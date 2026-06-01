@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.subviews.editor;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import javafx.scene.control.MenuItem;
@@ -20,10 +20,10 @@ import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 
 public class Editor_SubView implements GameUI_SubView {
 
-    private final GameUI ui;
+    private final AppContext ui;
     private final TileMapEditor editor;
 
-    public Editor_SubView(Stage stage, GameUI ui) {
+    public Editor_SubView(Stage stage, AppContext ui) {
         this.ui = ui;
         editor = new TileMapEditor(stage);
         MenuItem miQuitEditor = createQuitEditorMenuItem();
@@ -32,7 +32,7 @@ public class Editor_SubView implements GameUI_SubView {
     }
 
     private MenuItem createQuitEditorMenuItem() {
-        var miQuitEditor = new MenuItem(ui.access().translations().translate("back_to_game"));
+        var miQuitEditor = new MenuItem(ui.ui().translations().translate("back_to_game"));
         miQuitEditor.setOnAction(_ -> editor.quit());
         return miQuitEditor;
     }

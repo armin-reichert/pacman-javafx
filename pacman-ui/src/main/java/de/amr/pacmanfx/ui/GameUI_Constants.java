@@ -47,7 +47,7 @@ public class GameUI_Constants {
     /**
      * Resource manager for UI assets (fonts, images, sounds).
      */
-    public static final ResourceManager UI_RESOURCES = () -> GameUI.class;
+    public static final ResourceManager UI_RESOURCES = () -> AppContext.class;
 
     /**
      * Voice media for immunity activation.

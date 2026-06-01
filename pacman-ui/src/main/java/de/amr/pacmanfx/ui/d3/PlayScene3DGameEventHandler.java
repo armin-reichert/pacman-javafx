@@ -11,12 +11,12 @@ import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
+import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -81,19 +81,19 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
         assertLevel3D().addOrReplaceBonus3D(e.bonus());
-        services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent ignored) {
         assertLevel3D().entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookEaten);
-        services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent ignoredEvent) {
         assertLevel3D().entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
-        services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
@@ -103,17 +103,17 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     @Override
     public void onGameStarted(GameStartedEvent event) {
-        final State<Game> state = services().currentGameState();
-        final boolean silent = services().currentGame().isDemoLevelRunning() || state instanceof TestState;
+        final State<Game> state = context().currentGameState();
+        final boolean silent = context().currentGame().isDemoLevelRunning() || state instanceof TestState;
         if (!silent) {
-            services().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
+            context().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
         assertLevel3D().messageManager().showMessage(MessageManager3D.MessageType.READY);
     }
 
     @Override
     public void onGhostEaten(GhostEatenEvent ignoredEvent) {
-        services().currentSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     @Override
     public void onLevelStarted(LevelStartedEvent event) {
         final GameLevel level = event.level();
-        final State<Game> gameState = services().currentGameState();
+        final State<Game> gameState = context().currentGameState();
         //TODO rethink
         if (gameState instanceof TestState) {
             gameScene().replaceGameLevel3D(level);
@@ -150,12 +150,12 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
                     energizer3D.hide();
                     triggerEnergizerExplosion(level3D, energizer3D.shape().localToScene(Point3D.ZERO));
                 });
-                services().currentSoundEffects().ifPresent(GameSoundEffects::playEnergizerExplosion);
+                context().currentSoundEffects().ifPresent(GameSoundEffects::playEnergizerExplosion);
             }
             else {
                 level3D.pellet3DAtTile(tile).ifPresent(pellet3D -> removePelletAfterDelay(level3D, pellet3D));
-                final long tick = services().gameClock().tickCount();
-                services().currentSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
+                final long tick = context().gameClock().tickCount();
+                context().currentSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
             }
         }
     }
@@ -173,12 +173,12 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     @Override
     public void onPacGetsPower(PacGetsPowerEvent event) {
         final GameLevel3D level3D = assertLevel3D();
-        services().currentSoundEffects().ifPresent(GameSoundEffects::stopSiren);
-        if (!services().currentGame().isLevelCompleted()) {
+        context().currentSoundEffects().ifPresent(GameSoundEffects::stopSiren);
+        if (!context().currentGame().isLevelCompleted()) {
             level3D.entities().pac3D().setPowerMode(true);
             level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
                 .ifPresent(ManagedAnimation::playFromStart);
-            services().currentSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+            context().currentSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
     }
 
@@ -186,14 +186,14 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     public void onPacLostPower(PacLostPowerEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
         level3D.entities().pac3D().setPowerMode(false);
-        services().currentSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
             .ifPresent(ManagedAnimation::stop);
     }
 
     @Override
     public void onSpecialScore(SpecialScoreEvent ignoredEvent) {
-        services().currentSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 
     // Private state-specific handlers
@@ -220,7 +220,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         final GameLevel3D level3D = assertLevel3D();
         final Pac3D pac3D = level3D.entities().pac3D();
 
-        services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
         // Do not stop all animations!
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
@@ -246,7 +246,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
         return new SequentialTransition(
             pacStopping,
-            Ufx.pauseSecThen(1.5, () -> services().currentSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
+            Ufx.pauseSecThen(1.5, () -> context().currentSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
             pacDying,
             Ufx.pauseSec(0.5)
         );
@@ -255,7 +255,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     private void onEatingGhost() {
         final GameLevel3D level3D = assertLevel3D();
-        services().currentGame().doSimulationStep().ghostsKilled.forEach(ghost -> {
+        context().currentGame().doSimulationStep().ghostsKilled.forEach(ghost -> {
             final Ghost3D ghost3D = level3D.ghost3D(ghost.personality());
             final int killIndex = level3D.level().energizerVictims().indexOf(ghost);
             final Image pointsImage = level3D.uiConfig().killedGhostPointsImage(killIndex);
@@ -279,13 +279,13 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     private void onLevelComplete() {
         final GameLevel3D level3D = assertLevel3D();
-        final State<Game> gameState = services().currentGameState();
+        final State<Game> gameState = context().currentGameState();
 
         gameScene().scoreOpacity.set(0);
 
         level3D.entities().maze3D().house().hideDoors();
 
-        services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
         level3D.animationRegistry().stopAllAnimations();
         level3D.cleanupFoodAndParticles();
         level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);

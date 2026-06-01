@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -27,7 +27,7 @@ public class DashboardSectionGeneral extends DashboardSection {
     }
 
     @Override
-    public void connect(GameUI ui) {
+    public void connect(AppContext ui) {
         addStaticLabeledValue("Java Version",   Runtime.version().toString());
         addStaticLabeledValue("JavaFX Version", System.getProperty("javafx.runtime.version"));
 
@@ -47,8 +47,8 @@ public class DashboardSectionGeneral extends DashboardSection {
         final Button btnPlayPause = buttonsSimulationControl[0];
         btnPlayPause.setText(null);
         btnPlayPause.setStyle("-fx-background-color: transparent");
-        btnPlayPause.graphicProperty().bind(ui.access().gameClock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
-        btnPlayPause.tooltipProperty().bind(ui.access().gameClock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
+        btnPlayPause.graphicProperty().bind(ui.ui().gameClock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
+        btnPlayPause.tooltipProperty().bind(ui.ui().gameClock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
         setAction(ui, btnPlayPause, CommonActions.ACTION_TOGGLE_PAUSED);
 
         final Button btnStep = buttonsSimulationControl[1];
@@ -56,15 +56,15 @@ public class DashboardSectionGeneral extends DashboardSection {
         btnStep.setStyle("-fx-background-color: transparent");
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
-        btnStep.disableProperty().bind(ui.access().gameClock().updatesDisabledProperty().not());
-        setAction(btnStep, () -> ui.access().gameClock().makeSteps(GameUI_Constants.PROPERTY_SIMULATION_STEPS.get(), true));
+        btnStep.disableProperty().bind(ui.ui().gameClock().updatesDisabledProperty().not());
+        setAction(btnStep, () -> ui.ui().gameClock().makeSteps(GameUI_Constants.PROPERTY_SIMULATION_STEPS.get(), true));
 
         addIntSpinner("Num Steps", 1, 50, GameUI_Constants.PROPERTY_SIMULATION_STEPS);
 
         final var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
-        setEditor(sliderTargetFPS, ui.access().gameClock().targetFrameRateProperty());
+        setEditor(sliderTargetFPS, ui.ui().gameClock().targetFrameRateProperty());
 
-        final GameClock gameClock = ui.access().gameClock();
+        final GameClock gameClock = ui.ui().gameClock();
         addDynamicLabeledValue("", () -> "FPS: %.1f (Target: %d)".formatted(
             gameClock.fps(),
             gameClock.targetFrameRate()));

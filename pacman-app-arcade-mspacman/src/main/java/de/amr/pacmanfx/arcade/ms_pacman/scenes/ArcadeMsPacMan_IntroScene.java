@@ -19,7 +19,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -55,13 +55,13 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private int numTicksBeforeRising;
 
-    public ArcadeMsPacMan_IntroScene(GameUI ui) {
+    public ArcadeMsPacMan_IntroScene(AppContext ui) {
         super(ui);
 
         final var gameEventHandler = new GameScene.DefaultGameEventHandler(this) {
             @Override
             public void onCreditAdded(CreditAddedEvent e) {
-                services().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+                context().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
             }
         };
         setGameEventHandler(gameEventHandler);
@@ -71,9 +71,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        final SpriteAnimationSet spriteAnimationSet = ui.access().sprites().animationSet();
+        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
 
-        ui.access().sounds().playVoice(GameUI_Constants.VOICE_EXPLAIN_GAME_START);
+        context.ui().sounds().playVoice(GameUI_Constants.VOICE_EXPLAIN_GAME_START);
 
         actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         actionBindings.registerAllBindings(GameUI_Constants.SCENE_TESTS_BINDINGS);
@@ -101,7 +101,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onDeactivate() {
-        ui.access().sounds().stopAndDisposeVoice();
+        context.ui().sounds().stopAndDisposeVoice();
     }
 
     @Override
@@ -206,7 +206,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final Game game = scene.services().currentGame();
+                final Game game = scene.context().currentGame();
                 scene.marquee.timer().doTick();
                 if (sceneTimer.atSecond(2.0) && !game.canStartNewGame()) {
                     game.flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL); // demo level

@@ -13,16 +13,16 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.gamescene.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 
 import static de.amr.pacmanfx.ui.GameUI_Constants.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    private final GameUI ui;
+    private final AppContext ui;
 
-    public PacManXXL_MsPacMan_GameSceneConfig(GameUI ui) {
+    public PacManXXL_MsPacMan_GameSceneConfig(AppContext ui) {
         this.ui = requireNonNull(ui);
     }
 

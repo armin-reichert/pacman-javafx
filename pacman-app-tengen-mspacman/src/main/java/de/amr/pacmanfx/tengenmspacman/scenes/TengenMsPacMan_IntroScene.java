@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
@@ -54,7 +54,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     private int waitBeforeRising;
     public boolean dark;
 
-    public TengenMsPacMan_IntroScene(GameUI ui) {
+    public TengenMsPacMan_IntroScene(AppContext ui) {
         super(ui);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
@@ -63,7 +63,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        services().currentGame().hud().hide();
+        context().currentGame().hud().hide();
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
@@ -114,9 +114,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameUI ui = scene.ui;
-                final UIConfig currentConfig = ui.access().currentUIConfig();
-                final SpriteAnimationSet spriteAnimationSet = ui.access().sprites().animationSet();
+                final UIConfig currentConfig = scene.context().currentUIConfig();
+                final SpriteAnimationSet spriteAnimationSet = scene.context().ui().sprites().animationSet();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
@@ -178,7 +177,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
                 Ghost ghost = scene.ghosts.get(scene.ghostIndex);
-                Logger.debug("Tick {}: {} marching in", scene.services().gameClock().tickCount(), ghost.name());
+                Logger.debug("Tick {}: {} marching in", scene.context().gameClock().tickCount(), ghost.name());
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.x() <= GHOST_STOP_X) {
                         ghost.setX(GHOST_STOP_X);
@@ -219,7 +218,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 scene.marquee.update(timer.tickCount());
-                Logger.debug("Tick {}: {} marching in", scene.services().gameClock().tickCount(), scene.msPacMan.name());
+                Logger.debug("Tick {}: {} marching in", scene.context().gameClock().tickCount(), scene.msPacMan.name());
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);
@@ -227,7 +226,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    final TengenMsPacMan_GameModel game = scene.services().currentGame();
+                    final TengenMsPacMan_GameModel game = scene.context().currentGame();
                     if (game.allOptionsDefault()) {
                         game.setCanStartNewGame(false); // TODO check this
                         game.flow().restartState(TengenMsPacMan_GameState.STARTING_GAME_OR_LEVEL);

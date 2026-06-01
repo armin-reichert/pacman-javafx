@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import javafx.scene.control.Label;
@@ -20,21 +20,21 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
     }
 
     @Override
-    public void connect(GameUI ui) {
+    public void connect(AppContext ui) {
         updateTableForCurrentSubView(ui);
     }
 
     @Override
     public void update() {
         super.update();
-        if (dashboard.ui() != null) {
-            updateTableForCurrentSubView(dashboard.ui());
+        if (dashboard.context() != null) {
+            updateTableForCurrentSubView(dashboard.context());
         }
     }
 
-    private void updateTableForCurrentSubView(GameUI ui) {
+    private void updateTableForCurrentSubView(AppContext ui) {
         clearSection();
-        final GameUI_SubView currentSubView = ui.access().subViews().currentView();
+        final GameUI_SubView currentSubView = ui.ui().subViews().currentView();
         if (currentSubView == null) {
             return;
         }
@@ -48,7 +48,7 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
                 .sorted(Comparator.comparing(KeyCombination::getDisplayText))
                 .forEach(key -> {
                     final GameAction action = currentBindingMap.get(key);
-                    final String actionText = ui.access().translations().translate(action.resourceBundleKey());
+                    final String actionText = ui.ui().translations().translate(action.resourceBundleKey());
                     final Label label = createLabel(actionText, action.isEnabled(ui));
                     addRow(key.getDisplayText(), label);
                 });

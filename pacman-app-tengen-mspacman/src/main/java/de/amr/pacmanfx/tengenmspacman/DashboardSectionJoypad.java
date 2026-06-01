@@ -3,13 +3,12 @@
  */
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSection;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class DashboardSectionJoypad extends DashboardSection {
@@ -19,10 +18,10 @@ public class DashboardSectionJoypad extends DashboardSection {
     }
 
     @Override
-    public void connect(GameUI ui) {
+    public void connect(AppContext ui) {
 
         // NES controller image is located in "pacman-ui" module, use a class from that module to load it
-        final ResourceManager resourceManager = () -> GameUI.class;
+        final ResourceManager resourceManager = () -> AppContext.class;
 
         final ImageView nesControllerimage = new ImageView(
             resourceManager.loadImage("/de/amr/pacmanfx/ui/graphics/nes-controller.jpg"));

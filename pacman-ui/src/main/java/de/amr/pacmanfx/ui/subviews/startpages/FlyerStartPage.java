@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews.startpages;
 
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
@@ -62,32 +62,32 @@ public class FlyerStartPage extends StackPane implements StartPage {
     }
 
     @Override
-    public void init(GameUI ui) {
+    public void init(AppContext ui) {
         requireNonNull(ui);
         startButton = createStartButton(ui);
         getChildren().add(startButton);
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             if (e.getCode() == SHUT_UP_KEYCODE) {
-                ui.access().sounds().stopAndDisposeVoice();
+                ui.ui().sounds().stopAndDisposeVoice();
             }
         });
     }
 
     @Override
-    public void onEnterStartPage(GameUI ui) {
+    public void onEnterStartPage(AppContext ui) {
         if (startButton != null) {
             startButton.requestFocus();
         }
     }
 
     @Override
-    public void onExitStartPage(GameUI ui) {
-        ui.access().sounds().stopAndDisposeVoice();
+    public void onExitStartPage(AppContext ui) {
+        ui.ui().sounds().stopAndDisposeVoice();
     }
 
-    public Node createStartButton(GameUI ui) {
-        final var startButton = new FancyButton(ui.access().translations().translate("play_button"),
+    public Node createStartButton(AppContext ui) {
+        final var startButton = new FancyButton(ui.ui().translations().translate("play_button"),
             DEFAULT_START_BUTTON_FONT, DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
         startButton.setAction(() -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
         startButton.translateYProperty().bind(heightProperty().multiply(-0.1));

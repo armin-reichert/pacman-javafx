@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import javafx.scene.paint.Color;
@@ -29,7 +29,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     public Ghost ghost;
     public Color shadeOfBlue;
 
-    public TengenMsPacMan_BootScene(GameUI ui) {
+    public TengenMsPacMan_BootScene(AppContext ui) {
         super(ui);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
@@ -39,12 +39,12 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     public void onActivate(UIConfig uiConfig) {
         movingText = new Actor();
         movingText.setPosition(TS(9), getUnscaledHeight()); // lower border of screen
-        ghost = uiConfig.createGhostWithAnimations(ui.access().sprites().animationSet(), RED_GHOST_SHADOW);
+        ghost = uiConfig.createGhostWithAnimations(context.ui().sprites().animationSet(), RED_GHOST_SHADOW);
     }
 
     @Override
     public void onTick(GameClock clock) {
-        final State<Game> gameState = services().currentGameState();
+        final State<Game> gameState = context().currentGameState();
         final int t = (int) gameState.timer().tickCount();
         switch (t) {
             case   1 -> gray(false);

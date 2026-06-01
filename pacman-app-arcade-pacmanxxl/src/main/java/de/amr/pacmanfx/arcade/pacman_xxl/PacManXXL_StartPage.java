@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -53,7 +53,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
 
     private final PacManXXL_OptionMenu menu;
 
-    private GameUI ui;
+    private AppContext context;
 
     private ChangeListener<GameVariant> gameVariantNameListener;
     private ChangeListener<Boolean> cutScenesEnabledListener;
@@ -67,10 +67,10 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         getChildren().addAll(menu.root());
 
         focusedProperty().addListener((_, _, hasFocus) -> {
-            if (hasFocus && ui != null) {
-                updateMenuBinding(ui.view().stage());
+            if (hasFocus && context != null) {
+                updateMenuBinding(context.view().stage());
                 Logger.info("Input focus on {}, passing to {}...", this, menu);
-                menu.init(ui);
+                menu.init(context);
             }
         });
 
@@ -78,17 +78,17 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
             switch (e.getCode()) {
                 case E -> {
                     e.consume();
-                    if (ui != null) {
-                        ui.access().sounds().stopAndDisposeVoice();
-                        ui.access().subViews().startView().pauseProgressTimer();
-                        ui.openWorldMapFileInEditor(null);
+                    if (context != null) {
+                        context.ui().sounds().stopAndDisposeVoice();
+                        context.ui().subViews().startView().pauseProgressTimer();
+                        context.openWorldMapFileInEditor(null);
                     }
                 }
                 case ENTER -> {
                     e.consume();
-                    if (ui != null) {
-                        ui.access().sounds().stopAndDisposeVoice();
-                        ui.access().subViews().startView().pauseProgressTimer();
+                    if (context != null) {
+                        context.ui().sounds().stopAndDisposeVoice();
+                        context.ui().subViews().startView().pauseProgressTimer();
                         menu.startSelectedGame();
                     }
                 }
@@ -102,25 +102,25 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     }
 
     @Override
-    public void init(GameUI ui) {
-        this.ui = requireNonNull(ui);
-        updateMenuBinding(ui.view().stage());
+    public void init(AppContext context) {
+        this.context = requireNonNull(context);
+        updateMenuBinding(context.view().stage());
     }
 
     @Override
-    public void onEnterStartPage(GameUI ui) {
+    public void onEnterStartPage(AppContext context) {
         final GameVariant selectedGameVariant = menu.entryGameVariant().value();
         switch (selectedGameVariant) {
-            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> ui.access().gameContext().setGameVariantName(selectedGameVariant.name());
+            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> context.gameContext().setGameVariantName(selectedGameVariant.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);
         }
-        menu.init(ui);
-        ui.access().sounds().playVoice(VOICE);
+        menu.init(context);
+        context.ui().sounds().playVoice(VOICE);
     }
 
     @Override
-    public void onExitStartPage(GameUI ui) {
-        ui.access().sounds().stopAndDisposeVoice();
+    public void onExitStartPage(AppContext context) {
+        context.ui().sounds().stopAndDisposeVoice();
         menu.stopDrawLoop();
         removeMenuBinding();
     }
@@ -138,13 +138,13 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     private void updateMenuBinding(Stage stage) {
         removeMenuBinding();
 
-        gameVariantNameListener = (_, _, newVariant) -> ui.access().gameContext().setGameVariantName(newVariant.name());
+        gameVariantNameListener = (_, _, newVariant) -> context.gameContext().setGameVariantName(newVariant.name());
         menu.entryGameVariant().valueProperty().addListener(gameVariantNameListener);
 
         play3DListener = (_, _, play3D) -> GameUI_Constants.PROPERTY_3D_ENABLED.set(play3D);
         menu.entryPlay3D().valueProperty().addListener(play3DListener);
 
-        cutScenesEnabledListener = (_,_,enabled) -> ui.access().currentGameFlow().setCutScenesEnabled(enabled);
+        cutScenesEnabledListener = (_,_,enabled) -> context.currentGameFlow().setCutScenesEnabled(enabled);
         menu.entryCutScenesEnabled().valueProperty().addListener(cutScenesEnabledListener);
 
         menu.scalingProperty().bind(menuScaling(stage));

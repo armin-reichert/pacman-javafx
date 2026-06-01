@@ -14,7 +14,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -63,13 +63,13 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public Ghost blinky;
     public SpriteAnimation nailDressAnimation;
 
-    public ArcadePacMan_CutScene2(GameUI ui) {
+    public ArcadePacMan_CutScene2(AppContext ui) {
         super(ui);
     }
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        final SpriteAnimationSet spriteAnimationSet = ui.access().sprites().animationSet();
+        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
         pacMan = createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
         blinky = uiConfig.createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
@@ -87,7 +87,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         }
         switch (sceneTick) {
             case TICK_ANIMATION_START -> {
-                ui.access().sounds().play(PacManGameSoundID.INTERMISSION_2);
+                context.ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
                 setNailDressAnimationState(NailDressState.NAIL);
             }
             case TICK_PAC_MAN_STARTS_RUNNING -> pacManStartsRunning();
@@ -111,7 +111,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     private void animationEnds() {
         blinky.setVisible(false);
-        services().currentGameState().expire();
+        context().currentGameState().expire();
     }
 
     private void dressRaptures() {

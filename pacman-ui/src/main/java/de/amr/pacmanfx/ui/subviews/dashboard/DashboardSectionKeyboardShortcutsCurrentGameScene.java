@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import javafx.scene.input.KeyCombination;
@@ -18,21 +18,21 @@ public class DashboardSectionKeyboardShortcutsCurrentGameScene extends Dashboard
     }
 
     @Override
-    public void connect(GameUI ui) {
+    public void connect(AppContext ui) {
         updateTableForCurrentGameScene(ui);
     }
 
     @Override
     public void update() {
         super.update();
-        if (dashboard.ui() != null) {
-            updateTableForCurrentGameScene(dashboard.ui());
+        if (dashboard.context() != null) {
+            updateTableForCurrentGameScene(dashboard.context());
         }
     }
 
-    private void updateTableForCurrentGameScene(GameUI ui) {
+    private void updateTableForCurrentGameScene(AppContext ui) {
         clearSection();
-        final GameScene currentGameScene = ui.access().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene currentGameScene = ui.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (currentGameScene != null) {
             final var currentBindingsMap = currentGameScene.actionBindings().bindingMap();
             if (currentBindingsMap.isEmpty()) {
@@ -43,7 +43,7 @@ public class DashboardSectionKeyboardShortcutsCurrentGameScene extends Dashboard
                     .forEach(entry -> {
                         final KeyCombination keyCombination = entry.getKey();
                         final GameAction action = entry.getValue();
-                        final String localizedActionText = ui.access().translations().translate(action.resourceBundleKey());
+                        final String localizedActionText = ui.ui().translations().translate(action.resourceBundleKey());
                         addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(ui)));
                     });
             }

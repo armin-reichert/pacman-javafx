@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -62,18 +62,12 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         }
     };
 
-    /**
-     * Creates a new context menu for the play scene.
-     *
-     * @param ui the game UI providing access to game state and UI properties
-     * @throws NullPointerException if {@code ui} is {@code null}
-     */
-    public PlaySceneContextMenu(GameUI ui) {
-        final Game game = ui.access().currentGame();
-        final TranslationManager translator = ui.access().translations();
+    public PlaySceneContextMenu(AppContext context) {
+        final Game game = context.currentGame();
+        final TranslationManager translator = context.ui().translations();
 
         addLocalizedTitleItem(this, translator, "scene_display");
-        addLocalizedActionItem(this, ui, translator, ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
+        addLocalizedActionItem(this, context, translator, ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
         addLocalizedCheckBox(this, translator, GameUI_Constants.PROPERTY_MINI_VIEW_ON, "pip");
 
         addLocalizedTitleItem(this, translator, "select_perspective");
@@ -95,7 +89,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
 
         addSeparator(this);
         addLocalizedCheckBox(this, translator, GameUI_Constants.PROPERTY_MUTED, "muted");
-        addLocalizedActionItem(this, ui, translator, ACTION_QUIT_GAME_SCENE, "quit");
+        addLocalizedActionItem(this, context, translator, ACTION_QUIT_GAME_SCENE, "quit");
 
         GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.addListener(perspectiveListener);
     }

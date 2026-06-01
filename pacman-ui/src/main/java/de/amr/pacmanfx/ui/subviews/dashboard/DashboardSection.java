@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import javafx.beans.property.BooleanProperty;
@@ -77,7 +77,7 @@ public abstract class DashboardSection extends TitledPane {
         });
     }
 
-    public abstract void connect(GameUI ui);
+    public abstract void connect(AppContext ui);
 
     public void update() {
         infoTexts.forEach(DynamicInfoText::update);
@@ -91,8 +91,8 @@ public abstract class DashboardSection extends TitledPane {
         grid.setBackground(background);
     }
 
-    protected Supplier<String> ifGameScenePresent(GameUI ui, Function<GameScene, String> fnInfo) {
-        return () -> ui.access().gameScenes().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
+    protected Supplier<String> ifGameScenePresent(AppContext ui, Function<GameScene, String> fnInfo) {
+        return () -> ui.ui().gameScenes().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
     protected Supplier<String> ifGameLevel(Supplier<Game> gameSupplier, Function<GameLevel, String> fnInfo) {
@@ -233,7 +233,7 @@ public abstract class DashboardSection extends TitledPane {
         button.setOnAction(_ -> action.run());
     }
 
-    protected void setAction(GameUI ui, Button button, GameAction gameAction) {
+    protected void setAction(AppContext ui, Button button, GameAction gameAction) {
         button.setOnAction(_ -> gameAction.executeIfEnabled(ui));
         //TODO add boolean property for enabled-state to game action and bind against it
     }

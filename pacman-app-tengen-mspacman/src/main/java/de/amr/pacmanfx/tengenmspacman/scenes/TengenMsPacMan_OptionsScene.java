@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.model.*;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -54,14 +54,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private final IntegerProperty selectedOption = new SimpleIntegerProperty() {
         @Override
         protected void invalidated() {
-            ui.access().sounds().play(TengenMsPacManSoundID.OPTION_SELECTION_CHANGE);
+            context.ui().sounds().play(TengenMsPacManSoundID.OPTION_SELECTION_CHANGE);
             idleTicks = 0;
         }
     };
 
     private final GameAction actionSelectNextJoypadBinding = new GameAction("select_next_joypad_binding") {
         @Override
-        public void doAction(GameUI ui) {
+        public void doAction(AppContext ui) {
             Input.instance().joypad.selectNextBinding();
         }
     };
@@ -69,7 +69,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private int idleTicks;
     public int initialDelay;
 
-    public TengenMsPacMan_OptionsScene(GameUI ui) {
+    public TengenMsPacMan_OptionsScene(AppContext ui) {
         super(ui);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
@@ -102,14 +102,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            services().currentGameFlow().enterState(TengenMsPacMan_GameState.INTRO);
+            context().currentGameFlow().enterState(TengenMsPacMan_GameState.INTRO);
         }
     }
 
-    private TengenMsPacMan_GameModel tengenGame() { return services().currentGame(); }
+    private TengenMsPacMan_GameModel tengenGame() { return context().currentGame(); }
     
     private void optionValueChanged() {
-        ui.access().sounds().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
+        context.ui().sounds().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
         idleTicks = 0;
     }
 
@@ -118,7 +118,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void onInput(GameUI ui) {
+    public void onInput(AppContext ui) {
         if (Input.instance().joypad.isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);
         }

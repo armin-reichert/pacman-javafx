@@ -25,10 +25,10 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui.AppContext_Implementation;
 import de.amr.pacmanfx.ui.config.ConfigurationsManager;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
@@ -86,7 +86,7 @@ public class PacManGames3dApp extends Application {
     );
 
     private GameBox gameBox;
-    private GameUI ui;
+    private AppContext ui;
     private PacManXXL_MapSelector xxlMapSelector;
 
     private boolean useBuilder;
@@ -140,7 +140,7 @@ public class PacManGames3dApp extends Application {
             }
             else {
                 registerGames();
-                ui = new GameUI_Implementation(gameBox,
+                ui = new AppContext_Implementation(gameBox,
                     createViewImplementation(stage, sceneSize.x(), sceneSize.y())
                 );
                 addConfigFactories();
@@ -150,7 +150,7 @@ public class PacManGames3dApp extends Application {
             configureDashboard();
             Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
 
-            ui.access().customDirWatchdog().addEventListener(xxlMapSelector);
+            ui.ui().customDirWatchdog().addEventListener(xxlMapSelector);
             ui.displayOnScreen();
         }
         catch (RuntimeException x) {
@@ -199,7 +199,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addConfigFactories() {
-        final ConfigurationsManager configManager = ui.access().configurations();
+        final ConfigurationsManager configManager = ui.ui().configurations();
         configManager.addConfigFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
         configManager.addConfigFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);
         configManager.addConfigFactory(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new);
@@ -209,7 +209,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addStartPages() {
-        final StartPages_SubView startView = ui.access().subViews().startView();
+        final StartPages_SubView startView = ui.ui().subViews().startView();
         startView.addStartPage(new ArcadePacMan_StartPage());
         startView.addStartPage(new ArcadeMsPacMan_StartPage());
         startView.addStartPage(new TengenMsPacMan_StartPage());
@@ -220,9 +220,9 @@ public class PacManGames3dApp extends Application {
 
 
     private void configureDashboard() {
-        final Dashboard dashboard = ui.access().subViews().gamePlayView().dashboard();
+        final Dashboard dashboard = ui.ui().subViews().gamePlayView().dashboard();
 
-        ui.access().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, ui.access().translations());
+        ui.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, ui.ui().translations());
 
         // Add Joypad controller section
         dashboard.addSection(
@@ -236,7 +236,7 @@ public class PacManGames3dApp extends Application {
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
-                section.setCustomDirWatchDog(ui.access().customDirWatchdog());
+                section.setCustomDirWatchDog(ui.ui().customDirWatchdog());
                 section.setMapEditFunction(mapFile -> ui.openWorldMapFileInEditor(mapFile));
             });
     }

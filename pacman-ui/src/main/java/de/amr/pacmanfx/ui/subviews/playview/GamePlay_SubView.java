@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.subviews.playview;
 
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
@@ -62,7 +62,7 @@ public class GamePlay_SubView implements GameUI_SubView {
 
     private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for Play View");
 
-    private final GameUI ui;
+    private final AppContext context;
     private final ContextMenu contextMenu = new ContextMenu();
 
     private StackPane rootPane;
@@ -87,19 +87,19 @@ public class GamePlay_SubView implements GameUI_SubView {
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
 
-    public GamePlay_SubView(GameUI ui, DashboardConfig dashboardConfig) {
-        this.ui = requireNonNull(ui);
+    public GamePlay_SubView(AppContext context, DashboardConfig dashboardConfig) {
+        this.context = requireNonNull(context);
         createLayout(requireNonNull(dashboardConfig));
-        rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(ui, this));
-        miniPlaySceneView.setUI(ui);
+        rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(context, this));
+        miniPlaySceneView.setUI(context);
     }
 
     public void resizeToFit(Scene parentSceneFX) {
         gameSceneFrame.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
     }
 
-    public GameUI ui() {
-        return ui;
+    public AppContext ui() {
+        return context;
     }
 
     public ContextMenu contextMenu() {
@@ -118,9 +118,9 @@ public class GamePlay_SubView implements GameUI_SubView {
         return miniPlaySceneView;
     }
 
-    public void showHelp(GameUI ui) {
+    public void showHelp(AppContext context) {
         final double scaling = gameSceneFrame.scalingProperty().get();
-        helpLayer.showHelpPopup(ui, scaling, ui.access().gameContext().gameVariantName());
+        helpLayer.showHelpPopup(context, scaling, context.currentGameVariant());
     }
 
     public void setGameSceneContent(Node gameSceneContent) {
@@ -137,11 +137,11 @@ public class GamePlay_SubView implements GameUI_SubView {
     }
 
     @Override
-    public void onInput(GameUI ui, Input input) {
+    public void onInput(AppContext ui, Input input) {
         // First lLook for an action binding in my bindings, if nothing found, delegate to the current game scene if any
         actionBindings.actionMatchingKeyboardState(input.keyboard).ifPresentOrElse(
             action -> action.executeIfEnabled(ui),
-            () -> ui.access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onInput(ui))
+            () -> ui.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onInput(ui))
         );
     }
 
@@ -168,9 +168,9 @@ public class GamePlay_SubView implements GameUI_SubView {
     public void render() {
 
         // Render current 2D game scene
-        final GameScene gameScene = ui.access().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final Game game = ui.access().currentGame();
+            final Game game = context.currentGame();
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D);
             }
@@ -189,7 +189,7 @@ public class GamePlay_SubView implements GameUI_SubView {
     }
 
     public void updateGameSceneRenderers(GameScene2D gameScene2D) {
-        final UIConfig currentConfig = ui.access().currentUIConfig();
+        final UIConfig currentConfig = context.currentUIConfig();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = currentConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
             setFontSmoothing(GameUI_Constants.PROPERTY_CANVAS_FONT_SMOOTHING.get());
@@ -238,8 +238,8 @@ public class GamePlay_SubView implements GameUI_SubView {
         rootPane = new StackPane(gameSceneLayer, miniPlaySceneView.rootPane(), overlayLayer, helpLayer, pausedIcon);
     }
 
-    public void connect(GameUI ui) {
-        pausedIcon.visibleProperty().bind(ui.access().gameClock().updatesDisabledProperty());
+    public void connect(AppContext ui) {
+        pausedIcon.visibleProperty().bind(ui.ui().gameClock().updatesDisabledProperty());
 
         GameUI_Constants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 
@@ -252,9 +252,9 @@ public class GamePlay_SubView implements GameUI_SubView {
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUI_Constants.PROPERTY_MINI_VIEW_ON.get()
-                && ui.access().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D),
+                && ui.ui().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_3D),
             GameUI_Constants.PROPERTY_MINI_VIEW_ON,
-            ui.access().gameScenes().gameSceneProperty()
+            ui.ui().gameScenes().gameSceneProperty()
         ));
     }
 

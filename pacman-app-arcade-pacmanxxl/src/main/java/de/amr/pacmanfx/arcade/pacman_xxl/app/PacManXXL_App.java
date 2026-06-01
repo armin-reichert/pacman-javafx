@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
@@ -24,7 +24,7 @@ public class PacManXXL_App extends Application {
     private static final double HEIGHT_FRACTION = 0.8;
 
     private final GameBox gameBox = new GameBox(new CoinMechanism(99));
-    private GameUI ui;
+    private AppContext ui;
 
     @Override
     public void start(Stage primaryStage) {
@@ -42,7 +42,7 @@ public class PacManXXL_App extends Application {
             .startPage(PacManXXL_StartPage::new)
             .build();
 
-        ui.access().subViews().gamePlayView().configureDashboard(List.of(
+        ui.ui().subViews().gamePlayView().configureDashboard(List.of(
             CommonDashboardID.README,
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
@@ -53,17 +53,17 @@ public class PacManXXL_App extends Application {
             CommonDashboardID.KEYS_GLOBAL,
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT
-        ), ui.access().translations());
+        ), ui.ui().translations());
 
-        ui.access().subViews().gamePlayView().dashboard().findSection(CommonDashboardID.CUSTOM_MAPS)
+        ui.ui().subViews().gamePlayView().dashboard().findSection(CommonDashboardID.CUSTOM_MAPS)
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
-                section.setCustomDirWatchDog(ui.access().customDirWatchdog());
+                section.setCustomDirWatchDog(ui.ui().customDirWatchdog());
                 section.setMapEditFunction(mapFile -> ui.openWorldMapFileInEditor(mapFile));
             });
 
-        ui.access().customDirWatchdog().addEventListener(mapSelector);
+        ui.ui().customDirWatchdog().addEventListener(mapSelector);
         ui.displayOnScreen();
     }
 

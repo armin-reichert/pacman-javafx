@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews;
 
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.subviews.editor.Editor_SubView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
@@ -30,8 +30,8 @@ public final class SubViewManager {
 
     public SubViewManager() {}
 
-    public void connect(GameUI ui) {
-        requireNonNull(ui);
+    public void connect(AppContext context) {
+        requireNonNull(context);
 
         selectedSubViewProperty().addListener((_, oldView, newView) -> {
             if (oldView != null) {
@@ -39,8 +39,8 @@ public final class SubViewManager {
                 oldView.actionBindings().dispose();
             }
             newView.onEnter();
-            ui.view().replaceSubView(newView);
-            ui.access().flashMessages().clearMessage();
+            context.view().replaceSubView(newView);
+            context.ui().flashMessages().clearMessage();
         });
 
         setEditorCanOpen(() -> {
@@ -50,12 +50,11 @@ public final class SubViewManager {
             if (isSelected(startView)) return true;
 
             if (isSelected(gamePlayView)) {
-                return !ui.access().currentGame().isPlayingLevel();
+                return !context.currentGame().isPlayingLevel();
             }
 
             return false;
         });
-
     }
 
     public void setGamePlayView(GamePlay_SubView newGamePlayView) {

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
@@ -34,13 +34,13 @@ import static de.amr.pacmanfx.ui.GameUI_Constants.PROPERTY_3D_FLOOR_COLOR;
  */
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
-    public TengenMsPacMan_PlayScene3D(GameUI ui) {
+    public TengenMsPacMan_PlayScene3D(AppContext ui) {
         super(ui);
     }
 
     @Override
     protected void decorate(GameLevel3D level3D) {
-        final Game game = services().currentGame();
+        final Game game = context().currentGame();
         if (!(game instanceof TengenMsPacMan_GameModel tengenGame)) {
             throw new IllegalStateException("Cannot use Tengen play scene 3D in game of class %s"
                 .formatted(game.getClass().getSimpleName()));
@@ -101,7 +101,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
-            scores3D.showTextForScore(ui.access().translations().translate("score.game_over"),
+            scores3D.showTextForScore(context.ui().translations().translate("score.game_over"),
                 Color.valueOf(NES_Palette.rgbColor(0x16)));
         }
         // Always show high score

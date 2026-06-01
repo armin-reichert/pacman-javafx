@@ -10,8 +10,7 @@ import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_ServicesAccess;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
@@ -43,8 +42,8 @@ public abstract class GameScene implements Disposable {
             this.gameScene = requireNonNull(gameScene);
         }
 
-        public GameUI_ServicesAccess services() {
-            return gameScene.services();
+        public AppContext context() {
+            return gameScene.context();
         }
 
         public GameScene gameScene() {
@@ -52,24 +51,28 @@ public abstract class GameScene implements Disposable {
         }
 
         public Optional<GameLevel> optGameLevel() {
-            return services().currentGame().optGameLevel();
+            return context().currentGame().optGameLevel();
         }
 
         @Override
         public void onStopAllSounds(StopAllSoundsEvent event) {
-            gameScene.services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
         }
     }
 
     protected final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for " + getClass().getSimpleName());
 
-    protected final GameUI ui;
+    protected final AppContext context;
 
     private GameEventListener gameEventHandler;
 
-    public GameScene(GameUI ui) {
-        this.ui = requireNonNull(ui);
+    public GameScene(AppContext context) {
+        this.context = requireNonNull(context);
         setGameEventHandler(new DefaultGameEventHandler(this));
+    }
+
+    public AppContext context() {
+        return context;
     }
 
     public void setGameEventHandler(GameEventListener delegate) {
@@ -87,10 +90,6 @@ public abstract class GameScene implements Disposable {
         return Optional.empty();
     }
 
-    public GameUI_ServicesAccess services() {
-        return ui.access();
-    }
-
     /**
      * @return action bindings for this scene
      */
@@ -102,7 +101,7 @@ public abstract class GameScene implements Disposable {
      * Activates the scene and assigns keyboard bindings.
      */
     public final void activate() {
-        onActivate(services().currentUIConfig());
+        onActivate(context.currentUIConfig());
         Logger.info(actionBindings);
         Logger.trace("Game scene {} activated", getClass().getSimpleName());
     }
@@ -118,7 +117,7 @@ public abstract class GameScene implements Disposable {
     public final void deactivate() {
         onDeactivate();
         actionBindings.dispose();
-        services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.trace("Game scene {} deactivated", getClass().getSimpleName());
     }
 
@@ -138,7 +137,7 @@ public abstract class GameScene implements Disposable {
      * Called when a key combination is pressed inside this scene.
      * Executes the first matching action.
      */
-    public void onInput(GameUI ui) {
+    public void onInput(AppContext ui) {
         actionBindings().actionMatchingKeyboardState(Input.instance().keyboard).ifPresent(action -> action.executeIfEnabled(ui));
     }
 

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -36,7 +36,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private Clapperboard clapperboard;
 
-    public ArcadeMsPacMan_CutScene2(GameUI ui) {
+    public ArcadeMsPacMan_CutScene2(AppContext ui) {
         super(ui);
     }
 
@@ -54,7 +54,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        final SpriteAnimationSet spriteAnimationSet = ui.access().sprites().animationSet();
+        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
@@ -91,7 +91,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (timer.hasExpired()) {
-            ui.access().sounds().play(PacManGameSoundID.INTERMISSION_2);
+            context.ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
             enterStateChasing();
         }
     }
@@ -157,7 +157,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             msPacMan.setSpeed(4.0f);
         }
         else if (timer.atSecond(23)) {
-            services().currentGameState().expire();
+            context().currentGameState().expire();
         }
         else {
             pacMan.move();

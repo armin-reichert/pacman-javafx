@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -16,13 +16,13 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
  */
 public class ArcadePacMan_StartScene extends GameScene2D {
 
-    public ArcadePacMan_StartScene(GameUI ui) {
+    public ArcadePacMan_StartScene(AppContext ui) {
         super(ui);
 
         final var gameEventHandler = new GameScene.DefaultGameEventHandler(this) {
             @Override
             public void onCreditAdded(CreditAddedEvent e) {
-                services().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+                context().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
             }
         };
         setGameEventHandler(gameEventHandler);
@@ -35,6 +35,6 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void onDeactivate() {
-        ui.access().sounds().stopAndDisposeVoice();
+        context.ui().sounds().stopAndDisposeVoice();
     }
 }

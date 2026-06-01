@@ -24,22 +24,22 @@ public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEve
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
         // This is the sound in Ms. Pac-Man when the bonus wanders the maze. In Pac-Man, this is a no-op.
-        services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
-        services().currentSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
     public void onCreditAdded(CreditAddedEvent e) {
-        services().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
 
     @Override
@@ -49,27 +49,27 @@ public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEve
 
     @Override
     public void onGameStarted(GameStartedEvent e) {
-        final boolean silent = services().currentGame().isDemoLevelRunning() ||
-            services().currentGameState() instanceof TestState;
+        final boolean silent = context().currentGame().isDemoLevelRunning() ||
+            context().currentGameState() instanceof TestState;
         if (!silent) {
-            services().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
+            context().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
     }
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
         if (e.newState() == Arcade_GameState.LEVEL_COMPLETE) {
-            services().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene().levelCompletedAnimation().play();
         } else if (e.newState() == Arcade_GameState.GAME_OVER) {
-            services().currentSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
-            services().currentGame().hud().credit(true);
+            context().currentSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
+            context().currentGame().hud().credit(true);
         }
     }
 
     @Override
     public void onGhostEaten(GhostEatenEvent e) {
-        services().currentSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
     }
 
     @Override
@@ -80,32 +80,32 @@ public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEve
     @Override
     public void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        services().currentGameState().expire();
+        context().currentGameState().expire();
     }
 
     @Override
     public void onPacDying(PacDyingEvent e) {
-        services().currentSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
     }
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = services().gameClock().tickCount();
-        services().currentSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
+        final long tick = context().gameClock().tickCount();
+        context().currentSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        services().currentSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        services().currentSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 
     @Override
     public void onSpecialScore(SpecialScoreEvent e) {
-        services().currentSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+        context().currentSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 }

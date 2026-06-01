@@ -6,47 +6,47 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import javafx.util.Duration;
 
 public class TestActions {
 
     public static final GameAction ACTION_CUT_SCENES_TEST = new GameAction("test_cut_scenes") {
         @Override
-        public void doAction(GameUI ui) {
-            ui.access().currentGameFlow().enterStateWithName(CutScenesTestState.class.getSimpleName());
-            ui.access().flashMessage("Cut scenes test"); //TODO localize
+        public void doAction(AppContext context) {
+            context.currentGameFlow().enterStateWithName(CutScenesTestState.class.getSimpleName());
+            context.flashMessage("Cut scenes test"); //TODO localize
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) {
-            return ui.access().currentGameFlow().optState(CutScenesTestState.class.getSimpleName()).isPresent();
+        public boolean isEnabled(AppContext context) {
+            return context.currentGameFlow().optState(CutScenesTestState.class.getSimpleName()).isPresent();
         }
     };
 
     public static final GameAction ACTION_SHORT_LEVEL_TEST = new GameAction("short_level_test") {
         @Override
-        public void doAction(GameUI ui) {
-            ui.access().currentGameFlow().restartStateWithName(LevelShortTestState.class.getSimpleName());
-            ui.access().flashMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
+        public void doAction(AppContext context) {
+            context.currentGameFlow().restartStateWithName(LevelShortTestState.class.getSimpleName());
+            context.flashMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) {
-            return ui.access().currentGameFlow().optState(LevelShortTestState.class.getSimpleName()).isPresent();
+        public boolean isEnabled(AppContext context) {
+            return context.currentGameFlow().optState(LevelShortTestState.class.getSimpleName()).isPresent();
         }
     };
 
     public static final GameAction ACTION_MEDIUM_LEVEL_TEST = new GameAction("medium_level_test") {
         @Override
-        public void doAction(GameUI ui) {
-            ui.access().currentGameFlow().restartStateWithName(LevelMediumTestState.class.getSimpleName());
-            ui.access().flashMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
+        public void doAction(AppContext context) {
+            context.currentGameFlow().restartStateWithName(LevelMediumTestState.class.getSimpleName());
+            context.flashMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
         }
 
         @Override
-        public boolean isEnabled(GameUI ui) {
-            return ui.access().currentGameFlow().optState(LevelMediumTestState.class.getSimpleName()).isPresent();
+        public boolean isEnabled(AppContext context) {
+            return context.currentGameFlow().optState(LevelMediumTestState.class.getSimpleName()).isPresent();
         }
     };
 }

@@ -20,7 +20,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.gamescene.GameSceneConfig;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -59,10 +59,10 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
     public PacManXXL_MsPacMan_UIConfig() {}
 
     @Override
-    public void init(GameUI ui) {
+    public void init(AppContext ui) {
         Logger.info("Load assets of UI configuration {}", getClass().getSimpleName());
         loadAssets();
-        initSound(ui.access().sounds());
+        initSound(ui.ui().sounds());
         gameSceneConfig = new PacManXXL_MsPacMan_GameSceneConfig(ui);
     }
 

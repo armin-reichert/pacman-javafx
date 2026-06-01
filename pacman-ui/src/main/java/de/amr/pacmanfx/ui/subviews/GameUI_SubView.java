@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.subviews;
 
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.input.Input;
 import javafx.scene.Node;
@@ -26,12 +26,12 @@ public interface GameUI_SubView {
      * Processes the current keyboard state and executes the matching action, if any.
      * <p>
      * This method delegates to the view's {@link ActionBindingsSet} and executes
-     * the resolved action via {@link de.amr.pacmanfx.ui.action.GameAction#executeIfEnabled(GameUI)}.
+     * the resolved action via {@link de.amr.pacmanfx.ui.action.GameAction#executeIfEnabled(AppContext)}.
      *
      * @param ui the global game UI façade
      * @param input the user input
      */
-    default void onInput(GameUI ui, Input input) {
+    default void onInput(AppContext ui, Input input) {
         actionBindings().actionMatchingKeyboardState(input.keyboard).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 

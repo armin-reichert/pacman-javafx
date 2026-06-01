@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
 
 import java.util.function.BiFunction;
@@ -27,8 +27,8 @@ public class DashboardSectionActorInfo extends DashboardSection {
     }
 
     @Override
-    public void connect(GameUI ui) {
-        final Supplier<Game> gameSupplier = ui.access()::currentGame;
+    public void connect(AppContext context) {
+        final Supplier<Game> gameSupplier = context::currentGame;
 
         addDynamicLabeledValue("Pac Name", supplyPacInfo(gameSupplier, (_, pac) -> pac.name()));
         addDynamicLabeledValue("Lives",    ifGameLevel(gameSupplier, _ -> "%d".formatted(gameSupplier.get().lifeCount())));

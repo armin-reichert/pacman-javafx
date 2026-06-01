@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.view;
 
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
@@ -30,7 +30,7 @@ public class GameUI_MainScene extends Scene {
         rootPane().setPrefSize(width, height);
     }
 
-    public void init(GameUI ui) {
+    public void init(AppContext ui) {
         getStylesheets().add(GameUI_Constants.STYLE_SHEET_PATH);
 
         final Input userInput = Input.instance();
@@ -41,10 +41,10 @@ public class GameUI_MainScene extends Scene {
         // If a global action can be executed, do it; otherwise let the current view handle it.
         userInput.keyboard.addStateListener(_ -> actionBindings.actionMatchingKeyboardState(userInput.keyboard).ifPresentOrElse(
             action -> action.executeIfEnabled(ui),
-            () -> ui.access().subViews().currentView().onInput(ui, userInput)));
+            () -> ui.ui().subViews().currentView().onInput(ui, userInput)));
 
         // Delegate mouse scroll events to scene
-        setOnScroll(e -> ui.access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        setOnScroll(e -> ui.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         // Global action bindings
         actionBindings.registerFirstBinding(CommonActions.ACTION_ENTER_FULLSCREEN,        GameUI_Constants.COMMON_BINDINGS);

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -32,13 +32,13 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     public Pac pacMan;
     public Ghost blinky;
 
-    public ArcadePacMan_CutScene3(GameUI ui) {
+    public ArcadePacMan_CutScene3(AppContext ui) {
         super(ui);
     }
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        final SpriteAnimationSet spriteAnimationSet = ui.access().sprites().animationSet();
+        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
         blinky = uiConfig.createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
@@ -52,14 +52,14 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
             return;
         }
         if (sceneTick == TICK_ANIMATION_START) {
-            ui.access().sounds().play(PacManGameSoundID.INTERMISSION_3, 2);
+            context.ui().sounds().play(PacManGameSoundID.INTERMISSION_3, 2);
             startBlinkyChasingPacMan();
         }
         else if (sceneTick == TICK_BLINKY_RUNNING_NAKED){
             startBlinkyRunningNaked();
         }
         else if (sceneTick == TICK_ANIMATION_ENDS) {
-            services().currentGameState().expire();
+            context().currentGameState().expire();
             return;
         }
         pacMan.move();

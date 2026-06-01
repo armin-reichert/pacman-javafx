@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.subviews.help;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.geometry.Insets;
@@ -25,12 +25,12 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    public static HelpInfo build(GameUI ui) {
-        final Game game = ui.access().currentGame();
-        final State<Game> state = ui.access().currentGameState();
+    public static HelpInfo build(AppContext context) {
+        final Game game = context.currentGame();
+        final State<Game> state = context.currentGameState();
         final boolean demoLevel = game.isDemoLevelRunning();
 
-        final HelpInfo helpInfo = new HelpInfo(ui);
+        final HelpInfo helpInfo = new HelpInfo(context);
         if (state.matchesByName(CanonicalGameState.INTRO.name())) {
             helpInfo.addInfoForIntroScene(game);
         }
@@ -45,7 +45,7 @@ public class HelpInfo {
             if (demoLevel) {
                 helpInfo.addInfoForDemoLevelPlayScene();
             } else {
-                helpInfo.addInfoForPlayScene(ui.access().translations());
+                helpInfo.addInfoForPlayScene(context.ui().translations());
             }
         }
         else {
@@ -54,15 +54,15 @@ public class HelpInfo {
         return helpInfo;
     }
 
-    private final GameUI ui;
+    private final AppContext ui;
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text> column1 = new ArrayList<>();
 
-    public HelpInfo(GameUI ui) {
-        this.ui = requireNonNull(ui);
+    public HelpInfo(AppContext context) {
+        this.ui = requireNonNull(context);
     }
 
-    public Pane createPane(GameUI ui, Color backgroundColor, Font font) {
+    public Pane createPane(AppContext context, Color backgroundColor, Font font) {
         var grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(10);
@@ -79,14 +79,14 @@ public class HelpInfo {
         pane.setBackground(UfxBackgrounds.roundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (ui.access().currentGame().cheats().isUsingAutopilot()) {
-            var autoPilotEntry = text(ui.access().translations().translate("help.autopilot_on"), Color.ORANGE);
+        if (context.currentGame().cheats().isUsingAutopilot()) {
+            var autoPilotEntry = text(context.ui().translations().translate("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (ui.access().currentGame().cheats().isImmune()) {
-            var immunityEntry = text(ui.access().translations().translate("help.immunity_on"), Color.ORANGE);
+        if (context.currentGame().cheats().isImmune()) {
+            var immunityEntry = text(context.ui().translations().translate("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);
             grid.add(immunityEntry, 0, grid.getRowCount() + 1);
@@ -112,7 +112,7 @@ public class HelpInfo {
     }
 
     private void addRow(String lhsKey, String keyboardKey) {
-        addRow(label(ui.access().translations().translate(lhsKey), Color.gray(0.9)),
+        addRow(label(ui.ui().translations().translate(lhsKey), Color.gray(0.9)),
             text("[" + keyboardKey + "]", Color.YELLOW));
     }
 

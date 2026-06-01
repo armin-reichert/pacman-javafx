@@ -16,12 +16,12 @@ import static java.util.Objects.requireNonNull;
 
 public class GameVariantChangeHandler implements ChangeListener<String> {
 
-    private final GameUI ui;
+    private final AppContext context;
     private final GameEventHandler gameEventHandler;
 
-    public GameVariantChangeHandler(GameUI ui) {
-        this.ui = requireNonNull(ui);
-        gameEventHandler = new GameEventHandler(ui);
+    public GameVariantChangeHandler(AppContext context) {
+        this.context = requireNonNull(context);
+        gameEventHandler = new GameEventHandler(context);
     }
 
     @Override
@@ -32,24 +32,24 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
         if (newGameVariantName != null) {
             enterGameVariant(newGameVariantName);
         }
-        ui.view().statusIconBox().bind(ui.access().gameContext().gameForVariant(newGameVariantName));
+        context.view().statusIconBox().bind(context.gameContext().gameForVariant(newGameVariantName));
     }
 
     private void exitGameVariant(String variantName) {
-        final Game oldGame = ui.access().gameContext().gameForVariant(variantName);
-        ui.view().stage().getIcons().removeAll();
-        ui.access().configurations().dispose(variantName);
-        ui.access().sounds().dispose();
+        final Game oldGame = context.gameContext().gameForVariant(variantName);
+        context.view().stage().getIcons().removeAll();
+        context.ui().configurations().dispose(variantName);
+        context.ui().sounds().dispose();
         oldGame.flow().removeGameEventListener(gameEventHandler);
     }
 
     public void enterGameVariant(String variantName) {
-        final Game newGame = ui.access().gameContext().gameForVariant(variantName);
-        final UIConfig config = ui.access().configurations().getOrCreateUIConfig(variantName);
-        config.init(ui);
+        final Game newGame = context.gameContext().gameForVariant(variantName);
+        final UIConfig config = context.ui().configurations().getOrCreateUIConfig(variantName);
+        config.init(context);
         final Image icon = config.assets().image("app_icon");
         if (icon != null) {
-            ui.view().stage().getIcons().setAll(icon);
+            context.view().stage().getIcons().setAll(icon);
         } else {
             Logger.error("Could not find application icon for game variant {}", variantName);
         }

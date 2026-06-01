@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.subviews.playview;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.uilib.rendering.*;
@@ -47,7 +47,7 @@ public class MiniPlaySceneView {
     private final HBox rootPane;
     private final Canvas canvas;
 
-    private GameUI ui;
+    private AppContext context;
 
     // Note: The level and actor renderers cannot be created in the constructor, because the game controller has not yet
     //       selected a game variant when the constructor is called, so no UI configuration is available!
@@ -93,8 +93,8 @@ public class MiniPlaySceneView {
         return rootPane;
     }
 
-    public void setUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
+    public void setUI(AppContext ui) {
+        this.context = requireNonNull(ui);
     }
 
     public void setWorldSizeInPixel(Vector2i size) {
@@ -152,7 +152,7 @@ public class MiniPlaySceneView {
         canvasRenderer.clearCanvas();
 
         if (levelRenderer != null && actorRenderer != null) {
-            ui.access().currentGame().optGameLevel().ifPresent(this::drawGameLevel);
+            context.currentGame().optGameLevel().ifPresent(this::drawGameLevel);
         }
 
         if (GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
@@ -173,7 +173,7 @@ public class MiniPlaySceneView {
             CommonRenderInfoKey.MAP_BRIGHT, false,
             CommonRenderInfoKey.MAP_EMPTY, level.worldMap().foodLayer().remainingFoodCount() == 0,
             CommonRenderInfoKey.MAP_FLASHING, false,
-            CommonRenderInfoKey.TICK, ui.access().gameClock().tickCount()
+            CommonRenderInfoKey.TICK, context.ui().gameClock().tickCount()
         ));
         levelRenderer.applyLevelSettings(level, info);
         levelRenderer.drawLevel(level, info);

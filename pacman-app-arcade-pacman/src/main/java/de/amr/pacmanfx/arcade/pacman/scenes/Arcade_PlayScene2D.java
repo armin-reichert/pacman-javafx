@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonActions;
@@ -34,7 +34,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public Arcade_PlayScene2D(GameUI ui) {
+    public Arcade_PlayScene2D(AppContext ui) {
         super(ui);
         setGameEventHandler(new Arcade_PlayScene2DGameEventHandler(this));
     }
@@ -45,10 +45,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onTick(GameClock clock) {
-        final Arcade_GameModel game = services().currentGame();
+        final Arcade_GameModel game = context().currentGame();
         game.optGameLevel().ifPresent(level -> {
             updateLivesCounter(level);
-            services().currentSoundEffects().ifPresent(sfx -> {
+            context().currentSoundEffects().ifPresent(sfx -> {
                 sfx.setEnabled(!level.isDemoLevel());
                 sfx.playLevelRunningSound(level);
             });
@@ -57,35 +57,35 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        final Game game = services().currentGame();
+        final Game game = context().currentGame();
         final var menu = new ContextMenu();
-        addLocalizedTitleItem(menu, ui.access().translations(), "pacman");
-        addLocalizedCheckBox(menu, ui.access().translations(), game.cheats().usingAutopilotProperty(), "autopilot").setOnAction(e -> {
+        addLocalizedTitleItem(menu, context.ui().translations(), "pacman");
+        addLocalizedCheckBox(menu, context.ui().translations(), game.cheats().usingAutopilotProperty(), "autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                CheatActions.ACTION_ACTIVATE_AUTOPILOT.executeIfEnabled(ui);
+                CheatActions.ACTION_ACTIVATE_AUTOPILOT.executeIfEnabled(context);
             } else {
-                CheatActions.ACTION_DEACTIVATE_AUTOPILOT.executeIfEnabled(ui);
+                CheatActions.ACTION_DEACTIVATE_AUTOPILOT.executeIfEnabled(context);
             }
         });
-        addLocalizedCheckBox(menu, ui.access().translations(), game.cheats().immuneProperty(), "immunity").setOnAction(e -> {
+        addLocalizedCheckBox(menu, context.ui().translations(), game.cheats().immuneProperty(), "immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                CheatActions.ACTION_ACTIVATE_IMMUNITY.executeIfEnabled(ui);
+                CheatActions.ACTION_ACTIVATE_IMMUNITY.executeIfEnabled(context);
             } else {
-                CheatActions.ACTION_DEACTIVATE_IMMUNITY.executeIfEnabled(ui);
+                CheatActions.ACTION_DEACTIVATE_IMMUNITY.executeIfEnabled(context);
             }
         });
         addSeparator(menu);
-        addLocalizedCheckBox(menu, ui.access().translations(), GameUI_Constants.PROPERTY_MUTED, "muted");
-        addLocalizedActionItem(menu, ui, ui.access().translations(), CommonActions.ACTION_QUIT_GAME_SCENE, "quit");
+        addLocalizedCheckBox(menu, context.ui().translations(), GameUI_Constants.PROPERTY_MUTED, "muted");
+        addLocalizedActionItem(menu, context, context.ui().translations(), CommonActions.ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(menu);
     }
 
     @Override
     public void onEnteredFrom3DScene() {
-        services().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
+        context().currentGame().optGameLevel().ifPresent(this::acceptGameLevel);
     }
 
     // Others
@@ -107,8 +107,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
         }
         Logger.info(actionBindings);
 
-        ui.access().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
-        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> services().currentGameState().expire());
+        context.ui().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
+        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> context().currentGameState().expire());
 
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());
@@ -121,8 +121,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     // While Pac-Man is not yet visible on level start, one symbol more is shown in the lives counter
     private void updateLivesCounter(GameLevel level) {
-        final Game game = services().currentGame();
-        final int additionalLives = services().currentGameState() == Arcade_GameState.STARTING_GAME_OR_LEVEL
+        final Game game = context().currentGame();
+        final int additionalLives = context().currentGameState() == Arcade_GameState.STARTING_GAME_OR_LEVEL
             && !level.entities().pac().isVisible() ? 1 : 0;
         final int count = Math.clamp(game.lifeCount() - 1 + additionalLives, 0, game.hud().maxLivesDisplayed());
         game.hud().setVisibleLifeCount(count);

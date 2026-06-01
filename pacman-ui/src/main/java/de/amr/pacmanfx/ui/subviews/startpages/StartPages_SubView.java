@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.subviews.startpages;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
@@ -47,14 +47,14 @@ public class StartPages_SubView extends Carousel implements GameUI_SubView {
 
     private final GameAction actionShowPrevPage = new GameAction("show_prev_page") {
         @Override
-        public void doAction(GameUI ui) {
+        public void doAction(AppContext ui) {
             showPreviousItem();
         }
     };
 
     private final GameAction actionShowNextPage = new GameAction("show_next_page") {
         @Override
-        public void doAction(GameUI ui) {
+        public void doAction(AppContext ui) {
             showNextItem();
         }
     };
@@ -62,9 +62,9 @@ public class StartPages_SubView extends Carousel implements GameUI_SubView {
     private final List<StartPage> pages = new ArrayList<>();
     private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for Start View");
 
-    private final GameUI ui;
+    private final AppContext ui;
 
-    public StartPages_SubView(GameUI ui) {
+    public StartPages_SubView(AppContext ui) {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
         this.ui = requireNonNull(ui);
         selectedIndexProperty().addListener((_, ov, nv) -> {
@@ -151,6 +151,6 @@ public class StartPages_SubView extends Carousel implements GameUI_SubView {
 
     private String composeTitle() {
         final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
-        return ui != null ? ui.access().translations().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
+        return ui != null ? ui.ui().translations().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

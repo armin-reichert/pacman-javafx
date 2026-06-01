@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,9 +23,9 @@ public class DashboardSectionReadmeFirst extends DashboardSection {
     }
 
     @Override
-    public void connect(GameUI ui) {
+    public void connect(AppContext ui) {
         final var readmeText = new Text();
-        readmeText.setText(ui.access().translations().translate("infobox.readme.content"));
+        readmeText.setText(ui.ui().translations().translate("infobox.readme.content"));
         readmeText.setFont(TEXT_FONT);
         readmeText.setFill(Color.WHITE);
 
@@ -36,7 +36,7 @@ public class DashboardSectionReadmeFirst extends DashboardSection {
         buttonPane.setAlignment(Pos.CENTER);
         buttonPane.setPadding(new Insets(10, 0, 0, 0));
 
-        final var btnGotIt = new Button(ui.access().translations().translate("infobox.readme.got_it"));
+        final var btnGotIt = new Button(ui.ui().translations().translate("infobox.readme.got_it"));
         buttonPane.getChildren().add(btnGotIt);
         btnGotIt.setOnAction(_ -> dashboard.removeSection(CommonDashboardID.README));
 

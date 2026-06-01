@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -100,7 +100,7 @@ public class DashboardSectionAnimations3D extends DashboardSection {
     }
 
     @Override
-    public void connect(GameUI ui) {
+    public void connect(AppContext ui) {
         tableView.prefHeightProperty().bind(ui.view().stage().heightProperty()
             .map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
     }
@@ -109,9 +109,9 @@ public class DashboardSectionAnimations3D extends DashboardSection {
     public void update() {
         super.update();
 
-        if (dashboard.ui() != null) {
+        if (dashboard.context() != null) {
             final AnimationRegistry animationSet =
-                dashboard.ui().access().gameScenes().optCurrentGameScene()
+                dashboard.context().ui().gameScenes().optCurrentGameScene()
                     .filter(PlayScene3D.class::isInstance)
                     .map(PlayScene3D.class::cast)
                     .flatMap(PlayScene3D::optGameLevel3D)

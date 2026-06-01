@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.action.ActionBinding;
@@ -73,9 +73,9 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
-    public PlayScene3D(GameUI ui) {
+    public PlayScene3D(AppContext ui) {
         super(ui);
-        gameOverMessagePicker = new RandomTextPicker(ui.access().translations().bundle(), "game.over");
+        gameOverMessagePicker = new RandomTextPicker(ui.ui().translations().bundle(), "game.over");
         createSubScene();
         createBindings();
         bindActions();
@@ -109,9 +109,9 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
-            final UIConfig currentConfig = ui.access().currentUIConfig();
-            scores3D.showTextForScore(ui.access().translations().translate("score.game_over"),
-                currentConfig.assets().color("color.game_over_message"));
+            scores3D.showTextForScore(
+                context().ui().translations().translate("score.game_over"),
+                context().currentUIConfig().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -143,7 +143,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             Logger.info("Old 3D game level gets disposed...");
             level3D.dispose();
         }
-        final UIConfig currentConfig = ui.access().currentUIConfig();
+        final UIConfig currentConfig = context().currentUIConfig();
         level3D = new GameLevel3D(level, currentConfig);
         decorate(level3D);
         level3D.entities().selectAll().forEach(entity -> entity.init(level));
@@ -156,7 +156,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     public void showRandomGameOverMessage() {
-        ui.access().flashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
+        context().flashMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
     }
 
     @Override
@@ -195,7 +195,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onTick(GameClock clock) {
-        final GameLevel level = ui.access().currentGame().optGameLevel().orElse(null);
+        final GameLevel level = context().optCurrentGameLevel().orElse(null);
         if (level == null) {
             Logger.info("Tick {}: Game level not yet created, update ignored", clock.tickCount());
             return;
@@ -209,7 +209,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         level3D.entities().selectAll().forEach(entity -> entity.update(level));
         updateHUD3D(level);
         perspectives.updatePerspective(level);
-        ui.access().currentSoundEffects().ifPresent(soundEffects -> {
+        context().currentSoundEffects().ifPresent(soundEffects -> {
             soundEffects.setEnabled(!level.isDemoLevel());
             soundEffects.playLevelRunningSound(level);
         });
@@ -218,9 +218,9 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     @Override
     public void onScroll(ScrollEvent scrollEvent) {
         if (scrollEvent.getDeltaY() < 0) {
-            perspectives.actionDroneClimb().executeIfEnabled(ui);
+            perspectives.actionDroneClimb().executeIfEnabled(context);
         } else if (scrollEvent.getDeltaY() > 0) {
-            perspectives.actionDroneDescent().executeIfEnabled(ui);
+            perspectives.actionDroneDescent().executeIfEnabled(context);
         }
     }
 
@@ -231,7 +231,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        contextMenu = new PlaySceneContextMenu(ui);
+        contextMenu = new PlaySceneContextMenu(context);
         return Optional.of(contextMenu);
     }
 
@@ -280,8 +280,8 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         final Scores3D oldScores3D = scores3D;
 
         scores3D = new Scores3D(
-            ui.access().translations().translate("score.score"),
-            ui.access().translations().translate("score.high_score"),
+            context().ui().translations().translate("score.score"),
+            context().ui().translations().translate("score.high_score"),
             GameUI_Constants.FONT_ARCADE_8);
 
         scores3D.textOpacity.bind(scoreOpacity);

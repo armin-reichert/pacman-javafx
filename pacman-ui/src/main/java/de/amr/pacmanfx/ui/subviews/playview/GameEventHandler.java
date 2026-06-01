@@ -8,17 +8,17 @@ import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 
 import static java.util.Objects.requireNonNull;
 
 public class GameEventHandler extends DefaultGameEventListener {
 
-    private final GameUI ui;
+    private final AppContext context;
 
-    public GameEventHandler(GameUI ui) {
-        this.ui = requireNonNull(ui);
+    public GameEventHandler(AppContext context) {
+        this.context = requireNonNull(context);
     }
 
     @Override
@@ -27,39 +27,39 @@ public class GameEventHandler extends DefaultGameEventListener {
 
             case LevelCreatedEvent levelCreatedEvent -> {
                 final GameLevel level = levelCreatedEvent.level();
-                final UIConfig currentConfig = ui.access().currentUIConfig();
-                final SpriteAnimationSet spriteAnimationSet = ui.access().sprites().animationSet();
+                final UIConfig currentConfig = context.currentUIConfig();
+                final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
 
                 //TODO this should be done elsewhere
                 level.entities().pac().setAnimations(currentConfig.createPacAnimations(spriteAnimationSet));
                 level.entities().ghosts().forEach(ghost ->
                     ghost.setAnimations(currentConfig.createGhostAnimations(spriteAnimationSet, ghost.personality())));
 
-                final MiniPlaySceneView miniPlayView = ui.access().subViews().gamePlayView().miniPlaySceneView();
+                final MiniPlaySceneView miniPlayView = context.ui().subViews().gamePlayView().miniPlaySceneView();
                 miniPlayView.setUIConfig(currentConfig);
                 miniPlayView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
                 miniPlayView.slideIn();
 
                 // size of game scene might have changed, so re-embed
-                ui.access().gameScenes().optCurrentGameScene().ifPresent(
-                    gameScene -> ui.access().gameScenes().embedGameSceneIntoPlayView(ui.access(), ui.view(), gameScene));
+                context.ui().gameScenes().optCurrentGameScene().ifPresent(
+                    gameScene -> context.ui().gameScenes().embedGameSceneIntoPlayView(context, gameScene));
             }
 
             case GameStateChangeEvent stateChangeEvent -> {
                 if (stateChangeEvent.newState().matchesByName(CanonicalGameState.LEVEL_COMPLETE.name())) {
-                    final MiniPlaySceneView miniPlayView = ui.access().subViews().gamePlayView().miniPlaySceneView();
+                    final MiniPlaySceneView miniPlayView = context.ui().subViews().gamePlayView().miniPlaySceneView();
                     miniPlayView.slideOut();
                 }
             }
 
-            case GenericChangeEvent _ -> ui.access().gameScenes().forceGameSceneUpdate(ui);
+            case GenericChangeEvent _ -> context.ui().gameScenes().forceGameSceneUpdate(context);
 
             default -> {}
         }
 
-        ui.access().gameScenes().updateGameSceneAndForceReload(ui, false);
+        context.ui().gameScenes().updateGameSceneAndForceReload(context, false);
 
         // Call game event handler for current game scene
-        ui.access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
+        context.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
     }
 }

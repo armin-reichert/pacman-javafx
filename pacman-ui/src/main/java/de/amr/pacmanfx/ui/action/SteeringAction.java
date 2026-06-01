@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 
 import static java.util.Objects.requireNonNull;
 
@@ -23,13 +24,13 @@ public class SteeringAction extends GameAction {
     }
 
     @Override
-    public void doAction(GameUI ui) {
-        ui.access().currentGame().optGameLevel().ifPresent(level -> level.entities().pac().setWishDir(dir));
+    public void doAction(AppContext context) {
+        context.optCurrentGameLevel().ifPresent(level -> level.entities().pac().setWishDir(dir));
     }
 
     @Override
-    public boolean isEnabled(GameUI ui) {
-        final GameLevel level = ui.access().currentGame().optGameLevel().orElse(null);
+    public boolean isEnabled(AppContext context) {
+        final GameLevel level = context.optCurrentGameLevel().orElse(null);
         return level != null && !level.isDemoLevel() && !level.entities().pac().isUsingAutopilot();
     }
 }

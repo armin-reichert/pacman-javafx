@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.subviews.startpages.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.media.Media;
@@ -27,9 +27,9 @@ public class TengenMsPacMan_StartPage extends FlyerStartPage implements Resource
     }
 
     @Override
-    public void onEnterStartPage(GameUI ui) {
+    public void onEnterStartPage(AppContext context) {
         flyer.selectPage(0);
-        ui.access().sounds().playVoice(flyerTextSpeech);
-        ui.access().gameContext().gameVariantNameProperty().set(GameVariant.TENGEN_MS_PACMAN.name());
+        context.ui().sounds().playVoice(flyerTextSpeech);
+        context.gameContext().gameVariantNameProperty().set(GameVariant.TENGEN_MS_PACMAN.name());
     }
 }

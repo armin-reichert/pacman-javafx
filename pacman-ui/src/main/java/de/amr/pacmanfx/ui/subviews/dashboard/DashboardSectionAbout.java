@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.AppContext_Implementation;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
@@ -22,8 +22,8 @@ public class DashboardSectionAbout extends DashboardSection {
     }
 
     @Override
-    public void connect(GameUI ui) {
-        final ResourceManager rm = () -> GameUI_Implementation.class;
+    public void connect(AppContext ui) {
+        final ResourceManager rm = () -> AppContext_Implementation.class;
         final Image armin1970 = rm.loadImage("graphics/armin1970.jpg");
         final Font handwriting = rm.loadFont("fonts/Molle-Italic.ttf", 20);
 

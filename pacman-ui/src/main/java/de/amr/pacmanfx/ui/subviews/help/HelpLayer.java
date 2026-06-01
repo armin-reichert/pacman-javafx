@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.subviews.help;
 
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
@@ -33,7 +33,7 @@ public class HelpLayer extends Pane {
         prefHeightProperty().bind(master.prefHeightProperty());
     }
 
-    public void showHelpPopup(GameUI ui, double scaling, String variantName) {
+    public void showHelpPopup(AppContext ui, double scaling, String variantName) {
         final boolean msPacMan = variantName.equals(GameVariant.ARCADE_MS_PACMAN.name())
                 || variantName.equals(GameVariant.ARCADE_MS_PACMAN_XXL.name());
         final Color bgColor = msPacMan ? ArcadePalette.ARCADE_RED : ArcadePalette.ARCADE_BLUE;

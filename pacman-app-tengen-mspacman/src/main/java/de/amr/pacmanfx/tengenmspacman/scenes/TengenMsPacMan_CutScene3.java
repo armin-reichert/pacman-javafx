@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Input;
@@ -49,7 +49,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     private boolean darkness;
 
-    public TengenMsPacMan_CutScene3(GameUI ui) {
+    public TengenMsPacMan_CutScene3(AppContext ui) {
         super(ui);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
@@ -81,7 +81,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        final SpriteAnimationSet spriteAnimationSet = ui.access().sprites().animationSet();
+        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
 
         // Quit cut scene when "START" button on "joypad" is pressed
         final Joypad joypad = Input.instance().joypad;
@@ -103,17 +103,17 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
         darkness = false;
 
-        ui.access().sounds().play(PacManGameSoundID.INTERMISSION_3);
+        context.ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
     }
 
     @Override
     public void onDeactivate() {
-        ui.access().sounds().stop(PacManGameSoundID.INTERMISSION_3);
+        context.ui().sounds().stop(PacManGameSoundID.INTERMISSION_3);
     }
 
     @Override
     public void onTick(GameClock clock) {
-        final State<Game> gameState = services().currentGameState();
+        final State<Game> gameState = context().currentGameState();
         final long gameStateTick = gameState.timer().tickCount();
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {

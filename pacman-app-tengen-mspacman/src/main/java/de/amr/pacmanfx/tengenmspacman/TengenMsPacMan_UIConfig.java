@@ -18,7 +18,7 @@ import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.gamescene.GameSceneConfig;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -202,9 +202,9 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     @Override
-    public void init(GameUI ui) {
+    public void init(AppContext ui) {
         loadAssets();
-        registerSoundObjects(ui.access().sounds());
+        registerSoundObjects(ui.ui().sounds());
         gameSceneConfig = new TengenMsPacMan_GameSceneConfig(ui);
         Logger.info("Initialized Tengen UI configuration {} (loaded assets and sounds)", getClass().getSimpleName());
     }

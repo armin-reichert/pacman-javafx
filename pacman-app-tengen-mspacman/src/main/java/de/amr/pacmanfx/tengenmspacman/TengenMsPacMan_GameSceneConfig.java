@@ -9,7 +9,7 @@ import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.gamescene.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState.*;
 import static de.amr.pacmanfx.ui.GameUI_Constants.PROPERTY_3D_ENABLED;
@@ -17,9 +17,9 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    private final GameUI ui;
+    private final AppContext ui;
 
-    public TengenMsPacMan_GameSceneConfig(GameUI ui) {
+    public TengenMsPacMan_GameSceneConfig(AppContext ui) {
         this.ui = requireNonNull(ui);
     }
 

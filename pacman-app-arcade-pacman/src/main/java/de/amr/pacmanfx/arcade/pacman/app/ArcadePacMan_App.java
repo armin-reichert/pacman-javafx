@@ -11,10 +11,10 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui.AppContext_Implementation;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
 import de.amr.pacmanfx.ui.view.GameUI_MainScene;
@@ -46,7 +46,7 @@ public class ArcadePacMan_App extends Application {
     );
 
     private GameBox gameBox;
-    private GameUI ui;
+    private AppContext ui;
     private boolean useBuilder;
 
     @Override
@@ -70,7 +70,7 @@ public class ArcadePacMan_App extends Application {
         else {
             createUI(primaryStage, gameBox, size);
         }
-        ui.access().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, ui.access().translations());
+        ui.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, ui.ui().translations());
         ui.displayOnScreen();
     }
 
@@ -86,13 +86,13 @@ public class ArcadePacMan_App extends Application {
 
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
-        ui = new GameUI_Implementation(gameBox,
+        ui = new AppContext_Implementation(gameBox,
             createViewImplementation(stage, sceneSize.x(), sceneSize.y())
         );
-        ui.access().configurations().addConfigFactory(
+        ui.ui().configurations().addConfigFactory(
             GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
-        final StartPages_SubView startView = ui.access().subViews().startView();
+        final StartPages_SubView startView = ui.ui().subViews().startView();
 
         final var arcadePacManStartPage = new ArcadePacMan_StartPage();
         arcadePacManStartPage.init(ui);

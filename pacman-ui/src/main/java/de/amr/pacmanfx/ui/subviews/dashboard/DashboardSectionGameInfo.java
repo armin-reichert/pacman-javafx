@@ -13,8 +13,7 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.MapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_ServicesAccess;
+import de.amr.pacmanfx.ui.AppContext;
 import javafx.scene.paint.Color;
 
 import java.net.URLDecoder;
@@ -33,13 +32,12 @@ public class DashboardSectionGameInfo extends DashboardSection {
     }
 
     @Override
-    public void connect(GameUI ui) {
-        final GameUI_ServicesAccess access = ui.access();
-        final Supplier<Game> gameSupplier = access::currentGame;
+    public void connect(AppContext context) {
+        final Supplier<Game> gameSupplier = context::currentGame;
 
-        addDynamicLabeledValue("Game State",  () -> "%s".formatted(access.currentGameState().name()));
+        addDynamicLabeledValue("Game State",  () -> "%s".formatted(context.currentGameState().name()));
         addDynamicLabeledValue("State Timer", () -> stateTimerInfo(gameSupplier.get()));
-        addDynamicLabeledValue("Game Scene", ifGameScenePresent(ui, gameScene -> gameScene.getClass().getSimpleName()));
+        addDynamicLabeledValue("Game Scene", ifGameScenePresent(context, gameScene -> gameScene.getClass().getSimpleName()));
 
         addDynamicLabeledValue("Level Number", ifGameLevel(gameSupplier, level ->
             (level.isDemoLevel() ? "%d (Demo Level)" : "%d").formatted(level.number())));
@@ -58,7 +56,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
                 colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
             }
             else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                colorScheme = access.currentUIConfig().colorScheme(worldMap);
+                colorScheme = context.currentUIConfig().colorScheme(worldMap);
             }
             if (colorScheme != null) {
                 return "%s / %s / %s".formatted(

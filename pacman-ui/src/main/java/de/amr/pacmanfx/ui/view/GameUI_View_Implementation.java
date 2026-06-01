@@ -4,9 +4,8 @@
 
 package de.amr.pacmanfx.ui.view;
 
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.GameUI_ServicesAccess;
-import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.subviews.GameUI_SubView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -37,13 +36,13 @@ public class GameUI_View_Implementation implements GameUI_View {
     }
 
     @Override
-    public void attachServices(GameUI_ServicesAccess services) {
+    public void connect(AppContext context) {
         stageTitleBinding = createStringBinding(
-            () -> computeStageTitle(services),
-            services.gameClock().updatesDisabledProperty(),
-            services.gameContext().gameVariantNameProperty(),
-            services.subViews().selectedSubViewProperty(),
-            services.gameScenes().gameSceneProperty(),
+            () -> computeStageTitle(context),
+            context.gameClock().updatesDisabledProperty(),
+            context.gameContext().gameVariantNameProperty(),
+            context.ui().subViews().selectedSubViewProperty(),
+            context.ui().gameScenes().gameSceneProperty(),
             GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE,
             GameUI_Constants.PROPERTY_3D_ENABLED
         );
@@ -86,40 +85,39 @@ public class GameUI_View_Implementation implements GameUI_View {
         return stageTitleBinding;
     }
 
-    private String computeStageTitle(GameUI_ServicesAccess services) {
-        final GameUI_SubView view = services.subViews().currentView();
+    private String computeStageTitle(AppContext context) {
+        final GameUI_SubView view = context.ui().subViews().currentView();
         return view == null
-            ? services.translations().translate("view.missing") // Should never happen
-            : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(services));
+            ? context.ui().translations().translate("view.missing") // Should never happen
+            : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(context));
     }
 
-    private String titleForCurrentGameScene(GameUI_ServicesAccess services) {
-        final GameScene gameScene = services.gameScenes().optCurrentGameScene().orElse(null);
+    private String titleForCurrentGameScene(AppContext context) {
+        final GameScene gameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
 
         final boolean debug = GameUI_Constants.PROPERTY_DEBUG_INFO_VISIBLE.get();
         final boolean is3D = GameUI_Constants.PROPERTY_3D_ENABLED.get();
-        final boolean paused = services.gameClock().getUpdatesDisabled();
+        final boolean paused = context.gameClock().getUpdatesDisabled();
 
-        final String normalTitle = appTitle(services, paused, is3D);
+        final String normalTitle = appTitle(context, paused, is3D);
         return (gameScene == null || !debug)
             ? normalTitle
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String appTitle(GameUI_ServicesAccess services, boolean paused, boolean is3D) {
-        final String gameVariantName = services.gameContext().gameVariantName();
+    private String appTitle(AppContext context, boolean paused, boolean is3D) {
+        final String gameVariantName = context.currentGameVariant();
         if (gameVariantName == null) {
             return "";
         }
 
-        final String viewMode = services.translations().translate(is3D ? "threeD" : "twoD");
+        final String viewMode = context.ui().translations().translate(is3D ? "threeD" : "twoD");
 
         // In game-variant specific resource bundles, there should be two entries with placeholder
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final UIConfig currentConfig = services.currentUIConfig();
-        final TranslationManager appSpecificTranslator = currentConfig.assets();
+        final TranslationManager appSpecificTranslator = context.currentUIConfig().assets();
         final String appTitleKey = paused ? "app.title.paused" : "app.title";
         if (appSpecificTranslator.bundle() != null
             && appSpecificTranslator.bundle().containsKey(appTitleKey)) {
@@ -128,5 +126,4 @@ public class GameUI_View_Implementation implements GameUI_View {
             return "Unspecified Game";
         }
     }
-
 }

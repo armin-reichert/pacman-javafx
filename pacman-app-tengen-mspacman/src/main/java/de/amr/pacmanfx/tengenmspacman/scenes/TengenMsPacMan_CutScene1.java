@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Input;
@@ -58,7 +58,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     private boolean collided;
 
-    public TengenMsPacMan_CutScene1(GameUI ui) {
+    public TengenMsPacMan_CutScene1(AppContext ui) {
         super(ui);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
@@ -90,7 +90,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        final SpriteAnimationSet spriteAnimationSet = ui.access().sprites().animationSet();
+        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
         // Quit cut scene when "START" button on "joypad" is pressed
@@ -131,12 +131,12 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
         collided = false;
 
-        ui.access().sounds().play(PacManGameSoundID.INTERMISSION_1);
+        context.ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
     }
 
     @Override
     public void onDeactivate() {
-        ui.access().sounds().stop(PacManGameSoundID.INTERMISSION_1);
+        context.ui().sounds().stop(PacManGameSoundID.INTERMISSION_1);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             }
         }
 
-        final long gameStateTick = services().currentGameState().timer().tickCount();
+        final long gameStateTick = context().currentGameState().timer().tickCount();
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {
                 case 130 -> {
@@ -239,7 +239,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                     msPacMan.hide();
                     heart.hide();
                 }
-                case 775 -> services().currentGameState().expire();
+                case 775 -> context().currentGameState().expire();
             }
         }
     }

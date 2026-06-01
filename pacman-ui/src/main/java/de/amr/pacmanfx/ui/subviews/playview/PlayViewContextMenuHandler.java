@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.subviews.playview;
 
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
@@ -19,10 +19,10 @@ import static java.util.Objects.requireNonNull;
 
 public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent> {
 
-    private final GameUI ui;
+    private final AppContext ui;
     private final GamePlay_SubView playView;
 
-    public PlayViewContextMenuHandler(GameUI ui, GamePlay_SubView playView) {
+    public PlayViewContextMenuHandler(AppContext ui, GamePlay_SubView playView) {
         this.ui = requireNonNull(ui);
         this.playView = requireNonNull(playView);
 
@@ -39,11 +39,11 @@ public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent
         final ContextMenu menu = playView.contextMenu();
         menu.getItems().clear();
 
-        ui.access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+        ui.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             // Add 2D play scene-specific entries
-            if (ui.access().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_2D)) {
-                addLocalizedTitleItem(menu, ui.access().translations(), "scene_display");
-                addLocalizedActionItem(menu, ui, ui.access().translations(), CommonActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
+            if (ui.ui().gameScenes().currentGameSceneHasID(ui, CommonSceneID.PLAY_SCENE_2D)) {
+                addLocalizedTitleItem(menu, ui.ui().translations(), "scene_display");
+                addLocalizedActionItem(menu, ui, ui.ui().translations(), CommonActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
             }
             // Add scene-specific entries
             gameScene.supplyContextMenu().ifPresent(sceneMenu -> menu.getItems().addAll(sceneMenu.getItems()));

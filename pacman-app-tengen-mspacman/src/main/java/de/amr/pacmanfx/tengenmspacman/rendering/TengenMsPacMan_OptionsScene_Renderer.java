@@ -54,12 +54,12 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     }
 
     public void draw(GameScene2D scene) {
-        final UIConfig currentConfig = scene.services().currentUIConfig();
+        final UIConfig currentConfig = scene.context().currentUIConfig();
 
         clearCanvas();
 
         final TengenMsPacMan_OptionsScene optionsScene = (TengenMsPacMan_OptionsScene) scene;
-        final TengenMsPacMan_GameModel game = optionsScene.services().currentGame();
+        final TengenMsPacMan_GameModel game = optionsScene.context().currentGame();
 
         if (optionsScene.initialDelay > 0) return;
 

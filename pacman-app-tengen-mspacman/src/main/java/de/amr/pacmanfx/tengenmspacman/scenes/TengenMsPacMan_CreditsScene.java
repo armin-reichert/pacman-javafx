@@ -6,8 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.Game;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 
@@ -25,7 +24,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     public float fadeProgress = 0;
 
-    public TengenMsPacMan_CreditsScene(GameUI ui) {
+    public TengenMsPacMan_CreditsScene(AppContext ui) {
         super(ui);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
@@ -33,14 +32,14 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void onActivate(UIConfig uiConfig) {
-        services().currentGame().hud().hide();
+        context.currentGame().hud().hide();
         actionBindings.registerFirstBinding(ACTION_ENTER_START_SCREEN, TENGEN_SPECIFIC_BINDINGS);
         fadeProgress = 0;
     }
 
     @Override
     public void onTick(GameClock clock) {
-        final State<Game> gameState = services().currentGameState();
+        final State<Game> gameState = context.currentGameState();
         if (gameState.timer().atSecond(DISPLAY_SECONDS)) {
             gameState.expire();
             return;

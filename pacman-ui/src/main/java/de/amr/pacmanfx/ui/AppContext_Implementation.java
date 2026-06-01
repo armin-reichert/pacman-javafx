@@ -8,6 +8,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.SimulationStep;
@@ -45,30 +46,26 @@ import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
 
-/**
- * User interface for the Pac-Man game suite. Shows a carousel with a start page for each game variant.
- */
-public final class GameUI_Implementation implements GameUI {
+public final class AppContext_Implementation implements AppContext {
 
     // All games in a box (only 1,99 €!)
     private final GameBox gameBox;
 
-    private final GameUI_ServicesAccess access;
+    private final GameUI_Services access;
 
     private final GameUI_View_Implementation view;
 
-    public GameUI_Implementation(GameBox gameBox, GameUI_View_Implementation view) {
+    public AppContext_Implementation(GameBox gameBox, GameUI_View_Implementation view) {
         this.gameBox = requireNonNull(gameBox);
         this.view = requireNonNull(view);
 
-        this.access = new GameUI_ServicesAccess(
-            gameBox,
+        this.access = new GameUI_Services(
             new GameClockFX(),
             new DirectoryWatchdog(gameBox.customMapDir()),
             new ConfigurationsManager(),
             new FlashMessageManager(),
-            new GameSceneManager(view),
-            new PreferencesManager(GameUI_Implementation.class),
+            new GameSceneManager(this),
+            new PreferencesManager(getClass()),
             new SoundManager(),
             new SpriteAnimationManager(),
             () -> GameUI_Constants.LOCALIZED_TEXTS,
@@ -78,7 +75,10 @@ public final class GameUI_Implementation implements GameUI {
         createSubViews();
     }
 
-    // GameUI interface
+    @Override
+    public GameContext gameContext() {
+        return gameBox;
+    }
 
     @Override
     public GameUI_View view() {
@@ -86,7 +86,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameUI_ServicesAccess access() {
+    public GameUI_Services ui() {
         return access;
     }
 
@@ -94,7 +94,7 @@ public final class GameUI_Implementation implements GameUI {
 
     @Override
     public void openWorldMapFileInEditor(File worldMapFile) {
-        final SubViewManager subViewManager = access().subViews();
+        final SubViewManager subViewManager = ui().subViews();
         subViewManager.ensureEditorViewCreated();
         subViewManager.optEditorView().map(Editor_SubView::editor).ifPresent(editor -> {
             editor.init(gameBox.customMapDir());
@@ -108,11 +108,11 @@ public final class GameUI_Implementation implements GameUI {
                 }
             } catch (IOException x) {
                 Logger.error(x, "Could not open map file {}", worldMapFile);
-                access().flashMessage("Cannot open world map file");
+                flashMessage("Cannot open world map file");
             }
             catch (WorldMapParseException x) {
                 Logger.error(x, "Error reading map file data from {}", worldMapFile);
-                access().flashMessage("Cannot read world map file data");
+                flashMessage("Cannot read world map file data");
             }
         });
     }
@@ -120,8 +120,8 @@ public final class GameUI_Implementation implements GameUI {
     @Override
     public void restart() {
         stopGame();
-        access().currentGameFlow().restartStateWithName(CanonicalGameState.BOOT.name());
-        Platform.runLater(access().gameClock()::start);
+        currentGameFlow().restartStateWithName(CanonicalGameState.BOOT.name());
+        Platform.runLater(ui().gameClock()::start);
     }
 
     @Override
@@ -129,29 +129,29 @@ public final class GameUI_Implementation implements GameUI {
         initGameVariantAndRegisterChangeHandler();
         load3DAssets();
         initMainScene();
-        view().attachServices(access);
+        view().connect(this);
         initProperties();
         initGameClock();
         initSubViews();
         initView();
         view().show();
-        access().subViews().selectStartView();
+        ui().subViews().selectStartView();
         startServices();
     }
 
     @Override
     public void stopGame() {
-        access().currentGame().prepareNewGame();
+        currentGame().prepareNewGame();
 
-        access().gameClock().stop();
-        access().gameClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        ui().gameClock().stop();
+        ui().gameClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
 
-        access().sounds().stopAll();
+        ui().sounds().stopAll();
 
-        access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+        ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             gameScene.deactivate();
-            access().gameScenes().removeFromPlayView(access, gameScene);
-            access().gameScenes().gameSceneProperty().set(null);
+            ui().gameScenes().removeFromPlayView(access, gameScene);
+            ui().gameScenes().gameSceneProperty().set(null);
         });
 
         Logger.info("Game STOPPED!");
@@ -161,10 +161,10 @@ public final class GameUI_Implementation implements GameUI {
     public void terminate() {
         Logger.info("Application is terminated now. There is no way back!");
         stopGame();
-        access().sprites().stopAnimationTimer();
-        access().sprites().animationSet().clear();
-        access().flashMessages().stopTimer();
-        access().customDirWatchdog().dispose();
+        ui().sprites().stopAnimationTimer();
+        ui().sprites().animationSet().clear();
+        ui().flashMessages().stopTimer();
+        ui().customDirWatchdog().dispose();
     }
 
     // private stuff
@@ -175,7 +175,7 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void createSubViews() {
-        final SubViewManager subViewManager = access().subViews();
+        final SubViewManager subViewManager = ui().subViews();
 
         final StartPages_SubView startView = new StartPages_SubView(this);
         subViewManager.setStartView(startView);
@@ -187,13 +187,13 @@ public final class GameUI_Implementation implements GameUI {
     }
 
     private void initSubViews() {
-        access().subViews().connect(this);
-        access().subViews().gamePlayView().connect(this);
-        access().subViews().gamePlayView().dashboard().connect(this);
+        ui().subViews().connect(this);
+        ui().subViews().gamePlayView().connect(this);
+        ui().subViews().gamePlayView().dashboard().connect(this);
     }
 
     private void initView() {
-        view.setIcon(access().currentUIConfig().assets().image("app_icon"));
+        view.setIcon(currentUIConfig().assets().image("app_icon"));
     }
 
     private GamePlay_SubView createGamePlaySubView() {
@@ -210,21 +210,21 @@ public final class GameUI_Implementation implements GameUI {
             // restore title (editor changed it)
             stage.titleProperty().unbind();
             stage.titleProperty().bind(view.stageTitleBindingProperty());
-            access().subViews().selectStartView();
+            ui().subViews().selectStartView();
         });
         return editorView;
     }
 
     private void initGameClock() {
-        final GameClock clock = access().gameClock();
+        final GameClock clock = ui().gameClock();
         clock.setUpdateAction(() -> {
-            final SimulationStep step = access().currentGame().doSimulationStep();
+            final SimulationStep step = currentGame().doSimulationStep();
             step.clearInfo(clock.tickCount());
-            access().currentGameFlow().update();
+            currentGameFlow().update();
             step.printLog();
-            access().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
+            ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
-        clock.setPermanentAction(() -> access().subViews().currentView().render());
+        clock.setPermanentAction(() -> ui().subViews().currentView().render());
         clock.setErrorHandler(this::ka_tas_tro_phe);
     }
 
@@ -234,7 +234,7 @@ public final class GameUI_Implementation implements GameUI {
         view().mainScene().rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)
             view().statusIconBox().rootPane(),
-            access().flashMessages().messageView().rootPane(),
+            ui().flashMessages().messageView().rootPane(),
             keyboardInfo.rootPane());
 
         StackPane.setAlignment(view().statusIconBox().rootPane(), Pos.BOTTOM_LEFT);
@@ -242,55 +242,53 @@ public final class GameUI_Implementation implements GameUI {
 
         view().mainScene().init(this);
 
-        view().statusIconBox().bind(access().gameContext().game());
+        view().statusIconBox().bind(currentGame());
     }
 
     private void initProperties() {
-        final UIConfig currentConfig = access().currentUIConfig();
+        final UIConfig currentConfig = currentUIConfig();
 
         final MazeConfig3D mazeConfig3D = currentConfig.worldConfig().maze();
         GameUI_Constants.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
         GameUI_Constants.PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
 
-        access().sounds().muteProperty().bind(GameUI_Constants.PROPERTY_MUTED);
+        ui().sounds().muteProperty().bind(GameUI_Constants.PROPERTY_MUTED);
 
         view().statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> access().subViews().isSelected(access().subViews().gamePlayView())
-                || access().subViews().isSelected(access().subViews().startView()),
-            access().subViews().selectedSubViewProperty()));
+            () -> ui().subViews().isSelected(ui().subViews().gamePlayView())
+                || ui().subViews().isSelected(ui().subViews().startView()),
+            ui().subViews().selectedSubViewProperty()));
 
         view().mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> access().gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
+            () -> ui().gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
                 ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
                 : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
-            access().subViews().selectedSubViewProperty(),
-            access().gameScenes().gameSceneProperty()
+            ui().subViews().selectedSubViewProperty(),
+            ui().gameScenes().gameSceneProperty()
         ));
     }
 
     private void startServices() {
         Platform.runLater(() -> {
-            access().customDirWatchdog().startWatching();
-            access().flashMessages().startTimer();
-            access().sprites().startAnimationTimer();
+            ui().customDirWatchdog().startWatching();
+            ui().flashMessages().startTimer();
+            ui().sprites().startAnimationTimer();
         });
     }
 
     private void initGameVariantAndRegisterChangeHandler() {
         final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
-        access().gameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
-        gameVariantChangeHandler.enterGameVariant(access().gameContext().gameVariantName());
+        gameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
+        gameVariantChangeHandler.enterGameVariant(gameContext().gameVariantName());
     }
 
     /**
-     * @param reason what caused this catastrophe
-     *
      * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
      */
     private void ka_tas_tro_phe(Throwable reason) {
         Platform.runLater(() -> {
-            final String errorMessage = access().translations().translate("error.oh_no_my_program");
-            access().flashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+            final String errorMessage = ui().translations().translate("error.oh_no_my_program");
+            flashMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
             stopGame();
             Logger.error("*** SOMETHING VERY BAD HAPPENED:");
             Logger.error(reason);

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -29,7 +29,7 @@ public class TengenMsPacMan_App extends Application {
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
     private final GameBox gameBox = new GameBox(CoinMechanism.OUT_OF_SERVICE);
-    private GameUI ui;
+    private AppContext ui;
 
     @Override
     public void start(Stage primaryStage) {
@@ -41,7 +41,7 @@ public class TengenMsPacMan_App extends Application {
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
 
-        ui.access().subViews().gamePlayView().configureDashboard(List.of(
+        ui.ui().subViews().gamePlayView().configureDashboard(List.of(
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
             CommonDashboardID.SETTINGS_3D,
@@ -50,11 +50,11 @@ public class TengenMsPacMan_App extends Application {
             CommonDashboardID.KEYS_GLOBAL,
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT
-        ), ui.access().translations());
+        ), ui.ui().translations());
 
-        ui.access().subViews().gamePlayView().dashboard().addSection(
+        ui.ui().subViews().gamePlayView().dashboard().addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
-            new DashboardSectionJoypad(ui.access().subViews().gamePlayView().dashboard()),
+            new DashboardSectionJoypad(ui.ui().subViews().gamePlayView().dashboard()),
             TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
             false);
 

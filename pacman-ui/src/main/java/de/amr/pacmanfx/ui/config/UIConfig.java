@@ -9,7 +9,7 @@ import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
@@ -43,7 +43,7 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
  * (e.g. Arcade Pac-Man, Ms. Pac-Man, etc.).
  *
  * <p>A {@code UIConfig} implementation defines the complete visual and audio appearance
- * of one game variant within the {@link GameUI} framework. It acts as a theme provider,
+ * of one game variant within the {@link AppContext} framework. It acts as a theme provider,
  * supplying:</p>
  *
  * <ul>
@@ -56,11 +56,11 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
  * </ul>
  *
  * <p>Implementations are typically created once per game variant and remain active for
- * the lifetime of the {@link GameUI} instance.</p>
+ * the lifetime of the {@link AppContext} instance.</p>
  *
  * <h2>Lifecycle</h2>
  * <ol>
- *   <li>{@link #init(GameUI)} is called once during UI construction</li>
+ *   <li>{@link #init(AppContext)} is called once during UI construction</li>
  *   <li>Assets are loaded lazily or eagerly during {@code init()}</li>
  *   <li>Renderer and animation factories are called on demand during rendering</li>
  *   <li>{@link #dispose()} is called when the UI is shut down
@@ -71,7 +71,7 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
  * The interface is designed to be stateless where possible.</p>
  *
  * @see GameSceneConfig  companion interface handling scene creation and selection logic
- * @see GameUI           owner component that uses this configuration
+ * @see AppContext           owner component that uses this configuration
  */
 public interface UIConfig extends Disposable {
 
@@ -130,7 +130,7 @@ public interface UIConfig extends Disposable {
     );
 
     /**
-     * Initializes this configuration. Called exactly once when the owning {@link GameUI}
+     * Initializes this configuration. Called exactly once when the owning {@link AppContext}
      * is constructed.
      * <p>
      * Typical tasks performed here:
@@ -142,7 +142,7 @@ public interface UIConfig extends Disposable {
      *
      * @param ui the {@code GameUI} instance that owns this configuration
      */
-    void init(GameUI ui);
+    void init(AppContext ui);
 
     /**
      * Disposes all resources held by this configuration.

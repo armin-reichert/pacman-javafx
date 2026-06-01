@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
@@ -38,7 +38,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     private final OptionMenuEntry<WorldMapSelectionMode> entryMapOrder;
 
     private final ChaseAnimation chaseAnimation = new ChaseAnimation(NUM_TILES_X);
-    private GameUI ui;
+    private AppContext context;
 
     public PacManXXL_OptionMenu() {
         super(NUM_TILES_X, NUM_TILES_Y, TEXT_COLUMN, VALUE_COLUMN);
@@ -56,9 +56,9 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         {
             @Override
             public void onValueChanged(GameVariant oldVariant, GameVariant newVariant) {
-                if (ui != null) {
-                    final UIConfig uiConfig = ui.access().configurations().getOrCreateUIConfig(newVariant.name());
-                    chaseAnimation.init(uiConfig, canvas, ui.access().sprites().animationSet());
+                if (context != null) {
+                    final UIConfig uiConfig = context.ui().configurations().getOrCreateUIConfig(newVariant.name());
+                    chaseAnimation.init(uiConfig, canvas, context.ui().sprites().animationSet());
                 }
             }
         };
@@ -106,12 +106,12 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         chaseAnimation.draw();
     }
 
-    public void init(GameUI ui) {
-        this.ui = requireNonNull(ui);
+    public void init(AppContext context) {
+        this.context = requireNonNull(context);
 
-        final UIConfig currentConfig = ui.access().currentUIConfig();
-        final GameVariant gameVariant = GameVariant.valueOf(ui.access().currentGameVariant());
-        final Game game = ui.access().currentGame();
+        final UIConfig currentConfig = context.currentUIConfig();
+        final GameVariant gameVariant = GameVariant.valueOf(context.currentGameVariant());
+        final Game game = context.currentGame();
 
         if (!(game.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
             final String errorMsg = "Expected XXL map selector but found %s".formatted(game.mapSelector().getClass().getSimpleName());
@@ -129,8 +129,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         logMenuState();
 
-        soundEnabledProperty().bind(ui.access().sounds().muteProperty().not());
-        chaseAnimation.init(currentConfig, canvas, ui.access().sprites().animationSet());
+        soundEnabledProperty().bind(context.ui().sounds().muteProperty().not());
+        chaseAnimation.init(currentConfig, canvas, context.ui().sprites().animationSet());
 
         requestFocus();
     }
@@ -144,8 +144,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     public void startSelectedGame() {
-        ui.access().subViews().selectGamePlayView();
-        ui.restart();
+        context.ui().subViews().selectGamePlayView();
+        context.restart();
     }
 
     public void startDrawLoop() {

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews;
 
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -41,7 +41,7 @@ public final class ContextMenuSupport {
         return add(menu, actionItem);
     }
 
-    public static MenuItem addLocalizedActionItem(ContextMenu menu, GameUI ui, TranslationManager translator, GameAction action, String globalAssetsKey, Object... args) {
+    public static MenuItem addLocalizedActionItem(ContextMenu menu, AppContext ui, TranslationManager translator, GameAction action, String globalAssetsKey, Object... args) {
         var actionItem = new MenuItem(translator.translate(globalAssetsKey, args));
         actionItem.setOnAction(_ -> action.executeIfEnabled(ui));
         return add(menu, actionItem);

@@ -29,7 +29,7 @@ import static de.amr.pacmanfx.core.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Builder for constructing and configuring a {@link GameUI} instance.
+ * Builder for constructing and configuring a {@link AppContext} instance.
  */
 public class GameUI_Builder {
 
@@ -129,10 +129,10 @@ public class GameUI_Builder {
         );
     }
 
-    public GameUI build() {
+    public AppContext build() {
         validateConfigurationData();
 
-        final var ui = new GameUI_Implementation(
+        final var ui = new AppContext_Implementation(
             gameBox,
             createViewImplementation(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight())
         );
@@ -140,7 +140,7 @@ public class GameUI_Builder {
         gameConfigMap.forEach((gameVariant, config) -> {
             final AbstractGameModel game = config.gameModelFactory.get();
             gameBox.registerGame(gameVariant, game);
-            ui.access().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);
+            ui.ui().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);
             if (includeInteractiveTests) {
                 final GameFlow gameFlow = game.flow();
                 gameFlow.addState(new LevelShortTestState<>(gameBox.coinMechanism()));
@@ -149,7 +149,7 @@ public class GameUI_Builder {
             }
         });
 
-        final StartPages_SubView startPagesCarousel = ui.access().subViews().startView();
+        final StartPages_SubView startPagesCarousel = ui.ui().subViews().startView();
         for (var startPageFactory : startPageFactories) {
             final StartPage startPage = startPageFactory.get();
             if (startPage != null) {

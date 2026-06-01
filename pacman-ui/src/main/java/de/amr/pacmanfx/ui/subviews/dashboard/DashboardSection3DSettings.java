@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
@@ -43,14 +43,14 @@ public class DashboardSection3DSettings extends DashboardSection {
     }
 
     @Override
-    public void connect(GameUI ui) {
+    public void connect(AppContext context) {
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
         comboPerspectives = addChoiceBox("Perspective", PerspectiveID.values());
         addColorPicker("Light Color", GameUI_Constants.PROPERTY_3D_LIGHT_COLOR);
         addColorPicker("Floor Color", GameUI_Constants.PROPERTY_3D_FLOOR_COLOR);
-        addDynamicLabeledValue("Camera",         () -> subSceneCameraInfo(ui));
-        addDynamicLabeledValue("Sub-scene Size", () -> subSceneSizeInfo(ui));
-        addDynamicLabeledValue("Scene Size",     () -> sceneSizeInfo(ui));
+        addDynamicLabeledValue("Camera",         () -> subSceneCameraInfo(context));
+        addDynamicLabeledValue("Sub-scene Size", () -> subSceneSizeInfo(context));
+        addDynamicLabeledValue("Scene Size",     () -> sceneSizeInfo(context));
 
         cbMiniViewVisible = addCheckBox("Mini View", GameUI_Constants.PROPERTY_MINI_VIEW_ON);
 
@@ -93,8 +93,8 @@ public class DashboardSection3DSettings extends DashboardSection {
         setEditor(sliderWallOpacity, GameUI_Constants.PROPERTY_3D_WALL_OPACITY);
         setEditor(comboPerspectives, GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID);
 
-        cbUsePlayScene3D.setOnAction(_ -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
-        cbWireframeMode.setOnAction(_ -> ACTION_TOGGLE_DRAW_MODE.executeIfEnabled(ui));
+        cbUsePlayScene3D.setOnAction(_ -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(context));
+        cbWireframeMode.setOnAction(_ -> ACTION_TOGGLE_DRAW_MODE.executeIfEnabled(context));
     }
 
     @Override
@@ -103,8 +103,8 @@ public class DashboardSection3DSettings extends DashboardSection {
 
         comboPerspectives.setValue(GameUI_Constants.PROPERTY_3D_PERSPECTIVE_ID.get());
         sliderMiniViewSceneHeight.setValue(GameUI_Constants.PROPERTY_MINI_VIEW_HEIGHT.get());
-        if (dashboard.ui() != null) {
-            sliderMiniViewSceneHeight.setDisable(dashboard.ui().access().subViews().gamePlayView().miniPlaySceneView().isMoving());
+        if (dashboard.context() != null) {
+            sliderMiniViewSceneHeight.setDisable(dashboard.context().ui().subViews().gamePlayView().miniPlaySceneView().isMoving());
         }
         sliderMiniViewOpacityPercentage.setValue(GameUI_Constants.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
         sliderWallHeight.setValue(GameUI_Constants.PROPERTY_3D_WALL_HEIGHT.get());
@@ -116,15 +116,15 @@ public class DashboardSection3DSettings extends DashboardSection {
         cbWireframeMode.setSelected(GameUI_Constants.PROPERTY_3D_DRAW_MODE.get() == DrawMode.LINE);
     }
 
-    private String subSceneSizeInfo(GameUI ui) {
-        return ui.access().gameScenes().optCurrentGameScene()
+    private String subSceneSizeInfo(AppContext context) {
+        return context.ui().gameScenes().optCurrentGameScene()
             .flatMap(GameScene::optSubSceneFX)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
-    private String subSceneCameraInfo(GameUI ui) {
-        final GameScene gameScene = ui.access().gameScenes().optCurrentGameScene().orElse(null);
+    private String subSceneCameraInfo(AppContext context) {
+        final GameScene gameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
         return gameScene.optSubSceneFX().map(SubScene::getCamera)
             .map(camera -> "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
@@ -135,9 +135,9 @@ public class DashboardSection3DSettings extends DashboardSection {
             .orElse(NO_INFO);
     }
 
-    private String sceneSizeInfo(GameUI ui) {
-        final Game game = ui.access().currentGame();
-        final GameScene gameScene = ui.access().gameScenes().optCurrentGameScene().orElse(null);
+    private String sceneSizeInfo(AppContext context) {
+        final Game game = context.currentGame();
+        final GameScene gameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
 
         if (gameScene instanceof GameScene2D gameScene2D) {

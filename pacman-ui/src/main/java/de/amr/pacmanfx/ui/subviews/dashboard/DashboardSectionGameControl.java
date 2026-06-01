@@ -9,8 +9,7 @@ import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_ServicesAccess;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.action.TestActions;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -42,25 +41,25 @@ public class DashboardSectionGameControl extends DashboardSection {
     }
 
     @Override
-    public void connect(GameUI ui) {
-        final CoinMechanism coinMechanism = ui.access().gameContext().coinMechanism();
+    public void connect(AppContext context) {
+        final CoinMechanism coinMechanism = context.gameContext().coinMechanism();
         spinnerCredit            = addIntSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
         cbCollisionCheckedTwice  = addCheckBox("Collision Check 2x");
 
-        setAction(choiceBoxInitialLives, () -> ui.access().currentGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
+        setAction(choiceBoxInitialLives, () -> context.currentGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
 
         //setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO FIXME!
-        setAction(ui, buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
-        setAction(ui, buttonGroupLevelActions[GAME_LEVEL_NEXT], ACTION_ENTER_NEXT_LEVEL);
+        setAction(context, buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
+        setAction(context, buttonGroupLevelActions[GAME_LEVEL_NEXT], ACTION_ENTER_NEXT_LEVEL);
 
-        setAction(ui, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
-        setAction(ui, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
+        setAction(context, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
+        setAction(context, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
 
         cbCollisionCheckedTwice.setOnAction(_ -> {
-            final AbstractGameModel game = ui.access().currentGame();
+            final AbstractGameModel game = context.currentGame();
             game.setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected());
         });
     }
@@ -69,10 +68,9 @@ public class DashboardSectionGameControl extends DashboardSection {
     public void update() {
         super.update();
 
-        if (dashboard.ui() != null) {
-            final GameUI_ServicesAccess access = dashboard.ui().access();
-            final AbstractGameModel game = access.currentGame();
-            final State<Game> state = access.currentGameState();
+        if (dashboard.context() != null) {
+            final AbstractGameModel game = dashboard.context().currentGame();
+            final State<Game> state = dashboard.context().currentGameState();
 
             choiceBoxInitialLives.setValue(game.initialLifeCount());
             choiceBoxInitialLives.setDisable(!state.matchesByName(CanonicalGameState.INTRO.name()));

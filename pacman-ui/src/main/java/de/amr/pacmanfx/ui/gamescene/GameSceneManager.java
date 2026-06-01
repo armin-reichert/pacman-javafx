@@ -7,14 +7,15 @@ package de.amr.pacmanfx.ui.gamescene;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.GameUI_Services;
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.GameUI_ServicesAccess;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.playview.DecorationPane;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
 import de.amr.pacmanfx.ui.view.GameUI_View;
@@ -33,18 +34,18 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSceneManager implements ChangeListener<GameScene> {
 
-    private final GameUI_View gameUIView;
+    private final AppContext context;
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
-    public GameSceneManager(GameUI_View gameUIView) {
-        this.gameUIView = requireNonNull(gameUIView);
+    public GameSceneManager(AppContext context) {
+        this.context = requireNonNull(context);
         gameScene.addListener(this);
     }
 
     @Override
     public void changed(ObservableValue<? extends GameScene> py, GameScene oldGameScene, GameScene newGameScene) {
         if (newGameScene != null) {
-            embedGameSceneIntoPlayView(newGameScene.services(), gameUIView, newGameScene);
+            embedGameSceneIntoPlayView(context, newGameScene);
         }
     }
 
@@ -56,16 +57,16 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         return gameScene;
     }
 
-    public void forceGameSceneUpdate(GameUI ui) {
-        updateGameSceneAndForceReload(ui, true);
+    public void forceGameSceneUpdate(AppContext context) {
+        updateGameSceneAndForceReload(context, true);
     }
 
-    public void updateGameSceneAndForceReload(GameUI ui, boolean forceReload) {
-        final UIConfig currentConfig = ui.access().currentUIConfig();
-        final Game game = ui.access().currentGame();
+    public void updateGameSceneAndForceReload(AppContext context, boolean forceReload) {
+        final UIConfig currentConfig = context.currentUIConfig();
+        final Game game = context.currentGame();
 
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(ui, game).orElseThrow();
+        final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(context, game).orElseThrow();
 
         if (nextGameScene == prevGameScene && !forceReload) {
             return;
@@ -73,11 +74,11 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
         if (prevGameScene != null) {
             prevGameScene.deactivate();
-            removeFromPlayView(ui.access(), prevGameScene);
+            removeFromPlayView(context.ui(), prevGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
-        embedGameSceneIntoPlayView(ui.access(), ui.view(), nextGameScene);
+        embedGameSceneIntoPlayView(context, nextGameScene);
 
         nextGameScene.activate();
 
@@ -86,12 +87,12 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         gameSceneProperty().set(nextGameScene);
     }
 
-    public void quitCurrentGameScene(GameUI_ServicesAccess services) {
+    public void quitCurrentGameScene(AppContext context) {
         optCurrentGameScene().ifPresent(_ -> {
-            final CoinMechanism coinMechanism = services.gameContext().coinMechanism();
+            final CoinMechanism coinMechanism = context.gameContext().coinMechanism();
 
             //TODO Rethink this
-            final Game game = services.currentGame();
+            final Game game = context.currentGame();
             boolean shouldConsumeCoin = game.flow().state().name().equals("STARTING_GAME_OR_LEVEL")
                 || game.isPlayingLevel();
             if (shouldConsumeCoin && !coinMechanism.isEmpty()) {
@@ -101,7 +102,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
             Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
 
         });
-        services.subViews().selectStartView();
+        context.ui().subViews().selectStartView();
     }
 
     /**
@@ -111,10 +112,10 @@ public class GameSceneManager implements ChangeListener<GameScene> {
      * @param sceneID scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean hasGameSceneID(GameUI ui, GameScene gameScene, GameSceneConfig.SceneID sceneID) {
+    public boolean hasGameSceneID(AppContext context, GameScene gameScene, GameSceneConfig.SceneID sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
-        final UIConfig currentConfig = ui.access().currentUIConfig();
+        final UIConfig currentConfig = context.currentUIConfig();
         return currentConfig.gameSceneConfig().gameSceneHasID(gameScene, sceneID);
     }
 
@@ -124,9 +125,9 @@ public class GameSceneManager implements ChangeListener<GameScene> {
      * @param sceneID scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean currentGameSceneHasID(GameUI ui, GameSceneConfig.SceneID sceneID) {
+    public boolean currentGameSceneHasID(AppContext context, GameSceneConfig.SceneID sceneID) {
         final GameScene current = gameSceneProperty().get();
-        return current != null && hasGameSceneID(ui, current, sceneID);
+        return current != null && hasGameSceneID(context, current, sceneID);
     }
 
     // 2D-3D scene switch
@@ -188,7 +189,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     // Scene embedding
 
-    public void removeFromPlayView(GameUI_ServicesAccess services, GameScene gameScene) {
+    public void removeFromPlayView(GameUI_Services services, GameScene gameScene) {
         requireNonNull(services);
         requireNonNull(gameScene);
 
@@ -212,15 +213,16 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         Logger.info("Game scene {} REMOVED from play scene!", gameScene.getClass().getSimpleName());
     }
 
-    public void embedGameSceneIntoPlayView(GameUI_ServicesAccess services, GameUI_View gameUIView, GameScene gameScene) {
-        final UIConfig currentConfig = services.currentUIConfig();
+    public void embedGameSceneIntoPlayView(AppContext context, GameScene gameScene) {
+        final UIConfig currentConfig = context.currentUIConfig();
+        final SubViewManager subViews = context.ui().subViews();
 
-        services.subViews().gamePlayView().contextMenu().hide();
+        subViews.gamePlayView().contextMenu().hide();
 
         if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(gameUIView, services.subViews().gamePlayView(), gameScene, gameScene.optSubSceneFX().get());
+            embedGameSceneWithSubSceneFX(context.view(), subViews.gamePlayView(), gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(gameUIView, services.subViews().gamePlayView(), currentConfig.gameSceneConfig(), gameScene2D);
+            embedGameScene2D(context.view(), subViews.gamePlayView(), currentConfig.gameSceneConfig(), gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }
