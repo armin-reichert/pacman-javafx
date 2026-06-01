@@ -57,9 +57,9 @@ public interface AppContext extends AppLifecycle {
         return currentUIConfig().optSoundEffects();
     }
 
-    DirectoryWatchdog customDirWatchdog();
+    DirectoryWatchdog watchdog();
 
-    PreferencesManager preferences();
+    PreferencesManager prefs();
 
     /**
      * Displays a flash message.

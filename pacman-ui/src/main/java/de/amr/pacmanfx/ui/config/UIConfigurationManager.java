@@ -11,12 +11,12 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
-public class UIConfigurationsManager {
+public class UIConfigurationManager {
 
     private final Map<String, Supplier<? extends UIConfig>> configFactoriesByVariant = new HashMap<>();
     private final Map<String, UIConfig> configs = new HashMap<>();
 
-    public UIConfigurationsManager() {}
+    public UIConfigurationManager() {}
 
     public void addConfigFactory(String gameVariantName, Supplier<? extends UIConfig> configFactory) {
         requireNonNull(gameVariantName);

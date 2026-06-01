@@ -29,7 +29,7 @@ import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppContextImpl;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.AppConstants;
-import de.amr.pacmanfx.ui.config.UIConfigurationsManager;
+import de.amr.pacmanfx.ui.config.UIConfigurationManager;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
@@ -150,7 +150,7 @@ public class PacManGames3dApp extends Application {
             configureDashboard();
             Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
 
-            context.customDirWatchdog().addEventListener(xxlMapSelector);
+            context.watchdog().addEventListener(xxlMapSelector);
             context.displayOnScreen();
         }
         catch (RuntimeException x) {
@@ -199,7 +199,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addConfigFactories() {
-        final UIConfigurationsManager configManager = context.ui().configurations();
+        final UIConfigurationManager configManager = context.ui().configurations();
         configManager.addConfigFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
         configManager.addConfigFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);
         configManager.addConfigFactory(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new);
@@ -236,7 +236,7 @@ public class PacManGames3dApp extends Application {
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
-                section.setCustomDirWatchDog(context.customDirWatchdog());
+                section.setCustomDirWatchDog(context.watchdog());
                 section.setMapEditFunction(mapFile -> context.editMap(mapFile));
             });
     }

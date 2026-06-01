@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.CanonicalGameState;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
-import de.amr.pacmanfx.ui.config.UIConfigurationsManager;
+import de.amr.pacmanfx.ui.config.UIConfigurationManager;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
@@ -50,11 +50,11 @@ public final class AppContextImpl implements AppContext {
     // All games in a box (only 1,99 €!)
     private final GameBox gameBox;
 
-    private final PreferencesManager preferences;
+    private final PreferencesManager prefs;
 
-    private final DirectoryWatchdog directoryWatchdog;
+    private final DirectoryWatchdog watchdog;
 
-    private final GameClock gameClock = new GameClockFX();
+    private final GameClock clock = new GameClockFX();
 
     private final GameUI ui;
 
@@ -64,11 +64,11 @@ public final class AppContextImpl implements AppContext {
         this.gameBox = requireNonNull(gameBox);
         this.view = requireNonNull(view);
 
-        preferences = new PreferencesManager(getClass());
-        directoryWatchdog = new DirectoryWatchdog(gameBox.customMapDir());
+        prefs = new PreferencesManager(getClass());
+        watchdog = new DirectoryWatchdog(gameBox.customMapDir());
 
-        this.ui = new GameUI(
-            new UIConfigurationsManager(),
+        ui = new GameUI(
+            new UIConfigurationManager(),
             new FlashMessageManager(),
             new GameSceneManager(this),
             new SoundManager(),
@@ -82,8 +82,8 @@ public final class AppContextImpl implements AppContext {
     }
 
     @Override
-    public DirectoryWatchdog customDirWatchdog() {
-        return directoryWatchdog;
+    public DirectoryWatchdog watchdog() {
+        return watchdog;
     }
 
     @Override
@@ -93,12 +93,12 @@ public final class AppContextImpl implements AppContext {
 
     @Override
     public GameClock gameClock() {
-        return gameClock;
+        return clock;
     }
 
     @Override
-    public PreferencesManager preferences() {
-        return preferences;
+    public PreferencesManager prefs() {
+        return prefs;
     }
 
     @Override
@@ -106,21 +106,19 @@ public final class AppContextImpl implements AppContext {
         return ui;
     }
 
-    // GameUI_Life interface
-
     @Override
     public void editMap(File worldMapFile) {
-        final SubViewManager subViewManager = ui.subViews();
-        subViewManager.ensureEditorViewCreated();
-        subViewManager.optEditorView().map(EditorView::editor).ifPresent(editor -> {
+        final SubViewManager subViews = ui.subViews();
+        subViews.ensureEditorViewCreated();
+        subViews.optEditorView().map(EditorView::editor).ifPresent(editor -> {
             editor.init(gameBox.customMapDir());
             try {
-                if (worldMapFile != null) {
-                    editor.editFile(worldMapFile);
-                }
-                if (subViewManager.trySelectEditorView()) {
+                if (subViews.trySelectEditorView()) {
                     stopGame();
                     editor.start();
+                    if (worldMapFile != null) {
+                        editor.editFile(worldMapFile);
+                    }
                 }
             } catch (IOException x) {
                 Logger.error(x, "Could not open map file {}", worldMapFile);
@@ -137,7 +135,7 @@ public final class AppContextImpl implements AppContext {
     public void restart() {
         stopGame();
         currentGameFlow().restartStateWithName(CanonicalGameState.BOOT.name());
-        Platform.runLater(gameClock::start);
+        Platform.runLater(clock::start);
     }
 
     @Override
@@ -159,8 +157,8 @@ public final class AppContextImpl implements AppContext {
     public void stopGame() {
         currentGame().prepareNewGame();
 
-        gameClock.stop();
-        gameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        clock.stop();
+        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
 
         ui.sounds().stopAll();
 
@@ -180,7 +178,7 @@ public final class AppContextImpl implements AppContext {
         ui.sprites().stopAnimationTimer();
         ui.sprites().animationSet().clear();
         ui.flashMessages().stopTimer();
-        directoryWatchdog.dispose();
+        watchdog.dispose();
     }
 
     // private stuff
@@ -232,15 +230,15 @@ public final class AppContextImpl implements AppContext {
     }
 
     private void initGameClock() {
-        gameClock.setUpdateAction(() -> {
+        clock.setUpdateAction(() -> {
             final SimulationStep step = currentGame().doSimulationStep();
-            step.clearInfo(gameClock.tickCount());
+            step.clearInfo(clock.tickCount());
             currentGameFlow().update();
             step.printLog();
-            ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameClock));
+            ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
-        gameClock.setPermanentAction(() -> ui.subViews().currentView().render());
-        gameClock.setErrorHandler(this::ka_tas_tro_phe);
+        clock.setPermanentAction(() -> ui.subViews().currentView().render());
+        clock.setErrorHandler(this::ka_tas_tro_phe);
     }
 
     private void initMainScene() {
@@ -285,7 +283,7 @@ public final class AppContextImpl implements AppContext {
 
     private void startServices() {
         Platform.runLater(() -> {
-            directoryWatchdog.startWatching();
+            watchdog.startWatching();
             ui.flashMessages().startTimer();
             ui.sprites().startAnimationTimer();
         });

@@ -59,11 +59,11 @@ public class PacManXXL_App extends Application {
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
-                section.setCustomDirWatchDog(context.customDirWatchdog());
+                section.setCustomDirWatchDog(context.watchdog());
                 section.setMapEditFunction(mapFile -> context.editMap(mapFile));
             });
 
-        context.customDirWatchdog().addEventListener(mapSelector);
+        context.watchdog().addEventListener(mapSelector);
         context.displayOnScreen();
     }
 
