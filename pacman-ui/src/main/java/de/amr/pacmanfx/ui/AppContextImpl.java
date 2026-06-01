@@ -189,22 +189,22 @@ public final class AppContextImpl implements AppContext {
     }
 
     private void createSubViews() {
-        final SubViewManager subViewManager = ui.subViews();
+        final SubViewManager subViews = ui.subViews();
 
         final StartPagesView startView = new StartPagesView(this);
-        subViewManager.setStartView(startView);
+        subViews.setStartView(startView);
 
         final GamePlayView playView = createGamePlaySubView();
-        subViewManager.setGamePlayView(playView);
+        subViews.setGamePlayView(playView);
 
-        subViewManager.setEditorViewFactory(() -> createEditorSubView(view.stage()));
+        subViews.setEditorViewFactory(() -> createEditorSubView(view.stage()));
     }
 
     private GamePlayView createGamePlaySubView() {
         final var playView = new GamePlayView(this, AppConstants.DEFAULT_DASHBOARD_CONFIG);
-        final ChangeListener<? super Number> playViewResizer = (_,_,_) -> playView.resizeToFit(view.mainScene());
-        view.mainScene().widthProperty().addListener(playViewResizer);
-        view.mainScene().heightProperty().addListener(playViewResizer);
+        final ChangeListener<? super Number> resizeHandler = (_,_,_) -> playView.resizeToFit(view.mainScene());
+        view.mainScene().widthProperty().addListener(resizeHandler);
+        view.mainScene().heightProperty().addListener(resizeHandler);
         return playView;
     }
 
