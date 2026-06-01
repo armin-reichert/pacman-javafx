@@ -27,7 +27,7 @@ public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent
         this.playView = requireNonNull(playView);
 
         //TODO is there a better way to hide the context menu?
-        context.view().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+        context.ui().view().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() != MouseButton.SECONDARY) {
                 playView.contextMenu().hide();
             }

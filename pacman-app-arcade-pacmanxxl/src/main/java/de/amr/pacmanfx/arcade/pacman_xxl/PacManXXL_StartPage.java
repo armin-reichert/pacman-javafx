@@ -68,7 +68,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
 
         focusedProperty().addListener((_, _, hasFocus) -> {
             if (hasFocus && context != null) {
-                updateMenuBinding(context.view().stage());
+                updateMenuBinding(context.ui().view().stage());
                 Logger.info("Input focus on {}, passing to {}...", this, menu);
                 menu.init(context);
             }
@@ -104,7 +104,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     @Override
     public void init(AppContext context) {
         this.context = requireNonNull(context);
-        updateMenuBinding(context.view().stage());
+        updateMenuBinding(context.ui().view().stage());
     }
 
     @Override

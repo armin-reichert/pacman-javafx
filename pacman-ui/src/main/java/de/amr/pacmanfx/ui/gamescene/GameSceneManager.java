@@ -220,9 +220,9 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         subViews.gamePlayView().contextMenu().hide();
 
         if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(context.view(), subViews.gamePlayView(), gameScene, gameScene.optSubSceneFX().get());
+            embedGameSceneWithSubSceneFX(context.ui().view(), subViews.gamePlayView(), gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(context.view(), subViews.gamePlayView(), currentConfig.gameSceneConfig(), gameScene2D);
+            embedGameScene2D(context.ui().view(), subViews.gamePlayView(), currentConfig.gameSceneConfig(), gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }

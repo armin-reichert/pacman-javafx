@@ -21,8 +21,6 @@ import static java.util.Objects.requireNonNull;
 
 public interface AppContext extends GameUI_Life {
 
-    GameUI_View view();
-
     GameUI_Services ui();
 
     GameContext gameContext();

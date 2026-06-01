@@ -48,7 +48,7 @@ public final class CommonActions {
     public static final GameAction ACTION_ENTER_FULLSCREEN = new GameAction("enter_fullscreen") {
         @Override
         protected void doAction(AppContext context) {
-            context.view().stage().setFullScreen(true);
+            context.ui().view().stage().setFullScreen(true);
         }
     };
 

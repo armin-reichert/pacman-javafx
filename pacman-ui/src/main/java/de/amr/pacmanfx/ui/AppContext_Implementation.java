@@ -26,7 +26,6 @@ import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.editor.Editor_SubView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlay_SubView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPages_SubView;
-import de.amr.pacmanfx.ui.view.GameUI_View;
 import de.amr.pacmanfx.ui.view.GameUI_View_Implementation;
 import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
@@ -69,6 +68,7 @@ public final class AppContext_Implementation implements AppContext {
             new SoundManager(),
             new SpriteAnimationManager(),
             () -> GameUI_Constants.LOCALIZED_TEXTS,
+            view,
             new SubViewManager()
         );
 
@@ -78,11 +78,6 @@ public final class AppContext_Implementation implements AppContext {
     @Override
     public GameContext gameContext() {
         return gameBox;
-    }
-
-    @Override
-    public GameUI_View view() {
-        return view;
     }
 
     @Override
@@ -129,12 +124,12 @@ public final class AppContext_Implementation implements AppContext {
         initGameVariantAndRegisterChangeHandler();
         load3DAssets();
         initMainScene();
-        view().connect(this);
+        view.connect(this);
         initProperties();
         initGameClock();
         initSubViews();
         initView();
-        view().show();
+        view.show();
         ui().subViews().selectStartView();
         startServices();
     }
@@ -183,7 +178,7 @@ public final class AppContext_Implementation implements AppContext {
         final GamePlay_SubView playView = createGamePlaySubView();
         subViewManager.setGamePlayView(playView);
 
-        subViewManager.setEditorViewFactory(() -> createEditorSubView(view().stage()));
+        subViewManager.setEditorViewFactory(() -> createEditorSubView(view.stage()));
     }
 
     private void initSubViews() {
@@ -198,9 +193,9 @@ public final class AppContext_Implementation implements AppContext {
 
     private GamePlay_SubView createGamePlaySubView() {
         final var playView = new GamePlay_SubView(this, GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
-        final ChangeListener<? super Number> playViewResizer = (_,_,_) -> playView.resizeToFit(view().mainScene());
-        view().mainScene().widthProperty().addListener(playViewResizer);
-        view().mainScene().heightProperty().addListener(playViewResizer);
+        final ChangeListener<? super Number> playViewResizer = (_,_,_) -> playView.resizeToFit(view.mainScene());
+        view.mainScene().widthProperty().addListener(playViewResizer);
+        view.mainScene().heightProperty().addListener(playViewResizer);
         return playView;
     }
 
@@ -231,18 +226,18 @@ public final class AppContext_Implementation implements AppContext {
     private void initMainScene() {
         final KeyboardInfo keyboardInfo = new KeyboardInfo(Input.instance().keyboard);
 
-        view().mainScene().rootPane().getChildren().addAll(
+        view.mainScene().rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)
-            view().statusIconBox().rootPane(),
+            view.statusIconBox().rootPane(),
             ui().flashMessages().messageView().rootPane(),
             keyboardInfo.rootPane());
 
-        StackPane.setAlignment(view().statusIconBox().rootPane(), Pos.BOTTOM_LEFT);
+        StackPane.setAlignment(view.statusIconBox().rootPane(), Pos.BOTTOM_LEFT);
         keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
 
-        view().mainScene().init(this);
+        view.mainScene().init(this);
 
-        view().statusIconBox().bind(currentGame());
+        view.statusIconBox().bind(currentGame());
     }
 
     private void initProperties() {
@@ -254,12 +249,12 @@ public final class AppContext_Implementation implements AppContext {
 
         ui().sounds().muteProperty().bind(GameUI_Constants.PROPERTY_MUTED);
 
-        view().statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
+        view.statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> ui().subViews().isSelected(ui().subViews().gamePlayView())
                 || ui().subViews().isSelected(ui().subViews().startView()),
             ui().subViews().selectedSubViewProperty()));
 
-        view().mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
+        view.mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> ui().gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
                 ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
                 : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,

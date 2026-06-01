@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
+import de.amr.pacmanfx.ui.view.GameUI_View;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 
@@ -24,4 +25,5 @@ public record GameUI_Services(
     SoundManager sounds,
     SpriteAnimationManager sprites,
     TranslationManager translations,
+    GameUI_View view,
     SubViewManager subViews) {}

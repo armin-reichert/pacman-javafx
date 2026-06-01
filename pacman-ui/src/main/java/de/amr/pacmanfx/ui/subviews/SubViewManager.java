@@ -39,7 +39,7 @@ public final class SubViewManager {
                 oldView.actionBindings().dispose();
             }
             newView.onEnter();
-            context.view().replaceSubView(newView);
+            context.ui().view().replaceSubView(newView);
             context.ui().flashMessages().clearMessage();
         });
 
