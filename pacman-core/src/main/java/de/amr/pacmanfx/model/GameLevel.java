@@ -343,7 +343,7 @@ public class GameLevel {
     }
 
     /**
-     * @param i the bonus index
+     * @param i the bonus index (0 for the first bonus spawned in the level, ...)
      * @return the bonus symbol code of the bonus with the given index
      */
     public int bonusSymbolCode(int i) {
@@ -351,10 +351,10 @@ public class GameLevel {
     }
 
     /**
-     * @param i the bonus index
+     * @param i the bonus index (0 for the first bonus spawned in the level, ...)
      * @param symbolCode the bonus symbol code
      */
-    public void setBonusSymbol(int i, int symbolCode) {
+    public void setBonusSymbolCode(int i, int symbolCode) {
         if (0 <= i && i < bonusSymbolCodes.length) {
             bonusSymbolCodes[i] = symbolCode;
         } else {

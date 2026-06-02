@@ -88,6 +88,23 @@ public class ArcadePacMan_GameRules implements GameRules {
     }
 
     @Override
+    public int selectBonusSymbolCode(int levelNumber, int bonusIndex) {
+        // Each level has a single bonus symbol appearing twice during the level.
+        // From level 13 on, the same symbol (code=7, "key") appears.
+        // Klingt komisch? Is aber so!
+        return switch (levelNumber) {
+            case 1 -> 0;      // cherries
+            case 2 -> 1;      // strawberry
+            case 3, 4 -> 2;   // peach
+            case 5, 6 -> 3;   // apple
+            case 7, 8 -> 4;   // grapes
+            case 9, 10 -> 5;  // galaxian
+            case 11, 12 -> 6; // bell
+            default -> 7;     // key
+        };
+    }
+
+    @Override
     public int pointsForBonus(int symbolCode) {
         return switch (symbolCode) {
             case 0 -> 100;  // cherries

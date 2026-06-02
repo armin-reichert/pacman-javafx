@@ -136,7 +136,9 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
         setPacMan(level);
         setGhosts(level, house);
-        initBoni(level);
+
+        level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
 
         levelCounter.setEnabled(true);
 
@@ -226,27 +228,5 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
             huntingTimer.logPhase();
         });
         return huntingTimer;
-    }
-
-    protected void initBoni(GameLevel level) {
-        // Each level has a single bonus symbol appearing twice during the level.
-        // From level 13 on, the same symbol (code=7, "key") appears. Klingt komisch? Is' aber so!
-        final int symbol = bonusSymbolCode(Math.min(level.number(), 13));
-        level.setBonusSymbol(0, symbol);
-        level.setBonusSymbol(1, symbol);
-    }
-
-    protected int bonusSymbolCode(int levelNumber) {
-        return switch (levelNumber) {
-            case 1 -> 0;      // cherries
-            case 2 -> 1;      // strawberry
-            case 3, 4 -> 2;   // peach
-            case 5, 6 -> 3;   // apple
-            case 7, 8 -> 4;   // grapes
-            case 9, 10 -> 5;  // galaxian
-            case 11, 12 -> 6; // bell
-            case 13 -> 7;     // key
-            default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
-        };
     }
 }

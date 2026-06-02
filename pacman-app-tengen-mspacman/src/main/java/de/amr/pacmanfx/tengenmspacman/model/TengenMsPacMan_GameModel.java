@@ -380,8 +380,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         setGhosts(level, house);
 
         //TODO not sure about this:
-        level.setBonusSymbol(0, (byte) computeBonusSymbol(level.number()).ordinal());
-        level.setBonusSymbol(1, (byte) computeBonusSymbol(level.number()).ordinal());
+        level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
 
         levelCounter.setEnabled(levelNumber < 8);
 
@@ -613,13 +613,5 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             huntingTimer.logPhase();
         });
         return huntingTimer;
-    }
-
-    //TODO: I have no idea yet how Tengen really implemented this
-    private BonusSymbol computeBonusSymbol(int levelNumber) {
-        final BonusSymbol lastSymbol = mapCategory == MapCategory.STRANGE ? BonusSymbol.FLOWER : BonusSymbol.BANANA;
-        return (levelNumber - 1 <= lastSymbol.ordinal())
-            ? BonusSymbol.values()[levelNumber - 1]
-            : BonusSymbol.values()[randomInt(0, lastSymbol.ordinal() + 1)];
     }
 }

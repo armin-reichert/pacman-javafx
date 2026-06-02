@@ -207,7 +207,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         setMsPacMan(level);
         setGhosts(level, house);
-        initBoni(level);
+
+        level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
@@ -224,44 +226,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             return true;
         }
         return false;
-    }
-
-    /**
-     * <p>Got this information from
-     * <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>:
-     * </p>
-     * <p style="font-style:italic">
-     * The exact fruit mechanics are as follows: After 64 dots are consumed, the game spawns the first fruit of the level.
-     * After 176 dots are consumed, the game attempts to spawn the second fruit of the level. If the first fruit is still
-     * present in the level when (or eaten very shortly before) the 176th dot is consumed, the second fruit will not
-     * spawn. Dying while a fruit is on screen causes it to immediately disappear and never return.
-     * (TODO: what does "never" mean here? For the rest of the game?).
-     * The type of fruit is determined by the level count - levels 1-7 will always have two cherries, two strawberries,
-     * etc. until two bananas on level 7. On level 8 and beyond, the fruit type is randomly selected using the weights in
-     * the following table:
-     *
-     * <table>
-     * <tr align="left">
-     *   <th>Cherry</th><th>Strawberry</th><th>Peach</th><th>Pretzel</th><th>Apple</th><th>Pear&nbsp;</th><th>Banana</th>
-     * </tr>
-     * <tr align="right">
-     *     <td>5/32</td><td>5/32</td><td>5/32</td><td>5/32</td><td>4/32</td><td>4/32</td><td>4/32</td>
-     * </tr>
-     * </table>
-     * </p>
-     *
-     * See also <a href="https://umlautllama.com/projects/pacdocs/mspac/mspac.asm">Ms. Pac-Man disassembly</a>
-     */
-    protected byte computeBonusSymbol(int levelNumber) {
-        if (levelNumber <= 7) return (byte) (levelNumber - 1);
-        int coin = randomInt(0, 320);
-        if (coin <  50) return 0; // 5/32 probability
-        if (coin < 100) return 1; // 5/32
-        if (coin < 150) return 2; // 5/32
-        if (coin < 200) return 3; // 5/32
-        if (coin < 240) return 4; // 4/32
-        if (coin < 280) return 5; // 4/32
-        else            return 6; // 4/32
     }
 
     /**
@@ -357,11 +321,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             huntingTimer.logPhase();
         });
         return huntingTimer;
-    }
-
-    private void initBoni(GameLevel level) {
-        level.setBonusSymbol(0, computeBonusSymbol(level.number()));
-        level.setBonusSymbol(1, computeBonusSymbol(level.number()));
     }
 
     private void computeBonusRoute(Bonus bonus, TerrainLayer terrain, House house) {

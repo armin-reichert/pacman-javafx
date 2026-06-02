@@ -11,6 +11,8 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.OptionalInt;
 
+import static de.amr.basics.math.RandomNumberSupport.randomInt;
+
 public class TengenMsPacMan_GameRules implements GameRules {
 
     // See https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PowerPelletTimes.asm
@@ -89,6 +91,17 @@ public class TengenMsPacMan_GameRules implements GameRules {
     public boolean isBonusAwarded(GameLevel level) {
         int eatenFoodCount = level.worldMap().foodLayer().eatenFoodCount();
         return eatenFoodCount == 64 || eatenFoodCount == 176;
+    }
+
+    // TODO: I have no idea yet how Tengen Ms. Pac-Man exactly implemented this.
+    //       What I know is that the "strange" maps use an extended set of bonus symbols.
+    @Override
+    public int selectBonusSymbolCode(int levelNumber, int bonusIndex) {
+        final int lastSymbolCode = gameModel.mapCategory() == MapCategory.STRANGE
+            ? BonusSymbol.FLOWER.ordinal()
+            : BonusSymbol.BANANA.ordinal();
+
+        return levelNumber - 1 <= lastSymbolCode ? levelNumber - 1 : randomInt(0, lastSymbolCode + 1);
     }
 
     @Override

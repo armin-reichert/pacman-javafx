@@ -20,6 +20,8 @@ public interface GameRules {
 
     boolean isBonusAwarded(GameLevel level);
 
+    int selectBonusSymbolCode(int levelNumber, int bonusIndex);
+
     int pointsForBonus(int symbolCode);
 
     float eatenBonusDisplaySeconds();
