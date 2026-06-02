@@ -153,8 +153,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public void activateNextBonus() {
-        final GameLevel level = optGameLevel().orElseThrow();
+    public void activateNextBonus(GameLevel level) {
         level.selectNextBonus();
         final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
         final Bonus bonus = new Bonus(bonusSymbolCode, rules.pointsForBonus(bonusSymbolCode));

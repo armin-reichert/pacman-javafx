@@ -56,7 +56,7 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
             level.clearMessage();
         }
         else if (timer.atSecond(START + 3)) {
-            game.activateNextBonus();
+            game.activateNextBonus(level);
         }
         else if (timer.atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
@@ -65,7 +65,7 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
             });
         }
         else if (timer.atSecond(START + 6)) {
-            game.activateNextBonus();
+            game.activateNextBonus(level);
         }
         else if (timer.atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {

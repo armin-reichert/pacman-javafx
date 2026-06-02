@@ -167,7 +167,7 @@ public interface GameModel extends GameCheats {
     void eatPellet(GameLevel level, Vector2i tile);
 
     /** Activates the next bonus item, if applicable. */
-    void activateNextBonus();
+    void activateNextBonus(GameLevel level);
 
     /** @return {@code true} if Pac‑Man has been killed this frame */
     boolean hasPacManBeenKilled();

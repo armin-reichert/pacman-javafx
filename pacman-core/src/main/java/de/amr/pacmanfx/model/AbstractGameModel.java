@@ -522,7 +522,7 @@ public abstract class AbstractGameModel implements GameModel {
                 eatPellet(level, simStep.foodTile);
             }
             if (rules().isBonusAwarded(level)) {
-                activateNextBonus();
+                activateNextBonus(level);
                 simStep.bonusIndex = level.currentBonusIndex();
             }
             flow().publishGameEvent(new PacEatsFoodEvent(this, pac, simStep.energizerFound, false));
