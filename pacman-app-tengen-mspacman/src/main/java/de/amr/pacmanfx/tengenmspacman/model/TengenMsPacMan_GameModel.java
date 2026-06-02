@@ -20,7 +20,6 @@ import org.tinylog.Logger;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 import static de.amr.basics.math.RandomNumberSupport.randomBoolean;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
@@ -54,9 +53,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public static final String LEVEL_TEST_MESSAGE_TEXT_PATTERN = "TEST    L%02d";
 
     public static final Vector2i HOUSE_MIN_TILE = vec2_int(10, 15);
-
-    public static final int FIRST_LEVEL_NUMBER = 1;
-    public static final int LAST_LEVEL_NUMBER = 32;
 
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
     public static final byte GAME_OVER_MESSAGE_DELAY_SEC = 2;
@@ -117,7 +113,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private final GateKeeper gateKeeper;
     private final Steering automaticSteering;
     private final Steering demoLevelSteering;
-    private final Map<Integer, Integer> cutSceneNumberAfterLevelNumber;
 
     private MapCategory mapCategory;
     private Difficulty difficulty;
@@ -136,17 +131,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
         automaticSteering = new RuleBasedPacSteering();
         demoLevelSteering = new RuleBasedPacSteering();
-
         rules = new TengenMsPacMan_GameRules(this);
-
-        cutSceneNumberAfterLevelNumber = Map.of(
-            2, 1,
-            5, 2,
-            9, 3,
-            13, 3,
-            17, 3,
-            LAST_LEVEL_NUMBER, 4
-        );
 
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
         setDifficulty(Difficulty.NORMAL);
@@ -192,7 +177,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     public void setStartLevelNumber(int number) {
-        if (number < FIRST_LEVEL_NUMBER || number > LAST_LEVEL_NUMBER) {
+        if (number < TengenMsPacMan_GameRules.FIRST_LEVEL || number > TengenMsPacMan_GameRules.LAST_LEVEL) {
             throw GameException.invalidLevelNumber(number);
         }
         startLevelNumber = number;
@@ -388,13 +373,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void startNextLevel() {
         final GameLevel level = optGameLevel().orElseThrow();
-        if (level.number() < LAST_LEVEL_NUMBER) {
+        if (level.number() < TengenMsPacMan_GameRules.LAST_LEVEL) {
             buildNormalLevel(level.number() + 1);
             startLevel();
             level.entities().pac().show();
             level.ghosts().forEach(Ghost::show);
         } else {
-            Logger.warn("Last level ({}) reached, cannot start next level", LAST_LEVEL_NUMBER);
+            Logger.warn("Last level ({}) reached, cannot start next level", TengenMsPacMan_GameRules.LAST_LEVEL);
         }
     }
 
@@ -448,7 +433,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void buildNormalLevel(int levelNumber) {
         final GameLevel newLevel = createLevel(levelNumber, false);
-        newLevel.setCutSceneNumber(cutSceneNumberAfterLevelNumber.getOrDefault(levelNumber, 0));
+        newLevel.setCutSceneNumber(rules.cutSceneNumberAfterLevel(levelNumber).orElse(0));
         score.setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
 
@@ -476,7 +461,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public int lastLevelNumber() { return LAST_LEVEL_NUMBER; }
+    public int lastLevelNumber() { return TengenMsPacMan_GameRules.LAST_LEVEL; }
 
     @Override
     protected boolean isPacSafeInDemoLevel(GameLevel demoLevel) {

@@ -15,7 +15,6 @@ import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.IOException;
-import java.util.Map;
 
 import static de.amr.basics.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
@@ -80,8 +79,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected int bonus1PelletsEaten;
     protected int bonus2PelletsEaten;
 
-    protected Map<Integer, Integer> cutSceneNumberAfterLevelNumber;
-
     protected Arcade_GameModel(CoinMechanism coinMechanism) {
         this.coinMechanism = requireNonNull(coinMechanism);
         hud = new HeadsUpDisplay(coinMechanism);
@@ -93,14 +90,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         restingTicksEnergizer = 3;
 
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
-
-        cutSceneNumberAfterLevelNumber = Map.of(
-             2, 1, // after level #2, play cut scene #1
-             5, 2,
-             9, 3,
-            13, 3,
-            17, 3
-        );
     }
 
     @Override
@@ -366,11 +355,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void buildNormalLevel(int levelNumber) {
         final GameLevel level = createLevel(levelNumber, false);
-        level.setCutSceneNumber(cutSceneNumberAfterLevelNumber.getOrDefault(levelNumber, 0));
+        level.setCutSceneNumber(rules.cutSceneNumberAfterLevel(levelNumber).orElse(0));
         levelCounter().setEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-
         levelProperty().set(level);
         flow().publishGameEvent(new LevelCreatedEvent(this, level));
     }

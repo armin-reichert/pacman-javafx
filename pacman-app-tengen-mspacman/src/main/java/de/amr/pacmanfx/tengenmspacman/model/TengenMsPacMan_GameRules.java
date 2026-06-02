@@ -3,7 +3,22 @@ package de.amr.pacmanfx.tengenmspacman.model;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.Bonus;
 
+import java.util.Map;
+import java.util.OptionalInt;
+
 public class TengenMsPacMan_GameRules implements GameRules {
+
+    public static final int FIRST_LEVEL = 1;
+    public static final int LAST_LEVEL = 32;
+
+    private static final Map<Integer, Integer> CUT_SCENE_NUMBER_AFTER_LEVEL_NUMBER = Map.of(
+        2, 1,
+        5, 2,
+        9, 3,
+        13, 3,
+        17, 3,
+        LAST_LEVEL, 4
+    );
 
     private final TengenMsPacMan_GameModel gameModel;
 
@@ -48,5 +63,13 @@ public class TengenMsPacMan_GameRules implements GameRules {
                 || crossedScoreLine(oldScore, newScore, 100_000)
                 || crossedScoreLine(oldScore, newScore, 300_000);
         }
+    }
+
+    @Override
+    public OptionalInt cutSceneNumberAfterLevel(int levelNumber) {
+        final Integer cutSceneNumber = CUT_SCENE_NUMBER_AFTER_LEVEL_NUMBER.get(levelNumber);
+        return cutSceneNumber != null
+            ? OptionalInt.of(cutSceneNumber)
+            : OptionalInt.empty();
     }
 }

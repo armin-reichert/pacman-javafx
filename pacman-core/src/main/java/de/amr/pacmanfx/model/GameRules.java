@@ -2,6 +2,8 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.model.actors.Bonus;
 
+import java.util.OptionalInt;
+
 public interface GameRules {
 
     int pointsForPellet();
@@ -11,6 +13,8 @@ public interface GameRules {
     int pointsForBonus(Bonus bonus);
 
     boolean isExtraLifeAwarded(int oldScore, int newScore);
+
+    OptionalInt cutSceneNumberAfterLevel(int levelNumber);
 
     // Helper
 
