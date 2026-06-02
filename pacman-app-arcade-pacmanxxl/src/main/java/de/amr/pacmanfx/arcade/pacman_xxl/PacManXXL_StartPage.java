@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;

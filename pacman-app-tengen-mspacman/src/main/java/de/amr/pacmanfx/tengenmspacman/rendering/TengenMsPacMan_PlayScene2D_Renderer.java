@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.fsm.State;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.world.WorldMap;

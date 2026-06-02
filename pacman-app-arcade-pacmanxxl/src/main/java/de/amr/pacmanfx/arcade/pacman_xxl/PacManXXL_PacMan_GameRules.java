@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 
 public class PacManXXL_PacMan_GameRules extends ArcadePacMan_GameRules {
 

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.subviews.startpages.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;

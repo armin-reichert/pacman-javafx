@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene;
 
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.AppContext;
 import org.tinylog.Logger;
 

@@ -9,7 +9,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.event.BonusExpiredEvent;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import org.tinylog.Logger;

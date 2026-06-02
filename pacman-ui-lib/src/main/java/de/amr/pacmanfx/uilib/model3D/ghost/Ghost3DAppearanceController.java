@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.model3D.ghost;
 
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;

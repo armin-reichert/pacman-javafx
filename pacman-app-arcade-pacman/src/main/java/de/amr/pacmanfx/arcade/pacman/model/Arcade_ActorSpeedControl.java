@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.core.Globals;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.TerrainLayer;

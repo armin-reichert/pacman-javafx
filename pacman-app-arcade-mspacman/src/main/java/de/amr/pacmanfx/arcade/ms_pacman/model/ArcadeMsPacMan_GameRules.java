@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 

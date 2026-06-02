@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelMessage;
+import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.uilib.rendering.*;

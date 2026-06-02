@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.subviews.playview;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.config.UIConfig;

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.subviews.help;
 
-import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.uilib.Ufx;

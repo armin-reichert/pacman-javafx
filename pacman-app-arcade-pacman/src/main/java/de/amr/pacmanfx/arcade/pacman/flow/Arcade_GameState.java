@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman.flow;
 
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.flow.GameState;

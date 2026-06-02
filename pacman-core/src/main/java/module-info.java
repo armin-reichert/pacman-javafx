@@ -16,4 +16,7 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.steering;
     exports de.amr.pacmanfx.core;
     exports de.amr.pacmanfx.flow;
+    exports de.amr.pacmanfx.model.level;
+    exports de.amr.pacmanfx.score;
+    exports de.amr.pacmanfx.model.lives;
 }

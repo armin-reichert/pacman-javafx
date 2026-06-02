@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.d3.camera;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;

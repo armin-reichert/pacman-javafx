@@ -8,6 +8,9 @@ import de.amr.pacmanfx.event.BonusEatenEvent;
 import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevelMessage;
+import de.amr.pacmanfx.model.level.GameLevelMessageType;
 
 import static java.util.Objects.requireNonNull;
 

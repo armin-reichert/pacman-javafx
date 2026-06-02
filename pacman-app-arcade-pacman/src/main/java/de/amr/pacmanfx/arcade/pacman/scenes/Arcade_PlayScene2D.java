@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.AppContext;

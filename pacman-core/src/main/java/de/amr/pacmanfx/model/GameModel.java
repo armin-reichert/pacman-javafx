@@ -9,9 +9,14 @@ import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.LevelCounter;
+import de.amr.pacmanfx.model.lives.PacManLives;
 import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.flow.GameControlFlow;
+import de.amr.pacmanfx.score.PersistentScore;
+import de.amr.pacmanfx.score.Score;
 
 import java.util.Optional;
 

@@ -5,8 +5,8 @@ package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.AnimationIdentifier;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelEntity;
+import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;

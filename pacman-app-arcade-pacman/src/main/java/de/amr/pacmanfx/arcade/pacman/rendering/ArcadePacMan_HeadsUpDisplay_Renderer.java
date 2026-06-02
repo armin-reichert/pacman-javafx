@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.HeadsUpDisplay;
-import de.amr.pacmanfx.model.Score;
+import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;

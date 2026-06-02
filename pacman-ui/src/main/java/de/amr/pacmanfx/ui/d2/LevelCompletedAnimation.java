@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.d2;
 
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;

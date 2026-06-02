@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.world.FoodLayer;

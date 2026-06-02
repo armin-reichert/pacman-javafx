@@ -5,7 +5,7 @@ package de.amr.pacmanfx.model.actors;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;

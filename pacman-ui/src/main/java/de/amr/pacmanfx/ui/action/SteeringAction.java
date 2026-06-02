@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.AppContext;
 
 import static java.util.Objects.requireNonNull;

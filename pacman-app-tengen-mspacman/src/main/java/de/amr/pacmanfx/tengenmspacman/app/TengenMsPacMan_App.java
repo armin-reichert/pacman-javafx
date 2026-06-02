@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.model.GameVariant.TENGEN_MS_PACMAN;
+import static de.amr.pacmanfx.core.GameVariant.TENGEN_MS_PACMAN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_ASPECT_RATIO;
 
 public class TengenMsPacMan_App extends Application {

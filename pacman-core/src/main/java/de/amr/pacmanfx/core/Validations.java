@@ -3,8 +3,6 @@
  */
 package de.amr.pacmanfx.core;
 
-import de.amr.pacmanfx.model.GameException;
-
 import java.util.Set;
 import java.util.regex.Pattern;
 

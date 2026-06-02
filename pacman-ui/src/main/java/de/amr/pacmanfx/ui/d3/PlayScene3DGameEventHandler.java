@@ -10,7 +10,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.d3.animation.HideGhostShowPointsAnimation3D;

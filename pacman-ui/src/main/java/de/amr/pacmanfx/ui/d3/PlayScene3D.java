@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.Score;
+import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;

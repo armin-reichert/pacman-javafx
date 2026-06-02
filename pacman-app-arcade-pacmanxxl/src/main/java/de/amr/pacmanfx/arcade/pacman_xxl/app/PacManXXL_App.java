@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameBox;
-import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;

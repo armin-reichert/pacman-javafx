@@ -6,8 +6,8 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelMessageType;
+import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;

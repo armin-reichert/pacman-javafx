@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.world;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.AnimationIdentifier;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.world.ArcadeHouse;

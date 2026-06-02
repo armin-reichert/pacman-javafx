@@ -2,10 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.model;
+package de.amr.pacmanfx.model.level;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.Globals;
+import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;

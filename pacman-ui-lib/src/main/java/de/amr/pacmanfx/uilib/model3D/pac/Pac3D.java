@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.uilib.model3D.pac;
 
 import de.amr.basics.spriteanim.AnimationIdentifier;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelEntity;
+import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevelEntity;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;

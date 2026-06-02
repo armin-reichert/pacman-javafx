@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.model;
 
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.GameRules;
 
 import java.util.EnumMap;

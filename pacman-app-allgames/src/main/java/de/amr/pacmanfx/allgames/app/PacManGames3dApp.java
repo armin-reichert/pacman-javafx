@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.flow.GameControlFlow;
-import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
@@ -46,7 +46,7 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.pacmanfx.core.Validations.requireNonNegative;
-import static de.amr.pacmanfx.model.GameVariant.*;
+import static de.amr.pacmanfx.core.GameVariant.*;
 
 /**
  * Application containing all game variants, the 3D play scenes, the map editor etc.

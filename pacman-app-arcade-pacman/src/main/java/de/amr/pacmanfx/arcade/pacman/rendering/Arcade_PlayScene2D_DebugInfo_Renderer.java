@@ -8,7 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.world.TerrainLayer;

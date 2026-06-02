@@ -8,6 +8,9 @@ import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevelMessage;
+import de.amr.pacmanfx.model.level.GameLevelMessageType;
 
 import java.util.List;
 

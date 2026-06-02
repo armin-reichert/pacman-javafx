@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_ActorSpeedControl;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 
 // In levels 3..., ghosts do not slow down in tunnel anymore!

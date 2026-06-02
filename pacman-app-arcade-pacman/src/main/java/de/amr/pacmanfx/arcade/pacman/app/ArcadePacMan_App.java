@@ -10,7 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameBox;
-import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppContextImpl;
 import de.amr.pacmanfx.ui.GameUI_Builder;

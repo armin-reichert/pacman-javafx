@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 
 public interface ActorSpeedControl {
 

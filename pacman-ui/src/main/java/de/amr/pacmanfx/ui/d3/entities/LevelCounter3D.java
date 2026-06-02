@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.ui.d3.entities;
 
 import de.amr.basics.spriteanim.AnimationIdentifier;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelEntity;
+import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevelEntity;
 import de.amr.pacmanfx.ui.config.LevelCounterConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;

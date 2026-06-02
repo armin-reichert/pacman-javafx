@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 
 public interface GameLevelRenderer extends Renderer {
 

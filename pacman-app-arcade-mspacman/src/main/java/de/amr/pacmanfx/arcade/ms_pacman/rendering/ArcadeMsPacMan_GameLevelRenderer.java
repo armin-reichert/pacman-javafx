@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameLevelMessage;
-import de.amr.pacmanfx.model.GameLevelMessageType;
+import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevelMessage;
+import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;

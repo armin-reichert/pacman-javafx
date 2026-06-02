@@ -5,9 +5,9 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.HeadsUpDisplay;
-import de.amr.pacmanfx.model.Score;
+import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CutScene1;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CutScene2;

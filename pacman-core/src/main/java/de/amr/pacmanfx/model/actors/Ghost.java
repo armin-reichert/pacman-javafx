@@ -9,7 +9,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;

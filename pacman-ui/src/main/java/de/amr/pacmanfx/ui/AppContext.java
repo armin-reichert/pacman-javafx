@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.flow.GameControlFlow;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;

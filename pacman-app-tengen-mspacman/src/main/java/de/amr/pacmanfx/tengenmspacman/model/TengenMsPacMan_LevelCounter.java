@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.model;
 
-import de.amr.pacmanfx.model.LevelCounter;
+import de.amr.pacmanfx.model.level.LevelCounter;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 

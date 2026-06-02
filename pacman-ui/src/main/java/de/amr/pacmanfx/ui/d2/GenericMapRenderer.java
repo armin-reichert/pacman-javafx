@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.d2;
 
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;

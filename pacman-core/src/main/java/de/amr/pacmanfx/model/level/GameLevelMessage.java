@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.model;
+package de.amr.pacmanfx.model.level;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;

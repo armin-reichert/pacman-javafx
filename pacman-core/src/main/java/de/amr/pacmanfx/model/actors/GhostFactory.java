@@ -6,7 +6,7 @@ package de.amr.pacmanfx.model.actors;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.Globals;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 
 import static de.amr.pacmanfx.core.Globals.RED_GHOST_SHADOW;

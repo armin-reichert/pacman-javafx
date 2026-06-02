@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.Score;
+import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;

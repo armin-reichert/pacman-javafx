@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;

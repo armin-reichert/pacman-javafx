@@ -1,5 +1,7 @@
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.model.level.GameLevel;
+
 import java.util.OptionalInt;
 
 public interface GameRules {
