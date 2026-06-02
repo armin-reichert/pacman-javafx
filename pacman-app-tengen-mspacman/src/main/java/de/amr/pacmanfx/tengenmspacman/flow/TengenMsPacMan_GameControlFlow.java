@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.flow;
 
+import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
@@ -17,33 +18,73 @@ import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_GameControlFlow extends StateMachine<GameModel> implements GameControlFlow {
+public class TengenMsPacMan_GameControlFlow implements GameControlFlow {
 
-    private static void ensureFxThread(String actionDesc) {
-        if (!Platform.isFxApplicationThread()) {
-            throw new IllegalStateException(actionDesc + " must be executed on the JavaFX Application Thread");
-        }
-    }
+    private final StateMachine<GameModel> stateMachine;
 
     private final Set<GameEventListener> eventListeners = new HashSet<>();
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
     public TengenMsPacMan_GameControlFlow(TengenMsPacMan_GameModel game) {
-        setName("Tengen Ms. Pac-Man Game Flow");
+        requireNonNull(game);
+
+        stateMachine = new StateMachine<>();
+        stateMachine.setName("Tengen Ms. Pac-Man Game Flow");
         for (TengenMsPacMan_GameState gameState : TengenMsPacMan_GameState.values()) {
             addState(gameState.state());
         }
-        setContext(game);
-        addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
+        stateMachine.setContext(game);
+        stateMachine.addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
+    }
+
+    @Override
+    public State<GameModel> state() {
+        return stateMachine.state();
+    }
+
+    @Override
+    public Optional<State<GameModel>> optState(String stateName) {
+        return stateMachine.optState(stateName);
+    }
+
+    @Override
+    public void addState(State<GameModel> gameState) {
+        stateMachine.addState(gameState);
+    }
+
+    @Override
+    public void enterState(State<GameModel> gameState) {
+        stateMachine.enterState(gameState);
+    }
+
+    @Override
+    public void enterStateWithName(String stateName) {
+        stateMachine.enterStateWithName(stateName);
+    }
+
+    @Override
+    public void resumePreviousState() {
+        stateMachine.resumePreviousState();
+    }
+
+    @Override
+    public void restartState(State<GameModel> gameState) {
+        stateMachine.restartState(gameState);
+    }
+
+    @Override
+    public void restartState(String stateName) {
+        stateMachine.restartState(stateName);
     }
 
     @Override
     public void makeStep() {
-        super.update();
+        stateMachine.update();
     }
 
     /**
@@ -102,5 +143,13 @@ public class TengenMsPacMan_GameControlFlow extends StateMachine<GameModel> impl
     @Override
     public void setCutScenesEnabled(boolean enabled) {
         cutScenesEnabled.set(enabled);
+    }
+
+    // Private
+
+    private static void ensureFxThread(String actionDesc) {
+        if (!Platform.isFxApplicationThread()) {
+            throw new IllegalStateException(actionDesc + " must be executed on the JavaFX Application Thread");
+        }
     }
 }
