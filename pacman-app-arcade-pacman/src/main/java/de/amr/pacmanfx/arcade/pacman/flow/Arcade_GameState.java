@@ -208,7 +208,7 @@ public enum Arcade_GameState {
         public void onEnter(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             timer().restartTicks(level.gameOverStateTicks());
-            game.onGameOver();
+            game.onGameOver(level);
         }
 
         @Override

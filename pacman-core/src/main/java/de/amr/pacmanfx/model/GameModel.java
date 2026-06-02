@@ -195,8 +195,11 @@ public interface GameModel extends GameCheats {
      */
     void onEatGhost(GameLevel level, Ghost eatenGhost);
 
-    /** Called when the game reaches the game‑over state. */
-    void onGameOver();
+    /** Called when the game reaches the game‑over state.
+     *
+     * @param level the game level
+     */
+    void onGameOver(GameLevel level);
 
     /** Default collision strategy used by the original arcade games. */
     CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;

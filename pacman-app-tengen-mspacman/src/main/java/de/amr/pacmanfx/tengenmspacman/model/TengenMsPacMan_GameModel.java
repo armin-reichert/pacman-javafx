@@ -233,8 +233,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onGameOver() {
-        final GameLevel level = optGameLevel().orElseThrow();
+    public void onGameOver(GameLevel level) {
         setPlayingLevel(false);
         showMessage(level, GameLevelMessageType.GAME_OVER);
         try {

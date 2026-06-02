@@ -243,12 +243,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onGameOver() {
+    public void onGameOver(GameLevel level) {
         if (!coinMechanism.isEmpty()) {
             coinMechanism.consumeCoin(); //TODO not sure if coin should be consumed after game is over
         }
         setPlayingLevel(false);
-        final GameLevel level = optGameLevel().orElseThrow();
         showLevelMessage(level, GameLevelMessageType.GAME_OVER);
         try {
             updateHighScore();
