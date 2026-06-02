@@ -1,4 +1,6 @@
-name: Release
+# Build and create installer for app containing all games
+
+name: Build All Games App Installer
 
 permissions:
   contents: write

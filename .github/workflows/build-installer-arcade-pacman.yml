@@ -1,0 +1,122 @@
+# Build and create installer for Arcade Pac-Man game
+
+name: Build Pac-Man Arcade game installer
+
+permissions:
+  contents: write
+  packages: write
+
+on:
+  release:
+    types: [created, edited]
+
+jobs:
+
+  build-and-upload-artifacts:
+
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-14]
+        java: ['25']
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+    name: Build installers on ${{ matrix.os }}
+
+    steps:
+      # ------------------------------------------------------------
+      # 1. Checkout pacman-javafx
+      # ------------------------------------------------------------
+      - name: Checkout pacman-javafx
+        uses: actions/checkout@v4
+        with:
+          path: pacman-javafx
+
+      # ------------------------------------------------------------
+      # 3. Set up JDK
+      # ------------------------------------------------------------
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+          server-id: github
+          settings-path: ${{ github.workspace }}
+
+      - name: Verify Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v2
+
+      # ------------------------------------------------------------
+      # 4. Build installers (using GitHub Packages)
+      # ------------------------------------------------------------
+      - name: Build installers
+        working-directory: ${{ github.workspace }}/pacman-javafx/pacman-app-arcade-pacman
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew jpackage
+
+      # ------------------------------------------------------------
+      # 5. Upload installers
+      # ------------------------------------------------------------
+      - name: Upload Windows installer
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: pacman-javafx/pacman-app-arcade-pacman/build/jpackage/*.msi
+          if-no-files-found: error
+
+      - name: Upload Linux installer
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-installer
+          path: pacman-javafx/pacman-app-arcade-pacman/build/jpackage/*.deb
+          if-no-files-found: error
+
+      - name: Upload macOS installer
+        if: matrix.os == 'macos-14'
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-installer
+          path: pacman-javafx/pacman-app-arcade-pacman/build/jpackage/*.dmg
+          if-no-files-found: error
+
+  # ------------------------------------------------------------
+  # SECOND JOB: download artifacts and attach to release
+  # ------------------------------------------------------------
+  download-and-release-artifacts:
+    needs: build-and-upload-artifacts
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download Windows installer
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
+          path: installers/windows
+
+      - name: Download Linux installer
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-installer
+          path: installers/linux
+
+      - name: Download macOS installer
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-installer
+          path: installers/macos
+
+      - name: List downloaded files
+        run: ls -R installers
+
+      - name: Attach installers to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            installers/windows/*.msi
+            installers/linux/*.deb
+            installers/macos/*.dmg

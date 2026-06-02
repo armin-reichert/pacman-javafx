@@ -1,0 +1,33 @@
+name: Build All Modules
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-14]
+        java: ['25']
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+    name: Build on ${{ matrix.os }}
+
+    steps:
+      - name: Checkout pacman-javafx
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+
+      - name: Verify Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v2
+
+      - name: Build project
+        run: ./gradlew build --no-daemon
