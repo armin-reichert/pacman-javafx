@@ -10,8 +10,6 @@ import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 
-import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel.levelData;
-
 public class Arcade_ActorSpeedControl implements ActorSpeedControl {
 
     /** Base speed is 75 px per second (=1.25 px/tick). */
@@ -28,13 +26,13 @@ public class Arcade_ActorSpeedControl implements ActorSpeedControl {
 
     @Override
     public float pacSpeed(GameLevel level) {
-        final byte pct = levelData(level.number()).pctPacSpeed();
+        final byte pct = ArcadeGameRules.levelData(level.number()).pctPacSpeed();
         return pct > 0 ? pct * BASE_SPEED_ONE_PERCENT : BASE_SPEED;
     }
 
     @Override
     public float pacSpeedWhenHasPower(GameLevel level) {
-        final byte pct = levelData(level.number()).pctPacSpeedPowered();
+        final byte pct = ArcadeGameRules.levelData(level.number()).pctPacSpeedPowered();
         return pct > 0 ? pct * BASE_SPEED_ONE_PERCENT : pacSpeed(level);
     }
 
@@ -57,7 +55,7 @@ public class Arcade_ActorSpeedControl implements ActorSpeedControl {
     @Override
     public float ghostSpeedAttacking(GameLevel level, Ghost ghost) {
         final int levelNumber = level.number();
-        final LevelData data = levelData(levelNumber);
+        final LevelData data = ArcadeGameRules.levelData(levelNumber);
         if (ghost.personality() == Globals.RED_GHOST_SHADOW) {
             return switch (ghost.elroyState().mode()) {
                 case ZERO -> data.pctGhostSpeed()  * BASE_SPEED_ONE_PERCENT;
@@ -71,12 +69,12 @@ public class Arcade_ActorSpeedControl implements ActorSpeedControl {
 
     @Override
     public float ghostSpeedFrightened(GameLevel level) {
-        final float pct = levelData(level.number()).pctGhostSpeedFrightened();
+        final float pct = ArcadeGameRules.levelData(level.number()).pctGhostSpeedFrightened();
         return pct > 0 ? pct * BASE_SPEED_ONE_PERCENT : BASE_SPEED;
     }
 
     @Override
     public float ghostSpeedTunnel(int levelNumber) {
-        return levelData(levelNumber).pctGhostSpeedTunnel() * BASE_SPEED_ONE_PERCENT;
+        return ArcadeGameRules.levelData(levelNumber).pctGhostSpeedTunnel() * BASE_SPEED_ONE_PERCENT;
     }
 }

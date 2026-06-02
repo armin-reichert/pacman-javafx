@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameRules;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.CoinMechanism;
@@ -187,9 +188,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         terrain.setHouse(house);
 
         final AbstractHuntingTimer huntingTimer = createHuntingTimer();
-        final int numFlashes = levelData(levelNumber).numFlashes();
+        final int numFlashes = ArcadeGameRules.levelData(levelNumber).numFlashes();
 
-        final LevelData levelData = levelData(levelNumber);
+        final LevelData levelData = ArcadeGameRules.levelData(levelNumber);
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, numFlashes);
         level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
