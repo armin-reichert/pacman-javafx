@@ -122,13 +122,15 @@ public abstract class AbstractGameModel implements GameModel {
      * Variant-specific hooks
      * ---------------------------------------------------------------------- */
 
-    /**
-     * Called when Pac-Man eats a normal pellet.
-     *
-     * @param level the current level
-     * @param tile  the tile containing the pellet
-     */
-    public abstract void eatPellet(GameLevel level, Vector2i tile);
+    @Override
+    public void eatPellet(GameLevel level, Vector2i tile) {
+        requireNonNull(level);
+        requireNonNull(tile);
+        scorePoints(rules().pointsForPellet(), level.number());
+        if (gateKeeper() != null) {
+            gateKeeper().registerFoodEaten(level, level.worldMap().terrainLayer().house());
+        }
+    }
 
     /**
      * Called when Pac-Man eats an energizer.

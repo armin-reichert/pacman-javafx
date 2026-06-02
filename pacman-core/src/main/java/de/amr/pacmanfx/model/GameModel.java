@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.model;
 
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -147,6 +148,14 @@ public interface GameModel {
     void continuePlayingLevel(long tick);
 
     GateKeeper gateKeeper();
+
+    /**
+     * Called when Pac-Man eats a normal pellet.
+     *
+     * @param level the current level
+     * @param tile  the tile containing the pellet
+     */
+    void eatPellet(GameLevel level, Vector2i tile);
 
     /** Activates the next bonus item, if applicable. */
     void activateNextBonus();

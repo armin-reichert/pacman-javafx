@@ -527,15 +527,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void eatPellet(GameLevel level, Vector2i tile) {
-        requireNonNull(level);
-        requireNonNull(tile);
-
-        scorePoints(rules.pointsForPellet(), level.number());
-        gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
-    }
-
-    @Override
     public void eatEnergizer(GameLevel level, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(tile);

@@ -59,12 +59,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void eatPellet(GameLevel level, Vector2i tile) {
-        requireNonNull(level);
-        requireNonNull(tile);
-
-        scorePoints(rules().pointsForPellet(), level.number());
-        gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
-
+        super.eatPellet(level, tile);
         level.entities().pac().setRestingTicks(rules().restingTicksForPellet());
         checkRedGhostCruiseElroyActivation(level);
     }
