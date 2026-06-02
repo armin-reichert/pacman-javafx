@@ -8,7 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
@@ -99,7 +99,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     public void onTick(GameClock clock) {
         final UIConfig uiConfig = context().currentUIConfig();
         final TengenMsPacMan_GameModel game = context().currentGame();
-        final State<Game> gameState = context().currentGameState();
+        final State<GameModel> gameState = context().currentGameState();
         final long gameStateTick = gameState.timer().tickCount();
 
         clapperboard.tick();

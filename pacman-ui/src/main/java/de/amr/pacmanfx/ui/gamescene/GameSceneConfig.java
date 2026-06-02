@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.AppContext;
 
 import java.util.Optional;
@@ -14,7 +14,7 @@ import java.util.Optional;
  * Defines the configuration and selection logic for all game scenes belonging to a specific
  * game variant or UI mode.
  * <p>
- * A {@code GameSceneConfig} acts as the bridge between the game model ({@link Game}) and the
+ * A {@code GameSceneConfig} acts as the bridge between the game model ({@link GameModel}) and the
  * presentation layer. It determines:
  * <ul>
  *   <li>which scenes exist for a given variant,</li>
@@ -28,7 +28,7 @@ import java.util.Optional;
  * their own identifiers or use the built‑in {@link CommonSceneID} enumeration.
  *
  * <h2>Scene Selection</h2>
- * The method {@link #selectGameScene(AppContext, Game)} determines which scene should be displayed for the
+ * The method {@link #selectGameScene(AppContext, GameModel)} determines which scene should be displayed for the
  * current game state. This allows each game variant to define its own scene flow.
  */
 public interface GameSceneConfig extends Disposable {
@@ -66,14 +66,14 @@ public interface GameSceneConfig extends Disposable {
      * @param game the current game model
      * @return the scene to display, or an empty {@code Optional} if no scene applies
      */
-    Optional<GameScene> selectGameScene(AppContext context, Game game);
+    Optional<GameScene> selectGameScene(AppContext context, GameModel game);
 
     /**
      *
      * @param game the game
      * @return Scene ID of the cut-scene that follows the current game level.
      */
-    SceneID resolveCutSceneID(Game game);
+    SceneID resolveCutSceneID(GameModel game);
 
     /**
      * Indicates whether the given scene should be decorated with additional UI elements

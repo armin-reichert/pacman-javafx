@@ -28,7 +28,7 @@ public enum CanonicalGameState {
     GAME_OVER,
     INTERMISSION;
 
-    public boolean matches(State<Game> gameState) {
+    public boolean matches(State<GameModel> gameState) {
         requireNonNull(gameState);
         return gameState.matchesByName(name());
     }

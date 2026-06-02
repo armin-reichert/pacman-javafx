@@ -5,24 +5,24 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 
-public enum Arcade_GameState implements State<Game> {
+public enum Arcade_GameState implements State<GameModel> {
 
     /**
      * Corresponds to the screen showing all these random symbols from the Arcade video memory.
      */
     BOOT { // "Das muss das Boot abkönnen! Jawohl Herr Kaleu!"
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             lock(); // UI triggers timer expiration
             game.init();
             game.hud().hide();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 game.flow().enterState(INTRO);
             }
@@ -34,13 +34,13 @@ public enum Arcade_GameState implements State<Game> {
      */
     INTRO {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             lock();
             game.hud().credit(true).livesCounter(false).levelCounter(true).score(true).show();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 // Start demo level (attract mode)
                 game.flow().enterState(STARTING_GAME_OR_LEVEL);
@@ -53,26 +53,26 @@ public enum Arcade_GameState implements State<Game> {
      */
     PREPARING_GAME_START {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             lock();
             game.hud().credit(true).score(true).levelCounter(true).livesCounter(false).show();
             game.prepareNewGame();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             // Wait for user interaction (e.g. key press) to start playing
         }
     },
 
     STARTING_GAME_OR_LEVEL {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             game.hud().score(true).levelCounter(true).show();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             final long tick = timer.tickCount();
             if (game.isPlayingLevel()) {
                 game.continuePlayingLevel(tick);
@@ -91,12 +91,12 @@ public enum Arcade_GameState implements State<Game> {
 
     LEVEL_PLAYING {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             game.onStartLevelPlaying();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             game.doLevelPlaying();
             if (game.isLevelCompleted()) {
                 game.flow().enterState(LEVEL_COMPLETE);
@@ -112,13 +112,13 @@ public enum Arcade_GameState implements State<Game> {
 
     LEVEL_COMPLETE {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             lock(); // UI triggers timeout
             game.onLevelCompleted();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
                 if (level.isDemoLevel()) {
@@ -137,13 +137,13 @@ public enum Arcade_GameState implements State<Game> {
 
     LEVEL_TRANSITION {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             timer.restartSeconds(2);
             game.startNextLevel();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 game.flow().enterState(STARTING_GAME_OR_LEVEL);
             }
@@ -152,12 +152,12 @@ public enum Arcade_GameState implements State<Game> {
 
     EATING_GHOST {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             timer.restartTicks(TICK_EATING_GHOST_DURATION);
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 game.flow().resumePreviousState();
             } else {
@@ -168,12 +168,12 @@ public enum Arcade_GameState implements State<Game> {
 
     PACMAN_DYING {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             lock(); // UI triggers time-out
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
                 if (level.isDemoLevel()) {
@@ -190,14 +190,14 @@ public enum Arcade_GameState implements State<Game> {
 
     GAME_OVER {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             timer.restartTicks(level.gameOverStateTicks());
             game.onGameOver();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 final GameLevel level = game.optGameLevel().orElseThrow();
                 level.clearMessage();
@@ -213,20 +213,20 @@ public enum Arcade_GameState implements State<Game> {
 
     INTERMISSION {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             lock();
             game.hud().credit(false).score(false).levelCounter(true).livesCounter(false).show();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 game.flow().enterState(game.isPlayingLevel() ? LEVEL_TRANSITION : INTRO);
             }
         }
 
         @Override
-        public void onExit(Game game) {
+        public void onExit(GameModel game) {
             game.hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
         }
     };

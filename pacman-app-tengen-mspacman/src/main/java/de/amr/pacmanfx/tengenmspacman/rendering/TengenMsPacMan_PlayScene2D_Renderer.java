@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.fsm.State;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.world.WorldMap;
@@ -45,8 +45,8 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
         @Override
         public void draw(GameScene2D scene) {
-            final Game game = scene.context().currentGame();
-            final State<Game> gameState = scene.context().currentGameState();
+            final GameModel game = scene.context().currentGame();
+            final State<GameModel> gameState = scene.context().currentGameState();
 
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
 
@@ -105,7 +105,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         if (!(scene instanceof TengenMsPacMan_PlayScene2D playScene2D)) {
             return;
         }
-        final Game game = playScene2D.context().currentGame();
+        final GameModel game = playScene2D.context().currentGame();
         final long tick = playScene2D.context().gameClock().tickCount();
         game.optGameLevel().ifPresent(level -> {
             final WorldMap worldMap = level.worldMap();

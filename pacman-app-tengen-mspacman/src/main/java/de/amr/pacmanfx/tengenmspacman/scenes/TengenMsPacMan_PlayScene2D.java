@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
@@ -107,7 +107,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onEnteredFrom3DScene() {
-        final Game game = context().currentGame();
+        final GameModel game = context().currentGame();
         game.hud().levelCounter(true).livesCounter(true).show();
         game.optGameLevel().ifPresent(this::acceptGameLevel);
     }
@@ -162,7 +162,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
         final TranslationManager translationManager = context.ui().translations();
-        final Game game = context().currentGame();
+        final GameModel game = context().currentGame();
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
         final var menu = new ContextMenu();
 

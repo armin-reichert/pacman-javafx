@@ -5,9 +5,9 @@ package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.GenericChangeEvent;
 import de.amr.pacmanfx.model.CanonicalGameState;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 
-public class CutScenesTestState<GAME extends Game> extends TestState<GAME> {
+public class CutScenesTestState<GAME extends GameModel> extends TestState<GAME> {
 
     public int testedCutSceneNumber;
 

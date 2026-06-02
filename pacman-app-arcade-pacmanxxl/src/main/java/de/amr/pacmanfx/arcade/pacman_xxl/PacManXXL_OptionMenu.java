@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.AppContext;
@@ -111,7 +111,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         final UIConfig currentConfig = context.currentUIConfig();
         final GameVariant gameVariant = GameVariant.valueOf(context.currentGameVariant());
-        final Game game = context.currentGame();
+        final GameModel game = context.currentGame();
 
         if (!(game.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
             final String errorMsg = "Expected XXL map selector but found %s".formatted(game.mapSelector().getClass().getSimpleName());

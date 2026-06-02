@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.AbstractHuntingTimer;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
@@ -33,7 +33,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
 
     @Override
     public void connect(AppContext context) {
-        final Supplier<Game> gameSupplier = context::currentGame;
+        final Supplier<GameModel> gameSupplier = context::currentGame;
 
         addDynamicLabeledValue("Game State",  () -> "%s".formatted(context.currentGameState().name()));
         addDynamicLabeledValue("State Timer", () -> stateTimerInfo(gameSupplier.get()));
@@ -82,7 +82,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
         addDynamicLabeledValue("Maze flashings",  ifGameLevel(gameSupplier, this::fmtNumFlashes));
     }
 
-    private String stateTimerInfo(Game game) {
+    private String stateTimerInfo(GameModel game) {
         final TickTimer timer = game.flow().state().timer();
         final boolean indefinite = timer.durationTicks() == TickTimer.INDEFINITE;
         if (timer.isStopped()) {

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.subviews.playview.GameEventHandler;
 import javafx.beans.value.ChangeListener;
@@ -36,7 +36,7 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
     }
 
     private void exitGameVariant(String variantName) {
-        final Game oldGame = context.gameContext().gameForVariant(variantName);
+        final GameModel oldGame = context.gameContext().gameForVariant(variantName);
         context.ui().view().stage().getIcons().removeAll();
         context.ui().configurations().dispose(variantName);
         context.ui().sounds().dispose();
@@ -44,7 +44,7 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
     }
 
     public void enterGameVariant(String variantName) {
-        final Game newGame = context.gameContext().gameForVariant(variantName);
+        final GameModel newGame = context.gameContext().gameForVariant(variantName);
         final UIConfig config = context.ui().configurations().getOrCreateUIConfig(variantName);
         config.init(context);
         final Image icon = config.assets().image("app_icon");

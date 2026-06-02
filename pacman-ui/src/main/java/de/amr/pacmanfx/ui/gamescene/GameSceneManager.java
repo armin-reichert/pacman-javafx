@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene;
 
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.model.CanonicalGameState;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
@@ -64,7 +64,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     public void updateGameSceneAndForceReload(AppContext context, boolean forceReload) {
         final UIConfig currentConfig = context.currentUIConfig();
-        final Game game = context.currentGame();
+        final GameModel game = context.currentGame();
 
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
         final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(context, game).orElseThrow();

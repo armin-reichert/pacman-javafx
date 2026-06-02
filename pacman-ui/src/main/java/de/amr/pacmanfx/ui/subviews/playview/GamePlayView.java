@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.subviews.playview;
 
 import de.amr.pacmanfx.core.Globals;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
@@ -170,7 +170,7 @@ public class GamePlayView implements SubView {
         // Render current 2D game scene
         final GameScene gameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final Game game = context.currentGame();
+            final GameModel game = context.currentGame();
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D);
             }

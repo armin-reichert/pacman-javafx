@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.subviews.help;
 
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.model.CanonicalGameState;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -26,8 +26,8 @@ import static java.util.Objects.requireNonNull;
 public class HelpInfo {
 
     public static HelpInfo build(AppContext context) {
-        final Game game = context.currentGame();
-        final State<Game> state = context.currentGameState();
+        final GameModel game = context.currentGame();
+        final State<GameModel> state = context.currentGameState();
         final boolean demoLevel = game.isDemoLevelRunning();
 
         final HelpInfo helpInfo = new HelpInfo(context);
@@ -120,7 +120,7 @@ public class HelpInfo {
         addRow("help.show_intro", "Q");
     }
 
-    private void addInfoForIntroScene(Game game) {
+    private void addInfoForIntroScene(GameModel game) {
         if (game.canStartNewGame()) {
             addRow("help.start_game", "1");
         }
@@ -128,7 +128,7 @@ public class HelpInfo {
         addQuitEntry();
     }
 
-    private void addInfoForCreditScene(Game game) {
+    private void addInfoForCreditScene(GameModel game) {
         if (game.canStartNewGame()) {
             addRow("help.start_game", "1");
         }

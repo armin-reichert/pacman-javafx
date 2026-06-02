@@ -13,7 +13,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.event.CreditAddedEvent;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -205,7 +205,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final Game game = scene.context().currentGame();
+                final GameModel game = scene.context().currentGame();
                 scene.marquee.timer().doTick();
                 if (sceneTimer.atSecond(2.0) && !game.canStartNewGame()) {
                     game.flow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL); // demo level

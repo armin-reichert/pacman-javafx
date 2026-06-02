@@ -7,7 +7,7 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.CanonicalGameState;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
@@ -91,7 +91,7 @@ public final class CommonActions {
     public static final GameAction ACTION_QUIT_GAME_SCENE = new GameAction("quit_game_scene") {
         @Override
         protected void doAction(AppContext context) {
-            final Game game = context.currentGame();
+            final GameModel game = context.currentGame();
             game.cheats().clear(); //TODO needed?
             context.stopGame();
             context.ui().gameScenes().quitCurrentGameScene(context);
@@ -104,8 +104,8 @@ public final class CommonActions {
         protected void doAction(AppContext context) {
             //TODO check this code
             context.stopGame();
-            final Game game = context.currentGame();
-            final State<Game> gameState = context.currentGameState();
+            final GameModel game = context.currentGame();
+            final State<GameModel> gameState = context.currentGameState();
             boolean isLevelShortTest = gameState instanceof LevelShortTestState;
             if (isLevelShortTest) {
                 gameState.onExit(game); //TODO exit other states too?
@@ -211,7 +211,7 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction("toggle_collision_strategy") {
         @Override
         protected void doAction(AppContext context) {
-            final Game game = context.currentGame();
+            final GameModel game = context.currentGame();
             CollisionStrategy collisionStrategy = game.collisionStrategy();
             if (collisionStrategy == CollisionStrategy.CENTER_DISTANCE) {
                 game.setCollisionStrategy(CollisionStrategy.SAME_TILE);

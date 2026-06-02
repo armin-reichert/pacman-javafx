@@ -9,7 +9,7 @@ import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameFlow;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -48,7 +48,7 @@ public interface AppContext extends AppLifecycle {
         return currentGame().flow();
     }
 
-    default State<Game> currentGameState() {
+    default State<GameModel> currentGameState() {
         return currentGameFlow().state();
     }
 

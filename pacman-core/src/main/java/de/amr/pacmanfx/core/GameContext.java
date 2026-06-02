@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import javafx.beans.property.StringProperty;
 
 import static java.util.Objects.requireNonNull;
@@ -69,7 +69,7 @@ public interface GameContext {
      * @return the game model for the given variant name
      * @throws ClassCastException if the registered game model cannot be cast to the expected type
      */
-    <T extends Game> T gameForVariant(String variantName);
+    <T extends GameModel> T gameForVariant(String variantName);
 
     /**
      * Returns the game model of the currently selected game variant.

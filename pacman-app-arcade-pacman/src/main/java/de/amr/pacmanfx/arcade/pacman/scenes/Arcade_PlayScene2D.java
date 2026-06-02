@@ -6,10 +6,9 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -56,7 +55,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        final Game game = context().currentGame();
+        final GameModel game = context().currentGame();
         final var menu = new ContextMenu();
         addLocalizedTitleItem(menu, context.ui().translations(), "pacman");
         addLocalizedCheckBox(menu, context.ui().translations(), game.cheats().usingAutopilotProperty(), "autopilot").setOnAction(e -> {
@@ -120,7 +119,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     // While Pac-Man is not yet visible on level start, one symbol more is shown in the lives counter
     private void updateLivesCounter(GameLevel level) {
-        final Game game = context().currentGame();
+        final GameModel game = context().currentGame();
         final int additionalLives = context().currentGameState() == Arcade_GameState.STARTING_GAME_OR_LEVEL
             && !level.entities().pac().isVisible() ? 1 : 0;
         final int count = Math.clamp(game.lifeCount() - 1 + additionalLives, 0, game.hud().maxLivesDisplayed());

@@ -5,9 +5,9 @@ package de.amr.pacmanfx.model.test;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 
-public abstract class TestState<GAME extends Game> implements State<GAME> {
+public abstract class TestState<GAME extends GameModel> implements State<GAME> {
 
     protected final TickTimer timer = new TickTimer(getClass().getSimpleName());
 

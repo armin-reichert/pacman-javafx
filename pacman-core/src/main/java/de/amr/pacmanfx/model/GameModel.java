@@ -40,7 +40,7 @@ import java.util.Optional;
  *   <li>tracking score, lives, and HUD information</li>
  * </ul>
  */
-public interface Game {
+public interface GameModel {
 
     /** @return the controller responsible for managing the game flow */
     GameFlow flow();
@@ -188,6 +188,9 @@ public interface Game {
 
     /** @return the number of the last intermission shown */
     int lastIntermissionNumber();
+
+    /** Default collision strategy used by the original arcade games. */
+    CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;
 
     /**
      * Returns the collision strategy used to detect interactions between

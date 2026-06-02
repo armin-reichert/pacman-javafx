@@ -12,19 +12,19 @@ import java.util.Optional;
 
 public interface GameFlow {
 
-    Optional<State<Game>> optState(String stateName);
+    Optional<State<GameModel>> optState(String stateName);
 
-    State<Game> state();
+    State<GameModel> state();
 
-    void addState(State<Game> gameState);
+    void addState(State<GameModel> gameState);
 
-    void enterState(State<Game> gameState);
+    void enterState(State<GameModel> gameState);
 
     void enterStateWithName(String stateName);
 
     void resumePreviousState();
 
-    void restartState(State<Game> gameState);
+    void restartState(State<GameModel> gameState);
 
     void restartState(String stateName);
 

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.AppContext;
@@ -48,7 +48,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected SceneID determineSceneID(Game game) {
+    protected SceneID determineSceneID(GameModel game) {
         return switch (game.flow().state()) {
             case BOOT -> CommonSceneID.BOOT_SCENE;
             case PREPARING_GAME_START -> CommonSceneID.START_SCENE;

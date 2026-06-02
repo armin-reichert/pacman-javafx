@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.tinylog.Logger;
@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Container for the playable games. Each game variant is represented by an instance of its game model (see {@link Game}).
+ * Container for the playable games. Each game variant is represented by an instance of its game model (see {@link GameModel}).
  */
 public class GameBox implements GameContext {
 
@@ -42,7 +42,7 @@ public class GameBox implements GameContext {
     private final File homeDir = DEFAULT_HOME_DIR;
     private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
     private final CoinMechanism coinMechanism;
-    private final Map<String, Game> gamesByVariantName = new HashMap<>();
+    private final Map<String, GameModel> gamesByVariantName = new HashMap<>();
 
     public GameBox(CoinMechanism coinMechanism) {
         this.coinMechanism = requireNonNull(coinMechanism);
@@ -80,7 +80,7 @@ public class GameBox implements GameContext {
                 .formatted(variantName, GAME_VARIANT_NAME_PATTERN));
         }
 
-        final Game previousGame = gamesByVariantName.putIfAbsent(variantName, game);
+        final GameModel previousGame = gamesByVariantName.putIfAbsent(variantName, game);
         if (previousGame != null) {
             Logger.warn("Game ({}) is already registered for variant {}", previousGame.getClass().getName(), variantName);
         }
@@ -106,7 +106,7 @@ public class GameBox implements GameContext {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Game> T gameForVariant(String variantName) {
+    public <T extends GameModel> T gameForVariant(String variantName) {
         requireNonNull(variantName);
         if (gamesByVariantName.containsKey(variantName)) {
             return (T) gamesByVariantName.get(variantName);

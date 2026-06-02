@@ -8,7 +8,7 @@ import de.amr.basics.fsm.StateMachine;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameFlow;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class Arcade_GameFlow extends StateMachine<Game> implements GameFlow {
+public class Arcade_GameFlow extends StateMachine<GameModel> implements GameFlow {
 
     private static void ensureFxThread(String actionDesc) {
         if (!Platform.isFxApplicationThread()) {

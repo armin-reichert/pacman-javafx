@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.HeadsUpDisplay;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -39,7 +39,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
     }
 
     @Override
-    public void draw(HeadsUpDisplay hud, Game game, GameScene2D scene) {
+    public void draw(HeadsUpDisplay hud, GameModel game, GameScene2D scene) {
         requireNonNull(game);
         requireNonNull(scene);
 

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
@@ -136,7 +136,7 @@ public class DashboardSection3DSettings extends DashboardSection {
     }
 
     private String sceneSizeInfo(AppContext context) {
-        final Game game = context.currentGame();
+        final GameModel game = context.currentGame();
         final GameScene gameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
 

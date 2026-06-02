@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 
 import static java.util.Objects.requireNonNull;
 
-public class LevelShortTestState<GAME extends Game> extends TestState<GAME> {
+public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME> {
 
     private final CoinMechanism coinMechanism;
     private int lastTestedLevelNumber;

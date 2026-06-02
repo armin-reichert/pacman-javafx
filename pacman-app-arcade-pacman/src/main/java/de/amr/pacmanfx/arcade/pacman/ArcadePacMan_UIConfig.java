@@ -12,7 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.event.CreditAddedEvent;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostFactory;
@@ -117,7 +117,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         @Override
         public void doAction(AppContext context) {
             final CoinMechanism slot = context.gameContext().coinMechanism();
-            final Game game = context.currentGame();
+            final GameModel game = context.currentGame();
             context.ui().sounds().stopAndDisposeVoice();
             context.ui().sounds().setEnabled(true);
             slot.insertCoin();
@@ -131,12 +131,12 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             if (slot.isFull()) {
                 return false;
             }
-            final Game game = context.currentGame();
+            final GameModel game = context.currentGame();
             // In demo level, coin can always be inserted
             if (game.isDemoLevelRunning()) {
                 return true;
             }
-            final State<Game> gameState = game.flow().state();
+            final State<GameModel> gameState = game.flow().state();
             return gameState == INTRO || gameState == PREPARING_GAME_START;
         }
     };
@@ -154,8 +154,8 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             if (slot.isEmpty()) {
                 return false;
             }
-            final Game game = context.currentGame();
-            final State<Game> gameState = context.currentGameState();
+            final GameModel game = context.currentGame();
+            final State<GameModel> gameState = context.currentGameState();
             return (gameState == INTRO || gameState == PREPARING_GAME_START) && game.canStartNewGame();
         }
     };

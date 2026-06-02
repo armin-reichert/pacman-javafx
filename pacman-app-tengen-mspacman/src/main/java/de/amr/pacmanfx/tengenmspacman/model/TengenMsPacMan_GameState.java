@@ -6,23 +6,23 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 
-public enum TengenMsPacMan_GameState implements State<Game> {
+public enum TengenMsPacMan_GameState implements State<GameModel> {
 
     /**
      * Corresponds to the screen showing the "TENGEN PRESENTS" text and the red ghost running over the screen.
      */
     BOOT { // "Das muss das Boot abkönnen!"
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             lock();
             game.init();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 game.flow().enterState(INTRO);
             }
@@ -40,12 +40,12 @@ public enum TengenMsPacMan_GameState implements State<Game> {
      */
     INTRO {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             lock();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 game.flow().enterState(STARTING_GAME_OR_LEVEL);
             }
@@ -58,12 +58,12 @@ public enum TengenMsPacMan_GameState implements State<Game> {
      */
     PREPARING_GAME_START {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             game.prepareNewGame();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             // wait for user interaction to leave state
         }
     },
@@ -74,12 +74,12 @@ public enum TengenMsPacMan_GameState implements State<Game> {
      */
     SHOWING_HALL_OF_FAME {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             lock();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 game.flow().enterState(INTRO);
             }
@@ -88,12 +88,12 @@ public enum TengenMsPacMan_GameState implements State<Game> {
 
     STARTING_GAME_OR_LEVEL {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             game.hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             final long tick = timer.tickCount();
             if (game.isPlayingLevel()) {
                 game.continuePlayingLevel(tick);
@@ -107,12 +107,12 @@ public enum TengenMsPacMan_GameState implements State<Game> {
 
     LEVEL_PLAYING {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             game.onStartLevelPlaying();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             game.doLevelPlaying();
             if (game.isLevelCompleted()) {
                 game.flow().enterState(LEVEL_COMPLETE);
@@ -126,12 +126,12 @@ public enum TengenMsPacMan_GameState implements State<Game> {
 
     LEVEL_COMPLETE {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             lock(); // UI triggers timeout
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.tickCount() == 1) {
                 game.onLevelCompleted();
@@ -157,13 +157,13 @@ public enum TengenMsPacMan_GameState implements State<Game> {
 
     LEVEL_TRANSITION {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             timer.restartSeconds(2);
             game.startNextLevel();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 game.flow().enterState(STARTING_GAME_OR_LEVEL);
             }
@@ -172,12 +172,12 @@ public enum TengenMsPacMan_GameState implements State<Game> {
 
     EATING_GHOST {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             timer.restartTicks(TengenMsPacMan_GameModel.TICK_EATING_GHOST_COMPLETE);
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 game.flow().resumePreviousState();
             } else {
@@ -189,12 +189,12 @@ public enum TengenMsPacMan_GameState implements State<Game> {
 
     PACMAN_DYING {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             lock(); // UI triggers time-out
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
                 if (level.isDemoLevel()) {
@@ -211,14 +211,14 @@ public enum TengenMsPacMan_GameState implements State<Game> {
 
     GAME_OVER {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             timer.restartTicks(level.gameOverStateTicks());
             game.onGameOver();
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
                 if (level.isDemoLevel()) {
@@ -234,7 +234,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
 
     INTERMISSION {
         @Override
-        public void onEnter(Game game) {
+        public void onEnter(GameModel game) {
             lock();
             final var tengenHUD = (TengenMsPacMan_HeadsUpDisplay) game.hud();
             final TengenMsPacMan_GameModel tengenGame = tengenGame(game);
@@ -249,14 +249,14 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         }
 
         @Override
-        public void onUpdate(Game game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 game.flow().enterState(game.isPlayingLevel() ? LEVEL_TRANSITION : INTRO);
             }
         }
 
         @Override
-        public void onExit(Game game) {
+        public void onExit(GameModel game) {
             final var tengenHUD = (TengenMsPacMan_HeadsUpDisplay) game.hud();
             final TengenMsPacMan_GameModel tengenGame = tengenGame(game);
             if (tengenGame.mapCategory() == MapCategory.ARCADE) {
@@ -275,7 +275,7 @@ public enum TengenMsPacMan_GameState implements State<Game> {
         timer = new TickTimer("Timer-" + name());
     }
 
-    TengenMsPacMan_GameModel tengenGame(Game game) {
+    TengenMsPacMan_GameModel tengenGame(GameModel game) {
         return (TengenMsPacMan_GameModel) game;
     }
 

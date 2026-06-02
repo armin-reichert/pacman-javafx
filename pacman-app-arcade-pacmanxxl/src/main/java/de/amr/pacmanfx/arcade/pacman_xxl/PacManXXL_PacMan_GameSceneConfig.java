@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.gamescene.AbstractGameSceneConfig;
@@ -41,7 +41,7 @@ class PacManXXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected SceneID determineSceneID(Game game) {
+    protected SceneID determineSceneID(GameModel game) {
         return switch (game.flow().state()) {
             case Arcade_GameState.BOOT -> CommonSceneID.BOOT_SCENE;
             case Arcade_GameState.PREPARING_GAME_START -> CommonSceneID.START_SCENE;

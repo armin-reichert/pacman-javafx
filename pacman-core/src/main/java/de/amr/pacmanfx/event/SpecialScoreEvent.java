@@ -4,6 +4,6 @@
 
 package de.amr.pacmanfx.event;
 
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 
-public record SpecialScoreEvent(Game game, int score) implements GameEvent {}
+public record SpecialScoreEvent(GameModel game, int score) implements GameEvent {}

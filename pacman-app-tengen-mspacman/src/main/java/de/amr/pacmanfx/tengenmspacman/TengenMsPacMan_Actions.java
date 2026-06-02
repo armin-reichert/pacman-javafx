@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
@@ -33,7 +33,7 @@ public interface TengenMsPacMan_Actions {
 
         @Override
         public boolean isEnabled(AppContext context) {
-            final Game game = context.currentGame();
+            final GameModel game = context.currentGame();
             return game.isDemoLevelRunning();
         }
     };

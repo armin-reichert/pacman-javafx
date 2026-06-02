@@ -7,7 +7,7 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -15,7 +15,6 @@ import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -112,7 +111,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void onTick(GameClock clock) {
-        final State<Game> gameState = context().currentGameState();
+        final State<GameModel> gameState = context().currentGameState();
         final long gameStateTick = gameState.timer().tickCount();
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {

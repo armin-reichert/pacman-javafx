@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HeadsUpDisplay;
 import de.amr.pacmanfx.model.Score;
@@ -49,7 +49,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     @Override
-    public void draw(HeadsUpDisplay hud, Game game, GameScene2D scene) {
+    public void draw(HeadsUpDisplay hud, GameModel game, GameScene2D scene) {
         requireNonNull(hud);
         requireNonNull(game);
         requireNonNull(scene);
@@ -115,7 +115,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         fillText("%6d".formatted(score.points()), color, font, TS(13), TS(2));
     }
 
-    private void drawLivesCounter(Game game, TengenMsPacMan_HeadsUpDisplay hud, float y) {
+    private void drawLivesCounter(GameModel game, TengenMsPacMan_HeadsUpDisplay hud, float y) {
         final RectShort symbolSprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < hud.visibleLifeCount(); ++i) {
             drawSprite(symbolSprite, TS(4 + i * 2), y, true);

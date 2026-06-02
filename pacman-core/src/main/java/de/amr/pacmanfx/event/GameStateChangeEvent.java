@@ -5,6 +5,6 @@
 package de.amr.pacmanfx.event;
 
 import de.amr.basics.fsm.State;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 
-public record GameStateChangeEvent(Game game, State<Game> oldState, State<Game> newState) implements GameEvent {}
+public record GameStateChangeEvent(GameModel game, State<GameModel> oldState, State<GameModel> newState) implements GameEvent {}

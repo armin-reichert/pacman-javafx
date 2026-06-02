@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -28,7 +28,7 @@ public class DashboardSectionActorInfo extends DashboardSection {
 
     @Override
     public void connect(AppContext context) {
-        final Supplier<Game> gameSupplier = context::currentGame;
+        final Supplier<GameModel> gameSupplier = context::currentGame;
 
         addDynamicLabeledValue("Pac Name", supplyPacInfo(gameSupplier, (_, pac) -> pac.name()));
         addDynamicLabeledValue("Lives",    ifGameLevel(gameSupplier, _ -> "%d".formatted(gameSupplier.get().lifeCount())));
@@ -74,13 +74,13 @@ public class DashboardSectionActorInfo extends DashboardSection {
     }
 
     private Supplier<String> supplyPacInfo(
-        Supplier<Game> gameSupplier,
+        Supplier<GameModel> gameSupplier,
         BiFunction<GameLevel, Pac, String> detailInfoSupplier)
     {
         return ifGameLevel(gameSupplier, level -> detailInfoSupplier.apply(level, level.entities().pac()));
     }
 
-    private void addGhostInfo(Supplier<Game> gameSupplier, byte personality) {
+    private void addGhostInfo(Supplier<GameModel> gameSupplier, byte personality) {
         String name = switch (personality) {
             case RED_GHOST_SHADOW   -> "Red Ghost";
             case PINK_GHOST_SPEEDY  -> "Pink Ghost";
@@ -95,7 +95,7 @@ public class DashboardSectionActorInfo extends DashboardSection {
     }
 
     private Supplier<String> supplyGhostInfo(
-        Supplier<Game> gameSupplier,
+        Supplier<GameModel> gameSupplier,
         BiFunction<GameLevel, Ghost, String> detailInfoSupplier,
         byte personality)
     {

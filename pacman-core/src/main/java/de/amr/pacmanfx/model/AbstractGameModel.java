@@ -22,7 +22,7 @@ import static de.amr.pacmanfx.core.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Base implementation of the {@link Game} interface providing the core simulation logic shared by all Pac-Man variants.
+ * Base implementation of the {@link GameModel} interface providing the core simulation logic shared by all Pac-Man variants.
  *
  * <p>This abstract model encapsulates:
  * <ul>
@@ -41,13 +41,7 @@ import static java.util.Objects.requireNonNull;
  * <p>The model is deterministic and tick-driven: each call to {@link #doHuntingStep(GameLevel)} advances the
  * simulation by one frame.</p>
  */
-public abstract class AbstractGameModel implements Game {
-
-    /** Default collision strategy used by the original arcade games. */
-    public static final CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;
-
-    // Cheating
-    private final GameCheats cheats = new GameCheats();
+public abstract class AbstractGameModel implements GameModel {
 
     private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
@@ -74,8 +68,9 @@ public abstract class AbstractGameModel implements Game {
     /** Score thresholds at which extra lives are awarded. */
     private Set<Integer> extraLifeScores = Set.of();
 
-    protected AbstractGameModel() {
+    private final GameCheats cheats = new GameCheats();
 
+    protected AbstractGameModel() {
         score.pointsProperty().addListener((_, oldScore, newScore)
             -> handleScoreChange(oldScore.intValue(), newScore.intValue()));
 

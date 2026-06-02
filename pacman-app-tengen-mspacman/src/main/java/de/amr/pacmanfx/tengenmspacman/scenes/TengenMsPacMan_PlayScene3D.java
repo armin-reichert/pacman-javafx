@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
@@ -40,7 +40,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void decorate(GameLevel3D level3D) {
-        final Game game = context().currentGame();
+        final GameModel game = context().currentGame();
         if (!(game instanceof TengenMsPacMan_GameModel tengenGame)) {
             throw new IllegalStateException("Cannot use Tengen play scene 3D in game of class %s"
                 .formatted(game.getClass().getSimpleName()));

@@ -8,7 +8,7 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.AppConstants;
@@ -52,7 +52,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     @Override
     public void onGameStateChange(GameStateChangeEvent event) {
-        final State<Game> gameState = event.newState();
+        final State<GameModel> gameState = event.newState();
 
         //TODO ugly
         if (gameState instanceof TestState) {
@@ -103,7 +103,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     @Override
     public void onGameStarted(GameStartedEvent event) {
-        final State<Game> state = context().currentGameState();
+        final State<GameModel> state = context().currentGameState();
         final boolean silent = context().currentGame().isDemoLevelRunning() || state instanceof TestState;
         if (!silent) {
             context().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
@@ -124,7 +124,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     @Override
     public void onLevelStarted(LevelStartedEvent event) {
         final GameLevel level = event.level();
-        final State<Game> gameState = context().currentGameState();
+        final State<GameModel> gameState = context().currentGameState();
         //TODO rethink
         if (gameState instanceof TestState) {
             gameScene().replaceGameLevel3D(level);
@@ -216,7 +216,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
             .ifPresent(ManagedAnimation::playFromStart);
     }
 
-    private void onPacManDying(State<Game> gameState) {
+    private void onPacManDying(State<GameModel> gameState) {
         final GameLevel3D level3D = assertLevel3D();
         final Pac3D pac3D = level3D.entities().pac3D();
 
@@ -279,7 +279,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     private void onLevelComplete() {
         final GameLevel3D level3D = assertLevel3D();
-        final State<Game> gameState = context().currentGameState();
+        final State<GameModel> gameState = context().currentGameState();
 
         gameScene().scoreOpacity.set(0);
 
@@ -294,7 +294,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         playLevelEndAnimation(level3D.animationRegistry(), level3D.entities().maze3D(), gameState, level3D.level().cutSceneNumber() != 0);
     }
 
-    private void playLevelEndAnimation(AnimationRegistry animationRegistry, Maze3D maze3D, State<Game> gameState, boolean cutSceneAfter) {
+    private void playLevelEndAnimation(AnimationRegistry animationRegistry, Maze3D maze3D, State<GameModel> gameState, boolean cutSceneAfter) {
         final GameLevel3D.AnimationID animationID = cutSceneAfter
             ? GameLevel3D.AnimationID.LEVEL_COMPLETED_SHORT
             : GameLevel3D.AnimationID.LEVEL_COMPLETED_FULL;

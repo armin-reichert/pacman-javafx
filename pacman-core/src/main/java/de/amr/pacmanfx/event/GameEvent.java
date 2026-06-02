@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.event;
 
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 
 public sealed interface GameEvent permits
     BonusActivatedEvent,
@@ -30,5 +30,5 @@ public sealed interface GameEvent permits
     StopAllSoundsEvent,
     GenericChangeEvent
 {
-    Game game();
+    GameModel game();
 }

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
-import de.amr.pacmanfx.model.Game;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -95,7 +95,7 @@ public abstract class DashboardSection extends TitledPane {
         return () -> context.ui().gameScenes().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> ifGameLevel(Supplier<Game> gameSupplier, Function<GameLevel, String> fnInfo) {
+    protected Supplier<String> ifGameLevel(Supplier<GameModel> gameSupplier, Function<GameLevel, String> fnInfo) {
         return () -> gameSupplier.get().optGameLevel().map(fnInfo).orElse(NO_INFO);
     }
 

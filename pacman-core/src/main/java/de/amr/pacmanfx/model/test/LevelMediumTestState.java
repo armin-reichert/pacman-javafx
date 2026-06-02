@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 
 import java.util.List;
 
-public class LevelMediumTestState<GAME extends Game> extends TestState<GAME> {
+public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME> {
 
     static final int TEST_DURATION_SEC = 10;
 
