@@ -1,5 +1,8 @@
 # A JavaFX remake (2D+3D) of Pac-Man (Arcade) and Ms. Pac-Man (Arcade + Tengen NES Version)
 
+![Build](https://github.com/armin-reichert/pacman-javafx/actions/workflows/build.yml/badge.svg)
+
+
 ## ℹ️ Online version available
 
 An older release of Pac-Man and Ms. Pac-Man (2D) can be played online:
