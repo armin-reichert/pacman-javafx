@@ -4,59 +4,27 @@
 
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 
-public class GameCheats {
-
-    private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
-    private final BooleanProperty immune = new SimpleBooleanProperty(false);
-    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
-
-    public GameCheats() {}
+public interface GameCheats {
 
     /** @return property indicating whether a cheat has been used */
-    public BooleanProperty cheatUsedProperty() {
-        return cheatUsed;
-    }
+    BooleanProperty cheatUsedProperty();
 
     /** @return property indicating whether Pac‑Man is immune to death */
-    public BooleanProperty immuneProperty() {
-        return immune;
-    }
+    BooleanProperty immuneProperty();
 
     /** @return {@code true} if Pac‑Man is currently immune */
-    public boolean isImmune() {
-        return immuneProperty().get();
-    }
+    boolean isImmune();
 
     /** @return {@code true} if autopilot is currently active */
-    public boolean isUsingAutopilot() {
-        return usingAutopilotProperty().get();
-    }
+    boolean isUsingAutopilot();
 
     /** @return property indicating whether autopilot mode is active */
-    public BooleanProperty usingAutopilotProperty() {
-        return usingAutopilot;
-    }
+    BooleanProperty usingAutopilotProperty();
 
-    public void clear() {
-        cheatUsed.set(false);
-        immune.set(false);
-        usingAutopilot.set(false);
-    }
+    void clearCheats();
 
-    public void update(GameLevel level) {
-        if (level.isDemoLevel() || !level.game().isPlayingLevel()) {
-            return;
-        }
-        final Pac pac = level.entities().pac();
-        pac.immuneProperty().set(isImmune());
-        pac.usingAutopilotProperty().set(isUsingAutopilot());
-        if (isImmune() || isUsingAutopilot()) {
-            cheatUsed.set(true);
-        }
-    }
+    void updateCheats(GameLevel level);
 }

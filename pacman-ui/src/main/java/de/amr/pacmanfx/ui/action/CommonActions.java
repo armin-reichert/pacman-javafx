@@ -92,7 +92,7 @@ public final class CommonActions {
         @Override
         protected void doAction(AppContext context) {
             final GameModel game = context.currentGame();
-            game.cheats().clear(); //TODO needed?
+            game.clearCheats(); //TODO needed?
             context.stopGame();
             context.ui().gameScenes().quitCurrentGameScene(context);
             context.ui().subViews().selectStartView();

@@ -241,7 +241,7 @@ public enum TengenMsPacMan_GameState {
                     game.flow().enterState(SHOWING_HALL_OF_FAME.state());
                 } else {
                     level.clearMessage();
-                    game.cheats().clear();
+                    game.clearCheats();
                     game.flow().enterState(game.canContinueOnGameOver() ? GAME_PREPARATION.state() : GAME_INTRO.state());
                 }
             }

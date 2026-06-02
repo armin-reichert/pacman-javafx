@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.model;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -14,7 +15,6 @@ import de.amr.pacmanfx.model.level.LevelCounter;
 import de.amr.pacmanfx.model.lives.PacManLives;
 import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
 
@@ -47,7 +47,7 @@ import java.util.Optional;
  *   <li>tracking score, lives, and HUD information</li>
  * </ul>
  */
-public interface GameModel {
+public interface GameModel extends GameCheats {
 
     /** @return the controller responsible for managing the game flow */
     GameControlFlow flow();
@@ -56,9 +56,6 @@ public interface GameModel {
      * @return the rules for the game variant
      */
     GameRules rules();
-
-    /** @return cheat configuration for this game */
-    GameCheats cheats();
 
     /**
      * Returns the simulation step information for the current frame.

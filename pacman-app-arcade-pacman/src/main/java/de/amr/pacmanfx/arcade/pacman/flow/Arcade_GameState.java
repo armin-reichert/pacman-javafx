@@ -214,7 +214,7 @@ public enum Arcade_GameState {
             if (timer().hasExpired()) {
                 final GameLevel level = game.optGameLevel().orElseThrow();
                 level.clearMessage();
-                game.cheats().clear();
+                game.clearCheats();
                 if (game.canStartNewGame()) {
                     game.flow().enterState(GAME_PREPARATION.state);
                 } else {

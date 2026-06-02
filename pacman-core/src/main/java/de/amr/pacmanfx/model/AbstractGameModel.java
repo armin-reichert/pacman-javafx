@@ -72,13 +72,11 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected PacManLives lives;
 
-    private final GameCheats cheats = new GameCheats();
-
     protected AbstractGameModel() {
         score.pointsProperty().addListener((_, oldScore, newScore)
             -> handleScoreChange(oldScore.intValue(), newScore.intValue()));
 
-        cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
+        cheatUsedProperty().addListener((_, _, cheated) -> {
             if (cheated) {
                 handleCheatDetected();
             }
@@ -160,12 +158,54 @@ public abstract class AbstractGameModel implements GameModel {
     protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
     /* -------------------------------------------------------------------------
-     * Cheating interface implementation
+     * Cheating
      * ---------------------------------------------------------------------- */
 
-    @Override
-    public GameCheats cheats() {
-        return cheats;
+    private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
+    private final BooleanProperty immune = new SimpleBooleanProperty(false);
+    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
+
+    /** @return property indicating whether a cheat has been used */
+    public BooleanProperty cheatUsedProperty() {
+        return cheatUsed;
+    }
+
+    /** @return property indicating whether Pac‑Man is immune to death */
+    public BooleanProperty immuneProperty() {
+        return immune;
+    }
+
+    /** @return {@code true} if Pac‑Man is currently immune */
+    public boolean isImmune() {
+        return immuneProperty().get();
+    }
+
+    /** @return {@code true} if autopilot is currently active */
+    public boolean isUsingAutopilot() {
+        return usingAutopilotProperty().get();
+    }
+
+    /** @return property indicating whether autopilot mode is active */
+    public BooleanProperty usingAutopilotProperty() {
+        return usingAutopilot;
+    }
+
+    public void clearCheats() {
+        cheatUsed.set(false);
+        immune.set(false);
+        usingAutopilot.set(false);
+    }
+
+    public void updateCheats(GameLevel level) {
+        if (level.isDemoLevel() || !level.game().isPlayingLevel()) {
+            return;
+        }
+        final Pac pac = level.entities().pac();
+        pac.immuneProperty().set(isImmune());
+        pac.usingAutopilotProperty().set(isUsingAutopilot());
+        if (isImmune() || isUsingAutopilot()) {
+            cheatUsed.set(true);
+        }
     }
 
     /* -------------------------------------------------------------------------
@@ -181,7 +221,7 @@ public abstract class AbstractGameModel implements GameModel {
         if (gateKeeper() != null) {
             gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
-        cheats().update(level);
+        updateCheats(level);
     }
 
     @Override

@@ -5,7 +5,6 @@ package de.amr.pacmanfx.ui.view;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
@@ -20,11 +19,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
+
+import java.util.stream.Stream;
+
 //import org.kordamp.ikonli.Ikon;
 //import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 //import org.kordamp.ikonli.javafx.FontIcon;
-
-import java.util.stream.Stream;
 
 public class StatusIconBox implements Disposable {
 
@@ -117,20 +117,17 @@ public class StatusIconBox implements Disposable {
     }
 
     public void bind(GameModel game) {
-        final GameCheats cheats = game.cheats();
-
         iconAutopilot().visibleProperty().unbind();
-        iconAutopilot().visibleProperty().bind(cheats.usingAutopilotProperty());
+        iconAutopilot().visibleProperty().bind(game.usingAutopilotProperty());
 
         iconCheated()  .visibleProperty().unbind();
-        iconCheated()  .visibleProperty().bind(cheats.cheatUsedProperty());
+        iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
 
         iconImmune()   .visibleProperty().unbind();
-        iconImmune()   .visibleProperty().bind(cheats.immuneProperty());
+        iconImmune()   .visibleProperty().bind(game.immuneProperty());
 
         Logger.info("Icons autopilot, cheated and immune visibility bound to game model {}", game);
     }
-
 
     @Override
     public void dispose() {
