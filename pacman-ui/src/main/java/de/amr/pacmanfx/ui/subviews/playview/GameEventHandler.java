@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.subviews.playview;
 
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.model.CanonicalGameState;
+import de.amr.pacmanfx.flow.CanonicalGameState;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;

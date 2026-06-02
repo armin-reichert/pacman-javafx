@@ -34,7 +34,7 @@ import javafx.scene.image.Image;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.model.CanonicalGameState.*;
+import static de.amr.pacmanfx.flow.CanonicalGameState.*;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
 
 public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandler {

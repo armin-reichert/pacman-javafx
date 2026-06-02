@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.model.CanonicalGameState;
+import de.amr.pacmanfx.flow.CanonicalGameState;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;

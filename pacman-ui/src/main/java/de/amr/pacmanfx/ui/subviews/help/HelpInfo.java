@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.subviews.help;
 
 import de.amr.basics.fsm.State;
-import de.amr.pacmanfx.model.CanonicalGameState;
+import de.amr.pacmanfx.flow.CanonicalGameState;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;

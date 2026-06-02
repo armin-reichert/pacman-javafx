@@ -15,7 +15,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.GameControlFlow;
+import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;

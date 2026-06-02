@@ -1,18 +1,11 @@
-/*
- * Copyright (c) 2021-2026 Armin Reichert (MIT License)
- */
-
-package de.amr.pacmanfx.tengenmspacman.flow;
+package de.amr.pacmanfx.flow;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
-import de.amr.pacmanfx.model.GameControlFlow;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
@@ -23,23 +16,17 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_GameControlFlow implements GameControlFlow {
+public class StateMachineGameControlFlow implements GameControlFlow {
 
-    private final StateMachine<GameModel> stateMachine;
-
+    protected final StateMachine<GameModel> stateMachine = new StateMachine<>();
     private final Set<GameEventListener> eventListeners = new HashSet<>();
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
-    public TengenMsPacMan_GameControlFlow(TengenMsPacMan_GameModel game) {
-        requireNonNull(game);
-
-        stateMachine = new StateMachine<>();
-        stateMachine.setName("Tengen Ms. Pac-Man Game Flow");
-        for (TengenMsPacMan_GameState gameState : TengenMsPacMan_GameState.values()) {
-            addState(gameState.state());
-        }
-        stateMachine.setContext(game);
-        stateMachine.addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
+    public StateMachineGameControlFlow(String name, GameModel gameModel) {
+        requireNonNull(gameModel);
+        stateMachine.setName(name);
+        stateMachine.setContext(gameModel);
+        stateMachine.addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(gameModel, oldState, newState)));
     }
 
     @Override
@@ -95,7 +82,6 @@ public class TengenMsPacMan_GameControlFlow implements GameControlFlow {
     @Override
     public void addGameEventListener(GameEventListener listener) {
         requireNonNull(listener);
-        ensureFxThread("Adding game event listeners");
         final boolean added = eventListeners.add(listener);
         if (added) {
             Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
@@ -110,7 +96,6 @@ public class TengenMsPacMan_GameControlFlow implements GameControlFlow {
     @Override
     public void removeGameEventListener(GameEventListener listener) {
         requireNonNull(listener);
-        ensureFxThread("Removing game event listeners");
         boolean removed = eventListeners.remove(listener);
         if (removed) {
             Logger.info("{}: Game event listener removed: {}", getClass().getSimpleName(), listener);
@@ -143,13 +128,5 @@ public class TengenMsPacMan_GameControlFlow implements GameControlFlow {
     @Override
     public void setCutScenesEnabled(boolean enabled) {
         cutScenesEnabled.set(enabled);
-    }
-
-    // Private
-
-    private static void ensureFxThread(String actionDesc) {
-        if (!Platform.isFxApplicationThread()) {
-            throw new IllegalStateException(actionDesc + " must be executed on the JavaFX Application Thread");
-        }
     }
 }

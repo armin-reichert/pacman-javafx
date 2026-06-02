@@ -2,9 +2,10 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.model;
+package de.amr.pacmanfx.flow;
 
 import de.amr.basics.fsm.State;
+import de.amr.pacmanfx.model.GameModel;
 
 import static java.util.Objects.requireNonNull;
 

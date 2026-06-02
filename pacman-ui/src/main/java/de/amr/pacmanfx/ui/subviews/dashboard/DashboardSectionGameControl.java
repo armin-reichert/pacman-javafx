@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.CanonicalGameState;
+import de.amr.pacmanfx.flow.CanonicalGameState;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.AppContext;

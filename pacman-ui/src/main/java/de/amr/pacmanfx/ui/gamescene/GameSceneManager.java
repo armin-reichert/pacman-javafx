@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene;
 
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.model.CanonicalGameState;
+import de.amr.pacmanfx.flow.CanonicalGameState;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.AppConstants;

@@ -4,11 +4,12 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameControlFlow;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.event.*;
+import de.amr.pacmanfx.flow.GameControlFlow;
+import de.amr.pacmanfx.flow.StateMachineGameControlFlow;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.GateKeeper;
@@ -32,7 +33,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
      */
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = vec2_int(10, 15);
 
-    protected Arcade_GameControlFlow gameFlow;
+    protected GameControlFlow gameFlow;
     protected CoinMechanism coinMechanism;
 
     protected HeadsUpDisplay hud;
@@ -44,7 +45,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected Arcade_GameModel(CoinMechanism coinMechanism) {
         this.coinMechanism = requireNonNull(coinMechanism);
         hud = new HeadsUpDisplay(coinMechanism);
-        gameFlow = new Arcade_GameControlFlow(this);
+
+        gameFlow = new StateMachineGameControlFlow("Arcade Pac-Man Games Control Flow", this);
+        for (Arcade_GameState gameState : Arcade_GameState.values()) {
+            gameFlow.addState(gameState.state());
+        }
+
         actorSpeedControl = new Arcade_ActorSpeedControl();
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
     }

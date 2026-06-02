@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.flow;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.state.GameState;
+import de.amr.pacmanfx.flow.GameState;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HeadsUpDisplay;

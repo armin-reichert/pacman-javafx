@@ -7,12 +7,13 @@ package de.amr.pacmanfx.tengenmspacman.model;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.event.*;
+import de.amr.pacmanfx.flow.GameControlFlow;
+import de.amr.pacmanfx.flow.StateMachineGameControlFlow;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
-import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameControlFlow;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorSpeedControl;
@@ -60,7 +61,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
     private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
 
-    private final TengenMsPacMan_GameControlFlow gameFlow;
+    private final GameControlFlow gameFlow;
     private final TengenMsPacMan_ActorSpeedControl actorSpeedControl;
     private final TengenMsPacMan_HeadsUpDisplay hud;
     private final TengenMsPacMan_MapSelector mapSelector;
@@ -82,7 +83,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
         hud = new TengenMsPacMan_HeadsUpDisplay();
-        gameFlow = new TengenMsPacMan_GameControlFlow(this);
+
+        gameFlow = new StateMachineGameControlFlow("Tengen Ms. Pac-Man Game Flow", this);
+        for (TengenMsPacMan_GameState gameState : TengenMsPacMan_GameState.values()) {
+            gameFlow.addState(gameState.state());
+        }
+
         actorSpeedControl = new TengenMsPacMan_ActorSpeedControl();
         gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
         automaticSteering = new RuleBasedPacSteering();

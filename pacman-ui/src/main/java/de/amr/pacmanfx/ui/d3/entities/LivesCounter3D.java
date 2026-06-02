@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.ui.d3.entities;
 
-import de.amr.pacmanfx.model.CanonicalGameState;
-import de.amr.pacmanfx.model.GameControlFlow;
+import de.amr.pacmanfx.flow.CanonicalGameState;
+import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.ui.config.WorldConfig;

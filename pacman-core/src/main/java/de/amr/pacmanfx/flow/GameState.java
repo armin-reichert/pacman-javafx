@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.state;
+package de.amr.pacmanfx.flow;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;

@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.GenericChangeEvent;
-import de.amr.pacmanfx.model.CanonicalGameState;
+import de.amr.pacmanfx.flow.CanonicalGameState;
 import de.amr.pacmanfx.model.GameModel;
 
 public class CutScenesTestState<GAME extends GameModel> extends TestState<GAME> {
