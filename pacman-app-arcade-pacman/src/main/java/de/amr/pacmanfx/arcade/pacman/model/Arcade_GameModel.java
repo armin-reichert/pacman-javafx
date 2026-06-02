@@ -91,7 +91,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         rules = new ArcadeGameRules();
         restingTicksPellet = 1;
         restingTicksEnergizer = 3;
-        setExtraLifeScores(10_000);
 
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
 

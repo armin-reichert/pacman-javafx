@@ -137,7 +137,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         automaticSteering = new RuleBasedPacSteering();
         demoLevelSteering = new RuleBasedPacSteering();
 
-        rules = new TengenMsPacMan_GameRules();
+        rules = new TengenMsPacMan_GameRules(this);
 
         cutSceneNumberAfterLevelNumber = Map.of(
             2, 1,
@@ -174,20 +174,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         boosterActive = active;
     }
 
-    /*
-     * See https://tcrf.net/Ms._Pac-Man_(NES,_Tengen):
-     * Humorously, instead of adding a check to disable multiple extra lives,
-     * the "Arcade" maze set sets the remaining 3 extra life scores to over 970,000 points,
-     * a score normally unachievable without cheat codes, since all maze sets end after 32 stages.
-     * This was most likely done to simulate the Arcade game only giving one extra life per game.
-     */
     public void setMapCategory(MapCategory mapCategory) {
         this.mapCategory = requireNonNull(mapCategory);
-        if (mapCategory == MapCategory.ARCADE) {
-            setExtraLifeScores(10_000, 970_000, 980_000, 990_000);
-        } else {
-            setExtraLifeScores(10_000, 50_000, 100_000, 300_000);
-        }
     }
 
     public MapCategory mapCategory() {

@@ -45,8 +45,11 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractGameModel implements GameModel {
 
     private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
+
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
+
     private final ObjectProperty<GameLevel> level = new SimpleObjectProperty<>();
+
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
     /** Per-tick simulation state (collisions, kills, events). */
@@ -54,16 +57,11 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected GameRules rules;
 
-    /** Current score. */
     protected final Score score = new Score();
 
-    /** Persistent high score. */
     protected PersistentScore highScore;
 
     protected PacManLives lives;
-
-    /** Score thresholds at which extra lives are awarded. */
-    private Set<Integer> extraLifeScores = Set.of();
 
     private final GameCheats cheats = new GameCheats();
 
@@ -332,28 +330,15 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     /**
-     * Sets the score thresholds at which extra lives are awarded.
-     *
-     * @param scores the extra life scores (varargs)
-     */
-    protected void setExtraLifeScores(Integer... scores) {
-        extraLifeScores = scores.length <= 1
-            ? Set.of(scores) : Collections.unmodifiableSortedSet(new TreeSet<>(Set.of(scores)));
-    }
-
-    /**
      * Handles score changes and awards extra lives when thresholds are crossed.
      *
      * @param oldScore previous score
      * @param newScore new score
      */
     protected void handleScoreChange(int oldScore, int newScore) {
-        for (int extraLifeScore : extraLifeScores) {
-            if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
-                simStep.extraLifeWon = true;
-                simStep.extraLifeScore = extraLifeScore;
-                break;
-            }
+        if (rules.isExtraLifeAwarded(oldScore, newScore)) {
+            simStep.extraLifeWon = true;
+            simStep.extraLifeScore = newScore;
         }
         if (simStep.extraLifeWon) {
             lives().add(1);

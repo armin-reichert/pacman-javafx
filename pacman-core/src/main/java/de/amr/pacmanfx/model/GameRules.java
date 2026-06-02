@@ -9,4 +9,12 @@ public interface GameRules {
     int pointsForEnergizer();
 
     int pointsForBonus(Bonus bonus);
+
+    boolean isExtraLifeAwarded(int oldScore, int newScore);
+
+    // Helper
+
+    default boolean crossedScoreLine(int oldScore, int newScore, int scoreLine) {
+        return oldScore < scoreLine && newScore >= scoreLine;
+    }
 }

@@ -19,4 +19,9 @@ public class ArcadeGameRules implements GameRules {
     public int pointsForBonus(Bonus bonus) {
         return 0;
     }
+
+    @Override
+    public boolean isExtraLifeAwarded(int oldScore, int newScore) {
+        return crossedScoreLine(oldScore, newScore, 10_000);
+    }
 }
