@@ -18,6 +18,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
     // Warning: Constructor signature is used via reflection by GameUI_Builder, do not change!
     public PacManXXL_MsPacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
         super(coinMechanism, mapSelector);
+        rules = new PacManXXL_MsPacMan_GameRules();
     }
 
     @Override

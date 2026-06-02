@@ -10,6 +10,8 @@ public interface GameRules {
 
     int pointsForEnergizer();
 
+    boolean isBonusAwarded(GameLevel level);
+
     int pointsForBonus(Bonus bonus);
 
     float eatenBonusDisplaySeconds();

@@ -82,8 +82,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         BONUS_VALUES.put(BonusSymbol.FLOWER,     10000);
     }
 
-    private static final int FIRST_BONUS_PELLETS_EATEN = 64;
-    private static final int SECOND_BONUS_PELLETS_EATEN = 176;
     private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
     private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
 
@@ -479,13 +477,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         doHuntingStep(level);
         gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         cheats().update(level);
-    }
-
-    @Override
-    public boolean isBonusReached() {
-        final GameLevel level = optGameLevel().orElseThrow();
-        int eatenFoodCount = level.worldMap().foodLayer().eatenFoodCount();
-        return eatenFoodCount == FIRST_BONUS_PELLETS_EATEN || eatenFoodCount == SECOND_BONUS_PELLETS_EATEN;
     }
 
     @Override

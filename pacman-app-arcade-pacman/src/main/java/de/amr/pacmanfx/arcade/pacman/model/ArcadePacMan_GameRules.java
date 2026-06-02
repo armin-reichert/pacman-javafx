@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.Bonus;
 
@@ -8,7 +9,7 @@ import java.util.OptionalInt;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 
-public class ArcadeGameRules implements GameRules {
+public class ArcadePacMan_GameRules implements GameRules {
 
     public static final LevelData[] LEVEL_DATA_TABLE = {
         /* 1*/ LevelData.of( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5),
@@ -56,6 +57,12 @@ public class ArcadeGameRules implements GameRules {
     @Override
     public int pointsForEnergizer() {
         return 50;
+    }
+
+    @Override
+    public boolean isBonusAwarded(GameLevel level) {
+        final int pelletsEaten = level.worldMap().foodLayer().eatenFoodCount();
+        return pelletsEaten == 70 || pelletsEaten == 170;
     }
 
     @Override

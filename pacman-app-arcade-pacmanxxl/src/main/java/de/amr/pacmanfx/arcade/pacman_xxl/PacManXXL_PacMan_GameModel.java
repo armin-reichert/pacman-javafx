@@ -25,6 +25,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
     public PacManXXL_PacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
         super(coinMechanism, mapSelector);
+        rules = new PacManXXL_PacMan_GameRules();
         // Demo level map could be a custom map, so use generic auto-steering that also can cope with dead-ends:
         demoLevelSteering = new RuleBasedPacSteering();
     }

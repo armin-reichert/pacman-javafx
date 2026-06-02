@@ -459,7 +459,7 @@ public abstract class AbstractGameModel implements GameModel {
             } else {
                 eatPellet(level, simStep.foodTile);
             }
-            if (isBonusReached()) {
+            if (rules.isBonusAwarded(level)) {
                 activateNextBonus();
                 simStep.bonusIndex = level.currentBonusIndex();
             }

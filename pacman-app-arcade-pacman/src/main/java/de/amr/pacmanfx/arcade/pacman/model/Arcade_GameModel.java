@@ -43,16 +43,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected int restingTicksPellet;
     protected int restingTicksEnergizer;
 
-    protected int bonus1PelletsEaten;
-    protected int bonus2PelletsEaten;
-
     protected Arcade_GameModel(CoinMechanism coinMechanism) {
         this.coinMechanism = requireNonNull(coinMechanism);
         hud = new HeadsUpDisplay(coinMechanism);
         gameFlow = new Arcade_GameFlow(this);
         actorSpeedControl = new Arcade_ActorSpeedControl();
 
-        rules = new ArcadeGameRules();
+        rules = new ArcadePacMan_GameRules();
         restingTicksPellet = 1;
         restingTicksEnergizer = 3;
 
@@ -122,7 +119,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
         final Ghost redGhost = level.ghost(Globals.RED_GHOST_SHADOW);
         if (redGhost != null) {
-            final LevelData data = ArcadeGameRules.levelData(level.number());
+            final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
             final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();
             if (uneatenFoodCount == data.numDotsLeftElroy1()) {
                 redGhost.elroyState().setMode(ElroyState.Mode.ONE);

@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameRules;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.CoinMechanism;
@@ -150,11 +150,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         super(coinMechanism);
 
         this.mapSelector = requireNonNull(mapSelector);
-        this.levelCounter = new ArcadeMsPacMan_LevelCounter();
-        this.demoLevelSteering = new RuleBasedPacSteering();
-        this.automaticSteering = new RuleBasedPacSteering();
-        this.actorSpeedControl = new ArcadeMsPacMan_ActorSpeedControl();
-
+        levelCounter = new ArcadeMsPacMan_LevelCounter();
+        demoLevelSteering = new RuleBasedPacSteering();
+        automaticSteering = new RuleBasedPacSteering();
+        actorSpeedControl = new ArcadeMsPacMan_ActorSpeedControl();
+        rules = new ArcadeMsPacMan_GameRules();
         createGateKeeper();
         mapSelector.loadMapPrototypes();
     }
@@ -188,9 +188,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         terrain.setHouse(house);
 
         final AbstractHuntingTimer huntingTimer = createHuntingTimer();
-        final int numFlashes = ArcadeGameRules.levelData(levelNumber).numFlashes();
+        final int numFlashes = ArcadePacMan_GameRules.levelData(levelNumber).numFlashes();
 
-        final LevelData levelData = ArcadeGameRules.levelData(levelNumber);
+        final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, numFlashes);
         level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
@@ -216,13 +216,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public boolean isBonusReached() {
-        final GameLevel level = optGameLevel().orElseThrow();
-        final int eatenFoodCount = level.worldMap().foodLayer().eatenFoodCount();
-        return eatenFoodCount == bonus1PelletsEaten || eatenFoodCount == bonus2PelletsEaten;
     }
 
     /**
@@ -359,24 +352,9 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     private void initBoni(GameLevel level) {
-        final int totalFoodCount = level.worldMap().foodLayer().totalFoodCount();
-        switch (totalFoodCount) {
-            case 224, 238, 242, 244 -> {
-                // Original Arcade maps
-                bonus1PelletsEaten = 64;
-                bonus2PelletsEaten = 176;
-            }
-            default -> {
-                // XXL maps might be much larger
-                bonus1PelletsEaten = totalFoodCount / 4;
-                bonus2PelletsEaten = totalFoodCount * 3 / 4;
-            }
-        }
-
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));
     }
-
 
     protected int bonusValue(byte symbolCode) {
         return switch (symbolCode) {

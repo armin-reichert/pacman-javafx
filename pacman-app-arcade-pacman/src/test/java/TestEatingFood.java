@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-import de.amr.pacmanfx.arcade.pacman.model.ArcadeGameRules;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.CoinMechanism;
@@ -98,7 +98,7 @@ public class TestEatingFood {
     public void testCruiseElroyMode() {
         final Ghost blinky = currentGameLevel().ghost(RED_GHOST_SHADOW);
         final FoodLayer foodLayer = currentGameLevel().worldMap().foodLayer();
-        final LevelData data = ArcadeGameRules.levelData(currentGameLevel().number());
+        final LevelData data = ArcadePacMan_GameRules.levelData(currentGameLevel().number());
         while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy1()) {
             assertEquals(ElroyState.Mode.ZERO, blinky.elroyState().mode());
             eatNextPellet();

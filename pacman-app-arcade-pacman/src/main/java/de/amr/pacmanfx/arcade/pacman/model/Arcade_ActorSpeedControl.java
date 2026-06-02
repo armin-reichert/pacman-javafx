@@ -26,13 +26,13 @@ public class Arcade_ActorSpeedControl implements ActorSpeedControl {
 
     @Override
     public float pacSpeed(GameLevel level) {
-        final byte pct = ArcadeGameRules.levelData(level.number()).pctPacSpeed();
+        final byte pct = ArcadePacMan_GameRules.levelData(level.number()).pctPacSpeed();
         return pct > 0 ? pct * BASE_SPEED_ONE_PERCENT : BASE_SPEED;
     }
 
     @Override
     public float pacSpeedWhenHasPower(GameLevel level) {
-        final byte pct = ArcadeGameRules.levelData(level.number()).pctPacSpeedPowered();
+        final byte pct = ArcadePacMan_GameRules.levelData(level.number()).pctPacSpeedPowered();
         return pct > 0 ? pct * BASE_SPEED_ONE_PERCENT : pacSpeed(level);
     }
 
@@ -55,7 +55,7 @@ public class Arcade_ActorSpeedControl implements ActorSpeedControl {
     @Override
     public float ghostSpeedAttacking(GameLevel level, Ghost ghost) {
         final int levelNumber = level.number();
-        final LevelData data = ArcadeGameRules.levelData(levelNumber);
+        final LevelData data = ArcadePacMan_GameRules.levelData(levelNumber);
         if (ghost.personality() == Globals.RED_GHOST_SHADOW) {
             return switch (ghost.elroyState().mode()) {
                 case ZERO -> data.pctGhostSpeed()  * BASE_SPEED_ONE_PERCENT;
@@ -69,12 +69,12 @@ public class Arcade_ActorSpeedControl implements ActorSpeedControl {
 
     @Override
     public float ghostSpeedFrightened(GameLevel level) {
-        final float pct = ArcadeGameRules.levelData(level.number()).pctGhostSpeedFrightened();
+        final float pct = ArcadePacMan_GameRules.levelData(level.number()).pctGhostSpeedFrightened();
         return pct > 0 ? pct * BASE_SPEED_ONE_PERCENT : BASE_SPEED;
     }
 
     @Override
     public float ghostSpeedTunnel(int levelNumber) {
-        return ArcadeGameRules.levelData(levelNumber).pctGhostSpeedTunnel() * BASE_SPEED_ONE_PERCENT;
+        return ArcadePacMan_GameRules.levelData(levelNumber).pctGhostSpeedTunnel() * BASE_SPEED_ONE_PERCENT;
     }
 }

@@ -148,9 +148,6 @@ public interface GameModel {
     /** Activates the next bonus item, if applicable. */
     void activateNextBonus();
 
-    /** @return {@code true} if the bonus threshold has been reached */
-    boolean isBonusReached();
-
     /** @return {@code true} if Pac‑Man has been killed this frame */
     boolean hasPacManBeenKilled();
 

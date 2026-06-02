@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.tengenmspacman.model;
 
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.Bonus;
 
@@ -34,6 +35,12 @@ public class TengenMsPacMan_GameRules implements GameRules {
     @Override
     public int pointsForEnergizer() {
         return 50;
+    }
+
+    @Override
+    public boolean isBonusAwarded(GameLevel level) {
+        int eatenFoodCount = level.worldMap().foodLayer().eatenFoodCount();
+        return eatenFoodCount == 64 || eatenFoodCount == 176;
     }
 
     @Override

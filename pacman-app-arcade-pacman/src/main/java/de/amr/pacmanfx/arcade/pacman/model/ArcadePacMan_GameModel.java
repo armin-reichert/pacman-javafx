@@ -43,10 +43,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
-    public static final int TOTAL_FOOD_COUNT_ARCADE_PAC_MAN = 244;
-    public static final int BONUS_1_PELLETS_EATEN = 70;
-    public static final int BONUS_2_PELLETS_EATEN = 170;
-
     public static Pac createPacMan() {
         final var pacMan = new Pac("Pac-Man");
         pacMan.reset();
@@ -124,7 +120,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         final ArcadeHouse house = new ArcadeHouse(houseMinTile);
         terrain.setHouse(house);
 
-        final LevelData levelData = ArcadeGameRules.levelData(levelNumber);
+        final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
         final AbstractHuntingTimer huntingTimer = createHuntingTimer();
 
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, levelData.numFlashes());
@@ -145,13 +141,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     @Override
     protected boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
         return false;
-    }
-
-    @Override
-    public boolean isBonusReached() {
-        final GameLevel level = optGameLevel().orElseThrow();
-        final int pelletsEaten = level.worldMap().foodLayer().eatenFoodCount();
-        return pelletsEaten == bonus1PelletsEaten || pelletsEaten == bonus2PelletsEaten;
     }
 
     @Override
@@ -235,17 +224,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     protected void initBoni(GameLevel level) {
-        final int totalFoodCount = level.worldMap().foodLayer().totalFoodCount();
-        if (totalFoodCount == TOTAL_FOOD_COUNT_ARCADE_PAC_MAN) {
-            // Original Arcade map
-            bonus1PelletsEaten = BONUS_1_PELLETS_EATEN;
-            bonus2PelletsEaten = BONUS_2_PELLETS_EATEN;
-        } else {
-            // XXL maps may have different food count, use heuristic values
-            bonus1PelletsEaten = totalFoodCount / 4;
-            bonus2PelletsEaten = totalFoodCount * 3 / 4;
-        }
-
         // Each level has a single bonus symbol appearing twice during the level.
         // From level 13 on, the same symbol (code=7, "key") appears. Klingt komisch? Is' aber so!
         final byte symbol = bonusSymbol(Math.min(level.number(), 13));
