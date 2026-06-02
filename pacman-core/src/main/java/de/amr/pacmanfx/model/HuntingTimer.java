@@ -21,9 +21,9 @@ import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
  */
 public class HuntingTimer {
 
-    protected final TickTimer tickTimer;
+    private final TickTimer tickTimer;
 
-    protected final int numPhases;
+    private final int numPhases;
 
     private final IntegerProperty phaseIndex = new SimpleIntegerProperty();
 
