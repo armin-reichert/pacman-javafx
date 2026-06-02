@@ -12,6 +12,8 @@ public interface GameRules {
 
     int pointsForBonus(Bonus bonus);
 
+    float eatenBonusDisplaySeconds();
+
     boolean isExtraLifeAwarded(int oldScore, int newScore);
 
     OptionalInt cutSceneNumberAfterLevel(int levelNumber);

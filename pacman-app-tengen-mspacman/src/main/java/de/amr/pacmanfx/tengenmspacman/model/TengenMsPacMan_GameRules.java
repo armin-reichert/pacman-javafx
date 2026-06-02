@@ -41,6 +41,11 @@ public class TengenMsPacMan_GameRules implements GameRules {
         return 0;
     }
 
+    @Override
+    public float eatenBonusDisplaySeconds() {
+        return 2;
+    }
+
     /*
      * See https://tcrf.net/Ms._Pac-Man_(NES,_Tengen):
      *

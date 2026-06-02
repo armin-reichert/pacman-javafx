@@ -93,8 +93,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private static final int DEFAULT_START_LEVEL = 1;
     private static final int DEFAULT_NUM_CONTINUES = 4;
 
-    private static final float BONUS_EATEN_SECONDS = 2;
-
     private static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
     // See https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PowerPelletTimes.asm
@@ -575,14 +573,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                 flow().publishGameEvent(new PacGetsPowerEvent(this, pac));
             }
         }
-    }
-
-    @Override
-    public void eatBonus(GameLevel level, Bonus bonus) {
-        scorePoints(level, bonus.points());
-        Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-        bonus.showEatenForSeconds(BONUS_EATEN_SECONDS);
-        flow().publishGameEvent(new BonusEatenEvent(this, bonus));
     }
 
     @Override

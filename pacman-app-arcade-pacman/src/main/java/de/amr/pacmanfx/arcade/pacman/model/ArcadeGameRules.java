@@ -32,6 +32,11 @@ public class ArcadeGameRules implements GameRules {
     }
 
     @Override
+    public float eatenBonusDisplaySeconds() {
+        return 2;
+    }
+
+    @Override
     public boolean isExtraLifeAwarded(int oldScore, int newScore) {
         return crossedScoreLine(oldScore, newScore, 10_000);
     }

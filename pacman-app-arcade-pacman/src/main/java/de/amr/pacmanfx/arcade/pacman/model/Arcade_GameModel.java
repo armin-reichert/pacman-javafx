@@ -62,8 +62,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
      */
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = vec2_int(10, 15);
 
-    private static final float BONUS_EATEN_SECONDS = 2;
-
     protected Arcade_GameFlow gameFlow;
     protected CoinMechanism coinMechanism;
 
@@ -337,14 +335,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             Logger.error(x, "Error updating highscore file {}", highScore.file().getAbsolutePath());
         }
         Logger.info("Game ended with level number {}", level.number());
-    }
-
-    @Override
-    public void eatBonus(GameLevel level, Bonus bonus) {
-        scorePoints(level, bonus.points());
-        Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-        bonus.showEatenForSeconds(BONUS_EATEN_SECONDS);
-        flow().publishGameEvent(new BonusEatenEvent(this, bonus));
     }
 
     @Override

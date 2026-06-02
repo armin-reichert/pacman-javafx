@@ -133,13 +133,12 @@ public abstract class AbstractGameModel implements GameModel {
      */
     public abstract void eatEnergizer(GameLevel level, Vector2i tile);
 
-    /**
-     * Called when Pac-Man eats a bonus item (fruit).
-     *
-     * @param level the current level
-     * @param bonus the bonus actor
-     */
-    public abstract void eatBonus(GameLevel level, Bonus bonus);
+    public void eatBonus(GameLevel level, Bonus bonus) {
+        scorePoints(level, bonus.points());
+        Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+        bonus.showEatenForSeconds(rules.eatenBonusDisplaySeconds());
+        flow().publishGameEvent(new BonusEatenEvent(this, bonus));
+    }
 
     /**
      * Determines whether Pac-Man is safe from being killed during demo mode.
