@@ -88,12 +88,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         gameFlow = new Arcade_GameFlow(this);
         actorSpeedControl = new Arcade_ActorSpeedControl();
 
-        pelletPoints = 10;
-        energizerPoints = 50;
+        rules = new ArcadeGameRules();
         restingTicksPellet = 1;
         restingTicksEnergizer = 3;
         setExtraLifeScores(10_000);
+
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
+
         cutSceneNumberAfterLevelNumber = Map.of(
              2, 1, // after level #2, play cut scene #1
              5, 2,
@@ -118,7 +119,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(level, pelletPoints);
+        scorePoints(level, rules.pointsForPellet());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         level.entities().pac().setRestingTicks(restingTicksPellet);
         checkRedGhostCruiseElroyActivation(level);
@@ -131,7 +132,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         final Pac pac = level.entities().pac();
 
-        scorePoints(level, energizerPoints);
+        scorePoints(level, rules.pointsForEnergizer());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         pac.setRestingTicks(restingTicksEnergizer);
         checkRedGhostCruiseElroyActivation(level);

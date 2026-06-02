@@ -137,8 +137,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         automaticSteering = new RuleBasedPacSteering();
         demoLevelSteering = new RuleBasedPacSteering();
 
-        pelletPoints = 10;
-        energizerPoints = 50;
+        rules = new TengenMsPacMan_GameRules();
+
         cutSceneNumberAfterLevelNumber = Map.of(
             2, 1,
             5, 2,
@@ -573,7 +573,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(level, pelletPoints);
+        scorePoints(level, rules.pointsForPellet());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
     }
 
@@ -584,7 +584,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         final Pac pac = level.entities().pac();
 
-        scorePoints(level, energizerPoints);
+        scorePoints(level, rules.pointsForEnergizer());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         if (!isLevelCompleted()) {

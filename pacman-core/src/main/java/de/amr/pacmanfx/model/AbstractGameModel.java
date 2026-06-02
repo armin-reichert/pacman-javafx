@@ -52,11 +52,7 @@ public abstract class AbstractGameModel implements GameModel {
     /** Per-tick simulation state (collisions, kills, events). */
     protected final SimulationStep simStep = new SimulationStep();
 
-    /** Points awarded for pellets (variant-specific). */
-    protected int pelletPoints;
-
-    /** Points awarded for energizers (variant-specific). */
-    protected int energizerPoints;
+    protected GameRules rules;
 
     /** Current score. */
     protected final Score score = new Score();
