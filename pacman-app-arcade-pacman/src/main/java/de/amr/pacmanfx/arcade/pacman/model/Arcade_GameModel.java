@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.event.*;
@@ -65,6 +64,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         scorePoints(rules().pointsForPellet(), level.number());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
+
         level.entities().pac().setRestingTicks(rules().restingTicksForPellet());
         checkRedGhostCruiseElroyActivation(level);
     }
@@ -79,23 +79,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         final Pac pac = level.entities().pac();
         pac.setRestingTicks(rules().restingTicksForEnergizer());
-
         checkRedGhostCruiseElroyActivation(level);
 
+        level.killedGhostsForCurrentEnergizer().clear();
+
         if (!isLevelCompleted()) {
-            level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(MovingActor::requestTurnBack);
-            level.killedGhostsForCurrentEnergizer().clear();
-            final float powerSeconds = level.pacPowerSeconds();
-            if (powerSeconds > 0) {
-                level.huntingTimer().stop();
-                Logger.debug("Hunting stopped (Pac-Man got power)");
-                final long powerTicks = TickTimer.secToTicks(powerSeconds);
-                pac.powerTimer().restartTicks(powerTicks);
-                Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
-                level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
-                simStep.pacGotPower = true;
-                flow().publishGameEvent(new PacGetsPowerEvent(this, pac));
-            }
+            empowerPac(pac, level);
         }
     }
 

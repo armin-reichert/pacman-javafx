@@ -8,6 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
+import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.TerrainLayer;
@@ -468,6 +469,21 @@ public abstract class AbstractGameModel implements GameModel {
                 simStep.bonusIndex = level.currentBonusIndex();
             }
             flow().publishGameEvent(new PacEatsFoodEvent(this, pac, simStep.energizerFound, false));
+        }
+    }
+
+    protected void empowerPac(Pac pac, GameLevel level) {
+        level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(MovingActor::requestTurnBack);
+        final float powerSeconds = level.pacPowerSeconds();
+        if (powerSeconds > 0) {
+            level.huntingTimer().stop();
+            Logger.debug("Hunting stopped (Pac-Man got power)");
+            final long powerTicks = TickTimer.secToTicks(powerSeconds);
+            pac.powerTimer().restartTicks(powerTicks);
+            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
+            level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
+            simStep.pacGotPower = true;
+            flow().publishGameEvent(new PacGetsPowerEvent(this, pac));
         }
     }
 
