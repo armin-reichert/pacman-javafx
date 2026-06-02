@@ -190,13 +190,6 @@ public interface GameModel {
      */
     void onEatGhost(Ghost eatenGhost);
 
-    /**
-     * Performs the logic for the ghost‑eaten sequence.
-     *
-     * @param tick the current simulation tick
-     */
-    void doEatingGhost(long tick);
-
     /** Called when the game reaches the game‑over state. */
     void onGameOver();
 

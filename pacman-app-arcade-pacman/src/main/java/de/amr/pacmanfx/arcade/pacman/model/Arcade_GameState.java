@@ -5,8 +5,9 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.actors.GhostState;
 
 public enum Arcade_GameState implements State<GameModel> {
 
@@ -153,15 +154,23 @@ public enum Arcade_GameState implements State<GameModel> {
     EATING_GHOST {
         @Override
         public void onEnter(GameModel game) {
-            timer.restartTicks(TICK_EATING_GHOST_DURATION);
+            timer.restartTicks(60);
         }
 
         @Override
         public void onUpdate(GameModel game) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer.hasExpired()) {
+                level.entities().pac().show();
+                level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
+                level.ghosts().forEach(ghost -> ghost.animations().playSelected());
                 game.flow().resumePreviousState();
             } else {
-                game.doEatingGhost(timer.tickCount());
+                if (timer.tickCount() < 60) {
+                    level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
+                        .forEach(ghost -> ghost.update(level));
+                    level.blinking().doTick();
+                }
             }
         }
     },
@@ -231,7 +240,6 @@ public enum Arcade_GameState implements State<GameModel> {
         }
     };
 
-    public static final short TICK_EATING_GHOST_DURATION = 60;
     public static final short TICK_NEW_GAME_SHOW_GUYS = 60;
     public static final short TICK_NEW_GAME_START_HUNTING = 240;
     public static final short TICK_RESUME_HUNTING = 120;
