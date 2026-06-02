@@ -6,8 +6,8 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameModel;
 
 public enum TengenMsPacMan_GameState implements State<GameModel> {
 
@@ -239,7 +239,7 @@ public enum TengenMsPacMan_GameState implements State<GameModel> {
             final var tengenHUD = (TengenMsPacMan_HeadsUpDisplay) game.hud();
             final TengenMsPacMan_GameModel tengenGame = tengenGame(game);
             final GameLevel level = game.optGameLevel().orElseThrow();
-            final boolean lastCutSceneReached =  level.cutSceneNumber() == tengenGame.lastIntermissionNumber();
+            final boolean lastCutSceneReached =  level.cutSceneNumber() == tengenGame.rules().lastCutSceneNumber();
             if (tengenGame.mapCategory() == MapCategory.ARCADE || lastCutSceneReached) {
                 tengenHUD.hide();
             } else {

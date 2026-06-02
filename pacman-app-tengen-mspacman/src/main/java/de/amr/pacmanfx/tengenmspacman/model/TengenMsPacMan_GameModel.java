@@ -386,11 +386,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public int lastIntermissionNumber() {
-        return 4;
-    }
-
-    @Override
     protected void setGhostStartPosition(Ghost ghost, Vector2i tile) {
         if (ghost.personality() == RED_GHOST_SHADOW) {
             ghost.setStartPosition(halfTileRightOf(tile));

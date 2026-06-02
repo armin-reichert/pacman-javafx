@@ -46,6 +46,11 @@ public interface GameModel {
     /** @return the controller responsible for managing the game flow */
     GameFlow flow();
 
+    /**
+     * @return the rules for the game variant
+     */
+    GameRules rules();
+
     /** @return cheat configuration for this game */
     GameCheats cheats();
 
@@ -193,9 +198,6 @@ public interface GameModel {
 
     /** Called when the game reaches the game‑over state. */
     void onGameOver();
-
-    /** @return the number of the last intermission shown */
-    int lastIntermissionNumber();
 
     /** Default collision strategy used by the original arcade games. */
     CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;

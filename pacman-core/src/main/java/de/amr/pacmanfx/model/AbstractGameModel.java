@@ -86,8 +86,6 @@ public abstract class AbstractGameModel implements GameModel {
         highScore = new PersistentScore(highScoreFile);
     }
 
-    public abstract GameRules rules();
-
     /**
      * @return property controlling whether collisions are double-checked each tick
      */

@@ -266,11 +266,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public int lastIntermissionNumber() {
-        return 3;
-    }
-
-    @Override
     public void buildNormalLevel(int levelNumber) {
         final GameLevel level = createLevel(levelNumber, false);
         level.setCutSceneNumber(rules().cutSceneNumberAfterLevel(levelNumber).orElse(0));

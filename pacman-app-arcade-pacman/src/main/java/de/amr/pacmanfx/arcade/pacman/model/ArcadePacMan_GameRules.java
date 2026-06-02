@@ -106,4 +106,9 @@ public class ArcadePacMan_GameRules implements GameRules {
             ? OptionalInt.of(cutSceneNumber)
             : OptionalInt.empty();
     }
+
+    @Override
+    public int lastCutSceneNumber() {
+        return 3;
+    }
 }

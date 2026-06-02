@@ -30,6 +30,8 @@ public interface GameRules {
 
     OptionalInt cutSceneNumberAfterLevel(int levelNumber);
 
+    int lastCutSceneNumber();
+
     // Helper
 
     default boolean crossedScoreLine(int oldScore, int newScore, int scoreLine) {
