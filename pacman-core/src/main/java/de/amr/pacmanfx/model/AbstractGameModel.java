@@ -321,9 +321,7 @@ public abstract class AbstractGameModel implements GameModel {
      * Called when a level is completed. Stops timers, resets animations, and clears remaining food.
      */
     @Override
-    public void onLevelCompleted() {
-        final GameLevel level = optGameLevel().orElseThrow();
-
+    public void onLevelCompleted(GameLevel level) {
         level.huntingTimer().stop();
         Logger.info("Hunting timer stopped.");
 

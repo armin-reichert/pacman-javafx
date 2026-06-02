@@ -144,7 +144,7 @@ public enum TengenMsPacMan_GameState {
         public void onUpdate(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer().tickCount() == 1) {
-                game.onLevelCompleted();
+                game.onLevelCompleted(level);
             }
 
             if (level.isDemoLevel()) {

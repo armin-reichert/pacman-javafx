@@ -176,7 +176,7 @@ public interface GameModel extends GameCheats {
     boolean hasGhostBeenKilled();
 
     /** Called when the level has been completed. */
-    void onLevelCompleted();
+    void onLevelCompleted(GameLevel level);
 
     /**
      * Handles Pac‑Man's death sequence.

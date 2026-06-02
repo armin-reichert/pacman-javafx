@@ -76,7 +76,7 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
         else if (timer.atSecond(START + 9)) {
             level.hidePacAndGhosts();
             level.blinking().stop();
-            game.onLevelCompleted();
+            game.onLevelCompleted(level);
         }
         else if (timer.atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
