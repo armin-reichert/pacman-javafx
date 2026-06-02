@@ -192,21 +192,22 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(POS_HOUSE_MIN_TILE, houseMinTile.toString());
 
-        final var house = new ArcadeHouse(houseMinTile);
-        terrain.setHouse(house);
+        terrain.setHouse(new ArcadeHouse(houseMinTile));
 
         final AbstractHuntingTimer huntingTimer = createHuntingTimer();
         final int numFlashes = ArcadePacMan_GameRules.levelData(levelNumber).numFlashes();
 
-        final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, numFlashes);
         level.setDemoLevel(demoLevel);
+
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
+
+        final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
-        setMsPacMan(level);
-        setGhosts(level, house);
+        createAndSetMsPacMan(level);
+        createAndSetGhosts(level, terrain.house());
 
         level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
@@ -273,13 +274,13 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     // Helpers
 
-    private void setMsPacMan(GameLevel level) {
+    private void createAndSetMsPacMan(GameLevel level) {
         final Pac msPacMan = createMsPacMan();
         msPacMan.setAutomaticSteering(automaticSteering);
         level.setPac(msPacMan);
     }
 
-    private void setGhosts(GameLevel level, ArcadeHouse house) {
+    private void createAndSetGhosts(GameLevel level, House house) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         level.setGhosts(
             createGhost(RED_GHOST_SHADOW, terrain, house, POS_GHOST_1_RED),
