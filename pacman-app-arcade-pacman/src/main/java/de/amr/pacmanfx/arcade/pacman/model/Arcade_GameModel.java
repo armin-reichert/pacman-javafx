@@ -63,7 +63,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(level, rules().pointsForPellet());
+        scorePoints(rules().pointsForPellet(), level.number());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         level.entities().pac().setRestingTicks(rules().restingTicksForPellet());
         checkRedGhostCruiseElroyActivation(level);
@@ -74,7 +74,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(level, rules().pointsForEnergizer());
+        scorePoints(rules().pointsForEnergizer(), level.number());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         final Pac pac = level.entities().pac();
@@ -244,7 +244,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final int killedBefore = level.killedGhostsForCurrentEnergizer().size();
         final int points = rules().pointsForGhost(killedBefore);
 
-        scorePoints(level, points);
+        scorePoints(points, level.number());
         Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
 
         eatenGhost.setState(GhostState.EATEN);

@@ -11,13 +11,17 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.TerrainLayer;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.core.Globals.*;
 import static java.util.Objects.requireNonNull;
@@ -134,7 +138,7 @@ public abstract class AbstractGameModel implements GameModel {
     public abstract void eatEnergizer(GameLevel level, Vector2i tile);
 
     public void eatBonus(GameLevel level, Bonus bonus) {
-        scorePoints(level, bonus.points());
+        scorePoints(bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
         bonus.showEatenForSeconds(rules().eatenBonusDisplaySeconds());
         flow().publishGameEvent(new BonusEatenEvent(this, bonus));
@@ -558,10 +562,10 @@ public abstract class AbstractGameModel implements GameModel {
     /**
      * Adds points to the current score and updates the high score if necessary.
      *
-     * @param level  the current game level
-     * @param points points to add
+     * @param points points scored
+     * @param levelNumber number of current level
      */
-    protected void scorePoints(GameLevel level, int points) {
+    protected void scorePoints(int points, int levelNumber) {
         if (!score.isEnabled()) {
             return;
         }
@@ -569,7 +573,7 @@ public abstract class AbstractGameModel implements GameModel {
         final int newScore = oldScore + points;
         if (highScore.isEnabled() && newScore > highScore.points()) {
             highScore.setPoints(newScore);
-            highScore.setLevelNumber(level.number());
+            highScore.setLevelNumber(levelNumber);
             highScore.setDate(LocalDate.now());
         }
         score.setPoints(newScore);

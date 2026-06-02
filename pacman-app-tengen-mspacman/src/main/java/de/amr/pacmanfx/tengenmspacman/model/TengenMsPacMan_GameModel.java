@@ -537,7 +537,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(level, rules.pointsForPellet());
+        scorePoints(rules.pointsForPellet(), level.number());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
     }
 
@@ -548,7 +548,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         final Pac pac = level.entities().pac();
 
-        scorePoints(level, rules.pointsForEnergizer());
+        scorePoints(rules.pointsForEnergizer(), level.number());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         if (!isLevelCompleted()) {
@@ -619,7 +619,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         eatenGhost.setState(GhostState.EATEN);
         eatenGhost.animations().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, killedBefore);
 
-        scorePoints(level, points);
+        scorePoints(points, level.number());
 
         Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
 
