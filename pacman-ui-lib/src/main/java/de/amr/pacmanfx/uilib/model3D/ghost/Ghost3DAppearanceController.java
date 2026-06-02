@@ -27,7 +27,7 @@ public class Ghost3DAppearanceController {
                 //TODO maybe the (model) ghost should store the "frightened no more" state?
                 final boolean powerActive = pac.powerTimer().isRunning();
                 final boolean powerFading = pac.isPowerFading(level);
-                final boolean killedDuringCurrentPhase = level.energizerVictims().contains(ghost);
+                final boolean killedDuringCurrentPhase = level.killedGhostsForCurrentEnergizer().contains(ghost);
                 yield powerActive && !killedDuringCurrentPhase
                     ? powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED
                     : GhostAppearance.NORMAL;

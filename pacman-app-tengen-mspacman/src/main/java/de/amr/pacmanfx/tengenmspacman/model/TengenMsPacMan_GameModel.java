@@ -91,8 +91,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private static final int DEFAULT_START_LEVEL = 1;
     private static final int DEFAULT_NUM_CONTINUES = 4;
 
-    private static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
-
     // See https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PowerPelletTimes.asm
     // Hex value divided by 16 gives the duration in seconds
     private static final byte[] POWER_PELLET_TIMES = {
@@ -551,7 +549,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         if (!isLevelCompleted()) {
             level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(MovingActor::requestTurnBack);
-            level.energizerVictims().clear();
+            level.killedGhostsForCurrentEnergizer().clear();
             final float powerSeconds = level.pacPowerSeconds();
             if (powerSeconds > 0) {
                 level.huntingTimer().stop();
@@ -608,19 +606,25 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onEatGhost(Ghost ghost) {
+    public void onEatGhost(Ghost eatenGhost) {
         final GameLevel level = optGameLevel().orElseThrow();
-        final List<Ghost> victims = level.energizerVictims();
-        final int killedSoFar = victims.size();
-        final int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
-        victims.add(ghost);
-        ghost.setState(GhostState.EATEN);
-        ghost.animations().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, killedSoFar);
+
+        final int killedBefore = level.killedGhostsForCurrentEnergizer().size();
+        final int points = rules.pointsForGhost(killedBefore);
+
+        eatenGhost.setState(GhostState.EATEN);
+        eatenGhost.animations().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, killedBefore);
+
         scorePoints(level, points);
-        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.computeTile());
+
+        Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
+
         level.entities().pac().hide();
-        level.ghosts().forEach(g -> g.animations().stopSelected());
-        flow().publishGameEvent(new GhostEatenEvent(this, ghost));
+        level.entities().ghosts().forEach(g -> g.animations().stopSelected());
+
+        level.killedGhostsForCurrentEnergizer().add(eatenGhost);
+
+        flow().publishGameEvent(new GhostEatenEvent(this, eatenGhost));
     }
 
     @Override

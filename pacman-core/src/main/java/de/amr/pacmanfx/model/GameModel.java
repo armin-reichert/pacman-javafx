@@ -168,9 +168,9 @@ public interface GameModel {
     /**
      * Called when Pac‑Man eats a ghost.
      *
-     * @param ghost the ghost that was eaten
+     * @param eatenGhost the ghost that was eaten
      */
-    void onEatGhost(Ghost ghost);
+    void onEatGhost(Ghost eatenGhost);
 
     /**
      * Performs the logic for the ghost‑eaten sequence.

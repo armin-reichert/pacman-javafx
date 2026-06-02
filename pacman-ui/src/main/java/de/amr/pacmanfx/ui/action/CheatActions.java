@@ -63,7 +63,7 @@ public final class CheatActions {
                 final GameModel game = level.game();
                 final List<Ghost> killableGhosts = level.ghosts(FRIGHTENED, HUNTING_PAC).toList();
                 if (!killableGhosts.isEmpty()) {
-                    level.energizerVictims().clear(); // resets value of next killed ghost to 200
+                    level.killedGhostsForCurrentEnergizer().clear(); // resets value of next killed ghost to 200
                     killableGhosts.forEach(game::onEatGhost);
                     game.flow().enterStateWithName(CanonicalGameState.EATING_GHOST.name());
                 }

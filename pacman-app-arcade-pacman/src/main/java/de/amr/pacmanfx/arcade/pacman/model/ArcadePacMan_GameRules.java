@@ -50,6 +50,16 @@ public class ArcadePacMan_GameRules implements GameRules {
     );
 
     @Override
+    public int pointsForGhost(int killedBefore) {
+        return switch (killedBefore) {
+            case 0 -> 200;
+            case 1 -> 400;
+            case 2 -> 800;
+            default -> 1600;
+        };
+    }
+
+    @Override
     public int pointsForPellet() {
         return 10;
     }

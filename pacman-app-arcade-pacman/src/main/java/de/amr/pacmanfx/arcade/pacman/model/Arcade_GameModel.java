@@ -85,7 +85,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         if (!isLevelCompleted()) {
             level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(MovingActor::requestTurnBack);
-            level.energizerVictims().clear();
+            level.killedGhostsForCurrentEnergizer().clear();
             final float powerSeconds = level.pacPowerSeconds();
             if (powerSeconds > 0) {
                 level.huntingTimer().stop();
@@ -98,16 +98,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
                 flow().publishGameEvent(new PacGetsPowerEvent(this, pac));
             }
         }
-    }
-
-    protected int killedGhostValue(int alreadyKilled) {
-        return switch (alreadyKilled) {
-            case 0 -> 200;
-            case 1 -> 400;
-            case 2 -> 800;
-            case 3 -> 1600;
-            default -> throw new IllegalArgumentException("Illegal number of already killed ghosts: " + alreadyKilled);
-        };
     }
 
     protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
@@ -249,21 +239,23 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onEatGhost(Ghost ghost) {
+    public void onEatGhost(Ghost eatenGhost) {
         final GameLevel level = optGameLevel().orElseThrow();
-        final int alreadyKilled = level.energizerVictims().size();
-        final int points = killedGhostValue(alreadyKilled);
+
+        final int killedBefore = level.killedGhostsForCurrentEnergizer().size();
+        final int points = rules.pointsForGhost(killedBefore);
+
         scorePoints(level, points);
-        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.computeTile());
+        Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
 
-        ghost.setState(GhostState.EATEN);
+        eatenGhost.setState(GhostState.EATEN);
         // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
-        ghost.animations().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, alreadyKilled);
+        eatenGhost.animations().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, killedBefore);
 
-        level.energizerVictims().add(ghost);
+        level.killedGhostsForCurrentEnergizer().add(eatenGhost);
         level.entities().pac().hide();
         level.ghosts().forEach(g -> g.animations().stopSelected());
-        flow().publishGameEvent(new GhostEatenEvent(this, ghost));
+        flow().publishGameEvent(new GhostEatenEvent(this, eatenGhost));
     }
 
     @Override

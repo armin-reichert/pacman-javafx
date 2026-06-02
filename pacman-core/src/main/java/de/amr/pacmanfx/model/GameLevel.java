@@ -206,7 +206,7 @@ public class GameLevel {
     /**
      * @return the ghosts that have been killed using the power of the last energizer eaten.
      */
-    public List<Ghost> energizerVictims() { return victims; }
+    public List<Ghost> killedGhostsForCurrentEnergizer() { return victims; }
 
     /**
      * @return {@code true} if this is a demo level (attract mode)

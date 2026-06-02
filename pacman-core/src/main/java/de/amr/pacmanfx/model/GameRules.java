@@ -6,6 +6,8 @@ import java.util.OptionalInt;
 
 public interface GameRules {
 
+    int pointsForGhost(int killedBefore);
+
     int pointsForPellet();
 
     default int restingTicksForPellet() {

@@ -543,7 +543,7 @@ public abstract class AbstractGameModel implements GameModel {
                 simStep.pacLostPower = true;
                 pac.powerTimer().stop();
                 pac.powerTimer().reset(0);
-                level.energizerVictims().clear();
+                level.killedGhostsForCurrentEnergizer().clear();
                 level.huntingTimer().start();
                 level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
                 flow().publishGameEvent(new PacLostPowerEvent(this, pac));
