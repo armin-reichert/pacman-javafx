@@ -40,19 +40,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected Steering demoLevelSteering;
     protected Arcade_ActorSpeedControl actorSpeedControl;
 
-    protected int restingTicksPellet;
-    protected int restingTicksEnergizer;
-
     protected Arcade_GameModel(CoinMechanism coinMechanism) {
         this.coinMechanism = requireNonNull(coinMechanism);
         hud = new HeadsUpDisplay(coinMechanism);
         gameFlow = new Arcade_GameFlow(this);
         actorSpeedControl = new Arcade_ActorSpeedControl();
-
         rules = new ArcadePacMan_GameRules();
-        restingTicksPellet = 1;
-        restingTicksEnergizer = 3;
-
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
     }
 
@@ -73,7 +66,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         scorePoints(level, rules.pointsForPellet());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
-        level.entities().pac().setRestingTicks(restingTicksPellet);
+        level.entities().pac().setRestingTicks(rules.restingTicksForPellet());
         checkRedGhostCruiseElroyActivation(level);
     }
 
@@ -82,11 +75,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        final Pac pac = level.entities().pac();
-
         scorePoints(level, rules.pointsForEnergizer());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
-        pac.setRestingTicks(restingTicksEnergizer);
+
+        final Pac pac = level.entities().pac();
+        pac.setRestingTicks(rules.restingTicksForEnergizer());
+
         checkRedGhostCruiseElroyActivation(level);
 
         if (!isLevelCompleted()) {

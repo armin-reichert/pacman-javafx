@@ -54,9 +54,18 @@ public class ArcadePacMan_GameRules implements GameRules {
         return 10;
     }
 
+    public int restingTicksForPellet() {
+        return 1;
+    }
+
     @Override
     public int pointsForEnergizer() {
         return 50;
+    }
+
+    @Override
+    public int restingTicksForEnergizer() {
+        return 3;
     }
 
     @Override

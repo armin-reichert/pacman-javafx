@@ -8,7 +8,15 @@ public interface GameRules {
 
     int pointsForPellet();
 
+    default int restingTicksForPellet() {
+        return 0;
+    }
+
     int pointsForEnergizer();
+
+    default int restingTicksForEnergizer() {
+        return 0;
+    }
 
     boolean isBonusAwarded(GameLevel level);
 
