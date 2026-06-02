@@ -39,6 +39,11 @@ public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME
     }
 
     @Override
+    public String name() {
+        return "LevelMediumTestState";
+    }
+
+    @Override
     public void onEnter(GAME game) {
         lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
         timer.restartSeconds(TEST_DURATION_SEC);

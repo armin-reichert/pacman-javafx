@@ -12,6 +12,11 @@ public class CutScenesTestState<GAME extends GameModel> extends TestState<GAME> 
     public int testedCutSceneNumber;
 
     @Override
+    public String name() {
+        return "CutScenesTestState";
+    }
+
+    @Override
     public void onEnter(GAME game) {
         lock();
         testedCutSceneNumber = 1;

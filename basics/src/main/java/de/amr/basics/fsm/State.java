@@ -16,9 +16,7 @@ import java.util.stream.Stream;
  */
 public interface State<C> {
 
-    default Object name() {
-        return getClass().getSimpleName();
-    }
+    String name();
 
     default boolean matchesByName(String... names) {
         if (names.length == 0) return false;

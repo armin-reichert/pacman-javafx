@@ -150,7 +150,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         else if (tick == Arcade_GameState.TICK_NEW_GAME_START_HUNTING) {
             setPlayingLevel(true);
-            flow().enterState(Arcade_GameState.LEVEL_PLAYING);
+            flow().enterState(Arcade_GameState.LEVEL_PLAYING.state());
         }
     }
 
@@ -167,7 +167,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             flow().publishGameEvent(new GameContinuedEvent(this));
         }
         else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {
-            flow().enterState(Arcade_GameState.LEVEL_PLAYING);
+            flow().enterState(Arcade_GameState.LEVEL_PLAYING.state());
         }
     }
 
@@ -297,7 +297,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.ghosts().forEach(Ghost::show);
         }
         else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {
-            flow().enterState(Arcade_GameState.LEVEL_PLAYING);
+            flow().enterState(Arcade_GameState.LEVEL_PLAYING.state());
         }
     }
 

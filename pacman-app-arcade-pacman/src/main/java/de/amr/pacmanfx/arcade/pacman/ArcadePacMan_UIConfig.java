@@ -121,7 +121,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             context.ui().sounds().stopAndDisposeVoice();
             context.ui().sounds().setEnabled(true);
             slot.insertCoin();
-            game.flow().enterState(PREPARING_GAME_START);
+            game.flow().enterState(PREPARING_GAME_START.state());
             game.flow().publishGameEvent(new CreditAddedEvent(game, 1));
         }
 
@@ -137,7 +137,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
                 return true;
             }
             final State<GameModel> gameState = game.flow().state();
-            return gameState == INTRO || gameState == PREPARING_GAME_START;
+            return gameState == INTRO.state() || gameState == PREPARING_GAME_START.state();
         }
     };
 
@@ -145,7 +145,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         @Override
         public void doAction(AppContext context) {
             context.ui().sounds().stopAndDisposeVoice();
-            context.currentGameFlow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL);
+            context.currentGameFlow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL.state());
         }
 
         @Override
@@ -156,7 +156,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             }
             final GameModel game = context.currentGame();
             final State<GameModel> gameState = context.currentGameState();
-            return (gameState == INTRO || gameState == PREPARING_GAME_START) && game.canStartNewGame();
+            return (gameState == INTRO.state() || gameState == PREPARING_GAME_START.state()) && game.canStartNewGame();
         }
     };
 

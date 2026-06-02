@@ -36,7 +36,7 @@ public class Arcade_GameFlow extends StateMachine<GameModel> implements GameFlow
         setName("Arcade Pac-Man Game Flow");
         setContext(game);
         addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
-        Stream.of(Arcade_GameState.values()).forEach(this::addState);
+        Stream.of(Arcade_GameState.values()).forEach(arcadeGameState -> addState(arcadeGameState.state()));
     }
 
     /**

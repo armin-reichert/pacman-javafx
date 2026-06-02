@@ -3,7 +3,9 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
+import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene3D;
@@ -14,7 +16,6 @@ import de.amr.pacmanfx.ui.gamescene.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 
-import static de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState.*;
 import static de.amr.pacmanfx.ui.AppConstants.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
@@ -44,13 +45,22 @@ class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     @Override
     protected SceneID determineSceneID(GameModel game) {
-        return switch (game.flow().state()) {
-            case BOOT -> CommonSceneID.BOOT_SCENE;
-            case PREPARING_GAME_START -> CommonSceneID.START_SCENE;
-            case INTRO -> CommonSceneID.INTRO_SCENE;
-            case INTERMISSION -> resolveCutSceneID(game);
-            case CutScenesTestState<?> testState -> AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
-            default -> PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
-        };
+        final State<GameModel> state = game.flow().state();
+        if (state.matchesByName(Arcade_GameState.BOOT.name())) {
+            return CommonSceneID.BOOT_SCENE;
+        }
+        if (state.matchesByName(Arcade_GameState.INTERMISSION.name())) {
+            return resolveCutSceneID(game);
+        }
+        if (state.matchesByName(Arcade_GameState.INTRO.name())) {
+            return CommonSceneID.INTRO_SCENE;
+        }
+        if (state.matchesByName(Arcade_GameState.PREPARING_GAME_START.name())) {
+            return CommonSceneID.START_SCENE;
+        }
+        if (state instanceof CutScenesTestState<?> testState) {
+            return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
+        }
+        return PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
     }
 }

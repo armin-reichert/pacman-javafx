@@ -20,6 +20,11 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
     }
 
     @Override
+    public String name() {
+        return "LevelShortTestState";
+    }
+
+    @Override
     public void onEnter(GAME game) {
         coinMechanism.setNumCoins(1);
         lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();

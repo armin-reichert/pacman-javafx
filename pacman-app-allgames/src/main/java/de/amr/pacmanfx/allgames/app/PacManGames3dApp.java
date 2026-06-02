@@ -55,7 +55,7 @@ import static de.amr.pacmanfx.model.GameVariant.*;
  * Command-line arguments:
  * <ul>
  *     <li>{@code --use_builder=value}:<br/>
- *     <li>{@code --include-tests=value}</li>
+ *     <li>{@code --include_tests=value}</li>
  * </ul>
  * </p>
  */

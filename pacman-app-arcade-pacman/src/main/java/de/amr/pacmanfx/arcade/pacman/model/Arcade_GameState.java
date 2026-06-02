@@ -3,18 +3,18 @@
  */
 package de.amr.pacmanfx.arcade.pacman.model;
 
-import de.amr.basics.fsm.State;
-import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.state.GameState;
 
-public enum Arcade_GameState implements State<GameModel> {
+public enum Arcade_GameState {
 
     /**
      * Corresponds to the screen showing all these random symbols from the Arcade video memory.
      */
-    BOOT { // "Das muss das Boot abkönnen! Jawohl Herr Kaleu!"
+    BOOT (new GameState("BOOT") {
+        // "Das muss das Boot abkönnen! Jawohl, Herr Kaleu!"
         @Override
         public void onEnter(GameModel game) {
             lock(); // UI triggers timer expiration
@@ -24,16 +24,16 @@ public enum Arcade_GameState implements State<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (timer.hasExpired()) {
-                game.flow().enterState(INTRO);
+            if (timer().hasExpired()) {
+                game.flow().enterState(INTRO.state);
             }
         }
-    },
+    }),
 
     /**
      * Corresponds to the intro screen with the Pac-Man and ghost animations.
      */
-    INTRO {
+    INTRO (new GameState("INTRO") {
         @Override
         public void onEnter(GameModel game) {
             lock();
@@ -42,17 +42,17 @@ public enum Arcade_GameState implements State<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (timer.hasExpired()) {
+            if (timer().hasExpired()) {
                 // Start demo level (attract mode)
-                game.flow().enterState(STARTING_GAME_OR_LEVEL);
+                game.flow().enterState(STARTING_GAME_OR_LEVEL.state);
             }
         }
-    },
+    }),
 
     /**
      * Corresponds to the start screen of the Arcade Pac-Man games.
      */
-    PREPARING_GAME_START {
+    PREPARING_GAME_START (new GameState("PREPARING_GAME_START") {
         @Override
         public void onEnter(GameModel game) {
             lock();
@@ -64,9 +64,9 @@ public enum Arcade_GameState implements State<GameModel> {
         public void onUpdate(GameModel game) {
             // Wait for user interaction (e.g. key press) to start playing
         }
-    },
+    }),
 
-    STARTING_GAME_OR_LEVEL {
+    STARTING_GAME_OR_LEVEL (new GameState("STARTING_GAME_OR_LEVEL") {
         @Override
         public void onEnter(GameModel game) {
             game.hud().score(true).levelCounter(true).show();
@@ -74,7 +74,7 @@ public enum Arcade_GameState implements State<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            final long tick = timer.tickCount();
+            final long tick = timer().tickCount();
             if (game.isPlayingLevel()) {
                 game.continuePlayingLevel(tick);
                 game.hud().credit(false).livesCounter(true);
@@ -88,9 +88,9 @@ public enum Arcade_GameState implements State<GameModel> {
                 game.hud().credit(true).livesCounter(false);
             }
         }
-    },
+    }),
 
-    LEVEL_PLAYING {
+    LEVEL_PLAYING (new GameState("LEVEL_PLAYING") {
         @Override
         public void onEnter(GameModel game) {
             game.onStartLevelPlaying();
@@ -100,18 +100,18 @@ public enum Arcade_GameState implements State<GameModel> {
         public void onUpdate(GameModel game) {
             game.doLevelPlaying();
             if (game.isLevelCompleted()) {
-                game.flow().enterState(LEVEL_COMPLETE);
+                game.flow().enterState(LEVEL_COMPLETE.state);
             }
             else if (game.hasPacManBeenKilled()) {
-                game.flow().enterState(PACMAN_DYING);
+                game.flow().enterState(PACMAN_DYING.state);
             }
             else if (game.hasGhostBeenKilled()) {
-                game.flow().enterState(EATING_GHOST);
+                game.flow().enterState(EATING_GHOST.state);
             }
         }
-    },
+    }),
 
-    LEVEL_COMPLETE {
+    LEVEL_COMPLETE (new GameState("LEVEL_COMPLETE") {
         @Override
         public void onEnter(GameModel game) {
             lock(); // UI triggers timeout
@@ -121,61 +121,61 @@ public enum Arcade_GameState implements State<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
-            if (timer.hasExpired()) {
+            if (timer().hasExpired()) {
                 if (level.isDemoLevel()) {
                     // just in case: if demo level was completed, go back to intro scene
-                    game.flow().enterState(INTRO);
+                    game.flow().enterState(INTRO.state);
                 }
                 else if (game.flow().cutScenesEnabled() && level.cutSceneNumber() != 0) {
-                    game.flow().enterState(INTERMISSION);
+                    game.flow().enterState(INTERMISSION.state);
                 }
                 else {
-                    game.flow().enterState(LEVEL_TRANSITION);
+                    game.flow().enterState(LEVEL_TRANSITION.state);
                 }
             }
         }
-    },
+    }),
 
-    LEVEL_TRANSITION {
+    LEVEL_TRANSITION (new GameState("LEVEL_TRANSITION") {
         @Override
         public void onEnter(GameModel game) {
-            timer.restartSeconds(2);
+            timer().restartSeconds(2);
             game.startNextLevel();
         }
 
         @Override
         public void onUpdate(GameModel game) {
-            if (timer.hasExpired()) {
-                game.flow().enterState(STARTING_GAME_OR_LEVEL);
+            if (timer().hasExpired()) {
+                game.flow().enterState(STARTING_GAME_OR_LEVEL.state);
             }
         }
-    },
+    }),
 
-    EATING_GHOST {
+    EATING_GHOST (new GameState("EATING_GHOST") {
         @Override
         public void onEnter(GameModel game) {
-            timer.restartTicks(60);
+            timer().restartTicks(60);
         }
 
         @Override
         public void onUpdate(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
-            if (timer.hasExpired()) {
+            if (timer().hasExpired()) {
                 level.entities().pac().show();
                 level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
                 level.ghosts().forEach(ghost -> ghost.animations().playSelected());
                 game.flow().resumePreviousState();
             } else {
-                if (timer.tickCount() < 60) {
+                if (timer().tickCount() < 60) {
                     level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                         .forEach(ghost -> ghost.update(level));
                     level.blinking().doTick();
                 }
             }
         }
-    },
+    }),
 
-    PACMAN_DYING {
+    PACMAN_DYING (new GameState("PACMAN_DYING") {
         @Override
         public void onEnter(GameModel game) {
             lock(); // UI triggers time-out
@@ -184,43 +184,43 @@ public enum Arcade_GameState implements State<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
-            if (timer.hasExpired()) {
+            if (timer().hasExpired()) {
                 if (level.isDemoLevel()) {
-                    game.flow().enterState(GAME_OVER);
+                    game.flow().enterState(GAME_OVER.state);
                 } else {
                     game.lives().add(-1);
-                    game.flow().enterState(game.lives().count() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
+                    game.flow().enterState(game.lives().count() == 0 ? GAME_OVER.state : STARTING_GAME_OR_LEVEL.state);
                 }
             } else {
-                game.doPacManDying(level.entities().pac(), timer.tickCount());
+                game.doPacManDying(level.entities().pac(), timer().tickCount());
             }
         }
-    },
+    }),
 
-    GAME_OVER {
+    GAME_OVER (new GameState("GAME_OVER") {
         @Override
         public void onEnter(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
-            timer.restartTicks(level.gameOverStateTicks());
+            timer().restartTicks(level.gameOverStateTicks());
             game.onGameOver();
         }
 
         @Override
         public void onUpdate(GameModel game) {
-            if (timer.hasExpired()) {
+            if (timer().hasExpired()) {
                 final GameLevel level = game.optGameLevel().orElseThrow();
                 level.clearMessage();
                 game.cheats().clear();
                 if (game.canStartNewGame()) {
-                    game.flow().enterState(PREPARING_GAME_START);
+                    game.flow().enterState(PREPARING_GAME_START.state);
                 } else {
-                    game.flow().enterState(INTRO);
+                    game.flow().enterState(INTRO.state);
                 }
             }
         }
-    },
+    }),
 
-    INTERMISSION {
+    INTERMISSION (new GameState("INTERMISSION") {
         @Override
         public void onEnter(GameModel game) {
             lock();
@@ -229,8 +229,8 @@ public enum Arcade_GameState implements State<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (timer.hasExpired()) {
-                game.flow().enterState(game.isPlayingLevel() ? LEVEL_TRANSITION : INTRO);
+            if (timer().hasExpired()) {
+                game.flow().enterState(game.isPlayingLevel() ? LEVEL_TRANSITION.state : INTRO.state);
             }
         }
 
@@ -238,7 +238,7 @@ public enum Arcade_GameState implements State<GameModel> {
         public void onExit(GameModel game) {
             game.hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
         }
-    };
+    });
 
     public static final short TICK_NEW_GAME_SHOW_GUYS = 60;
     public static final short TICK_NEW_GAME_START_HUNTING = 240;
@@ -248,14 +248,13 @@ public enum Arcade_GameState implements State<GameModel> {
     public static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
     public static final short TICK_PACMAN_DYING_PAC_DEAD = 210;
 
-    final TickTimer timer;
+    final GameState state;
 
-    Arcade_GameState() {
-        timer = new TickTimer("Timer-" + name());
+    Arcade_GameState(GameState state) {
+        this.state = state;
     }
 
-    @Override
-    public TickTimer timer() {
-        return timer;
+    public GameState state() {
+        return state;
     }
 }
