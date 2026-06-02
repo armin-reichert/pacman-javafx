@@ -167,6 +167,18 @@ public abstract class AbstractGameModel implements GameModel {
      * ---------------------------------------------------------------------- */
 
     @Override
+    public void doLevelPlaying() {
+        final GameLevel level = optGameLevel().orElseThrow();
+        level.entities().pac().show();
+        level.ghosts().forEach(Ghost::show);
+        doHuntingStep(level);
+        if (gateKeeper() != null) {
+            gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
+        }
+        cheats().update(level);
+    }
+
+    @Override
     public SimulationStep doSimulationStep() {
         return simStep;
     }

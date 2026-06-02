@@ -170,6 +170,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         return difficulty;
     }
 
+    @Override
+    public GateKeeper gateKeeper() {
+        return gateKeeper;
+    }
+
     public void setStartLevelNumber(int number) {
         if (number < TengenMsPacMan_GameRules.FIRST_LEVEL || number > TengenMsPacMan_GameRules.LAST_LEVEL) {
             throw GameException.invalidLevelNumber(number);
@@ -468,16 +473,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void doLevelPlaying() {
-        final GameLevel level = optGameLevel().orElseThrow();
-        level.entities().pac().show();
-        level.ghosts().forEach(Ghost::show);
-        doHuntingStep(level);
-        gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
-        cheats().update(level);
     }
 
     @Override

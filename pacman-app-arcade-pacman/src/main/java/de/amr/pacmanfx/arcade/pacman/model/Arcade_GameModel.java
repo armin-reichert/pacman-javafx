@@ -112,6 +112,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     // Game interface
 
     @Override
+    public GateKeeper gateKeeper() {
+        return gateKeeper;
+    }
+
+    @Override
     public void init() {
         lives().setInitialCount(3);
         prepareNewGame();
@@ -176,18 +181,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public boolean canContinueOnGameOver() { return false; }
-
-    @Override
-    public void doLevelPlaying() {
-        final GameLevel level = optGameLevel().orElseThrow();
-        level.entities().pac().show();
-        level.ghosts().forEach(Ghost::show);
-        doHuntingStep(level);
-        if (gateKeeper != null) {
-            gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
-        }
-        cheats().update(level);
-    }
 
     @Override
     public void doPacManDying(Pac pac, long tick) {

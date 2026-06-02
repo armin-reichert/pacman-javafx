@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 
 import java.util.Optional;
@@ -144,6 +145,8 @@ public interface GameModel {
      * @param tick the current simulation tick
      */
     void continuePlayingLevel(long tick);
+
+    GateKeeper gateKeeper();
 
     /** Activates the next bonus item, if applicable. */
     void activateNextBonus();
