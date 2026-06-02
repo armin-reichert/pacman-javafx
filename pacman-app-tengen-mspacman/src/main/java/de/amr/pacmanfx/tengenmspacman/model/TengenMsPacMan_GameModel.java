@@ -40,7 +40,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public static final short TICK_NEW_GAME_START_HUNTING = 250;
     public static final short TICK_RESUME_HUNTING = 240;
     public static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
-    public static final short TICK_EATING_GHOST_COMPLETE = 60;
 
     public static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
     public static final short TICK_PACMAN_DYING_START_PAC_ANIMATION = 90;
@@ -273,7 +272,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
         else if (tick == TICK_NEW_GAME_START_HUNTING) {
             setPlayingLevel(true);
-            flow().enterState(LEVEL_PLAYING);
+            flow().enterState(LEVEL_PLAYING.state());
         }
     }
 
@@ -286,7 +285,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.ghosts().forEach(Ghost::show);
             flow().publishGameEvent(new GameContinuedEvent(this));
         } else if (tick == TICK_RESUME_HUNTING) {
-            flow().enterState(LEVEL_PLAYING);
+            flow().enterState(LEVEL_PLAYING.state());
         }
     }
 
@@ -329,7 +328,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.ghosts().forEach(Ghost::show);
         }
         else if (tick == TICK_DEMO_LEVEL_START_HUNTING) {
-            flow().enterState(TengenMsPacMan_GameState.LEVEL_PLAYING);
+            flow().enterState(TengenMsPacMan_GameState.LEVEL_PLAYING.state());
         }
     }
 

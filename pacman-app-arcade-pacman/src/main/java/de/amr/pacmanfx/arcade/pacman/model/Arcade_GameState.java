@@ -8,13 +8,17 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.state.GameState;
 
+import static java.util.Objects.requireNonNull;
+
 public enum Arcade_GameState {
 
     /**
      * Corresponds to the screen showing all these random symbols from the Arcade video memory.
      */
     BOOT (new GameState("BOOT") {
+
         // "Das muss das Boot abkönnen! Jawohl, Herr Kaleu!"
+
         @Override
         public void onEnter(GameModel game) {
             lock(); // UI triggers timer expiration
@@ -240,6 +244,16 @@ public enum Arcade_GameState {
         }
     });
 
+    final GameState state;
+
+    Arcade_GameState(GameState state) {
+        this.state = requireNonNull(state);
+    }
+
+    public GameState state() {
+        return state;
+    }
+
     public static final short TICK_NEW_GAME_SHOW_GUYS = 60;
     public static final short TICK_NEW_GAME_START_HUNTING = 240;
     public static final short TICK_RESUME_HUNTING = 120;
@@ -248,13 +262,4 @@ public enum Arcade_GameState {
     public static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
     public static final short TICK_PACMAN_DYING_PAC_DEAD = 210;
 
-    final GameState state;
-
-    Arcade_GameState(GameState state) {
-        this.state = state;
-    }
-
-    public GameState state() {
-        return state;
-    }
 }

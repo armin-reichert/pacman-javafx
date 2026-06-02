@@ -10,7 +10,6 @@ import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -101,7 +100,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            context().currentGameFlow().enterState(TengenMsPacMan_GameState.INTRO);
+            context().currentGameFlow().enterState(TengenMsPacMan_GameState.INTRO.state());
         }
     }
 

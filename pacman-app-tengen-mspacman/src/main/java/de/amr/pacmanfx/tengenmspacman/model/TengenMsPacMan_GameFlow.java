@@ -33,7 +33,9 @@ public class TengenMsPacMan_GameFlow extends StateMachine<GameModel> implements 
 
     public TengenMsPacMan_GameFlow(TengenMsPacMan_GameModel game) {
         setName("Tengen Ms. Pac-Man Game Flow");
-        addStates(TengenMsPacMan_GameState.values());
+        for (TengenMsPacMan_GameState gameState : TengenMsPacMan_GameState.values()) {
+            addState(gameState.state());
+        }
         setContext(game);
         addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
     }

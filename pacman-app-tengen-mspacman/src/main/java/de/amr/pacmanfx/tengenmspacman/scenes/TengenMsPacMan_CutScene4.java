@@ -168,7 +168,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                 }
                 case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(uiConfig, gameStateTick);
                 case 1500 -> context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
-                case TICK_EXPIRES -> game.flow().enterState(TengenMsPacMan_GameState.PREPARING_GAME_START);
+                case TICK_EXPIRES -> game.flow().enterState(TengenMsPacMan_GameState.PREPARING_GAME_START.state());
             }
         }
     }

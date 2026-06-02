@@ -21,14 +21,14 @@ public interface TengenMsPacMan_Actions {
     GameAction ACTION_ENTER_START_SCREEN = new GameAction("enter_start_screen") {
         @Override
         public void doAction(AppContext context) {
-            context.currentGameFlow().enterState(TengenMsPacMan_GameState.PREPARING_GAME_START);
+            context.currentGameFlow().enterState(TengenMsPacMan_GameState.PREPARING_GAME_START.state());
         }
     };
 
     GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction("quit_demo_level") {
         @Override
         public void doAction(AppContext context) {
-            context.currentGameFlow().enterState(TengenMsPacMan_GameState.PREPARING_GAME_START);
+            context.currentGameFlow().enterState(TengenMsPacMan_GameState.PREPARING_GAME_START.state());
         }
 
         @Override
@@ -41,7 +41,7 @@ public interface TengenMsPacMan_Actions {
     GameAction ACTION_START_PLAYING = new GameAction("start_playing") {
         @Override
         public void doAction(AppContext context) {
-            context.currentGameFlow().enterState(TengenMsPacMan_GameState.STARTING_GAME_OR_LEVEL);
+            context.currentGameFlow().enterState(TengenMsPacMan_GameState.STARTING_GAME_OR_LEVEL.state());
         }
     };
 

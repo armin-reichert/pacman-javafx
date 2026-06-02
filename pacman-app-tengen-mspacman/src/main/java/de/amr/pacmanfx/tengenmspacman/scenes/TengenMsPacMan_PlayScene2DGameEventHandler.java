@@ -62,22 +62,19 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        switch (e.newState()) {
-            case TengenMsPacMan_GameState.LEVEL_COMPLETE -> {
-                final GameLevel level = optGameLevel().orElseThrow();
-                context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
-                gameScene().playLevelCompleteAnimation(level);
-            }
-            case TengenMsPacMan_GameState.GAME_OVER -> {
-                final TengenMsPacMan_PlayScene2D playScene2D = gameScene();
-                final PlayScene2DCamera camera = playScene2D.dynamicCamera();
-                final GameLevel level = optGameLevel().orElseThrow();
-                context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
-                camera.enterManualMode();
-                camera.setToTopPosition();
-                level.optMessage().ifPresent(playScene2D::startGameOverMessageAnimation);
-            }
-            default -> {}
+        if (e.newState() == TengenMsPacMan_GameState.LEVEL_COMPLETE.state()) {
+            final GameLevel level = optGameLevel().orElseThrow();
+            context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            gameScene().playLevelCompleteAnimation(level);
+        }
+        else if (e.newState() == TengenMsPacMan_GameState.GAME_OVER.state()) {
+            final TengenMsPacMan_PlayScene2D playScene2D = gameScene();
+            final PlayScene2DCamera camera = playScene2D.dynamicCamera();
+            final GameLevel level = optGameLevel().orElseThrow();
+            context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            camera.enterManualMode();
+            camera.setToTopPosition();
+            level.optMessage().ifPresent(playScene2D::startGameOverMessageAnimation);
         }
     }
 
