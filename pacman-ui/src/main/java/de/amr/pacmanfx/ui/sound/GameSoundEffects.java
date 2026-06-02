@@ -18,7 +18,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.flow.CanonicalGameState.LEVEL_PLAYING;
+import static de.amr.pacmanfx.flow.GameStateID.LEVEL_PLAYING;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -172,7 +172,7 @@ public class GameSoundEffects {
         if (!soundManager.isEnabled()) {
             return;
         }
-        if (level.game().flow().state().matchesByName(LEVEL_PLAYING.name())) {
+        if (level.game().flow().state().nameIsOneOf(LEVEL_PLAYING.name())) {
             playSiren(level);
             playGhostSounds(level.entities().pac(), level.ghosts());
         }

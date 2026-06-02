@@ -46,16 +46,16 @@ class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     @Override
     protected SceneID determineSceneID(GameModel game) {
         final State<GameModel> state = game.flow().state();
-        if (state.matchesByName(Arcade_GameState.BOOT.name())) {
+        if (state.nameIsOneOf(Arcade_GameState.BOOT.name())) {
             return CommonSceneID.BOOT_SCENE;
         }
-        if (state.matchesByName(Arcade_GameState.INTERMISSION.name())) {
+        if (state.nameIsOneOf(Arcade_GameState.INTERMISSION.name())) {
             return resolveCutSceneID(game);
         }
-        if (state.matchesByName(Arcade_GameState.INTRO.name())) {
+        if (state.nameIsOneOf(Arcade_GameState.INTRO.name())) {
             return CommonSceneID.INTRO_SCENE;
         }
-        if (state.matchesByName(Arcade_GameState.PREPARING_GAME_START.name())) {
+        if (state.nameIsOneOf(Arcade_GameState.PREPARING_GAME_START.name())) {
             return CommonSceneID.START_SCENE;
         }
         if (state instanceof CutScenesTestState<?> testState) {

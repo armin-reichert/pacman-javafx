@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.subviews.help;
 
 import de.amr.basics.fsm.State;
-import de.amr.pacmanfx.flow.CanonicalGameState;
+import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
@@ -31,17 +31,17 @@ public class HelpInfo {
         final boolean demoLevel = game.isDemoLevelRunning();
 
         final HelpInfo helpInfo = new HelpInfo(context);
-        if (state.matchesByName(CanonicalGameState.INTRO.name())) {
+        if (state.nameIsOneOf(GameStateID.INTRO.name())) {
             helpInfo.addInfoForIntroScene(game);
         }
-        else if (state.matchesByName(CanonicalGameState.PREPARING_GAME_START.name())) {
+        else if (state.nameIsOneOf(GameStateID.PREPARING_GAME_START.name())) {
             helpInfo.addInfoForCreditScene(game);
         }
-        else if (state.matchesByName(
-            CanonicalGameState.STARTING_GAME_OR_LEVEL.name(),
-            CanonicalGameState.LEVEL_PLAYING.name(),
-            CanonicalGameState.PACMAN_DYING.name(),
-            CanonicalGameState.EATING_GHOST.name())) {
+        else if (state.nameIsOneOf(
+            GameStateID.STARTING_GAME_OR_LEVEL.name(),
+            GameStateID.LEVEL_PLAYING.name(),
+            GameStateID.PACMAN_DYING.name(),
+            GameStateID.EATING_GHOST.name())) {
             if (demoLevel) {
                 helpInfo.addInfoForDemoLevelPlayScene();
             } else {

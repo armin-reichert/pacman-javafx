@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene;
 
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.flow.CanonicalGameState;
+import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.AppConstants;
@@ -92,7 +92,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         optCurrentGameScene().ifPresent(scene -> {
             //TODO Rethink this
             final CoinMechanism coinMechanism = context.gameContext().coinMechanism();
-            boolean shouldConsumeCoin = context.currentGameState().matchesByName(CanonicalGameState.STARTING_GAME_OR_LEVEL.name())
+            boolean shouldConsumeCoin = context.currentGameState().nameIsOneOf(GameStateID.STARTING_GAME_OR_LEVEL.name())
                 || context.currentGame().isPlayingLevel();
             if (shouldConsumeCoin && !coinMechanism.isEmpty()) {
                 coinMechanism.consumeCoin();

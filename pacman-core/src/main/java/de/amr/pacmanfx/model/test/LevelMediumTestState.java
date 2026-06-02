@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
-import de.amr.pacmanfx.flow.CanonicalGameState;
+import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -68,7 +68,7 @@ public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
                 game.flow().publishGameEvent(new StopAllSoundsEvent(game));
-                game.flow().enterStateWithName(CanonicalGameState.INTRO.name());
+                game.flow().enterState(GameStateID.INTRO.name());
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);
                 game.startNextLevel();
@@ -76,11 +76,11 @@ public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME
             }
         }
         else if (game.isLevelCompleted()) {
-            game.flow().enterStateWithName(CanonicalGameState.INTRO.name());
+            game.flow().enterState(GameStateID.INTRO.name());
         } else if (game.hasPacManBeenKilled()) {
             expire();
         } else if (game.hasGhostBeenKilled()) {
-            game.flow().enterStateWithName(CanonicalGameState.EATING_GHOST.name());
+            game.flow().enterState(GameStateID.EATING_GHOST.name());
         }
     }
 

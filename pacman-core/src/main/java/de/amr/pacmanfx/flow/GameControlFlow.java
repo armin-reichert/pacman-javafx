@@ -21,7 +21,7 @@ public interface GameControlFlow {
 
     void enterState(State<GameModel> gameState);
 
-    void enterStateWithName(String stateName);
+    void enterState(String stateName);
 
     void resumePreviousState();
 

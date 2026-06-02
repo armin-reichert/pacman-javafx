@@ -5,8 +5,8 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.flow.CanonicalGameState;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.AppContext;
@@ -73,11 +73,11 @@ public class DashboardSectionGameControl extends DashboardSection {
             final State<GameModel> state = dashboard.context().currentGameState();
 
             choiceBoxInitialLives.setValue(game.lives().initialCount());
-            choiceBoxInitialLives.setDisable(!state.matchesByName(CanonicalGameState.INTRO.name()));
+            choiceBoxInitialLives.setDisable(!state.nameIsOneOf(GameStateID.INTRO.name()));
 
-            final boolean creditDisabled = !state.matchesByName(
-                CanonicalGameState.INTRO.name(),
-                CanonicalGameState.PREPARING_GAME_START.name()
+            final boolean creditDisabled = !state.nameIsOneOf(
+                GameStateID.INTRO.name(),
+                GameStateID.PREPARING_GAME_START.name()
             );
             spinnerCredit.setDisable(creditDisabled);
 
@@ -86,7 +86,7 @@ public class DashboardSectionGameControl extends DashboardSection {
             buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(booting || game.optGameLevel().isEmpty());
             buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(booting || !canEnterNextLevel(game, state));
 
-            buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.matchesByName(CanonicalGameState.INTRO.name()));
+            buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.nameIsOneOf(GameStateID.INTRO.name()));
             buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(state instanceof CutScenesTestState));
 
             cbCollisionCheckedTwice.setSelected(game.isCollisionDoubleChecked());
@@ -94,18 +94,18 @@ public class DashboardSectionGameControl extends DashboardSection {
     }
 
     private boolean isBooting(State<GameModel> state) {
-        return state.matchesByName(CanonicalGameState.BOOT.name());
+        return state.nameIsOneOf(GameStateID.BOOT.name());
     }
 
     private boolean canStartLevel(GameModel game, State<GameModel> state) {
         return game.canStartNewGame()
-            && state.matchesByName(
-                CanonicalGameState.INTRO.name(),
-                CanonicalGameState.PREPARING_GAME_START.name()
+            && state.nameIsOneOf(
+                GameStateID.INTRO.name(),
+                GameStateID.PREPARING_GAME_START.name()
         );
     }
 
     private boolean canEnterNextLevel(GameModel game, State<GameModel> state) {
-        return game.isPlayingLevel() && state.matchesByName(CanonicalGameState.LEVEL_PLAYING.name());
+        return game.isPlayingLevel() && state.nameIsOneOf(GameStateID.LEVEL_PLAYING.name());
     }
 }

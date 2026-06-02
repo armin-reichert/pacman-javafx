@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.event.PacEatsFoodEvent;
-import de.amr.pacmanfx.flow.CanonicalGameState;
+import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -52,7 +52,7 @@ public final class CheatActions {
         public boolean isEnabled(AppContext context) {
             final State<GameModel> gameState = context.currentGameState();
             return realLevel(context).isPresent()
-                && gameState.matchesByName(CanonicalGameState.LEVEL_PLAYING.name());
+                && gameState.nameIsOneOf(GameStateID.LEVEL_PLAYING.name());
         }
     };
 
@@ -65,7 +65,7 @@ public final class CheatActions {
                 if (!killableGhosts.isEmpty()) {
                     level.killedGhostsForCurrentEnergizer().clear(); // resets value of next killed ghost to 200
                     killableGhosts.forEach(game::onEatGhost);
-                    game.flow().enterStateWithName(CanonicalGameState.EATING_GHOST.name());
+                    game.flow().enterState(GameStateID.EATING_GHOST.name());
                 }
                 game.cheats().cheatUsedProperty().set(true);
             });
@@ -75,7 +75,7 @@ public final class CheatActions {
         public boolean isEnabled(AppContext context) {
             final State<GameModel> gameState = context.currentGameState();
             return realLevel(context).isPresent()
-                && gameState.matchesByName(CanonicalGameState.LEVEL_PLAYING.name());
+                && gameState.nameIsOneOf(GameStateID.LEVEL_PLAYING.name());
         }
     };
 
@@ -85,7 +85,7 @@ public final class CheatActions {
             realLevel(context).ifPresent(_ -> {
                 final GameModel game = context.currentGame();
                 game.cheats().cheatUsedProperty().set(true);
-                game.flow().enterStateWithName(CanonicalGameState.LEVEL_COMPLETE.name());
+                game.flow().enterState(GameStateID.LEVEL_COMPLETE.name());
             });
         }
 
@@ -94,7 +94,7 @@ public final class CheatActions {
             final State<GameModel> gameState = context.currentGameState();
             final GameLevel level = realLevel(context).orElse(null);
             return level != null
-                && gameState.matchesByName(CanonicalGameState.LEVEL_PLAYING.name())
+                && gameState.nameIsOneOf(GameStateID.LEVEL_PLAYING.name())
                 && level.number() < level.game().lastLevelNumber();
         }
     };

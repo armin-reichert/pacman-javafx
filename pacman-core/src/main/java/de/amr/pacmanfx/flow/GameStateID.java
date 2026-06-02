@@ -16,7 +16,7 @@ import static java.util.Objects.requireNonNull;
  * game‑variant‑independent code. Implementations may define additional
  * states, but these represent the canonical set used across Pac‑Man FX.</p>
  */
-public enum CanonicalGameState {
+public enum GameStateID {
     BOOT,
     INTRO,
     PREPARING_GAME_START,
@@ -29,8 +29,8 @@ public enum CanonicalGameState {
     GAME_OVER,
     INTERMISSION;
 
-    public boolean matches(State<GameModel> gameState) {
+    public boolean identifies(State<GameModel> gameState) {
         requireNonNull(gameState);
-        return gameState.matchesByName(name());
+        return gameState.name().equals(name());
     }
 }

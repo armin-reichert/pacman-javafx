@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.flow.CanonicalGameState;
+import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
@@ -110,7 +110,7 @@ public final class CommonActions {
             if (isLevelShortTest) {
                 gameState.onExit(game); //TODO exit other states too?
             }
-            game.flow().restartState(CanonicalGameState.INTRO.name());
+            game.flow().restartState(GameStateID.INTRO.name());
             context.gameClock().start();
         }
     };
@@ -319,7 +319,7 @@ public final class CommonActions {
         }
 
         private boolean isLevelPlaying(AppContext context) {
-            return context.currentGameState().matchesByName(CanonicalGameState.LEVEL_PLAYING.name());
+            return context.currentGameState().nameIsOneOf(GameStateID.LEVEL_PLAYING.name());
         }
     };
 }

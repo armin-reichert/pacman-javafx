@@ -5,7 +5,7 @@ package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.BonusEatenEvent;
-import de.amr.pacmanfx.flow.CanonicalGameState;
+import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Ghost;
 
@@ -78,7 +78,7 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
         else if (timer.atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
                 coinMechanism.setNumCoins(0);
-                game.flow().restartState(CanonicalGameState.BOOT.name());
+                game.flow().restartState(GameStateID.BOOT.name());
             } else {
                 lock();
                 game.startNextLevel();

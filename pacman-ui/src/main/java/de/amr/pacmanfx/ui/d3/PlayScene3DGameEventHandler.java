@@ -8,6 +8,7 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.event.*;
+import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
@@ -34,7 +35,6 @@ import javafx.scene.image.Image;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.flow.CanonicalGameState.*;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
 
 public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandler {
@@ -58,22 +58,22 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         if (gameState instanceof TestState) {
             handleTestState();
         }
-        else if (STARTING_GAME_OR_LEVEL.matches(gameState)) {
+        else if (GameStateID.STARTING_GAME_OR_LEVEL.identifies(gameState)) {
             onStartingGameOrLevel();
         }
-        else if (LEVEL_PLAYING.matches(gameState)) {
+        else if (GameStateID.LEVEL_PLAYING.identifies(gameState)) {
             onHuntingStart();
         }
-        else if (PACMAN_DYING.matches(gameState)) {
+        else if (GameStateID.PACMAN_DYING.identifies(gameState)) {
             onPacManDying(gameState);
         }
-        else if (EATING_GHOST.matches(gameState)) {
+        else if (GameStateID.EATING_GHOST.identifies(gameState)) {
             onEatingGhost();
         }
-        else if (LEVEL_COMPLETE.matches(gameState)) {
+        else if (GameStateID.LEVEL_COMPLETE.identifies(gameState)) {
             onLevelComplete();
         }
-        else if (GAME_OVER.matches(gameState)) {
+        else if (GameStateID.GAME_OVER.identifies(gameState)) {
             onGameOver();
         }
     }

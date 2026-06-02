@@ -52,19 +52,19 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     @Override
     protected SceneID determineSceneID(GameModel game) {
         final State<GameModel> state = game.flow().state();
-        if (state.matchesByName(TengenMsPacMan_GameState.BOOT.name())) {
+        if (state.nameIsOneOf(TengenMsPacMan_GameState.BOOT.name())) {
             return CommonSceneID.BOOT_SCENE;
         }
-        if (state.matchesByName(TengenMsPacMan_GameState.INTERMISSION.name())) {
+        if (state.nameIsOneOf(TengenMsPacMan_GameState.INTERMISSION.name())) {
             return resolveCutSceneID(game);
         }
-        if (state.matchesByName(TengenMsPacMan_GameState.INTRO.name())) {
+        if (state.nameIsOneOf(TengenMsPacMan_GameState.INTRO.name())) {
             return CommonSceneID.INTRO_SCENE;
         }
-        if (state.matchesByName(TengenMsPacMan_GameState.PREPARING_GAME_START.name())) {
+        if (state.nameIsOneOf(TengenMsPacMan_GameState.PREPARING_GAME_START.name())) {
             return CommonSceneID.START_SCENE;
         }
-        if (state.matchesByName(SHOWING_HALL_OF_FAME.name())) {
+        if (state.nameIsOneOf(SHOWING_HALL_OF_FAME.name())) {
             return TengenMsPacMan_UIConfig.TengenSceneID.HALL_OF_FAME;
         }
         if (state instanceof CutScenesTestState<?> testState) {

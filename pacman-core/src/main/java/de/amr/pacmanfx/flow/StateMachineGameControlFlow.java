@@ -54,7 +54,7 @@ public class StateMachineGameControlFlow implements GameControlFlow {
     }
 
     @Override
-    public void enterStateWithName(String stateName) {
+    public void enterState(String stateName) {
         stateMachine.enterStateWithName(stateName);
     }
 

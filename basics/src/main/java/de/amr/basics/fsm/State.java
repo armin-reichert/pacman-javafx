@@ -18,7 +18,7 @@ public interface State<C> {
 
     String name();
 
-    default boolean matchesByName(String... names) {
+    default boolean nameIsOneOf(String... names) {
         if (names.length == 0) return false;
         return Stream.of(names).anyMatch(name -> name().equals(name));
     }

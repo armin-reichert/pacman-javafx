@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.subviews.playview;
 
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.flow.CanonicalGameState;
+import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -46,7 +46,7 @@ public class GameEventHandler extends DefaultGameEventListener {
             }
 
             case GameStateChangeEvent stateChangeEvent -> {
-                if (stateChangeEvent.newState().matchesByName(CanonicalGameState.LEVEL_COMPLETE.name())) {
+                if (stateChangeEvent.newState().nameIsOneOf(GameStateID.LEVEL_COMPLETE.name())) {
                     final MiniPlaySceneView miniPlayView = context.ui().subViews().gamePlayView().miniPlaySceneView();
                     miniPlayView.slideOut();
                 }

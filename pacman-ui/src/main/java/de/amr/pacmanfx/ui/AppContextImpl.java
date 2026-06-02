@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Globals;
-import de.amr.pacmanfx.flow.CanonicalGameState;
+import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.SimulationStep;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.config.UIConfigManager;
@@ -139,7 +139,7 @@ public final class AppContextImpl implements AppContext {
     @Override
     public void restartGame() {
         stopGame();
-        currentGameFlow().restartState(CanonicalGameState.BOOT.name());
+        currentGameFlow().restartState(GameStateID.BOOT.name());
         Platform.runLater(clock::start);
     }
 
