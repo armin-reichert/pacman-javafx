@@ -29,6 +29,8 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import java.util.Set;
+
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.Globals.HTS;
 import static de.amr.pacmanfx.core.Globals.TS;
@@ -252,13 +254,13 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
      */
     public void update(GameLevel gameLevel) {
         boolean accessRequested = gameLevel
-            .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            .ghostsInAnyOfStates(Set.of(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
             .anyMatch(Ghost::isVisible);
         light.lightOnProperty().set(accessRequested);
 
         gameLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> {
             boolean ghostNearHouseEntry = gameLevel
-                .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+                .ghostsInAnyOfStates(Set.of(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
                 .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= doorSensitivity)
                 .anyMatch(Ghost::isVisible);
             doorsOpenProperty.set(ghostNearHouseEntry);
@@ -287,11 +289,6 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
 
     public void playDoorsMeltingAnimation() {
         animations.optAnimation(AnimationID.HOUSE_DOORS_MELTING).ifPresent(ManagedAnimation::playFromStart);
-    }
-
-    /** Returns the interior point light. */
-    public PointLight light() {
-        return light;
     }
 
     @Override

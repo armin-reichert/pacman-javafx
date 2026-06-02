@@ -152,6 +152,6 @@ public class LevelCompletedAnimation {
     }
 
     private void hideGhosts() {
-        level.ghosts().forEach(Ghost::hide);
+        level.entities().ghosts().forEach(Ghost::hide);
     }
 }

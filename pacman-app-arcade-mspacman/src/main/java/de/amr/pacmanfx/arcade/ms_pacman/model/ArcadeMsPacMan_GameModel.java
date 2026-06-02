@@ -20,6 +20,7 @@ import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.basics.math.RandomNumberSupport.*;
@@ -317,7 +318,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
             optGameLevel().ifPresent(level -> {
                 if (newPhaseIndex.intValue() > 0) {
-                    level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                    level.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
                         .forEach(Ghost::requestTurnBack);
                 }
             });

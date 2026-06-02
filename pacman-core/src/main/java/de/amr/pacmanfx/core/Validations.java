@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.core;
 
-import java.util.Set;
+import java.util.Collection;
 import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
@@ -67,14 +67,13 @@ public interface Validations {
         return value >= (target - delta) && value <= (target + delta);
     }
 
-    @SafeVarargs
-    static <T> boolean stateIsOneOf(T value, T... alternatives) {
+    static <T> boolean stateIsOneOf(T value, Collection<T> alternatives) {
         if (value == null) {
             throw new IllegalArgumentException("Value is null");
         }
-        if (alternatives.length == 0) {
+        if (alternatives.isEmpty()) {
             throw new IllegalArgumentException("No alternatives given");
         }
-        return Set.of(alternatives).contains(value);
+        return alternatives.contains(value);
     }
 }

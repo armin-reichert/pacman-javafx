@@ -223,7 +223,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
             optGameLevel().ifPresent(level -> {
                 if (newPhaseIndex.intValue() > 0) {
-                    level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                    level.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
                         .forEach(Ghost::requestTurnBack);
                 }
             });

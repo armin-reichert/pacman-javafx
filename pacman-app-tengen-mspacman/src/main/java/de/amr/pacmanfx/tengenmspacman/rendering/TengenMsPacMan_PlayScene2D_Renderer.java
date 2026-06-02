@@ -58,7 +58,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * TS));
             game.optGameLevel().ifPresent(level -> {
                 drawMovingActorInfo(level.entities().pac());
-                level.ghosts().forEach(this::drawMovingActorInfo);
+                level.entities().ghosts().forEach(this::drawMovingActorInfo);
             });
             ctx.fillText("Camera y=%.2f".formatted(playScene.dynamicCamera().getTranslateY()), scaled(11*TS), scaled(15*TS));
             ctx.restore();

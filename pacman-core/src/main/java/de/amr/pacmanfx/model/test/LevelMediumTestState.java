@@ -63,7 +63,7 @@ public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME
 
         level.entities().pac().update(level);
 
-        level.ghosts().forEach(ghost -> ghost.update(level));
+        level.entities().ghosts().forEach(ghost -> ghost.update(level));
 
         level.optBonus().ifPresent(bonus -> bonus.update(level));
 

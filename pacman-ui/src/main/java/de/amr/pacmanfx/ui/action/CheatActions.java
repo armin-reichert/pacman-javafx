@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui.AppContext;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
@@ -61,7 +62,7 @@ public final class CheatActions {
         public void doAction(AppContext context) {
             realLevel(context).ifPresent(level -> {
                 final GameModel game = level.game();
-                final List<Ghost> killableGhosts = level.ghosts(FRIGHTENED, HUNTING_PAC).toList();
+                final List<Ghost> killableGhosts = level.ghostsInAnyOfStates(Set.of(FRIGHTENED, HUNTING_PAC)).toList();
                 if (!killableGhosts.isEmpty()) {
                     level.killedGhostsForCurrentEnergizer().clear(); // resets value of next killed ghost to 200
                     killableGhosts.forEach(game::onEatGhost);

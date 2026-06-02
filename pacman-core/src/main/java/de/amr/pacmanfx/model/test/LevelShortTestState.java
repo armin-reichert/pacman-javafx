@@ -38,7 +38,7 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
         game.startLevel();
         final GameLevel level = game.optGameLevel().orElseThrow();
         level.entities().pac().show();
-        level.ghosts().forEach(Ghost::show);
+        level.entities().ghosts().forEach(Ghost::show);
     }
 
     @Override

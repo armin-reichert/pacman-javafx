@@ -88,7 +88,7 @@ public class RuleBasedPacSteering implements Steering {
             data.hunterBehind = hunterBehind;
             data.hunterBehindDistance = pac.computeTile().manhattanDist(hunterBehind.computeTile());
         }
-        data.frightenedGhosts = level.ghosts(GhostState.FRIGHTENED)
+        data.frightenedGhosts = level.ghostsInState(GhostState.FRIGHTENED)
             .filter(ghost -> ghost.computeTile().manhattanDist(pac.computeTile()) <= CollectedData.MAX_GHOST_CHASE_DIST)
             .collect(Collectors.toList());
         data.frightenedGhostsDistance = data.frightenedGhosts.stream()
@@ -129,7 +129,7 @@ public class RuleBasedPacSteering implements Steering {
         } else {
             pac.setTargetTile(findTileFarthestFromGhosts(level, pac, findNearestFoodTiles(level)));
         }
-        pac.optTargetTile().ifPresent(target -> {
+        pac.optTargetTile().ifPresent(_ -> {
             pac.navigateTowardsTarget(level);
             Logger.trace("Navigated towards {}, moveDir={} wishDir={}", pac.targetTile(), pac.moveDir(), pac.wishDir());
         });
@@ -160,7 +160,7 @@ public class RuleBasedPacSteering implements Steering {
             }
             var aheadLeft = ahead.plus(pac.moveDir().nextCounterClockwise().vector());
             var aheadRight = ahead.plus(pac.moveDir().nextClockwise().vector());
-            Iterable<Ghost> huntingGhosts = gameLevel.ghosts(GhostState.HUNTING_PAC)::iterator;
+            Iterable<Ghost> huntingGhosts = gameLevel.ghostsInState(GhostState.HUNTING_PAC)::iterator;
             for (var ghost : huntingGhosts) {
                 if (ghost.computeTile().equals(ahead) || ghost.computeTile().equals(aheadLeft) || ghost.computeTile().equals(aheadRight)) {
                     if (energizerFound) {
@@ -181,7 +181,7 @@ public class RuleBasedPacSteering implements Steering {
             if (!pac.canAccessTile(gameLevel, behind)) {
                 break;
             }
-            Iterable<Ghost> huntingGhosts = gameLevel.ghosts(GhostState.HUNTING_PAC)::iterator;
+            Iterable<Ghost> huntingGhosts = gameLevel.ghostsInState(GhostState.HUNTING_PAC)::iterator;
             for (Ghost ghost : huntingGhosts) {
                 if (ghost.computeTile().equals(behind)) {
                     return ghost;
@@ -264,7 +264,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private float minDistanceFromGhosts(GameLevel gameLevel, Pac pac) {
-        return (float) gameLevel.ghosts().map(Ghost::computeTile)
+        return (float) gameLevel.entities().ghosts().stream().map(Ghost::computeTile)
             .mapToDouble(pac.computeTile()::manhattanDist)
             .min().orElse(Float.MAX_VALUE);
     }

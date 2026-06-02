@@ -10,7 +10,6 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.TerrainTile;
@@ -18,6 +17,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -230,14 +230,14 @@ public class Ghost extends MovingActor {
             return false;
         }
         if (home != null && home.isDoorAt(tile)) {
-            return inAnyOfStates(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
+            return inAnyOfStates(Set.of(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE));
         }
         return !terrainLayer.isTileBlocked(tile);
     }
 
     @Override
     public boolean canTurnBack() {
-        return newTileEntered && inAnyOfStates(GhostState.HUNTING_PAC, GhostState.FRIGHTENED);
+        return newTileEntered && inAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.FRIGHTENED));
     }
 
     // Here begins the state machine part
@@ -262,7 +262,7 @@ public class Ghost extends MovingActor {
      * If no alternatives are given, an exception is thrown.
      * <code>false</code>
      */
-    public boolean inAnyOfStates(GhostState... states) {
+    public boolean inAnyOfStates(Collection<GhostState> states) {
         return state != null && stateIsOneOf(state(), states);
     }
 

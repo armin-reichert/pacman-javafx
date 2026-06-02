@@ -6,7 +6,8 @@ package de.amr.pacmanfx.model.level;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.Globals;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -299,16 +300,14 @@ public class GameLevel {
         return entities.ghosts().get(requireValidGhostPersonality(personality));
     }
 
-    /**
-     * @param states a list of ghost states
-     * @return if no states are specified, all ghosts are returned. Otherwise, all ghosts that have any of the specified
-     * states are returned.
-     */
-    public Stream<Ghost> ghosts(GhostState... states) {
+    public Stream<Ghost> ghostsInAnyOfStates(Collection<GhostState> states) {
         requireNonNull(states);
-        return states.length == 0
-            ? entities.ghosts().stream()
-            : entities.ghosts().stream().filter(ghost -> ghost.inAnyOfStates(states));
+        return entities.ghosts().stream().filter(ghost -> states.contains(ghost.state()));
+    }
+
+    public Stream<Ghost> ghostsInState(GhostState state) {
+        requireNonNull(state);
+        return entities.ghosts().stream().filter(ghost -> state.equals(ghost.state()));
     }
 
     // Bonus

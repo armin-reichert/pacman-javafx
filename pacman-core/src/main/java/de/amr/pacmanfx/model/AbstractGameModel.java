@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static de.amr.pacmanfx.core.Globals.*;
 import static java.util.Objects.requireNonNull;
@@ -216,7 +217,7 @@ public abstract class AbstractGameModel implements GameModel {
     public void doLevelPlaying() {
         final GameLevel level = optGameLevel().orElseThrow();
         level.entities().pac().show();
-        level.ghosts().forEach(Ghost::show);
+        level.entities().ghosts().forEach(Ghost::show);
         doHuntingStep(level);
         if (gateKeeper() != null) {
             gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
@@ -309,7 +310,7 @@ public abstract class AbstractGameModel implements GameModel {
         level.blinking().restart();
 
         level.entities().pac().animations().playSelected();
-        level.ghosts().forEach(ghost -> ghost.animations().playSelected());
+        level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
 
         final HuntingTimer huntingTimer = level.huntingTimer();
         huntingTimer.startFirstPhase(rules(), level.number());
@@ -340,7 +341,7 @@ public abstract class AbstractGameModel implements GameModel {
         pac.powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero.");
 
-        level.ghosts().forEach(ghost -> ghost.animations().stopSelected());
+        level.entities().ghosts().forEach(ghost -> ghost.animations().stopSelected());
         level.optBonus().ifPresent(Bonus::setInactive);
     }
 
@@ -363,7 +364,7 @@ public abstract class AbstractGameModel implements GameModel {
         pac.powerTimer().resetToIndefiniteDuration();
         pac.animations().resetSelected();
 
-        level.ghosts().forEach(ghost -> {
+        level.entities().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
             ghost.setPosition(ghost.startPosition());
             final Direction startDir = level.worldMap().terrainLayer().house().ghostStartDirection(ghost.personality());
@@ -531,7 +532,7 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     protected void empowerPac(Pac pac, GameLevel level) {
-        level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(MovingActor::requestTurnBack);
+        level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
         final float powerSeconds = level.pacPowerSeconds();
         if (powerSeconds > 0) {
             level.huntingTimer().stop();
@@ -539,7 +540,7 @@ public abstract class AbstractGameModel implements GameModel {
             final long powerTicks = TickTimer.secToTicks(powerSeconds);
             pac.powerTimer().restartTicks(powerTicks);
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
-            level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
+            level.ghostsInState(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
             simStep.pacGotPower = true;
             flow().publishGameEvent(new PacGetsPowerEvent(this, pac));
         }
@@ -623,7 +624,7 @@ public abstract class AbstractGameModel implements GameModel {
                 pac.powerTimer().reset(0);
                 level.killedGhostsForCurrentEnergizer().clear();
                 level.huntingTimer().start();
-                level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
+                level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
                 flow().publishGameEvent(new PacLostPowerEvent(this, pac));
             }
         }

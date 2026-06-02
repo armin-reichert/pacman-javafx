@@ -157,7 +157,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         else if (tick == Arcade_GameState.TICK_NEW_GAME_SHOW_GUYS) {
             final GameLevel level = optGameLevel().orElseThrow();
             level.entities().pac().show();
-            level.ghosts().forEach(Ghost::show);
+            level.entities().ghosts().forEach(Ghost::show);
         }
         else if (tick == Arcade_GameState.TICK_NEW_GAME_START_HUNTING) {
             setPlayingLevel(true);
@@ -171,7 +171,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (tick == 1) {
             makeReadyForPlaying(level);
             level.entities().pac().show();
-            level.ghosts().forEach(Ghost::show);
+            level.entities().ghosts().forEach(Ghost::show);
             showLevelMessage(level, GameLevelMessageType.READY);
         }
         else if (tick == 60) {
@@ -200,11 +200,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             Logger.info("Power timer stopped and reset to zero.");
             pac.setSpeed(0);
             pac.setDead(true);
-            level.ghosts().forEach(ghost -> ghost.onPacKilled(level));
+            level.entities().ghosts().forEach(ghost -> ghost.onPacKilled(level));
             flow().publishGameEvent(new StopAllSoundsEvent(this));
         }
         else if (tick == Arcade_GameState.TICK_PACMAN_DYING_HIDE_GHOSTS) {
-            level.ghosts().forEach(Ghost::hide);
+            level.entities().ghosts().forEach(Ghost::hide);
             pac.animations().select(ArcadePacMan_AnimationID.PAC_DYING);
             pac.animations().resetSelected();
         }
@@ -241,7 +241,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         level.killedGhostsForCurrentEnergizer().add(eatenGhost);
         level.entities().pac().hide();
-        level.ghosts().forEach(g -> g.animations().stopSelected());
+        level.entities().ghosts().forEach(g -> g.animations().stopSelected());
         flow().publishGameEvent(new GhostEatenEvent(this, eatenGhost));
     }
 
@@ -256,7 +256,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         try {
             updateHighScore();
         } catch (IOException x) {
-            Logger.error(x, "Error updating highscore file {}", highScore.file().getAbsolutePath());
+            Logger.error(x, "Error updating high-score file {}", highScore.file().getAbsolutePath());
         }
         Logger.info("Game ended with level number {}", level.number());
     }
@@ -305,7 +305,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             // Now, actor animations are available, show them
             final GameLevel level = optGameLevel().orElseThrow();
             level.entities().pac().show();
-            level.ghosts().forEach(Ghost::show);
+            level.entities().ghosts().forEach(Ghost::show);
         }
         else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {
             flow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());

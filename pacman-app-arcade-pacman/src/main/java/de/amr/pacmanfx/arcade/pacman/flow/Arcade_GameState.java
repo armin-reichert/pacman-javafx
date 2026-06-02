@@ -8,6 +8,8 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.flow.GameState;
 
+import java.util.Set;
+
 import static java.util.Objects.requireNonNull;
 
 public enum Arcade_GameState {
@@ -166,12 +168,12 @@ public enum Arcade_GameState {
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer().hasExpired()) {
                 level.entities().pac().show();
-                level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-                level.ghosts().forEach(ghost -> ghost.animations().playSelected());
+                level.ghostsInState(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
+                level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
                 game.flow().resumePreviousState();
             } else {
                 if (timer().tickCount() < 60) {
-                    level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
+                    level.ghostsInAnyOfStates(Set.of(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE))
                         .forEach(ghost -> ghost.update(level));
                     level.blinking().doTick();
                 }

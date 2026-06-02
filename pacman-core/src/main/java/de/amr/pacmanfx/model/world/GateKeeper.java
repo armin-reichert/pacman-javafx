@@ -193,7 +193,7 @@ public class GateKeeper {
                 Logger.trace("Global dot counter = {}", globalCounterValue);
             }
         } else {
-            level.ghosts(GhostState.LOCKED).filter(house::isVisitedBy).findFirst().ifPresent(ghost -> {
+            level.ghostsInState(GhostState.LOCKED).filter(house::isVisitedBy).findFirst().ifPresent(ghost -> {
                 ghostCounters[ghost.personality()]++;
                 Logger.trace("{} dot counter = {}", ghost.name(), ghostCounters[ghost.personality()]);
             });

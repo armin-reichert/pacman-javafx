@@ -16,7 +16,7 @@ import org.tinylog.Logger;
 
 import java.net.URL;
 import java.util.Arrays;
-import java.util.stream.Stream;
+import java.util.Collection;
 
 import static de.amr.pacmanfx.flow.GameStateID.GAME_LEVEL_PLAYING;
 import static java.util.Objects.requireNonNull;
@@ -174,7 +174,7 @@ public class GameSoundEffects {
         }
         if (level.game().flow().state().nameIsOneOf(GAME_LEVEL_PLAYING.name())) {
             playSiren(level);
-            playGhostSounds(level.entities().pac(), level.ghosts());
+            playGhostSounds(level.entities().pac(), level.entities().ghosts());
         }
     }
 
@@ -230,8 +230,8 @@ public class GameSoundEffects {
      * @param pac    Pac-Man actor
      * @param ghosts stream of all ghosts in the level
      */
-    public void playGhostSounds(Pac pac, Stream<Ghost> ghosts) {
-        boolean ghostReturning = pac.isAlive() && ghosts.anyMatch(g ->
+    public void playGhostSounds(Pac pac, Collection<Ghost> ghosts) {
+        boolean ghostReturning = pac.isAlive() && ghosts.stream().anyMatch(g ->
                 g.state() == GhostState.RETURNING_HOME || g.state() == GhostState.ENTERING_HOUSE);
         if (ghostReturning) {
             playGhostReturningToHouseSound();

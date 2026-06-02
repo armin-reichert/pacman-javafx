@@ -138,13 +138,13 @@ public class HuntingTimer {
             this);
     }
 
-    protected void startPhase(GameRules rules, int levelNumber, int phaseIndex) {
+    private void startPhase(GameRules rules, int levelNumber, int phaseIndex) {
         final long duration = rules.huntingPhaseDuration(levelNumber, phaseIndex);
         tickTimer.restartTicks(duration);
         phaseIndexProperty().set(phaseIndex);
     }
 
-    protected int requireValidPhaseIndex(int phaseIndex) {
+    private int requireValidPhaseIndex(int phaseIndex) {
         if (phaseIndex < 0 || phaseIndex > numPhases - 1) {
             throw new IllegalArgumentException("Hunting phase index must be 0..%d, but is %d".formatted(numPhases, phaseIndex));
         }

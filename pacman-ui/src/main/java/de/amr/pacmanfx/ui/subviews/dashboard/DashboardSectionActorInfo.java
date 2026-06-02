@@ -100,7 +100,7 @@ public class DashboardSectionActorInfo extends DashboardSection {
         byte personality)
     {
         return ifGameLevel(gameSupplier, level -> {
-            if (level.ghosts().findAny().isPresent()) {
+            if (!level.entities().ghosts().isEmpty()) {
                 return detailInfoSupplier.apply(level, level.ghost(personality));
             }
             return NO_INFO;

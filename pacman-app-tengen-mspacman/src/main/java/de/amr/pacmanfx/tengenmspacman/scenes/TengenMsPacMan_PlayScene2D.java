@@ -261,7 +261,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             : ArcadePacMan_AnimationID.PAC_MUNCHING);
         pac.animations().resetSelected();
 
-        level.ghosts().forEach(ghost -> {
+        level.entities().ghosts().forEach(ghost -> {
             ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
             ghost.animations().resetSelected();
         });
