@@ -103,7 +103,7 @@ public final class CheatActions {
         @Override
         public void doAction(AppContext context) {
             final GameModel game = context.currentGame();
-            setAutopilot(context, !game.isUsingAutopilot());
+            setAutopilot(context, !game.isPacUsingAutopilot());
         }
 
         @Override
@@ -138,7 +138,7 @@ public final class CheatActions {
 
     private static void setAutopilot(AppContext context, boolean auto) {
         final GameModel game = context.currentGame();
-        game.usingAutopilotProperty().set(auto);
+        game.pacUsingAutopilotProperty().set(auto);
         context.ui().sounds().playVoice(auto ? AppConstants.VOICE_AUTOPILOT_ON : AppConstants.VOICE_AUTOPILOT_OFF);
         context.shortMessage(context.ui().translations().translate(auto ? "autopilot_on" : "autopilot_off"));
     }
@@ -171,7 +171,7 @@ public final class CheatActions {
         @Override
         public void doAction(AppContext context) {
             final GameModel game = context.currentGame();
-            setPacImmune(context, !game.isImmune());
+            setPacImmune(context, !game.isPacImmune());
         }
 
         @Override
@@ -181,7 +181,7 @@ public final class CheatActions {
     };
 
     public static void setPacImmune(AppContext context, boolean immune) {
-        context.currentGame().immuneProperty().set(immune);
+        context.currentGame().pacImmuneProperty().set(immune);
         context.ui().sounds().playVoice(immune ? AppConstants.VOICE_IMMUNITY_ON : AppConstants.VOICE_IMMUNITY_OFF);
         context.shortMessage(context.ui().translations().translate(immune ? "player_immunity_on" : "player_immunity_off"));
     }

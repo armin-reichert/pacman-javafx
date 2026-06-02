@@ -84,8 +84,8 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         }
 
         addLocalizedTitleItem(this, translator, "pacman");
-        addLocalizedCheckBox(this, translator, game.usingAutopilotProperty(), "autopilot");
-        addLocalizedCheckBox(this, translator, game.immuneProperty(), "immunity");
+        addLocalizedCheckBox(this, translator, game.pacUsingAutopilotProperty(), "autopilot");
+        addLocalizedCheckBox(this, translator, game.pacImmuneProperty(), "immunity");
 
         addSeparator(this);
         addLocalizedCheckBox(this, translator, AppConstants.PROPERTY_MUTED, "muted");

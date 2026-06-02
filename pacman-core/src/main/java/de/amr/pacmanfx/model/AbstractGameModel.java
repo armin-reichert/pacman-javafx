@@ -162,8 +162,8 @@ public abstract class AbstractGameModel implements GameModel {
      * ---------------------------------------------------------------------- */
 
     private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
-    private final BooleanProperty immune = new SimpleBooleanProperty(false);
-    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
+    private final BooleanProperty pacImmune = new SimpleBooleanProperty(false);
+    private final BooleanProperty pacUsingAutopilot = new SimpleBooleanProperty(false);
 
     /** @return property indicating whether a cheat has been used */
     public BooleanProperty cheatUsedProperty() {
@@ -171,29 +171,29 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     /** @return property indicating whether Pac‑Man is immune to death */
-    public BooleanProperty immuneProperty() {
-        return immune;
+    public BooleanProperty pacImmuneProperty() {
+        return pacImmune;
     }
 
     /** @return {@code true} if Pac‑Man is currently immune */
-    public boolean isImmune() {
-        return immuneProperty().get();
+    public boolean isPacImmune() {
+        return pacImmuneProperty().get();
     }
 
     /** @return {@code true} if autopilot is currently active */
-    public boolean isUsingAutopilot() {
-        return usingAutopilotProperty().get();
+    public boolean isPacUsingAutopilot() {
+        return pacUsingAutopilotProperty().get();
     }
 
     /** @return property indicating whether autopilot mode is active */
-    public BooleanProperty usingAutopilotProperty() {
-        return usingAutopilot;
+    public BooleanProperty pacUsingAutopilotProperty() {
+        return pacUsingAutopilot;
     }
 
     public void clearCheats() {
         cheatUsed.set(false);
-        immune.set(false);
-        usingAutopilot.set(false);
+        pacImmune.set(false);
+        pacUsingAutopilot.set(false);
     }
 
     public void updateCheats(GameLevel level) {
@@ -201,9 +201,9 @@ public abstract class AbstractGameModel implements GameModel {
             return;
         }
         final Pac pac = level.entities().pac();
-        pac.immuneProperty().set(isImmune());
-        pac.usingAutopilotProperty().set(isUsingAutopilot());
-        if (isImmune() || isUsingAutopilot()) {
+        pac.immuneProperty().set(isPacImmune());
+        pac.usingAutopilotProperty().set(isPacUsingAutopilot());
+        if (isPacImmune() || isPacUsingAutopilot()) {
             cheatUsed.set(true);
         }
     }

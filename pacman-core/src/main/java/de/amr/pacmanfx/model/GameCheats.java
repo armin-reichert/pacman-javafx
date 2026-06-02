@@ -13,16 +13,16 @@ public interface GameCheats {
     BooleanProperty cheatUsedProperty();
 
     /** @return property indicating whether Pac‑Man is immune to death */
-    BooleanProperty immuneProperty();
+    BooleanProperty pacImmuneProperty();
 
     /** @return {@code true} if Pac‑Man is currently immune */
-    boolean isImmune();
+    boolean isPacImmune();
 
     /** @return {@code true} if autopilot is currently active */
-    boolean isUsingAutopilot();
+    boolean isPacUsingAutopilot();
 
     /** @return property indicating whether autopilot mode is active */
-    BooleanProperty usingAutopilotProperty();
+    BooleanProperty pacUsingAutopilotProperty();
 
     void clearCheats();
 
