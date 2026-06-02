@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.flow;
 
+import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.event.GameEvent;
@@ -17,33 +18,75 @@ import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class Arcade_GameControlFlow extends StateMachine<GameModel> implements GameControlFlow {
+public class Arcade_GameControlFlow implements GameControlFlow {
 
-    private static void ensureFxThread(String actionDesc) {
-        if (!Platform.isFxApplicationThread()) {
-            throw new IllegalStateException(actionDesc + " must be executed on the JavaFX Application Thread");
-        }
-    }
+    private final StateMachine<GameModel> stateMachine;
 
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
     private final Set<GameEventListener> eventListeners = new HashSet<>();
 
     public Arcade_GameControlFlow(Arcade_GameModel game) {
-        setName("Arcade Pac-Man Game Flow");
-        setContext(game);
-        addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
-        Stream.of(Arcade_GameState.values()).forEach(arcadeGameState -> addState(arcadeGameState.state()));
+        requireNonNull(game);
+
+        stateMachine = new StateMachine<>();
+        stateMachine.setName("Arcade Pac-Man Game Flow");
+        for (Arcade_GameState gameState : Arcade_GameState.values()) {
+            addState(gameState.state());
+        }
+        stateMachine.setContext(game);
+        stateMachine.addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
+    }
+
+    @Override
+    public State<GameModel> state() {
+        return stateMachine.state();
+    }
+
+    @Override
+    public Optional<State<GameModel>> optState(String stateName) {
+        return stateMachine.optState(stateName);
+    }
+
+    @Override
+    public void addState(State<GameModel> gameState) {
+        stateMachine.addState(gameState);
+    }
+
+    @Override
+    public void enterState(State<GameModel> gameState) {
+        stateMachine.enterState(gameState);
+    }
+
+    @Override
+    public void enterStateWithName(String stateName) {
+        stateMachine.enterStateWithName(stateName);
+    }
+
+    @Override
+    public void resumePreviousState() {
+        stateMachine.resumePreviousState();
+    }
+
+    @Override
+    public void restartState(State<GameModel> gameState) {
+        stateMachine.restartState(gameState);
+    }
+
+    @Override
+    public void restartState(String stateName) {
+        stateMachine.restartState(stateName);
     }
 
     @Override
     public void makeStep() {
-        super.update();
+        stateMachine.update();
     }
+
 
     /**
      * Registers a {@link GameEventListener}.
@@ -102,4 +145,11 @@ public class Arcade_GameControlFlow extends StateMachine<GameModel> implements G
     public void setCutScenesEnabled(boolean enabled) {
         cutScenesEnabled.set(enabled);
     }
+
+    private static void ensureFxThread(String actionDesc) {
+        if (!Platform.isFxApplicationThread()) {
+            throw new IllegalStateException(actionDesc + " must be executed on the JavaFX Application Thread");
+        }
+    }
+
 }
