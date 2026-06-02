@@ -26,9 +26,9 @@ public final class CheatActions {
         public void doAction(AppContext context) {
             realLevel(context).ifPresent(level -> {
                 final GameModel game = level.game();
-                game.addLives(3);
+                game.lives().add(3);
                 game.cheats().cheatUsedProperty().set(true);
-                final String message = context.ui().translations().translate("message.cheat_add_lives", game.lifeCount());
+                final String message = context.ui().translations().translate("message.cheat_add_lives", game.lives().count());
                 context.shortMessage(message);
             });
         }

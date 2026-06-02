@@ -45,9 +45,7 @@ public abstract class AbstractGameModel implements GameModel {
 
     private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
-    private final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
     private final ObjectProperty<GameLevel> level = new SimpleObjectProperty<>();
-    private final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
     /** Per-tick simulation state (collisions, kills, events). */
@@ -65,6 +63,8 @@ public abstract class AbstractGameModel implements GameModel {
     /** Persistent high score. */
     protected PersistentScore highScore;
 
+    protected PacManLives lives;
+
     /** Score thresholds at which extra lives are awarded. */
     private Set<Integer> extraLifeScores = Set.of();
 
@@ -79,6 +79,8 @@ public abstract class AbstractGameModel implements GameModel {
                 handleCheatDetected();
             }
         });
+
+        lives = new PacManLivesImpl();
     }
 
     public void setHighScoreFile(File highScoreFile) {
@@ -176,8 +178,8 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public IntegerProperty lifeCountProperty() {
-        return lifeCount;
+    public PacManLives lives() {
+        return lives;
     }
 
     @Override
@@ -190,15 +192,6 @@ public abstract class AbstractGameModel implements GameModel {
         return highScore;
     }
 
-    @Override
-    public int lifeCount() {
-        return lifeCountProperty().get();
-    }
-
-    @Override
-    public void addLives(int n) {
-        lifeCountProperty().set(lifeCount() + n);
-    }
 
     @Override
     public CollisionStrategy collisionStrategy() {
@@ -229,16 +222,6 @@ public abstract class AbstractGameModel implements GameModel {
     @Override
     public boolean hasGhostBeenKilled() {
         return !simStep.ghostsKilled.isEmpty();
-    }
-
-    @Override
-    public int initialLifeCount() {
-        return initialLifeCount.get();
-    }
-
-    @Override
-    public void setInitialLifeCount(int count) {
-        initialLifeCount.set(count);
     }
 
     /**
@@ -376,7 +359,7 @@ public abstract class AbstractGameModel implements GameModel {
             }
         }
         if (simStep.extraLifeWon) {
-            addLives(1);
+            lives().add(1);
             flow().publishGameEvent(new SpecialScoreEvent(this, newScore));
         }
     }

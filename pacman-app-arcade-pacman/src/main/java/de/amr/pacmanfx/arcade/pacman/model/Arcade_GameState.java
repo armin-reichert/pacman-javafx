@@ -179,8 +179,8 @@ public enum Arcade_GameState implements State<GameModel> {
                 if (level.isDemoLevel()) {
                     game.flow().enterState(GAME_OVER);
                 } else {
-                    game.addLives(-1);
-                    game.flow().enterState(game.lifeCount() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
+                    game.lives().add(-1);
+                    game.flow().enterState(game.lives().count() == 0 ? GAME_OVER : STARTING_GAME_OR_LEVEL);
                 }
             } else {
                 game.doPacManDying(level.entities().pac(), timer.tickCount());

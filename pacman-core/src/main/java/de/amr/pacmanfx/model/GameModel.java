@@ -9,14 +9,13 @@ import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import javafx.beans.property.IntegerProperty;
 
 import java.util.Optional;
 
 /**
  * Common interface for all Pac‑Man game models.
  *
- * <p>A {@code Game} represents the complete simulation state and logic of a
+ * <p>Represents the complete simulation state and logic of a
  * Pac‑Man variant. It owns all core subsystems: actors, world map, scoring,
  * level progression, and the finite state machine that drives the game flow.
  * The controller layer interacts with the game exclusively through this
@@ -203,20 +202,7 @@ public interface GameModel {
     /** Sets the collision strategy. */
     void setCollisionStrategy(CollisionStrategy collisionStrategy);
 
-    /** @return the number of lives the player starts with */
-    int initialLifeCount();
-
-    /** Sets the initial number of lives. */
-    void setInitialLifeCount(int numLives);
-
-    /** @return the property tracking the current life count */
-    IntegerProperty lifeCountProperty();
-
-    /** @return the current number of lives */
-    int lifeCount();
-
-    /** Adds the given number of lives. */
-    void addLives(int numLives);
+    PacManLives lives();
 
     ActorSpeedControl actorSpeedControl();
 }

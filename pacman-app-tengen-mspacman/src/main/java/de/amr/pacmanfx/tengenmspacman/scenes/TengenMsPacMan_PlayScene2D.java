@@ -235,7 +235,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         final boolean oneExtra = context().currentGameState() == TengenMsPacMan_GameState.STARTING_GAME_OR_LEVEL
             && !level.entities().pac().isVisible();
-        final int displayedLifeCount = oneExtra ? game.lifeCount() : game.lifeCount() - 1;
+        final int displayedLifeCount = oneExtra ? game.lives().count() : game.lives().count() - 1;
         game.hud().setVisibleLifeCount(Math.clamp(displayedLifeCount, 0, game.hud().maxLivesDisplayed()));
         game.hud().levelNumber(game.mapCategory() != MapCategory.ARCADE);
     }

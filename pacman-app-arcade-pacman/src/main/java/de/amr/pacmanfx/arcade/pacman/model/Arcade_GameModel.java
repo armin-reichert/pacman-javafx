@@ -188,7 +188,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void init() {
-        setInitialLifeCount(3);
+        lives().setInitialCount(3);
         prepareNewGame();
     }
 
@@ -203,7 +203,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         gateKeeper.reset();
         levelProperty().set(null);
-        lifeCountProperty().set(initialLifeCount());
+        lives().setCount(lives().initialCount());
         levelCounter().clear();
         setPlayingLevel(false);
     }

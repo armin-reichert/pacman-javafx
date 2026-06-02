@@ -162,7 +162,7 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
         final boolean oneMore = gameFlow.state().matchesByName(CanonicalGameState.STARTING_GAME_OR_LEVEL.name())
             && !level.entities().pac().isVisible();
         final boolean visible = level.game().canStartNewGame();
-        int lifeCount = level.game().lifeCount() - 1;
+        int lifeCount = level.game().lives().count() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
         if (oneMore) lifeCount += 1;
         livesCountProperty().set(lifeCount);

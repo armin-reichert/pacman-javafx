@@ -49,7 +49,7 @@ public class DashboardSectionGameControl extends DashboardSection {
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
         cbCollisionCheckedTwice  = addCheckBox("Collision Check 2x");
 
-        setAction(choiceBoxInitialLives, () -> context.currentGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
+        setAction(choiceBoxInitialLives, () -> context.currentGame().lives().setInitialCount(choiceBoxInitialLives.getValue()));
 
         //setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO FIXME!
         setAction(context, buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
@@ -72,7 +72,7 @@ public class DashboardSectionGameControl extends DashboardSection {
             final AbstractGameModel game = dashboard.context().currentGame();
             final State<GameModel> state = dashboard.context().currentGameState();
 
-            choiceBoxInitialLives.setValue(game.initialLifeCount());
+            choiceBoxInitialLives.setValue(game.lives().initialCount());
             choiceBoxInitialLives.setDisable(!state.matchesByName(CanonicalGameState.INTRO.name()));
 
             final boolean creditDisabled = !state.matchesByName(

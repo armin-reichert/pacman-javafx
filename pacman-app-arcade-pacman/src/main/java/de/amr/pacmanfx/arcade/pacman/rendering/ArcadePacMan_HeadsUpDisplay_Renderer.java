@@ -74,7 +74,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(livesCounterSprite, x + i * TS(2), y, true);
             }
-            final int lifeCount = game.lifeCount();
+            final int lifeCount = game.lives().count();
             if (lifeCount > hud.maxLivesDisplayed()) {
                 // Show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 final Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));

@@ -255,7 +255,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void init() {
         mapSelector.loadMapPrototypes();
-        setInitialLifeCount(3);
+        lives().setInitialCount(3);
         hud.all(false);
 
         setPacBoosterMode(DEFAULT_PAC_BOOSTER);
@@ -269,7 +269,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void prepareNewGame() {
-        lifeCountProperty().set(initialLifeCount());
+        lives().setCount(lives().initialCount());
         levelProperty().set(null);
         levelCounter.clear();
         setPlayingLevel(false);

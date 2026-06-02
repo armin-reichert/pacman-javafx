@@ -122,7 +122,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final GameModel game = context().currentGame();
         final int additionalLives = context().currentGameState() == Arcade_GameState.STARTING_GAME_OR_LEVEL
             && !level.entities().pac().isVisible() ? 1 : 0;
-        final int count = Math.clamp(game.lifeCount() - 1 + additionalLives, 0, game.hud().maxLivesDisplayed());
+        final int count = Math.clamp(game.lives().count() - 1 + additionalLives, 0, game.hud().maxLivesDisplayed());
         game.hud().setVisibleLifeCount(count);
     }
 
