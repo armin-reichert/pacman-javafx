@@ -181,10 +181,11 @@ public interface GameModel extends GameCheats {
     /**
      * Handles Pac‑Man's death sequence.
      *
+     * @param level the game level
      * @param pac  the Pac‑Man actor
      * @param tick the current simulation tick
      */
-    void doPacManDying(Pac pac, long tick);
+    void doPacManDying(GameLevel level, Pac pac, long tick);
 
     /**
      * Called when Pac‑Man eats a ghost.

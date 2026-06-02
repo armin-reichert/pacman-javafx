@@ -198,7 +198,7 @@ public enum Arcade_GameState {
                     game.flow().enterState(game.lives().count() == 0 ? GAME_OVER.state : GAME_STARTING_NEW_GAME_OR_LEVEL.state);
                 }
             } else {
-                game.doPacManDying(level.entities().pac(), timer().tickCount());
+                game.doPacManDying(level, level.entities().pac(), timer().tickCount());
             }
         }
     }),
