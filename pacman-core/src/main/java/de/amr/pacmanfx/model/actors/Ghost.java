@@ -54,7 +54,7 @@ public class Ghost extends MovingActor {
         requireNonNull(level);
         requireNonNull(speed);
         setSpeed(speed);
-        final Vector2i targetTile = level.huntingTimer().phase() == HuntingPhase.CHASING
+        final Vector2i targetTile = level.huntingTimer().isChasing()
             ? chasingTargetTileStrategy.apply(level)
             : level.worldMap().terrainLayer().ghostScatterTile(personality());
         tryMovingTowardsTargetTile(level, targetTile);

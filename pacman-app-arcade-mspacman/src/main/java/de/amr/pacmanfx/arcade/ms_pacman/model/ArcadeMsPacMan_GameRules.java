@@ -100,5 +100,4 @@ public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
             throw new IllegalArgumentException("Phase index " + phaseIndex + " is invalid");
         }
     }
-
 }

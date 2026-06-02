@@ -105,8 +105,8 @@ public class DashboardSectionGameInfo extends DashboardSection {
     private String fmtHuntingPhase(GameLevel level) {
         HuntingTimer timer = level.huntingTimer();
         return "%s #%d%s (%s)".formatted(
-            timer.phase().name(),
-            timer.phase() == HuntingPhase.CHASING
+            timer.currentHuntingPhase().name(),
+            timer.currentHuntingPhase() == HuntingPhase.CHASING
                 ? timer.currentChasingPhaseIndex().orElse(42)
                 : timer.currentScatterPhaseIndex().orElse(42),
             timer.isStopped() ? " STOPPED" : "",

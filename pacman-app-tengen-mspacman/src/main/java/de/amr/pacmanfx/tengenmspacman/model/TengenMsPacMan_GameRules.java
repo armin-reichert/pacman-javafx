@@ -158,8 +158,8 @@ public class TengenMsPacMan_GameRules implements GameRules {
 
     private static final int NUM_HUNTING_PHASES = 8;
 
-    private static final long[] TICKS_LEVEL_1_TO_4 = { 420, 1200, 1, 62220, 1, 62220, 1, TickTimer.INDEFINITE };
-    private static final long[] TICKS_LEVEL_5_PLUS = { 300, 1200, 1, 62220, 1, 62220, 1, TickTimer.INDEFINITE };
+    private static final long[] HUNTING_TICKS_LEVEL_1_TO_4 = { 420, 1200, 1, 62220, 1, 62220, 1, TickTimer.INDEFINITE };
+    private static final long[] HUNTING_TICKS_LEVEL_5_PLUS = { 300, 1200, 1, 62220, 1, 62220, 1, TickTimer.INDEFINITE };
 
     @Override
     public int numHuntingPhases() {
@@ -171,8 +171,8 @@ public class TengenMsPacMan_GameRules implements GameRules {
         Validations.requireValidLevelNumber(levelNumber);
         if (Validations.inClosedRange(phaseIndex, 0, NUM_HUNTING_PHASES - 1)) {
             return levelNumber <= 4
-                ? TICKS_LEVEL_1_TO_4[phaseIndex]
-                : TICKS_LEVEL_5_PLUS[phaseIndex];        }
+                ? HUNTING_TICKS_LEVEL_1_TO_4[phaseIndex]
+                : HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];        }
         else {
             throw new IllegalArgumentException("Phase index " + phaseIndex + " is invalid");
         }

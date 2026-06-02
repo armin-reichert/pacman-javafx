@@ -80,7 +80,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
                 redGhost.tryMovingOrTeleporting(level);
             } else {
                 // Normal behavior of red ghost
-                final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || redGhost.elroyState().enabled();
+                final boolean chase = level.huntingTimer().isChasing() || redGhost.elroyState().enabled();
                 final Vector2i targetTile = chase
                     ? redGhost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(redGhost.personality());
@@ -109,7 +109,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
                 pinkGhost.setSpeed(speed);
                 pinkGhost.tryMovingOrTeleporting(level);
             } else {
-                final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
+                final boolean chase = level.huntingTimer().isChasing();
                 final Vector2i targetTile = chase
                     ? pinkGhost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(pinkGhost.personality());

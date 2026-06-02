@@ -123,7 +123,7 @@ public class DashboardSectionActorInfo extends DashboardSection {
     private String ghostState(GameLevel level, Ghost ghost) {
         var stateText = ghost.state() != null ? ghost.state().name() : "undefined";
         if (ghost.state() == GhostState.HUNTING_PAC) {
-            stateText = level.huntingTimer().phase().name();
+            stateText = level.huntingTimer().currentHuntingPhase().name();
         }
         return stateText;
     }

@@ -45,7 +45,7 @@ public class HuntingTimer {
     public void update(GameRules rules, int levelNumber) {
         requireValidLevelNumber(levelNumber);
         if (tickTimer.hasExpired()) {
-            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), tickTimer.tickCount());
+            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), currentHuntingPhase(), tickTimer.tickCount());
             int nextPhaseIndex = requireValidPhaseIndex(phaseIndex() + 1);
             startPhase(rules, levelNumber, nextPhaseIndex);
         } else {
@@ -113,8 +113,16 @@ public class HuntingTimer {
         return isOdd(phaseIndex()) ? Optional.of(phaseIndex() / 2) : Optional.empty();
     }
 
-    public HuntingPhase phase() { return
-        isEven(phaseIndex()) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING;
+    public HuntingPhase currentHuntingPhase() {
+        return isEven(phaseIndex()) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING;
+    }
+
+    public boolean isChasing() {
+        return currentHuntingPhase() == HuntingPhase.CHASING;
+    }
+
+    public boolean isScattering() {
+        return currentHuntingPhase() == HuntingPhase.SCATTERING;
     }
 
     public void startFirstPhase(GameRules rules, int levelNumber) {
@@ -125,7 +133,7 @@ public class HuntingTimer {
 
     public void logPhase() {
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds). {}",
-            phaseIndex(), phase().name(),
+            phaseIndex(), currentHuntingPhase().name(),
             tickTimer.durationTicks(), (float) tickTimer.durationTicks() / Globals.NUM_TICKS_PER_SEC,
             this);
     }

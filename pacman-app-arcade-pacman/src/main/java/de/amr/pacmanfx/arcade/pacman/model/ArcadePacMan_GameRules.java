@@ -149,9 +149,9 @@ public class ArcadePacMan_GameRules implements GameRules {
     private static final int NUM_HUNTING_PHASES = 8;
 
     // Ticks of scatter (index 0, 2, 4, 6) and chasing (1, 3, 5, 7) phases, -1 = forever
-    private static final int[] TICKS_SEQ_1 = { 420, 1200, 420, 1200, 300,  1200, 300, -1 };
-    private static final int[] TICKS_SEQ_2 = { 420, 1200, 420, 1200, 300, 61980,   1, -1 };
-    private static final int[] TICKS_SEQ_3 = { 300, 1200, 300, 1200, 300, 62262,   1, -1 };
+    private static final int[] HUNTING_TICKS_SEQ_1 = { 420, 1200, 420, 1200, 300,  1200, 300, -1 };
+    private static final int[] HUNTING_TICKS_SEQ_2 = { 420, 1200, 420, 1200, 300, 61980,   1, -1 };
+    private static final int[] HUNTING_TICKS_SEQ_3 = { 300, 1200, 300, 1200, 300, 62262,   1, -1 };
 
     @Override
     public int numHuntingPhases() {
@@ -165,9 +165,9 @@ public class ArcadePacMan_GameRules implements GameRules {
             throw new IllegalArgumentException("Phase index %d is invalid".formatted(phaseIndex));
         }
         final long ticks = switch (levelNumber) {
-            case 1       -> TICKS_SEQ_1[phaseIndex];
-            case 2, 3, 4 -> TICKS_SEQ_2[phaseIndex];
-            default      -> TICKS_SEQ_3[phaseIndex];
+            case 1       -> HUNTING_TICKS_SEQ_1[phaseIndex];
+            case 2, 3, 4 -> HUNTING_TICKS_SEQ_2[phaseIndex];
+            default      -> HUNTING_TICKS_SEQ_3[phaseIndex];
         };
         return ticks != -1 ? ticks : TickTimer.INDEFINITE;
     }

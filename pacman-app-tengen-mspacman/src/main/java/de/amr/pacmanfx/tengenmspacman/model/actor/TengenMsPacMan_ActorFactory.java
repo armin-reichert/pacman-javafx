@@ -59,7 +59,7 @@ public interface TengenMsPacMan_ActorFactory {
                 ghost.tryMovingOrTeleporting(level);
             } else {
                 // Normal behavior of red ghost
-                final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || ghost.elroyState().enabled();
+                final boolean chase = level.huntingTimer().isChasing() || ghost.elroyState().enabled();
                 final Vector2i targetTile = chase
                     ? ghost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(ghost.personality());
@@ -80,7 +80,7 @@ public interface TengenMsPacMan_ActorFactory {
                 ghost.setSpeed(speed);
                 ghost.tryMovingOrTeleporting(level);
             } else {
-                final boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
+                final boolean chase = level.huntingTimer().isChasing();
                 final Vector2i targetTile = chase
                     ? ghost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(ghost.personality());

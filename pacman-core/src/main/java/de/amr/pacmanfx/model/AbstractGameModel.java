@@ -313,7 +313,7 @@ public abstract class AbstractGameModel implements GameModel {
 
         final HuntingTimer huntingTimer = level.huntingTimer();
         huntingTimer.startFirstPhase(rules(), level.number());
-        flow().publishGameEvent(new HuntingPhaseStartedEvent(this, huntingTimer.phaseIndex(), huntingTimer.phase()));
+        flow().publishGameEvent(new HuntingPhaseStartedEvent(this, huntingTimer.phaseIndex(), huntingTimer.currentHuntingPhase()));
     }
 
     /**
