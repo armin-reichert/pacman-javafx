@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.basics.math.Vector2f;
@@ -17,7 +18,6 @@ import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import org.tinylog.Logger;
 
 import java.io.IOException;
-import java.util.EnumMap;
 import java.util.List;
 
 import static de.amr.basics.math.RandomNumberSupport.randomBoolean;
@@ -56,47 +56,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
     public static final byte GAME_OVER_MESSAGE_DELAY_SEC = 2;
 
-    public enum BonusSymbol {
-        // Arcade, Mini, Big mazes
-        CHERRY, STRAWBERRY, ORANGE, PRETZEL, APPLE, PEAR, BANANA,
-        // Strange mazes (additional symbols)
-        MILK, ICE_CREAM, HIGH_HEELS, STAR, HAND, RING, FLOWER
-    }
-
-    private static final EnumMap<BonusSymbol, Integer> BONUS_VALUES = new EnumMap<>(BonusSymbol.class);
-    static {
-        BONUS_VALUES.put(BonusSymbol.CHERRY,       100);
-        BONUS_VALUES.put(BonusSymbol.STRAWBERRY,   200);
-        BONUS_VALUES.put(BonusSymbol.ORANGE,       500);
-        BONUS_VALUES.put(BonusSymbol.PRETZEL,      700);
-        BONUS_VALUES.put(BonusSymbol.APPLE,       1000);
-        BONUS_VALUES.put(BonusSymbol.PEAR,        2000);
-        BONUS_VALUES.put(BonusSymbol.BANANA,      5000); // Note!
-        BONUS_VALUES.put(BonusSymbol.MILK,        3000); // Note!
-        BONUS_VALUES.put(BonusSymbol.ICE_CREAM,   4000); // Note!
-        BONUS_VALUES.put(BonusSymbol.HIGH_HEELS,  6000);
-        BONUS_VALUES.put(BonusSymbol.STAR,        7000);
-        BONUS_VALUES.put(BonusSymbol.HAND,        8000);
-        BONUS_VALUES.put(BonusSymbol.RING,        9000);
-        BONUS_VALUES.put(BonusSymbol.FLOWER,     10000);
-    }
-
     private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
     private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
-
-    private static final PacBooster DEFAULT_PAC_BOOSTER = PacBooster.OFF;
-    private static final Difficulty DEFAULT_DIFFICULTY = Difficulty.NORMAL;
-    private static final MapCategory DEFAULT_MAP_CATEGORY = MapCategory.ARCADE;
-    private static final int DEFAULT_START_LEVEL = 1;
-    private static final int DEFAULT_NUM_CONTINUES = 4;
-
-    // See https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PowerPelletTimes.asm
-    // Hex value divided by 16 gives the duration in seconds
-    private static final byte[] POWER_PELLET_TIMES = {
-        0x60, 0x50, 0x40, 0x30, 0x20, 0x50, 0x20, 0x1C, // levels 1-8
-        0x18, 0x40, 0x20, 0x1C, 0x18, 0x20, 0x1C, 0x18, // levels 9-16
-        0x00, 0x18, 0x20                                // levels 17, 18, then 19+
-    };
 
     private final TengenMsPacMan_GameFlow gameFlow;
     private final TengenMsPacMan_ActorSpeedControl actorSpeedControl;
@@ -132,11 +93,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     public boolean allOptionsDefault() {
-        return pacBoosterMode == DEFAULT_PAC_BOOSTER
-            && difficulty == DEFAULT_DIFFICULTY
-            && mapCategory == DEFAULT_MAP_CATEGORY
-            && startLevelNumber == DEFAULT_START_LEVEL
-            && numContinues == DEFAULT_NUM_CONTINUES;
+        return pacBoosterMode == TengenMsPacMan_GameRules.DEFAULT_PAC_BOOSTER
+            && difficulty == TengenMsPacMan_GameRules.DEFAULT_DIFFICULTY
+            && mapCategory == TengenMsPacMan_GameRules.DEFAULT_MAP_CATEGORY
+            && startLevelNumber == TengenMsPacMan_GameRules.DEFAULT_START_LEVEL
+            && numContinues == TengenMsPacMan_GameRules.DEFAULT_NUM_CONTINUES;
     }
 
     public void setPacBoosterMode(PacBooster mode) {
@@ -168,11 +129,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public Difficulty difficulty() {
         return difficulty;
-    }
-
-    @Override
-    public GateKeeper gateKeeper() {
-        return gateKeeper;
     }
 
     public void setStartLevelNumber(int number) {
@@ -223,6 +179,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
+    public GateKeeper gateKeeper() {
+        return gateKeeper;
+    }
+
+    @Override
     public TengenMsPacMan_HeadsUpDisplay hud() {
         return hud;
     }
@@ -233,11 +194,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         lives().setInitialCount(3);
         hud.all(false);
 
-        setPacBoosterMode(DEFAULT_PAC_BOOSTER);
-        setDifficulty(DEFAULT_DIFFICULTY);
-        setMapCategory(DEFAULT_MAP_CATEGORY);
-        setStartLevelNumber(DEFAULT_START_LEVEL);
-        numContinues = DEFAULT_NUM_CONTINUES;
+        setPacBoosterMode(TengenMsPacMan_GameRules.DEFAULT_PAC_BOOSTER);
+        setDifficulty(TengenMsPacMan_GameRules.DEFAULT_DIFFICULTY);
+        setMapCategory(TengenMsPacMan_GameRules.DEFAULT_MAP_CATEGORY);
+        setStartLevelNumber(TengenMsPacMan_GameRules.DEFAULT_START_LEVEL);
+        numContinues = TengenMsPacMan_GameRules.DEFAULT_NUM_CONTINUES;
 
         prepareNewGame();
     }
@@ -407,7 +368,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         level.setDemoLevel(demoLevel);
 
         int index = levelNumber <= 19 ? levelNumber - 1 : 18;
-        float powerSeconds = POWER_PELLET_TIMES[index] / 16.0f;
+        float powerSeconds = TengenMsPacMan_GameRules.POWER_PELLET_TIMES[index] / 16.0f;
         level.setPacPowerSeconds(powerSeconds);
         level.setPacPowerFadingSeconds(0.5f * 3);
 
@@ -512,7 +473,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         final byte symbolCode = level.bonusSymbol(level.currentBonusIndex());
         final BonusSymbol symbol = BonusSymbol.values()[symbolCode];
-        final Bonus bonus = new Bonus(symbolCode, BONUS_VALUES.get(symbol));
+        final Bonus bonus = new Bonus(symbolCode, TengenMsPacMan_GameRules.BONUS_VALUES.get(symbol));
         bonus.setMazeRoute(route, leftToRight);
         bonus.showEdibleAndStartWandering(actorSpeedControl.bonusSpeed(level));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
