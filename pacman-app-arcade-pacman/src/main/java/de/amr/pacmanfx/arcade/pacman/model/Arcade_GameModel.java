@@ -45,7 +45,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         hud = new HeadsUpDisplay(coinMechanism);
         gameFlow = new Arcade_GameFlow(this);
         actorSpeedControl = new Arcade_ActorSpeedControl();
-        rules = new ArcadePacMan_GameRules();
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
     }
 
@@ -64,9 +63,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(level, rules.pointsForPellet());
+        scorePoints(level, rules().pointsForPellet());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
-        level.entities().pac().setRestingTicks(rules.restingTicksForPellet());
+        level.entities().pac().setRestingTicks(rules().restingTicksForPellet());
         checkRedGhostCruiseElroyActivation(level);
     }
 
@@ -75,11 +74,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(level, rules.pointsForEnergizer());
+        scorePoints(level, rules().pointsForEnergizer());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         final Pac pac = level.entities().pac();
-        pac.setRestingTicks(rules.restingTicksForEnergizer());
+        pac.setRestingTicks(rules().restingTicksForEnergizer());
 
         checkRedGhostCruiseElroyActivation(level);
 
@@ -243,7 +242,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final GameLevel level = optGameLevel().orElseThrow();
 
         final int killedBefore = level.killedGhostsForCurrentEnergizer().size();
-        final int points = rules.pointsForGhost(killedBefore);
+        final int points = rules().pointsForGhost(killedBefore);
 
         scorePoints(level, points);
         Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
@@ -297,7 +296,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void buildNormalLevel(int levelNumber) {
         final GameLevel level = createLevel(levelNumber, false);
-        level.setCutSceneNumber(rules.cutSceneNumberAfterLevel(levelNumber).orElse(0));
+        level.setCutSceneNumber(rules().cutSceneNumberAfterLevel(levelNumber).orElse(0));
         levelCounter().setEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);

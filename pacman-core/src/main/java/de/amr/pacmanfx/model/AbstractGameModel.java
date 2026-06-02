@@ -55,8 +55,6 @@ public abstract class AbstractGameModel implements GameModel {
     /** Per-tick simulation state (collisions, kills, events). */
     protected final SimulationStep simStep = new SimulationStep();
 
-    protected GameRules rules;
-
     protected final Score score = new Score();
 
     protected PersistentScore highScore;
@@ -82,6 +80,8 @@ public abstract class AbstractGameModel implements GameModel {
         requireNonNull(highScoreFile);
         highScore = new PersistentScore(highScoreFile);
     }
+
+    public abstract GameRules rules();
 
     /**
      * @return property controlling whether collisions are double-checked each tick
@@ -136,7 +136,7 @@ public abstract class AbstractGameModel implements GameModel {
     public void eatBonus(GameLevel level, Bonus bonus) {
         scorePoints(level, bonus.points());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-        bonus.showEatenForSeconds(rules.eatenBonusDisplaySeconds());
+        bonus.showEatenForSeconds(rules().eatenBonusDisplaySeconds());
         flow().publishGameEvent(new BonusEatenEvent(this, bonus));
     }
 
@@ -335,7 +335,7 @@ public abstract class AbstractGameModel implements GameModel {
      * @param newScore new score
      */
     protected void handleScoreChange(int oldScore, int newScore) {
-        if (rules.isExtraLifeAwarded(oldScore, newScore)) {
+        if (rules().isExtraLifeAwarded(oldScore, newScore)) {
             simStep.extraLifeWon = true;
             simStep.extraLifeScore = newScore;
         }
@@ -459,7 +459,7 @@ public abstract class AbstractGameModel implements GameModel {
             } else {
                 eatPellet(level, simStep.foodTile);
             }
-            if (rules.isBonusAwarded(level)) {
+            if (rules().isBonusAwarded(level)) {
                 activateNextBonus();
                 simStep.bonusIndex = level.currentBonusIndex();
             }

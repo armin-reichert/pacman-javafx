@@ -107,6 +107,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private final GateKeeper gateKeeper;
     private final Steering automaticSteering;
     private final Steering demoLevelSteering;
+    private final TengenMsPacMan_GameRules rules;
 
     private MapCategory mapCategory;
     private Difficulty difficulty;
@@ -202,7 +203,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         level.setMessage(message);
     }
 
-    // Game interface
+    @Override
+    public TengenMsPacMan_GameRules rules() {
+        return rules;
+    }
 
     @Override
     public ActorSpeedControl actorSpeedControl() {

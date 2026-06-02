@@ -137,6 +137,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     protected final WorldMapSelector mapSelector;
     protected final LevelCounter levelCounter;
 
+    protected GameRules rules;
+
     /**
      * Called via reflection by builder.
      *
@@ -157,6 +159,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         rules = new ArcadeMsPacMan_GameRules();
         createGateKeeper();
         mapSelector.loadMapPrototypes();
+    }
+
+    @Override
+    public GameRules rules() {
+        return rules;
     }
 
     @Override

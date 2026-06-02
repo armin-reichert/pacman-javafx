@@ -6,10 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
-import de.amr.pacmanfx.model.AbstractHuntingTimer;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.HeadsUpDisplay;
-import de.amr.pacmanfx.model.LevelCounter;
+import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
@@ -72,6 +69,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     protected final LevelCounter levelCounter;
     protected final WorldMapSelector mapSelector;
 
+    protected GameRules rules;
+
     /**
      * @param coinMechanism the coin mechanism
      */
@@ -89,7 +88,13 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         this.levelCounter = new ArcadePacMan_LevelCounter();
         this.demoLevelSteering = new RouteBasedSteering(DEMO_LEVEL_ROUTE);
         this.automaticSteering = new RuleBasedPacSteering();
+        rules = new ArcadePacMan_GameRules();
         createGateKeeper();
+    }
+
+    @Override
+    public GameRules rules() {
+        return rules;
     }
 
     @Override
