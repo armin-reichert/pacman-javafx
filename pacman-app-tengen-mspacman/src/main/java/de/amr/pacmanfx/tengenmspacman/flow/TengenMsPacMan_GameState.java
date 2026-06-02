@@ -106,7 +106,8 @@ public enum TengenMsPacMan_GameState {
         public void onUpdate(GameModel game) {
             final long tick = timer().tickCount();
             if (game.isPlayingLevel()) {
-                game.continuePlayingLevel(tick);
+                final GameLevel level = game.optGameLevel().orElseThrow();
+                game.continuePlayingLevel(level, tick);
             } else if (game.canStartNewGame()) {
                 game.startNewGame(tick);
             } else {

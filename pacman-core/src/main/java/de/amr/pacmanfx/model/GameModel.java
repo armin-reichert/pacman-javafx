@@ -154,9 +154,10 @@ public interface GameModel extends GameCheats {
     /**
      * Continues level gameplay at the given tick.
      *
+     * @param level the current level
      * @param tick the current simulation tick
      */
-    void continuePlayingLevel(long tick);
+    void continuePlayingLevel(GameLevel level, long tick);
 
     /**
      * Called when Pac-Man eats a normal pellet.

@@ -80,9 +80,10 @@ public enum Arcade_GameState {
 
         @Override
         public void onUpdate(GameModel game) {
+            final GameLevel level = game.optGameLevel().orElse(null);
             final long tick = timer().tickCount();
             if (game.isPlayingLevel()) {
-                game.continuePlayingLevel(tick);
+                game.continuePlayingLevel(level, tick);
                 game.hud().credit(false).livesCounter(true);
             }
             else if (game.canStartNewGame()) {
