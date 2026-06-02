@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.fsm.State;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameState;
+import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.test.CutScenesTestState;

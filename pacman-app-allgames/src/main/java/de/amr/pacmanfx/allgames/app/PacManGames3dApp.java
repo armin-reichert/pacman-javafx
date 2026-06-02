@@ -15,7 +15,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.GameFlow;
+import de.amr.pacmanfx.model.GameControlFlow;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
@@ -192,7 +192,7 @@ public class PacManGames3dApp extends Application {
         }
     }
 
-    private void addTestStates(GameFlow gameFlow) {
+    private void addTestStates(GameControlFlow gameFlow) {
         gameFlow.addState(new LevelShortTestState<>(gameBox.coinMechanism()));
         gameFlow.addState(new LevelMediumTestState<>());
         gameFlow.addState(new CutScenesTestState<>());

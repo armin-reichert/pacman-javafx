@@ -2,14 +2,15 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.pacman.model;
+package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.basics.fsm.StateMachine;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
+import de.amr.pacmanfx.model.GameControlFlow;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameFlow;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -17,11 +18,10 @@ import org.tinylog.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class Arcade_GameFlow extends StateMachine<GameModel> implements GameFlow {
+public class TengenMsPacMan_GameControlFlow extends StateMachine<GameModel> implements GameControlFlow {
 
     private static void ensureFxThread(String actionDesc) {
         if (!Platform.isFxApplicationThread()) {
@@ -29,14 +29,21 @@ public class Arcade_GameFlow extends StateMachine<GameModel> implements GameFlow
         }
     }
 
-    private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
     private final Set<GameEventListener> eventListeners = new HashSet<>();
+    private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
-    public Arcade_GameFlow(Arcade_GameModel game) {
-        setName("Arcade Pac-Man Game Flow");
+    public TengenMsPacMan_GameControlFlow(TengenMsPacMan_GameModel game) {
+        setName("Tengen Ms. Pac-Man Game Flow");
+        for (TengenMsPacMan_GameState gameState : TengenMsPacMan_GameState.values()) {
+            addState(gameState.state());
+        }
         setContext(game);
         addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
-        Stream.of(Arcade_GameState.values()).forEach(arcadeGameState -> addState(arcadeGameState.state()));
+    }
+
+    @Override
+    public void makeStep() {
+        super.update();
     }
 
     /**

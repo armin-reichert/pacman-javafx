@@ -22,4 +22,5 @@ open module de.amr.pacmanfx.tengenmspacman {
     exports de.amr.pacmanfx.tengenmspacman.model.actor;
     exports de.amr.pacmanfx.tengenmspacman.rendering;
     exports de.amr.pacmanfx.tengenmspacman.scenes;
+    exports de.amr.pacmanfx.tengenmspacman.flow;
 }

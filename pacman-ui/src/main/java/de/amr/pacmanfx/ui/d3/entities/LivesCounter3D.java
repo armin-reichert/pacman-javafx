@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.d3.entities;
 
 import de.amr.pacmanfx.model.CanonicalGameState;
-import de.amr.pacmanfx.model.GameFlow;
+import de.amr.pacmanfx.model.GameControlFlow;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameLevelEntity;
 import de.amr.pacmanfx.ui.config.WorldConfig;
@@ -158,7 +158,7 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
      */
     @Override
     public void update(GameLevel level) {
-        final GameFlow gameFlow = level.game().flow();
+        final GameControlFlow gameFlow = level.game().flow();
         final boolean oneMore = gameFlow.state().matchesByName(CanonicalGameState.STARTING_GAME_OR_LEVEL.name())
             && !level.entities().pac().isVisible();
         final boolean visible = level.game().canStartNewGame();

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.event.GameEventListener;
 
 import java.util.Optional;
 
-public interface GameFlow {
+public interface GameControlFlow {
 
     Optional<State<GameModel>> optState(String stateName);
 
@@ -28,7 +28,7 @@ public interface GameFlow {
 
     void restartState(String stateName);
 
-    void update();
+    void makeStep();
 
     // Game events
 

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameFlow;
+import de.amr.pacmanfx.model.GameControlFlow;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.input.Input;
@@ -44,7 +44,7 @@ public interface AppContext extends AppLifecycle {
         return currentGame().optGameLevel();
     }
 
-    default GameFlow currentGameFlow() {
+    default GameControlFlow currentGameFlow() {
         return currentGame().flow();
     }
 

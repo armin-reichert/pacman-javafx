@@ -6,14 +6,14 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState;
+import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.gamescene.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameState.SHOWING_HALL_OF_FAME;
+import static de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState.SHOWING_HALL_OF_FAME;
 import static de.amr.pacmanfx.ui.AppConstants.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 

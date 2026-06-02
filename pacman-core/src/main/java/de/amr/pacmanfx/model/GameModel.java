@@ -44,7 +44,7 @@ import java.util.Optional;
 public interface GameModel {
 
     /** @return the controller responsible for managing the game flow */
-    GameFlow flow();
+    GameControlFlow flow();
 
     /**
      * @return the rules for the game variant
