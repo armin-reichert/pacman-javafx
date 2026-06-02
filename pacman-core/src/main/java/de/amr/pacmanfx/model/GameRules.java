@@ -34,6 +34,17 @@ public interface GameRules {
 
     int lastCutSceneNumber();
 
+    // Hunting
+
+    int numHuntingPhases();
+
+    /**
+     * @param levelNumber game level number
+     * @param phaseIndex index of hunting phase ({@code 0..numPhases - 1})
+     * @return Duration (number of ticks) of phase.
+     */
+    long huntingPhaseDuration(int levelNumber, int phaseIndex);
+
     // Helper
 
     default boolean crossedScoreLine(int oldScore, int newScore, int scoreLine) {

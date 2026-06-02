@@ -128,7 +128,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         terrain.setHouse(house);
 
         final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
-        final AbstractHuntingTimer huntingTimer = createHuntingTimer();
+        final HuntingTimer huntingTimer = createHuntingTimer();
 
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, levelData.numFlashes());
         level.setDemoLevel(demoLevel);
@@ -217,8 +217,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         });
     }
 
-    protected AbstractHuntingTimer createHuntingTimer() {
-        final var huntingTimer = new ArcadePacMan_HuntingTimer();
+    protected HuntingTimer createHuntingTimer() {
+        final var huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", rules().numHuntingPhases());
         // On each phase start (except the initial phase), the ghosts reverse their move direction
         huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
             optGameLevel().ifPresent(level -> {

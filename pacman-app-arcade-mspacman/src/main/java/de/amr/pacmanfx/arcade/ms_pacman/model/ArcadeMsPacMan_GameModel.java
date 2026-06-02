@@ -196,7 +196,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         terrain.setHouse(new ArcadeHouse(houseMinTile));
 
-        final AbstractHuntingTimer huntingTimer = createHuntingTimer();
+        final HuntingTimer huntingTimer = createHuntingTimer();
         final int numFlashes = ArcadePacMan_GameRules.levelData(levelNumber).numFlashes();
 
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, numFlashes);
@@ -312,8 +312,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         });
     }
 
-    private AbstractHuntingTimer createHuntingTimer() {
-        final var huntingTimer = new ArcadeMsPacMan_HuntingTimer();
+    private HuntingTimer createHuntingTimer() {
+        final var huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", rules().numHuntingPhases());
         huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
             optGameLevel().ifPresent(level -> {
                 if (newPhaseIndex.intValue() > 0) {

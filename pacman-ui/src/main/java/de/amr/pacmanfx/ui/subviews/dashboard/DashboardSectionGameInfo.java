@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.model.AbstractHuntingTimer;
+import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
@@ -103,7 +103,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
     }
 
     private String fmtHuntingPhase(GameLevel level) {
-        AbstractHuntingTimer timer = level.huntingTimer();
+        HuntingTimer timer = level.huntingTimer();
         return "%s #%d%s (%s)".formatted(
             timer.phase().name(),
             timer.phase() == HuntingPhase.CHASING
@@ -121,11 +121,11 @@ public class DashboardSectionGameInfo extends DashboardSection {
         return "%.2f sec".formatted(duration / (float) NUM_TICKS_PER_SEC);
     }
 
-    private String fmtHuntingTicksRunning(AbstractHuntingTimer timer) {
+    private String fmtHuntingTicksRunning(HuntingTimer timer) {
         return "%d".formatted(timer.tickCount());
     }
 
-    private String fmtHuntingTicksRemaining(AbstractHuntingTimer timer) {
+    private String fmtHuntingTicksRemaining(HuntingTimer timer) {
         return "%d".formatted(timer.remainingTicksOfCurrentPhase());
     }
 

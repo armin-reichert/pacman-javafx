@@ -19,39 +19,35 @@ import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 /**
  * Controls the timing of the hunting phases (alternating scattering and chasing).
  */
-public abstract class AbstractHuntingTimer {
+public class HuntingTimer {
 
     protected final TickTimer tickTimer;
+
     protected final int numPhases;
+
     private final IntegerProperty phaseIndex = new SimpleIntegerProperty();
 
     /**
      * @param name a readable name for this timer
      * @param numPhases the total number of scatter and chasing phases (4+4 in Arcade Pac-Man games)
      */
-    protected AbstractHuntingTimer(String name, int numPhases) {
+    public HuntingTimer(String name, int numPhases) {
         this.tickTimer = new TickTimer(name);
         this.numPhases = requireNonNegativeInt(numPhases);
     }
 
     /**
-     * @param levelNumber game level number
-     * @param phaseIndex index of hunting phase ({@code 0..numPhases - 1})
-     * @return Duration (number of ticks) of phase.
-     */
-    public abstract long phaseDuration(int levelNumber, int phaseIndex);
-
-    /**
      * Advances the hunting timer and starts the timer for the next phase if the current phase is complete.
      *
+     * @param rules the game rules
      * @param levelNumber the game level number (starts with 1)
      */
-    public void update(int levelNumber) {
+    public void update(GameRules rules, int levelNumber) {
         requireValidLevelNumber(levelNumber);
         if (tickTimer.hasExpired()) {
             Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), tickTimer.tickCount());
             int nextPhaseIndex = requireValidPhaseIndex(phaseIndex() + 1);
-            startPhase(levelNumber, nextPhaseIndex);
+            startPhase(rules, levelNumber, nextPhaseIndex);
         } else {
             tickTimer.doTick();
         }
@@ -121,9 +117,9 @@ public abstract class AbstractHuntingTimer {
         isEven(phaseIndex()) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING;
     }
 
-    public void startFirstPhase(int levelNumber) {
+    public void startFirstPhase(GameRules rules, int levelNumber) {
         requireValidLevelNumber(levelNumber);
-        startPhase(levelNumber, 0);
+        startPhase(rules, levelNumber, 0);
         logPhase();
     }
 
@@ -134,8 +130,8 @@ public abstract class AbstractHuntingTimer {
             this);
     }
 
-    protected void startPhase(int levelNumber, int phaseIndex) {
-        final long duration = phaseDuration(levelNumber, phaseIndex);
+    protected void startPhase(GameRules rules, int levelNumber, int phaseIndex) {
+        final long duration = rules.huntingPhaseDuration(levelNumber, phaseIndex);
         tickTimer.restartTicks(duration);
         phaseIndexProperty().set(phaseIndex);
     }

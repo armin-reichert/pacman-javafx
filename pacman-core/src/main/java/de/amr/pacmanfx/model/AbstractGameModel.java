@@ -311,8 +311,8 @@ public abstract class AbstractGameModel implements GameModel {
         level.entities().pac().animations().playSelected();
         level.ghosts().forEach(ghost -> ghost.animations().playSelected());
 
-        final AbstractHuntingTimer huntingTimer = level.huntingTimer();
-        huntingTimer.startFirstPhase(level.number());
+        final HuntingTimer huntingTimer = level.huntingTimer();
+        huntingTimer.startFirstPhase(rules(), level.number());
         flow().publishGameEvent(new HuntingPhaseStartedEvent(this, huntingTimer.phaseIndex(), huntingTimer.phase()));
     }
 
@@ -462,7 +462,7 @@ public abstract class AbstractGameModel implements GameModel {
 
         if (!isLevelCompleted()) {
             updatePacPower(level, pac);
-            level.huntingTimer().update(level.number());
+            level.huntingTimer().update(rules(), level.number());
         }
     }
 

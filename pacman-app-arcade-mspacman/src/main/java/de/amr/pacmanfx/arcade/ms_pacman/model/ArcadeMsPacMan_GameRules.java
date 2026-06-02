@@ -4,7 +4,9 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
+import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
+import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.model.level.GameLevel;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
@@ -71,4 +73,32 @@ public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
             default -> throw new IllegalArgumentException("Invalid symbol code: " + symbolCode);
         };
     }
+
+    // Hunting
+
+    private static final int NUM_HUNTING_PHASES = 8;
+
+    // Ticks of scatter (index 0, 2, 4, 6) and chasing (1, 3, 5, 7) phases, -1 = forever
+    private static final int[] HUNTING_TICKS_LEVEL_1_TO_4 = { 420, 1200, 1, 62220, 1, 62220, 1, -1};
+    private static final int[] HUNTING_TICKS_LEVEL_5_PLUS = { 300, 1200, 1, 62220, 1, 62220, 1, -1};
+
+    @Override
+    public int numHuntingPhases() {
+        return super.numHuntingPhases();
+    }
+
+    @Override
+    public long huntingPhaseDuration(int levelNumber, int phaseIndex) {
+        Validations.requireValidLevelNumber(levelNumber);
+        if (Validations.inClosedRange(phaseIndex, 0, NUM_HUNTING_PHASES - 1)) {
+            long ticks = levelNumber < 5
+                ? HUNTING_TICKS_LEVEL_1_TO_4[phaseIndex]
+                : HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
+            return ticks != -1 ? ticks : TickTimer.INDEFINITE;
+        }
+        else {
+            throw new IllegalArgumentException("Phase index " + phaseIndex + " is invalid");
+        }
+    }
+
 }

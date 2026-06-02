@@ -81,7 +81,7 @@ public class GameLevel {
     private final int number; // 1=first level
     private final WorldMap worldMap;
     private final EntitySetWithCache entities = new EntitySetWithCache();
-    private final AbstractHuntingTimer huntingTimer;
+    private final HuntingTimer huntingTimer;
     private final Pulse blinking;
     private final List<Ghost> victims = new ArrayList<>();
     private final int[] bonusSymbolCodes = new int[2];
@@ -98,7 +98,7 @@ public class GameLevel {
 
     private int cutSceneNumber;
 
-    public GameLevel(GameModel game, int number, WorldMap worldMap, AbstractHuntingTimer huntingTimer, int numFlashes) {
+    public GameLevel(GameModel game, int number, WorldMap worldMap, HuntingTimer huntingTimer, int numFlashes) {
         this.game = requireNonNull(game);
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
@@ -192,7 +192,7 @@ public class GameLevel {
     /**
      * @return the timer controlling the hunting phases (scattering and chasing).
      */
-    public AbstractHuntingTimer huntingTimer() {
+    public HuntingTimer huntingTimer() {
         return huntingTimer;
     }
 
