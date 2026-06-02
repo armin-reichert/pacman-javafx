@@ -145,8 +145,12 @@ public interface GameModel extends GameCheats {
     /** Sets whether the game is currently being played. */
     void setPlayingLevel(boolean playing);
 
-    /** Called when level gameplay begins. */
-    void onStartLevelPlaying();
+    /**
+     * Called when level gameplay begins.
+     *
+     * @param level the current level
+     */
+    void onStartLevelPlaying(GameLevel level);
 
     /**
      * Performs the main update logic while the level is being played.

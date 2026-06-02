@@ -119,7 +119,8 @@ public enum TengenMsPacMan_GameState {
     GAME_LEVEL_PLAYING(new GameState("GAME_LEVEL_PLAYING") {
         @Override
         public void onEnter(GameModel game) {
-            game.onStartLevelPlaying();
+            final GameLevel level = game.optGameLevel().orElseThrow();
+            game.onStartLevelPlaying(level);
         }
 
         @Override

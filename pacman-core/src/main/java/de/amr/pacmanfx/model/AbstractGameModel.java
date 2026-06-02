@@ -297,9 +297,7 @@ public abstract class AbstractGameModel implements GameModel {
      *
      */
     @Override
-    public void onStartLevelPlaying() {
-        final GameLevel level = optGameLevel().orElseThrow();
-
+    public void onStartLevelPlaying(GameLevel level) {
         // Clear "READY!" message. "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared!
         level.optMessage()
             .filter(message -> message.type() == GameLevelMessageType.READY)
