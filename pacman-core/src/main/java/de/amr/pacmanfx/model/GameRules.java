@@ -1,7 +1,5 @@
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.model.actors.Bonus;
-
 import java.util.OptionalInt;
 
 public interface GameRules {
@@ -22,7 +20,7 @@ public interface GameRules {
 
     boolean isBonusAwarded(GameLevel level);
 
-    int pointsForBonus(Bonus bonus);
+    int pointsForBonus(int symbolCode);
 
     float eatenBonusDisplaySeconds();
 

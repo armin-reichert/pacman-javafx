@@ -305,7 +305,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             Logger.info("Demo level {} started", level.number());
         } else {
             showMessage(level, GameLevelMessageType.READY);
-            levelCounter.update(level.number(), level.bonusSymbol(0));
+            levelCounter.update(level.number(), level.bonusSymbolCode(0));
             score().setEnabled(true);
             cheats().update(level);
             Logger.info("Level {} started", level.number());
@@ -471,9 +471,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         level.selectNextBonus();
 
-        final byte symbolCode = level.bonusSymbol(level.currentBonusIndex());
-        final BonusSymbol symbol = BonusSymbol.values()[symbolCode];
-        final Bonus bonus = new Bonus(symbolCode, TengenMsPacMan_GameRules.BONUS_VALUES.get(symbol));
+        final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
+        final Bonus bonus = new Bonus(symbolCode, rules.pointsForBonus(symbolCode));
         bonus.setMazeRoute(route, leftToRight);
         bonus.showEdibleAndStartWandering(actorSpeedControl.bonusSpeed(level));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");

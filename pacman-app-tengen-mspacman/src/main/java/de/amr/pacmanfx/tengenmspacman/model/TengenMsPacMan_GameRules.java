@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameRules;
-import de.amr.pacmanfx.model.actors.Bonus;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -28,22 +27,22 @@ public class TengenMsPacMan_GameRules implements GameRules {
 
     public static final int DEFAULT_START_LEVEL = 1;
 
-    public static final EnumMap<BonusSymbol, Integer> BONUS_VALUES = new EnumMap<>(BonusSymbol.class);
+    public static final EnumMap<BonusSymbol, Integer> BONUS_POINTS = new EnumMap<>(BonusSymbol.class);
     static {
-        BONUS_VALUES.put(BonusSymbol.CHERRY,       100);
-        BONUS_VALUES.put(BonusSymbol.STRAWBERRY,   200);
-        BONUS_VALUES.put(BonusSymbol.ORANGE,       500);
-        BONUS_VALUES.put(BonusSymbol.PRETZEL,      700);
-        BONUS_VALUES.put(BonusSymbol.APPLE,       1000);
-        BONUS_VALUES.put(BonusSymbol.PEAR,        2000);
-        BONUS_VALUES.put(BonusSymbol.BANANA,      5000); // Note!
-        BONUS_VALUES.put(BonusSymbol.MILK,        3000); // Note!
-        BONUS_VALUES.put(BonusSymbol.ICE_CREAM,   4000); // Note!
-        BONUS_VALUES.put(BonusSymbol.HIGH_HEELS,  6000);
-        BONUS_VALUES.put(BonusSymbol.STAR,        7000);
-        BONUS_VALUES.put(BonusSymbol.HAND,        8000);
-        BONUS_VALUES.put(BonusSymbol.RING,        9000);
-        BONUS_VALUES.put(BonusSymbol.FLOWER,     10000);
+        BONUS_POINTS.put(BonusSymbol.CHERRY,       100);
+        BONUS_POINTS.put(BonusSymbol.STRAWBERRY,   200);
+        BONUS_POINTS.put(BonusSymbol.ORANGE,       500);
+        BONUS_POINTS.put(BonusSymbol.PRETZEL,      700);
+        BONUS_POINTS.put(BonusSymbol.APPLE,       1000);
+        BONUS_POINTS.put(BonusSymbol.PEAR,        2000);
+        BONUS_POINTS.put(BonusSymbol.BANANA,      5000); // Note!
+        BONUS_POINTS.put(BonusSymbol.MILK,        3000); // Note!
+        BONUS_POINTS.put(BonusSymbol.ICE_CREAM,   4000); // Note!
+        BONUS_POINTS.put(BonusSymbol.HIGH_HEELS,  6000);
+        BONUS_POINTS.put(BonusSymbol.STAR,        7000);
+        BONUS_POINTS.put(BonusSymbol.HAND,        8000);
+        BONUS_POINTS.put(BonusSymbol.RING,        9000);
+        BONUS_POINTS.put(BonusSymbol.FLOWER,     10000);
     }
 
     public static final int FIRST_LEVEL = 1;
@@ -93,8 +92,9 @@ public class TengenMsPacMan_GameRules implements GameRules {
     }
 
     @Override
-    public int pointsForBonus(Bonus bonus) {
-        return 0;
+    public int pointsForBonus(int symbolCode) {
+        final BonusSymbol symbol = BonusSymbol.values()[symbolCode];
+        return BONUS_POINTS.get(symbol);
     }
 
     @Override

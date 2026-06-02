@@ -17,31 +17,31 @@ public class TengenMsPacMan_LevelCounter implements LevelCounter {
     public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
 
     private final BooleanProperty levelCounterEnabled = new SimpleBooleanProperty(true);
-    private final List<Byte> levelCounterSymbols = new ArrayList<>();
+    private final List<Integer> symbolCodes = new ArrayList<>();
 
     public BooleanProperty levelCounterEnabledProperty() {
         return levelCounterEnabled;
     }
 
     @Override
-    public List<Byte> symbols() {
-        return Collections.unmodifiableList(levelCounterSymbols);
+    public List<Integer> symbolCodes() {
+        return Collections.unmodifiableList(symbolCodes);
     }
 
     @Override
     public void clear() {
-        levelCounterSymbols.clear();
+        symbolCodes.clear();
     }
 
     @Override
-    public void update(int levelNumber, byte symbol) {
+    public void update(int levelNumber, int symbolCode) {
         if (levelNumber == 1) {
             clear();
         }
         if (isEnabled()) {
-            levelCounterSymbols.add(symbol);
-            if (levelCounterSymbols.size() > LEVEL_COUNTER_MAX_SIZE) {
-                levelCounterSymbols.removeFirst();
+            symbolCodes.add(symbolCode);
+            if (symbolCodes.size() > LEVEL_COUNTER_MAX_SIZE) {
+                symbolCodes.removeFirst();
             }
         }
     }

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameRules;
-import de.amr.pacmanfx.model.actors.Bonus;
 
 import java.util.Map;
 import java.util.OptionalInt;
@@ -89,8 +88,18 @@ public class ArcadePacMan_GameRules implements GameRules {
     }
 
     @Override
-    public int pointsForBonus(Bonus bonus) {
-        return 0;
+    public int pointsForBonus(int symbolCode) {
+        return switch (symbolCode) {
+            case 0 -> 100;  // cherries
+            case 1 -> 300;  // strawberry
+            case 2 -> 500;  // peach
+            case 3 -> 700;  // apple
+            case 4 -> 1000; // grapes
+            case 5 -> 2000; // galaxian
+            case 6 -> 3000; // bell
+            case 7 -> 5000; // key
+            default -> throw new IllegalArgumentException("Invalid symbol code: " + symbolCode);
+        };
     }
 
     @Override

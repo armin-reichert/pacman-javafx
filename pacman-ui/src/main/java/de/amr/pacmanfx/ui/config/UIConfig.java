@@ -237,18 +237,18 @@ public interface UIConfig extends Disposable {
     /**
      * Returns the 2D image of the bonus symbol (cherry, strawberry, …) for the given code.
      *
-     * @param symbol bonus symbol identifier (usually 0–7)
+     * @param symbolCode bonus symbol identifier (usually 0–7)
      * @return corresponding bonus symbol image
      */
-    Image bonusSymbolImage(byte symbol);
+    Image bonusSymbolImage(int symbolCode);
 
     /**
      * Returns the 2D image showing the point value awarded for eating the bonus.
      *
-     * @param symbol bonus symbol identifier
+     * @param symbolCode bonus symbol identifier
      * @return image displaying the corresponding point value
      */
-    Image bonusValueImage(byte symbol);
+    Image bonusValueImage(int symbolCode);
 
     // ─────────────────────────────────────────────────────────────────────────────
     // Color & rendering factories

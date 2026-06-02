@@ -15,20 +15,20 @@ public class ArcadeMsPacMan_LevelCounter implements LevelCounter {
     public static final int MAX_LEVEL_COUNTER_SYMBOLS = 7;
 
     private final BooleanProperty enabled = new SimpleBooleanProperty(true);
-    private final List<Byte> symbols = new ArrayList<>();
+    private final List<Integer> symbolCodes = new ArrayList<>();
 
     @Override
     public void clear() {
-        symbols.clear();
+        symbolCodes.clear();
     }
 
     @Override
-    public void update(int levelNumber, byte symbol) {
+    public void update(int levelNumber, int symbolCode) {
         if (levelNumber == 1) {
-            symbols.clear();
+            symbolCodes.clear();
         }
         if (levelNumber < MAX_LEVEL_COUNTER_SYMBOLS && isEnabled()) {
-            symbols.add(symbol);
+            symbolCodes.add(symbolCode);
         }
     }
 
@@ -43,7 +43,7 @@ public class ArcadeMsPacMan_LevelCounter implements LevelCounter {
     }
 
     @Override
-    public List<Byte> symbols() {
-        return symbols;
+    public List<Integer> symbolCodes() {
+        return symbolCodes;
     }
 }

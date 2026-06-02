@@ -286,14 +286,14 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     @Override
-    public Image bonusSymbolImage(byte symbol) {
+    public Image bonusSymbolImage(int symbolCode) {
         final RectShort[] symbolSprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
-        return spriteSheet().image(symbolSprites[symbol]);
+        return spriteSheet().image(symbolSprites[symbolCode]);
     }
 
     @Override
-    public Image bonusValueImage(byte symbol) {
-        final int spriteIndex = bonusValueSpriteIndex(symbol);
+    public Image bonusValueImage(int symbolCode) {
+        final int spriteIndex = bonusValueSpriteIndex(symbolCode);
         final RectShort sprite = spriteSheet().sprites(SpriteID.BONUS_VALUES)[spriteIndex];
         return spriteSheet().image(sprite);
     }

@@ -31,7 +31,7 @@ public class Bonus extends MovingActor {
     private static final int PULSE_CHANGE_TICKS = 10;
 
     private final TickTimer timer = new TickTimer("Bonus-Timer");
-    private final byte symbol;
+    private final int symbolCode;
     private final int points;
 
     private BonusState state;
@@ -40,9 +40,9 @@ public class Bonus extends MovingActor {
     private final Pulse jumpingAnimation;
     private RouteBasedSteering routeNavigation;
 
-    public Bonus(byte symbol, int points) {
-        super("Bonus-symbol:%d-points:%d".formatted(symbol, points));
-        this.symbol = (byte) Validations.requireNonNegativeInt(symbol);
+    public Bonus(int symbolCode, int points) {
+        super("Bonus-symbol:%d-points:%d".formatted(symbolCode, points));
+        this.symbolCode = Validations.requireNonNegativeInt(symbolCode);
         this.points = Validations.requireNonNegativeInt(points);
         jumpingAnimation = new Pulse(PULSE_CHANGE_TICKS, Pulse.State.OFF);
 
@@ -57,8 +57,8 @@ public class Bonus extends MovingActor {
         return state;
     }
 
-    public byte symbol() {
-        return symbol;
+    public int symbolCode() {
+        return symbolCode;
     }
 
     public int points() {
@@ -175,7 +175,7 @@ public class Bonus extends MovingActor {
     @Override
     public String toString() {
         return "Bonus{symbol=%s, points=%d, ticksRemaining=%d, state=%s, animation=%s}"
-            .formatted(symbol, points, timer.remainingTicks(), state, jumpingAnimation);
+            .formatted(symbolCode, points, timer.remainingTicks(), state, jumpingAnimation);
     }
 
     @Override

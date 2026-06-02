@@ -83,7 +83,7 @@ public class GameLevel {
     private final AbstractHuntingTimer huntingTimer;
     private final Pulse blinking;
     private final List<Ghost> victims = new ArrayList<>();
-    private final byte[] bonusSymbols = new byte[2];
+    private final int[] bonusSymbolCodes = new int[2];
     private final int numFlashes;
 
     private byte currentBonusIndex; // -1=no bonus, 0=first, 1=second
@@ -346,17 +346,17 @@ public class GameLevel {
      * @param i the bonus index
      * @return the bonus symbol code of the bonus with the given index
      */
-    public byte bonusSymbol(int i) {
-        return bonusSymbols[i];
+    public int bonusSymbolCode(int i) {
+        return bonusSymbolCodes[i];
     }
 
     /**
      * @param i the bonus index
-     * @param symbol the bonus symbol code
+     * @param symbolCode the bonus symbol code
      */
-    public void setBonusSymbol(int i, byte symbol) {
-        if (0 <= i && i < bonusSymbols.length) {
-            bonusSymbols[i] = symbol;
+    public void setBonusSymbol(int i, int symbolCode) {
+        if (0 <= i && i < bonusSymbolCodes.length) {
+            bonusSymbolCodes[i] = symbolCode;
         } else {
             throw new IllegalArgumentException("Cannot set bonus symbol at index " + i);
         }

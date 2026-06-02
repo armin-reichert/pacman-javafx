@@ -152,8 +152,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     public void activateNextBonus() {
         final GameLevel level = optGameLevel().orElseThrow();
         level.selectNextBonus();
-        final byte symbol = level.bonusSymbol(level.currentBonusIndex());
-        final var bonus = new Bonus(symbol, bonusValue(symbol));
+        final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
+        final Bonus bonus = new Bonus(bonusSymbolCode, rules.pointsForBonus(bonusSymbolCode));
         final Vector2i bonusTile = level.worldMap().terrainLayer()
             .getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
         bonus.setPosition(halfTileRightOf(bonusTile));
@@ -231,26 +231,12 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     protected void initBoni(GameLevel level) {
         // Each level has a single bonus symbol appearing twice during the level.
         // From level 13 on, the same symbol (code=7, "key") appears. Klingt komisch? Is' aber so!
-        final byte symbol = bonusSymbol(Math.min(level.number(), 13));
+        final int symbol = bonusSymbolCode(Math.min(level.number(), 13));
         level.setBonusSymbol(0, symbol);
         level.setBonusSymbol(1, symbol);
     }
 
-    protected int bonusValue(byte symbolCode) {
-        return switch (symbolCode) {
-            case 0 -> 100;  // cherries
-            case 1 -> 300;  // strawberry
-            case 2 -> 500;  // peach
-            case 3 -> 700;  // apple
-            case 4 -> 1000; // grapes
-            case 5 -> 2000; // galaxian
-            case 6 -> 3000; // bell
-            case 7 -> 5000; // key
-            default -> throw new IllegalArgumentException("Invalid symbol code: " + symbolCode);
-        };
-    }
-
-    protected byte bonusSymbol(int levelNumber) {
+    protected int bonusSymbolCode(int levelNumber) {
         return switch (levelNumber) {
             case 1 -> 0;      // cherries
             case 2 -> 1;      // strawberry

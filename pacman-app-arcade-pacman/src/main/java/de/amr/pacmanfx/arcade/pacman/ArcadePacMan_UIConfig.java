@@ -346,14 +346,14 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public Image bonusSymbolImage(byte symbol) {
+    public Image bonusSymbolImage(int symbolCode) {
         final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
-        return spriteSheet().image(sprites[symbol]);
+        return spriteSheet().image(sprites[symbolCode]);
     }
 
     @Override
-    public Image bonusValueImage(byte symbol) {
+    public Image bonusValueImage(int symbolCode) {
         final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_VALUES);
-        return spriteSheet().image(sprites[symbol]);
+        return spriteSheet().image(sprites[symbolCode]);
     }
 }

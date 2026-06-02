@@ -328,7 +328,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             Logger.info("Demo level {} started", level.number());
         } else {
             showLevelMessage(level, GameLevelMessageType.READY);
-            levelCounter().update(level.number(), level.bonusSymbol(0));
+            levelCounter().update(level.number(), level.bonusSymbolCode(0));
             score().setEnabled(true);
             cheats().update(level);
             Logger.info("Level {} started", level.number());

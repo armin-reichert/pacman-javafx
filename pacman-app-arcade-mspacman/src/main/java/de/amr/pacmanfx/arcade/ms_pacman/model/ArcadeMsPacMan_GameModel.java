@@ -292,8 +292,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         }
 
         level.selectNextBonus();
-        final byte symbol = level.bonusSymbol(level.currentBonusIndex());
-        final var bonus = new Bonus(symbol, bonusValue(symbol));
+        final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
+        final var bonus = new Bonus(bonusSymbolCode, rules().pointsForBonus(bonusSymbolCode));
         if (terrain.horizontalPortals().isEmpty()) {
             final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.setPosition(halfTileRightOf(bonusTile));
@@ -362,19 +362,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     private void initBoni(GameLevel level) {
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));
-    }
-
-    protected int bonusValue(byte symbolCode) {
-        return switch (symbolCode) {
-            case 0 -> 100;  // cherries
-            case 1 -> 200;  // strawberry
-            case 2 -> 500;  // orange
-            case 3 -> 700;  // pretzel
-            case 4 -> 1000; // apple
-            case 5 -> 2000; // pear
-            case 6 -> 5000; // banana
-            default -> throw new IllegalArgumentException("Invalid symbol code: " + symbolCode);
-        };
     }
 
     private void computeBonusRoute(Bonus bonus, TerrainLayer terrain, House house) {

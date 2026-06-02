@@ -333,8 +333,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private Bonus3D createBonus3D(Bonus bonus) {
         final BonusConfig config = uiConfig.worldConfig().bonusConfig();
         final Bonus3D bonus3D = new Bonus3D(animationRegistry, bonus,
-            uiConfig.bonusSymbolImage(bonus.symbol()), config.bonusSymbolWidth(),
-            uiConfig.bonusValueImage(bonus.symbol()),  config.bonusPointsWidth());
+            uiConfig.bonusSymbolImage(bonus.symbolCode()), config.bonusSymbolWidth(),
+            uiConfig.bonusValueImage(bonus.symbolCode()),  config.bonusPointsWidth());
         entitySet.add(bonus3D);
         return bonus3D;
     }

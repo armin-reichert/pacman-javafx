@@ -47,11 +47,11 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
     public void init(GameLevel level) {
         final LevelCounterConfig3D config = uiConfig.worldConfig().levelCounter();
         final float cubeSize = config.symbolSize();
-        final List<Byte> symbols = level.game().levelCounter().symbols();
+        final List<Integer> symbolCodes = level.game().levelCounter().symbolCodes();
         getChildren().clear();
-        for (int i = 0; i < symbols.size(); ++i) {
-            final Byte symbol = symbols.get(i);
-            final Image symbolImage = uiConfig.bonusSymbolImage(symbol);
+        for (int i = 0; i < symbolCodes.size(); ++i) {
+            final Integer symbolCode = symbolCodes.get(i);
+            final Image symbolImage = uiConfig.bonusSymbolImage(symbolCode);
             final var texture = new PhongMaterial(Color.WHITE);
             texture.setDiffuseMap(symbolImage);
             final var cube = new Box(cubeSize, cubeSize, cubeSize);

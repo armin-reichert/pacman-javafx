@@ -6,9 +6,9 @@ package de.amr.pacmanfx.model;
 import java.util.List;
 
 public interface LevelCounter {
-    List<Byte> symbols();
+    List<Integer> symbolCodes();
     boolean isEnabled();
     void setEnabled(boolean enabled);
     void clear();
-    void update(int levelNumber, byte symbol);
+    void update(int levelNumber, int symbolCode);
 }
