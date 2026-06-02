@@ -179,6 +179,21 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
+    public void doEatingGhost(long tick) {
+        final GameLevel level = optGameLevel().orElseThrow();
+        if (tick < 60) {
+            level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
+                .forEach(ghost -> ghost.update(level));
+            level.blinking().doTick();
+        }
+        else if (tick == 60) {
+            level.entities().pac().show();
+            level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
+            level.ghosts().forEach(ghost -> ghost.animations().playSelected());
+        }
+    }
+
+    @Override
     public SimulationStep doSimulationStep() {
         return simStep;
     }

@@ -76,6 +76,9 @@ public interface GameModel {
     /** @return the map selector determining which maze is used per level */
     WorldMapSelector mapSelector();
 
+    /** @return the gatekeeper controlling ghost house access. */
+    GateKeeper gateKeeper();
+
     /** @return the current level, if one is active */
     Optional<GameLevel> optGameLevel();
 
@@ -151,8 +154,6 @@ public interface GameModel {
      * @param tick the current simulation tick
      */
     void continuePlayingLevel(long tick);
-
-    GateKeeper gateKeeper();
 
     /**
      * Called when Pac-Man eats a normal pellet.

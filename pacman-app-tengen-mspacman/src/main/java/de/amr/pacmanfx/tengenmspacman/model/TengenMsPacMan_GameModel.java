@@ -560,21 +560,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         flow().publishGameEvent(new GhostEatenEvent(this, eatenGhost));
     }
 
-    @Override
-    public void doEatingGhost(long tick) {
-        final GameLevel level = optGameLevel().orElseThrow();
-        if (tick < TICK_EATING_GHOST_COMPLETE) {
-            level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-                .forEach(ghost -> ghost.update(level));
-            level.blinking().doTick();
-        }
-        else if (tick == TICK_EATING_GHOST_COMPLETE) {
-            level.entities().pac().show();
-            level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-            level.ghosts().forEach(actor -> actor.animations().playSelected());
-        }
-    }
-
     // Helpers
 
     private void setMsPacMan(GameLevel level) {

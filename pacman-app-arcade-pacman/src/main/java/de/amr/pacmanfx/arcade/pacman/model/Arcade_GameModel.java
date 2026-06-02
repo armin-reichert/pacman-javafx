@@ -235,21 +235,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void doEatingGhost(long tick) {
-        final GameLevel level = optGameLevel().orElseThrow();
-        if (tick < Arcade_GameState.TICK_EATING_GHOST_DURATION) {
-            level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-                .forEach(ghost -> ghost.update(level));
-            level.blinking().doTick();
-        }
-        else if (tick == Arcade_GameState.TICK_EATING_GHOST_DURATION) {
-            level.entities().pac().show();
-            level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-            level.ghosts().forEach(ghost -> ghost.animations().playSelected());
-        }
-    }
-
-    @Override
     public void onGameOver() {
         if (!coinMechanism.isEmpty()) {
             coinMechanism.consumeCoin(); //TODO not sure if coin should be consumed after game is over
