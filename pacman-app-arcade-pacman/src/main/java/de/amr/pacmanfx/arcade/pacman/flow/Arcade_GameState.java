@@ -105,7 +105,8 @@ public enum Arcade_GameState {
 
         @Override
         public void onUpdate(GameModel game) {
-            game.doLevelPlaying();
+            final GameLevel level = game.optGameLevel().orElseThrow();
+            game.doLevelPlaying(level);
             if (game.isLevelCompleted()) {
                 game.flow().enterState(GAME_LEVEL_COMPLETE.state);
             }

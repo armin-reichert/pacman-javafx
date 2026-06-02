@@ -67,7 +67,7 @@ public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME
 
         level.optBonus().ifPresent(bonus -> bonus.update(level));
 
-        game.doLevelPlaying();
+        game.doLevelPlaying(level);
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
                 game.flow().publishGameEvent(new StopAllSoundsEvent(game));

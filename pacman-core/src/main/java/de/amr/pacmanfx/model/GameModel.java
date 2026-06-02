@@ -148,8 +148,12 @@ public interface GameModel extends GameCheats {
     /** Called when level gameplay begins. */
     void onStartLevelPlaying();
 
-    /** Performs the main update logic while the level is being played. */
-    void doLevelPlaying();
+    /**
+     * Performs the main update logic while the level is being played.
+     *
+     * @param level the current level
+     */
+    void doLevelPlaying(GameLevel level);
 
     /**
      * Continues level gameplay at the given tick.

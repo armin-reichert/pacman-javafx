@@ -214,8 +214,7 @@ public abstract class AbstractGameModel implements GameModel {
      * ---------------------------------------------------------------------- */
 
     @Override
-    public void doLevelPlaying() {
-        final GameLevel level = optGameLevel().orElseThrow();
+    public void doLevelPlaying(GameLevel level) {
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
         doHuntingStep(level);
