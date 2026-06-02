@@ -62,7 +62,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        if (e.newState() == TengenMsPacMan_GameState.LEVEL_COMPLETE.state()) {
+        if (e.newState() == TengenMsPacMan_GameState.GAME_LEVEL_COMPLETE.state()) {
             final GameLevel level = optGameLevel().orElseThrow();
             context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene().playLevelCompleteAnimation(level);

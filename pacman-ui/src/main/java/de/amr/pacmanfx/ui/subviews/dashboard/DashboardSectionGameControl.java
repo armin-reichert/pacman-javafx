@@ -73,11 +73,11 @@ public class DashboardSectionGameControl extends DashboardSection {
             final State<GameModel> state = dashboard.context().currentGameState();
 
             choiceBoxInitialLives.setValue(game.lives().initialCount());
-            choiceBoxInitialLives.setDisable(!state.nameIsOneOf(GameStateID.INTRO.name()));
+            choiceBoxInitialLives.setDisable(!state.nameIsOneOf(GameStateID.GAME_INTRO.name()));
 
             final boolean creditDisabled = !state.nameIsOneOf(
-                GameStateID.INTRO.name(),
-                GameStateID.PREPARING_GAME_START.name()
+                GameStateID.GAME_INTRO.name(),
+                GameStateID.GAME_PREPARATION.name()
             );
             spinnerCredit.setDisable(creditDisabled);
 
@@ -86,7 +86,7 @@ public class DashboardSectionGameControl extends DashboardSection {
             buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(booting || game.optGameLevel().isEmpty());
             buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(booting || !canEnterNextLevel(game, state));
 
-            buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.nameIsOneOf(GameStateID.INTRO.name()));
+            buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.nameIsOneOf(GameStateID.GAME_INTRO.name()));
             buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(state instanceof CutScenesTestState));
 
             cbCollisionCheckedTwice.setSelected(game.isCollisionDoubleChecked());
@@ -100,12 +100,12 @@ public class DashboardSectionGameControl extends DashboardSection {
     private boolean canStartLevel(GameModel game, State<GameModel> state) {
         return game.canStartNewGame()
             && state.nameIsOneOf(
-                GameStateID.INTRO.name(),
-                GameStateID.PREPARING_GAME_START.name()
+                GameStateID.GAME_INTRO.name(),
+                GameStateID.GAME_PREPARATION.name()
         );
     }
 
     private boolean canEnterNextLevel(GameModel game, State<GameModel> state) {
-        return game.isPlayingLevel() && state.nameIsOneOf(GameStateID.LEVEL_PLAYING.name());
+        return game.isPlayingLevel() && state.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
     }
 }

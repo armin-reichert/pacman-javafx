@@ -68,7 +68,7 @@ public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
                 game.flow().publishGameEvent(new StopAllSoundsEvent(game));
-                game.flow().enterState(GameStateID.INTRO.name());
+                game.flow().enterState(GameStateID.GAME_INTRO.name());
             } else {
                 timer().restartSeconds(TEST_DURATION_SEC);
                 game.startNextLevel();
@@ -76,11 +76,11 @@ public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME
             }
         }
         else if (game.isLevelCompleted()) {
-            game.flow().enterState(GameStateID.INTRO.name());
+            game.flow().enterState(GameStateID.GAME_INTRO.name());
         } else if (game.hasPacManBeenKilled()) {
             expire();
         } else if (game.hasGhostBeenKilled()) {
-            game.flow().enterState(GameStateID.EATING_GHOST.name());
+            game.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST.name());
         }
     }
 

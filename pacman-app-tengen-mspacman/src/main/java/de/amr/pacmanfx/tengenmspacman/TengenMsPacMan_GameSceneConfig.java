@@ -55,13 +55,13 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
         if (state.nameIsOneOf(TengenMsPacMan_GameState.BOOT.name())) {
             return CommonSceneID.BOOT_SCENE;
         }
-        if (state.nameIsOneOf(TengenMsPacMan_GameState.INTERMISSION.name())) {
+        if (state.nameIsOneOf(TengenMsPacMan_GameState.GAME_LEVEL_INTERMISSION.name())) {
             return resolveCutSceneID(game);
         }
-        if (state.nameIsOneOf(TengenMsPacMan_GameState.INTRO.name())) {
+        if (state.nameIsOneOf(TengenMsPacMan_GameState.GAME_INTRO.name())) {
             return CommonSceneID.INTRO_SCENE;
         }
-        if (state.nameIsOneOf(TengenMsPacMan_GameState.PREPARING_GAME_START.name())) {
+        if (state.nameIsOneOf(TengenMsPacMan_GameState.GAME_PREPARATION.name())) {
             return CommonSceneID.START_SCENE;
         }
         if (state.nameIsOneOf(SHOWING_HALL_OF_FAME.name())) {

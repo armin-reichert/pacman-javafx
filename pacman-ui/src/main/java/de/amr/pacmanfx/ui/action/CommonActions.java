@@ -110,7 +110,7 @@ public final class CommonActions {
             if (isLevelShortTest) {
                 gameState.onExit(game); //TODO exit other states too?
             }
-            game.flow().restartState(GameStateID.INTRO.name());
+            game.flow().restartState(GameStateID.GAME_INTRO.name());
             context.gameClock().start();
         }
     };
@@ -319,7 +319,7 @@ public final class CommonActions {
         }
 
         private boolean isLevelPlaying(AppContext context) {
-            return context.currentGameState().nameIsOneOf(GameStateID.LEVEL_PLAYING.name());
+            return context.currentGameState().nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
         }
     };
 }

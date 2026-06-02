@@ -58,19 +58,19 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         if (gameState instanceof TestState) {
             handleTestState();
         }
-        else if (GameStateID.STARTING_GAME_OR_LEVEL.identifies(gameState)) {
+        else if (GameStateID.GAME_STARTING_NEW_GAME_OR_LEVEL.identifies(gameState)) {
             onStartingGameOrLevel();
         }
-        else if (GameStateID.LEVEL_PLAYING.identifies(gameState)) {
+        else if (GameStateID.GAME_LEVEL_PLAYING.identifies(gameState)) {
             onHuntingStart();
         }
-        else if (GameStateID.PACMAN_DYING.identifies(gameState)) {
+        else if (GameStateID.GAME_LEVEL_PACMAN_DYING.identifies(gameState)) {
             onPacManDying(gameState);
         }
-        else if (GameStateID.EATING_GHOST.identifies(gameState)) {
+        else if (GameStateID.GAME_LEVEL_EATING_GHOST.identifies(gameState)) {
             onEatingGhost();
         }
-        else if (GameStateID.LEVEL_COMPLETE.identifies(gameState)) {
+        else if (GameStateID.GAME_LEVEL_COMPLETE.identifies(gameState)) {
             onLevelComplete();
         }
         else if (GameStateID.GAME_OVER.identifies(gameState)) {

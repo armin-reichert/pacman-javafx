@@ -46,8 +46,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import static de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState.INTRO;
-import static de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState.PREPARING_GAME_START;
+import static de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState.GAME_INTRO;
+import static de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState.GAME_PREPARATION;
 import static de.amr.pacmanfx.core.Globals.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
@@ -121,7 +121,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             context.ui().sounds().stopAndDisposeVoice();
             context.ui().sounds().setEnabled(true);
             slot.insertCoin();
-            game.flow().enterState(PREPARING_GAME_START.state());
+            game.flow().enterState(GAME_PREPARATION.state());
             game.flow().publishGameEvent(new CreditAddedEvent(game, 1));
         }
 
@@ -137,7 +137,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
                 return true;
             }
             final State<GameModel> gameState = game.flow().state();
-            return gameState == INTRO.state() || gameState == PREPARING_GAME_START.state();
+            return gameState == GAME_INTRO.state() || gameState == GAME_PREPARATION.state();
         }
     };
 
@@ -145,7 +145,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         @Override
         public void doAction(AppContext context) {
             context.ui().sounds().stopAndDisposeVoice();
-            context.currentGameFlow().enterState(Arcade_GameState.STARTING_GAME_OR_LEVEL.state());
+            context.currentGameFlow().enterState(Arcade_GameState.GAME_STARTING_NEW_GAME_OR_LEVEL.state());
         }
 
         @Override
@@ -156,7 +156,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             }
             final GameModel game = context.currentGame();
             final State<GameModel> gameState = context.currentGameState();
-            return (gameState == INTRO.state() || gameState == PREPARING_GAME_START.state()) && game.canStartNewGame();
+            return (gameState == GAME_INTRO.state() || gameState == GAME_PREPARATION.state()) && game.canStartNewGame();
         }
     };
 

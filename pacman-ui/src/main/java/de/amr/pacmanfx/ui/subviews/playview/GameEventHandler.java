@@ -46,7 +46,7 @@ public class GameEventHandler extends DefaultGameEventListener {
             }
 
             case GameStateChangeEvent stateChangeEvent -> {
-                if (stateChangeEvent.newState().nameIsOneOf(GameStateID.LEVEL_COMPLETE.name())) {
+                if (stateChangeEvent.newState().nameIsOneOf(GameStateID.GAME_LEVEL_COMPLETE.name())) {
                     final MiniPlaySceneView miniPlayView = context.ui().subViews().gamePlayView().miniPlaySceneView();
                     miniPlayView.slideOut();
                 }

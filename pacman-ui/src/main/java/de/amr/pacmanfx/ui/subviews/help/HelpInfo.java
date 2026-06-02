@@ -31,17 +31,17 @@ public class HelpInfo {
         final boolean demoLevel = game.isDemoLevelRunning();
 
         final HelpInfo helpInfo = new HelpInfo(context);
-        if (state.nameIsOneOf(GameStateID.INTRO.name())) {
+        if (state.nameIsOneOf(GameStateID.GAME_INTRO.name())) {
             helpInfo.addInfoForIntroScene(game);
         }
-        else if (state.nameIsOneOf(GameStateID.PREPARING_GAME_START.name())) {
+        else if (state.nameIsOneOf(GameStateID.GAME_PREPARATION.name())) {
             helpInfo.addInfoForCreditScene(game);
         }
         else if (state.nameIsOneOf(
-            GameStateID.STARTING_GAME_OR_LEVEL.name(),
-            GameStateID.LEVEL_PLAYING.name(),
-            GameStateID.PACMAN_DYING.name(),
-            GameStateID.EATING_GHOST.name())) {
+            GameStateID.GAME_STARTING_NEW_GAME_OR_LEVEL.name(),
+            GameStateID.GAME_LEVEL_PLAYING.name(),
+            GameStateID.GAME_LEVEL_PACMAN_DYING.name(),
+            GameStateID.GAME_LEVEL_EATING_GHOST.name())) {
             if (demoLevel) {
                 helpInfo.addInfoForDemoLevelPlayScene();
             } else {

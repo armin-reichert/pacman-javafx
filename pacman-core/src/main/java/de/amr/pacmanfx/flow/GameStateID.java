@@ -18,16 +18,16 @@ import static java.util.Objects.requireNonNull;
  */
 public enum GameStateID {
     BOOT,
-    INTRO,
-    PREPARING_GAME_START,
-    STARTING_GAME_OR_LEVEL,
-    LEVEL_PLAYING,
-    LEVEL_COMPLETE,
-    LEVEL_TRANSITION,
-    EATING_GHOST,
-    PACMAN_DYING,
-    GAME_OVER,
-    INTERMISSION;
+    GAME_INTRO,
+    GAME_PREPARATION,
+    GAME_STARTING_NEW_GAME_OR_LEVEL,
+    GAME_LEVEL_PLAYING,
+    GAME_LEVEL_COMPLETE,
+    GAME_LEVEL_TRANSITION,
+    GAME_LEVEL_EATING_GHOST,
+    GAME_LEVEL_PACMAN_DYING,
+    GAME_LEVEL_INTERMISSION,
+    GAME_OVER;
 
     public boolean identifies(State<GameModel> gameState) {
         requireNonNull(gameState);

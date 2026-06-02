@@ -58,7 +58,7 @@ public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEve
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        if (e.newState() == Arcade_GameState.LEVEL_COMPLETE.state()) {
+        if (e.newState() == Arcade_GameState.GAME_LEVEL_COMPLETE.state()) {
             context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene().levelCompletedAnimation().play();
         } else if (e.newState() == Arcade_GameState.GAME_OVER.state()) {

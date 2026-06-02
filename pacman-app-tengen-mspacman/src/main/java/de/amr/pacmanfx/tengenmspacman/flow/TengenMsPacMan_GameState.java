@@ -32,7 +32,7 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onUpdate(GameModel game) {
             if (timer().hasExpired()) {
-                game.flow().enterState(INTRO.state());
+                game.flow().enterState(GAME_INTRO.state());
             }
         }
     }),
@@ -46,7 +46,7 @@ public enum TengenMsPacMan_GameState {
      * level ends, the credits screens are shown and then again the "PRESS START" scene.
      * </p>
      */
-    INTRO (new GameState("INTRO") {
+    GAME_INTRO(new GameState("GAME_INTRO") {
         @Override
         public void onEnter(GameModel game) {
             lock();
@@ -55,7 +55,7 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onUpdate(GameModel game) {
             if (timer().hasExpired()) {
-                game.flow().enterState(STARTING_GAME_OR_LEVEL.state);
+                game.flow().enterState(GAME_STARTING_NEW_GAME_OR_LEVEL.state);
             }
         }
     }),
@@ -64,7 +64,7 @@ public enum TengenMsPacMan_GameState {
      * Corresponds to the "MS PAC-MAN OPTIONS" screen where difficulty, booster, map category
      * and start level can be set.
      */
-    PREPARING_GAME_START (new GameState("PREPARING_GAME_START") {
+    GAME_PREPARATION(new GameState("GAME_PREPARATION") {
         @Override
         public void onEnter(GameModel game) {
             game.prepareNewGame();
@@ -89,12 +89,12 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onUpdate(GameModel game) {
             if (timer().hasExpired()) {
-                game.flow().enterState(INTRO.state());
+                game.flow().enterState(GAME_INTRO.state());
             }
         }
     }),
 
-    STARTING_GAME_OR_LEVEL (new GameState("STARTING_GAME_OR_LEVEL") {
+    GAME_STARTING_NEW_GAME_OR_LEVEL(new GameState("GAME_STARTING_NEW_GAME_OR_LEVEL") {
         @Override
         public void onEnter(GameModel game) {
             game.hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
@@ -113,7 +113,7 @@ public enum TengenMsPacMan_GameState {
         }
     }),
 
-    LEVEL_PLAYING (new GameState("LEVEL_PLAYING") {
+    GAME_LEVEL_PLAYING(new GameState("GAME_LEVEL_PLAYING") {
         @Override
         public void onEnter(GameModel game) {
             game.onStartLevelPlaying();
@@ -123,16 +123,16 @@ public enum TengenMsPacMan_GameState {
         public void onUpdate(GameModel game) {
             game.doLevelPlaying();
             if (game.isLevelCompleted()) {
-                game.flow().enterState(LEVEL_COMPLETE.state());
+                game.flow().enterState(GAME_LEVEL_COMPLETE.state());
             } else if (game.hasPacManBeenKilled()) {
-                game.flow().enterState(PACMAN_DYING.state());
+                game.flow().enterState(GAME_LEVEL_PACMAN_DYING.state());
             } else if (game.hasGhostBeenKilled()) {
-                game.flow().enterState(EATING_GHOST.state());
+                game.flow().enterState(GAME_LEVEL_EATING_GHOST.state());
             }
         }
     }),
 
-    LEVEL_COMPLETE (new GameState("LEVEL_COMPLETE") {
+    GAME_LEVEL_COMPLETE(new GameState("GAME_LEVEL_COMPLETE") {
         @Override
         public void onEnter(GameModel game) {
             lock(); // UI triggers timeout
@@ -153,17 +153,17 @@ public enum TengenMsPacMan_GameState {
             if (timer().hasExpired()) {
                 if (level.isDemoLevel()) {
                     // Just in case: if demo level is completed, go back to intro scene
-                    game.flow().enterState(INTRO.state());
+                    game.flow().enterState(GAME_INTRO.state());
                 } else if (game.flow().cutScenesEnabled() && level.cutSceneNumber() != 0) {
-                    game.flow().enterState(INTERMISSION.state());
+                    game.flow().enterState(GAME_LEVEL_INTERMISSION.state());
                 } else {
-                    game.flow().enterState(LEVEL_TRANSITION.state());
+                    game.flow().enterState(GAME_LEVEL_TRANSITION.state());
                 }
             }
         }
     }),
 
-    LEVEL_TRANSITION (new GameState("LEVEL_TRANSITION") {
+    GAME_LEVEL_TRANSITION(new GameState("GAME_LEVEL_TRANSITION") {
         @Override
         public void onEnter(GameModel game) {
             timer().restartSeconds(2);
@@ -173,12 +173,12 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onUpdate(GameModel game) {
             if (timer().hasExpired()) {
-                game.flow().enterState(STARTING_GAME_OR_LEVEL.state());
+                game.flow().enterState(GAME_STARTING_NEW_GAME_OR_LEVEL.state());
             }
         }
     }),
 
-    EATING_GHOST (new GameState("EATING_GHOST") {
+    GAME_LEVEL_EATING_GHOST(new GameState("GAME_LEVEL_EATING_GHOST") {
         @Override
         public void onEnter(GameModel game) {
             timer().restartTicks(60);
@@ -203,7 +203,7 @@ public enum TengenMsPacMan_GameState {
     }),
 
 
-    PACMAN_DYING (new GameState("PACMAN_DYING") {
+    GAME_LEVEL_PACMAN_DYING(new GameState("GAME_LEVEL_PACMAN_DYING") {
         @Override
         public void onEnter(GameModel game) {
             lock(); // UI triggers time-out
@@ -217,7 +217,7 @@ public enum TengenMsPacMan_GameState {
                     game.flow().enterState(GAME_OVER.state());
                 } else {
                     game.lives().add(-1);
-                    game.flow().enterState(game.lives().count() == 0 ? GAME_OVER.state() : STARTING_GAME_OR_LEVEL.state());
+                    game.flow().enterState(game.lives().count() == 0 ? GAME_OVER.state() : GAME_STARTING_NEW_GAME_OR_LEVEL.state());
                 }
             } else {
                 game.doPacManDying(level.entities().pac(), timer().tickCount());
@@ -242,13 +242,13 @@ public enum TengenMsPacMan_GameState {
                 } else {
                     level.clearMessage();
                     game.cheats().clear();
-                    game.flow().enterState(game.canContinueOnGameOver() ? PREPARING_GAME_START.state() : INTRO.state());
+                    game.flow().enterState(game.canContinueOnGameOver() ? GAME_PREPARATION.state() : GAME_INTRO.state());
                 }
             }
         }
     }),
 
-    INTERMISSION (new GameState("INTERMISSION") {
+    GAME_LEVEL_INTERMISSION(new GameState("GAME_LEVEL_INTERMISSION") {
         @Override
         public void onEnter(GameModel game) {
             lock();
@@ -267,7 +267,7 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onUpdate(GameModel game) {
             if (timer().hasExpired()) {
-                game.flow().enterState(game.isPlayingLevel() ? LEVEL_TRANSITION.state() : INTRO.state());
+                game.flow().enterState(game.isPlayingLevel() ? GAME_LEVEL_TRANSITION.state() : GAME_INTRO.state());
             }
         }
 
