@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.fsm.State;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
@@ -22,7 +22,6 @@ import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     extends BaseRenderer
     implements GameScene2D_Renderer, SpriteRendererMixin, TengenMsPacMan_SceneRendererMixin
 {
-    private static final int CONTENT_INDENT = 2*TS;
+    private static final int CONTENT_INDENT = 2 * TS;
     private static final List<Byte> GHOSTS_Z_ORDER = List.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW);
 
     private static class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
@@ -71,22 +70,12 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     private final TengenMsPacMan_ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
-    private final Rectangle clipRect;
 
     public TengenMsPacMan_PlayScene2D_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
-
         levelRenderer = scene.configureRenderer((TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas));
         actorRenderer = scene.configureRenderer((TengenMsPacMan_ActorRenderer)     uiConfig.createActorRenderer(canvas));
         debugRenderer = scene.configureRenderer(new PlaySceneDebugInfoRenderer(canvas));
-
-        // All maps are 28 tiles wide but the NES screen is 32 tiles wide. To accommodate, the maps are centered
-        // horizontally and 2 tiles on each side are clipped.
-        clipRect = new Rectangle();
-        clipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(CONTENT_INDENT)));
-        clipRect.yProperty().bind(canvas.translateYProperty());
-        clipRect.widthProperty().bind(scalingProperty().multiply(NES_SCREEN_WIDTH - 2 * CONTENT_INDENT));
-        clipRect.heightProperty().bind(canvas.heightProperty());
     }
 
     @Override
@@ -107,20 +96,33 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         }
         final GameModel game = playScene2D.context().currentGame();
         final long tick = playScene2D.context().gameClock().tickCount();
+
         game.optGameLevel().ifPresent(level -> {
             final WorldMap worldMap = level.worldMap();
+            final double scaledIndent = scaled(CONTENT_INDENT);
+
             configureRenderInfo(playScene2D, worldMap, tick);
             configureActorZOrder(level);
-            ctx.getCanvas().setClip(clipRect);
+
             ctx.save();
-            ctx.translate(scaled(CONTENT_INDENT), 0);
+            ctx.translate(scaledIndent, 0);
             levelRenderer.drawLevel(level, renderInfo);
             levelRenderer.drawDoor(worldMap); // ghosts appear under door, so draw door over again
             actorsInZOrder.forEach(actorRenderer::drawActor);
             ctx.restore();
-            ctx.getCanvas().setClip(null);
+
             if (AppConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
                 debugRenderer.draw(playScene2D);
+            }
+            else {
+                // All maps are 28 tiles wide but the NES screen is 32 tiles wide.
+                // To accommodate, the maps are centered horizontally and 2 tiles on each side are clipped.
+                final double stripeHeight = ctx.getCanvas().getHeight();
+                ctx.save();
+                ctx.setFill(backgroundColor());
+                ctx.fillRect(0, 0, scaledIndent, stripeHeight);
+                ctx.fillRect(ctx.getCanvas().getWidth() - scaledIndent, 0, scaledIndent, stripeHeight);
+                ctx.restore();
             }
         });
     }
