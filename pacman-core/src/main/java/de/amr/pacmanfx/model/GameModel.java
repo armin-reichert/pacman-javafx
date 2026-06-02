@@ -189,9 +189,10 @@ public interface GameModel extends GameCheats {
     /**
      * Called when Pac‑Man eats a ghost.
      *
+     * @param level the game level
      * @param eatenGhost the ghost that was eaten
      */
-    void onEatGhost(Ghost eatenGhost);
+    void onEatGhost(GameLevel level, Ghost eatenGhost);
 
     /** Called when the game reaches the game‑over state. */
     void onGameOver();

@@ -226,9 +226,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onEatGhost(Ghost eatenGhost) {
-        final GameLevel level = optGameLevel().orElseThrow();
-
+    public void onEatGhost(GameLevel level, Ghost eatenGhost) {
         final int killedBefore = level.killedGhostsForCurrentEnergizer().size();
         final int points = rules().pointsForGhost(killedBefore);
 
