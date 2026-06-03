@@ -38,8 +38,6 @@ public interface GameModel extends GameCheats {
 
     GateKeeper gateKeeper();
 
-    SimulationStep doSimulationStep();
-
     HeadsUpDisplay hud();
 
     LevelCounter levelCounter();
@@ -51,6 +49,8 @@ public interface GameModel extends GameCheats {
     WorldMapSelector mapSelector();
 
     // Lifecycle
+
+    SimulationStep simulationStep();
 
     void init();
 

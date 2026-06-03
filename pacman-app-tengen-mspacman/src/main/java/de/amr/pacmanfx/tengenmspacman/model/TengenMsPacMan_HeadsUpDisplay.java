@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.tengenmspacman.model;
 
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.model.HeadsUpDisplay;
 
 public class TengenMsPacMan_HeadsUpDisplay extends HeadsUpDisplay {
@@ -11,9 +10,7 @@ public class TengenMsPacMan_HeadsUpDisplay extends HeadsUpDisplay {
     private boolean levelNumberVisible;
     private boolean gameOptionsVisible;
 
-    public TengenMsPacMan_HeadsUpDisplay() {
-        super(CoinMechanism.OUT_OF_SERVICE);
-    }
+    public TengenMsPacMan_HeadsUpDisplay() {}
 
     public TengenMsPacMan_HeadsUpDisplay gameOptions(boolean visible) {
         gameOptionsVisible = visible;

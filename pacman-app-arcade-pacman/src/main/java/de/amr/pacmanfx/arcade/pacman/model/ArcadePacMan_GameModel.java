@@ -6,12 +6,9 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
-import de.amr.pacmanfx.model.GameRules;
-import de.amr.pacmanfx.model.HeadsUpDisplay;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.LevelCounter;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
@@ -69,11 +66,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     protected static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 
-    protected final LevelCounter levelCounter;
-    protected final WorldMapSelector mapSelector;
-
-    protected GameRules rules;
-
     /**
      * @param coinMechanism the coin mechanism
      */
@@ -86,33 +78,14 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
      * @param mapSelector e.g. selector that selects custom maps before standard maps
      */
     public ArcadePacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
-        super(coinMechanism);
+        this.coinMechanism = requireNonNull(coinMechanism);
+        hud.setCoinMechanism(coinMechanism);
         this.mapSelector = requireNonNull(mapSelector);
-        this.levelCounter = new ArcadePacMan_LevelCounter();
-        this.demoLevelSteering = new RouteBasedSteering(DEMO_LEVEL_ROUTE);
-        this.automaticSteering = new RuleBasedPacSteering();
+        levelCounter = new ArcadePacMan_LevelCounter();
+        demoLevelSteering = new RouteBasedSteering(DEMO_LEVEL_ROUTE);
+        automaticSteering = new RuleBasedPacSteering();
         rules = new ArcadePacMan_GameRules();
         createGateKeeper();
-    }
-
-    @Override
-    public GameRules rules() {
-        return rules;
-    }
-
-    @Override
-    public LevelCounter levelCounter() {
-        return levelCounter;
-    }
-
-    @Override
-    public WorldMapSelector mapSelector() {
-        return mapSelector;
-    }
-
-    @Override
-    public HeadsUpDisplay hud() {
-        return hud;
     }
 
     @Override

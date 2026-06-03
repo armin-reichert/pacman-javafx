@@ -15,9 +15,12 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.model.level.LevelCounter;
 import de.amr.pacmanfx.model.lives.PacManLives;
 import de.amr.pacmanfx.model.lives.PacManLivesImpl;
+import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
 import javafx.beans.property.BooleanProperty;
@@ -51,16 +54,29 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected final Score score = new Score();
 
-    protected GameControlFlow gameFlow;
+    protected GameControlFlow flow;
+
+    protected GateKeeper gateKeeper;
+
+    protected HeadsUpDisplay hud;
 
     protected PersistentScore highScore;
 
     protected PacManLives lives;
 
+    protected GameRules rules;
+
+    protected LevelCounter levelCounter;
+
+    protected WorldMapSelector mapSelector;
+
     private CollisionStrategy collisionStrategy = DEFAULT_COLLISION_STRATEGY;
+
+    // Constructor
 
     protected AbstractGameModel() {
         lives = new PacManLivesImpl();
+        hud = new HeadsUpDisplay();
 
         score.pointsProperty().addListener((_, oldScore, newScore)
             -> handleScoreChange(oldScore.intValue(), newScore.intValue()));
@@ -72,132 +88,85 @@ public abstract class AbstractGameModel implements GameModel {
         });
     }
 
-    public void setHighScoreFile(File highScoreFile) {
-        requireNonNull(highScoreFile);
-        highScore = new PersistentScore(highScoreFile);
-    }
-
-    /**
-     * @return property controlling whether collisions are double-checked each tick
-     */
-    public BooleanProperty collisionDoubleCheckedProperty() {
-        return collisionDoubleChecked;
-    }
-
-    /**
-     * @return {@code true} if collisions are double-checked each tick
-     */
-    public Boolean isCollisionDoubleChecked() {
-        return collisionDoubleCheckedProperty().get();
-    }
-
-    /**
-     * Enables or disables double collision checking.
-     *
-     * @param doubleChecked {@code true} to enable double-checking
-     */
-    public void setCollisionDoubleChecked(boolean doubleChecked) {
-        collisionDoubleCheckedProperty().set(doubleChecked);
-    }
-
-    /**
-     * @return the level property
-     */
-    public ObjectProperty<GameLevel> levelProperty() {
-        return level;
-    }
-
-    /* -------------------------------------------------------------------------
-     * Variant-specific hooks
-     * ---------------------------------------------------------------------- */
-
-    @Override
-    public void eatPellet(GameLevel level, Vector2i tile) {
-        requireNonNull(level);
-        requireNonNull(tile);
-        scorePoints(rules().pointsForPellet(), level.number());
-        if (gateKeeper() != null) {
-            gateKeeper().registerFoodEaten(level, level.worldMap().terrainLayer().house());
-        }
-    }
-
-    /**
-     * Called when Pac-Man eats an energizer.
-     *
-     * @param level the current level
-     * @param tile  the tile containing the energizer
-     */
-    public abstract void eatEnergizer(GameLevel level, Vector2i tile);
-
-    public void eatBonus(GameLevel level, Bonus bonus) {
-        scorePoints(bonus.points(), level.number());
-        Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-        bonus.showEatenForSeconds(rules().eatenBonusDisplaySeconds());
-        flow().publishGameEvent(new BonusEatenEvent(this, bonus));
-    }
-
-    /**
-     * Determines whether Pac-Man is safe from being killed during demo mode.
-     *
-     * @param demoLevel the demo level
-     * @return {@code true} if Pac-Man cannot be killed at this moment
-     */
-    protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
-
-    /* -------------------------------------------------------------------------
-     * Cheating
-     * ---------------------------------------------------------------------- */
-
-    private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
-    private final BooleanProperty pacImmune = new SimpleBooleanProperty(false);
-    private final BooleanProperty pacUsingAutopilot = new SimpleBooleanProperty(false);
-
-    /** @return property indicating whether a cheat has been used */
-    public BooleanProperty cheatUsedProperty() {
-        return cheatUsed;
-    }
-
-    /** @return property indicating whether Pac‑Man is immune to death */
-    public BooleanProperty pacImmuneProperty() {
-        return pacImmune;
-    }
-
-    /** @return {@code true} if Pac‑Man is currently immune */
-    public boolean isPacImmune() {
-        return pacImmuneProperty().get();
-    }
-
-    /** @return {@code true} if autopilot is currently active */
-    public boolean isPacUsingAutopilot() {
-        return pacUsingAutopilotProperty().get();
-    }
-
-    /** @return property indicating whether autopilot mode is active */
-    public BooleanProperty pacUsingAutopilotProperty() {
-        return pacUsingAutopilot;
-    }
-
-    public void clearCheats() {
-        cheatUsed.set(false);
-        pacImmune.set(false);
-        pacUsingAutopilot.set(false);
-    }
-
-    public void updateCheats(GameLevel level) {
-        if (level.isDemoLevel() || !level.game().isPlaying()) {
-            return;
-        }
-        final Pac pac = level.entities().pac();
-        pac.immuneProperty().set(isPacImmune());
-        pac.usingAutopilotProperty().set(isPacUsingAutopilot());
-        if (isPacImmune() || isPacUsingAutopilot()) {
-            cheatUsed.set(true);
-        }
-    }
-
     /* -------------------------------------------------------------------------
      * Game interface implementation
      * ---------------------------------------------------------------------- */
+
+    @Override
+    public GameControlFlow flow() {
+        return flow;
+    }
+
+    public GameRules rules() {
+        return rules;
+    }
+
+    @Override
+    public PacManLives lives() {
+        return lives;
+    }
+
+    @Override
+    public abstract ActorSpeedControl actorSpeedControl();
+
+    public GateKeeper gateKeeper() {
+        return gateKeeper;
+    }
+
+    @Override
+    public HeadsUpDisplay hud() {
+        return hud;
+    }
+
+    @Override
+    public LevelCounter levelCounter() {
+        return levelCounter;
+    }
+
+    @Override
+    public Score score() {
+        return score;
+    }
+
+    @Override
+    public PersistentScore highScore() {
+        return highScore;
+    }
+
+    @Override
+    public WorldMapSelector mapSelector() {
+        return mapSelector;
+    }
+
+    // Lifecycle
+
+    @Override
+    public SimulationStep simulationStep() {
+        return simStep;
+    }
+
+    @Override
+    public void init() {
+        lives().setInitialCount(3);
+        prepareNewGame();
+    }
+
+    @Override
+    public void prepareNewGame() {
+        score.reset();
+        try {
+            highScore.load();
+            highScore.setEnabled(true);
+        } catch (IOException x) {
+            Logger.error(x, "Error loading high-score file {}", highScore.file().getAbsolutePath());
+        }
+        gateKeeper.reset();
+        levelProperty().set(null);
+        lives().setCount(lives().initialCount());
+        levelCounter.clear();
+        setPlaying(false);
+    }
+
 
     @Override
     public void doLevelPlaying(GameLevel level) {
@@ -210,29 +179,10 @@ public abstract class AbstractGameModel implements GameModel {
         updateCheats(level);
     }
 
-    @Override
-    public SimulationStep doSimulationStep() {
-        return simStep;
-    }
 
     @Override
     public Optional<GameLevel> optGameLevel() {
         return Optional.ofNullable(level.get());
-    }
-
-    @Override
-    public PacManLives lives() {
-        return lives;
-    }
-
-    @Override
-    public Score score() {
-        return score;
-    }
-
-    @Override
-    public PersistentScore highScore() {
-        return highScore;
     }
 
     @Override
@@ -314,6 +264,19 @@ public abstract class AbstractGameModel implements GameModel {
         level.optBonus().ifPresent(Bonus::setInactive);
     }
 
+    // Actor related
+
+    @Override
+    public void eatPellet(GameLevel level, Vector2i tile) {
+        requireNonNull(level);
+        requireNonNull(tile);
+        scorePoints(rules().pointsForPellet(), level.number());
+        if (gateKeeper() != null) {
+            gateKeeper().registerFoodEaten(level, level.worldMap().terrainLayer().house());
+        }
+    }
+
+
     /* -------------------------------------------------------------------------
      * Utility methods
      * ---------------------------------------------------------------------- */
@@ -377,6 +340,39 @@ public abstract class AbstractGameModel implements GameModel {
             lives().add(1);
             flow().publishGameEvent(new SpecialScoreEvent(this, newScore));
         }
+    }
+
+    /* -------------------------------------------------------------------------
+     * Cheating
+     * ---------------------------------------------------------------------- */
+
+    private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
+    private final BooleanProperty pacImmune = new SimpleBooleanProperty(false);
+    private final BooleanProperty pacUsingAutopilot = new SimpleBooleanProperty(false);
+
+    /** @return property indicating whether a cheat has been used */
+    public BooleanProperty cheatUsedProperty() {
+        return cheatUsed;
+    }
+
+    /** @return property indicating whether Pac‑Man is immune to death */
+    public BooleanProperty pacImmuneProperty() {
+        return pacImmune;
+    }
+
+    /** @return {@code true} if Pac‑Man is currently immune */
+    public boolean isPacImmune() {
+        return pacImmuneProperty().get();
+    }
+
+    /** @return {@code true} if autopilot is currently active */
+    public boolean isPacUsingAutopilot() {
+        return pacUsingAutopilotProperty().get();
+    }
+
+    /** @return property indicating whether autopilot mode is active */
+    public BooleanProperty pacUsingAutopilotProperty() {
+        return pacUsingAutopilot;
     }
 
     /**
@@ -601,8 +597,35 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     /* -------------------------------------------------------------------------
+     * Cheat management
+     * ---------------------------------------------------------------------- */
+
+    public void clearCheats() {
+        cheatUsed.set(false);
+        pacImmune.set(false);
+        pacUsingAutopilot.set(false);
+    }
+
+    public void updateCheats(GameLevel level) {
+        if (level.isDemoLevel() || !level.game().isPlaying()) {
+            return;
+        }
+        final Pac pac = level.entities().pac();
+        pac.immuneProperty().set(isPacImmune());
+        pac.usingAutopilotProperty().set(isPacUsingAutopilot());
+        if (isPacImmune() || isPacUsingAutopilot()) {
+            cheatUsed.set(true);
+        }
+    }
+
+    /* -------------------------------------------------------------------------
      * Score management
      * ---------------------------------------------------------------------- */
+
+    public void setHighScoreFile(File highScoreFile) {
+        requireNonNull(highScoreFile);
+        highScore = new PersistentScore(highScoreFile);
+    }
 
     protected void scorePoints(int points, int levelNumber) {
         if (!score.isEnabled()) {
@@ -632,4 +655,64 @@ public abstract class AbstractGameModel implements GameModel {
         message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
         level.setMessage(message);
     }
+
+
+
+
+
+
+    /**
+     * @return property controlling whether collisions are double-checked each tick
+     */
+    public BooleanProperty collisionDoubleCheckedProperty() {
+        return collisionDoubleChecked;
+    }
+
+    /**
+     * @return {@code true} if collisions are double-checked each tick
+     */
+    public Boolean isCollisionDoubleChecked() {
+        return collisionDoubleCheckedProperty().get();
+    }
+
+    /**
+     * Enables or disables double collision checking.
+     *
+     * @param doubleChecked {@code true} to enable double-checking
+     */
+    public void setCollisionDoubleChecked(boolean doubleChecked) {
+        collisionDoubleCheckedProperty().set(doubleChecked);
+    }
+
+    /**
+     * @return the level property
+     */
+    public ObjectProperty<GameLevel> levelProperty() {
+        return level;
+    }
+
+    /**
+     * Called when Pac-Man eats an energizer.
+     *
+     * @param level the current level
+     * @param tile  the tile containing the energizer
+     */
+    public abstract void eatEnergizer(GameLevel level, Vector2i tile);
+
+    public void eatBonus(GameLevel level, Bonus bonus) {
+        scorePoints(bonus.points(), level.number());
+        Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+        bonus.showEatenForSeconds(rules().eatenBonusDisplaySeconds());
+        flow().publishGameEvent(new BonusEatenEvent(this, bonus));
+    }
+
+    /**
+     * Determines whether Pac-Man is safe from being killed during demo mode.
+     *
+     * @param demoLevel the demo level
+     * @return {@code true} if Pac-Man cannot be killed at this moment
+     */
+    protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
+
+
 }

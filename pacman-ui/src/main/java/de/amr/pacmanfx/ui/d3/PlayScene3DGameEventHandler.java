@@ -255,7 +255,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     private void onEatingGhost() {
         final GameLevel3D level3D = assertLevel3D();
-        context().currentGame().doSimulationStep().ghostsKilled.forEach(ghost -> {
+        context().currentGame().simulationStep().ghostsKilled.forEach(ghost -> {
             final Ghost3D ghost3D = level3D.ghost3D(ghost.personality());
             final int killIndex = level3D.level().killedGhostsForCurrentEnergizer().indexOf(ghost);
             final Image pointsImage = level3D.uiConfig().killedGhostPointsImage(killIndex);

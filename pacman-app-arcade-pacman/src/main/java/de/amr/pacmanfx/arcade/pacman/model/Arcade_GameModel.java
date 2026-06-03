@@ -8,7 +8,6 @@ import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.flow.StateMachineGameControlFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.HeadsUpDisplay;
@@ -38,28 +37,18 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     protected CoinMechanism coinMechanism;
 
-    protected HeadsUpDisplay hud;
-    protected GateKeeper gateKeeper;
     protected Steering automaticSteering;
     protected Steering demoLevelSteering;
     protected Arcade_ActorSpeedControl actorSpeedControl;
 
-    protected Arcade_GameModel(CoinMechanism coinMechanism) {
-        this.coinMechanism = requireNonNull(coinMechanism);
-        hud = new HeadsUpDisplay(coinMechanism);
-
-        gameFlow = new StateMachineGameControlFlow("Arcade Pac-Man Games Control Flow", this);
+    protected Arcade_GameModel() {
+        flow = new StateMachineGameControlFlow("Arcade Pac-Man Games Control Flow", this);
         for (Arcade_GameState gameState : Arcade_GameState.values()) {
-            gameFlow.addState(gameState.state());
+            flow.addState(gameState.state());
         }
 
         actorSpeedControl = new Arcade_ActorSpeedControl();
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
-    }
-
-    @Override
-    public GameControlFlow flow() {
-        return gameFlow;
     }
 
     @Override
@@ -109,33 +98,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     // Game interface
-
-    @Override
-    public GateKeeper gateKeeper() {
-        return gateKeeper;
-    }
-
-    @Override
-    public void init() {
-        lives().setInitialCount(3);
-        prepareNewGame();
-    }
-
-    @Override
-    public void prepareNewGame() {
-        score.reset();
-        try {
-            highScore.load();
-            highScore.setEnabled(true);
-        } catch (IOException x) {
-            Logger.error(x, "Error loading high-score file {}", highScore.file().getAbsolutePath());
-        }
-        gateKeeper.reset();
-        levelProperty().set(null);
-        lives().setCount(lives().initialCount());
-        levelCounter().clear();
-        setPlaying(false);
-    }
 
     @Override
     public boolean canStartNewGame() { return !coinMechanism.isEmpty(); }

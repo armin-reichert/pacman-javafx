@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class HeadsUpDisplay {
 
-    private final CoinMechanism coinMechanism;
+    private CoinMechanism coinMechanism;
 
     private boolean visible = true;
     private boolean creditVisible;
@@ -19,8 +19,10 @@ public class HeadsUpDisplay {
     private boolean scoreVisible = true;
     private int     visibleLifeCount;
 
-    public HeadsUpDisplay(CoinMechanism coinMechanism) {
-        this.coinMechanism = Objects.requireNonNull(coinMechanism);
+    public HeadsUpDisplay() {}
+
+    public void setCoinMechanism(CoinMechanism coinMechanism) {
+        this.coinMechanism = coinMechanism;
     }
 
     public HeadsUpDisplay all(boolean visible) {

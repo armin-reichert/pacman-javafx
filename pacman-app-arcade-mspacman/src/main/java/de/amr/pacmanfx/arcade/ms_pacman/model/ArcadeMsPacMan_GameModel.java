@@ -14,7 +14,6 @@ import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.LevelCounter;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -138,11 +137,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     protected static final int GAME_OVER_STATE_TICKS = 150;
 
-    protected final WorldMapSelector mapSelector;
-    protected final LevelCounter levelCounter;
-
-    protected GameRules rules;
-
     /**
      * Called via reflection by builder.
      *
@@ -153,8 +147,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
-        super(coinMechanism);
-
+        this.coinMechanism = requireNonNull(coinMechanism);
+        hud.setCoinMechanism(coinMechanism);
         this.mapSelector = requireNonNull(mapSelector);
         levelCounter = new ArcadeMsPacMan_LevelCounter();
         demoLevelSteering = new RuleBasedPacSteering();
@@ -163,26 +157,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         rules = new ArcadeMsPacMan_GameRules();
         createGateKeeper();
         mapSelector.loadMapPrototypes();
-    }
-
-    @Override
-    public GameRules rules() {
-        return rules;
-    }
-
-    @Override
-    public WorldMapSelector mapSelector() {
-        return mapSelector;
-    }
-
-    @Override
-    public LevelCounter levelCounter() {
-        return levelCounter;
-    }
-
-    @Override
-    public HeadsUpDisplay hud() {
-        return hud;
     }
 
     @Override

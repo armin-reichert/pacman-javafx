@@ -8,7 +8,6 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.flow.StateMachineGameControlFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.HuntingTimer;
@@ -65,8 +64,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private final TengenMsPacMan_ActorSpeedControl actorSpeedControl;
     private final TengenMsPacMan_HeadsUpDisplay hud;
     private final TengenMsPacMan_MapSelector mapSelector;
-    private final TengenMsPacMan_LevelCounter levelCounter;
-    private final GateKeeper gateKeeper;
     private final Steering automaticSteering;
     private final Steering demoLevelSteering;
     private final TengenMsPacMan_GameRules rules;
@@ -84,9 +81,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         levelCounter = new TengenMsPacMan_LevelCounter();
         hud = new TengenMsPacMan_HeadsUpDisplay();
 
-        gameFlow = new StateMachineGameControlFlow("Tengen Ms. Pac-Man Game Flow", this);
+        flow = new StateMachineGameControlFlow("Tengen Ms. Pac-Man Game Flow", this);
         for (TengenMsPacMan_GameState gameState : TengenMsPacMan_GameState.values()) {
-            gameFlow.addState(gameState.state());
+            flow.addState(gameState.state());
         }
 
         actorSpeedControl = new TengenMsPacMan_ActorSpeedControl();
@@ -181,16 +178,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public GameControlFlow flow() {
-        return gameFlow;
-    }
-
-    @Override
-    public GateKeeper gateKeeper() {
-        return gateKeeper;
-    }
-
-    @Override
     public TengenMsPacMan_HeadsUpDisplay hud() {
         return hud;
     }
@@ -212,19 +199,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void prepareNewGame() {
-        lives().setCount(lives().initialCount());
-        levelProperty().set(null);
-        levelCounter.clear();
-        setPlaying(false);
+        super.prepareNewGame();
         boosterActive = false;
-        gateKeeper.reset();
-        score.reset();
-        try {
-            highScore.load();
-            highScore.setEnabled(true);
-        } catch (IOException x) {
-            Logger.error(x, "Error loading high-score file {}", highScore.file().getAbsolutePath());
-        }
     }
 
     @Override
@@ -239,11 +215,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public WorldMapSelector mapSelector() { return mapSelector; }
-
-    @Override
     public TengenMsPacMan_LevelCounter levelCounter() {
-        return levelCounter;
+        return (TengenMsPacMan_LevelCounter) levelCounter;
     }
 
     @Override
