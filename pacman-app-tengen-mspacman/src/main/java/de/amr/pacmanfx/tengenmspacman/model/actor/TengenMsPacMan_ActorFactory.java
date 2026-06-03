@@ -7,7 +7,6 @@ package de.amr.pacmanfx.tengenmspacman.model.actor;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -59,7 +58,7 @@ public interface TengenMsPacMan_ActorFactory {
                 ghost.tryMovingOrTeleporting(level);
             } else {
                 // Normal behavior of red ghost
-                final boolean chase = level.huntingTimer().isChasing() || ghost.elroyState().enabled();
+                final boolean chase = level.huntingTimer().isChasing() || ghost.elroy().enabled();
                 final Vector2i targetTile = chase
                     ? ghost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(ghost.personality());

@@ -81,7 +81,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
                 redGhost.tryMovingOrTeleporting(level);
             } else {
                 // Normal behavior of red ghost
-                final boolean chase = level.huntingTimer().isChasing() || redGhost.elroyState().enabled();
+                final boolean chase = level.huntingTimer().isChasing() || redGhost.elroy().enabled();
                 final Vector2i targetTile = chase
                     ? redGhost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(redGhost.personality());
@@ -300,13 +300,14 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
     }
 
     private void createGateKeeper() {
-        this.gateKeeper = new GateKeeper();
-        this.gateKeeper.setOnGhostReleased((level, prisoner) -> {
-            if (prisoner.personality() == ORANGE_GHOST_POKEY) {
+        gateKeeper = new GateKeeper();
+        gateKeeper.setOnGhostReleased((level, releasedPrisoner) -> {
+            if (releasedPrisoner.personality() == ORANGE_GHOST_POKEY) {
                 final Ghost blinky = level.ghost(RED_GHOST_SHADOW);
-                if (blinky.elroyState().mode() != ElroyState.Mode.ZERO && !blinky.elroyState().enabled()) {
-                    Logger.debug("Re-enable {}'s Cruise Elroy mode because {} got released:", blinky.name(), prisoner.name());
-                    blinky.elroyState().setEnabled(true);
+                if (blinky.elroy().boost() != Elroy.Boost.NONE && !blinky.elroy().enabled()) {
+                    blinky.elroy().setEnabled(true);
+                    Logger.debug("Re-enabled {}'s Elroy state ({}). Reason; ({} got released):",
+                        blinky.name(), blinky.elroy(), releasedPrisoner.name());
                 }
             }
         });

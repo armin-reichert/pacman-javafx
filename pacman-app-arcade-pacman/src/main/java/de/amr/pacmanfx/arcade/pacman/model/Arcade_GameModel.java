@@ -100,9 +100,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
             final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();
             if (uneatenFoodCount == data.numDotsLeftElroy1()) {
-                redGhost.elroyState().setMode(ElroyState.Mode.ONE);
+                redGhost.elroy().setBoost(Elroy.Boost.MEDIUM);
             } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
-                redGhost.elroyState().setMode(ElroyState.Mode.TWO);
+                redGhost.elroy().setBoost(Elroy.Boost.LARGE);
             }
         } else {
             throw new IllegalStateException("Red ghost not existing in this level");

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.model.actors.ElroyState;
+import de.amr.pacmanfx.model.actors.Elroy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import org.junit.jupiter.api.BeforeAll;
@@ -100,25 +100,25 @@ public class TestEatingFood {
         final FoodLayer foodLayer = currentGameLevel().worldMap().foodLayer();
         final LevelData data = ArcadePacMan_GameRules.levelData(currentGameLevel().number());
         while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy1()) {
-            assertEquals(ElroyState.Mode.ZERO, blinky.elroyState().mode());
+            assertEquals(Elroy.Boost.NONE, blinky.elroy().boost());
             eatNextPellet();
         }
-        assertEquals(ElroyState.Mode.ONE, blinky.elroyState().mode());
+        assertEquals(Elroy.Boost.MEDIUM, blinky.elroy().boost());
         while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy2()) {
-            assertEquals(ElroyState.Mode.ONE, blinky.elroyState().mode());
+            assertEquals(Elroy.Boost.MEDIUM, blinky.elroy().boost());
             eatNextPellet();
         }
-        assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
+        assertEquals(Elroy.Boost.LARGE, blinky.elroy().boost());
         while (foodLayer.remainingFoodCount() > foodLayer.energizerTiles().size()) {
-            assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
+            assertEquals(Elroy.Boost.LARGE, blinky.elroy().boost());
             eatNextPellet();
         }
-        assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
+        assertEquals(Elroy.Boost.LARGE, blinky.elroy().boost());
         while (foodLayer.remainingFoodCount() > 0) {
-            assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
+            assertEquals(Elroy.Boost.LARGE, blinky.elroy().boost());
             eatNextEnergizer(currentGameLevel());
         }
-        assertEquals(ElroyState.Mode.TWO, blinky.elroyState().mode());
+        assertEquals(Elroy.Boost.LARGE, blinky.elroy().boost());
     }
 
     @Test

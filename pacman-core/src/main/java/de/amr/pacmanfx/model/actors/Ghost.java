@@ -42,7 +42,7 @@ public class Ghost extends MovingActor {
     private House home;
 
     // Only used by red ghost in Arcade Pac-Man
-    private final ElroyState elroyState = new ElroyState();
+    private final Elroy elroy = new Elroy();
 
     private Function<GameLevel, Vector2i> chasingTargetTileStrategy = _ -> null;
 
@@ -87,7 +87,7 @@ public class Ghost extends MovingActor {
     @Override
     public void reset() {
         super.reset();
-        elroyState().reset();
+        elroy().clear();
     }
 
     public void setHuntingStrategy(BiConsumer<GameLevel, Float> huntingStrategy) {
@@ -131,7 +131,7 @@ public class Ghost extends MovingActor {
         return startPosition;
     }
 
-    public ElroyState elroyState() { return elroyState; }
+    public Elroy elroy() { return elroy; }
 
     @Override
     public String toString() {
@@ -152,7 +152,7 @@ public class Ghost extends MovingActor {
                 ", turnBackRequested=" + turnBackRequested +
                 ", canTeleport=" + canTeleport +
                 ", corneringSpeedUp=" + corneringSpeedDelta +
-                ", elroy state=" + elroyState +
+                ", elroy" + elroy +
                 '}';
     }
 
@@ -165,7 +165,7 @@ public class Ghost extends MovingActor {
      * @param ignored the game level where this happens
      */
     public void onPacKilled(GameLevel ignored) {
-        elroyState().setEnabled(false);
+        elroy.setEnabled(false);
     }
 
     /**

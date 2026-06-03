@@ -57,10 +57,10 @@ public class Arcade_ActorSpeedControl implements ActorSpeedControl {
         final int levelNumber = level.number();
         final LevelData data = ArcadePacMan_GameRules.levelData(levelNumber);
         if (ghost.personality() == Globals.RED_GHOST_SHADOW) {
-            return switch (ghost.elroyState().mode()) {
-                case ZERO -> data.pctGhostSpeed()  * BASE_SPEED_ONE_PERCENT;
-                case ONE  -> data.pctElroy1Speed() * BASE_SPEED_ONE_PERCENT;
-                case TWO  -> data.pctElroy2Speed() * BASE_SPEED_ONE_PERCENT;
+            return switch (ghost.elroy().boost()) {
+                case NONE -> data.pctGhostSpeed()  * BASE_SPEED_ONE_PERCENT;
+                case MEDIUM -> data.pctElroy1Speed() * BASE_SPEED_ONE_PERCENT;
+                case LARGE -> data.pctElroy2Speed() * BASE_SPEED_ONE_PERCENT;
             };
         } else {
             return data.pctGhostSpeed() * BASE_SPEED_ONE_PERCENT;
