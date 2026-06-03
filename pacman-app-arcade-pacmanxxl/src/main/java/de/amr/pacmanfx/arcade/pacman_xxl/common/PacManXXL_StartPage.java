@@ -53,16 +53,14 @@ public class PacManXXL_StartPage implements StartPage {
 
     private final StringProperty title = new SimpleStringProperty("Pac-Man XXL games");
 
-    private static class MenuBinding {
+    private class MenuBinding {
 
-        private final PacManXXL_OptionMenu menu;
         private final ChangeListener<GameVariant> gameVariantNameListener;
         private final ChangeListener<Boolean> cutScenesEnabledListener;
         private final ChangeListener<Boolean> play3DListener;
         private final ObservableValue<Double> scaling;
 
-        public MenuBinding(AppContext context, PacManXXL_OptionMenu menu) {
-            this.menu = menu;
+        public MenuBinding(AppContext context) {
             gameVariantNameListener = (_, _, newVariant) -> context.gameContext().select(newVariant.name());
             play3DListener = (_, _, play3D) -> AppConstants.PROPERTY_3D_ENABLED.set(play3D);
             cutScenesEnabledListener = (_, _, enabled) -> context.currentGameFlow().setCutScenesEnabled(enabled);
@@ -90,23 +88,21 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     private final StackPane rootPane = new StackPane();
-    private final PacManXXL_OptionMenu menu;
+    private final PacManXXL_OptionMenu menu = new PacManXXL_OptionMenu();
 
     private MenuBinding menuBinding;
 
     public PacManXXL_StartPage() {
-        menu = new PacManXXL_OptionMenu();
-        menu.setStyle(MENU_STYLE);
         rootPane.getChildren().add(menu.rootPane());
-
         rootPane.setBackground(UfxBackgrounds.createWallpaper(WALLPAPER));
+        menu.setStyle(MENU_STYLE);
     }
 
     @Override
     public void init(AppContext context) {
         requireNonNull(context);
 
-        menuBinding = new MenuBinding(context, menu);
+        menuBinding = new MenuBinding(context);
 
         rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
             if (hasFocus) {
