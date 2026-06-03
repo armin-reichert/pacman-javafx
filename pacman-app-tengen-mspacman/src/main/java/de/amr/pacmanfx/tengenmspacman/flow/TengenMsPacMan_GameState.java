@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.flow;
 
+import de.amr.pacmanfx.event.GameContinuedEvent;
 import de.amr.pacmanfx.event.GameStartedEvent;
 import de.amr.pacmanfx.flow.GameState;
 import de.amr.pacmanfx.model.GameModel;
@@ -108,8 +109,7 @@ public enum TengenMsPacMan_GameState {
         public void onUpdate(GameModel game) {
             final long tick = timer().tickCount();
             if (game.isPlayingLevel()) {
-                final GameLevel level = game.optGameLevel().orElseThrow();
-                game.continuePlayingLevel(level, tick);
+                game.flow().enterState(GAME_LEVEL_CONTINUE.state());
             } else if (game.canStartNewGame()) {
                 game.flow().enterState(GAME_STARTING.state());
             } else {
@@ -144,6 +144,27 @@ public enum TengenMsPacMan_GameState {
             }
         }
     }),
+
+    GAME_LEVEL_CONTINUE(new GameState("GAME_LEVEL_CONTINUE") {
+
+        @Override
+        public void onEnter(GameModel game) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
+            game.makeReadyForPlaying(level);
+            level.entities().pac().show();
+            level.entities().ghosts().forEach(Ghost::show);
+            game.flow().publishGameEvent(new GameContinuedEvent(game));
+        }
+
+        @Override
+        public void onUpdate(GameModel game) {
+            final long tick = timer().tickCount();
+            if (tick == Timing.TICK_RESUME_HUNTING) {
+                game.flow().enterState(GAME_LEVEL_PLAYING.state());
+            }
+        }
+    }),
+
 
     GAME_LEVEL_PLAYING(new GameState("GAME_LEVEL_PLAYING") {
         @Override

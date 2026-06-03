@@ -46,7 +46,12 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
         final GameLevel level = game.optGameLevel().orElseThrow();
         final float START = 1.0f;
         if (timer.atSecond(START)) {
-            game.continuePlayingLevel(level, 1);
+            game.makeReadyForPlaying(level);
+            level.entities().pac().show();
+            level.entities().ghosts().forEach(Ghost::show);
+            game.showLevelMessage(level, GameLevelMessageType.READY);
+            game.hud().credit(false).livesCounter(true);
+
             GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
             message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
             level.setMessage(message);

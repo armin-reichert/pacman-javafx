@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.level.LevelCounter;
 import de.amr.pacmanfx.model.lives.PacManLives;
 import de.amr.pacmanfx.model.world.GateKeeper;
@@ -153,14 +154,6 @@ public interface GameModel extends GameCheats {
     void doLevelPlaying(GameLevel level);
 
     /**
-     * Continues level gameplay at the given tick.
-     *
-     * @param level the current level
-     * @param tick the current simulation tick
-     */
-    void continuePlayingLevel(GameLevel level, long tick);
-
-    /**
      * Called when Pac-Man eats a normal pellet.
      *
      * @param level the current level
@@ -220,4 +213,8 @@ public interface GameModel extends GameCheats {
     PacManLives lives();
 
     ActorSpeedControl actorSpeedControl();
+
+    void makeReadyForPlaying(GameLevel level);
+
+    void showLevelMessage(GameLevel level, GameLevelMessageType type);
 }

@@ -10,10 +10,10 @@ import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.flow.StateMachineGameControlFlow;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.AbstractGameModel;
+import de.amr.pacmanfx.model.HeadsUpDisplay;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.steering.Steering;
@@ -109,12 +109,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
     }
 
-    protected void showLevelMessage(GameLevel level, GameLevelMessageType type) {
-        final var message = new GameLevelMessage(type);
-        message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
-        level.setMessage(message);
-    }
-
     // Game interface
 
     @Override
@@ -142,22 +136,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         lives().setCount(lives().initialCount());
         levelCounter().clear();
         setPlayingLevel(false);
-    }
-
-    @Override
-    public void continuePlayingLevel(GameLevel level, long tick) {
-        if (tick == 1) {
-            makeReadyForPlaying(level);
-            level.entities().pac().show();
-            level.entities().ghosts().forEach(Ghost::show);
-            showLevelMessage(level, GameLevelMessageType.READY);
-        }
-        else if (tick == 60) {
-            flow().publishGameEvent(new GameContinuedEvent(this));
-        }
-        else if (tick == Arcade_GameState.Timing.TICK_RESUME_HUNTING) {
-            flow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
-        }
     }
 
     @Override

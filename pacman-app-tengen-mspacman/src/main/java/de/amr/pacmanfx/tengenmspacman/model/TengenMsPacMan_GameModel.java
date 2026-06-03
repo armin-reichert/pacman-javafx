@@ -10,7 +10,8 @@ import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.flow.StateMachineGameControlFlow;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.AbstractGameModel;
+import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
@@ -33,7 +34,7 @@ import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.basics.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.core.Globals.*;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
-import static de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState.*;
+import static de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState.Timing;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -260,18 +261,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public boolean canStartNewGame() {
         return canStartNewGame;
-    }
-
-    @Override
-    public void continuePlayingLevel(GameLevel level, long tick) {
-        if (tick == 1) {
-            makeReadyForPlaying(level);
-            level.entities().pac().show();
-            level.entities().ghosts().forEach(Ghost::show);
-            flow().publishGameEvent(new GameContinuedEvent(this));
-        } else if (tick == Timing.TICK_RESUME_HUNTING) {
-            flow().enterState(GAME_LEVEL_PLAYING.state());
-        }
     }
 
     @Override

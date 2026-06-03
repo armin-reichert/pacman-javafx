@@ -12,6 +12,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.lives.PacManLives;
 import de.amr.pacmanfx.model.lives.PacManLivesImpl;
@@ -348,7 +349,8 @@ public abstract class AbstractGameModel implements GameModel {
      * Resets Pac-Man and the ghosts and places them at their start positions in their start states. Pac-Man initially
      * wants to move to the left.
      */
-    protected void makeReadyForPlaying(GameLevel level) {
+    @Override
+    public void makeReadyForPlaying(GameLevel level) {
         final Vector2f startPosition = level.worldMap().terrainLayer().pacStartPosition();
 
         final Pac pac = level.entities().pac();
@@ -660,5 +662,12 @@ public abstract class AbstractGameModel implements GameModel {
         if (highScore.points() > savedHighScore.points()) {
             highScore.save();
         }
+    }
+
+    @Override
+    public void showLevelMessage(GameLevel level, GameLevelMessageType type) {
+        final var message = new GameLevelMessage(type);
+        message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
+        level.setMessage(message);
     }
 }

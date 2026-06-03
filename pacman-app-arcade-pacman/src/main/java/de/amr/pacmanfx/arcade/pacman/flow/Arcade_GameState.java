@@ -3,12 +3,14 @@
  */
 package de.amr.pacmanfx.arcade.pacman.flow;
 
+import de.amr.pacmanfx.event.GameContinuedEvent;
 import de.amr.pacmanfx.event.GameStartedEvent;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.flow.GameState;
+import de.amr.pacmanfx.model.level.GameLevelMessageType;
 
 import java.util.Set;
 
@@ -84,9 +86,7 @@ public enum Arcade_GameState {
         public void onUpdate(GameModel game) {
             final long tick = timer().tickCount();
             if (game.isPlayingLevel()) {
-                final GameLevel level = game.optGameLevel().orElse(null);
-                game.continuePlayingLevel(level, tick);
-                game.hud().credit(false).livesCounter(true);
+                game.flow().enterState(GAME_LEVEL_CONTINUE.state());
             }
             else if (game.canStartNewGame()) {
                 game.flow().enterState(GAME_STARTING.state());
@@ -97,6 +97,7 @@ public enum Arcade_GameState {
             }
         }
     }),
+
 
     GAME_STARTING( new GameState("GAME_STARTING") {
 
@@ -121,6 +122,30 @@ public enum Arcade_GameState {
             }
             else if (tick == Timing.TICK_NEW_GAME_START_HUNTING) {
                 game.setPlayingLevel(true);
+                game.flow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
+            }
+        }
+    }),
+
+    GAME_LEVEL_CONTINUE(new GameState("GAME_LEVEL_CONTINUE") {
+
+        @Override
+        public void onEnter(GameModel game) {
+            final GameLevel level = game.optGameLevel().orElseThrow();
+            game.makeReadyForPlaying(level);
+            level.entities().pac().show();
+            level.entities().ghosts().forEach(Ghost::show);
+            game.showLevelMessage(level, GameLevelMessageType.READY);
+            game.hud().credit(false).livesCounter(true);
+        }
+
+        @Override
+        public void onUpdate(GameModel game) {
+            final long tick = timer().tickCount();
+            if (tick == 60) {
+                game.flow().publishGameEvent(new GameContinuedEvent(game));
+            }
+            else if (tick == Arcade_GameState.Timing.TICK_RESUME_HUNTING) {
                 game.flow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
             }
         }
