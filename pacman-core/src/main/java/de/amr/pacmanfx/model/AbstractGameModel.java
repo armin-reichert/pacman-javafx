@@ -127,6 +127,7 @@ public abstract class AbstractGameModel implements GameModel {
         return actorSpeedControl;
     }
 
+    @Override
     public GateKeeper gateKeeper() {
         return gateKeeper;
     }
