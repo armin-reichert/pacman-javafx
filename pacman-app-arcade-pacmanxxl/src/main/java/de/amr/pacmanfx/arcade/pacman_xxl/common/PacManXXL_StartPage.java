@@ -17,6 +17,7 @@ import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
@@ -54,51 +55,44 @@ public class PacManXXL_StartPage implements StartPage {
 
     private static class MenuBinding {
 
-        private ChangeListener<GameVariant> gameVariantNameListener;
-        private ChangeListener<Boolean> cutScenesEnabledListener;
-        private ChangeListener<Boolean> play3DListener;
+        private final PacManXXL_OptionMenu menu;
+        private final ChangeListener<GameVariant> gameVariantNameListener;
+        private final ChangeListener<Boolean> cutScenesEnabledListener;
+        private final ChangeListener<Boolean> play3DListener;
+        private final ObservableValue<Double> scaling;
 
-        private void bind(AppContext context, PacManXXL_OptionMenu menu) {
-            unbind(menu);
-
+        public MenuBinding(AppContext context, PacManXXL_OptionMenu menu) {
+            this.menu = menu;
             gameVariantNameListener = (_, _, newVariant) -> context.gameContext().select(newVariant.name());
-            menu.entryGameVariant().valueProperty().addListener(gameVariantNameListener);
-
             play3DListener = (_, _, play3D) -> AppConstants.PROPERTY_3D_ENABLED.set(play3D);
-            menu.entryPlay3D().valueProperty().addListener(play3DListener);
-
             cutScenesEnabledListener = (_, _, enabled) -> context.currentGameFlow().setCutScenesEnabled(enabled);
-            menu.entryCutScenesEnabled().valueProperty().addListener(cutScenesEnabledListener);
-
-            menu.scalingProperty().bind(context.ui().view().stage().heightProperty().map(h -> {
+            scaling = context.ui().view().stage().heightProperty().map(h -> {
                 final double menuHeight = Math.clamp(h.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
                 final double scaling = menuHeight / TS(menu.numTilesY());
                 return Math.round(scaling * 100.0) / 100.0; // rounded to 2 decimal digits to avoid too much resizing
-            }));
+            });
         }
 
-        private void unbind(PacManXXL_OptionMenu menu) {
-            if (gameVariantNameListener != null) {
-                menu.entryGameVariant().valueProperty().removeListener(gameVariantNameListener);
-            }
+        public void bind() {
+            unbind();
+            menu.entryGameVariant().valueProperty().addListener(gameVariantNameListener);
+            menu.entryPlay3D().valueProperty().addListener(play3DListener);
+            menu.entryCutScenesEnabled().valueProperty().addListener(cutScenesEnabledListener);
+            menu.scalingProperty().bind(scaling);
+        }
 
-            if (play3DListener != null) {
-                menu.entryPlay3D().valueProperty().removeListener(play3DListener);
-            }
-
-            if (cutScenesEnabledListener != null) {
-                menu.entryCutScenesEnabled().valueProperty().removeListener(cutScenesEnabledListener);
-            }
-
+        public void unbind() {
+            menu.entryGameVariant().valueProperty().removeListener(gameVariantNameListener);
+            menu.entryPlay3D().valueProperty().removeListener(play3DListener);
+            menu.entryCutScenesEnabled().valueProperty().removeListener(cutScenesEnabledListener);
             menu.scalingProperty().unbind();
         }
     }
 
     private final StackPane rootPane = new StackPane();
     private final PacManXXL_OptionMenu menu;
-    private final MenuBinding menuBinding = new MenuBinding();
 
-    private AppContext context;
+    private MenuBinding menuBinding;
 
     public PacManXXL_StartPage() {
         menu = new PacManXXL_OptionMenu();
@@ -106,20 +100,22 @@ public class PacManXXL_StartPage implements StartPage {
         rootPane.getChildren().add(menu.rootPane());
 
         rootPane.setBackground(UfxBackgrounds.createWallpaper(WALLPAPER));
-
-        rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
-            if (hasFocus && context != null) {
-                menu.init(context);
-                menuBinding.bind(context, menu);
-            }
-        });
     }
 
     @Override
     public void init(AppContext context) {
-        this.context = requireNonNull(context);
+        requireNonNull(context);
 
-        menuBinding.bind(context, menu);
+        menuBinding = new MenuBinding(context, menu);
+
+        rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
+            if (hasFocus) {
+                menu.init(context);
+                menuBinding.bind();
+            }
+        });
+
+        menuBinding.bind();
 
         context.input().keyboard.addStateListener(kb -> {
             if (kb.isKeyPressed(KeyCode.E)) {
@@ -146,7 +142,7 @@ public class PacManXXL_StartPage implements StartPage {
     public void onExitStartPage(AppContext context) {
         context.ui().sounds().stopAndDisposeVoice();
         menu.stopDrawLoop();
-        menuBinding.unbind(menu);
+        menuBinding.unbind();
     }
 
     @Override
