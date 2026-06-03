@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.input;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
+import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,11 +52,13 @@ public final class Keyboard {
     public void addStateListener(StateListener stateListener) {
         requireNonNull(stateListener);
         listeners.add(stateListener);
+        Logger.info("KeyboardStateListener added: {}", stateListener);
     }
 
     public void removeStateListener(StateListener stateListener) {
         requireNonNull(stateListener);
         listeners.remove(stateListener);
+        Logger.info("KeyboardStateListener removed: {}", stateListener);
     }
 
     public Collection<KeyCode> pressedKeys() {
