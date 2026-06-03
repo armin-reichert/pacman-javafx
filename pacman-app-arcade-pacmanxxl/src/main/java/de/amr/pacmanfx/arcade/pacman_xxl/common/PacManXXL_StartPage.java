@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.arcade.pacman_xxl;
+package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppContext;
@@ -33,8 +33,8 @@ import static java.util.Objects.requireNonNull;
 public class PacManXXL_StartPage extends StackPane implements StartPage {
 
     private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_StartPage.class;
-    private static final Image WALLPAPER = LOCAL_RESOURCES.loadImage("graphics/screenshot.png");
-    private static final Media VOICE = LOCAL_RESOURCES.loadMedia("sound/game-description.mp3");
+    private static final Image WALLPAPER = LOCAL_RESOURCES.loadImage("/de/amr/pacmanfx/arcade/pacman_xxl/graphics/screenshot.png");
+    private static final Media VOICE = LOCAL_RESOURCES.loadMedia("/de/amr/pacmanfx/arcade/pacman_xxl/sound/game-description.mp3");
 
     private static final int MENU_MIN_HEIGHT = 400;
     private static final int MENU_MAX_HEIGHT = 800;

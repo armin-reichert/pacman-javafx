@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.arcade.pacman_xxl;
+package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.filesystem.PathWatchEventListener;
 import de.amr.pacmanfx.model.world.*;
@@ -136,7 +136,8 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
     public void loadMapPrototypes() {
         if (builtinMaps.isEmpty()) {
             try {
-                final List<WorldMap> predefinedMaps = WorldMapSelector.loadMaps(getClass(), "maps/masonic_%d.world", 8);
+                final List<WorldMap> predefinedMaps = WorldMapSelector.loadMaps(getClass(),
+                    "/de/amr/pacmanfx/arcade/pacman_xxl/maps/masonic_%d.world", 8);
                 builtinMaps.addAll(predefinedMaps);
                 loadCustomMaps();
             } catch (IOException x) {

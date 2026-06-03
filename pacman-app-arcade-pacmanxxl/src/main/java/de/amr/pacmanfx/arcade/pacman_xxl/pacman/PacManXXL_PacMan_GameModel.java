@@ -1,9 +1,10 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.arcade.pacman_xxl;
+package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.model.level.GameLevel;

@@ -1,9 +1,9 @@
-package de.amr.pacmanfx.arcade.pacman_xxl;
+package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameRules;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.model.level.GameLevel;
 
-public class PacManXXL_MsPacMan_GameRules extends ArcadeMsPacMan_GameRules {
+public class PacManXXL_PacMan_GameRules extends ArcadePacMan_GameRules {
 
     @Override
     public boolean isBonusAwarded(GameLevel level) {

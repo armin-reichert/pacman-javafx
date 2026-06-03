@@ -4,7 +4,12 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.arcade.pacman_xxl.*;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.core.GameVariant;
