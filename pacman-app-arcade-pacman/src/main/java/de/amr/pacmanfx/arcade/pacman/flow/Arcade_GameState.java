@@ -85,7 +85,7 @@ public enum Arcade_GameState {
         @Override
         public void onUpdate(GameModel game) {
             final long tick = timer().tickCount();
-            if (game.isPlayingLevel()) {
+            if (game.isPlaying()) {
                 game.flow().enterState(GAME_LEVEL_CONTINUE.state());
             }
             else if (game.canStartNewGame()) {
@@ -121,7 +121,7 @@ public enum Arcade_GameState {
                 level.entities().ghosts().forEach(Ghost::show);
             }
             else if (tick == Timing.TICK_NEW_GAME_START_HUNTING) {
-                game.setPlayingLevel(true);
+                game.setPlaying(true);
                 game.flow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
             }
         }
@@ -293,7 +293,7 @@ public enum Arcade_GameState {
         @Override
         public void onUpdate(GameModel game) {
             if (timer().hasExpired()) {
-                game.flow().enterState(game.isPlayingLevel() ? GAME_LEVEL_TRANSITION.state() : GAME_INTRO.state());
+                game.flow().enterState(game.isPlaying() ? GAME_LEVEL_TRANSITION.state() : GAME_INTRO.state());
             }
         }
 

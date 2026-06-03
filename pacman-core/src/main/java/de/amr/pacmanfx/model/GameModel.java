@@ -134,10 +134,10 @@ public interface GameModel extends GameCheats {
     void startNextLevel();
 
     /** @return {@code true} if the game is currently in a playing state */
-    boolean isPlayingLevel();
+    boolean isPlaying();
 
     /** Sets whether the game is currently being played. */
-    void setPlayingLevel(boolean playing);
+    void setPlaying(boolean playing);
 
     /**
      * Called when level gameplay begins.

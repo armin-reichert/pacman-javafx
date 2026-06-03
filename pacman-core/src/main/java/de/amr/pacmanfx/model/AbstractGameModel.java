@@ -185,7 +185,7 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     public void updateCheats(GameLevel level) {
-        if (level.isDemoLevel() || !level.game().isPlayingLevel()) {
+        if (level.isDemoLevel() || !level.game().isPlaying()) {
             return;
         }
         final Pac pac = level.entities().pac();
@@ -248,12 +248,12 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public boolean isPlayingLevel() {
+    public boolean isPlaying() {
         return playing.get();
     }
 
     @Override
-    public void setPlayingLevel(boolean playing) {
+    public void setPlaying(boolean playing) {
         this.playing.set(playing);
     }
 

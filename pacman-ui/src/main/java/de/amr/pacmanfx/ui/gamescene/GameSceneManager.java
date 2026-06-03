@@ -93,7 +93,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
             //TODO Rethink this
             final CoinMechanism coinMechanism = context.gameContext().coinMechanism();
             boolean shouldConsumeCoin = context.currentGameState().nameIsOneOf(GameStateID.GAME_STARTING_NEW_GAME_OR_LEVEL.name())
-                || context.currentGame().isPlayingLevel();
+                || context.currentGame().isPlaying();
             if (shouldConsumeCoin && !coinMechanism.isEmpty()) {
                 coinMechanism.consumeCoin();
             }

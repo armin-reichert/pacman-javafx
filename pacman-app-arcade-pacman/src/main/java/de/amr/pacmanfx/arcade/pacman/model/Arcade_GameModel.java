@@ -134,7 +134,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         levelProperty().set(null);
         lives().setCount(lives().initialCount());
         levelCounter().clear();
-        setPlayingLevel(false);
+        setPlaying(false);
     }
 
     @Override
@@ -202,7 +202,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         if (!coinMechanism.isEmpty()) {
             coinMechanism.consumeCoin(); //TODO not sure if coin should be consumed after game is over
         }
-        setPlayingLevel(false);
+        setPlaying(false);
         showLevelMessage(level, GameLevelMessageType.GAME_OVER);
         try {
             updateHighScore();
