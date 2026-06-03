@@ -227,6 +227,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     // 3D scenes or 2D scenes with camera
     private void embedGameSceneWithSubSceneFX(AppContext context, GamePlayView playView, GameScene gameScene, SubScene subSceneFX) {
         final GameViewMainScene mainScene = context.ui().view().mainScene();
+
         // stretch sub scene to available space
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
         subSceneFX.heightProperty().bind(mainScene.heightProperty());

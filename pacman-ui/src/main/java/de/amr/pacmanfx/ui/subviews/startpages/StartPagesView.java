@@ -74,7 +74,7 @@ public class StartPagesView extends Carousel implements SubView {
             if (newIndex != -1) {
                 StartPage startPage = pages.get(newIndex);
                 startPage.onEnterStartPage(context);
-                startPage.layoutRoot().requestFocus();
+                startPage.rootPane().requestFocus();
             }
         });
         setBackground(AppConstants.BACKGROUND_PAC_MAN_WALLPAPER);
@@ -87,7 +87,10 @@ public class StartPagesView extends Carousel implements SubView {
         actionBindings.setKeyCombination(CommonActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
         Logger.info(actionBindings);
         restartProgressTimer();
-        currentStartPage().ifPresent(page -> page.layoutRoot().requestFocus());
+        currentStartPage().ifPresent(page -> {
+            page.rootPane().requestFocus();
+            Logger.info("Request focus for {}", page.rootPane());
+        });
     }
 
     @Override
@@ -142,7 +145,7 @@ public class StartPagesView extends Carousel implements SubView {
     public void addStartPage(StartPage startPage) {
         requireNonNull(startPage);
         pages.add(startPage);
-        addItem(startPage.layoutRoot());
+        addItem(startPage.rootPane());
         setNavigationButtonsVisible(numItems() >= 2);
         Logger.debug("Start page '{}' added", startPage.getClass().getSimpleName());
     }

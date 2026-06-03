@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.subviews.startpages;
 
 import de.amr.pacmanfx.ui.AppContext;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
 
 /**
@@ -33,12 +33,12 @@ public interface StartPage {
     /**
      * Returns the root layout node representing this start page.
      * <p>
-     * The returned {@link Region} is inserted into the start‑view container.
+     * The returned {@link Pane} is inserted into the start‑view container.
      * Implementations should create this node once and reuse it.
      *
      * @return the root JavaFX layout node for this page
      */
-    Region layoutRoot();
+    Pane rootPane();
 
     /**
      * Performs one‑time initialization of the start page.

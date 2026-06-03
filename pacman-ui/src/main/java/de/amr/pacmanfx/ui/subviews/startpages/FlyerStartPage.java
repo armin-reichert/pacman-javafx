@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.ui.subviews.startpages;
 
-import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -13,7 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -52,7 +52,7 @@ public class FlyerStartPage extends StackPane implements StartPage {
     }
 
     @Override
-    public Region layoutRoot() {
+    public Pane rootPane() {
         return this;
     }
 

@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
@@ -18,7 +18,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.stage.Stage;
@@ -126,7 +126,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     }
 
     @Override
-    public Region layoutRoot() {
+    public Pane rootPane() {
         return this;
     }
 

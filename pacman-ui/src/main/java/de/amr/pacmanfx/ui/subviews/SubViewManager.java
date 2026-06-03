@@ -38,9 +38,9 @@ public final class SubViewManager {
                 oldView.onExit();
                 oldView.actionBindings().dispose();
             }
-            newView.onEnter();
             context.ui().view().replaceSubView(newView);
             context.ui().flashMessages().clearMessage();
+            newView.onEnter();
         });
 
         setEditorCanOpen(() -> {
