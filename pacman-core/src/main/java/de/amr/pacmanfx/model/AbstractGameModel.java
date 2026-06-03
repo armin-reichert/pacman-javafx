@@ -41,15 +41,12 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameModel implements GameModel {
 
-    private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(DEFAULT_COLLISION_STRATEGY);
-
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
 
     private final ObjectProperty<GameLevel> level = new SimpleObjectProperty<>();
 
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
-    /** Per-tick simulation state (collisions, kills, events). */
     protected final SimulationStep simStep = new SimulationStep();
 
     protected final Score score = new Score();
@@ -59,6 +56,8 @@ public abstract class AbstractGameModel implements GameModel {
     protected PersistentScore highScore;
 
     protected PacManLives lives;
+
+    private CollisionStrategy collisionStrategy = DEFAULT_COLLISION_STRATEGY;
 
     protected AbstractGameModel() {
         lives = new PacManLivesImpl();
@@ -238,13 +237,12 @@ public abstract class AbstractGameModel implements GameModel {
 
     @Override
     public CollisionStrategy collisionStrategy() {
-        return collisionStrategy.get();
+        return collisionStrategy;
     }
 
     @Override
     public void setCollisionStrategy(CollisionStrategy strategy) {
-        requireNonNull(strategy);
-        collisionStrategy.set(strategy);
+        this.collisionStrategy = requireNonNull(strategy);
     }
 
     @Override
@@ -606,12 +604,6 @@ public abstract class AbstractGameModel implements GameModel {
      * Score management
      * ---------------------------------------------------------------------- */
 
-    /**
-     * Adds points to the current score and updates the high score if necessary.
-     *
-     * @param points points scored
-     * @param levelNumber number of current level
-     */
     protected void scorePoints(int points, int levelNumber) {
         if (!score.isEnabled()) {
             return;
@@ -626,11 +618,6 @@ public abstract class AbstractGameModel implements GameModel {
         score.setPoints(newScore);
     }
 
-    /**
-     * Updates the high score file if the current high score is higher than the saved one.
-     *
-     * @throws IOException if saving fails
-     */
     protected void updateHighScore() throws IOException {
         final PersistentScore savedHighScore = new PersistentScore(highScore.file());
         savedHighScore.load();
