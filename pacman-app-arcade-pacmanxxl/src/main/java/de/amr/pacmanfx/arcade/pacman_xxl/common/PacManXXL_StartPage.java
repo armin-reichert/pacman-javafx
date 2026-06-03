@@ -53,6 +53,7 @@ public class PacManXXL_StartPage implements StartPage {
 
     private final StringProperty title = new SimpleStringProperty("Pac-Man XXL games");
 
+    // Menu must adapt to selected game variant and global property change and scales with scene resize
     private class MenuBinding {
 
         private final ChangeListener<GameVariant> gameVariantNameListener;
@@ -61,9 +62,9 @@ public class PacManXXL_StartPage implements StartPage {
         private final ObservableValue<Double> scaling;
 
         public MenuBinding(AppContext context) {
-            gameVariantNameListener = (_, _, newVariant) -> context.gameContext().select(newVariant.name());
-            play3DListener = (_, _, play3D) -> AppConstants.PROPERTY_3D_ENABLED.set(play3D);
-            cutScenesEnabledListener = (_, _, enabled) -> context.currentGameFlow().setCutScenesEnabled(enabled);
+            gameVariantNameListener = (_, _, variant) -> context.gameContext().select(variant.name());
+            play3DListener = (_, _, enable3D) -> AppConstants.PROPERTY_3D_ENABLED.set(enable3D);
+            cutScenesEnabledListener = (_, _, enableCutScenes) -> context.currentGameFlow().setCutScenesEnabled(enableCutScenes);
             scaling = context.ui().view().stage().heightProperty().map(h -> {
                 final double menuHeight = Math.clamp(h.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
                 final double scaling = menuHeight / TS(menu.numTilesY());
@@ -71,15 +72,15 @@ public class PacManXXL_StartPage implements StartPage {
             });
         }
 
-        public void bind() {
-            unbind();
+        public void update() {
+            clear();
             menu.entryGameVariant().valueProperty().addListener(gameVariantNameListener);
             menu.entryPlay3D().valueProperty().addListener(play3DListener);
             menu.entryCutScenesEnabled().valueProperty().addListener(cutScenesEnabledListener);
             menu.scalingProperty().bind(scaling);
         }
 
-        public void unbind() {
+        public void clear() {
             menu.entryGameVariant().valueProperty().removeListener(gameVariantNameListener);
             menu.entryPlay3D().valueProperty().removeListener(play3DListener);
             menu.entryCutScenesEnabled().valueProperty().removeListener(cutScenesEnabledListener);
@@ -102,16 +103,17 @@ public class PacManXXL_StartPage implements StartPage {
     public void init(AppContext context) {
         requireNonNull(context);
 
-        menuBinding = new MenuBinding(context);
+        if (menuBinding == null) {
+            menuBinding = new MenuBinding(context);
+        }
+        menuBinding.update();
 
         rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
             if (hasFocus) {
                 menu.init(context);
-                menuBinding.bind();
+                menuBinding.update();
             }
         });
-
-        menuBinding.bind();
 
         context.input().keyboard.addStateListener(kb -> {
             if (kb.isKeyPressed(KeyCode.E)) {
@@ -138,7 +140,7 @@ public class PacManXXL_StartPage implements StartPage {
     public void onExitStartPage(AppContext context) {
         context.ui().sounds().stopAndDisposeVoice();
         menu.stopDrawLoop();
-        menuBinding.unbind();
+        menuBinding.clear();
     }
 
     @Override
