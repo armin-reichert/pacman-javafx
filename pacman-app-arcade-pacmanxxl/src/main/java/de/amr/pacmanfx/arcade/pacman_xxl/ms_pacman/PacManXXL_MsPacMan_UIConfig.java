@@ -42,34 +42,57 @@ import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
-public class PacManXXL_MsPacMan_UIConfig implements UIConfig {
+public final class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
 
     private static final ResourceManager ARCADE_RES = () -> ArcadeMsPacMan_UIConfig.class;
 
-    private static final ResourceManager XXL_RES = () -> PacManXXL_MsPacMan_UIConfig.class;
     private static final String XXL_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
     private static final String XXL_PKG = "de.amr.pacmanfx.arcade.pacman_xxl.";
 
     private final AssetMap assets = new AssetMap();
     private final ArcadeMsPacMan_Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
+
     private GameSceneConfig gameSceneConfig;
-    private GameSoundEffects soundEffects;
+    private GameSoundEffects sfx;
+
+    private AppContext context;
 
     public PacManXXL_MsPacMan_UIConfig() {}
 
     @Override
+    public Class<?> resourceRootClass() {
+        return getClass();
+    }
+
+    @Override
     public void init(AppContext context) {
+        this.context = context;
+
+        gameSceneConfig = new PacManXXL_MsPacMan_GameSceneConfig(context);
+
         Logger.info("Load assets of UI configuration {}", getClass().getSimpleName());
         loadAssets();
-        initSound(context.ui().sounds());
-        gameSceneConfig = new PacManXXL_MsPacMan_GameSceneConfig(context);
+
+        Logger.info("Register sounds and effects of UI configuration {}", getClass().getSimpleName());
+        registerSounds(context.ui().sounds());
+        sfx = new GameSoundEffects(context.ui().sounds());
+        initSoundEffects();
     }
 
     @Override
     public void dispose() {
         Logger.info("Dispose UI configuration {}:", getClass().getSimpleName());
-        disposeAssets();
+
         gameSceneConfig.dispose();
+
+        Logger.info("Dispose assets of UI configuration {}", getClass().getSimpleName());
+        disposeAssets();
+
+        if (context != null) {
+            Logger.info("Unregister sounds and effects of UI configuration {}", getClass().getSimpleName());
+            unregisterSounds(context.ui().sounds());
+            sfx.dispose();
+        }
     }
 
     @Override
@@ -89,18 +112,20 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig {
 
     private void loadAssets() {
         assets.clear();
-        assets.set("app_icon", XXL_RES.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
+
+        assets.set("app_icon", loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
         assets.set("logo.midway", ARCADE_RES.loadImage("graphics/midway_logo.png"));
         assets.set("color.game_over_message", ARCADE_RED);
+
         assets.setLocalizedTexts(ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman"));
     }
 
-    private void initSound(SoundManager soundManager) {
+    private void registerSounds(SoundManager soundManager) {
         soundManager.setMediaPlayer (PacManGameSoundID.BONUS_ACTIVE,          ARCADE_RES.url("sound/Fruit_Bounce.mp3"));
         soundManager.setAudioClip   (PacManGameSoundID.BONUS_EATEN,           ARCADE_RES.url("sound/Fruit.mp3"));
         soundManager.setAudioClip   (PacManGameSoundID.COIN_INSERTED,         ARCADE_RES.url("sound/credit.wav"));
-        soundManager.setAudioClip   (PacManGameSoundID.ENERGIZER_EXPLOSION_1, XXL_RES.url(XXL_PATH + "sound/explosion1.mp3"));
-        soundManager.setAudioClip   (PacManGameSoundID.ENERGIZER_EXPLOSION_2, XXL_RES.url(XXL_PATH + "sound/explosion2.mp3"));
+        soundManager.setAudioClip   (PacManGameSoundID.ENERGIZER_EXPLOSION_1, url(XXL_PATH + "sound/explosion1.mp3"));
+        soundManager.setAudioClip   (PacManGameSoundID.ENERGIZER_EXPLOSION_2, url(XXL_PATH + "sound/explosion2.mp3"));
         soundManager.setAudioClip   (PacManGameSoundID.EXTRA_LIFE,            ARCADE_RES.url("sound/ExtraLife.mp3"));
         soundManager.setMediaPlayer (PacManGameSoundID.GAME_OVER,             ARCADE_RES.url("sound/game-over.mp3"));
         soundManager.setMediaPlayer (PacManGameSoundID.GAME_READY,            ARCADE_RES.url("sound/Start.mp3"));
@@ -114,16 +139,38 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig {
         soundManager.setMediaPlayer (PacManGameSoundID.PAC_MAN_DEATH,         ARCADE_RES.url("sound/Died.mp3"));
         soundManager.setAudioClip   (PacManGameSoundID.PAC_MAN_MUNCHING,      ARCADE_RES.url("sound/munch.wav"));
         soundManager.setMediaPlayer (PacManGameSoundID.PAC_MAN_POWER,         ARCADE_RES.url("sound/ScaredGhost.mp3"));
+    }
 
-        soundEffects = new GameSoundEffects(soundManager);
-        soundEffects.setMunchingSoundDelay((byte) 0);
-        soundEffects.registerSirens(
+    private void unregisterSounds(SoundManager sounds) {
+        sounds.unregisterSound(PacManGameSoundID.BONUS_ACTIVE);
+        sounds.unregisterSound(PacManGameSoundID.BONUS_EATEN);
+        sounds.unregisterSound(PacManGameSoundID.COIN_INSERTED);
+        sounds.unregisterSound(PacManGameSoundID.ENERGIZER_EXPLOSION_1);
+        sounds.unregisterSound(PacManGameSoundID.ENERGIZER_EXPLOSION_2);
+        sounds.unregisterSound(PacManGameSoundID.EXTRA_LIFE);
+        sounds.unregisterSound(PacManGameSoundID.GAME_OVER);
+        sounds.unregisterSound(PacManGameSoundID.GAME_READY);
+        sounds.unregisterSound(PacManGameSoundID.GHOST_EATEN);
+        sounds.unregisterSound(PacManGameSoundID.GHOST_RETURNS);
+        sounds.unregisterSound(PacManGameSoundID.INTERMISSION_1);
+        sounds.unregisterSound(PacManGameSoundID.INTERMISSION_2);
+        sounds.unregisterSound(PacManGameSoundID.INTERMISSION_3);
+        sounds.unregisterSound(PacManGameSoundID.LEVEL_CHANGED);
+        sounds.unregisterSound(PacManGameSoundID.LEVEL_COMPLETE);
+        sounds.unregisterSound(PacManGameSoundID.PAC_MAN_DEATH);
+        sounds.unregisterSound(PacManGameSoundID.PAC_MAN_MUNCHING);
+        sounds.unregisterSound(PacManGameSoundID.PAC_MAN_POWER);
+    }
+
+    private void initSoundEffects() {
+        sfx.setMunchingSoundDelay((byte) 0);
+        sfx.registerSirens(
             ARCADE_RES.url("sound/GhostNoise1.wav"),
             ARCADE_RES.url("sound/GhostNoise2.wav"),
             ARCADE_RES.url("sound/GhostNoise3.wav"),
             ARCADE_RES.url("sound/GhostNoise4.wav")
         );
-        soundEffects.setSirenVolume(0.33f);
+        sfx.setSirenVolume(0.33f);
     }
 
     @Override
@@ -138,7 +185,7 @@ public class PacManXXL_MsPacMan_UIConfig implements UIConfig {
 
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
-        return Optional.ofNullable(soundEffects);
+        return Optional.ofNullable(sfx);
     }
 
     @Override

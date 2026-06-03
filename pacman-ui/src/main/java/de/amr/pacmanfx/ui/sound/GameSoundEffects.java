@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.sound;
 
+import de.amr.basics.Disposable;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -30,12 +31,24 @@ import static java.util.Objects.requireNonNull;
  * All sound decisions are centralized here for easier maintenance and debugging.
  * </p>
  */
-public class GameSoundEffects {
+public class GameSoundEffects implements Disposable {
+
+    private static final int NO_SIREN = 0;
 
     private final SoundManager soundManager;
 
     private long lastMunchingSoundPlayedTick;
     private byte munchingSoundDelay;
+
+    // Sirens
+
+    private final BooleanProperty sirenMuted = new SimpleBooleanProperty(false);
+
+    private URL[] sirenURLs = new URL[0];
+    private AudioClip[] sirenClips = new AudioClip[0];
+
+    private int currentSirenNumber = NO_SIREN;
+    private float sirenVolume = 1.0f;
 
     /**
      * Creates a new sound effects manager using the given sound manager.
@@ -44,6 +57,13 @@ public class GameSoundEffects {
      */
     public GameSoundEffects(SoundManager soundManager) {
         this.soundManager = requireNonNull(soundManager);
+    }
+
+    @Override
+    public void dispose() {
+        sirenMuted.unbind();
+        sirenURLs = null;
+        sirenClips = null;
     }
 
     /**
@@ -241,14 +261,6 @@ public class GameSoundEffects {
     }
 
     // Sirens
-
-    private static final int NO_SIREN = 0;
-
-    private final BooleanProperty sirenMuted = new SimpleBooleanProperty(false);
-    private URL[] sirenURLs = new URL[0];
-    private AudioClip[] sirenClips = new AudioClip[0];
-    private int currentSirenNumber = NO_SIREN;
-    private float sirenVolume = 1.0f;
 
     public void registerSirens(URL... urls) {
         sirenURLs = Arrays.copyOf(urls, urls.length);

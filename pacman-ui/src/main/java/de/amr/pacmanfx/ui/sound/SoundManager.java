@@ -56,7 +56,6 @@ public class SoundManager implements Disposable {
         }
     }
 
-
     @Override
     public void dispose() {
         final int numEntries = soundMap.size();
@@ -87,6 +86,11 @@ public class SoundManager implements Disposable {
         ));
 
         registerSoundURL(soundID, player);
+    }
+
+    public void unregisterSound(SoundID soundID) {
+        requireNonNull(soundID);
+        soundMap.remove(soundID);
     }
 
     public BooleanProperty enabledProperty() {
