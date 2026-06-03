@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
@@ -88,10 +89,30 @@ public class PacManXXL_StartPage implements StartPage {
         }
     }
 
+    private class KeyboardInputHandler implements Keyboard.StateListener{
+        private final AppContext context;
+
+        public KeyboardInputHandler(AppContext context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onKeyboardStateChange(Keyboard keyboard) {
+            if (keyboard.isKeyPressed(KeyCode.E)) {
+                openEditor(context);
+            }
+            else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
+                startSelectedGame(context);
+            }
+
+        }
+    }
+
     private final StackPane rootPane = new StackPane();
     private final PacManXXL_OptionMenu menu = new PacManXXL_OptionMenu();
 
     private MenuBinding menuBinding;
+    private KeyboardInputHandler keyboardInputHandler;
 
     public PacManXXL_StartPage() {
         rootPane.getChildren().add(menu.rootPane());
@@ -108,6 +129,10 @@ public class PacManXXL_StartPage implements StartPage {
         }
         menuBinding.update();
 
+        if (keyboardInputHandler == null) {
+            keyboardInputHandler = new KeyboardInputHandler(context);
+        }
+
         rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
             if (hasFocus) {
                 menu.init(context);
@@ -115,14 +140,6 @@ public class PacManXXL_StartPage implements StartPage {
             }
         });
 
-        context.input().keyboard().addStateListener(kb -> {
-            if (kb.isKeyPressed(KeyCode.E)) {
-                openEditor(context);
-            }
-            else if (kb.isKeyPressed(KeyCode.ENTER)) {
-                startSelectedGame(context);
-            }
-        });
     }
 
     @Override
@@ -133,12 +150,14 @@ public class PacManXXL_StartPage implements StartPage {
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);
         }
         menu.init(context);
+        context.input().keyboard().addStateListener(keyboardInputHandler);
         context.ui().sounds().playVoice(VOICE);
     }
 
     @Override
     public void onExitStartPage(AppContext context) {
         context.ui().sounds().stopAndDisposeVoice();
+        context.input().keyboard().removeStateListener(keyboardInputHandler);
         menu.stopDrawLoop();
         menuBinding.clear();
     }

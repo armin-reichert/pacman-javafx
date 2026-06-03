@@ -38,7 +38,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
             case CommonSceneID.BOOT_SCENE -> new TengenMsPacMan_BootScene(context);
             case CommonSceneID.INTRO_SCENE -> new TengenMsPacMan_IntroScene(context);
             case CommonSceneID.START_SCENE -> new TengenMsPacMan_OptionsScene(context);
-            case TengenMsPacMan_UIConfig.TengenSceneID.HALL_OF_FAME -> new TengenMsPacMan_CreditsScene(context);
+            case TengenSceneID.HALL_OF_FAME -> new TengenMsPacMan_CreditsScene(context);
             case CommonSceneID.PLAY_SCENE_2D -> new TengenMsPacMan_PlayScene2D(context);
             case CommonSceneID.PLAY_SCENE_3D -> new TengenMsPacMan_PlayScene3D(context);
             case CommonSceneID.CUTSCENE_1 -> new TengenMsPacMan_CutScene1(context);
@@ -52,20 +52,20 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     @Override
     protected SceneID determineSceneID(GameModel game) {
         final State<GameModel> state = game.flow().state();
-        if (state.nameIsOneOf(TengenMsPacMan_GameState.BOOT.name())) {
+        if (state.name().equals(TengenMsPacMan_GameState.BOOT.name())) {
             return CommonSceneID.BOOT_SCENE;
         }
-        if (state.nameIsOneOf(TengenMsPacMan_GameState.GAME_LEVEL_INTERMISSION.name())) {
+        if (state.name().equals(TengenMsPacMan_GameState.GAME_LEVEL_INTERMISSION.name())) {
             return resolveCutSceneID(game);
         }
-        if (state.nameIsOneOf(TengenMsPacMan_GameState.GAME_INTRO.name())) {
+        if (state.name().equals(TengenMsPacMan_GameState.GAME_INTRO.name())) {
             return CommonSceneID.INTRO_SCENE;
         }
-        if (state.nameIsOneOf(TengenMsPacMan_GameState.GAME_PREPARATION.name())) {
+        if (state.name().equals(TengenMsPacMan_GameState.GAME_PREPARATION.name())) {
             return CommonSceneID.START_SCENE;
         }
-        if (state.nameIsOneOf(SHOWING_HALL_OF_FAME.name())) {
-            return TengenMsPacMan_UIConfig.TengenSceneID.HALL_OF_FAME;
+        if (state.name().equals(SHOWING_HALL_OF_FAME.name())) {
+            return TengenSceneID.HALL_OF_FAME;
         }
         if (state instanceof CutScenesTestState<?> testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);

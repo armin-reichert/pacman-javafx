@@ -111,9 +111,6 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
         new PelletConfig3D(0.8f, 6.0f)
     );
 
-    /** Defines additional Tengen-specific scene IDs */
-    public enum TengenSceneID implements GameSceneConfig.SceneID { HALL_OF_FAME }
-
     /** Defines additional Tengen-specific dashboard IDs */
     public enum TengenMsPacMan_DashboardID implements DashboardID { JOYPAD }
 

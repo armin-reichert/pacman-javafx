@@ -8,6 +8,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.requireNonNull;
 import static javafx.scene.input.KeyCombination.*;
@@ -36,7 +37,7 @@ public final class Keyboard {
 
     public static KeyCodeCombination alt_shift(KeyCode code) { return new KeyCodeCombination(code, SHIFT_DOWN, ALT_DOWN); }
 
-    private final Set<StateListener> listeners = new HashSet<>();
+    private final Set<StateListener> listeners = ConcurrentHashMap.newKeySet();
 
     // Current state
     private final Collection<KeyCode> pressedKeys = new LinkedHashSet<>();
@@ -82,7 +83,9 @@ public final class Keyboard {
         if (!event.getCode().isModifierKey()) {
             changed = pressedKeys.add(event.getCode());
         }
-        if (changed) listeners.forEach(listener -> listener.onKeyboardStateChange(this));
+        if (changed) {
+            listeners.forEach(listener -> listener.onKeyboardStateChange(this));
+        }
     }
 
     public void onKeyReleased(KeyEvent event) {
@@ -90,7 +93,9 @@ public final class Keyboard {
         if (!event.getCode().isModifierKey()) {
             changed = pressedKeys.remove(event.getCode());
         }
-        if (changed) listeners.forEach(listener -> listener.onKeyboardStateChange(this));
+        if (changed) {
+            listeners.forEach(listener -> listener.onKeyboardStateChange(this));
+        }
     }
 
     private boolean updateModifierState(KeyEvent event) {
