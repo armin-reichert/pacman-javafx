@@ -33,7 +33,7 @@ import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.basics.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.core.Globals.*;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
-import static de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState.GAME_LEVEL_PLAYING;
+import static de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -43,11 +43,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
-    public static final short TICK_SHOW_READY = 10;
-    public static final short TICK_NEW_GAME_SHOW_GUYS = 70;
-    public static final short TICK_NEW_GAME_START_HUNTING = 250;
-    public static final short TICK_RESUME_HUNTING = 240;
-    public static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
 
     public static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
     public static final short TICK_PACMAN_DYING_START_PAC_ANIMATION = 90;
@@ -268,34 +263,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startNewGame(long tick) {
-        if (tick == 1) {
-            prepareNewGame();
-            buildNormalLevel(startLevelNumber);
-            flow().publishGameEvent(new GameStartedEvent(this));
-        }
-        else if (tick == TICK_SHOW_READY) {
-            startLevel();
-        }
-        else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
-            final GameLevel level = optGameLevel().orElseThrow();
-            level.entities().pac().show();
-            level.entities().ghosts().forEach(Ghost::show);
-        }
-        else if (tick == TICK_NEW_GAME_START_HUNTING) {
-            setPlayingLevel(true);
-            flow().enterState(GAME_LEVEL_PLAYING.state());
-        }
-    }
-
-    @Override
     public void continuePlayingLevel(GameLevel level, long tick) {
         if (tick == 1) {
             makeReadyForPlaying(level);
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
             flow().publishGameEvent(new GameContinuedEvent(this));
-        } else if (tick == TICK_RESUME_HUNTING) {
+        } else if (tick == Timing.TICK_RESUME_HUNTING) {
             flow().enterState(GAME_LEVEL_PLAYING.state());
         }
     }
@@ -338,7 +312,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
         }
-        else if (tick == TICK_DEMO_LEVEL_START_HUNTING) {
+        else if (tick == Timing.TICK_DEMO_LEVEL_START_HUNTING) {
             flow().enterState(TengenMsPacMan_GameState.GAME_LEVEL_PLAYING.state());
         }
     }

@@ -41,7 +41,7 @@ public interface TengenMsPacMan_Actions {
     GameAction ACTION_START_PLAYING = new GameAction("start_playing") {
         @Override
         public void doAction(AppContext context) {
-            context.currentGameFlow().enterState(TengenMsPacMan_GameState.GAME_STARTING_NEW_GAME_OR_LEVEL.state());
+            context.currentGameFlow().enterState(TengenMsPacMan_GameState.GAME_OR_LEVEL_STARTING.state());
         }
     };
 

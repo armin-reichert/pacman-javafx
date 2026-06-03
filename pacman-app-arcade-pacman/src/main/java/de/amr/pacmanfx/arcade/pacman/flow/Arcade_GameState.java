@@ -3,6 +3,8 @@
  */
 package de.amr.pacmanfx.arcade.pacman.flow;
 
+import de.amr.pacmanfx.event.GameStartedEvent;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -50,7 +52,7 @@ public enum Arcade_GameState {
         public void onUpdate(GameModel game) {
             if (timer().hasExpired()) {
                 // Start demo level (attract mode)
-                game.flow().enterState(GAME_STARTING_NEW_GAME_OR_LEVEL.state);
+                game.flow().enterState(GAME_OR_LEVEL_STARTING.state);
             }
         }
     }),
@@ -72,7 +74,7 @@ public enum Arcade_GameState {
         }
     }),
 
-    GAME_STARTING_NEW_GAME_OR_LEVEL(new GameState("GAME_STARTING_NEW_GAME_OR_LEVEL") {
+    GAME_OR_LEVEL_STARTING(new GameState("GAME_OR_LEVEL_STARTING") {
         @Override
         public void onEnter(GameModel game) {
             game.hud().score(true).levelCounter(true).show();
@@ -80,19 +82,46 @@ public enum Arcade_GameState {
 
         @Override
         public void onUpdate(GameModel game) {
-            final GameLevel level = game.optGameLevel().orElse(null);
             final long tick = timer().tickCount();
             if (game.isPlayingLevel()) {
+                final GameLevel level = game.optGameLevel().orElse(null);
                 game.continuePlayingLevel(level, tick);
                 game.hud().credit(false).livesCounter(true);
             }
             else if (game.canStartNewGame()) {
-                game.startNewGame(tick);
-                game.hud().credit(false).livesCounter(true);
+                game.flow().enterState(GAME_STARTING.state());
             }
             else {
                 game.startDemoLevel(tick);
                 game.hud().credit(true).livesCounter(false);
+            }
+        }
+    }),
+
+    GAME_STARTING( new GameState("GAME_STARTING") {
+
+        @Override
+        public void onEnter(GameModel game) {
+            game.prepareNewGame();
+            game.hud().credit(false).livesCounter(true);
+            game.buildNormalLevel(1);
+            game.flow().publishGameEvent(new GameStartedEvent(game));
+        }
+
+        @Override
+        public void onUpdate(GameModel game) {
+            final long tick = timer().tickCount();
+            if (tick == Timing.TICK_NEW_GAME_START_LEVEL) {
+                game.startLevel();
+            }
+            else if (tick == Timing.TICK_NEW_GAME_SHOW_GUYS) {
+                final GameLevel level = game.optGameLevel().orElseThrow();
+                level.entities().pac().show();
+                level.entities().ghosts().forEach(Ghost::show);
+            }
+            else if (tick == Timing.TICK_NEW_GAME_START_HUNTING) {
+                game.setPlayingLevel(true);
+                game.flow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
             }
         }
     }),
@@ -155,7 +184,7 @@ public enum Arcade_GameState {
         @Override
         public void onUpdate(GameModel game) {
             if (timer().hasExpired()) {
-                game.flow().enterState(GAME_STARTING_NEW_GAME_OR_LEVEL.state);
+                game.flow().enterState(GAME_OR_LEVEL_STARTING.state);
             }
         }
     }),
@@ -198,7 +227,7 @@ public enum Arcade_GameState {
                     game.flow().enterState(GAME_OVER.state);
                 } else {
                     game.lives().add(-1);
-                    game.flow().enterState(game.lives().count() == 0 ? GAME_OVER.state : GAME_STARTING_NEW_GAME_OR_LEVEL.state);
+                    game.flow().enterState(game.lives().count() == 0 ? GAME_OVER.state : GAME_OR_LEVEL_STARTING.state);
                 }
             } else {
                 game.doPacManDying(level, level.entities().pac(), timer().tickCount());
@@ -259,12 +288,14 @@ public enum Arcade_GameState {
         return state;
     }
 
-    public static final short TICK_NEW_GAME_SHOW_GUYS = 60;
-    public static final short TICK_NEW_GAME_START_HUNTING = 240;
-    public static final short TICK_RESUME_HUNTING = 120;
-    public static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
-    public static final short TICK_PACMAN_DYING_START_ANIMATION = 90;
-    public static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
-    public static final short TICK_PACMAN_DYING_PAC_DEAD = 210;
-
+    public static class Timing {
+        public static final short TICK_NEW_GAME_START_LEVEL = 2;
+        public static final short TICK_NEW_GAME_SHOW_GUYS = 60;
+        public static final short TICK_NEW_GAME_START_HUNTING = 240;
+        public static final short TICK_RESUME_HUNTING = 120;
+        public static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
+        public static final short TICK_PACMAN_DYING_START_ANIMATION = 90;
+        public static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
+        public static final short TICK_PACMAN_DYING_PAC_DEAD = 210;
+    }
 }

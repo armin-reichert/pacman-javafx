@@ -145,27 +145,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startNewGame(long tick) {
-        if (tick == 1) {
-            prepareNewGame();
-            buildNormalLevel(1);
-            flow().publishGameEvent(new GameStartedEvent(this));
-        }
-        else if (tick == 2) {
-            startLevel();
-        }
-        else if (tick == Arcade_GameState.TICK_NEW_GAME_SHOW_GUYS) {
-            final GameLevel level = optGameLevel().orElseThrow();
-            level.entities().pac().show();
-            level.entities().ghosts().forEach(Ghost::show);
-        }
-        else if (tick == Arcade_GameState.TICK_NEW_GAME_START_HUNTING) {
-            setPlayingLevel(true);
-            flow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
-        }
-    }
-
-    @Override
     public void continuePlayingLevel(GameLevel level, long tick) {
         if (tick == 1) {
             makeReadyForPlaying(level);
@@ -176,7 +155,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         else if (tick == 60) {
             flow().publishGameEvent(new GameContinuedEvent(this));
         }
-        else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {
+        else if (tick == Arcade_GameState.Timing.TICK_RESUME_HUNTING) {
             flow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
         }
     }
@@ -201,20 +180,20 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.entities().ghosts().forEach(ghost -> ghost.onPacKilled(level));
             flow().publishGameEvent(new StopAllSoundsEvent(this));
         }
-        else if (tick == Arcade_GameState.TICK_PACMAN_DYING_HIDE_GHOSTS) {
+        else if (tick == Arcade_GameState.Timing.TICK_PACMAN_DYING_HIDE_GHOSTS) {
             level.entities().ghosts().forEach(Ghost::hide);
             pac.animations().select(ArcadePacMan_AnimationID.PAC_DYING);
             pac.animations().resetSelected();
         }
-        else if (tick == Arcade_GameState.TICK_PACMAN_DYING_START_ANIMATION) {
+        else if (tick == Arcade_GameState.Timing.TICK_PACMAN_DYING_START_ANIMATION) {
             pac.animations().playSelected();
             flow().publishGameEvent(new PacDyingEvent(this, pac));
         }
-        else if (tick == Arcade_GameState.TICK_PACMAN_DYING_HIDE_PAC) {
+        else if (tick == Arcade_GameState.Timing.TICK_PACMAN_DYING_HIDE_PAC) {
             pac.hide();
             level.optBonus().ifPresent(Bonus::setInactive); //TODO check this
         }
-        else if (tick == Arcade_GameState.TICK_PACMAN_DYING_PAC_DEAD) {
+        else if (tick == Arcade_GameState.Timing.TICK_PACMAN_DYING_PAC_DEAD) {
             flow().publishGameEvent(new PacDeadEvent(this, pac));
         }
         else {
@@ -302,7 +281,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
         }
-        else if (tick == Arcade_GameState.TICK_RESUME_HUNTING) {
+        else if (tick == Arcade_GameState.Timing.TICK_RESUME_HUNTING) {
             flow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
         }
     }

@@ -145,7 +145,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         @Override
         public void doAction(AppContext context) {
             context.ui().sounds().stopAndDisposeVoice();
-            context.currentGameFlow().enterState(Arcade_GameState.GAME_STARTING_NEW_GAME_OR_LEVEL.state());
+            context.currentGameFlow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
         }
 
         @Override

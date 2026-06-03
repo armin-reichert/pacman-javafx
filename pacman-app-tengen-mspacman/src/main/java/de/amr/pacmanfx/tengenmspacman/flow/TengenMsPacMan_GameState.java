@@ -4,10 +4,12 @@
 
 package de.amr.pacmanfx.tengenmspacman.flow;
 
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.event.GameStartedEvent;
 import de.amr.pacmanfx.flow.GameState;
+import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HeadsUpDisplay;
@@ -57,7 +59,7 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onUpdate(GameModel game) {
             if (timer().hasExpired()) {
-                game.flow().enterState(GAME_STARTING_NEW_GAME_OR_LEVEL.state);
+                game.flow().enterState(GAME_OR_LEVEL_STARTING.state);
             }
         }
     }),
@@ -96,7 +98,7 @@ public enum TengenMsPacMan_GameState {
         }
     }),
 
-    GAME_STARTING_NEW_GAME_OR_LEVEL(new GameState("GAME_STARTING_NEW_GAME_OR_LEVEL") {
+    GAME_OR_LEVEL_STARTING(new GameState("GAME_OR_LEVEL_STARTING") {
         @Override
         public void onEnter(GameModel game) {
             game.hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
@@ -109,9 +111,36 @@ public enum TengenMsPacMan_GameState {
                 final GameLevel level = game.optGameLevel().orElseThrow();
                 game.continuePlayingLevel(level, tick);
             } else if (game.canStartNewGame()) {
-                game.startNewGame(tick);
+                game.flow().enterState(GAME_STARTING.state());
             } else {
                 game.startDemoLevel(tick);
+            }
+        }
+    }),
+
+    GAME_STARTING(new GameState("GAME_STARTING") {
+
+        @Override
+        public void onEnter(GameModel game) {
+            game.prepareNewGame();
+            game.buildNormalLevel(tengenGame(game).startLevelNumber());
+            game.flow().publishGameEvent(new GameStartedEvent(game));
+        }
+
+        @Override
+        public void onUpdate(GameModel game) {
+            final long tick = timer().tickCount();
+            if (tick == Timing.TICK_SHOW_READY) {
+                game.startLevel();
+            }
+            else if (tick == Timing.TICK_NEW_GAME_SHOW_GUYS) {
+                final GameLevel level = game.optGameLevel().orElseThrow();
+                level.entities().pac().show();
+                level.entities().ghosts().forEach(Ghost::show);
+            }
+            else if (tick == Timing.TICK_NEW_GAME_START_HUNTING) {
+                game.setPlayingLevel(true);
+                game.flow().enterState(GAME_LEVEL_PLAYING.state());
             }
         }
     }),
@@ -178,7 +207,7 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onUpdate(GameModel game) {
             if (timer().hasExpired()) {
-                game.flow().enterState(GAME_STARTING_NEW_GAME_OR_LEVEL.state());
+                game.flow().enterState(GAME_OR_LEVEL_STARTING.state());
             }
         }
     }),
@@ -222,7 +251,7 @@ public enum TengenMsPacMan_GameState {
                     game.flow().enterState(GAME_OVER.state());
                 } else {
                     game.lives().add(-1);
-                    game.flow().enterState(game.lives().count() == 0 ? GAME_OVER.state() : GAME_STARTING_NEW_GAME_OR_LEVEL.state());
+                    game.flow().enterState(game.lives().count() == 0 ? GAME_OVER.state() : GAME_OR_LEVEL_STARTING.state());
                 }
             } else {
                 game.doPacManDying(level, level.entities().pac(), timer().tickCount());
@@ -303,4 +332,13 @@ public enum TengenMsPacMan_GameState {
     static TengenMsPacMan_GameModel tengenGame(GameModel game) {
         return (TengenMsPacMan_GameModel) game;
     }
+
+    public static class Timing {
+        public static final short TICK_SHOW_READY = 10;
+        public static final short TICK_NEW_GAME_SHOW_GUYS = 70;
+        public static final short TICK_NEW_GAME_START_HUNTING = 250;
+        public static final short TICK_RESUME_HUNTING = 240;
+        public static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
+    }
+
 }

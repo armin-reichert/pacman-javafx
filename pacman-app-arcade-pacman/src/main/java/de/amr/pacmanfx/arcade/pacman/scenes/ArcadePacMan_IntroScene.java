@@ -350,7 +350,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.ghosts[ORANGE_GHOST_POKEY].hide();
-                    scene.context().currentGameFlow().enterState(Arcade_GameState.GAME_STARTING_NEW_GAME_OR_LEVEL.state());
+                    scene.context().currentGameFlow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
                 }
             }
         };

@@ -99,13 +99,6 @@ public interface GameModel extends GameCheats {
     /** @return {@code true} if a new game may be started */
     boolean canStartNewGame();
 
-    /**
-     * Starts a new game at the given simulation tick.
-     *
-     * @param tick the current simulation tick
-     */
-    void startNewGame(long tick);
-
     /** @return {@code true} if the game may continue after game‑over */
     boolean canContinueOnGameOver();
 
