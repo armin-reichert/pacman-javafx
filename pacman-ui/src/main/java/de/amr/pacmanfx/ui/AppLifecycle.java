@@ -40,7 +40,7 @@ public interface AppLifecycle {
     /**
      * Opens the given world map file in the editor view.
      *
-     * @param worldMapFile world map file to edit
+     * @param worldMapFile world map file to edit or {@code null} to just open the map editor
      */
     void editMap(File worldMapFile);
 }

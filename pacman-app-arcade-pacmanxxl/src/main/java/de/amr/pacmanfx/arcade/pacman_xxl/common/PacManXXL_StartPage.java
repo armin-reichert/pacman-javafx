@@ -7,7 +7,6 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
@@ -23,7 +22,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
-import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.Globals.TS;
@@ -73,7 +71,7 @@ public class PacManXXL_StartPage implements StartPage {
 
         rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
             if (hasFocus && context != null) {
-                updateMenuBinding(context.ui().view().stage());
+                updateMenuBinding(context);
                 Logger.info("Input focus on {}, passing to {}...", this, menu);
                 menu.init(context);
             }
@@ -83,19 +81,15 @@ public class PacManXXL_StartPage implements StartPage {
     @Override
     public void init(AppContext context) {
         this.context = requireNonNull(context);
-        updateMenuBinding(context.ui().view().stage());
-        installKeyboardHandler(context.input().keyboard);
-    }
+        updateMenuBinding(context);
 
-    private void installKeyboardHandler(Keyboard keyboard) {
-        keyboard.addStateListener(_ -> {
-            Logger.info("Keyboard state change, keyboard = {}", keyboard);
-            if (keyboard.isKeyPressed(KeyCode.E)) {
+        context.input().keyboard.addStateListener(kb -> {
+            if (kb.isKeyPressed(KeyCode.E)) {
                 context.ui().sounds().stopAndDisposeVoice();
                 context.ui().subViews().startView().pauseProgressTimer();
                 context.editMap(null);
             }
-            else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
+            else if (kb.isKeyPressed(KeyCode.ENTER)) {
                 context.ui().sounds().stopAndDisposeVoice();
                 context.ui().subViews().startView().pauseProgressTimer();
                 menu.startSelectedGame();
@@ -131,7 +125,7 @@ public class PacManXXL_StartPage implements StartPage {
         return title.get();
     }
 
-    private void updateMenuBinding(Stage stage) {
+    private void updateMenuBinding(AppContext context) {
         removeMenuBinding();
 
         gameVariantNameListener = (_, _, newVariant) -> context.gameContext().select(newVariant.name());
@@ -143,7 +137,7 @@ public class PacManXXL_StartPage implements StartPage {
         cutScenesEnabledListener = (_,_,enabled) -> context.currentGameFlow().setCutScenesEnabled(enabled);
         menu.entryCutScenesEnabled().valueProperty().addListener(cutScenesEnabledListener);
 
-        menu.scalingProperty().bind(menuScaling(stage));
+        menu.scalingProperty().bind(menuScaling(context));
     }
 
     private void removeMenuBinding() {
@@ -162,17 +156,9 @@ public class PacManXXL_StartPage implements StartPage {
         menu.scalingProperty().unbind();
     }
 
-    /**
-     * Computes the scaling of the menu depending on the stage height. The option menu should take a relative amount of
-     * the stage height that is clamped to the min/max height interval.
-     *
-     * @param stage the stage of the UI
-     * @return the scaling binding depending on the height of the stage
-     */
-    private ObservableValue<Double> menuScaling(Stage stage) {
-        return stage.heightProperty().map(stageHeight -> {
-            final double menuHeight = Math.clamp(
-                stageHeight.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
+    private ObservableValue<Double> menuScaling(AppContext context) {
+        return context.ui().view().stage().heightProperty().map(h -> {
+            final double menuHeight = Math.clamp(h.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
             final double scaling = menuHeight / TS(menu.numTilesY());
             return Math.round(scaling * 100.0) / 100.0; // rounded to 2 decimal digits to avoid too much resizing
         });
