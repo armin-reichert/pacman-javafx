@@ -8,14 +8,10 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
 import org.tinylog.Logger;
 
@@ -136,7 +132,7 @@ public class OptionMenu {
         this.nextValueKeyCode = keyCode;
     }
 
-    public Node root() { return root; }
+    public Pane rootPane() { return root; }
 
     public int numTilesX() {
         return numTilesX;

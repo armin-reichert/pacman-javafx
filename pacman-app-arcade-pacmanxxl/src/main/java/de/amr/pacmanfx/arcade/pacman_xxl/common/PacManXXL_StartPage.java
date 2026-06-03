@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
  */
-public class PacManXXL_StartPage extends StackPane implements StartPage {
+public class PacManXXL_StartPage implements StartPage {
 
     private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_StartPage.class;
     private static final Image WALLPAPER = LOCAL_RESOURCES.loadImage("/de/amr/pacmanfx/arcade/pacman_xxl/graphics/screenshot.png");
@@ -51,6 +51,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
 
     private final StringProperty title = new SimpleStringProperty("Pac-Man XXL games");
 
+    private final StackPane rootPane = new StackPane();
     private final PacManXXL_OptionMenu menu;
 
     private AppContext context;
@@ -60,13 +61,13 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     private ChangeListener<Boolean> play3DListener;
 
     public PacManXXL_StartPage() {
-        setBackground(UfxBackgrounds.createWallpaper(WALLPAPER));
+        rootPane.setBackground(UfxBackgrounds.createWallpaper(WALLPAPER));
 
         menu = new PacManXXL_OptionMenu();
         menu.setStyle(MENU_STYLE);
-        getChildren().addAll(menu.root());
+        rootPane.getChildren().addAll(menu.rootPane());
 
-        focusedProperty().addListener((_, _, hasFocus) -> {
+        rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
             if (hasFocus && context != null) {
                 updateMenuBinding(context.ui().view().stage());
                 Logger.info("Input focus on {}, passing to {}...", this, menu);
@@ -74,7 +75,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
             }
         });
 
-        addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+        rootPane.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case E -> {
                     e.consume();
@@ -127,7 +128,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
 
     @Override
     public Pane rootPane() {
-        return this;
+        return rootPane;
     }
 
     @Override
