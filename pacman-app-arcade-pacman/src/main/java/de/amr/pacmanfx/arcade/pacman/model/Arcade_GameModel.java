@@ -39,7 +39,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     protected Steering automaticSteering;
     protected Steering demoLevelSteering;
-    protected Arcade_ActorSpeedControl actorSpeedControl;
 
     protected Arcade_GameModel() {
         flow = new StateMachineGameControlFlow("Arcade Pac-Man Games Control Flow", this);
@@ -49,11 +48,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         actorSpeedControl = new Arcade_ActorSpeedControl();
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
-    }
-
-    @Override
-    public ActorSpeedControl actorSpeedControl() {
-        return actorSpeedControl;
     }
 
     @Override

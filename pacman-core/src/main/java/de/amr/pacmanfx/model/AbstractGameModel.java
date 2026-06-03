@@ -50,11 +50,15 @@ public abstract class AbstractGameModel implements GameModel {
 
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
+    // common model data
+
     protected final SimulationStep simStep = new SimulationStep();
 
     protected final Score score = new Score();
 
     protected GameControlFlow flow;
+
+    protected ActorSpeedControl actorSpeedControl;
 
     protected GateKeeper gateKeeper;
 
@@ -62,7 +66,7 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected PersistentScore highScore;
 
-    protected PacManLives lives;
+    protected final PacManLives lives = new PacManLivesImpl();
 
     protected GameRules rules;
 
@@ -75,7 +79,6 @@ public abstract class AbstractGameModel implements GameModel {
     // Constructor
 
     protected AbstractGameModel() {
-        lives = new PacManLivesImpl();
         hud = new HeadsUpDisplay();
 
         score.pointsProperty().addListener((_, oldScore, newScore)
@@ -107,7 +110,9 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public abstract ActorSpeedControl actorSpeedControl();
+    public ActorSpeedControl actorSpeedControl() {
+        return actorSpeedControl;
+    }
 
     public GateKeeper gateKeeper() {
         return gateKeeper;
@@ -147,7 +152,9 @@ public abstract class AbstractGameModel implements GameModel {
 
     @Override
     public void init() {
+        mapSelector.loadMapPrototypes();
         lives().setInitialCount(3);
+        hud.all(false);
         prepareNewGame();
     }
 

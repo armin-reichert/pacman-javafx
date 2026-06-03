@@ -30,7 +30,6 @@ import java.util.Set;
 
 import static de.amr.basics.math.RandomNumberSupport.randomBoolean;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
-import static de.amr.pacmanfx.core.Globals.tile;
 import static de.amr.pacmanfx.core.Globals.*;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState.Timing;
@@ -61,12 +60,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
     private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
 
-    private final TengenMsPacMan_ActorSpeedControl actorSpeedControl;
-    private final TengenMsPacMan_HeadsUpDisplay hud;
-    private final TengenMsPacMan_MapSelector mapSelector;
     private final Steering automaticSteering;
     private final Steering demoLevelSteering;
-    private final TengenMsPacMan_GameRules rules;
 
     private MapCategory mapCategory;
     private Difficulty difficulty;
@@ -128,7 +123,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = requireNonNull(difficulty);
-        actorSpeedControl.setDifficulty(difficulty);
+        actorSpeedControl().setDifficulty(difficulty);
     }
 
     public Difficulty difficulty() {
@@ -169,32 +164,28 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public TengenMsPacMan_GameRules rules() {
-        return rules;
+        return (TengenMsPacMan_GameRules) rules;
     }
 
     @Override
-    public ActorSpeedControl actorSpeedControl() {
-        return actorSpeedControl;
+    public TengenMsPacMan_ActorSpeedControl actorSpeedControl() {
+        return (TengenMsPacMan_ActorSpeedControl) actorSpeedControl;
     }
 
     @Override
     public TengenMsPacMan_HeadsUpDisplay hud() {
-        return hud;
+        return (TengenMsPacMan_HeadsUpDisplay) hud;
     }
 
     @Override
     public void init() {
-        mapSelector.loadMapPrototypes();
-        lives().setInitialCount(3);
-        hud.all(false);
+        super.init();
 
         setPacBoosterMode(TengenMsPacMan_GameRules.DEFAULT_PAC_BOOSTER);
         setDifficulty(TengenMsPacMan_GameRules.DEFAULT_DIFFICULTY);
         setMapCategory(TengenMsPacMan_GameRules.DEFAULT_MAP_CATEGORY);
         setStartLevelNumber(TengenMsPacMan_GameRules.DEFAULT_START_LEVEL);
         numContinues = TengenMsPacMan_GameRules.DEFAULT_NUM_CONTINUES;
-
-        prepareNewGame();
     }
 
     @Override
