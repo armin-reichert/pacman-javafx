@@ -36,7 +36,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
      */
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = vec2_int(10, 15);
 
-    protected GameControlFlow gameFlow;
     protected CoinMechanism coinMechanism;
 
     protected HeadsUpDisplay hud;

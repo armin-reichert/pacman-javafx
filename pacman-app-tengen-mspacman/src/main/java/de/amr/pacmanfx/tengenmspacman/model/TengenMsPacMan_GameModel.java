@@ -62,7 +62,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
     private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
 
-    private final GameControlFlow gameFlow;
     private final TengenMsPacMan_ActorSpeedControl actorSpeedControl;
     private final TengenMsPacMan_HeadsUpDisplay hud;
     private final TengenMsPacMan_MapSelector mapSelector;

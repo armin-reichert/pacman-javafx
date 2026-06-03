@@ -10,6 +10,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.event.*;
+import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
@@ -69,6 +70,8 @@ public abstract class AbstractGameModel implements GameModel {
     protected final SimulationStep simStep = new SimulationStep();
 
     protected final Score score = new Score();
+
+    protected GameControlFlow gameFlow;
 
     protected PersistentScore highScore;
 
