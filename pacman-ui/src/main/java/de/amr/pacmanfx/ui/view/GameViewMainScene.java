@@ -34,7 +34,7 @@ public class GameViewMainScene extends Scene {
     public void init(AppContext context) {
         getStylesheets().add(AppConstants.STYLE_SHEET_PATH);
         
-        final Keyboard keyboard = context.input().keyboard;
+        final Keyboard keyboard = context.input().keyboard();
 
         addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);
         addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);

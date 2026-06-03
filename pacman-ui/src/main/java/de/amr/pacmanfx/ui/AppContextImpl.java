@@ -237,7 +237,7 @@ public final class AppContextImpl implements AppContext {
     }
 
     private void initMainScene() {
-        final KeyboardInfo keyboardInfo = new KeyboardInfo(input().keyboard);
+        final KeyboardInfo keyboardInfo = new KeyboardInfo(input().keyboard());
 
         view.mainScene().rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)

@@ -115,7 +115,7 @@ public class PacManXXL_StartPage implements StartPage {
             }
         });
 
-        context.input().keyboard.addStateListener(kb -> {
+        context.input().keyboard().addStateListener(kb -> {
             if (kb.isKeyPressed(KeyCode.E)) {
                 openEditor(context);
             }

@@ -11,7 +11,6 @@ import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
@@ -98,7 +97,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         }
 
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            drawJoypadKeyBinding(scene.context().input().joypad.currentKeyBinding());
+            drawJoypadKeyBinding(scene.context().input().joypad().currentKeyBinding());
         }
 
         if (AppConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {

@@ -16,7 +16,6 @@ import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -93,7 +92,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
         // Quit cut scene when "START" button on "joypad" is pressed
-        final Joypad joypad = context.input().joypad;
+        final Joypad joypad = context.input().joypad();
         actionBindings.setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(1, "THEY MEET");

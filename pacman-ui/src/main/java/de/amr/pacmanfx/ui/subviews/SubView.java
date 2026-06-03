@@ -32,7 +32,7 @@ public interface SubView {
      * @param input the user input
      */
     default void onInput(AppContext context, Input input) {
-        actionBindings().actionMatchingKeyboardState(input.keyboard).ifPresent(gameAction -> gameAction.executeIfEnabled(context));
+        actionBindings().actionMatchingKeyboardState(input.keyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(context));
     }
 
     /**
