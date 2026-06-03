@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
@@ -72,7 +73,6 @@ public class PacManXXL_StartPage implements StartPage {
         rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
             if (hasFocus && context != null) {
                 updateMenuBinding(context);
-                Logger.info("Input focus on {}, passing to {}...", this, menu);
                 menu.init(context);
             }
         });
@@ -81,18 +81,15 @@ public class PacManXXL_StartPage implements StartPage {
     @Override
     public void init(AppContext context) {
         this.context = requireNonNull(context);
+
         updateMenuBinding(context);
 
         context.input().keyboard.addStateListener(kb -> {
             if (kb.isKeyPressed(KeyCode.E)) {
-                context.ui().sounds().stopAndDisposeVoice();
-                context.ui().subViews().startView().pauseProgressTimer();
-                context.editMap(null);
+                openEditor(context);
             }
             else if (kb.isKeyPressed(KeyCode.ENTER)) {
-                context.ui().sounds().stopAndDisposeVoice();
-                context.ui().subViews().startView().pauseProgressTimer();
-                menu.startSelectedGame();
+                startSelectedGame(context);
             }
         });
     }
@@ -123,6 +120,20 @@ public class PacManXXL_StartPage implements StartPage {
     @Override
     public String title() {
         return title.get();
+    }
+
+    // Private
+
+    private void openEditor(AppContext context) {
+        context.ui().sounds().stopAndDisposeVoice();
+        context.ui().subViews().startView().pauseProgressTimer();
+        context.editMap(null);
+    }
+
+    private void startSelectedGame(AppContext context) {
+        context.ui().sounds().stopAndDisposeVoice();
+        context.ui().subViews().startView().pauseProgressTimer();
+        menu.startSelectedGame();
     }
 
     private void updateMenuBinding(AppContext context) {
