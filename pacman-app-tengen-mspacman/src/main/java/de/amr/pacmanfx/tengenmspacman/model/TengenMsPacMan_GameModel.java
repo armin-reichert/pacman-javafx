@@ -17,14 +17,12 @@ import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
-import de.amr.pacmanfx.steering.Steering;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorSpeedControl;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import org.tinylog.Logger;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -60,9 +58,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
     private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
 
-    private final Steering automaticSteering;
-    private final Steering demoLevelSteering;
-
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBoosterMode;
@@ -72,20 +67,19 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel() {
-        mapSelector = new TengenMsPacMan_MapSelector();
-        levelCounter = new TengenMsPacMan_LevelCounter();
-        hud = new TengenMsPacMan_HeadsUpDisplay();
-
         flow = new StateMachineGameControlFlow("Tengen Ms. Pac-Man Game Flow", this);
         for (TengenMsPacMan_GameState gameState : TengenMsPacMan_GameState.values()) {
             flow.addState(gameState.state());
         }
 
+        rules = new TengenMsPacMan_GameRules(this);
+        mapSelector = new TengenMsPacMan_MapSelector();
+        levelCounter = new TengenMsPacMan_LevelCounter();
+        hud = new TengenMsPacMan_HeadsUpDisplay();
         actorSpeedControl = new TengenMsPacMan_ActorSpeedControl();
         gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
         automaticSteering = new RuleBasedPacSteering();
         demoLevelSteering = new RuleBasedPacSteering();
-        rules = new TengenMsPacMan_GameRules(this);
 
         setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
         setDifficulty(Difficulty.NORMAL);
@@ -178,6 +172,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
+    public TengenMsPacMan_LevelCounter levelCounter() {
+        return (TengenMsPacMan_LevelCounter) levelCounter;
+    }
+
+    @Override
     public void init() {
         super.init();
 
@@ -192,22 +191,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void prepareNewGame() {
         super.prepareNewGame();
         boosterActive = false;
-    }
-
-    @Override
-    public void onGameOver(GameLevel level) {
-        setPlaying(false);
-        showMessage(level, GameLevelMessageType.GAME_OVER);
-        try {
-            updateHighScore();
-        } catch (IOException x) {
-            Logger.error(x, "Error updating high-score file {}", highScore.file().getAbsolutePath());
-        }
-    }
-
-    @Override
-    public TengenMsPacMan_LevelCounter levelCounter() {
-        return (TengenMsPacMan_LevelCounter) levelCounter;
     }
 
     @Override

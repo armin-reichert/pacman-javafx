@@ -5,16 +5,13 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.flow.StateMachineGameControlFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.HeadsUpDisplay;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
@@ -34,11 +31,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
      * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
      */
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
-
-    protected CoinMechanism coinMechanism;
-
-    protected Steering automaticSteering;
-    protected Steering demoLevelSteering;
 
     protected Arcade_GameModel() {
         flow = new StateMachineGameControlFlow("Arcade Pac-Man Games Control Flow", this);
@@ -93,11 +85,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     // Game interface
 
-    @Override
-    public boolean canStartNewGame() { return !coinMechanism.isEmpty(); }
 
-    @Override
-    public boolean canContinueOnGameOver() { return false; }
 
     @Override
     public void doPacManDying(GameLevel level, Pac pac, long tick) {
@@ -151,21 +139,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.entities().pac().hide();
         level.entities().ghosts().forEach(g -> g.animations().stopSelected());
         flow().publishGameEvent(new GhostEatenEvent(this, eatenGhost));
-    }
-
-    @Override
-    public void onGameOver(GameLevel level) {
-        if (!coinMechanism.isEmpty()) {
-            coinMechanism.consumeCoin(); //TODO not sure if coin should be consumed after game is over
-        }
-        setPlaying(false);
-        showLevelMessage(level, GameLevelMessageType.GAME_OVER);
-        try {
-            updateHighScore();
-        } catch (IOException x) {
-            Logger.error(x, "Error updating high-score file {}", highScore.file().getAbsolutePath());
-        }
-        Logger.info("Game ended with level number {}", level.number());
     }
 
     @Override

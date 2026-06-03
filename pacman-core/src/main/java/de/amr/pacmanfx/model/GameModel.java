@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.model;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
@@ -31,6 +32,8 @@ public interface GameModel extends GameCheats {
     GameControlFlow flow();
 
     GameRules rules();
+
+    CoinMechanism coinMechanism();
 
     PacManLives lives();
 

@@ -9,6 +9,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.model.actors.*;
@@ -23,6 +24,7 @@ import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
+import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -54,6 +56,8 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected final SimulationStep simStep = new SimulationStep();
 
+    protected CoinMechanism coinMechanism = CoinMechanism.OUT_OF_SERVICE;
+
     protected final Score score = new Score();
 
     protected GameControlFlow flow;
@@ -73,6 +77,10 @@ public abstract class AbstractGameModel implements GameModel {
     protected LevelCounter levelCounter;
 
     protected WorldMapSelector mapSelector;
+
+    protected Steering automaticSteering;
+
+    protected Steering demoLevelSteering;
 
     private CollisionStrategy collisionStrategy = DEFAULT_COLLISION_STRATEGY;
 
@@ -102,6 +110,11 @@ public abstract class AbstractGameModel implements GameModel {
 
     public GameRules rules() {
         return rules;
+    }
+
+    @Override
+    public CoinMechanism coinMechanism() {
+        return coinMechanism;
     }
 
     @Override
@@ -174,6 +187,26 @@ public abstract class AbstractGameModel implements GameModel {
         setPlaying(false);
     }
 
+    @Override
+    public boolean canStartNewGame() { return !coinMechanism.isEmpty(); }
+
+    @Override
+    public boolean canContinueOnGameOver() { return false; }
+
+    @Override
+    public void onGameOver(GameLevel level) {
+        if (!coinMechanism.isEmpty()) {
+            coinMechanism.consumeCoin(); //TODO not sure if coin should be consumed after game is over
+        }
+        setPlaying(false);
+        showLevelMessage(level, GameLevelMessageType.GAME_OVER);
+        try {
+            updateHighScore();
+        } catch (IOException x) {
+            Logger.error(x, "Error updating high-score file {}", highScore.file().getAbsolutePath());
+        }
+        Logger.info("Game ended with level number {}", level.number());
+    }
 
     @Override
     public void doLevelPlaying(GameLevel level) {
