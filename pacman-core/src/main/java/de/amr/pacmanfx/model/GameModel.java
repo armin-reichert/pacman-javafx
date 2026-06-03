@@ -125,7 +125,7 @@ public interface GameModel extends GameCheats {
     void startDemoLevel(long tick);
 
     /** @return {@code true} if the current level has been completed */
-    boolean isLevelCompleted();
+    boolean isLevelCompleted(GameLevel level);
 
     /** @return the number of the last completed level */
     int lastLevelNumber();

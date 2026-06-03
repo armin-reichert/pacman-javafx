@@ -38,23 +38,6 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Base implementation of the {@link GameModel} interface providing the core simulation logic shared by all Pac-Man variants.
- *
- * <p>This abstract model encapsulates:
- * <ul>
- *   <li>the main per-tick simulation loop ({@link #doHuntingStep(GameLevel)})</li>
- *   <li>movement and collision detection for Pac-Man, ghosts, and bonus items</li>
- *   <li>pellet, energizer, and bonus consumption</li>
- *   <li>power mode handling and ghost state transitions</li>
- *   <li>score management, high-score persistence, and extra-life awarding</li>
- *   <li>cheat detection and cheat-related state</li>
- *   <li>event publishing for UI and game control</li>
- * </ul>
- *
- * <p>Concrete game variants (Arcade Pac-Man, Ms. Pac-Man, Tengen, etc.) extend this class and implement
- * variant-specific behavior such as pellet scoring, energizer effects, bonus scoring, and ghost speeds.</p>
- *
- * <p>The model is deterministic and tick-driven: each call to {@link #doHuntingStep(GameLevel)} advances the
- * simulation by one frame.</p>
  */
 public abstract class AbstractGameModel implements GameModel {
 
@@ -78,6 +61,8 @@ public abstract class AbstractGameModel implements GameModel {
     protected PacManLives lives;
 
     protected AbstractGameModel() {
+        lives = new PacManLivesImpl();
+
         score.pointsProperty().addListener((_, oldScore, newScore)
             -> handleScoreChange(oldScore.intValue(), newScore.intValue()));
 
@@ -86,8 +71,6 @@ public abstract class AbstractGameModel implements GameModel {
                 handleCheatDetected();
             }
         });
-
-        lives = new PacManLivesImpl();
     }
 
     public void setHighScoreFile(File highScoreFile) {
@@ -253,7 +236,6 @@ public abstract class AbstractGameModel implements GameModel {
         return highScore;
     }
 
-
     @Override
     public CollisionStrategy collisionStrategy() {
         return collisionStrategy.get();
@@ -285,21 +267,11 @@ public abstract class AbstractGameModel implements GameModel {
         return !simStep.ghostsKilled.isEmpty();
     }
 
-    /**
-     * Returns whether the current level is completed.
-     *
-     * @return {@code true} if all food has been eaten
-     */
     @Override
-    public boolean isLevelCompleted() {
-        final GameLevel level = optGameLevel().orElseThrow();
+    public boolean isLevelCompleted(GameLevel level) {
         return level.worldMap().foodLayer().remainingFoodCount() == 0;
     }
 
-    /**
-     * Called when level starts playing: resets timers, starts animations, and publishes a game event.
-     *
-     */
     @Override
     public void onStartLevelPlaying(GameLevel level) {
         // Clear "READY!" message. "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared!
@@ -461,7 +433,7 @@ public abstract class AbstractGameModel implements GameModel {
         checkFoodFound(level, pac);
         checkBonusFound(level);
 
-        if (!isLevelCompleted()) {
+        if (!isLevelCompleted(level)) {
             updatePacPower(level, pac);
             level.huntingTimer().update(rules(), level.number());
         }

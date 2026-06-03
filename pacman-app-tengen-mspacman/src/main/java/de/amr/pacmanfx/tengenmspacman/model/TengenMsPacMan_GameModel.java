@@ -463,7 +463,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         level.killedGhostsForCurrentEnergizer().clear();
 
         final Pac pac = level.entities().pac();
-        if (!isLevelCompleted()) {
+        if (!isLevelCompleted(level)) {
             empowerPac(pac, level);
         }
     }

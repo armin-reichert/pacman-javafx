@@ -78,7 +78,7 @@ public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME
                 configureLevelForTest(game);
             }
         }
-        else if (game.isLevelCompleted()) {
+        else if (game.isLevelCompleted(level)) {
             game.flow().enterState(GameStateID.GAME_INTRO.name());
         } else if (game.hasPacManBeenKilled()) {
             expire();

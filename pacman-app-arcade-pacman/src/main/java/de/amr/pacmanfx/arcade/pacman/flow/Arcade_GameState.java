@@ -35,7 +35,7 @@ public enum Arcade_GameState {
         @Override
         public void onUpdate(GameModel game) {
             if (timer().hasExpired()) {
-                game.flow().enterState(GAME_INTRO.state);
+                game.flow().enterState(GAME_INTRO.state());
             }
         }
     }),
@@ -54,7 +54,7 @@ public enum Arcade_GameState {
         public void onUpdate(GameModel game) {
             if (timer().hasExpired()) {
                 // Start demo level (attract mode)
-                game.flow().enterState(GAME_OR_LEVEL_STARTING.state);
+                game.flow().enterState(GAME_OR_LEVEL_STARTING.state());
             }
         }
     }),
@@ -162,14 +162,14 @@ public enum Arcade_GameState {
         public void onUpdate(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             game.doLevelPlaying(level);
-            if (game.isLevelCompleted()) {
-                game.flow().enterState(GAME_LEVEL_COMPLETE.state);
+            if (game.isLevelCompleted(level)) {
+                game.flow().enterState(GAME_LEVEL_COMPLETE.state());
             }
             else if (game.hasPacManBeenKilled()) {
-                game.flow().enterState(GAME_LEVEL_PACMAN_DYING.state);
+                game.flow().enterState(GAME_LEVEL_PACMAN_DYING.state());
             }
             else if (game.hasGhostBeenKilled()) {
-                game.flow().enterState(GAME_LEVEL_EATING_GHOST.state);
+                game.flow().enterState(GAME_LEVEL_EATING_GHOST.state());
             }
         }
     }),
@@ -187,13 +187,13 @@ public enum Arcade_GameState {
             if (timer().hasExpired()) {
                 if (level.isDemoLevel()) {
                     // just in case: if demo level was completed, go back to intro scene
-                    game.flow().enterState(GAME_INTRO.state);
+                    game.flow().enterState(GAME_INTRO.state());
                 }
                 else if (game.flow().cutScenesEnabled() && level.cutSceneNumber() != 0) {
-                    game.flow().enterState(GAME_LEVEL_INTERMISSION.state);
+                    game.flow().enterState(GAME_LEVEL_INTERMISSION.state());
                 }
                 else {
-                    game.flow().enterState(GAME_LEVEL_TRANSITION.state);
+                    game.flow().enterState(GAME_LEVEL_TRANSITION.state());
                 }
             }
         }
@@ -209,7 +209,7 @@ public enum Arcade_GameState {
         @Override
         public void onUpdate(GameModel game) {
             if (timer().hasExpired()) {
-                game.flow().enterState(GAME_OR_LEVEL_STARTING.state);
+                game.flow().enterState(GAME_OR_LEVEL_STARTING.state());
             }
         }
     }),
@@ -249,10 +249,10 @@ public enum Arcade_GameState {
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer().hasExpired()) {
                 if (level.isDemoLevel()) {
-                    game.flow().enterState(GAME_OVER.state);
+                    game.flow().enterState(GAME_OVER.state());
                 } else {
                     game.lives().add(-1);
-                    game.flow().enterState(game.lives().count() == 0 ? GAME_OVER.state : GAME_OR_LEVEL_STARTING.state);
+                    game.flow().enterState(game.lives().count() == 0 ? GAME_OVER.state() : GAME_OR_LEVEL_STARTING.state());
                 }
             } else {
                 game.doPacManDying(level, level.entities().pac(), timer().tickCount());
@@ -275,9 +275,9 @@ public enum Arcade_GameState {
                 level.clearMessage();
                 game.clearCheats();
                 if (game.canStartNewGame()) {
-                    game.flow().enterState(GAME_PREPARATION.state);
+                    game.flow().enterState(GAME_PREPARATION.state());
                 } else {
-                    game.flow().enterState(GAME_INTRO.state);
+                    game.flow().enterState(GAME_INTRO.state());
                 }
             }
         }
@@ -293,7 +293,7 @@ public enum Arcade_GameState {
         @Override
         public void onUpdate(GameModel game) {
             if (timer().hasExpired()) {
-                game.flow().enterState(game.isPlayingLevel() ? GAME_LEVEL_TRANSITION.state : GAME_INTRO.state);
+                game.flow().enterState(game.isPlayingLevel() ? GAME_LEVEL_TRANSITION.state() : GAME_INTRO.state());
             }
         }
 

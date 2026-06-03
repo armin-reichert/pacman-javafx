@@ -88,7 +88,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         level.killedGhostsForCurrentEnergizer().clear();
 
-        if (!isLevelCompleted()) {
+        if (!isLevelCompleted(level)) {
             empowerPac(pac, level);
         }
     }
