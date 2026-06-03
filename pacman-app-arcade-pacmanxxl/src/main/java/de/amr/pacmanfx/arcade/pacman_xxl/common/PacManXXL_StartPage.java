@@ -23,7 +23,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.Globals.TS;
 import static java.util.Objects.requireNonNull;
