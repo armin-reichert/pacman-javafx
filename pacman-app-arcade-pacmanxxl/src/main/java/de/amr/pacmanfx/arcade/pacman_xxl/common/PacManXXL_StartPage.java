@@ -3,9 +3,11 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
+import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
@@ -17,7 +19,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
@@ -32,13 +34,15 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManXXL_StartPage implements StartPage {
 
-    private static final ResourceManager LOCAL_RESOURCES = () -> PacManXXL_StartPage.class;
-    private static final Image WALLPAPER = LOCAL_RESOURCES.loadImage("/de/amr/pacmanfx/arcade/pacman_xxl/graphics/screenshot.png");
-    private static final Media VOICE = LOCAL_RESOURCES.loadMedia("/de/amr/pacmanfx/arcade/pacman_xxl/sound/game-description.mp3");
+    private static final ResourceManager XXL_RES = () -> PacManXXL_PacMan_UIConfig.class;
+    private static final String XXL_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
 
-    private static final int MENU_MIN_HEIGHT = 400;
-    private static final int MENU_MAX_HEIGHT = 800;
-    private static final double RELATIVE_MENU_HEIGHT = 0.66;
+    private static final Image WALLPAPER = XXL_RES.loadImage(XXL_PATH + "graphics/screenshot.png");
+    private static final Media VOICE     = XXL_RES.loadMedia(XXL_PATH + "sound/game-description.mp3");
+
+    private static final int   MENU_MIN_HEIGHT = 400;
+    private static final int   MENU_MAX_HEIGHT = 800;
+    private static final float MENU_REL_HEIGHT = 0.66f;
 
     private static final OptionMenuStyle MENU_STYLE = OptionMenuStyle.builder()
         .titleFont(Ufx.deriveFont(AppConstants.FONT_PAC_FONT_GOOD, 4 * TS))
@@ -61,11 +65,11 @@ public class PacManXXL_StartPage implements StartPage {
     private ChangeListener<Boolean> play3DListener;
 
     public PacManXXL_StartPage() {
-        rootPane.setBackground(UfxBackgrounds.createWallpaper(WALLPAPER));
-
         menu = new PacManXXL_OptionMenu();
         menu.setStyle(MENU_STYLE);
-        rootPane.getChildren().addAll(menu.rootPane());
+        rootPane.getChildren().add(menu.rootPane());
+
+        rootPane.setBackground(UfxBackgrounds.createWallpaper(WALLPAPER));
 
         rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
             if (hasFocus && context != null) {
@@ -74,38 +78,29 @@ public class PacManXXL_StartPage implements StartPage {
                 menu.init(context);
             }
         });
-
-        rootPane.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            switch (e.getCode()) {
-                case E -> {
-                    e.consume();
-                    if (context != null) {
-                        context.ui().sounds().stopAndDisposeVoice();
-                        context.ui().subViews().startView().pauseProgressTimer();
-                        context.editMap(null);
-                    }
-                }
-                case ENTER -> {
-                    e.consume();
-                    if (context != null) {
-                        context.ui().sounds().stopAndDisposeVoice();
-                        context.ui().subViews().startView().pauseProgressTimer();
-                        menu.startSelectedGame();
-                    }
-                }
-                default -> {
-                    if (!e.getCode().isModifierKey()) {
-                        Logger.info("'{}': No start page action assigned.", e.getCode());
-                    }
-                }
-            }
-        });
     }
 
     @Override
     public void init(AppContext context) {
         this.context = requireNonNull(context);
         updateMenuBinding(context.ui().view().stage());
+        installKeyboardHandler(context.input().keyboard);
+    }
+
+    private void installKeyboardHandler(Keyboard keyboard) {
+        keyboard.addStateListener(_ -> {
+            Logger.info("Keyboard state change, keyboard = {}", keyboard);
+            if (keyboard.isKeyPressed(KeyCode.E)) {
+                context.ui().sounds().stopAndDisposeVoice();
+                context.ui().subViews().startView().pauseProgressTimer();
+                context.editMap(null);
+            }
+            else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
+                context.ui().sounds().stopAndDisposeVoice();
+                context.ui().subViews().startView().pauseProgressTimer();
+                menu.startSelectedGame();
+            }
+        });
     }
 
     @Override
@@ -177,7 +172,7 @@ public class PacManXXL_StartPage implements StartPage {
     private ObservableValue<Double> menuScaling(Stage stage) {
         return stage.heightProperty().map(stageHeight -> {
             final double menuHeight = Math.clamp(
-                stageHeight.doubleValue() * RELATIVE_MENU_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
+                stageHeight.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
             final double scaling = menuHeight / TS(menu.numTilesY());
             return Math.round(scaling * 100.0) / 100.0; // rounded to 2 decimal digits to avoid too much resizing
         });

@@ -68,7 +68,7 @@ public class OptionMenu {
 
         root.maxWidthProperty().bind(canvas.widthProperty());
         root.maxHeightProperty().bind(canvas.heightProperty());
-        root.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
+        root.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPress);
         root.setCenter(canvas);
 
         setStyle(OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE);

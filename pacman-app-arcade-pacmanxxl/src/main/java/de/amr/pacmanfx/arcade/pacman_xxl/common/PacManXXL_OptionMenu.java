@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.model.GameModel;
@@ -32,7 +33,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     public static final int CHASE_ANIMATION_Y = (NUM_TILES_Y - 12) * TS;
 
-    private final OptionMenuEntry<GameVariant>   entryGameVariant;
+    private final OptionMenuEntry<GameVariant>           entryGameVariant;
     private final OptionMenuEntry<Boolean>               entryPlay3D;
     private final OptionMenuEntry<Boolean>               entryCutScenesEnabled;
     private final OptionMenuEntry<WorldMapSelectionMode> entryMapOrder;
