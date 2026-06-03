@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.basics.math.Vector2i.vec2_int;
+import static de.amr.pacmanfx.core.Globals.tile;
 import static java.util.Objects.requireNonNull;
 
 public sealed class WorldMapLayer permits FoodLayer, TerrainLayer {
@@ -97,7 +97,7 @@ public sealed class WorldMapLayer permits FoodLayer, TerrainLayer {
      * @return tile with given index
      */
     public Vector2i tileAtIndex(int index) {
-        return vec2_int(index % numCols(), index / numCols());
+        return tile(index % numCols(), index / numCols());
     }
 
     /**
@@ -106,7 +106,7 @@ public sealed class WorldMapLayer permits FoodLayer, TerrainLayer {
      */
     public Vector2i mirrorPosition(Vector2i tile) {
         assertInsideWorld(tile);
-        return vec2_int(numCols() - 1 - tile.x(), tile.y());
+        return tile(numCols() - 1 - tile.x(), tile.y());
     }
 
     public byte content(int row, int col) {

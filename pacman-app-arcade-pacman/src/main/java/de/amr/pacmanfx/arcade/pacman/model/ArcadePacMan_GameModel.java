@@ -6,7 +6,9 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.GameRules;
+import de.amr.pacmanfx.model.HeadsUpDisplay;
+import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.LevelCounter;
@@ -20,7 +22,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.amr.basics.math.RandomNumberSupport.randomFloat;
-import static de.amr.basics.math.Vector2i.vec2_int;
 import static de.amr.pacmanfx.core.Globals.*;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
@@ -49,19 +50,19 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     protected static final List<Vector2i> DEMO_LEVEL_ROUTE = List.of(
-        vec2_int(9, 26), vec2_int(9, 29), vec2_int(12,29), vec2_int(12, 32), vec2_int(26,32),
-        vec2_int(26,29), vec2_int(24,29), vec2_int(24,26), vec2_int(26,26),  vec2_int(26,23),
-        vec2_int(21,23), vec2_int(18,23), vec2_int(18,14), vec2_int(9,14),   vec2_int(9,17),
-        vec2_int(6,17),  vec2_int(6,4),   vec2_int(1,4),   vec2_int(1,8),    vec2_int(12,8),
-        vec2_int(12,4),  vec2_int(6,4),   vec2_int(6,11),  vec2_int(1,11),   vec2_int(1,8),
-        vec2_int(9,8),   vec2_int(9,11),  vec2_int(12,11), vec2_int(12,14),  vec2_int(9,14),
-        vec2_int(9,17),  vec2_int(0,17),  /*warp tunnel*/   vec2_int(21,17),  vec2_int(21,29),
-        vec2_int(26,29), vec2_int(26,32), vec2_int(1,32),  vec2_int(1,29),   vec2_int(3,29),
-        vec2_int(3,26),  vec2_int(1,26),  vec2_int(1,23),  vec2_int(12,23),  vec2_int(12,26),
-        vec2_int(15,26), vec2_int(15,23), vec2_int(26,23), vec2_int(26,26),  vec2_int(24,26),
-        vec2_int(24,29), vec2_int(26,29), vec2_int(26,32), vec2_int(1,32),
-        vec2_int(1,29),  vec2_int(3,29),  vec2_int(3,26),  vec2_int(1,26),   vec2_int(1,23),
-        vec2_int(6,23)   /* Pac-Man gets eaten at tile (3,23) in Arcade game demo level */
+        tile( 9,26), tile( 9,29), tile(12,29), tile(12,32), tile(26,32),
+        tile(26,29), tile(24,29), tile(24,26), tile(26,26), tile(26,23),
+        tile(21,23), tile(18,23), tile(18,14), tile( 9,14), tile( 9,17),
+        tile( 6,17), tile( 6 ,4), tile( 1, 4), tile( 1, 8), tile(12, 8),
+        tile(12, 4), tile( 6, 4), tile( 6,11), tile( 1,11), tile( 1, 8),
+        tile( 9, 8), tile( 9,11), tile(12,11), tile(12,14), tile( 9,14),
+        tile( 9,17), tile( 0,17), /*tunnel*/   tile(21,17), tile(21,29),
+        tile(26,29), tile(26,32), tile( 1,32), tile( 1,29), tile( 3,29),
+        tile( 3,26), tile( 1,26), tile( 1,23), tile(12,23), tile(12,26),
+        tile(15,26), tile(15,23), tile(26,23), tile(26,26), tile(24,26),
+        tile(24,29), tile(26,29), tile(26,32), tile( 1,32),
+        tile( 1,29), tile( 3,29), tile( 3,26), tile( 1,26), tile( 1,23),
+        tile( 6,23)
     );
 
     protected static final int GAME_OVER_STATE_TICKS = 90;
@@ -136,8 +137,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * levelData.numFlashes()); //TODO correct?
 
-        setPacMan(level);
-        setGhosts(level, house);
+        createAndSetPacMan(level);
+        createAndSetGhosts(level, house);
 
         level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
@@ -167,13 +168,13 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     // helpers
 
-    protected void setPacMan(GameLevel level) {
+    protected void createAndSetPacMan(GameLevel level) {
         final Pac pacMan = createPacMan();
         pacMan.setAutomaticSteering(automaticSteering);
         level.setPac(pacMan);
     }
 
-    protected void setGhosts(GameLevel level, House house) {
+    protected void createAndSetGhosts(GameLevel level, House house) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         // Special tiles where attacking ghosts cannot move up
@@ -189,10 +190,11 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         );
     }
 
-    protected Ghost createGhost(byte personality, TerrainLayer terrain, House house, String startTileProperty, Set<Vector2i> specialTiles) {
+    protected Ghost createGhost(byte personality, TerrainLayer terrain, House house, String startTileProperty,
+                                Set<Vector2i> specialTiles) {
         final Ghost ghost = switch (personality) {
-            case RED_GHOST_SHADOW -> GhostFactory.createRedGhostShadow("Blinky");
-            case PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky");
+            case RED_GHOST_SHADOW   -> GhostFactory.createRedGhostShadow("Blinky");
+            case PINK_GHOST_SPEEDY  -> GhostFactory.createPinkGhostAmbusher("Pinky");
             case CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
             case ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);

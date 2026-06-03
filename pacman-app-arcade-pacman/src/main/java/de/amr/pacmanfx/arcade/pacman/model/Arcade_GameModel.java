@@ -21,7 +21,7 @@ import org.tinylog.Logger;
 
 import java.io.IOException;
 
-import static de.amr.basics.math.Vector2i.vec2_int;
+import static de.amr.pacmanfx.core.Globals.tile;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -34,7 +34,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     /**
      * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
      */
-    public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = vec2_int(10, 15);
+    public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
 
     protected CoinMechanism coinMechanism;
 

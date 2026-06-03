@@ -16,7 +16,7 @@ import org.tinylog.Logger;
 import java.nio.IntBuffer;
 import java.time.LocalTime;
 
-import static de.amr.basics.math.Vector2i.vec2_int;
+import static de.amr.pacmanfx.core.Globals.tile;
 import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;
 
@@ -72,7 +72,7 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
         int numMazeCols = worldMap.numCols();
         for (int row = 0; row < numMazeRows; ++row) {
             for (int col = 0; col < numMazeCols; ++col) {
-                Vector2i worldMapTile = vec2_int(col, row + emptyRowsTop);
+                Vector2i worldMapTile = tile(col, row + emptyRowsTop);
                 try {
                     int[] pixelsOfTile = new int[TS*TS]; // pixels row-wise
                     rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);

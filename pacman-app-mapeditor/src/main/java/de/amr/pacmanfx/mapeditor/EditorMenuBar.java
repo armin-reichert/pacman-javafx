@@ -7,7 +7,7 @@ import de.amr.pacmanfx.mapeditor.actions.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;
 
-import static de.amr.basics.math.Vector2i.vec2_int;
+import static de.amr.pacmanfx.core.Globals.tile;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.NO_GRAPHIC;
 import static de.amr.pacmanfx.mapeditor.EditorGlobals.translated;
 
@@ -69,7 +69,7 @@ public class EditorMenuBar extends MenuBar {
         var miAddHouse = new MenuItem(translated("menu.edit.add_house"));
         miAddHouse.setOnAction(_ -> {
             int numRows = editor.currentWorldMap().numRows(), numCols = editor.currentWorldMap().numCols();
-            new Action_MoveArcadeHouse(editor, vec2_int(numCols / 2 - 4, numRows / 2 - 3)).execute();
+            new Action_MoveArcadeHouse(editor, tile(numCols / 2 - 4, numRows / 2 - 3)).execute();
         });
 
         miAddHouse.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));

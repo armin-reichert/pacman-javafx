@@ -33,7 +33,7 @@ import javafx.scene.transform.Translate;
 
 import java.util.stream.Stream;
 
-import static de.amr.basics.math.Vector2i.vec2_int;
+import static de.amr.pacmanfx.core.Globals.tile;
 import static de.amr.pacmanfx.core.Globals.HTS;
 import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
@@ -240,8 +240,8 @@ public class EditorMaze3D extends Group {
         if (houseMinTile == null || houseMaxTile == null) {
             return;
         }
-        Vector2i houseRightUpper = vec2_int(houseMaxTile.x(), houseMinTile.y());
-        Vector2i houseLeftLower = vec2_int(houseMinTile.x(), houseMaxTile.y());
+        Vector2i houseRightUpper = tile(houseMaxTile.x(), houseMinTile.y());
+        Vector2i houseLeftLower = tile(houseMinTile.x(), houseMaxTile.y());
 
         PhongMaterial wallBaseMaterial = Ufx.coloredPhongMaterial(colorWithOpacity(wallBaseColor, 0.4));
         PhongMaterial wallTopMaterial = Ufx.coloredPhongMaterial(wallTopColor);

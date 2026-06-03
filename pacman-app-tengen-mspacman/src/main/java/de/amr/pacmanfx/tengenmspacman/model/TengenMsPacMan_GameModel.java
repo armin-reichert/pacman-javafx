@@ -31,7 +31,7 @@ import java.util.Set;
 
 import static de.amr.basics.math.RandomNumberSupport.randomBoolean;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
-import static de.amr.basics.math.Vector2i.vec2_int;
+import static de.amr.pacmanfx.core.Globals.tile;
 import static de.amr.pacmanfx.core.Globals.*;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState.Timing;
@@ -54,7 +54,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public static final String READY_MESSAGE_TEXT = "READY!";
     public static final String LEVEL_TEST_MESSAGE_TEXT_PATTERN = "TEST    L%02d";
 
-    public static final Vector2i HOUSE_MIN_TILE = vec2_int(10, 15);
+    public static final Vector2i HOUSE_MIN_TILE = tile(10, 15);
 
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
     public static final byte GAME_OVER_MESSAGE_DELAY_SEC = 2;

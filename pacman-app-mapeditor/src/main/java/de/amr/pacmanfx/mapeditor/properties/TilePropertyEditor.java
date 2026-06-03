@@ -13,7 +13,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
 import org.tinylog.Logger;
 
-import static de.amr.basics.math.Vector2i.vec2_int;
+import static de.amr.pacmanfx.core.Globals.tile;
 
 
 class TilePropertyEditor extends AbstractPropertyEditor {
@@ -67,7 +67,7 @@ class TilePropertyEditor extends AbstractPropertyEditor {
 
     @Override
     protected String formattedValue() {
-        return MapEditorPropertyType.TILE.format(vec2_int(spinnerX.getValue(), spinnerY.getValue()));
+        return MapEditorPropertyType.TILE.format(tile(spinnerX.getValue(), spinnerY.getValue()));
     }
 
     @Override

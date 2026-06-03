@@ -6,7 +6,7 @@ package de.amr.pacmanfx.mapeditor.actions;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.world.WorldMap;
 
-import static de.amr.basics.math.Vector2i.vec2_int;
+import static de.amr.pacmanfx.core.Globals.tile;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
@@ -27,10 +27,10 @@ public class Action_SetDefaultScatterPositions extends EditorAction<Void> {
     public Void execute() {
         int numCols = worldMap.numCols(), numRows = worldMap.numRows();
         if (numCols >= 3 && numRows >= 2) {
-            worldMap.terrainLayer().propertyMap().put(POS_SCATTER_RED_GHOST,    String.valueOf(vec2_int(numCols - 3, 0)));
-            worldMap.terrainLayer().propertyMap().put(POS_SCATTER_PINK_GHOST,   String.valueOf(vec2_int(2, 0)));
-            worldMap.terrainLayer().propertyMap().put(POS_SCATTER_CYAN_GHOST,   String.valueOf(vec2_int(numCols - 1, numRows - 2)));
-            worldMap.terrainLayer().propertyMap().put(POS_SCATTER_ORANGE_GHOST, String.valueOf(vec2_int(0, numRows - 2)));
+            worldMap.terrainLayer().propertyMap().put(POS_SCATTER_RED_GHOST,    String.valueOf(tile(numCols - 3, 0)));
+            worldMap.terrainLayer().propertyMap().put(POS_SCATTER_PINK_GHOST,   String.valueOf(tile(2, 0)));
+            worldMap.terrainLayer().propertyMap().put(POS_SCATTER_CYAN_GHOST,   String.valueOf(tile(numCols - 1, numRows - 2)));
+            worldMap.terrainLayer().propertyMap().put(POS_SCATTER_ORANGE_GHOST, String.valueOf(tile(0, numRows - 2)));
             editor.setTerrainMapChanged();
         }
         return null;

@@ -11,7 +11,7 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.basics.math.Vector2i.vec2_int;
+import static de.amr.pacmanfx.core.Globals.tile;
 import static de.amr.pacmanfx.core.Globals.HTS;
 import static de.amr.pacmanfx.model.world.TerrainTile.*;
 import static java.lang.Math.signum;
@@ -145,7 +145,7 @@ public class Obstacle {
         for (ObstacleSegment segment : segments) {
             Vector2i v = segment.vector();
             if (v.x() != 0 && v.y() != 0) { // diagonal
-                Vector2i e = segment.isNWCorner() || segment.isSECorner() ? vec2_int(0, v.y()) : vec2_int(v.x(), 0);
+                Vector2i e = segment.isNWCorner() || segment.isSECorner() ? tile(0, v.y()) : tile(v.x(), 0);
                 edges.add(e);
                 edges.add(v.minus(e));
             } else {
