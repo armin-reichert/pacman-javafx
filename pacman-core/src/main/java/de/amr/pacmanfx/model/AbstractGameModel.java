@@ -24,7 +24,7 @@ import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
-import de.amr.pacmanfx.simulation.SimulationStepResult;
+import de.amr.pacmanfx.simulation.SimulationStep;
 import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -35,7 +35,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -59,7 +58,7 @@ public abstract class AbstractGameModel implements GameModel {
     // Common data
 
     //TODO move elsewhere or pass as parameter into simulation methods
-    protected final SimulationStepResult simStep = new SimulationStepResult();
+    protected final SimulationStep simStep = new SimulationStep();
 
     protected CoinMechanism coinMechanism;
 
@@ -140,11 +139,6 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public GateKeeper gateKeeper() {
-        return gateKeeper;
-    }
-
-    @Override
     public HeadsUpDisplay hud() {
         return hud;
     }
@@ -172,7 +166,7 @@ public abstract class AbstractGameModel implements GameModel {
     // Lifecycle
 
     @Override
-    public SimulationStepResult simulationStep() {
+    public SimulationStep simulationStep() {
         return simStep;
     }
 
@@ -336,7 +330,7 @@ public abstract class AbstractGameModel implements GameModel {
 
     @Override
     public void doLevelPlaying(GameLevel level) {
-        doHuntingStep(level);
+        simulationStep().doHuntingStep(this, level);
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
@@ -452,175 +446,11 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected void handleScoreChange(int oldScore, int newScore) {
         if (rules.isExtraLifeAwarded(oldScore, newScore)) {
-            simStep.extraLifeWon = true;
-            simStep.extraLifeScore = newScore;
-        }
-        if (simStep.extraLifeWon) {
+            simStep.setExtraLifeWon(true);
+            simStep.setExtraLifeScore(newScore);
             lives.add(1);
             flow.publishGameEvent(new SpecialScoreEvent(this, newScore));
         }
-    }
-
-    /* -------------------------------------------------------------------------
-     * Main simulation step
-     * ---------------------------------------------------------------------- */
-
-    protected void doHuntingStep(GameLevel level) {
-        level.heartbeat().triggerPulse();
-
-        final Pac pac = level.entities().pac();
-        final List<Ghost> ghosts = level.entities().ghosts();
-        final Bonus bonus = level.entities().optBonus().orElse(null);
-
-        //TODO rework collision handling
-
-        boolean quitHunting;
-        if (isCollisionDoubleChecked()) {
-            quitHunting = evalCollisions(level, pac, ghosts, bonus);
-            if (!quitHunting) {
-                level.entities().forEach(e -> e.update(level));
-                quitHunting = evalCollisions(level, pac, ghosts, bonus);
-            }
-        } else {
-            level.entities().forEach(e -> e.update(level));
-            quitHunting = evalCollisions(level, pac, ghosts, bonus);
-        }
-
-        if (quitHunting) {
-            Logger.info("Hunting has been stopped!");
-            return;
-        }
-
-        checkFoodFound(level, pac);
-        checkBonusFound(level);
-
-        if (!rules.isLevelCompleted(level)) {
-            updatePacPowerMode(level, pac);
-            level.huntingTimer().update(rules(), level.number());
-        }
-    }
-
-    private boolean evalCollisions(GameLevel level, Pac pac, List<Ghost> ghosts, Bonus bonus) {
-        detectCollisions(level, pac, ghosts, bonus);
-        if (!simStep.ghostsCollidingWithPac.isEmpty()) {
-            // Is Pac getting killed after the collision with a ghost?
-            // He might stay alive if immune or in level's safe phase!
-            checkPacKilled(level, pac);
-            if (simStep.hasPacManBeenKilled()) {
-                return true;
-            }
-            else {
-                // Frightened ghosts get killed when colliding with Pac
-                simStep.ghostsCollidingWithPac.stream()
-                    .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
-                    .forEach(simStep.ghostsKilled::add);
-                // More than one ghost might have been killed in this step
-                simStep.ghostsKilled.forEach(ghost -> onEatGhost(level, ghost));
-                if (simStep.hasGhostBeenKilled()) {
-                    return true;
-                }
-            }
-
-            // If collision happened while teleporting (horizontally), move collided actors into visible world
-            final TerrainLayer terrain = level.worldMap().terrainLayer();
-            terrain.hPortalContainingTile(pac.computeTile()).ifPresent(hPortal -> {
-                if (pac.moveDir() == Direction.LEFT) {
-                    pac.setX(hPortal.rightBorderEntryTile().x() * TS + HTS);
-                } else if (pac.moveDir() == Direction.RIGHT) {
-                    pac.setX(hPortal.leftBorderEntryTile().x() * TS - HTS);
-                }
-                // Not sure if colliding ghosts should also be moved back to light
-                //simStep.ghostsCollidingWithPac.forEach(ghost -> ghost.setX(pac.x()));
-                Logger.info("Detected collision while teleporting, moved Pac-Man back into world");
-            });
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks whether Pac-Man has entered a tile containing food (pellet or energizer)
-     * and triggers the corresponding variant-specific behavior.
-     *
-     * @param level the current level
-     * @param pac   Pac-Man
-     */
-    private void checkFoodFound(GameLevel level, Pac pac) {
-        if (simStep.foodTile == null) {
-            pac.continueStarving();
-        } else {
-            level.worldMap().foodLayer().markFoodEatenAt(simStep.foodTile);
-            pac.endStarving();
-            if (simStep.energizerFound) {
-                eatEnergizer(level, simStep.foodTile);
-            } else {
-                eatPellet(level, simStep.foodTile);
-            }
-            if (rules().isBonusAwarded(level)) {
-                activateNextBonus(level);
-                simStep.bonusIndex = level.currentBonusIndex();
-            }
-            flow.publishGameEvent(new PacEatsFoodEvent(this, pac, simStep.energizerFound, false));
-        }
-    }
-
-    /**
-     * Checks whether Pac-Man has collided with an edible bonus item and, if so, triggers
-     * the variant-specific bonus handling.
-     *
-     * @param level the current level
-     */
-    private void checkBonusFound(GameLevel level) {
-        if (simStep.edibleBonus != null) {
-            eatBonus(level, simStep.edibleBonus);
-        }
-    }
-
-    // Collision behavior is controlled by the current collision strategy.
-    // The original Arcade games use tile-based collision which can lead to missed collisions
-    // by passing through!
-    private void detectCollisions(GameLevel level, Pac pac, List<Ghost> ghosts, Bonus bonus) {
-
-        // Ghosts colliding with Pac?
-        simStep.ghostsCollidingWithPac.clear();
-        ghosts.stream().filter(ghost -> collisionStrategy().collide(pac, ghost))
-            .forEach(simStep.ghostsCollidingWithPac::add);
-
-        simStep.edibleBonus = null;
-        if (bonus != null && bonus.state() == BonusState.EDIBLE && collisionStrategy().collide(pac, bonus)) {
-            simStep.edibleBonus = bonus;
-        }
-
-        final Vector2i pacTile = pac.computeTile();
-        if (level.worldMap().foodLayer().hasFoodAtTile(pacTile)) {
-            simStep.foodTile = pacTile;
-            simStep.energizerFound = level.worldMap().foodLayer().isEnergizerTile(pacTile);
-        }
-    }
-
-    /**
-     * Checks if Pac-Man gets killed by a collision with an attacking ghost.
-     *
-     * <p>In attract mode (demo level), there is a time interval at the beginning when Pac-Man is safe.
-     * This is to avoid having Pac-Man getting killed too early in demo mode.
-     * In contrast to the original Arcade games, the demo mode is not fixed but uses random ghost moves so it
-     * cannot be predicted how long the demo mode runs.</p>
-     *
-     * <p>In normal mode, Pac-Man can be made immune against ghost attacks using a cheat command.
-     * In this case, Pac-Man is safe against ghost attacks too.</p>
-     *
-     * @param level the game level
-     * @param pac   the Pac
-     */
-    protected void checkPacKilled(GameLevel level, Pac pac) {
-        final boolean demoLevel = level.isDemoLevel();
-        if (demoLevel && isPacSafeInDemoLevel(level) || !demoLevel && pac.isImmune()) {
-            return;
-        }
-        simStep.pacKiller = simStep.ghostsCollidingWithPac.stream()
-            .filter(ghost -> ghost.state() == GhostState.HUNTING_PAC)
-            .findFirst()
-            .orElse(null);
     }
 
     protected void startPacPowerMode(Pac pac, GameLevel level) {
@@ -633,19 +463,20 @@ public abstract class AbstractGameModel implements GameModel {
             pac.powerTimer().restartTicks(powerTicks);
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
             level.ghostsInState(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
-            simStep.pacGotPower = true;
+            simStep.setPacGotPower(true);
             flow.publishGameEvent(new PacGetsPowerEvent(this, pac));
         }
     }
 
-    protected void updatePacPowerMode(GameLevel level, Pac pac) {
+    @Override
+    public void updatePacPowerMode(GameLevel level, Pac pac) {
         if (pac.powerTimer().isRunning()) {
             pac.powerTimer().doTick();
             if (pac.isPowerFadingStarting(level)) {
-                simStep.pacStartsLosingPower = true;
+                simStep.setPacStartsLosingPower(true);
                 flow.publishGameEvent(new PacPowerFadesEvent(this, pac));
             } else if (pac.powerTimer().hasExpired()) {
-                simStep.pacLostPower = true;
+                simStep.setPacLostPower(true);
                 pac.powerTimer().stop();
                 pac.powerTimer().reset(0);
                 level.killedGhostsForCurrentEnergizer().clear();
@@ -708,6 +539,7 @@ public abstract class AbstractGameModel implements GameModel {
     /**
      * @return {@code true} if collisions are double-checked each tick
      */
+    @Override
     public Boolean isCollisionDoubleChecked() {
         return collisionDoubleCheckedProperty().get();
     }
@@ -721,14 +553,11 @@ public abstract class AbstractGameModel implements GameModel {
         collisionDoubleCheckedProperty().set(doubleChecked);
     }
 
-    public abstract void eatEnergizer(GameLevel level, Vector2i tile);
-
+    @Override
     public void eatBonus(GameLevel level, Bonus bonus) {
         scorePoints(bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
         bonus.showEatenForSeconds(rules.eatenBonusDisplaySeconds());
         flow.publishGameEvent(new BonusEatenEvent(this, bonus));
     }
-
-    protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 }

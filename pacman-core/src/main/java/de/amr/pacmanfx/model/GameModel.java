@@ -7,19 +7,15 @@ package de.amr.pacmanfx.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.flow.GameControlFlow;
-import de.amr.pacmanfx.model.actors.ActorSpeedControl;
-import de.amr.pacmanfx.model.actors.CollisionStrategy;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.level.LevelCounter;
 import de.amr.pacmanfx.model.lives.PacManLives;
-import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
-import de.amr.pacmanfx.simulation.SimulationStepResult;
+import de.amr.pacmanfx.simulation.SimulationStep;
 
 import java.util.Optional;
 
@@ -42,8 +38,6 @@ public interface GameModel {
 
     ActorSpeedControl actorSpeedControl();
 
-    GateKeeper gateKeeper();
-
     HeadsUpDisplay hud();
 
     LevelCounter levelCounter();
@@ -56,7 +50,7 @@ public interface GameModel {
 
     // Lifecycle
 
-    SimulationStepResult simulationStep();
+    SimulationStep simulationStep();
 
     void init();
 
@@ -110,10 +104,20 @@ public interface GameModel {
 
     void setCollisionStrategy(CollisionStrategy collisionStrategy);
 
+    void updatePacPowerMode(GameLevel level, Pac pac);
+
+    Boolean isCollisionDoubleChecked();
+
     void eatPellet(GameLevel level, Vector2i tile);
+
+    void eatEnergizer(GameLevel level, Vector2i tile);
+
+    void eatBonus(GameLevel level, Bonus bonus);
 
     //TODO remove tick parameter, introduce new game state instead
     void doPacManDying(GameLevel level, Pac pac, long tick);
 
     void onEatGhost(GameLevel level, Ghost eatenGhost);
+
+    boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 }

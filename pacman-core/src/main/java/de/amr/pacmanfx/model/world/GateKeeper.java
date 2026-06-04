@@ -4,10 +4,10 @@
 package de.amr.pacmanfx.model.world;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.level.GameLevel;
 import org.tinylog.Logger;
 
 import java.util.Arrays;
@@ -221,8 +221,8 @@ public class GateKeeper {
             .filter(ghost -> ghost.state() == GhostState.LOCKED)
             .findFirst()
             .ifPresent(prisoner -> checkReleaseOfGhost(level, prisoner).ifPresent(reason -> {
-                level.game().simulationStep().ghostReleasedFromJailhouse = prisoner;
-                level.game().simulationStep().ghostReleaseInfo = reason;
+                level.game().simulationStep().setGhostReleasedFromJailhouse(prisoner);
+                level.game().simulationStep().setGhostReleaseInfo(reason);
                 prisoner.setMoveDir(Direction.UP);
                 prisoner.setWishDir(Direction.UP);
                 prisoner.setState(GhostState.LEAVING_HOUSE);
