@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.model;
+package de.amr.pacmanfx.simulation;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * Stores what happened during the current simulation step.
  */
-public class SimulationStep {
+public class SimulationStepResult {
     public long              tick;
     public Vector2i          foodTile;
     public boolean           energizerFound;
@@ -98,4 +98,14 @@ public class SimulationStep {
             }
         }
     }
+
+    public boolean hasPacManBeenKilled() {
+        return pacKiller != null;
+    }
+
+    public boolean hasGhostBeenKilled() {
+        return !ghostsKilled.isEmpty();
+    }
+
+
 }

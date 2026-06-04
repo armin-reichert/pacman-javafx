@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.flow.GameStateID;
-import de.amr.pacmanfx.model.SimulationStep;
+import de.amr.pacmanfx.simulation.SimulationStepResult;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.config.UIConfigManager;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
@@ -226,7 +226,7 @@ public final class AppContextImpl implements AppContext {
 
     private void initGameClock() {
         clock.setUpdateAction(() -> {
-            final SimulationStep step = currentGame().simulationStep();
+            final SimulationStepResult step = currentGame().simulationStep();
             step.clearInfo(clock.tickCount());
             currentGameFlow().makeStep();
             step.printLog();

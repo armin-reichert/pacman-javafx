@@ -80,9 +80,9 @@ public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME
         }
         else if (game.rules().isLevelCompleted(level)) {
             game.flow().enterState(GameStateID.GAME_INTRO.name());
-        } else if (game.hasPacManBeenKilled()) {
+        } else if (game.simulationStep().hasPacManBeenKilled()) {
             expire();
-        } else if (game.hasGhostBeenKilled()) {
+        } else if (game.simulationStep().hasGhostBeenKilled()) {
             game.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST.name());
         }
     }

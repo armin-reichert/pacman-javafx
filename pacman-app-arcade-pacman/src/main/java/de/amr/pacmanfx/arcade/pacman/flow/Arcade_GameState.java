@@ -165,10 +165,10 @@ public enum Arcade_GameState {
             if (game.rules().isLevelCompleted(level)) {
                 game.flow().enterState(GAME_LEVEL_COMPLETE.state());
             }
-            else if (game.hasPacManBeenKilled()) {
+            else if (game.simulationStep().hasPacManBeenKilled()) {
                 game.flow().enterState(GAME_LEVEL_PACMAN_DYING.state());
             }
-            else if (game.hasGhostBeenKilled()) {
+            else if (game.simulationStep().hasGhostBeenKilled()) {
                 game.flow().enterState(GAME_LEVEL_EATING_GHOST.state());
             }
         }

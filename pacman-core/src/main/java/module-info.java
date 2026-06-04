@@ -19,4 +19,5 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.model.level;
     exports de.amr.pacmanfx.score;
     exports de.amr.pacmanfx.model.lives;
+    exports de.amr.pacmanfx.simulation;
 }

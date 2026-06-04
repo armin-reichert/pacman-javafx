@@ -24,6 +24,7 @@ import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
+import de.amr.pacmanfx.simulation.SimulationStepResult;
 import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -58,7 +59,7 @@ public abstract class AbstractGameModel implements GameModel {
     // Common data
 
     //TODO move elsewhere or pass as parameter into simulation methods
-    protected final SimulationStep simStep = new SimulationStep();
+    protected final SimulationStepResult simStep = new SimulationStepResult();
 
     protected CoinMechanism coinMechanism;
 
@@ -171,7 +172,7 @@ public abstract class AbstractGameModel implements GameModel {
     // Lifecycle
 
     @Override
-    public SimulationStep simulationStep() {
+    public SimulationStepResult simulationStep() {
         return simStep;
     }
 
@@ -200,7 +201,7 @@ public abstract class AbstractGameModel implements GameModel {
         gateKeeper.reset();
         levelCounter.clear();
 
-        levelProperty().set(null);
+        level.set(null);
         setPlaying(false);
     }
 
@@ -250,7 +251,7 @@ public abstract class AbstractGameModel implements GameModel {
 
     @Override
     public void setLevel(GameLevel level) {
-        levelProperty().set(level);
+        this.level.set(level);
     }
 
     @Override
@@ -329,15 +330,15 @@ public abstract class AbstractGameModel implements GameModel {
         level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
 
         final HuntingTimer huntingTimer = level.huntingTimer();
-        huntingTimer.startFirstPhase(rules(), level.number());
-        flow().publishGameEvent(new HuntingPhaseStartedEvent(this, huntingTimer.phaseIndex(), huntingTimer.currentHuntingPhase()));
+        huntingTimer.startFirstPhase(rules, level.number());
+        flow.publishGameEvent(new HuntingPhaseStartedEvent(this, huntingTimer.phaseIndex(), huntingTimer.currentHuntingPhase()));
     }
 
     @Override
     public void doLevelPlaying(GameLevel level) {
         doHuntingStep(level);
-        if (gateKeeper() != null) {
-            gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
+        if (gateKeeper != null) {
+            gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
         cheats.update(level);
     }
@@ -393,16 +394,6 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public boolean hasPacManBeenKilled() {
-        return simStep.pacKiller != null;
-    }
-
-    @Override
-    public boolean hasGhostBeenKilled() {
-        return !simStep.ghostsKilled.isEmpty();
-    }
-
-    @Override
     public void onEatGhost(GameLevel level, Ghost eatenGhost) {
         final int killedBefore = level.killedGhostsForCurrentEnergizer().size();
         final int points = rules.pointsForGhost(killedBefore);
@@ -418,7 +409,7 @@ public abstract class AbstractGameModel implements GameModel {
         level.entities().pac().hide();
         level.entities().ghosts().forEach(g -> g.animations().stopSelected());
 
-        flow().publishGameEvent(new GhostEatenEvent(this, eatenGhost));
+        flow.publishGameEvent(new GhostEatenEvent(this, eatenGhost));
     }
 
     /* -------------------------------------------------------------------------
@@ -460,7 +451,7 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     protected void handleScoreChange(int oldScore, int newScore) {
-        if (rules().isExtraLifeAwarded(oldScore, newScore)) {
+        if (rules.isExtraLifeAwarded(oldScore, newScore)) {
             simStep.extraLifeWon = true;
             simStep.extraLifeScore = newScore;
         }
@@ -515,7 +506,7 @@ public abstract class AbstractGameModel implements GameModel {
             // Is Pac getting killed after the collision with a ghost?
             // He might stay alive if immune or in level's safe phase!
             checkPacKilled(level, pac);
-            if (hasPacManBeenKilled()) {
+            if (simStep.hasPacManBeenKilled()) {
                 return true;
             }
             else {
@@ -525,7 +516,7 @@ public abstract class AbstractGameModel implements GameModel {
                     .forEach(simStep.ghostsKilled::add);
                 // More than one ghost might have been killed in this step
                 simStep.ghostsKilled.forEach(ghost -> onEatGhost(level, ghost));
-                if (hasGhostBeenKilled()) {
+                if (simStep.hasGhostBeenKilled()) {
                     return true;
                 }
             }
@@ -569,7 +560,7 @@ public abstract class AbstractGameModel implements GameModel {
                 activateNextBonus(level);
                 simStep.bonusIndex = level.currentBonusIndex();
             }
-            flow().publishGameEvent(new PacEatsFoodEvent(this, pac, simStep.energizerFound, false));
+            flow.publishGameEvent(new PacEatsFoodEvent(this, pac, simStep.energizerFound, false));
         }
     }
 
@@ -730,17 +721,13 @@ public abstract class AbstractGameModel implements GameModel {
         collisionDoubleCheckedProperty().set(doubleChecked);
     }
 
-    private ObjectProperty<GameLevel> levelProperty() {
-        return level;
-    }
-
     public abstract void eatEnergizer(GameLevel level, Vector2i tile);
 
     public void eatBonus(GameLevel level, Bonus bonus) {
         scorePoints(bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-        bonus.showEatenForSeconds(rules().eatenBonusDisplaySeconds());
-        flow().publishGameEvent(new BonusEatenEvent(this, bonus));
+        bonus.showEatenForSeconds(rules.eatenBonusDisplaySeconds());
+        flow.publishGameEvent(new BonusEatenEvent(this, bonus));
     }
 
     protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);

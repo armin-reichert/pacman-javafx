@@ -19,6 +19,7 @@ import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
+import de.amr.pacmanfx.simulation.SimulationStepResult;
 
 import java.util.Optional;
 
@@ -55,7 +56,7 @@ public interface GameModel {
 
     // Lifecycle
 
-    SimulationStep simulationStep();
+    SimulationStepResult simulationStep();
 
     void init();
 
@@ -111,12 +112,8 @@ public interface GameModel {
 
     void eatPellet(GameLevel level, Vector2i tile);
 
-    boolean hasPacManBeenKilled();
-
     //TODO remove tick parameter, introduce new game state instead
     void doPacManDying(GameLevel level, Pac pac, long tick);
-
-    boolean hasGhostBeenKilled();
 
     void onEatGhost(GameLevel level, Ghost eatenGhost);
 }
