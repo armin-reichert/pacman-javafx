@@ -16,7 +16,7 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.core.Globals.HTS;
 import static de.amr.pacmanfx.core.Globals.TS;
 
-public class HuntingStepEvaluation {
+public class HuntingLogic {
 
     public static GameStateID computeNextState(GameContext context, GameLevel level) {
         if (context.gameModel().rules().isLevelCompleted(level)) {
@@ -45,7 +45,6 @@ public class HuntingStepEvaluation {
         }
     }
 
-
     private static void evalFoodFound(HuntingStepResult result, GameModel game, GameLevel level, Pac pac) {
         if (!result.foodFound()) {
             pac.continueStarving();
@@ -66,8 +65,6 @@ public class HuntingStepEvaluation {
         if (game.rules().isBonusAwarded(level)) {
             game.activateNextBonus(level);
         }
-
-        game.flow().publishGameEvent(new PacEatsFoodEvent(game.flow().context(), pac, result.energizerFound(), false));
     }
 
     private static void evalBonusFound(HuntingStepResult result, GameModel game, GameLevel level) {
@@ -80,14 +77,9 @@ public class HuntingStepEvaluation {
         if (level.isDemoLevel() && game.isPacSafeInDemoLevel(level) || pac.isImmune()) {
             return;
         }
-        final Ghost pacKiller = result.ghostsCollidingWithPac().stream()
+        result.ghostsCollidingWithPac().stream()
             .filter(ghost -> ghost.state() == GhostState.HUNTING_PAC)
-            .findFirst()
-            .orElse(null);
-        if (pacKiller != null) {
-            result.setPacKilled(true);
-            evalPacKilledInPortal(level, pac);
-        }
+            .findFirst().ifPresent(pacKiller -> result.setPacKilled(true));
     }
 
     private static void evalGhostsKilled(HuntingStepResult result, GameModel game, GameLevel level) {
@@ -101,17 +93,4 @@ public class HuntingStepEvaluation {
         }
     }
 
-    // If collision happened while teleporting (horizontally), move collided actors into visible world
-    private static void evalPacKilledInPortal(GameLevel level, Pac pac) {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        terrain.hPortalContainingTile(pac.computeTile()).ifPresent(hPortal -> {
-            if (pac.moveDir() == Direction.LEFT) {
-                pac.setX(hPortal.rightBorderEntryTile().x() * TS + HTS);
-            } else if (pac.moveDir() == Direction.RIGHT) {
-                pac.setX(hPortal.leftBorderEntryTile().x() * TS - HTS);
-            }
-            // Not sure if colliding ghosts should also be moved back to visible area
-            Logger.info("Detected collision while teleporting, moved Pac-Man back into world");
-        });
-    }
 }

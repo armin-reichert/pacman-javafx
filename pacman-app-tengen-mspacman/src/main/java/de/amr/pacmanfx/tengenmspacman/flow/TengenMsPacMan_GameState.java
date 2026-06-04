@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.simulation.Hunting;
-import de.amr.pacmanfx.simulation.HuntingStepEvaluation;
+import de.amr.pacmanfx.simulation.HuntingLogic;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HeadsUpDisplay;
@@ -211,10 +211,10 @@ public enum TengenMsPacMan_GameState {
 
             context.startNewHuntingStep();
             Hunting.detectCollisions(context);
-            HuntingStepEvaluation.evaluate(context);
+            HuntingLogic.evaluate(context);
             logHuntingStep(context);
 
-            final GameStateID nextStateID = HuntingStepEvaluation.computeNextState(context, level);
+            final GameStateID nextStateID = HuntingLogic.computeNextState(context, level);
             context.gameFlow().enterState(nextStateID.name());
         }
 

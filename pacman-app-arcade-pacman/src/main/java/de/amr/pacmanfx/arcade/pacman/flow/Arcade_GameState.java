@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameContinuedEvent;
 import de.amr.pacmanfx.event.GameStartedEvent;
+import de.amr.pacmanfx.event.PacEatsFoodEvent;
 import de.amr.pacmanfx.flow.GameState;
 import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
@@ -16,7 +17,8 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.simulation.Hunting;
-import de.amr.pacmanfx.simulation.HuntingStepEvaluation;
+import de.amr.pacmanfx.simulation.HuntingLogic;
+import de.amr.pacmanfx.simulation.HuntingResolver;
 import org.tinylog.Logger;
 
 import java.util.Set;
@@ -198,10 +200,16 @@ public enum Arcade_GameState {
 
             context.startNewHuntingStep();
             Hunting.detectCollisions(context);
-            HuntingStepEvaluation.evaluate(context);
+            HuntingLogic.evaluate(context);
             logHuntingStep(context);
 
-            final GameStateID nextStateID = HuntingStepEvaluation.computeNextState(context, level);
+            if (context.huntingResult().foodFound()) {
+                context.gameFlow().publishGameEvent(
+                    new PacEatsFoodEvent(context, pac, context.huntingResult().energizerFound(), false));
+            }
+            HuntingResolver.fixPacPositionIfKilledInsidePortal(level, pac);
+
+            final GameStateID nextStateID = HuntingLogic.computeNextState(context, level);
             context.gameFlow().enterState(nextStateID.name());
         }
 
