@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class HuntingStepResult {
+public final class HuntingStepResult {
 
     private Vector2i foodFoundTile;
     private boolean energizerFound;
@@ -29,7 +29,6 @@ public class HuntingStepResult {
     public HuntingStepResult() {
         bonusIndex = -1;
     }
-
 
     public Vector2i foodFoundTile() {
         return foodFoundTile;

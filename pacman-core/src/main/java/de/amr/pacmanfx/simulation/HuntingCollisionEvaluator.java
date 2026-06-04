@@ -11,7 +11,9 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 
-public class HuntingCollisionEvaluator {
+public final class HuntingCollisionEvaluator {
+
+    private HuntingCollisionEvaluator() {}
 
     public static void evaluate(GameContext context) {
         final HuntingStepResult result = context.huntingResult();

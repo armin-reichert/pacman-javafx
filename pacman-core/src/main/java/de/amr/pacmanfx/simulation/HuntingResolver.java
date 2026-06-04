@@ -11,7 +11,9 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.core.Globals.HTS;
 import static de.amr.pacmanfx.core.Globals.TS;
 
-public class HuntingResolver {
+public final class HuntingResolver {
+
+    private HuntingResolver() {}
 
     public static GameStateID computeNextState(GameContext context, GameLevel level) {
         if (context.gameModel().rules().isLevelCompleted(level)) {
