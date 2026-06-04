@@ -210,10 +210,4 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         flow().publishGameEvent(new LevelStartedEvent(this, level));
     }
 
-    @Override
-    public void startNextLevel() {
-        final GameLevel level = optGameLevel().orElseThrow();
-        buildNormalLevel(level.number() + 1);
-        startLevel();
-    }
 }

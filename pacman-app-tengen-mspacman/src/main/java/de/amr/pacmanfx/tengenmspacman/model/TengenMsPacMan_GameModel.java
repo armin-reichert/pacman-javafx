@@ -212,7 +212,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void startLevel() {
         final GameLevel level = optGameLevel().orElseThrow();
         level.recordStartTime(System.currentTimeMillis());
+
         makeReadyForPlaying(level);
+        level.entities().pac().show();
+        level.entities().ghosts().forEach(Ghost::show);
+
         if (pacBoosterMode == PacBooster.ALWAYS_ON) {
             activatePacBooster(level.entities().pac(), true);
         }
@@ -248,19 +252,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
         else if (tick == Timing.TICK_DEMO_LEVEL_START_HUNTING) {
             flow().enterState(TengenMsPacMan_GameState.GAME_LEVEL_PLAYING.state());
-        }
-    }
-
-    @Override
-    public void startNextLevel() {
-        final GameLevel level = optGameLevel().orElseThrow();
-        if (level.number() < TengenMsPacMan_GameRules.LAST_LEVEL_NUMBER) {
-            buildNormalLevel(level.number() + 1);
-            startLevel();
-            level.entities().pac().show();
-            level.entities().ghosts().forEach(Ghost::show);
-        } else {
-            Logger.warn("Last level ({}) reached, cannot start next level", TengenMsPacMan_GameRules.LAST_LEVEL_NUMBER);
         }
     }
 
