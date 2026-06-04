@@ -28,7 +28,7 @@ public final class CheatActions {
             realLevel(context).ifPresent(level -> {
                 final GameModel game = level.game();
                 game.lives().add(3);
-                game.cheatUsedProperty().set(true);
+                game.cheats().notifyCheatUsed();
                 final String message = context.ui().translations().translate("message.cheat_add_lives", game.lives().count());
                 context.shortMessage(message);
             });
@@ -44,7 +44,7 @@ public final class CheatActions {
             realLevel(context).ifPresent(level -> {
                 final GameModel game = level.game();
                 level.worldMap().foodLayer().eatPellets();
-                game.cheatUsedProperty().set(true);
+                game.cheats().cheatUsedProperty().set(true);
                 game.flow().publishGameEvent(new PacEatsFoodEvent(game, level.entities().pac(), false, true));
             });
         }
@@ -68,7 +68,7 @@ public final class CheatActions {
                     killableGhosts.forEach(ghost -> game.onEatGhost(level, ghost));
                     game.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST.name());
                 }
-                game.cheatUsedProperty().set(true);
+                game.cheats().cheatUsedProperty().set(true);
             });
         }
 
@@ -85,7 +85,7 @@ public final class CheatActions {
         public void doAction(AppContext context) {
             realLevel(context).ifPresent(_ -> {
                 final GameModel game = context.currentGame();
-                game.cheatUsedProperty().set(true);
+                game.cheats().notifyCheatUsed();
                 game.flow().enterState(GameStateID.GAME_LEVEL_COMPLETE.name());
             });
         }
@@ -104,7 +104,7 @@ public final class CheatActions {
         @Override
         public void doAction(AppContext context) {
             final GameModel game = context.currentGame();
-            setAutopilot(context, !game.isPacUsingAutopilot());
+            setAutopilot(context, !game.cheats().isPacUsingAutopilot());
         }
 
         @Override
@@ -139,7 +139,7 @@ public final class CheatActions {
 
     private static void setAutopilot(AppContext context, boolean auto) {
         final GameModel game = context.currentGame();
-        game.pacUsingAutopilotProperty().set(auto);
+        game.cheats().pacUsingAutopilotProperty().set(auto);
         context.ui().sounds().playVoice(auto ? AppConstants.VOICE_AUTOPILOT_ON : AppConstants.VOICE_AUTOPILOT_OFF);
         context.shortMessage(context.ui().translations().translate(auto ? "autopilot_on" : "autopilot_off"));
     }
@@ -172,7 +172,7 @@ public final class CheatActions {
         @Override
         public void doAction(AppContext context) {
             final GameModel game = context.currentGame();
-            setPacImmune(context, !game.isPacImmune());
+            setPacImmune(context, !game.cheats().isPacImmune());
         }
 
         @Override
@@ -182,7 +182,7 @@ public final class CheatActions {
     };
 
     public static void setPacImmune(AppContext context, boolean immune) {
-        context.currentGame().pacImmuneProperty().set(immune);
+        context.currentGame().cheats().pacImmuneProperty().set(immune);
         context.ui().sounds().playVoice(immune ? AppConstants.VOICE_IMMUNITY_ON : AppConstants.VOICE_IMMUNITY_OFF);
         context.shortMessage(context.ui().translations().translate(immune ? "player_immunity_on" : "player_immunity_off"));
     }

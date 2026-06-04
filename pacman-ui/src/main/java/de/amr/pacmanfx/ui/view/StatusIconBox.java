@@ -118,13 +118,13 @@ public class StatusIconBox implements Disposable {
 
     public void bind(GameModel game) {
         iconAutopilot().visibleProperty().unbind();
-        iconAutopilot().visibleProperty().bind(game.pacUsingAutopilotProperty());
+        iconAutopilot().visibleProperty().bind(game.cheats().pacUsingAutopilotProperty());
 
         iconCheated()  .visibleProperty().unbind();
-        iconCheated()  .visibleProperty().bind(game.cheatUsedProperty());
+        iconCheated()  .visibleProperty().bind(game.cheats().cheatUsedProperty());
 
         iconImmune()   .visibleProperty().unbind();
-        iconImmune()   .visibleProperty().bind(game.pacImmuneProperty());
+        iconImmune()   .visibleProperty().bind(game.cheats().pacImmuneProperty());
 
         Logger.info("Icons autopilot, cheated and immune visibility bound to game model {}", game);
     }

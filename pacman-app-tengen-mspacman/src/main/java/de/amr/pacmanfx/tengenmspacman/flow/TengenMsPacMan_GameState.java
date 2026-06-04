@@ -150,7 +150,7 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onEnter(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
-            game.makeReadyForPlaying(level);
+            game.prepareLevelForPlaying(level);
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
             game.flow().publishGameEvent(new GameContinuedEvent(game));
@@ -296,7 +296,7 @@ public enum TengenMsPacMan_GameState {
                     game.flow().enterState(SHOWING_HALL_OF_FAME.state());
                 } else {
                     level.clearMessage();
-                    game.clearCheats();
+                    game.cheats().clear();
                     game.flow().enterState(game.canContinueOnGameOver() ? GAME_PREPARATION.state() : GAME_INTRO.state());
                 }
             }

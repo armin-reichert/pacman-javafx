@@ -46,19 +46,23 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameModel implements GameModel {
 
+    // Common properties
+
+    //TODO move elsewhere
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
 
     private final ObjectProperty<GameLevel> level = new SimpleObjectProperty<>();
 
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
-    // common model data
+    // Common data
 
+    //TODO move elsewhere or pass as parameter into simulation methods
     protected final SimulationStep simStep = new SimulationStep();
 
-    protected CoinMechanism coinMechanism = CoinMechanism.OUT_OF_SERVICE;
+    protected CoinMechanism coinMechanism;
 
-    protected final Score score = new Score();
+    protected final Score score;
 
     protected GameControlFlow flow;
 
@@ -70,9 +74,11 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected PersistentScore highScore;
 
-    protected final PacManLives lives = new PacManLivesImpl();
-
     protected GameRules rules;
+
+    protected GameCheats cheats;
+
+    protected PacManLives lives;
 
     protected LevelCounter levelCounter;
 
@@ -82,25 +88,25 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected Steering demoLevelSteering;
 
-    private CollisionStrategy collisionStrategy = DEFAULT_COLLISION_STRATEGY;
+    private CollisionStrategy collisionStrategy;
 
     // Constructor
 
     protected AbstractGameModel() {
+        coinMechanism = CoinMechanism.OUT_OF_SERVICE;
+        score = new Score();
+        lives = new PacManLivesImpl();
         hud = new HeadsUpDisplay();
+        collisionStrategy = CollisionStrategy.SAME_TILE;
+        cheats = new DefaultCheatsImpl();
 
         score.pointsProperty().addListener((_, oldScore, newScore)
             -> handleScoreChange(oldScore.intValue(), newScore.intValue()));
 
-        cheatUsedProperty().addListener((_, _, cheated) -> {
-            if (cheated) {
-                handleCheatDetected();
-            }
-        });
     }
 
     /* -------------------------------------------------------------------------
-     * Game interface implementation
+     * GameModel interface implementation
      * ---------------------------------------------------------------------- */
 
     @Override
@@ -110,6 +116,11 @@ public abstract class AbstractGameModel implements GameModel {
 
     public GameRules rules() {
         return rules;
+    }
+
+    @Override
+    public GameCheats cheats() {
+        return cheats;
     }
 
     @Override
@@ -167,13 +178,14 @@ public abstract class AbstractGameModel implements GameModel {
     @Override
     public void init() {
         mapSelector.loadMapPrototypes();
-        lives().setInitialCount(3);
+        lives.setInitialCount(3);
         hud.all(false);
         prepareNewGame();
     }
 
     @Override
     public void prepareNewGame() {
+        lives.setCount(lives.initialCount());
         score.reset();
         try {
             highScore.load();
@@ -182,17 +194,21 @@ public abstract class AbstractGameModel implements GameModel {
             Logger.error(x, "Error loading high-score file {}", highScore.file().getAbsolutePath());
         }
         gateKeeper.reset();
-        levelProperty().set(null);
-        lives().setCount(lives().initialCount());
         levelCounter.clear();
+
+        levelProperty().set(null);
         setPlaying(false);
     }
 
     @Override
-    public boolean canStartNewGame() { return !coinMechanism.isEmpty(); }
+    public boolean canStartNewGame() {
+        return !coinMechanism.isEmpty();
+    }
 
     @Override
-    public boolean canContinueOnGameOver() { return false; }
+    public boolean canContinueOnGameOver() {
+        return false;
+    }
 
     @Override
     public void onGameOver(GameLevel level) {
@@ -214,14 +230,18 @@ public abstract class AbstractGameModel implements GameModel {
         this.playing.set(playing);
     }
 
+    @Override
     public abstract void activateNextBonus(GameLevel level);
 
     // Level related
 
+    @Override
     public abstract GameLevel createLevel(int levelNumber, boolean demoLevel);
 
+    @Override
     public abstract void buildNormalLevel(int levelNumber);
 
+    @Override
     public abstract void buildDemoLevel();
 
     @Override
@@ -229,10 +249,11 @@ public abstract class AbstractGameModel implements GameModel {
         return Optional.ofNullable(level.get());
     }
 
+    @Override
     public abstract void startLevel();
 
     @Override
-    public void makeReadyForPlaying(GameLevel level) {
+    public void prepareLevelForPlaying(GameLevel level) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final House house = terrain.optHouse().orElseThrow();
 
@@ -265,8 +286,11 @@ public abstract class AbstractGameModel implements GameModel {
         level.setMessage(message);
     }
 
+    //TODO remove tick, introduce new game state
+    @Override
     public abstract void startDemoLevel(long tick);
 
+    @Override
     public boolean isDemoLevelRunning() {
         return optGameLevel().isPresent() && optGameLevel().get().isDemoLevel();
     }
@@ -306,7 +330,7 @@ public abstract class AbstractGameModel implements GameModel {
         if (gateKeeper() != null) {
             gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
-        updateCheats(level);
+        cheats.update(level);
     }
 
     @Override
@@ -388,6 +412,29 @@ public abstract class AbstractGameModel implements GameModel {
         flow().publishGameEvent(new GhostEatenEvent(this, eatenGhost));
     }
 
+    /* -------------------------------------------------------------------------
+     * Cheating
+     * ---------------------------------------------------------------------- */
+
+    public class DefaultCheatsImpl extends GameCheats {
+
+        @Override
+        public void update(GameLevel level) {
+            if (level.isDemoLevel() || !level.game().isPlaying()) {
+                return;
+            }
+            final Pac pac = level.entities().pac();
+            pac.immuneProperty().set(isPacImmune());
+            pac.usingAutopilotProperty().set(isPacUsingAutopilot());
+            if (isPacImmune() || isPacUsingAutopilot()) {
+                notifyCheatUsed();
+            }
+        }
+
+        public void handleCheatDetected() {
+            highScore.setEnabled(false);
+        }
+    }
 
     /* -------------------------------------------------------------------------
      * Utility methods
@@ -407,48 +454,9 @@ public abstract class AbstractGameModel implements GameModel {
             simStep.extraLifeScore = newScore;
         }
         if (simStep.extraLifeWon) {
-            lives().add(1);
-            flow().publishGameEvent(new SpecialScoreEvent(this, newScore));
+            lives.add(1);
+            flow.publishGameEvent(new SpecialScoreEvent(this, newScore));
         }
-    }
-
-    /* -------------------------------------------------------------------------
-     * Cheating
-     * ---------------------------------------------------------------------- */
-
-    private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
-
-    private final BooleanProperty pacImmune = new SimpleBooleanProperty(false);
-
-    private final BooleanProperty pacUsingAutopilot = new SimpleBooleanProperty(false);
-
-    @Override
-    public BooleanProperty cheatUsedProperty() {
-        return cheatUsed;
-    }
-
-    @Override
-    public BooleanProperty pacImmuneProperty() {
-        return pacImmune;
-    }
-
-    @Override
-    public boolean isPacImmune() {
-        return pacImmuneProperty().get();
-    }
-
-    @Override
-    public boolean isPacUsingAutopilot() {
-        return pacUsingAutopilotProperty().get();
-    }
-
-    @Override
-    public BooleanProperty pacUsingAutopilotProperty() {
-        return pacUsingAutopilot;
-    }
-
-    protected void handleCheatDetected() {
-        highScore.setEnabled(false);
     }
 
     /* -------------------------------------------------------------------------
@@ -461,6 +469,8 @@ public abstract class AbstractGameModel implements GameModel {
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
         final Bonus bonus = level.entities().optBonus().orElse(null);
+
+        //TODO rework collision handling
 
         boolean quitHunting;
         if (isCollisionDoubleChecked()) {
@@ -483,7 +493,7 @@ public abstract class AbstractGameModel implements GameModel {
         checkBonusFound(level);
 
         if (!rules.isLevelCompleted(level)) {
-            updatePacPower(level, pac);
+            updatePacPowerMode(level, pac);
             level.huntingTimer().update(rules(), level.number());
         }
     }
@@ -552,21 +562,6 @@ public abstract class AbstractGameModel implements GameModel {
         }
     }
 
-    protected void empowerPac(Pac pac, GameLevel level) {
-        level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
-        final float powerSeconds = level.pacPowerSeconds();
-        if (powerSeconds > 0) {
-            level.huntingTimer().stop();
-            Logger.debug("Hunting stopped (Pac-Man got power)");
-            final long powerTicks = TickTimer.secToTicks(powerSeconds);
-            pac.powerTimer().restartTicks(powerTicks);
-            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
-            level.ghostsInState(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
-            simStep.pacGotPower = true;
-            flow().publishGameEvent(new PacGetsPowerEvent(this, pac));
-        }
-    }
-
     /**
      * Checks whether Pac-Man has collided with an edible bonus item and, if so, triggers
      * the variant-specific bonus handling.
@@ -626,19 +621,27 @@ public abstract class AbstractGameModel implements GameModel {
             .orElse(null);
     }
 
-    /**
-     * Updates Pac-Man's power mode. Power starts fading after some time. When this happens, the ghosts start flashing
-     * and when the power timer expires, they take their normal color again and continue chasing Pac-Man.
-     *
-     * @param level the game level
-     * @param pac the Pac-Man
-     */
-    protected void updatePacPower(GameLevel level, Pac pac) {
+    protected void startPacPowerMode(Pac pac, GameLevel level) {
+        level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
+        final float powerSeconds = level.pacPowerSeconds();
+        if (powerSeconds > 0) {
+            level.huntingTimer().stop();
+            Logger.debug("Hunting stopped (Pac-Man got power)");
+            final long powerTicks = TickTimer.secToTicks(powerSeconds);
+            pac.powerTimer().restartTicks(powerTicks);
+            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
+            level.ghostsInState(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
+            simStep.pacGotPower = true;
+            flow.publishGameEvent(new PacGetsPowerEvent(this, pac));
+        }
+    }
+
+    protected void updatePacPowerMode(GameLevel level, Pac pac) {
         if (pac.powerTimer().isRunning()) {
             pac.powerTimer().doTick();
             if (pac.isPowerFadingStarting(level)) {
                 simStep.pacStartsLosingPower = true;
-                flow().publishGameEvent(new PacPowerFadesEvent(this, pac));
+                flow.publishGameEvent(new PacPowerFadesEvent(this, pac));
             } else if (pac.powerTimer().hasExpired()) {
                 simStep.pacLostPower = true;
                 pac.powerTimer().stop();
@@ -646,30 +649,8 @@ public abstract class AbstractGameModel implements GameModel {
                 level.killedGhostsForCurrentEnergizer().clear();
                 level.huntingTimer().start();
                 level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-                flow().publishGameEvent(new PacLostPowerEvent(this, pac));
+                flow.publishGameEvent(new PacLostPowerEvent(this, pac));
             }
-        }
-    }
-
-    /* -------------------------------------------------------------------------
-     * Cheat management
-     * ---------------------------------------------------------------------- */
-
-    public void clearCheats() {
-        cheatUsed.set(false);
-        pacImmune.set(false);
-        pacUsingAutopilot.set(false);
-    }
-
-    public void updateCheats(GameLevel level) {
-        if (level.isDemoLevel() || !level.game().isPlaying()) {
-            return;
-        }
-        final Pac pac = level.entities().pac();
-        pac.immuneProperty().set(isPacImmune());
-        pac.usingAutopilotProperty().set(isPacUsingAutopilot());
-        if (isPacImmune() || isPacUsingAutopilot()) {
-            cheatUsed.set(true);
         }
     }
 

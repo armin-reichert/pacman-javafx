@@ -194,6 +194,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public boolean canContinueOnGameOver() {
+        //TODO don't change values inside this method
         if (startLevelNumber >= 10 && numContinues > 0) {
             numContinues -= 1;
             return true;
@@ -213,7 +214,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final GameLevel level = optGameLevel().orElseThrow();
         level.recordStartTime(System.currentTimeMillis());
 
-        makeReadyForPlaying(level);
+        prepareLevelForPlaying(level);
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
 
@@ -229,7 +230,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             showMessage(level, GameLevelMessageType.READY);
             levelCounter.update(level.number(), level.bonusSymbolCode(0));
             score().setEnabled(true);
-            updateCheats(level);
+            cheats.update(level);
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
@@ -398,7 +399,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         final Pac pac = level.entities().pac();
         if (!rules.isLevelCompleted(level)) {
-            empowerPac(pac, level);
+            startPacPowerMode(pac, level);
         }
     }
 

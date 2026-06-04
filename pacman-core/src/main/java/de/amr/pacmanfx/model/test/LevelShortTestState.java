@@ -46,7 +46,7 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
         final GameLevel level = game.optGameLevel().orElseThrow();
         final float START = 1.0f;
         if (timer.atSecond(START)) {
-            game.makeReadyForPlaying(level);
+            game.prepareLevelForPlaying(level);
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
             game.showLevelMessage(level, GameLevelMessageType.READY);

@@ -61,7 +61,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         level.killedGhostsForCurrentEnergizer().clear();
 
         if (!rules.isLevelCompleted(level)) {
-            empowerPac(pac, level);
+            startPacPowerMode(pac, level);
         }
     }
 
@@ -175,7 +175,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void startLevel() {
         final GameLevel level = optGameLevel().orElseThrow();
         level.recordStartTime(System.currentTimeMillis());
-        makeReadyForPlaying(level);
+        prepareLevelForPlaying(level);
         if (level.isDemoLevel()) {
             showLevelMessage(level, GameLevelMessageType.GAME_OVER);
             score().setEnabled(false);
@@ -185,7 +185,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             showLevelMessage(level, GameLevelMessageType.READY);
             levelCounter().update(level.number(), level.bonusSymbolCode(0));
             score().setEnabled(true);
-            updateCheats(level);
+            cheats.update(level);
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!

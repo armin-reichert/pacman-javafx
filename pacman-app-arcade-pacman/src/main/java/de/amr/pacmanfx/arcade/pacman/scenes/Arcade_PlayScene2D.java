@@ -58,7 +58,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final GameModel game = context().currentGame();
         final var menu = new ContextMenu();
         addLocalizedTitleItem(menu, context.ui().translations(), "pacman");
-        addLocalizedCheckBox(menu, context.ui().translations(), game.pacUsingAutopilotProperty(), "autopilot").setOnAction(e -> {
+        addLocalizedCheckBox(menu, context.ui().translations(), game.cheats().pacUsingAutopilotProperty(), "autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
                 CheatActions.ACTION_ACTIVATE_AUTOPILOT.executeIfEnabled(context);
@@ -66,7 +66,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
                 CheatActions.ACTION_DEACTIVATE_AUTOPILOT.executeIfEnabled(context);
             }
         });
-        addLocalizedCheckBox(menu, context.ui().translations(), game.pacImmuneProperty(), "immunity").setOnAction(e -> {
+        addLocalizedCheckBox(menu, context.ui().translations(), game.cheats().pacImmuneProperty(), "immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
                 CheatActions.ACTION_ACTIVATE_IMMUNITY.executeIfEnabled(context);

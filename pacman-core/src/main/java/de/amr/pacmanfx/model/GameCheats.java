@@ -6,25 +6,58 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.model.level.GameLevel;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import org.tinylog.Logger;
 
-public interface GameCheats {
+public abstract class GameCheats {
 
-    /** @return property indicating whether a cheat has been used */
-    BooleanProperty cheatUsedProperty();
+    private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
 
-    /** @return property indicating whether Pac‑Man is immune to death */
-    BooleanProperty pacImmuneProperty();
+    private final BooleanProperty pacImmune = new SimpleBooleanProperty(false);
 
-    /** @return {@code true} if Pac‑Man is currently immune */
-    boolean isPacImmune();
+    private final BooleanProperty pacUsingAutopilot = new SimpleBooleanProperty(false);
 
-    /** @return {@code true} if autopilot is currently active */
-    boolean isPacUsingAutopilot();
+    public BooleanProperty cheatUsedProperty() {
+        return cheatUsed;
+    }
 
-    /** @return property indicating whether autopilot mode is active */
-    BooleanProperty pacUsingAutopilotProperty();
+    public void notifyCheatUsed() {
+        cheatUsed.set(true);
+    }
 
-    void clearCheats();
+    public BooleanProperty pacImmuneProperty() {
+        return pacImmune;
+    }
 
-    void updateCheats(GameLevel level);
+    public boolean isPacImmune() {
+        return pacImmuneProperty().get();
+    }
+
+    public boolean isPacUsingAutopilot() {
+        return pacUsingAutopilotProperty().get();
+    }
+
+    public BooleanProperty pacUsingAutopilotProperty() {
+        return pacUsingAutopilot;
+    }
+
+    protected GameCheats() {
+        cheatUsedProperty().addListener((_, _, cheated) -> {
+            if (cheated) {
+                handleCheatDetected();
+            }
+        });
+    }
+
+    public void clear() {
+        cheatUsedProperty().set(false);
+        pacImmuneProperty().set(false);
+        pacUsingAutopilotProperty().set(false);
+    }
+
+    public void handleCheatDetected() {
+        Logger.info("Cheat detected!");
+    }
+
+    public abstract void update(GameLevel level);
 }

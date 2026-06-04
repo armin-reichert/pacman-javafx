@@ -179,8 +179,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         miScrolling.setToggleGroup(toggleGroup);
 
         addLocalizedTitleItem(menu, translationManager, "pacman");
-        addLocalizedCheckBox(menu, translationManager, game.pacUsingAutopilotProperty(), "autopilot");
-        addLocalizedCheckBox(menu, translationManager, game.pacImmuneProperty(), "immunity");
+        addLocalizedCheckBox(menu, translationManager, game.cheats().pacUsingAutopilotProperty(), "autopilot");
+        addLocalizedCheckBox(menu, translationManager, game.cheats().pacImmuneProperty(), "immunity");
         addSeparator(menu);
         addLocalizedCheckBox(menu, translationManager, AppConstants.PROPERTY_MUTED, "muted");
         addLocalizedActionItem(menu, context, translationManager, ACTION_QUIT_GAME_SCENE, "quit");

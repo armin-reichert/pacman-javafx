@@ -132,7 +132,7 @@ public enum Arcade_GameState {
         @Override
         public void onEnter(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
-            game.makeReadyForPlaying(level);
+            game.prepareLevelForPlaying(level);
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
             game.showLevelMessage(level, GameLevelMessageType.READY);
@@ -273,7 +273,7 @@ public enum Arcade_GameState {
             if (timer().hasExpired()) {
                 final GameLevel level = game.optGameLevel().orElseThrow();
                 level.clearMessage();
-                game.clearCheats();
+                game.cheats().clear();
                 if (game.canStartNewGame()) {
                     game.flow().enterState(GAME_PREPARATION.state());
                 } else {

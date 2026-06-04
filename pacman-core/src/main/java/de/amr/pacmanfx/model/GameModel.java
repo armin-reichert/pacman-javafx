@@ -25,13 +25,15 @@ import java.util.Optional;
 /**
  * Common interface for all Pac‑Man game models.
  */
-public interface GameModel extends GameCheats {
+public interface GameModel {
 
     // Components
 
     GameControlFlow flow();
 
     GameRules rules();
+
+    GameCheats cheats();
 
     CoinMechanism coinMechanism();
 
@@ -83,7 +85,7 @@ public interface GameModel extends GameCheats {
 
     void startLevel();
 
-    void makeReadyForPlaying(GameLevel level);
+    void prepareLevelForPlaying(GameLevel level);
 
     void showLevelMessage(GameLevel level, GameLevelMessageType type);
 
@@ -100,8 +102,6 @@ public interface GameModel extends GameCheats {
     void onLevelCompleted(GameLevel level);
 
     // Actor related
-
-    CollisionStrategy DEFAULT_COLLISION_STRATEGY = CollisionStrategy.SAME_TILE;
 
     CollisionStrategy collisionStrategy();
 
