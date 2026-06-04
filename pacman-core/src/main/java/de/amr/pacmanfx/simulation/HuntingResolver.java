@@ -1,6 +1,8 @@
 package de.amr.pacmanfx.simulation;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;
@@ -10,6 +12,19 @@ import static de.amr.pacmanfx.core.Globals.HTS;
 import static de.amr.pacmanfx.core.Globals.TS;
 
 public class HuntingResolver {
+
+    public static GameStateID computeNextState(GameContext context, GameLevel level) {
+        if (context.gameModel().rules().isLevelCompleted(level)) {
+            return GameStateID.GAME_LEVEL_COMPLETE;
+        }
+        else if (context.huntingResult().pacKilled()) {
+            return GameStateID.GAME_LEVEL_PACMAN_DYING;
+        }
+        else if (context.huntingResult().hasGhostBeenKilled()) {
+            return GameStateID.GAME_LEVEL_EATING_GHOST;
+        }
+        return GameStateID.GAME_LEVEL_PLAYING;
+    }
 
     // If collision happened while teleporting (horizontally), move collided actors into visible world
     public static void fixPacPositionIfKilledInsidePortal(GameLevel level, Pac pac) {

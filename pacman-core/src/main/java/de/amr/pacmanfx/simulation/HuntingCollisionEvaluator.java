@@ -1,35 +1,17 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.simulation;
 
-import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.PacEatsFoodEvent;
-import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.world.TerrainLayer;
-import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.Globals.HTS;
-import static de.amr.pacmanfx.core.Globals.TS;
-
-public class HuntingLogic {
-
-    public static GameStateID computeNextState(GameContext context, GameLevel level) {
-        if (context.gameModel().rules().isLevelCompleted(level)) {
-            return GameStateID.GAME_LEVEL_COMPLETE;
-        }
-        else if (context.huntingResult().pacKilled()) {
-            return GameStateID.GAME_LEVEL_PACMAN_DYING;
-        }
-        else if (context.huntingResult().hasGhostBeenKilled()) {
-            return GameStateID.GAME_LEVEL_EATING_GHOST;
-        }
-        return GameStateID.GAME_LEVEL_PLAYING;
-    }
+public class HuntingCollisionEvaluator {
 
     public static void evaluate(GameContext context) {
         final HuntingStepResult result = context.huntingResult();

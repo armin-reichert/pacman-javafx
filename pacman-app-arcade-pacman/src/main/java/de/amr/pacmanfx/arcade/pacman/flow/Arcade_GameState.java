@@ -16,8 +16,9 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.simulation.Hunting;
-import de.amr.pacmanfx.simulation.HuntingLogic;
+import de.amr.pacmanfx.model.world.GateKeeper;
+import de.amr.pacmanfx.simulation.HuntingCollisionDetector;
+import de.amr.pacmanfx.simulation.HuntingCollisionEvaluator;
 import de.amr.pacmanfx.simulation.HuntingResolver;
 import org.tinylog.Logger;
 
@@ -185,22 +186,22 @@ public enum Arcade_GameState {
             final GameModel game = context.gameModel();
             final GameLevel level = game.optGameLevel().orElseThrow();
             final Pac pac = level.entities().pac();
-
-            if (game.gateKeeper() != null) {
-                game.gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
-            }
+            final GateKeeper gateKeeper = game.gateKeeper();
 
             game.cheats().update(level);
 
             level.heartbeat().triggerPulse();
             level.huntingTimer().update(game.rules(), level.number());
+            if (gateKeeper != null) {
+                gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
+            }
 
             level.entities().forEach(entity -> entity.update(level));
             game.updatePacPowerMode(level, pac);
 
             context.startNewHuntingStep();
-            Hunting.detectCollisions(context);
-            HuntingLogic.evaluate(context);
+            HuntingCollisionDetector.detectCollisions(context);
+            HuntingCollisionEvaluator.evaluate(context);
             logHuntingStep(context);
 
             if (context.huntingResult().foodFound()) {
@@ -209,12 +210,12 @@ public enum Arcade_GameState {
             }
             HuntingResolver.fixPacPositionIfKilledInsidePortal(level, pac);
 
-            final GameStateID nextStateID = HuntingLogic.computeNextState(context, level);
+            final GameStateID nextStateID = HuntingResolver.computeNextState(context, level);
             context.gameFlow().enterState(nextStateID.name());
         }
 
         private void logHuntingStep(GameContext context) {
-            final var report = Hunting.createReport(context.huntingResult());
+            final var report = HuntingCollisionDetector.createReport(context.huntingResult());
             if (!report.isEmpty()) {
                 Logger.info("Hunting Step: tick=", context.gameClock().tickCount());
                 for (var msg : report) {

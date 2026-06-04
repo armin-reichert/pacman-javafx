@@ -10,14 +10,13 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Hunting {
+public final class HuntingCollisionDetector {
 
-    private Hunting() {}
+    private HuntingCollisionDetector() {}
 
     public static List<String> createReport(HuntingStepResult result) {
         var messages = new ArrayList<String>();

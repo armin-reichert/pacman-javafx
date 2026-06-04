@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.simulation.Hunting;
+import de.amr.pacmanfx.simulation.HuntingCollisionDetector;
 
 import java.util.List;
 
@@ -78,7 +78,7 @@ public class LevelMediumTestState extends TestState {
         level.heartbeat().triggerPulse();
 
         context.startNewHuntingStep();
-        Hunting.detectCollisions(context);
+        HuntingCollisionDetector.detectCollisions(context);
 
         //TODO add missing logic again
         boolean pacKilled = false;
