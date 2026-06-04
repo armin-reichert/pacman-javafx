@@ -251,7 +251,7 @@ public enum TengenMsPacMan_GameState {
                 if (timer().tickCount() < 60) {
                     level.ghostsInAnyOfStates(Set.of(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE))
                         .forEach(ghost -> ghost.update(level));
-                    level.heartbeat().pulse();
+                    level.heartbeat().triggerPulse();
                 }
             }
         }

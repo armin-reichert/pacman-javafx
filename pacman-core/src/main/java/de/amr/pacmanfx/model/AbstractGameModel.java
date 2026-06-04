@@ -459,7 +459,7 @@ public abstract class AbstractGameModel implements GameModel {
      * @param level the current game level
      */
     protected void doHuntingStep(GameLevel level) {
-        level.heartbeat().pulse();
+        level.heartbeat().triggerPulse();
 
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();

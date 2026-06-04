@@ -450,7 +450,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             flow().publishGameEvent(new PacDeadEvent(this, pac));
         }
         else {
-            level.heartbeat().pulse();
+            level.heartbeat().triggerPulse();
             pac.update(level);
         }
     }

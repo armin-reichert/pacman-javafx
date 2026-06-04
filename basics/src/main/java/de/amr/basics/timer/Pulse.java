@@ -40,7 +40,7 @@ public class Pulse {
         start();
     }
 
-    public void pulse() {
+    public void triggerPulse() {
         pulseTriggered = false;
         if (running) {
             ++pulseCount;

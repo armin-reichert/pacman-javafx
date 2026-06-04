@@ -115,7 +115,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             flow().publishGameEvent(new PacDeadEvent(this, pac));
         }
         else {
-            level.heartbeat().pulse();
+            level.heartbeat().triggerPulse();
             pac.update(level);
         }
     }
