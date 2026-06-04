@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core;
 import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.simulation.Hunting;
+import de.amr.pacmanfx.simulation.HuntingStepResult;
 import javafx.beans.property.StringProperty;
 
 import static java.util.Objects.requireNonNull;
@@ -103,5 +103,5 @@ public interface GameContext {
 
     void startNewHuntingStep();
 
-    Hunting.Result huntingResult();
+    HuntingStepResult huntingResult();
 }

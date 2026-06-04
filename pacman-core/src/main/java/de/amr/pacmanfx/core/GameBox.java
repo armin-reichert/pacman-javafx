@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.simulation.Hunting;
+import de.amr.pacmanfx.simulation.HuntingStepResult;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.tinylog.Logger;
@@ -48,7 +48,7 @@ public class GameBox implements GameContext {
     private final GameClock gameClock;
     private final CoinMechanism coinMechanism;
 
-    private Hunting.Result huntingResult;
+    private HuntingStepResult huntingResult;
 
     public GameBox(GameClock gameClock, CoinMechanism coinMechanism) {
         this.gameClock = requireNonNull(gameClock);
@@ -141,13 +141,13 @@ public class GameBox implements GameContext {
     }
 
     @Override
-    public Hunting.Result huntingResult() {
+    public HuntingStepResult huntingResult() {
         return huntingResult;
     }
 
     @Override
     public void startNewHuntingStep() {
-        huntingResult = new Hunting.Result();
+        huntingResult = new HuntingStepResult();
     }
 
     // other stuff
