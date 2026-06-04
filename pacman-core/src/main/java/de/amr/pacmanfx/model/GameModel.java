@@ -81,6 +81,8 @@ public interface GameModel {
 
     void buildDemoLevel();
 
+    void setLevel(GameLevel level);
+
     Optional<GameLevel> optGameLevel();
 
     void startLevel();

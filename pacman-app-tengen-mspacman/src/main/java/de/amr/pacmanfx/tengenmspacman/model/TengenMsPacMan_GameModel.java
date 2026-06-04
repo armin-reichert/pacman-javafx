@@ -305,8 +305,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         score.setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
 
-        levelProperty().set(newLevel);
-        flow().publishGameEvent(new LevelCreatedEvent(this, newLevel));
+        setLevel(newLevel);
+        flow.publishGameEvent(new LevelCreatedEvent(this, newLevel));
     }
 
     @Override
@@ -322,10 +322,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         gateKeeper.setLevelNumber(1);
         demoLevelSteering.init();
-        score().setLevelNumber(1);
+        score.setLevelNumber(1);
 
-        levelProperty().set(newLevel);
-        flow().publishGameEvent(new LevelCreatedEvent(this, newLevel));
+        setLevel(newLevel);
+        flow.publishGameEvent(new LevelCreatedEvent(this, newLevel));
     }
 
     @Override

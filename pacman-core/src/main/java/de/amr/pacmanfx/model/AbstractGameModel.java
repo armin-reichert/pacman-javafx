@@ -249,6 +249,11 @@ public abstract class AbstractGameModel implements GameModel {
     public abstract void buildDemoLevel();
 
     @Override
+    public void setLevel(GameLevel level) {
+        levelProperty().set(level);
+    }
+
+    @Override
     public Optional<GameLevel> optGameLevel() {
         return Optional.ofNullable(level.get());
     }
@@ -725,19 +730,10 @@ public abstract class AbstractGameModel implements GameModel {
         collisionDoubleCheckedProperty().set(doubleChecked);
     }
 
-    /**
-     * @return the level property
-     */
-    public ObjectProperty<GameLevel> levelProperty() {
+    private ObjectProperty<GameLevel> levelProperty() {
         return level;
     }
 
-    /**
-     * Called when Pac-Man eats an energizer.
-     *
-     * @param level the current level
-     * @param tile  the tile containing the energizer
-     */
     public abstract void eatEnergizer(GameLevel level, Vector2i tile);
 
     public void eatBonus(GameLevel level, Bonus bonus) {
@@ -747,11 +743,5 @@ public abstract class AbstractGameModel implements GameModel {
         flow().publishGameEvent(new BonusEatenEvent(this, bonus));
     }
 
-    /**
-     * Determines whether Pac-Man is safe from being killed during demo mode.
-     *
-     * @param demoLevel the demo level
-     * @return {@code true} if Pac-Man cannot be killed at this moment
-     */
     protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 }

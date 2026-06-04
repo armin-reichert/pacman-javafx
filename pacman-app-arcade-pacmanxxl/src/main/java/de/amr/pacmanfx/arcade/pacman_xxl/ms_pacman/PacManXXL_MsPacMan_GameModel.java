@@ -43,10 +43,10 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
         gateKeeper.setLevelNumber(levelNumber);
         demoLevelSteering.init();
-        levelCounter().setEnabled(false);
-        score().setLevelNumber(levelNumber);
+        levelCounter.setEnabled(false);
+        score.setLevelNumber(levelNumber);
 
-        levelProperty().set(level);
-        flow().publishGameEvent(new LevelCreatedEvent(this, level));
+        setLevel(level);
+        flow.publishGameEvent(new LevelCreatedEvent(this, level));
     }
 }

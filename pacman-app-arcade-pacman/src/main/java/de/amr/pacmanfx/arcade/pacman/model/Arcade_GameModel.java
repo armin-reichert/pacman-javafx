@@ -127,7 +127,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         levelCounter().setEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        levelProperty().set(level);
+        setLevel(level);
         flow().publishGameEvent(new LevelCreatedEvent(this, level));
     }
 
@@ -144,12 +144,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         gateKeeper.setLevelNumber(levelNumber);
         demoLevelSteering.init();
-        levelCounter().setEnabled(true);
-        score().setLevelNumber(levelNumber);
+        levelCounter.setEnabled(true);
+        score.setLevelNumber(levelNumber);
 
-        levelProperty().set(level);
-
-        flow().publishGameEvent(new LevelCreatedEvent(this, level));
+        setLevel(level);
+        flow.publishGameEvent(new LevelCreatedEvent(this, level));
     }
 
     @Override
