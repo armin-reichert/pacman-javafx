@@ -70,7 +70,18 @@ public class LevelMediumTestState extends TestState {
         level.entities().ghosts().forEach(ghost -> ghost.update(level));
         level.optBonus().ifPresent(bonus -> bonus.update(level));
 
-        Hunting.doHuntingStep(context);
+        if (game.gateKeeper() != null) {
+            game.gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
+        }
+        game.cheats().update(level);
+
+        level.heartbeat().triggerPulse();
+
+        context.startNewHuntingStep();
+        Hunting.detectCollisions(context);
+
+        //TODO add missing logic again
+        boolean pacKilled = false;
 
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
@@ -86,7 +97,7 @@ public class LevelMediumTestState extends TestState {
         else if (game.rules().isLevelCompleted(level)) {
             game.flow().enterState(GameStateID.GAME_INTRO.name());
         }
-        else if (context.huntingResult().hasPacManBeenKilled()) {
+        else if (pacKilled) {
             expire();
         }
         else if (context.huntingResult().hasGhostBeenKilled()) {

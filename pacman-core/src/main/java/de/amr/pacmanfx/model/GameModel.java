@@ -115,5 +115,9 @@ public interface GameModel {
 
     void onEatGhost(GameLevel level, Ghost eatenGhost);
 
+    void startPacPowerMode(GameLevel level, Pac pac);
+
+    void updatePacPowerMode(GameLevel level, Pac pac);
+
     boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 }

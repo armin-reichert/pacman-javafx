@@ -8,12 +8,16 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameContinuedEvent;
 import de.amr.pacmanfx.event.GameStartedEvent;
 import de.amr.pacmanfx.flow.GameState;
+import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.simulation.Hunting;
+import de.amr.pacmanfx.simulation.HuntingStepEvaluation;
+import org.tinylog.Logger;
 
 import java.util.Set;
 
@@ -178,19 +182,39 @@ public enum Arcade_GameState {
         public void onUpdate(GameContext context) {
             final GameModel game = context.gameModel();
             final GameLevel level = game.optGameLevel().orElseThrow();
+            final Pac pac = level.entities().pac();
 
-            Hunting.doHuntingStep(context);
+            if (game.gateKeeper() != null) {
+                game.gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
+            }
 
-            if (game.rules().isLevelCompleted(level)) {
-                context.gameFlow().enterState(GAME_LEVEL_COMPLETE.state());
-            }
-            else if (context.huntingResult().hasPacManBeenKilled()) {
-                context.gameFlow().enterState(GAME_LEVEL_PACMAN_DYING.state());
-            }
-            else if (context.huntingResult().hasGhostBeenKilled()) {
-                context.gameFlow().enterState(GAME_LEVEL_EATING_GHOST.state());
+            game.cheats().update(level);
+
+            level.heartbeat().triggerPulse();
+            level.huntingTimer().update(game.rules(), level.number());
+
+            level.entities().forEach(entity -> entity.update(level));
+            game.updatePacPowerMode(level, pac);
+
+            context.startNewHuntingStep();
+            Hunting.detectCollisions(context);
+            HuntingStepEvaluation.evaluate(context);
+            logHuntingStep(context);
+
+            final GameStateID nextStateID = HuntingStepEvaluation.computeNextState(context, level);
+            context.gameFlow().enterState(nextStateID.name());
+        }
+
+        private void logHuntingStep(GameContext context) {
+            final var report = Hunting.createReport(context.huntingResult());
+            if (!report.isEmpty()) {
+                Logger.info("Hunting Step: tick=", context.gameClock().tickCount());
+                for (var msg : report) {
+                    Logger.info("- " + msg);
+                }
             }
         }
+
     }),
 
     GAME_LEVEL_COMPLETE (new GameState("GAME_LEVEL_COMPLETE") {

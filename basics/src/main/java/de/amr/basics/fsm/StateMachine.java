@@ -174,7 +174,6 @@ public class StateMachine<C> {
     public void enterState(State<C> newState) {
         requireNonNull(newState);
         if (newState == state) {
-            Logger.info("State machine is already in state {}", state);
             return;
         }
         if (state != null) {

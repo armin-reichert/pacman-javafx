@@ -392,6 +392,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         level.killedGhostsForCurrentEnergizer().clear();
+
+        startPacPowerMode(level, level.entities().pac());
     }
 
     @Override

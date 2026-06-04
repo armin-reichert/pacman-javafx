@@ -406,8 +406,10 @@ public class Ghost extends MovingActor {
     private void playFrightenedAnimation(GameLevel level, Pac pac) {
         if (pac.isPowerFadingStarting(level)) {
             animations.select(ArcadePacMan_AnimationID.GHOST_FLASHING);
+            animations.playSelected();
         } else if (!pac.isPowerFading(level)) {
             animations.select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
+            animations.playSelected();
         }
     }
 

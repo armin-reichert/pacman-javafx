@@ -7,11 +7,9 @@ package de.amr.pacmanfx.model;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
+import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.event.BonusEatenEvent;
-import de.amr.pacmanfx.event.GhostEatenEvent;
-import de.amr.pacmanfx.event.HuntingPhaseStartedEvent;
-import de.amr.pacmanfx.event.SpecialScoreEvent;
+import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -37,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Set;
 
 import static de.amr.pacmanfx.core.Globals.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
@@ -403,6 +402,38 @@ public abstract class AbstractGameModel implements GameModel {
 
         flow.publishGameEvent(new GhostEatenEvent(flow().context(), eatenGhost));
     }
+
+    public void startPacPowerMode(GameLevel level, Pac pac) {
+        level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
+        final float powerSeconds = level.pacPowerSeconds();
+        if (powerSeconds > 0) {
+            level.huntingTimer().stop();
+            Logger.debug("Hunting stopped (Pac-Man got power)");
+            final long powerTicks = TickTimer.secToTicks(powerSeconds);
+            pac.powerTimer().restartTicks(powerTicks);
+            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
+            level.ghostsInState(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
+            flow.publishGameEvent(new PacGetsPowerEvent(flow.context(), pac));
+        }
+    }
+
+    public void updatePacPowerMode(GameLevel level, Pac pac) {
+        if (pac.powerTimer().isRunning()) {
+            pac.powerTimer().doTick();
+            if (pac.isPowerFadingStarting(level)) {
+                flow.publishGameEvent(new PacPowerFadesEvent(flow.context(), pac));
+            } else if (pac.powerTimer().hasExpired()) {
+                pac.powerTimer().stop();
+                pac.powerTimer().reset(0);
+                level.killedGhostsForCurrentEnergizer().clear();
+                level.huntingTimer().start();
+                level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
+                flow.publishGameEvent(new PacLostPowerEvent(flow.context(), pac));
+            }
+        }
+    }
+
+
 
     /* -------------------------------------------------------------------------
      * Cheating

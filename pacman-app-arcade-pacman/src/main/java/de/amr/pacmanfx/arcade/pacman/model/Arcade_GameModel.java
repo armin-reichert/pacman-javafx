@@ -55,6 +55,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         checkRedGhostCruiseElroyActivation(level);
 
         level.killedGhostsForCurrentEnergizer().clear();
+
+        startPacPowerMode(level, pac);
     }
 
     protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
