@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameContinuedEvent;
 import de.amr.pacmanfx.event.GameStartedEvent;
 import de.amr.pacmanfx.flow.GameState;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -30,15 +31,16 @@ public enum Arcade_GameState {
 
         @Override
         public void onEnter(GameContext context) {
+            final GameModel game = context.gameModel();
             lock(); // UI triggers timer expiration
-            context.gameModel().init();
-            context.gameModel().hud().hide();
+            game.init();
+            game.hud().hide();
         }
 
         @Override
         public void onUpdate(GameContext context) {
             if (timer().hasExpired()) {
-                context.gameModel().flow().enterState(GAME_INTRO.state());
+                context.gameFlow().enterState(GAME_INTRO.state());
             }
         }
     }),
@@ -47,17 +49,19 @@ public enum Arcade_GameState {
      * Corresponds to the intro screen with the Pac-Man and ghost animations.
      */
     GAME_INTRO(new GameState("GAME_INTRO") {
+
         @Override
         public void onEnter(GameContext context) {
+            final GameModel game = context.gameModel();
             lock();
-            context.gameModel().hud().credit(true).livesCounter(false).levelCounter(true).score(true).show();
+            game.hud().credit(true).livesCounter(false).levelCounter(true).score(true).show();
         }
 
         @Override
         public void onUpdate(GameContext context) {
             if (timer().hasExpired()) {
                 // Start demo level (attract mode)
-                context.gameModel().flow().enterState(GAME_OR_LEVEL_STARTING.state());
+                context.gameFlow().enterState(GAME_OR_LEVEL_STARTING.state());
             }
         }
     }),
@@ -66,11 +70,13 @@ public enum Arcade_GameState {
      * Corresponds to the start screen of the Arcade Pac-Man games.
      */
     GAME_PREPARATION(new GameState("GAME_PREPARATION") {
+
         @Override
         public void onEnter(GameContext context) {
+            final GameModel game = context.gameModel();
             lock();
-            context.gameModel().hud().credit(true).score(true).levelCounter(true).livesCounter(false).show();
-            context.gameModel().prepareNewGame();
+            game.hud().credit(true).score(true).levelCounter(true).livesCounter(false).show();
+            game.prepareNewGame();
         }
 
         @Override
@@ -80,23 +86,26 @@ public enum Arcade_GameState {
     }),
 
     GAME_OR_LEVEL_STARTING(new GameState("GAME_OR_LEVEL_STARTING") {
+
         @Override
         public void onEnter(GameContext context) {
-            context.gameModel().hud().score(true).levelCounter(true).show();
+            final GameModel game = context.gameModel();
+            game.hud().score(true).levelCounter(true).show();
         }
 
         @Override
         public void onUpdate(GameContext context) {
+            final GameModel game = context.gameModel();
             final long tick = timer().tickCount();
-            if (context.gameModel().isPlaying()) {
-                context.gameModel().flow().enterState(GAME_LEVEL_CONTINUE.state());
+            if (game.isPlaying()) {
+                context.gameFlow().enterState(GAME_LEVEL_CONTINUE.state());
             }
-            else if (context.gameModel().canStartNewGame()) {
-                context.gameModel().flow().enterState(GAME_STARTING.state());
+            else if (game.canStartNewGame()) {
+                context.gameFlow().enterState(GAME_STARTING.state());
             }
             else {
-                context.gameModel().startDemoLevel(tick);
-                context.gameModel().hud().credit(true).livesCounter(false);
+                game.startDemoLevel(tick);
+                game.hud().credit(true).livesCounter(false);
             }
         }
     }),
@@ -106,26 +115,28 @@ public enum Arcade_GameState {
 
         @Override
         public void onEnter(GameContext context) {
-            context.gameModel().prepareNewGame();
-            context.gameModel().hud().credit(false).livesCounter(true);
-            context.gameModel().buildNormalLevel(1);
-            context.gameModel().flow().publishGameEvent(new GameStartedEvent(context));
+            final GameModel game = context.gameModel();
+            game.prepareNewGame();
+            game.hud().credit(false).livesCounter(true);
+            game.buildNormalLevel(1);
+            context.gameFlow().publishGameEvent(new GameStartedEvent(context));
         }
 
         @Override
         public void onUpdate(GameContext context) {
+            final GameModel game = context.gameModel();
             final long tick = timer().tickCount();
             if (tick == Timing.TICK_NEW_GAME_START_LEVEL) {
-                context.gameModel().startLevel();
+                game.startLevel();
             }
             else if (tick == Timing.TICK_NEW_GAME_SHOW_GUYS) {
-                final GameLevel level = context.gameModel().optGameLevel().orElseThrow();
+                final GameLevel level = game.optGameLevel().orElseThrow();
                 level.entities().pac().show();
                 level.entities().ghosts().forEach(Ghost::show);
             }
             else if (tick == Timing.TICK_NEW_GAME_START_HUNTING) {
-                context.gameModel().setPlaying(true);
-                context.gameModel().flow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
+                game.setPlaying(true);
+                context.gameFlow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
             }
         }
     }),
@@ -134,93 +145,103 @@ public enum Arcade_GameState {
 
         @Override
         public void onEnter(GameContext context) {
-            final GameLevel level = context.gameModel().optGameLevel().orElseThrow();
-            context.gameModel().prepareLevelForPlaying(level);
+            final GameModel game = context.gameModel();
+            final GameLevel level = game.optGameLevel().orElseThrow();
+            game.prepareLevelForPlaying(level);
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
-            context.gameModel().showLevelMessage(level, GameLevelMessageType.READY);
-            context.gameModel().hud().credit(false).livesCounter(true);
+            game.showLevelMessage(level, GameLevelMessageType.READY);
+            game.hud().credit(false).livesCounter(true);
         }
 
         @Override
         public void onUpdate(GameContext context) {
             final long tick = timer().tickCount();
             if (tick == 60) {
-                context.gameModel().flow().publishGameEvent(new GameContinuedEvent(context));
+                context.gameFlow().publishGameEvent(new GameContinuedEvent(context));
             }
             else if (tick == Arcade_GameState.Timing.TICK_RESUME_HUNTING) {
-                context.gameModel().flow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
+                context.gameFlow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
             }
         }
     }),
 
     GAME_LEVEL_PLAYING(new GameState("GAME_LEVEL_PLAYING") {
+
         @Override
         public void onEnter(GameContext context) {
-            final GameLevel level = context.gameModel().optGameLevel().orElseThrow();
-            context.gameModel().onStartLevelPlaying(level);
+            final GameModel game = context.gameModel();
+            final GameLevel level = game.optGameLevel().orElseThrow();
+            game.onStartLevelPlaying(level);
         }
 
         @Override
         public void onUpdate(GameContext context) {
-            final GameLevel level = context.gameModel().optGameLevel().orElseThrow();
+            final GameModel game = context.gameModel();
+            final GameLevel level = game.optGameLevel().orElseThrow();
 
             //TODO tick
             final SimulationStep step = Simulation.doHuntingStep(context, 42);
 
-            if (context.gameModel().rules().isLevelCompleted(level)) {
-                context.gameModel().flow().enterState(GAME_LEVEL_COMPLETE.state());
+            if (game.rules().isLevelCompleted(level)) {
+                context.gameFlow().enterState(GAME_LEVEL_COMPLETE.state());
             }
             else if (step.hasPacManBeenKilled()) {
-                context.gameModel().flow().enterState(GAME_LEVEL_PACMAN_DYING.state());
+                context.gameFlow().enterState(GAME_LEVEL_PACMAN_DYING.state());
             }
             else if (step.hasGhostBeenKilled()) {
-                context.gameModel().flow().enterState(GAME_LEVEL_EATING_GHOST.state());
+                context.gameFlow().enterState(GAME_LEVEL_EATING_GHOST.state());
             }
         }
     }),
 
     GAME_LEVEL_COMPLETE (new GameState("GAME_LEVEL_COMPLETE") {
+
         @Override
         public void onEnter(GameContext context) {
+            final GameModel game = context.gameModel();
             lock(); // UI triggers timeout
-            context.gameModel().onLevelCompleted(context.gameModel().optGameLevel().orElseThrow());
+            game.onLevelCompleted(game.optGameLevel().orElseThrow());
         }
 
         @Override
         public void onUpdate(GameContext context) {
-            final GameLevel level = context.gameModel().optGameLevel().orElseThrow();
+            final GameModel game = context.gameModel();
+            final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer().hasExpired()) {
                 if (level.isDemoLevel()) {
                     // just in case: if demo level was completed, go back to intro scene
-                    context.gameModel().flow().enterState(GAME_INTRO.state());
+                    context.gameFlow().enterState(GAME_INTRO.state());
                 }
-                else if (context.gameModel().flow().cutScenesEnabled() && level.cutSceneNumber() != 0) {
-                    context.gameModel().flow().enterState(GAME_LEVEL_INTERMISSION.state());
+                else if (context.gameFlow().cutScenesEnabled() && level.cutSceneNumber() != 0) {
+                    context.gameFlow().enterState(GAME_LEVEL_INTERMISSION.state());
                 }
                 else {
-                    context.gameModel().flow().enterState(GAME_LEVEL_TRANSITION.state());
+                    context.gameFlow().enterState(GAME_LEVEL_TRANSITION.state());
                 }
             }
         }
     }),
 
     GAME_LEVEL_TRANSITION(new GameState("GAME_LEVEL_TRANSITION") {
+
         @Override
         public void onEnter(GameContext context) {
+            final GameModel game = context.gameModel();
             timer().restartSeconds(2);
-            context.gameModel().startNextLevel();
+            game.startNextLevel();
         }
 
         @Override
         public void onUpdate(GameContext context) {
             if (timer().hasExpired()) {
-                context.gameModel().flow().enterState(GAME_OR_LEVEL_STARTING.state());
+                context.gameFlow().enterState(GAME_OR_LEVEL_STARTING.state());
             }
         }
     }),
 
     GAME_LEVEL_EATING_GHOST(new GameState("GAME_LEVEL_EATING_GHOST") {
+
         @Override
         public void onEnter(GameContext context) {
             timer().restartTicks(60);
@@ -228,12 +249,13 @@ public enum Arcade_GameState {
 
         @Override
         public void onUpdate(GameContext context) {
-            final GameLevel level = context.gameModel().optGameLevel().orElseThrow();
+            final GameModel game = context.gameModel();
+            final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer().hasExpired()) {
                 level.entities().pac().show();
                 level.ghostsInState(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
                 level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
-                context.gameModel().flow().resumePreviousState();
+                context.gameFlow().resumePreviousState();
             } else {
                 if (timer().tickCount() < 60) {
                     level.ghostsInAnyOfStates(Set.of(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE))
@@ -245,6 +267,7 @@ public enum Arcade_GameState {
     }),
 
     GAME_LEVEL_PACMAN_DYING(new GameState("GAME_LEVEL_PACMAN_DYING") {
+
         @Override
         public void onEnter(GameContext context) {
             lock(); // UI triggers time-out
@@ -252,60 +275,68 @@ public enum Arcade_GameState {
 
         @Override
         public void onUpdate(GameContext context) {
-            final GameLevel level = context.gameModel().optGameLevel().orElseThrow();
+            final GameModel game = context.gameModel();
+            final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer().hasExpired()) {
                 if (level.isDemoLevel()) {
-                    context.gameModel().flow().enterState(GAME_OVER.state());
+                    context.gameFlow().enterState(GAME_OVER.state());
                 } else {
-                    context.gameModel().lives().add(-1);
-                    context.gameModel().flow().enterState(context.gameModel().lives().count() == 0 ? GAME_OVER.state() : GAME_OR_LEVEL_STARTING.state());
+                    game.lives().add(-1);
+                    context.gameFlow().enterState(game.lives().count() == 0 ? GAME_OVER.state() : GAME_OR_LEVEL_STARTING.state());
                 }
             } else {
-                context.gameModel().doPacManDying(level, level.entities().pac(), timer().tickCount());
+                game.doPacManDying(level, level.entities().pac(), timer().tickCount());
             }
         }
     }),
 
     GAME_OVER (new GameState("GAME_OVER") {
+
         @Override
         public void onEnter(GameContext context) {
-            final GameLevel level = context.gameModel().optGameLevel().orElseThrow();
+            final GameModel game = context.gameModel();
+            final GameLevel level = game.optGameLevel().orElseThrow();
             timer().restartTicks(level.gameOverStateTicks());
-            context.gameModel().onGameOver(level);
+            game.onGameOver(level);
         }
 
         @Override
         public void onUpdate(GameContext context) {
+            final GameModel game = context.gameModel();
             if (timer().hasExpired()) {
-                final GameLevel level = context.gameModel().optGameLevel().orElseThrow();
+                final GameLevel level = game.optGameLevel().orElseThrow();
                 level.clearMessage();
-                context.gameModel().cheats().clear();
-                if (context.gameModel().canStartNewGame()) {
-                    context.gameModel().flow().enterState(GAME_PREPARATION.state());
+                game.cheats().clear();
+                if (game.canStartNewGame()) {
+                    context.gameFlow().enterState(GAME_PREPARATION.state());
                 } else {
-                    context.gameModel().flow().enterState(GAME_INTRO.state());
+                    context.gameFlow().enterState(GAME_INTRO.state());
                 }
             }
         }
     }),
 
     GAME_LEVEL_INTERMISSION(new GameState("GAME_LEVEL_INTERMISSION") {
+
         @Override
         public void onEnter(GameContext context) {
+            final GameModel game = context.gameModel();
             lock();
-            context.gameModel().hud().credit(false).score(false).levelCounter(true).livesCounter(false).show();
+            game.hud().credit(false).score(false).levelCounter(true).livesCounter(false).show();
         }
 
         @Override
         public void onUpdate(GameContext context) {
+            final GameModel game = context.gameModel();
             if (timer().hasExpired()) {
-                context.gameModel().flow().enterState(context.gameModel().isPlaying() ? GAME_LEVEL_TRANSITION.state() : GAME_INTRO.state());
+                context.gameFlow().enterState(game.isPlaying() ? GAME_LEVEL_TRANSITION.state() : GAME_INTRO.state());
             }
         }
 
         @Override
         public void onExit(GameContext context) {
-            context.gameModel().hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
+            final GameModel game = context.gameModel();
+            game.hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
         }
     });
 

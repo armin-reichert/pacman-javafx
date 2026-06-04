@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.core;
 
+import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.simulation.SimulationStep;
@@ -80,6 +81,10 @@ public interface GameContext {
      * @throws ClassCastException if the registered game model type does not match the expected type
      */
     <T extends AbstractGameModel> T gameModel();
+
+    default GameControlFlow gameFlow() {
+        return gameModel().flow();
+    }
 
     /**
      * Returns the coin mechanism associated with the game box.
