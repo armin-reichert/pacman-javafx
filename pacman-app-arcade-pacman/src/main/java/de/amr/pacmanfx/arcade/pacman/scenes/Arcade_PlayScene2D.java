@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
-import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -43,7 +42,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onTick(GameClock clock) {
+    public void onTick(long tick) {
         context.optCurrentGameLevel().ifPresent(level -> {
             updateLivesCounter(level);
             context().currentSoundEffects().ifPresent(sfx -> {

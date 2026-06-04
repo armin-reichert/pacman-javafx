@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.fsm.State;
-import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -37,7 +36,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     }
 
     @Override
-    public void onTick(GameClock clock) {
+    public void onTick(long tick) {
         final State<GameContext> gameState = context.currentGameState();
         if (gameState.timer().atSecond(DISPLAY_SECONDS)) {
             gameState.expire();

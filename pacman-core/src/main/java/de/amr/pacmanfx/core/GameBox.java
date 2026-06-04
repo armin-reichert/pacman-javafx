@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.simulation.SimulationStep;
+import de.amr.pacmanfx.simulation.Hunting;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.tinylog.Logger;
@@ -45,10 +45,13 @@ public class GameBox implements GameContext {
     private final File homeDir = DEFAULT_HOME_DIR;
     private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
 
+    private final GameClock gameClock;
     private final CoinMechanism coinMechanism;
-    private final SimulationStep simulationStep = new SimulationStep();
 
-    public GameBox(CoinMechanism coinMechanism) {
+    private Hunting.Result huntingResult;
+
+    public GameBox(GameClock gameClock, CoinMechanism coinMechanism) {
+        this.gameClock = requireNonNull(gameClock);
         this.coinMechanism = requireNonNull(coinMechanism);
 
         final boolean ok = validateUserDirs();
@@ -104,8 +107,8 @@ public class GameBox implements GameContext {
     }
 
     @Override
-    public SimulationStep simulationStep() {
-        return simulationStep;
+    public GameClock gameClock() {
+        return gameClock;
     }
 
     @Override
@@ -135,6 +138,16 @@ public class GameBox implements GameContext {
     public boolean hasGameForVariantName(String variantName) {
         requireNonNull(variantName);
         return gamesByVariantName.containsKey(variantName);
+    }
+
+    @Override
+    public Hunting.Result huntingResult() {
+        return huntingResult;
+    }
+
+    @Override
+    public void startNewHuntingStep() {
+        huntingResult = new Hunting.Result();
     }
 
     // other stuff

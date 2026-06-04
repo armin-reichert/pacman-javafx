@@ -21,6 +21,7 @@ import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImpl;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
+import de.amr.pacmanfx.uilib.GameClockFX;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -52,7 +53,7 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void init() throws Exception {
-        gameBox = new GameBox( new CoinMechanism(99));
+        gameBox = new GameBox(new GameClockFX(), new CoinMechanism(99));
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
     }
 

@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.d3;
 
-import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.score.Score;
@@ -194,15 +193,15 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     @Override
-    public void onTick(GameClock clock) {
+    public void onTick(long tick) {
         final GameLevel level = context().optCurrentGameLevel().orElse(null);
         if (level == null) {
-            Logger.info("Tick {}: Game level not yet created, update ignored", clock.tickCount());
+            Logger.info("Tick {}: Game level not yet created, update ignored", tick);
             return;
         }
 
         if (level3D == null) {
-            Logger.info("Tick {}: Game level 3D not yet created, update ignored", clock.tickCount());
+            Logger.info("Tick {}: Game level 3D not yet created, update ignored", tick);
             return;
         }
 

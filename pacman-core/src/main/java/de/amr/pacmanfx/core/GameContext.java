@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core;
 import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.simulation.SimulationStep;
+import de.amr.pacmanfx.simulation.Hunting;
 import javafx.beans.property.StringProperty;
 
 import static java.util.Objects.requireNonNull;
@@ -87,6 +87,11 @@ public interface GameContext {
     }
 
     /**
+     * @return the game clock driving the simulation
+     */
+    GameClock gameClock();
+
+    /**
      * Returns the coin mechanism associated with the game box.
      * <p>
      * The coin mechanism is responsible for tracking inserted credits and
@@ -96,5 +101,7 @@ public interface GameContext {
      */
     CoinMechanism coinMechanism();
 
-    SimulationStep simulationStep();
+    void startNewHuntingStep();
+
+    Hunting.Result huntingResult();
 }

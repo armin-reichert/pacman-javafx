@@ -68,7 +68,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
             onPacManDying(gameState);
         }
         else if (GameStateID.GAME_LEVEL_EATING_GHOST.identifies(gameState)) {
-            onEatingGhost();
+            onEatingGhost(event.context());
         }
         else if (GameStateID.GAME_LEVEL_COMPLETE.identifies(gameState)) {
             onLevelComplete();
@@ -252,9 +252,9 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         );
     }
 
-    private void onEatingGhost() {
+    private void onEatingGhost(GameContext context) {
         final GameLevel3D level3D = assertLevel3D();
-        context().gameContext().simulationStep().ghostsKilled().forEach(ghost -> {
+        context.huntingResult().ghostsKilled().forEach(ghost -> {
             final Ghost3D ghost3D = level3D.ghost3D(ghost.personality());
             final int killIndex = level3D.level().killedGhostsForCurrentEnergizer().indexOf(ghost);
             final Image pointsImage = level3D.uiConfig().killedGhostPointsImage(killIndex);

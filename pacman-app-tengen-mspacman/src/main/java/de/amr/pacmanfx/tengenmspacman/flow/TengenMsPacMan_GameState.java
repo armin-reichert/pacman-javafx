@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.simulation.SimulationStep;
+import de.amr.pacmanfx.simulation.Hunting;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HeadsUpDisplay;
@@ -192,16 +192,15 @@ public enum TengenMsPacMan_GameState {
             final GameModel game = context.gameModel();
             final GameLevel level = game.optGameLevel().orElseThrow();
 
-            //TODO tick
-            final SimulationStep step = de.amr.pacmanfx.simulation.Simulation.doHuntingStep(context, 42);
+            Hunting.doHuntingStep(context);
 
             if (game.rules().isLevelCompleted(level)) {
                 game.flow().enterState(GAME_LEVEL_COMPLETE.state());
             }
-            else if (step.hasPacManBeenKilled()) {
+            else if (context.huntingResult().hasPacManBeenKilled()) {
                 game.flow().enterState(GAME_LEVEL_PACMAN_DYING.state());
             }
-            else if (step.hasGhostBeenKilled()) {
+            else if (context.huntingResult().hasGhostBeenKilled()) {
                 game.flow().enterState(GAME_LEVEL_EATING_GHOST.state());
             }
         }

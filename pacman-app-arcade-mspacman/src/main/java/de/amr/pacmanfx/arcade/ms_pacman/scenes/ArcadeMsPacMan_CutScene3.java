@@ -8,7 +8,6 @@ import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
@@ -86,7 +85,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void onTick(GameClock clock) {
+    public void onTick(long tick) {
         switch (sceneState) {
             case SceneState.CLAPPERBOARD -> updateStateClapperboard();
             case SceneState.DELIVER_JUNIOR -> updateStateDeliverJunior();

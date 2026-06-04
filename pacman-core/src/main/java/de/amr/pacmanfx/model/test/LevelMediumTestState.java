@@ -12,8 +12,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.simulation.Simulation;
-import de.amr.pacmanfx.simulation.SimulationStep;
+import de.amr.pacmanfx.simulation.Hunting;
 
 import java.util.List;
 
@@ -71,9 +70,7 @@ public class LevelMediumTestState extends TestState {
         level.entities().ghosts().forEach(ghost -> ghost.update(level));
         level.optBonus().ifPresent(bonus -> bonus.update(level));
 
-        //TODO tick
-        final SimulationStep step = Simulation.doHuntingStep(context, 42);
-        step.printLog();
+        Hunting.doHuntingStep(context);
 
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
@@ -89,10 +86,10 @@ public class LevelMediumTestState extends TestState {
         else if (game.rules().isLevelCompleted(level)) {
             game.flow().enterState(GameStateID.GAME_INTRO.name());
         }
-        else if (step.hasPacManBeenKilled()) {
+        else if (context.huntingResult().hasPacManBeenKilled()) {
             expire();
         }
-        else if (step.hasGhostBeenKilled()) {
+        else if (context.huntingResult().hasGhostBeenKilled()) {
             game.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST.name());
         }
     }

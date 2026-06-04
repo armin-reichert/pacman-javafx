@@ -126,7 +126,7 @@ public abstract class GameScene implements Disposable {
     public void onDeactivate() {}
 
     /** Called every game tick. */
-    public void onTick(GameClock clock) {}
+    public void onTick(long tick) {}
 
     /** Called when the scene is embedded into the UI. */
     public void onEmbedded() {}

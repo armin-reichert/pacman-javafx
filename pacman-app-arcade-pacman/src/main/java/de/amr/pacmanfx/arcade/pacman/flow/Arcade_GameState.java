@@ -13,8 +13,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.simulation.Simulation;
-import de.amr.pacmanfx.simulation.SimulationStep;
+import de.amr.pacmanfx.simulation.Hunting;
 
 import java.util.Set;
 
@@ -180,16 +179,15 @@ public enum Arcade_GameState {
             final GameModel game = context.gameModel();
             final GameLevel level = game.optGameLevel().orElseThrow();
 
-            //TODO tick
-            final SimulationStep step = Simulation.doHuntingStep(context, 42);
+            Hunting.doHuntingStep(context);
 
             if (game.rules().isLevelCompleted(level)) {
                 context.gameFlow().enterState(GAME_LEVEL_COMPLETE.state());
             }
-            else if (step.hasPacManBeenKilled()) {
+            else if (context.huntingResult().hasPacManBeenKilled()) {
                 context.gameFlow().enterState(GAME_LEVEL_PACMAN_DYING.state());
             }
-            else if (step.hasGhostBeenKilled()) {
+            else if (context.huntingResult().hasGhostBeenKilled()) {
                 context.gameFlow().enterState(GAME_LEVEL_EATING_GHOST.state());
             }
         }
