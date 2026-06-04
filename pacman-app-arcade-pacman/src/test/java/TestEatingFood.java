@@ -2,6 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
+import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
@@ -29,7 +30,9 @@ public class TestEatingFood {
     static void setup() {
         final String variantName = GameVariant.ARCADE_PACMAN.name();
         gameBox = new GameBox(CoinMechanism.OUT_OF_SERVICE);
-        gameBox.registerGame(variantName, new ArcadePacMan_GameModel(CoinMechanism.OUT_OF_SERVICE));
+        gameBox.registerGame(variantName, new ArcadePacMan_GameModel(
+            new Arcade_GameFlow(gameBox),
+            CoinMechanism.OUT_OF_SERVICE));
         gameBox.select(variantName);
     }
 
