@@ -160,7 +160,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     private void chasePacMan(long tick) {
-        blinking.doTick();
+        blinking.pulse();
         pacMan.move();
         for (Ghost ghost : ghosts) {
             ghost.move();
@@ -198,7 +198,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     private void chaseGhosts(long tick) {
-        blinking.doTick();
+        blinking.pulse();
         pacMan.move();
         for (Ghost ghost : ghosts) { ghost.move(); }
         edibleGhost().ifPresent(victim -> eatGhostAndStopChasing(victim, tick));

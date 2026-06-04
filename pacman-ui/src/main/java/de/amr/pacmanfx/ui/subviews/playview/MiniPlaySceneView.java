@@ -169,7 +169,7 @@ public class MiniPlaySceneView {
     private void drawGameLevel(GameLevel level) {
         final var info = new RenderInfo();
         info.putAll(Map.of(
-            CommonRenderInfoKey.ENERGIZER_VISIBLE, level.blinking().state() == Pulse.State.ON,
+            CommonRenderInfoKey.ENERGIZER_VISIBLE, level.heartbeat().state() == Pulse.State.ON,
             CommonRenderInfoKey.MAP_BRIGHT, false,
             CommonRenderInfoKey.MAP_EMPTY, level.worldMap().foodLayer().remainingFoodCount() == 0,
             CommonRenderInfoKey.MAP_FLASHING, false,

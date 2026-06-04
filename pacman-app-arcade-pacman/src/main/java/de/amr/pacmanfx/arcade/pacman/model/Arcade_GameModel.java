@@ -12,10 +12,7 @@ import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
-
-import java.io.IOException;
 
 import static de.amr.pacmanfx.core.Globals.tile;
 import static java.util.Objects.requireNonNull;
@@ -118,7 +115,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             flow().publishGameEvent(new PacDeadEvent(this, pac));
         }
         else {
-            level.blinking().doTick();
+            level.heartbeat().pulse();
             pac.update(level);
         }
     }

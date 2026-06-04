@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.model;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
@@ -20,6 +19,7 @@ import de.amr.pacmanfx.model.level.LevelCounter;
 import de.amr.pacmanfx.model.lives.PacManLives;
 import de.amr.pacmanfx.model.lives.PacManLivesImpl;
 import de.amr.pacmanfx.model.world.GateKeeper;
+import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.score.PersistentScore;
@@ -199,15 +199,78 @@ public abstract class AbstractGameModel implements GameModel {
         if (!coinMechanism.isEmpty()) {
             coinMechanism.consumeCoin(); //TODO not sure if coin should be consumed after game is over
         }
+        updateHighScore();
         setPlaying(false);
         showLevelMessage(level, GameLevelMessageType.GAME_OVER);
-        try {
-            updateHighScore();
-        } catch (IOException x) {
-            Logger.error(x, "Error updating high-score file {}", highScore.file().getAbsolutePath());
-        }
-        Logger.info("Game ended with level number {}", level.number());
     }
+
+    @Override
+    public boolean isPlaying() {
+        return playing.get();
+    }
+
+    @Override
+    public void setPlaying(boolean playing) {
+        this.playing.set(playing);
+    }
+
+    public abstract void activateNextBonus(GameLevel level);
+
+    // Level related
+
+    public abstract GameLevel createLevel(int levelNumber, boolean demoLevel);
+
+    public abstract void buildNormalLevel(int levelNumber);
+
+    public abstract void buildDemoLevel();
+
+    @Override
+    public Optional<GameLevel> optGameLevel() {
+        return Optional.ofNullable(level.get());
+    }
+
+    public abstract void startLevel();
+
+    @Override
+    public void makeReadyForPlaying(GameLevel level) {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final House house = terrain.optHouse().orElseThrow();
+
+        final Pac pac = level.entities().pac();
+        pac.reset(); // initially invisible!
+        pac.setPosition(terrain.pacStartPosition());
+        pac.setMoveDir(Direction.LEFT);
+        pac.setWishDir(Direction.LEFT);
+        pac.powerTimer().resetToIndefiniteDuration();
+        pac.animations().resetSelected();
+
+        level.entities().ghosts().forEach(ghost -> {
+            ghost.reset(); // initially invisible!
+            ghost.setPosition(ghost.startPosition());
+            final Direction direction = house.ghostStartDirection(ghost.personality());
+            ghost.setMoveDir(direction);
+            ghost.setWishDir(direction);
+            ghost.setState(GhostState.LOCKED);
+            ghost.animations().resetSelected();
+        });
+
+        level.heartbeat().setStartState(Pulse.State.ON); // Energizers are visible when ON
+        level.heartbeat().reset();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public void doLevelPlaying(GameLevel level) {
@@ -220,12 +283,6 @@ public abstract class AbstractGameModel implements GameModel {
         updateCheats(level);
     }
 
-
-    @Override
-    public Optional<GameLevel> optGameLevel() {
-        return Optional.ofNullable(level.get());
-    }
-
     @Override
     public CollisionStrategy collisionStrategy() {
         return collisionStrategy;
@@ -234,16 +291,6 @@ public abstract class AbstractGameModel implements GameModel {
     @Override
     public void setCollisionStrategy(CollisionStrategy strategy) {
         this.collisionStrategy = requireNonNull(strategy);
-    }
-
-    @Override
-    public boolean isPlaying() {
-        return playing.get();
-    }
-
-    @Override
-    public void setPlaying(boolean playing) {
-        this.playing.set(playing);
     }
 
     @Override
@@ -268,8 +315,8 @@ public abstract class AbstractGameModel implements GameModel {
             .filter(message -> message.type() == GameLevelMessageType.READY)
             .ifPresent(_ -> level.clearMessage());
 
-        level.blinking().setStartState(Pulse.State.ON);
-        level.blinking().restart();
+        level.heartbeat().setStartState(Pulse.State.ON);
+        level.heartbeat().restart();
 
         level.entities().pac().animations().playSelected();
         level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
@@ -287,8 +334,8 @@ public abstract class AbstractGameModel implements GameModel {
         level.huntingTimer().stop();
         Logger.info("Hunting timer stopped.");
 
-        level.blinking().setStartState(Pulse.State.OFF);
-        level.blinking().reset();
+        level.heartbeat().setStartState(Pulse.State.OFF);
+        level.heartbeat().reset();
 
         // If level was ended by cheat, there might still be food remaining, so eat it:
         level.worldMap().foodLayer().eatAll();
@@ -321,36 +368,6 @@ public abstract class AbstractGameModel implements GameModel {
     /* -------------------------------------------------------------------------
      * Utility methods
      * ---------------------------------------------------------------------- */
-
-    /**
-     * Resets Pac-Man and the ghosts and places them at their start positions in their start states. Pac-Man initially
-     * wants to move to the left.
-     */
-    @Override
-    public void makeReadyForPlaying(GameLevel level) {
-        final Vector2f startPosition = level.worldMap().terrainLayer().pacStartPosition();
-
-        final Pac pac = level.entities().pac();
-        pac.reset(); // initially invisible!
-        pac.setPosition(startPosition);
-        pac.setMoveDir(Direction.LEFT);
-        pac.setWishDir(Direction.LEFT);
-        pac.powerTimer().resetToIndefiniteDuration();
-        pac.animations().resetSelected();
-
-        level.entities().ghosts().forEach(ghost -> {
-            ghost.reset(); // initially invisible!
-            ghost.setPosition(ghost.startPosition());
-            final Direction startDir = level.worldMap().terrainLayer().house().ghostStartDirection(ghost.personality());
-            ghost.setMoveDir(startDir);
-            ghost.setWishDir(startDir);
-            ghost.setState(GhostState.LOCKED);
-            ghost.animations().resetSelected();
-        });
-
-        level.blinking().setStartState(Pulse.State.ON); // Energizers are visible when ON
-        level.blinking().reset();
-    }
 
     /**
      * Sets the start position for the given ghost.
@@ -442,7 +459,7 @@ public abstract class AbstractGameModel implements GameModel {
      * @param level the current game level
      */
     protected void doHuntingStep(GameLevel level) {
-        level.blinking().doTick();
+        level.heartbeat().pulse();
 
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
@@ -682,11 +699,15 @@ public abstract class AbstractGameModel implements GameModel {
         score.setPoints(newScore);
     }
 
-    protected void updateHighScore() throws IOException {
+    protected void updateHighScore() {
         final PersistentScore savedHighScore = new PersistentScore(highScore.file());
-        savedHighScore.load();
-        if (highScore.points() > savedHighScore.points()) {
-            highScore.save();
+        try {
+            savedHighScore.load();
+            if (highScore.points() > savedHighScore.points()) {
+                highScore.save();
+            }
+        } catch (IOException x) {
+            Logger.error(x, "Could not update high-score");
         }
     }
 

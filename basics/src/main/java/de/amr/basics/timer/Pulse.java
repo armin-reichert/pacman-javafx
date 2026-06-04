@@ -19,7 +19,7 @@ public class Pulse {
     private final int halfPeriod;
     private State startState;
     private State state;
-    private long tick;
+    private long pulseCount;
     private boolean running;
     private boolean pulseTriggered;
 
@@ -31,7 +31,7 @@ public class Pulse {
 
     public void reset() {
         stop();
-        tick = 0;
+        pulseCount = 0;
         state = startState;
     }
 
@@ -40,15 +40,11 @@ public class Pulse {
         start();
     }
 
-    public long tick() {
-        return tick;
-    }
-
-    public void doTick() {
+    public void pulse() {
         pulseTriggered = false;
         if (running) {
-            ++tick;
-            if (tick % halfPeriod == 0) {
+            ++pulseCount;
+            if (pulseCount % halfPeriod == 0) {
                 state = state.inverse();
                 pulseTriggered = true;
             }

@@ -83,7 +83,7 @@ public class GameLevel {
     private final WorldMap worldMap;
     private final EntitySetWithCache entities = new EntitySetWithCache();
     private final HuntingTimer huntingTimer;
-    private final Pulse blinking;
+    private final Pulse heartbeat;
     private final List<Ghost> victims = new ArrayList<>();
     private final int[] bonusSymbolCodes = new int[2];
     private final int numFlashes;
@@ -106,7 +106,7 @@ public class GameLevel {
         this.huntingTimer = requireNonNull(huntingTimer);
         this.numFlashes = requireNonNegativeInt(numFlashes);
 
-        blinking = new Pulse(10, Pulse.State.OFF);
+        heartbeat = new Pulse(10, Pulse.State.OFF);
         currentBonusIndex = -1;
         huntingTimer.reset();
     }
@@ -133,10 +133,10 @@ public class GameLevel {
     }
 
     /**
-     * @return the blinking animation used for the energizers.
+     * @return the pulse driving the blinking animation for the energizers.
      */
-    public Pulse blinking() {
-        return blinking;
+    public Pulse heartbeat() {
+        return heartbeat;
     }
 
     /**

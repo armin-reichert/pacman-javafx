@@ -232,7 +232,7 @@ public enum Arcade_GameState {
                 if (timer().tickCount() < 60) {
                     level.ghostsInAnyOfStates(Set.of(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE))
                         .forEach(ghost -> ghost.update(level));
-                    level.blinking().doTick();
+                    level.heartbeat().pulse();
                 }
             }
         }

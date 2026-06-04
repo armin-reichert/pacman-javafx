@@ -164,7 +164,7 @@ public class Bonus extends MovingActor {
 
     //TODO check in emulator what's exactly going on
     private void jump() {
-        jumpingAnimation.doTick();
+        jumpingAnimation.pulse();
         if (jumpingAnimation.pulseTriggered()) {
             float pixels = moveDir().isVertical() ? 3.0f : 2.0f;
             float dy = jumpingAnimation.state() == Pulse.State.ON ? -pixels : pixels;

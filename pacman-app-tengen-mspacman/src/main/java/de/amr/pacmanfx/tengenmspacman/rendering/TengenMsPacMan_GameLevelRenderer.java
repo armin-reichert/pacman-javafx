@@ -101,7 +101,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         final MapImageSet recoloredMazeSprites = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
         final NES_MapColorScheme colorScheme = recoloredMazeSprites.mapImage().colorScheme();
         final Color pelletColor = Color.valueOf(colorScheme.pellet());
-        final boolean blinkingOn = level.blinking().state() == Pulse.State.ON;
+        final boolean blinkingOn = level.heartbeat().state() == Pulse.State.ON;
 
         ctx.save();
         ctx.scale(scaling(), scaling());

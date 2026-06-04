@@ -55,7 +55,7 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
             GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
             message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
             level.setMessage(message);
-            level.blinking().restart();
+            level.heartbeat().restart();
         }
         else if (timer.atSecond(START + 1)) {
             level.clearMessage();
@@ -80,7 +80,7 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
         }
         else if (timer.atSecond(START + 9)) {
             level.hidePacAndGhosts();
-            level.blinking().stop();
+            level.heartbeat().stop();
             game.onLevelCompleted(level);
         }
         else if (timer.atSecond(START + 10)) {
