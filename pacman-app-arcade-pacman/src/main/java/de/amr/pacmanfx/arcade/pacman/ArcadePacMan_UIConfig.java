@@ -10,6 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.model.GameModel;
@@ -122,7 +123,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             context.ui().sounds().setEnabled(true);
             slot.insertCoin();
             game.flow().enterState(GAME_PREPARATION.state());
-            game.flow().publishGameEvent(new CreditAddedEvent(game, 1));
+            game.flow().publishGameEvent(new CreditAddedEvent(context.gameContext(), 1));
         }
 
         @Override
@@ -136,7 +137,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             if (game.isDemoLevelRunning()) {
                 return true;
             }
-            final State<GameModel> gameState = game.flow().state();
+            final State<GameContext> gameState = game.flow().state();
             return gameState == GAME_INTRO.state() || gameState == GAME_PREPARATION.state();
         }
     };
@@ -155,7 +156,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
                 return false;
             }
             final GameModel game = context.currentGame();
-            final State<GameModel> gameState = context.currentGameState();
+            final State<GameContext> gameState = context.currentGameState();
             return (gameState == GAME_INTRO.state() || gameState == GAME_PREPARATION.state()) && game.canStartNewGame();
         }
     };

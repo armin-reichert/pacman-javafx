@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.fsm.State;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.PacEatsFoodEvent;
 import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
@@ -45,13 +46,13 @@ public final class CheatActions {
                 final GameModel game = level.game();
                 level.worldMap().foodLayer().eatPellets();
                 game.cheats().cheatUsedProperty().set(true);
-                game.flow().publishGameEvent(new PacEatsFoodEvent(game, level.entities().pac(), false, true));
+                game.flow().publishGameEvent(new PacEatsFoodEvent(context.gameContext(), level.entities().pac(), false, true));
             });
         }
 
         @Override
         public boolean isEnabled(AppContext context) {
-            final State<GameModel> gameState = context.currentGameState();
+            final State<GameContext> gameState = context.currentGameState();
             return realLevel(context).isPresent()
                 && gameState.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
         }
@@ -74,7 +75,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(AppContext context) {
-            final State<GameModel> gameState = context.currentGameState();
+            final State<GameContext> gameState = context.currentGameState();
             return realLevel(context).isPresent()
                 && gameState.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
         }
@@ -92,7 +93,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(AppContext context) {
-            final State<GameModel> gameState = context.currentGameState();
+            final State<GameContext> gameState = context.currentGameState();
             final GameLevel level = realLevel(context).orElse(null);
             return level != null
                 && gameState.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name())

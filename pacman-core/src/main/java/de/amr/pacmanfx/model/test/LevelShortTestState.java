@@ -4,9 +4,10 @@
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusEatenEvent;
 import de.amr.pacmanfx.flow.GameStateID;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
@@ -14,7 +15,7 @@ import de.amr.pacmanfx.model.level.GameLevelMessageType;
 
 import static java.util.Objects.requireNonNull;
 
-public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME> {
+public class LevelShortTestState extends TestState {
 
     private final CoinMechanism coinMechanism;
     private int lastTestedLevelNumber;
@@ -29,7 +30,8 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
     }
 
     @Override
-    public void onEnter(GAME game) {
+    public void onEnter(GameContext context) {
+        final GameModel game = context.gameModel();
         coinMechanism.setNumCoins(1);
         lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.rules().lastLevelNumber();
         lock();
@@ -42,7 +44,8 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
     }
 
     @Override
-    public void onUpdate(GAME game) {
+    public void onUpdate(GameContext context) {
+        final GameModel game = context.gameModel();
         final GameLevel level = game.optGameLevel().orElseThrow();
         final float START = 1.0f;
         if (timer.atSecond(START)) {
@@ -66,7 +69,7 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
         else if (timer.atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
-                game.flow().publishGameEvent(new BonusEatenEvent(game, bonus));
+                game.flow().publishGameEvent(new BonusEatenEvent(context, bonus));
             });
         }
         else if (timer.atSecond(START + 6)) {
@@ -75,7 +78,7 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
         else if (timer.atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
-                game.flow().publishGameEvent(new BonusEatenEvent(game, bonus));
+                game.flow().publishGameEvent(new BonusEatenEvent(context, bonus));
             });
         }
         else if (timer.atSecond(START + 9)) {
@@ -100,7 +103,8 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
     }
 
     @Override
-    public void onExit(GAME game) {
+    public void onExit(GameContext context) {
+        final GameModel game = context.gameModel();
         coinMechanism.setNumCoins(0);
         game.init();
         game.levelCounter().clear();

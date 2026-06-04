@@ -226,10 +226,7 @@ public final class AppContextImpl implements AppContext {
 
     private void initGameClock() {
         clock.setUpdateAction(() -> {
-            final SimulationStep step = currentGame().simulationStep();
-            step.init(clock.tickCount());
             currentGameFlow().makeStep();
-            step.printLog();
             ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock));
         });
         clock.setPermanentAction(() -> ui.subViews().currentView().render());

@@ -12,10 +12,10 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.level.LevelCounter;
 import de.amr.pacmanfx.model.lives.PacManLives;
+import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
-import de.amr.pacmanfx.simulation.SimulationStep;
 
 import java.util.Optional;
 
@@ -36,6 +36,8 @@ public interface GameModel {
 
     PacManLives lives();
 
+    GateKeeper gateKeeper();
+
     ActorSpeedControl actorSpeedControl();
 
     HeadsUpDisplay hud();
@@ -49,8 +51,6 @@ public interface GameModel {
     WorldMapSelector mapSelector();
 
     // Lifecycle
-
-    SimulationStep simulationStep();
 
     void init();
 
@@ -103,8 +103,6 @@ public interface GameModel {
     CollisionStrategy collisionStrategy();
 
     void setCollisionStrategy(CollisionStrategy collisionStrategy);
-
-    void updatePacPowerMode(GameLevel level, Pac pac);
 
     Boolean isCollisionDoubleChecked();
 

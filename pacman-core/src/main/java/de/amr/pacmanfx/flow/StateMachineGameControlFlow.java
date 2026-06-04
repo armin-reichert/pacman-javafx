@@ -6,10 +6,10 @@ package de.amr.pacmanfx.flow;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
-import de.amr.pacmanfx.model.GameModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
@@ -22,34 +22,41 @@ import static java.util.Objects.requireNonNull;
 
 public class StateMachineGameControlFlow implements GameControlFlow {
 
-    protected final StateMachine<GameModel> stateMachine = new StateMachine<>();
+    private final GameContext context;
+    protected final StateMachine<GameContext> stateMachine = new StateMachine<>();
     private final Set<GameEventListener> eventListeners = new HashSet<>();
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
-    public StateMachineGameControlFlow(String name, GameModel gameModel) {
-        requireNonNull(gameModel);
+    public StateMachineGameControlFlow(String name, GameContext context) {
+        this.context = requireNonNull(context);
         stateMachine.setName(name);
-        stateMachine.setContext(gameModel);
-        stateMachine.addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(gameModel, oldState, newState)));
+        stateMachine.setContext(context);
+        stateMachine.addStateChangeListener((oldState, newState)
+            -> publishGameEvent(new GameStateChangeEvent(context, oldState, newState)));
     }
 
     @Override
-    public State<GameModel> state() {
+    public GameContext context() {
+        return context;
+    }
+
+    @Override
+    public State<GameContext> state() {
         return stateMachine.state();
     }
 
     @Override
-    public Optional<State<GameModel>> optState(String stateName) {
+    public Optional<State<GameContext>> optState(String stateName) {
         return stateMachine.optState(stateName);
     }
 
     @Override
-    public void addState(State<GameModel> gameState) {
+    public void addState(State<GameContext> gameState) {
         stateMachine.addState(gameState);
     }
 
     @Override
-    public void enterState(State<GameModel> gameState) {
+    public void enterState(State<GameContext> gameState) {
         stateMachine.enterState(gameState);
     }
 
@@ -64,7 +71,7 @@ public class StateMachineGameControlFlow implements GameControlFlow {
     }
 
     @Override
-    public void restartState(State<GameModel> gameState) {
+    public void restartState(State<GameContext> gameState) {
         stateMachine.restartState(gameState);
     }
 

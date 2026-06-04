@@ -8,8 +8,9 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
-import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
@@ -25,8 +26,8 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
     private static final int[] DEMOLEVEL_NUMBERS = { 1, 3, 6, 10, 14, 18 };
 
-    public PacManXXL_PacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
-        super(coinMechanism, mapSelector);
+    public PacManXXL_PacMan_GameModel(GameControlFlow flow, CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
+        super(flow, coinMechanism, mapSelector);
         rules = new PacManXXL_PacMan_GameRules();
         // Demo level map could be a custom map, so use generic auto-steering that also can cope with dead-ends:
         demoLevelSteering = new RuleBasedPacSteering();
@@ -54,6 +55,6 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         score.setLevelNumber(levelNumber);
 
         setLevel(level);
-        flow.publishGameEvent(new LevelCreatedEvent(this, level));
+        flow.publishGameEvent(new LevelCreatedEvent(flow.context(), level));
     }
 }

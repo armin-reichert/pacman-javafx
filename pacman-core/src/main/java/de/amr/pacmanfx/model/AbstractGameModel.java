@@ -7,9 +7,11 @@ package de.amr.pacmanfx.model;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.event.*;
+import de.amr.pacmanfx.event.BonusEatenEvent;
+import de.amr.pacmanfx.event.GhostEatenEvent;
+import de.amr.pacmanfx.event.HuntingPhaseStartedEvent;
+import de.amr.pacmanfx.event.SpecialScoreEvent;
 import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -24,7 +26,6 @@ import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
-import de.amr.pacmanfx.simulation.SimulationStep;
 import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -36,9 +37,8 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
-import java.util.Set;
 
-import static de.amr.pacmanfx.core.Globals.*;
+import static de.amr.pacmanfx.core.Globals.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -56,9 +56,6 @@ public abstract class AbstractGameModel implements GameModel {
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
     // Common data
-
-    //TODO move elsewhere or pass as parameter into simulation methods
-    protected final SimulationStep simStep = new SimulationStep();
 
     protected CoinMechanism coinMechanism;
 
@@ -102,7 +99,13 @@ public abstract class AbstractGameModel implements GameModel {
 
         score.pointsProperty().addListener((_, oldScore, newScore)
             -> handleScoreChange(oldScore.intValue(), newScore.intValue()));
+    }
 
+    protected void handleScoreChange(int oldScore, int newScore) {
+        if (rules.isExtraLifeAwarded(oldScore, newScore)) {
+            lives.add(1);
+            flow.publishGameEvent(new SpecialScoreEvent(flow.context(), newScore));
+        }
     }
 
     /* -------------------------------------------------------------------------
@@ -139,6 +142,11 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
+    public GateKeeper gateKeeper() {
+        return gateKeeper;
+    }
+
+    @Override
     public HeadsUpDisplay hud() {
         return hud;
     }
@@ -164,11 +172,6 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     // Lifecycle
-
-    @Override
-    public SimulationStep simulationStep() {
-        return simStep;
-    }
 
     @Override
     public void init() {
@@ -325,12 +328,15 @@ public abstract class AbstractGameModel implements GameModel {
 
         final HuntingTimer huntingTimer = level.huntingTimer();
         huntingTimer.startFirstPhase(rules, level.number());
-        flow.publishGameEvent(new HuntingPhaseStartedEvent(this, huntingTimer.phaseIndex(), huntingTimer.currentHuntingPhase()));
+        flow.publishGameEvent(new HuntingPhaseStartedEvent(
+            flow.context(),
+            huntingTimer.phaseIndex(),
+            huntingTimer.currentHuntingPhase())
+        );
     }
 
     @Override
     public void doLevelPlaying(GameLevel level) {
-        simulationStep().doHuntingStep(this, level);
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
@@ -403,7 +409,7 @@ public abstract class AbstractGameModel implements GameModel {
         level.entities().pac().hide();
         level.entities().ghosts().forEach(g -> g.animations().stopSelected());
 
-        flow.publishGameEvent(new GhostEatenEvent(this, eatenGhost));
+        flow.publishGameEvent(new GhostEatenEvent(flow().context(), eatenGhost));
     }
 
     /* -------------------------------------------------------------------------
@@ -441,49 +447,6 @@ public abstract class AbstractGameModel implements GameModel {
             ghost.setStartPosition(halfTileRightOf(tile));
         } else {
             Logger.error("{} start tile not specified", ghost.name());
-        }
-    }
-
-    protected void handleScoreChange(int oldScore, int newScore) {
-        if (rules.isExtraLifeAwarded(oldScore, newScore)) {
-            simStep.setExtraLifeWon(true);
-            simStep.setExtraLifeScore(newScore);
-            lives.add(1);
-            flow.publishGameEvent(new SpecialScoreEvent(this, newScore));
-        }
-    }
-
-    protected void startPacPowerMode(Pac pac, GameLevel level) {
-        level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
-        final float powerSeconds = level.pacPowerSeconds();
-        if (powerSeconds > 0) {
-            level.huntingTimer().stop();
-            Logger.debug("Hunting stopped (Pac-Man got power)");
-            final long powerTicks = TickTimer.secToTicks(powerSeconds);
-            pac.powerTimer().restartTicks(powerTicks);
-            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
-            level.ghostsInState(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
-            simStep.setPacGotPower(true);
-            flow.publishGameEvent(new PacGetsPowerEvent(this, pac));
-        }
-    }
-
-    @Override
-    public void updatePacPowerMode(GameLevel level, Pac pac) {
-        if (pac.powerTimer().isRunning()) {
-            pac.powerTimer().doTick();
-            if (pac.isPowerFadingStarting(level)) {
-                simStep.setPacStartsLosingPower(true);
-                flow.publishGameEvent(new PacPowerFadesEvent(this, pac));
-            } else if (pac.powerTimer().hasExpired()) {
-                simStep.setPacLostPower(true);
-                pac.powerTimer().stop();
-                pac.powerTimer().reset(0);
-                level.killedGhostsForCurrentEnergizer().clear();
-                level.huntingTimer().start();
-                level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-                flow.publishGameEvent(new PacLostPowerEvent(this, pac));
-            }
         }
     }
 
@@ -558,6 +521,6 @@ public abstract class AbstractGameModel implements GameModel {
         scorePoints(bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
         bonus.showEatenForSeconds(rules.eatenBonusDisplaySeconds());
-        flow.publishGameEvent(new BonusEatenEvent(this, bonus));
+        flow.publishGameEvent(new BonusEatenEvent(flow.context(), bonus));
     }
 }

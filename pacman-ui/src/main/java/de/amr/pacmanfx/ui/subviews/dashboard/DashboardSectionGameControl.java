@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
@@ -70,7 +71,7 @@ public class DashboardSectionGameControl extends DashboardSection {
 
         if (dashboard.context() != null) {
             final AbstractGameModel game = dashboard.context().currentGame();
-            final State<GameModel> state = dashboard.context().currentGameState();
+            final State<GameContext> state = dashboard.context().currentGameState();
 
             choiceBoxInitialLives.setValue(game.lives().initialCount());
             choiceBoxInitialLives.setDisable(!state.nameIsOneOf(GameStateID.GAME_INTRO.name()));
@@ -93,11 +94,11 @@ public class DashboardSectionGameControl extends DashboardSection {
         }
     }
 
-    private boolean isBooting(State<GameModel> state) {
-        return state.nameIsOneOf(GameStateID.BOOT.name());
+    private boolean isBooting(State<?> state) {
+        return state.name().equals(GameStateID.BOOT.name());
     }
 
-    private boolean canStartLevel(GameModel game, State<GameModel> state) {
+    private boolean canStartLevel(GameModel game, State<GameContext> state) {
         return game.canStartNewGame()
             && state.nameIsOneOf(
                 GameStateID.GAME_INTRO.name(),
@@ -105,7 +106,7 @@ public class DashboardSectionGameControl extends DashboardSection {
         );
     }
 
-    private boolean canEnterNextLevel(GameModel game, State<GameModel> state) {
+    private boolean canEnterNextLevel(GameModel game, State<GameContext> state) {
         return game.isPlaying() && state.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
     }
 }

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene3D;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.AppContext;
@@ -46,7 +47,7 @@ public class PacManXXL_MsPacMan_GameSceneConfig extends AbstractGameSceneConfig 
 
     @Override
     protected SceneID determineSceneID(GameModel game) {
-        final State<GameModel> state = game.flow().state();
+        final State<GameContext> state = game.flow().state();
         if (state.name().equals(Arcade_GameState.BOOT.name())) {
             return CommonSceneID.BOOT_SCENE;
         }
@@ -59,7 +60,7 @@ public class PacManXXL_MsPacMan_GameSceneConfig extends AbstractGameSceneConfig 
         if (state.name().equals(Arcade_GameState.GAME_PREPARATION.name())) {
             return CommonSceneID.START_SCENE;
         }
-        if (state instanceof CutScenesTestState<?> testState) {
+        if (state instanceof CutScenesTestState testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
         }
         return PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;

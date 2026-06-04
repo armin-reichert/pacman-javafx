@@ -143,9 +143,9 @@ public class GameUI_Builder {
             ui.ui().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);
             if (includeInteractiveTests) {
                 final GameControlFlow gameFlow = game.flow();
-                gameFlow.addState(new LevelShortTestState<>(gameBox.coinMechanism()));
-                gameFlow.addState(new LevelMediumTestState<>());
-                gameFlow.addState(new CutScenesTestState<>());
+                gameFlow.addState(new LevelShortTestState(gameBox.coinMechanism()));
+                gameFlow.addState(new LevelMediumTestState());
+                gameFlow.addState(new CutScenesTestState());
             }
         });
 

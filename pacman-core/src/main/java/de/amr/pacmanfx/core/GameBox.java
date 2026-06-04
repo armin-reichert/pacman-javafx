@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.simulation.SimulationStep;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.tinylog.Logger;
@@ -39,10 +40,13 @@ public class GameBox implements GameContext {
     public static final File DEFAULT_CUSTOM_MAP_DIR = new File(DEFAULT_HOME_DIR, "maps");
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
+    private final Map<String, GameModel> gamesByVariantName = new HashMap<>();
+
     private final File homeDir = DEFAULT_HOME_DIR;
     private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
+
     private final CoinMechanism coinMechanism;
-    private final Map<String, GameModel> gamesByVariantName = new HashMap<>();
+    private final SimulationStep simulationStep = new SimulationStep();
 
     public GameBox(CoinMechanism coinMechanism) {
         this.coinMechanism = requireNonNull(coinMechanism);
@@ -97,6 +101,11 @@ public class GameBox implements GameContext {
     @Override
     public CoinMechanism coinMechanism() {
         return coinMechanism;
+    }
+
+    @Override
+    public SimulationStep simulationStep() {
+        return simulationStep;
     }
 
     @Override

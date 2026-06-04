@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.model.test;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
@@ -11,16 +12,19 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.simulation.Simulation;
+import de.amr.pacmanfx.simulation.SimulationStep;
 
 import java.util.List;
 
-public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME> {
+public class LevelMediumTestState extends TestState {
 
     static final int TEST_DURATION_SEC = 10;
 
     private int lastTestedLevelNumber;
 
-    private void configureLevelForTest(GAME game) {
+    private void configureLevelForTest(GameContext context) {
+        final GameModel game = context.gameModel();
         final GameLevel level = game.optGameLevel().orElseThrow();
 
         final Pac pac = level.entities().pac();
@@ -39,7 +43,7 @@ public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME
 
         game.hud().show();
 
-        game.flow().publishGameEvent(new StopAllSoundsEvent(game));
+        game.flow().publishGameEvent(new StopAllSoundsEvent(context));
     }
 
     @Override
@@ -48,47 +52,54 @@ public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME
     }
 
     @Override
-    public void onEnter(GAME game) {
+    public void onEnter(GameContext context) {
+        final GameModel game = context.gameModel();
         lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.rules().lastLevelNumber();
         timer.restartSeconds(TEST_DURATION_SEC);
         game.prepareNewGame();
         game.buildNormalLevel(1);
         game.startLevel();
-        configureLevelForTest(game);
+        configureLevelForTest(context);
     }
 
     @Override
-    public void onUpdate(GAME game) {
+    public void onUpdate(GameContext context) {
+        final GameModel game = context.gameModel();
         final GameLevel level = game.optGameLevel().orElseThrow();
 
         level.entities().pac().update(level);
-
         level.entities().ghosts().forEach(ghost -> ghost.update(level));
-
         level.optBonus().ifPresent(bonus -> bonus.update(level));
 
-        game.doLevelPlaying(level);
+        //TODO tick
+        final SimulationStep step = Simulation.doHuntingStep(context, 42);
+        step.printLog();
+
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
-                game.flow().publishGameEvent(new StopAllSoundsEvent(game));
+                game.flow().publishGameEvent(new StopAllSoundsEvent(context));
                 game.flow().enterState(GameStateID.GAME_INTRO.name());
-            } else {
+            }
+            else {
                 timer().restartSeconds(TEST_DURATION_SEC);
                 game.startNextLevel();
-                configureLevelForTest(game);
+                configureLevelForTest(context);
             }
         }
         else if (game.rules().isLevelCompleted(level)) {
             game.flow().enterState(GameStateID.GAME_INTRO.name());
-        } else if (game.simulationStep().hasPacManBeenKilled()) {
+        }
+        else if (step.hasPacManBeenKilled()) {
             expire();
-        } else if (game.simulationStep().hasGhostBeenKilled()) {
+        }
+        else if (step.hasGhostBeenKilled()) {
             game.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST.name());
         }
     }
 
     @Override
-    public void onExit(GAME game) {
+    public void onExit(GameContext context) {
+        final GameModel game = context.gameModel();
         game.levelCounter().clear();
     }
 }

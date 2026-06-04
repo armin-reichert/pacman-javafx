@@ -5,6 +5,7 @@ package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.simulation.SimulationStep;
 import javafx.beans.property.StringProperty;
 
 import static java.util.Objects.requireNonNull;
@@ -89,4 +90,6 @@ public interface GameContext {
      * @return the coin mechanism
      */
     CoinMechanism coinMechanism();
+
+    SimulationStep simulationStep();
 }

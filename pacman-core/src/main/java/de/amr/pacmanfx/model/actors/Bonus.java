@@ -137,13 +137,13 @@ public class Bonus extends MovingActor {
                 }
                 if (edibleStateOver) {
                     setInactive();
-                    level.game().flow().publishGameEvent(new BonusExpiredEvent(level.game(), this));
+                    level.game().flow().publishGameEvent(new BonusExpiredEvent(level.game().flow().context(), this));
                 }
             }
             case EATEN -> {
                 if (timer.hasExpired()) {
                     setInactive();
-                    level.game().flow().publishGameEvent(new BonusExpiredEvent(level.game(), this));
+                    level.game().flow().publishGameEvent(new BonusExpiredEvent(level.game().flow().context(), this));
                 }
             }
             case INACTIVE -> {}

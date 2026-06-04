@@ -8,9 +8,8 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.flow.GameControlFlow;
+import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.input.Input;
@@ -48,7 +47,7 @@ public interface AppContext extends AppLifecycle {
         return currentGame().flow();
     }
 
-    default State<GameModel> currentGameState() {
+    default State<GameContext> currentGameState() {
         return currentGameFlow().state();
     }
 

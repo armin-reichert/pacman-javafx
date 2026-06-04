@@ -5,7 +5,11 @@ package de.amr.pacmanfx.simulation;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.event.PacEatsFoodEvent;
+import de.amr.pacmanfx.event.PacGetsPowerEvent;
+import de.amr.pacmanfx.event.PacLostPowerEvent;
+import de.amr.pacmanfx.event.PacPowerFadesEvent;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -208,14 +212,19 @@ public class SimulationStep {
      * Main simulation step
      * ---------------------------------------------------------------------- */
 
-    public void doHuntingStep(GameModel game, GameLevel level) {
+    public void simulate(GameLevel level) {
+        final GameModel game = level.game();
+
+        if (game.gateKeeper() != null) {
+            game.gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
+        }
+        game.cheats().update(level);
+
         level.heartbeat().triggerPulse();
 
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
         final Bonus bonus = level.entities().optBonus().orElse(null);
-
-        //TODO rework collision handling
 
         boolean quitHunting;
         if (game.isCollisionDoubleChecked()) {
@@ -224,7 +233,8 @@ public class SimulationStep {
                 level.entities().forEach(e -> e.update(level));
                 quitHunting = evalCollisions(game, level, pac, ghosts, bonus);
             }
-        } else {
+        }
+        else {
             level.entities().forEach(e -> e.update(level));
             quitHunting = evalCollisions(game, level, pac, ghosts, bonus);
         }
@@ -238,7 +248,7 @@ public class SimulationStep {
         checkBonusFound(game, level);
 
         if (!game.rules().isLevelCompleted(level)) {
-            game.updatePacPowerMode(level, pac);
+            updatePacPowerMode(game, level, pac);
             level.huntingTimer().update(game.rules(), level.number());
         }
     }
@@ -310,6 +320,9 @@ public class SimulationStep {
             level.worldMap().foodLayer().markFoodEatenAt(foodFoundTile);
             pac.endStarving();
             if (energizerFound()) {
+                if (!game.rules().isLevelCompleted(level)) {
+                    startPacPowerMode(game, level, pac);
+                }
                 game.eatEnergizer(level, foodFoundTile);
             } else {
                 game.eatPellet(level, foodFoundTile);
@@ -318,13 +331,45 @@ public class SimulationStep {
                 game.activateNextBonus(level);
                 setBonusIndex(level.currentBonusIndex());
             }
-            game.flow().publishGameEvent(new PacEatsFoodEvent(game, pac, energizerFound(), false));
+            game.flow().publishGameEvent(new PacEatsFoodEvent(game.flow().context(), pac, energizerFound(), false));
         }
     }
 
     private void checkBonusFound(GameModel game, GameLevel level) {
         if (foundEdibleBonus()) {
             game.eatBonus(level, edibleBonus);
+        }
+    }
+
+    private void startPacPowerMode(GameModel game, GameLevel level, Pac pac) {
+        level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
+        final float powerSeconds = level.pacPowerSeconds();
+        if (powerSeconds > 0) {
+            level.huntingTimer().stop();
+            Logger.debug("Hunting stopped (Pac-Man got power)");
+            final long powerTicks = TickTimer.secToTicks(powerSeconds);
+            pac.powerTimer().restartTicks(powerTicks);
+            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
+            level.ghostsInState(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
+            game.flow().publishGameEvent(new PacGetsPowerEvent(game.flow().context(), pac));
+        }
+    }
+
+    private void updatePacPowerMode(GameModel game, GameLevel level, Pac pac) {
+        if (pac.powerTimer().isRunning()) {
+            pac.powerTimer().doTick();
+            if (pac.isPowerFadingStarting(level)) {
+                setPacStartsLosingPower(true);
+                game.flow().publishGameEvent(new PacPowerFadesEvent(game.flow().context(), pac));
+            } else if (pac.powerTimer().hasExpired()) {
+                setPacLostPower(true);
+                pac.powerTimer().stop();
+                pac.powerTimer().reset(0);
+                level.killedGhostsForCurrentEnergizer().clear();
+                level.huntingTimer().start();
+                level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
+                game.flow().publishGameEvent(new PacLostPowerEvent(game.flow().context(), pac));
+            }
         }
     }
 }

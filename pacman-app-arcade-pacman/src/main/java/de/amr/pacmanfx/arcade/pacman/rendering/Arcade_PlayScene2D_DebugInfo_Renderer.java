@@ -6,11 +6,11 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.HuntingTimer;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -66,7 +66,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
                     }
             });
 
-            final State<GameModel> state = scene.context().currentGameState();
+            final State<GameContext> state = scene.context().currentGameState();
             final String gameStateText = state.name() + " (Tick %d)".formatted(state.timer().tickCount());
             String huntingPhaseText = "";
             if (state == Arcade_GameState.GAME_LEVEL_PLAYING.state()) {

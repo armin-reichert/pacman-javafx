@@ -10,6 +10,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
@@ -29,6 +30,7 @@ import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
+import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppContextImpl;
@@ -115,23 +117,23 @@ public class PacManGames3dApp extends Application {
                     .newUI(stage, sceneSize.x(), sceneSize.y(), gameBox)
 
                     .game(ARCADE_PACMAN,
-                        () -> new ArcadePacMan_GameModel(coinMechanism),
+                        () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gameBox), coinMechanism),
                         ArcadePacMan_UIConfig::new)
 
                     .game(ARCADE_MS_PACMAN,
-                        () -> new ArcadeMsPacMan_GameModel(coinMechanism),
+                        () -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gameBox), coinMechanism),
                         ArcadeMsPacMan_UIConfig::new)
 
                     .game(TENGEN_MS_PACMAN,
-                        TengenMsPacMan_GameModel::new,
+                        () -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow(gameBox)),
                         TengenMsPacMan_UIConfig::new)
 
                     .game(ARCADE_PACMAN_XXL,
-                        () -> new PacManXXL_PacMan_GameModel(coinMechanism, xxlMapSelector),
+                        () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gameBox), coinMechanism, xxlMapSelector),
                         PacManXXL_PacMan_UIConfig::new)
 
                     .game(ARCADE_MS_PACMAN_XXL,
-                        () -> new PacManXXL_MsPacMan_GameModel(coinMechanism, xxlMapSelector),
+                        () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gameBox), coinMechanism, xxlMapSelector),
                         PacManXXL_MsPacMan_UIConfig::new)
 
                     .startPage(ArcadePacMan_StartPage::new)
@@ -145,9 +147,7 @@ public class PacManGames3dApp extends Application {
             }
             else {
                 registerGames();
-                context = new AppContextImpl(gameBox,
-                    createViewImplementation(stage, sceneSize.x(), sceneSize.y())
-                );
+                context = new AppContextImpl(gameBox, createViewImplementation(stage, sceneSize.x(), sceneSize.y()));
                 addConfigFactories();
                 addStartPages();
             }
@@ -184,11 +184,11 @@ public class PacManGames3dApp extends Application {
     private void registerGames() {
         for (GameVariant variant : GameVariant.values()) {
             final AbstractGameModel game = switch (variant) {
-                case ARCADE_PACMAN        -> new ArcadePacMan_GameModel(gameBox.coinMechanism());
-                case ARCADE_MS_PACMAN     -> new ArcadeMsPacMan_GameModel(gameBox.coinMechanism());
-                case TENGEN_MS_PACMAN     -> new TengenMsPacMan_GameModel();
-                case ARCADE_PACMAN_XXL    -> new PacManXXL_PacMan_GameModel(gameBox.coinMechanism(), xxlMapSelector);
-                case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(gameBox.coinMechanism(), xxlMapSelector);
+                case ARCADE_PACMAN        -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism());
+                case ARCADE_MS_PACMAN     -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism());
+                case TENGEN_MS_PACMAN     -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow(gameBox));
+                case ARCADE_PACMAN_XXL    -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism(), xxlMapSelector);
+                case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism(), xxlMapSelector);
             };
             if (includeTests) {
                 addTestStates(game.flow());
@@ -198,9 +198,9 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addTestStates(GameControlFlow gameFlow) {
-        gameFlow.addState(new LevelShortTestState<>(gameBox.coinMechanism()));
-        gameFlow.addState(new LevelMediumTestState<>());
-        gameFlow.addState(new CutScenesTestState<>());
+        gameFlow.addState(new LevelShortTestState(gameBox.coinMechanism()));
+        gameFlow.addState(new LevelMediumTestState());
+        gameFlow.addState(new CutScenesTestState());
     }
 
     private void addConfigFactories() {

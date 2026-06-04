@@ -6,12 +6,12 @@ package de.amr.pacmanfx.flow;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.core.GameContext;
 import org.tinylog.Logger;
 
 import java.util.Objects;
 
-public class GameState implements State<GameModel> {
+public class GameState implements State<GameContext> {
 
     private final String name;
     private final TickTimer timer;
@@ -27,17 +27,17 @@ public class GameState implements State<GameModel> {
     }
 
     @Override
-    public void onEnter(GameModel context) {
+    public void onEnter(GameContext context) {
         Logger.trace("onEnter");
     }
 
     @Override
-    public void onUpdate(GameModel context) {
+    public void onUpdate(GameContext context) {
         Logger.trace("onUpdate");
     }
 
     @Override
-    public void onExit(GameModel context) {
+    public void onExit(GameContext context) {
         Logger.trace("onExit");
     }
 

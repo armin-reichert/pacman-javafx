@@ -221,8 +221,8 @@ public class GateKeeper {
             .filter(ghost -> ghost.state() == GhostState.LOCKED)
             .findFirst()
             .ifPresent(prisoner -> checkReleaseOfGhost(level, prisoner).ifPresent(reason -> {
-                level.game().simulationStep().setGhostReleasedFromJailhouse(prisoner);
-                level.game().simulationStep().setGhostReleaseInfo(reason);
+     //           level.game().simulationStep().setGhostReleasedFromJailhouse(prisoner);
+     //           level.game().simulationStep().setGhostReleaseInfo(reason);
                 prisoner.setMoveDir(Direction.UP);
                 prisoner.setWishDir(Direction.UP);
                 prisoner.setState(GhostState.LEAVING_HOUSE);

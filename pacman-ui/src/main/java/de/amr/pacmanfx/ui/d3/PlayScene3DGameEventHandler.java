@@ -7,9 +7,9 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.flow.GameStateID;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.AppConstants;
@@ -52,7 +52,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     @Override
     public void onGameStateChange(GameStateChangeEvent event) {
-        final State<GameModel> gameState = event.newState();
+        final State<GameContext> gameState = event.newState();
 
         //TODO ugly
         if (gameState instanceof TestState) {
@@ -103,7 +103,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     @Override
     public void onGameStarted(GameStartedEvent event) {
-        final State<GameModel> state = context().currentGameState();
+        final State<GameContext> state = context().currentGameState();
         final boolean silent = context().currentGame().isDemoLevelRunning() || state instanceof TestState;
         if (!silent) {
             context().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
@@ -124,7 +124,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     @Override
     public void onLevelStarted(LevelStartedEvent event) {
         final GameLevel level = event.level();
-        final State<GameModel> gameState = context().currentGameState();
+        final State<GameContext> gameState = context().currentGameState();
         //TODO rethink
         if (gameState instanceof TestState) {
             gameScene().replaceGameLevel3D(level);
@@ -216,7 +216,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
             .ifPresent(ManagedAnimation::playFromStart);
     }
 
-    private void onPacManDying(State<GameModel> gameState) {
+    private void onPacManDying(State<GameContext> gameState) {
         final GameLevel3D level3D = assertLevel3D();
         final Pac3D pac3D = level3D.entities().pac3D();
 
@@ -252,10 +252,9 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         );
     }
 
-
     private void onEatingGhost() {
         final GameLevel3D level3D = assertLevel3D();
-        context().currentGame().simulationStep().ghostsKilled().forEach(ghost -> {
+        context().gameContext().simulationStep().ghostsKilled().forEach(ghost -> {
             final Ghost3D ghost3D = level3D.ghost3D(ghost.personality());
             final int killIndex = level3D.level().killedGhostsForCurrentEnergizer().indexOf(ghost);
             final Image pointsImage = level3D.uiConfig().killedGhostPointsImage(killIndex);
@@ -279,7 +278,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     private void onLevelComplete() {
         final GameLevel3D level3D = assertLevel3D();
-        final State<GameModel> gameState = context().currentGameState();
+        final State<GameContext> gameState = context().currentGameState();
 
         gameScene().scoreOpacity.set(0);
 
@@ -294,7 +293,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         playLevelEndAnimation(level3D.animationRegistry(), level3D.entities().maze3D(), gameState, level3D.level().cutSceneNumber() != 0);
     }
 
-    private void playLevelEndAnimation(AnimationRegistry animationRegistry, Maze3D maze3D, State<GameModel> gameState, boolean cutSceneAfter) {
+    private void playLevelEndAnimation(AnimationRegistry animationRegistry, Maze3D maze3D, State<GameContext> gameState, boolean cutSceneAfter) {
         final GameLevel3D.AnimationID animationID = cutSceneAfter
             ? GameLevel3D.AnimationID.LEVEL_COMPLETED_SHORT
             : GameLevel3D.AnimationID.LEVEL_COMPLETED_FULL;

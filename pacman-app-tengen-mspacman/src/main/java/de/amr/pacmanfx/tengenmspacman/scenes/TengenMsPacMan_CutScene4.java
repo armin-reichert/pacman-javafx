@@ -8,12 +8,12 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.AppContext;
@@ -99,7 +99,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     public void onTick(GameClock clock) {
         final UIConfig uiConfig = context().currentUIConfig();
         final TengenMsPacMan_GameModel game = context().currentGame();
-        final State<GameModel> gameState = context().currentGameState();
+        final State<GameContext> gameState = context().currentGameState();
         final long gameStateTick = gameState.timer().tickCount();
 
         clapperboard.tick();

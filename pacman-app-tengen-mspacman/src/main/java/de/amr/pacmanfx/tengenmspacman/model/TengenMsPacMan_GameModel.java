@@ -8,6 +8,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.event.*;
+import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.flow.StateMachineGameControlFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.HuntingTimer;
@@ -65,12 +66,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private boolean canStartNewGame;
     private int numContinues;
 
-    public TengenMsPacMan_GameModel() {
-        flow = new StateMachineGameControlFlow("Tengen Ms. Pac-Man Game Flow", this);
-        for (TengenMsPacMan_GameState gameState : TengenMsPacMan_GameState.values()) {
-            flow.addState(gameState.state());
-        }
-
+    public TengenMsPacMan_GameModel(GameControlFlow flow) {
+        this.flow = flow;
         rules = new TengenMsPacMan_GameRules(this);
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
@@ -234,7 +231,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        flow().publishGameEvent(new LevelStartedEvent(this, level));
+        flow.publishGameEvent(new LevelStartedEvent(flow.context(), level));
     }
 
     @Override
@@ -306,7 +303,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gateKeeper.setLevelNumber(levelNumber);
 
         setLevel(newLevel);
-        flow.publishGameEvent(new LevelCreatedEvent(this, newLevel));
+        flow.publishGameEvent(new LevelCreatedEvent(flow.context(), newLevel));
     }
 
     @Override
@@ -325,7 +322,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         score.setLevelNumber(1);
 
         setLevel(newLevel);
-        flow.publishGameEvent(new LevelCreatedEvent(this, newLevel));
+        flow.publishGameEvent(new LevelCreatedEvent(flow.context(), newLevel));
     }
 
     @Override
@@ -384,7 +381,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        flow().publishGameEvent(new BonusActivatedEvent(this, bonus));
+        flow().publishGameEvent(new BonusActivatedEvent(flow.context(), bonus));
     }
 
     @Override
@@ -396,11 +393,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         level.killedGhostsForCurrentEnergizer().clear();
-
-        final Pac pac = level.entities().pac();
-        if (!rules.isLevelCompleted(level)) {
-            startPacPowerMode(pac, level);
-        }
     }
 
     @Override
@@ -418,7 +410,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             pac.animations().stopSelected();
 
             level.entities().ghosts().forEach(ghost -> ghost.onPacKilled(level));
-            flow().publishGameEvent(new StopAllSoundsEvent(this));
+            flow.publishGameEvent(new StopAllSoundsEvent(flow.context()));
         }
         else if (tick == TICK_PACMAN_DYING_HIDE_GHOSTS) {
             level.entities().ghosts().forEach(Ghost::hide);
@@ -427,7 +419,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
         else if (tick == TICK_PACMAN_DYING_START_PAC_ANIMATION) {
             pac.animations().playSelected();
-            flow().publishGameEvent(new PacDyingEvent(this, pac));
+            flow.publishGameEvent(new PacDyingEvent(flow.context(), pac));
         }
         else if (tick == TICK_PACMAN_DYING_HIDE_PAC) {
             pac.hide();
@@ -435,7 +427,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.optBonus().ifPresent(Bonus::setInactive);
         }
         else if (tick == TICK_PACMAN_DYING_PAC_DEAD) {
-            flow().publishGameEvent(new PacDeadEvent(this, pac));
+            flow.publishGameEvent(new PacDeadEvent(flow.context(), pac));
         }
         else {
             level.heartbeat().triggerPulse();

@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameModel;
@@ -39,10 +40,10 @@ public class PacManXXL_App extends Application {
         context = GameUI_Builder
             .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
             .game(GameVariant.ARCADE_PACMAN_XXL,
-                () -> new PacManXXL_PacMan_GameModel(gameBox.coinMechanism(), mapSelector),
+                () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism(), mapSelector),
                 PacManXXL_PacMan_UIConfig::new)
             .game(GameVariant.ARCADE_MS_PACMAN_XXL,
-                () -> new PacManXXL_MsPacMan_GameModel(gameBox.coinMechanism(), mapSelector),
+                () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism(), mapSelector),
                 PacManXXL_MsPacMan_UIConfig::new)
             .startPage(PacManXXL_StartPage::new)
             .build();

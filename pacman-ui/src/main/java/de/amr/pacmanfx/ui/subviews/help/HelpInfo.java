@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.subviews.help;
 
 import de.amr.basics.fsm.State;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.AppContext;
@@ -27,7 +28,7 @@ public class HelpInfo {
 
     public static HelpInfo build(AppContext context) {
         final GameModel game = context.currentGame();
-        final State<GameModel> state = context.currentGameState();
+        final State<GameContext> state = context.currentGameState();
         final boolean demoLevel = game.isDemoLevelRunning();
 
         final HelpInfo helpInfo = new HelpInfo(context);

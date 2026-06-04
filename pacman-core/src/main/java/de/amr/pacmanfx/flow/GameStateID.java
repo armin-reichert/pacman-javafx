@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.flow;
 
 import de.amr.basics.fsm.State;
-import de.amr.pacmanfx.model.GameModel;
 
 import static java.util.Objects.requireNonNull;
 
@@ -29,7 +28,7 @@ public enum GameStateID {
     GAME_LEVEL_INTERMISSION,
     GAME_OVER;
 
-    public boolean identifies(State<GameModel> gameState) {
+    public boolean identifies(State<?> gameState) {
         requireNonNull(gameState);
         return gameState.name().equals(name());
     }

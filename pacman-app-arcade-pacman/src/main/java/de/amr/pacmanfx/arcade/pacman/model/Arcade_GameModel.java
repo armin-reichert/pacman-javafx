@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.flow.StateMachineGameControlFlow;
+import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -29,12 +29,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
      */
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
 
-    protected Arcade_GameModel() {
-        flow = new StateMachineGameControlFlow("Arcade Pac-Man Games Control Flow", this);
-        for (Arcade_GameState gameState : Arcade_GameState.values()) {
-            flow.addState(gameState.state());
-        }
-
+    protected Arcade_GameModel(GameControlFlow flow) {
+        this.flow = requireNonNull(flow);
         actorSpeedControl = new Arcade_ActorSpeedControl();
         setCollisionStrategy(CollisionStrategy.SAME_TILE);
     }
@@ -59,10 +55,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         checkRedGhostCruiseElroyActivation(level);
 
         level.killedGhostsForCurrentEnergizer().clear();
-
-        if (!rules.isLevelCompleted(level)) {
-            startPacPowerMode(pac, level);
-        }
     }
 
     protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
@@ -82,8 +74,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     // Game interface
 
-
-
     @Override
     public void doPacManDying(GameLevel level, Pac pac, long tick) {
         if (tick == 1) {
@@ -96,7 +86,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             pac.setSpeed(0);
             pac.setDead(true);
             level.entities().ghosts().forEach(ghost -> ghost.onPacKilled(level));
-            flow().publishGameEvent(new StopAllSoundsEvent(this));
+            flow.publishGameEvent(new StopAllSoundsEvent(flow.context()));
         }
         else if (tick == Arcade_GameState.Timing.TICK_PACMAN_DYING_HIDE_GHOSTS) {
             level.entities().ghosts().forEach(Ghost::hide);
@@ -105,14 +95,14 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         }
         else if (tick == Arcade_GameState.Timing.TICK_PACMAN_DYING_START_ANIMATION) {
             pac.animations().playSelected();
-            flow().publishGameEvent(new PacDyingEvent(this, pac));
+            flow.publishGameEvent(new PacDyingEvent(flow.context(), pac));
         }
         else if (tick == Arcade_GameState.Timing.TICK_PACMAN_DYING_HIDE_PAC) {
             pac.hide();
             level.optBonus().ifPresent(Bonus::setInactive); //TODO check this
         }
         else if (tick == Arcade_GameState.Timing.TICK_PACMAN_DYING_PAC_DEAD) {
-            flow().publishGameEvent(new PacDeadEvent(this, pac));
+            flow.publishGameEvent(new PacDeadEvent(flow.context(), pac));
         }
         else {
             level.heartbeat().triggerPulse();
@@ -128,7 +118,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         setLevel(level);
-        flow().publishGameEvent(new LevelCreatedEvent(this, level));
+        flow.publishGameEvent(new LevelCreatedEvent(flow.context(), level));
     }
 
     @Override
@@ -148,7 +138,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         score.setLevelNumber(levelNumber);
 
         setLevel(level);
-        flow.publishGameEvent(new LevelCreatedEvent(this, level));
+        flow.publishGameEvent(new LevelCreatedEvent(flow.context(), level));
     }
 
     @Override
@@ -182,13 +172,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             Logger.info("Demo level {} started", level.number());
         } else {
             showLevelMessage(level, GameLevelMessageType.READY);
-            levelCounter().update(level.number(), level.bonusSymbolCode(0));
-            score().setEnabled(true);
+            levelCounter.update(level.number(), level.bonusSymbolCode(0));
+            score.setEnabled(true);
             cheats.update(level);
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        flow().publishGameEvent(new LevelStartedEvent(this, level));
+        flow.publishGameEvent(new LevelStartedEvent(flow.context(), level));
     }
-
 }

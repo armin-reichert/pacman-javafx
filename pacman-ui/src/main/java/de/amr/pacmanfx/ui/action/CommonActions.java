@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.core.GameVariant;
@@ -105,10 +106,10 @@ public final class CommonActions {
             //TODO check this code
             context.stopGame();
             final GameModel game = context.currentGame();
-            final State<GameModel> gameState = context.currentGameState();
+            final State<GameContext> gameState = context.currentGameState();
             boolean isLevelShortTest = gameState instanceof LevelShortTestState;
             if (isLevelShortTest) {
-                gameState.onExit(game); //TODO exit other states too?
+                gameState.onExit(context.gameContext()); //TODO exit other states too?
             }
             game.flow().restartState(GameStateID.GAME_INTRO.name());
             context.gameClock().start();

@@ -5,27 +5,29 @@
 package de.amr.pacmanfx.flow;
 
 import de.amr.basics.fsm.State;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.model.GameModel;
 
 import java.util.Optional;
 
 public interface GameControlFlow {
 
-    Optional<State<GameModel>> optState(String stateName);
+    GameContext context();
 
-    State<GameModel> state();
+    Optional<State<GameContext>> optState(String stateName);
 
-    void addState(State<GameModel> gameState);
+    State<GameContext> state();
 
-    void enterState(State<GameModel> gameState);
+    void addState(State<GameContext> gameState);
+
+    void enterState(State<GameContext> gameState);
 
     void enterState(String stateName);
 
     void resumePreviousState();
 
-    void restartState(State<GameModel> gameState);
+    void restartState(State<GameContext> gameState);
 
     void restartState(String stateName);
 

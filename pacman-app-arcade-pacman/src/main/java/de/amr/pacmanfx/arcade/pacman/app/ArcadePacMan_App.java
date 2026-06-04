@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.app;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameBox;
@@ -62,7 +63,7 @@ public class ArcadePacMan_App extends Application {
             context = GameUI_Builder.newUI(primaryStage, size.x(), size.y(), gameBox)
                 .game(
                     GameVariant.ARCADE_PACMAN,
-                    () -> new ArcadePacMan_GameModel(gameBox.coinMechanism()),
+                    () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism()),
                     ArcadePacMan_UIConfig::new)
                 .startPage(ArcadePacMan_StartPage::new)
                 .build();
@@ -82,7 +83,7 @@ public class ArcadePacMan_App extends Application {
     // Private area
 
     private void createUI(Stage stage, GameBox gameBox, Vector2i sceneSize) {
-        final var game = new ArcadePacMan_GameModel(gameBox.coinMechanism());
+        final var game = new ArcadePacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism());
 
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 

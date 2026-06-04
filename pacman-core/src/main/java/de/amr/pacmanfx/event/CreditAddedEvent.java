@@ -4,6 +4,6 @@
 
 package de.amr.pacmanfx.event;
 
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.core.GameContext;
 
-public record CreditAddedEvent(GameModel game, int credits) implements GameEvent {}
+public record CreditAddedEvent(GameContext context, int credits) implements GameEvent {}

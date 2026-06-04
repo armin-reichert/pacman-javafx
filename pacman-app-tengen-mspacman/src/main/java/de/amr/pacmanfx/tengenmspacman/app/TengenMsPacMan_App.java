@@ -10,6 +10,7 @@ import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
+import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Builder;
@@ -37,7 +38,8 @@ public class TengenMsPacMan_App extends Application {
 
         context = GameUI_Builder
             .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
-            .game(TENGEN_MS_PACMAN, TengenMsPacMan_GameModel::new, TengenMsPacMan_UIConfig::new)
+            .game(TENGEN_MS_PACMAN,
+                () -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow(gameBox)), TengenMsPacMan_UIConfig::new)
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
 
