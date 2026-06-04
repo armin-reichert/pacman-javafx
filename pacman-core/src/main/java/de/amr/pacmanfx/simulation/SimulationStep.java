@@ -34,10 +34,6 @@ public class SimulationStep {
     private boolean pacStartsLosingPower;
     private boolean pacLostPower;
     private Ghost pacKiller;
-    private boolean extraLifeWon;
-    private int extraLifeScore;
-    private Ghost ghostReleasedFromJailhouse;
-    private String ghostReleaseInfo;
     private final List<Ghost> ghostsKilled = new ArrayList<>();
     private final Set<Ghost> ghostsCollidingWithPac = new HashSet<>(4);
 
@@ -51,10 +47,6 @@ public class SimulationStep {
         pacStartsLosingPower = false;
         pacLostPower = false;
         pacKiller = null;
-        extraLifeWon = false;
-        extraLifeScore = 0;
-        ghostReleasedFromJailhouse = null;
-        ghostReleaseInfo = null;
         ghostsKilled.clear();
         ghostsCollidingWithPac.clear();
     }
@@ -84,12 +76,6 @@ public class SimulationStep {
         }
         if (pacKiller != null) {
             messages.add("Pac killed by %s at tile %s".formatted(pacKiller.name(), pacKiller.computeTile()));
-        }
-        if (extraLifeWon) {
-            messages.add("Extra life won for scoring %d points".formatted(extraLifeScore));
-        }
-        if (ghostReleasedFromJailhouse != null) {
-            messages.add("%s unlocked: %s".formatted(ghostReleasedFromJailhouse.name(), ghostReleaseInfo));
         }
         for (Ghost ghost : ghostsKilled) {
             messages.add("%s killed at %s".formatted(ghost.name(), ghost.computeTile()));
@@ -139,14 +125,6 @@ public class SimulationStep {
         return !ghostsKilled.isEmpty();
     }
 
-    public void setGhostReleasedFromJailhouse(Ghost ghostReleasedFromJailhouse) {
-        this.ghostReleasedFromJailhouse = ghostReleasedFromJailhouse;
-    }
-
-    public void setGhostReleaseInfo(String ghostReleaseInfo) {
-        this.ghostReleaseInfo = ghostReleaseInfo;
-    }
-
     public Bonus edibleBonus() {
         return edibleBonus;
     }
@@ -157,14 +135,6 @@ public class SimulationStep {
 
     public void setBonusIndex(int bonusIndex) {
         this.bonusIndex = bonusIndex;
-    }
-
-    public void setExtraLifeWon(boolean won) {
-        extraLifeWon = won;
-    }
-
-    public void setExtraLifeScore(int extraLifeScore) {
-        this.extraLifeScore = extraLifeScore;
     }
 
     public void setPacGotPower(boolean pacGotPower) {

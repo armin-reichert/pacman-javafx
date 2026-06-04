@@ -336,14 +336,6 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public void doLevelPlaying(GameLevel level) {
-        if (gateKeeper != null) {
-            gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
-        }
-        cheats.update(level);
-    }
-
-    @Override
     public void onLevelCompleted(GameLevel level) {
         level.huntingTimer().stop();
         Logger.info("Hunting timer stopped.");

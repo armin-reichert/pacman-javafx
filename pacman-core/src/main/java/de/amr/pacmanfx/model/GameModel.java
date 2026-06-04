@@ -94,8 +94,6 @@ public interface GameModel {
 
     void onStartLevelPlaying(GameLevel level);
 
-    void doLevelPlaying(GameLevel level);
-
     void onLevelCompleted(GameLevel level);
 
     // Actor related
