@@ -6,6 +6,10 @@ import java.util.OptionalInt;
 
 public interface GameRules {
 
+    boolean isLevelCompleted(GameLevel level);
+
+    int lastLevelNumber();
+
     int pointsForGhost(int killedBefore);
 
     int pointsForPellet();

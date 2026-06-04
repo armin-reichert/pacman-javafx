@@ -40,7 +40,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
-
     public static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
     public static final short TICK_PACMAN_DYING_START_PAC_ANIMATION = 90;
     public static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
@@ -125,7 +124,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     public void setStartLevelNumber(int number) {
-        if (number < TengenMsPacMan_GameRules.FIRST_LEVEL || number > TengenMsPacMan_GameRules.LAST_LEVEL) {
+        if (number < TengenMsPacMan_GameRules.FIRST_LEVEL || number > TengenMsPacMan_GameRules.LAST_LEVEL_NUMBER) {
             throw GameException.invalidLevelNumber(number);
         }
         startLevelNumber = number;
@@ -255,13 +254,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void startNextLevel() {
         final GameLevel level = optGameLevel().orElseThrow();
-        if (level.number() < TengenMsPacMan_GameRules.LAST_LEVEL) {
+        if (level.number() < TengenMsPacMan_GameRules.LAST_LEVEL_NUMBER) {
             buildNormalLevel(level.number() + 1);
             startLevel();
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
         } else {
-            Logger.warn("Last level ({}) reached, cannot start next level", TengenMsPacMan_GameRules.LAST_LEVEL);
+            Logger.warn("Last level ({}) reached, cannot start next level", TengenMsPacMan_GameRules.LAST_LEVEL_NUMBER);
         }
     }
 
@@ -338,9 +337,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public int lastLevelNumber() { return TengenMsPacMan_GameRules.LAST_LEVEL; }
-
-    @Override
     protected boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
         float runningMillis = System.currentTimeMillis() - demoLevel.startTime();
         if (runningMillis <= DEMO_LEVEL_MIN_DURATION_MILLIS) {
@@ -410,7 +406,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         level.killedGhostsForCurrentEnergizer().clear();
 
         final Pac pac = level.entities().pac();
-        if (!isLevelCompleted(level)) {
+        if (!rules.isLevelCompleted(level)) {
             empowerPac(pac, level);
         }
     }

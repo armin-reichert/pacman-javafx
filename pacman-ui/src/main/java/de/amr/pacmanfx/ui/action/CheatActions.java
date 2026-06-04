@@ -96,7 +96,7 @@ public final class CheatActions {
             final GameLevel level = realLevel(context).orElse(null);
             return level != null
                 && gameState.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name())
-                && level.number() < level.game().lastLevelNumber();
+                && level.number() < level.game().rules().lastLevelNumber();
         }
     };
 

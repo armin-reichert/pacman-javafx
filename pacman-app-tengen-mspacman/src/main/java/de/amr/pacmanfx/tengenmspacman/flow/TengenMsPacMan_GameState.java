@@ -177,7 +177,7 @@ public enum TengenMsPacMan_GameState {
         public void onUpdate(GameModel game) {
             final GameLevel level = game.optGameLevel().orElseThrow();
             game.doLevelPlaying(level);
-            if (game.isLevelCompleted(level)) {
+            if (game.rules().isLevelCompleted(level)) {
                 game.flow().enterState(GAME_LEVEL_COMPLETE.state());
             } else if (game.hasPacManBeenKilled()) {
                 game.flow().enterState(GAME_LEVEL_PACMAN_DYING.state());

@@ -89,13 +89,7 @@ public interface GameModel extends GameCheats {
 
     void startDemoLevel(long tick);
 
-    default boolean isDemoLevelRunning() {
-        return optGameLevel().isPresent() && optGameLevel().get().isDemoLevel();
-    }
-
-    boolean isLevelCompleted(GameLevel level);
-
-    int lastLevelNumber();
+    boolean isDemoLevelRunning();
 
     void startNextLevel();
 

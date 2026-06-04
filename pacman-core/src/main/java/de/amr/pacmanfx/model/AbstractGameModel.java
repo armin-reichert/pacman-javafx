@@ -258,6 +258,45 @@ public abstract class AbstractGameModel implements GameModel {
         level.heartbeat().reset();
     }
 
+    @Override
+    public void showLevelMessage(GameLevel level, GameLevelMessageType type) {
+        final var message = new GameLevelMessage(type);
+        message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
+        level.setMessage(message);
+    }
+
+    public abstract void startDemoLevel(long tick);
+
+    public boolean isDemoLevelRunning() {
+        return optGameLevel().isPresent() && optGameLevel().get().isDemoLevel();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -301,11 +340,6 @@ public abstract class AbstractGameModel implements GameModel {
     @Override
     public boolean hasGhostBeenKilled() {
         return !simStep.ghostsKilled.isEmpty();
-    }
-
-    @Override
-    public boolean isLevelCompleted(GameLevel level) {
-        return level.worldMap().foodLayer().remainingFoodCount() == 0;
     }
 
     @Override
@@ -485,7 +519,7 @@ public abstract class AbstractGameModel implements GameModel {
         checkFoodFound(level, pac);
         checkBonusFound(level);
 
-        if (!isLevelCompleted(level)) {
+        if (!rules.isLevelCompleted(level)) {
             updatePacPower(level, pac);
             level.huntingTimer().update(rules(), level.number());
         }
@@ -711,12 +745,6 @@ public abstract class AbstractGameModel implements GameModel {
         }
     }
 
-    @Override
-    public void showLevelMessage(GameLevel level, GameLevelMessageType type) {
-        final var message = new GameLevelMessage(type);
-        message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
-        level.setMessage(message);
-    }
 
 
 

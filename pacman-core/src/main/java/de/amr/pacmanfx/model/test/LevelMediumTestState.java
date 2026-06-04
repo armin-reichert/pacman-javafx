@@ -5,7 +5,7 @@ package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.flow.GameStateID;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -49,7 +49,7 @@ public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME
 
     @Override
     public void onEnter(GAME game) {
-        lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
+        lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.rules().lastLevelNumber();
         timer.restartSeconds(TEST_DURATION_SEC);
         game.prepareNewGame();
         game.buildNormalLevel(1);
@@ -78,7 +78,7 @@ public class LevelMediumTestState<GAME extends GameModel> extends TestState<GAME
                 configureLevelForTest(game);
             }
         }
-        else if (game.isLevelCompleted(level)) {
+        else if (game.rules().isLevelCompleted(level)) {
             game.flow().enterState(GameStateID.GAME_INTRO.name());
         } else if (game.hasPacManBeenKilled()) {
             expire();

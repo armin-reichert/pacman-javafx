@@ -31,7 +31,7 @@ public class LevelShortTestState<GAME extends GameModel> extends TestState<GAME>
     @Override
     public void onEnter(GAME game) {
         coinMechanism.setNumCoins(1);
-        lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
+        lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.rules().lastLevelNumber();
         lock();
         game.prepareNewGame();
         game.buildNormalLevel(1);

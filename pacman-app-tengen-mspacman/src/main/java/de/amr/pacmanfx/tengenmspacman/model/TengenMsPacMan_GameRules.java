@@ -50,7 +50,7 @@ public class TengenMsPacMan_GameRules implements GameRules {
     }
 
     public static final int FIRST_LEVEL = 1;
-    public static final int LAST_LEVEL = 32;
+    public static final int LAST_LEVEL_NUMBER = 32;
 
     public static final int DEFAULT_NUM_CONTINUES = 4;
 
@@ -60,13 +60,23 @@ public class TengenMsPacMan_GameRules implements GameRules {
         9, 3,
         13, 3,
         17, 3,
-        LAST_LEVEL, 4
+        LAST_LEVEL_NUMBER, 4
     );
 
     private final TengenMsPacMan_GameModel gameModel;
 
     public TengenMsPacMan_GameRules(TengenMsPacMan_GameModel gameModel) {
         this.gameModel = gameModel;
+    }
+
+    @Override
+    public boolean isLevelCompleted(GameLevel level) {
+        return level.worldMap().foodLayer().remainingFoodCount() == 0;
+    }
+
+    @Override
+    public int lastLevelNumber() {
+        return LAST_LEVEL_NUMBER;
     }
 
     @Override

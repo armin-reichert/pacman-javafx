@@ -60,7 +60,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         level.killedGhostsForCurrentEnergizer().clear();
 
-        if (!isLevelCompleted(level)) {
+        if (!rules.isLevelCompleted(level)) {
             empowerPac(pac, level);
         }
     }
@@ -215,10 +215,5 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         final GameLevel level = optGameLevel().orElseThrow();
         buildNormalLevel(level.number() + 1);
         startLevel();
-    }
-
-    @Override
-    public int lastLevelNumber() {
-        return Integer.MAX_VALUE;
     }
 }

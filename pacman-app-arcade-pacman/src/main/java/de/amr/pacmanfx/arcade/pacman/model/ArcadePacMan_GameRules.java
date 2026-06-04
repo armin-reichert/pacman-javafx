@@ -55,6 +55,16 @@ public class ArcadePacMan_GameRules implements GameRules {
     );
 
     @Override
+    public boolean isLevelCompleted(GameLevel level) {
+        return level.worldMap().foodLayer().remainingFoodCount() == 0;
+    }
+
+    @Override
+    public int lastLevelNumber() {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
     public int pointsForGhost(int killedBefore) {
         return switch (killedBefore) {
             case 0 -> 200;
