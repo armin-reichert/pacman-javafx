@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.core.GameBox;
-import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.flow.GameControlFlow;
 import de.amr.pacmanfx.core.GameVariant;
+import de.amr.pacmanfx.flow.GameControlFlow;
+import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
@@ -14,8 +14,8 @@ import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
-import de.amr.pacmanfx.ui.view.GameViewMainScene;
 import de.amr.pacmanfx.ui.view.GameViewImpl;
+import de.amr.pacmanfx.ui.view.GameViewMainScene;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
 import javafx.stage.Stage;
 

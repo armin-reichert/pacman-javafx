@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.core.GameVariant;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
-import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
@@ -17,9 +17,9 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.core.GameVariant.ARCADE_MS_PACMAN_XXL;
 import static de.amr.pacmanfx.core.GameVariant.ARCADE_PACMAN_XXL;
+import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.model.world.WorldMapSelectionMode.*;
 import static java.util.Objects.requireNonNull;
 

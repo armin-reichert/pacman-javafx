@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.subviews.help;
 
 import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.AppConstants;
+import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FadingPane;

@@ -9,9 +9,7 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.core.Globals.tile;
-import static de.amr.pacmanfx.core.Globals.HTS;
-import static de.amr.pacmanfx.core.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.*;
 import static de.amr.pacmanfx.model.world.TerrainTile.*;
 import static java.util.function.Predicate.not;
 

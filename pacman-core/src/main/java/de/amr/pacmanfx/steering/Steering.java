@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.steering;
 
-import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.actors.MovingActor;
+import de.amr.pacmanfx.model.level.GameLevel;
 
 /**
  * @author Armin Reichert

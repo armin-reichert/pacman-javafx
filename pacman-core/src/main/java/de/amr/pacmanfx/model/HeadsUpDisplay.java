@@ -6,8 +6,6 @@ package de.amr.pacmanfx.model;
 import de.amr.pacmanfx.core.CoinMechanism;
 import javafx.beans.property.IntegerProperty;
 
-import java.util.Objects;
-
 public class HeadsUpDisplay {
 
     private CoinMechanism coinMechanism;

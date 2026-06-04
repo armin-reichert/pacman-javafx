@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.ui.d2;
 
-import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.level.GameLevel;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.SequentialTransition;

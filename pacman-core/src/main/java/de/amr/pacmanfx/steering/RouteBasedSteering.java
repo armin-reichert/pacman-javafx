@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.steering;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.actors.MovingActor;
+import de.amr.pacmanfx.model.level.GameLevel;
 import org.tinylog.Logger;
 
 import java.util.List;

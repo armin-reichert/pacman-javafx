@@ -6,8 +6,8 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.GameRules;
+import de.amr.pacmanfx.model.level.GameLevel;
 
 import java.util.EnumMap;
 import java.util.Map;

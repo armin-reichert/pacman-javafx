@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.GameRules;
+import de.amr.pacmanfx.model.level.GameLevel;
 
 import java.util.Map;
 import java.util.OptionalInt;
