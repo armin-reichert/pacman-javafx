@@ -187,11 +187,15 @@ public abstract class AbstractGameModel implements GameModel {
     public void prepareNewGame() {
         lives.setCount(lives.initialCount());
         score.reset();
-        try {
-            highScore.load();
-            highScore.setEnabled(true);
-        } catch (IOException x) {
-            Logger.error(x, "Error loading high-score file {}", highScore.file().getAbsolutePath());
+        if (highScore != null) {
+            try {
+                highScore.load();
+                highScore.setEnabled(true);
+            } catch (IOException x) {
+                Logger.error(x, "Error loading high-score file {}", highScore.file().getAbsolutePath());
+            }
+        } else {
+            Logger.error("No high-score file has been assigned");
         }
         gateKeeper.reset();
         levelCounter.clear();
@@ -432,7 +436,9 @@ public abstract class AbstractGameModel implements GameModel {
         }
 
         public void handleCheatDetected() {
-            highScore.setEnabled(false);
+            if (highScore != null) {
+                highScore.setEnabled(false);
+            }
         }
     }
 
@@ -658,8 +664,9 @@ public abstract class AbstractGameModel implements GameModel {
      * Score management
      * ---------------------------------------------------------------------- */
 
-    public void setHighScoreFile(File highScoreFile) {
+    public void createHighScore(File highScoreFile) {
         requireNonNull(highScoreFile);
+        //TODO more checks
         highScore = new PersistentScore(highScoreFile);
     }
 
@@ -669,15 +676,21 @@ public abstract class AbstractGameModel implements GameModel {
         }
         final int oldScore = score.points();
         final int newScore = oldScore + points;
-        if (highScore.isEnabled() && newScore > highScore.points()) {
+
+        if (highScore != null && highScore.isEnabled() && newScore > highScore.points()) {
             highScore.setPoints(newScore);
             highScore.setLevelNumber(levelNumber);
             highScore.setDate(LocalDate.now());
         }
+
         score.setPoints(newScore);
     }
 
     protected void updateHighScore() {
+        if (highScore == null) {
+            Logger.error("Cannot update high-score, no high-score file has been assigned");
+            return;
+        }
         final PersistentScore savedHighScore = new PersistentScore(highScore.file());
         try {
             savedHighScore.load();
@@ -688,12 +701,6 @@ public abstract class AbstractGameModel implements GameModel {
             Logger.error(x, "Could not update high-score");
         }
     }
-
-
-
-
-
-
 
     /**
      * @return property controlling whether collisions are double-checked each tick
@@ -747,6 +754,4 @@ public abstract class AbstractGameModel implements GameModel {
      * @return {@code true} if Pac-Man cannot be killed at this moment
      */
     protected abstract boolean isPacSafeInDemoLevel(GameLevel demoLevel);
-
-
 }

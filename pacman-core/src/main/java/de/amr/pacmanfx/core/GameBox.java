@@ -86,7 +86,7 @@ public class GameBox implements GameContext {
         }
 
         final File highScoreFile = highScoreFile(variantName);
-        game.setHighScoreFile(highScoreFile);
+        game.createHighScore(highScoreFile);
 
         Logger.info("Game model {} registered as {}, high score file: {}",
             game.getClass().getSimpleName(), variantName, highScoreFile);
