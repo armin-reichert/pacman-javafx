@@ -442,26 +442,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
     }
 
-    @Override
-    public void onEatGhost(GameLevel level, Ghost eatenGhost) {
-        final int killedBefore = level.killedGhostsForCurrentEnergizer().size();
-        final int points = rules.pointsForGhost(killedBefore);
-
-        eatenGhost.setState(GhostState.EATEN);
-        eatenGhost.animations().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, killedBefore);
-
-        scorePoints(points, level.number());
-
-        Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
-
-        level.entities().pac().hide();
-        level.entities().ghosts().forEach(g -> g.animations().stopSelected());
-
-        level.killedGhostsForCurrentEnergizer().add(eatenGhost);
-
-        flow().publishGameEvent(new GhostEatenEvent(this, eatenGhost));
-    }
-
     // Helpers
 
     private void setMsPacMan(GameLevel level) {

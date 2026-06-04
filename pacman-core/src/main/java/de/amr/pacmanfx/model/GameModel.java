@@ -111,6 +111,7 @@ public interface GameModel extends GameCheats {
 
     boolean hasPacManBeenKilled();
 
+    //TODO remove tick parameter, introduce new game state instead
     void doPacManDying(GameLevel level, Pac pac, long tick);
 
     boolean hasGhostBeenKilled();

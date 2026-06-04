@@ -121,24 +121,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void onEatGhost(GameLevel level, Ghost eatenGhost) {
-        final int killedBefore = level.killedGhostsForCurrentEnergizer().size();
-        final int points = rules().pointsForGhost(killedBefore);
-
-        scorePoints(points, level.number());
-        Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
-
-        eatenGhost.setState(GhostState.EATEN);
-        // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
-        eatenGhost.animations().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, killedBefore);
-
-        level.killedGhostsForCurrentEnergizer().add(eatenGhost);
-        level.entities().pac().hide();
-        level.entities().ghosts().forEach(g -> g.animations().stopSelected());
-        flow().publishGameEvent(new GhostEatenEvent(this, eatenGhost));
-    }
-
-    @Override
     public void buildNormalLevel(int levelNumber) {
         final GameLevel level = createLevel(levelNumber, false);
         level.setCutSceneNumber(rules().cutSceneNumberAfterLevel(levelNumber).orElse(0));

@@ -309,68 +309,6 @@ public abstract class AbstractGameModel implements GameModel {
         updateCheats(level);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @Override
-    public CollisionStrategy collisionStrategy() {
-        return collisionStrategy;
-    }
-
-    @Override
-    public void setCollisionStrategy(CollisionStrategy strategy) {
-        this.collisionStrategy = requireNonNull(strategy);
-    }
-
-    @Override
-    public boolean hasPacManBeenKilled() {
-        return simStep.pacKiller != null;
-    }
-
-    @Override
-    public boolean hasGhostBeenKilled() {
-        return !simStep.ghostsKilled.isEmpty();
-    }
-
-    /**
-     * Called when a level is completed. Stops timers, resets animations, and clears remaining food.
-     */
     @Override
     public void onLevelCompleted(GameLevel level) {
         level.huntingTimer().stop();
@@ -390,20 +328,64 @@ public abstract class AbstractGameModel implements GameModel {
         pac.powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero.");
 
-        level.entities().ghosts().forEach(ghost -> ghost.animations().stopSelected());
+        level.entities().ghosts().forEach(ghost -> {
+            ghost.animations().stopSelected();
+            //TODO check in emulator if ghost animation is reset to normal
+            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            ghost.setSpeed(0);
+        });
         level.optBonus().ifPresent(Bonus::setInactive);
     }
 
     // Actor related
 
     @Override
+    public CollisionStrategy collisionStrategy() {
+        return collisionStrategy;
+    }
+
+    @Override
+    public void setCollisionStrategy(CollisionStrategy strategy) {
+        this.collisionStrategy = requireNonNull(strategy);
+    }
+
+    @Override
     public void eatPellet(GameLevel level, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(tile);
-        scorePoints(rules().pointsForPellet(), level.number());
-        if (gateKeeper() != null) {
-            gateKeeper().registerFoodEaten(level, level.worldMap().terrainLayer().house());
+        scorePoints(rules.pointsForPellet(), level.number());
+        if (gateKeeper != null) {
+            gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         }
+    }
+
+    @Override
+    public boolean hasPacManBeenKilled() {
+        return simStep.pacKiller != null;
+    }
+
+    @Override
+    public boolean hasGhostBeenKilled() {
+        return !simStep.ghostsKilled.isEmpty();
+    }
+
+    @Override
+    public void onEatGhost(GameLevel level, Ghost eatenGhost) {
+        final int killedBefore = level.killedGhostsForCurrentEnergizer().size();
+        final int points = rules.pointsForGhost(killedBefore);
+
+        scorePoints(points, level.number());
+        Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
+
+        eatenGhost.setState(GhostState.EATEN);
+        // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
+        eatenGhost.animations().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, killedBefore);
+
+        level.killedGhostsForCurrentEnergizer().add(eatenGhost);
+        level.entities().pac().hide();
+        level.entities().ghosts().forEach(g -> g.animations().stopSelected());
+
+        flow().publishGameEvent(new GhostEatenEvent(this, eatenGhost));
     }
 
 
@@ -411,12 +393,6 @@ public abstract class AbstractGameModel implements GameModel {
      * Utility methods
      * ---------------------------------------------------------------------- */
 
-    /**
-     * Sets the start position for the given ghost.
-     *
-     * @param ghost the ghost
-     * @param tile  the start tile (or {@code null} if not specified)
-     */
     protected void setGhostStartPosition(Ghost ghost, Vector2i tile) {
         if (tile != null) {
             ghost.setStartPosition(halfTileRightOf(tile));
@@ -425,12 +401,6 @@ public abstract class AbstractGameModel implements GameModel {
         }
     }
 
-    /**
-     * Handles score changes and awards extra lives when thresholds are crossed.
-     *
-     * @param oldScore previous score
-     * @param newScore new score
-     */
     protected void handleScoreChange(int oldScore, int newScore) {
         if (rules().isExtraLifeAwarded(oldScore, newScore)) {
             simStep.extraLifeWon = true;
@@ -447,37 +417,36 @@ public abstract class AbstractGameModel implements GameModel {
      * ---------------------------------------------------------------------- */
 
     private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
+
     private final BooleanProperty pacImmune = new SimpleBooleanProperty(false);
+
     private final BooleanProperty pacUsingAutopilot = new SimpleBooleanProperty(false);
 
-    /** @return property indicating whether a cheat has been used */
+    @Override
     public BooleanProperty cheatUsedProperty() {
         return cheatUsed;
     }
 
-    /** @return property indicating whether Pac‑Man is immune to death */
+    @Override
     public BooleanProperty pacImmuneProperty() {
         return pacImmune;
     }
 
-    /** @return {@code true} if Pac‑Man is currently immune */
+    @Override
     public boolean isPacImmune() {
         return pacImmuneProperty().get();
     }
 
-    /** @return {@code true} if autopilot is currently active */
+    @Override
     public boolean isPacUsingAutopilot() {
         return pacUsingAutopilotProperty().get();
     }
 
-    /** @return property indicating whether autopilot mode is active */
+    @Override
     public BooleanProperty pacUsingAutopilotProperty() {
         return pacUsingAutopilot;
     }
 
-    /**
-     * Called when a cheat is detected. Disables high-score saving by default.
-     */
     protected void handleCheatDetected() {
         highScore.setEnabled(false);
     }
@@ -486,20 +455,6 @@ public abstract class AbstractGameModel implements GameModel {
      * Main simulation step
      * ---------------------------------------------------------------------- */
 
-    /**
-     * Performs one simulation step of the hunting phase.
-     *
-     * <p>This method:
-     * <ul>
-     *   <li>moves Pac-Man and ghosts</li>
-     *   <li>detects collisions (ghosts, food, bonus)</li>
-     *   <li>handles ghost kills or Pac-Man death</li>
-     *   <li>updates power mode and timers</li>
-     *   <li>activates bonuses when thresholds are reached</li>
-     * </ul>
-     *
-     * @param level the current game level
-     */
     protected void doHuntingStep(GameLevel level) {
         level.heartbeat().triggerPulse();
 
