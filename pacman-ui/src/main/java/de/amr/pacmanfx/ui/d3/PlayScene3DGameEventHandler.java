@@ -103,7 +103,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     @Override
     public void onGameStarted(GameStartedEvent event) {
-        final State<GameContext> state = context().currentGameContext().currentGameState();
+        final State<GameContext> state = context().currentGameContext().gameState();
         final boolean silent = context().currentGameContext().gameModel().isDemoLevelRunning() || state instanceof TestState;
         if (!silent) {
             context().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
@@ -124,7 +124,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     @Override
     public void onLevelStarted(LevelStartedEvent event) {
         final GameLevel level = event.level();
-        final State<GameContext> gameState = context().currentGameContext().currentGameState();
+        final State<GameContext> gameState = context().currentGameContext().gameState();
         //TODO rethink
         if (gameState instanceof TestState) {
             gameScene().replaceGameLevel3D(level);
@@ -278,7 +278,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     private void onLevelComplete() {
         final GameLevel3D level3D = assertLevel3D();
-        final State<GameContext> gameState = context().currentGameContext().currentGameState();
+        final State<GameContext> gameState = context().currentGameContext().gameState();
 
         gameScene().scoreOpacity.set(0);
 

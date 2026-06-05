@@ -28,7 +28,7 @@ public class HelpInfo {
 
     public static HelpInfo build(AppContext context) {
         final GameModel game = context.currentGameContext().gameModel();
-        final State<GameContext> state = context.currentGameContext().currentGameState();
+        final State<GameContext> state = context.currentGameContext().gameState();
         final boolean demoLevel = game.isDemoLevelRunning();
 
         final HelpInfo helpInfo = new HelpInfo(context);

@@ -69,7 +69,7 @@ public class DashboardSectionGameControl extends DashboardSection {
 
         if (dashboard.context() != null) {
             final AbstractGameModel game = (AbstractGameModel) dashboard.context().currentGameContext().gameModel();
-            final State<GameContext> state = dashboard.context().currentGameContext().currentGameState();
+            final State<GameContext> state = dashboard.context().currentGameContext().gameState();
 
             choiceBoxInitialLives.setValue(game.lives().initialCount());
             choiceBoxInitialLives.setDisable(!state.nameIsOneOf(GameStateID.GAME_INTRO.name()));

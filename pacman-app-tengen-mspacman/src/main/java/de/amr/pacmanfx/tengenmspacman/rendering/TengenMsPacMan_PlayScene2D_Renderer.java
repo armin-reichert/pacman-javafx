@@ -46,7 +46,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         @Override
         public void draw(GameScene2D scene) {
             final GameModel game = scene.context().currentGameContext().gameModel();
-            final State<GameContext> gameState = scene.context().currentGameContext().currentGameState();
+            final State<GameContext> gameState = scene.context().currentGameContext().gameState();
 
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
 

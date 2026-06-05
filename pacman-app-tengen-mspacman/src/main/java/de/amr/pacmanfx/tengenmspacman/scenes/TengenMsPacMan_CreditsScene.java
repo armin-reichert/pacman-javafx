@@ -37,7 +37,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void onTick(long tick) {
-        final State<GameContext> gameState = context.currentGameContext().currentGameState();
+        final State<GameContext> gameState = context.currentGameContext().gameState();
         if (gameState.timer().atSecond(DISPLAY_SECONDS)) {
             gameState.expire();
             return;

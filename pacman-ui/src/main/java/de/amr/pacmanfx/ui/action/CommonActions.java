@@ -56,7 +56,7 @@ public final class CommonActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("let_game_state_expire") {
         @Override
         protected void doAction(AppContext context) {
-            context.currentGameContext().currentGameState().expire();
+            context.currentGameContext().gameState().expire();
         }
     };
 
@@ -106,7 +106,7 @@ public final class CommonActions {
             //TODO check this code
             context.stopGame();
             final GameModel game = context.currentGameContext().gameModel();
-            final State<GameContext> gameState = context.currentGameContext().currentGameState();
+            final State<GameContext> gameState = context.currentGameContext().gameState();
             boolean isLevelShortTest = gameState instanceof LevelShortTestState;
             if (isLevelShortTest) {
                 gameState.onExit(context.currentGameContext()); //TODO exit other states too?
@@ -317,7 +317,7 @@ public final class CommonActions {
         }
 
         private boolean isLevelPlaying(AppContext context) {
-            return context.currentGameContext().currentGameState().nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
+            return context.currentGameContext().gameState().nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
         }
     };
 }

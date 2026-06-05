@@ -52,7 +52,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(AppContext context) {
-            final State<GameContext> gameState = context.currentGameContext().currentGameState();
+            final State<GameContext> gameState = context.currentGameContext().gameState();
             return realLevel(context).isPresent()
                 && gameState.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
         }
@@ -75,7 +75,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(AppContext context) {
-            final State<GameContext> gameState = context.currentGameContext().currentGameState();
+            final State<GameContext> gameState = context.currentGameContext().gameState();
             return realLevel(context).isPresent()
                 && gameState.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
         }
@@ -93,7 +93,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(AppContext context) {
-            final State<GameContext> gameState = context.currentGameContext().currentGameState();
+            final State<GameContext> gameState = context.currentGameContext().gameState();
             final GameLevel level = realLevel(context).orElse(null);
             return level != null
                 && gameState.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name())

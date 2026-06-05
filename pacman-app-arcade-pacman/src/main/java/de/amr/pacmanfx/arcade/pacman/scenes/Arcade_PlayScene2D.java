@@ -105,7 +105,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         Logger.info(actionBindings);
 
         context.ui().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
-        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> context().currentGameContext().currentGameState().expire());
+        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> context().currentGameContext().gameState().expire());
 
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());
@@ -119,7 +119,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     // While Pac-Man is not yet visible on level start, one symbol more is shown in the lives counter
     private void updateLivesCounter(GameLevel level) {
         final GameModel game = context().currentGameContext().gameModel();
-        final int additionalLives = context().currentGameContext().currentGameState() == Arcade_GameState.GAME_OR_LEVEL_STARTING.state()
+        final int additionalLives = context().currentGameContext().gameState() == Arcade_GameState.GAME_OR_LEVEL_STARTING.state()
             && !level.entities().pac().isVisible() ? 1 : 0;
         final int count = Math.clamp(game.lives().count() - 1 + additionalLives, 0, game.hud().maxLivesDisplayed());
         game.hud().setVisibleLifeCount(count);

@@ -156,7 +156,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
                 return false;
             }
             final GameModel game = context.currentGameContext().gameModel();
-            final State<GameContext> gameState = context.currentGameContext().currentGameState();
+            final State<GameContext> gameState = context.currentGameContext().gameState();
             return (gameState == GAME_INTRO.state() || gameState == GAME_PREPARATION.state()) && game.canStartNewGame();
         }
     };

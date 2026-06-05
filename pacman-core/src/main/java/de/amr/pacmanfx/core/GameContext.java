@@ -22,7 +22,7 @@ public interface GameContext {
 
     GameFlow gameFlow();
 
-    default State<GameContext> currentGameState() {
+    default State<GameContext> gameState() {
         return gameFlow().state();
     }
 

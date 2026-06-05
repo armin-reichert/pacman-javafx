@@ -35,7 +35,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
     public void connect(AppContext context) {
         final Supplier<GameModel> gameSupplier = context.currentGameContext()::gameModel;
 
-        addDynamicLabeledValue("Game State",  () -> "%s".formatted(context.currentGameContext().currentGameState().name()));
+        addDynamicLabeledValue("Game State",  () -> "%s".formatted(context.currentGameContext().gameState().name()));
         addDynamicLabeledValue("State Timer", () -> stateTimerInfo(gameSupplier.get()));
         addDynamicLabeledValue("Game Scene", ifGameScenePresent(context, gameScene -> gameScene.getClass().getSimpleName()));
 

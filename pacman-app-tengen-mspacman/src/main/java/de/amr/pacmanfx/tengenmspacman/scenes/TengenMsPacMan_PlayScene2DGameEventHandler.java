@@ -54,7 +54,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
     @Override
     public void onGameStarted(GameStartedEvent e) {
         final GameModel game = context().currentGameContext().gameModel();
-        final boolean silent = game.isDemoLevelRunning() || context().currentGameContext().currentGameState() instanceof TestState;
+        final boolean silent = game.isDemoLevelRunning() || context().currentGameContext().gameState() instanceof TestState;
         if (!silent) {
             context().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -96,7 +96,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
 
     @Override
     public void onPacDead(PacDeadEvent e) {
-        context().currentGameContext().currentGameState().expire();
+        context().currentGameContext().gameState().expire();
     }
 
     @Override
