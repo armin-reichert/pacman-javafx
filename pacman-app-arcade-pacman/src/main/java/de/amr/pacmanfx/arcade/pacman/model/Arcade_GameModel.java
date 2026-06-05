@@ -53,7 +53,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         pac.setRestingTicks(rules().restingTicksForEnergizer());
         checkRedGhostCruiseElroyActivation(level);
 
-        level.killedGhostsForCurrentEnergizer().clear();
+        level.clearGhostKillChain();
 
         startPacPowerMode(level, pac);
     }

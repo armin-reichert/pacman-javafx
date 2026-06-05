@@ -84,7 +84,7 @@ public class GameLevel {
     private final EntitySetWithCache entities = new EntitySetWithCache();
     private final HuntingTimer huntingTimer;
     private final Pulse heartbeat;
-    private final List<Ghost> victims = new ArrayList<>();
+    private final List<Ghost> ghostKillChain = new ArrayList<>();
     private final int[] bonusSymbolCodes = new int[2];
     private final int numFlashes;
 
@@ -205,10 +205,33 @@ public class GameLevel {
         entities.ghosts().forEach(Ghost::hide);
     }
 
-    /**
-     * @return the ghosts that have been killed using the power of the last energizer eaten.
-     */
-    public List<Ghost> killedGhostsForCurrentEnergizer() { return victims; }
+    // Ghost kill chain
+
+    public void clearGhostKillChain() {
+        ghostKillChain.clear();
+    }
+
+    public void addToGhostKillChain(Ghost ghost) {
+        requireNonNull(ghost);
+        if (ghostKillChain.contains(ghost)) {
+            throw new IllegalArgumentException("Ghost kill chain already contains ghost %s".formatted(ghost.name()));
+        }
+        ghostKillChain.add(ghost);
+    }
+
+    public int ghostKillChainSize() {
+        return ghostKillChain.size();
+    }
+
+    public boolean isInGhostKilledChain(Ghost ghost) {
+        requireNonNull(ghost);
+        return ghostKillChain.contains(ghost);
+    }
+
+    public int indexInGhostKilledChain(Ghost ghost) {
+        requireNonNull(ghost);
+        return ghostKillChain.indexOf(ghost);
+    }
 
     /**
      * @return {@code true} if this is a demo level (attract mode)

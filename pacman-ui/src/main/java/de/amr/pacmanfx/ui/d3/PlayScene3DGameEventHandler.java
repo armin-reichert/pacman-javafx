@@ -256,7 +256,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         final GameLevel3D level3D = assertLevel3D();
         context.huntingResult().ghostsKilled().forEach(ghost -> {
             final Ghost3D ghost3D = level3D.ghost3D(ghost.personality());
-            final int killIndex = level3D.level().killedGhostsForCurrentEnergizer().indexOf(ghost);
+            final int killIndex = level3D.level().indexInGhostKilledChain(ghost);
             final Image pointsImage = level3D.uiConfig().killedGhostPointsImage(killIndex);
             final NumberBox3D numberBox3D = createGhostPointsNumberBox3D(ghost3D, pointsImage);
             level3D.getChildren().add(numberBox3D);

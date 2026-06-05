@@ -356,7 +356,6 @@ public abstract class AbstractGameModel implements GameModel {
 
     // Actor related
 
-
     @Override
     public void eatPellet(GameLevel level, Vector2i tile) {
         requireNonNull(level);
@@ -369,7 +368,7 @@ public abstract class AbstractGameModel implements GameModel {
 
     @Override
     public void onEatGhost(GameLevel level, Ghost eatenGhost) {
-        final int killedBefore = level.killedGhostsForCurrentEnergizer().size();
+        final int killedBefore = level.ghostKillChainSize();
         final int points = rules.pointsForGhost(killedBefore);
 
         scorePoints(points, level.number());
@@ -379,7 +378,7 @@ public abstract class AbstractGameModel implements GameModel {
         // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
         eatenGhost.animations().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, killedBefore);
 
-        level.killedGhostsForCurrentEnergizer().add(eatenGhost);
+        level.addToGhostKillChain(eatenGhost);
         level.entities().pac().hide();
         level.entities().ghosts().forEach(g -> g.animations().stopSelected());
 
@@ -408,15 +407,13 @@ public abstract class AbstractGameModel implements GameModel {
             } else if (pac.powerTimer().hasExpired()) {
                 pac.powerTimer().stop();
                 pac.powerTimer().reset(0);
-                level.killedGhostsForCurrentEnergizer().clear();
+                level.clearGhostKillChain();
                 level.huntingTimer().start();
                 level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
                 flow.publishGameEvent(new PacLostPowerEvent(flow.context(), pac));
             }
         }
     }
-
-
 
     /* -------------------------------------------------------------------------
      * Cheating

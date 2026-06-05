@@ -364,7 +364,7 @@ public class Ghost extends MovingActor {
     }
 
     private boolean isInDanger(GameLevel level) {
-        return level.entities().pac().powerTimer().isRunning() && !level.killedGhostsForCurrentEnergizer().contains(this);
+        return level.entities().pac().powerTimer().isRunning() && !level.isInGhostKilledChain(this);
     }
 
     // --- HUNTING_PAC ---
