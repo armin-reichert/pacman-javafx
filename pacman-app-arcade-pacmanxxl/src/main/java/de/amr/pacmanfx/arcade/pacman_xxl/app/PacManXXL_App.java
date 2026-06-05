@@ -12,13 +12,12 @@ import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Builder;
+import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
-import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -30,21 +29,21 @@ public class PacManXXL_App extends Application {
     private static final double ASPECT_RATIO    = 1.6;
     private static final double HEIGHT_FRACTION = 0.8;
 
-    private final GamesContainer gameBox = new GamesContainer(new GameClockFX(), new CoinMechanism(99));
+    private final GamesContainer gamesContainer = new GamesContainer(new CoinMechanism(99));
     private AppContext context;
 
     @Override
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        final var mapSelector = new PacManXXL_MapSelector(gameBox.customMapDir());
+        final var mapSelector = new PacManXXL_MapSelector(gamesContainer.customMapDir());
 
         context = GameUI_Builder
-            .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
+            .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer)
             .game(GameVariant.ARCADE_PACMAN_XXL,
-                () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism(), mapSelector),
+                () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism(), mapSelector),
                 PacManXXL_PacMan_UIConfig::new)
             .game(GameVariant.ARCADE_MS_PACMAN_XXL,
-                () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism(), mapSelector),
+                () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism(), mapSelector),
                 PacManXXL_MsPacMan_UIConfig::new)
             .startPage(PacManXXL_StartPage::new)
             .build();

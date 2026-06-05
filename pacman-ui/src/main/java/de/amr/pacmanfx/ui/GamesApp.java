@@ -43,10 +43,10 @@ import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
 
-public final class AppContextImpl implements AppContext {
+public final class GamesApp implements AppContext {
 
     // All games in a box (only 1,99 €!)
-    private final GamesContainer gameBox;
+    private final GamesContainer gamesContainer;
 
     private final PreferencesManager prefs;
 
@@ -56,12 +56,15 @@ public final class AppContextImpl implements AppContext {
 
     private final GameViewImpl view;
 
-    public AppContextImpl(GamesContainer gameBox, GameViewImpl view) {
-        this.gameBox = requireNonNull(gameBox);
+    private final GameClock gameClock;
+
+    public GamesApp(GamesContainer gamesContainer, GameViewImpl view, GameClock gameClock) {
+        this.gamesContainer = requireNonNull(gamesContainer);
         this.view = requireNonNull(view);
+        this.gameClock = requireNonNull(gameClock);
 
         prefs = new PreferencesManager(getClass());
-        watchdog = new DirectoryWatchdog(gameBox.customMapDir());
+        watchdog = new DirectoryWatchdog(gamesContainer.customMapDir());
 
         ui = new GameUI(
             new UIConfigManager(),
@@ -84,12 +87,12 @@ public final class AppContextImpl implements AppContext {
 
     @Override
     public GameContext currentGameContext() {
-        return gameBox;
+        return gamesContainer;
     }
 
     @Override
     public GameClock gameClock() {
-        return gameBox.gameClock();
+        return gameClock;
     }
 
     @Override
@@ -112,7 +115,7 @@ public final class AppContextImpl implements AppContext {
         final SubViewManager subViews = ui.subViews();
         subViews.ensureEditorViewCreated();
         subViews.optEditorView().map(EditorView::editor).ifPresent(editor -> {
-            editor.init(gameBox.customMapDir());
+            editor.init(gamesContainer.customMapDir());
             try {
                 if (subViews.trySelectEditorView()) {
                     stopGame();

@@ -34,7 +34,7 @@ import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.AppContextImpl;
+import de.amr.pacmanfx.ui.GamesApp;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.config.UIConfigManager;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
@@ -93,7 +93,7 @@ public class PacManGames3dApp extends Application {
         CommonDashboardID.ABOUT
     );
 
-    private GamesContainer gameBox;
+    private GamesContainer gamesContainer;
     private AppContext context;
     private PacManXXL_MapSelector xxlMapSelector;
 
@@ -104,37 +104,37 @@ public class PacManGames3dApp extends Application {
     public void init() {
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
-        gameBox = new GamesContainer(new GameClockFX(), new CoinMechanism(99));
-        xxlMapSelector = new PacManXXL_MapSelector(gameBox.customMapDir());
+        gamesContainer = new GamesContainer(new CoinMechanism(99));
+        xxlMapSelector = new PacManXXL_MapSelector(gamesContainer.customMapDir());
     }
 
     @Override
     public void start(Stage stage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        final CoinMechanism coinMechanism = gameBox.coinMechanism();
+        final CoinMechanism coinMechanism = gamesContainer.coinMechanism();
         try {
             if (useBuilder) {
                 context = GameUI_Builder
-                    .newUI(stage, sceneSize.x(), sceneSize.y(), gameBox)
+                    .newUI(stage, sceneSize.x(), sceneSize.y(), gamesContainer)
 
                     .game(ARCADE_PACMAN,
-                        () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gameBox), coinMechanism),
+                        () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism),
                         ArcadePacMan_UIConfig::new)
 
                     .game(ARCADE_MS_PACMAN,
-                        () -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gameBox), coinMechanism),
+                        () -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism),
                         ArcadeMsPacMan_UIConfig::new)
 
                     .game(TENGEN_MS_PACMAN,
-                        () -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow(gameBox)),
+                        () -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow(gamesContainer)),
                         TengenMsPacMan_UIConfig::new)
 
                     .game(ARCADE_PACMAN_XXL,
-                        () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gameBox), coinMechanism, xxlMapSelector),
+                        () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism, xxlMapSelector),
                         PacManXXL_PacMan_UIConfig::new)
 
                     .game(ARCADE_MS_PACMAN_XXL,
-                        () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gameBox), coinMechanism, xxlMapSelector),
+                        () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism, xxlMapSelector),
                         PacManXXL_MsPacMan_UIConfig::new)
 
                     .startPage(ArcadePacMan_StartPage::new)
@@ -148,7 +148,10 @@ public class PacManGames3dApp extends Application {
             }
             else {
                 registerGames();
-                context = new AppContextImpl(gameBox, createViewImplementation(stage, sceneSize.x(), sceneSize.y()));
+                context = new GamesApp(
+                    gamesContainer,
+                    createView(stage, sceneSize.x(), sceneSize.y()),
+                    new GameClockFX());
                 addConfigFactories();
                 addStartPages();
             }
@@ -174,7 +177,7 @@ public class PacManGames3dApp extends Application {
 
     // Private area
 
-    private GameViewImpl createViewImplementation(Stage stage, int width, int height) {
+    private GameViewImpl createView(Stage stage, int width, int height) {
         return new GameViewImpl(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
@@ -185,21 +188,21 @@ public class PacManGames3dApp extends Application {
     private void registerGames() {
         for (GameVariant variant : GameVariant.values()) {
             final AbstractGameModel game = switch (variant) {
-                case ARCADE_PACMAN        -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism());
-                case ARCADE_MS_PACMAN     -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism());
-                case TENGEN_MS_PACMAN     -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow(gameBox));
-                case ARCADE_PACMAN_XXL    -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism(), xxlMapSelector);
-                case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism(), xxlMapSelector);
+                case ARCADE_PACMAN        -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism());
+                case ARCADE_MS_PACMAN     -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism());
+                case TENGEN_MS_PACMAN     -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow(gamesContainer));
+                case ARCADE_PACMAN_XXL    -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism(), xxlMapSelector);
+                case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism(), xxlMapSelector);
             };
             if (includeTests) {
                 addTestStates(game.flow());
             }
-            gameBox.registerGame(variant.name(), game);
+            gamesContainer.registerGame(variant.name(), game);
         }
     }
 
     private void addTestStates(GameFlow gameFlow) {
-        gameFlow.addState(new LevelShortTestState(gameBox.coinMechanism()));
+        gameFlow.addState(new LevelShortTestState(gamesContainer.coinMechanism()));
         gameFlow.addState(new LevelMediumTestState());
         gameFlow.addState(new CutScenesTestState());
     }

@@ -64,7 +64,7 @@ public class GameLevelPlayingState extends GameState {
     private void logHuntingStep(GameContext context) {
         final var report = HuntingStepResult.createReport(context.huntingResult());
         if (!report.isEmpty()) {
-            Logger.info("Hunting Step: tick=", context.gameClock().tickCount());
+            Logger.info("Hunting Step:");
             for (var msg : report) {
                 Logger.info("- " + msg);
             }

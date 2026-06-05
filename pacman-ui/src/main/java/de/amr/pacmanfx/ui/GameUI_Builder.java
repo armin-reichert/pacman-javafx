@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImpl;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
+import de.amr.pacmanfx.uilib.GameClockFX;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -132,9 +133,10 @@ public class GameUI_Builder {
     public AppContext build() {
         validateConfigurationData();
 
-        final var ui = new AppContextImpl(
+        final var ui = new GamesApp(
             gameBox,
-            createViewImplementation(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight())
+            createViewImplementation(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight()),
+            new GameClockFX()
         );
 
         gameConfigMap.forEach((gameVariant, config) -> {

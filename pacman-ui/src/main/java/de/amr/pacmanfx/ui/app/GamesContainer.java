@@ -51,7 +51,6 @@ public class GamesContainer implements GameContext {
     private final File homeDir = DEFAULT_HOME_DIR;
     private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
 
-    private final GameClock gameClock;
 
     private final CoinMechanism coinMechanism;
 
@@ -61,8 +60,7 @@ public class GamesContainer implements GameContext {
 
     private HuntingStepResult huntingResult;
 
-    public GamesContainer(GameClock gameClock, CoinMechanism coinMechanism) {
-        this.gameClock = requireNonNull(gameClock);
+    public GamesContainer(CoinMechanism coinMechanism) {
         this.coinMechanism = requireNonNull(coinMechanism);
 
         final boolean ok = validateUserDirs();
@@ -115,11 +113,6 @@ public class GamesContainer implements GameContext {
     @Override
     public CoinMechanism coinMechanism() {
         return coinMechanism;
-    }
-
-    @Override
-    public GameClock gameClock() {
-        return gameClock;
     }
 
     @Override

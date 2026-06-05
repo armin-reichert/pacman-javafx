@@ -87,10 +87,6 @@ public interface GameContext {
         return gameModel().flow();
     }
 
-    /**
-     * @return the game clock driving the simulation
-     */
-    GameClock gameClock();
 
     /**
      * Returns the coin mechanism associated with the game box.

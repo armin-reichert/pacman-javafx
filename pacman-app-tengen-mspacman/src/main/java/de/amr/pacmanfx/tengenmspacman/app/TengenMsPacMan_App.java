@@ -15,7 +15,6 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -30,7 +29,7 @@ public class TengenMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = NES_SCREEN_ASPECT_RATIO; // 32:30
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
-    private final GamesContainer gameBox = new GamesContainer(new GameClockFX(), CoinMechanism.OUT_OF_SERVICE);
+    private final GamesContainer gamesContainer = new GamesContainer(CoinMechanism.OUT_OF_SERVICE);
     private AppContext context;
 
     @Override
@@ -38,9 +37,9 @@ public class TengenMsPacMan_App extends Application {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         context = GameUI_Builder
-            .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gameBox)
+            .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer)
             .game(TENGEN_MS_PACMAN,
-                () -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow(gameBox)), TengenMsPacMan_UIConfig::new)
+                () -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow(gamesContainer)), TengenMsPacMan_UIConfig::new)
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
 

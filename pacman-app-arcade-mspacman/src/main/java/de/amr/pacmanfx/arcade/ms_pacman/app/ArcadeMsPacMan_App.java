@@ -14,7 +14,6 @@ import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -30,12 +29,12 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final var gameBox = new GamesContainer(new GameClockFX(), new CoinMechanism(99));
+        final var gamesContainer = new GamesContainer(new CoinMechanism(99));
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         context = GameUI_Builder
-            .newUI(primaryStage, screenSize.x(), screenSize.y(), gameBox)
+            .newUI(primaryStage, screenSize.x(), screenSize.y(), gamesContainer)
             .game(GameVariant.ARCADE_MS_PACMAN,
-                () -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism()),
+                () -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism()),
                 ArcadeMsPacMan_UIConfig::new)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .build();
