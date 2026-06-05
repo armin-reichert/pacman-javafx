@@ -80,9 +80,9 @@ public class OptionMenuRenderer extends BaseRenderer {
         drawActionText(KeyCode.SPACE, CHANGE_VALUE, normalColor, brightColor, font, centerX, y);
 
         for (int num = 1; num <= OptionMenu.NUM_CLIENT_ACTIONS; ++num) {
-            if (menu.actionKeyCode(num) != null && menu.actionText(num) != null) {
+            if (menu.actionKey(num) != null && menu.actionText(num) != null) {
                 y += lineSkip;
-                drawActionText(menu.actionKeyCode(num), menu.actionText(num), normalColor, brightColor, font, centerX, y);
+                drawActionText(menu.actionKey(num), menu.actionText(num), normalColor, brightColor, font, centerX, y);
             }
         }
     }
