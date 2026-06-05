@@ -26,9 +26,7 @@ import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -46,8 +44,6 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractGameModel implements GameModel {
 
     // Common properties
-
-    private final ObjectProperty<GameLevel> level = new SimpleObjectProperty<>();
 
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
@@ -70,6 +66,8 @@ public abstract class AbstractGameModel implements GameModel {
     protected GameRules rules;
 
     protected GameCheats cheats;
+
+    protected GameLevel currentLevel;
 
     protected PacManLives lives;
 
@@ -191,7 +189,7 @@ public abstract class AbstractGameModel implements GameModel {
         gateKeeper.reset();
         levelCounter.clear();
 
-        level.set(null);
+        currentLevel = null;
         setPlaying(false);
     }
 
@@ -241,12 +239,12 @@ public abstract class AbstractGameModel implements GameModel {
 
     @Override
     public void setLevel(GameLevel level) {
-        this.level.set(level);
+        currentLevel = level;
     }
 
     @Override
     public Optional<GameLevel> optGameLevel() {
-        return Optional.ofNullable(level.get());
+        return Optional.ofNullable(currentLevel);
     }
 
     @Override
