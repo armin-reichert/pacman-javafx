@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
-import de.amr.pacmanfx.flow.GameControlFlow;
+import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -70,7 +70,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     /**
      * @param coinMechanism the coin mechanism
      */
-    public ArcadePacMan_GameModel(GameControlFlow flow, CoinMechanism coinMechanism) {
+    public ArcadePacMan_GameModel(GameFlow flow, CoinMechanism coinMechanism) {
         this(flow, coinMechanism, new ArcadePacMan_MapSelector());
     }
 
@@ -78,7 +78,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
      * @param coinMechanism the coin mechanism
      * @param mapSelector e.g. selector that selects custom maps before standard maps
      */
-    public ArcadePacMan_GameModel(GameControlFlow flow, CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
+    public ArcadePacMan_GameModel(GameFlow flow, CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
         super(flow);
         this.coinMechanism = requireNonNull(coinMechanism);
         hud.setCoinMechanism(coinMechanism);

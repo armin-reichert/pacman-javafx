@@ -21,6 +21,11 @@ public class GameState implements State<GameContext> {
         this.timer = new TickTimer("GameStateTimer-" + getClass().getSimpleName());
     }
 
+    public GameState(GameStateID id) {
+        this.name = Objects.requireNonNull(id).name();
+        this.timer = new TickTimer("GameStateTimer-" + getClass().getSimpleName());
+    }
+
     @Override
     public String name() {
         return name;

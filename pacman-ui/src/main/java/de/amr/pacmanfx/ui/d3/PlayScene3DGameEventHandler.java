@@ -58,7 +58,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
         if (gameState instanceof TestState) {
             handleTestState();
         }
-        else if (GameStateID.GAME_STARTING_NEW_GAME_OR_LEVEL.identifies(gameState)) {
+        else if (GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameState)) {
             onStartingGameOrLevel();
         }
         else if (GameStateID.GAME_LEVEL_PLAYING.identifies(gameState)) {

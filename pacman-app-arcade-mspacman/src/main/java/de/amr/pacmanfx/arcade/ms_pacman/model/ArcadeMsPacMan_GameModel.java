@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
-import de.amr.pacmanfx.flow.GameControlFlow;
+import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -143,11 +143,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      *
      * @param coinMechanism the coin mechanism
      */
-    public ArcadeMsPacMan_GameModel(GameControlFlow flow, CoinMechanism coinMechanism) {
+    public ArcadeMsPacMan_GameModel(GameFlow flow, CoinMechanism coinMechanism) {
         this(flow, coinMechanism, new ArcadeMsPacMan_MapSelector());
     }
 
-    public ArcadeMsPacMan_GameModel(GameControlFlow flow, CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
+    public ArcadeMsPacMan_GameModel(GameFlow flow, CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
         super(flow);
         this.coinMechanism = requireNonNull(coinMechanism);
         hud.setCoinMechanism(coinMechanism);

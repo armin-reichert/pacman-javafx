@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.flow;
 
 import de.amr.pacmanfx.core.GameContext;
@@ -7,7 +11,7 @@ public class GameBootState extends GameState {
 
     public GameBootState() {
         // "Das muss das Boot abkönnen! Jawohl, Herr Kaleu!"
-        super("BOOT");
+        super(GameStateID.BOOT);
     }
 
 
@@ -22,7 +26,7 @@ public class GameBootState extends GameState {
     public void onUpdate(GameContext context) {
         final GameModel game = context.gameModel();
         if (timer().hasExpired()) {
-            game.flow().enterState("GAME_INTRO");
+            game.flow().enterState(GameStateID.GAME_INTRO);
         }
     }
 }

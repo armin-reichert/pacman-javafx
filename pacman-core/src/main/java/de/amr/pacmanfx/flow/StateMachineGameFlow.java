@@ -20,14 +20,14 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public class StateMachineGameControlFlow implements GameControlFlow {
+public class StateMachineGameFlow implements GameFlow {
 
     private final GameContext context;
     protected final StateMachine<GameContext> stateMachine = new StateMachine<>();
     private final Set<GameEventListener> eventListeners = new HashSet<>();
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
-    public StateMachineGameControlFlow(String name, GameContext context) {
+    public StateMachineGameFlow(String name, GameContext context) {
         this.context = requireNonNull(context);
         stateMachine.setName(name);
         stateMachine.setContext(context);

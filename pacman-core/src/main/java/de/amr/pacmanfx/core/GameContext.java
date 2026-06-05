@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.core;
 
-import de.amr.pacmanfx.flow.GameControlFlow;
+import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
@@ -82,7 +82,7 @@ public interface GameContext {
      */
     <T extends AbstractGameModel> T gameModel();
 
-    default GameControlFlow gameFlow() {
+    default GameFlow gameFlow() {
         return gameModel().flow();
     }
 

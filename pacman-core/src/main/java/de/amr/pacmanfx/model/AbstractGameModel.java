@@ -10,7 +10,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.flow.GameControlFlow;
+import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
@@ -60,7 +60,7 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected final Score score;
 
-    protected GameControlFlow flow;
+    protected GameFlow flow;
 
     protected ActorSpeedControl actorSpeedControl;
 
@@ -112,7 +112,7 @@ public abstract class AbstractGameModel implements GameModel {
      * ---------------------------------------------------------------------- */
 
     @Override
-    public GameControlFlow flow() {
+    public GameFlow flow() {
         return flow;
     }
 

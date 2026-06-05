@@ -11,7 +11,7 @@ import de.amr.pacmanfx.event.GameEventListener;
 
 import java.util.Optional;
 
-public interface GameControlFlow {
+public interface GameFlow {
 
     GameContext context();
 
@@ -22,6 +22,10 @@ public interface GameControlFlow {
     void addState(State<GameContext> gameState);
 
     void enterState(State<GameContext> gameState);
+
+    default void enterState(GameStateID id) {
+        enterState(id.name());
+    }
 
     void enterState(String stateName);
 

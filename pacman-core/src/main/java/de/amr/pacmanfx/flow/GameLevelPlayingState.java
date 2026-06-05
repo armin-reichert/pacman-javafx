@@ -17,8 +17,8 @@ import org.tinylog.Logger;
 
 public class GameLevelPlayingState extends GameState {
 
-    public GameLevelPlayingState(String name) {
-        super(name);
+    public GameLevelPlayingState() {
+        super(GameStateID.GAME_LEVEL_PLAYING);
     }
 
     @Override

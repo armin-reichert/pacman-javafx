@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.flow.GameControlFlow;
+import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
@@ -142,7 +142,7 @@ public class GameUI_Builder {
             gameBox.registerGame(gameVariant, game);
             ui.ui().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);
             if (includeInteractiveTests) {
-                final GameControlFlow gameFlow = game.flow();
+                final GameFlow gameFlow = game.flow();
                 gameFlow.addState(new LevelShortTestState(gameBox.coinMechanism()));
                 gameFlow.addState(new LevelMediumTestState());
                 gameFlow.addState(new CutScenesTestState());

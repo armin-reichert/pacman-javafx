@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.flow.GameControlFlow;
+import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -29,7 +29,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
      */
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
 
-    protected Arcade_GameModel(GameControlFlow flow) {
+    protected Arcade_GameModel(GameFlow flow) {
         this.flow = requireNonNull(flow);
         actorSpeedControl = new Arcade_ActorSpeedControl();
         setCollisionStrategy(CollisionStrategy.SAME_TILE);

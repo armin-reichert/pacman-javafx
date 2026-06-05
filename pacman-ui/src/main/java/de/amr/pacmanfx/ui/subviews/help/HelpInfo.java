@@ -39,7 +39,7 @@ public class HelpInfo {
             helpInfo.addInfoForCreditScene(game);
         }
         else if (state.nameIsOneOf(
-            GameStateID.GAME_STARTING_NEW_GAME_OR_LEVEL.name(),
+            GameStateID.GAME_OR_LEVEL_STARTING.name(),
             GameStateID.GAME_LEVEL_PLAYING.name(),
             GameStateID.GAME_LEVEL_PACMAN_DYING.name(),
             GameStateID.GAME_LEVEL_EATING_GHOST.name())) {

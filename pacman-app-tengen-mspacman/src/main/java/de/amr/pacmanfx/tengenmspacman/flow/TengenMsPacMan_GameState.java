@@ -149,7 +149,7 @@ public enum TengenMsPacMan_GameState {
         }
     }),
 
-    GAME_LEVEL_PLAYING(new GameLevelPlayingState("GAME_LEVEL_PLAYING")),
+    GAME_LEVEL_PLAYING(new GameLevelPlayingState()),
 
     GAME_LEVEL_COMPLETE(new GameState("GAME_LEVEL_COMPLETE") {
         @Override

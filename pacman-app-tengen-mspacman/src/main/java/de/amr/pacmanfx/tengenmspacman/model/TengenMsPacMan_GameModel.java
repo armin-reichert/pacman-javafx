@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.flow.GameControlFlow;
+import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.*;
@@ -65,7 +65,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private boolean canStartNewGame;
     private int numContinues;
 
-    public TengenMsPacMan_GameModel(GameControlFlow flow) {
+    public TengenMsPacMan_GameModel(GameFlow flow) {
         this.flow = flow;
         rules = new TengenMsPacMan_GameRules(this);
         mapSelector = new TengenMsPacMan_MapSelector();

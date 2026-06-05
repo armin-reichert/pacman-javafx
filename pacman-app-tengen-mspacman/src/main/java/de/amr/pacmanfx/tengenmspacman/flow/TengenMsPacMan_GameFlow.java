@@ -1,9 +1,9 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.flow.StateMachineGameControlFlow;
+import de.amr.pacmanfx.flow.StateMachineGameFlow;
 
-public class TengenMsPacMan_GameFlow extends StateMachineGameControlFlow {
+public class TengenMsPacMan_GameFlow extends StateMachineGameFlow {
 
     public TengenMsPacMan_GameFlow(GameContext context) {
         super("Tengen Ms. Pac-Man Game Flow", context);
