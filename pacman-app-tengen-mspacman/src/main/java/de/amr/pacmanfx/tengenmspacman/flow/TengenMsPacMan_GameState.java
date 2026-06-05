@@ -172,28 +172,7 @@ public enum TengenMsPacMan_GameState {
 
     GAME_LEVEL_EATING_GHOST(new GameLevelEatingGhostState()),
 
-    GAME_LEVEL_PACMAN_DYING(new GameState(GameStateID.GAME_LEVEL_PACMAN_DYING) {
-        @Override
-        public void onEnter(GameContext context) {
-            lock(); // UI triggers time-out
-        }
-
-        @Override
-        public void onUpdate(GameContext context) {
-            final GameModel game = context.gameModel();
-            final GameLevel level = game.optGameLevel().orElseThrow();
-            if (timer().hasExpired()) {
-                if (level.isDemoLevel()) {
-                    context.gameFlow().enterState(GAME_OVER.state());
-                } else {
-                    game.lives().add(-1);
-                    context.gameFlow().enterState(game.lives().count() == 0 ? GAME_OVER.state() : GAME_OR_LEVEL_STARTING.state());
-                }
-            } else {
-                game.doPacManDying(level, level.entities().pac(), timer().tickCount());
-            }
-        }
-    }),
+    GAME_LEVEL_PACMAN_DYING(new GameLevelPacManDyingState()),
 
     GAME_OVER (new GameState(GameStateID.GAME_OVER) {
         @Override
