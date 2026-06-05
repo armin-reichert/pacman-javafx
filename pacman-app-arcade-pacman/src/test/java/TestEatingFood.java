@@ -47,7 +47,7 @@ public class TestEatingFood {
     }
 
     private GameModel currentGame() {
-        return theGameApp.gameContext().game();
+        return theGameApp.gameContext().gameModel();
     }
 
     private GameLevel currentGameLevel() {

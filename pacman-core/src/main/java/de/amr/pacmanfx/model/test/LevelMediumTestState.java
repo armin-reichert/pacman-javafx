@@ -23,7 +23,7 @@ public class LevelMediumTestState extends TestState {
     private int lastTestedLevelNumber;
 
     private void configureLevelForTest(GameContext context) {
-        final GameModel game = context.game();
+        final GameModel game = context.gameModel();
         final GameLevel level = game.optGameLevel().orElseThrow();
 
         final Pac pac = level.entities().pac();
@@ -52,7 +52,7 @@ public class LevelMediumTestState extends TestState {
 
     @Override
     public void onEnter(GameContext context) {
-        final GameModel game = context.game();
+        final GameModel game = context.gameModel();
         lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.rules().lastLevelNumber();
         timer.restartSeconds(TEST_DURATION_SEC);
         game.prepareNewGame();
@@ -63,7 +63,7 @@ public class LevelMediumTestState extends TestState {
 
     @Override
     public void onUpdate(GameContext context) {
-        final GameModel game = context.game();
+        final GameModel game = context.gameModel();
         final GameLevel level = game.optGameLevel().orElseThrow();
 
         level.entities().pac().update(level);
@@ -107,7 +107,7 @@ public class LevelMediumTestState extends TestState {
 
     @Override
     public void onExit(GameContext context) {
-        final GameModel game = context.game();
+        final GameModel game = context.gameModel();
         game.levelCounter().clear();
     }
 }

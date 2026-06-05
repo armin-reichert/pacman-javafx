@@ -23,14 +23,14 @@ public class GameLevelPlayingState extends GameState {
 
     @Override
     public void onEnter(GameContext context) {
-        final GameModel game = context.game();
+        final GameModel game = context.gameModel();
         final GameLevel level = game.optGameLevel().orElseThrow();
         game.onStartLevelPlaying(level);
     }
 
     @Override
     public void onUpdate(GameContext context) {
-        final GameModel game = context.game();
+        final GameModel game = context.gameModel();
         final GameLevel level = game.optGameLevel().orElseThrow();
         final Pac pac = level.entities().pac();
         final GateKeeper gateKeeper = game.gateKeeper();
@@ -58,7 +58,7 @@ public class GameLevelPlayingState extends GameState {
 
         // State transition
         final GameStateID nextStateID = HuntingStateTransitions.computeNextState(context.huntingResult(), game.rules(), level);
-        context.flow().enterState(nextStateID.name());
+        context.gameFlow().enterState(nextStateID.name());
     }
 
     private void logHuntingStep(GameContext context) {

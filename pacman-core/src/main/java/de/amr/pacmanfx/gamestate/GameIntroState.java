@@ -14,7 +14,7 @@ public class GameIntroState extends GameState {
 
     @Override
     public void onEnter(GameContext context) {
-        context.game().hud()
+        context.gameModel().hud()
             .levelCounter(true)
             .livesCounter(false)
             .credit(true)
@@ -27,7 +27,7 @@ public class GameIntroState extends GameState {
     @Override
     public void onUpdate(GameContext context) {
         if (timer().hasExpired()) {
-            context.flow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
+            context.gameFlow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
         }
     }
 }
