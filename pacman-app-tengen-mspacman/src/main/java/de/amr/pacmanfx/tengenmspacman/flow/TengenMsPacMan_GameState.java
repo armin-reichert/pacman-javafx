@@ -18,6 +18,7 @@ import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.simulation.HuntingCollisionDetector;
 import de.amr.pacmanfx.simulation.HuntingResolver;
 import de.amr.pacmanfx.simulation.HuntingStateTransitions;
+import de.amr.pacmanfx.simulation.HuntingStepResult;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HeadsUpDisplay;
@@ -224,9 +225,8 @@ public enum TengenMsPacMan_GameState {
             context.gameFlow().enterState(nextStateID.name());
         }
 
-
         private void logHuntingStep(GameContext context) {
-            final var report = HuntingCollisionDetector.createReport(context.huntingResult());
+            final var report = HuntingStepResult.createReport(context.huntingResult());
             if (!report.isEmpty()) {
                 Logger.info("Hunting Step: tick=", context.gameClock().tickCount());
                 for (var msg : report) {

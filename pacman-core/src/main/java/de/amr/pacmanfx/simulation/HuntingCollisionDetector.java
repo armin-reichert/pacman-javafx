@@ -11,41 +11,12 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class HuntingCollisionDetector {
 
     private HuntingCollisionDetector() {}
 
-    public static List<String> createReport(HuntingStepResult result) {
-        var messages = new ArrayList<String>();
-        for (Ghost ghost : result.ghostsCollidingWithPac()) {
-            messages.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghost.computeTile(), ghost.state()));
-        }
-        if (result.energizerFound()) {
-            messages.add("Energizer found at " + result.foodFoundTile());
-        }
-        if (result.bonusIndex() != -1) {
-            messages.add("Bonus score reached, index=" + result.bonusIndex());
-        }
-        if (result.edibleBonus() != null) {
-            messages.add("Bonus eaten: %s".formatted(result.edibleBonus()));
-        }
-        if (result.pacGotPower()) {
-            messages.add("Pac gained power");
-        }
-        if (result.pacStartsLosingPower()) {
-            messages.add("Pac starts losing power");
-        }
-        if (result.pacLostPower()) {
-            messages.add("Pac lost power");
-        }
-        for (Ghost ghost : result.ghostsKilled()) {
-            messages.add("%s killed at %s".formatted(ghost.name(), ghost.computeTile()));
-        }
-        return messages;
-    }
 
     public static void detectCollisions(GameContext context) {
         final HuntingStepResult result = context.huntingResult();

@@ -19,6 +19,7 @@ import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.simulation.HuntingCollisionDetector;
 import de.amr.pacmanfx.simulation.HuntingResolver;
 import de.amr.pacmanfx.simulation.HuntingStateTransitions;
+import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 
 import java.util.Set;
@@ -212,7 +213,7 @@ public enum Arcade_GameState {
         }
 
         private void logHuntingStep(GameContext context) {
-            final var report = HuntingCollisionDetector.createReport(context.huntingResult());
+            final var report = HuntingStepResult.createReport(context.huntingResult());
             if (!report.isEmpty()) {
                 Logger.info("Hunting Step: tick=", context.gameClock().tickCount());
                 for (var msg : report) {
