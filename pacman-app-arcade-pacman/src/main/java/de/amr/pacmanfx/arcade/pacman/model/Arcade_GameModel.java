@@ -32,7 +32,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     protected Arcade_GameModel(GameFlow flow) {
         this.flow = requireNonNull(flow);
         actorSpeedControl = new Arcade_ActorSpeedControl();
-        setCollisionStrategy(CollisionStrategy.SAME_TILE);
     }
 
     @Override

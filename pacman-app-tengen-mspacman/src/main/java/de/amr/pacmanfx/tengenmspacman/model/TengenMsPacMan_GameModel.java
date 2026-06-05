@@ -76,7 +76,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         automaticSteering = new RuleBasedPacSteering();
         demoLevelSteering = new RuleBasedPacSteering();
 
-        setCollisionStrategy(CollisionStrategy.CENTER_DISTANCE);
         setDifficulty(Difficulty.NORMAL);
     }
 

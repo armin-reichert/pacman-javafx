@@ -7,7 +7,10 @@ package de.amr.pacmanfx.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.flow.GameFlow;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.ActorSpeedControl;
+import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.level.LevelCounter;
@@ -97,12 +100,6 @@ public interface GameModel {
     void onLevelCompleted(GameLevel level);
 
     // Actor related
-
-    CollisionStrategy collisionStrategy();
-
-    void setCollisionStrategy(CollisionStrategy collisionStrategy);
-
-    Boolean isCollisionDoubleChecked();
 
     void eatPellet(GameLevel level, Vector2i tile);
 

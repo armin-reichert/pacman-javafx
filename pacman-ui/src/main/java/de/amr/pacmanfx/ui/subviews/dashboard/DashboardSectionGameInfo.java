@@ -71,7 +71,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
         addDynamicLabeledValue("-Running",        ifGameLevel(gameSupplier, level -> fmtHuntingTicksRunning(level.huntingTimer())));
         addDynamicLabeledValue("-Remaining",      ifGameLevel(gameSupplier, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
 
-        addDynamicLabeledValue("Collision mode",  ifGameLevel(gameSupplier, this::fmtCollisionMode));
+        addDynamicLabeledValue("Collision mode",  () -> fmtCollisionMode(context.gameContext().collisionStrategy()));
         addDynamicLabeledValue("Pac-Man speed",   ifGameLevel(gameSupplier, this::fmtPacNormalSpeed));
         addDynamicLabeledValue("- empowered",     ifGameLevel(gameSupplier, this::fmtPacSpeedPowered));
         addDynamicLabeledValue("Power Duration",  ifGameLevel(gameSupplier, this::fmtPacPowerTime));
@@ -94,8 +94,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
         return "Tick %d of %d. Remaining: %d".formatted(timer.tickCount(), timer.durationTicks(), timer.remainingTicks());
     }
 
-    private String fmtCollisionMode(GameLevel level) {
-        CollisionStrategy collisionStrategy = level.game().collisionStrategy();
+    private String fmtCollisionMode(CollisionStrategy collisionStrategy ) {
         return switch (collisionStrategy) {
             case SAME_TILE -> "Same Tile";
             case CENTER_DISTANCE -> "Distance-based";

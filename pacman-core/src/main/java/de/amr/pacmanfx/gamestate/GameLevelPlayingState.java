@@ -34,7 +34,6 @@ public class GameLevelPlayingState extends GameState {
         final GameLevel level = game.optGameLevel().orElseThrow();
         final Pac pac = level.entities().pac();
         final GateKeeper gateKeeper = game.gateKeeper();
-        final boolean doubleChecked = game.isCollisionDoubleChecked();
 
         // Update
         game.cheats().update(level);
@@ -46,7 +45,7 @@ public class GameLevelPlayingState extends GameState {
         game.updatePacPowerMode(level, pac);
 
         context.startNewHuntingStep();
-        if (doubleChecked) {
+        if (context.isCollisionDoubleChecked()) {
             HuntingCollisionDetector.detectCollisions(context);
         }
         level.entities().forEach(entity -> entity.update(level));

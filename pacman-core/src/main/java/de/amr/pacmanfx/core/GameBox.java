@@ -6,7 +6,10 @@ package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.tinylog.Logger;
@@ -46,7 +49,12 @@ public class GameBox implements GameContext {
     private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
 
     private final GameClock gameClock;
+
     private final CoinMechanism coinMechanism;
+
+    private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
+
+    private CollisionStrategy collisionStrategy = CollisionStrategy.SAME_TILE;
 
     private HuntingStepResult huntingResult;
 
@@ -138,6 +146,30 @@ public class GameBox implements GameContext {
     public boolean hasGameForVariantName(String variantName) {
         requireNonNull(variantName);
         return gamesByVariantName.containsKey(variantName);
+    }
+
+    @Override
+    public CollisionStrategy collisionStrategy() {
+        return collisionStrategy;
+    }
+
+    @Override
+    public void setCollisionStrategy(CollisionStrategy strategy) {
+        this.collisionStrategy = requireNonNull(strategy);
+    }
+
+    public BooleanProperty collisionDoubleCheckedProperty() {
+        return collisionDoubleChecked;
+    }
+
+    @Override
+    public Boolean isCollisionDoubleChecked() {
+        return collisionDoubleCheckedProperty().get();
+    }
+
+    @Override
+    public void setCollisionDoubleChecked(boolean doubleChecked) {
+        collisionDoubleCheckedProperty().set(doubleChecked);
     }
 
     @Override

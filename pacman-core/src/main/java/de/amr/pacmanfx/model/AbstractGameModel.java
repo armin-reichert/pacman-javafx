@@ -47,9 +47,6 @@ public abstract class AbstractGameModel implements GameModel {
 
     // Common properties
 
-    //TODO move elsewhere
-    private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
-
     private final ObjectProperty<GameLevel> level = new SimpleObjectProperty<>();
 
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
@@ -84,8 +81,6 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected Steering demoLevelSteering;
 
-    private CollisionStrategy collisionStrategy;
-
     // Constructor
 
     protected AbstractGameModel() {
@@ -93,7 +88,6 @@ public abstract class AbstractGameModel implements GameModel {
         score = new Score();
         lives = new PacManLivesImpl();
         hud = new HeadsUpDisplay();
-        collisionStrategy = CollisionStrategy.SAME_TILE;
         cheats = new DefaultCheatsImpl();
 
         score.pointsProperty().addListener((_, oldScore, newScore)
@@ -364,15 +358,6 @@ public abstract class AbstractGameModel implements GameModel {
 
     // Actor related
 
-    @Override
-    public CollisionStrategy collisionStrategy() {
-        return collisionStrategy;
-    }
-
-    @Override
-    public void setCollisionStrategy(CollisionStrategy strategy) {
-        this.collisionStrategy = requireNonNull(strategy);
-    }
 
     @Override
     public void eatPellet(GameLevel level, Vector2i tile) {
@@ -515,31 +500,6 @@ public abstract class AbstractGameModel implements GameModel {
         }
     }
 
-    /**
-     * @return property controlling whether collisions are double-checked each tick
-     */
-    public BooleanProperty collisionDoubleCheckedProperty() {
-        return collisionDoubleChecked;
-    }
-
-    /**
-     * @return {@code true} if collisions are double-checked each tick
-     */
-    @Override
-    public Boolean isCollisionDoubleChecked() {
-        return collisionDoubleCheckedProperty().get();
-    }
-
-    /**
-     * Enables or disables double collision checking.
-     *
-     * @param doubleChecked {@code true} to enable double-checking
-     */
-    public void setCollisionDoubleChecked(boolean doubleChecked) {
-        collisionDoubleCheckedProperty().set(doubleChecked);
-    }
-
-    @Override
     public void eatBonus(GameLevel level, Bonus bonus) {
         scorePoints(bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
