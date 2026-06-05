@@ -30,7 +30,7 @@ public class TestEatingFood {
     @BeforeAll
     static void setup() {
         final String variantName = GameVariant.ARCADE_PACMAN.name();
-        gameBox = new GamesContainer(new GameClockFX(), CoinMechanism.OUT_OF_SERVICE);
+        gameBox = new GamesContainer(CoinMechanism.OUT_OF_SERVICE);
         gameBox.registerGame(variantName, new ArcadePacMan_GameModel(
             new Arcade_GameFlow(gameBox),
             CoinMechanism.OUT_OF_SERVICE));
