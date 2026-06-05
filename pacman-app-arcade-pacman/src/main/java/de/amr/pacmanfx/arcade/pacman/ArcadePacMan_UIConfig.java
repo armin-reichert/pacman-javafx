@@ -117,18 +117,18 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     public static final GameAction ACTION_INSERT_COIN = new GameAction("insert_coin") {
         @Override
         public void doAction(AppContext context) {
-            final CoinMechanism slot = context.gameContext().coinMechanism();
+            final CoinMechanism slot = context.currentGameContext().coinMechanism();
             final GameModel game = context.currentGame();
             context.ui().sounds().stopAndDisposeVoice();
             context.ui().sounds().setEnabled(true);
             slot.insertCoin();
             game.flow().enterState(GAME_PREPARATION.state());
-            game.flow().publishGameEvent(new CreditAddedEvent(context.gameContext(), 1));
+            game.flow().publishGameEvent(new CreditAddedEvent(context.currentGameContext(), 1));
         }
 
         @Override
         public boolean isEnabled(AppContext context) {
-            final CoinMechanism slot = context.gameContext().coinMechanism();
+            final CoinMechanism slot = context.currentGameContext().coinMechanism();
             if (slot.isFull()) {
                 return false;
             }
@@ -151,7 +151,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
 
         @Override
         public boolean isEnabled(AppContext context) {
-            final CoinMechanism slot = context.gameContext().coinMechanism();
+            final CoinMechanism slot = context.currentGameContext().coinMechanism();
             if (slot.isEmpty()) {
                 return false;
             }

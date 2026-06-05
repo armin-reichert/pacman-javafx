@@ -63,7 +63,7 @@ public class PacManXXL_StartPage implements StartPage {
         private final ObservableValue<Double> scaling;
 
         public MenuBinding(AppContext context) {
-            gameVariantNameListener = (_, _, variant) -> context.gameContext().select(variant.name());
+            gameVariantNameListener = (_, _, variant) -> context.currentGameContext().select(variant.name());
             play3DListener = (_, _, enable3D) -> AppConstants.PROPERTY_3D_ENABLED.set(enable3D);
             cutScenesEnabledListener = (_, _, enableCutScenes) -> context.currentGameFlow().setCutScenesEnabled(enableCutScenes);
             scaling = context.ui().view().stage().heightProperty().map(h -> {
@@ -148,7 +148,7 @@ public class PacManXXL_StartPage implements StartPage {
     public void onEnterStartPage(AppContext context) {
         final GameVariant selectedGameVariant = menu.entryGameVariant().value();
         switch (selectedGameVariant) {
-            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> context.gameContext().select(selectedGameVariant.name());
+            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> context.currentGameContext().select(selectedGameVariant.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);
         }
         menu.init(context);

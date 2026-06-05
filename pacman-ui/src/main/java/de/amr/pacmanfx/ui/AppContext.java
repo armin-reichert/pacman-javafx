@@ -27,16 +27,16 @@ public interface AppContext extends AppLifecycle {
 
     GameUI ui();
 
-    GameContext gameContext();
+    GameContext currentGameContext();
 
     GameClock gameClock();
 
     default String currentGameVariant() {
-        return gameContext().gameVariantName();
+        return currentGameContext().gameVariantName();
     }
 
     default <T extends AbstractGameModel> T currentGame() {
-        return gameContext().gameModel();
+        return currentGameContext().gameModel();
     }
 
     default Optional<GameLevel> optCurrentGameLevel() {
@@ -52,7 +52,7 @@ public interface AppContext extends AppLifecycle {
     }
 
     default UIConfig currentUIConfig() {
-        return ui().configurations().getOrCreateUIConfig(gameContext().gameVariantName());
+        return ui().configurations().getOrCreateUIConfig(currentGameContext().gameVariantName());
     }
 
     default Optional<GameSoundEffects> currentSoundEffects() {

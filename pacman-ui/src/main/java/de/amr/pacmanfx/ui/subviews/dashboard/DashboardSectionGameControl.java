@@ -44,12 +44,12 @@ public class DashboardSectionGameControl extends DashboardSection {
 
     @Override
     public void connect(AppContext context) {
-        final CoinMechanism coinMechanism = context.gameContext().coinMechanism();
+        final CoinMechanism coinMechanism = context.currentGameContext().coinMechanism();
         spinnerCredit            = addIntSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
-        addDynamicLabeledValue("Collision Mode", () -> context.gameContext().collisionStrategy());
+        addDynamicLabeledValue("Collision Mode", () -> context.currentGameContext().collisionStrategy());
         cbCollisionCheckedTwice  = addCheckBox("Collision Check 2x");
 
         setAction(choiceBoxInitialLives, () -> context.currentGame().lives().setInitialCount(choiceBoxInitialLives.getValue()));
@@ -61,7 +61,7 @@ public class DashboardSectionGameControl extends DashboardSection {
         setAction(context, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
         setAction(context, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
 
-        cbCollisionCheckedTwice.setOnAction(_ -> context.gameContext().setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected()));
+        cbCollisionCheckedTwice.setOnAction(_ -> context.currentGameContext().setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected()));
     }
 
     @Override
@@ -89,7 +89,7 @@ public class DashboardSectionGameControl extends DashboardSection {
             buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.nameIsOneOf(GameStateID.GAME_INTRO.name()));
             buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(state instanceof CutScenesTestState));
 
-            cbCollisionCheckedTwice.setSelected(dashboard.context().gameContext().isCollisionDoubleChecked());
+            cbCollisionCheckedTwice.setSelected(dashboard.context().currentGameContext().isCollisionDoubleChecked());
         }
     }
 

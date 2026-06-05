@@ -40,7 +40,7 @@ public class GameViewImpl implements GameView {
         stageTitleBinding = createStringBinding(
             () -> computeStageTitle(context),
             context.gameClock().updatesDisabledProperty(),
-            context.gameContext().gameVariantNameProperty(),
+            context.currentGameContext().gameVariantNameProperty(),
             context.ui().subViews().selectedSubViewProperty(),
             context.ui().gameScenes().gameSceneProperty(),
             AppConstants.PROPERTY_DEBUG_INFO_VISIBLE,

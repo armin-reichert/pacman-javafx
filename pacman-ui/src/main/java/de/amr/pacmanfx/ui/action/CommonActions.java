@@ -40,7 +40,7 @@ public final class CommonActions {
     public static final GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("boot_show_play_view") {
         @Override
         protected void doAction(AppContext context) {
-            context.gameContext().coinMechanism().setNumCoins(0);
+            context.currentGameContext().coinMechanism().setNumCoins(0);
             context.ui().subViews().selectGamePlayView();
             context.restartGame();
         }
@@ -109,7 +109,7 @@ public final class CommonActions {
             final State<GameContext> gameState = context.currentGameState();
             boolean isLevelShortTest = gameState instanceof LevelShortTestState;
             if (isLevelShortTest) {
-                gameState.onExit(context.gameContext()); //TODO exit other states too?
+                gameState.onExit(context.currentGameContext()); //TODO exit other states too?
             }
             game.flow().restartState(GameStateID.GAME_INTRO.name());
             context.gameClock().start();
@@ -124,7 +124,7 @@ public final class CommonActions {
 
         @Override
         public boolean isEnabled(AppContext context) {
-            boolean isArcadeGame = GameVariant.isArcadeGameName(context.gameContext().gameVariantName());
+            boolean isArcadeGame = GameVariant.isArcadeGameName(context.currentGameContext().gameVariantName());
             boolean isPlayScene2D = context.ui().gameScenes().currentGameSceneHasID(context, CommonSceneID.PLAY_SCENE_2D);
             return isArcadeGame && isPlayScene2D;
         }
@@ -212,7 +212,7 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction("toggle_collision_strategy") {
         @Override
         protected void doAction(AppContext context) {
-            final GameContext gameContext = context.gameContext();
+            final GameContext gameContext = context.currentGameContext();
             final CollisionStrategy strategy = gameContext.collisionStrategy();
             final CollisionStrategy newStrategy = strategy == CollisionStrategy.CENTER_DISTANCE
                 ? CollisionStrategy.SAME_TILE : CollisionStrategy.CENTER_DISTANCE;
@@ -285,7 +285,7 @@ public final class CommonActions {
                 context.ui().sounds().stopAll();
                 currentConfig.optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             }
-            Logger.info("Game ({}) {}", context.gameContext().gameVariantName(), context.gameClock().getUpdatesDisabled() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", context.currentGameContext().gameVariantName(), context.gameClock().getUpdatesDisabled() ? "paused" : "resumed");
         }
 
         @Override

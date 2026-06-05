@@ -46,7 +46,7 @@ public final class CheatActions {
                 final GameModel game = level.game();
                 level.worldMap().foodLayer().eatPellets();
                 game.cheats().cheatUsedProperty().set(true);
-                game.flow().publishGameEvent(new PacEatsFoodEvent(context.gameContext(), level.entities().pac(), false, true));
+                game.flow().publishGameEvent(new PacEatsFoodEvent(context.currentGameContext(), level.entities().pac(), false, true));
             });
         }
 

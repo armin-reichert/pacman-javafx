@@ -83,7 +83,7 @@ public final class AppContextImpl implements AppContext {
     }
 
     @Override
-    public GameContext gameContext() {
+    public GameContext currentGameContext() {
         return gameBox;
     }
 
@@ -279,8 +279,8 @@ public final class AppContextImpl implements AppContext {
 
     private void initGameVariantAndRegisterChangeHandler() {
         final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
-        gameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
-        gameVariantChangeHandler.enterGameVariant(gameContext().gameVariantName());
+        currentGameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
+        gameVariantChangeHandler.enterGameVariant(currentGameContext().gameVariantName());
     }
 
     /**
