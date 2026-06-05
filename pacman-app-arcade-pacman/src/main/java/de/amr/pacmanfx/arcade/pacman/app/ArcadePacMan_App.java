@@ -10,7 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.ui.app.GameBox;
+import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
@@ -47,13 +47,13 @@ public class ArcadePacMan_App extends Application {
         CommonDashboardID.ABOUT
     );
 
-    private GameBox gameBox;
+    private GamesContainer gameBox;
     private AppContext appContext;
     private boolean useBuilder;
 
     @Override
     public void init() throws Exception {
-        gameBox = new GameBox(new GameClockFX(), new CoinMechanism(99));
+        gameBox = new GamesContainer(new GameClockFX(), new CoinMechanism(99));
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
     }
 
@@ -83,7 +83,7 @@ public class ArcadePacMan_App extends Application {
 
     // Private area
 
-    private void createUI(Stage stage, GameBox gameBox, Vector2i sceneSize) {
+    private void createUI(Stage stage, GamesContainer gameBox, Vector2i sceneSize) {
         final var game = new ArcadePacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism());
 
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);

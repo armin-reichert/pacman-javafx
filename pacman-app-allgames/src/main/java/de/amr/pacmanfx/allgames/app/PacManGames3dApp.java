@@ -19,7 +19,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.ui.app.GameBox;
+import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
@@ -93,7 +93,7 @@ public class PacManGames3dApp extends Application {
         CommonDashboardID.ABOUT
     );
 
-    private GameBox gameBox;
+    private GamesContainer gameBox;
     private AppContext context;
     private PacManXXL_MapSelector xxlMapSelector;
 
@@ -104,7 +104,7 @@ public class PacManGames3dApp extends Application {
     public void init() {
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
-        gameBox = new GameBox(new GameClockFX(), new CoinMechanism(99));
+        gameBox = new GamesContainer(new GameClockFX(), new CoinMechanism(99));
         xxlMapSelector = new PacManXXL_MapSelector(gameBox.customMapDir());
     }
 

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.ui.app.GameBox;
+import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameUI_Builder;
@@ -30,7 +30,7 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final var gameBox = new GameBox(new GameClockFX(), new CoinMechanism(99));
+        final var gameBox = new GamesContainer(new GameClockFX(), new CoinMechanism(99));
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         context = GameUI_Builder
             .newUI(primaryStage, screenSize.x(), screenSize.y(), gameBox)

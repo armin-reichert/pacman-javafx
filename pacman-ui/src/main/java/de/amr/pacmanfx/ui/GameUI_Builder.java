@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.ui.app.GameBox;
+import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
@@ -44,13 +44,13 @@ public class GameUI_Builder {
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight,
-        GameBox gameBox)
+        GamesContainer gameBox)
     {
         return new GameUI_Builder(stage, mainSceneWidth, mainSceneHeight, requireNonNull(gameBox));
     }
 
     private final WindowConfig windowConfig;
-    private final GameBox gameBox;
+    private final GamesContainer gameBox;
     private final Map<String, GameConfig> gameConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
     private boolean includeInteractiveTests;
@@ -59,7 +59,7 @@ public class GameUI_Builder {
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight,
-        GameBox gameBox)
+        GamesContainer gameBox)
     {
         windowConfig = new WindowConfig(stage, mainSceneWidth, mainSceneHeight);
         this.gameBox = gameBox;
@@ -182,8 +182,8 @@ public class GameUI_Builder {
         if (name.isBlank()) {
             error("Game variant name must not be blank");
         }
-        if (!GameBox.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
-            error("Game variant name '%s' does not match pattern '%s'".formatted(name, GameBox.GAME_VARIANT_NAME_PATTERN));
+        if (!GamesContainer.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
+            error("Game variant name '%s' does not match pattern '%s'".formatted(name, GamesContainer.GAME_VARIANT_NAME_PATTERN));
         }
     }
 

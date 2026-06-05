@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.math.RandomNumberSupport;
-import de.amr.pacmanfx.ui.app.GameBox;
+import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Globals;
@@ -46,7 +46,7 @@ import static java.util.Objects.requireNonNull;
 public final class AppContextImpl implements AppContext {
 
     // All games in a box (only 1,99 €!)
-    private final GameBox gameBox;
+    private final GamesContainer gameBox;
 
     private final PreferencesManager prefs;
 
@@ -56,7 +56,7 @@ public final class AppContextImpl implements AppContext {
 
     private final GameViewImpl view;
 
-    public AppContextImpl(GameBox gameBox, GameViewImpl view) {
+    public AppContextImpl(GamesContainer gameBox, GameViewImpl view) {
         this.gameBox = requireNonNull(gameBox);
         this.view = requireNonNull(view);
 

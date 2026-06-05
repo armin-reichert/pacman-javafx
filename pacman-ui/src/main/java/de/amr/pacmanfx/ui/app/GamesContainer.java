@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Container for the playable games. Each game variant is represented by an instance of its game model (see {@link GameModel}).
  */
-public class GameBox implements GameContext {
+public class GamesContainer implements GameContext {
 
     /**
      * Game variant names must match this pattern (e.g. "MS_PACMAN_2024").
@@ -61,7 +61,7 @@ public class GameBox implements GameContext {
 
     private HuntingStepResult huntingResult;
 
-    public GameBox(GameClock gameClock, CoinMechanism coinMechanism) {
+    public GamesContainer(GameClock gameClock, CoinMechanism coinMechanism) {
         this.gameClock = requireNonNull(gameClock);
         this.coinMechanism = requireNonNull(coinMechanism);
 
