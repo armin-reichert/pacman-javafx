@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
@@ -11,6 +10,7 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
+import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
@@ -145,7 +145,7 @@ public class GameUI_Builder {
             ui.ui().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);
             if (includeInteractiveTests) {
                 final GameFlow gameFlow = game.flow();
-                gameFlow.addState(new LevelShortTestState(gameBox.coinMechanism()));
+                gameFlow.addState(new LevelShortTestState());
                 gameFlow.addState(new LevelMediumTestState());
                 gameFlow.addState(new CutScenesTestState());
             }

@@ -47,8 +47,9 @@ public class ArcadePacMan_App extends Application {
         CommonDashboardID.ABOUT
     );
 
+    private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private GamesContainer gamesContainer;
-    private AppContext appContext;
+    private AppContext app;
     private boolean useBuilder;
 
     @Override
@@ -61,10 +62,10 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
-            appContext = GameUI_Builder.newUI(primaryStage, size.x(), size.y(), gamesContainer)
+            app = GameUI_Builder.newUI(primaryStage, size.x(), size.y(), gamesContainer)
                 .game(
                     GameVariant.ARCADE_PACMAN,
-                    () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism()),
+                    () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism),
                     ArcadePacMan_UIConfig::new)
                 .startPage(ArcadePacMan_StartPage::new)
                 .build();
@@ -72,29 +73,29 @@ public class ArcadePacMan_App extends Application {
         else {
             createUI(primaryStage, gamesContainer, size);
         }
-        appContext.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, appContext.ui().translations());
-        appContext.displayOnScreen();
+        app.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, app.ui().translations());
+        app.displayOnScreen();
     }
 
     @Override
     public void stop() {
-        appContext.terminate();
+        app.terminate();
     }
 
     // Private area
 
     private void createUI(Stage stage, GamesContainer gamesContainer, Vector2i sceneSize) {
-        final var game = new ArcadePacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism());
+        final var game = new ArcadePacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism);
 
         gamesContainer.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
-        appContext = new GamesApp(gamesContainer, createView(stage, sceneSize.x(), sceneSize.y()), new GameClockFX());
-        appContext.ui().configurations().addConfigFactory(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
+        app = new GamesApp(gamesContainer, createView(stage, sceneSize.x(), sceneSize.y()), new GameClockFX());
+        app.ui().configurations().addConfigFactory(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
-        final StartPagesView startView = appContext.ui().subViews().startView();
+        final StartPagesView startView = app.ui().subViews().startView();
 
         final var arcadePacManStartPage = new ArcadePacMan_StartPage();
-        arcadePacManStartPage.init(appContext);
+        arcadePacManStartPage.init(app);
 
         startView.addStartPage(arcadePacManStartPage);
         startView.setSelectedIndex(0);

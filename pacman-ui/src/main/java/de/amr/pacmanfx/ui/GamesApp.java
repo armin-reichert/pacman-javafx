@@ -6,12 +6,13 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.math.RandomNumberSupport;
-import de.amr.pacmanfx.ui.app.GamesContainer;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
+import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.config.UIConfigManager;
@@ -58,10 +59,13 @@ public final class GamesApp implements AppContext {
 
     private final GameClock gameClock;
 
+    private final CoinMechanism coinMechanism;
+
     public GamesApp(GamesContainer gamesContainer, GameViewImpl view, GameClock gameClock) {
         this.gamesContainer = requireNonNull(gamesContainer);
         this.view = requireNonNull(view);
         this.gameClock = requireNonNull(gameClock);
+        this.coinMechanism = new CoinMechanism(99);
 
         prefs = new PreferencesManager(getClass());
         watchdog = new DirectoryWatchdog(gamesContainer.customMapDir());
@@ -93,6 +97,11 @@ public final class GamesApp implements AppContext {
     @Override
     public GameClock gameClock() {
         return gameClock;
+    }
+
+    @Override
+    public CoinMechanism coinMechanism() {
+        return coinMechanism;
     }
 
     @Override

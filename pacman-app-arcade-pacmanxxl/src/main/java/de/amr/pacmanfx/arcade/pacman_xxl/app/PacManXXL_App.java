@@ -29,26 +29,27 @@ public class PacManXXL_App extends Application {
     private static final double ASPECT_RATIO    = 1.6;
     private static final double HEIGHT_FRACTION = 0.8;
 
+    private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private final GamesContainer gamesContainer = new GamesContainer(new CoinMechanism(99));
-    private AppContext context;
+    private AppContext app;
 
     @Override
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         final var mapSelector = new PacManXXL_MapSelector(gamesContainer.customMapDir());
 
-        context = GameUI_Builder
+        app = GameUI_Builder
             .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer)
             .game(GameVariant.ARCADE_PACMAN_XXL,
-                () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism(), mapSelector),
+                () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism, mapSelector),
                 PacManXXL_PacMan_UIConfig::new)
             .game(GameVariant.ARCADE_MS_PACMAN_XXL,
-                () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism(), mapSelector),
+                () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism, mapSelector),
                 PacManXXL_MsPacMan_UIConfig::new)
             .startPage(PacManXXL_StartPage::new)
             .build();
 
-        context.ui().subViews().gamePlayView().configureDashboard(List.of(
+        app.ui().subViews().gamePlayView().configureDashboard(List.of(
             CommonDashboardID.README,
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
@@ -59,22 +60,22 @@ public class PacManXXL_App extends Application {
             CommonDashboardID.KEYS_GLOBAL,
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT
-        ), context.ui().translations());
+        ), app.ui().translations());
 
-        context.ui().subViews().gamePlayView().dashboard().findSection(CommonDashboardID.CUSTOM_MAPS)
+        app.ui().subViews().gamePlayView().dashboard().findSection(CommonDashboardID.CUSTOM_MAPS)
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
-                section.setCustomDirWatchDog(context.watchdog());
-                section.setMapEditFunction(mapFile -> context.editMap(mapFile));
+                section.setCustomDirWatchDog(app.watchdog());
+                section.setMapEditFunction(mapFile -> app.editMap(mapFile));
             });
 
-        context.watchdog().addEventListener(mapSelector);
-        context.displayOnScreen();
+        app.watchdog().addEventListener(mapSelector);
+        app.displayOnScreen();
     }
 
     @Override
     public void stop() {
-        context.terminate();
+        app.terminate();
     }
 }

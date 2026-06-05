@@ -91,7 +91,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     public void quitCurrentGameScene(AppContext context) {
         optCurrentGameScene().ifPresent(scene -> {
             //TODO Rethink this
-            final CoinMechanism coinMechanism = context.currentGameContext().coinMechanism();
+            final CoinMechanism coinMechanism = context.coinMechanism();
             boolean shouldConsumeCoin = context.currentGameState().nameIsOneOf(GameStateID.GAME_OR_LEVEL_STARTING.name())
                 || context.currentGame().isPlaying();
             if (shouldConsumeCoin && !coinMechanism.isEmpty()) {

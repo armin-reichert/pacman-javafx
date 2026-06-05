@@ -87,17 +87,6 @@ public interface GameContext {
         return gameModel().flow();
     }
 
-
-    /**
-     * Returns the coin mechanism associated with the game box.
-     * <p>
-     * The coin mechanism is responsible for tracking inserted credits and
-     * determining whether a game can be started.
-     *
-     * @return the coin mechanism
-     */
-    CoinMechanism coinMechanism();
-
     void setCollisionStrategy(CollisionStrategy collisionStrategy);
 
     Boolean isCollisionDoubleChecked();

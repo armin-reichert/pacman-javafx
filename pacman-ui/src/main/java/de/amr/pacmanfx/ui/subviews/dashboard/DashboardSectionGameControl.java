@@ -35,7 +35,6 @@ public class DashboardSectionGameControl extends DashboardSection {
     private ChoiceBox<Integer> choiceBoxInitialLives;
     private Button[] buttonGroupLevelActions;
     private Button[] buttonGroupCutScenesTest;
-    private DynamicInfoText infoCollisionStrategy;
     private CheckBox cbCollisionCheckedTwice;
 
     public DashboardSectionGameControl(Dashboard dashboard) {
@@ -44,7 +43,7 @@ public class DashboardSectionGameControl extends DashboardSection {
 
     @Override
     public void connect(AppContext context) {
-        final CoinMechanism coinMechanism = context.currentGameContext().coinMechanism();
+        final CoinMechanism coinMechanism = context.coinMechanism();
         spinnerCredit            = addIntSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));

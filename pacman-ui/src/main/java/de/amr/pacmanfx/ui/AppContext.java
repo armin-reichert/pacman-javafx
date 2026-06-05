@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.fsm.State;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameFlow;
@@ -30,6 +31,8 @@ public interface AppContext extends AppLifecycle {
     GameContext currentGameContext();
 
     GameClock gameClock();
+
+    CoinMechanism coinMechanism();
 
     default String currentGameVariant() {
         return currentGameContext().gameVariantName();

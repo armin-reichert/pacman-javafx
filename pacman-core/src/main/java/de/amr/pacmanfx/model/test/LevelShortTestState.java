@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.model.test;
 
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusEatenEvent;
 import de.amr.pacmanfx.gamestate.GameStateID;
@@ -13,15 +12,11 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 
-import static java.util.Objects.requireNonNull;
-
 public class LevelShortTestState extends TestState {
 
-    private final CoinMechanism coinMechanism;
     private int lastTestedLevelNumber;
 
-    public LevelShortTestState(CoinMechanism coinMechanism) {
-        this.coinMechanism = requireNonNull(coinMechanism);
+    public LevelShortTestState() {
     }
 
     @Override
@@ -32,7 +27,7 @@ public class LevelShortTestState extends TestState {
     @Override
     public void onEnter(GameContext context) {
         final GameModel game = context.gameModel();
-        coinMechanism.setNumCoins(1);
+        //coinMechanism.setNumCoins(1);
         lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.rules().lastLevelNumber();
         lock();
         game.prepareNewGame();
@@ -88,7 +83,7 @@ public class LevelShortTestState extends TestState {
         }
         else if (timer.atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
-                coinMechanism.setNumCoins(0);
+                //coinMechanism.setNumCoins(0);
                 game.flow().restartState(GameStateID.BOOT.name());
             } else {
                 lock();
@@ -105,7 +100,7 @@ public class LevelShortTestState extends TestState {
     @Override
     public void onExit(GameContext context) {
         final GameModel game = context.gameModel();
-        coinMechanism.setNumCoins(0);
+        //coinMechanism.setNumCoins(0);
         game.init();
         game.levelCounter().clear();
     }

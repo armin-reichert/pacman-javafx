@@ -25,21 +25,22 @@ public class ArcadeMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = 1.2f; // 12:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    private AppContext context;
+    private final CoinMechanism coinMechanism = new CoinMechanism(99);
+    private AppContext app;
 
     @Override
     public void start(Stage primaryStage) {
         final var gamesContainer = new GamesContainer(new CoinMechanism(99));
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        context = GameUI_Builder
+        app = GameUI_Builder
             .newUI(primaryStage, screenSize.x(), screenSize.y(), gamesContainer)
             .game(GameVariant.ARCADE_MS_PACMAN,
-                () -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism()),
+                () -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism),
                 ArcadeMsPacMan_UIConfig::new)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .build();
 
-        context.ui().subViews().gamePlayView().dashboard().addCommonSections(context.ui().translations(), List.of(
+        app.ui().subViews().gamePlayView().dashboard().addCommonSections(app.ui().translations(), List.of(
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
             CommonDashboardID.SETTINGS_3D,
@@ -49,13 +50,13 @@ public class ArcadeMsPacMan_App extends Application {
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT)
         );
-        context.displayOnScreen();
+        app.displayOnScreen();
     }
 
     @Override
     public void stop() {
-        if (context != null) {
-            context.terminate();
+        if (app != null) {
+            app.terminate();
         }
     }
 }

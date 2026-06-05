@@ -93,8 +93,9 @@ public class PacManGames3dApp extends Application {
         CommonDashboardID.ABOUT
     );
 
+    private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private GamesContainer gamesContainer;
-    private AppContext context;
+    private AppContext app;
     private PacManXXL_MapSelector xxlMapSelector;
 
     private boolean useBuilder;
@@ -111,10 +112,9 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage stage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        final CoinMechanism coinMechanism = gamesContainer.coinMechanism();
         try {
             if (useBuilder) {
-                context = GameUI_Builder
+                app = GameUI_Builder
                     .newUI(stage, sceneSize.x(), sceneSize.y(), gamesContainer)
 
                     .game(ARCADE_PACMAN,
@@ -148,7 +148,7 @@ public class PacManGames3dApp extends Application {
             }
             else {
                 registerGames();
-                context = new GamesApp(
+                app = new GamesApp(
                     gamesContainer,
                     createView(stage, sceneSize.x(), sceneSize.y()),
                     new GameClockFX());
@@ -159,8 +159,8 @@ public class PacManGames3dApp extends Application {
             configureDashboard();
             Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
 
-            context.watchdog().addEventListener(xxlMapSelector);
-            context.displayOnScreen();
+            app.watchdog().addEventListener(xxlMapSelector);
+            app.displayOnScreen();
         }
         catch (RuntimeException x) {
             Logger.error(x, "An error occurred starting the game.");
@@ -170,8 +170,8 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void stop() {
-        if (context != null) {
-            context.terminate();
+        if (app != null) {
+            app.terminate();
         }
     }
 
@@ -188,11 +188,11 @@ public class PacManGames3dApp extends Application {
     private void registerGames() {
         for (GameVariant variant : GameVariant.values()) {
             final AbstractGameModel game = switch (variant) {
-                case ARCADE_PACMAN        -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism());
-                case ARCADE_MS_PACMAN     -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism());
+                case ARCADE_PACMAN        -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism);
+                case ARCADE_MS_PACMAN     -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism);
                 case TENGEN_MS_PACMAN     -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow(gamesContainer));
-                case ARCADE_PACMAN_XXL    -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism(), xxlMapSelector);
-                case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), gamesContainer.coinMechanism(), xxlMapSelector);
+                case ARCADE_PACMAN_XXL    -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism, xxlMapSelector);
+                case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism, xxlMapSelector);
             };
             if (includeTests) {
                 addTestStates(game.flow());
@@ -202,13 +202,13 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addTestStates(GameFlow gameFlow) {
-        gameFlow.addState(new LevelShortTestState(gamesContainer.coinMechanism()));
+        gameFlow.addState(new LevelShortTestState());
         gameFlow.addState(new LevelMediumTestState());
         gameFlow.addState(new CutScenesTestState());
     }
 
     private void addConfigFactories() {
-        final UIConfigManager configManager = context.ui().configurations();
+        final UIConfigManager configManager = app.ui().configurations();
         configManager.addConfigFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
         configManager.addConfigFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);
         configManager.addConfigFactory(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new);
@@ -218,20 +218,20 @@ public class PacManGames3dApp extends Application {
     }
 
     private void addStartPages() {
-        final StartPagesView startView = context.ui().subViews().startView();
+        final StartPagesView startView = app.ui().subViews().startView();
         startView.addStartPage(new ArcadePacMan_StartPage());
         startView.addStartPage(new ArcadeMsPacMan_StartPage());
         startView.addStartPage(new TengenMsPacMan_StartPage());
         startView.addStartPage(new PacManXXL_StartPage());
-        startView.startPages().forEach(startPage -> startPage.init(context));
+        startView.startPages().forEach(startPage -> startPage.init(app));
         startView.setSelectedIndex(0);
     }
 
 
     private void configureDashboard() {
-        final Dashboard dashboard = context.ui().subViews().gamePlayView().dashboard();
+        final Dashboard dashboard = app.ui().subViews().gamePlayView().dashboard();
 
-        context.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, context.ui().translations());
+        app.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, app.ui().translations());
 
         // Add Joypad controller section
         dashboard.addSection(
@@ -245,8 +245,8 @@ public class PacManGames3dApp extends Application {
             .filter(DashboardSectionCustomMaps.class::isInstance)
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
-                section.setCustomDirWatchDog(context.watchdog());
-                section.setMapEditFunction(mapFile -> context.editMap(mapFile));
+                section.setCustomDirWatchDog(app.watchdog());
+                section.setMapEditFunction(mapFile -> app.editMap(mapFile));
             });
     }
 }

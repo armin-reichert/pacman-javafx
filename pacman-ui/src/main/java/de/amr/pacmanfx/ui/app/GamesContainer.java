@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.app;
 
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
@@ -52,8 +51,6 @@ public class GamesContainer implements GameContext {
     private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
 
 
-    private final CoinMechanism coinMechanism;
-
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
 
     private CollisionStrategy collisionStrategy = CollisionStrategy.SAME_TILE;
@@ -61,8 +58,6 @@ public class GamesContainer implements GameContext {
     private HuntingStepResult huntingResult;
 
     public GamesContainer(CoinMechanism coinMechanism) {
-        this.coinMechanism = requireNonNull(coinMechanism);
-
         final boolean ok = validateUserDirs();
         if (!ok) {
             throw new IllegalStateException("GameBox: User directory validation failed");
@@ -109,11 +104,6 @@ public class GamesContainer implements GameContext {
     }
 
     // GameContext implementation
-
-    @Override
-    public CoinMechanism coinMechanism() {
-        return coinMechanism;
-    }
 
     @Override
     public StringProperty gameVariantNameProperty() {

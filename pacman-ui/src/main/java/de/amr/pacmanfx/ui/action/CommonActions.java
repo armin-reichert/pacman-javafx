@@ -40,7 +40,7 @@ public final class CommonActions {
     public static final GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("boot_show_play_view") {
         @Override
         protected void doAction(AppContext context) {
-            context.currentGameContext().coinMechanism().setNumCoins(0);
+            context.coinMechanism().setNumCoins(0);
             context.ui().subViews().selectGamePlayView();
             context.restartGame();
         }
