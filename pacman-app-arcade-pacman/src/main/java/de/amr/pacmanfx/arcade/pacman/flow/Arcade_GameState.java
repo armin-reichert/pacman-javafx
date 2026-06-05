@@ -222,9 +222,5 @@ public enum Arcade_GameState {
         public static final short TICK_NEW_GAME_SHOW_GUYS = 60;
         public static final short TICK_NEW_GAME_START_HUNTING = 240;
         public static final short TICK_RESUME_HUNTING = 120;
-        public static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
-        public static final short TICK_PACMAN_DYING_START_ANIMATION = 90;
-        public static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
-        public static final short TICK_PACMAN_DYING_PAC_DEAD = 210;
     }
 }

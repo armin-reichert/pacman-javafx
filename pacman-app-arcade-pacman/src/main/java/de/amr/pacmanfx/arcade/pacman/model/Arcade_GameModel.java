@@ -76,42 +76,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     // Game interface
 
     @Override
-    public void doPacManDying(GameLevel level, Pac pac, long tick) {
-        if (tick == 1) {
-            gateKeeper.resetCounterAndSetEnabled(true);
-            level.huntingTimer().stop();
-            pac.animations().stopSelected();
-            pac.powerTimer().stop();
-            pac.powerTimer().reset(0);
-            Logger.info("Power timer stopped and reset to zero.");
-            pac.setSpeed(0);
-            pac.setDead(true);
-            level.entities().ghosts().forEach(ghost -> ghost.onPacKilled(level));
-            flow.publishGameEvent(new StopAllSoundsEvent(flow.context()));
-        }
-        else if (tick == Arcade_GameState.Timing.TICK_PACMAN_DYING_HIDE_GHOSTS) {
-            level.entities().ghosts().forEach(Ghost::hide);
-            pac.animations().select(ArcadePacMan_AnimationID.PAC_DYING);
-            pac.animations().resetSelected();
-        }
-        else if (tick == Arcade_GameState.Timing.TICK_PACMAN_DYING_START_ANIMATION) {
-            pac.animations().playSelected();
-            flow.publishGameEvent(new PacDyingEvent(flow.context(), pac));
-        }
-        else if (tick == Arcade_GameState.Timing.TICK_PACMAN_DYING_HIDE_PAC) {
-            pac.hide();
-            level.optBonus().ifPresent(Bonus::setInactive); //TODO check this
-        }
-        else if (tick == Arcade_GameState.Timing.TICK_PACMAN_DYING_PAC_DEAD) {
-            flow.publishGameEvent(new PacDeadEvent(flow.context(), pac));
-        }
-        else {
-            level.heartbeat().triggerPulse();
-            pac.update(level);
-        }
-    }
-
-    @Override
     public void buildNormalLevel(int levelNumber) {
         final GameLevel level = createLevel(levelNumber, false);
         level.setCutSceneNumber(rules().cutSceneNumberAfterLevel(levelNumber).orElse(0));

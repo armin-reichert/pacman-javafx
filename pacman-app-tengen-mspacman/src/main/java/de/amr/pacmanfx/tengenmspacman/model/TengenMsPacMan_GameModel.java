@@ -395,46 +395,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         startPacPowerMode(level, level.entities().pac());
     }
 
-    @Override
-    public void doPacManDying(GameLevel level, Pac pac, long tick) {
-        if (tick == 1) {
-            level.huntingTimer().stop();
-            gateKeeper.resetCounterAndSetEnabled(true);
-
-            pac.powerTimer().stop();
-            pac.powerTimer().reset(0);
-            Logger.info("Power timer stopped and reset to zero.");
-
-            pac.setSpeed(0);
-            pac.setDead(true);
-            pac.animations().stopSelected();
-
-            level.entities().ghosts().forEach(ghost -> ghost.onPacKilled(level));
-            flow.publishGameEvent(new StopAllSoundsEvent(flow.context()));
-        }
-        else if (tick == TICK_PACMAN_DYING_HIDE_GHOSTS) {
-            level.entities().ghosts().forEach(Ghost::hide);
-            pac.animations().select(ArcadePacMan_AnimationID.PAC_DYING);
-            pac.animations().resetSelected();
-        }
-        else if (tick == TICK_PACMAN_DYING_START_PAC_ANIMATION) {
-            pac.animations().playSelected();
-            flow.publishGameEvent(new PacDyingEvent(flow.context(), pac));
-        }
-        else if (tick == TICK_PACMAN_DYING_HIDE_PAC) {
-            pac.hide();
-            //TODO clarify in MAME
-            level.optBonus().ifPresent(Bonus::setInactive);
-        }
-        else if (tick == TICK_PACMAN_DYING_PAC_DEAD) {
-            flow.publishGameEvent(new PacDeadEvent(flow.context(), pac));
-        }
-        else {
-            level.heartbeat().triggerPulse();
-            pac.update(level);
-        }
-    }
-
     // Helpers
 
     private void setMsPacMan(GameLevel level) {

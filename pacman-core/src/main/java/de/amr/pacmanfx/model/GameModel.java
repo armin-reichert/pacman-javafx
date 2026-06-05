@@ -107,9 +107,6 @@ public interface GameModel {
 
     void eatBonus(GameLevel level, Bonus bonus);
 
-    //TODO remove tick parameter, introduce new game state instead
-    void doPacManDying(GameLevel level, Pac pac, long tick);
-
     void onEatGhost(GameLevel level, Ghost eatenGhost);
 
     void startPacPowerMode(GameLevel level, Pac pac);
