@@ -30,9 +30,9 @@ import static de.amr.pacmanfx.core.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Builder for constructing and configuring a {@link AppContext} instance.
+ * Builder for constructing and configuring an application.
  */
-public class GameUI_Builder {
+public class GameAppBuilder {
 
     record WindowConfig(Stage stage, int sceneWidth, int sceneHeight) {}
 
@@ -41,22 +41,22 @@ public class GameUI_Builder {
         Supplier<? extends UIConfig> uiConfigFactory,
         WorldMapSelector mapSelector) {}
 
-    public static GameUI_Builder newUI(
+    public static GameAppBuilder newApp(
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight,
         GamesContainer gameBox)
     {
-        return new GameUI_Builder(stage, mainSceneWidth, mainSceneHeight, requireNonNull(gameBox));
+        return new GameAppBuilder(stage, mainSceneWidth, mainSceneHeight, requireNonNull(gameBox));
     }
 
     private final WindowConfig windowConfig;
     private final GamesContainer gameBox;
     private final Map<String, GameConfig> gameConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
-    private boolean includeInteractiveTests;
+    private boolean interactiveTests;
 
-    private GameUI_Builder(
+    private GameAppBuilder(
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight,
@@ -76,7 +76,7 @@ public class GameUI_Builder {
      * </pre>
      *
      */
-    public GameUI_Builder game(
+    public GameAppBuilder game(
         String gameVariantName,
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends UIConfig> uiConfigFactory,
@@ -93,7 +93,7 @@ public class GameUI_Builder {
         return this;
     }
 
-    public GameUI_Builder game(
+    public GameAppBuilder game(
         String variantName,
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends UIConfig> uiConfigFactory)
@@ -101,7 +101,7 @@ public class GameUI_Builder {
         return game(variantName, gameModelFactory, uiConfigFactory, null);
     }
 
-    public GameUI_Builder game(
+    public GameAppBuilder game(
         GameVariant variant,
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends UIConfig> uiConfigFactory)
@@ -109,7 +109,7 @@ public class GameUI_Builder {
         return game(variant.name(), gameModelFactory, uiConfigFactory, null);
     }
 
-    public GameUI_Builder startPage(Supplier<? extends StartPage> startPageFactory) {
+    public GameAppBuilder startPage(Supplier<? extends StartPage> startPageFactory) {
         if (startPageFactory == null) {
             error("Start page factory is null");
         }
@@ -117,8 +117,8 @@ public class GameUI_Builder {
         return this;
     }
 
-    public GameUI_Builder includeInteractiveTests(boolean include) {
-        includeInteractiveTests = include;
+    public GameAppBuilder interactiveTests(boolean include) {
+        interactiveTests = include;
         return this;
     }
 
@@ -143,7 +143,7 @@ public class GameUI_Builder {
             final AbstractGameModel game = config.gameModelFactory.get();
             gameBox.registerGame(gameVariant, game);
             ui.ui().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);
-            if (includeInteractiveTests) {
+            if (interactiveTests) {
                 final GameFlow gameFlow = game.flow();
                 gameFlow.addState(new LevelShortTestState());
                 gameFlow.addState(new LevelMediumTestState());

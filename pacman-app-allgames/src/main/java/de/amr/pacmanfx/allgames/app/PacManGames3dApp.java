@@ -35,7 +35,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GamesApp;
-import de.amr.pacmanfx.ui.GameUI_Builder;
+import de.amr.pacmanfx.ui.GameAppBuilder;
 import de.amr.pacmanfx.ui.config.UIConfigManager;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
@@ -114,8 +114,8 @@ public class PacManGames3dApp extends Application {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {
             if (useBuilder) {
-                app = GameUI_Builder
-                    .newUI(stage, sceneSize.x(), sceneSize.y(), gamesContainer)
+                app = GameAppBuilder
+                    .newApp(stage, sceneSize.x(), sceneSize.y(), gamesContainer)
 
                     .game(ARCADE_PACMAN,
                         () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism),
@@ -142,7 +142,7 @@ public class PacManGames3dApp extends Application {
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
 
-                    .includeInteractiveTests(includeTests)
+                    .interactiveTests(includeTests)
 
                     .build();
             }

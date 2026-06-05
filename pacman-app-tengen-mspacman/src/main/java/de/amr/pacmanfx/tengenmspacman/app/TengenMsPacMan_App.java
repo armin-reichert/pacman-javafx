@@ -13,7 +13,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_Das
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameUI_Builder;
+import de.amr.pacmanfx.ui.GameAppBuilder;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
@@ -36,8 +36,8 @@ public class TengenMsPacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        context = GameUI_Builder
-            .newUI(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer)
+        context = GameAppBuilder
+            .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer)
             .game(TENGEN_MS_PACMAN,
                 () -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow(gamesContainer)), TengenMsPacMan_UIConfig::new)
             .startPage(TengenMsPacMan_StartPage::new)

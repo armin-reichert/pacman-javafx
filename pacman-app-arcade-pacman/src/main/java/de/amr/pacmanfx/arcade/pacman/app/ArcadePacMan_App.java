@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GamesApp;
-import de.amr.pacmanfx.ui.GameUI_Builder;
+import de.amr.pacmanfx.ui.GameAppBuilder;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImpl;
@@ -62,7 +62,7 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
-            app = GameUI_Builder.newUI(primaryStage, size.x(), size.y(), gamesContainer)
+            app = GameAppBuilder.newApp(primaryStage, size.x(), size.y(), gamesContainer)
                 .game(
                     GameVariant.ARCADE_PACMAN,
                     () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism),
