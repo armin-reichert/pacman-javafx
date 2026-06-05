@@ -7,6 +7,8 @@ package de.amr.pacmanfx.tengenmspacman.flow;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameContinuedEvent;
 import de.amr.pacmanfx.event.GameStartedEvent;
+import de.amr.pacmanfx.flow.GameBootState;
+import de.amr.pacmanfx.flow.GameIntroState;
 import de.amr.pacmanfx.flow.GameLevelPlayingState;
 import de.amr.pacmanfx.flow.GameState;
 import de.amr.pacmanfx.model.GameModel;
@@ -26,25 +28,7 @@ public enum TengenMsPacMan_GameState {
     /**
      * Corresponds to the screen showing the "TENGEN PRESENTS" text and the red ghost running over the screen.
      */
-    BOOT (new GameState("BOOT") { 
-        
-        // "Das muss das Boot abkönnen!"
-        
-        @Override
-        public void onEnter(GameContext context) {
-            final GameModel game = context.gameModel();
-            lock();
-            game.init();
-        }
-
-        @Override
-        public void onUpdate(GameContext context) {
-            final GameModel game = context.gameModel();
-            if (timer().hasExpired()) {
-                game.flow().enterState(GAME_INTRO.state());
-            }
-        }
-    }),
+    BOOT (new GameBootState()),
 
     /**
      * Corresponds to the screen showing the "TENGEN PRESENTS MS. PAC-MAN" title,
@@ -55,20 +39,7 @@ public enum TengenMsPacMan_GameState {
      * level ends, the credits screens are shown and then again the "PRESS START" scene.
      * </p>
      */
-    GAME_INTRO(new GameState("GAME_INTRO") {
-        @Override
-        public void onEnter(GameContext context) {
-            lock();
-        }
-
-        @Override
-        public void onUpdate(GameContext context) {
-            final GameModel game = context.gameModel();
-            if (timer().hasExpired()) {
-                game.flow().enterState(GAME_OR_LEVEL_STARTING.state);
-            }
-        }
-    }),
+    GAME_INTRO(new GameIntroState()),
 
     /**
      * Corresponds to the "MS PAC-MAN OPTIONS" screen where difficulty, booster, map category

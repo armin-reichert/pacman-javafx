@@ -176,7 +176,7 @@ public abstract class AbstractGameModel implements GameModel {
     public void init() {
         mapSelector.loadMapPrototypes();
         lives.setInitialCount(3);
-        hud.all(false);
+        hud.hide();
         prepareNewGame();
     }
 

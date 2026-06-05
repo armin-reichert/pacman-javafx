@@ -7,6 +7,8 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameContinuedEvent;
 import de.amr.pacmanfx.event.GameStartedEvent;
+import de.amr.pacmanfx.flow.GameBootState;
+import de.amr.pacmanfx.flow.GameIntroState;
 import de.amr.pacmanfx.flow.GameLevelPlayingState;
 import de.amr.pacmanfx.flow.GameState;
 import de.amr.pacmanfx.model.GameModel;
@@ -24,46 +26,12 @@ public enum Arcade_GameState {
     /**
      * Corresponds to the screen showing all these random symbols from the Arcade video memory.
      */
-    BOOT (new GameState("BOOT") {
-
-        // "Das muss das Boot abkönnen! Jawohl, Herr Kaleu!"
-
-        @Override
-        public void onEnter(GameContext context) {
-            final GameModel game = context.gameModel();
-            lock(); // UI triggers timer expiration
-            game.init();
-            game.hud().hide();
-        }
-
-        @Override
-        public void onUpdate(GameContext context) {
-            if (timer().hasExpired()) {
-                context.gameFlow().enterState(GAME_INTRO.state());
-            }
-        }
-    }),
+    BOOT (new GameBootState()),
 
     /**
      * Corresponds to the intro screen with the Pac-Man and ghost animations.
      */
-    GAME_INTRO(new GameState("GAME_INTRO") {
-
-        @Override
-        public void onEnter(GameContext context) {
-            final GameModel game = context.gameModel();
-            lock();
-            game.hud().credit(true).livesCounter(false).levelCounter(true).score(true).show();
-        }
-
-        @Override
-        public void onUpdate(GameContext context) {
-            if (timer().hasExpired()) {
-                // Start demo level (attract mode)
-                context.gameFlow().enterState(GAME_OR_LEVEL_STARTING.state());
-            }
-        }
-    }),
+    GAME_INTRO(new GameIntroState()),
 
     /**
      * Corresponds to the start screen of the Arcade Pac-Man games.
