@@ -1,0 +1,24 @@
+package de.amr.pacmanfx.flow;
+
+import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.model.GameModel;
+
+public class GamePreparationState extends GameState {
+
+    public GamePreparationState() {
+        super(GameStateID.GAME_PREPARATION);
+    }
+
+    @Override
+    public void onEnter(GameContext context) {
+        final GameModel game = context.gameModel();
+        game.hud().credit(true).score(true).levelCounter(true).livesCounter(false).show();
+        game.prepareNewGame();
+    }
+
+    @Override
+    public void onUpdate(GameContext context) {
+        // Wait for user interaction (e.g. key press) to start playing
+    }
+
+}

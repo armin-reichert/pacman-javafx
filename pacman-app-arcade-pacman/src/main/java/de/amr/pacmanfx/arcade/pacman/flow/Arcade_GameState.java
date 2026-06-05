@@ -33,21 +33,7 @@ public enum Arcade_GameState {
     /**
      * Corresponds to the start screen of the Arcade Pac-Man games.
      */
-    GAME_PREPARATION(new GameState("GAME_PREPARATION") {
-
-        @Override
-        public void onEnter(GameContext context) {
-            final GameModel game = context.gameModel();
-            lock();
-            game.hud().credit(true).score(true).levelCounter(true).livesCounter(false).show();
-            game.prepareNewGame();
-        }
-
-        @Override
-        public void onUpdate(GameContext context) {
-            // Wait for user interaction (e.g. key press) to start playing
-        }
-    }),
+    GAME_PREPARATION(new GamePreparationState()),
 
     GAME_OR_LEVEL_STARTING(new GameState(GameStateID.GAME_OR_LEVEL_STARTING) {
 

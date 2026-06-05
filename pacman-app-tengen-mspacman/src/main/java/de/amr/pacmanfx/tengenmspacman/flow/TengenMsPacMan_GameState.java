@@ -42,18 +42,7 @@ public enum TengenMsPacMan_GameState {
      * Corresponds to the "MS PAC-MAN OPTIONS" screen where difficulty, booster, map category
      * and start level can be set.
      */
-    GAME_PREPARATION(new GameState(GameStateID.GAME_PREPARATION) {
-        @Override
-        public void onEnter(GameContext context) {
-            final GameModel game = context.gameModel();
-            game.prepareNewGame();
-        }
-
-        @Override
-        public void onUpdate(GameContext context) {
-            // wait for user interaction to leave state
-        }
-    }),
+    GAME_PREPARATION(new GamePreparationState()),
 
     /**
      * Corresponds to the screen showing the people that have contributed to the game. Here, a seconds
