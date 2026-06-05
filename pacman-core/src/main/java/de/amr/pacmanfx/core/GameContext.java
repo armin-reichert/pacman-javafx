@@ -10,8 +10,6 @@ import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import javafx.beans.property.StringProperty;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Provides access to the current game variant, its associated game model,
  * and shared game-box components such as the coin mechanism.
@@ -22,11 +20,6 @@ import static java.util.Objects.requireNonNull;
  */
 public interface GameContext {
 
-    /**
-     * The property holding the name (identifier) of the currently selected game variant.
-     *
-     * @return the observable property representing the selected game variant name
-     */
     StringProperty gameVariantNameProperty();
 
     /**
@@ -37,24 +30,14 @@ public interface GameContext {
      * @param variantName the name of the game variant to select (must not be {@code null})
      * @throws IllegalArgumentException if no game with the given name is registered
      */
-    default void select(String variantName) {
-        requireNonNull(variantName);
-        if (hasGameForVariantName(variantName)) {
-            gameVariantNameProperty().set(variantName);
-        }
-        else {
-            throw new IllegalArgumentException("Game with name '" + variantName + "' not found");
-        }
-    }
+    void selectGameVariant(String variantName);
 
     /**
      * Returns the name (identifier) of the currently selected game variant.
      *
      * @return the current game variant name
      */
-    default String gameVariantName() {
-        return gameVariantNameProperty().get();
-    }
+    String gameVariantName();
 
     /**
      * Checks whether a game variant with the given name is registered.

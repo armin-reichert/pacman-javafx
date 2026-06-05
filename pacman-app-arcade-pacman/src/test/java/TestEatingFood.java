@@ -33,7 +33,7 @@ public class TestEatingFood {
         gameBox.registerGame(variantName, new ArcadePacMan_GameModel(
             new Arcade_GameFlow(gameBox),
             CoinMechanism.OUT_OF_SERVICE));
-        gameBox.select(variantName);
+        gameBox.selectGameVariant(variantName);
     }
 
     @BeforeEach

@@ -45,11 +45,11 @@ public class GamesContainer implements GameContext {
     public static final File DEFAULT_CUSTOM_MAP_DIR = new File(DEFAULT_HOME_DIR, "maps");
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
+
     private final Map<String, GameModel> gamesByVariantName = new HashMap<>();
 
     private final File homeDir = DEFAULT_HOME_DIR;
     private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
-
 
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
 
@@ -105,9 +105,26 @@ public class GamesContainer implements GameContext {
 
     // GameContext implementation
 
+
     @Override
     public StringProperty gameVariantNameProperty() {
         return gameVariantName;
+    }
+
+    @Override
+    public void selectGameVariant(String variantName) {
+        requireNonNull(variantName);
+        if (hasGameForVariantName(variantName)) {
+            gameVariantName.set(variantName);
+        }
+        else {
+            throw new IllegalArgumentException("Game with name '" + variantName + "' not found");
+        }
+    }
+
+    @Override
+    public String gameVariantName() {
+        return gameVariantName.get();
     }
 
     @Override

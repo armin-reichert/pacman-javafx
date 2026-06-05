@@ -30,6 +30,6 @@ public class TengenMsPacMan_StartPage extends FlyerStartPage implements Resource
     public void onEnterStartPage(AppContext context) {
         flyer.selectPage(0);
         context.ui().sounds().playVoice(flyerTextSpeech);
-        context.currentGameContext().gameVariantNameProperty().set(GameVariant.TENGEN_MS_PACMAN.name());
+        context.currentGameContext().selectGameVariant(GameVariant.TENGEN_MS_PACMAN.name());
     }
 }
