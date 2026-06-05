@@ -137,6 +137,8 @@ public class PacManXXL_StartPage implements StartPage {
             if (hasFocus) {
                 menu.init(context);
                 menuBinding.update();
+                context.input().keyboard().removeStateListener(keyboardInputHandler);
+                context.input().keyboard().addStateListener(keyboardInputHandler);
             }
         });
 
