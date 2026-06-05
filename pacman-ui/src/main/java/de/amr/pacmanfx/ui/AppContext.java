@@ -9,7 +9,6 @@ import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -24,7 +23,7 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public interface AppContext extends GameContext, AppLifecycle {
+public interface AppContext extends AppLifecycle {
 
     Input input();
 
@@ -71,15 +70,7 @@ public interface AppContext extends GameContext, AppLifecycle {
         return currentGame().optGameLevel();
     }
 
-    @Override
-    default GameModel gameModel() {
-        return currentGame();
-    }
-
-    @Override
-    default GameFlow gameFlow() {
-        return currentGame().flow();
-    }
+    GameContext gameContext();
 
     default State<GameContext> currentGameState() {
         return currentGame().flow().state();

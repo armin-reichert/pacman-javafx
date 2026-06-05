@@ -8,7 +8,9 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Globals;
+import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
@@ -52,6 +54,51 @@ import static java.util.Objects.requireNonNull;
 
 public final class GamesApp implements AppContext {
 
+    class GameContextImpl implements GameContext {
+
+        private HuntingStepResult huntingStepResult;
+
+        @Override
+        public GameModel gameModel() {
+            return currentGame();
+        }
+
+        @Override
+        public GameFlow gameFlow() {
+            return gameModel().flow();
+        }
+
+        @Override
+        public CollisionStrategy collisionStrategy() {
+            return collisionStrategy;
+        }
+
+        @Override
+        public void setCollisionStrategy(CollisionStrategy strategy) {
+            collisionStrategy = requireNonNull(strategy);
+        }
+
+        @Override
+        public Boolean isCollisionDoubleChecked() {
+            return collisionDoubleChecked.get();
+        }
+
+        @Override
+        public void setCollisionDoubleChecked(boolean doubleChecked) {
+            collisionDoubleChecked.set(doubleChecked);
+        }
+
+        @Override
+        public void startNewHuntingStep() {
+            huntingStepResult = new HuntingStepResult();
+        }
+
+        @Override
+        public HuntingStepResult huntingResult() {
+            return huntingStepResult;
+        }
+    }
+
     // All games in a box (only 1,99 €!)
     private final GamesContainer gamesContainer;
 
@@ -73,7 +120,7 @@ public final class GamesApp implements AppContext {
 
     private CollisionStrategy collisionStrategy = CollisionStrategy.SAME_TILE;
 
-    private HuntingStepResult huntingResult;
+    private GameContext currentGameContext;
 
     public GamesApp(GamesContainer gamesContainer, GameViewImpl view, GameClock gameClock, CoinMechanism coinMechanism) {
         this.gamesContainer = requireNonNull(gamesContainer);
@@ -98,7 +145,8 @@ public final class GamesApp implements AppContext {
         createSubViews();
 
         gameVariantName.addListener((_, _, newVariantName) -> {
-            gameForVariant(newVariantName).flow().setContext(this);
+            currentGameContext = new GameContextImpl();
+            gameForVariant(newVariantName).flow().setContext(currentGameContext);
         });
     }
 
@@ -128,33 +176,9 @@ public final class GamesApp implements AppContext {
         return gamesContainer.gameForVariant(variantName);
     }
 
-    public CollisionStrategy collisionStrategy() {
-        return collisionStrategy;
-    }
-
-    public void setCollisionStrategy(CollisionStrategy strategy) {
-        this.collisionStrategy = requireNonNull(strategy);
-    }
-
-    public BooleanProperty collisionDoubleCheckedProperty() {
-        return collisionDoubleChecked;
-    }
-
-    public Boolean isCollisionDoubleChecked() {
-        return collisionDoubleCheckedProperty().get();
-    }
-
-    public void setCollisionDoubleChecked(boolean doubleChecked) {
-        collisionDoubleCheckedProperty().set(doubleChecked);
-    }
-
-    public void startNewHuntingStep() {
-        huntingResult = new HuntingStepResult();
-    }
-
     @Override
-    public HuntingStepResult huntingResult() {
-        return huntingResult;
+    public GameContext gameContext() {
+        return currentGameContext;
     }
 
     @Override
@@ -215,7 +239,7 @@ public final class GamesApp implements AppContext {
     @Override
     public void restartGame() {
         stopGame();
-        gameFlow().restartState(GameStateID.BOOT.name());
+        gameContext().gameFlow().restartState(GameStateID.BOOT.name());
         Platform.runLater(gameClock()::start);
     }
 
@@ -302,7 +326,7 @@ public final class GamesApp implements AppContext {
 
     private void initGameClock() {
         gameClock().setUpdateAction(() -> {
-            gameFlow().makeStep();
+            currentGameContext.gameFlow().makeStep();
             ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameClock().tickCount()));
         });
         gameClock().setPermanentAction(() -> ui.subViews().currentView().render());

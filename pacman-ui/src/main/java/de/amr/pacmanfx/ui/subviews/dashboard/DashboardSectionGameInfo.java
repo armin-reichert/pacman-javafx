@@ -71,7 +71,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
         addDynamicLabeledValue("-Running",        ifGameLevel(gameSupplier, level -> fmtHuntingTicksRunning(level.huntingTimer())));
         addDynamicLabeledValue("-Remaining",      ifGameLevel(gameSupplier, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
 
-        addDynamicLabeledValue("Collision mode",  () -> fmtCollisionMode(context.collisionStrategy()));
+        addDynamicLabeledValue("Collision mode",  () -> fmtCollisionMode(context.gameContext().collisionStrategy()));
         addDynamicLabeledValue("Pac-Man speed",   ifGameLevel(gameSupplier, this::fmtPacNormalSpeed));
         addDynamicLabeledValue("- empowered",     ifGameLevel(gameSupplier, this::fmtPacSpeedPowered));
         addDynamicLabeledValue("Power Duration",  ifGameLevel(gameSupplier, this::fmtPacPowerTime));

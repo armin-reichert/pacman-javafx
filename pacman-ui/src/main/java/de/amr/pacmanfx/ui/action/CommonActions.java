@@ -109,7 +109,7 @@ public final class CommonActions {
             final State<GameContext> gameState = context.currentGameState();
             boolean isLevelShortTest = gameState instanceof LevelShortTestState;
             if (isLevelShortTest) {
-                gameState.onExit(context); //TODO exit other states too?
+                gameState.onExit(context.gameContext()); //TODO exit other states too?
             }
             game.flow().restartState(GameStateID.GAME_INTRO.name());
             context.gameClock().start();
@@ -212,10 +212,10 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction("toggle_collision_strategy") {
         @Override
         protected void doAction(AppContext context) {
-            final CollisionStrategy strategy = context.collisionStrategy();
+            final CollisionStrategy strategy = context.gameContext().collisionStrategy();
             final CollisionStrategy newStrategy = strategy == CollisionStrategy.CENTER_DISTANCE
                 ? CollisionStrategy.SAME_TILE : CollisionStrategy.CENTER_DISTANCE;
-            context.setCollisionStrategy(newStrategy);
+            context.gameContext().setCollisionStrategy(newStrategy);
             if (newStrategy == CollisionStrategy.SAME_TILE) {
                 context.shortMessage("Using original Arcade collision strategy (same tile check)"); //TODO localize
             } else {
