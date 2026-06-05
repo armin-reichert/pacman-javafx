@@ -186,13 +186,13 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onUpdate(GameContext context) {
             final GameModel game = context.gameModel();
-            final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer().hasExpired()) {
+                final GameLevel level = game.optGameLevel().orElseThrow();
+                game.cheats().clear();
                 if (level.isDemoLevel()) {
                     context.gameFlow().enterState(TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
                 } else {
                     level.clearMessage();
-                    game.cheats().clear();
                     context.gameFlow().enterState(game.canContinueOnGameOver()
                         ? GameStateID.GAME_PREPARATION
                         : GameStateID.GAME_INTRO);
@@ -201,16 +201,19 @@ public enum TengenMsPacMan_GameState {
         }
     }),
 
-    GAME_LEVEL_INTERMISSION(new GameState("GAME_LEVEL_INTERMISSION") {
+    GAME_LEVEL_INTERMISSION(new GameState(GameStateID.GAME_LEVEL_INTERMISSION) {
+
         @Override
         public void onEnter(GameContext context) {
             final GameModel game = context.gameModel();
             lock();
+
+            final GameLevel level = game.optGameLevel().orElseThrow();
+
             final var tengenHUD = (TengenMsPacMan_HeadsUpDisplay) game.hud();
             final TengenMsPacMan_GameModel tengenGame = tengenGame(game);
-            final GameLevel level = game.optGameLevel().orElseThrow();
-            final boolean lastCutSceneReached =  level.cutSceneNumber() == tengenGame.rules().lastCutSceneNumber();
-            if (tengenGame.mapCategory() == MapCategory.ARCADE || lastCutSceneReached) {
+            final boolean isLastCutScene = level.cutSceneNumber() == tengenGame.rules().lastCutSceneNumber();
+            if (tengenGame.mapCategory() == MapCategory.ARCADE || isLastCutScene) {
                 tengenHUD.hide();
             } else {
                 tengenHUD.show();
@@ -264,5 +267,4 @@ public enum TengenMsPacMan_GameState {
         public static final short TICK_RESUME_HUNTING = 240;
         public static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
     }
-
 }

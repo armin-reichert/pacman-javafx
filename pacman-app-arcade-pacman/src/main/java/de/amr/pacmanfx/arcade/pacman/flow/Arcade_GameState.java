@@ -193,8 +193,9 @@ public enum Arcade_GameState {
         public void onUpdate(GameContext context) {
             final GameModel game = context.gameModel();
             if (timer().hasExpired()) {
-                context.gameFlow().enterState(
-                    game.isPlaying() ? GameStateID.GAME_LEVEL_TRANSITION : GameStateID.GAME_INTRO
+                context.gameFlow().enterState(game.isPlaying()
+                    ? GameStateID.GAME_LEVEL_TRANSITION
+                    : GameStateID.GAME_INTRO
                 );
             }
         }
