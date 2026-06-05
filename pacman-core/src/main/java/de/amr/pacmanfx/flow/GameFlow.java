@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public interface GameFlow {
@@ -23,7 +24,8 @@ public interface GameFlow {
 
     void enterState(State<GameContext> gameState);
 
-    default void enterState(GameStateID id) {
+    default void enterState(GameStateIdentifier id) {
+        Objects.requireNonNull(id);
         enterState(id.name());
     }
 

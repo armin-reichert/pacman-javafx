@@ -7,10 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameContinuedEvent;
 import de.amr.pacmanfx.event.GameStartedEvent;
-import de.amr.pacmanfx.flow.GameBootState;
-import de.amr.pacmanfx.flow.GameIntroState;
-import de.amr.pacmanfx.flow.GameLevelPlayingState;
-import de.amr.pacmanfx.flow.GameState;
+import de.amr.pacmanfx.flow.*;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -52,7 +49,7 @@ public enum Arcade_GameState {
         }
     }),
 
-    GAME_OR_LEVEL_STARTING(new GameState("GAME_OR_LEVEL_STARTING") {
+    GAME_OR_LEVEL_STARTING(new GameState(GameStateID.GAME_OR_LEVEL_STARTING) {
 
         @Override
         public void onEnter(GameContext context) {
@@ -65,10 +62,10 @@ public enum Arcade_GameState {
             final GameModel game = context.gameModel();
             final long tick = timer().tickCount();
             if (game.isPlaying()) {
-                context.gameFlow().enterState(GAME_LEVEL_CONTINUE.state());
+                context.gameFlow().enterState(GameStateID.GAME_LEVEL_CONTINUE);
             }
             else if (game.canStartNewGame()) {
-                context.gameFlow().enterState(GAME_STARTING.state());
+                context.gameFlow().enterState(GameStateID.GAME_STARTING);
             }
             else {
                 game.startDemoLevel(tick);
@@ -78,7 +75,7 @@ public enum Arcade_GameState {
     }),
 
 
-    GAME_STARTING( new GameState("GAME_STARTING") {
+    GAME_STARTING( new GameState(GameStateID.GAME_STARTING) {
 
         @Override
         public void onEnter(GameContext context) {
@@ -103,12 +100,12 @@ public enum Arcade_GameState {
             }
             else if (tick == Timing.TICK_NEW_GAME_START_HUNTING) {
                 game.setPlaying(true);
-                context.gameFlow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
+                context.gameFlow().enterState(GameStateID.GAME_LEVEL_PLAYING);
             }
         }
     }),
 
-    GAME_LEVEL_CONTINUE(new GameState("GAME_LEVEL_CONTINUE") {
+    GAME_LEVEL_CONTINUE(new GameState(GameStateID.GAME_LEVEL_CONTINUE) {
 
         @Override
         public void onEnter(GameContext context) {
@@ -128,14 +125,14 @@ public enum Arcade_GameState {
                 context.gameFlow().publishGameEvent(new GameContinuedEvent(context));
             }
             else if (tick == Arcade_GameState.Timing.TICK_RESUME_HUNTING) {
-                context.gameFlow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
+                context.gameFlow().enterState(GameStateID.GAME_LEVEL_PLAYING);
             }
         }
     }),
 
     GAME_LEVEL_PLAYING(new GameLevelPlayingState()),
 
-    GAME_LEVEL_COMPLETE (new GameState("GAME_LEVEL_COMPLETE") {
+    GAME_LEVEL_COMPLETE (new GameState(GameStateID.GAME_LEVEL_COMPLETE) {
 
         @Override
         public void onEnter(GameContext context) {
@@ -151,19 +148,19 @@ public enum Arcade_GameState {
             if (timer().hasExpired()) {
                 if (level.isDemoLevel()) {
                     // just in case: if demo level was completed, go back to intro scene
-                    context.gameFlow().enterState(GAME_INTRO.state());
+                    context.gameFlow().enterState(GameStateID.GAME_INTRO);
                 }
                 else if (context.gameFlow().cutScenesEnabled() && level.cutSceneNumber() != 0) {
-                    context.gameFlow().enterState(GAME_LEVEL_INTERMISSION.state());
+                    context.gameFlow().enterState(GameStateID.GAME_LEVEL_INTERMISSION);
                 }
                 else {
-                    context.gameFlow().enterState(GAME_LEVEL_TRANSITION.state());
+                    context.gameFlow().enterState(GameStateID.GAME_LEVEL_TRANSITION);
                 }
             }
         }
     }),
 
-    GAME_LEVEL_TRANSITION(new GameState("GAME_LEVEL_TRANSITION") {
+    GAME_LEVEL_TRANSITION(new GameState(GameStateID.GAME_LEVEL_TRANSITION) {
 
         @Override
         public void onEnter(GameContext context) {
@@ -175,7 +172,7 @@ public enum Arcade_GameState {
         @Override
         public void onUpdate(GameContext context) {
             if (timer().hasExpired()) {
-                context.gameFlow().enterState(GAME_OR_LEVEL_STARTING.state());
+                context.gameFlow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
             }
         }
     }),
@@ -206,7 +203,7 @@ public enum Arcade_GameState {
         }
     }),
 
-    GAME_LEVEL_PACMAN_DYING(new GameState("GAME_LEVEL_PACMAN_DYING") {
+    GAME_LEVEL_PACMAN_DYING(new GameState(GameStateID.GAME_LEVEL_PACMAN_DYING) {
 
         @Override
         public void onEnter(GameContext context) {
@@ -219,10 +216,12 @@ public enum Arcade_GameState {
             final GameLevel level = game.optGameLevel().orElseThrow();
             if (timer().hasExpired()) {
                 if (level.isDemoLevel()) {
-                    context.gameFlow().enterState(GAME_OVER.state());
+                    context.gameFlow().enterState(GameStateID.GAME_OVER);
                 } else {
                     game.lives().add(-1);
-                    context.gameFlow().enterState(game.lives().count() == 0 ? GAME_OVER.state() : GAME_OR_LEVEL_STARTING.state());
+                    context.gameFlow().enterState(game.lives().count() == 0
+                        ? GameStateID.GAME_OVER
+                        : GameStateID.GAME_OR_LEVEL_STARTING);
                 }
             } else {
                 game.doPacManDying(level, level.entities().pac(), timer().tickCount());
@@ -230,7 +229,7 @@ public enum Arcade_GameState {
         }
     }),
 
-    GAME_OVER (new GameState("GAME_OVER") {
+    GAME_OVER (new GameState(GameStateID.GAME_OVER) {
 
         @Override
         public void onEnter(GameContext context) {
@@ -248,15 +247,15 @@ public enum Arcade_GameState {
                 level.clearMessage();
                 game.cheats().clear();
                 if (game.canStartNewGame()) {
-                    context.gameFlow().enterState(GAME_PREPARATION.state());
+                    context.gameFlow().enterState(GameStateID.GAME_PREPARATION);
                 } else {
-                    context.gameFlow().enterState(GAME_INTRO.state());
+                    context.gameFlow().enterState(GameStateID.GAME_INTRO);
                 }
             }
         }
     }),
 
-    GAME_LEVEL_INTERMISSION(new GameState("GAME_LEVEL_INTERMISSION") {
+    GAME_LEVEL_INTERMISSION(new GameState(GameStateID.GAME_LEVEL_INTERMISSION) {
 
         @Override
         public void onEnter(GameContext context) {
@@ -269,7 +268,9 @@ public enum Arcade_GameState {
         public void onUpdate(GameContext context) {
             final GameModel game = context.gameModel();
             if (timer().hasExpired()) {
-                context.gameFlow().enterState(game.isPlaying() ? GAME_LEVEL_TRANSITION.state() : GAME_INTRO.state());
+                context.gameFlow().enterState(
+                    game.isPlaying() ? GameStateID.GAME_LEVEL_TRANSITION : GameStateID.GAME_INTRO
+                );
             }
         }
 
