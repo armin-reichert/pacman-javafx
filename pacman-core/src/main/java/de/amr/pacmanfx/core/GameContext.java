@@ -10,9 +10,9 @@ import de.amr.pacmanfx.simulation.HuntingStepResult;
 
 public interface GameContext {
 
-    GameModel gameModel();
+    GameModel game();
 
-    GameFlow gameFlow();
+    GameFlow flow();
 
     void setCollisionStrategy(CollisionStrategy collisionStrategy);
 

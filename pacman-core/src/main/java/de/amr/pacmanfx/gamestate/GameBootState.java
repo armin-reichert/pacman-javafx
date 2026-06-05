@@ -17,14 +17,14 @@ public class GameBootState extends GameState {
 
     @Override
     public void onEnter(GameContext context) {
-        final GameModel game = context.gameModel();
+        final GameModel game = context.game();
         lock();
         game.init();
     }
 
     @Override
     public void onUpdate(GameContext context) {
-        final GameModel game = context.gameModel();
+        final GameModel game = context.game();
         if (timer().hasExpired()) {
             game.flow().enterState(GameStateID.GAME_INTRO);
         }

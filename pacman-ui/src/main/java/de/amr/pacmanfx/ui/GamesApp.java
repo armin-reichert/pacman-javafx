@@ -59,13 +59,13 @@ public final class GamesApp implements AppContext {
         private HuntingStepResult huntingStepResult;
 
         @Override
-        public GameModel gameModel() {
+        public GameModel game() {
             return currentGame();
         }
 
         @Override
-        public GameFlow gameFlow() {
-            return gameModel().flow();
+        public GameFlow flow() {
+            return game().flow();
         }
 
         @Override
@@ -239,7 +239,7 @@ public final class GamesApp implements AppContext {
     @Override
     public void restartGame() {
         stopGame();
-        gameContext().gameFlow().restartState(GameStateID.BOOT.name());
+        gameContext().flow().restartState(GameStateID.BOOT.name());
         Platform.runLater(gameClock()::start);
     }
 
@@ -326,7 +326,7 @@ public final class GamesApp implements AppContext {
 
     private void initGameClock() {
         gameClock().setUpdateAction(() -> {
-            currentGameContext.gameFlow().makeStep();
+            currentGameContext.flow().makeStep();
             ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameClock().tickCount()));
         });
         gameClock().setPermanentAction(() -> ui.subViews().currentView().render());

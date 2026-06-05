@@ -26,7 +26,7 @@ public class LevelShortTestState extends TestState {
 
     @Override
     public void onEnter(GameContext context) {
-        final GameModel game = context.gameModel();
+        final GameModel game = context.game();
         //coinMechanism.setNumCoins(1);
         lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.rules().lastLevelNumber();
         lock();
@@ -40,7 +40,7 @@ public class LevelShortTestState extends TestState {
 
     @Override
     public void onUpdate(GameContext context) {
-        final GameModel game = context.gameModel();
+        final GameModel game = context.game();
         final GameLevel level = game.optGameLevel().orElseThrow();
         final float START = 1.0f;
         if (timer.atSecond(START)) {
@@ -99,7 +99,7 @@ public class LevelShortTestState extends TestState {
 
     @Override
     public void onExit(GameContext context) {
-        final GameModel game = context.gameModel();
+        final GameModel game = context.game();
         //coinMechanism.setNumCoins(0);
         game.init();
         game.levelCounter().clear();

@@ -25,7 +25,7 @@ public class CutScenesTestState extends TestState {
 
     @Override
     public void onUpdate(GameContext context) {
-        final GameModel game = context.gameModel();
+        final GameModel game = context.game();
         if (timer.hasExpired()) {
             if (testedCutSceneNumber < game.rules().lastCutSceneNumber()) {
                 testedCutSceneNumber += 1;

@@ -20,13 +20,13 @@ public final class HuntingResolver {
 
     public static void evaluate(GameContext context) {
         final HuntingStepResult result = context.huntingResult();
-        final GameModel game = context.gameModel();
+        final GameModel game = context.game();
         final GameLevel level = game.optGameLevel().orElseThrow();
         final Pac pac = level.entities().pac();
 
         evalFoodFound(result, game, level, pac);
         if (context.huntingResult().foodFound()) {
-            context.gameFlow().publishGameEvent(
+            context.flow().publishGameEvent(
                 new PacEatsFoodEvent(context, pac, context.huntingResult().energizerFound(), false));
         }
 
