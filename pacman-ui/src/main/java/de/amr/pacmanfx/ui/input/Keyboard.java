@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.input;
 
+import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
@@ -52,6 +53,13 @@ public final class Keyboard {
 
     Keyboard() {}
 
+    public void filterEventsForScene(Scene scene) {
+        scene.removeEventFilter(KeyEvent.KEY_PRESSED,  this::onKeyPressed);
+        scene.removeEventFilter(KeyEvent.KEY_RELEASED, this::onKeyPressed);
+        scene.addEventFilter(KeyEvent.KEY_PRESSED,  this::onKeyPressed);
+        scene.addEventFilter(KeyEvent.KEY_RELEASED, this::onKeyReleased);
+    }
+
     public void addStateListener(StateListener stateListener) {
         requireNonNull(stateListener);
         listeners.add(stateListener);
@@ -84,7 +92,7 @@ public final class Keyboard {
         return metaDown;
     }
 
-    public void onKeyPressed(KeyEvent event) {
+    private void onKeyPressed(KeyEvent event) {
         boolean changed = updateModifierState(event);
         if (!event.getCode().isModifierKey()) {
             changed = pressedKeys.add(event.getCode());
@@ -94,13 +102,9 @@ public final class Keyboard {
         }
     }
 
-    public void onKeyReleased(KeyEvent event) {
-        boolean changed = updateModifierState(event);
+    private void onKeyReleased(KeyEvent event) {
         if (!event.getCode().isModifierKey()) {
-            changed = pressedKeys.remove(event.getCode());
-        }
-        if (changed) {
-            listeners.forEach(listener -> listener.onKeyboardStateChange(this));
+            pressedKeys.remove(event.getCode());
         }
     }
 

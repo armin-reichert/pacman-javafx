@@ -89,7 +89,7 @@ public class StartPagesView extends Carousel implements SubView {
         restartProgressTimer();
         currentStartPage().ifPresent(page -> {
             page.rootPane().requestFocus();
-            Logger.info("Request focus for {}", page.rootPane());
+            Logger.info("Request focus for root pane of start page {}", page);
         });
     }
 

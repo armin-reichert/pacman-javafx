@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import org.tinylog.Logger;
 
@@ -34,14 +33,8 @@ public class GameViewMainScene extends Scene {
         getStylesheets().add(AppConstants.STYLE_SHEET_PATH);
         
         final Keyboard keyboard = context.input().keyboard();
-
-        addEventFilter(KeyEvent.KEY_PRESSED,  keyboard::onKeyPressed);
-        addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
-
-        // If a global action can be executed, do it; otherwise let the current view handle it.
-        keyboard.addStateListener(_ -> actionBindings.actionMatchingKeyboardState(keyboard).ifPresentOrElse(
-            action -> action.executeIfEnabled(context),
-            () -> context.ui().subViews().currentView().onInput(context, context.input())));
+        keyboard.filterEventsForScene(this);
+        keyboard.addStateListener(kb -> handleKeyboardStateChange(context, kb));
 
         // Delegate mouse scroll events to scene
         setOnScroll(e -> context.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
@@ -52,7 +45,14 @@ public class GameViewMainScene extends Scene {
         actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, AppConstants.COMMON_BINDINGS);
         actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_MUTED,            AppConstants.COMMON_BINDINGS);
 
-        Logger.info("\n" + actionBindings);
+        Logger.info(actionBindings);
+    }
+
+    private void handleKeyboardStateChange(AppContext context, Keyboard keyboard) {
+        // Check for "global" action first. otherwise let current sub views handle the keyboard state change
+        actionBindings.actionMatchingKeyboardState(keyboard).ifPresentOrElse(
+            action -> action.executeIfEnabled(context),
+            () -> context.ui().subViews().currentView().onInput(context, context.input()));
     }
 
     public StackPane rootPane() {

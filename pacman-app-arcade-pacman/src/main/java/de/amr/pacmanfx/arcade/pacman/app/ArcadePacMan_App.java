@@ -48,7 +48,7 @@ public class ArcadePacMan_App extends Application {
     );
 
     private GameBox gameBox;
-    private AppContext context;
+    private AppContext appContext;
     private boolean useBuilder;
 
     @Override
@@ -61,7 +61,7 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
-            context = GameUI_Builder.newUI(primaryStage, size.x(), size.y(), gameBox)
+            appContext = GameUI_Builder.newUI(primaryStage, size.x(), size.y(), gameBox)
                 .game(
                     GameVariant.ARCADE_PACMAN,
                     () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gameBox), gameBox.coinMechanism()),
@@ -72,13 +72,13 @@ public class ArcadePacMan_App extends Application {
         else {
             createUI(primaryStage, gameBox, size);
         }
-        context.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, context.ui().translations());
-        context.displayOnScreen();
+        appContext.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, appContext.ui().translations());
+        appContext.displayOnScreen();
     }
 
     @Override
     public void stop() {
-        context.terminate();
+        appContext.terminate();
     }
 
     // Private area
@@ -88,27 +88,23 @@ public class ArcadePacMan_App extends Application {
 
         gameBox.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
-        context = new AppContextImpl(gameBox,
-            createViewImplementation(stage, sceneSize.x(), sceneSize.y())
-        );
-        context.ui().configurations().addConfigFactory(
-            GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
+        appContext = new AppContextImpl(gameBox, createView(stage, sceneSize.x(), sceneSize.y()));
+        appContext.ui().configurations().addConfigFactory(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
-        final StartPagesView startView = context.ui().subViews().startView();
+        final StartPagesView startView = appContext.ui().subViews().startView();
 
         final var arcadePacManStartPage = new ArcadePacMan_StartPage();
-        arcadePacManStartPage.init(context);
+        arcadePacManStartPage.init(appContext);
 
         startView.addStartPage(arcadePacManStartPage);
         startView.setSelectedIndex(0);
     }
 
-    private GameViewImpl createViewImplementation(Stage stage, int width, int height) {
+    private GameViewImpl createView(Stage stage, int width, int height) {
         return new GameViewImpl(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
             new StatusIconBox(() -> AppConstants.LOCALIZED_TEXTS)
         );
     }
-
 }
