@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.d3.entities;
 
 import de.amr.pacmanfx.flow.GameFlow;
-import de.amr.pacmanfx.flow.GameStateID;
+import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntity;
 import de.amr.pacmanfx.ui.config.WorldConfig;

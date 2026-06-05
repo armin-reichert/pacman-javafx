@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.PacEatsFoodEvent;
-import de.amr.pacmanfx.flow.GameStateID;
+import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;

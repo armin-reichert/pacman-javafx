@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.flow;
+package de.amr.pacmanfx.gamestate;
 
 public interface GameStateIdentifier {
 

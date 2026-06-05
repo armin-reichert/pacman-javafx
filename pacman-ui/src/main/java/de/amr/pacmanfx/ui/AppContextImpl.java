@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameBox;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Globals;
-import de.amr.pacmanfx.flow.GameStateID;
+import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;

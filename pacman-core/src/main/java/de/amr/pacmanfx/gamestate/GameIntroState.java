@@ -2,22 +2,26 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.flow;
+package de.amr.pacmanfx.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.model.GameModel;
 
-public class GameLevelTransitionState extends GameState{
+public class GameIntroState extends GameState {
 
-    public GameLevelTransitionState() {
-        super(GameStateID.GAME_LEVEL_TRANSITION);
+    public GameIntroState() {
+        super(GameStateID.GAME_INTRO);
     }
 
     @Override
     public void onEnter(GameContext context) {
-        final GameModel game = context.gameModel();
-        timer().restartSeconds(2);
-        game.startNextLevel();
+        context.gameModel().hud()
+            .levelCounter(true)
+            .livesCounter(false)
+            .credit(true)
+            .score(true)
+            .show();
+
+        lock();
     }
 
     @Override

@@ -19,7 +19,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static de.amr.pacmanfx.flow.GameStateID.GAME_LEVEL_PLAYING;
+import static de.amr.pacmanfx.gamestate.GameStateID.GAME_LEVEL_PLAYING;
 import static java.util.Objects.requireNonNull;
 
 /**

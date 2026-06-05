@@ -5,7 +5,7 @@ package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GenericChangeEvent;
-import de.amr.pacmanfx.flow.GameStateID;
+import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 
 public class CutScenesTestState extends TestState {

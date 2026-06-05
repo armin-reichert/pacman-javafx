@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.flow;
+package de.amr.pacmanfx.gamestate;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
