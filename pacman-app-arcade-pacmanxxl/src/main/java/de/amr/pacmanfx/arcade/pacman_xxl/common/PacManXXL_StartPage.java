@@ -185,6 +185,6 @@ public class PacManXXL_StartPage implements StartPage {
     private void startSelectedGame(AppContext context) {
         context.ui().sounds().stopAndDisposeVoice();
         context.ui().subViews().startView().pauseProgressTimer();
-        menu.startSelectedGame();
+        menu.startGame();
     }
 }
