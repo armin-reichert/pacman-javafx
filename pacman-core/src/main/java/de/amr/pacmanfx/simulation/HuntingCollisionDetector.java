@@ -17,7 +17,6 @@ public final class HuntingCollisionDetector {
 
     private HuntingCollisionDetector() {}
 
-
     public static void detectCollisions(GameContext context) {
         final HuntingStepResult result = context.huntingResult();
         final GameModel game = context.gameModel();
@@ -33,12 +32,14 @@ public final class HuntingCollisionDetector {
     }
 
     private static void detectPacGhostCollisions(HuntingStepResult result, CollisionStrategy strategy, Pac pac, List<Ghost> ghosts) {
+        result.ghostsCollidingWithPac().clear();
         ghosts.stream()
             .filter(ghost -> strategy.collide(pac, ghost))
             .forEach(result.ghostsCollidingWithPac()::add);
     }
 
     private static void detectEdibleBonus(HuntingStepResult result, CollisionStrategy strategy, Pac pac, Bonus bonus) {
+        result.setEdibleBonus(null);
         if (bonus != null && bonus.state() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
             result.setEdibleBonus(bonus);
         }

@@ -34,6 +34,7 @@ public class GameLevelPlayingState extends GameState {
         final GameLevel level = game.optGameLevel().orElseThrow();
         final Pac pac = level.entities().pac();
         final GateKeeper gateKeeper = game.gateKeeper();
+        final boolean doubleChecked = game.isCollisionDoubleChecked();
 
         // Update
         game.cheats().update(level);
@@ -42,11 +43,13 @@ public class GameLevelPlayingState extends GameState {
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
-        level.entities().forEach(entity -> entity.update(level));
         game.updatePacPowerMode(level, pac);
 
-        // Collision detection
         context.startNewHuntingStep();
+        if (doubleChecked) {
+            HuntingCollisionDetector.detectCollisions(context);
+        }
+        level.entities().forEach(entity -> entity.update(level));
         HuntingCollisionDetector.detectCollisions(context);
 
         // Resolving
