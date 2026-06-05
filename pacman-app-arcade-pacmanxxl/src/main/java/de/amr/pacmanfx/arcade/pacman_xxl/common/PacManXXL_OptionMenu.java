@@ -137,10 +137,10 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     public void logMenuState() {
-        Logger.info("Menu State: (game variant={}, scene={}, cut scenes={}, map order={})",
+        Logger.info("Option Menu: ({}, {}, {}, {})",
             entryGameVariant.value(),
             entryPlay3D.value() ? "3D" : "2D",
-            entryCutScenesEnabled.value() ? "ON" : "OFF",
+            "Cut Scenes " + (entryCutScenesEnabled.value() ? "ON" : "OFF"),
             entryMapOrder.value());
     }
 
