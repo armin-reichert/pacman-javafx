@@ -4,16 +4,8 @@
 
 package de.amr.pacmanfx.ui.app;
 
-import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.CollisionStrategy;
-import de.amr.pacmanfx.simulation.HuntingStepResult;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -26,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Container for the playable games. Each game variant is represented by an instance of its game model (see {@link GameModel}).
  */
-public class GamesContainer implements GameContext {
+public class GamesContainer {
 
     /**
      * Game variant names must match this pattern (e.g. "MS_PACMAN_2024").
@@ -44,18 +36,13 @@ public class GamesContainer implements GameContext {
      */
     public static final File DEFAULT_CUSTOM_MAP_DIR = new File(DEFAULT_HOME_DIR, "maps");
 
-    private final StringProperty gameVariantName = new SimpleStringProperty();
 
     private final Map<String, GameModel> gamesByVariantName = new HashMap<>();
 
     private final File homeDir = DEFAULT_HOME_DIR;
+
     private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
 
-    private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
-
-    private CollisionStrategy collisionStrategy = CollisionStrategy.SAME_TILE;
-
-    private HuntingStepResult huntingResult;
 
     public GamesContainer() {
         final boolean ok = validateUserDirs();
@@ -103,31 +90,7 @@ public class GamesContainer implements GameContext {
             game.getClass().getSimpleName(), variantName, highScoreFile);
     }
 
-    // GameContext implementation
 
-
-    @Override
-    public StringProperty gameVariantNameProperty() {
-        return gameVariantName;
-    }
-
-    @Override
-    public void selectGameVariant(String variantName) {
-        requireNonNull(variantName);
-        if (hasGameForVariantName(variantName)) {
-            gameVariantName.set(variantName);
-        }
-        else {
-            throw new IllegalArgumentException("Game with name '" + variantName + "' not found");
-        }
-    }
-
-    @Override
-    public String gameVariantName() {
-        return gameVariantName.get();
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public <T extends GameModel> T gameForVariant(String variantName) {
         requireNonNull(variantName);
@@ -139,51 +102,11 @@ public class GamesContainer implements GameContext {
         throw new IllegalArgumentException(errorMessage);
     }
 
-    @Override
-    public <G extends AbstractGameModel> G gameModel() {
-        final String variantName = gameVariantName();
-        return variantName == null ? null : gameForVariant(variantName);
-    }
-
-    @Override
     public boolean hasGameForVariantName(String variantName) {
         requireNonNull(variantName);
         return gamesByVariantName.containsKey(variantName);
     }
 
-    @Override
-    public CollisionStrategy collisionStrategy() {
-        return collisionStrategy;
-    }
-
-    @Override
-    public void setCollisionStrategy(CollisionStrategy strategy) {
-        this.collisionStrategy = requireNonNull(strategy);
-    }
-
-    public BooleanProperty collisionDoubleCheckedProperty() {
-        return collisionDoubleChecked;
-    }
-
-    @Override
-    public Boolean isCollisionDoubleChecked() {
-        return collisionDoubleCheckedProperty().get();
-    }
-
-    @Override
-    public void setCollisionDoubleChecked(boolean doubleChecked) {
-        collisionDoubleCheckedProperty().set(doubleChecked);
-    }
-
-    @Override
-    public HuntingStepResult huntingResult() {
-        return huntingResult;
-    }
-
-    @Override
-    public void startNewHuntingStep() {
-        huntingResult = new HuntingStepResult();
-    }
 
     // other stuff
 

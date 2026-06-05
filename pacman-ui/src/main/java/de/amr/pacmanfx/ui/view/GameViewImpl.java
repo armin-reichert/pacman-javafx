@@ -40,7 +40,7 @@ public class GameViewImpl implements GameView {
         stageTitleBinding = createStringBinding(
             () -> computeStageTitle(context),
             context.gameClock().updatesDisabledProperty(),
-            context.currentGameContext().gameVariantNameProperty(),
+            context.gameVariantNameProperty(),
             context.ui().subViews().selectedSubViewProperty(),
             context.ui().gameScenes().gameSceneProperty(),
             AppConstants.PROPERTY_DEBUG_INFO_VISIBLE,
@@ -106,7 +106,7 @@ public class GameViewImpl implements GameView {
     }
 
     private String appTitle(AppContext context, boolean paused, boolean is3D) {
-        final String gameVariantName = context.currentGameVariant();
+        final String gameVariantName = context.currentGameVariantName();
         if (gameVariantName == null) {
             return "";
         }

@@ -115,26 +115,26 @@ public class PacManGames3dApp extends Application {
         try {
             if (useBuilder) {
                 app = GameAppBuilder
-                    .newApp(stage, sceneSize.x(), sceneSize.y(), gamesContainer)
+                    .newApp(stage, sceneSize.x(), sceneSize.y(), gamesContainer, coinMechanism)
 
                     .game(ARCADE_PACMAN,
-                        () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism),
+                        () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(), coinMechanism),
                         ArcadePacMan_UIConfig::new)
 
                     .game(ARCADE_MS_PACMAN,
-                        () -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism),
+                        () -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(), coinMechanism),
                         ArcadeMsPacMan_UIConfig::new)
 
                     .game(TENGEN_MS_PACMAN,
-                        () -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow(gamesContainer)),
+                        () -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow()),
                         TengenMsPacMan_UIConfig::new)
 
                     .game(ARCADE_PACMAN_XXL,
-                        () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism, xxlMapSelector),
+                        () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(), coinMechanism, xxlMapSelector),
                         PacManXXL_PacMan_UIConfig::new)
 
                     .game(ARCADE_MS_PACMAN_XXL,
-                        () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism, xxlMapSelector),
+                        () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(), coinMechanism, xxlMapSelector),
                         PacManXXL_MsPacMan_UIConfig::new)
 
                     .startPage(ArcadePacMan_StartPage::new)
@@ -147,11 +147,12 @@ public class PacManGames3dApp extends Application {
                     .build();
             }
             else {
-                registerGames();
                 app = new GamesApp(
                     gamesContainer,
                     createView(stage, sceneSize.x(), sceneSize.y()),
-                    new GameClockFX());
+                    new GameClockFX(),
+                    coinMechanism);
+                registerGames();
                 addConfigFactories();
                 addStartPages();
             }
@@ -188,11 +189,11 @@ public class PacManGames3dApp extends Application {
     private void registerGames() {
         for (GameVariant variant : GameVariant.values()) {
             final AbstractGameModel game = switch (variant) {
-                case ARCADE_PACMAN        -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism);
-                case ARCADE_MS_PACMAN     -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism);
-                case TENGEN_MS_PACMAN     -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow(gamesContainer));
-                case ARCADE_PACMAN_XXL    -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism, xxlMapSelector);
-                case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism, xxlMapSelector);
+                case ARCADE_PACMAN        -> new ArcadePacMan_GameModel(new Arcade_GameFlow(), coinMechanism);
+                case ARCADE_MS_PACMAN     -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(), coinMechanism);
+                case TENGEN_MS_PACMAN     -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow());
+                case ARCADE_PACMAN_XXL    -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(), coinMechanism, xxlMapSelector);
+                case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(), coinMechanism, xxlMapSelector);
             };
             if (includeTests) {
                 addTestStates(game.flow());

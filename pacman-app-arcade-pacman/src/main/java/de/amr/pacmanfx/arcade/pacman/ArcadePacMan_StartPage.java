@@ -32,6 +32,6 @@ public class ArcadePacMan_StartPage extends FlyerStartPage implements ResourceMa
     public void onEnterStartPage(AppContext context) {
         flyer.selectPage(0);
         context.ui().sounds().playVoice(flyerTextSpeech);
-        context.currentGameContext().selectGameVariant(GameVariant.ARCADE_PACMAN.name());
+        context.selectGameVariant(GameVariant.ARCADE_PACMAN.name());
     }
 }

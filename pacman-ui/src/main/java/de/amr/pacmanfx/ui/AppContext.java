@@ -11,51 +11,82 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
+import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
 
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public interface AppContext extends AppLifecycle {
+public interface AppContext extends GameContext, AppLifecycle {
 
     Input input();
 
     GameUI ui();
 
-    GameContext currentGameContext();
-
     GameClock gameClock();
 
     CoinMechanism coinMechanism();
 
-    default String currentGameVariant() {
-        return currentGameContext().gameVariantName();
-    }
+    StringProperty gameVariantNameProperty();
+
+    /**
+     * Selects the game variant with the given name.
+     * <p>
+     * If no game with the specified name exists, an {@link IllegalArgumentException} is thrown.
+     *
+     * @param variantName the name of the game variant to select (must not be {@code null})
+     * @throws IllegalArgumentException if no game with the given name is registered
+     */
+    void selectGameVariant(String variantName);
+
+    /**
+     * Returns the name (identifier) of the currently selected game variant.
+     *
+     * @return the current game variant name
+     */
+    String currentGameVariantName();
+
+    /**
+     * Returns the game model associated with the specified variant name.
+     *
+     * @param variantName the name of the game variant
+     * @param <T>         the expected type of the game model
+     * @return the game model for the given variant name
+     * @throws ClassCastException if the registered game model cannot be cast to the expected type
+     */
+    <T extends GameModel> T gameForVariant(String variantName);
 
     default <T extends AbstractGameModel> T currentGame() {
-        return currentGameContext().gameModel();
+        return gameForVariant(currentGameVariantName());
     }
 
     default Optional<GameLevel> optCurrentGameLevel() {
         return currentGame().optGameLevel();
     }
 
-    default GameFlow currentGameFlow() {
+    @Override
+    default GameModel gameModel() {
+        return currentGame();
+    }
+
+    @Override
+    default GameFlow gameFlow() {
         return currentGame().flow();
     }
 
     default State<GameContext> currentGameState() {
-        return currentGameFlow().state();
+        return currentGame().flow().state();
     }
 
     default UIConfig currentUIConfig() {
-        return ui().configurations().getOrCreateUIConfig(currentGameContext().gameVariantName());
+        return ui().configurations().getOrCreateUIConfig(currentGameVariantName());
     }
 
     default Optional<GameSoundEffects> currentSoundEffects() {

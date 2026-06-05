@@ -120,7 +120,7 @@ public class GamePlayView implements SubView {
 
     public void showHelp(AppContext context) {
         final double scaling = gameSceneFrame.scalingProperty().get();
-        helpLayer.showHelpPopup(context, scaling, context.currentGameVariant());
+        helpLayer.showHelpPopup(context, scaling, context.currentGameVariantName());
     }
 
     public void setGameSceneContent(Node gameSceneContent) {

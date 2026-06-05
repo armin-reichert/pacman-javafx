@@ -22,22 +22,24 @@ import static java.util.Objects.requireNonNull;
 
 public class StateMachineGameFlow implements GameFlow {
 
-    private final GameContext context;
     protected final StateMachine<GameContext> stateMachine = new StateMachine<>();
     private final Set<GameEventListener> eventListeners = new HashSet<>();
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
-    public StateMachineGameFlow(String name, GameContext context) {
-        this.context = requireNonNull(context);
+    public StateMachineGameFlow(String name) {
         stateMachine.setName(name);
-        stateMachine.setContext(context);
         stateMachine.addStateChangeListener((oldState, newState)
-            -> publishGameEvent(new GameStateChangeEvent(context, oldState, newState)));
+            -> publishGameEvent(new GameStateChangeEvent(context(), oldState, newState)));
+    }
+
+    @Override
+    public void setContext(GameContext context) {
+        stateMachine.setContext(requireNonNull(context));
     }
 
     @Override
     public GameContext context() {
-        return context;
+        return stateMachine.context();
     }
 
     @Override

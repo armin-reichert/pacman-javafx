@@ -39,12 +39,12 @@ public class PacManXXL_App extends Application {
         final var mapSelector = new PacManXXL_MapSelector(gamesContainer.customMapDir());
 
         app = GameAppBuilder
-            .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer)
+            .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer, coinMechanism)
             .game(GameVariant.ARCADE_PACMAN_XXL,
-                () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism, mapSelector),
+                () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(), coinMechanism, mapSelector),
                 PacManXXL_PacMan_UIConfig::new)
             .game(GameVariant.ARCADE_MS_PACMAN_XXL,
-                () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism, mapSelector),
+                () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(), coinMechanism, mapSelector),
                 PacManXXL_MsPacMan_UIConfig::new)
             .startPage(PacManXXL_StartPage::new)
             .build();

@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
@@ -36,9 +37,9 @@ public class TengenMsPacMan_App extends Application {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         app = GameAppBuilder
-            .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer)
+            .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer, CoinMechanism.OUT_OF_SERVICE)
             .game(TENGEN_MS_PACMAN,
-                () -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow(gamesContainer)), TengenMsPacMan_UIConfig::new)
+                () -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow()), TengenMsPacMan_UIConfig::new)
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
 

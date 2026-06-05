@@ -4,71 +4,15 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.flow.GameFlow;
-import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
-import javafx.beans.property.StringProperty;
 
-/**
- * Provides access to the current game variant, its associated game model,
- * and shared game-box components such as the coin mechanism.
- * <p>
- * A {@code GameContext} acts as a central lookup for selecting and retrieving
- * game variants by name. Implementations are responsible for maintaining the
- * registry of available game variants.
- */
 public interface GameContext {
 
-    StringProperty gameVariantNameProperty();
+    GameModel gameModel();
 
-    /**
-     * Selects the game variant with the given name.
-     * <p>
-     * If no game with the specified name exists, an {@link IllegalArgumentException} is thrown.
-     *
-     * @param variantName the name of the game variant to select (must not be {@code null})
-     * @throws IllegalArgumentException if no game with the given name is registered
-     */
-    void selectGameVariant(String variantName);
-
-    /**
-     * Returns the name (identifier) of the currently selected game variant.
-     *
-     * @return the current game variant name
-     */
-    String gameVariantName();
-
-    /**
-     * Checks whether a game variant with the given name is registered.
-     *
-     * @param name the game variant name to check
-     * @return {@code true} if a game with that name exists, {@code false} otherwise
-     */
-    boolean hasGameForVariantName(String name);
-
-    /**
-     * Returns the game model associated with the specified variant name.
-     *
-     * @param variantName the name of the game variant
-     * @param <T>         the expected type of the game model
-     * @return the game model for the given variant name
-     * @throws ClassCastException if the registered game model cannot be cast to the expected type
-     */
-    <T extends GameModel> T gameForVariant(String variantName);
-
-    /**
-     * Returns the game model of the currently selected game variant.
-     *
-     * @param <T> the expected type of the game model
-     * @return the game model of the active game variant
-     * @throws ClassCastException if the registered game model type does not match the expected type
-     */
-    <T extends AbstractGameModel> T gameModel();
-
-    default GameFlow gameFlow() {
-        return gameModel().flow();
-    }
+    GameFlow gameFlow();
 
     void setCollisionStrategy(CollisionStrategy collisionStrategy);
 

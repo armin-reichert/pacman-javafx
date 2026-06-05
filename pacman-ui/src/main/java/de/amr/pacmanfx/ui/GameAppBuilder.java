@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
@@ -45,13 +46,15 @@ public class GameAppBuilder {
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight,
-        GamesContainer gameBox)
+        GamesContainer gamesContainer,
+        CoinMechanism coinMechanism)
     {
-        return new GameAppBuilder(stage, mainSceneWidth, mainSceneHeight, requireNonNull(gameBox));
+        return new GameAppBuilder(stage, mainSceneWidth, mainSceneHeight, gamesContainer, coinMechanism);
     }
 
     private final WindowConfig windowConfig;
-    private final GamesContainer gameBox;
+    private final CoinMechanism coinMechanism;
+    private final GamesContainer gamesContainer;
     private final Map<String, GameConfig> gameConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
     private boolean interactiveTests;
@@ -60,10 +63,12 @@ public class GameAppBuilder {
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight,
-        GamesContainer gameBox)
+        GamesContainer gamesContainer,
+        CoinMechanism coinMechanism)
     {
         windowConfig = new WindowConfig(stage, mainSceneWidth, mainSceneHeight);
-        this.gameBox = gameBox;
+        this.gamesContainer = requireNonNull(gamesContainer);
+        this.coinMechanism = requireNonNull(coinMechanism);
     }
 
     /**
@@ -134,14 +139,14 @@ public class GameAppBuilder {
         validateConfigurationData();
 
         final var ui = new GamesApp(
-            gameBox,
+            gamesContainer,
             createViewImplementation(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight()),
-            new GameClockFX()
-        );
+            new GameClockFX(),
+            coinMechanism);
 
         gameConfigMap.forEach((gameVariant, config) -> {
             final AbstractGameModel game = config.gameModelFactory.get();
-            gameBox.registerGame(gameVariant, game);
+            gamesContainer.registerGame(gameVariant, game);
             ui.ui().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);
             if (interactiveTests) {
                 final GameFlow gameFlow = game.flow();

@@ -8,10 +8,12 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.gamestate.GameStateID;
+import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
+import de.amr.pacmanfx.simulation.HuntingStepResult;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -31,6 +33,10 @@ import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Region;
@@ -49,6 +55,8 @@ public final class GamesApp implements AppContext {
     // All games in a box (only 1,99 €!)
     private final GamesContainer gamesContainer;
 
+    private final StringProperty gameVariantName = new SimpleStringProperty();
+
     private final PreferencesManager prefs;
 
     private final DirectoryWatchdog watchdog;
@@ -61,11 +69,17 @@ public final class GamesApp implements AppContext {
 
     private final CoinMechanism coinMechanism;
 
-    public GamesApp(GamesContainer gamesContainer, GameViewImpl view, GameClock gameClock) {
+    private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
+
+    private CollisionStrategy collisionStrategy = CollisionStrategy.SAME_TILE;
+
+    private HuntingStepResult huntingResult;
+
+    public GamesApp(GamesContainer gamesContainer, GameViewImpl view, GameClock gameClock, CoinMechanism coinMechanism) {
         this.gamesContainer = requireNonNull(gamesContainer);
         this.view = requireNonNull(view);
         this.gameClock = requireNonNull(gameClock);
-        this.coinMechanism = new CoinMechanism(99);
+        this.coinMechanism = requireNonNull(coinMechanism);
 
         prefs = new PreferencesManager(getClass());
         watchdog = new DirectoryWatchdog(gamesContainer.customMapDir());
@@ -82,16 +96,70 @@ public final class GamesApp implements AppContext {
         );
 
         createSubViews();
+
+        gameVariantName.addListener((_, _, newVariantName) -> {
+            gameForVariant(newVariantName).flow().setContext(this);
+        });
+    }
+
+    @Override
+    public StringProperty gameVariantNameProperty() {
+        return gameVariantName;
+    }
+
+    @Override
+    public void selectGameVariant(String variantName) {
+        requireNonNull(variantName);
+        if (gamesContainer.hasGameForVariantName(variantName)) {
+            gameVariantName.set(variantName);
+        }
+        else {
+            throw new IllegalArgumentException("Game with name '" + variantName + "' not found");
+        }
+    }
+
+    @Override
+    public String currentGameVariantName() {
+        return gameVariantName.get();
+    }
+
+    @Override
+    public <T extends GameModel> T gameForVariant(String variantName) {
+        return gamesContainer.gameForVariant(variantName);
+    }
+
+    public CollisionStrategy collisionStrategy() {
+        return collisionStrategy;
+    }
+
+    public void setCollisionStrategy(CollisionStrategy strategy) {
+        this.collisionStrategy = requireNonNull(strategy);
+    }
+
+    public BooleanProperty collisionDoubleCheckedProperty() {
+        return collisionDoubleChecked;
+    }
+
+    public Boolean isCollisionDoubleChecked() {
+        return collisionDoubleCheckedProperty().get();
+    }
+
+    public void setCollisionDoubleChecked(boolean doubleChecked) {
+        collisionDoubleCheckedProperty().set(doubleChecked);
+    }
+
+    public void startNewHuntingStep() {
+        huntingResult = new HuntingStepResult();
+    }
+
+    @Override
+    public HuntingStepResult huntingResult() {
+        return huntingResult;
     }
 
     @Override
     public Input input() {
         return Input.instance();
-    }
-
-    @Override
-    public GameContext currentGameContext() {
-        return gamesContainer;
     }
 
     @Override
@@ -147,7 +215,7 @@ public final class GamesApp implements AppContext {
     @Override
     public void restartGame() {
         stopGame();
-        currentGameFlow().restartState(GameStateID.BOOT.name());
+        gameFlow().restartState(GameStateID.BOOT.name());
         Platform.runLater(gameClock()::start);
     }
 
@@ -234,7 +302,7 @@ public final class GamesApp implements AppContext {
 
     private void initGameClock() {
         gameClock().setUpdateAction(() -> {
-            currentGameFlow().makeStep();
+            gameFlow().makeStep();
             ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameClock().tickCount()));
         });
         gameClock().setPermanentAction(() -> ui.subViews().currentView().render());
@@ -291,8 +359,8 @@ public final class GamesApp implements AppContext {
 
     private void initGameVariantAndRegisterChangeHandler() {
         final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
-        currentGameContext().gameVariantNameProperty().addListener(gameVariantChangeHandler);
-        gameVariantChangeHandler.enterGameVariant(currentGameContext().gameVariantName());
+        gameVariantName.addListener(gameVariantChangeHandler);
+        gameVariantChangeHandler.enterGameVariant(currentGameVariantName());
     }
 
     /**

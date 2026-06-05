@@ -62,10 +62,10 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
-            app = GameAppBuilder.newApp(primaryStage, size.x(), size.y(), gamesContainer)
+            app = GameAppBuilder.newApp(primaryStage, size.x(), size.y(), gamesContainer, coinMechanism)
                 .game(
                     GameVariant.ARCADE_PACMAN,
-                    () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism),
+                    () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(), coinMechanism),
                     ArcadePacMan_UIConfig::new)
                 .startPage(ArcadePacMan_StartPage::new)
                 .build();
@@ -85,11 +85,11 @@ public class ArcadePacMan_App extends Application {
     // Private area
 
     private void createUI(Stage stage, GamesContainer gamesContainer, Vector2i sceneSize) {
-        final var game = new ArcadePacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism);
+        app = new GamesApp(gamesContainer, createView(stage, sceneSize.x(), sceneSize.y()), new GameClockFX(), coinMechanism);
 
+        final var game = new ArcadePacMan_GameModel(new Arcade_GameFlow(), coinMechanism);
         gamesContainer.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
-        app = new GamesApp(gamesContainer, createView(stage, sceneSize.x(), sceneSize.y()), new GameClockFX());
         app.ui().configurations().addConfigFactory(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
         final StartPagesView startView = app.ui().subViews().startView();

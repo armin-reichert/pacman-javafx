@@ -15,6 +15,8 @@ import java.util.Optional;
 
 public interface GameFlow {
 
+    void setContext(GameContext context);
+
     GameContext context();
 
     Optional<State<GameContext>> optState(String stateName);

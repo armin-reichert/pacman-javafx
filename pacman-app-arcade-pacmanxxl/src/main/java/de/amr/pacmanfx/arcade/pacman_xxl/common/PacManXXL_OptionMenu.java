@@ -82,7 +82,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         this.context = requireNonNull(context);
 
         final UIConfig currentConfig = context.currentUIConfig();
-        final GameVariant gameVariant = GameVariant.valueOf(context.currentGameVariant());
+        final GameVariant gameVariant = GameVariant.valueOf(context.currentGameVariantName());
         final GameModel game = context.currentGame();
 
         if (!(game.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {

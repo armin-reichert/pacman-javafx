@@ -33,9 +33,9 @@ public class ArcadeMsPacMan_App extends Application {
         final var gamesContainer = new GamesContainer();
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         app = GameAppBuilder
-            .newApp(primaryStage, screenSize.x(), screenSize.y(), gamesContainer)
+            .newApp(primaryStage, screenSize.x(), screenSize.y(), gamesContainer, coinMechanism)
             .game(GameVariant.ARCADE_MS_PACMAN,
-                () -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(gamesContainer), coinMechanism),
+                () -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(), coinMechanism),
                 ArcadeMsPacMan_UIConfig::new)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .build();
