@@ -6,7 +6,7 @@ package experiments.custommaps;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.core.GameBox;
+import de.amr.pacmanfx.ui.app.GameBox;
 import de.amr.pacmanfx.uilib.GameClockFX;
 import javafx.application.Application;
 import javafx.application.Platform;

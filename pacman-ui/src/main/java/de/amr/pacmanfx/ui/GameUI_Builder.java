@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.core.GameBox;
+import de.amr.pacmanfx.ui.app.GameBox;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
@@ -182,8 +182,8 @@ public class GameUI_Builder {
         if (name.isBlank()) {
             error("Game variant name must not be blank");
         }
-        if (!de.amr.pacmanfx.core.GameBox.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
-            error("Game variant name '%s' does not match pattern '%s'".formatted(name, de.amr.pacmanfx.core.GameBox.GAME_VARIANT_NAME_PATTERN));
+        if (!GameBox.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
+            error("Game variant name '%s' does not match pattern '%s'".formatted(name, GameBox.GAME_VARIANT_NAME_PATTERN));
         }
     }
 

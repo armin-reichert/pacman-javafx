@@ -19,6 +19,7 @@ open module de.amr.pacmanfx.ui {
 
     exports de.amr.pacmanfx.ui;
     exports de.amr.pacmanfx.ui.action;
+    exports de.amr.pacmanfx.ui.app;
     exports de.amr.pacmanfx.ui.config;
     exports de.amr.pacmanfx.ui.subviews.dashboard;
     exports de.amr.pacmanfx.ui.d2;
