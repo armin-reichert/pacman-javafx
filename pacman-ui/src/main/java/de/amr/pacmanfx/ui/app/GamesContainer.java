@@ -57,7 +57,7 @@ public class GamesContainer implements GameContext {
 
     private HuntingStepResult huntingResult;
 
-    public GamesContainer(CoinMechanism coinMechanism) {
+    public GamesContainer() {
         final boolean ok = validateUserDirs();
         if (!ok) {
             throw new IllegalStateException("GameBox: User directory validation failed");

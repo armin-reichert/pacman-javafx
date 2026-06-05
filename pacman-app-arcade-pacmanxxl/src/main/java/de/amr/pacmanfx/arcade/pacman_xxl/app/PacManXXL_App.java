@@ -30,7 +30,7 @@ public class PacManXXL_App extends Application {
     private static final double HEIGHT_FRACTION = 0.8;
 
     private final CoinMechanism coinMechanism = new CoinMechanism(99);
-    private final GamesContainer gamesContainer = new GamesContainer(new CoinMechanism(99));
+    private final GamesContainer gamesContainer = new GamesContainer();
     private AppContext app;
 
     @Override

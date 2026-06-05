@@ -7,13 +7,12 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.model.actors.Elroy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.uilib.GameClockFX;
+import de.amr.pacmanfx.ui.app.GamesContainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +29,7 @@ public class TestEatingFood {
     @BeforeAll
     static void setup() {
         final String variantName = GameVariant.ARCADE_PACMAN.name();
-        gameBox = new GamesContainer(CoinMechanism.OUT_OF_SERVICE);
+        gameBox = new GamesContainer();
         gameBox.registerGame(variantName, new ArcadePacMan_GameModel(
             new Arcade_GameFlow(gameBox),
             CoinMechanism.OUT_OF_SERVICE));

@@ -10,12 +10,12 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GamesApp;
 import de.amr.pacmanfx.ui.GameAppBuilder;
+import de.amr.pacmanfx.ui.GamesApp;
+import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImpl;
@@ -54,7 +54,7 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void init() throws Exception {
-        gamesContainer = new GamesContainer(new CoinMechanism(99));
+        gamesContainer = new GamesContainer();
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
     }
 
