@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.gamescene;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
@@ -49,7 +48,7 @@ public abstract class GameScene implements Disposable {
         }
 
         public Optional<GameLevel> optGameLevel() {
-            return context().currentGame().optGameLevel();
+            return context().currentGameContext().optCurrentGameLevel();
         }
 
         @Override

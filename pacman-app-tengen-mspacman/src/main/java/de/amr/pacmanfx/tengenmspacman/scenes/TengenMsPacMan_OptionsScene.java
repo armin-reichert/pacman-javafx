@@ -103,11 +103,11 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            context().gameContext().gameFlow().enterState(TengenMsPacMan_GameState.GAME_INTRO.state());
+            context().currentGameContext().gameFlow().enterState(TengenMsPacMan_GameState.GAME_INTRO.state());
         }
     }
 
-    private TengenMsPacMan_GameModel tengenGame() { return context().currentGame(); }
+    private TengenMsPacMan_GameModel tengenGame() { return (TengenMsPacMan_GameModel) context().currentGameContext().gameModel(); }
     
     private void optionValueChanged() {
         context.ui().sounds().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);

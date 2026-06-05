@@ -46,13 +46,13 @@ public final class CheatActions {
                 final GameModel game = level.game();
                 level.worldMap().foodLayer().eatPellets();
                 game.cheats().cheatUsedProperty().set(true);
-                game.flow().publishGameEvent(new PacEatsFoodEvent(context.gameContext(), level.entities().pac(), false, true));
+                game.flow().publishGameEvent(new PacEatsFoodEvent(context.currentGameContext(), level.entities().pac(), false, true));
             });
         }
 
         @Override
         public boolean isEnabled(AppContext context) {
-            final State<GameContext> gameState = context.currentGameState();
+            final State<GameContext> gameState = context.currentGameContext().currentGameState();
             return realLevel(context).isPresent()
                 && gameState.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
         }
@@ -75,7 +75,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(AppContext context) {
-            final State<GameContext> gameState = context.currentGameState();
+            final State<GameContext> gameState = context.currentGameContext().currentGameState();
             return realLevel(context).isPresent()
                 && gameState.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
         }
@@ -85,7 +85,7 @@ public final class CheatActions {
         @Override
         public void doAction(AppContext context) {
             realLevel(context).ifPresent(_ -> {
-                final GameModel game = context.currentGame();
+                final GameModel game = context.currentGameContext().gameModel();
                 game.cheats().notifyCheatUsed();
                 game.flow().enterState(GameStateID.GAME_LEVEL_COMPLETE.name());
             });
@@ -93,7 +93,7 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(AppContext context) {
-            final State<GameContext> gameState = context.currentGameState();
+            final State<GameContext> gameState = context.currentGameContext().currentGameState();
             final GameLevel level = realLevel(context).orElse(null);
             return level != null
                 && gameState.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name())
@@ -104,7 +104,7 @@ public final class CheatActions {
     public static final GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction("toggle_autopilot") {
         @Override
         public void doAction(AppContext context) {
-            final GameModel game = context.currentGame();
+            final GameModel game = context.currentGameContext().gameModel();
             setAutopilot(context, !game.cheats().isPacUsingAutopilot());
         }
 
@@ -139,7 +139,7 @@ public final class CheatActions {
     };
 
     private static void setAutopilot(AppContext context, boolean auto) {
-        final GameModel game = context.currentGame();
+        final GameModel game = context.currentGameContext().gameModel();
         game.cheats().pacUsingAutopilotProperty().set(auto);
         context.ui().sounds().playVoice(auto ? AppConstants.VOICE_AUTOPILOT_ON : AppConstants.VOICE_AUTOPILOT_OFF);
         context.shortMessage(context.ui().translations().translate(auto ? "autopilot_on" : "autopilot_off"));
@@ -172,7 +172,7 @@ public final class CheatActions {
     public static final GameAction ACTION_TOGGLE_IMMUNITY = new GameAction("toggle_immunity") {
         @Override
         public void doAction(AppContext context) {
-            final GameModel game = context.currentGame();
+            final GameModel game = context.currentGameContext().gameModel();
             setPacImmune(context, !game.cheats().isPacImmune());
         }
 
@@ -183,12 +183,12 @@ public final class CheatActions {
     };
 
     public static void setPacImmune(AppContext context, boolean immune) {
-        context.currentGame().cheats().pacImmuneProperty().set(immune);
+        context.currentGameContext().gameModel().cheats().pacImmuneProperty().set(immune);
         context.ui().sounds().playVoice(immune ? AppConstants.VOICE_IMMUNITY_ON : AppConstants.VOICE_IMMUNITY_OFF);
         context.shortMessage(context.ui().translations().translate(immune ? "player_immunity_on" : "player_immunity_off"));
     }
 
     private static Optional<GameLevel> realLevel(AppContext context) {
-        return context.optCurrentGameLevel().filter(level -> !level.isDemoLevel());
+        return context.currentGameContext().optCurrentGameLevel().filter(level -> !level.isDemoLevel());
     }
 }

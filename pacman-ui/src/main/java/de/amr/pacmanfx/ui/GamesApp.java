@@ -60,7 +60,7 @@ public final class GamesApp implements AppContext {
 
         @Override
         public GameModel gameModel() {
-            return currentGame();
+            return gameForVariant(currentGameVariantName());
         }
 
         @Override
@@ -177,7 +177,7 @@ public final class GamesApp implements AppContext {
     }
 
     @Override
-    public GameContext gameContext() {
+    public GameContext currentGameContext() {
         return currentGameContext;
     }
 
@@ -239,7 +239,7 @@ public final class GamesApp implements AppContext {
     @Override
     public void restartGame() {
         stopGame();
-        gameContext().gameFlow().restartState(GameStateID.BOOT.name());
+        currentGameContext().gameFlow().restartState(GameStateID.BOOT.name());
         Platform.runLater(gameClock()::start);
     }
 
@@ -260,7 +260,7 @@ public final class GamesApp implements AppContext {
 
     @Override
     public void stopGame() {
-        currentGame().prepareNewGame();
+        currentGameContext.gameModel().prepareNewGame();
 
         gameClock().stop();
         gameClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
@@ -347,7 +347,7 @@ public final class GamesApp implements AppContext {
 
         view.mainScene().init(this);
 
-        view.statusIconBox().bind(currentGame());
+        view.statusIconBox().bind(currentGameContext().gameModel());
     }
 
     private void initProperties() {

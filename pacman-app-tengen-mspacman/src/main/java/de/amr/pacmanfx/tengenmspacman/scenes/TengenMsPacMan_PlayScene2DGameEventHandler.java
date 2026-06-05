@@ -45,7 +45,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
         optGameLevel().ifPresent(level -> {
             gameScene().resetAnimations(level);
             gameScene().dynamicCamera().playIntroSequence();
-            if (context().currentGame() instanceof TengenMsPacMan_GameModel tengenGame) {
+            if (context().currentGameContext().gameModel() instanceof TengenMsPacMan_GameModel tengenGame) {
                 tengenGame.showMessage(level, GameLevelMessageType.READY);
             }
         });
@@ -53,8 +53,8 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
 
     @Override
     public void onGameStarted(GameStartedEvent e) {
-        final GameModel game = context().currentGame();
-        final boolean silent = game.isDemoLevelRunning() || context().currentGameState() instanceof TestState;
+        final GameModel game = context().currentGameContext().gameModel();
+        final boolean silent = game.isDemoLevelRunning() || context().currentGameContext().currentGameState() instanceof TestState;
         if (!silent) {
             context().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -96,7 +96,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
 
     @Override
     public void onPacDead(PacDeadEvent e) {
-        context().currentGameState().expire();
+        context().currentGameContext().currentGameState().expire();
     }
 
     @Override

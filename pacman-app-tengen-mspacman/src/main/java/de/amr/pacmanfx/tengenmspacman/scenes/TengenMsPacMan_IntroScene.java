@@ -62,7 +62,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate(AppContext context) {
-        context().currentGame().hud().hide();
+        context().currentGameContext().gameModel().hud().hide();
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) context.currentUIConfig().spriteSheet();
 
@@ -225,7 +225,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    final TengenMsPacMan_GameModel game = scene.context().currentGame();
+                    final TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) scene.context().currentGameContext().gameModel();
                     if (game.allOptionsDefault()) {
                         game.setCanStartNewGame(false); // TODO check this
                         game.flow().restartState(TengenMsPacMan_GameState.GAME_OR_LEVEL_STARTING.state());

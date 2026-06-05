@@ -5,13 +5,10 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -62,19 +59,7 @@ public interface AppContext extends AppLifecycle {
      */
     <T extends GameModel> T gameForVariant(String variantName);
 
-    default <T extends AbstractGameModel> T currentGame() {
-        return gameForVariant(currentGameVariantName());
-    }
-
-    default Optional<GameLevel> optCurrentGameLevel() {
-        return currentGame().optGameLevel();
-    }
-
-    GameContext gameContext();
-
-    default State<GameContext> currentGameState() {
-        return currentGame().flow().state();
-    }
+    GameContext currentGameContext();
 
     default UIConfig currentUIConfig() {
         return ui().configurations().getOrCreateUIConfig(currentGameVariantName());

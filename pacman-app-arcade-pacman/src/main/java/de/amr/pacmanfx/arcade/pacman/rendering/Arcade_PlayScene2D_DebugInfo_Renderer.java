@@ -37,7 +37,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
     public void draw(GameScene2D scene) {
         drawTileGrid(scene.getUnscaledWidth(), scene.getUnscaledHeight(), Color.LIGHTGRAY);
 
-        scene.context().optCurrentGameLevel().ifPresent(level -> {
+        scene.context().currentGameContext().optCurrentGameLevel().ifPresent(level -> {
             // We assume all ghosts have the same set of special terrain tiles
             level.ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
                 final double x = scaled(tile.x() * TS);
@@ -66,7 +66,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
                     }
             });
 
-            final State<GameContext> state = scene.context().currentGameState();
+            final State<GameContext> state = scene.context().currentGameContext().currentGameState();
             final String gameStateText = state.name() + " (Tick %d)".formatted(state.timer().tickCount());
             String huntingPhaseText = "";
             if (state == Arcade_GameState.GAME_LEVEL_PLAYING.state()) {

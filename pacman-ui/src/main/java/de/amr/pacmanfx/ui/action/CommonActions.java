@@ -56,7 +56,7 @@ public final class CommonActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("let_game_state_expire") {
         @Override
         protected void doAction(AppContext context) {
-            context.currentGameState().expire();
+            context.currentGameContext().currentGameState().expire();
         }
     };
 
@@ -92,7 +92,7 @@ public final class CommonActions {
     public static final GameAction ACTION_QUIT_GAME_SCENE = new GameAction("quit_game_scene") {
         @Override
         protected void doAction(AppContext context) {
-            final GameModel game = context.currentGame();
+            final GameModel game = context.currentGameContext().gameModel();
             game.cheats().clear(); //TODO needed?
             context.stopGame();
             context.ui().gameScenes().quitCurrentGameScene(context);
@@ -105,11 +105,11 @@ public final class CommonActions {
         protected void doAction(AppContext context) {
             //TODO check this code
             context.stopGame();
-            final GameModel game = context.currentGame();
-            final State<GameContext> gameState = context.currentGameState();
+            final GameModel game = context.currentGameContext().gameModel();
+            final State<GameContext> gameState = context.currentGameContext().currentGameState();
             boolean isLevelShortTest = gameState instanceof LevelShortTestState;
             if (isLevelShortTest) {
-                gameState.onExit(context.gameContext()); //TODO exit other states too?
+                gameState.onExit(context.currentGameContext()); //TODO exit other states too?
             }
             game.flow().restartState(GameStateID.GAME_INTRO.name());
             context.gameClock().start();
@@ -212,10 +212,10 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction("toggle_collision_strategy") {
         @Override
         protected void doAction(AppContext context) {
-            final CollisionStrategy strategy = context.gameContext().collisionStrategy();
+            final CollisionStrategy strategy = context.currentGameContext().collisionStrategy();
             final CollisionStrategy newStrategy = strategy == CollisionStrategy.CENTER_DISTANCE
                 ? CollisionStrategy.SAME_TILE : CollisionStrategy.CENTER_DISTANCE;
-            context.gameContext().setCollisionStrategy(newStrategy);
+            context.currentGameContext().setCollisionStrategy(newStrategy);
             if (newStrategy == CollisionStrategy.SAME_TILE) {
                 context.shortMessage("Using original Arcade collision strategy (same tile check)"); //TODO localize
             } else {
@@ -317,7 +317,7 @@ public final class CommonActions {
         }
 
         private boolean isLevelPlaying(AppContext context) {
-            return context.currentGameState().nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
+            return context.currentGameContext().currentGameState().nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
         }
     };
 }

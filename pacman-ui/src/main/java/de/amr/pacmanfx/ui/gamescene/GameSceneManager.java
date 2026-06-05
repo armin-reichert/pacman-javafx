@@ -64,7 +64,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     public void updateGameSceneAndForceReload(AppContext context, boolean forceReload) {
         final UIConfig currentConfig = context.currentUIConfig();
-        final GameModel game = context.currentGame();
+        final GameModel game = context.currentGameContext().gameModel();
 
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
         final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(context, game).orElseThrow();
@@ -92,8 +92,8 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         optCurrentGameScene().ifPresent(scene -> {
             //TODO Rethink this
             final CoinMechanism coinMechanism = context.coinMechanism();
-            boolean shouldConsumeCoin = context.currentGameState().nameIsOneOf(GameStateID.GAME_OR_LEVEL_STARTING.name())
-                || context.currentGame().isPlaying();
+            boolean shouldConsumeCoin = context.currentGameContext().currentGameState().nameIsOneOf(GameStateID.GAME_OR_LEVEL_STARTING.name())
+                || context.currentGameContext().gameModel().isPlaying();
             if (shouldConsumeCoin && !coinMechanism.isEmpty()) {
                 coinMechanism.consumeCoin();
             }

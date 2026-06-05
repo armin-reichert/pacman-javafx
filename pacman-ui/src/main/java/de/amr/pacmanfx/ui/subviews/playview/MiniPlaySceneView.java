@@ -152,7 +152,7 @@ public class MiniPlaySceneView {
         canvasRenderer.clearCanvas();
 
         if (levelRenderer != null && actorRenderer != null) {
-            context.optCurrentGameLevel().ifPresent(this::drawGameLevel);
+            context.currentGameContext().optCurrentGameLevel().ifPresent(this::drawGameLevel);
         }
 
         if (AppConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {

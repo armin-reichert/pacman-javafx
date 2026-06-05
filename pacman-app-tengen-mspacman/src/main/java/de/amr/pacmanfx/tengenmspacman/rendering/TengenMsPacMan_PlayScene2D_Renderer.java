@@ -45,8 +45,8 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
         @Override
         public void draw(GameScene2D scene) {
-            final GameModel game = scene.context().currentGame();
-            final State<GameContext> gameState = scene.context().currentGameState();
+            final GameModel game = scene.context().currentGameContext().gameModel();
+            final State<GameContext> gameState = scene.context().currentGameContext().currentGameState();
 
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
 
@@ -95,7 +95,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         if (!(scene instanceof TengenMsPacMan_PlayScene2D playScene2D)) {
             return;
         }
-        final GameModel game = playScene2D.context().currentGame();
+        final GameModel game = playScene2D.context().currentGameContext().gameModel();
         final long tick = playScene2D.context().gameClock().tickCount();
 
         game.optGameLevel().ifPresent(level -> {

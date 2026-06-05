@@ -43,7 +43,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onTick(long tick) {
-        context.optCurrentGameLevel().ifPresent(level -> {
+        context.currentGameContext().optCurrentGameLevel().ifPresent(level -> {
             updateLivesCounter(level);
             context().currentSoundEffects().ifPresent(sfx -> {
                 sfx.setEnabled(!level.isDemoLevel());
@@ -54,7 +54,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        final GameModel game = context().currentGame();
+        final GameModel game = context().currentGameContext().gameModel();
         final var menu = new ContextMenu();
         addLocalizedTitleItem(menu, context.ui().translations(), "pacman");
         addLocalizedCheckBox(menu, context.ui().translations(), game.cheats().pacUsingAutopilotProperty(), "autopilot").setOnAction(e -> {
@@ -82,7 +82,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onEnteredFrom3DScene() {
-        context().optCurrentGameLevel().ifPresent(this::acceptGameLevel);
+        context().currentGameContext().optCurrentGameLevel().ifPresent(this::acceptGameLevel);
     }
 
     // Others
@@ -105,7 +105,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         Logger.info(actionBindings);
 
         context.ui().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
-        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> context().currentGameState().expire());
+        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> context().currentGameContext().currentGameState().expire());
 
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());
@@ -118,8 +118,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     // While Pac-Man is not yet visible on level start, one symbol more is shown in the lives counter
     private void updateLivesCounter(GameLevel level) {
-        final GameModel game = context().currentGame();
-        final int additionalLives = context().currentGameState() == Arcade_GameState.GAME_OR_LEVEL_STARTING.state()
+        final GameModel game = context().currentGameContext().gameModel();
+        final int additionalLives = context().currentGameContext().currentGameState() == Arcade_GameState.GAME_OR_LEVEL_STARTING.state()
             && !level.entities().pac().isVisible() ? 1 : 0;
         final int count = Math.clamp(game.lives().count() - 1 + additionalLives, 0, game.hud().maxLivesDisplayed());
         game.hud().setVisibleLifeCount(count);

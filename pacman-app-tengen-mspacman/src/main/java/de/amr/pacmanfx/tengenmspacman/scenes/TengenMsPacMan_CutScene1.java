@@ -154,7 +154,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             }
         }
 
-        final long gameStateTick = context().currentGameState().timer().tickCount();
+        final long gameStateTick = context().currentGameContext().currentGameState().timer().tickCount();
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {
                 case 130 -> {
@@ -236,7 +236,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                     msPacMan.hide();
                     heart.hide();
                 }
-                case 775 -> context().currentGameState().expire();
+                case 775 -> context().currentGameContext().currentGameState().expire();
             }
         }
     }

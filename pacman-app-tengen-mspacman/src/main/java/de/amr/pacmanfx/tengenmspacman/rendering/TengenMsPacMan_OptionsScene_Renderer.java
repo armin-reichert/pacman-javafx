@@ -58,7 +58,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         clearCanvas();
 
         final TengenMsPacMan_OptionsScene optionsScene = (TengenMsPacMan_OptionsScene) scene;
-        final TengenMsPacMan_GameModel game = optionsScene.context().currentGame();
+        final TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) optionsScene.context().currentGameContext().gameModel();
 
         if (optionsScene.initialDelay > 0) return;
 

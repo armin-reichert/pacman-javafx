@@ -97,8 +97,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     @Override
     public void onTick(long tick) {
         final UIConfig uiConfig = context().currentUIConfig();
-        final TengenMsPacMan_GameModel game = context().currentGame();
-        final State<GameContext> gameState = context().currentGameState();
+        final TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) context().currentGameContext().gameModel();
+        final State<GameContext> gameState = context().currentGameContext().currentGameState();
         final long gameStateTick = gameState.timer().tickCount();
 
         clapperboard.tick();

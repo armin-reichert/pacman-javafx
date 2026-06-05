@@ -110,7 +110,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void onTick(long tick) {
-        final State<GameContext> gameState = context().currentGameState();
+        final State<GameContext> gameState = context().currentGameContext().currentGameState();
         final long gameStateTick = gameState.timer().tickCount();
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {

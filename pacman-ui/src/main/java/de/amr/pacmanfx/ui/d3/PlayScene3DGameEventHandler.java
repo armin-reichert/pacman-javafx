@@ -103,8 +103,8 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     @Override
     public void onGameStarted(GameStartedEvent event) {
-        final State<GameContext> state = context().currentGameState();
-        final boolean silent = context().currentGame().isDemoLevelRunning() || state instanceof TestState;
+        final State<GameContext> state = context().currentGameContext().currentGameState();
+        final boolean silent = context().currentGameContext().gameModel().isDemoLevelRunning() || state instanceof TestState;
         if (!silent) {
             context().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -124,7 +124,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     @Override
     public void onLevelStarted(LevelStartedEvent event) {
         final GameLevel level = event.level();
-        final State<GameContext> gameState = context().currentGameState();
+        final State<GameContext> gameState = context().currentGameContext().currentGameState();
         //TODO rethink
         if (gameState instanceof TestState) {
             gameScene().replaceGameLevel3D(level);
@@ -174,7 +174,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     public void onPacGetsPower(PacGetsPowerEvent event) {
         final GameLevel3D level3D = assertLevel3D();
         context().currentSoundEffects().ifPresent(GameSoundEffects::stopSiren);
-        if (!context().currentGame().rules().isLevelCompleted(level3D.level())) {
+        if (!context().currentGameContext().gameModel().rules().isLevelCompleted(level3D.level())) {
             level3D.entities().pac3D().setPowerMode(true);
             level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
                 .ifPresent(ManagedAnimation::playFromStart);
@@ -278,7 +278,7 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
 
     private void onLevelComplete() {
         final GameLevel3D level3D = assertLevel3D();
-        final State<GameContext> gameState = context().currentGameState();
+        final State<GameContext> gameState = context().currentGameContext().currentGameState();
 
         gameScene().scoreOpacity.set(0);
 

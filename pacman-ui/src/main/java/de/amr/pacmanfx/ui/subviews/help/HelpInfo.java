@@ -27,8 +27,8 @@ import static java.util.Objects.requireNonNull;
 public class HelpInfo {
 
     public static HelpInfo build(AppContext context) {
-        final GameModel game = context.currentGame();
-        final State<GameContext> state = context.currentGameState();
+        final GameModel game = context.currentGameContext().gameModel();
+        final State<GameContext> state = context.currentGameContext().currentGameState();
         final boolean demoLevel = game.isDemoLevelRunning();
 
         final HelpInfo helpInfo = new HelpInfo(context);
@@ -80,13 +80,13 @@ public class HelpInfo {
         pane.setBackground(UfxBackgrounds.roundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (context.currentGame().cheats().isPacUsingAutopilot()) {
+        if (context.currentGameContext().gameModel().cheats().isPacUsingAutopilot()) {
             var autoPilotEntry = text(context.ui().translations().translate("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (context.currentGame().cheats().isPacImmune()) {
+        if (context.currentGameContext().gameModel().cheats().isPacImmune()) {
             var immunityEntry = text(context.ui().translations().translate("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);

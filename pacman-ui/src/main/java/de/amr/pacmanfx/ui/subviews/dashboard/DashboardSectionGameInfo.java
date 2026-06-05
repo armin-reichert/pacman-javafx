@@ -33,9 +33,9 @@ public class DashboardSectionGameInfo extends DashboardSection {
 
     @Override
     public void connect(AppContext context) {
-        final Supplier<GameModel> gameSupplier = context::currentGame;
+        final Supplier<GameModel> gameSupplier = context.currentGameContext()::gameModel;
 
-        addDynamicLabeledValue("Game State",  () -> "%s".formatted(context.currentGameState().name()));
+        addDynamicLabeledValue("Game State",  () -> "%s".formatted(context.currentGameContext().currentGameState().name()));
         addDynamicLabeledValue("State Timer", () -> stateTimerInfo(gameSupplier.get()));
         addDynamicLabeledValue("Game Scene", ifGameScenePresent(context, gameScene -> gameScene.getClass().getSimpleName()));
 
@@ -71,7 +71,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
         addDynamicLabeledValue("-Running",        ifGameLevel(gameSupplier, level -> fmtHuntingTicksRunning(level.huntingTimer())));
         addDynamicLabeledValue("-Remaining",      ifGameLevel(gameSupplier, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
 
-        addDynamicLabeledValue("Collision mode",  () -> fmtCollisionMode(context.gameContext().collisionStrategy()));
+        addDynamicLabeledValue("Collision mode",  () -> fmtCollisionMode(context.currentGameContext().collisionStrategy()));
         addDynamicLabeledValue("Pac-Man speed",   ifGameLevel(gameSupplier, this::fmtPacNormalSpeed));
         addDynamicLabeledValue("- empowered",     ifGameLevel(gameSupplier, this::fmtPacSpeedPowered));
         addDynamicLabeledValue("Power Duration",  ifGameLevel(gameSupplier, this::fmtPacPowerTime));
