@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Elroy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -25,29 +26,32 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestEatingFood {
 
-    private static GamesApp app;
-    private static GamesContainer gameBox;
+    private static GamesApp theGameApp;
 
     @BeforeAll
     static void setup() {
         final String variantName = GameVariant.ARCADE_PACMAN.name();
-        gameBox = new GamesContainer();
+        GamesContainer gameBox = new GamesContainer();
         gameBox.registerGame(variantName, new ArcadePacMan_GameModel(
             new Arcade_GameFlow(),
             CoinMechanism.OUT_OF_SERVICE));
 
 
         //TODO  create and init app
-        app.selectGameVariant(variantName);
+        theGameApp.selectGameVariant(variantName);
     }
 
     @BeforeEach
     public void createGameLevel() {
-        app.gameModel().buildNormalLevel(1);
+        currentGame().buildNormalLevel(1);
+    }
+
+    private GameModel currentGame() {
+        return theGameApp.gameContext().game();
     }
 
     private GameLevel currentGameLevel() {
-        return app.gameModel().optGameLevel().orElseThrow();
+        return currentGame().optGameLevel().orElseThrow();
     }
 
     private void eatNextPellet() {
@@ -57,7 +61,7 @@ public class TestEatingFood {
             .filter(not(foodLayer::isEnergizerTile))
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                app.gameModel().eatPellet(currentGameLevel(), tile);
+                currentGame().eatPellet(currentGameLevel(), tile);
             });
     }
 
@@ -67,7 +71,7 @@ public class TestEatingFood {
             .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                app.gameModel().eatEnergizer(level, tile);
+                currentGame().eatEnergizer(level, tile);
             });
     }
 
@@ -94,11 +98,11 @@ public class TestEatingFood {
     public void testLevelCompletion() {
         final GameLevel level = currentGameLevel();
         while (level.worldMap().foodLayer().remainingFoodCount() > 0) {
-            assertFalse(app.gameModel().rules().isLevelCompleted(level));
+            assertFalse(currentGame().rules().isLevelCompleted(level));
             eatNextPellet();
             eatNextEnergizer(level);
         }
-        assertTrue(app.gameModel().rules().isLevelCompleted(level));
+        assertTrue(currentGame().rules().isLevelCompleted(level));
     }
 
     @Test
