@@ -66,8 +66,8 @@ public enum Arcade_GameState {
         @Override
         public void onEnter(GameContext context) {
             final GameModel game = context.gameModel();
-            game.prepareNewGame();
             game.hud().credit(false).livesCounter(true);
+            game.prepareNewGame();
             game.buildNormalLevel(1);
             context.gameFlow().publishGameEvent(new GameStartedEvent(context));
         }
@@ -97,11 +97,15 @@ public enum Arcade_GameState {
         public void onEnter(GameContext context) {
             final GameModel game = context.gameModel();
             final GameLevel level = game.optGameLevel().orElseThrow();
+
             game.prepareLevelForPlaying(level);
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
+
             game.showLevelMessage(level, GameLevelMessageType.READY);
             game.hud().credit(false).livesCounter(true);
+
+            context.gameFlow().publishGameEvent(new GameContinuedEvent(context));
         }
 
         @Override
@@ -110,7 +114,7 @@ public enum Arcade_GameState {
             if (tick == 60) {
                 context.gameFlow().publishGameEvent(new GameContinuedEvent(context));
             }
-            else if (tick == Arcade_GameState.Timing.TICK_RESUME_HUNTING) {
+            else if (tick == Timing.TICK_RESUME_HUNTING) {
                 context.gameFlow().enterState(GameStateID.GAME_LEVEL_PLAYING);
             }
         }
@@ -131,6 +135,7 @@ public enum Arcade_GameState {
         public void onUpdate(GameContext context) {
             final GameModel game = context.gameModel();
             final GameLevel level = game.optGameLevel().orElseThrow();
+
             if (timer().hasExpired()) {
                 if (level.isDemoLevel()) {
                     // just in case: if demo level was completed, go back to intro scene
@@ -146,22 +151,7 @@ public enum Arcade_GameState {
         }
     }),
 
-    GAME_LEVEL_TRANSITION(new GameState(GameStateID.GAME_LEVEL_TRANSITION) {
-
-        @Override
-        public void onEnter(GameContext context) {
-            final GameModel game = context.gameModel();
-            timer().restartSeconds(2);
-            game.startNextLevel();
-        }
-
-        @Override
-        public void onUpdate(GameContext context) {
-            if (timer().hasExpired()) {
-                context.gameFlow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
-            }
-        }
-    }),
+    GAME_LEVEL_TRANSITION(new GameLevelTransitionState()),
 
     GAME_LEVEL_EATING_GHOST(new GameState("GAME_LEVEL_EATING_GHOST") {
 
