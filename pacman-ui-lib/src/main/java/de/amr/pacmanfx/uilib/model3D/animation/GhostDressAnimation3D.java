@@ -16,13 +16,13 @@ import javafx.util.Duration;
  */
 public class GhostDressAnimation3D extends ManagedAnimation {
 
-    private static final float FULL_CYCLE_SEC = 0.6f;
+    private static final float FULL_CYCLE_SEC = 0.8f;
 
     public GhostDressAnimation3D(Ghost3D ghost3D, int angle) {
         super("Ghost Dress Animation (%s)".formatted(ghost3D.ghost().name()));
         setFactory(() -> {
             final var dressRotation = new RotateTransition(Duration.seconds(FULL_CYCLE_SEC / 2), ghost3D.dressGroup());
-            dressRotation.setAxis(Rotate.Y_AXIS); // Note: Y axis!
+            dressRotation.setAxis(Rotate.Y_AXIS); // TODO: Check which Y axis
             dressRotation.setFromAngle(-angle);
             dressRotation.setToAngle(angle);
             dressRotation.setCycleCount(Animation.INDEFINITE);
