@@ -87,7 +87,7 @@ public class TestEatingFood {
 
     @BeforeEach
     public void createGameLevel() {
-        testContext.gameModel().buildNormalLevel(1);
+        testContext.gameModel().buildNormalLevel(testContext, 1);
     }
 
     private void eatNextPellet() {
@@ -109,7 +109,7 @@ public class TestEatingFood {
             .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                level.game().eatEnergizer(level, tile);
+                level.game().eatEnergizer(testContext, level, tile);
             });
     }
 
@@ -139,11 +139,11 @@ public class TestEatingFood {
     public void testLevelCompletion() {
         testContext.gameModel().optGameLevel().ifPresent(level -> {
             while (level.worldMap().foodLayer().remainingFoodCount() > 0) {
-                assertFalse(level.game().rules().isLevelCompleted(level));
+                assertFalse(testContext.gameRules().isLevelCompleted(level));
                 eatNextPellet();
                 eatNextEnergizer(level);
             }
-            assertTrue(level.game().rules().isLevelCompleted(level));
+            assertTrue(testContext.gameRules().isLevelCompleted(level));
         });
     }
 
