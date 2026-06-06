@@ -9,11 +9,14 @@ import de.amr.pacmanfx.event.GameContinuedEvent;
 import de.amr.pacmanfx.event.GameStartedEvent;
 import de.amr.pacmanfx.gamestate.*;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HeadsUpDisplay;
+import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -62,8 +65,14 @@ public enum TengenMsPacMan_GameState {
     GAME_OR_LEVEL_STARTING(new GameState(GameStateID.GAME_OR_LEVEL_STARTING) {
         @Override
         public void onEnter(GameContext gameContext) {
-            final TengenMsPacMan_HeadsUpDisplay hud = (TengenMsPacMan_HeadsUpDisplay) gameContext.gameModel().hud();
+            final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext.gameModel();
+            final TengenMsPacMan_HeadsUpDisplay hud = gameModel.hud();
             hud.credit(false).score(true).levelCounter(true).livesCounter(true).show();
+
+            // The rules vary between map categories so update the rules here:
+            final TengenMsPacMan_GameRules gameRules = (TengenMsPacMan_GameRules) gameContext.gameRules();
+            gameRules.setCurrentMapCategory(gameModel.mapCategory());
+            Logger.info("Using game rules for map category {}", gameRules.currentMapCategory());
         }
 
         @Override

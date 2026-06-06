@@ -74,6 +74,10 @@ public class TengenMsPacMan_GameRules implements GameRules {
         this.currentMapCategory = currentMapCategory;
     }
 
+    public MapCategory currentMapCategory() {
+        return currentMapCategory;
+    }
+
     @Override
     public boolean isLevelCompleted(GameLevel level) {
         return level.worldMap().foodLayer().remainingFoodCount() == 0;
