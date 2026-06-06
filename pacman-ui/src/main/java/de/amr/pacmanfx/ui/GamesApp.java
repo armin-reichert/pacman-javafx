@@ -14,7 +14,6 @@ import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
-import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
@@ -48,7 +47,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
 
@@ -104,6 +102,8 @@ public final class GamesApp implements AppContext {
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
+    private final File customMapDir;
+
     private final PreferencesManager prefs;
 
     private final DirectoryWatchdog watchdog;
@@ -127,9 +127,9 @@ public final class GamesApp implements AppContext {
         this.view = requireNonNull(view);
         this.gameClock = requireNonNull(gameClock);
         this.coinMechanism = requireNonNull(coinMechanism);
-
+        this.customMapDir = gamesContainer.customMapDir();//TODO
         prefs = new PreferencesManager(getClass());
-        watchdog = new DirectoryWatchdog(gamesContainer.customMapDir());
+        watchdog = new DirectoryWatchdog(customMapDir);
 
         ui = new GameUI(
             new UIConfigManager(),
@@ -148,6 +148,11 @@ public final class GamesApp implements AppContext {
             currentGameContext = new GameContextImpl();
             gameForVariant(newVariantName).flow().setContext(currentGameContext);
         });
+    }
+
+    @Override
+    public File customMapDir() {
+        return customMapDir;
     }
 
     @Override
@@ -209,31 +214,6 @@ public final class GamesApp implements AppContext {
     @Override
     public DirectoryWatchdog watchdog() {
         return watchdog;
-    }
-
-    @Override
-    public void editMap(File worldMapFile) {
-        final SubViewManager subViews = ui.subViews();
-        subViews.ensureEditorViewCreated();
-        subViews.optEditorView().map(EditorView::editor).ifPresent(editor -> {
-            editor.init(gamesContainer.customMapDir());
-            try {
-                if (subViews.trySelectEditorView()) {
-                    stopGame();
-                    editor.start();
-                    if (worldMapFile != null) {
-                        editor.editFile(worldMapFile);
-                    }
-                }
-            } catch (IOException x) {
-                Logger.error(x, "Could not open map file {}", worldMapFile);
-                shortMessage("Cannot open world map file");
-            }
-            catch (WorldMapParseException x) {
-                Logger.error(x, "Error reading map file data from {}", worldMapFile);
-                shortMessage("Cannot read world map file data");
-            }
-        });
     }
 
     @Override

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -179,7 +180,7 @@ public class PacManXXL_StartPage implements StartPage {
     private void openEditor(AppContext context) {
         context.ui().sounds().stopAndDisposeVoice();
         context.ui().subViews().startView().pauseProgressTimer();
-        context.editMap(null);
+        CommonActions.ACTION_OPEN_EDITOR.executeIfEnabled(context);
     }
 
     private void startSelectedGame(AppContext context) {

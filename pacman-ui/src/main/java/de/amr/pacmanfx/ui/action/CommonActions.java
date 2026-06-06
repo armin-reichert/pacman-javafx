@@ -12,15 +12,21 @@ import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
+import de.amr.pacmanfx.model.world.WorldMapParseException;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.subviews.SubViewManager;
+import de.amr.pacmanfx.ui.subviews.editor.EditorView;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
+
+import java.io.File;
+import java.io.IOException;
 
 import static de.amr.pacmanfx.core.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
@@ -32,6 +38,40 @@ import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
  * of the form {@code key=localized_action_name} where {@code key=action.name()} !
  */
 public final class CommonActions {
+
+    public static void editMapFile(AppContext context, File worldMapFile) {
+        createEditMapFileAction(worldMapFile).executeIfEnabled(context);
+    }
+
+    public static GameAction createEditMapFileAction(File worldMapFile) {
+        return new GameAction("edit_map_file") {
+            @Override
+            protected void doAction(AppContext context) {
+
+                final SubViewManager subViews = context.ui().subViews();
+                subViews.ensureEditorViewCreated();
+                subViews.optEditorView().map(EditorView::editor).ifPresent(editor -> {
+                    editor.init(context.customMapDir());
+                    try {
+                        if (subViews.trySelectEditorView()) {
+                            editor.start();
+                            if (worldMapFile != null) {
+                                editor.editFile(worldMapFile);
+                            }
+                            context.stopGame();
+                        }
+                    } catch (IOException x) {
+                        Logger.error(x, "Could not open map file {}", worldMapFile);
+                        context.shortMessage("Cannot open world map file");
+                    }
+                    catch (WorldMapParseException x) {
+                        Logger.error(x, "Error reading map file data from {}", worldMapFile);
+                        context.shortMessage("Cannot read world map file data");
+                    }
+                });
+            }
+        };
+    }
 
     public static final int SIM_SPEED_DELTA = 2;
     public static final int SIM_SPEED_MIN = 5;
@@ -63,7 +103,16 @@ public final class CommonActions {
     public static final GameAction ACTION_OPEN_EDITOR = new GameAction("open_editor") {
         @Override
         protected void doAction(AppContext context) {
-            context.editMap(null);
+            context.stopGame();
+
+            final SubViewManager subViews = context.ui().subViews();
+            subViews.ensureEditorViewCreated();
+            subViews.trySelectEditorView();
+            subViews.optEditorView().map(EditorView::editor).ifPresent(editor -> {
+                editor.init(context.customMapDir());
+                editor.start();
+            });
+
         }
     };
 

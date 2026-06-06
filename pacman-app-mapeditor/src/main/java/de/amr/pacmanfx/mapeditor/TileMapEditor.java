@@ -74,6 +74,7 @@ public class TileMapEditor {
     }
 
     public void editFile(File worldMapFile) throws WorldMapParseException, IOException {
+        requireNonNull(worldMapFile);
         WorldMap.fromFile(worldMapFile).ifPresent(worldMap -> {
             setCurrentWorldMap(worldMap);
             setCurrentFile(worldMapFile);

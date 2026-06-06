@@ -3,8 +3,6 @@
  */
 package de.amr.pacmanfx.ui;
 
-import java.io.File;
-
 /**
  * Lifecycle methods.
  */
@@ -36,11 +34,4 @@ public interface AppLifecycle {
      * Called when the application is shutting down.
      */
     void terminate();
-
-    /**
-     * Opens the given world map file in the editor view.
-     *
-     * @param worldMapFile world map file to edit or {@code null} to just open the map editor
-     */
-    void editMap(File worldMapFile);
 }

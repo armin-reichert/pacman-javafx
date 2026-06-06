@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameAppBuilder;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
@@ -67,7 +68,7 @@ public class PacManXXL_App extends Application {
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
                 section.setCustomDirWatchDog(app.watchdog());
-                section.setMapEditFunction(mapFile -> app.editMap(mapFile));
+                section.setMapEditFunction(mapFile -> CommonActions.editMapFile(app, mapFile));
             });
 
         app.watchdog().addEventListener(mapSelector);

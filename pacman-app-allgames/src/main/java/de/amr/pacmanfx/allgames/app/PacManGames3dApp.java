@@ -35,6 +35,7 @@ import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameAppBuilder;
 import de.amr.pacmanfx.ui.GamesApp;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.config.UIConfigManager;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
@@ -247,7 +248,7 @@ public class PacManGames3dApp extends Application {
             .map(DashboardSectionCustomMaps.class::cast)
             .ifPresent(section -> {
                 section.setCustomDirWatchDog(app.watchdog());
-                section.setMapEditFunction(mapFile -> app.editMap(mapFile));
+                section.setMapEditFunction(mapFile -> CommonActions.editMapFile(app, mapFile));
             });
     }
 }

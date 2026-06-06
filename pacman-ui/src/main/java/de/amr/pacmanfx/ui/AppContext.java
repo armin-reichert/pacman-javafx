@@ -16,6 +16,7 @@ import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.beans.property.StringProperty;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -27,6 +28,8 @@ public interface AppContext extends AppLifecycle {
     GameUI ui();
 
     GameClock gameClock();
+
+    File customMapDir();
 
     CoinMechanism coinMechanism();
 
