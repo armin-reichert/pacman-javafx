@@ -9,6 +9,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.actors.*;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 import static de.amr.pacmanfx.core.Globals.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
@@ -63,8 +65,6 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected PersistentScore highScore;
 
-    protected GameRules rules;
-
     protected GameCheats cheats;
 
     protected GameLevel currentLevel;
@@ -88,16 +88,22 @@ public abstract class AbstractGameModel implements GameModel {
         hud = new HeadsUpDisplay();
         cheats = new DefaultCheatsImpl();
 
-        score.pointsProperty().addListener((_, oldScore, newScore)
-            -> handleScoreChange(oldScore.intValue(), newScore.intValue()));
     }
 
+    public void addScoreChangeHandler(BiConsumer<Integer, Integer> handler) {
+        requireNonNull(handler);
+        score.pointsProperty().addListener((_, oldScore, newScore) -> handler.accept(oldScore.intValue(), newScore.intValue()));
+    }
+
+/*
     protected void handleScoreChange(int oldScore, int newScore) {
         if (rules.isExtraLifeAwarded(oldScore, newScore)) {
             lives.add(1);
             flow.publishGameEvent(new SpecialScoreEvent(flow.context(), newScore));
         }
     }
+
+ */
 
     /* -------------------------------------------------------------------------
      * GameModel interface implementation
@@ -106,10 +112,6 @@ public abstract class AbstractGameModel implements GameModel {
     @Override
     public GameFlow flow() {
         return flow;
-    }
-
-    public GameRules rules() {
-        return rules;
     }
 
     @Override
@@ -224,18 +226,18 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public abstract void activateNextBonus(GameLevel level);
+    public abstract void activateNextBonus(GameContext gameContext, GameLevel level);
 
     // Level related
 
     @Override
-    public abstract GameLevel createLevel(int levelNumber, boolean demoLevel);
+    public abstract GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel);
 
     @Override
-    public abstract void buildNormalLevel(int levelNumber);
+    public abstract void buildNormalLevel(GameContext gameContext, int levelNumber);
 
     @Override
-    public abstract void buildDemoLevel();
+    public abstract void buildDemoLevel(GameContext gameContext);
 
     @Override
     public void setLevel(GameLevel level) {
@@ -286,7 +288,7 @@ public abstract class AbstractGameModel implements GameModel {
 
     //TODO remove tick, introduce new game state
     @Override
-    public abstract void startDemoLevel(long tick);
+    public abstract void startDemoLevel(GameContext gameContext, long tick);
 
     @Override
     public boolean isDemoLevelRunning() {
@@ -294,18 +296,18 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public void startNextLevel() {
+    public void startNextLevel(GameContext gameContext) {
         final GameLevel level = optGameLevel().orElseThrow();
-        if (level.number() < rules.lastLevelNumber()) {
-            buildNormalLevel(level.number() + 1);
+        if (level.number() < gameContext.gameRules().lastLevelNumber()) {
+            buildNormalLevel(gameContext, level.number() + 1);
             startLevel();
         } else {
-            Logger.warn("Last level ({}) reached, cannot start next level", rules.lastLevelNumber());
+            Logger.warn("Last level ({}) reached, cannot start next level", gameContext.gameRules().lastLevelNumber());
         }
     }
 
     @Override
-    public void onStartLevelPlaying(GameLevel level) {
+    public void onStartLevelPlaying(GameContext gameContext, GameLevel level) {
         // Clear "READY!" message. "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared!
         level.optMessage()
             .filter(message -> message.type() == GameLevelMessageType.READY)
@@ -318,7 +320,7 @@ public abstract class AbstractGameModel implements GameModel {
         level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
 
         final HuntingTimer huntingTimer = level.huntingTimer();
-        huntingTimer.startFirstPhase(rules, level.number());
+        huntingTimer.startFirstPhase(gameContext.gameRules(), level.number());
         flow.publishGameEvent(new HuntingPhaseStartedEvent(
             flow.context(),
             huntingTimer.phaseIndex(),
@@ -357,19 +359,27 @@ public abstract class AbstractGameModel implements GameModel {
     // Actor related
 
     @Override
-    public void eatPellet(GameLevel level, Vector2i tile) {
+    public void eatPellet(GameContext gameContext, GameLevel level, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(tile);
-        scorePoints(rules.pointsForPellet(), level.number());
+        scorePoints(gameContext.gameRules().pointsForPellet(), level.number());
         if (gateKeeper != null) {
             gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         }
     }
 
     @Override
-    public void onEatGhost(GameLevel level, Ghost eatenGhost) {
+    public void eatBonus(GameContext gameContext, GameLevel level, Bonus bonus) {
+        scorePoints(bonus.points(), level.number());
+        Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+        bonus.showEatenForSeconds(gameContext.gameRules().eatenBonusDisplaySeconds());
+        flow.publishGameEvent(new BonusEatenEvent(flow.context(), bonus));
+    }
+
+    @Override
+    public void onEatGhost(GameContext gameContext, GameLevel level, Ghost eatenGhost) {
         final int killedBefore = level.ghostKillChainSize();
-        final int points = rules.pointsForGhost(killedBefore);
+        final int points = gameContext.gameRules().pointsForGhost(killedBefore);
 
         scorePoints(points, level.number());
         Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
@@ -495,10 +505,4 @@ public abstract class AbstractGameModel implements GameModel {
         }
     }
 
-    public void eatBonus(GameLevel level, Bonus bonus) {
-        scorePoints(bonus.points(), level.number());
-        Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-        bonus.showEatenForSeconds(rules.eatenBonusDisplaySeconds());
-        flow.publishGameEvent(new BonusEatenEvent(flow.context(), bonus));
-    }
 }

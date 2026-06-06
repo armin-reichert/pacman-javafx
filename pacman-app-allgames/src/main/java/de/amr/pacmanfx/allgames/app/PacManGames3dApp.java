@@ -125,25 +125,40 @@ public class PacManGames3dApp extends Application {
                 app = GameAppBuilder
                     .newApp(stage, sceneSize.x(), sceneSize.y(), gamesContainer, coinMechanism)
 
-                    .game(ARCADE_PACMAN,
+                    .game(
+                        ARCADE_PACMAN,
                         () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(), coinMechanism),
-                        ArcadePacMan_UIConfig::new)
+                        ArcadePacMan_GameRules::new,
+                        ArcadePacMan_UIConfig::new
+                    )
 
-                    .game(ARCADE_MS_PACMAN,
+                    .game(
+                        ARCADE_MS_PACMAN,
                         () -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(), coinMechanism),
-                        ArcadeMsPacMan_UIConfig::new)
+                        ArcadeMsPacMan_GameRules::new,
+                        ArcadeMsPacMan_UIConfig::new
+                    )
 
-                    .game(TENGEN_MS_PACMAN,
+                    .game(
+                        TENGEN_MS_PACMAN,
                         () -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow()),
-                        TengenMsPacMan_UIConfig::new)
+                        TengenMsPacMan_GameRules::new,
+                        TengenMsPacMan_UIConfig::new
+                    )
 
-                    .game(ARCADE_PACMAN_XXL,
+                    .game(
+                        ARCADE_PACMAN_XXL,
                         () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(), coinMechanism, xxlMapSelector),
-                        PacManXXL_PacMan_UIConfig::new)
+                        PacManXXL_PacMan_GameRules::new,
+                        PacManXXL_PacMan_UIConfig::new
+                    )
 
-                    .game(ARCADE_MS_PACMAN_XXL,
+                    .game(
+                        ARCADE_MS_PACMAN_XXL,
                         () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(), coinMechanism, xxlMapSelector),
-                        PacManXXL_MsPacMan_UIConfig::new)
+                        PacManXXL_MsPacMan_GameRules::new,
+                        PacManXXL_MsPacMan_UIConfig::new
+                    )
 
                     .startPage(ArcadePacMan_StartPage::new)
                     .startPage(ArcadeMsPacMan_StartPage::new)
@@ -216,7 +231,7 @@ public class PacManGames3dApp extends Application {
                 case TENGEN_MS_PACMAN -> {
                     final GameFlow gameFlow = new TengenMsPacMan_GameFlow();
                     final TengenMsPacMan_GameModel gameModel = new TengenMsPacMan_GameModel(gameFlow);
-                    final GameRules gameRules = new TengenMsPacMan_GameRules(gameModel);
+                    final GameRules gameRules = new TengenMsPacMan_GameRules();
                     yield new GameSpecification(gameModel, gameFlow, gameRules);
                 }
                 case ARCADE_PACMAN_XXL -> {

@@ -5,8 +5,10 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.flow.GameFlow;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -86,12 +88,11 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         levelCounter = new ArcadePacMan_LevelCounter();
         demoLevelSteering = new RouteBasedSteering(DEMO_LEVEL_ROUTE);
         automaticSteering = new RuleBasedPacSteering();
-        rules = new ArcadePacMan_GameRules();
         createGateKeeper();
     }
 
     @Override
-    public GameLevel createLevel(int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
         requireValidLevelNumber(levelNumber);
 
         final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber);
@@ -104,7 +105,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         terrain.setHouse(house);
 
         final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
-        final HuntingTimer huntingTimer = createHuntingTimer();
+        final HuntingTimer huntingTimer = createHuntingTimer(gameContext.gameRules());
 
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, levelData.numFlashes());
         level.setDemoLevel(demoLevel);
@@ -115,8 +116,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         createAndSetPacMan(level);
         createAndSetGhosts(level, house);
 
-        level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
+        level.setBonusSymbolCode(0, gameContext.gameRules().selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, gameContext.gameRules().selectBonusSymbolCode(level.number(), 1));
 
         levelCounter.setEnabled(true);
 
@@ -129,10 +130,10 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public void activateNextBonus(GameLevel level) {
+    public void activateNextBonus(GameContext gameContext, GameLevel level) {
         level.selectNextBonus();
         final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final Bonus bonus = new Bonus(bonusSymbolCode, rules.pointsForBonus(bonusSymbolCode));
+        final Bonus bonus = new Bonus(bonusSymbolCode, gameContext.gameRules().pointsForBonus(bonusSymbolCode));
         final Vector2i bonusTile = level.worldMap().terrainLayer()
             .getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
         bonus.setPosition(halfTileRightOf(bonusTile));
@@ -193,8 +194,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         });
     }
 
-    protected HuntingTimer createHuntingTimer() {
-        final var huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", rules().numHuntingPhases());
+    protected HuntingTimer createHuntingTimer(GameRules gameRules) {
+        final var huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", gameRules.numHuntingPhases());
         // On each phase start (except the initial phase), the ghosts reverse their move direction
         huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
             optGameLevel().ifPresent(level -> {

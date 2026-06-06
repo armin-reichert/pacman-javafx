@@ -8,8 +8,10 @@ import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
@@ -41,12 +43,18 @@ public class PacManXXL_App extends Application {
 
         app = GameAppBuilder
             .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer, coinMechanism)
-            .game(GameVariant.ARCADE_PACMAN_XXL,
+            .game(
+                GameVariant.ARCADE_PACMAN_XXL,
                 () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(), coinMechanism, mapSelector),
-                PacManXXL_PacMan_UIConfig::new)
-            .game(GameVariant.ARCADE_MS_PACMAN_XXL,
+                PacManXXL_PacMan_GameRules::new,
+                PacManXXL_PacMan_UIConfig::new
+            )
+            .game(
+                GameVariant.ARCADE_MS_PACMAN_XXL,
                 () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(), coinMechanism, mapSelector),
-                PacManXXL_MsPacMan_UIConfig::new)
+                PacManXXL_MsPacMan_GameRules::new,
+                PacManXXL_MsPacMan_UIConfig::new
+            )
             .startPage(PacManXXL_StartPage::new)
             .build();
 

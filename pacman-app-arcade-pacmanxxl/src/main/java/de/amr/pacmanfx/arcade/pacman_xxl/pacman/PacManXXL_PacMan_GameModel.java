@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -28,7 +29,6 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
     public PacManXXL_PacMan_GameModel(GameFlow flow, CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
         super(flow, coinMechanism, mapSelector);
-        rules = new PacManXXL_PacMan_GameRules();
         // Demo level map could be a custom map, so use generic auto-steering that also can cope with dead-ends:
         demoLevelSteering = new RuleBasedPacSteering();
     }
@@ -37,12 +37,12 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
     public PacManXXL_MapSelector mapSelector() { return (PacManXXL_MapSelector) mapSelector; }
 
     @Override
-    public void buildDemoLevel() {
+    public void buildDemoLevel(GameContext gameContext) {
         mapSelector().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 
         // Select random (standard) level with different map and map color scheme for each choice
         final int levelNumber = DEMOLEVEL_NUMBERS[randomInt(0, DEMOLEVEL_NUMBERS.length)];
-        final GameLevel level = createLevel(levelNumber, true);
+        final GameLevel level = createLevel(gameContext, levelNumber, true);
 
         final Pac pac = level.entities().pac();
         pac.setImmune(false);

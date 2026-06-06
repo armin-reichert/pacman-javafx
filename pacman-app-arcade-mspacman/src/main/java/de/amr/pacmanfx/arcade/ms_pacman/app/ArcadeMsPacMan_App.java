@@ -7,6 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
@@ -34,9 +35,12 @@ public class ArcadeMsPacMan_App extends Application {
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         app = GameAppBuilder
             .newApp(primaryStage, screenSize.x(), screenSize.y(), gamesContainer, coinMechanism)
-            .game(GameVariant.ARCADE_MS_PACMAN,
+            .game(
+                GameVariant.ARCADE_MS_PACMAN,
                 () -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(), coinMechanism),
-                ArcadeMsPacMan_UIConfig::new)
+                ArcadeMsPacMan_GameRules::new,
+                ArcadeMsPacMan_UIConfig::new
+            )
             .startPage(ArcadeMsPacMan_StartPage::new)
             .build();
 

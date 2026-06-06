@@ -6,10 +6,14 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameException;
-import de.amr.pacmanfx.event.*;
+import de.amr.pacmanfx.event.BonusActivatedEvent;
+import de.amr.pacmanfx.event.LevelCreatedEvent;
+import de.amr.pacmanfx.event.LevelStartedEvent;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -40,11 +44,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
-    public static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
-    public static final short TICK_PACMAN_DYING_START_PAC_ANIMATION = 90;
-    public static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
-    public static final short TICK_PACMAN_DYING_PAC_DEAD = 240;
-
     public static final String GAME_OVER_MESSAGE_TEXT = "GAME OVER";
     public static final String READY_MESSAGE_TEXT = "READY!";
     public static final String LEVEL_TEST_MESSAGE_TEXT_PATTERN = "TEST    L%02d";
@@ -67,7 +66,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public TengenMsPacMan_GameModel(GameFlow flow) {
         this.flow = flow;
-        rules = new TengenMsPacMan_GameRules(this);
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
         hud = new TengenMsPacMan_HeadsUpDisplay();
@@ -151,11 +149,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public TengenMsPacMan_GameRules rules() {
-        return (TengenMsPacMan_GameRules) rules;
-    }
-
-    @Override
     public TengenMsPacMan_ActorSpeedControl actorSpeedControl() {
         return (TengenMsPacMan_ActorSpeedControl) actorSpeedControl;
     }
@@ -232,10 +225,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         flow.publishGameEvent(new LevelStartedEvent(flow.context(), level));
     }
 
+    //TODO Remove tick parameter, introduce game state
     @Override
-    public void startDemoLevel(long tick) {
+    public void startDemoLevel(GameContext gameContext, long tick) {
         if (tick == 1) {
-            buildDemoLevel();
+            buildDemoLevel(gameContext);
         }
         else if (tick == 2) {
             startLevel();
@@ -262,14 +256,14 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public GameLevel createLevel(int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber, mapCategory);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
         terrain.setHouse(house);
 
-        final GameLevel level = new GameLevel(this, levelNumber, worldMap, createHuntingTimer(), 3);
+        final GameLevel level = new GameLevel(this, levelNumber, worldMap, createHuntingTimer(gameContext.gameRules()), 3);
         level.setDemoLevel(demoLevel);
 
         int index = levelNumber <= 19 ? levelNumber - 1 : 18;
@@ -285,8 +279,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         setGhosts(level, house);
 
         //TODO not sure about this:
-        level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
+        level.setBonusSymbolCode(0, gameContext.gameRules().selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, gameContext.gameRules().selectBonusSymbolCode(level.number(), 1));
 
         levelCounter.setEnabled(levelNumber < 8);
 
@@ -294,9 +288,9 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void buildNormalLevel(int levelNumber) {
-        final GameLevel newLevel = createLevel(levelNumber, false);
-        newLevel.setCutSceneNumber(rules.cutSceneNumberAfterLevel(levelNumber).orElse(0));
+    public void buildNormalLevel(GameContext gameContext, int levelNumber) {
+        final GameLevel newLevel = createLevel(gameContext, levelNumber, false);
+        newLevel.setCutSceneNumber(gameContext.gameRules().cutSceneNumberAfterLevel(levelNumber).orElse(0));
         score.setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
 
@@ -305,8 +299,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void buildDemoLevel() {
-        final GameLevel newLevel = createLevel(1, true);
+    public void buildDemoLevel(GameContext gameContext) {
+        final GameLevel newLevel = createLevel(gameContext, 1, true);
         newLevel.setCutSceneNumber(0);
         newLevel.setGameOverStateTicks(120);
 
@@ -334,7 +328,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void activateNextBonus(GameLevel level) {
+    public void activateNextBonus(GameContext gameContext, GameLevel level) {
         //TODO Find out how Tengen really implemented this
         if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {
             Logger.info("Previous bonus is still active, skip this bonus");
@@ -373,7 +367,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final Bonus bonus = new Bonus(symbolCode, rules.pointsForBonus(symbolCode));
+        final Bonus bonus = new Bonus(symbolCode, gameContext.gameRules().pointsForBonus(symbolCode));
         bonus.setMazeRoute(route, leftToRight);
         bonus.showEdibleAndStartWandering(actorSpeedControl.bonusSpeed(level));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
@@ -383,11 +377,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void eatEnergizer(GameLevel level, Vector2i tile) {
+    public void eatEnergizer(GameContext gameContext, GameLevel level, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(rules.pointsForEnergizer(), level.number());
+        scorePoints(gameContext.gameRules().pointsForEnergizer(), level.number());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         level.clearGhostKillChain();
@@ -421,8 +415,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         return ghost;
     }
 
-    private HuntingTimer createHuntingTimer() {
-        final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", rules().numHuntingPhases());
+    private HuntingTimer createHuntingTimer(GameRules gameRules) {
+        final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", gameRules.numHuntingPhases());
         huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
             optGameLevel().ifPresent(level -> {
                 if (newPhaseIndex.intValue() > 0) {

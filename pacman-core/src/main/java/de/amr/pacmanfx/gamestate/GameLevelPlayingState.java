@@ -25,7 +25,7 @@ public class GameLevelPlayingState extends GameState {
     public void onEnter(GameContext context) {
         final GameModel game = context.gameModel();
         final GameLevel level = game.optGameLevel().orElseThrow();
-        game.onStartLevelPlaying(level);
+        game.onStartLevelPlaying(context, level);
     }
 
     @Override

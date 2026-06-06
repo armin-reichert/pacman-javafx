@@ -11,6 +11,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameAppBuilder;
 import de.amr.pacmanfx.ui.app.GamesContainer;
@@ -38,8 +39,13 @@ public class TengenMsPacMan_App extends Application {
 
         app = GameAppBuilder
             .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer, CoinMechanism.OUT_OF_SERVICE)
-            .game(TENGEN_MS_PACMAN,
-                () -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow()), TengenMsPacMan_UIConfig::new)
+            .game(
+                TENGEN_MS_PACMAN,
+                () -> new TengenMsPacMan_GameModel(
+                new TengenMsPacMan_GameFlow()),
+                TengenMsPacMan_GameRules::new,
+                TengenMsPacMan_UIConfig::new
+            )
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
 

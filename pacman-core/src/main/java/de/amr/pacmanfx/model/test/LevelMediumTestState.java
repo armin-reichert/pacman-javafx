@@ -51,59 +51,59 @@ public class LevelMediumTestState extends TestState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final GameModel game = context.gameModel();
-        lastTestedLevelNumber = context.gameRules().lastLevelNumber() == Integer.MAX_VALUE
+    public void onEnter(GameContext gameContext) {
+        final GameModel game = gameContext.gameModel();
+        lastTestedLevelNumber = gameContext.gameRules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
-            : context.gameRules().lastLevelNumber();
+            : gameContext.gameRules().lastLevelNumber();
         timer.restartSeconds(TEST_DURATION_SEC);
         game.prepareNewGame();
-        game.buildNormalLevel(1);
+        game.buildNormalLevel(gameContext, 1);
         game.startLevel();
-        configureLevelForTest(context);
+        configureLevelForTest(gameContext);
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameModel game = context.gameModel();
-        final GameLevel level = game.optGameLevel().orElseThrow();
+    public void onUpdate(GameContext gameContext) {
+        final GameModel gameModel = gameContext.gameModel();
+        final GameLevel level = gameModel.optGameLevel().orElseThrow();
 
         level.entities().pac().update(level);
         level.entities().ghosts().forEach(ghost -> ghost.update(level));
         level.optBonus().ifPresent(bonus -> bonus.update(level));
 
-        if (game.gateKeeper() != null) {
-            game.gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
+        if (gameModel.gateKeeper() != null) {
+            gameModel.gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
-        game.cheats().update(level);
+        gameModel.cheats().update(level);
 
         level.heartbeat().triggerPulse();
 
-        context.startNewHuntingStep();
-        HuntingCollisionDetector.detectCollisions(context);
+        gameContext.startNewHuntingStep();
+        HuntingCollisionDetector.detectCollisions(gameContext);
 
         //TODO add missing logic again
         boolean pacKilled = false;
 
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
-                game.flow().publishGameEvent(new StopAllSoundsEvent(context));
-                game.flow().enterState(GameStateID.GAME_INTRO.name());
+                gameModel.flow().publishGameEvent(new StopAllSoundsEvent(gameContext));
+                gameModel.flow().enterState(GameStateID.GAME_INTRO.name());
             }
             else {
                 timer().restartSeconds(TEST_DURATION_SEC);
-                game.startNextLevel();
-                configureLevelForTest(context);
+                gameModel.startNextLevel(gameContext);
+                configureLevelForTest(gameContext);
             }
         }
-        else if (context.gameRules().isLevelCompleted(level)) {
-            game.flow().enterState(GameStateID.GAME_INTRO.name());
+        else if (gameContext.gameRules().isLevelCompleted(level)) {
+            gameModel.flow().enterState(GameStateID.GAME_INTRO.name());
         }
         else if (pacKilled) {
             expire();
         }
-        else if (context.huntingResult().hasGhostBeenKilled()) {
-            game.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST.name());
+        else if (gameContext.huntingResult().hasGhostBeenKilled()) {
+            gameModel.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST.name());
         }
     }
 

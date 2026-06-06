@@ -41,18 +41,18 @@ public enum Arcade_GameState {
         }
 
         @Override
-        public void onUpdate(GameContext context) {
-            final GameModel game = context.gameModel();
+        public void onUpdate(GameContext gameContext) {
+            final GameModel gameModel = gameContext.gameModel();
             final long tick = timer().tickCount();
-            if (game.isPlaying()) {
-                context.gameFlow().enterState(GameStateID.GAME_LEVEL_CONTINUE);
+            if (gameModel.isPlaying()) {
+                gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_CONTINUE);
             }
-            else if (game.canStartNewGame()) {
-                context.gameFlow().enterState(GameStateID.GAME_STARTING);
+            else if (gameModel.canStartNewGame()) {
+                gameContext.gameFlow().enterState(GameStateID.GAME_STARTING);
             }
             else {
-                game.startDemoLevel(tick);
-                game.hud().credit(true).livesCounter(false);
+                gameModel.startDemoLevel(gameContext, tick);
+                gameModel.hud().credit(true).livesCounter(false);
             }
         }
     }),
@@ -61,12 +61,12 @@ public enum Arcade_GameState {
     GAME_STARTING( new GameState(GameStateID.GAME_STARTING) {
 
         @Override
-        public void onEnter(GameContext context) {
-            final GameModel game = context.gameModel();
-            game.hud().credit(false).livesCounter(true);
-            game.prepareNewGame();
-            game.buildNormalLevel(1);
-            context.gameFlow().publishGameEvent(new GameStartedEvent(context));
+        public void onEnter(GameContext gameContext) {
+            final GameModel gameModel = gameContext.gameModel();
+            gameModel.hud().credit(false).livesCounter(true);
+            gameModel.prepareNewGame();
+            gameModel.buildNormalLevel(gameContext, 1);
+            gameContext.gameFlow().publishGameEvent(new GameStartedEvent(gameContext));
         }
 
         @Override

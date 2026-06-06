@@ -10,8 +10,10 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.flow.GameFlow;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -156,13 +158,12 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         demoLevelSteering = new RuleBasedPacSteering();
         automaticSteering = new RuleBasedPacSteering();
         actorSpeedControl = new ArcadeMsPacMan_ActorSpeedControl();
-        rules = new ArcadeMsPacMan_GameRules();
         createGateKeeper();
         mapSelector.loadMapPrototypes();
     }
 
     @Override
-    public GameLevel createLevel(int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
         requireValidLevelNumber(levelNumber);
 
         final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber);
@@ -173,7 +174,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         terrain.setHouse(new ArcadeHouse(houseMinTile));
 
-        final HuntingTimer huntingTimer = createHuntingTimer();
+        final HuntingTimer huntingTimer = createHuntingTimer(gameContext.gameRules());
         final int numFlashes = ArcadePacMan_GameRules.levelData(levelNumber).numFlashes();
 
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, numFlashes);
@@ -188,8 +189,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         createAndSetMsPacMan(level);
         createAndSetGhosts(level, terrain.house());
 
-        level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
+        level.setBonusSymbolCode(0, gameContext.gameRules().selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, gameContext.gameRules().selectBonusSymbolCode(level.number(), 1));
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
@@ -220,7 +221,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      *
      **/
     @Override
-    public void activateNextBonus(GameLevel level) {
+    public void activateNextBonus(GameContext gameContext, GameLevel level) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {
@@ -236,7 +237,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         level.selectNextBonus();
         final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final var bonus = new Bonus(bonusSymbolCode, rules().pointsForBonus(bonusSymbolCode));
+        final var bonus = new Bonus(bonusSymbolCode, gameContext.gameRules().pointsForBonus(bonusSymbolCode));
         if (terrain.horizontalPortals().isEmpty()) {
             final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.setPosition(halfTileRightOf(bonusTile));
@@ -289,8 +290,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         });
     }
 
-    private HuntingTimer createHuntingTimer() {
-        final var huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", rules().numHuntingPhases());
+    private HuntingTimer createHuntingTimer(GameRules gameRules) {
+        final var huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", gameRules.numHuntingPhases());
         huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
             optGameLevel().ifPresent(level -> {
                 if (newPhaseIndex.intValue() > 0) {

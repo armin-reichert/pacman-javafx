@@ -6,6 +6,7 @@ package de.amr.pacmanfx.model;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -31,9 +32,6 @@ public interface GameModel {
 
     //TODO move into GameContext
     GameFlow flow();
-
-    //TODO move into GameContext
-    GameRules rules();
 
     GameCheats cheats();
 
@@ -71,15 +69,13 @@ public interface GameModel {
 
     void setPlaying(boolean playing);
 
-    void activateNextBonus(GameLevel level);
-
     // Level related
 
-    GameLevel createLevel(int levelNumber, boolean demoLevel);
+    GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel);
 
-    void buildNormalLevel(int levelNumber);
+    void buildNormalLevel(GameContext gameContext, int levelNumber);
 
-    void buildDemoLevel();
+    void buildDemoLevel(GameContext gameContext);
 
     void setLevel(GameLevel level);
 
@@ -87,29 +83,31 @@ public interface GameModel {
 
     void startLevel();
 
+    void startNextLevel(GameContext gameContext);
+
     void prepareLevelForPlaying(GameLevel level);
 
     void showLevelMessage(GameLevel level, GameLevelMessageType type);
 
-    void startDemoLevel(long tick);
+    void startDemoLevel(GameContext gameContext, long tick);
 
     boolean isDemoLevelRunning();
 
-    void startNextLevel();
-
-    void onStartLevelPlaying(GameLevel level);
+    void onStartLevelPlaying(GameContext gameContext, GameLevel level);
 
     void onLevelCompleted(GameLevel level);
 
     // Actor related
 
-    void eatPellet(GameLevel level, Vector2i tile);
+    void eatPellet(GameContext gameContext, GameLevel level, Vector2i tile);
 
-    void eatEnergizer(GameLevel level, Vector2i tile);
+    void eatEnergizer(GameContext gameContext, GameLevel level, Vector2i tile);
 
-    void eatBonus(GameLevel level, Bonus bonus);
+    void activateNextBonus(GameContext gameContext, GameLevel level);
 
-    void onEatGhost(GameLevel level, Ghost eatenGhost);
+    void eatBonus(GameContext gameContext, GameLevel level, Bonus bonus);
+
+    void onEatGhost(GameContext gameContext, GameLevel level, Ghost eatenGhost);
 
     void startPacPowerMode(GameLevel level, Pac pac);
 

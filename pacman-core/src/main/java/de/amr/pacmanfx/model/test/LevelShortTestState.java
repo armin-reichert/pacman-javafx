@@ -25,32 +25,32 @@ public class LevelShortTestState extends TestState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final GameModel game = context.gameModel();
+    public void onEnter(GameContext gameContext) {
+        final GameModel gameModel = gameContext.gameModel();
         //coinMechanism.setNumCoins(1);
-        lastTestedLevelNumber = context.gameRules().lastLevelNumber() == Integer.MAX_VALUE
+        lastTestedLevelNumber = gameContext.gameRules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
-            : context.gameRules().lastLevelNumber();
+            : gameContext.gameRules().lastLevelNumber();
         lock();
-        game.prepareNewGame();
-        game.buildNormalLevel(1);
-        game.startLevel();
-        final GameLevel level = game.optGameLevel().orElseThrow();
+        gameModel.prepareNewGame();
+        gameModel.buildNormalLevel(gameContext, 1);
+        gameModel.startLevel();
+        final GameLevel level = gameModel.optGameLevel().orElseThrow();
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameModel game = context.gameModel();
-        final GameLevel level = game.optGameLevel().orElseThrow();
+    public void onUpdate(GameContext gameContext) {
+        final GameModel gameModel = gameContext.gameModel();
+        final GameLevel level = gameModel.optGameLevel().orElseThrow();
         final float START = 1.0f;
         if (timer.atSecond(START)) {
-            game.prepareLevelForPlaying(level);
+            gameModel.prepareLevelForPlaying(level);
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
-            game.showLevelMessage(level, GameLevelMessageType.READY);
-            game.hud().credit(false).livesCounter(true);
+            gameModel.showLevelMessage(level, GameLevelMessageType.READY);
+            gameModel.hud().credit(false).livesCounter(true);
 
             GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
             message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
@@ -61,41 +61,41 @@ public class LevelShortTestState extends TestState {
             level.clearMessage();
         }
         else if (timer.atSecond(START + 3)) {
-            game.activateNextBonus(level);
+            gameModel.activateNextBonus(gameContext, level);
         }
         else if (timer.atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
-                game.flow().publishGameEvent(new BonusEatenEvent(context, bonus));
+                gameModel.flow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
             });
         }
         else if (timer.atSecond(START + 6)) {
-            game.activateNextBonus(level);
+            gameModel.activateNextBonus(gameContext, level);
         }
         else if (timer.atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
-                game.flow().publishGameEvent(new BonusEatenEvent(context, bonus));
+                gameModel.flow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
             });
         }
         else if (timer.atSecond(START + 9)) {
             level.hidePacAndGhosts();
             level.heartbeat().stop();
-            game.onLevelCompleted(level);
+            gameModel.onLevelCompleted(level);
         }
         else if (timer.atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
                 //coinMechanism.setNumCoins(0);
-                game.flow().restartState(GameStateID.BOOT.name());
+                gameModel.flow().restartState(GameStateID.BOOT.name());
             } else {
                 lock();
-                game.startNextLevel();
+                gameModel.startNextLevel(gameContext);
                 GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
                 message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
                 level.setMessage(message);
             }
         } else {
-            game.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.update(level));
+            gameModel.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.update(level));
         }
     }
 

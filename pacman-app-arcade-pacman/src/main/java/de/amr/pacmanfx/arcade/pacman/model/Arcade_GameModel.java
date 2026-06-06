@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.flow.GameFlow;
@@ -35,22 +36,22 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void eatPellet(GameLevel level, Vector2i tile) {
-        super.eatPellet(level, tile);
-        level.entities().pac().setRestingTicks(rules().restingTicksForPellet());
+    public void eatPellet(GameContext gameContext, GameLevel level, Vector2i tile) {
+        super.eatPellet(gameContext, level, tile);
+        level.entities().pac().setRestingTicks(gameContext.gameRules().restingTicksForPellet());
         checkRedGhostCruiseElroyActivation(level);
     }
 
     @Override
-    public void eatEnergizer(GameLevel level, Vector2i tile) {
+    public void eatEnergizer(GameContext gameContext, GameLevel level, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(rules().pointsForEnergizer(), level.number());
+        scorePoints(gameContext.gameRules().pointsForEnergizer(), level.number());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         final Pac pac = level.entities().pac();
-        pac.setRestingTicks(rules().restingTicksForEnergizer());
+        pac.setRestingTicks(gameContext.gameRules().restingTicksForEnergizer());
         checkRedGhostCruiseElroyActivation(level);
 
         level.clearGhostKillChain();
@@ -76,9 +77,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     // Game interface
 
     @Override
-    public void buildNormalLevel(int levelNumber) {
-        final GameLevel level = createLevel(levelNumber, false);
-        level.setCutSceneNumber(rules().cutSceneNumberAfterLevel(levelNumber).orElse(0));
+    public void buildNormalLevel(GameContext gameContext, int levelNumber) {
+        final GameLevel level = createLevel(gameContext, levelNumber, false);
+        level.setCutSceneNumber(gameContext.gameRules().cutSceneNumberAfterLevel(levelNumber).orElse(0));
         levelCounter().setEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
@@ -87,9 +88,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void buildDemoLevel() {
+    public void buildDemoLevel(GameContext gameContext) {
         int levelNumber = 1;
-        final GameLevel level = createLevel(levelNumber, true);
+        final GameLevel level = createLevel(gameContext, levelNumber, true);
         level.setCutSceneNumber(0);
 
         final Pac pac = level.entities().pac();
@@ -107,9 +108,9 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startDemoLevel(long tick) {
+    public void startDemoLevel(GameContext gameContext, long tick) {
         if (tick == 1) {
-            buildDemoLevel();
+            buildDemoLevel(gameContext);
         }
         else if (tick == 2) {
             startLevel();

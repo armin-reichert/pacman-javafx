@@ -47,36 +47,36 @@ public enum TengenMsPacMan_GameState {
      */
     SHOWING_HALL_OF_FAME (new GameState(TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME) {
         @Override
-        public void onEnter(GameContext context) {
+        public void onEnter(GameContext gameContext) {
             lock();
         }
 
         @Override
-        public void onUpdate(GameContext context) {
+        public void onUpdate(GameContext gameContext) {
             if (timer().hasExpired()) {
-                context.gameFlow().enterState(GAME_INTRO.state());
+                gameContext.gameFlow().enterState(GAME_INTRO.state());
             }
         }
     }),
 
     GAME_OR_LEVEL_STARTING(new GameState(GameStateID.GAME_OR_LEVEL_STARTING) {
         @Override
-        public void onEnter(GameContext context) {
-            final GameModel game = context.gameModel();
-            game.hud().credit(false).score(true).levelCounter(true).livesCounter(true).show();
+        public void onEnter(GameContext gameContext) {
+            final TengenMsPacMan_HeadsUpDisplay hud = (TengenMsPacMan_HeadsUpDisplay) gameContext.gameModel().hud();
+            hud.credit(false).score(true).levelCounter(true).livesCounter(true).show();
         }
 
         @Override
-        public void onUpdate(GameContext context) {
-            final GameModel game = context.gameModel();
+        public void onUpdate(GameContext gameContext) {
+            final GameModel gameModel = gameContext.gameModel();
             final long tick = timer().tickCount();
-            if (game.isPlaying()) {
-                context.gameFlow().enterState(GameStateID.GAME_LEVEL_CONTINUE);
+            if (gameModel.isPlaying()) {
+                gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_CONTINUE);
             }
-            else if (game.canStartNewGame()) {
-                context.gameFlow().enterState(GameStateID.GAME_STARTING);
+            else if (gameModel.canStartNewGame()) {
+                gameContext.gameFlow().enterState(GameStateID.GAME_STARTING);
             } else {
-                game.startDemoLevel(tick);
+                gameModel.startDemoLevel(gameContext, tick);
             }
         }
     }),
@@ -84,28 +84,28 @@ public enum TengenMsPacMan_GameState {
     GAME_STARTING(new GameState(GameStateID.GAME_STARTING) {
 
         @Override
-        public void onEnter(GameContext context) {
-            final GameModel game = context.gameModel();
-            game.prepareNewGame();
-            game.buildNormalLevel(tengenGame(game).startLevelNumber());
-            context.gameFlow().publishGameEvent(new GameStartedEvent(context));
+        public void onEnter(GameContext gameContext) {
+            final GameModel gameModel = gameContext.gameModel();
+            gameModel.prepareNewGame();
+            gameModel.buildNormalLevel(gameContext, tengenGameModel(gameModel).startLevelNumber());
+            gameContext.gameFlow().publishGameEvent(new GameStartedEvent(gameContext));
         }
 
         @Override
-        public void onUpdate(GameContext context) {
-            final GameModel game = context.gameModel();
+        public void onUpdate(GameContext gameContext) {
+            final GameModel gameModel = gameContext.gameModel();
             final long tick = timer().tickCount();
             if (tick == Timing.TICK_SHOW_READY) {
-                game.startLevel();
+                gameModel.startLevel();
             }
             else if (tick == Timing.TICK_NEW_GAME_SHOW_GUYS) {
-                final GameLevel level = game.optGameLevel().orElseThrow();
+                final GameLevel level = gameModel.optGameLevel().orElseThrow();
                 level.entities().pac().show();
                 level.entities().ghosts().forEach(Ghost::show);
             }
             else if (tick == Timing.TICK_NEW_GAME_START_HUNTING) {
-                game.setPlaying(true);
-                context.gameFlow().enterState(GameStateID.GAME_LEVEL_PLAYING);
+                gameModel.setPlaying(true);
+                gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_PLAYING);
             }
         }
     }),
@@ -113,22 +113,22 @@ public enum TengenMsPacMan_GameState {
     GAME_LEVEL_CONTINUE(new GameState(GameStateID.GAME_LEVEL_CONTINUE) {
 
         @Override
-        public void onEnter(GameContext context) {
-            final GameModel game = context.gameModel();
-            final GameLevel level = game.optGameLevel().orElseThrow();
+        public void onEnter(GameContext gameContext) {
+            final GameModel gameModel = gameContext.gameModel();
+            final GameLevel level = gameModel.optGameLevel().orElseThrow();
 
-            game.prepareLevelForPlaying(level);
+            gameModel.prepareLevelForPlaying(level);
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
 
-            context.gameFlow().publishGameEvent(new GameContinuedEvent(context));
+            gameContext.gameFlow().publishGameEvent(new GameContinuedEvent(gameContext));
         }
 
         @Override
-        public void onUpdate(GameContext context) {
+        public void onUpdate(GameContext gameContext) {
             final long tick = timer().tickCount();
             if (tick == Timing.TICK_RESUME_HUNTING) {
-                context.gameFlow().enterState(GameStateID.GAME_LEVEL_PLAYING);
+                gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_PLAYING);
             }
         }
     }),
@@ -137,32 +137,32 @@ public enum TengenMsPacMan_GameState {
 
     GAME_LEVEL_COMPLETE(new GameState(GameStateID.GAME_LEVEL_COMPLETE) {
         @Override
-        public void onEnter(GameContext context) {
-            final GameModel game = context.gameModel();
+        public void onEnter(GameContext gameContext) {
+            final GameModel gameModel = gameContext.gameModel();
             lock(); // UI triggers timeout
-            game.onLevelCompleted(game.optGameLevel().orElseThrow());
+            gameModel.onLevelCompleted(gameModel.optGameLevel().orElseThrow());
         }
 
         @Override
-        public void onUpdate(GameContext context) {
-            final GameModel game = context.gameModel();
-            final GameLevel level = game.optGameLevel().orElseThrow();
+        public void onUpdate(GameContext gameContext) {
+            final GameModel gameModel = gameContext.gameModel();
+            final GameLevel level = gameModel.optGameLevel().orElseThrow();
 
             if (level.isDemoLevel()) {
-                context.gameFlow().enterState(TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
+                gameContext.gameFlow().enterState(TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
                 return;
             }
 
             if (timer().hasExpired()) {
                 if (level.isDemoLevel()) {
                     // Just in case: if demo level is completed, go back to intro scene
-                    context.gameFlow().enterState(GameStateID.GAME_INTRO);
+                    gameContext.gameFlow().enterState(GameStateID.GAME_INTRO);
                 }
-                else if (context.gameFlow().cutScenesEnabled() && level.cutSceneNumber() != 0) {
-                    context.gameFlow().enterState(GameStateID.GAME_LEVEL_INTERMISSION);
+                else if (gameContext.gameFlow().cutScenesEnabled() && level.cutSceneNumber() != 0) {
+                    gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_INTERMISSION);
                 }
                 else {
-                    context.gameFlow().enterState(GameStateID.GAME_LEVEL_TRANSITION);
+                    gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_TRANSITION);
                 }
             }
         }
@@ -176,24 +176,24 @@ public enum TengenMsPacMan_GameState {
 
     GAME_OVER (new GameState(GameStateID.GAME_OVER) {
         @Override
-        public void onEnter(GameContext context) {
-            final GameModel game = context.gameModel();
-            final GameLevel level = game.optGameLevel().orElseThrow();
+        public void onEnter(GameContext gameContext) {
+            final GameModel gameModel = gameContext.gameModel();
+            final GameLevel level = gameModel.optGameLevel().orElseThrow();
             timer().restartTicks(level.gameOverStateTicks());
-            game.onGameOver(level);
+            gameModel.onGameOver(level);
         }
 
         @Override
-        public void onUpdate(GameContext context) {
-            final GameModel game = context.gameModel();
+        public void onUpdate(GameContext gameContext) {
+            final GameModel gameModel = gameContext.gameModel();
             if (timer().hasExpired()) {
-                final GameLevel level = game.optGameLevel().orElseThrow();
-                game.cheats().clear();
+                final GameLevel level = gameModel.optGameLevel().orElseThrow();
+                gameModel.cheats().clear();
                 if (level.isDemoLevel()) {
-                    context.gameFlow().enterState(TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
+                    gameContext.gameFlow().enterState(TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
                 } else {
                     level.clearMessage();
-                    context.gameFlow().enterState(game.canContinueOnGameOver()
+                    gameContext.gameFlow().enterState(gameModel.canContinueOnGameOver()
                         ? GameStateID.GAME_PREPARATION
                         : GameStateID.GAME_INTRO);
                 }
@@ -204,43 +204,41 @@ public enum TengenMsPacMan_GameState {
     GAME_LEVEL_INTERMISSION(new GameState(GameStateID.GAME_LEVEL_INTERMISSION) {
 
         @Override
-        public void onEnter(GameContext context) {
-            final GameModel game = context.gameModel();
+        public void onEnter(GameContext gameContext) {
+            final GameModel gameModel = gameContext.gameModel();
+            final GameLevel level = gameModel.optGameLevel().orElseThrow();
+            final var hud = (TengenMsPacMan_HeadsUpDisplay) gameModel.hud();
+            final boolean isLastCutScene = level.cutSceneNumber() == gameContext.gameRules().lastCutSceneNumber();
+
             lock();
 
-            final GameLevel level = game.optGameLevel().orElseThrow();
-
-            final var tengenHUD = (TengenMsPacMan_HeadsUpDisplay) game.hud();
-            final TengenMsPacMan_GameModel tengenGame = tengenGame(game);
-            final boolean isLastCutScene = level.cutSceneNumber() == tengenGame.rules().lastCutSceneNumber();
-            if (tengenGame.mapCategory() == MapCategory.ARCADE || isLastCutScene) {
-                tengenHUD.hide();
+            if (tengenGameModel(gameModel).mapCategory() == MapCategory.ARCADE || isLastCutScene) {
+                hud.hide();
             } else {
-                tengenHUD.show();
-                tengenHUD.gameOptions(false).score(false).levelCounter(true).livesCounter(false).show();
+                hud.show();
+                hud.gameOptions(false).score(false).levelCounter(true).livesCounter(false).show();
             }
         }
 
         @Override
-        public void onUpdate(GameContext context) {
-            final GameModel game = context.gameModel();
+        public void onUpdate(GameContext gameContext) {
+            final GameModel gameModel = gameContext.gameModel();
             if (timer().hasExpired()) {
-                context.gameFlow().enterState(game.isPlaying()
+                gameContext.gameFlow().enterState(gameModel.isPlaying()
                     ? GameStateID.GAME_LEVEL_TRANSITION
                     : GameStateID.GAME_INTRO);
             }
         }
 
         @Override
-        public void onExit(GameContext context) {
-            final GameModel game = context.gameModel();
-            final var tengenHUD = (TengenMsPacMan_HeadsUpDisplay) game.hud();
-            final TengenMsPacMan_GameModel tengenGame = tengenGame(game);
-            if (tengenGame.mapCategory() == MapCategory.ARCADE) {
-                tengenHUD.hide();
+        public void onExit(GameContext gameContext) {
+            final GameModel gameModel = gameContext.gameModel();
+            final var hud = (TengenMsPacMan_HeadsUpDisplay) gameModel.hud();
+            if (tengenGameModel(gameModel).mapCategory() == MapCategory.ARCADE) {
+                hud.hide();
             } else {
-                tengenHUD.show();
-                tengenHUD.all(true).gameOptions(true).score(true).levelCounter(true).livesCounter(false).show();
+                hud.show();
+                hud.all(true).gameOptions(true).score(true).levelCounter(true).livesCounter(false).show();
             }
         }
 
@@ -256,15 +254,22 @@ public enum TengenMsPacMan_GameState {
         return state;
     }
 
-    static TengenMsPacMan_GameModel tengenGame(GameModel game) {
+    static TengenMsPacMan_GameModel tengenGameModel(GameModel game) {
         return (TengenMsPacMan_GameModel) game;
     }
 
+    //TODO make package-private again
     public static class Timing {
         public static final short TICK_SHOW_READY = 10;
         public static final short TICK_NEW_GAME_SHOW_GUYS = 70;
         public static final short TICK_NEW_GAME_START_HUNTING = 250;
         public static final short TICK_RESUME_HUNTING = 240;
         public static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
+
+        //TODO check times in common game state
+        public static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
+        public static final short TICK_PACMAN_DYING_START_PAC_ANIMATION = 90;
+        public static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
+        public static final short TICK_PACMAN_DYING_PAC_DEAD = 240;
     }
 }

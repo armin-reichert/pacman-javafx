@@ -98,7 +98,7 @@ public class TestEatingFood {
                 .filter(not(foodLayer::isEnergizerTile))
                 .findFirst().ifPresent(tile -> {
                     foodLayer.markFoodEatenAt(tile);
-                    level.game().eatPellet(level, tile);
+                    level.game().eatPellet(testContext, level, tile);
                 });
         });
     }

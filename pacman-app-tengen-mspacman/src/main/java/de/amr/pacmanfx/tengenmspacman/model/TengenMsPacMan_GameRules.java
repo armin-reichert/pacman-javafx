@@ -15,6 +15,9 @@ import java.util.OptionalInt;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 
+// TODO: In Tengen Ms. Pac-Man, the game rules vary depending on the map category!
+//       Should I use different rules instances which are switched on map category change or do I make the rules instance
+//       mutable and store the current map category?
 public class TengenMsPacMan_GameRules implements GameRules {
 
     // See https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PowerPelletTimes.asm
@@ -63,10 +66,12 @@ public class TengenMsPacMan_GameRules implements GameRules {
         LAST_LEVEL_NUMBER, 4
     );
 
-    private final TengenMsPacMan_GameModel gameModel;
+    private MapCategory currentMapCategory = MapCategory.ARCADE;
 
-    public TengenMsPacMan_GameRules(TengenMsPacMan_GameModel gameModel) {
-        this.gameModel = gameModel;
+    public TengenMsPacMan_GameRules() {}
+
+    public void setCurrentMapCategory(MapCategory currentMapCategory) {
+        this.currentMapCategory = currentMapCategory;
     }
 
     @Override
@@ -109,7 +114,8 @@ public class TengenMsPacMan_GameRules implements GameRules {
     //       What I know is that the "strange" maps use an extended set of bonus symbols.
     @Override
     public int selectBonusSymbolCode(int levelNumber, int bonusIndex) {
-        final int lastSymbolCode = gameModel.mapCategory() == MapCategory.STRANGE
+
+        final int lastSymbolCode = currentMapCategory == MapCategory.STRANGE
             ? BonusSymbol.FLOWER.ordinal()
             : BonusSymbol.BANANA.ordinal();
 
@@ -137,7 +143,7 @@ public class TengenMsPacMan_GameRules implements GameRules {
      */
     @Override
     public boolean isExtraLifeAwarded(int oldScore, int newScore) {
-        if (gameModel.mapCategory() == MapCategory.ARCADE) {
+        if (currentMapCategory == MapCategory.ARCADE) {
             return crossedScoreLine(oldScore, newScore, 10_000)
                 || crossedScoreLine(oldScore, newScore, 970_000)
                 || crossedScoreLine(oldScore, newScore, 980_000)

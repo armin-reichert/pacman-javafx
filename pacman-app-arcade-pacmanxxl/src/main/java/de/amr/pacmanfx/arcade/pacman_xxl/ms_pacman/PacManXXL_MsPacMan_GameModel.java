@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -23,19 +24,18 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
     // Warning: Constructor signature is used via reflection by GameUI_Builder, do not change!
     public PacManXXL_MsPacMan_GameModel(GameFlow flow, CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
         super(flow, coinMechanism, mapSelector);
-        rules = new PacManXXL_MsPacMan_GameRules();
     }
 
     @Override
     public PacManXXL_MapSelector mapSelector() { return (PacManXXL_MapSelector) mapSelector; }
 
     @Override
-    public void buildDemoLevel() {
+    public void buildDemoLevel(GameContext gameContext) {
         mapSelector().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 
         // Select random (standard) level with different map and map color scheme for each choice
         final int levelNumber = DEMOLEVEL_NUMBERS[randomInt(0, DEMOLEVEL_NUMBERS.length)];
-        final GameLevel level = createLevel(levelNumber, true);
+        final GameLevel level = createLevel(gameContext, levelNumber, true);
 
         final Pac pac = level.entities().pac();
         pac.setImmune(false);
