@@ -7,7 +7,6 @@ import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.gamescene.AbstractGameSceneConfig;
@@ -43,13 +42,13 @@ class PacManXXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected SceneID determineSceneID(GameModel game) {
-        final State<GameContext> state = game.flow().state();
+    protected SceneID determineSceneID(GameContext gameContext) {
+        final State<GameContext> state = gameContext.gameState();
         if (state.name().equals(Arcade_GameState.BOOT.name())) {
             return CommonSceneID.BOOT_SCENE;
         }
         if (state.name().equals(Arcade_GameState.GAME_LEVEL_INTERMISSION.name())) {
-            return resolveCutSceneID(game);
+            return resolveCutSceneID(gameContext);
         }
         if (state.name().equals(Arcade_GameState.GAME_INTRO.name())) {
             return CommonSceneID.INTRO_SCENE;

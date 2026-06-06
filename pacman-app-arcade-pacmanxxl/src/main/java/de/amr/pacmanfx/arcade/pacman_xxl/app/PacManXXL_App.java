@@ -45,13 +45,15 @@ public class PacManXXL_App extends Application {
             .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer, coinMechanism)
             .game(
                 GameVariant.ARCADE_PACMAN_XXL,
-                () -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(), coinMechanism, mapSelector),
+                Arcade_GameFlow::new,
+                () -> new PacManXXL_PacMan_GameModel(coinMechanism, mapSelector),
                 PacManXXL_PacMan_GameRules::new,
                 PacManXXL_PacMan_UIConfig::new
             )
             .game(
                 GameVariant.ARCADE_MS_PACMAN_XXL,
-                () -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(), coinMechanism, mapSelector),
+                Arcade_GameFlow::new,
+                () -> new PacManXXL_MsPacMan_GameModel(coinMechanism, mapSelector),
                 PacManXXL_MsPacMan_GameRules::new,
                 PacManXXL_MsPacMan_UIConfig::new
             )

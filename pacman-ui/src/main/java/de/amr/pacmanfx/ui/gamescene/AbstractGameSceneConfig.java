@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.AppContext;
@@ -44,8 +45,8 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public SceneID resolveCutSceneID(GameModel game) {
-        final Optional<GameLevel> optGameLevel = game.optGameLevel();
+    public SceneID resolveCutSceneID(GameContext gameContext) {
+        final Optional<GameLevel> optGameLevel = gameContext.gameModel().optGameLevel();
         if (optGameLevel.isEmpty()) {
             throw new IllegalStateException("Cannot determine cut scene, no game level available");
         }
@@ -63,9 +64,9 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public final Optional<GameScene> selectGameScene(AppContext context, GameModel game) {
+    public final Optional<GameScene> selectGameScene(AppContext appContext, GameModel game) {
         requireNonNull(game);
-        final SceneID sceneID = determineSceneID(game);
+        final SceneID sceneID = determineSceneID(appContext.currentGameContext());
         final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
         return Optional.of(gameScene);
     }
@@ -79,5 +80,5 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     protected abstract GameScene createGameScene(SceneID sceneID);
 
-    protected abstract SceneID determineSceneID(GameModel game);
+    protected abstract SceneID determineSceneID(GameContext gameContext);
 }

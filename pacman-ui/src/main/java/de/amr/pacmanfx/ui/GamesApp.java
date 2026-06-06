@@ -56,7 +56,12 @@ public final class GamesApp implements AppContext {
 
     class GameContextImpl implements GameContext {
 
+        private final GameFlow gameFlow;
         private HuntingStepResult huntingStepResult;
+
+        public GameContextImpl(GameFlow gameFlow) {
+            this.gameFlow = requireNonNull(gameFlow);
+        }
 
         @Override
         public GameModel gameModel() {
@@ -70,7 +75,7 @@ public final class GamesApp implements AppContext {
 
         @Override
         public GameFlow gameFlow() {
-            return gameForVariant(currentGameVariantName()).gameFlow();
+            return gameFlow;
         }
 
         @Override
@@ -152,8 +157,10 @@ public final class GamesApp implements AppContext {
         createSubViews();
 
         gameVariantName.addListener((_, _, newVariantName) -> {
-            currentGameContext = new GameContextImpl();
-            gameForVariant(newVariantName).gameFlow().setContext(currentGameContext);
+            final GameFlow gameFlow = gameForVariant(newVariantName).gameFlowFactory().get();
+            currentGameContext = new GameContextImpl(gameFlow);
+            //TODO change this
+            gameFlow.setContext(currentGameContext);
         });
     }
 

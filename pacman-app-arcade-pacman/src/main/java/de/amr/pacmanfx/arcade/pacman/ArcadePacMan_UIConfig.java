@@ -116,28 +116,28 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
      */
     public static final GameAction ACTION_INSERT_COIN = new GameAction("insert_coin") {
         @Override
-        public void doAction(AppContext context) {
-            final CoinMechanism slot = context.coinMechanism();
-            final GameModel game = context.currentGameContext().gameModel();
-            context.ui().sounds().stopAndDisposeVoice();
-            context.ui().sounds().setEnabled(true);
+        public void doAction(AppContext appContext) {
+            final CoinMechanism slot = appContext.coinMechanism();
+            final GameContext gameContext = appContext.currentGameContext();
+            appContext.ui().sounds().stopAndDisposeVoice();
+            appContext.ui().sounds().setEnabled(true);
             slot.insertCoin();
-            game.flow().enterState(GAME_PREPARATION.state());
-            game.flow().publishGameEvent(new CreditAddedEvent(context.currentGameContext(), 1));
+            gameContext.gameFlow().publishGameEvent(new CreditAddedEvent(gameContext, 1));
+            gameContext.gameFlow().enterState(GAME_PREPARATION.state());
         }
 
         @Override
-        public boolean isEnabled(AppContext context) {
-            final CoinMechanism slot = context.coinMechanism();
+        public boolean isEnabled(AppContext appContext) {
+            final CoinMechanism slot = appContext.coinMechanism();
             if (slot.isFull()) {
                 return false;
             }
-            final GameModel game = context.currentGameContext().gameModel();
+            final GameContext gameContext = appContext.currentGameContext();
             // In demo level, coin can always be inserted
-            if (game.isDemoLevelRunning()) {
+            if (gameContext.gameModel().isDemoLevelRunning()) {
                 return true;
             }
-            final State<GameContext> gameState = game.flow().state();
+            final State<GameContext> gameState = gameContext.gameState();
             return gameState == GAME_INTRO.state() || gameState == GAME_PREPARATION.state();
         }
     };

@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene;
 
 import de.amr.basics.Disposable;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.AppContext;
 
@@ -70,10 +71,10 @@ public interface GameSceneConfig extends Disposable {
 
     /**
      *
-     * @param game the game
+     * @param gameContext the current game context
      * @return Scene ID of the cut-scene that follows the current game level.
      */
-    SceneID resolveCutSceneID(GameModel game);
+    SceneID resolveCutSceneID(GameContext gameContext);
 
     /**
      * Indicates whether the given scene should be decorated with additional UI elements

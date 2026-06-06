@@ -41,8 +41,8 @@ public class TengenMsPacMan_App extends Application {
             .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer, CoinMechanism.OUT_OF_SERVICE)
             .game(
                 TENGEN_MS_PACMAN,
-                () -> new TengenMsPacMan_GameModel(
-                new TengenMsPacMan_GameFlow()),
+                TengenMsPacMan_GameFlow::new,
+                TengenMsPacMan_GameModel::new,
                 TengenMsPacMan_GameRules::new,
                 TengenMsPacMan_UIConfig::new
             )

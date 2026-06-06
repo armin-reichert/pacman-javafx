@@ -8,6 +8,7 @@ import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
@@ -216,8 +217,11 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
+                final GameContext gameContext = scene.gameContext();
+
                 scene.marquee.update(timer.tickCount());
                 Logger.debug("Tick {}: {} marching in", scene.appContext().gameClock().tickCount(), scene.msPacMan.name());
+
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);
@@ -228,9 +232,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     final TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) scene.appContext().currentGameContext().gameModel();
                     if (game.allOptionsDefault()) {
                         game.setCanStartNewGame(false); // TODO check this
-                        game.flow().restartState(TengenMsPacMan_GameState.GAME_OR_LEVEL_STARTING.state());
+                        gameContext.gameFlow().restartState(TengenMsPacMan_GameState.GAME_OR_LEVEL_STARTING.state());
                     } else {
-                        game.flow().enterState(TengenMsPacMan_GameState.GAME_PREPARATION.state());
+                        gameContext.gameFlow().enterState(TengenMsPacMan_GameState.GAME_PREPARATION.state());
                     }
                 }
             }

@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.AppContext;
@@ -97,8 +96,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     @Override
     public void onTick(long tick) {
         final UIConfig uiConfig = appContext().currentUIConfig();
-        final TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) appContext().currentGameContext().gameModel();
-        final State<GameContext> gameState = appContext().currentGameContext().gameState();
+        final State<GameContext> gameState = gameContext().gameState();
         final long gameStateTick = gameState.timer().tickCount();
 
         clapperboard.tick();
@@ -167,7 +165,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
                 }
                 case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(uiConfig, gameStateTick);
                 case 1500 -> appContext().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
-                case TICK_EXPIRES -> game.flow().enterState(TengenMsPacMan_GameState.GAME_PREPARATION.state());
+                case TICK_EXPIRES -> gameContext().gameFlow().enterState(TengenMsPacMan_GameState.GAME_PREPARATION.state());
             }
         }
     }

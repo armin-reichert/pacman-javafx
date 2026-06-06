@@ -37,7 +37,8 @@ public class ArcadeMsPacMan_App extends Application {
             .newApp(primaryStage, screenSize.x(), screenSize.y(), gamesContainer, coinMechanism)
             .game(
                 GameVariant.ARCADE_MS_PACMAN,
-                () -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(), coinMechanism),
+                Arcade_GameFlow::new,
+                () -> new ArcadeMsPacMan_GameModel(coinMechanism),
                 ArcadeMsPacMan_GameRules::new,
                 ArcadeMsPacMan_UIConfig::new
             )

@@ -11,6 +11,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
@@ -204,12 +205,13 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameModel game = scene.appContext().currentGameContext().gameModel();
+                final GameContext gameContext = scene.appContext().currentGameContext();
+                final GameModel gameModel = gameContext.gameModel();
                 scene.marquee.timer().doTick();
-                if (sceneTimer.atSecond(2.0) && !game.canStartNewGame()) {
-                    game.flow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state()); // demo level
+                if (sceneTimer.atSecond(2.0) && !gameModel.canStartNewGame()) {
+                    gameContext.gameFlow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state()); // demo level
                 } else if (sceneTimer.atSecond(5)) {
-                    game.flow().enterState(Arcade_GameState.GAME_PREPARATION.state());
+                    gameContext.gameFlow().enterState(Arcade_GameState.GAME_PREPARATION.state());
                 }
             }
         };

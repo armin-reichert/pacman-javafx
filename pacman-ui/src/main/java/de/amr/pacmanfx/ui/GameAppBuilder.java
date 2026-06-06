@@ -8,9 +8,6 @@ import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.model.test.LevelMediumTestState;
-import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.app.GameSpecification;
 import de.amr.pacmanfx.ui.app.GamesContainer;
@@ -155,7 +152,7 @@ public class GameAppBuilder {
     public AppContext build() {
         validateConfigurationData();
 
-        final var ui = new GamesApp(
+        final var app = new GamesApp(
             gamesContainer,
             createViewImplementation(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight()),
             new GameClockFX(),
@@ -163,29 +160,33 @@ public class GameAppBuilder {
 
         gameConfigMap.forEach((gameVariant, config) -> {
             final AbstractGameModel gameModel = config.gameModelFactory.get();
-            final GameFlow gameFlow = config.gameFlowFactory.get();
             final GameRules gameRules = config.gameRulesFactory.get();
-            gamesContainer.registerGame(gameVariant, new GameSpecification(gameModel, gameFlow, gameRules));
-            ui.ui().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);
+            gamesContainer.registerGame(gameVariant, new GameSpecification(config.gameFlowFactory, gameModel, gameRules));
+            app.ui().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);
+
+            //TODO
+            /*
             if (interactiveTests) {
                 gameFlow.addState(new LevelShortTestState());
                 gameFlow.addState(new LevelMediumTestState());
                 gameFlow.addState(new CutScenesTestState());
             }
+
+             */
         });
 
-        final StartPagesView startPagesCarousel = ui.ui().subViews().startView();
+        final StartPagesView startPagesCarousel = app.ui().subViews().startView();
         for (var startPageFactory : startPageFactories) {
             final StartPage startPage = startPageFactory.get();
             if (startPage != null) {
                 startPagesCarousel.addStartPage(startPage);
-                startPage.init(ui);
+                startPage.init(app);
             }
             else {
                 error("Start page could not be created");
             }
         }
-        return ui;
+        return app;
     }
 
     private void validateConfigurationData() {

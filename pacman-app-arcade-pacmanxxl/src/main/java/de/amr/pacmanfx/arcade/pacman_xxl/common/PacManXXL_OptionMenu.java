@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
@@ -78,15 +79,16 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         chaseAnimation.draw();
     }
 
-    public void init(AppContext context) {
-        this.context = requireNonNull(context);
+    public void init(AppContext appContext) {
+        this.context = requireNonNull(appContext);
 
-        final UIConfig currentConfig = context.currentUIConfig();
-        final GameVariant gameVariant = GameVariant.valueOf(context.currentGameVariantName());
-        final GameModel game = context.currentGameContext().gameModel();
+        final UIConfig currentConfig = appContext.currentUIConfig();
+        final GameContext gameContext = appContext.currentGameContext();
+        final GameVariant gameVariant = GameVariant.valueOf(appContext.currentGameVariantName());
+        final GameModel gameModel = gameContext.gameModel();
 
-        if (!(game.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
-            final String errorMsg = "Expected XXL map selector but found %s".formatted(game.mapSelector().getClass().getSimpleName());
+        if (!(gameModel.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
+            final String errorMsg = "Expected XXL map selector but found %s".formatted(gameModel.mapSelector().getClass().getSimpleName());
             Logger.error(errorMsg);
             throw new IllegalStateException(errorMsg);
         }
@@ -95,14 +97,14 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         // Init menu items
         entryGameVariant.setValue(gameVariant);
         entryPlay3D.setValue(AppConstants.PROPERTY_3D_ENABLED.get());
-        entryCutScenes.setValue(game.flow().cutScenesEnabled());
+        entryCutScenes.setValue(gameContext.gameFlow().cutScenesEnabled());
         entryMapOrder.setValue(mapSelector.selectionMode());
         entryMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());
 
         logMenuState();
 
-        soundEnabledProperty().bind(context.ui().sounds().muteProperty().not());
-        chaseAnimation.init(currentConfig, canvas, context.ui().sprites().animationSet());
+        soundEnabledProperty().bind(appContext.ui().sounds().muteProperty().not());
+        chaseAnimation.init(currentConfig, canvas, appContext.ui().sprites().animationSet());
 
         requestFocus();
     }

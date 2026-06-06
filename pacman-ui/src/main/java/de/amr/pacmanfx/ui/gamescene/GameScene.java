@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene;
 
 import de.amr.basics.Disposable;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
@@ -70,6 +71,10 @@ public abstract class GameScene implements Disposable {
 
     public AppContext appContext() {
         return appContext;
+    }
+
+    public GameContext gameContext() {
+        return appContext.currentGameContext();
     }
 
     public void setGameEventHandler(GameEventListener delegate) {
