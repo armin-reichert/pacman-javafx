@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.app;
 
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
@@ -9,8 +9,6 @@ import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.ui.app.GameSpecification;
-import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
@@ -32,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Builder for constructing and configuring an application.
  */
-public class GameAppBuilder {
+public class AppBuilder {
 
     record WindowConfig(Stage stage, int sceneWidth, int sceneHeight) {}
 
@@ -43,14 +41,14 @@ public class GameAppBuilder {
         Supplier<? extends UIConfig> uiConfigFactory,
         WorldMapSelector mapSelector) {}
 
-    public static GameAppBuilder newApp(
+    public static AppBuilder newApp(
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight,
         GamesContainer gamesContainer,
         CoinMechanism coinMechanism)
     {
-        return new GameAppBuilder(stage, mainSceneWidth, mainSceneHeight, gamesContainer, coinMechanism);
+        return new AppBuilder(stage, mainSceneWidth, mainSceneHeight, gamesContainer, coinMechanism);
     }
 
     private final WindowConfig windowConfig;
@@ -60,7 +58,7 @@ public class GameAppBuilder {
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
     private boolean interactiveTests;
 
-    private GameAppBuilder(
+    private AppBuilder(
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight,
@@ -82,7 +80,7 @@ public class GameAppBuilder {
      * </pre>
      *
      */
-    public GameAppBuilder game(
+    public AppBuilder game(
         String gameVariantName,
         Supplier<? extends GameFlow> gameFlowFactory,
         Supplier<? extends AbstractGameModel> gameModelFactory,
@@ -108,7 +106,7 @@ public class GameAppBuilder {
         return this;
     }
 
-    public GameAppBuilder game(
+    public AppBuilder game(
         String variantName,
         Supplier<? extends GameFlow> gameFlowFactory,
         Supplier<? extends AbstractGameModel> gameModelFactory,
@@ -118,7 +116,7 @@ public class GameAppBuilder {
         return game(variantName, gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, null);
     }
 
-    public GameAppBuilder game(
+    public AppBuilder game(
         GameVariant variant,
         Supplier<? extends GameFlow> gameFlowFactory,
         Supplier<? extends AbstractGameModel> gameModelFactory,
@@ -128,7 +126,7 @@ public class GameAppBuilder {
         return game(variant.name(), gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, null);
     }
 
-    public GameAppBuilder startPage(Supplier<? extends StartPage> startPageFactory) {
+    public AppBuilder startPage(Supplier<? extends StartPage> startPageFactory) {
         if (startPageFactory == null) {
             error("Start page factory is null");
         }
@@ -136,7 +134,7 @@ public class GameAppBuilder {
         return this;
     }
 
-    public GameAppBuilder interactiveTests(boolean include) {
+    public AppBuilder interactiveTests(boolean include) {
         interactiveTests = include;
         return this;
     }

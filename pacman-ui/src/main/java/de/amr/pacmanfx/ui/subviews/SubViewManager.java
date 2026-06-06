@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews;
 
-import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.subviews.editor.EditorView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;

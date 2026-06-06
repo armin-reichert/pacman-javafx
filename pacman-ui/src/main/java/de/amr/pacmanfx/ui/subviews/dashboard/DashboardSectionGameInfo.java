@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.MapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.app.AppContext;
 import javafx.scene.paint.Color;
 
 import java.net.URLDecoder;

@@ -14,10 +14,10 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
-import de.amr.pacmanfx.ui.AppConstants;
-import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameAppBuilder;
-import de.amr.pacmanfx.ui.AppContextImpl;
+import de.amr.pacmanfx.ui.app.AppConstants;
+import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.AppBuilder;
+import de.amr.pacmanfx.ui.app.AppContextImpl;
 import de.amr.pacmanfx.ui.app.GameSpecification;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
@@ -66,7 +66,7 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
-            app = GameAppBuilder.newApp(primaryStage, size.x(), size.y(), gamesContainer, coinMechanism)
+            app = AppBuilder.newApp(primaryStage, size.x(), size.y(), gamesContainer, coinMechanism)
                 .game(
                     GameVariant.ARCADE_PACMAN,
                     Arcade_GameFlow::new,

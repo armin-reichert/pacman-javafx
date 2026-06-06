@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.view;
 
-import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.stage.Stage;
 

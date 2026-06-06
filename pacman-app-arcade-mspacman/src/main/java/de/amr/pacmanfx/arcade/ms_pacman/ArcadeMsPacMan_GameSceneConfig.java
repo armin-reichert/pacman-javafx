@@ -11,12 +11,12 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene3D;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.gamescene.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 
-import static de.amr.pacmanfx.ui.AppConstants.PROPERTY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.app.AppConstants.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {

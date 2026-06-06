@@ -12,8 +12,8 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_Das
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
-import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameAppBuilder;
+import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.AppBuilder;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -37,7 +37,7 @@ public class TengenMsPacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        app = GameAppBuilder
+        app = AppBuilder
             .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer, CoinMechanism.OUT_OF_SERVICE)
             .game(
                 TENGEN_MS_PACMAN,

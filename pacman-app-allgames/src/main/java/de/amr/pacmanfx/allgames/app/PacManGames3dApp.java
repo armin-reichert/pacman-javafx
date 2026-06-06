@@ -35,10 +35,10 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_Das
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
-import de.amr.pacmanfx.ui.AppConstants;
-import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.AppContextImpl;
-import de.amr.pacmanfx.ui.GameAppBuilder;
+import de.amr.pacmanfx.ui.app.AppConstants;
+import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.AppContextImpl;
+import de.amr.pacmanfx.ui.app.AppBuilder;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.app.GameSpecification;
 import de.amr.pacmanfx.ui.app.GamesContainer;
@@ -120,7 +120,7 @@ public class PacManGames3dApp extends Application {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {
             if (useBuilder) {
-                app = GameAppBuilder
+                app = AppBuilder
                     .newApp(stage, sceneSize.x(), sceneSize.y(), gamesContainer, coinMechanism)
 
                     .game(

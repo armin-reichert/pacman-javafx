@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.ui.AppConstants;
-import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.app.AppConstants;
+import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;

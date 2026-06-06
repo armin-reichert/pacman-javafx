@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
 
 import java.util.function.BiFunction;

@@ -10,8 +10,8 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.AppConstants;
-import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.app.AppConstants;
+import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
@@ -24,7 +24,7 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_PAC_BOOSTER;
-import static de.amr.pacmanfx.ui.AppConstants.PROPERTY_3D_FLOOR_COLOR;
+import static de.amr.pacmanfx.ui.app.AppConstants.PROPERTY_3D_FLOOR_COLOR;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.

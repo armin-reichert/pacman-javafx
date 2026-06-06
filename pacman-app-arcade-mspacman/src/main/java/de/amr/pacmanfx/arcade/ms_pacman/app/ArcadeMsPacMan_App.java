@@ -11,8 +11,8 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameAppBuilder;
+import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.AppBuilder;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -33,7 +33,7 @@ public class ArcadeMsPacMan_App extends Application {
     public void start(Stage primaryStage) {
         final var gamesContainer = new GamesContainer();
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        app = GameAppBuilder
+        app = AppBuilder
             .newApp(primaryStage, screenSize.x(), screenSize.y(), gamesContainer, coinMechanism)
             .game(
                 GameVariant.ARCADE_MS_PACMAN,

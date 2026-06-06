@@ -15,8 +15,8 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.ui.AppContext;
-import de.amr.pacmanfx.ui.GameAppBuilder;
+import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.AppBuilder;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
@@ -41,7 +41,7 @@ public class PacManXXL_App extends Application {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         final var mapSelector = new PacManXXL_MapSelector(gamesContainer.customMapDir());
 
-        app = GameAppBuilder
+        app = AppBuilder
             .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer, coinMechanism)
             .game(
                 GameVariant.ARCADE_PACMAN_XXL,

@@ -1,4 +1,8 @@
-package de.amr.pacmanfx.ui;
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.ui.app;
 
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
@@ -7,7 +11,6 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
-import de.amr.pacmanfx.ui.app.GameSpecification;
 
 import static java.util.Objects.requireNonNull;
 

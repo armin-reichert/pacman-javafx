@@ -9,6 +9,7 @@ import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
+import de.amr.pacmanfx.ui.view.FlashMessageManager;
 import de.amr.pacmanfx.ui.view.GameView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 

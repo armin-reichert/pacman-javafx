@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.subviews.playview;
 
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.ui.AppConstants;
-import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.app.AppConstants;
+import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import de.amr.pacmanfx.ui.config.UIConfig;

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.level.GameLevelEntity;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.Obstacle;
 import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.ui.AppConstants;
+import de.amr.pacmanfx.ui.app.AppConstants;
 import de.amr.pacmanfx.ui.config.FloorConfig3D;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;

@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.app;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.math.RandomNumberSupport;
@@ -13,8 +13,7 @@ import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
-import de.amr.pacmanfx.ui.app.GameSpecification;
-import de.amr.pacmanfx.ui.app.GamesContainer;
+import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.config.UIConfigManager;
@@ -28,6 +27,7 @@ import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.editor.EditorView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
+import de.amr.pacmanfx.ui.view.FlashMessageManager;
 import de.amr.pacmanfx.ui.view.GameViewImpl;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;

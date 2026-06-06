@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.app.AppContext;
 import org.tinylog.Logger;
 
 /**

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
-import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import javafx.scene.input.KeyCombination;

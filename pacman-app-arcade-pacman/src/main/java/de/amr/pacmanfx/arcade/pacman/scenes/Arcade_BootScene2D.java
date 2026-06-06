@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 
 /**

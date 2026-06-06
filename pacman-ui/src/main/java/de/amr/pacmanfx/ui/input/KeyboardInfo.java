@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.ui.input;
 
-import de.amr.pacmanfx.ui.AppConstants;
+import de.amr.pacmanfx.ui.app.AppConstants;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;

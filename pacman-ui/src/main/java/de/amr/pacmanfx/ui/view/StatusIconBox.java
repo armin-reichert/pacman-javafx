@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.view;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.ui.AppConstants;
+import de.amr.pacmanfx.ui.app.AppConstants;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;

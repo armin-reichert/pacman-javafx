@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.subviews;
 
-import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.input.Input;
 import javafx.scene.Node;
