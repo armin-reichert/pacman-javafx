@@ -31,10 +31,15 @@ public class TestEatingFood {
     static class TestContext implements GameContext {
 
         private final GameFlow  gameFlow  = new Arcade_GameFlow();
-        private final GameModel gameModel = new ArcadePacMan_GameModel(new CoinMechanism(99));
+        private final GameModel gameModel = new ArcadePacMan_GameModel();
         private final GameRules gameRules = new ArcadePacMan_GameRules();
 
         public TestContext() {
+        }
+
+        @Override
+        public CoinMechanism coinMechanism() {
+            return CoinMechanism.OUT_OF_SERVICE;
         }
 
         @Override
