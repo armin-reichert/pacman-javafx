@@ -112,7 +112,7 @@ public class PacManGames3dApp extends Application {
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
         gamesContainer = new GamesContainer();
-        xxlMapSelector = new PacManXXL_MapSelector(gamesContainer.customMapDir());
+        xxlMapSelector = new PacManXXL_MapSelector(AppConstants.CUSTOM_MAP_DIR);
     }
 
     @Override

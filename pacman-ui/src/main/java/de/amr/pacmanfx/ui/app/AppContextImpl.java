@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
-import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.config.UIConfigManager;
@@ -56,8 +56,6 @@ public final class AppContextImpl implements AppContext {
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
-    private final File customMapDir;
-
     private final PreferencesManager prefs;
 
     private final DirectoryWatchdog watchdog;
@@ -81,9 +79,8 @@ public final class AppContextImpl implements AppContext {
         this.view = requireNonNull(view);
         this.gameClock = requireNonNull(gameClock);
         this.coinMechanism = requireNonNull(coinMechanism);
-        this.customMapDir = gamesContainer.customMapDir();//TODO
         prefs = new PreferencesManager(getClass());
-        watchdog = new DirectoryWatchdog(customMapDir);
+        watchdog = new DirectoryWatchdog(AppConstants.CUSTOM_MAP_DIR);
 
         ui = new GameUI(
             new UIConfigManager(),
@@ -118,7 +115,7 @@ public final class AppContextImpl implements AppContext {
 
     @Override
     public File customMapDir() {
-        return customMapDir;
+        return AppConstants.CUSTOM_MAP_DIR;
     }
 
     @Override

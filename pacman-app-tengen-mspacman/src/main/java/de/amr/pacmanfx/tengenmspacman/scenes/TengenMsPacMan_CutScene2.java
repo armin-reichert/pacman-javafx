@@ -61,11 +61,11 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    public void onActivate(AppContext context) {
-        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
+    public void onActivate(AppContext appContext) {
+        final SpriteAnimationSet spriteAnimationSet = appContext.ui().sprites().animationSet();
 
         // Quit cut scene when "START" button on "joypad" is pressed
-        final Joypad joypad = context.input().joypad();
+        final Joypad joypad = appContext.input().joypad();
         actionBindings.setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(2, "THE CHASE");
@@ -74,12 +74,12 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        msPacMan.setAnimations(appContext.currentUIConfig().createPacAnimations(spriteAnimationSet));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        pacMan.setAnimations(appContext.currentUIConfig().createPacAnimations(spriteAnimationSet));
 
-        context.ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
+        appContext.ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
     }
 
     @Override

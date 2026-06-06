@@ -56,6 +56,7 @@ public class AppBuilder {
     private final GamesContainer gamesContainer;
     private final Map<String, GameConfig> gameConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
+
     private boolean interactiveTests;
 
     private AppBuilder(
@@ -206,8 +207,8 @@ public class AppBuilder {
         if (name.isBlank()) {
             error("Game variant name must not be blank");
         }
-        if (!GamesContainer.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
-            error("Game variant name '%s' does not match pattern '%s'".formatted(name, GamesContainer.GAME_VARIANT_NAME_PATTERN));
+        if (!AppConstants.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
+            error("Game variant name '%s' does not match pattern '%s'".formatted(name, AppConstants.GAME_VARIANT_NAME_PATTERN));
         }
     }
 

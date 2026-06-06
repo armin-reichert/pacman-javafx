@@ -10,7 +10,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
 
@@ -19,48 +18,20 @@ import static java.util.Objects.requireNonNull;
  */
 public class GamesContainer {
 
-    /**
-     * Game variant names must match this pattern (e.g. "MS_PACMAN_2024").
-     */
-    public static final Pattern GAME_VARIANT_NAME_PATTERN = Pattern.compile("[A-Z][A-Z_0-9]*");
-
-    /**
-     * Directory under which the user specific files are stored.
-     * <p>Default: <code>$HOME/.pacmanfx</code> (Unix) or <code>%USERPROFILE%\.pacmanfx</code> (MS Windows)</p>
-     */
-    public static final File DEFAULT_HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
-
-    /**
-     * Directory where custom maps are stored (default: <code>&lt;home_dir&gt;/maps</code>).
-     */
-    public static final File DEFAULT_CUSTOM_MAP_DIR = new File(DEFAULT_HOME_DIR, "maps");
+    public static File highScoreFile(String gameVariantName) {
+        requireNonNull(gameVariantName);
+        final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
+        return new File(AppConstants.USER_HOME_DIR, fileName);
+    }
 
 
     private final Map<String, GameSpecification> gamesByVariantName = new HashMap<>();
-
-    private final File homeDir = DEFAULT_HOME_DIR;
-
-    private final File customMapDir = DEFAULT_CUSTOM_MAP_DIR;
 
     public GamesContainer() {
         final boolean ok = validateUserDirs();
         if (!ok) {
             throw new IllegalStateException("GameBox: User directory validation failed");
         }
-    }
-
-    public File customMapDir() {
-        return customMapDir;
-    }
-
-    public File homeDir() {
-        return homeDir;
-    }
-
-    public File highScoreFile(String gameVariantName) {
-        requireNonNull(gameVariantName);
-        final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
-        return new File(homeDir, fileName);
     }
 
     /**
@@ -71,9 +42,9 @@ public class GamesContainer {
         requireNonNull(variantName);
         requireNonNull(game);
 
-        if (!GAME_VARIANT_NAME_PATTERN.matcher(variantName).matches()) {
+        if (!AppConstants.GAME_VARIANT_NAME_PATTERN.matcher(variantName).matches()) {
             throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
-                .formatted(variantName, GAME_VARIANT_NAME_PATTERN));
+                .formatted(variantName, AppConstants.GAME_VARIANT_NAME_PATTERN));
         }
 
         final GameSpecification previousGame = gamesByVariantName.putIfAbsent(variantName, game);
@@ -106,8 +77,8 @@ public class GamesContainer {
     // other stuff
 
     private boolean validateUserDirs() {
-        return dirExistsAndIsWritable(DEFAULT_HOME_DIR, "Home directory")
-            && dirExistsAndIsWritable(DEFAULT_CUSTOM_MAP_DIR, "Custom map directory");
+        return dirExistsAndIsWritable(AppConstants.USER_HOME_DIR, "Home directory")
+            && dirExistsAndIsWritable(AppConstants.CUSTOM_MAP_DIR, "Custom map directory");
     }
 
     private static boolean dirExistsAndIsWritable(File dir, String description) {

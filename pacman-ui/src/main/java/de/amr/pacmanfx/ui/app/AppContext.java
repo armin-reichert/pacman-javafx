@@ -36,21 +36,8 @@ public interface AppContext extends AppLifecycle {
 
     StringProperty gameVariantNameProperty();
 
-    /**
-     * Selects the game variant with the given name.
-     * <p>
-     * If no game with the specified name exists, an {@link IllegalArgumentException} is thrown.
-     *
-     * @param variantName the name of the game variant to select (must not be {@code null})
-     * @throws IllegalArgumentException if no game with the given name is registered
-     */
     void selectGameVariant(String variantName);
 
-    /**
-     * Returns the name (identifier) of the currently selected game variant.
-     *
-     * @return the current game variant name
-     */
     String currentGameVariantName();
 
     GameSpecification gameForVariant(String variantName);

@@ -26,9 +26,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_AUTOPILOT;
 import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_TOGGLE_IMMUNITY;
@@ -39,6 +41,23 @@ import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;
 public class AppConstants {
 
     private AppConstants() {}
+
+    /**
+     * Game variant names must match this pattern (e.g. "MS_PACMAN_2024").
+     */
+    public static final Pattern GAME_VARIANT_NAME_PATTERN = Pattern.compile("[A-Z][A-Z_0-9]*");
+
+    /**
+     * Directory under which the user specific files are stored.
+     * <p>Default: <code>$HOME/.pacmanfx</code> (Unix) or <code>%USERPROFILE%\.pacmanfx</code> (MS Windows)</p>
+     */
+    public static final File USER_HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
+
+    /**
+     * Directory where custom maps are stored (default: <code>&lt;home_dir&gt;/maps</code>).
+     */
+    public static final File CUSTOM_MAP_DIR = new File(USER_HOME_DIR, "maps");
+
 
     public static final int MIN_STAGE_WIDTH  = 280;
 
