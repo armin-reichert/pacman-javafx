@@ -60,7 +60,7 @@ public class DashboardSectionGameControl extends DashboardSection {
         setAction(context, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
         setAction(context, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
 
-        cbCollisionCheckedTwice.setOnAction(_ -> context.currentGameContext().setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected()));
+        cbCollisionCheckedTwice.setOnAction(_ -> context.setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected()));
     }
 
     @Override

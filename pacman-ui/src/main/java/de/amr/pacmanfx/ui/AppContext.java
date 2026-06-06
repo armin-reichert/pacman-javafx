@@ -8,6 +8,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.ui.app.GameSpecification;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.input.Input;
@@ -67,6 +68,10 @@ public interface AppContext extends AppLifecycle {
     DirectoryWatchdog watchdog();
 
     PreferencesManager prefs();
+
+    void setCollisionDoubleChecked(boolean value);
+
+    void setCollisionStrategy(CollisionStrategy collisionStrategy);
 
     /**
      * Displays a flash message.

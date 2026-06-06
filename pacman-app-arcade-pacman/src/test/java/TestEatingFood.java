@@ -35,10 +35,9 @@ public class TestEatingFood {
 
         final GameRules gameRules = new ArcadePacMan_GameRules();
 
-        final GameModel gameModel = new ArcadePacMan_GameModel(
-            new Arcade_GameFlow(),
-            new CoinMechanism(99)
-        );
+        final GameFlow gameFlow = new Arcade_GameFlow();
+
+        final GameModel gameModel = new ArcadePacMan_GameModel(new CoinMechanism(99));
 
         testContext = new GameContext() {
             @Override
@@ -53,11 +52,7 @@ public class TestEatingFood {
 
             @Override
             public GameFlow gameFlow() {
-                return gameModel.flow(); //TODO
-            }
-
-            @Override
-            public void setCollisionStrategy(CollisionStrategy collisionStrategy) {
+                return gameFlow;
             }
 
             @Override
@@ -68,10 +63,6 @@ public class TestEatingFood {
             @Override
             public CollisionStrategy collisionStrategy() {
                 return CollisionStrategy.SAME_TILE;
-            }
-
-            @Override
-            public void setCollisionDoubleChecked(boolean doubleChecked) {
             }
 
             @Override

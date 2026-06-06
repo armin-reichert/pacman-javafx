@@ -12,10 +12,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
-import de.amr.pacmanfx.simulation.HuntingStepResult;
 import de.amr.pacmanfx.ui.app.GameSpecification;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
@@ -53,61 +50,6 @@ import java.io.File;
 import static java.util.Objects.requireNonNull;
 
 public final class GamesApp implements AppContext {
-
-    class GameContextImpl implements GameContext {
-
-        private final GameFlow gameFlow;
-        private HuntingStepResult huntingStepResult;
-
-        public GameContextImpl(GameFlow gameFlow) {
-            this.gameFlow = requireNonNull(gameFlow);
-        }
-
-        @Override
-        public GameModel gameModel() {
-            return gameForVariant(currentGameVariantName()).gameModel();
-        }
-
-        @Override
-        public GameRules gameRules() {
-            return gameForVariant(currentGameVariantName()).gameRules();
-        }
-
-        @Override
-        public GameFlow gameFlow() {
-            return gameFlow;
-        }
-
-        @Override
-        public CollisionStrategy collisionStrategy() {
-            return collisionStrategy;
-        }
-
-        @Override
-        public void setCollisionStrategy(CollisionStrategy strategy) {
-            collisionStrategy = requireNonNull(strategy);
-        }
-
-        @Override
-        public Boolean isCollisionDoubleChecked() {
-            return collisionDoubleChecked.get();
-        }
-
-        @Override
-        public void setCollisionDoubleChecked(boolean doubleChecked) {
-            collisionDoubleChecked.set(doubleChecked);
-        }
-
-        @Override
-        public void startNewHuntingStep() {
-            huntingStepResult = new HuntingStepResult();
-        }
-
-        @Override
-        public HuntingStepResult huntingResult() {
-            return huntingStepResult;
-        }
-    }
 
     // All games in a box (only 1,99 €!)
     private final GamesContainer gamesContainer;
@@ -158,10 +100,18 @@ public final class GamesApp implements AppContext {
 
         gameVariantName.addListener((_, _, newVariantName) -> {
             final GameFlow gameFlow = gameForVariant(newVariantName).gameFlowFactory().get();
-            currentGameContext = new GameContextImpl(gameFlow);
+            currentGameContext = new GameContextImpl(this, gameFlow);
             //TODO change this
             gameFlow.setContext(currentGameContext);
         });
+    }
+
+    public CollisionStrategy collisionStrategy() {
+        return collisionStrategy;
+    }
+
+    public boolean isCollisionDoubleChecked() {
+        return collisionDoubleChecked.get();
     }
 
     @Override
@@ -218,6 +168,16 @@ public final class GamesApp implements AppContext {
     @Override
     public PreferencesManager prefs() {
         return prefs;
+    }
+
+    @Override
+    public void setCollisionDoubleChecked(boolean value) {
+        collisionDoubleChecked.set(value);
+    }
+
+    @Override
+    public void setCollisionStrategy(CollisionStrategy collisionStrategy) {
+        this.collisionStrategy = collisionStrategy;
     }
 
     @Override

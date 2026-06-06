@@ -33,13 +33,9 @@ public interface GameContext {
         return gameModel().optGameLevel();
     }
 
-    void setCollisionStrategy(CollisionStrategy collisionStrategy);
-
     Boolean isCollisionDoubleChecked();
 
     CollisionStrategy collisionStrategy();
-
-    void setCollisionDoubleChecked(boolean doubleChecked);
 
     void startNewHuntingStep();
 

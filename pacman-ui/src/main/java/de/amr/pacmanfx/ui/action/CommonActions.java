@@ -261,15 +261,15 @@ public final class CommonActions {
 
     public static final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction("toggle_collision_strategy") {
         @Override
-        protected void doAction(AppContext context) {
-            final CollisionStrategy strategy = context.currentGameContext().collisionStrategy();
+        protected void doAction(AppContext appContext) {
+            final CollisionStrategy strategy = appContext.currentGameContext().collisionStrategy();
             final CollisionStrategy newStrategy = strategy == CollisionStrategy.CENTER_DISTANCE
                 ? CollisionStrategy.SAME_TILE : CollisionStrategy.CENTER_DISTANCE;
-            context.currentGameContext().setCollisionStrategy(newStrategy);
+            appContext.setCollisionStrategy(newStrategy);
             if (newStrategy == CollisionStrategy.SAME_TILE) {
-                context.shortMessage("Using original Arcade collision strategy (same tile check)"); //TODO localize
+                appContext.shortMessage("Using original Arcade collision strategy (same tile check)"); //TODO localize
             } else {
-                context.shortMessage("Using fail-safe collision strategy"); //TODO localize
+                appContext.shortMessage("Using fail-safe collision strategy"); //TODO localize
             }
         }
     };
