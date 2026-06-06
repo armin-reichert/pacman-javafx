@@ -96,7 +96,7 @@ public class ArcadePacMan_App extends Application {
         final AbstractGameModel gameModel = new ArcadePacMan_GameModel();
         final GameRules gameRules = new ArcadePacMan_GameRules();
 
-        final GameSpecification game = new GameSpecification(Arcade_GameFlow::new, gameModel, gameRules);
+        final GameSpecification game = new GameSpecification(Arcade_GameFlow::new, gameModel, gameRules, false);
         gamesContainer.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
         app.ui().configurations().addConfigFactory(

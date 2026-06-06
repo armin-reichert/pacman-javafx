@@ -24,10 +24,6 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.flow.GameFlow;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.model.test.LevelMediumTestState;
-import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
@@ -35,13 +31,8 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_Das
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
-import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
-import de.amr.pacmanfx.ui.app.AppContextImpl;
-import de.amr.pacmanfx.ui.app.AppBuilder;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.app.GameSpecification;
-import de.amr.pacmanfx.ui.app.GamesContainer;
+import de.amr.pacmanfx.ui.app.*;
 import de.amr.pacmanfx.ui.config.UIConfigManager;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
@@ -219,48 +210,40 @@ public class PacManGames3dApp extends Application {
                 case ARCADE_PACMAN -> new GameSpecification(
                     Arcade_GameFlow::new,
                     new ArcadePacMan_GameModel(),
-                    new ArcadePacMan_GameRules()
+                    new ArcadePacMan_GameRules(),
+                    includeTests
                 );
 
                 case ARCADE_MS_PACMAN -> new GameSpecification(
                     Arcade_GameFlow::new,
                     new ArcadeMsPacMan_GameModel(),
-                    new ArcadeMsPacMan_GameRules()
+                    new ArcadeMsPacMan_GameRules(),
+                    includeTests
                 );
 
                 case TENGEN_MS_PACMAN -> new GameSpecification(
                     TengenMsPacMan_GameFlow::new,
                     new TengenMsPacMan_GameModel(),
-                    new TengenMsPacMan_GameRules());
+                    new TengenMsPacMan_GameRules(),
+                    includeTests
+                );
 
                 case ARCADE_PACMAN_XXL -> new GameSpecification(
                     Arcade_GameFlow::new,
                     new PacManXXL_PacMan_GameModel(xxlMapSelector),
-                    new PacManXXL_PacMan_GameRules()
+                    new PacManXXL_PacMan_GameRules(),
+                    includeTests
                 );
 
                 case ARCADE_MS_PACMAN_XXL -> new GameSpecification(
                     Arcade_GameFlow::new,
                     new PacManXXL_MsPacMan_GameModel(xxlMapSelector),
-                    new PacManXXL_MsPacMan_GameRules()
+                    new PacManXXL_MsPacMan_GameRules(),
+                    includeTests
                 );
             };
-
-            //TODO
-            /*
-            if (includeTests) {
-                addTestStates(game.gameModel().flow());
-            }
-
-             */
             gamesContainer.registerGame(variant.name(), game);
         }
-    }
-
-    private void addTestStates(GameFlow gameFlow) {
-        gameFlow.addState(new LevelShortTestState());
-        gameFlow.addState(new LevelMediumTestState());
-        gameFlow.addState(new CutScenesTestState());
     }
 
     private void addConfigFactories() {
@@ -270,7 +253,6 @@ public class PacManGames3dApp extends Application {
         configManager.addConfigFactory(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new);
         configManager.addConfigFactory(ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_UIConfig::new);
         configManager.addConfigFactory(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig::new);
-
     }
 
     private void addStartPages() {

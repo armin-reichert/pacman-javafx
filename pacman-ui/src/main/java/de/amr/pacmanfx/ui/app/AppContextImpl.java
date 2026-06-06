@@ -13,6 +13,9 @@ import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
+import de.amr.pacmanfx.model.test.CutScenesTestState;
+import de.amr.pacmanfx.model.test.LevelMediumTestState;
+import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -96,11 +99,19 @@ public final class AppContextImpl implements AppContext {
         createSubViews();
 
         gameVariantName.addListener((_, _, newVariantName) -> {
+            final GameSpecification newGame = gameForVariant(newVariantName);
+            final GameFlow gameFlow = newGame.gameFlowFactory().get();
+
+            //TODO avoid circular dependency
             currentGameContext = new GameContextImpl(this);
-            //TODO How to avoid this circular dependency?
-            final GameFlow gameFlow = gameForVariant(newVariantName).gameFlowFactory().get();
             currentGameContext.setGameFlow(gameFlow);
-            //TODO check
+
+            if (newGame.includeTests()) {
+                gameFlow.addState(new LevelShortTestState());
+                gameFlow.addState(new LevelMediumTestState());
+                gameFlow.addState(new CutScenesTestState());
+            }
+
             currentGameContext.gameModel().hud().setCoinMechanism(coinMechanism);
         });
     }

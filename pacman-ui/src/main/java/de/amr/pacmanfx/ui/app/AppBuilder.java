@@ -57,7 +57,7 @@ public class AppBuilder {
     private final Map<String, GameConfig> gameConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
 
-    private boolean interactiveTests;
+    private boolean includeTests;
 
     private AppBuilder(
         Stage stage,
@@ -136,7 +136,7 @@ public class AppBuilder {
     }
 
     public AppBuilder interactiveTests(boolean include) {
-        interactiveTests = include;
+        includeTests = include;
         return this;
     }
 
@@ -160,18 +160,8 @@ public class AppBuilder {
         gameConfigMap.forEach((gameVariant, config) -> {
             final AbstractGameModel gameModel = config.gameModelFactory.get();
             final GameRules gameRules = config.gameRulesFactory.get();
-            gamesContainer.registerGame(gameVariant, new GameSpecification(config.gameFlowFactory, gameModel, gameRules));
+            gamesContainer.registerGame(gameVariant, new GameSpecification(config.gameFlowFactory, gameModel, gameRules, includeTests));
             app.ui().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);
-
-            //TODO
-            /*
-            if (interactiveTests) {
-                gameFlow.addState(new LevelShortTestState());
-                gameFlow.addState(new LevelMediumTestState());
-                gameFlow.addState(new CutScenesTestState());
-            }
-
-             */
         });
 
         final StartPagesView startPagesCarousel = app.ui().subViews().startView();

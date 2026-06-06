@@ -9,5 +9,6 @@ import java.util.function.Supplier;
 public record GameSpecification(
     Supplier<? extends GameFlow> gameFlowFactory,
     AbstractGameModel gameModel,
-    GameRules gameRules)
+    GameRules gameRules,
+    boolean includeTests)
 {}
