@@ -111,7 +111,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     public void startGame() {
         context.ui().subViews().selectGamePlayView();
-        context.restartGame();
+        context.startGame();
     }
 
     public void startDrawLoop() {

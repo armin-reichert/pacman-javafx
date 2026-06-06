@@ -82,7 +82,7 @@ public final class CommonActions {
         protected void doAction(AppContext context) {
             context.coinMechanism().setNumCoins(0);
             context.ui().subViews().selectGamePlayView();
-            context.restartGame();
+            context.startGame();
         }
     };
 

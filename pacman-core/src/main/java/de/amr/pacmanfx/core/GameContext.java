@@ -15,10 +15,6 @@ import java.util.Optional;
 
 public interface GameContext {
 
-    /**
-     * @return the game flow (state machine) controlling the game play.
-     *
-     */
     GameFlow gameFlow();
 
     default State<GameContext> gameState() {
@@ -33,7 +29,7 @@ public interface GameContext {
         return gameModel().optGameLevel();
     }
 
-    Boolean isCollisionDoubleChecked();
+    boolean isCollisionDoubleChecked();
 
     CollisionStrategy collisionStrategy();
 

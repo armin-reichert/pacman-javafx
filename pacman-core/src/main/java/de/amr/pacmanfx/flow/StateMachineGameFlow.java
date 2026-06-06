@@ -29,16 +29,16 @@ public class StateMachineGameFlow implements GameFlow {
     public StateMachineGameFlow(String name) {
         stateMachine.setName(name);
         stateMachine.addStateChangeListener((oldState, newState)
-            -> publishGameEvent(new GameStateChangeEvent(context(), oldState, newState)));
+            -> publishGameEvent(new GameStateChangeEvent(gameContext(), oldState, newState)));
     }
 
     @Override
-    public void setContext(GameContext context) {
-        stateMachine.setContext(requireNonNull(context));
+    public void setGameContext(GameContext gameContext) {
+        stateMachine.setContext(gameContext);
     }
 
     @Override
-    public GameContext context() {
+    public GameContext gameContext() {
         return stateMachine.context();
     }
 

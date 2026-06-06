@@ -13,11 +13,14 @@ import static java.util.Objects.requireNonNull;
 public class GameContextImpl implements GameContext {
 
     private final GamesApp gamesApp;
-    private final GameFlow gameFlow;
+    private GameFlow gameFlow;
     private HuntingStepResult huntingStepResult;
 
-    public GameContextImpl(GamesApp gamesApp, GameFlow gameFlow) {
+    public GameContextImpl(GamesApp gamesApp) {
         this.gamesApp = requireNonNull(gamesApp);
+    }
+
+    public void setGameFlow(GameFlow gameFlow) {
         this.gameFlow = requireNonNull(gameFlow);
     }
 
@@ -46,7 +49,7 @@ public class GameContextImpl implements GameContext {
     }
 
     @Override
-    public Boolean isCollisionDoubleChecked() {
+    public boolean isCollisionDoubleChecked() {
         return gamesApp.isCollisionDoubleChecked();
     }
 

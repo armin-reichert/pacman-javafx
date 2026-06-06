@@ -74,7 +74,7 @@ public final class GamesApp implements AppContext {
 
     private CollisionStrategy collisionStrategy = CollisionStrategy.SAME_TILE;
 
-    private GameContext currentGameContext;
+    private GameContextImpl currentGameContext;
 
     public GamesApp(GamesContainer gamesContainer, GameViewImpl view, GameClock gameClock, CoinMechanism coinMechanism) {
         this.gamesContainer = requireNonNull(gamesContainer);
@@ -99,10 +99,10 @@ public final class GamesApp implements AppContext {
         createSubViews();
 
         gameVariantName.addListener((_, _, newVariantName) -> {
+            currentGameContext = new GameContextImpl(this);
+            //TODO How to avoid this circular dependency?
             final GameFlow gameFlow = gameForVariant(newVariantName).gameFlowFactory().get();
-            currentGameContext = new GameContextImpl(this, gameFlow);
-            //TODO change this
-            gameFlow.setContext(currentGameContext);
+            currentGameContext.setGameFlow(gameFlow);
         });
     }
 
@@ -190,12 +190,7 @@ public final class GamesApp implements AppContext {
         return watchdog;
     }
 
-    @Override
-    public void restartGame() {
-        stopGame();
-        currentGameContext().gameFlow().restartState(GameStateID.BOOT.name());
-        Platform.runLater(gameClock()::start);
-    }
+    // Lifecycle
 
     @Override
     public void displayOnScreen() {
@@ -210,6 +205,14 @@ public final class GamesApp implements AppContext {
         view.show();
         ui.subViews().selectStartView();
         startServices();
+    }
+
+    @Override
+    public void startGame() {
+        stopGame();
+        currentGameContext().gameFlow().setGameContext(currentGameContext);
+        currentGameContext().gameFlow().restartState(GameStateID.BOOT.name());
+        Platform.runLater(gameClock()::start);
     }
 
     @Override

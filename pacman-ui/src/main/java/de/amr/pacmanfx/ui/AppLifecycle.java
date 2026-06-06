@@ -19,7 +19,7 @@ public interface AppLifecycle {
      * <p>
      * Typically used when switching variants or restarting gameplay.
      */
-    void restartGame();
+    void startGame();
 
     /**
      * Shows the UI (centered) and displays the first start page.

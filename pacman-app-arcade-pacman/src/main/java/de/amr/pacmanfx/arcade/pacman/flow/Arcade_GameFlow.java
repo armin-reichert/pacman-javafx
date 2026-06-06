@@ -1,6 +1,5 @@
 package de.amr.pacmanfx.arcade.pacman.flow;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.StateMachineGameFlow;
 
 public class Arcade_GameFlow extends StateMachineGameFlow {

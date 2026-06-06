@@ -28,68 +28,72 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestEatingFood {
 
-    private static GameContext testContext;
+    static class TestContext implements GameContext {
+
+        private final GameFlow  gameFlow  = new Arcade_GameFlow();
+        private final GameModel gameModel = new ArcadePacMan_GameModel(new CoinMechanism(99));
+        private final GameRules gameRules = new ArcadePacMan_GameRules();
+
+        public TestContext() {
+        }
+
+        @Override
+        public GameFlow gameFlow() {
+            return gameFlow;
+        }
+
+        @Override
+        public GameRules gameRules() {
+            return gameRules;
+        }
+
+        @Override
+        public GameModel gameModel() {
+            return gameModel;
+        }
+
+        @Override
+        public boolean isCollisionDoubleChecked() {
+            return false;
+        }
+
+        @Override
+        public CollisionStrategy collisionStrategy() {
+            return CollisionStrategy.SAME_TILE;
+        }
+
+        @Override
+        public void startNewHuntingStep() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public HuntingStepResult huntingResult() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
+
+    private static TestContext testGameContext;
 
     @BeforeAll
     static void setup() {
-
-        final GameRules gameRules = new ArcadePacMan_GameRules();
-
-        final GameFlow gameFlow = new Arcade_GameFlow();
-
-        final GameModel gameModel = new ArcadePacMan_GameModel(new CoinMechanism(99));
-
-        testContext = new GameContext() {
-            @Override
-            public GameModel gameModel() {
-                return gameModel;
-            }
-
-            @Override
-            public GameRules gameRules() {
-                return gameRules;
-            }
-
-            @Override
-            public GameFlow gameFlow() {
-                return gameFlow;
-            }
-
-            @Override
-            public Boolean isCollisionDoubleChecked() {
-                return true;
-            }
-
-            @Override
-            public CollisionStrategy collisionStrategy() {
-                return CollisionStrategy.SAME_TILE;
-            }
-
-            @Override
-            public void startNewHuntingStep() {
-            }
-
-            @Override
-            public HuntingStepResult huntingResult() {
-                return null;
-            }
-        };
+        testGameContext = new TestContext();
     }
 
     @BeforeEach
     public void createGameLevel() {
-        testContext.gameModel().buildNormalLevel(testContext, 1);
+        testGameContext.gameModel().buildNormalLevel(testGameContext, 1);
     }
 
     private void eatNextPellet() {
-        testContext.gameModel().optGameLevel().ifPresent(level -> {
+        testGameContext.gameModel().optGameLevel().ifPresent(level -> {
             final FoodLayer foodLayer = level.worldMap().foodLayer();
             foodLayer.tiles()
                 .filter(foodLayer::hasFoodAtTile)
                 .filter(not(foodLayer::isEnergizerTile))
                 .findFirst().ifPresent(tile -> {
                     foodLayer.markFoodEatenAt(tile);
-                    level.game().eatPellet(testContext, level, tile);
+                    level.game().eatPellet(testGameContext, level, tile);
                 });
         });
     }
@@ -100,14 +104,14 @@ public class TestEatingFood {
             .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                level.game().eatEnergizer(testContext, level, tile);
+                level.game().eatEnergizer(testGameContext, level, tile);
             });
     }
 
     @Test
     @DisplayName("Test Food Counting")
     public void testFoodCounting() {
-        testContext.gameModel().optGameLevel().ifPresent(level -> {
+        testGameContext.gameModel().optGameLevel().ifPresent(level -> {
             final FoodLayer foodLayer = level.worldMap().foodLayer();
 
             int eaten = foodLayer.eatenFoodCount();
@@ -128,20 +132,20 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Level Completion")
     public void testLevelCompletion() {
-        testContext.gameModel().optGameLevel().ifPresent(level -> {
+        testGameContext.gameModel().optGameLevel().ifPresent(level -> {
             while (level.worldMap().foodLayer().remainingFoodCount() > 0) {
-                assertFalse(testContext.gameRules().isLevelCompleted(level));
+                assertFalse(testGameContext.gameRules().isLevelCompleted(level));
                 eatNextPellet();
                 eatNextEnergizer(level);
             }
-            assertTrue(testContext.gameRules().isLevelCompleted(level));
+            assertTrue(testGameContext.gameRules().isLevelCompleted(level));
         });
     }
 
     @Test
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
-        testContext.gameModel().optGameLevel().ifPresent(level -> {
+        testGameContext.gameModel().optGameLevel().ifPresent(level -> {
             final Ghost blinky = level.ghost(RED_GHOST_SHADOW);
             final FoodLayer foodLayer = level.worldMap().foodLayer();
             final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
@@ -171,7 +175,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Resting")
     public void testResting() {
-        testContext.gameModel().optGameLevel().ifPresent(level -> {
+        testGameContext.gameModel().optGameLevel().ifPresent(level -> {
             eatNextPellet();
             assertEquals(1, level.entities().pac().restingTicks());
             eatNextEnergizer(level);
