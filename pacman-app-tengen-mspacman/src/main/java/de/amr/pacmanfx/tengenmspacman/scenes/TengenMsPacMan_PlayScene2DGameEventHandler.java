@@ -27,17 +27,17 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
 
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
-        context().currentSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
+        appContext().currentSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        context().currentSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
+        appContext().currentSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
-        context().currentSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
+        appContext().currentSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
         optGameLevel().ifPresent(level -> {
             gameScene().resetAnimations(level);
             gameScene().dynamicCamera().playIntroSequence();
-            if (context().currentGameContext().gameModel() instanceof TengenMsPacMan_GameModel tengenGame) {
+            if (appContext().currentGameContext().gameModel() instanceof TengenMsPacMan_GameModel tengenGame) {
                 tengenGame.showMessage(level, GameLevelMessageType.READY);
             }
         });
@@ -53,10 +53,10 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
 
     @Override
     public void onGameStarted(GameStartedEvent e) {
-        final GameModel game = context().currentGameContext().gameModel();
-        final boolean silent = game.isDemoLevelRunning() || context().currentGameContext().gameState() instanceof TestState;
+        final GameModel game = appContext().currentGameContext().gameModel();
+        final boolean silent = game.isDemoLevelRunning() || appContext().currentGameContext().gameState() instanceof TestState;
         if (!silent) {
-            context().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
+            appContext().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
     }
 
@@ -64,14 +64,14 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
     public void onGameStateChange(GameStateChangeEvent e) {
         if (e.newState() == TengenMsPacMan_GameState.GAME_LEVEL_COMPLETE.state()) {
             final GameLevel level = optGameLevel().orElseThrow();
-            context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            appContext().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene().playLevelCompleteAnimation(level);
         }
         else if (e.newState() == TengenMsPacMan_GameState.GAME_OVER.state()) {
             final TengenMsPacMan_PlayScene2D playScene2D = gameScene();
             final PlayScene2DCamera camera = playScene2D.dynamicCamera();
             final GameLevel level = optGameLevel().orElseThrow();
-            context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            appContext().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
             camera.enterManualMode();
             camera.setToTopPosition();
             level.optMessage().ifPresent(playScene2D::startGameOverMessageAnimation);
@@ -80,7 +80,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
 
     @Override
     public void onGhostEaten(GhostEatenEvent e) {
-        context().currentSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
+        appContext().currentSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
     }
 
     @Override
@@ -96,33 +96,33 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.Defaul
 
     @Override
     public void onPacDead(PacDeadEvent e) {
-        context().currentGameContext().gameState().expire();
+        appContext().currentGameContext().gameState().expire();
     }
 
     @Override
     public void onPacDying(PacDyingEvent e) {
         gameScene().dynamicCamera().enterManualMode();
-        context().currentSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
+        appContext().currentSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
     }
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = context().gameClock().tickCount();
-        gameScene().context().currentSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
+        final long tick = appContext().gameClock().tickCount();
+        gameScene().appContext().currentSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        gameScene().context().currentSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+        gameScene().appContext().currentSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        gameScene().context().currentSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        gameScene().appContext().currentSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 
     @Override
     public void onSpecialScore(SpecialScoreEvent e) {
-        gameScene().context().currentSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+        gameScene().appContext().currentSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 }

@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
+import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.HuntingPhase;
@@ -32,12 +33,12 @@ public class DashboardSectionGameInfo extends DashboardSection {
     }
 
     @Override
-    public void connect(AppContext context) {
-        final Supplier<GameModel> gameSupplier = context.currentGameContext()::gameModel;
+    public void connect(AppContext appContext) {
+        final Supplier<GameModel> gameSupplier = appContext.currentGameContext()::gameModel;
 
-        addDynamicLabeledValue("Game State",  () -> "%s".formatted(context.currentGameContext().gameState().name()));
-        addDynamicLabeledValue("State Timer", () -> stateTimerInfo(gameSupplier.get()));
-        addDynamicLabeledValue("Game Scene", ifGameScenePresent(context, gameScene -> gameScene.getClass().getSimpleName()));
+        addDynamicLabeledValue("Game State",  () -> "%s".formatted(appContext.currentGameContext().gameState().name()));
+        addDynamicLabeledValue("State Timer", () -> stateTimerInfo(appContext.currentGameContext().gameState()));
+        addDynamicLabeledValue("Game Scene", ifGameScenePresent(appContext, gameScene -> gameScene.getClass().getSimpleName()));
 
         addDynamicLabeledValue("Level Number", ifGameLevel(gameSupplier, level ->
             (level.isDemoLevel() ? "%d (Demo Level)" : "%d").formatted(level.number())));
@@ -56,7 +57,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
                 colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
             }
             else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                colorScheme = context.currentUIConfig().colorScheme(worldMap);
+                colorScheme = appContext.currentUIConfig().colorScheme(worldMap);
             }
             if (colorScheme != null) {
                 return "%s / %s / %s".formatted(
@@ -71,7 +72,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
         addDynamicLabeledValue("-Running",        ifGameLevel(gameSupplier, level -> fmtHuntingTicksRunning(level.huntingTimer())));
         addDynamicLabeledValue("-Remaining",      ifGameLevel(gameSupplier, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
 
-        addDynamicLabeledValue("Collision mode",  () -> fmtCollisionMode(context.currentGameContext().collisionStrategy()));
+        addDynamicLabeledValue("Collision mode",  () -> fmtCollisionMode(appContext.currentGameContext().collisionStrategy()));
         addDynamicLabeledValue("Pac-Man speed",   ifGameLevel(gameSupplier, this::fmtPacNormalSpeed));
         addDynamicLabeledValue("- empowered",     ifGameLevel(gameSupplier, this::fmtPacSpeedPowered));
         addDynamicLabeledValue("Power Duration",  ifGameLevel(gameSupplier, this::fmtPacPowerTime));
@@ -82,8 +83,8 @@ public class DashboardSectionGameInfo extends DashboardSection {
         addDynamicLabeledValue("Maze flashings",  ifGameLevel(gameSupplier, this::fmtNumFlashes));
     }
 
-    private String stateTimerInfo(GameModel game) {
-        final TickTimer timer = game.flow().state().timer();
+    private String stateTimerInfo(State<?> gameState) {
+        final TickTimer timer = gameState.timer();
         final boolean indefinite = timer.durationTicks() == TickTimer.INDEFINITE;
         if (timer.isStopped()) {
             return "Stopped at tick %s of %s".formatted(timer.tickCount(), indefinite ? "∞" : timer.durationTicks());

@@ -105,12 +105,12 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void onDeactivate() {
-        context.ui().sounds().stop(PacManGameSoundID.INTERMISSION_3);
+        appContext.ui().sounds().stop(PacManGameSoundID.INTERMISSION_3);
     }
 
     @Override
     public void onTick(long tick) {
-        final State<GameContext> gameState = context().currentGameContext().gameState();
+        final State<GameContext> gameState = appContext().currentGameContext().gameState();
         final long gameStateTick = gameState.timer().tickCount();
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {

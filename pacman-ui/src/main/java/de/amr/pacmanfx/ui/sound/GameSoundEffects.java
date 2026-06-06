@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui.sound;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.RandomNumberSupport;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -188,11 +189,11 @@ public class GameSoundEffects implements Disposable {
      *
      * @param level the current game level
      */
-    public void playLevelRunningSound(GameLevel level) {
+    public void playLevelRunningSound(GameContext gameContext, GameLevel level) {
         if (!soundManager.isEnabled()) {
             return;
         }
-        if (level.game().flow().state().nameIsOneOf(GAME_LEVEL_PLAYING.name())) {
+        if (gameContext.gameState().nameIsOneOf(GAME_LEVEL_PLAYING.name())) {
             playSiren(level);
             playGhostSounds(level.entities().pac(), level.entities().ghosts());
         }

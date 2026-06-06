@@ -7,7 +7,6 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
-import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.*;
@@ -72,16 +71,15 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     /**
      * @param coinMechanism the coin mechanism
      */
-    public ArcadePacMan_GameModel(GameFlow flow, CoinMechanism coinMechanism) {
-        this(flow, coinMechanism, new ArcadePacMan_MapSelector());
+    public ArcadePacMan_GameModel(CoinMechanism coinMechanism) {
+        this(coinMechanism, new ArcadePacMan_MapSelector());
     }
 
     /**
      * @param coinMechanism the coin mechanism
      * @param mapSelector e.g. selector that selects custom maps before standard maps
      */
-    public ArcadePacMan_GameModel(GameFlow flow, CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
-        super(flow);
+    public ArcadePacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
         this.coinMechanism = requireNonNull(coinMechanism);
         hud.setCoinMechanism(coinMechanism);
         this.mapSelector = requireNonNull(mapSelector);
@@ -139,7 +137,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.showEdibleForSeconds(randomFloat(9, 10));
         level.setBonus(bonus);
-        flow.publishGameEvent(new BonusActivatedEvent(flow.context(), bonus));
+        gameContext.gameFlow().publishGameEvent(new BonusActivatedEvent(gameContext, bonus));
     }
 
     // helpers

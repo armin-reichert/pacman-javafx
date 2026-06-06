@@ -48,7 +48,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             return;
         }
         if (sceneTick == ANIMATION_START_TICK) {
-            context.ui().sounds().play(PacManGameSoundID.INTERMISSION_1, 2);
+            appContext.ui().sounds().play(PacManGameSoundID.INTERMISSION_1, 2);
             startBlinkyChasingPacMan();
         }
         else if (sceneTick == ANIMATION_START_TICK + 260) {
@@ -58,7 +58,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             startBigPacManChasingBlinky();
         }
         else if (sceneTick == ANIMATION_START_TICK + 632) {
-            context().currentGameContext().gameState().expire();
+            appContext().currentGameContext().gameState().expire();
         }
         if (sceneTick >= ANIMATION_START_TICK) {
             pacMan.move();

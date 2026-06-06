@@ -54,18 +54,18 @@ public class GameLevelPacManDyingState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameModel game = context.gameModel();
-        final GameLevel level = game.optGameLevel().orElseThrow();
+    public void onUpdate(GameContext gameContext) {
+        final GameModel gameModel = gameContext.gameModel();
+        final GameLevel level = gameModel.optGameLevel().orElseThrow();
         final Pac pac = level.entities().pac();
         final long tick = timer().tickCount();
 
         if (timer().hasExpired()) {
             if (level.isDemoLevel()) {
-                context.gameFlow().enterState(GameStateID.GAME_OVER);
+                gameContext.gameFlow().enterState(GameStateID.GAME_OVER);
             } else {
-                game.lives().add(-1);
-                context.gameFlow().enterState(game.lives().count() == 0
+                gameModel.lives().add(-1);
+                gameContext.gameFlow().enterState(gameModel.lives().count() == 0
                     ? GameStateID.GAME_OVER
                     : GameStateID.GAME_OR_LEVEL_STARTING);
             }
@@ -77,18 +77,18 @@ public class GameLevelPacManDyingState extends GameState {
         }
         else if (tick == Timing.TICK_PACMAN_DYING_START_ANIMATION) {
             pac.animations().playSelected();
-            context.gameFlow().publishGameEvent(new PacDyingEvent(context, pac));
+            gameContext.gameFlow().publishGameEvent(new PacDyingEvent(gameContext, pac));
         }
         else if (tick == Timing.TICK_PACMAN_DYING_HIDE_PAC) {
             pac.hide();
             level.optBonus().ifPresent(Bonus::setInactive); //TODO check this
         }
         else if (tick == Timing.TICK_PACMAN_DYING_PAC_DEAD) {
-            context.gameFlow().publishGameEvent(new PacDeadEvent(context, pac));
+            gameContext.gameFlow().publishGameEvent(new PacDeadEvent(gameContext, pac));
         }
         else {
             level.heartbeat().triggerPulse();
-            pac.update(level);
+            pac.update(gameContext, level);
         }
     }
 }

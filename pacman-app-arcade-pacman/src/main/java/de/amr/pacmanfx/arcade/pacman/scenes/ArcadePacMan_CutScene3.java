@@ -50,14 +50,14 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
             return;
         }
         if (sceneTick == TICK_ANIMATION_START) {
-            context.ui().sounds().play(PacManGameSoundID.INTERMISSION_3, 2);
+            appContext.ui().sounds().play(PacManGameSoundID.INTERMISSION_3, 2);
             startBlinkyChasingPacMan();
         }
         else if (sceneTick == TICK_BLINKY_RUNNING_NAKED){
             startBlinkyRunningNaked();
         }
         else if (sceneTick == TICK_ANIMATION_ENDS) {
-            context().currentGameContext().gameState().expire();
+            appContext().currentGameContext().gameState().expire();
             return;
         }
         pacMan.move();

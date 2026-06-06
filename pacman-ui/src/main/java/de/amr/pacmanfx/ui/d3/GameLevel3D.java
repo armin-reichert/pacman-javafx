@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.math.Vector3f;
 import de.amr.basics.spriteanim.AnimationIdentifier;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -150,17 +151,18 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates a new 3D level representation for the given game level.
      *
-     * @param level          the game level to visualize
-     * @param uiConfig       the global UI configuration (provides 3D settings, colors, models)
+     * @param gameContext the current game context
+     * @param level       the game level to visualize
+     * @param uiConfig    the global UI configuration (provides 3D settings, colors, models)
      */
-    public GameLevel3D(GameLevel level, UIConfig uiConfig) {
+    public GameLevel3D(GameContext gameContext, GameLevel level, UIConfig uiConfig) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
 
         createMaze3D();
         createFood3D();
         createPac3D();
-        createGhosts3D();
+        createGhosts3D(gameContext);
         createLevelCounter3D();
         createLivesCounter3D();
         createMessageManager();
@@ -345,13 +347,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         entitySet.add(entitySet.pac3D);
     }
 
-    private void createGhosts3D() {
+    private void createGhosts3D(GameContext gameContext) {
         final List<GhostConfig> ghostConfigs = uiConfig.worldConfig().ghostConfigs();
         entitySet.ghosts3D = Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .map(ghost -> {
                 final Ghost3D ghost3D = createGhost3D(ghostConfigs.get(ghost.personality()), ghost);
-                ghost3D.init(level);
+                ghost3D.init(gameContext, level);
                 return ghost3D;
             }).toList();
 

@@ -70,7 +70,7 @@ public final class GamesApp implements AppContext {
 
         @Override
         public GameFlow gameFlow() {
-            return gameModel().flow(); //TODO
+            return gameForVariant(currentGameVariantName()).gameFlow();
         }
 
         @Override

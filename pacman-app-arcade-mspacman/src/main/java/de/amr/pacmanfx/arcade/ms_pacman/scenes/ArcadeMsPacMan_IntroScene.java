@@ -59,7 +59,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         final var gameEventHandler = new GameScene.DefaultGameEventHandler(this) {
             @Override
             public void onCreditAdded(CreditAddedEvent e) {
-                context().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+                appContext().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
             }
         };
         setGameEventHandler(gameEventHandler);
@@ -99,7 +99,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onDeactivate() {
-        context.ui().sounds().stopAndDisposeVoice();
+        appContext.ui().sounds().stopAndDisposeVoice();
     }
 
     @Override
@@ -204,7 +204,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameModel game = scene.context().currentGameContext().gameModel();
+                final GameModel game = scene.appContext().currentGameContext().gameModel();
                 scene.marquee.timer().doTick();
                 if (sceneTimer.atSecond(2.0) && !game.canStartNewGame()) {
                     game.flow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state()); // demo level

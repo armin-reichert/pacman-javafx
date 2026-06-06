@@ -41,7 +41,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
 
-        final UIConfig currentConfig = scene.context().currentUIConfig();
+        final UIConfig currentConfig = scene.appContext().currentUIConfig();
         levelRenderer = scene.configureRenderer(currentConfig.createGameLevelRenderer(canvas));
         actorRenderer = scene.configureRenderer(currentConfig.createActorRenderer(canvas));
         debugRenderer = scene.configureRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(canvas));
@@ -60,7 +60,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         }
         // Level creation happens by handling a game event after the play scene has been activated. Therefore,
         // the game level is not yet existing for the first two ticks after this scene got active.
-        scene.context().currentGameContext().optCurrentGameLevel().ifPresent(level -> {
+        scene.appContext().currentGameContext().optCurrentGameLevel().ifPresent(level -> {
             final RenderInfo info = createRenderInfo(level, playScene);
             levelRenderer.applyLevelSettings(level, info);
             levelRenderer.drawLevel(level, info);

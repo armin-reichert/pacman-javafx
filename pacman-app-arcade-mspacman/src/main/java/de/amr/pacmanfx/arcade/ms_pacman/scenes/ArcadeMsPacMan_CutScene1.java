@@ -124,7 +124,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (sceneTimer.atSecond(1)) {
-            context.ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
+            appContext.ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
         } else if (sceneTimer.hasExpired()) {
             enterStateChasedByGhosts();
         }
@@ -263,7 +263,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     private void updateStateInHeaven() {
         if (sceneTimer.hasExpired()) {
-            context().currentGameContext().gameState().expire();
+            appContext().currentGameContext().gameState().expire();
         }
     }
 }

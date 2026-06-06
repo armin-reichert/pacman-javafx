@@ -39,8 +39,8 @@ public abstract class GameScene implements Disposable {
             this.gameScene = requireNonNull(gameScene);
         }
 
-        public AppContext context() {
-            return gameScene.context();
+        public AppContext appContext() {
+            return gameScene.appContext();
         }
 
         public GameScene gameScene() {
@@ -48,28 +48,28 @@ public abstract class GameScene implements Disposable {
         }
 
         public Optional<GameLevel> optGameLevel() {
-            return context().currentGameContext().optCurrentGameLevel();
+            return appContext().currentGameContext().optCurrentGameLevel();
         }
 
         @Override
         public void onStopAllSounds(StopAllSoundsEvent event) {
-            context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            appContext().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
         }
     }
 
     protected final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for " + getClass().getSimpleName());
 
-    protected final AppContext context;
+    protected final AppContext appContext;
 
     private GameEventListener gameEventHandler;
 
     public GameScene(AppContext context) {
-        this.context = requireNonNull(context);
+        this.appContext = requireNonNull(context);
         setGameEventHandler(new DefaultGameEventHandler(this));
     }
 
-    public AppContext context() {
-        return context;
+    public AppContext appContext() {
+        return appContext;
     }
 
     public void setGameEventHandler(GameEventListener delegate) {
@@ -98,7 +98,7 @@ public abstract class GameScene implements Disposable {
      * Activates the scene and assigns keyboard bindings.
      */
     public final void activate() {
-        onActivate(context);
+        onActivate(appContext);
         Logger.info(actionBindings);
         Logger.trace("Game scene {} activated", getClass().getSimpleName());
     }
@@ -114,7 +114,7 @@ public abstract class GameScene implements Disposable {
     public final void deactivate() {
         onDeactivate();
         actionBindings.dispose();
-        context().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        appContext().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.trace("Game scene {} deactivated", getClass().getSimpleName());
     }
 

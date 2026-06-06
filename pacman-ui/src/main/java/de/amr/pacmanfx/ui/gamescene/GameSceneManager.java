@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene;
 
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -62,12 +63,13 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         updateGameSceneAndForceReload(context, true);
     }
 
-    public void updateGameSceneAndForceReload(AppContext context, boolean forceReload) {
-        final UIConfig currentConfig = context.currentUIConfig();
-        final GameModel game = context.currentGameContext().gameModel();
+    public void updateGameSceneAndForceReload(AppContext appContext, boolean forceReload) {
+        final UIConfig currentConfig = appContext.currentUIConfig();
+        final GameContext gameContext = appContext.currentGameContext();
+        final GameModel game = gameContext.gameModel();
 
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(context, game).orElseThrow();
+        final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(appContext, game).orElseThrow();
 
         if (nextGameScene == prevGameScene && !forceReload) {
             return;
@@ -75,15 +77,15 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
         if (prevGameScene != null) {
             prevGameScene.deactivate();
-            removeFromPlayView(context, prevGameScene);
+            removeFromPlayView(appContext, prevGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
-        embedGameSceneIntoPlayView(context, nextGameScene);
+        embedGameSceneIntoPlayView(appContext, nextGameScene);
 
         nextGameScene.activate();
 
-        game.optGameLevel().ifPresent(level -> handle2D3DSwitch(currentConfig, level, prevGameScene, nextGameScene));
+        game.optGameLevel().ifPresent(level -> handle2D3DSwitch(currentConfig, gameContext, level, prevGameScene, nextGameScene));
 
         gameSceneProperty().set(nextGameScene);
     }
@@ -128,30 +130,30 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     // 2D-3D scene switch
 
-    private void handle2D3DSwitch(UIConfig uiConfig, GameLevel level, GameScene prevGameScene, GameScene nextGameScene) {
+    private void handle2D3DSwitch(UIConfig uiConfig, GameContext gameContext, GameLevel level, GameScene prevGameScene, GameScene nextGameScene) {
         final GameSceneSwitchType sceneSwitchType = identifySceneSwitchType(prevGameScene, nextGameScene);
         switch (sceneSwitchType) {
-            case FROM_2D_TO_3D -> switchPlaySceneTo3D(uiConfig, level, prevGameScene, nextGameScene);
+            case FROM_2D_TO_3D -> switchPlaySceneTo3D(uiConfig, gameContext, level, prevGameScene, nextGameScene);
             case FROM_3D_TO_2D -> switchPlaySceneTo2D(prevGameScene, nextGameScene);
             case NONE -> {}
             default -> throw new IllegalArgumentException("Illegal scene switch type: " + sceneSwitchType);
         }
     }
 
-    private void switchPlaySceneTo3D(UIConfig uiConfig, GameLevel level, GameScene currentScene, GameScene nextScene) {
+    private void switchPlaySceneTo3D(UIConfig uiConfig, GameContext gameContext, GameLevel level, GameScene currentScene, GameScene nextScene) {
         if (!(nextScene instanceof PlayScene3D playScene3D)) {
             throw new IllegalArgumentException("Expected PlayScene3D, but scene has class %s"
                 .formatted(nextScene.getClass().getSimpleName()));
         }
 
-        playScene3D.replaceGameLevel3D(level);
+        playScene3D.replaceGameLevel3D(gameContext, level);
         playScene3D.updateHUD3D(level);
         playScene3D.replaceActionBindings(level);
         playScene3D.initFood3D(level.worldMap().foodLayer(), true);
 
         final GameLevel3D level3D = playScene3D.optGameLevel3D().orElseThrow();
         final Pac3D pac3D = level3D.entities().pac3D();
-        playScene3D.initPac3D(pac3D, level);
+        playScene3D.initPac3D(gameContext, pac3D, level);
         level3D.startLivesCounterTrackingPac();
 
         if (level.entities().pac().powerTimer().isRunning()) {

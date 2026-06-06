@@ -15,18 +15,22 @@ import java.util.Optional;
 
 public interface GameContext {
 
-    GameModel gameModel();
-
-    GameRules gameRules();
-
-    default Optional<GameLevel> optCurrentGameLevel() {
-        return gameModel().optGameLevel();
-    }
-
+    /**
+     * @return the game flow (state machine) controlling the game play.
+     *
+     */
     GameFlow gameFlow();
 
     default State<GameContext> gameState() {
         return gameFlow().state();
+    }
+
+    GameRules gameRules();
+
+    GameModel gameModel();
+
+    default Optional<GameLevel> optCurrentGameLevel() {
+        return gameModel().optGameLevel();
     }
 
     void setCollisionStrategy(CollisionStrategy collisionStrategy);

@@ -7,7 +7,6 @@ package de.amr.pacmanfx.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -30,9 +29,7 @@ public interface GameModel {
 
     // Components
 
-    //TODO move into GameContext
-    GameFlow flow();
-
+    //TODO move into game context
     GameCheats cheats();
 
     CoinMechanism coinMechanism();
@@ -81,7 +78,7 @@ public interface GameModel {
 
     Optional<GameLevel> optGameLevel();
 
-    void startLevel();
+    void startLevel(GameContext gameContext);
 
     void startNextLevel(GameContext gameContext);
 
@@ -109,9 +106,9 @@ public interface GameModel {
 
     void onEatGhost(GameContext gameContext, GameLevel level, Ghost eatenGhost);
 
-    void startPacPowerMode(GameLevel level, Pac pac);
+    void startPacPowerMode(GameContext gameContext, GameLevel level, Pac pac);
 
-    void updatePacPowerMode(GameLevel level, Pac pac);
+    void updatePacPowerMode(GameContext gameContext, GameLevel level, Pac pac);
 
     boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 }

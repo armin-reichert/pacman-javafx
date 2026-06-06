@@ -55,7 +55,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private final IntegerProperty selectedOption = new SimpleIntegerProperty() {
         @Override
         protected void invalidated() {
-            context.ui().sounds().play(TengenMsPacManSoundID.OPTION_SELECTION_CHANGE);
+            appContext.ui().sounds().play(TengenMsPacManSoundID.OPTION_SELECTION_CHANGE);
             idleTicks = 0;
         }
     };
@@ -103,14 +103,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            context().currentGameContext().gameFlow().enterState(TengenMsPacMan_GameState.GAME_INTRO.state());
+            appContext().currentGameContext().gameFlow().enterState(TengenMsPacMan_GameState.GAME_INTRO.state());
         }
     }
 
-    private TengenMsPacMan_GameModel tengenGame() { return (TengenMsPacMan_GameModel) context().currentGameContext().gameModel(); }
+    private TengenMsPacMan_GameModel tengenGame() { return (TengenMsPacMan_GameModel) appContext().currentGameContext().gameModel(); }
     
     private void optionValueChanged() {
-        context.ui().sounds().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
+        appContext.ui().sounds().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
         idleTicks = 0;
     }
 

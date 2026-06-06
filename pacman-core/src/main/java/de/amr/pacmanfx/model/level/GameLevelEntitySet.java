@@ -5,18 +5,19 @@
 package de.amr.pacmanfx.model.level;
 
 import de.amr.basics.QuerySet;
+import de.amr.pacmanfx.core.GameContext;
 
 import static java.util.Objects.requireNonNull;
 
 public class GameLevelEntitySet extends QuerySet<GameLevelEntity> {
 
-    public void init(GameLevel level) {
+    public void init(GameContext gameContext, GameLevel level) {
         requireNonNull(level);
-        selectAll().forEach(e -> e.init(level));
+        selectAll().forEach(e -> e.init(gameContext, level));
     }
 
-    public void update(GameLevel level) {
+    public void update(GameContext gameContext, GameLevel level) {
         requireNonNull(level);
-        selectAll().forEach(e -> e.update(level));
+        selectAll().forEach(e -> e.update(gameContext, level));
     }
 }

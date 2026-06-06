@@ -29,37 +29,37 @@ public class GameLevelPlayingState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameModel game = context.gameModel();
-        final GameLevel level = game.optGameLevel().orElseThrow();
+    public void onUpdate(GameContext gameContext) {
+        final GameModel gameModel = gameContext.gameModel();
+        final GameLevel level = gameModel.optGameLevel().orElseThrow();
         final Pac pac = level.entities().pac();
-        final GateKeeper gateKeeper = game.gateKeeper();
+        final GateKeeper gateKeeper = gameModel.gateKeeper();
 
         // Update
-        game.cheats().update(level);
+        gameModel.cheats().update(level);
         level.heartbeat().triggerPulse();
-        level.huntingTimer().update(context.gameRules(), level.number());
+        level.huntingTimer().update(gameContext.gameRules(), level.number());
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
-        game.updatePacPowerMode(level, pac);
+        gameModel.updatePacPowerMode(gameContext, level, pac);
 
-        context.startNewHuntingStep();
-        if (context.isCollisionDoubleChecked()) {
-            HuntingCollisionDetector.detectCollisions(context);
+        gameContext.startNewHuntingStep();
+        if (gameContext.isCollisionDoubleChecked()) {
+            HuntingCollisionDetector.detectCollisions(gameContext);
         }
-        level.entities().forEach(entity -> entity.update(level));
-        HuntingCollisionDetector.detectCollisions(context);
+        level.entities().forEach(entity -> entity.update(gameContext, level));
+        HuntingCollisionDetector.detectCollisions(gameContext);
 
         // Resolving
-        HuntingResolver.evaluate(context);
+        HuntingResolver.evaluate(gameContext);
 
-        logHuntingStep(context);
+        logHuntingStep(gameContext);
 
         // State transition
         final GameStateID nextStateID = HuntingStateTransitions
-            .computeNextState(context.huntingResult(), context.gameRules(), level);
-        context.gameFlow().enterState(nextStateID.name());
+            .computeNextState(gameContext.huntingResult(), gameContext.gameRules(), level);
+        gameContext.gameFlow().enterState(nextStateID.name());
     }
 
     private void logHuntingStep(GameContext context) {

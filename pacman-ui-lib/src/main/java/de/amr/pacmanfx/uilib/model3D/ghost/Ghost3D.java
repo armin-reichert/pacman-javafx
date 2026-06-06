@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D.ghost;
 
 import de.amr.basics.spriteanim.AnimationIdentifier;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntity;
@@ -76,14 +77,14 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     }
 
     @Override
-    public void init(GameLevel level) {
+    public void init(GameContext gameContext, GameLevel level) {
         assertControllersAssigned();
         transformController.init(this, level.worldMap());
         appearanceController.init(this);
     }
 
     @Override
-    public void update(GameLevel level) {
+    public void update(GameContext gameContext, GameLevel level) {
         assertControllersAssigned();
         transformController.update(this, level.worldMap());
         appearanceController.update(this, level);

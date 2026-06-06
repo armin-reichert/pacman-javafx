@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.d3.entities;
 import de.amr.basics.StopWatch;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntity;
 import de.amr.pacmanfx.model.world.House;
@@ -53,11 +54,11 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
     }
 
     @Override
-    public void init(GameLevel level) {}
+    public void init(GameContext gameContext, GameLevel level) {}
 
     @Override
-    public void update(GameLevel level) {
-        house3D.update(level);
+    public void update(GameContext gameContext, GameLevel level) {
+        house3D.update(gameContext, level);
     }
 
     public void build(Map<String, PhongMaterial> materials, MazeConfig3D mazeConfig, FloorConfig3D floorConfig3D) {

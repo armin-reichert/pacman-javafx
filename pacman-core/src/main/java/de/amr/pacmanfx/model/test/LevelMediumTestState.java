@@ -22,9 +22,9 @@ public class LevelMediumTestState extends TestState {
 
     private int lastTestedLevelNumber;
 
-    private void configureLevelForTest(GameContext context) {
-        final GameModel game = context.gameModel();
-        final GameLevel level = game.optGameLevel().orElseThrow();
+    private void configureLevelForTest(GameContext gameContext) {
+        final GameModel gameModel = gameContext.gameModel();
+        final GameLevel level = gameModel.optGameLevel().orElseThrow();
 
         final Pac pac = level.entities().pac();
         pac.usingAutopilotProperty().unbind();
@@ -40,9 +40,9 @@ public class LevelMediumTestState extends TestState {
         message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
         level.setMessage(message);
 
-        game.hud().show();
+        gameModel.hud().show();
 
-        game.flow().publishGameEvent(new StopAllSoundsEvent(context));
+        gameContext.gameFlow().publishGameEvent(new StopAllSoundsEvent(gameContext));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class LevelMediumTestState extends TestState {
         timer.restartSeconds(TEST_DURATION_SEC);
         game.prepareNewGame();
         game.buildNormalLevel(gameContext, 1);
-        game.startLevel();
+        game.startLevel(gameContext);
         configureLevelForTest(gameContext);
     }
 
@@ -68,9 +68,9 @@ public class LevelMediumTestState extends TestState {
         final GameModel gameModel = gameContext.gameModel();
         final GameLevel level = gameModel.optGameLevel().orElseThrow();
 
-        level.entities().pac().update(level);
-        level.entities().ghosts().forEach(ghost -> ghost.update(level));
-        level.optBonus().ifPresent(bonus -> bonus.update(level));
+        level.entities().pac().update(gameContext, level);
+        level.entities().ghosts().forEach(ghost -> ghost.update(gameContext, level));
+        level.optBonus().ifPresent(bonus -> bonus.update(gameContext, level));
 
         if (gameModel.gateKeeper() != null) {
             gameModel.gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
@@ -87,8 +87,8 @@ public class LevelMediumTestState extends TestState {
 
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
-                gameModel.flow().publishGameEvent(new StopAllSoundsEvent(gameContext));
-                gameModel.flow().enterState(GameStateID.GAME_INTRO.name());
+                gameContext.gameFlow().publishGameEvent(new StopAllSoundsEvent(gameContext));
+                gameContext.gameFlow().enterState(GameStateID.GAME_INTRO.name());
             }
             else {
                 timer().restartSeconds(TEST_DURATION_SEC);
@@ -97,13 +97,13 @@ public class LevelMediumTestState extends TestState {
             }
         }
         else if (gameContext.gameRules().isLevelCompleted(level)) {
-            gameModel.flow().enterState(GameStateID.GAME_INTRO.name());
+            gameContext.gameFlow().enterState(GameStateID.GAME_INTRO.name());
         }
         else if (pacKilled) {
             expire();
         }
         else if (gameContext.huntingResult().hasGhostBeenKilled()) {
-            gameModel.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST.name());
+            gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST.name());
         }
     }
 

@@ -40,13 +40,13 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void decorate(GameLevel3D level3D) {
-        final GameModel game = context().currentGameContext().gameModel();
+        final GameModel game = appContext().currentGameContext().gameModel();
         if (!(game instanceof TengenMsPacMan_GameModel tengenGame)) {
             throw new IllegalStateException("Cannot use Tengen play scene 3D in game of class %s"
                 .formatted(game.getClass().getSimpleName()));
         }
         // If any of the default level settings has been changed, display the level info
-        context.currentGameContext().optCurrentGameLevel().ifPresent(level -> {
+        appContext.currentGameContext().optCurrentGameLevel().ifPresent(level -> {
             if (!tengenGame.allOptionsDefault()) {
                 final ImageView levelInfo = new ImageView();
                 final double infoWidth = TS(level.worldMap().numCols());
@@ -101,7 +101,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
-            scores3D.showTextForScore(context.ui().translations().translate("score.game_over"),
+            scores3D.showTextForScore(appContext.ui().translations().translate("score.game_over"),
                 Color.valueOf(NES_Palette.rgbColor(0x16)));
         }
         // Always show high score

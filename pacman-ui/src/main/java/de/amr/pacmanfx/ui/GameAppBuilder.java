@@ -40,6 +40,7 @@ public class GameAppBuilder {
     record WindowConfig(Stage stage, int sceneWidth, int sceneHeight) {}
 
     record GameConfig(
+        Supplier<? extends GameFlow> gameFlowFactory,
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends GameRules> gameRulesFactory,
         Supplier<? extends UIConfig> uiConfigFactory,
@@ -86,12 +87,17 @@ public class GameAppBuilder {
      */
     public GameAppBuilder game(
         String gameVariantName,
+        Supplier<? extends GameFlow> gameFlowFactory,
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends GameRules> gameRulesFactory,
         Supplier<? extends UIConfig> uiConfigFactory,
         WorldMapSelector mapSelector)
     {
         validateGameVariantName(gameVariantName);
+
+        if (gameFlowFactory == null) {
+            error("Game flow factory for game variant '%s' is null".formatted(gameVariantName));
+        }
         if (gameModelFactory == null) {
             error("Game model factory for game variant '%s' is null".formatted(gameVariantName));
         }
@@ -101,26 +107,28 @@ public class GameAppBuilder {
         if (uiConfigFactory == null) {
             error("UI configuration factory for game variant '%s' is null".formatted(gameVariantName));
         }
-        gameConfigMap.put(gameVariantName, new GameConfig(gameModelFactory, gameRulesFactory, uiConfigFactory, mapSelector));
+        gameConfigMap.put(gameVariantName, new GameConfig(gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, mapSelector));
         return this;
     }
 
     public GameAppBuilder game(
         String variantName,
+        Supplier<? extends GameFlow> gameFlowFactory,
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends GameRules> gameRulesFactory,
         Supplier<? extends UIConfig> uiConfigFactory)
     {
-        return game(variantName, gameModelFactory, gameRulesFactory, uiConfigFactory, null);
+        return game(variantName, gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, null);
     }
 
     public GameAppBuilder game(
         GameVariant variant,
+        Supplier<? extends GameFlow> gameFlowFactory,
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends GameRules> gameRulesFactory,
         Supplier<? extends UIConfig> uiConfigFactory)
     {
-        return game(variant.name(), gameModelFactory, gameRulesFactory, uiConfigFactory, null);
+        return game(variant.name(), gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, null);
     }
 
     public GameAppBuilder startPage(Supplier<? extends StartPage> startPageFactory) {
@@ -155,7 +163,7 @@ public class GameAppBuilder {
 
         gameConfigMap.forEach((gameVariant, config) -> {
             final AbstractGameModel gameModel = config.gameModelFactory.get();
-            final GameFlow gameFlow = gameModel.flow(); //TODO
+            final GameFlow gameFlow = config.gameFlowFactory.get();
             final GameRules gameRules = config.gameRulesFactory.get();
             gamesContainer.registerGame(gameVariant, new GameSpecification(gameModel, gameFlow, gameRules));
             ui.ui().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);

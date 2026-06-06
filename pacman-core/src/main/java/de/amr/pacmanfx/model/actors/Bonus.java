@@ -7,6 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.event.BonusExpiredEvent;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -118,12 +119,11 @@ public class Bonus extends MovingActor {
     }
 
     @Override
-    public void init(GameLevel level) {
-
+    public void init(GameContext gameContext, GameLevel level) {
     }
 
     @Override
-    public void update(GameLevel level) {
+    public void update(GameContext gameContext, GameLevel level) {
         timer.doTick();
         switch (state) {
             case EDIBLE -> {
@@ -137,13 +137,13 @@ public class Bonus extends MovingActor {
                 }
                 if (edibleStateOver) {
                     setInactive();
-                    level.game().flow().publishGameEvent(new BonusExpiredEvent(level.game().flow().context(), this));
+                    gameContext.gameFlow().publishGameEvent(new BonusExpiredEvent(gameContext, this));
                 }
             }
             case EATEN -> {
                 if (timer.hasExpired()) {
                     setInactive();
-                    level.game().flow().publishGameEvent(new BonusExpiredEvent(level.game().flow().context(), this));
+                    gameContext.gameFlow().publishGameEvent(new BonusExpiredEvent(gameContext, this));
                 }
             }
             case INACTIVE -> {}

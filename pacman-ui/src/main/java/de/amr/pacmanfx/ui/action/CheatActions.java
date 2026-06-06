@@ -41,12 +41,13 @@ public final class CheatActions {
 
     public static final GameAction ACTION_EAT_ALL_PELLETS = new GameAction("cheat_eat_all_pellets") {
         @Override
-        public void doAction(AppContext context) {
-            realLevel(context).ifPresent(level -> {
-                final GameModel game = level.game();
+        public void doAction(AppContext appContext) {
+            realLevel(appContext).ifPresent(level -> {
+                final GameContext gameContext = appContext.currentGameContext();
+                final GameModel gameModel = gameContext.gameModel();
                 level.worldMap().foodLayer().eatPellets();
-                game.cheats().cheatUsedProperty().set(true);
-                game.flow().publishGameEvent(new PacEatsFoodEvent(context.currentGameContext(), level.entities().pac(), false, true));
+                gameModel.cheats().cheatUsedProperty().set(true);
+                gameContext.gameFlow().publishGameEvent(new PacEatsFoodEvent(gameContext, level.entities().pac(), false, true));
             });
         }
 
@@ -60,16 +61,17 @@ public final class CheatActions {
 
     public static final GameAction ACTION_KILL_GHOSTS = new GameAction("cheat_kill_ghosts") {
         @Override
-        public void doAction(AppContext context) {
-            realLevel(context).ifPresent(level -> {
-                final GameModel game = level.game();
+        public void doAction(AppContext appContext) {
+            realLevel(appContext).ifPresent(level -> {
+                final GameContext gameContext = appContext.currentGameContext();
+                final GameModel gameModel = gameContext.gameModel();
                 final List<Ghost> killableGhosts = level.ghostsInAnyOfStates(Set.of(FRIGHTENED, HUNTING_PAC)).toList();
                 if (!killableGhosts.isEmpty()) {
                     level.clearGhostKillChain(); // resets value of next killed ghost to 200
-                    killableGhosts.forEach(ghost -> game.onEatGhost(context.currentGameContext(), level, ghost));
-                    game.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST.name());
+                    killableGhosts.forEach(ghost -> gameModel.onEatGhost(appContext.currentGameContext(), level, ghost));
+                    gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST.name());
                 }
-                game.cheats().cheatUsedProperty().set(true);
+                gameModel.cheats().cheatUsedProperty().set(true);
             });
         }
 
@@ -83,11 +85,12 @@ public final class CheatActions {
 
     public static final GameAction ACTION_ENTER_NEXT_LEVEL = new GameAction("cheat_enter_next_level") {
         @Override
-        public void doAction(AppContext context) {
-            realLevel(context).ifPresent(_ -> {
-                final GameModel game = context.currentGameContext().gameModel();
-                game.cheats().notifyCheatUsed();
-                game.flow().enterState(GameStateID.GAME_LEVEL_COMPLETE.name());
+        public void doAction(AppContext appContext) {
+            realLevel(appContext).ifPresent(_ -> {
+                final GameContext gameContext = appContext.currentGameContext();
+                final GameModel gameModel = gameContext.gameModel();
+                gameModel.cheats().notifyCheatUsed();
+                gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_COMPLETE.name());
             });
         }
 

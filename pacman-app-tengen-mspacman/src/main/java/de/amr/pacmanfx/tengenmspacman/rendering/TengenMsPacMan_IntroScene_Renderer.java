@@ -97,7 +97,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         }
 
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            drawJoypadKeyBinding(scene.context().input().joypad().currentKeyBinding());
+            drawJoypadKeyBinding(scene.appContext().input().joypad().currentKeyBinding());
         }
 
         if (AppConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {

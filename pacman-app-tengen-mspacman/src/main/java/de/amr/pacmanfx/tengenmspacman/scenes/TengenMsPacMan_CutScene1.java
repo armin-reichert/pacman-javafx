@@ -133,7 +133,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void onDeactivate() {
-        context.ui().sounds().stop(PacManGameSoundID.INTERMISSION_1);
+        appContext.ui().sounds().stop(PacManGameSoundID.INTERMISSION_1);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             }
         }
 
-        final long gameStateTick = context().currentGameContext().gameState().timer().tickCount();
+        final long gameStateTick = appContext().currentGameContext().gameState().timer().tickCount();
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {
                 case 130 -> {
@@ -236,7 +236,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                     msPacMan.hide();
                     heart.hide();
                 }
-                case 775 -> context().currentGameContext().gameState().expire();
+                case 775 -> appContext().currentGameContext().gameState().expire();
             }
         }
     }

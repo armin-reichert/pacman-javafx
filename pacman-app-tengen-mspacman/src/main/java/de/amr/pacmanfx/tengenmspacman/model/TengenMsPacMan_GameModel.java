@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.event.LevelStartedEvent;
-import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.HuntingTimer;
@@ -34,7 +33,6 @@ import static de.amr.basics.math.RandomNumberSupport.randomBoolean;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.core.Globals.*;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
-import static de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState.Timing;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -64,8 +62,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private boolean canStartNewGame;
     private int numContinues;
 
-    public TengenMsPacMan_GameModel(GameFlow flow) {
-        this.flow = flow;
+    public TengenMsPacMan_GameModel() {
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
         hud = new TengenMsPacMan_HeadsUpDisplay();
@@ -198,7 +195,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startLevel() {
+    public void startLevel(GameContext gameContext) {
         final GameLevel level = optGameLevel().orElseThrow();
         level.recordStartTime(System.currentTimeMillis());
 
@@ -222,7 +219,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        flow.publishGameEvent(new LevelStartedEvent(flow.context(), level));
+        gameContext.gameFlow().publishGameEvent(new LevelStartedEvent(gameContext, level));
     }
 
     //TODO Remove tick parameter, introduce game state
@@ -232,7 +229,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             buildDemoLevel(gameContext);
         }
         else if (tick == 2) {
-            startLevel();
+            startLevel(gameContext);
         }
         else if (tick == 3) {
             // Now, actor animations are available
@@ -240,8 +237,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
         }
-        else if (tick == Timing.TICK_DEMO_LEVEL_START_HUNTING) {
-            flow().enterState(TengenMsPacMan_GameState.GAME_LEVEL_PLAYING.state());
+        else if (tick == TengenMsPacMan_GameState.Timing.TICK_DEMO_LEVEL_START_HUNTING) {
+            gameContext.gameFlow().enterState(TengenMsPacMan_GameState.GAME_LEVEL_PLAYING.state());
         }
     }
 
@@ -295,7 +292,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gateKeeper.setLevelNumber(levelNumber);
 
         setLevel(newLevel);
-        flow.publishGameEvent(new LevelCreatedEvent(flow.context(), newLevel));
+        gameContext.gameFlow().publishGameEvent(new LevelCreatedEvent(gameContext, newLevel));
     }
 
     @Override
@@ -314,7 +311,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         score.setLevelNumber(1);
 
         setLevel(newLevel);
-        flow.publishGameEvent(new LevelCreatedEvent(flow.context(), newLevel));
+        gameContext.gameFlow().publishGameEvent(new LevelCreatedEvent(gameContext, newLevel));
     }
 
     @Override
@@ -373,7 +370,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        flow().publishGameEvent(new BonusActivatedEvent(flow.context(), bonus));
+        gameContext.gameFlow().publishGameEvent(new BonusActivatedEvent(gameContext, bonus));
     }
 
     @Override
@@ -386,7 +383,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         level.clearGhostKillChain();
 
-        startPacPowerMode(level, level.entities().pac());
+        startPacPowerMode(gameContext, level, level.entities().pac());
     }
 
     // Helpers

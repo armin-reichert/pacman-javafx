@@ -7,10 +7,12 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Globals;
-import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.flow.GameFlow;
+import de.amr.pacmanfx.event.LevelCreatedEvent;
+import de.amr.pacmanfx.event.LevelStartedEvent;
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Elroy;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import org.tinylog.Logger;
@@ -30,8 +32,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
      */
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
 
-    protected Arcade_GameModel(GameFlow flow) {
-        this.flow = requireNonNull(flow);
+    protected Arcade_GameModel() {
         actorSpeedControl = new Arcade_ActorSpeedControl();
     }
 
@@ -56,7 +57,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         level.clearGhostKillChain();
 
-        startPacPowerMode(level, pac);
+        startPacPowerMode(gameContext, level, pac);
     }
 
     protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
@@ -84,7 +85,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         setLevel(level);
-        flow.publishGameEvent(new LevelCreatedEvent(flow.context(), level));
+        gameContext.gameFlow().publishGameEvent(new LevelCreatedEvent(gameContext, level));
     }
 
     @Override
@@ -104,16 +105,17 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         score.setLevelNumber(levelNumber);
 
         setLevel(level);
-        flow.publishGameEvent(new LevelCreatedEvent(flow.context(), level));
+        gameContext.gameFlow().publishGameEvent(new LevelCreatedEvent(gameContext, level));
     }
 
+    //TODO remove tick parameter, introduce game state
     @Override
     public void startDemoLevel(GameContext gameContext, long tick) {
         if (tick == 1) {
             buildDemoLevel(gameContext);
         }
         else if (tick == 2) {
-            startLevel();
+            startLevel(gameContext);
         }
         else if (tick == 3) {
             // Now, actor animations are available, show them
@@ -122,12 +124,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.entities().ghosts().forEach(Ghost::show);
         }
         else if (tick == Arcade_GameState.Timing.TICK_RESUME_HUNTING) {
-            flow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
+            gameContext.gameFlow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
         }
     }
 
     @Override
-    public void startLevel() {
+    public void startLevel(GameContext gameContext) {
         final GameLevel level = optGameLevel().orElseThrow();
         level.recordStartTime(System.currentTimeMillis());
         prepareLevelForPlaying(level);
@@ -144,6 +146,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        flow.publishGameEvent(new LevelStartedEvent(flow.context(), level));
+        gameContext.gameFlow().publishGameEvent(new LevelStartedEvent(gameContext, level));
     }
 }

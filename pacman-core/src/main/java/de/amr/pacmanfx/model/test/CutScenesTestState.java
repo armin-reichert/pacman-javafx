@@ -6,7 +6,6 @@ package de.amr.pacmanfx.model.test;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GenericChangeEvent;
 import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.GameModel;
 
 public class CutScenesTestState extends TestState {
 
@@ -18,22 +17,21 @@ public class CutScenesTestState extends TestState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
+    public void onEnter(GameContext gameContext) {
         lock();
         testedCutSceneNumber = 1;
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameModel game = context.gameModel();
+    public void onUpdate(GameContext gameContext) {
         if (timer.hasExpired()) {
-            if (testedCutSceneNumber < context.gameRules().lastCutSceneNumber()) {
+            if (testedCutSceneNumber < gameContext.gameRules().lastCutSceneNumber()) {
                 testedCutSceneNumber += 1;
                 lock();
                 //TODO find another solution and get rid of this event type
-                game.flow().publishGameEvent(new GenericChangeEvent(context, "Cut Scene Test"));
+                gameContext.gameFlow().publishGameEvent(new GenericChangeEvent(gameContext, "Cut Scene Test"));
             } else {
-                game.flow().enterState(GameStateID.GAME_INTRO.name());
+                gameContext.gameFlow().enterState(GameStateID.GAME_INTRO.name());
             }
         }
     }

@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.d3.entities;
 
 import de.amr.basics.spriteanim.AnimationIdentifier;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntity;
 import de.amr.pacmanfx.ui.config.LevelCounterConfig3D;
@@ -44,7 +45,7 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
     }
 
     @Override
-    public void init(GameLevel level) {
+    public void init(GameContext gameContext, GameLevel level) {
         final LevelCounterConfig3D config = uiConfig.worldConfig().levelCounter();
         final float cubeSize = config.symbolSize();
         final List<Integer> symbolCodes = level.game().levelCounter().symbolCodes();
@@ -82,7 +83,7 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
     }
 
     @Override
-    public void update(GameLevel level) {}
+    public void update(GameContext gameContext, GameLevel level) {}
 
     @Override
     public void dispose() {

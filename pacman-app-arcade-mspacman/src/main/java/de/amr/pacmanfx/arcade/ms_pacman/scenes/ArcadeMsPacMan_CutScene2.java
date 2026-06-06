@@ -89,7 +89,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (timer.hasExpired()) {
-            context.ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
+            appContext.ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
             enterStateChasing();
         }
     }
@@ -155,7 +155,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             msPacMan.setSpeed(4.0f);
         }
         else if (timer.atSecond(23)) {
-            context().currentGameContext().gameState().expire();
+            appContext().currentGameContext().gameState().expire();
         }
         else {
             pacMan.move();

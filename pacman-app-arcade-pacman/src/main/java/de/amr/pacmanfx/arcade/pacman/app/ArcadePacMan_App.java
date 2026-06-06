@@ -70,6 +70,7 @@ public class ArcadePacMan_App extends Application {
             app = GameAppBuilder.newApp(primaryStage, size.x(), size.y(), gamesContainer, coinMechanism)
                 .game(
                     GameVariant.ARCADE_PACMAN,
+                    Arcade_GameFlow::new,
                     () -> new ArcadePacMan_GameModel(new Arcade_GameFlow(), coinMechanism),
                     ArcadePacMan_GameRules::new,
                     ArcadePacMan_UIConfig::new)

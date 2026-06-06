@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.subviews.playview.GameEventHandler;
 import javafx.beans.value.ChangeListener;
@@ -16,12 +15,12 @@ import static java.util.Objects.requireNonNull;
 
 public class GameVariantChangeHandler implements ChangeListener<String> {
 
-    private final AppContext context;
+    private final AppContext appContext;
     private final GameEventHandler gameEventHandler;
 
-    public GameVariantChangeHandler(AppContext context) {
-        this.context = requireNonNull(context);
-        gameEventHandler = new GameEventHandler(context);
+    public GameVariantChangeHandler(AppContext appContext) {
+        this.appContext = requireNonNull(appContext);
+        gameEventHandler = new GameEventHandler(appContext);
     }
 
     @Override
@@ -32,27 +31,25 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
         if (newGameVariantName != null) {
             enterGameVariant(newGameVariantName);
         }
-        context.ui().view().statusIconBox().bind(context.gameForVariant(newGameVariantName).gameModel());
+        appContext.ui().view().statusIconBox().bind(appContext.gameForVariant(newGameVariantName).gameModel());
     }
 
     private void exitGameVariant(String variantName) {
-        final GameModel oldGameModel = context.gameForVariant(variantName).gameModel();
-        context.ui().view().stage().getIcons().removeAll();
-        context.ui().configurations().dispose(variantName);
-        context.ui().sounds().dispose();
-        oldGameModel.flow().removeGameEventListener(gameEventHandler);
+        appContext.ui().view().stage().getIcons().removeAll();
+        appContext.ui().configurations().dispose(variantName);
+        appContext.ui().sounds().dispose();
+        appContext.currentGameContext().gameFlow().removeGameEventListener(gameEventHandler);
     }
 
     public void enterGameVariant(String variantName) {
-        final GameModel newGameModel = context.gameForVariant(variantName).gameModel();
-        final UIConfig config = context.ui().configurations().getOrCreateUIConfig(variantName);
-        config.init(context);
+        final UIConfig config = appContext.ui().configurations().getOrCreateUIConfig(variantName);
+        config.init(appContext);
         final Image icon = config.assets().image("app_icon");
         if (icon != null) {
-            context.ui().view().stage().getIcons().setAll(icon);
+            appContext.ui().view().stage().getIcons().setAll(icon);
         } else {
             Logger.error("Could not find application icon for game variant {}", variantName);
         }
-        newGameModel.flow().addGameEventListener(gameEventHandler);
+        appContext.currentGameContext().gameFlow().addGameEventListener(gameEventHandler);
     }
 }

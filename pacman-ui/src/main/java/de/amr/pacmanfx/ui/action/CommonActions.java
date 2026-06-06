@@ -151,17 +151,18 @@ public final class CommonActions {
 
     public static final GameAction ACTION_RESTART_INTRO = new GameAction("restart_intro") {
         @Override
-        protected void doAction(AppContext context) {
+        protected void doAction(AppContext appContext) {
             //TODO check this code
-            context.stopGame();
-            final GameModel game = context.currentGameContext().gameModel();
-            final State<GameContext> gameState = context.currentGameContext().gameState();
+            appContext.stopGame();
+
+            final GameContext gameContext = appContext.currentGameContext();
+            final State<GameContext> gameState = gameContext.gameState();
             boolean isLevelShortTest = gameState instanceof LevelShortTestState;
             if (isLevelShortTest) {
-                gameState.onExit(context.currentGameContext()); //TODO exit other states too?
+                gameState.onExit(appContext.currentGameContext()); //TODO exit other states too?
             }
-            game.flow().restartState(GameStateID.GAME_INTRO.name());
-            context.gameClock().start();
+            gameContext.gameFlow().restartState(GameStateID.GAME_INTRO.name());
+            appContext.gameClock().start();
         }
     };
 

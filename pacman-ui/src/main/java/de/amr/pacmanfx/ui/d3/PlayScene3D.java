@@ -4,13 +4,13 @@
 
 package de.amr.pacmanfx.ui.d3;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.action.ActionBinding;
-import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
@@ -109,8 +109,8 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
             scores3D.showTextForScore(
-                context().ui().translations().translate("score.game_over"),
-                context().currentUIConfig().assets().color("color.game_over_message"));
+                appContext().ui().translations().translate("score.game_over"),
+                appContext().currentUIConfig().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -118,11 +118,12 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
     }
 
-    public void initPac3D(Pac3D pac3D, GameLevel level) {
+    public void initPac3D(GameContext gameContext, Pac3D pac3D, GameLevel level) {
+        requireNonNull(gameContext);
         requireNonNull(pac3D);
         requireNonNull(level);
-        pac3D.init(level);
-        pac3D.update(level);
+        pac3D.init(gameContext, level);
+        pac3D.update(gameContext, level);
     }
 
     public void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
@@ -136,18 +137,18 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         });
     }
 
-    public void replaceGameLevel3D(GameLevel level) {
+    public void replaceGameLevel3D(GameContext gameContext, GameLevel level) {
         requireNonNull(level);
         if (level3D != null) {
             Logger.info("Old 3D game level gets disposed...");
             level3D.dispose();
         }
-        final UIConfig currentConfig = context().currentUIConfig();
-        level3D = new GameLevel3D(level, currentConfig);
+        level3D = new GameLevel3D(gameContext, level, appContext.currentUIConfig());
         decorate(level3D);
-        level3D.entities().selectAll().forEach(entity -> entity.init(level));
-        level3D.startLivesCounterTrackingPac();
         level3DParent.getChildren().setAll(level3D);
+
+        level3D.entities().selectAll().forEach(entity -> entity.init(appContext.currentGameContext(), level));
+        level3D.startLivesCounterTrackingPac();
 
         level3D.createAnimations(AppConstants.DEFAULT_PARTICLE_ANIMATION_CONFIG);
 
@@ -155,7 +156,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     public void showRandomGameOverMessage() {
-        context().shortMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
+        appContext().shortMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
     }
 
     @Override
@@ -194,7 +195,9 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onTick(long tick) {
-        final GameLevel level = context().currentGameContext().optCurrentGameLevel().orElse(null);
+        final GameContext gameContext = appContext.currentGameContext();
+        final GameLevel level = gameContext.optCurrentGameLevel().orElse(null);
+
         if (level == null) {
             Logger.info("Tick {}: Game level not yet created, update ignored", tick);
             return;
@@ -205,21 +208,21 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             return;
         }
 
-        level3D.entities().selectAll().forEach(entity -> entity.update(level));
+        level3D.entities().selectAll().forEach(entity -> entity.update(gameContext, level));
         updateHUD3D(level);
         perspectives.updatePerspective(level);
-        context().currentSoundEffects().ifPresent(soundEffects -> {
+        appContext.currentSoundEffects().ifPresent(soundEffects -> {
             soundEffects.setEnabled(!level.isDemoLevel());
-            soundEffects.playLevelRunningSound(level);
+            soundEffects.playLevelRunningSound(gameContext, level);
         });
     }
 
     @Override
     public void onScroll(ScrollEvent scrollEvent) {
         if (scrollEvent.getDeltaY() < 0) {
-            perspectives.actionDroneClimb().executeIfEnabled(context);
+            perspectives.actionDroneClimb().executeIfEnabled(appContext);
         } else if (scrollEvent.getDeltaY() > 0) {
-            perspectives.actionDroneDescent().executeIfEnabled(context);
+            perspectives.actionDroneDescent().executeIfEnabled(appContext);
         }
     }
 
@@ -230,7 +233,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        contextMenu = new PlaySceneContextMenu(context);
+        contextMenu = new PlaySceneContextMenu(appContext);
         return Optional.of(contextMenu);
     }
 
@@ -279,8 +282,8 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         final Scores3D oldScores3D = scores3D;
 
         scores3D = new Scores3D(
-            context().ui().translations().translate("score.score"),
-            context().ui().translations().translate("score.high_score"),
+            appContext().ui().translations().translate("score.score"),
+            appContext().ui().translations().translate("score.high_score"),
             AppConstants.FONT_ARCADE_8);
 
         scores3D.textOpacity.bind(scoreOpacity);

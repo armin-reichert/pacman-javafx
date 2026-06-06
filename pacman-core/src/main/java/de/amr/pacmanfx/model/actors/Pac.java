@@ -5,6 +5,7 @@ package de.amr.pacmanfx.model.actors;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.steering.Steering;
@@ -148,12 +149,10 @@ public class Pac extends MovingActor {
     }
 
     @Override
-    public void init(GameLevel level) {
-
-    }
+    public void init(GameContext gameContext, GameLevel level) {}
 
     @Override
-    public void update(GameLevel level) {
+    public void update(GameContext gameContext, GameLevel level) {
 
         if (isDead() || restingTicks == REST_FOREVER) {
             return;

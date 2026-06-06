@@ -70,20 +70,20 @@ public enum Arcade_GameState {
         }
 
         @Override
-        public void onUpdate(GameContext context) {
-            final GameModel game = context.gameModel();
+        public void onUpdate(GameContext gameContext) {
+            final GameModel gameModel = gameContext.gameModel();
             final long tick = timer().tickCount();
             if (tick == Timing.TICK_NEW_GAME_START_LEVEL) {
-                game.startLevel();
+                gameModel.startLevel(gameContext);
             }
             else if (tick == Timing.TICK_NEW_GAME_SHOW_GUYS) {
-                final GameLevel level = game.optGameLevel().orElseThrow();
+                final GameLevel level = gameModel.optGameLevel().orElseThrow();
                 level.entities().pac().show();
                 level.entities().ghosts().forEach(Ghost::show);
             }
             else if (tick == Timing.TICK_NEW_GAME_START_HUNTING) {
-                game.setPlaying(true);
-                context.gameFlow().enterState(GameStateID.GAME_LEVEL_PLAYING);
+                gameModel.setPlaying(true);
+                gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_PLAYING);
             }
         }
     }),

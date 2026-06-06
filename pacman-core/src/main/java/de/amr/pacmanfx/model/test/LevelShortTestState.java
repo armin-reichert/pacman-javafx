@@ -34,7 +34,7 @@ public class LevelShortTestState extends TestState {
         lock();
         gameModel.prepareNewGame();
         gameModel.buildNormalLevel(gameContext, 1);
-        gameModel.startLevel();
+        gameModel.startLevel(gameContext);
         final GameLevel level = gameModel.optGameLevel().orElseThrow();
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
@@ -66,7 +66,7 @@ public class LevelShortTestState extends TestState {
         else if (timer.atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
-                gameModel.flow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
+                gameContext.gameFlow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
             });
         }
         else if (timer.atSecond(START + 6)) {
@@ -75,7 +75,7 @@ public class LevelShortTestState extends TestState {
         else if (timer.atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
-                gameModel.flow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
+                gameContext.gameFlow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
             });
         }
         else if (timer.atSecond(START + 9)) {
@@ -86,7 +86,7 @@ public class LevelShortTestState extends TestState {
         else if (timer.atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
                 //coinMechanism.setNumCoins(0);
-                gameModel.flow().restartState(GameStateID.BOOT.name());
+                gameContext.gameFlow().restartState(GameStateID.BOOT.name());
             } else {
                 lock();
                 gameModel.startNextLevel(gameContext);
@@ -95,7 +95,7 @@ public class LevelShortTestState extends TestState {
                 level.setMessage(message);
             }
         } else {
-            gameModel.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.update(level));
+            gameModel.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.update(gameContext, level));
         }
     }
 

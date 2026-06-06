@@ -9,7 +9,6 @@ import de.amr.pacmanfx.event.GameContinuedEvent;
 import de.amr.pacmanfx.event.GameStartedEvent;
 import de.amr.pacmanfx.gamestate.*;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
@@ -105,7 +104,7 @@ public enum TengenMsPacMan_GameState {
             final GameModel gameModel = gameContext.gameModel();
             final long tick = timer().tickCount();
             if (tick == Timing.TICK_SHOW_READY) {
-                gameModel.startLevel();
+                gameModel.startLevel(gameContext);
             }
             else if (tick == Timing.TICK_NEW_GAME_SHOW_GUYS) {
                 final GameLevel level = gameModel.optGameLevel().orElseThrow();

@@ -85,7 +85,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         }
         switch (sceneTick) {
             case TICK_ANIMATION_START -> {
-                context.ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
+                appContext.ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
                 setNailDressAnimationState(NailDressState.NAIL);
             }
             case TICK_PAC_MAN_STARTS_RUNNING -> pacManStartsRunning();
@@ -109,7 +109,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     private void animationEnds() {
         blinky.setVisible(false);
-        context().currentGameContext().gameState().expire();
+        appContext().currentGameContext().gameState().expire();
     }
 
     private void dressRaptures() {

@@ -21,7 +21,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
         final var gameEventHandler = new GameScene.DefaultGameEventHandler(this) {
             @Override
             public void onCreditAdded(CreditAddedEvent e) {
-                context().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+                appContext().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
             }
         };
         setGameEventHandler(gameEventHandler);
@@ -34,6 +34,6 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void onDeactivate() {
-        context.ui().sounds().stopAndDisposeVoice();
+        appContext.ui().sounds().stopAndDisposeVoice();
     }
 }
