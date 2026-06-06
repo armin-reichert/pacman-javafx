@@ -6,10 +6,7 @@ package de.amr.pacmanfx.ui.gamescene;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.event.StopAllSoundsEvent;
-import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
@@ -28,45 +25,15 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class GameScene implements Disposable {
 
-    /**
-     * Default event handler used by scenes unless replaced.
-     * Handles generic UI updates and global sound stop events.
-     */
-    public static class DefaultGameEventHandler extends DefaultGameEventListener {
-
-        private final GameScene gameScene;
-
-        public DefaultGameEventHandler(GameScene gameScene) {
-            this.gameScene = requireNonNull(gameScene);
-        }
-
-        public AppContext appContext() {
-            return gameScene.appContext();
-        }
-
-        public GameScene gameScene() {
-            return gameScene;
-        }
-
-        public Optional<GameLevel> optGameLevel() {
-            return appContext().currentGameContext().optCurrentGameLevel();
-        }
-
-        @Override
-        public void onStopAllSounds(StopAllSoundsEvent event) {
-            appContext().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
-        }
-    }
-
     protected final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for " + getClass().getSimpleName());
 
     protected final AppContext appContext;
 
     private GameEventListener gameEventHandler;
 
-    public GameScene(AppContext context) {
-        this.appContext = requireNonNull(context);
-        setGameEventHandler(new DefaultGameEventHandler(this));
+    public GameScene(AppContext appContext) {
+        this.appContext = requireNonNull(appContext);
+        setGameEventHandler(new BaseGameSceneHandler(appContext));
     }
 
     public AppContext appContext() {

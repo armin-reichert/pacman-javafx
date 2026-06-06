@@ -7,18 +7,16 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.gamescene.GameScene;
+import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
-public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEventHandler {
+public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
 
-    public Arcade_PlayScene2DGameEventHandler(Arcade_PlayScene2D gameScene) {
-        super(gameScene);
-    }
+    private final Arcade_PlayScene2D playScene2D;
 
-    @Override
-    public Arcade_PlayScene2D gameScene() {
-        return (Arcade_PlayScene2D) super.gameScene();
+    public Arcade_PlayScene2DGameEventHandler(Arcade_PlayScene2D playScene2D) {
+        super(playScene2D.appContext());
+        this.playScene2D = playScene2D;
     }
 
     @Override
@@ -44,7 +42,7 @@ public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEve
 
     @Override
     public void onGameContinued(GameContinuedEvent e) {
-        optGameLevel().ifPresent(level -> gameScene().resetActorAnimations(level));
+        optGameLevel().ifPresent(playScene2D::resetActorAnimations);
     }
 
     @Override
@@ -60,7 +58,7 @@ public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEve
     public void onGameStateChange(GameStateChangeEvent e) {
         if (e.newState() == Arcade_GameState.GAME_LEVEL_COMPLETE.state()) {
             appContext().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
-            gameScene().levelCompletedAnimation().play();
+            playScene2D.levelCompletedAnimation().play();
         } else if (e.newState() == Arcade_GameState.GAME_OVER.state()) {
             appContext().currentSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
             appContext().currentGameContext().gameModel().hud().credit(true);
@@ -74,7 +72,7 @@ public class Arcade_PlayScene2DGameEventHandler extends GameScene.DefaultGameEve
 
     @Override
     public void onLevelCreated(LevelCreatedEvent e) {
-        gameScene().acceptGameLevel(e.level());
+        playScene2D.acceptGameLevel(e.level());
     }
 
     @Override

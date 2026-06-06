@@ -11,18 +11,22 @@ import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.gamescene.GameScene;
+import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
-public class TengenMsPacMan_PlayScene2DGameEventHandler extends GameScene.DefaultGameEventHandler {
+import static java.util.Objects.requireNonNull;
 
-    public TengenMsPacMan_PlayScene2DGameEventHandler(GameScene gameScene) {
-        super(gameScene);
+public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
+
+    private final TengenMsPacMan_PlayScene2D playScene;
+
+    public TengenMsPacMan_PlayScene2DGameEventHandler(TengenMsPacMan_PlayScene2D playScene) {
+        super(playScene.appContext());
+        this.playScene = requireNonNull(playScene);
     }
 
-    @Override
     public TengenMsPacMan_PlayScene2D gameScene() {
-        return (TengenMsPacMan_PlayScene2D) super.gameScene();
+        return playScene;
     }
 
     @Override

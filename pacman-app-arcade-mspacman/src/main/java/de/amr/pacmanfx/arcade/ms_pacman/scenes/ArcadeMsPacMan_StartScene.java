@@ -8,18 +8,18 @@ import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.ui.gamescene.GameScene;
+import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
-    public ArcadeMsPacMan_StartScene(AppContext context) {
-        super(context);
+    public ArcadeMsPacMan_StartScene(AppContext appContext) {
+        super(appContext);
 
-        final GameEventListener gameEventHandler = new GameScene.DefaultGameEventHandler(this) {
+        final GameEventListener gameEventHandler = new BaseGameSceneHandler(appContext) {
             @Override
             public void onCreditAdded(CreditAddedEvent e) {
-                appContext().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+                appContext.currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
             }
         };
         setGameEventHandler(gameEventHandler);

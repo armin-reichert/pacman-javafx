@@ -7,7 +7,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.ui.gamescene.GameScene;
+import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 /**
@@ -18,7 +18,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     public ArcadePacMan_StartScene(AppContext context) {
         super(context);
 
-        final var gameEventHandler = new GameScene.DefaultGameEventHandler(this) {
+        final var gameEventHandler = new BaseGameSceneHandler(appContext) {
             @Override
             public void onCreditAdded(CreditAddedEvent e) {
                 appContext().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);

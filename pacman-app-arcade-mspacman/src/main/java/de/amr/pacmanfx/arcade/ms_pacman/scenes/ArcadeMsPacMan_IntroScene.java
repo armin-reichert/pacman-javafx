@@ -21,7 +21,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.ui.gamescene.GameScene;
+import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import java.util.List;
@@ -54,16 +54,15 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private int numTicksBeforeRising;
 
-    public ArcadeMsPacMan_IntroScene(AppContext context) {
-        super(context);
+    public ArcadeMsPacMan_IntroScene(AppContext appContext) {
+        super(appContext);
 
-        final var gameEventHandler = new GameScene.DefaultGameEventHandler(this) {
+        setGameEventHandler(new BaseGameSceneHandler(appContext) {
             @Override
             public void onCreditAdded(CreditAddedEvent e) {
-                appContext().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+                appContext.currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
             }
-        };
-        setGameEventHandler(gameEventHandler);
+        });
 
         sceneController = new StateMachine<>(this, List.of(SceneState.values()));
     }
