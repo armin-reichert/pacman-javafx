@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.filesystem.PathWatchEventListener;
 import de.amr.pacmanfx.model.world.*;
+import de.amr.pacmanfx.ui.app.AppConstants;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.tinylog.Logger;
@@ -36,15 +37,13 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
         new WorldMapColorScheme("#5036d9", "#5f8bcf", "#fcb5ff", "#feb8ae")
     };
 
-    private final File customMapDir;
     private final ObservableList<WorldMap> customMaps = FXCollections.observableArrayList();
     private final List<WorldMap> builtinMaps = new ArrayList<>();
     private WorldMapSelectionMode selectionMode;
 
-    public PacManXXL_MapSelector(File customMapDir) {
-        this.customMapDir = requireNonNull(customMapDir);
+    public PacManXXL_MapSelector() {
         this.selectionMode = WorldMapSelectionMode.CUSTOM_MAPS_FIRST;
-        addJuniorPacMapPrototypesIfEmptyDir(customMapDir);
+        addJuniorPacMapPrototypesIfEmptyDir();
     }
 
     public WorldMapSelectionMode selectionMode() {
@@ -56,7 +55,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
         Logger.info("Detected custom map directory changes:");
         for (WatchEvent<Path> event : watchEvents) {
             final Path relPath = event.context(); // file or directory name in custom map dir
-            final File file = customMapDir.toPath().resolve(relPath).toFile();
+            final File file = AppConstants.CUSTOM_MAP_DIR.toPath().resolve(relPath).toFile();
             Logger.info("WatchEvent kind={}, relative path='{}' file='{}'", event.kind(), relPath, file);
             if (!file.getAbsolutePath().toLowerCase().endsWith(".world")) {
                 Logger.info("Ignored: File '{}' is no world map file or has wrong extension", file);
@@ -114,13 +113,13 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
             Logger.info("Custom maps have already been loaded");
             return;
         }
-        final File[] worldMapFiles = customMapDir.listFiles((_, name) -> name.endsWith(".world"));
+        final File[] worldMapFiles = AppConstants.CUSTOM_MAP_DIR.listFiles((_, name) -> name.endsWith(".world"));
         if (worldMapFiles == null) {
-            Logger.error("Could not access custom map directory '{}'", customMapDir);
+            Logger.error("Could not access custom map directory '{}'", AppConstants.CUSTOM_MAP_DIR);
             return;
         }
         if (worldMapFiles.length == 0) {
-            Logger.info("No custom maps found in directory '{}'", customMapDir);
+            Logger.info("No custom maps found in directory '{}'", AppConstants.CUSTOM_MAP_DIR);
         } else {
             Logger.info("Found {} custom map(s)", worldMapFiles.length);
         }
@@ -182,11 +181,10 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
         return worldMap;
     }
 
-    private void addJuniorPacMapPrototypesIfEmptyDir(File customMapDir) {
-        requireNonNull(customMapDir);
-        final File[] files = customMapDir.listFiles();
+    private void addJuniorPacMapPrototypesIfEmptyDir() {
+        final File[] files = AppConstants.CUSTOM_MAP_DIR.listFiles();
         if (files == null) {
-            Logger.error("Could not access custom map directory '{}'", customMapDir);
+            Logger.error("Could not access custom map directory '{}'", AppConstants.CUSTOM_MAP_DIR);
             return;
         }
         if (files.length == 0) {
@@ -196,7 +194,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 final String path = "/de/amr/pacmanfx/arcade/pacman_xxl/maps/junior_pacman/" + mapName;
                 final URL url = PacManXXL_MapSelector.class.getResource(path);
                 if (url != null) {
-                    final File targetFile = new File(customMapDir, mapName);
+                    final File targetFile = new File(AppConstants.CUSTOM_MAP_DIR, mapName);
                     WorldMap.fromURL(url).ifPresentOrElse(worldMap -> {
                         try {
                             worldMap.saveToFile(targetFile);

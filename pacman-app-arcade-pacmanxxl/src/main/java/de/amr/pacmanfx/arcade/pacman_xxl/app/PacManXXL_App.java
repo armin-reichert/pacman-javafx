@@ -15,10 +15,9 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
-import de.amr.pacmanfx.ui.app.AppBuilder;
 import de.amr.pacmanfx.ui.action.CommonActions;
+import de.amr.pacmanfx.ui.app.AppBuilder;
+import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
@@ -35,26 +34,26 @@ public class PacManXXL_App extends Application {
 
     private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private final GamesContainer gamesContainer = new GamesContainer();
+    private final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
     private AppContext app;
 
     @Override
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        final var mapSelector = new PacManXXL_MapSelector(AppConstants.CUSTOM_MAP_DIR);
 
         app = AppBuilder
             .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer, coinMechanism)
             .game(
                 GameVariant.ARCADE_PACMAN_XXL,
                 Arcade_GameFlow::new,
-                () -> new PacManXXL_PacMan_GameModel(mapSelector),
+                () -> new PacManXXL_PacMan_GameModel(xxlMapSelector),
                 PacManXXL_PacMan_GameRules::new,
                 PacManXXL_PacMan_UIConfig::new
             )
             .game(
                 GameVariant.ARCADE_MS_PACMAN_XXL,
                 Arcade_GameFlow::new,
-                () -> new PacManXXL_MsPacMan_GameModel(mapSelector),
+                () -> new PacManXXL_MsPacMan_GameModel(xxlMapSelector),
                 PacManXXL_MsPacMan_GameRules::new,
                 PacManXXL_MsPacMan_UIConfig::new
             )
@@ -82,7 +81,7 @@ public class PacManXXL_App extends Application {
                 section.setMapEditFunction(mapFile -> CommonActions.editMapFile(app, mapFile));
             });
 
-        app.watchdog().addEventListener(mapSelector);
+        app.watchdog().addEventListener(xxlMapSelector);
         app.displayOnScreen();
     }
 
