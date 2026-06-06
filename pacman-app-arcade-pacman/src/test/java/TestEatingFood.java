@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Elroy;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -32,6 +33,8 @@ public class TestEatingFood {
     @BeforeAll
     static void setup() {
 
+        final GameRules gameRules = new ArcadePacMan_GameRules();
+
         final GameModel gameModel = new ArcadePacMan_GameModel(
             new Arcade_GameFlow(),
             new CoinMechanism(99)
@@ -41,6 +44,11 @@ public class TestEatingFood {
             @Override
             public GameModel gameModel() {
                 return gameModel;
+            }
+
+            @Override
+            public GameRules gameRules() {
+                return gameRules;
             }
 
             @Override
