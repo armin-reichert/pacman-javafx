@@ -48,7 +48,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(gameContext.gameRules().pointsForEnergizer(), level.number());
+        scorePoints(gameContext, gameContext.gameRules().pointsForEnergizer(), level.number());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         final Pac pac = level.entities().pac();

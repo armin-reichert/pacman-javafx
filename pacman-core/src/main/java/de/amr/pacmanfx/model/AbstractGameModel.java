@@ -34,7 +34,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiConsumer;
 
 import static de.amr.pacmanfx.core.Globals.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
@@ -84,23 +83,7 @@ public abstract class AbstractGameModel implements GameModel {
         lives = new PacManLivesImpl();
         hud = new HeadsUpDisplay();
         cheats = new DefaultCheatsImpl();
-
     }
-
-    public void addScoreChangeHandler(BiConsumer<Integer, Integer> handler) {
-        requireNonNull(handler);
-        score.pointsProperty().addListener((_, oldScore, newScore) -> handler.accept(oldScore.intValue(), newScore.intValue()));
-    }
-
-/*
-    protected void handleScoreChange(int oldScore, int newScore) {
-        if (rules.isExtraLifeAwarded(oldScore, newScore)) {
-            lives.add(1);
-            gameContext.gameFlow().publishGameEvent(new SpecialScoreEvent(gameContext, newScore));
-        }
-    }
-
- */
 
     /* -------------------------------------------------------------------------
      * GameModel interface implementation
@@ -354,7 +337,7 @@ public abstract class AbstractGameModel implements GameModel {
     public void eatPellet(GameContext gameContext, GameLevel level, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(tile);
-        scorePoints(gameContext.gameRules().pointsForPellet(), level.number());
+        scorePoints(gameContext, gameContext.gameRules().pointsForPellet(), level.number());
         if (gateKeeper != null) {
             gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         }
@@ -362,7 +345,7 @@ public abstract class AbstractGameModel implements GameModel {
 
     @Override
     public void eatBonus(GameContext gameContext, GameLevel level, Bonus bonus) {
-        scorePoints(bonus.points(), level.number());
+        scorePoints(gameContext, bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
         bonus.showEatenForSeconds(gameContext.gameRules().eatenBonusDisplaySeconds());
         gameContext.gameFlow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
@@ -373,7 +356,7 @@ public abstract class AbstractGameModel implements GameModel {
         final int killedBefore = level.ghostKillChainSize();
         final int points = gameContext.gameRules().pointsForGhost(killedBefore);
 
-        scorePoints(points, level.number());
+        scorePoints(gameContext, points, level.number());
         Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
 
         eatenGhost.setState(GhostState.EATEN);
@@ -465,12 +448,17 @@ public abstract class AbstractGameModel implements GameModel {
         highScore = new PersistentScore(highScoreFile);
     }
 
-    protected void scorePoints(int points, int levelNumber) {
+    protected void scorePoints(GameContext gameContext, int points, int levelNumber) {
         if (!score.isEnabled()) {
             return;
         }
         final int oldScore = score.points();
         final int newScore = oldScore + points;
+
+        if (gameContext.gameRules().isExtraLifeAwarded(oldScore, newScore)) {
+            lives.add(1);
+            gameContext.gameFlow().publishGameEvent(new SpecialScoreEvent(gameContext, newScore));
+        }
 
         if (highScore != null && highScore.isEnabled() && newScore > highScore.points()) {
             highScore.setPoints(newScore);
@@ -480,7 +468,6 @@ public abstract class AbstractGameModel implements GameModel {
 
         score.setPoints(newScore);
     }
-
     protected void updateHighScore() {
         if (highScore == null) {
             Logger.error("Cannot update high-score, no high-score file has been assigned");
