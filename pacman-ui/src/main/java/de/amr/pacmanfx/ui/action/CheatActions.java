@@ -93,11 +93,12 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(AppContext context) {
-            final State<GameContext> gameState = context.currentGameContext().gameState();
+            final GameContext gameContext = context.currentGameContext();
+            final State<GameContext> gameState = gameContext.gameState();
             final GameLevel level = realLevel(context).orElse(null);
             return level != null
                 && gameState.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name())
-                && level.number() < level.game().rules().lastLevelNumber();
+                && level.number() < gameContext.gameRules().lastLevelNumber();
         }
     };
 

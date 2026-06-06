@@ -38,7 +38,7 @@ public class GameLevelPlayingState extends GameState {
         // Update
         game.cheats().update(level);
         level.heartbeat().triggerPulse();
-        level.huntingTimer().update(game.rules(), level.number());
+        level.huntingTimer().update(context.gameRules(), level.number());
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
@@ -57,7 +57,8 @@ public class GameLevelPlayingState extends GameState {
         logHuntingStep(context);
 
         // State transition
-        final GameStateID nextStateID = HuntingStateTransitions.computeNextState(context.huntingResult(), game.rules(), level);
+        final GameStateID nextStateID = HuntingStateTransitions
+            .computeNextState(context.huntingResult(), context.gameRules(), level);
         context.gameFlow().enterState(nextStateID.name());
     }
 

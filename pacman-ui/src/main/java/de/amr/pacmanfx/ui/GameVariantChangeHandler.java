@@ -32,19 +32,19 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
         if (newGameVariantName != null) {
             enterGameVariant(newGameVariantName);
         }
-        context.ui().view().statusIconBox().bind(context.gameForVariant(newGameVariantName));
+        context.ui().view().statusIconBox().bind(context.gameForVariant(newGameVariantName).gameModel());
     }
 
     private void exitGameVariant(String variantName) {
-        final GameModel oldGame = context.gameForVariant(variantName);
+        final GameModel oldGameModel = context.gameForVariant(variantName).gameModel();
         context.ui().view().stage().getIcons().removeAll();
         context.ui().configurations().dispose(variantName);
         context.ui().sounds().dispose();
-        oldGame.flow().removeGameEventListener(gameEventHandler);
+        oldGameModel.flow().removeGameEventListener(gameEventHandler);
     }
 
     public void enterGameVariant(String variantName) {
-        final GameModel newGame = context.gameForVariant(variantName);
+        final GameModel newGameModel = context.gameForVariant(variantName).gameModel();
         final UIConfig config = context.ui().configurations().getOrCreateUIConfig(variantName);
         config.init(context);
         final Image icon = config.assets().image("app_icon");
@@ -53,6 +53,6 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
         } else {
             Logger.error("Could not find application icon for game variant {}", variantName);
         }
-        newGame.flow().addGameEventListener(gameEventHandler);
+        newGameModel.flow().addGameEventListener(gameEventHandler);
     }
 }

@@ -8,20 +8,25 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
@@ -31,11 +36,13 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameAppBuilder;
 import de.amr.pacmanfx.ui.GamesApp;
 import de.amr.pacmanfx.ui.action.CommonActions;
+import de.amr.pacmanfx.ui.app.GameSpecification;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.config.UIConfigManager;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
@@ -189,15 +196,44 @@ public class PacManGames3dApp extends Application {
 
     private void registerGames() {
         for (GameVariant variant : GameVariant.values()) {
-            final AbstractGameModel game = switch (variant) {
-                case ARCADE_PACMAN        -> new ArcadePacMan_GameModel(new Arcade_GameFlow(), coinMechanism);
-                case ARCADE_MS_PACMAN     -> new ArcadeMsPacMan_GameModel(new Arcade_GameFlow(), coinMechanism);
-                case TENGEN_MS_PACMAN     -> new TengenMsPacMan_GameModel(new TengenMsPacMan_GameFlow());
-                case ARCADE_PACMAN_XXL    -> new PacManXXL_PacMan_GameModel(new Arcade_GameFlow(), coinMechanism, xxlMapSelector);
-                case ARCADE_MS_PACMAN_XXL -> new PacManXXL_MsPacMan_GameModel(new Arcade_GameFlow(), coinMechanism, xxlMapSelector);
+            final GameSpecification game = switch (variant) {
+                case ARCADE_PACMAN -> {
+                    final GameFlow gameFlow = new Arcade_GameFlow();
+                    yield new GameSpecification(
+                        new ArcadePacMan_GameModel(gameFlow, coinMechanism),
+                        gameFlow,
+                        new ArcadePacMan_GameRules()
+                    );
+                }
+                case ARCADE_MS_PACMAN -> {
+                    final GameFlow gameFlow = new Arcade_GameFlow();
+                    yield new GameSpecification(
+                        new ArcadeMsPacMan_GameModel(gameFlow, coinMechanism),
+                        gameFlow,
+                        new ArcadeMsPacMan_GameRules()
+                    );
+                }
+                case TENGEN_MS_PACMAN -> {
+                    final GameFlow gameFlow = new TengenMsPacMan_GameFlow();
+                    final TengenMsPacMan_GameModel gameModel = new TengenMsPacMan_GameModel(gameFlow);
+                    final GameRules gameRules = new TengenMsPacMan_GameRules(gameModel);
+                    yield new GameSpecification(gameModel, gameFlow, gameRules);
+                }
+                case ARCADE_PACMAN_XXL -> {
+                    final GameFlow gameFlow = new Arcade_GameFlow();
+                    final AbstractGameModel gameModel = new PacManXXL_PacMan_GameModel(gameFlow, coinMechanism, xxlMapSelector);
+                    final GameRules gameRules = new PacManXXL_PacMan_GameRules();
+                    yield new GameSpecification(gameModel, gameFlow, gameRules);
+                }
+                case ARCADE_MS_PACMAN_XXL -> {
+                    final GameFlow gameFlow = new Arcade_GameFlow();
+                    final AbstractGameModel gameModel = new PacManXXL_MsPacMan_GameModel(gameFlow, coinMechanism, xxlMapSelector);
+                    final GameRules gameRules = new PacManXXL_MsPacMan_GameRules();
+                    yield new GameSpecification(gameModel, gameFlow, gameRules);
+                }
             };
             if (includeTests) {
-                addTestStates(game.flow());
+                addTestStates(game.gameModel().flow());
             }
             gamesContainer.registerGame(variant.name(), game);
         }

@@ -29,8 +29,10 @@ public interface GameModel {
 
     // Components
 
+    //TODO move into GameContext
     GameFlow flow();
 
+    //TODO move into GameContext
     GameRules rules();
 
     GameCheats cheats();

@@ -7,10 +7,12 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
+import de.amr.pacmanfx.ui.app.GameSpecification;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
@@ -145,11 +147,12 @@ public class GameAppBuilder {
             coinMechanism);
 
         gameConfigMap.forEach((gameVariant, config) -> {
-            final AbstractGameModel game = config.gameModelFactory.get();
-            gamesContainer.registerGame(gameVariant, game);
+            final AbstractGameModel gameModel = config.gameModelFactory.get();
+            final GameFlow gameFlow = gameModel.flow(); //TODO
+            final GameRules gameRules = gameModel.rules(); // TODO
+            gamesContainer.registerGame(gameVariant, new GameSpecification(gameModel, gameFlow, gameRules));
             ui.ui().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);
             if (interactiveTests) {
-                final GameFlow gameFlow = game.flow();
                 gameFlow.addState(new LevelShortTestState());
                 gameFlow.addState(new LevelMediumTestState());
                 gameFlow.addState(new CutScenesTestState());

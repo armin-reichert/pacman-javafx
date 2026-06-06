@@ -11,23 +11,22 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.Globals.HTS;
-import static de.amr.pacmanfx.core.Globals.TS;
+import static de.amr.pacmanfx.core.Globals.*;
 
 public final class HuntingResolver {
 
     private HuntingResolver() {}
 
-    public static void evaluate(GameContext context) {
-        final HuntingStepResult result = context.huntingResult();
-        final GameModel game = context.gameModel();
+    public static void evaluate(GameContext gameContext) {
+        final HuntingStepResult result = gameContext.huntingResult();
+        final GameModel game = gameContext.gameModel();
         final GameLevel level = game.optGameLevel().orElseThrow();
         final Pac pac = level.entities().pac();
 
-        evalFoodFound(result, game, level, pac);
-        if (context.huntingResult().foodFound()) {
-            context.gameFlow().publishGameEvent(
-                new PacEatsFoodEvent(context, pac, context.huntingResult().energizerFound(), false));
+        evalFoodFound(result, gameContext, level, pac);
+        if (gameContext.huntingResult().foodFound()) {
+            gameContext.gameFlow().publishGameEvent(
+                new PacEatsFoodEvent(gameContext, pac, gameContext.huntingResult().energizerFound(), false));
         }
 
         evalBonusFound(result, game, level);
@@ -41,7 +40,7 @@ public final class HuntingResolver {
         }
     }
 
-    private static void evalFoodFound(HuntingStepResult result, GameModel game, GameLevel level, Pac pac) {
+    private static void evalFoodFound(HuntingStepResult result, GameContext gameContext, GameLevel level, Pac pac) {
         if (!result.foodFound()) {
             pac.continueStarving();
             return;
@@ -53,13 +52,13 @@ public final class HuntingResolver {
 
         level.worldMap().foodLayer().markFoodEatenAt(foodTile);
         if (result.energizerFound()) {
-            game.eatEnergizer(level, foodTile);
+            gameContext.gameModel().eatEnergizer(level, foodTile);
         } else {
-            game.eatPellet(level, foodTile);
+            gameContext.gameModel().eatPellet(level, foodTile);
         }
 
-        if (game.rules().isBonusAwarded(level)) {
-            game.activateNextBonus(level);
+        if (gameContext.gameRules().isBonusAwarded(level)) {
+            gameContext.gameModel().activateNextBonus(level);
         }
     }
 
@@ -75,7 +74,7 @@ public final class HuntingResolver {
         }
         result.ghostsCollidingWithPac().stream()
             .filter(ghost -> ghost.state() == GhostState.HUNTING_PAC)
-            .findFirst().ifPresent(pacKiller -> result.setPacKilled(true));
+            .findFirst().ifPresent(_ -> result.setPacKilled(true));
     }
 
     private static void evalGhostsKilled(HuntingStepResult result, GameModel game, GameLevel level) {

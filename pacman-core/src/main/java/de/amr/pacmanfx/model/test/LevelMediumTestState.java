@@ -53,7 +53,9 @@ public class LevelMediumTestState extends TestState {
     @Override
     public void onEnter(GameContext context) {
         final GameModel game = context.gameModel();
-        lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.rules().lastLevelNumber();
+        lastTestedLevelNumber = context.gameRules().lastLevelNumber() == Integer.MAX_VALUE
+            ? 25
+            : context.gameRules().lastLevelNumber();
         timer.restartSeconds(TEST_DURATION_SEC);
         game.prepareNewGame();
         game.buildNormalLevel(1);
@@ -94,7 +96,7 @@ public class LevelMediumTestState extends TestState {
                 configureLevelForTest(context);
             }
         }
-        else if (game.rules().isLevelCompleted(level)) {
+        else if (context.gameRules().isLevelCompleted(level)) {
             game.flow().enterState(GameStateID.GAME_INTRO.name());
         }
         else if (pacKilled) {

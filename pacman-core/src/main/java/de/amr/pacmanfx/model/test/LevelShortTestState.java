@@ -28,7 +28,9 @@ public class LevelShortTestState extends TestState {
     public void onEnter(GameContext context) {
         final GameModel game = context.gameModel();
         //coinMechanism.setNumCoins(1);
-        lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.rules().lastLevelNumber();
+        lastTestedLevelNumber = context.gameRules().lastLevelNumber() == Integer.MAX_VALUE
+            ? 25
+            : context.gameRules().lastLevelNumber();
         lock();
         game.prepareNewGame();
         game.buildNormalLevel(1);

@@ -8,7 +8,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.ui.app.GameSpecification;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -52,15 +52,7 @@ public interface AppContext extends AppLifecycle {
      */
     String currentGameVariantName();
 
-    /**
-     * Returns the game model associated with the specified variant name.
-     *
-     * @param variantName the name of the game variant
-     * @param <T>         the expected type of the game model
-     * @return the game model for the given variant name
-     * @throws ClassCastException if the registered game model cannot be cast to the expected type
-     */
-    <T extends GameModel> T gameForVariant(String variantName);
+    GameSpecification gameForVariant(String variantName);
 
     GameContext currentGameContext();
 

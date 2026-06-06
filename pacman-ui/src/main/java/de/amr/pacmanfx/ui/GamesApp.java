@@ -13,8 +13,10 @@ import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
+import de.amr.pacmanfx.ui.app.GameSpecification;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -58,12 +60,17 @@ public final class GamesApp implements AppContext {
 
         @Override
         public GameModel gameModel() {
-            return gameForVariant(currentGameVariantName());
+            return gameForVariant(currentGameVariantName()).gameModel();
+        }
+
+        @Override
+        public GameRules gameRules() {
+            return gameForVariant(currentGameVariantName()).gameRules();
         }
 
         @Override
         public GameFlow gameFlow() {
-            return gameModel().flow();
+            return gameModel().flow(); //TODO
         }
 
         @Override
@@ -146,7 +153,7 @@ public final class GamesApp implements AppContext {
 
         gameVariantName.addListener((_, _, newVariantName) -> {
             currentGameContext = new GameContextImpl();
-            gameForVariant(newVariantName).flow().setContext(currentGameContext);
+            gameForVariant(newVariantName).gameFlow().setContext(currentGameContext);
         });
     }
 
@@ -177,7 +184,7 @@ public final class GamesApp implements AppContext {
     }
 
     @Override
-    public <T extends GameModel> T gameForVariant(String variantName) {
+    public GameSpecification gameForVariant(String variantName) {
         return gamesContainer.gameForVariant(variantName);
     }
 

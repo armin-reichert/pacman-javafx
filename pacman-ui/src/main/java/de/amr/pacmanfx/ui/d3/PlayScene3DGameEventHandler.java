@@ -173,8 +173,9 @@ public class PlayScene3DGameEventHandler extends GameScene.DefaultGameEventHandl
     @Override
     public void onPacGetsPower(PacGetsPowerEvent event) {
         final GameLevel3D level3D = assertLevel3D();
+        final GameContext gameContext = context().currentGameContext();
         context().currentSoundEffects().ifPresent(GameSoundEffects::stopSiren);
-        if (!context().currentGameContext().gameModel().rules().isLevelCompleted(level3D.level())) {
+        if (!gameContext.gameRules().isLevelCompleted(level3D.level())) {
             level3D.entities().pac3D().setPowerMode(true);
             level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
                 .ifPresent(ManagedAnimation::playFromStart);

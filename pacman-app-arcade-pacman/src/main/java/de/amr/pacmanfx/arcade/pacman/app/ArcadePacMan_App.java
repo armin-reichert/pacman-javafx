@@ -11,10 +11,14 @@ import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
+import de.amr.pacmanfx.flow.GameFlow;
+import de.amr.pacmanfx.model.AbstractGameModel;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameAppBuilder;
 import de.amr.pacmanfx.ui.GamesApp;
+import de.amr.pacmanfx.ui.app.GameSpecification;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
@@ -71,7 +75,7 @@ public class ArcadePacMan_App extends Application {
                 .build();
         }
         else {
-            createUI(primaryStage, gamesContainer, size);
+            createApp(primaryStage, gamesContainer, size);
         }
         app.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, app.ui().translations());
         app.displayOnScreen();
@@ -84,13 +88,19 @@ public class ArcadePacMan_App extends Application {
 
     // Private area
 
-    private void createUI(Stage stage, GamesContainer gamesContainer, Vector2i sceneSize) {
+    private void createApp(Stage stage, GamesContainer gamesContainer, Vector2i sceneSize) {
         app = new GamesApp(gamesContainer, createView(stage, sceneSize.x(), sceneSize.y()), new GameClockFX(), coinMechanism);
 
-        final var game = new ArcadePacMan_GameModel(new Arcade_GameFlow(), coinMechanism);
+        //TODO: remove rules from model
+        final GameFlow gameFlow = new Arcade_GameFlow();
+        final AbstractGameModel gameModel = new ArcadePacMan_GameModel(gameFlow, coinMechanism);
+        final GameRules gameRules = gameModel.rules();
+
+        final GameSpecification game = new GameSpecification(gameModel, gameFlow, gameRules);
         gamesContainer.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
-        app.ui().configurations().addConfigFactory(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
+        app.ui().configurations().addConfigFactory(
+            GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
 
         final StartPagesView startView = app.ui().subViews().startView();
 
