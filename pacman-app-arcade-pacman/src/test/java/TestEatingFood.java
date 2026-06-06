@@ -7,14 +7,15 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.core.GameVariant;
+import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Elroy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.ui.GamesApp;
-import de.amr.pacmanfx.ui.app.GamesContainer;
+import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,43 +27,72 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestEatingFood {
 
-    private static GamesApp theGameApp;
+    private static GameContext testContext;
 
     @BeforeAll
     static void setup() {
-        final String variantName = GameVariant.ARCADE_PACMAN.name();
-        GamesContainer gameBox = new GamesContainer();
-        gameBox.registerGame(variantName, new ArcadePacMan_GameModel(
+
+        final GameModel gameModel = new ArcadePacMan_GameModel(
             new Arcade_GameFlow(),
-            CoinMechanism.OUT_OF_SERVICE));
+            new CoinMechanism(99)
+        );
 
+        testContext = new GameContext() {
+            @Override
+            public GameModel gameModel() {
+                return gameModel;
+            }
 
-        //TODO  create and init app
-        theGameApp.selectGameVariant(variantName);
+            @Override
+            public GameFlow gameFlow() {
+                return gameModel.flow(); //TODO
+            }
+
+            @Override
+            public void setCollisionStrategy(CollisionStrategy collisionStrategy) {
+            }
+
+            @Override
+            public Boolean isCollisionDoubleChecked() {
+                return true;
+            }
+
+            @Override
+            public CollisionStrategy collisionStrategy() {
+                return CollisionStrategy.SAME_TILE;
+            }
+
+            @Override
+            public void setCollisionDoubleChecked(boolean doubleChecked) {
+            }
+
+            @Override
+            public void startNewHuntingStep() {
+            }
+
+            @Override
+            public HuntingStepResult huntingResult() {
+                return null;
+            }
+        };
     }
 
     @BeforeEach
     public void createGameLevel() {
-        currentGame().buildNormalLevel(1);
-    }
-
-    private GameModel currentGame() {
-        return theGameApp.currentGameContext().gameModel();
-    }
-
-    private GameLevel currentGameLevel() {
-        return currentGame().optGameLevel().orElseThrow();
+        testContext.gameModel().buildNormalLevel(1);
     }
 
     private void eatNextPellet() {
-        final FoodLayer foodLayer = currentGameLevel().worldMap().foodLayer();
-        foodLayer.tiles()
-            .filter(foodLayer::hasFoodAtTile)
-            .filter(not(foodLayer::isEnergizerTile))
-            .findFirst().ifPresent(tile -> {
-                foodLayer.markFoodEatenAt(tile);
-                currentGame().eatPellet(currentGameLevel(), tile);
-            });
+        testContext.gameModel().optGameLevel().ifPresent(level -> {
+            final FoodLayer foodLayer = level.worldMap().foodLayer();
+            foodLayer.tiles()
+                .filter(foodLayer::hasFoodAtTile)
+                .filter(not(foodLayer::isEnergizerTile))
+                .findFirst().ifPresent(tile -> {
+                    foodLayer.markFoodEatenAt(tile);
+                    level.game().eatPellet(level, tile);
+                });
+        });
     }
 
     private void eatNextEnergizer(GameLevel level) {
@@ -71,74 +101,82 @@ public class TestEatingFood {
             .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                currentGame().eatEnergizer(level, tile);
+                level.game().eatEnergizer(level, tile);
             });
     }
 
     @Test
     @DisplayName("Test Food Counting")
     public void testFoodCounting() {
-        final FoodLayer foodLayer = currentGameLevel().worldMap().foodLayer();
+        testContext.gameModel().optGameLevel().ifPresent(level -> {
+            final FoodLayer foodLayer = level.worldMap().foodLayer();
 
-        int eaten = foodLayer.eatenFoodCount();
-        int uneaten = foodLayer.remainingFoodCount();
-        eatNextPellet();
-        assertEquals(eaten + 1, foodLayer.eatenFoodCount());
-        assertEquals(uneaten - 1, foodLayer.remainingFoodCount());
+            int eaten = foodLayer.eatenFoodCount();
+            int uneaten = foodLayer.remainingFoodCount();
+            eatNextPellet();
+            assertEquals(eaten + 1, foodLayer.eatenFoodCount());
+            assertEquals(uneaten - 1, foodLayer.remainingFoodCount());
 
-        eaten = foodLayer.eatenFoodCount();
-        uneaten = foodLayer.remainingFoodCount();
-        eatNextEnergizer(currentGameLevel());
-        assertEquals(eaten + 1, foodLayer.eatenFoodCount());
-        assertEquals(uneaten - 1, foodLayer.remainingFoodCount());
+            eaten = foodLayer.eatenFoodCount();
+            uneaten = foodLayer.remainingFoodCount();
+            eatNextEnergizer(level);
+            assertEquals(eaten + 1, foodLayer.eatenFoodCount());
+            assertEquals(uneaten - 1, foodLayer.remainingFoodCount());
+            
+        });
     }
 
     @Test
     @DisplayName("Test Level Completion")
     public void testLevelCompletion() {
-        final GameLevel level = currentGameLevel();
-        while (level.worldMap().foodLayer().remainingFoodCount() > 0) {
-            assertFalse(currentGame().rules().isLevelCompleted(level));
-            eatNextPellet();
-            eatNextEnergizer(level);
-        }
-        assertTrue(currentGame().rules().isLevelCompleted(level));
+        testContext.gameModel().optGameLevel().ifPresent(level -> {
+            while (level.worldMap().foodLayer().remainingFoodCount() > 0) {
+                assertFalse(level.game().rules().isLevelCompleted(level));
+                eatNextPellet();
+                eatNextEnergizer(level);
+            }
+            assertTrue(level.game().rules().isLevelCompleted(level));
+        });
     }
 
     @Test
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
-        final Ghost blinky = currentGameLevel().ghost(RED_GHOST_SHADOW);
-        final FoodLayer foodLayer = currentGameLevel().worldMap().foodLayer();
-        final LevelData data = ArcadePacMan_GameRules.levelData(currentGameLevel().number());
-        while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy1()) {
-            assertEquals(Elroy.Boost.NONE, blinky.elroy().boost());
-            eatNextPellet();
-        }
-        assertEquals(Elroy.Boost.MEDIUM, blinky.elroy().boost());
-        while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy2()) {
+        testContext.gameModel().optGameLevel().ifPresent(level -> {
+            final Ghost blinky = level.ghost(RED_GHOST_SHADOW);
+            final FoodLayer foodLayer = level.worldMap().foodLayer();
+            final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
+            while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy1()) {
+                assertEquals(Elroy.Boost.NONE, blinky.elroy().boost());
+                eatNextPellet();
+            }
             assertEquals(Elroy.Boost.MEDIUM, blinky.elroy().boost());
-            eatNextPellet();
-        }
-        assertEquals(Elroy.Boost.LARGE, blinky.elroy().boost());
-        while (foodLayer.remainingFoodCount() > foodLayer.energizerTiles().size()) {
+            while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy2()) {
+                assertEquals(Elroy.Boost.MEDIUM, blinky.elroy().boost());
+                eatNextPellet();
+            }
             assertEquals(Elroy.Boost.LARGE, blinky.elroy().boost());
-            eatNextPellet();
-        }
-        assertEquals(Elroy.Boost.LARGE, blinky.elroy().boost());
-        while (foodLayer.remainingFoodCount() > 0) {
+            while (foodLayer.remainingFoodCount() > foodLayer.energizerTiles().size()) {
+                assertEquals(Elroy.Boost.LARGE, blinky.elroy().boost());
+                eatNextPellet();
+            }
             assertEquals(Elroy.Boost.LARGE, blinky.elroy().boost());
-            eatNextEnergizer(currentGameLevel());
-        }
-        assertEquals(Elroy.Boost.LARGE, blinky.elroy().boost());
+            while (foodLayer.remainingFoodCount() > 0) {
+                assertEquals(Elroy.Boost.LARGE, blinky.elroy().boost());
+                eatNextEnergizer(level);
+            }
+            assertEquals(Elroy.Boost.LARGE, blinky.elroy().boost());
+        });
     }
 
     @Test
     @DisplayName("Test Resting")
     public void testResting() {
-        eatNextPellet();
-        assertEquals(1, currentGameLevel().entities().pac().restingTicks());
-        eatNextEnergizer(currentGameLevel());
-        assertEquals(3, currentGameLevel().entities().pac().restingTicks());
+        testContext.gameModel().optGameLevel().ifPresent(level -> {
+            eatNextPellet();
+            assertEquals(1, level.entities().pac().restingTicks());
+            eatNextEnergizer(level);
+            assertEquals(3, level.entities().pac().restingTicks());
+        });
     }
 }
