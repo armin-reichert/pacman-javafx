@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -18,11 +17,10 @@ import static de.amr.basics.math.RandomNumberSupport.randomInt;
 
 public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
-    private static final int[] DEMOLEVEL_NUMBERS = { 1, 3, 6, 10, 14, 18 };
+    private static final int[] DEMO_LEVEL_NUMBERS = { 1, 3, 6, 10, 14, 18 };
 
-    // Warning: Constructor signature is used via reflection by GameUI_Builder, do not change!
-    public PacManXXL_MsPacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
-        super(coinMechanism, mapSelector);
+    public PacManXXL_MsPacMan_GameModel(WorldMapSelector mapSelector) {
+        super(mapSelector);
     }
 
     @Override
@@ -33,7 +31,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         mapSelector().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 
         // Select random (standard) level with different map and map color scheme for each choice
-        final int levelNumber = DEMOLEVEL_NUMBERS[randomInt(0, DEMOLEVEL_NUMBERS.length)];
+        final int levelNumber = DEMO_LEVEL_NUMBERS[randomInt(0, DEMO_LEVEL_NUMBERS.length)];
         final GameLevel level = createLevel(gameContext, levelNumber, true);
 
         final Pac pac = level.entities().pac();

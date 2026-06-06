@@ -15,6 +15,8 @@ import java.util.Optional;
 
 public interface GameContext {
 
+    CoinMechanism coinMechanism();
+
     GameFlow gameFlow();
 
     default State<GameContext> gameState() {

@@ -38,7 +38,7 @@ public class ArcadeMsPacMan_App extends Application {
             .game(
                 GameVariant.ARCADE_MS_PACMAN,
                 Arcade_GameFlow::new,
-                () -> new ArcadeMsPacMan_GameModel(coinMechanism),
+                ArcadeMsPacMan_GameModel::new,
                 ArcadeMsPacMan_GameRules::new,
                 ArcadeMsPacMan_UIConfig::new
             )

@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.model;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -32,8 +31,6 @@ public interface GameModel {
     //TODO move into game context
     GameCheats cheats();
 
-    CoinMechanism coinMechanism();
-
     PacManLives lives();
 
     GateKeeper gateKeeper();
@@ -56,11 +53,11 @@ public interface GameModel {
 
     void prepareNewGame();
 
-    boolean canStartNewGame();
+    boolean canStartNewGame(GameContext gameContext);
 
     boolean canContinueOnGameOver();
 
-    void onGameOver(GameLevel level);
+    void onGameOver(GameContext gameContext, GameLevel level);
 
     boolean isPlaying();
 

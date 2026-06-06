@@ -8,7 +8,6 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.actors.*;
@@ -49,8 +48,6 @@ public abstract class AbstractGameModel implements GameModel {
 
     // Common data
 
-    protected CoinMechanism coinMechanism;
-
     protected final Score score;
 
     protected ActorSpeedControl actorSpeedControl;
@@ -78,7 +75,6 @@ public abstract class AbstractGameModel implements GameModel {
     // Constructor
 
     protected AbstractGameModel() {
-        coinMechanism = CoinMechanism.OUT_OF_SERVICE;
         score = new Score();
         lives = new PacManLivesImpl();
         hud = new HeadsUpDisplay();
@@ -92,11 +88,6 @@ public abstract class AbstractGameModel implements GameModel {
     @Override
     public GameCheats cheats() {
         return cheats;
-    }
-
-    @Override
-    public CoinMechanism coinMechanism() {
-        return coinMechanism;
     }
 
     @Override
@@ -171,8 +162,8 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public boolean canStartNewGame() {
-        return !coinMechanism.isEmpty();
+    public boolean canStartNewGame(GameContext gameContext) {
+        return !gameContext.coinMechanism().isEmpty();
     }
 
     @Override
@@ -181,9 +172,9 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public void onGameOver(GameLevel level) {
-        if (!coinMechanism.isEmpty()) {
-            coinMechanism.consumeCoin(); //TODO not sure if coin should be consumed after game is over
+    public void onGameOver(GameContext gameContext, GameLevel level) {
+        if (!gameContext.coinMechanism().isEmpty()) {
+            gameContext.coinMechanism().consumeCoin(); //TODO not sure if coin should be consumed after game is over
         }
         updateHighScore();
         setPlaying(false);

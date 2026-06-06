@@ -150,14 +150,16 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         }
 
         @Override
-        public boolean isEnabled(AppContext context) {
-            final CoinMechanism slot = context.coinMechanism();
+        public boolean isEnabled(AppContext appContext) {
+            final CoinMechanism slot = appContext.coinMechanism();
             if (slot.isEmpty()) {
                 return false;
             }
-            final GameModel game = context.currentGameContext().gameModel();
-            final State<GameContext> gameState = context.currentGameContext().gameState();
-            return (gameState == GAME_INTRO.state() || gameState == GAME_PREPARATION.state()) && game.canStartNewGame();
+            final GameContext gameContext = appContext.currentGameContext();
+            final GameModel gameModel = gameContext.gameModel();
+            final State<GameContext> gameState = appContext.currentGameContext().gameState();
+            return (gameState == GAME_INTRO.state() || gameState == GAME_PREPARATION.state())
+                && gameModel.canStartNewGame(gameContext);
         }
     };
 

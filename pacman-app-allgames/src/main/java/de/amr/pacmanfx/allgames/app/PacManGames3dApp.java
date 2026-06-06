@@ -37,8 +37,8 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
+import de.amr.pacmanfx.ui.AppContextImpl;
 import de.amr.pacmanfx.ui.GameAppBuilder;
-import de.amr.pacmanfx.ui.GamesApp;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.app.GameSpecification;
 import de.amr.pacmanfx.ui.app.GamesContainer;
@@ -126,7 +126,7 @@ public class PacManGames3dApp extends Application {
                     .game(
                         ARCADE_PACMAN,
                         Arcade_GameFlow::new,
-                        () -> new ArcadePacMan_GameModel(coinMechanism),
+                        ArcadePacMan_GameModel::new,
                         ArcadePacMan_GameRules::new,
                         ArcadePacMan_UIConfig::new
                     )
@@ -134,7 +134,7 @@ public class PacManGames3dApp extends Application {
                     .game(
                         ARCADE_MS_PACMAN,
                         Arcade_GameFlow::new,
-                        () -> new ArcadeMsPacMan_GameModel(coinMechanism),
+                        ArcadeMsPacMan_GameModel::new,
                         ArcadeMsPacMan_GameRules::new,
                         ArcadeMsPacMan_UIConfig::new
                     )
@@ -150,7 +150,7 @@ public class PacManGames3dApp extends Application {
                     .game(
                         ARCADE_PACMAN_XXL,
                         Arcade_GameFlow::new,
-                        () -> new PacManXXL_PacMan_GameModel(coinMechanism, xxlMapSelector),
+                        () -> new PacManXXL_PacMan_GameModel(xxlMapSelector),
                         PacManXXL_PacMan_GameRules::new,
                         PacManXXL_PacMan_UIConfig::new
                     )
@@ -158,7 +158,7 @@ public class PacManGames3dApp extends Application {
                     .game(
                         ARCADE_MS_PACMAN_XXL,
                         Arcade_GameFlow::new,
-                        () -> new PacManXXL_MsPacMan_GameModel(coinMechanism, xxlMapSelector),
+                        () -> new PacManXXL_MsPacMan_GameModel(xxlMapSelector),
                         PacManXXL_MsPacMan_GameRules::new,
                         PacManXXL_MsPacMan_UIConfig::new
                     )
@@ -173,7 +173,7 @@ public class PacManGames3dApp extends Application {
                     .build();
             }
             else {
-                app = new GamesApp(
+                app = new AppContextImpl(
                     gamesContainer,
                     createView(stage, sceneSize.x(), sceneSize.y()),
                     new GameClockFX(),
@@ -218,13 +218,13 @@ public class PacManGames3dApp extends Application {
 
                 case ARCADE_PACMAN -> new GameSpecification(
                     Arcade_GameFlow::new,
-                    new ArcadePacMan_GameModel(coinMechanism),
+                    new ArcadePacMan_GameModel(),
                     new ArcadePacMan_GameRules()
                 );
 
                 case ARCADE_MS_PACMAN -> new GameSpecification(
                     Arcade_GameFlow::new,
-                    new ArcadeMsPacMan_GameModel(coinMechanism),
+                    new ArcadeMsPacMan_GameModel(),
                     new ArcadeMsPacMan_GameRules()
                 );
 
@@ -235,13 +235,13 @@ public class PacManGames3dApp extends Application {
 
                 case ARCADE_PACMAN_XXL -> new GameSpecification(
                     Arcade_GameFlow::new,
-                    new PacManXXL_PacMan_GameModel(coinMechanism, xxlMapSelector),
+                    new PacManXXL_PacMan_GameModel(xxlMapSelector),
                     new PacManXXL_PacMan_GameRules()
                 );
 
                 case ARCADE_MS_PACMAN_XXL -> new GameSpecification(
                     Arcade_GameFlow::new,
-                    new PacManXXL_MsPacMan_GameModel(coinMechanism, xxlMapSelector),
+                    new PacManXXL_MsPacMan_GameModel(xxlMapSelector),
                     new PacManXXL_MsPacMan_GameRules()
                 );
             };

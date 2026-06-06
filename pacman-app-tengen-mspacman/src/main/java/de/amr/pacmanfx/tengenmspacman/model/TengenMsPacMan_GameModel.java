@@ -190,7 +190,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public boolean canStartNewGame() {
+    public boolean canStartNewGame(GameContext gameContext) {
         return canStartNewGame;
     }
 

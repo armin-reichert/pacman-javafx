@@ -47,7 +47,7 @@ public enum Arcade_GameState {
             if (gameModel.isPlaying()) {
                 gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_CONTINUE);
             }
-            else if (gameModel.canStartNewGame()) {
+            else if (gameModel.canStartNewGame(gameContext)) {
                 gameContext.gameFlow().enterState(GameStateID.GAME_STARTING);
             }
             else {
@@ -157,24 +157,24 @@ public enum Arcade_GameState {
     GAME_OVER (new GameState(GameStateID.GAME_OVER) {
 
         @Override
-        public void onEnter(GameContext context) {
-            final GameModel game = context.gameModel();
+        public void onEnter(GameContext gameContext) {
+            final GameModel game = gameContext.gameModel();
             final GameLevel level = game.optGameLevel().orElseThrow();
             timer().restartTicks(level.gameOverStateTicks());
-            game.onGameOver(level);
+            game.onGameOver(gameContext, level);
         }
 
         @Override
-        public void onUpdate(GameContext context) {
-            final GameModel game = context.gameModel();
+        public void onUpdate(GameContext gameContext) {
+            final GameModel game = gameContext.gameModel();
             if (timer().hasExpired()) {
                 final GameLevel level = game.optGameLevel().orElseThrow();
                 level.clearMessage();
                 game.cheats().clear();
-                if (game.canStartNewGame()) {
-                    context.gameFlow().enterState(GameStateID.GAME_PREPARATION);
+                if (game.canStartNewGame(gameContext)) {
+                    gameContext.gameFlow().enterState(GameStateID.GAME_PREPARATION);
                 } else {
-                    context.gameFlow().enterState(GameStateID.GAME_INTRO);
+                    gameContext.gameFlow().enterState(GameStateID.GAME_INTRO);
                 }
             }
         }

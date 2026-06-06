@@ -152,7 +152,7 @@ public class GameAppBuilder {
     public AppContext build() {
         validateConfigurationData();
 
-        final var app = new GamesApp(
+        final var app = new AppContextImpl(
             gamesContainer,
             createViewImplementation(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight()),
             new GameClockFX(),

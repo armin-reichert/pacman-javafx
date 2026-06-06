@@ -49,7 +49,7 @@ import java.io.File;
 
 import static java.util.Objects.requireNonNull;
 
-public final class GamesApp implements AppContext {
+public final class AppContextImpl implements AppContext {
 
     // All games in a box (only 1,99 €!)
     private final GamesContainer gamesContainer;
@@ -76,7 +76,7 @@ public final class GamesApp implements AppContext {
 
     private GameContextImpl currentGameContext;
 
-    public GamesApp(GamesContainer gamesContainer, GameViewImpl view, GameClock gameClock, CoinMechanism coinMechanism) {
+    public AppContextImpl(GamesContainer gamesContainer, GameViewImpl view, GameClock gameClock, CoinMechanism coinMechanism) {
         this.gamesContainer = requireNonNull(gamesContainer);
         this.view = requireNonNull(view);
         this.gameClock = requireNonNull(gameClock);
@@ -103,6 +103,8 @@ public final class GamesApp implements AppContext {
             //TODO How to avoid this circular dependency?
             final GameFlow gameFlow = gameForVariant(newVariantName).gameFlowFactory().get();
             currentGameContext.setGameFlow(gameFlow);
+            //TODO check
+            currentGameContext.gameModel().hud().setCoinMechanism(coinMechanism);
         });
     }
 

@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.GameModel;
@@ -12,12 +13,12 @@ import static java.util.Objects.requireNonNull;
 
 public class GameContextImpl implements GameContext {
 
-    private final GamesApp gamesApp;
+    private final AppContextImpl appContextImpl;
     private GameFlow gameFlow;
     private HuntingStepResult huntingStepResult;
 
-    public GameContextImpl(GamesApp gamesApp) {
-        this.gamesApp = requireNonNull(gamesApp);
+    public GameContextImpl(AppContextImpl appContextImpl) {
+        this.appContextImpl = requireNonNull(appContextImpl);
     }
 
     public void setGameFlow(GameFlow gameFlow) {
@@ -25,7 +26,12 @@ public class GameContextImpl implements GameContext {
     }
 
     private GameSpecification currentGame() {
-        return gamesApp.gameForVariant(gamesApp.currentGameVariantName());
+        return appContextImpl.gameForVariant(appContextImpl.currentGameVariantName());
+    }
+
+    @Override
+    public CoinMechanism coinMechanism() {
+        return appContextImpl.coinMechanism();
     }
 
     @Override
@@ -45,12 +51,12 @@ public class GameContextImpl implements GameContext {
 
     @Override
     public CollisionStrategy collisionStrategy() {
-        return gamesApp.collisionStrategy();
+        return appContextImpl.collisionStrategy();
     }
 
     @Override
     public boolean isCollisionDoubleChecked() {
-        return gamesApp.isCollisionDoubleChecked();
+        return appContextImpl.isCollisionDoubleChecked();
     }
 
     @Override

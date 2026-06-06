@@ -46,14 +46,14 @@ public class PacManXXL_App extends Application {
             .game(
                 GameVariant.ARCADE_PACMAN_XXL,
                 Arcade_GameFlow::new,
-                () -> new PacManXXL_PacMan_GameModel(coinMechanism, mapSelector),
+                () -> new PacManXXL_PacMan_GameModel(mapSelector),
                 PacManXXL_PacMan_GameRules::new,
                 PacManXXL_PacMan_UIConfig::new
             )
             .game(
                 GameVariant.ARCADE_MS_PACMAN_XXL,
                 Arcade_GameFlow::new,
-                () -> new PacManXXL_MsPacMan_GameModel(coinMechanism, mapSelector),
+                () -> new PacManXXL_MsPacMan_GameModel(mapSelector),
                 PacManXXL_MsPacMan_GameRules::new,
                 PacManXXL_MsPacMan_UIConfig::new
             )

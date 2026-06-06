@@ -68,10 +68,11 @@ public class DashboardSectionGameControl extends DashboardSection {
         super.update();
 
         if (dashboard.context() != null) {
-            final AbstractGameModel game = (AbstractGameModel) dashboard.context().currentGameContext().gameModel();
+            final GameContext gameContext = dashboard.context().currentGameContext();
+            final AbstractGameModel gameModel = (AbstractGameModel) gameContext.gameModel();
             final State<GameContext> state = dashboard.context().currentGameContext().gameState();
 
-            choiceBoxInitialLives.setValue(game.lives().initialCount());
+            choiceBoxInitialLives.setValue(gameModel.lives().initialCount());
             choiceBoxInitialLives.setDisable(!state.nameIsOneOf(GameStateID.GAME_INTRO.name()));
 
             final boolean creditDisabled = !state.nameIsOneOf(
@@ -81,9 +82,9 @@ public class DashboardSectionGameControl extends DashboardSection {
             spinnerCredit.setDisable(creditDisabled);
 
             final boolean booting = isBooting(state);
-            buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(game, state));
-            buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(booting || game.optGameLevel().isEmpty());
-            buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(booting || !canEnterNextLevel(game, state));
+            buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(gameContext, gameModel, state));
+            buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(booting || gameModel.optGameLevel().isEmpty());
+            buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(booting || !canEnterNextLevel(gameModel, state));
 
             buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.nameIsOneOf(GameStateID.GAME_INTRO.name()));
             buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(state instanceof CutScenesTestState));
@@ -96,8 +97,8 @@ public class DashboardSectionGameControl extends DashboardSection {
         return state.name().equals(GameStateID.BOOT.name());
     }
 
-    private boolean canStartLevel(GameModel game, State<GameContext> state) {
-        return game.canStartNewGame()
+    private boolean canStartLevel(GameContext gameContext, GameModel game, State<GameContext> state) {
+        return game.canStartNewGame(gameContext)
             && state.nameIsOneOf(
                 GameStateID.GAME_INTRO.name(),
                 GameStateID.GAME_PREPARATION.name()

@@ -17,7 +17,7 @@ import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.ui.AppConstants;
 import de.amr.pacmanfx.ui.AppContext;
 import de.amr.pacmanfx.ui.GameAppBuilder;
-import de.amr.pacmanfx.ui.GamesApp;
+import de.amr.pacmanfx.ui.AppContextImpl;
 import de.amr.pacmanfx.ui.app.GameSpecification;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
@@ -70,7 +70,7 @@ public class ArcadePacMan_App extends Application {
                 .game(
                     GameVariant.ARCADE_PACMAN,
                     Arcade_GameFlow::new,
-                    () -> new ArcadePacMan_GameModel(coinMechanism),
+                    ArcadePacMan_GameModel::new,
                     ArcadePacMan_GameRules::new,
                     ArcadePacMan_UIConfig::new)
                 .startPage(ArcadePacMan_StartPage::new)
@@ -91,9 +91,9 @@ public class ArcadePacMan_App extends Application {
     // Private area
 
     private void createApp(Stage stage, GamesContainer gamesContainer, Vector2i sceneSize) {
-        app = new GamesApp(gamesContainer, createView(stage, sceneSize.x(), sceneSize.y()), new GameClockFX(), coinMechanism);
+        app = new AppContextImpl(gamesContainer, createView(stage, sceneSize.x(), sceneSize.y()), new GameClockFX(), coinMechanism);
 
-        final AbstractGameModel gameModel = new ArcadePacMan_GameModel(coinMechanism);
+        final AbstractGameModel gameModel = new ArcadePacMan_GameModel();
         final GameRules gameRules = new ArcadePacMan_GameRules();
 
         final GameSpecification game = new GameSpecification(Arcade_GameFlow::new, gameModel, gameRules);

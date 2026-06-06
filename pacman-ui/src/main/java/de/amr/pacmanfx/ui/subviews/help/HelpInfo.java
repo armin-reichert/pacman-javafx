@@ -26,17 +26,18 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    public static HelpInfo build(AppContext context) {
-        final GameModel game = context.currentGameContext().gameModel();
-        final State<GameContext> state = context.currentGameContext().gameState();
+    public static HelpInfo build(AppContext appContext) {
+        final GameContext gameContext = appContext.currentGameContext();
+        final GameModel game = appContext.currentGameContext().gameModel();
+        final State<GameContext> state = appContext.currentGameContext().gameState();
         final boolean demoLevel = game.isDemoLevelRunning();
 
-        final HelpInfo helpInfo = new HelpInfo(context);
+        final HelpInfo helpInfo = new HelpInfo(appContext);
         if (state.nameIsOneOf(GameStateID.GAME_INTRO.name())) {
-            helpInfo.addInfoForIntroScene(game);
+            helpInfo.addInfoForIntroScene(gameContext, game);
         }
         else if (state.nameIsOneOf(GameStateID.GAME_PREPARATION.name())) {
-            helpInfo.addInfoForCreditScene(game);
+            helpInfo.addInfoForCreditScene(gameContext, game);
         }
         else if (state.nameIsOneOf(
             GameStateID.GAME_OR_LEVEL_STARTING.name(),
@@ -46,7 +47,7 @@ public class HelpInfo {
             if (demoLevel) {
                 helpInfo.addInfoForDemoLevelPlayScene();
             } else {
-                helpInfo.addInfoForPlayScene(context.ui().translations());
+                helpInfo.addInfoForPlayScene(appContext.ui().translations());
             }
         }
         else {
@@ -121,16 +122,16 @@ public class HelpInfo {
         addRow("help.show_intro", "Q");
     }
 
-    private void addInfoForIntroScene(GameModel game) {
-        if (game.canStartNewGame()) {
+    private void addInfoForIntroScene(GameContext gameContext, GameModel game) {
+        if (game.canStartNewGame(gameContext)) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");
         addQuitEntry();
     }
 
-    private void addInfoForCreditScene(GameModel game) {
-        if (game.canStartNewGame()) {
+    private void addInfoForCreditScene(GameContext gameContext, GameModel game) {
+        if (game.canStartNewGame(gameContext)) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");

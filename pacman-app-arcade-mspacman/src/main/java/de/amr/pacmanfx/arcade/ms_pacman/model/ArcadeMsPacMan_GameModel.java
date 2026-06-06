@@ -9,7 +9,6 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.model.GameRules;
@@ -139,18 +138,11 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     protected static final int GAME_OVER_STATE_TICKS = 150;
 
-    /**
-     * Called via reflection by builder.
-     *
-     * @param coinMechanism the coin mechanism
-     */
-    public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism) {
-        this(coinMechanism, new ArcadeMsPacMan_MapSelector());
+    public ArcadeMsPacMan_GameModel() {
+        this(new ArcadeMsPacMan_MapSelector());
     }
 
-    public ArcadeMsPacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
-        this.coinMechanism = requireNonNull(coinMechanism);
-        hud.setCoinMechanism(coinMechanism);
+    public ArcadeMsPacMan_GameModel(WorldMapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
         levelCounter = new ArcadeMsPacMan_LevelCounter();
         demoLevelSteering = new RuleBasedPacSteering();

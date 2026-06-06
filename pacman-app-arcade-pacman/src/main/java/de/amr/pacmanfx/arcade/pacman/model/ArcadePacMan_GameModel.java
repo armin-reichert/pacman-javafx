@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.model.GameRules;
@@ -68,20 +67,14 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     protected static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 
-    /**
-     * @param coinMechanism the coin mechanism
-     */
-    public ArcadePacMan_GameModel(CoinMechanism coinMechanism) {
-        this(coinMechanism, new ArcadePacMan_MapSelector());
+    public ArcadePacMan_GameModel() {
+        this(new ArcadePacMan_MapSelector());
     }
 
     /**
-     * @param coinMechanism the coin mechanism
      * @param mapSelector e.g. selector that selects custom maps before standard maps
      */
-    public ArcadePacMan_GameModel(CoinMechanism coinMechanism, WorldMapSelector mapSelector) {
-        this.coinMechanism = requireNonNull(coinMechanism);
-        hud.setCoinMechanism(coinMechanism);
+    public ArcadePacMan_GameModel(WorldMapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
         levelCounter = new ArcadePacMan_LevelCounter();
         demoLevelSteering = new RouteBasedSteering(DEMO_LEVEL_ROUTE);
