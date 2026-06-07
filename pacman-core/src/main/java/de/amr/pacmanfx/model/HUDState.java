@@ -15,13 +15,9 @@ public class HUDState {
     private boolean levelCounterVisible = true;
     private boolean scoreVisible = true;
     private int     visibleLifeCount;
-    private IntegerProperty credit = new SimpleIntegerProperty(0);
+    private final IntegerProperty credit = new SimpleIntegerProperty(0);
 
     public HUDState() {}
-
-    public HUDState all(boolean visible) {
-        return score(visible).levelCounter(visible).livesCounter(visible);
-    }
 
     public HUDState levelCounter(boolean visible) {
         levelCounterVisible = visible;

@@ -243,7 +243,6 @@ public enum TengenMsPacMan_GameState {
                 hud.hide();
             }
             else {
-                hud.show();
                 hud.gameOptions(false).score(false).levelCounter(true).livesCounter(false).show();
             }
         }
@@ -267,8 +266,7 @@ public enum TengenMsPacMan_GameState {
                 hud.hide();
             }
             else {
-                hud.show();
-                hud.all(true).gameOptions(true).score(true).levelCounter(true).livesCounter(false).show();
+                hud.gameOptions(true).score(true).levelCounter(true).livesCounter(false).show();
             }
         }
     });
