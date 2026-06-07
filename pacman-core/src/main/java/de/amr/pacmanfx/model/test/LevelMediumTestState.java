@@ -22,6 +22,10 @@ public class LevelMediumTestState extends TestState {
 
     private int lastTestedLevelNumber;
 
+    public LevelMediumTestState() {
+        super("Medium Level Test State");
+    }
+
     private void configureLevelForTest(GameContext gameContext) {
         final GameModel gameModel = gameContext.gameModel();
         final GameLevel level = gameModel.optGameLevel().orElseThrow();

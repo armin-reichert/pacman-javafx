@@ -17,6 +17,7 @@ public class LevelShortTestState extends TestState {
     private int lastTestedLevelNumber;
 
     public LevelShortTestState() {
+        super("Short Level Test State");
     }
 
     @Override

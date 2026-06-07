@@ -11,6 +11,10 @@ public class CutScenesTestState extends TestState {
 
     public int testedCutSceneNumber;
 
+    public CutScenesTestState() {
+        super("Cut Scenes Test State");
+    }
+
     @Override
     public String name() {
         return "CutScenesTestState";
