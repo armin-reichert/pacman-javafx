@@ -3,9 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene3D;
@@ -48,20 +46,22 @@ class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     @Override
     protected SceneID determineSceneID(GameContext gameContext) {
         final GameState state = gameContext.gameState();
+
+        if (state instanceof CutScenesTestState testState) {
+            return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
+        }
+
         if (GameStateID.BOOT.identifies(state)) {
             return CommonSceneID.BOOT_SCENE;
         }
-        if (state.name().equals(Arcade_GameState.GAME_LEVEL_INTERMISSION.name())) {
+        if (GameStateID.GAME_LEVEL_INTERMISSION.identifies(state)) {
             return resolveCutSceneID(gameContext);
         }
-        if (state.name().equals(Arcade_GameState.GAME_INTRO.name())) {
+        if (GameStateID.GAME_INTRO.identifies(state)) {
             return CommonSceneID.INTRO_SCENE;
         }
-        if (state.name().equals(Arcade_GameState.GAME_PREPARATION.name())) {
+        if (GameStateID.GAME_PREPARATION.identifies(state)) {
             return CommonSceneID.START_SCENE;
-        }
-        if (state instanceof CutScenesTestState testState) {
-            return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
         }
         return PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
     }
