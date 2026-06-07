@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.core;
 
-import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.flow.GameFlow;
+import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
@@ -20,7 +20,7 @@ public interface GameContext {
 
     GameFlow gameFlow();
 
-    default State<GameContext> gameState() {
+    default GameState gameState() {
         return gameFlow().state();
     }
 

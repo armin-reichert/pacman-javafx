@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
+import de.amr.pacmanfx.gamestate.GameState;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
@@ -43,8 +44,8 @@ public class StateMachineGameFlow implements GameFlow {
     }
 
     @Override
-    public State<GameContext> state() {
-        return stateMachine.state();
+    public GameState state() {
+        return (GameState) stateMachine.state();
     }
 
     @Override

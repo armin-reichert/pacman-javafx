@@ -51,23 +51,22 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent event) {
-        final State<GameContext> gameState = event.newState();
+        final var gameState = event.newState();
 
-        //TODO ugly
         if (gameState instanceof TestState) {
-            handleTestState(appContext().currentGameContext());
+            handleTestState();
         }
         else if (GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameState)) {
-            onStartingGameOrLevel(appContext().currentGameContext());
+            onStartingGameOrLevel();
         }
         else if (GameStateID.GAME_LEVEL_PLAYING.identifies(gameState)) {
-            onHuntingStart(appContext().currentGameContext());
+            onHuntingStart();
         }
         else if (GameStateID.GAME_LEVEL_PACMAN_DYING.identifies(gameState)) {
-            onPacManDying(gameState);
+            onPacManDying();
         }
         else if (GameStateID.GAME_LEVEL_EATING_GHOST.identifies(gameState)) {
-            onEatingGhost(event.context());
+            onEatingGhost();
         }
         else if (GameStateID.GAME_LEVEL_COMPLETE.identifies(gameState)) {
             onLevelComplete();
@@ -102,8 +101,8 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
 
     @Override
     public void onGameStarted(GameStartedEvent event) {
-        final State<GameContext> state = appContext().currentGameContext().gameState();
-        final boolean silent = appContext().currentGameContext().gameModel().isDemoLevelRunning() || state instanceof TestState;
+        final State<GameContext> state = gameContext().gameState();
+        final boolean silent = gameContext().gameModel().isDemoLevelRunning() || state instanceof TestState;
         if (!silent) {
             appContext().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -117,13 +116,13 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent event) {
-        playScene3D.replaceGameLevel3D(appContext().currentGameContext(), event.level());
+        playScene3D.replaceGameLevel3D(gameContext(), event.level());
     }
 
     @Override
     public void onLevelStarted(LevelStartedEvent event) {
         final GameLevel level = event.level();
-        final GameContext gameContext = appContext().currentGameContext();
+        final GameContext gameContext = gameContext();
         final State<GameContext> gameState = gameContext.gameState();
         //TODO rethink
         if (gameState instanceof TestState) {
@@ -173,7 +172,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
     @Override
     public void onPacGetsPower(PacGetsPowerEvent event) {
         final GameLevel3D level3D = assertLevel3D();
-        final GameContext gameContext = appContext().currentGameContext();
+        final GameContext gameContext = gameContext();
         appContext().currentSoundEffects().ifPresent(GameSoundEffects::stopSiren);
         if (!gameContext.gameRules().isLevelCompleted(level3D.level())) {
             level3D.entities().pac3D().setPowerMode(true);
@@ -199,15 +198,15 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
 
     // Private state-specific handlers
 
-    private void onStartingGameOrLevel(GameContext gameContext) {
+    private void onStartingGameOrLevel() {
         playScene3D.optGameLevel3D().ifPresent(level3D ->
-            level3D.entities().selectAll().forEach(entity -> entity.init(gameContext, level3D.level())));
+            level3D.entities().selectAll().forEach(entity -> entity.init(gameContext(), level3D.level())));
     }
 
-    private void onHuntingStart(GameContext gameContext) {
+    private void onHuntingStart() {
         final GameLevel3D level3D = assertLevel3D();
-        level3D.entities().pac3D().init(gameContext, level3D.level());
-        level3D.entities().ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext, level3D.level()));
+        level3D.entities().pac3D().init(gameContext(), level3D.level());
+        level3D.entities().ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext(), level3D.level()));
         level3D.energizers3D().forEach(Energizer3D::startPumping);
 
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.PARTICLES)
@@ -217,8 +216,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
             .ifPresent(ManagedAnimation::playFromStart);
     }
 
-    private void onPacManDying(State<GameContext> gameState) {
-        final GameContext gameContext = appContext().currentGameContext();
+    private void onPacManDying() {
         final GameLevel3D level3D = assertLevel3D();
         final Pac3D pac3D = level3D.entities().pac3D();
 
@@ -231,15 +229,15 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         level3D.entities().ghosts3D().forEach(Ghost3D::stopAllAnimations);
         level3D.entities().selectAllOfType(Bonus3D.class).forEach(Bonus3D::lookExpired);
 
-        gameState.lock();
-        final Animation dyingAnimationSeq = createPacDyingAnimationSeq(level3D.animationRegistry(), pac3D, gameContext, level3D.level());
-        dyingAnimationSeq.setOnFinished(_ -> gameState.expire());
+        gameContext().gameState().lock();
+        final Animation dyingAnimationSeq = createPacDyingAnimationSeq(level3D.animationRegistry(), pac3D, level3D.level());
+        dyingAnimationSeq.setOnFinished(_ -> gameContext().gameState().expire());
         dyingAnimationSeq.play();
     }
 
-    private Animation createPacDyingAnimationSeq(AnimationRegistry animationRegistry, Pac3D pac3D, GameContext gameContext, GameLevel level) {
+    private Animation createPacDyingAnimationSeq(AnimationRegistry animationRegistry, Pac3D pac3D, GameLevel level) {
         final Animation pacStopping = Ufx.doNow(() -> {
-            pac3D.update(gameContext, level);
+            pac3D.update(gameContext(), level);
             animationRegistry.animation(Pac3D.AnimationID.CHEWING).stop();
             animationRegistry.animation(Pac3D.AnimationID.MOVING).stop();
         });
@@ -254,9 +252,9 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         );
     }
 
-    private void onEatingGhost(GameContext context) {
+    private void onEatingGhost() {
         final GameLevel3D level3D = assertLevel3D();
-        context.huntingResult().ghostsKilled().forEach(ghost -> {
+        gameContext().huntingResult().ghostsKilled().forEach(ghost -> {
             final Ghost3D ghost3D = level3D.ghost3D(ghost.personality());
             final int killIndex = level3D.level().indexInGhostKilledChain(ghost);
             final Image pointsImage = level3D.uiConfig().killedGhostPointsImage(killIndex);
@@ -280,7 +278,6 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
 
     private void onLevelComplete() {
         final GameLevel3D level3D = assertLevel3D();
-        final State<GameContext> gameState = appContext().currentGameContext().gameState();
 
         playScene3D.scoreOpacity.set(0);
 
@@ -292,10 +289,10 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.messageManager().hideMessage();
 
-        playLevelEndAnimation(level3D.animationRegistry(), level3D.entities().maze3D(), gameState, level3D.level().cutSceneNumber() != 0);
+        playLevelEndAnimation(level3D.animationRegistry(), level3D.entities().maze3D(), level3D.level().cutSceneNumber() != 0);
     }
 
-    private void playLevelEndAnimation(AnimationRegistry animationRegistry, Maze3D maze3D, State<GameContext> gameState, boolean cutSceneAfter) {
+    private void playLevelEndAnimation(AnimationRegistry animationRegistry, Maze3D maze3D, boolean cutSceneAfter) {
         final GameLevel3D.AnimationID animationID = cutSceneAfter
             ? GameLevel3D.AnimationID.LEVEL_COMPLETED_SHORT
             : GameLevel3D.AnimationID.LEVEL_COMPLETED_FULL;
@@ -303,11 +300,11 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         final Optional<ManagedAnimation> levelEndAnimation = animationRegistry.optAnimation(animationID);
 
         if (levelEndAnimation.isEmpty()) {
-            Ufx.pauseSecThen(2, gameState::expire).play();
+            Ufx.pauseSecThen(2, () -> gameContext().gameState().expire()).play();
             return;
         }
 
-        gameState.lock();
+        gameContext().gameState().lock();
 
         final PerspectiveID perspectiveBeforeAnimation = AppConstants.PROPERTY_3D_PERSPECTIVE_ID.get();
 
@@ -326,7 +323,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
             levelEndAnimation.get().animationFX(),
             restoreCameraPerspective
         );
-        seq.setOnFinished(_ -> gameState.expire());
+        seq.setOnFinished(_ -> gameContext().gameState().expire());
 
         seq.play();
     }
@@ -342,9 +339,9 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 
-    private void handleTestState(GameContext gameContext) {
+    private void handleTestState() {
         playScene3D.optGameLevel3D().ifPresent(level3D -> {
-            playScene3D.replaceGameLevel3D(gameContext, level3D.level());
+            playScene3D.replaceGameLevel3D(gameContext(), level3D.level());
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level3D.level().number());
             AppConstants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
         });

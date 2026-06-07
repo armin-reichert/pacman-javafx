@@ -8,6 +8,7 @@ import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
+import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateIdentifier;
 
 import java.util.Objects;
@@ -21,7 +22,7 @@ public interface GameFlow {
 
     Optional<State<GameContext>> optState(String stateName);
 
-    State<GameContext> state();
+    GameState state();
 
     void addState(State<GameContext> gameState);
 
