@@ -15,6 +15,7 @@ import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.app.AppConstants;
 import de.amr.pacmanfx.ui.app.AppContext;
@@ -67,8 +68,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public TengenMsPacMan_PlayScene2D(AppContext context) {
-        super(context);
+    public TengenMsPacMan_PlayScene2D(AppContext appContext) {
+        super(appContext);
 
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
@@ -108,9 +109,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onEnteredFrom3DScene() {
-        final GameModel game = appContext().currentGameContext().gameModel();
-        game.hud().levelCounterOn().livesCounterOn().show();
-        game.optGameLevel().ifPresent(this::acceptGameLevel);
+        final GameModel gameModel = appContext().currentGameContext().gameModel();
+        gameModel.hud().levelCounterOn().livesCounterOn().show();
+        gameModel.optGameLevel().ifPresent(this::acceptGameLevel);
     }
 
     @Override
@@ -123,12 +124,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onActivate(AppContext context) {
-        final TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) appContext().currentGameContext().gameModel();
-        game.hud().scoreOn().levelCounterOn().livesCounterOn().show();
-        if (game.allOptionsDefault()) {
-            game.hud().gameOptionsOff();
+        final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) appContext().currentGameContext().gameModel();
+        final TengenMsPacMan_HUDState hud = gameModel.hud();
+        hud.scoreOn().levelCounterOn().livesCounterOn().show();
+        if (gameModel.allOptionsDefault()) {
+            hud.gameOptionsOff();
         } else {
-            game.hud().gameOptionsOn();
+            hud.gameOptionsOn();
         }
         updateScaling();
         dynamicCamera.enterManualMode();
@@ -143,8 +145,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void onTick(long tick) {
         final GameContext gameContext = appContext.currentGameContext();
-        final TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) gameContext.gameModel();
-        game.optGameLevel().ifPresent(level -> {
+        final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext.gameModel();
+        gameModel.optGameLevel().ifPresent(level -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final int numRows = terrain.numRows();
             canvasHeightUnscaled.set(TS(numRows + 2)); // 2 additional rows for level counter below maze
@@ -168,16 +170,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        final TranslationManager translationManager = appContext.ui().translations();
+        final TranslationManager translations = appContext.ui().translations();
         final GameModel game = appContext().currentGameContext().gameModel();
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
-        final var menu = new ContextMenu();
+        final var contextMenu = new ContextMenu();
 
-        final RadioMenuItem miScaledToFit = addLocalizedRadioButton(menu, translationManager, "scaled_to_fit");
+        final RadioMenuItem miScaledToFit = addLocalizedRadioButton(contextMenu, translations, "scaled_to_fit");
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
         miScaledToFit.setOnAction(_ -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
 
-        final RadioMenuItem miScrolling = addLocalizedRadioButton(menu, translationManager, "scrolling");
+        final RadioMenuItem miScrolling = addLocalizedRadioButton(contextMenu, translations, "scrolling");
         miScrolling.setSelected(displayMode == SCROLLING);
         miScrolling.setOnAction(_ -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SCROLLING));
 
@@ -185,14 +187,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         miScaledToFit.setToggleGroup(toggleGroup);
         miScrolling.setToggleGroup(toggleGroup);
 
-        addLocalizedTitleItem(menu, translationManager, "pacman");
-        addLocalizedCheckBox(menu, translationManager, game.cheats().pacUsingAutopilotProperty(), "autopilot");
-        addLocalizedCheckBox(menu, translationManager, game.cheats().pacImmuneProperty(), "immunity");
-        addSeparator(menu);
-        addLocalizedCheckBox(menu, translationManager, AppConstants.PROPERTY_MUTED, "muted");
-        addLocalizedActionItem(menu, appContext, translationManager, ACTION_QUIT_GAME_SCENE, "quit");
+        addLocalizedTitleItem(contextMenu, translations, "pacman");
+        addLocalizedCheckBox(contextMenu, translations, game.cheats().pacUsingAutopilotProperty(), "autopilot");
+        addLocalizedCheckBox(contextMenu, translations, game.cheats().pacImmuneProperty(), "immunity");
+        addSeparator(contextMenu);
+        addLocalizedCheckBox(contextMenu, translations, AppConstants.PROPERTY_MUTED, "muted");
+        addLocalizedActionItem(contextMenu, appContext, translations, ACTION_QUIT_GAME_SCENE, "quit");
 
-        return Optional.of(menu);
+        return Optional.of(contextMenu);
     }
 
     @Override
@@ -238,16 +240,20 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     private void updateHUD(GameLevel level) {
-        final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext().gameModel();
+        final var gameModel = (TengenMsPacMan_GameModel) gameContext().gameModel();
+        final TengenMsPacMan_HUDState hud = gameModel.hud();
+
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         final boolean oneExtra = GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameContext().gameState())
             && !level.entities().pac().isVisible();
         final int displayed = oneExtra ? gameModel.lives().count() : gameModel.lives().count() - 1;
-        gameModel.hud().setVisibleLifeCount(Math.clamp(displayed, 0, gameModel.hud().maxLivesDisplayed()));
+
+        final int visibleLives = Math.clamp(displayed, 0, gameModel.hud().maxLivesDisplayed());
+        hud.setVisibleLifeCount(visibleLives);
         if (gameModel.mapCategory() == MapCategory.ARCADE) {
-            gameModel.hud().levelNumberOff();
+            hud.levelNumberOff();
         } else {
-            gameModel.hud().levelNumberOn();
+            hud.levelNumberOn();
         }
     }
 
@@ -258,18 +264,18 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     protected void startGameOverMessageAnimation(GameLevelMessage message) {
         if (message instanceof MovingGameLevelMessage movingMessage) {
-            double messageWidth = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, Font.font(BaseRenderer.ARCADE_FONT.getFamily(), TS));
-            movingMessage.startMovement(getUnscaledWidth(), messageWidth);
+            final Font font = Font.font(BaseRenderer.ARCADE_FONT.getFamily(), TS);
+            final double width = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, font);
+            movingMessage.startMovement(getUnscaledWidth(), width);
         }
     }
 
     protected void resetAnimations(GameLevel level) {
-        final TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) appContext().currentGameContext().gameModel();
-
+        final var gameModel = (TengenMsPacMan_GameModel) appContext().currentGameContext().gameModel();
         final Pac pac = level.entities().pac();
-        pac.animations().select(game.isBoosterActive()
-            ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
-            : ArcadePacMan_AnimationID.PAC_MUNCHING);
+
+        pac.animations().select(gameModel.isBoosterActive()
+            ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : ArcadePacMan_AnimationID.PAC_MUNCHING);
         pac.animations().resetSelected();
 
         level.entities().ghosts().forEach(ghost -> {
