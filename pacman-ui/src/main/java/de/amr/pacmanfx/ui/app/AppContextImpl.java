@@ -48,8 +48,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.io.File;
-
 import static java.util.Objects.requireNonNull;
 
 public final class AppContextImpl implements AppContext {
@@ -121,11 +119,6 @@ public final class AppContextImpl implements AppContext {
 
     public boolean isCollisionDoubleChecked() {
         return collisionDoubleChecked.get();
-    }
-
-    @Override
-    public File customMapDir() {
-        return AppConstants.CUSTOM_MAP_DIR;
     }
 
     @Override

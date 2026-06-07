@@ -53,7 +53,7 @@ public final class CommonActions {
                 final SubViewManager subViews = appContext.ui().subViews();
                 subViews.ensureEditorViewCreated();
                 subViews.optEditorView().map(EditorView::editor).ifPresent(editor -> {
-                    editor.init(appContext.customMapDir());
+                    editor.init(AppConstants.CUSTOM_MAP_DIR);
                     try {
                         if (subViews.trySelectEditorView()) {
                             editor.start();
@@ -110,7 +110,7 @@ public final class CommonActions {
             subViews.ensureEditorViewCreated();
             subViews.trySelectEditorView();
             subViews.optEditorView().map(EditorView::editor).ifPresent(editor -> {
-                editor.init(appContext.customMapDir());
+                editor.init(AppConstants.CUSTOM_MAP_DIR);
                 editor.start();
             });
         }
