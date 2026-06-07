@@ -5,9 +5,10 @@ package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GenericChangeEvent;
+import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 
-public class CutScenesTestState extends TestState {
+public class CutScenesTestState extends GameState implements TestState {
 
     public int testedCutSceneNumber;
 
@@ -28,7 +29,7 @@ public class CutScenesTestState extends TestState {
 
     @Override
     public void onUpdate(GameContext gameContext) {
-        if (timer.hasExpired()) {
+        if (timer().hasExpired()) {
             if (testedCutSceneNumber < gameContext.gameRules().lastCutSceneNumber()) {
                 testedCutSceneNumber += 1;
                 lock();

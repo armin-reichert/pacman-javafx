@@ -5,6 +5,7 @@ package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusEatenEvent;
+import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -12,7 +13,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 
-public class LevelShortTestState extends TestState {
+public class LevelShortTestState extends GameState implements TestState {
 
     private int lastTestedLevelNumber;
 
@@ -46,7 +47,7 @@ public class LevelShortTestState extends TestState {
         final GameModel gameModel = gameContext.gameModel();
         final GameLevel level = gameModel.optGameLevel().orElseThrow();
         final float START = 1.0f;
-        if (timer.atSecond(START)) {
+        if (timer().atSecond(START)) {
             gameModel.prepareLevelForPlaying(level);
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
@@ -58,33 +59,33 @@ public class LevelShortTestState extends TestState {
             level.setMessage(message);
             level.heartbeat().restart();
         }
-        else if (timer.atSecond(START + 1)) {
+        else if (timer().atSecond(START + 1)) {
             level.clearMessage();
         }
-        else if (timer.atSecond(START + 3)) {
+        else if (timer().atSecond(START + 3)) {
             gameModel.activateNextBonus(gameContext, level);
         }
-        else if (timer.atSecond(START + 5)) {
+        else if (timer().atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
                 gameContext.gameFlow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
             });
         }
-        else if (timer.atSecond(START + 6)) {
+        else if (timer().atSecond(START + 6)) {
             gameModel.activateNextBonus(gameContext, level);
         }
-        else if (timer.atSecond(START + 8)) {
+        else if (timer().atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
                 gameContext.gameFlow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
             });
         }
-        else if (timer.atSecond(START + 9)) {
+        else if (timer().atSecond(START + 9)) {
             level.hidePacAndGhosts();
             level.heartbeat().stop();
             gameModel.onLevelCompleted(level);
         }
-        else if (timer.atSecond(START + 10)) {
+        else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
                 //coinMechanism.setNumCoins(0);
                 gameContext.gameFlow().restartState(GameStateID.BOOT.name());
