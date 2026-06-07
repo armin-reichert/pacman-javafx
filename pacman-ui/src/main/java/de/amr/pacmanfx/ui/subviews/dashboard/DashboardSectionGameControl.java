@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
-import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.gamestate.GameState;
@@ -95,7 +94,7 @@ public class DashboardSectionGameControl extends DashboardSection {
             && gameState.isOneOf(GameStateID.GAME_INTRO, GameStateID.GAME_PREPARATION);
     }
 
-    private boolean canEnterNextLevel(GameModel game, State<GameContext> state) {
-        return game.isPlaying() && state.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
+    private boolean canEnterNextLevel(GameModel game, GameState gameState) {
+        return game.isPlaying() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
     }
 }

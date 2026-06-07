@@ -7,6 +7,7 @@ import de.amr.basics.Disposable;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
+import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -20,7 +21,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static de.amr.pacmanfx.gamestate.GameStateID.GAME_LEVEL_PLAYING;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -187,13 +187,14 @@ public class GameSoundEffects implements Disposable {
      * Does nothing if sound is globally disabled.
      * </p>
      *
+     * @param gameContext the current game context
      * @param level the current game level
      */
     public void playLevelRunningSound(GameContext gameContext, GameLevel level) {
         if (!soundManager.isEnabled()) {
             return;
         }
-        if (gameContext.gameState().nameIsOneOf(GAME_LEVEL_PLAYING.name())) {
+        if (GameStateID.GAME_LEVEL_PLAYING.identifies(gameContext.gameState())) {
             playSiren(level);
             playGhostSounds(level.entities().pac(), level.entities().ghosts());
         }

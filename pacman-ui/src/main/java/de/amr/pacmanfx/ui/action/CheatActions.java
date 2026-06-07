@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.PacEatsFoodEvent;
+import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -54,8 +55,7 @@ public final class CheatActions {
         @Override
         public boolean isEnabled(AppContext context) {
             final State<GameContext> gameState = context.currentGameContext().gameState();
-            return realLevel(context).isPresent()
-                && gameState.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
+            return realLevel(context).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
         }
     };
 
@@ -77,9 +77,8 @@ public final class CheatActions {
 
         @Override
         public boolean isEnabled(AppContext context) {
-            final State<GameContext> gameState = context.currentGameContext().gameState();
-            return realLevel(context).isPresent()
-                && gameState.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name());
+            final GameState gameState = context.currentGameContext().gameState();
+            return realLevel(context).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
         }
     };
 
@@ -100,7 +99,7 @@ public final class CheatActions {
             final State<GameContext> gameState = gameContext.gameState();
             final GameLevel level = realLevel(context).orElse(null);
             return level != null
-                && gameState.nameIsOneOf(GameStateID.GAME_LEVEL_PLAYING.name())
+                && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState)
                 && level.number() < gameContext.gameRules().lastLevelNumber();
         }
     };
