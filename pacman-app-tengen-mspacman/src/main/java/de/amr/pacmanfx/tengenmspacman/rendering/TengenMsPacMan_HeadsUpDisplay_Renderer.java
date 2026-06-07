@@ -55,7 +55,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         requireNonNull(scene);
 
         if (!hud.isVisible()) return;
-        if (!(hud instanceof TengenMsPacMan_HeadsUpDisplay tengenHUD)) return;
+        if (!(hud instanceof TengenMsPacMan_HUDState tengenHUD)) return;
         if (!(game instanceof TengenMsPacMan_GameModel tengenGame)) return;
 
         ctx.save();
@@ -115,7 +115,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         fillText("%6d".formatted(score.points()), color, font, TS(13), TS(2));
     }
 
-    private void drawLivesCounter(GameModel game, TengenMsPacMan_HeadsUpDisplay hud, float y) {
+    private void drawLivesCounter(GameModel game, TengenMsPacMan_HUDState hud, float y) {
         final RectShort symbolSprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < hud.visibleLifeCount(); ++i) {
             drawSprite(symbolSprite, TS(4 + i * 2), y, true);
@@ -125,7 +125,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         }
     }
 
-    private void drawLevelCounter(GameLevel level, TengenMsPacMan_HeadsUpDisplay hud, float y) {
+    private void drawLevelCounter(GameLevel level, TengenMsPacMan_HUDState hud, float y) {
         final RectShort[] symbolSprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
         float x = LEVEL_COUNTER_POS_RIGHT - TS(2);
         // symbols are drawn from right to left!

@@ -5,14 +5,14 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.pacmanfx.model.HUDState;
 
-public class TengenMsPacMan_HeadsUpDisplay extends HUDState {
+public class TengenMsPacMan_HUDState extends HUDState {
 
     private boolean levelNumberVisible;
     private boolean gameOptionsVisible;
 
-    public TengenMsPacMan_HeadsUpDisplay() {}
+    public TengenMsPacMan_HUDState() {}
 
-    public TengenMsPacMan_HeadsUpDisplay gameOptions(boolean visible) {
+    public TengenMsPacMan_HUDState gameOptions(boolean visible) {
         gameOptionsVisible = visible;
         return this;
     }
@@ -21,7 +21,7 @@ public class TengenMsPacMan_HeadsUpDisplay extends HUDState {
         return gameOptionsVisible;
     }
 
-    public TengenMsPacMan_HeadsUpDisplay levelNumber(boolean visible) {
+    public TengenMsPacMan_HUDState levelNumber(boolean visible) {
         levelNumberVisible = visible;
         return this;
     }

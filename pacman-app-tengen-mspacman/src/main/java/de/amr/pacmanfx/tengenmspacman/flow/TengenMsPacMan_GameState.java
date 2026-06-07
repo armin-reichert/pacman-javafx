@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HeadsUpDisplay;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -68,7 +68,7 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onEnter(GameContext gameContext) {
             final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext.gameModel();
-            final TengenMsPacMan_HeadsUpDisplay hud = gameModel.hud();
+            final TengenMsPacMan_HUDState hud = gameModel.hud();
         
             hud.credit(false).score(true).levelCounter(true).livesCounter(true).show();
 
@@ -234,7 +234,7 @@ public enum TengenMsPacMan_GameState {
         public void onEnter(GameContext gameContext) {
             final GameModel gameModel = gameContext.gameModel();
             final GameLevel level = gameContext.requireGameLevel();
-            final var hud = (TengenMsPacMan_HeadsUpDisplay) gameModel.hud();
+            final var hud = (TengenMsPacMan_HUDState) gameModel.hud();
             final boolean isLastCutScene = level.cutSceneNumber() == gameContext.gameRules().lastCutSceneNumber();
 
             lock();
@@ -260,7 +260,7 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onExit(GameContext gameContext) {
             final GameModel gameModel = gameContext.gameModel();
-            final var hud = (TengenMsPacMan_HeadsUpDisplay) gameModel.hud();
+            final var hud = (TengenMsPacMan_HUDState) gameModel.hud();
 
             if (tengenMsPacman(gameModel).mapCategory() == MapCategory.ARCADE) {
                 hud.hide();

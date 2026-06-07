@@ -65,7 +65,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public TengenMsPacMan_GameModel() {
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
-        hud = new TengenMsPacMan_HeadsUpDisplay();
+        hud = new TengenMsPacMan_HUDState();
         actorSpeedControl = new TengenMsPacMan_ActorSpeedControl();
         gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
         automaticSteering = new RuleBasedPacSteering();
@@ -151,8 +151,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public TengenMsPacMan_HeadsUpDisplay hud() {
-        return (TengenMsPacMan_HeadsUpDisplay) hud;
+    public TengenMsPacMan_HUDState hud() {
+        return (TengenMsPacMan_HUDState) hud;
     }
 
     @Override
