@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.tengenmspacman.model;
 
-import de.amr.pacmanfx.model.HeadsUpDisplay;
+import de.amr.pacmanfx.model.HUDState;
 
-public class TengenMsPacMan_HeadsUpDisplay extends HeadsUpDisplay {
+public class TengenMsPacMan_HeadsUpDisplay extends HUDState {
 
     private boolean levelNumberVisible;
     private boolean gameOptionsVisible;

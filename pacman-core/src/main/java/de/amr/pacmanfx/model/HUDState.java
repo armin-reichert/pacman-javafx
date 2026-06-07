@@ -1,14 +1,13 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.core.CoinMechanism;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
-public class HeadsUpDisplay {
-
-    private CoinMechanism coinMechanism;
+public class HUDState {
 
     private boolean visible = true;
     private boolean creditVisible;
@@ -16,43 +15,44 @@ public class HeadsUpDisplay {
     private boolean levelCounterVisible = true;
     private boolean scoreVisible = true;
     private int     visibleLifeCount;
+    private IntegerProperty credit = new SimpleIntegerProperty(0);
 
-    public HeadsUpDisplay() {}
+    public HUDState() {}
 
-    public void setCoinMechanism(CoinMechanism coinMechanism) {
-        this.coinMechanism = coinMechanism;
-    }
-
-    public HeadsUpDisplay all(boolean visible) {
+    public HUDState all(boolean visible) {
         return score(visible).levelCounter(visible).livesCounter(visible);
     }
 
-    public HeadsUpDisplay levelCounter(boolean visible) {
+    public HUDState levelCounter(boolean visible) {
         levelCounterVisible = visible;
         return this;
     }
 
-    public HeadsUpDisplay livesCounter(boolean visible) {
+    public HUDState livesCounter(boolean visible) {
         livesCounterVisible = visible;
         return this;
     }
 
-    public HeadsUpDisplay score(boolean visible) {
+    public HUDState score(boolean visible) {
         scoreVisible = visible;
         return this;
     }
 
-    public HeadsUpDisplay credit(boolean visible) {
+    public HUDState credit(boolean visible) {
         creditVisible = visible;
         return this;
     }
 
-    public IntegerProperty numCoinsProperty() {
-        return coinMechanism.numCoinsProperty();
+    public int credit() {
+        return credit.get();
     }
 
-    public int numCoins() {
-        return coinMechanism.numCoins();
+    public void setCredit(int credit) {
+        creditProperty().set(credit);
+    }
+
+    public IntegerProperty creditProperty() {
+        return credit;
     }
 
     public boolean isCreditVisible() { return creditVisible; }

@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.HeadsUpDisplay;
+import de.amr.pacmanfx.model.HUDState;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
@@ -40,7 +40,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
     }
 
     @Override
-    public void draw(HeadsUpDisplay hud, GameModel game, GameScene2D scene) {
+    public void draw(HUDState hud, GameModel game, GameScene2D scene) {
         requireNonNull(game);
         requireNonNull(scene);
 
@@ -83,7 +83,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
         }
 
         if (hud.isCreditVisible()) {
-            fillText(CREDIT_TEXT_PATTERN.formatted(hud.numCoins()), ARCADE_WHITE, arcadeFont8(), TS(2), scene.getUnscaledHeight());
+            fillText(CREDIT_TEXT_PATTERN.formatted(hud.credit()), ARCADE_WHITE, arcadeFont8(), TS(2), scene.getUnscaledHeight());
         }
     }
 

@@ -111,7 +111,7 @@ public final class AppContextImpl implements AppContext {
                 gameFlow.addState(new CutScenesTestState());
             }
 
-            currentGameContext.gameModel().hud().setCoinMechanism(coinMechanism);
+            currentGameContext.gameModel().hud().creditProperty().bind(coinMechanism.numCoinsProperty());
         });
     }
 

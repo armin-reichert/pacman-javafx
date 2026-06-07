@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.HeadsUpDisplay;
+import de.amr.pacmanfx.model.HUDState;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.tengenmspacman.model.*;
@@ -49,7 +49,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     @Override
-    public void draw(HeadsUpDisplay hud, GameModel game, GameScene2D scene) {
+    public void draw(HUDState hud, GameModel game, GameScene2D scene) {
         requireNonNull(hud);
         requireNonNull(game);
         requireNonNull(scene);

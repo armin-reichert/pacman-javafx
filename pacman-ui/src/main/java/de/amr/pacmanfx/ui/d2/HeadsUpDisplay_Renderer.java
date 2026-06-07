@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.d2;
 
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.HeadsUpDisplay;
+import de.amr.pacmanfx.model.HUDState;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
 public interface HeadsUpDisplay_Renderer extends Renderer {
@@ -16,5 +16,5 @@ public interface HeadsUpDisplay_Renderer extends Renderer {
      * @param game the game model
      * @param scene 2D scene
      */
-    void draw(HeadsUpDisplay hud, GameModel game, GameScene2D scene);
+    void draw(HUDState hud, GameModel game, GameScene2D scene);
 }

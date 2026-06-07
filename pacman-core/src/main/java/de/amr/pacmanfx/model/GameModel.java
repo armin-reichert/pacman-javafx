@@ -37,7 +37,7 @@ public interface GameModel {
 
     ActorSpeedControl actorSpeedControl();
 
-    HeadsUpDisplay hud();
+    HUDState hud();
 
     LevelCounter levelCounter();
 
