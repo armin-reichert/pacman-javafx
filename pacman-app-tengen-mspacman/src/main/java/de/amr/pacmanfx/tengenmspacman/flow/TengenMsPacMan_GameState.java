@@ -118,7 +118,7 @@ public enum TengenMsPacMan_GameState {
         }
     }),
 
-    GAME_LEVEL_CONTINUE(new GameState(GameStateID.GAME_LEVEL_CONTINUE) {
+    GAME_LEVEL_CONTINUE( new GameState(GameStateID.GAME_LEVEL_CONTINUE) {
 
         @Override
         public void onEnter(GameContext gameContext) {
