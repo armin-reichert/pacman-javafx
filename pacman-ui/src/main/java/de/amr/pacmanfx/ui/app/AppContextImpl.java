@@ -225,7 +225,7 @@ public final class AppContextImpl implements AppContext {
     public void startGame() {
         stopGame();
         currentGameContext().gameFlow().setGameContext(currentGameContext);
-        currentGameContext().gameFlow().restartState(GameStateID.BOOT.name());
+        currentGameContext().gameFlow().restartState(GameStateID.BOOT);
         Platform.runLater(gameClock()::start);
     }
 

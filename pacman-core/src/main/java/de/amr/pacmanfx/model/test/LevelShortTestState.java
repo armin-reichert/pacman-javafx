@@ -88,7 +88,7 @@ public class LevelShortTestState extends GameState implements TestState {
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
                 //coinMechanism.setNumCoins(0);
-                gameContext.gameFlow().restartState(GameStateID.BOOT.name());
+                gameContext.gameFlow().restartState(GameStateID.BOOT);
             } else {
                 lock();
                 gameModel.startNextLevel(gameContext);
