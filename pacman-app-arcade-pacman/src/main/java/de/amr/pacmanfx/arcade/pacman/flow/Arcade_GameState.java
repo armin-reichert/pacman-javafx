@@ -81,15 +81,15 @@ public enum Arcade_GameState {
             final GameModel gameModel = gameContext.gameModel();
             final long tick = timer().tickCount();
             
-            if (tick == Timing.TICK_NEW_GAME_START_LEVEL) {
+            if (tick == Arcade_GameState.Timing.TICK_NEW_GAME_START_LEVEL) {
                 gameModel.startLevel(gameContext);
             }
-            else if (tick == Timing.TICK_NEW_GAME_SHOW_GUYS) {
+            else if (tick == Arcade_GameState.Timing.TICK_NEW_GAME_SHOW_GUYS) {
                 final GameLevel level = gameContext.requireGameLevel();
                 level.entities().pac().show();
                 level.entities().ghosts().forEach(Ghost::show);
             }
-            else if (tick == Timing.TICK_NEW_GAME_START_HUNTING) {
+            else if (tick == Arcade_GameState.Timing.TICK_NEW_GAME_START_HUNTING) {
                 gameModel.setPlaying(true);
                 flow.enterState(GameStateID.GAME_LEVEL_PLAYING);
             }
@@ -116,10 +116,10 @@ public enum Arcade_GameState {
             final GameFlow flow = gameContext.gameFlow();
             final long tick = timer().tickCount();
 
-            if (tick == Timing.TICK_CONTINUE_LEVEL) {
+            if (tick == Arcade_GameState.Timing.TICK_CONTINUE_LEVEL) {
                 flow.publishGameEvent(new GameContinuedEvent(gameContext));
             }
-            else if (tick == Timing.TICK_RESUME_HUNTING) {
+            else if (tick == Arcade_GameState.Timing.TICK_RESUME_HUNTING) {
                 flow.enterState(GameStateID.GAME_LEVEL_PLAYING);
             }
         }
@@ -161,7 +161,9 @@ public enum Arcade_GameState {
 
     GAME_LEVEL_EATING_GHOST(new GameLevelEatingGhostState()),
 
-    GAME_LEVEL_PACMAN_DYING(new GameLevelPacManDyingState()),
+    GAME_LEVEL_PACMAN_DYING(new GameLevelPacManDyingState(
+        new GameLevelPacManDyingState.Timing(60, 90, 190, 210)
+    )),
 
     GAME_OVER (new GameState(GameStateID.GAME_OVER) {
 

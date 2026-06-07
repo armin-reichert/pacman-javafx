@@ -113,15 +113,15 @@ public enum TengenMsPacMan_GameState {
             final GameModel gameModel = gameContext.gameModel();
             final long tick = timer().tickCount();
 
-            if (tick == Timing.TICK_SHOW_READY) {
+            if (tick == TengenMsPacMan_GameState.Timing.TICK_SHOW_READY) {
                 gameModel.startLevel(gameContext);
             }
-            else if (tick == Timing.TICK_NEW_GAME_SHOW_GUYS) {
+            else if (tick == TengenMsPacMan_GameState.Timing.TICK_NEW_GAME_SHOW_GUYS) {
                 final GameLevel level = gameContext.requireGameLevel();
                 level.entities().pac().show();
                 level.entities().ghosts().forEach(Ghost::show);
             }
-            else if (tick == Timing.TICK_NEW_GAME_START_HUNTING) {
+            else if (tick == TengenMsPacMan_GameState.Timing.TICK_NEW_GAME_START_HUNTING) {
                 gameModel.setPlaying(true);
                 gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_PLAYING);
             }
@@ -146,7 +146,7 @@ public enum TengenMsPacMan_GameState {
         public void onUpdate(GameContext gameContext) {
             final long tick = timer().tickCount();
 
-            if (tick == Timing.TICK_RESUME_HUNTING) {
+            if (tick == TengenMsPacMan_GameState.Timing.TICK_RESUME_HUNTING) {
                 gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_PLAYING);
             }
         }
@@ -193,7 +193,9 @@ public enum TengenMsPacMan_GameState {
 
     GAME_LEVEL_EATING_GHOST( new GameLevelEatingGhostState() ),
 
-    GAME_LEVEL_PACMAN_DYING( new GameLevelPacManDyingState() ),
+    GAME_LEVEL_PACMAN_DYING(
+        new GameLevelPacManDyingState(new GameLevelPacManDyingState.Timing(60, 90, 190, 240))
+    ),
 
     GAME_OVER ( new GameState(GameStateID.GAME_OVER) {
 
@@ -292,11 +294,5 @@ public enum TengenMsPacMan_GameState {
         public static final short TICK_NEW_GAME_START_HUNTING = 250;
         public static final short TICK_RESUME_HUNTING = 240;
         public static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
-
-        //TODO check times if times match with those common game state implementation, if not, provide own state!
-        public static final short TICK_PACMAN_DYING_HIDE_GHOSTS = 60;
-        public static final short TICK_PACMAN_DYING_START_PAC_ANIMATION = 90;
-        public static final short TICK_PACMAN_DYING_HIDE_PAC = 190;
-        public static final short TICK_PACMAN_DYING_PAC_DEAD = 240;
     }
 }
