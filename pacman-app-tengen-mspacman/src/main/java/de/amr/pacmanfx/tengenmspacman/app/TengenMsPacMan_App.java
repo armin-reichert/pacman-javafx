@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
@@ -12,11 +11,13 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_Das
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
-import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.app.AppBuilder;
+import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
+import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -38,7 +39,7 @@ public class TengenMsPacMan_App extends Application {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         app = AppBuilder
-            .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer, CoinMechanism.OUT_OF_SERVICE)
+            .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer)
             .game(
                 TENGEN_MS_PACMAN,
                 TengenMsPacMan_GameFlow::new,
@@ -48,6 +49,9 @@ public class TengenMsPacMan_App extends Application {
             )
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
+
+        final Dashboard dashboard = app.ui().subViews().gamePlayView().dashboard();
+        final TranslationManager tengenTranslations = () -> TengenMsPacMan_UIConfig.TEXT_BUNDLE;
 
         app.ui().subViews().gamePlayView().configureDashboard(List.of(
             CommonDashboardID.GENERAL,
@@ -60,10 +64,11 @@ public class TengenMsPacMan_App extends Application {
             CommonDashboardID.ABOUT
         ), app.ui().translations());
 
-        app.ui().subViews().gamePlayView().dashboard().addSection(
+        // Will be added before "ABOUT" section!
+        dashboard.addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
-            new DashboardSectionJoypad(app.ui().subViews().gamePlayView().dashboard()),
-            TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
+            new DashboardSectionJoypad(dashboard),
+            tengenTranslations.translate("infobox.joypad.title"),
             false);
 
         app.displayOnScreen();

@@ -45,42 +45,34 @@ public class AppBuilder {
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight,
-        GamesContainer gamesContainer,
-        CoinMechanism coinMechanism)
+        GamesContainer gamesContainer)
     {
-        return new AppBuilder(stage, mainSceneWidth, mainSceneHeight, gamesContainer, coinMechanism);
+        return new AppBuilder(stage, mainSceneWidth, mainSceneHeight, gamesContainer);
     }
 
     private final WindowConfig windowConfig;
-    private final CoinMechanism coinMechanism;
     private final GamesContainer gamesContainer;
     private final Map<String, GameConfig> gameConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
 
+    private boolean coinMechanism;
     private boolean includeTests;
 
     private AppBuilder(
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight,
-        GamesContainer gamesContainer,
-        CoinMechanism coinMechanism)
+        GamesContainer gamesContainer)
     {
         windowConfig = new WindowConfig(stage, mainSceneWidth, mainSceneHeight);
         this.gamesContainer = requireNonNull(gamesContainer);
-        this.coinMechanism = requireNonNull(coinMechanism);
     }
 
-    /**
-     * Example:
-     * <pre>
-     *     game(
-     *      "ARCADE_PACMAN",
-     *      () -> new ArcadePacMan_GameModel(gameBox.coinMechanism(),
-     *
-     * </pre>
-     *
-     */
+    public AppBuilder coinMechanism(boolean coinMechanism) {
+        this.coinMechanism = coinMechanism;
+        return this;
+    }
+
     public AppBuilder game(
         String gameVariantName,
         Supplier<? extends GameFlow> gameFlowFactory,
@@ -127,25 +119,17 @@ public class AppBuilder {
         return game(variant.name(), gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, null);
     }
 
+    public AppBuilder interactiveTests(boolean include) {
+        includeTests = include;
+        return this;
+    }
+
     public AppBuilder startPage(Supplier<? extends StartPage> startPageFactory) {
         if (startPageFactory == null) {
             error("Start page factory is null");
         }
         startPageFactories.add(startPageFactory);
         return this;
-    }
-
-    public AppBuilder interactiveTests(boolean include) {
-        includeTests = include;
-        return this;
-    }
-
-    private GameViewImpl createViewImplementation(Stage stage, int width, int height) {
-        return new GameViewImpl(
-            stage,
-            new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
-            new StatusIconBox(() -> AppConstants.LOCALIZED_TEXTS)
-        );
     }
 
     public AppContext build() {
@@ -155,7 +139,7 @@ public class AppBuilder {
             gamesContainer,
             createViewImplementation(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight()),
             new GameClockFX(),
-            coinMechanism);
+            coinMechanism ? new CoinMechanism(99) : CoinMechanism.OUT_OF_SERVICE);
 
         gameConfigMap.forEach((gameVariant, config) -> {
             final AbstractGameModel gameModel = config.gameModelFactory.get();
@@ -176,6 +160,14 @@ public class AppBuilder {
             }
         }
         return app;
+    }
+
+    private GameViewImpl createViewImplementation(Stage stage, int width, int height) {
+        return new GameViewImpl(
+            stage,
+            new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
+            new StatusIconBox(() -> AppConstants.LOCALIZED_TEXTS)
+        );
     }
 
     private void validateConfigurationData() {

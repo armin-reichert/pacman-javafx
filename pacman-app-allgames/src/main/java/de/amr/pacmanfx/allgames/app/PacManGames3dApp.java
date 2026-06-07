@@ -90,7 +90,6 @@ public class PacManGames3dApp extends Application {
         CommonDashboardID.ABOUT
     );
 
-    private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private GamesContainer gamesContainer;
     private AppContext app;
     private PacManXXL_MapSelector xxlMapSelector;
@@ -112,7 +111,7 @@ public class PacManGames3dApp extends Application {
         try {
             if (useBuilder) {
                 app = AppBuilder
-                    .newApp(stage, sceneSize.x(), sceneSize.y(), gamesContainer, coinMechanism)
+                    .newApp(stage, sceneSize.x(), sceneSize.y(), gamesContainer)
 
                     .game(
                         ARCADE_PACMAN,
@@ -159,6 +158,7 @@ public class PacManGames3dApp extends Application {
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
 
+                    .coinMechanism(true)
                     .interactiveTests(includeTests)
 
                     .build();
@@ -168,7 +168,7 @@ public class PacManGames3dApp extends Application {
                     gamesContainer,
                     createView(stage, sceneSize.x(), sceneSize.y()),
                     new GameClockFX(),
-                    coinMechanism);
+                    new CoinMechanism());
                 registerGames();
                 addConfigFactories();
                 addStartPages();
@@ -178,12 +178,13 @@ public class PacManGames3dApp extends Application {
             Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
 
             app.watchdog().addEventListener(xxlMapSelector);
-            app.displayOnScreen();
         }
         catch (RuntimeException x) {
             Logger.error(x, "An error occurred starting the game.");
             Platform.exit();
         }
+
+        app.displayOnScreen();
     }
 
     @Override

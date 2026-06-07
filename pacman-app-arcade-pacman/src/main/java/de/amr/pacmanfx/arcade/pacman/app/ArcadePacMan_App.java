@@ -51,7 +51,6 @@ public class ArcadePacMan_App extends Application {
         CommonDashboardID.ABOUT
     );
 
-    private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private GamesContainer gamesContainer;
     private AppContext app;
     private boolean useBuilder;
@@ -66,7 +65,7 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
-            app = AppBuilder.newApp(primaryStage, size.x(), size.y(), gamesContainer, coinMechanism)
+            app = AppBuilder.newApp(primaryStage, size.x(), size.y(), gamesContainer)
                 .game(
                     GameVariant.ARCADE_PACMAN,
                     Arcade_GameFlow::new,
@@ -74,6 +73,8 @@ public class ArcadePacMan_App extends Application {
                     ArcadePacMan_GameRules::new,
                     ArcadePacMan_UIConfig::new)
                 .startPage(ArcadePacMan_StartPage::new)
+                .coinMechanism(true)
+                .interactiveTests(false)
                 .build();
         }
         else {
@@ -91,7 +92,7 @@ public class ArcadePacMan_App extends Application {
     // Private area
 
     private void createApp(Stage stage, GamesContainer gamesContainer, Vector2i sceneSize) {
-        app = new AppContextImpl(gamesContainer, createView(stage, sceneSize.x(), sceneSize.y()), new GameClockFX(), coinMechanism);
+        app = new AppContextImpl(gamesContainer, createView(stage, sceneSize.x(), sceneSize.y()), new GameClockFX(), new CoinMechanism());
 
         final AbstractGameModel gameModel = new ArcadePacMan_GameModel();
         final GameRules gameRules = new ArcadePacMan_GameRules();

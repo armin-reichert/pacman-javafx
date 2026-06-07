@@ -13,7 +13,6 @@ import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.app.AppBuilder;
@@ -32,7 +31,6 @@ public class PacManXXL_App extends Application {
     private static final double ASPECT_RATIO    = 1.6;
     private static final double HEIGHT_FRACTION = 0.8;
 
-    private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private final GamesContainer gamesContainer = new GamesContainer();
     private final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
     private AppContext app;
@@ -42,7 +40,7 @@ public class PacManXXL_App extends Application {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         app = AppBuilder
-            .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer, coinMechanism)
+            .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer)
             .game(
                 GameVariant.ARCADE_PACMAN_XXL,
                 Arcade_GameFlow::new,
@@ -58,6 +56,8 @@ public class PacManXXL_App extends Application {
                 PacManXXL_MsPacMan_UIConfig::new
             )
             .startPage(PacManXXL_StartPage::new)
+            .coinMechanism(true)
+            .interactiveTests(false)
             .build();
 
         app.ui().subViews().gamePlayView().configureDashboard(List.of(
