@@ -39,7 +39,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void eatPellet(GameContext gameContext, GameLevel level, Vector2i tile) {
         super.eatPellet(gameContext, level, tile);
-        level.entities().pac().setRestingTicks(gameContext.gameRules().restingTicksForPellet());
+        level.entities().pac().setRestingTicks(gameContext.rules().restingTicksForPellet());
         checkRedGhostCruiseElroyActivation(level);
     }
 
@@ -48,11 +48,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(gameContext, gameContext.gameRules().pointsForEnergizer(), level.number());
+        scorePoints(gameContext, gameContext.rules().pointsForEnergizer(), level.number());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         final Pac pac = level.entities().pac();
-        pac.setRestingTicks(gameContext.gameRules().restingTicksForEnergizer());
+        pac.setRestingTicks(gameContext.rules().restingTicksForEnergizer());
         checkRedGhostCruiseElroyActivation(level);
 
         level.clearGhostKillChain();
@@ -80,12 +80,12 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void buildNormalLevel(GameContext gameContext, int levelNumber) {
         final GameLevel level = createLevel(gameContext, levelNumber, false);
-        level.setCutSceneNumber(gameContext.gameRules().cutSceneNumberAfterLevel(levelNumber).orElse(0));
+        level.setCutSceneNumber(gameContext.rules().cutSceneNumberAfterLevel(levelNumber).orElse(0));
         levelCounter().setEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         setLevel(level);
-        gameContext.gameFlow().publishGameEvent(new LevelCreatedEvent(gameContext, level));
+        gameContext.flow().publishGameEvent(new LevelCreatedEvent(gameContext, level));
     }
 
     @Override
@@ -105,7 +105,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         score.setLevelNumber(levelNumber);
 
         setLevel(level);
-        gameContext.gameFlow().publishGameEvent(new LevelCreatedEvent(gameContext, level));
+        gameContext.flow().publishGameEvent(new LevelCreatedEvent(gameContext, level));
     }
 
     //TODO remove tick parameter, introduce game state
@@ -124,7 +124,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             level.entities().ghosts().forEach(Ghost::show);
         }
         else if (tick == Arcade_GameState.Timing.TICK_RESUME_HUNTING) {
-            gameContext.gameFlow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
+            gameContext.flow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
         }
     }
 
@@ -146,6 +146,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        gameContext.gameFlow().publishGameEvent(new LevelStartedEvent(gameContext, level));
+        gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));
     }
 }

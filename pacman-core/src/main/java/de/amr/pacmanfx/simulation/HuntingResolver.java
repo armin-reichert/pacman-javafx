@@ -20,13 +20,13 @@ public final class HuntingResolver {
 
     public static void evaluate(GameContext gameContext) {
         final HuntingStepResult result = gameContext.huntingResult();
-        final GameModel game = gameContext.gameModel();
+        final GameModel game = gameContext.model();
         final GameLevel level = game.optGameLevel().orElseThrow();
         final Pac pac = level.entities().pac();
 
         evalFoodFound(result, gameContext, level, pac);
         if (gameContext.huntingResult().foodFound()) {
-            gameContext.gameFlow().publishGameEvent(
+            gameContext.flow().publishGameEvent(
                 new PacEatsFoodEvent(gameContext, pac, gameContext.huntingResult().energizerFound(), false));
         }
 
@@ -50,7 +50,7 @@ public final class HuntingResolver {
 
         pac.endStarving();
 
-        final GameModel gameModel = gameContext.gameModel();
+        final GameModel gameModel = gameContext.model();
         final Vector2i foodTile = result.foodFoundTile();
 
         level.worldMap().foodLayer().markFoodEatenAt(foodTile);
@@ -60,7 +60,7 @@ public final class HuntingResolver {
             gameModel.eatPellet(gameContext, level, foodTile);
         }
 
-        if (gameContext.gameRules().isBonusAwarded(level)) {
+        if (gameContext.rules().isBonusAwarded(level)) {
             gameModel.activateNextBonus(gameContext, level);
         }
     }

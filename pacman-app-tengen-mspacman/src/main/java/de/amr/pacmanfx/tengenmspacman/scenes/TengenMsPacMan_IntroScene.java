@@ -63,7 +63,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate(AppContext context) {
-        appContext().currentGameContext().gameModel().hud().hide();
+        appContext().currentGameContext().model().hud().hide();
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) context.currentUIConfig().spriteSheet();
 
@@ -229,12 +229,12 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    final TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) scene.appContext().currentGameContext().gameModel();
+                    final TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) scene.appContext().currentGameContext().model();
                     if (game.allOptionsDefault()) {
                         game.setCanStartNewGame(false); // TODO check this
-                        gameContext.gameFlow().restartState(TengenMsPacMan_GameState.GAME_OR_LEVEL_STARTING.state());
+                        gameContext.flow().restartState(TengenMsPacMan_GameState.GAME_OR_LEVEL_STARTING.state());
                     } else {
-                        gameContext.gameFlow().enterState(TengenMsPacMan_GameState.GAME_PREPARATION.state());
+                        gameContext.flow().enterState(TengenMsPacMan_GameState.GAME_PREPARATION.state());
                     }
                 }
             }

@@ -37,11 +37,11 @@ public class BaseGameSceneHandler extends DefaultGameEventListener {
     }
 
     public GameModel gameModel() {
-        return gameContext().gameModel();
+        return gameContext().model();
     }
 
     public Optional<GameLevel> optGameLevel() {
-        return appContext.currentGameContext().optCurrentGameLevel();
+        return appContext.currentGameContext().optCurrentLevel();
     }
 
     @Override

@@ -37,14 +37,14 @@ public enum Arcade_GameState {
 
         @Override
         public void onEnter(GameContext gameContext) {
-            final GameModel gameModel = gameContext.gameModel();
+            final GameModel gameModel = gameContext.model();
             gameModel.hud().scoreOn().levelCounterOn().show();
         }
 
         @Override
         public void onUpdate(GameContext gameContext) {
-            final GameFlow flow = gameContext.gameFlow();
-            final GameModel gameModel = gameContext.gameModel();
+            final GameFlow flow = gameContext.flow();
+            final GameModel gameModel = gameContext.model();
             final long tick = timer().tickCount();
 
             if (gameModel.isPlaying()) {
@@ -65,8 +65,8 @@ public enum Arcade_GameState {
 
         @Override
         public void onEnter(GameContext gameContext) {
-            final GameFlow flow = gameContext.gameFlow();
-            final GameModel gameModel = gameContext.gameModel();
+            final GameFlow flow = gameContext.flow();
+            final GameModel gameModel = gameContext.model();
 
             gameModel.hud().creditOff().livesCounterOn();
             gameModel.prepareNewGame();
@@ -77,15 +77,15 @@ public enum Arcade_GameState {
 
         @Override
         public void onUpdate(GameContext gameContext) {
-            final GameFlow flow = gameContext.gameFlow();
-            final GameModel gameModel = gameContext.gameModel();
+            final GameFlow flow = gameContext.flow();
+            final GameModel gameModel = gameContext.model();
             final long tick = timer().tickCount();
             
             if (tick == Arcade_GameState.Timing.TICK_NEW_GAME_START_LEVEL) {
                 gameModel.startLevel(gameContext);
             }
             else if (tick == Arcade_GameState.Timing.TICK_NEW_GAME_SHOW_GUYS) {
-                final GameLevel level = gameContext.requireGameLevel();
+                final GameLevel level = gameContext.requireLevel();
                 level.entities().pac().show();
                 level.entities().ghosts().forEach(Ghost::show);
             }
@@ -100,8 +100,8 @@ public enum Arcade_GameState {
 
         @Override
         public void onEnter(GameContext gameContext) {
-            final GameModel game = gameContext.gameModel();
-            final GameLevel level = gameContext.requireGameLevel();
+            final GameModel game = gameContext.model();
+            final GameLevel level = gameContext.requireLevel();
 
             game.prepareLevelForPlaying(level);
             level.entities().pac().show();
@@ -113,7 +113,7 @@ public enum Arcade_GameState {
 
         @Override
         public void onUpdate(GameContext gameContext) {
-            final GameFlow flow = gameContext.gameFlow();
+            final GameFlow flow = gameContext.flow();
             final long tick = timer().tickCount();
 
             if (tick == Arcade_GameState.Timing.TICK_CONTINUE_LEVEL) {
@@ -131,15 +131,15 @@ public enum Arcade_GameState {
 
         @Override
         public void onEnter(GameContext gameContext) {
-            final GameModel game = gameContext.gameModel();
+            final GameModel game = gameContext.model();
             lock(); // UI triggers timeout
-            game.onLevelCompleted(gameContext.requireGameLevel());
+            game.onLevelCompleted(gameContext.requireLevel());
         }
 
         @Override
         public void onUpdate(GameContext gameContext) {
-            final GameFlow flow = gameContext.gameFlow();
-            final GameLevel level = gameContext.requireGameLevel();
+            final GameFlow flow = gameContext.flow();
+            final GameLevel level = gameContext.requireLevel();
 
             if (timer().hasExpired()) {
                 if (level.isDemoLevel()) {
@@ -168,19 +168,19 @@ public enum Arcade_GameState {
 
         @Override
         public void onEnter(GameContext gameContext) {
-            final GameModel game = gameContext.gameModel();
-            final GameLevel level = gameContext.requireGameLevel();
+            final GameModel game = gameContext.model();
+            final GameLevel level = gameContext.requireLevel();
             timer().restartTicks(level.gameOverStateTicks());
             game.onGameOver(gameContext, level);
         }
 
         @Override
         public void onUpdate(GameContext gameContext) {
-            final GameFlow flow = gameContext.gameFlow();
-            final GameModel game = gameContext.gameModel();
+            final GameFlow flow = gameContext.flow();
+            final GameModel game = gameContext.model();
 
             if (timer().hasExpired()) {
-                final GameLevel level = gameContext.requireGameLevel();
+                final GameLevel level = gameContext.requireLevel();
                 level.clearMessage();
                 game.cheats().clear();
                 if (game.canStartNewGame(gameContext)) {
@@ -196,15 +196,15 @@ public enum Arcade_GameState {
 
         @Override
         public void onEnter(GameContext gameContext) {
-            final GameModel gameModel = gameContext.gameModel();
+            final GameModel gameModel = gameContext.model();
             lock();
             gameModel.hud().creditOff().scoreOff().levelCounterOn().livesCounterOff().show();
         }
 
         @Override
         public void onUpdate(GameContext gameContext) {
-            final GameFlow flow = gameContext.gameFlow();
-            final GameModel gameModel = gameContext.gameModel();
+            final GameFlow flow = gameContext.flow();
+            final GameModel gameModel = gameContext.model();
 
             if (timer().hasExpired()) {
                 flow.enterState(gameModel.isPlaying() ? GameStateID.GAME_LEVEL_TRANSITION : GameStateID.GAME_INTRO);
@@ -213,7 +213,7 @@ public enum Arcade_GameState {
 
         @Override
         public void onExit(GameContext gameContext) {
-            final GameModel gameModel = gameContext.gameModel();
+            final GameModel gameModel = gameContext.model();
             gameModel.hud().creditOff().scoreOn().levelCounterOn().livesCounterOn().show();
         }
     });

@@ -34,10 +34,10 @@ public class DashboardSectionGameInfo extends DashboardSection {
 
     @Override
     public void connect(AppContext appContext) {
-        final Supplier<GameModel> gameSupplier = appContext.currentGameContext()::gameModel;
+        final Supplier<GameModel> gameSupplier = appContext.currentGameContext()::model;
 
-        addDynamicLabeledValue("Game State",  () -> "%s".formatted(appContext.currentGameContext().gameState().name()));
-        addDynamicLabeledValue("State Timer", () -> stateTimerInfo(appContext.currentGameContext().gameState()));
+        addDynamicLabeledValue("Game State",  () -> "%s".formatted(appContext.currentGameContext().state().name()));
+        addDynamicLabeledValue("State Timer", () -> stateTimerInfo(appContext.currentGameContext().state()));
         addDynamicLabeledValue("Game Scene", ifGameScenePresent(appContext, gameScene -> gameScene.getClass().getSimpleName()));
 
         addDynamicLabeledValue("Level Number", ifGameLevel(gameSupplier, level ->

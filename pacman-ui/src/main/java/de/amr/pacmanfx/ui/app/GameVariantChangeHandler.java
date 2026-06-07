@@ -38,7 +38,7 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
         appContext.ui().view().stage().getIcons().removeAll();
         appContext.ui().configurations().dispose(variantName);
         appContext.ui().sounds().dispose();
-        appContext.currentGameContext().gameFlow().removeGameEventListener(gameEventHandler);
+        appContext.currentGameContext().flow().removeGameEventListener(gameEventHandler);
     }
 
     public void enterGameVariant(String variantName) {
@@ -50,6 +50,6 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
         } else {
             Logger.error("Could not find application icon for game variant {}", variantName);
         }
-        appContext.currentGameContext().gameFlow().addGameEventListener(gameEventHandler);
+        appContext.currentGameContext().flow().addGameEventListener(gameEventHandler);
     }
 }

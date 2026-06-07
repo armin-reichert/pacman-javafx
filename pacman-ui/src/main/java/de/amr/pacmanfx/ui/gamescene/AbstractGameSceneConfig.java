@@ -46,7 +46,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     @Override
     public SceneID resolveCutSceneID(GameContext gameContext) {
-        final Optional<GameLevel> optGameLevel = gameContext.gameModel().optGameLevel();
+        final Optional<GameLevel> optGameLevel = gameContext.model().optGameLevel();
         if (optGameLevel.isEmpty()) {
             throw new IllegalStateException("Cannot determine cut scene, no game level available");
         }

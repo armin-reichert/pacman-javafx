@@ -111,7 +111,7 @@ public final class AppContextImpl implements AppContext {
                 gameFlow.addState(new CutScenesTestState());
             }
 
-            currentGameContext.gameModel().hud().creditProperty().bind(coinMechanism.numCoinsProperty());
+            currentGameContext.model().hud().creditProperty().bind(coinMechanism.numCoinsProperty());
         });
     }
 
@@ -224,14 +224,14 @@ public final class AppContextImpl implements AppContext {
     @Override
     public void startGame() {
         stopGame();
-        currentGameContext().gameFlow().setGameContext(currentGameContext);
-        currentGameContext().gameFlow().restartState(GameStateID.BOOT);
+        currentGameContext().flow().setGameContext(currentGameContext);
+        currentGameContext().flow().restartState(GameStateID.BOOT);
         Platform.runLater(gameClock()::start);
     }
 
     @Override
     public void stopGame() {
-        currentGameContext.gameModel().prepareNewGame();
+        currentGameContext.model().prepareNewGame();
 
         gameClock().stop();
         gameClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
@@ -297,7 +297,7 @@ public final class AppContextImpl implements AppContext {
 
     private void initGameClock() {
         gameClock().setUpdateAction(() -> {
-            currentGameContext.gameFlow().makeStep();
+            currentGameContext.flow().makeStep();
             ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameClock().tickCount()));
         });
         gameClock().setPermanentAction(() -> ui.subViews().currentView().render());
@@ -318,7 +318,7 @@ public final class AppContextImpl implements AppContext {
 
         view.mainScene().init(this);
 
-        view.statusIconBox().bind(currentGameContext().gameModel());
+        view.statusIconBox().bind(currentGameContext().model());
     }
 
     private void initProperties() {

@@ -14,14 +14,14 @@ public class GameIntroState extends GameState {
 
     @Override
     public void onEnter(GameContext context) {
-        context.gameModel().hud().levelCounterOn().livesCounterOff().creditOn().scoreOn().show();
+        context.model().hud().levelCounterOn().livesCounterOff().creditOn().scoreOn().show();
         lock();
     }
 
     @Override
     public void onUpdate(GameContext context) {
         if (timer().hasExpired()) {
-            context.gameFlow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
+            context.flow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
         }
     }
 }

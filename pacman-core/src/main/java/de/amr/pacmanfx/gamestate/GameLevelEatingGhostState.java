@@ -24,13 +24,13 @@ public class GameLevelEatingGhostState extends GameState {
 
     @Override
     public void onUpdate(GameContext gameContext) {
-        final GameModel gameModel = gameContext.gameModel();
+        final GameModel gameModel = gameContext.model();
         final GameLevel level = gameModel.optGameLevel().orElseThrow();
         if (timer().hasExpired()) {
             level.entities().pac().show();
             level.ghostsInState(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
             level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
-            gameContext.gameFlow().resumePreviousState();
+            gameContext.flow().resumePreviousState();
         } else {
             if (timer().tickCount() < 60) {
                 level.ghostsInAnyOfStates(Set.of(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE))

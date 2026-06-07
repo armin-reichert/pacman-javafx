@@ -38,17 +38,17 @@ public class GameContextImpl implements GameContext {
     }
 
     @Override
-    public GameModel gameModel() {
+    public GameModel model() {
         return currentGame().gameModel();
     }
 
     @Override
-    public GameRules gameRules() {
+    public GameRules rules() {
         return currentGame().gameRules();
     }
 
     @Override
-    public GameFlow gameFlow() {
+    public GameFlow flow() {
         return gameFlow;
     }
 

@@ -18,22 +18,22 @@ public interface GameContext {
 
     CoinMechanism coinMechanism();
 
-    GameFlow gameFlow();
+    GameFlow flow();
 
-    default GameState gameState() {
-        return gameFlow().state();
+    default GameState state() {
+        return flow().state();
     }
 
-    GameRules gameRules();
+    GameRules rules();
 
-    GameModel gameModel();
+    GameModel model();
 
-    default Optional<GameLevel> optCurrentGameLevel() {
-        return gameModel().optGameLevel();
+    default Optional<GameLevel> optCurrentLevel() {
+        return model().optGameLevel();
     }
 
-    default GameLevel requireGameLevel() {
-        return gameModel().optGameLevel().orElseThrow(IllegalStateException::new);
+    default GameLevel requireLevel() {
+        return model().optGameLevel().orElseThrow(IllegalStateException::new);
     }
 
     boolean isCollisionDoubleChecked();

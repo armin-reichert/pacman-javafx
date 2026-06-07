@@ -98,7 +98,7 @@ public final class CommonActions {
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("let_game_state_expire") {
         @Override
         protected void doAction(AppContext appContext) {
-            appContext.currentGameContext().gameState().expire();
+            appContext.currentGameContext().state().expire();
         }
     };
 
@@ -149,7 +149,7 @@ public final class CommonActions {
     public static final GameAction ACTION_QUIT_GAME_SCENE = new GameAction("quit_game_scene") {
         @Override
         protected void doAction(AppContext appContext) {
-            final GameModel gameModel = appContext.currentGameContext().gameModel();
+            final GameModel gameModel = appContext.currentGameContext().model();
             gameModel.cheats().clear(); //TODO needed?
             appContext.stopGame();
             appContext.ui().gameScenes().quitCurrentGameScene(appContext);
@@ -164,12 +164,12 @@ public final class CommonActions {
             appContext.stopGame();
 
             final GameContext gameContext = appContext.currentGameContext();
-            final GameState gameState = gameContext.gameState();
+            final GameState gameState = gameContext.state();
             if (gameState instanceof LevelShortTestState) {
                 gameState.onExit(gameContext); //TODO exit normal game states too?
             }
             appContext.gameClock().start();
-            gameContext.gameFlow().restartState(GameStateID.GAME_INTRO);
+            gameContext.flow().restartState(GameStateID.GAME_INTRO);
         }
     };
 
@@ -389,7 +389,7 @@ public final class CommonActions {
         }
 
         private boolean isLevelPlaying(AppContext appContext) {
-            final GameState gameState = appContext.currentGameContext().gameState();
+            final GameState gameState = appContext.currentGameContext().state();
             return GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
         }
     };

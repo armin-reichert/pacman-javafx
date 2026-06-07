@@ -109,7 +109,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     private void animationEnds() {
         blinky.setVisible(false);
-        appContext().currentGameContext().gameState().expire();
+        appContext().currentGameContext().state().expire();
     }
 
     private void dressRaptures() {

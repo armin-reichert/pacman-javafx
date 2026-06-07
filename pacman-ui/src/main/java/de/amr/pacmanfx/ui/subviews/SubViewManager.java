@@ -50,7 +50,7 @@ public final class SubViewManager {
             if (isSelected(startView)) return true;
 
             if (isSelected(gamePlayView)) {
-                return !context.currentGameContext().gameModel().isPlaying();
+                return !context.currentGameContext().model().isPlaying();
             }
 
             return false;

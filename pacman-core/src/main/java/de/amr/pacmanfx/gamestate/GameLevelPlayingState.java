@@ -22,23 +22,23 @@ public class GameLevelPlayingState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final GameModel game = context.gameModel();
-        final GameLevel level = game.optGameLevel().orElseThrow();
-        game.onStartLevelPlaying(context, level);
+    public void onEnter(GameContext gameContext) {
+        final GameModel gameModel = gameContext.model();
+        final GameLevel level = gameContext.requireLevel();
+        gameModel.onStartLevelPlaying(gameContext, level);
     }
 
     @Override
     public void onUpdate(GameContext gameContext) {
-        final GameModel gameModel = gameContext.gameModel();
-        final GameLevel level = gameModel.optGameLevel().orElseThrow();
+        final GameModel gameModel = gameContext.model();
+        final GameLevel level = gameContext.requireLevel();
         final Pac pac = level.entities().pac();
         final GateKeeper gateKeeper = gameModel.gateKeeper();
 
         // Update
         gameModel.cheats().update(level);
         level.heartbeat().triggerPulse();
-        level.huntingTimer().update(gameContext.gameRules(), level.number());
+        level.huntingTimer().update(gameContext.rules(), level.number());
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
@@ -57,8 +57,8 @@ public class GameLevelPlayingState extends GameState {
         logHuntingStep(gameContext);
 
         // State transition
-        final GameStateID nextStateID = computeNextState(gameContext.huntingResult(), gameContext.gameRules(), level);
-        gameContext.gameFlow().enterState(nextStateID.name());
+        final GameStateID nextStateID = computeNextState(gameContext.huntingResult(), gameContext.rules(), level);
+        gameContext.flow().enterState(nextStateID.name());
     }
 
     private GameStateID computeNextState(HuntingStepResult result, GameRules rules, GameLevel level) {

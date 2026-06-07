@@ -5,7 +5,6 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
-import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
@@ -104,11 +103,11 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            appContext().currentGameContext().gameFlow().enterState(GameStateID.GAME_INTRO);
+            appContext().currentGameContext().flow().enterState(GameStateID.GAME_INTRO);
         }
     }
 
-    private TengenMsPacMan_GameModel tengenGame() { return (TengenMsPacMan_GameModel) appContext().currentGameContext().gameModel(); }
+    private TengenMsPacMan_GameModel tengenGame() { return (TengenMsPacMan_GameModel) appContext().currentGameContext().model(); }
     
     private void optionValueChanged() {
         appContext.ui().sounds().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);

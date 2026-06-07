@@ -28,11 +28,11 @@ public class LevelShortTestState extends GameState implements TestState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        final GameModel gameModel = gameContext.gameModel();
+        final GameModel gameModel = gameContext.model();
         //coinMechanism.setNumCoins(1);
-        lastTestedLevelNumber = gameContext.gameRules().lastLevelNumber() == Integer.MAX_VALUE
+        lastTestedLevelNumber = gameContext.rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
-            : gameContext.gameRules().lastLevelNumber();
+            : gameContext.rules().lastLevelNumber();
         lock();
         gameModel.prepareNewGame();
         gameModel.buildNormalLevel(gameContext, 1);
@@ -44,7 +44,7 @@ public class LevelShortTestState extends GameState implements TestState {
 
     @Override
     public void onUpdate(GameContext gameContext) {
-        final GameModel gameModel = gameContext.gameModel();
+        final GameModel gameModel = gameContext.model();
         final GameLevel level = gameModel.optGameLevel().orElseThrow();
         final float START = 1.0f;
         if (timer().atSecond(START)) {
@@ -68,7 +68,7 @@ public class LevelShortTestState extends GameState implements TestState {
         else if (timer().atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
-                gameContext.gameFlow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
+                gameContext.flow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
             });
         }
         else if (timer().atSecond(START + 6)) {
@@ -77,7 +77,7 @@ public class LevelShortTestState extends GameState implements TestState {
         else if (timer().atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
-                gameContext.gameFlow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
+                gameContext.flow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
             });
         }
         else if (timer().atSecond(START + 9)) {
@@ -88,7 +88,7 @@ public class LevelShortTestState extends GameState implements TestState {
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
                 //coinMechanism.setNumCoins(0);
-                gameContext.gameFlow().restartState(GameStateID.BOOT);
+                gameContext.flow().restartState(GameStateID.BOOT);
             } else {
                 lock();
                 gameModel.startNextLevel(gameContext);
@@ -103,7 +103,7 @@ public class LevelShortTestState extends GameState implements TestState {
 
     @Override
     public void onExit(GameContext context) {
-        final GameModel game = context.gameModel();
+        final GameModel game = context.model();
         //coinMechanism.setNumCoins(0);
         game.init();
         game.levelCounter().clear();

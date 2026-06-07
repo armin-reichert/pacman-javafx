@@ -28,7 +28,7 @@ public class LevelMediumTestState extends GameState implements TestState {
     }
 
     private void configureLevelForTest(GameContext gameContext) {
-        final GameModel gameModel = gameContext.gameModel();
+        final GameModel gameModel = gameContext.model();
         final GameLevel level = gameModel.optGameLevel().orElseThrow();
 
         final Pac pac = level.entities().pac();
@@ -47,7 +47,7 @@ public class LevelMediumTestState extends GameState implements TestState {
 
         gameModel.hud().show();
 
-        gameContext.gameFlow().publishGameEvent(new StopAllSoundsEvent(gameContext));
+        gameContext.flow().publishGameEvent(new StopAllSoundsEvent(gameContext));
     }
 
     @Override
@@ -57,10 +57,10 @@ public class LevelMediumTestState extends GameState implements TestState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        final GameModel game = gameContext.gameModel();
-        lastTestedLevelNumber = gameContext.gameRules().lastLevelNumber() == Integer.MAX_VALUE
+        final GameModel game = gameContext.model();
+        lastTestedLevelNumber = gameContext.rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
-            : gameContext.gameRules().lastLevelNumber();
+            : gameContext.rules().lastLevelNumber();
         timer().restartSeconds(TEST_DURATION_SEC);
         game.prepareNewGame();
         game.buildNormalLevel(gameContext, 1);
@@ -70,7 +70,7 @@ public class LevelMediumTestState extends GameState implements TestState {
 
     @Override
     public void onUpdate(GameContext gameContext) {
-        final GameModel gameModel = gameContext.gameModel();
+        final GameModel gameModel = gameContext.model();
         final GameLevel level = gameModel.optGameLevel().orElseThrow();
 
         level.entities().pac().update(gameContext, level);
@@ -92,8 +92,8 @@ public class LevelMediumTestState extends GameState implements TestState {
 
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
-                gameContext.gameFlow().publishGameEvent(new StopAllSoundsEvent(gameContext));
-                gameContext.gameFlow().enterState(GameStateID.GAME_INTRO);
+                gameContext.flow().publishGameEvent(new StopAllSoundsEvent(gameContext));
+                gameContext.flow().enterState(GameStateID.GAME_INTRO);
             }
             else {
                 timer().restartSeconds(TEST_DURATION_SEC);
@@ -101,20 +101,20 @@ public class LevelMediumTestState extends GameState implements TestState {
                 configureLevelForTest(gameContext);
             }
         }
-        else if (gameContext.gameRules().isLevelCompleted(level)) {
-            gameContext.gameFlow().enterState(GameStateID.GAME_INTRO);
+        else if (gameContext.rules().isLevelCompleted(level)) {
+            gameContext.flow().enterState(GameStateID.GAME_INTRO);
         }
         else if (pacKilled) {
             expire();
         }
         else if (gameContext.huntingResult().hasGhostBeenKilled()) {
-            gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST);
+            gameContext.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST);
         }
     }
 
     @Override
     public void onExit(GameContext context) {
-        final GameModel game = context.gameModel();
+        final GameModel game = context.model();
         game.levelCounter().clear();
     }
 }

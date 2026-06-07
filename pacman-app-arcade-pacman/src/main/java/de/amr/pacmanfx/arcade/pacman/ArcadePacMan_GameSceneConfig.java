@@ -42,7 +42,7 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     @Override
     protected SceneID determineSceneID(GameContext gameContext) {
-        final State<GameContext> state = gameContext.gameState();
+        final State<GameContext> state = gameContext.state();
         if (state instanceof CutScenesTestState testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
         }

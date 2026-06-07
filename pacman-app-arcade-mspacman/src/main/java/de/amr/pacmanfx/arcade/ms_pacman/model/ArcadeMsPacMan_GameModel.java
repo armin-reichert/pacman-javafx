@@ -164,7 +164,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         terrain.setHouse(new ArcadeHouse(houseMinTile));
 
-        final HuntingTimer huntingTimer = createHuntingTimer(gameContext.gameRules());
+        final HuntingTimer huntingTimer = createHuntingTimer(gameContext.rules());
         final int numFlashes = ArcadePacMan_GameRules.levelData(levelNumber).numFlashes();
 
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, numFlashes);
@@ -179,8 +179,8 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         createAndSetMsPacMan(level);
         createAndSetGhosts(level, terrain.house());
 
-        level.setBonusSymbolCode(0, gameContext.gameRules().selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, gameContext.gameRules().selectBonusSymbolCode(level.number(), 1));
+        level.setBonusSymbolCode(0, gameContext.rules().selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, gameContext.rules().selectBonusSymbolCode(level.number(), 1));
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
@@ -227,7 +227,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
         level.selectNextBonus();
         final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final var bonus = new Bonus(bonusSymbolCode, gameContext.gameRules().pointsForBonus(bonusSymbolCode));
+        final var bonus = new Bonus(bonusSymbolCode, gameContext.rules().pointsForBonus(bonusSymbolCode));
         if (terrain.horizontalPortals().isEmpty()) {
             final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.setPosition(halfTileRightOf(bonusTile));
@@ -238,7 +238,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         }
 
         level.setBonus(bonus);
-        gameContext.gameFlow().publishGameEvent(new BonusActivatedEvent(gameContext, bonus));
+        gameContext.flow().publishGameEvent(new BonusActivatedEvent(gameContext, bonus));
     }
 
     // Helpers

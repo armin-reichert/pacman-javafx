@@ -50,7 +50,7 @@ public class DashboardSectionGameControl extends DashboardSection {
         addDynamicLabeledValue("Collision Mode", context.currentGameContext()::collisionStrategy);
         cbCollisionCheckedTwice  = addCheckBox("Collision Check 2x");
 
-        setAction(choiceBoxInitialLives, () -> context.currentGameContext().gameModel().lives().setInitialCount(choiceBoxInitialLives.getValue()));
+        setAction(choiceBoxInitialLives, () -> context.currentGameContext().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
 
         //setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO FIXME!
         setAction(context, buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
@@ -68,8 +68,8 @@ public class DashboardSectionGameControl extends DashboardSection {
 
         if (dashboard.appContext() != null) {
             final GameContext gameContext = dashboard.appContext().currentGameContext();
-            final GameModel gameModel = gameContext.gameModel();
-            final GameState gameState = gameContext.gameState();
+            final GameModel gameModel = gameContext.model();
+            final GameState gameState = gameContext.state();
 
             choiceBoxInitialLives.setValue(gameModel.lives().initialCount());
             choiceBoxInitialLives.setDisable(!GameStateID.GAME_INTRO.identifies(gameState));

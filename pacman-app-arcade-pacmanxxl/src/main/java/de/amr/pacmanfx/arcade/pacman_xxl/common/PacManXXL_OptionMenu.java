@@ -85,7 +85,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         final UIConfig currentConfig = appContext.currentUIConfig();
         final GameContext gameContext = appContext.currentGameContext();
         final GameVariant gameVariant = GameVariant.valueOf(appContext.currentGameVariantName());
-        final GameModel gameModel = gameContext.gameModel();
+        final GameModel gameModel = gameContext.model();
 
         if (!(gameModel.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
             final String errorMsg = "Expected XXL map selector but found %s".formatted(gameModel.mapSelector().getClass().getSimpleName());
@@ -97,7 +97,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         // Init menu items
         entryGameVariant.setValue(gameVariant);
         entryPlay3D.setValue(AppConstants.PROPERTY_3D_ENABLED.get());
-        entryCutScenes.setValue(gameContext.gameFlow().cutScenesEnabled());
+        entryCutScenes.setValue(gameContext.flow().cutScenesEnabled());
         entryMapOrder.setValue(mapSelector.selectionMode());
         entryMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());
 

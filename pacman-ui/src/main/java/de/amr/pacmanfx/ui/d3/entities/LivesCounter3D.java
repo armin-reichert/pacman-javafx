@@ -158,8 +158,8 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
 
     @Override
     public void update(GameContext gameContext, GameLevel level) {
-        final GameModel gameModel = gameContext.gameModel();
-        final GameState gameState = gameContext.gameState();
+        final GameModel gameModel = gameContext.model();
+        final GameState gameState = gameContext.state();
         final boolean visible = gameModel.canStartNewGame(gameContext);
         final Pac pac = level.entities().pac();
 

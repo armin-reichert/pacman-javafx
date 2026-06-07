@@ -11,7 +11,7 @@ public class GamePreparationState extends GameState {
 
     @Override
     public void onEnter(GameContext context) {
-        final GameModel game = context.gameModel();
+        final GameModel game = context.model();
         game.hud().creditOn().scoreOn().levelCounterOn().livesCounterOff().show();
         game.prepareNewGame();
     }

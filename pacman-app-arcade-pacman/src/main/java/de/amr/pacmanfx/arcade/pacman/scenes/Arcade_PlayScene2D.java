@@ -44,7 +44,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onTick(long tick) {
-        gameContext().optCurrentGameLevel().ifPresent(level -> {
+        gameContext().optCurrentLevel().ifPresent(level -> {
             updateLivesCounter(level);
             appContext().currentSoundEffects().ifPresent(sfx -> {
                 sfx.setEnabled(!level.isDemoLevel());
@@ -56,7 +56,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
         final TranslationManager translations = appContext.ui().translations();
-        final GameModel gameModel = gameContext().gameModel();
+        final GameModel gameModel = gameContext().model();
         final var contextMenu = new ContextMenu();
         addLocalizedTitleItem(contextMenu, translations, "pacman");
         addLocalizedCheckBox(contextMenu, translations, gameModel.cheats().pacUsingAutopilotProperty(), "autopilot").setOnAction(e -> {
@@ -84,7 +84,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onEnteredFrom3DScene() {
-        appContext().currentGameContext().optCurrentGameLevel().ifPresent(this::acceptGameLevel);
+        appContext().currentGameContext().optCurrentLevel().ifPresent(this::acceptGameLevel);
     }
 
     // Others
@@ -107,7 +107,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         Logger.info(actionBindings);
 
         appContext.ui().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
-        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameContext().gameState().expire());
+        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameContext().state().expire());
 
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());
@@ -120,8 +120,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     // While Pac-Man is not yet visible on level start, one symbol more is shown in the lives counter
     private void updateLivesCounter(GameLevel level) {
-        final GameModel gameModel = gameContext().gameModel();
-        final int additionalLives = GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameContext().gameState())
+        final GameModel gameModel = gameContext().model();
+        final int additionalLives = GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameContext().state())
             && !level.entities().pac().isVisible() ? 1 : 0;
         final int count = Math.clamp(gameModel.lives().count() - 1 + additionalLives, 0, gameModel.hud().maxLivesDisplayed());
         gameModel.hud().setVisibleLifeCount(count);

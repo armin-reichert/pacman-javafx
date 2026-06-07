@@ -51,6 +51,6 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         score.setLevelNumber(levelNumber);
 
         setLevel(level);
-        gameContext.gameFlow().publishGameEvent(new LevelCreatedEvent(gameContext, level));
+        gameContext.flow().publishGameEvent(new LevelCreatedEvent(gameContext, level));
     }
 }

@@ -101,8 +101,8 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
 
     @Override
     public void onGameStarted(GameStartedEvent event) {
-        final State<GameContext> state = gameContext().gameState();
-        final boolean silent = gameContext().gameModel().isDemoLevelRunning() || state instanceof TestState;
+        final State<GameContext> state = gameContext().state();
+        final boolean silent = gameContext().model().isDemoLevelRunning() || state instanceof TestState;
         if (!silent) {
             appContext().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -123,7 +123,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
     public void onLevelStarted(LevelStartedEvent event) {
         final GameLevel level = event.level();
         final GameContext gameContext = gameContext();
-        final State<GameContext> gameState = gameContext.gameState();
+        final State<GameContext> gameState = gameContext.state();
         //TODO rethink
         if (gameState instanceof TestState) {
             playScene3D.replaceGameLevel3D(gameContext, level);
@@ -174,7 +174,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         final GameLevel3D level3D = assertLevel3D();
         final GameContext gameContext = gameContext();
         appContext().currentSoundEffects().ifPresent(GameSoundEffects::stopSiren);
-        if (!gameContext.gameRules().isLevelCompleted(level3D.level())) {
+        if (!gameContext.rules().isLevelCompleted(level3D.level())) {
             level3D.entities().pac3D().setPowerMode(true);
             level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
                 .ifPresent(ManagedAnimation::playFromStart);
@@ -229,9 +229,9 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         level3D.entities().ghosts3D().forEach(Ghost3D::stopAllAnimations);
         level3D.entities().selectAllOfType(Bonus3D.class).forEach(Bonus3D::lookExpired);
 
-        gameContext().gameState().lock();
+        gameContext().state().lock();
         final Animation dyingAnimationSeq = createPacDyingAnimationSeq(level3D.animationRegistry(), pac3D, level3D.level());
-        dyingAnimationSeq.setOnFinished(_ -> gameContext().gameState().expire());
+        dyingAnimationSeq.setOnFinished(_ -> gameContext().state().expire());
         dyingAnimationSeq.play();
     }
 
@@ -300,11 +300,11 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         final Optional<ManagedAnimation> levelEndAnimation = animationRegistry.optAnimation(animationID);
 
         if (levelEndAnimation.isEmpty()) {
-            Ufx.pauseSecThen(2, () -> gameContext().gameState().expire()).play();
+            Ufx.pauseSecThen(2, () -> gameContext().state().expire()).play();
             return;
         }
 
-        gameContext().gameState().lock();
+        gameContext().state().lock();
 
         final PerspectiveID perspectiveBeforeAnimation = AppConstants.PROPERTY_3D_PERSPECTIVE_ID.get();
 
@@ -323,7 +323,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
             levelEndAnimation.get().animationFX(),
             restoreCameraPerspective
         );
-        seq.setOnFinished(_ -> gameContext().gameState().expire());
+        seq.setOnFinished(_ -> gameContext().state().expire());
 
         seq.play();
     }

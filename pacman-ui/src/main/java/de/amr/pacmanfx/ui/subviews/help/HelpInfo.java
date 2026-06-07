@@ -28,8 +28,8 @@ public class HelpInfo {
 
     public static HelpInfo build(AppContext appContext) {
         final GameContext gameContext = appContext.currentGameContext();
-        final GameModel game = appContext.currentGameContext().gameModel();
-        final GameState state = appContext.currentGameContext().gameState();
+        final GameModel game = appContext.currentGameContext().model();
+        final GameState state = appContext.currentGameContext().state();
         final boolean demoLevel = game.isDemoLevelRunning();
 
         final HelpInfo helpInfo = new HelpInfo(appContext);
@@ -83,7 +83,7 @@ public class HelpInfo {
         pane.setBackground(UfxBackgrounds.roundedBackground(backgroundColor, 10));
 
         final GameContext gameContext = appContext.currentGameContext();
-        final GameCheats cheats = gameContext.gameModel().cheats();
+        final GameCheats cheats = gameContext.model().cheats();
 
         // add default entries:
         if (cheats.isPacUsingAutopilot()) {

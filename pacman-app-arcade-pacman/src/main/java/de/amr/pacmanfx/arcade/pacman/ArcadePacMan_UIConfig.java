@@ -121,8 +121,8 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             appContext.ui().sounds().stopAndDisposeVoice();
             appContext.ui().sounds().setEnabled(true);
             slot.insertCoin();
-            gameContext.gameFlow().publishGameEvent(new CreditAddedEvent(gameContext, 1));
-            gameContext.gameFlow().enterState(GameStateID.GAME_PREPARATION);
+            gameContext.flow().publishGameEvent(new CreditAddedEvent(gameContext, 1));
+            gameContext.flow().enterState(GameStateID.GAME_PREPARATION);
         }
 
         @Override
@@ -133,10 +133,10 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             }
             final GameContext gameContext = appContext.currentGameContext();
             // In demo level, coin can always be inserted
-            if (gameContext.gameModel().isDemoLevelRunning()) {
+            if (gameContext.model().isDemoLevelRunning()) {
                 return true;
             }
-            final GameState gameState = gameContext.gameState();
+            final GameState gameState = gameContext.state();
             return GameStateID.GAME_INTRO.identifies(gameState) || GameStateID.GAME_PREPARATION.identifies(gameState);
         }
     };
@@ -145,7 +145,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         @Override
         public void doAction(AppContext context) {
             context.ui().sounds().stopAndDisposeVoice();
-            context.currentGameContext().gameFlow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
+            context.currentGameContext().flow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
         }
 
         @Override
@@ -155,8 +155,8 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
                 return false;
             }
             final GameContext gameContext = appContext.currentGameContext();
-            final GameModel gameModel = gameContext.gameModel();
-            final GameState gameState = gameContext.gameState();
+            final GameModel gameModel = gameContext.model();
+            final GameState gameState = gameContext.state();
             return (GameStateID.GAME_INTRO.identifies(gameState) || GameStateID.GAME_PREPARATION.identifies(gameState))
                 && gameModel.canStartNewGame(gameContext);
         }
