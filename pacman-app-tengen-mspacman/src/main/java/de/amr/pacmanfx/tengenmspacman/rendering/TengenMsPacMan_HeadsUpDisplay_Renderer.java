@@ -61,7 +61,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         ctx.save();
         ctx.translate(0, scaled(computeOffsetY(scene)));
 
-        if (hud.isScoreVisible()) {
+        if (hud.isScoreOn()) {
             // blink frequency = 1Hz (30 ticks on, 30 ticks off)
             final boolean on = scene.appContext().gameClock().tickCount() % 60 < 30;
             drawScore(game.score(), on, arcadeFont8());
@@ -76,17 +76,17 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
 
         final int counterY = scene.getUnscaledHeight() - TS;
 
-        if (hud.isLivesCounterVisible()) {
+        if (hud.isLivesCounterOn()) {
             drawLivesCounter(tengenGame, tengenHUD, counterY);
         }
 
         game.optGameLevel().ifPresent(level -> {
-            if (tengenHUD.isLevelCounterVisible()) {
+            if (tengenHUD.isLevelCounterOn()) {
                 drawLevelCounter(level, tengenHUD, counterY);
             }
         });
 
-        if (tengenHUD.gameOptionsVisible()) {
+        if (tengenHUD.areGameOptionsOn()) {
             drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBoosterMode(), TS(16), TS(2.5f));
         }
 
@@ -135,7 +135,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             }
             x -= TS(2);
         }
-        if (hud.levelNumberVisible()) {
+        if (hud.isLevelNumberOn()) {
             drawLevelNumberBox(level.number(), LEVEL_COUNTER_POS_LEFT, y); // left box
             drawLevelNumberBox(level.number(), LEVEL_COUNTER_POS_RIGHT, y); // right box
         }

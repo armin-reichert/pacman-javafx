@@ -52,7 +52,7 @@ public class LevelShortTestState extends GameState implements TestState {
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
             gameModel.showLevelMessage(level, GameLevelMessageType.READY);
-            gameModel.hud().credit(false).livesCounter(true);
+            gameModel.hud().creditOff().livesCounterOn();
 
             GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
             message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());

@@ -14,13 +14,7 @@ public class GameIntroState extends GameState {
 
     @Override
     public void onEnter(GameContext context) {
-        context.gameModel().hud()
-            .levelCounter(true)
-            .livesCounter(false)
-            .credit(true)
-            .score(true)
-            .show();
-
+        context.gameModel().hud().levelCounterOn().livesCounterOff().creditOn().scoreOn().show();
         lock();
     }
 

@@ -45,7 +45,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
 
         if (!hud.isVisible()) return;
 
-        if (hud.isScoreVisible()) {
+        if (hud.isScoreOn()) {
             drawScore(game.score(), SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, TS(1), TS(1));
 
             final Score highScore = game.highScore();
@@ -56,7 +56,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
             drawScore(highScore, HIGH_SCORE_TEXT, arcadeFont8(), color, TS(14), TS(1));
         }
 
-        if (hud.isLevelCounterVisible()) {
+        if (hud.isLevelCounterOn()) {
             final RectShort[] bonusSymbols = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
             float x = scene.getUnscaledWidth() - TS(4);
             final float y = scene.getUnscaledHeight() - TS(2) + 2;
@@ -66,7 +66,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
             }
         }
 
-        if (hud.isLivesCounterVisible()) {
+        if (hud.isLivesCounterOn()) {
             final RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             final float x = TS(2);
             final float y = scene.getUnscaledHeight() - TS(2);
@@ -81,7 +81,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
             }
         }
 
-        if (hud.isCreditVisible()) {
+        if (hud.isCreditOn()) {
             fillText("CREDIT %2d".formatted(hud.credit()), ARCADE_WHITE, arcadeFont8(), TS(2), scene.getUnscaledHeight());
         }
     }

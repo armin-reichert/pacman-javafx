@@ -7,26 +7,36 @@ import de.amr.pacmanfx.model.HUDState;
 
 public class TengenMsPacMan_HUDState extends HUDState {
 
-    private boolean levelNumberVisible;
-    private boolean gameOptionsVisible;
+    private boolean levelNumberOn;
+    private boolean gameOptionsOn;
 
     public TengenMsPacMan_HUDState() {}
 
-    public TengenMsPacMan_HUDState gameOptions(boolean visible) {
-        gameOptionsVisible = visible;
+    public TengenMsPacMan_HUDState gameOptionsOn() {
+        gameOptionsOn = true;
         return this;
     }
 
-    public boolean gameOptionsVisible() {
-        return gameOptionsVisible;
-    }
-
-    public TengenMsPacMan_HUDState levelNumber(boolean visible) {
-        levelNumberVisible = visible;
+    public TengenMsPacMan_HUDState gameOptionsOff() {
+        gameOptionsOn = false;
         return this;
     }
 
-    public boolean levelNumberVisible() {
-        return levelNumberVisible;
+    public boolean areGameOptionsOn() {
+        return gameOptionsOn;
+    }
+
+    public TengenMsPacMan_HUDState levelNumberOn() {
+        levelNumberOn = true;
+        return this;
+    }
+
+    public TengenMsPacMan_HUDState levelNumberOff() {
+        levelNumberOn = false;
+        return this;
+    }
+
+    public boolean isLevelNumberOn() {
+        return levelNumberOn;
     }
 }
