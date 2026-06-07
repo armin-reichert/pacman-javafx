@@ -32,6 +32,10 @@ public interface GameContext {
         return gameModel().optGameLevel();
     }
 
+    default GameLevel requireGameLevel() {
+        return gameModel().optGameLevel().orElseThrow(IllegalStateException::new);
+    }
+
     boolean isCollisionDoubleChecked();
 
     CollisionStrategy collisionStrategy();

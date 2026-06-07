@@ -100,9 +100,8 @@ public enum Arcade_GameState {
 
         @Override
         public void onEnter(GameContext gameContext) {
-            final GameFlow flow = gameContext.gameFlow();
             final GameModel game = gameContext.gameModel();
-            final GameLevel level = game.optGameLevel().orElseThrow();
+            final GameLevel level = gameContext.requireGameLevel();
 
             game.prepareLevelForPlaying(level);
             level.entities().pac().show();
@@ -110,8 +109,6 @@ public enum Arcade_GameState {
 
             game.showLevelMessage(level, GameLevelMessageType.READY);
             game.hud().credit(false).livesCounter(true);
-
-            flow.publishGameEvent(new GameContinuedEvent(gameContext));
         }
 
         @Override
@@ -119,7 +116,7 @@ public enum Arcade_GameState {
             final GameFlow flow = gameContext.gameFlow();
             final long tick = timer().tickCount();
 
-            if (tick == 60) {
+            if (tick == Timing.TICK_CONTINUE_LEVEL) {
                 flow.publishGameEvent(new GameContinuedEvent(gameContext));
             }
             else if (tick == Timing.TICK_RESUME_HUNTING) {
@@ -171,7 +168,7 @@ public enum Arcade_GameState {
         @Override
         public void onEnter(GameContext gameContext) {
             final GameModel game = gameContext.gameModel();
-            final GameLevel level = game.optGameLevel().orElseThrow();
+            final GameLevel level = gameContext.requireGameLevel();
             timer().restartTicks(level.gameOverStateTicks());
             game.onGameOver(gameContext, level);
         }
@@ -182,7 +179,7 @@ public enum Arcade_GameState {
             final GameModel game = gameContext.gameModel();
 
             if (timer().hasExpired()) {
-                final GameLevel level = game.optGameLevel().orElseThrow();
+                final GameLevel level = gameContext.requireGameLevel();
                 level.clearMessage();
                 game.cheats().clear();
                 if (game.canStartNewGame(gameContext)) {
@@ -235,5 +232,6 @@ public enum Arcade_GameState {
         public static final short TICK_NEW_GAME_SHOW_GUYS = 60;
         public static final short TICK_NEW_GAME_START_HUNTING = 240;
         public static final short TICK_RESUME_HUNTING = 120;
+        public static final int TICK_CONTINUE_LEVEL = 60;
     }
 }
