@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
-import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
@@ -96,8 +95,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     @Override
     public void onTick(long tick) {
         final UIConfig uiConfig = appContext().currentUIConfig();
-        final GameState gameState = gameContext().state();
-        final long gameStateTick = gameState.timer().tickCount();
+        final long gameStateTick = gameState().timer().tickCount();
 
         clapperboard.tick();
 

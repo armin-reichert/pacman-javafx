@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 
@@ -33,12 +32,11 @@ public class Arcade_BootScene2D extends GameScene2D {
 
     @Override
     public void onTick(long tick) {
-        final GameState gameState = gameContext().state();
-        switch ((int) gameState.timer().tickCount()) {
+        switch ((int) gameState().timer().tickCount()) {
             case  60 -> sceneState = SceneState.HEX_CODES;
             case 120 -> sceneState = SceneState.RANDOM_SPRITE_FRAGMENTS;
             case 210 -> sceneState = SceneState.GRID;
-            case 240 -> gameState.expire();
+            case 240 -> gameState().expire();
         }
     }
 }

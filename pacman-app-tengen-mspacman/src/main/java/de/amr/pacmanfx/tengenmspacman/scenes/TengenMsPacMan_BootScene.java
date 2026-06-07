@@ -3,9 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
-import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -43,7 +41,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     public void onTick(long tick) {
-        final GameState gameState = gameContext().state();
+        final GameState gameState = gameState();
         final int t = (int) gameState.timer().tickCount();
         switch (t) {
             case   1 -> gray(false);

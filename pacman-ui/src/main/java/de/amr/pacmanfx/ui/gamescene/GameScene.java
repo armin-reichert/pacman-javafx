@@ -7,6 +7,8 @@ package de.amr.pacmanfx.ui.gamescene;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEventListener;
+import de.amr.pacmanfx.gamestate.GameState;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import de.amr.pacmanfx.ui.app.AppContext;
@@ -42,6 +44,14 @@ public abstract class GameScene implements Disposable {
 
     public GameContext gameContext() {
         return appContext.currentGameContext();
+    }
+
+    public GameModel gameModel() {
+        return gameContext().model();
+    }
+
+    public GameState gameState() {
+        return gameContext().state();
     }
 
     public void setGameEventHandler(GameEventListener delegate) {

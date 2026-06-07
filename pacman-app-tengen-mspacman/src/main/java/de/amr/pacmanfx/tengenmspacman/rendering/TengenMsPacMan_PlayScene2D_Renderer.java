@@ -3,8 +3,6 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.basics.fsm.State;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -46,8 +44,8 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
         @Override
         public void draw(GameScene2D scene) {
-            final GameModel game = scene.gameContext().model();
-            final GameState gameState = scene.gameContext().state();
+            final GameModel game = scene.gameModel();
+            final GameState gameState = scene.gameState();
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
 
             drawTileGrid(NES_SCREEN_WIDTH, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
@@ -95,7 +93,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         if (!(scene instanceof TengenMsPacMan_PlayScene2D playScene2D)) {
             return;
         }
-        final GameModel game = playScene2D.gameContext().model();
+        final GameModel game = playScene2D.gameModel();
         final long tick = playScene2D.appContext().gameClock().tickCount();
 
         game.optGameLevel().ifPresent(level -> {

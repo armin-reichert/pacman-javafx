@@ -3,11 +3,8 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
-import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
@@ -92,8 +89,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void onTick(long tick) {
-        final GameState gameState = gameContext().state();
-        final long gameStateTick = gameState.timer().tickCount();
+        final long gameStateTick = gameState().timer().tickCount();
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {
                 case 270 -> {
@@ -153,7 +149,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setSpeed(4.0f);
                 }
-                case 1380 -> gameState.expire();
+                case 1380 -> gameState().expire();
             }
 
             pacMan.move();

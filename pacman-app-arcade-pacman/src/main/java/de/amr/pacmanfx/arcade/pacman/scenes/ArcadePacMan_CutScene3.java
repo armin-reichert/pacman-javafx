@@ -57,7 +57,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
             startBlinkyRunningNaked();
         }
         else if (sceneTick == TICK_ANIMATION_ENDS) {
-            gameContext().state().expire();
+            gameState().expire();
             return;
         }
         pacMan.move();

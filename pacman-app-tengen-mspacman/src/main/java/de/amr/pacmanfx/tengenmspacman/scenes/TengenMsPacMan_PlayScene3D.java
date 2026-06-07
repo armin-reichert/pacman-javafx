@@ -40,10 +40,9 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void decorate(GameLevel3D level3D) {
-        final GameModel gameModel = gameContext().model();
-        if (!(gameModel instanceof TengenMsPacMan_GameModel tengenGameModel)) {
+        if (!(gameModel() instanceof TengenMsPacMan_GameModel tengenGameModel)) {
             throw new IllegalStateException("Cannot use Tengen play scene 3D in game of class %s"
-                .formatted(gameModel.getClass().getSimpleName()));
+                .formatted(gameModel().getClass().getSimpleName()));
         }
         // If any of the default level settings has been changed, display the level info
         gameContext().optCurrentLevel().ifPresent(level -> {
