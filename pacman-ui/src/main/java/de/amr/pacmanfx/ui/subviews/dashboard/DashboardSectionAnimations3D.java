@@ -109,9 +109,9 @@ public class DashboardSectionAnimations3D extends DashboardSection {
     public void update() {
         super.update();
 
-        if (dashboard.context() != null) {
+        if (dashboard.appContext() != null) {
             final AnimationRegistry animationSet =
-                dashboard.context().ui().gameScenes().optCurrentGameScene()
+                dashboard.appContext().ui().gameScenes().optCurrentGameScene()
                     .filter(PlayScene3D.class::isInstance)
                     .map(PlayScene3D.class::cast)
                     .flatMap(PlayScene3D::optGameLevel3D)

@@ -56,7 +56,7 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onUpdate(GameContext gameContext) {
             if (timer().hasExpired()) {
-                gameContext.gameFlow().enterState(GAME_INTRO.state());
+                gameContext.gameFlow().enterState(GameStateID.GAME_INTRO);
             }
         }
     }),

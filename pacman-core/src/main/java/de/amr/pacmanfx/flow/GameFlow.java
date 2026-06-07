@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.gamestate.GameState;
+import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.gamestate.GameStateIdentifier;
 
 import java.util.Objects;
@@ -40,6 +41,10 @@ public interface GameFlow {
     void restartState(State<GameContext> gameState);
 
     void restartState(String stateName);
+
+    default void restartState(GameStateID gameStateID) {
+        restartState(gameStateID.name());
+    }
 
     void makeStep();
 

@@ -93,7 +93,7 @@ public class LevelMediumTestState extends GameState implements TestState {
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
                 gameContext.gameFlow().publishGameEvent(new StopAllSoundsEvent(gameContext));
-                gameContext.gameFlow().enterState(GameStateID.GAME_INTRO.name());
+                gameContext.gameFlow().enterState(GameStateID.GAME_INTRO);
             }
             else {
                 timer().restartSeconds(TEST_DURATION_SEC);
@@ -102,7 +102,7 @@ public class LevelMediumTestState extends GameState implements TestState {
             }
         }
         else if (gameContext.gameRules().isLevelCompleted(level)) {
-            gameContext.gameFlow().enterState(GameStateID.GAME_INTRO.name());
+            gameContext.gameFlow().enterState(GameStateID.GAME_INTRO);
         }
         else if (pacKilled) {
             expire();

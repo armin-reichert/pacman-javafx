@@ -36,7 +36,7 @@ public class CutScenesTestState extends GameState implements TestState {
                 //TODO find another solution and get rid of this event type
                 gameContext.gameFlow().publishGameEvent(new GenericChangeEvent(gameContext, "Cut Scene Test"));
             } else {
-                gameContext.gameFlow().enterState(GameStateID.GAME_INTRO.name());
+                gameContext.gameFlow().enterState(GameStateID.GAME_INTRO);
             }
         }
     }

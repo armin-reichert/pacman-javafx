@@ -27,8 +27,8 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
     @Override
     public void update() {
         super.update();
-        if (dashboard.context() != null) {
-            updateTableForCurrentSubView(dashboard.context());
+        if (dashboard.appContext() != null) {
+            updateTableForCurrentSubView(dashboard.appContext());
         }
     }
 

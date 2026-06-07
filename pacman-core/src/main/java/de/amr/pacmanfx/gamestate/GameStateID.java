@@ -4,10 +4,6 @@
 
 package de.amr.pacmanfx.gamestate;
 
-import de.amr.basics.fsm.State;
-
-import static java.util.Objects.requireNonNull;
-
 /**
  * Enumeration of game state identifiers.
  *
@@ -29,9 +25,4 @@ public enum GameStateID implements GameStateIdentifier {
     GAME_LEVEL_PACMAN_DYING,
     GAME_LEVEL_INTERMISSION,
     GAME_OVER;
-
-    public boolean identifies(State<?> gameState) {
-        requireNonNull(gameState);
-        return gameState.name().equals(name());
-    }
 }

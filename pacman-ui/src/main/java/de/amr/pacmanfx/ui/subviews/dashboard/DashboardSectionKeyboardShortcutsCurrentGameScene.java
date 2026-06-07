@@ -25,8 +25,8 @@ public class DashboardSectionKeyboardShortcutsCurrentGameScene extends Dashboard
     @Override
     public void update() {
         super.update();
-        if (dashboard.context() != null) {
-            updateTableForCurrentGameScene(dashboard.context());
+        if (dashboard.appContext() != null) {
+            updateTableForCurrentGameScene(dashboard.appContext());
         }
     }
 

@@ -6,12 +6,12 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.action.TestActions;
+import de.amr.pacmanfx.ui.app.AppContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -67,42 +67,32 @@ public class DashboardSectionGameControl extends DashboardSection {
     public void update() {
         super.update();
 
-        if (dashboard.context() != null) {
-            final GameContext gameContext = dashboard.context().currentGameContext();
-            final AbstractGameModel gameModel = (AbstractGameModel) gameContext.gameModel();
-            final State<GameContext> state = dashboard.context().currentGameContext().gameState();
+        if (dashboard.appContext() != null) {
+            final GameContext gameContext = dashboard.appContext().currentGameContext();
+            final GameModel gameModel = gameContext.gameModel();
+            final GameState gameState = gameContext.gameState();
 
             choiceBoxInitialLives.setValue(gameModel.lives().initialCount());
-            choiceBoxInitialLives.setDisable(!state.nameIsOneOf(GameStateID.GAME_INTRO.name()));
+            choiceBoxInitialLives.setDisable(!GameStateID.GAME_INTRO.identifies(gameState));
 
-            final boolean creditDisabled = !state.nameIsOneOf(
-                GameStateID.GAME_INTRO.name(),
-                GameStateID.GAME_PREPARATION.name()
-            );
+            final boolean creditDisabled = !gameState.isOneOf(GameStateID.GAME_INTRO, GameStateID.GAME_PREPARATION);
             spinnerCredit.setDisable(creditDisabled);
 
-            final boolean booting = isBooting(state);
-            buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(gameContext, gameModel, state));
-            buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(booting || gameModel.optGameLevel().isEmpty());
-            buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(booting || !canEnterNextLevel(gameModel, state));
+            final boolean booting = GameStateID.BOOT.identifies(gameState);
+            buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(gameContext, gameModel, gameState));
+            buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(gameModel, gameState));
+            buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || gameModel.optGameLevel().isEmpty());
 
-            buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !state.nameIsOneOf(GameStateID.GAME_INTRO.name()));
-            buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(state instanceof CutScenesTestState));
+            buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !GameStateID.GAME_INTRO.identifies(gameState));
+            buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(gameState instanceof CutScenesTestState));
 
-            cbCollisionCheckedTwice.setSelected(dashboard.context().currentGameContext().isCollisionDoubleChecked());
+            cbCollisionCheckedTwice.setSelected(gameContext.isCollisionDoubleChecked());
         }
     }
 
-    private boolean isBooting(State<?> state) {
-        return state.name().equals(GameStateID.BOOT.name());
-    }
-
-    private boolean canStartLevel(GameContext gameContext, GameModel game, State<GameContext> state) {
+    private boolean canStartLevel(GameContext gameContext, GameModel game, GameState gameState) {
         return game.canStartNewGame(gameContext)
-            && state.nameIsOneOf(
-                GameStateID.GAME_INTRO.name(),
-                GameStateID.GAME_PREPARATION.name()
-        );
+            && gameState.isOneOf(GameStateID.GAME_INTRO, GameStateID.GAME_PREPARATION);
     }
 
     private boolean canEnterNextLevel(GameModel game, State<GameContext> state) {

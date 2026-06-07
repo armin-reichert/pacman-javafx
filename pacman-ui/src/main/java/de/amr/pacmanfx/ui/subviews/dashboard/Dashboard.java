@@ -108,7 +108,7 @@ public class Dashboard {
         return config;
     }
 
-    public AppContext context() {
+    public AppContext appContext() {
         return context;
     }
 

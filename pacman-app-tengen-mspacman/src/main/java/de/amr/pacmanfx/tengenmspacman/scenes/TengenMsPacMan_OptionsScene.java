@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
+import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
@@ -103,7 +104,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            appContext().currentGameContext().gameFlow().enterState(TengenMsPacMan_GameState.GAME_INTRO.state());
+            appContext().currentGameContext().gameFlow().enterState(GameStateID.GAME_INTRO);
         }
     }
 

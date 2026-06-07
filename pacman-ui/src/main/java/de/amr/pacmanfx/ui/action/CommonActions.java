@@ -161,7 +161,7 @@ public final class CommonActions {
             if (isLevelShortTest) {
                 gameState.onExit(appContext.currentGameContext()); //TODO exit other states too?
             }
-            gameContext.gameFlow().restartState(GameStateID.GAME_INTRO.name());
+            gameContext.gameFlow().restartState(GameStateID.GAME_INTRO);
             appContext.gameClock().start();
         }
     };

@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.basics.fsm.State;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
@@ -13,15 +12,17 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.event.CreditAddedEvent;
+import de.amr.pacmanfx.gamestate.GameState;
+import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.GameAction;
+import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -47,8 +48,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import static de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState.GAME_INTRO;
-import static de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState.GAME_PREPARATION;
 import static de.amr.pacmanfx.core.Globals.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
@@ -123,7 +122,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             appContext.ui().sounds().setEnabled(true);
             slot.insertCoin();
             gameContext.gameFlow().publishGameEvent(new CreditAddedEvent(gameContext, 1));
-            gameContext.gameFlow().enterState(GAME_PREPARATION.state());
+            gameContext.gameFlow().enterState(GameStateID.GAME_PREPARATION);
         }
 
         @Override
@@ -137,8 +136,8 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             if (gameContext.gameModel().isDemoLevelRunning()) {
                 return true;
             }
-            final State<GameContext> gameState = gameContext.gameState();
-            return gameState == GAME_INTRO.state() || gameState == GAME_PREPARATION.state();
+            final GameState gameState = gameContext.gameState();
+            return GameStateID.GAME_INTRO.identifies(gameState) || GameStateID.GAME_PREPARATION.identifies(gameState);
         }
     };
 
@@ -157,8 +156,8 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
             }
             final GameContext gameContext = appContext.currentGameContext();
             final GameModel gameModel = gameContext.gameModel();
-            final State<GameContext> gameState = appContext.currentGameContext().gameState();
-            return (gameState == GAME_INTRO.state() || gameState == GAME_PREPARATION.state())
+            final GameState gameState = gameContext.gameState();
+            return (GameStateID.GAME_INTRO.identifies(gameState) || GameStateID.GAME_PREPARATION.identifies(gameState))
                 && gameModel.canStartNewGame(gameContext);
         }
     };

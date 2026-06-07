@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.GameContext;
 import org.tinylog.Logger;
 
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class GameState implements State<GameContext> {
 
@@ -24,6 +25,10 @@ public class GameState implements State<GameContext> {
     public GameState(GameStateIdentifier id) {
         this.name = Objects.requireNonNull(id).name();
         this.timer = new TickTimer("GameStateTimer-" + getClass().getSimpleName());
+    }
+
+    public boolean isOneOf(GameStateID... ids) {
+        return Stream.of(ids).map(GameStateID::name).anyMatch(idName -> idName.equals(this.name));
     }
 
     @Override
@@ -50,5 +55,4 @@ public class GameState implements State<GameContext> {
     public TickTimer timer() {
         return timer;
     }
-
 }
