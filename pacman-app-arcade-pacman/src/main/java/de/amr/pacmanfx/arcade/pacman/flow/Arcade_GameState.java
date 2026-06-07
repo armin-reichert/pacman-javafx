@@ -85,7 +85,7 @@ public enum Arcade_GameState {
                 gameModel.startLevel(gameContext);
             }
             else if (tick == Timing.TICK_NEW_GAME_SHOW_GUYS) {
-                final GameLevel level = gameModel.optGameLevel().orElseThrow();
+                final GameLevel level = gameContext.requireGameLevel();
                 level.entities().pac().show();
                 level.entities().ghosts().forEach(Ghost::show);
             }
@@ -133,14 +133,14 @@ public enum Arcade_GameState {
         public void onEnter(GameContext gameContext) {
             final GameModel game = gameContext.gameModel();
             lock(); // UI triggers timeout
-            game.onLevelCompleted(game.optGameLevel().orElseThrow());
+            game.onLevelCompleted(gameContext.requireGameLevel());
         }
 
         @Override
         public void onUpdate(GameContext gameContext) {
             final GameFlow flow = gameContext.gameFlow();
             final GameModel gameModel = gameContext.gameModel();
-            final GameLevel level = gameModel.optGameLevel().orElseThrow();
+            final GameLevel level = gameContext.requireGameLevel();
 
             if (timer().hasExpired()) {
                 if (level.isDemoLevel()) {
@@ -228,10 +228,10 @@ public enum Arcade_GameState {
     }
 
     public static class Timing {
-        public static final short TICK_NEW_GAME_START_LEVEL = 2;
-        public static final short TICK_NEW_GAME_SHOW_GUYS = 60;
-        public static final short TICK_NEW_GAME_START_HUNTING = 240;
-        public static final short TICK_RESUME_HUNTING = 120;
+        public static final int TICK_NEW_GAME_START_LEVEL = 2;
+        public static final int TICK_NEW_GAME_SHOW_GUYS = 60;
+        public static final int TICK_NEW_GAME_START_HUNTING = 240;
+        public static final int TICK_RESUME_HUNTING = 120;
         public static final int TICK_CONTINUE_LEVEL = 60;
     }
 }
