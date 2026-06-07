@@ -69,8 +69,7 @@ public class GameLevelPacManDyingState extends GameState {
             } else {
                 gameModel.lives().add(-1);
                 gameContext.flow().enterState(gameModel.lives().count() == 0
-                    ? GameStateID.GAME_OVER
-                    : GameStateID.GAME_OR_LEVEL_STARTING);
+                    ? GameStateID.GAME_OVER : GameStateID.GAME_OR_LEVEL_STARTING);
             }
         }
         else if (tick == timings.hideGhostsTick()) {

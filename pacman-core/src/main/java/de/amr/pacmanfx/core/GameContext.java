@@ -33,7 +33,7 @@ public interface GameContext {
     }
 
     default GameLevel requireLevel() {
-        return model().optGameLevel().orElseThrow(IllegalStateException::new);
+        return optCurrentLevel().orElseThrow(IllegalStateException::new);
     }
 
     boolean isCollisionDoubleChecked();
