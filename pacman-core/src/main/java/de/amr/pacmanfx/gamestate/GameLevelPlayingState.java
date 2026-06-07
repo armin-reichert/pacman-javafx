@@ -6,12 +6,12 @@ package de.amr.pacmanfx.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.simulation.HuntingCollisionDetector;
 import de.amr.pacmanfx.simulation.HuntingResolver;
-import de.amr.pacmanfx.simulation.HuntingStateTransitions;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 
@@ -57,10 +57,23 @@ public class GameLevelPlayingState extends GameState {
         logHuntingStep(gameContext);
 
         // State transition
-        final GameStateID nextStateID = HuntingStateTransitions
-            .computeNextState(gameContext.huntingResult(), gameContext.gameRules(), level);
+        final GameStateID nextStateID = computeNextState(gameContext.huntingResult(), gameContext.gameRules(), level);
         gameContext.gameFlow().enterState(nextStateID.name());
     }
+
+    private GameStateID computeNextState(HuntingStepResult result, GameRules rules, GameLevel level) {
+        if (rules.isLevelCompleted(level)) {
+            return GameStateID.GAME_LEVEL_COMPLETE;
+        }
+        else if (result.pacKilled()) {
+            return GameStateID.GAME_LEVEL_PACMAN_DYING;
+        }
+        else if (result.hasGhostBeenKilled()) {
+            return GameStateID.GAME_LEVEL_EATING_GHOST;
+        }
+        return GameStateID.GAME_LEVEL_PLAYING;
+    }
+
 
     private void logHuntingStep(GameContext context) {
         final var report = HuntingStepResult.createReport(context.huntingResult());
