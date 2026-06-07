@@ -91,7 +91,6 @@ public class PacManGames3dApp extends Application {
     );
 
     private AppContext app;
-    private PacManXXL_MapSelector xxlMapSelector;
 
     private boolean useBuilder;
     private boolean includeTests;
@@ -100,7 +99,6 @@ public class PacManGames3dApp extends Application {
     public void init() {
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
-        xxlMapSelector = new PacManXXL_MapSelector();
     }
 
     @Override
@@ -138,7 +136,7 @@ public class PacManGames3dApp extends Application {
                     .game(
                         ARCADE_PACMAN_XXL,
                         Arcade_GameFlow::new,
-                        () -> new PacManXXL_PacMan_GameModel(xxlMapSelector),
+                        PacManXXL_PacMan_GameModel::new,
                         PacManXXL_PacMan_GameRules::new,
                         PacManXXL_PacMan_UIConfig::new
                     )
@@ -146,7 +144,7 @@ public class PacManGames3dApp extends Application {
                     .game(
                         ARCADE_MS_PACMAN_XXL,
                         Arcade_GameFlow::new,
-                        () -> new PacManXXL_MsPacMan_GameModel(xxlMapSelector),
+                        PacManXXL_MsPacMan_GameModel::new,
                         PacManXXL_MsPacMan_GameRules::new,
                         PacManXXL_MsPacMan_UIConfig::new
                     )
@@ -172,9 +170,14 @@ public class PacManGames3dApp extends Application {
             }
 
             configureDashboard();
-            Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
 
+            final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
             app.watchdog().addEventListener(xxlMapSelector);
+
+            app.gamesContainer().gameForVariant(GameVariant.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
+            app.gamesContainer().gameForVariant(GameVariant.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
+
+            Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
         }
         catch (RuntimeException x) {
             Logger.error(x, "An error occurred starting the game.");
@@ -228,14 +231,14 @@ public class PacManGames3dApp extends Application {
 
                 case ARCADE_PACMAN_XXL -> new GameSpecification(
                     Arcade_GameFlow::new,
-                    new PacManXXL_PacMan_GameModel(xxlMapSelector),
+                    new PacManXXL_PacMan_GameModel(),
                     new PacManXXL_PacMan_GameRules(),
                     includeTests
                 );
 
                 case ARCADE_MS_PACMAN_XXL -> new GameSpecification(
                     Arcade_GameFlow::new,
-                    new PacManXXL_MsPacMan_GameModel(xxlMapSelector),
+                    new PacManXXL_MsPacMan_GameModel(),
                     new PacManXXL_MsPacMan_GameRules(),
                     includeTests
                 );

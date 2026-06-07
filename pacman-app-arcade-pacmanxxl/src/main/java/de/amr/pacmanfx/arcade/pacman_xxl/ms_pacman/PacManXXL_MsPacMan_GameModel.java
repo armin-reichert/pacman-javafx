@@ -11,7 +11,6 @@ import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
-import de.amr.pacmanfx.model.world.WorldMapSelector;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 
@@ -19,9 +18,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
     private static final int[] DEMO_LEVEL_NUMBERS = { 1, 3, 6, 10, 14, 18 };
 
-    public PacManXXL_MsPacMan_GameModel(WorldMapSelector mapSelector) {
-        super(mapSelector);
-    }
+    public PacManXXL_MsPacMan_GameModel() {}
 
     @Override
     public PacManXXL_MapSelector mapSelector() { return (PacManXXL_MapSelector) mapSelector; }

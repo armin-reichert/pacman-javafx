@@ -81,6 +81,10 @@ public abstract class AbstractGameModel implements GameModel {
         cheats = new DefaultCheatsImpl();
     }
 
+    public void setMapSelector(WorldMapSelector mapSelector) {
+        this.mapSelector =  requireNonNull(mapSelector);
+    }
+
     /* -------------------------------------------------------------------------
      * GameModel interface implementation
      * ---------------------------------------------------------------------- */
@@ -459,6 +463,7 @@ public abstract class AbstractGameModel implements GameModel {
 
         score.setPoints(newScore);
     }
+
     protected void updateHighScore() {
         if (highScore == null) {
             Logger.error("Cannot update high-score, no high-score file has been assigned");
@@ -474,5 +479,4 @@ public abstract class AbstractGameModel implements GameModel {
             Logger.error(x, "Could not update high-score");
         }
     }
-
 }
