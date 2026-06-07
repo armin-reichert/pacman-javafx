@@ -14,6 +14,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.event.CreditAddedEvent;
+import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui.app.AppConstants;
 import de.amr.pacmanfx.ui.app.AppContext;
@@ -351,7 +352,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.ghosts[ORANGE_GHOST_POKEY].hide();
-                    scene.appContext().currentGameContext().flow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
+                    scene.gameContext().flow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
                 }
             }
         };

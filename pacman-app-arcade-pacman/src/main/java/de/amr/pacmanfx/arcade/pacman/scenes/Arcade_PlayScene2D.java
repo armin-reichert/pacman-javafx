@@ -84,7 +84,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public void onEnteredFrom3DScene() {
-        appContext().currentGameContext().optCurrentLevel().ifPresent(this::acceptGameLevel);
+        gameContext().optCurrentLevel().ifPresent(this::acceptGameLevel);
     }
 
     // Others

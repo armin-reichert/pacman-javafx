@@ -147,7 +147,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         decorate(level3D);
         level3DParent.getChildren().setAll(level3D);
 
-        level3D.entities().selectAll().forEach(entity -> entity.init(appContext().currentGameContext(), level));
+        level3D.entities().selectAll().forEach(entity -> entity.init(gameContext, level));
         level3D.startLivesCounterTrackingPac();
 
         level3D.createAnimations(AppConstants.DEFAULT_PARTICLE_ANIMATION_CONFIG);
@@ -195,8 +195,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onTick(long tick) {
-        final GameContext gameContext = appContext().currentGameContext();
-        final GameLevel level = gameContext.optCurrentLevel().orElse(null);
+        final GameLevel level = gameContext().optCurrentLevel().orElse(null);
 
         if (level == null) {
             Logger.info("Tick {}: Game level not yet created, update ignored", tick);
@@ -208,12 +207,12 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             return;
         }
 
-        level3D.entities().selectAll().forEach(entity -> entity.update(gameContext, level));
+        level3D.entities().selectAll().forEach(entity -> entity.update(gameContext(), level));
         updateHUD3D(level);
         perspectives.updatePerspective(level);
         appContext().currentSoundEffects().ifPresent(soundEffects -> {
             soundEffects.setEnabled(!level.isDemoLevel());
-            soundEffects.playLevelRunningSound(gameContext, level);
+            soundEffects.playLevelRunningSound(gameContext(), level);
         });
     }
 

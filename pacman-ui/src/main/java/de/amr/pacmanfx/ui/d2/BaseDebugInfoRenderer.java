@@ -7,6 +7,7 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -34,11 +35,11 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
 
     @Override
     public void draw(GameScene2D scene) {
-        final State<GameContext> state = scene.appContext().currentGameContext().state();
+        final GameState gameState = scene.gameContext().state();
         final String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
-            state.name(),
-            state.timer().tickCount(),
-            state.timer().durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(state.timer().tickCount())
+            gameState.name(),
+            gameState.timer().tickCount(),
+            gameState.timer().durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(gameState.timer().tickCount())
         );
         ctx.setFill(debugTextFill);
         ctx.setStroke(debugTextStroke);

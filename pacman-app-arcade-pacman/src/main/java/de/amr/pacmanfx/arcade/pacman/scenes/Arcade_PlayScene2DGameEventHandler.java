@@ -48,8 +48,8 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
 
     @Override
     public void onGameStarted(GameStartedEvent e) {
-        final boolean silent = appContext().currentGameContext().model().isDemoLevelRunning() ||
-            appContext().currentGameContext().state() instanceof TestState;
+        final boolean silent = gameContext().model().isDemoLevelRunning() ||
+            gameContext().state() instanceof TestState;
         if (!silent) {
             appContext().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -64,7 +64,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
             playScene2D.levelCompletedAnimation().play();
         }
         else if (GameStateID.GAME_OVER.identifies(newState)) {
-            appContext().currentGameContext().model().hud().creditOn();
+            gameContext().model().hud().creditOn();
             appContext().currentSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
         }
     }
@@ -82,7 +82,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
     @Override
     public void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        appContext().currentGameContext().state().expire();
+        gameContext().state().expire();
     }
 
     @Override

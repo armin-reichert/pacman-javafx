@@ -7,6 +7,8 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.gamestate.GameState;
+import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
@@ -37,7 +39,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
     public void draw(GameScene2D scene) {
         drawTileGrid(scene.getUnscaledWidth(), scene.getUnscaledHeight(), Color.LIGHTGRAY);
 
-        scene.appContext().currentGameContext().optCurrentLevel().ifPresent(level -> {
+        scene.gameContext().optCurrentLevel().ifPresent(level -> {
             // We assume all ghosts have the same set of special terrain tiles
             level.ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
                 final double x = scaled(tile.x() * TS);
@@ -66,10 +68,10 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
                     }
             });
 
-            final State<GameContext> state = scene.appContext().currentGameContext().state();
+            final GameState state = scene.gameContext().state();
             final String gameStateText = state.name() + " (Tick %d)".formatted(state.timer().tickCount());
             String huntingPhaseText = "";
-            if (state == Arcade_GameState.GAME_LEVEL_PLAYING.state()) {
+            if (GameStateID.GAME_LEVEL_PLAYING.identifies(state)) {
                 final HuntingTimer huntingTimer = level.huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.currentHuntingPhase(), huntingTimer.tickCount());
             }

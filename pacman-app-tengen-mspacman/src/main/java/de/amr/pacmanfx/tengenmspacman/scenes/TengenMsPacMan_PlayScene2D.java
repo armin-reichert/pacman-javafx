@@ -90,7 +90,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
 
-        scalingProperty().addListener((_, _, _) -> appContext().currentGameContext().optCurrentLevel().ifPresent(level ->
+        scalingProperty().addListener((_, _, _) -> gameContext().optCurrentLevel().ifPresent(level ->
             dynamicCamera.updateRange(level.worldMap())));
     }
 
@@ -108,7 +108,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onEnteredFrom3DScene() {
-        final GameModel gameModel = appContext().currentGameContext().model();
+        final GameModel gameModel = gameContext().model();
         gameModel.hud().levelCounterOn().livesCounterOn().show();
         gameModel.optGameLevel().ifPresent(this::acceptGameLevel);
     }
@@ -258,7 +258,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     protected void playLevelCompleteAnimation(GameLevel level) {
-        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> appContext().currentGameContext().state().expire());
+        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameContext().state().expire());
         levelCompletedAnimation.play();
     }
 
@@ -271,7 +271,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     protected void resetAnimations(GameLevel level) {
-        final var gameModel = (TengenMsPacMan_GameModel) appContext().currentGameContext().model();
+        final var gameModel = (TengenMsPacMan_GameModel) gameContext().model();
         final Pac pac = level.entities().pac();
 
         pac.animations().select(gameModel.isBoosterActive()
