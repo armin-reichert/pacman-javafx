@@ -31,12 +31,12 @@ public class PacManXXL_App extends Application {
     private static final double ASPECT_RATIO    = 1.6;
     private static final double HEIGHT_FRACTION = 0.8;
 
-    private final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
     private AppContext app;
 
     @Override
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
 
         app = AppBuilder
 
