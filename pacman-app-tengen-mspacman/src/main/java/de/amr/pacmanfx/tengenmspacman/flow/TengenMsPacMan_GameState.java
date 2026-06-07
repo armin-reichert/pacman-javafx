@@ -61,7 +61,7 @@ public enum TengenMsPacMan_GameState {
         }
     }),
 
-    GAME_OR_LEVEL_STARTING(new GameState(GameStateID.GAME_OR_LEVEL_STARTING) {
+    GAME_OR_LEVEL_STARTING( new GameState(GameStateID.GAME_OR_LEVEL_STARTING) {
         @Override
         public void onEnter(GameContext gameContext) {
             final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext.gameModel();
