@@ -181,8 +181,13 @@ public final class CommonActions {
 
         @Override
         public boolean isEnabled(AppContext appContext) {
-            return GameVariant.isArcadeGameName(appContext.currentGameVariantName())
-                && appContext.ui().gameScenes().currentGameSceneHasID(appContext, CommonSceneID.PLAY_SCENE_2D);
+            final String variantName = appContext.currentGameVariantName();
+            final boolean isArcadeGame = GameVariant.isArcadeGameName(variantName);
+            final GameSceneManager gameScenes = appContext.ui().gameScenes();
+            return isArcadeGame &&
+                      (gameScenes.currentGameSceneHasID(appContext, CommonSceneID.INTRO_SCENE)
+                    || gameScenes.currentGameSceneHasID(appContext, CommonSceneID.START_SCENE)
+                    || gameScenes.currentGameSceneHasID(appContext, CommonSceneID.PLAY_SCENE_2D));
         }
     };
 

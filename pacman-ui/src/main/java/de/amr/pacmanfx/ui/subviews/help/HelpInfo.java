@@ -3,9 +3,10 @@
  */
 package de.amr.pacmanfx.ui.subviews.help;
 
-import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
+import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
@@ -29,25 +30,22 @@ public class HelpInfo {
     public static HelpInfo build(AppContext appContext) {
         final GameContext gameContext = appContext.currentGameContext();
         final GameModel game = appContext.currentGameContext().gameModel();
-        final State<GameContext> state = appContext.currentGameContext().gameState();
+        final GameState state = appContext.currentGameContext().gameState();
         final boolean demoLevel = game.isDemoLevelRunning();
 
         final HelpInfo helpInfo = new HelpInfo(appContext);
-        if (state.nameIsOneOf(GameStateID.GAME_INTRO.name())) {
+        if (GameStateID.GAME_INTRO.identifies(state)) {
             helpInfo.addInfoForIntroScene(gameContext, game);
         }
-        else if (state.nameIsOneOf(GameStateID.GAME_PREPARATION.name())) {
+        else if (GameStateID.GAME_PREPARATION.identifies(state)) {
             helpInfo.addInfoForCreditScene(gameContext, game);
         }
-        else if (state.nameIsOneOf(
-            GameStateID.GAME_OR_LEVEL_STARTING.name(),
-            GameStateID.GAME_LEVEL_PLAYING.name(),
-            GameStateID.GAME_LEVEL_PACMAN_DYING.name(),
-            GameStateID.GAME_LEVEL_EATING_GHOST.name())) {
+        else if (state.isOneOf(GameStateID.GAME_OR_LEVEL_STARTING, GameStateID.GAME_LEVEL_PLAYING,
+            GameStateID.GAME_LEVEL_PACMAN_DYING, GameStateID.GAME_LEVEL_EATING_GHOST)) {
             if (demoLevel) {
                 helpInfo.addInfoForDemoLevelPlayScene();
             } else {
-                helpInfo.addInfoForPlayScene(appContext.ui().translations());
+                helpInfo.addInfoForPlayScene();
             }
         }
         else {
@@ -56,16 +54,17 @@ public class HelpInfo {
         return helpInfo;
     }
 
-    private final AppContext context;
-    private final List<Label> column0 = new ArrayList<>();
-    private final List<Text> column1 = new ArrayList<>();
+    private final AppContext appContext;
 
-    public HelpInfo(AppContext context) {
-        this.context = requireNonNull(context);
+    private final List<Label> column0 = new ArrayList<>();
+    private final List<Text>  column1 = new ArrayList<>();
+
+    public HelpInfo(AppContext appContext) {
+        this.appContext = requireNonNull(appContext);
     }
 
-    public Pane createPane(AppContext context, Color backgroundColor, Font font) {
-        var grid = new GridPane();
+    public Pane createPane(AppContext appContext, Color backgroundColor, Font font) {
+        final var grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(10);
         for (int row = 0; row < column0.size(); ++row) {
@@ -76,19 +75,23 @@ public class HelpInfo {
             column0.get(row).setFont(font);
             column1.get(row).setFont(font);
         }
-        var pane = new BorderPane(grid);
+        final var pane = new BorderPane(grid);
         pane.setPadding(new Insets(10));
         pane.setBackground(UfxBackgrounds.roundedBackground(backgroundColor, 10));
 
+        final TranslationManager translations = appContext.ui().translations();
+        final GameContext gameContext = appContext.currentGameContext();
+        final GameCheats cheats = gameContext.gameModel().cheats();
+
         // add default entries:
-        if (context.currentGameContext().gameModel().cheats().isPacUsingAutopilot()) {
-            var autoPilotEntry = text(context.ui().translations().translate("help.autopilot_on"), Color.ORANGE);
+        if (cheats.isPacUsingAutopilot()) {
+            final Text autoPilotEntry = text(translations.translate("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (context.currentGameContext().gameModel().cheats().isPacImmune()) {
-            var immunityEntry = text(context.ui().translations().translate("help.immunity_on"), Color.ORANGE);
+        if (cheats.isPacImmune()) {
+            final Text immunityEntry = text(translations.translate("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);
             grid.add(immunityEntry, 0, grid.getRowCount() + 1);
@@ -102,52 +105,55 @@ public class HelpInfo {
     }
 
     private Label label(String s, Color color) {
-        var label = new Label(s);
+        final var label = new Label(s);
         label.setTextFill(color);
         return label;
     }
 
     private Text text(String s, Color color) {
-        var text = new Text(s);
+        final var text = new Text(s);
         text.setFill(color);
         return text;
     }
 
-    private void addRow(String lhsKey, String keyboardKey) {
-        addRow(label(context.ui().translations().translate(lhsKey), Color.gray(0.9)),
-            text("[" + keyboardKey + "]", Color.YELLOW));
+    private void addEntry(String lhsKey, String keyCode) {
+        final TranslationManager translations = appContext.ui().translations();
+        final Label label = label(translations.translate(lhsKey), Color.gray(0.9));
+        final Text keyCodeText = text("[%s]".formatted(keyCode), Color.YELLOW);
+        addRow(label, keyCodeText);
     }
 
     private void addQuitEntry() {
-        addRow("help.show_intro", "Q");
+        addEntry("help.show_intro", "Q");
     }
 
     private void addInfoForIntroScene(GameContext gameContext, GameModel game) {
         if (game.canStartNewGame(gameContext)) {
-            addRow("help.start_game", "1");
+            addEntry("help.start_game", "1");
         }
-        addRow("help.add_credit", "5");
+        addEntry("help.add_credit", "5");
         addQuitEntry();
     }
 
     private void addInfoForCreditScene(GameContext gameContext, GameModel game) {
         if (game.canStartNewGame(gameContext)) {
-            addRow("help.start_game", "1");
+            addEntry("help.start_game", "1");
         }
-        addRow("help.add_credit", "5");
+        addEntry("help.add_credit", "5");
         addQuitEntry();
     }
 
-    private void addInfoForPlayScene(TranslationManager translationManager) {
-        addRow("help.move_left", translationManager.translate("help.cursor_left"));
-        addRow("help.move_right", translationManager.translate("help.cursor_right"));
-        addRow("help.move_up",    translationManager.translate("help.cursor_up"));
-        addRow("help.move_down",  translationManager.translate("help.cursor_down"));
+    private void addInfoForPlayScene() {
+        final TranslationManager translations = appContext.ui().translations();
+        addEntry("help.move_left",  translations.translate("help.cursor_left"));
+        addEntry("help.move_right", translations.translate("help.cursor_right"));
+        addEntry("help.move_up",    translations.translate("help.cursor_up"));
+        addEntry("help.move_down",  translations.translate("help.cursor_down"));
         addQuitEntry();
     }
 
     private void addInfoForDemoLevelPlayScene() {
-        addRow("help.add_credit", "5");
+        addEntry("help.add_credit", "5");
         addQuitEntry();
     }
 }
