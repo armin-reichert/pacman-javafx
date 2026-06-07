@@ -12,7 +12,6 @@ import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.app.AppBuilder;
 import de.amr.pacmanfx.ui.app.AppContext;
-import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
@@ -29,10 +28,9 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final var gamesContainer = new GamesContainer();
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         app = AppBuilder
-            .newApp(primaryStage, screenSize.x(), screenSize.y(), gamesContainer)
+            .newApp(primaryStage, screenSize.x(), screenSize.y())
             .game(
                 GameVariant.ARCADE_MS_PACMAN,
                 Arcade_GameFlow::new,

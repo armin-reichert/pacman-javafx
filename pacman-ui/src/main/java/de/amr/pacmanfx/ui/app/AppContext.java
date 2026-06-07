@@ -40,6 +40,8 @@ public interface AppContext extends AppLifecycle {
 
     String currentGameVariantName();
 
+    GamesContainer gamesContainer();
+
     GameSpecification gameForVariant(String variantName);
 
     GameContext currentGameContext();

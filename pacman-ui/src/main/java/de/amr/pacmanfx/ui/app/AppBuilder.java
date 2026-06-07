@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.core.Validations.requireNonNegative;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Builder for constructing and configuring an application.
@@ -44,14 +43,12 @@ public class AppBuilder {
     public static AppBuilder newApp(
         Stage stage,
         int mainSceneWidth,
-        int mainSceneHeight,
-        GamesContainer gamesContainer)
+        int mainSceneHeight)
     {
-        return new AppBuilder(stage, mainSceneWidth, mainSceneHeight, gamesContainer);
+        return new AppBuilder(stage, mainSceneWidth, mainSceneHeight);
     }
 
     private final WindowConfig windowConfig;
-    private final GamesContainer gamesContainer;
     private final Map<String, GameConfig> gameConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
 
@@ -61,11 +58,9 @@ public class AppBuilder {
     private AppBuilder(
         Stage stage,
         int mainSceneWidth,
-        int mainSceneHeight,
-        GamesContainer gamesContainer)
+        int mainSceneHeight)
     {
         windowConfig = new WindowConfig(stage, mainSceneWidth, mainSceneHeight);
-        this.gamesContainer = requireNonNull(gamesContainer);
     }
 
     public AppBuilder coinMechanism(boolean coinMechanism) {
@@ -136,16 +131,18 @@ public class AppBuilder {
         validateConfigurationData();
 
         final var app = new AppContextImpl(
-            gamesContainer,
-            createViewImplementation(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight()),
+            createGameView(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight()),
             new GameClockFX(),
             coinMechanism ? new CoinMechanism(99) : CoinMechanism.OUT_OF_SERVICE);
 
-        gameConfigMap.forEach((gameVariant, config) -> {
-            final AbstractGameModel gameModel = config.gameModelFactory.get();
-            final GameRules gameRules = config.gameRulesFactory.get();
-            gamesContainer.registerGame(gameVariant, new GameSpecification(config.gameFlowFactory, gameModel, gameRules, includeTests));
-            app.ui().configurations().addConfigFactory(gameVariant, config.uiConfigFactory);
+        gameConfigMap.forEach((variant, game) -> {
+            app.gamesContainer().registerGame(variant,
+                new GameSpecification(
+                    game.gameFlowFactory,
+                    game.gameModelFactory.get(),
+                    game.gameRulesFactory.get(),
+                    includeTests));
+            app.ui().configurations().addConfigFactory(variant, game.uiConfigFactory);
         });
 
         final StartPagesView startPagesCarousel = app.ui().subViews().startView();
@@ -162,7 +159,7 @@ public class AppBuilder {
         return app;
     }
 
-    private GameViewImpl createViewImplementation(Stage stage, int width, int height) {
+    private GameViewImpl createGameView(Stage stage, int width, int height) {
         return new GameViewImpl(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),

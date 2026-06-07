@@ -90,7 +90,6 @@ public class PacManGames3dApp extends Application {
         CommonDashboardID.ABOUT
     );
 
-    private GamesContainer gamesContainer;
     private AppContext app;
     private PacManXXL_MapSelector xxlMapSelector;
 
@@ -101,7 +100,6 @@ public class PacManGames3dApp extends Application {
     public void init() {
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
-        gamesContainer = new GamesContainer();
         xxlMapSelector = new PacManXXL_MapSelector();
     }
 
@@ -111,7 +109,7 @@ public class PacManGames3dApp extends Application {
         try {
             if (useBuilder) {
                 app = AppBuilder
-                    .newApp(stage, sceneSize.x(), sceneSize.y(), gamesContainer)
+                    .newApp(stage, sceneSize.x(), sceneSize.y())
 
                     .game(
                         ARCADE_PACMAN,
@@ -165,7 +163,6 @@ public class PacManGames3dApp extends Application {
             }
             else {
                 app = new AppContextImpl(
-                    gamesContainer,
                     createView(stage, sceneSize.x(), sceneSize.y()),
                     new GameClockFX(),
                     new CoinMechanism());
@@ -243,7 +240,7 @@ public class PacManGames3dApp extends Application {
                     includeTests
                 );
             };
-            gamesContainer.registerGame(variant.name(), game);
+            app.gamesContainer().registerGame(variant.name(), game);
         }
     }
 

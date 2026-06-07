@@ -51,13 +51,11 @@ public class ArcadePacMan_App extends Application {
         CommonDashboardID.ABOUT
     );
 
-    private GamesContainer gamesContainer;
     private AppContext app;
     private boolean useBuilder;
 
     @Override
     public void init() throws Exception {
-        gamesContainer = new GamesContainer();
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
     }
 
@@ -65,7 +63,7 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
-            app = AppBuilder.newApp(primaryStage, size.x(), size.y(), gamesContainer)
+            app = AppBuilder.newApp(primaryStage, size.x(), size.y())
                 .game(
                     GameVariant.ARCADE_PACMAN,
                     Arcade_GameFlow::new,
@@ -78,7 +76,7 @@ public class ArcadePacMan_App extends Application {
                 .build();
         }
         else {
-            createApp(primaryStage, gamesContainer, size);
+            createApp(primaryStage, size);
         }
         app.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, app.ui().translations());
         app.displayOnScreen();
@@ -91,14 +89,14 @@ public class ArcadePacMan_App extends Application {
 
     // Private area
 
-    private void createApp(Stage stage, GamesContainer gamesContainer, Vector2i sceneSize) {
-        app = new AppContextImpl(gamesContainer, createView(stage, sceneSize.x(), sceneSize.y()), new GameClockFX(), new CoinMechanism());
+    private void createApp(Stage stage, Vector2i sceneSize) {
+        app = new AppContextImpl(createView(stage, sceneSize.x(), sceneSize.y()), new GameClockFX(), new CoinMechanism());
 
         final AbstractGameModel gameModel = new ArcadePacMan_GameModel();
         final GameRules gameRules = new ArcadePacMan_GameRules();
 
         final GameSpecification game = new GameSpecification(Arcade_GameFlow::new, gameModel, gameRules, false);
-        gamesContainer.registerGame(GameVariant.ARCADE_PACMAN.name(), game);
+        app.gamesContainer().registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
         app.ui().configurations().addConfigFactory(
             GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);

@@ -17,9 +17,9 @@ import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.app.AppBuilder;
 import de.amr.pacmanfx.ui.app.AppContext;
-import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
+import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -31,7 +31,6 @@ public class PacManXXL_App extends Application {
     private static final double ASPECT_RATIO    = 1.6;
     private static final double HEIGHT_FRACTION = 0.8;
 
-    private final GamesContainer gamesContainer = new GamesContainer();
     private final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
     private AppContext app;
 
@@ -40,7 +39,9 @@ public class PacManXXL_App extends Application {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         app = AppBuilder
-            .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer)
+
+            .newApp(primaryStage, sceneSize.x(), sceneSize.y())
+
             .game(
                 GameVariant.ARCADE_PACMAN_XXL,
                 Arcade_GameFlow::new,
@@ -48,6 +49,7 @@ public class PacManXXL_App extends Application {
                 PacManXXL_PacMan_GameRules::new,
                 PacManXXL_PacMan_UIConfig::new
             )
+
             .game(
                 GameVariant.ARCADE_MS_PACMAN_XXL,
                 Arcade_GameFlow::new,
@@ -55,12 +57,14 @@ public class PacManXXL_App extends Application {
                 PacManXXL_MsPacMan_GameRules::new,
                 PacManXXL_MsPacMan_UIConfig::new
             )
+
             .startPage(PacManXXL_StartPage::new)
             .coinMechanism(true)
             .interactiveTests(false)
             .build();
 
-        app.ui().subViews().gamePlayView().configureDashboard(List.of(
+        final GamePlayView playView = app.ui().subViews().gamePlayView();
+        playView.configureDashboard(List.of(
             CommonDashboardID.README,
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
@@ -73,13 +77,12 @@ public class PacManXXL_App extends Application {
             CommonDashboardID.ABOUT
         ), app.ui().translations());
 
-        app.ui().subViews().gamePlayView().dashboard().findSection(CommonDashboardID.CUSTOM_MAPS)
-            .filter(DashboardSectionCustomMaps.class::isInstance)
-            .map(DashboardSectionCustomMaps.class::cast)
-            .ifPresent(section -> {
-                section.setCustomDirWatchDog(app.watchdog());
-                section.setMapEditFunction(mapFile -> CommonActions.editMapFile(app, mapFile));
-            });
+        playView.dashboard().findSection(CommonDashboardID.CUSTOM_MAPS).ifPresent(section -> {
+            if (section instanceof DashboardSectionCustomMaps sectionCustomMaps) {
+                sectionCustomMaps.setCustomDirWatchDog(app.watchdog());
+                sectionCustomMaps.setMapEditFunction(mapFile -> CommonActions.editMapFile(app, mapFile));
+            }
+        });
 
         app.watchdog().addEventListener(xxlMapSelector);
         app.displayOnScreen();

@@ -55,7 +55,7 @@ import static java.util.Objects.requireNonNull;
 public final class AppContextImpl implements AppContext {
 
     // All games in a box (only 1,99 €!)
-    private final GamesContainer gamesContainer;
+    private final GamesContainer gamesContainer = new GamesContainer();
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
@@ -77,8 +77,7 @@ public final class AppContextImpl implements AppContext {
 
     private GameContextImpl currentGameContext;
 
-    public AppContextImpl(GamesContainer gamesContainer, GameViewImpl view, GameClock gameClock, CoinMechanism coinMechanism) {
-        this.gamesContainer = requireNonNull(gamesContainer);
+    public AppContextImpl(GameViewImpl view, GameClock gameClock, CoinMechanism coinMechanism) {
         this.view = requireNonNull(view);
         this.gameClock = requireNonNull(gameClock);
         this.coinMechanism = requireNonNull(coinMechanism);
@@ -148,6 +147,11 @@ public final class AppContextImpl implements AppContext {
     @Override
     public String currentGameVariantName() {
         return gameVariantName.get();
+    }
+
+    @Override
+    public GamesContainer gamesContainer() {
+        return gamesContainer;
     }
 
     @Override

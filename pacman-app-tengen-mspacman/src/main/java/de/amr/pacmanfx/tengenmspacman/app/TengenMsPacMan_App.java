@@ -13,9 +13,8 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.ui.app.AppBuilder;
 import de.amr.pacmanfx.ui.app.AppContext;
-import de.amr.pacmanfx.ui.app.GamesContainer;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.application.Application;
@@ -31,15 +30,13 @@ public class TengenMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = NES_SCREEN_ASPECT_RATIO; // 32:30
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
-    private final GamesContainer gamesContainer = new GamesContainer();
     private AppContext app;
 
     @Override
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        app = AppBuilder
-            .newApp(primaryStage, sceneSize.x(), sceneSize.y(), gamesContainer)
+        app = AppBuilder.newApp(primaryStage, sceneSize.x(), sceneSize.y())
             .game(
                 TENGEN_MS_PACMAN,
                 TengenMsPacMan_GameFlow::new,
@@ -50,10 +47,10 @@ public class TengenMsPacMan_App extends Application {
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
 
-        final Dashboard dashboard = app.ui().subViews().gamePlayView().dashboard();
+        final GamePlayView playView = app.ui().subViews().gamePlayView();
         final TranslationManager tengenTranslations = () -> TengenMsPacMan_UIConfig.TEXT_BUNDLE;
 
-        app.ui().subViews().gamePlayView().configureDashboard(List.of(
+        playView.configureDashboard(List.of(
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
             CommonDashboardID.SETTINGS_3D,
@@ -65,9 +62,9 @@ public class TengenMsPacMan_App extends Application {
         ), app.ui().translations());
 
         // Will be added before "ABOUT" section!
-        dashboard.addSection(
+        playView.dashboard().addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
-            new DashboardSectionJoypad(dashboard),
+            new DashboardSectionJoypad(playView.dashboard()),
             tengenTranslations.translate("infobox.joypad.title"),
             false);
 
