@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
@@ -123,15 +122,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onActivate(AppContext context) {
-        final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) appContext().currentGameContext().model();
+    public void onActivate() {
+        final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext().model();
         final TengenMsPacMan_HUDState hud = gameModel.hud();
+
         hud.scoreOn().levelCounterOn().livesCounterOn().show();
         if (gameModel.allOptionsDefault()) {
             hud.gameOptionsOff();
         } else {
             hud.gameOptionsOn();
         }
+
         updateScaling();
         dynamicCamera.enterManualMode();
         dynamicCamera.setToTopPosition();
@@ -144,8 +145,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onTick(long tick) {
-        final GameContext gameContext = appContext.currentGameContext();
-        final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext.model();
+        final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext().model();
         gameModel.optGameLevel().ifPresent(level -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final int numRows = terrain.numRows();
@@ -163,15 +163,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             updateHUD(level);
             appContext().currentSoundEffects().ifPresent(soundEffects -> {
                 soundEffects.setEnabled(!level.isDemoLevel());
-                soundEffects.playLevelRunningSound(gameContext, level);
+                soundEffects.playLevelRunningSound(gameContext(), level);
             });
         });
     }
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        final TranslationManager translations = appContext.ui().translations();
-        final GameModel game = appContext().currentGameContext().model();
+        final TranslationManager translations = appContext().ui().translations();
+        final GameModel gameModel = gameContext().model();
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
         final var contextMenu = new ContextMenu();
 
@@ -188,11 +188,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         miScrolling.setToggleGroup(toggleGroup);
 
         addLocalizedTitleItem(contextMenu, translations, "pacman");
-        addLocalizedCheckBox(contextMenu, translations, game.cheats().pacUsingAutopilotProperty(), "autopilot");
-        addLocalizedCheckBox(contextMenu, translations, game.cheats().pacImmuneProperty(), "immunity");
+        addLocalizedCheckBox(contextMenu, translations, gameModel.cheats().pacUsingAutopilotProperty(), "autopilot");
+        addLocalizedCheckBox(contextMenu, translations, gameModel.cheats().pacImmuneProperty(), "immunity");
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, AppConstants.PROPERTY_MUTED, "muted");
-        addLocalizedActionItem(contextMenu, appContext, translations, ACTION_QUIT_GAME_SCENE, "quit");
+        addLocalizedActionItem(contextMenu, appContext(), translations, ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(contextMenu);
     }
@@ -208,19 +208,19 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(level.worldMap());
 
-        appContext.ui().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
+        appContext().ui().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
 
         if (level.isDemoLevel()) {
-            actionBindings.registerFirstBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
-            actionBindings.registerFirstBinding(ACTION_QUIT_DEMO_LEVEL, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings().registerFirstBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings().registerFirstBinding(ACTION_QUIT_DEMO_LEVEL, TENGEN_SPECIFIC_BINDINGS);
         } else {
             // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
-            actionBindings.registerAllBindings(STEERING_BINDINGS);
-            actionBindings.registerAllBindings(AppConstants.CHEAT_ACTION_BINDINGS);
-            actionBindings.registerFirstBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
-            actionBindings.registerFirstBinding(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings().registerAllBindings(STEERING_BINDINGS);
+            actionBindings().registerAllBindings(AppConstants.CHEAT_ACTION_BINDINGS);
+            actionBindings().registerFirstBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
+            actionBindings().registerFirstBinding(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
         }
-        Logger.info(actionBindings);
+        Logger.info(actionBindings());
 
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());

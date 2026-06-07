@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
@@ -77,12 +78,13 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void onActivate(AppContext context) {
-        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
+    public void onActivate() {
+        final UIConfig uiConfig = appContext().currentUIConfig();
+        final SpriteAnimationSet spriteAnimations = appContext().ui().sprites().animationSet();
 
         // Quit cut scene when "START" button on "joypad" is pressed
-        final Joypad joypad = context.input().joypad();
-        actionBindings.setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
+        final Joypad joypad = appContext().input().joypad();
+        actionBindings().setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(3, "JUNIOR");
         clapperboard.setPosition(3 * TS, 10 * TS);
@@ -90,22 +92,22 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
 
-        stork = new Stork(spriteAnimationSet);
-        flyingBag = new Bag(spriteAnimationSet);
+        stork = new Stork(spriteAnimations);
+        flyingBag = new Bag(spriteAnimations);
 
         darkness = false;
 
-        context.ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
+        appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
     }
 
     @Override
     public void onDeactivate() {
-        appContext.ui().sounds().stop(PacManGameSoundID.INTERMISSION_3);
+        appContext().ui().sounds().stop(PacManGameSoundID.INTERMISSION_3);
     }
 
     @Override

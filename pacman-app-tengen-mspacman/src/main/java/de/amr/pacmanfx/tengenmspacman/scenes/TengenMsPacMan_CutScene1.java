@@ -14,6 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
@@ -86,13 +87,14 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public void onActivate(AppContext context) {
-        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
+    public void onActivate() {
+        final UIConfig uiConfig = appContext().currentUIConfig();
+        final SpriteAnimationSet spriteAnimations = appContext().ui().sprites().animationSet();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
         // Quit cut scene when "START" button on "joypad" is pressed
-        final Joypad joypad = context.input().joypad();
-        actionBindings.setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
+        final Joypad joypad = appContext().input().joypad();
+        actionBindings().setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(1, "THEY MEET");
         clapperboard.setPosition(3 * TS, 10 * TS);
@@ -100,24 +102,24 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
         msPacMan.setSpeed(0);
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
         pacMan.setSpeed(0);
 
-        inky = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL);
+        inky = uiConfig.createGhostWithAnimations(spriteAnimations, CYAN_GHOST_BASHFUL);
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
         inky.setPosition(LEFT_BORDER, UPPER_LANE);
         inky.setSpeed(0);
 
-        pinky = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY);
+        pinky = uiConfig.createGhostWithAnimations(spriteAnimations, PINK_GHOST_SPEEDY);
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(RIGHT_BORDER, LOWER_LANE);
@@ -128,12 +130,12 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
         collided = false;
 
-        context.ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
+        appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
     }
 
     @Override
     public void onDeactivate() {
-        appContext.ui().sounds().stop(PacManGameSoundID.INTERMISSION_1);
+        appContext().ui().sounds().stop(PacManGameSoundID.INTERMISSION_1);
     }
 
     @Override

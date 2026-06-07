@@ -62,15 +62,17 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void onActivate(AppContext context) {
-        appContext().currentGameContext().model().hud().hide();
+    public void onActivate() {
+        final UIConfig uiConfig = appContext().currentUIConfig();
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) context.currentUIConfig().spriteSheet();
+        gameContext().model().hud().hide();
 
-        actionBindings.registerFirstBinding(ACTION_ENTER_START_SCREEN,             TENGEN_SPECIFIC_BINDINGS);
-        actionBindings.registerFirstBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
+        spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        final List<GhostConfig> ghostConfigs = context.currentUIConfig().worldConfig().ghostConfigs();
+        actionBindings().registerFirstBinding(ACTION_ENTER_START_SCREEN,             TENGEN_SPECIFIC_BINDINGS);
+        actionBindings().registerFirstBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
+
+        final List<GhostConfig> ghostConfigs = uiConfig.worldConfig().ghostConfigs();
         ghostColors = Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
             .map(personality -> ghostConfigs.get(personality).colors().normalColors().dressColor())
             .toArray(Color[]::new);

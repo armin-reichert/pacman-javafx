@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -63,18 +64,19 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void onActivate(AppContext context) {
-        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
+    public void onActivate() {
+        final UIConfig uiConfig = appContext().currentUIConfig();
+        final SpriteAnimationSet spriteAnimations = appContext().ui().sprites().animationSet();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
 
-        stork = new Stork(spriteAnimationSet);
+        stork = new Stork(spriteAnimations);
 
-        bag = new Bag(spriteAnimationSet);
+        bag = new Bag(spriteAnimations);
         bag.setOpen(false);
 
         clapperboard = new Clapperboard("3", "JUNIOR");
@@ -111,7 +113,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (sceneTimer.atSecond(1)) {
-            appContext.ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
+            appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
         } else if (sceneTimer.atSecond(3)) {
             enterStateDeliverJunior();
         }

@@ -40,28 +40,33 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void decorate(GameLevel3D level3D) {
-        final GameModel game = appContext().currentGameContext().model();
-        if (!(game instanceof TengenMsPacMan_GameModel tengenGame)) {
+        final GameModel gameModel = gameContext().model();
+        if (!(gameModel instanceof TengenMsPacMan_GameModel tengenGameModel)) {
             throw new IllegalStateException("Cannot use Tengen play scene 3D in game of class %s"
-                .formatted(game.getClass().getSimpleName()));
+                .formatted(gameModel.getClass().getSimpleName()));
         }
         // If any of the default level settings has been changed, display the level info
-        appContext.currentGameContext().optCurrentLevel().ifPresent(level -> {
-            if (!tengenGame.allOptionsDefault()) {
-                final ImageView levelInfo = new ImageView();
-                final double infoWidth = TS(level.worldMap().numCols());
-                final double infoHeight = TS(2);
-                levelInfo.setFitWidth(infoWidth);
-                levelInfo.setFitHeight(infoHeight);
-                levelInfo.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR.map(
-                    color -> createLevelInfoImage(tengenGame, level.number(), infoWidth, infoHeight, color)));
-                // Display the level info at front side of floor just over the surface
-                final Maze3D maze3D = level3D.entities().maze3D();
-                levelInfo.setTranslateY(maze3D.floor().getHeight() - levelInfo.getFitHeight());
-                levelInfo.setTranslateZ(-maze3D.floor().getDepth());
+        gameContext().optCurrentLevel().ifPresent(level -> {
+            if (!tengenGameModel.allOptionsDefault()) {
+                final ImageView levelInfo = createLevelInfoView(tengenGameModel, level);
                 level3D.getChildren().add(levelInfo);
             }
         });
+    }
+
+    private ImageView createLevelInfoView(TengenMsPacMan_GameModel gameModel, GameLevel level) {
+        final ImageView levelInfo = new ImageView();
+        final double infoWidth = TS(level.worldMap().numCols());
+        final double infoHeight = TS(2);
+        levelInfo.setFitWidth(infoWidth);
+        levelInfo.setFitHeight(infoHeight);
+        levelInfo.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR.map(
+            color -> createLevelInfoImage(gameModel, level.number(), infoWidth, infoHeight, color)));
+        // Display the level info at front side of floor just over the surface
+        final Maze3D maze3D = level3D.entities().maze3D();
+        levelInfo.setTranslateY(maze3D.floor().getHeight() - levelInfo.getFitHeight());
+        levelInfo.setTranslateZ(-maze3D.floor().getDepth());
+        return levelInfo;
     }
 
     private Image createLevelInfoImage(TengenMsPacMan_GameModel game, int levelNumber, double width, double height, Color backgroundColor) {
@@ -81,18 +86,18 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void replaceActionBindings(GameLevel level) {
-        actionBindings.dispose();
+        actionBindings().dispose();
         if (level.isDemoLevel()) {
             // In demo level, allow going back to options screen
-            actionBindings.registerFirstBinding(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
+            actionBindings().registerFirstBinding(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
         } else {
-            actionBindings.registerAllBindings(TengenMsPacMan_ActionBindings.STEERING_BINDINGS);
-            actionBindings.registerFirstBinding(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
-            actionBindings.registerAllBindings(AppConstants.CHEAT_ACTION_BINDINGS);
+            actionBindings().registerAllBindings(TengenMsPacMan_ActionBindings.STEERING_BINDINGS);
+            actionBindings().registerFirstBinding(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
+            actionBindings().registerAllBindings(AppConstants.CHEAT_ACTION_BINDINGS);
         }
         bindActions();
 
-        Logger.info(actionBindings);
+        Logger.info(actionBindings());
     }
 
     @Override
@@ -101,7 +106,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
-            scores3D.showTextForScore(appContext.ui().translations().translate("score.game_over"),
+            scores3D.showTextForScore(appContext().ui().translations().translate("score.game_over"),
                 Color.valueOf(NES_Palette.rgbColor(0x16)));
         }
         // Always show high score

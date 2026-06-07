@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -51,12 +52,13 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    public void onActivate(AppContext context) {
-        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
+    public void onActivate() {
+        final UIConfig uiConfig = appContext().currentUIConfig();
+        final SpriteAnimationSet spriteAnimations = appContext().ui().sprites().animationSet();
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.setPosition(TS(3), TS(10));
         clapperboard.startAnimation();
@@ -89,7 +91,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (timer.hasExpired()) {
-            appContext.ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
+            appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
             enterStateChasing();
         }
     }

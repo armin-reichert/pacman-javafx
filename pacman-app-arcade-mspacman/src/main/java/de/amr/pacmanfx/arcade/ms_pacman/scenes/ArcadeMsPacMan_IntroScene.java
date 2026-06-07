@@ -20,6 +20,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.app.AppConstants;
 import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -68,27 +69,28 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void onActivate(AppContext context) {
-        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
+    public void onActivate() {
+        final UIConfig uiConfig = appContext().currentUIConfig();
+        final SpriteAnimationSet spriteAnimations = appContext().ui().sprites().animationSet();
 
-        context.ui().sounds().playVoice(AppConstants.VOICE_EXPLAIN_GAME_START);
+        appContext().ui().sounds().playVoice(AppConstants.VOICE_EXPLAIN_GAME_START);
 
-        actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
-        actionBindings.registerAllBindings(AppConstants.SCENE_TESTS_BINDINGS);
+        actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(AppConstants.SCENE_TESTS_BINDINGS);
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);
         marquee.setBulbOnColor(ARCADE_WHITE);
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
         msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
 
         ghosts = List.of(
-            context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW),
-            context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY),
-            context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL),
-            context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, ORANGE_GHOST_POKEY)
+            uiConfig.createGhostWithAnimations(spriteAnimations, RED_GHOST_SHADOW),
+            uiConfig.createGhostWithAnimations(spriteAnimations, PINK_GHOST_SPEEDY),
+            uiConfig.createGhostWithAnimations(spriteAnimations, CYAN_GHOST_BASHFUL),
+            uiConfig.createGhostWithAnimations(spriteAnimations, ORANGE_GHOST_POKEY)
         );
 
         presentedGhostPersonality = RED_GHOST_SHADOW;
@@ -99,7 +101,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onDeactivate() {
-        appContext.ui().sounds().stopAndDisposeVoice();
+        appContext().ui().sounds().stopAndDisposeVoice();
     }
 
     @Override

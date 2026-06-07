@@ -143,11 +143,11 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             Logger.info("Old 3D game level gets disposed...");
             level3D.dispose();
         }
-        level3D = new GameLevel3D(gameContext, level, appContext.currentUIConfig());
+        level3D = new GameLevel3D(gameContext, level, appContext().currentUIConfig());
         decorate(level3D);
         level3DParent.getChildren().setAll(level3D);
 
-        level3D.entities().selectAll().forEach(entity -> entity.init(appContext.currentGameContext(), level));
+        level3D.entities().selectAll().forEach(entity -> entity.init(appContext().currentGameContext(), level));
         level3D.startLivesCounterTrackingPac();
 
         level3D.createAnimations(AppConstants.DEFAULT_PARTICLE_ANIMATION_CONFIG);
@@ -161,7 +161,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void dispose() {
-        actionBindings.dispose();
+        actionBindings().dispose();
         perspectives.dispose();
         disposeContextMenu();
         removeAndDisposeGameLevel3D();
@@ -180,7 +180,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     @Override
-    public void onActivate(AppContext context) {
+    public void onActivate() {
         perspectives.activeIDProperty().bind(AppConstants.PROPERTY_3D_PERSPECTIVE_ID);
         PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
@@ -195,7 +195,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onTick(long tick) {
-        final GameContext gameContext = appContext.currentGameContext();
+        final GameContext gameContext = appContext().currentGameContext();
         final GameLevel level = gameContext.optCurrentLevel().orElse(null);
 
         if (level == null) {
@@ -211,7 +211,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         level3D.entities().selectAll().forEach(entity -> entity.update(gameContext, level));
         updateHUD3D(level);
         perspectives.updatePerspective(level);
-        appContext.currentSoundEffects().ifPresent(soundEffects -> {
+        appContext().currentSoundEffects().ifPresent(soundEffects -> {
             soundEffects.setEnabled(!level.isDemoLevel());
             soundEffects.playLevelRunningSound(gameContext, level);
         });
@@ -220,9 +220,9 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     @Override
     public void onScroll(ScrollEvent scrollEvent) {
         if (scrollEvent.getDeltaY() < 0) {
-            perspectives.actionDroneClimb().executeIfEnabled(appContext);
+            perspectives.actionDroneClimb().executeIfEnabled(appContext());
         } else if (scrollEvent.getDeltaY() > 0) {
-            perspectives.actionDroneDescent().executeIfEnabled(appContext);
+            perspectives.actionDroneDescent().executeIfEnabled(appContext());
         }
     }
 
@@ -233,7 +233,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        contextMenu = new PlaySceneContextMenu(appContext);
+        contextMenu = new PlaySceneContextMenu(appContext());
         return Optional.of(contextMenu);
     }
 
@@ -275,7 +275,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     protected void decorate(GameLevel3D level3D) {}
 
     protected void bindActions() {
-        actionBindings.registerAllBindings(bindings);
+        actionBindings().registerAllBindings(bindings);
     }
 
     private void replaceScores3D() {

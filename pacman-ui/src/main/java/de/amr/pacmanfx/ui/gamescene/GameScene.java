@@ -7,9 +7,9 @@ package de.amr.pacmanfx.ui.gamescene;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
+import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
@@ -25,15 +25,15 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class GameScene implements Disposable {
 
-    protected final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for " + getClass().getSimpleName());
+    private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for " + getClass().getSimpleName());
 
-    protected final AppContext appContext;
+    private final AppContext appContext;
 
     private GameEventListener gameEventHandler;
 
     public GameScene(AppContext appContext) {
         this.appContext = requireNonNull(appContext);
-        setGameEventHandler(new BaseGameSceneHandler(appContext));
+        gameEventHandler = new BaseGameSceneHandler(appContext);
     }
 
     public AppContext appContext() {
@@ -70,9 +70,9 @@ public abstract class GameScene implements Disposable {
      * Activates the scene and assigns keyboard bindings.
      */
     public final void activate() {
-        onActivate(appContext);
-        Logger.info(actionBindings);
+        onActivate();
         Logger.trace("Game scene {} activated", getClass().getSimpleName());
+        Logger.info(actionBindings);
     }
 
     /**
@@ -86,12 +86,12 @@ public abstract class GameScene implements Disposable {
     public final void deactivate() {
         onDeactivate();
         actionBindings.dispose();
-        appContext().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        appContext.currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.trace("Game scene {} deactivated", getClass().getSimpleName());
     }
 
     /** Called when the scene becomes active. */
-    public void onActivate(AppContext context) {}
+    public void onActivate() {}
 
     /** Called when the scene is deactivated. */
     public void onDeactivate() {}
@@ -106,9 +106,9 @@ public abstract class GameScene implements Disposable {
      * Called when a key combination is pressed inside this scene.
      * Executes the first matching action.
      */
-    public void onInput(AppContext context) {
-        actionBindings().actionMatchingKeyboardState(context.input().keyboard())
-            .ifPresent(action -> action.executeIfEnabled(context));
+    public void onInput() {
+        actionBindings().actionMatchingKeyboardState(appContext.input().keyboard())
+            .ifPresent(action -> action.executeIfEnabled(appContext));
     }
 
     /**

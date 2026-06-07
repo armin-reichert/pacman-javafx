@@ -15,8 +15,8 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
  */
 public class ArcadePacMan_StartScene extends GameScene2D {
 
-    public ArcadePacMan_StartScene(AppContext context) {
-        super(context);
+    public ArcadePacMan_StartScene(AppContext appContext) {
+        super(appContext);
 
         final var gameEventHandler = new BaseGameSceneHandler(appContext) {
             @Override
@@ -28,12 +28,12 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     }
 
     @Override
-    public void onActivate(AppContext context) {
-        actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+    public void onActivate() {
+        actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
     }
 
     @Override
     public void onDeactivate() {
-        appContext.ui().sounds().stopAndDisposeVoice();
+        appContext().ui().sounds().stopAndDisposeVoice();
     }
 }

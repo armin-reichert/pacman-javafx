@@ -7,11 +7,13 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
@@ -61,12 +63,13 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    public void onActivate(AppContext appContext) {
-        final SpriteAnimationSet spriteAnimationSet = appContext.ui().sprites().animationSet();
+    public void onActivate() {
+        final UIConfig uiConfig = appContext().currentUIConfig();
+        final SpriteAnimationSet spriteAnimations = appContext().ui().sprites().animationSet();
 
         // Quit cut scene when "START" button on "joypad" is pressed
-        final Joypad joypad = appContext.input().joypad();
-        actionBindings.setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
+        final Joypad joypad = appContext().input().joypad();
+        actionBindings().setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(2, "THE CHASE");
         clapperboard.setPosition(3 * TS, 10 * TS);
@@ -74,22 +77,22 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(appContext.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(appContext.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
 
-        appContext.ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
+        appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
     }
 
     @Override
     public void onDeactivate() {
-        appContext.ui().sounds().stop(PacManGameSoundID.INTERMISSION_2);
+        appContext().ui().sounds().stop(PacManGameSoundID.INTERMISSION_2);
     }
 
     @Override
     public void onTick(long tick) {
-        final State<GameContext> gameState = appContext().currentGameContext().state();
+        final GameState gameState = appContext().currentGameContext().state();
         final long gameStateTick = gameState.timer().tickCount();
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {

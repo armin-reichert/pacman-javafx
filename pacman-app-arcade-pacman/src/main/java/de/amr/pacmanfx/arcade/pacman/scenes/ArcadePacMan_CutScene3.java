@@ -35,11 +35,11 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public void onActivate(AppContext context) {
-        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
+    public void onActivate() {
+        final SpriteAnimationSet spriteAnimationSet = appContext().ui().sprites().animationSet();
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
-        blinky = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
+        pacMan.setAnimations(appContext().currentUIConfig().createPacAnimations(spriteAnimationSet));
+        blinky = appContext().currentUIConfig().createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
         sceneTick = -1;
     }
 
@@ -50,7 +50,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
             return;
         }
         if (sceneTick == TICK_ANIMATION_START) {
-            appContext.ui().sounds().play(PacManGameSoundID.INTERMISSION_3, 2);
+            appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_3, 2);
             startBlinkyChasingPacMan();
         }
         else if (sceneTick == TICK_BLINKY_RUNNING_NAKED){

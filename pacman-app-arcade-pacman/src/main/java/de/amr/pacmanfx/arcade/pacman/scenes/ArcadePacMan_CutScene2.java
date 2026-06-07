@@ -66,11 +66,11 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
-    public void onActivate(AppContext context) {
-        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
+    public void onActivate() {
+        final SpriteAnimationSet spriteAnimationSet = appContext().ui().sprites().animationSet();
         pacMan = createPacMan();
-        pacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
-        blinky = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
+        pacMan.setAnimations(appContext().currentUIConfig().createPacAnimations(spriteAnimationSet));
+        blinky = appContext().currentUIConfig().createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
         nailDressAnimation = SpriteAnimationBuilder.builder()
             .sprites(ArcadePacMan_SpriteSheet.instance().sprites(SpriteID.RED_GHOST_STRETCHED))
             .initiallyStopped()
@@ -85,7 +85,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         }
         switch (sceneTick) {
             case TICK_ANIMATION_START -> {
-                appContext.ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
+                appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
                 setNailDressAnimationState(NailDressState.NAIL);
             }
             case TICK_PAC_MAN_STARTS_RUNNING -> pacManStartsRunning();

@@ -17,6 +17,7 @@ import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui.app.AppConstants;
 import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -82,8 +83,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private int ghostIndex;
     private long lastGhostEatenTick;
 
-    public ArcadePacMan_IntroScene(AppContext context) {
-        super(context);
+    public ArcadePacMan_IntroScene(AppContext appContext) {
+        super(appContext);
 
         flow = new StateMachine<>(this, List.of(SceneState.values()));
 
@@ -97,23 +98,24 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void onActivate(AppContext context) {
-        context.ui().sounds().playVoice(AppConstants.VOICE_EXPLAIN_GAME_START);
+    public void onActivate() {
+        appContext().ui().sounds().playVoice(AppConstants.VOICE_EXPLAIN_GAME_START);
 
-        actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // insert coin + start game actions
-        actionBindings.registerAllBindings(AppConstants.SCENE_TESTS_BINDINGS); // actions for starting tests
+        actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // insert coin + start game actions
+        actionBindings().registerAllBindings(AppConstants.SCENE_TESTS_BINDINGS); // actions for starting tests
 
         blinking = new Pulse(10, Pulse.State.ON);
 
-        final SpriteAnimationSet spriteAnimationSet = context.ui().sprites().animationSet();
+        final UIConfig uiConfig = appContext().currentUIConfig();
+        final SpriteAnimationSet spriteAnimations = appContext().ui().sprites().animationSet();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(context.currentUIConfig().createPacAnimations(spriteAnimationSet));
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
 
-        ghosts[0] = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
-        ghosts[1] = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY);
-        ghosts[2] = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL);
-        ghosts[3] = context.currentUIConfig().createGhostWithAnimations(spriteAnimationSet, ORANGE_GHOST_POKEY);
+        ghosts[0] = uiConfig.createGhostWithAnimations(spriteAnimations, RED_GHOST_SHADOW);
+        ghosts[1] = uiConfig.createGhostWithAnimations(spriteAnimations, PINK_GHOST_SPEEDY);
+        ghosts[2] = uiConfig.createGhostWithAnimations(spriteAnimations, CYAN_GHOST_BASHFUL);
+        ghosts[3] = uiConfig.createGhostWithAnimations(spriteAnimations, ORANGE_GHOST_POKEY);
 
         Arrays.fill(ghostImageVisible, false);
         Arrays.fill(ghostNicknameVisible, false);
@@ -130,7 +132,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public void onDeactivate() {
         blinking.stop();
-        appContext.ui().sounds().stopAndDisposeVoice();
+        appContext().ui().sounds().stopAndDisposeVoice();
     }
 
     @Override

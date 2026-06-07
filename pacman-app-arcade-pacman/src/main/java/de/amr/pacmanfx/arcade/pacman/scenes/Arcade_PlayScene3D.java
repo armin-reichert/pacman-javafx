@@ -18,14 +18,14 @@ public class Arcade_PlayScene3D extends PlayScene3D {
 
     @Override
     public void replaceActionBindings(GameLevel level) {
-        actionBindings.dispose();
+        actionBindings().dispose();
         if (level.isDemoLevel()) {
-            actionBindings.registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+            actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         } else {
-            actionBindings.registerAllBindings(AppConstants.STEERING_ACTION_BINDINGS);
-            actionBindings.registerAllBindings(AppConstants.CHEAT_ACTION_BINDINGS);
+            actionBindings().registerAllBindings(AppConstants.STEERING_ACTION_BINDINGS);
+            actionBindings().registerAllBindings(AppConstants.CHEAT_ACTION_BINDINGS);
         }
         bindActions();
-        Logger.info(actionBindings);
+        Logger.info(actionBindings());
     }
 }

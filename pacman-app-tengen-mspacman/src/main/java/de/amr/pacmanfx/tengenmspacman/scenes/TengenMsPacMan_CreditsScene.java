@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 
@@ -29,15 +30,15 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     }
 
     @Override
-    public void onActivate(AppContext context) {
-        context.currentGameContext().model().hud().hide();
-        actionBindings.registerFirstBinding(ACTION_ENTER_START_SCREEN, TENGEN_SPECIFIC_BINDINGS);
+    public void onActivate() {
+        gameContext().model().hud().hide();
+        actionBindings().registerFirstBinding(ACTION_ENTER_START_SCREEN, TENGEN_SPECIFIC_BINDINGS);
         fadeProgress = 0;
     }
 
     @Override
     public void onTick(long tick) {
-        final State<GameContext> gameState = appContext.currentGameContext().state();
+        final GameState gameState = gameContext().state();
         if (gameState.timer().atSecond(DISPLAY_SECONDS)) {
             gameState.expire();
             return;
