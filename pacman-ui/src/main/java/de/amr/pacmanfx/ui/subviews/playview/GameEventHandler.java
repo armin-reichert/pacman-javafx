@@ -4,7 +4,9 @@
 
 package de.amr.pacmanfx.ui.subviews.playview;
 
+import de.amr.basics.fsm.State;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -46,7 +48,8 @@ public class GameEventHandler extends DefaultGameEventListener {
             }
 
             case GameStateChangeEvent stateChangeEvent -> {
-                if (stateChangeEvent.newState().nameIsOneOf(GameStateID.GAME_LEVEL_COMPLETE.name())) {
+                final State<GameContext> gameState = stateChangeEvent.newState();
+                if (GameStateID.GAME_LEVEL_COMPLETE.identifies(gameState)) {
                     final MiniPlaySceneView miniPlayView = context.ui().subViews().gamePlayView().miniPlaySceneView();
                     miniPlayView.slideOut();
                 }

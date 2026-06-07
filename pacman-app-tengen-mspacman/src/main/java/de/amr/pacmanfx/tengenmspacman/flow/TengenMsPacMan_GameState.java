@@ -141,9 +141,9 @@ public enum TengenMsPacMan_GameState {
         }
     }),
 
-    GAME_LEVEL_PLAYING(new GameLevelPlayingState()),
+    GAME_LEVEL_PLAYING( new GameLevelPlayingState()),
 
-    GAME_LEVEL_COMPLETE(new GameState(GameStateID.GAME_LEVEL_COMPLETE) {
+    GAME_LEVEL_COMPLETE( new GameState(GameStateID.GAME_LEVEL_COMPLETE) {
         @Override
         public void onEnter(GameContext gameContext) {
             final GameModel gameModel = gameContext.gameModel();

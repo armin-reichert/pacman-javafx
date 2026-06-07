@@ -89,7 +89,7 @@ public final class CheatActions {
                 final GameContext gameContext = appContext.currentGameContext();
                 final GameModel gameModel = gameContext.gameModel();
                 gameModel.cheats().notifyCheatUsed();
-                gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_COMPLETE.name());
+                gameContext.gameFlow().enterState(GameStateID.GAME_LEVEL_COMPLETE);
             });
         }
 
