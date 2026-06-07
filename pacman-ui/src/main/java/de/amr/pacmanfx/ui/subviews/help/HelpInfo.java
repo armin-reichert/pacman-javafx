@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
-import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -63,6 +62,10 @@ public class HelpInfo {
         this.appContext = requireNonNull(appContext);
     }
 
+    private String translate(String key, Object... args) {
+        return appContext.ui().translations().translate(key, args);
+    }
+
     public Pane createPane(AppContext appContext, Color backgroundColor, Font font) {
         final var grid = new GridPane();
         grid.setHgap(20);
@@ -79,19 +82,18 @@ public class HelpInfo {
         pane.setPadding(new Insets(10));
         pane.setBackground(UfxBackgrounds.roundedBackground(backgroundColor, 10));
 
-        final TranslationManager translations = appContext.ui().translations();
         final GameContext gameContext = appContext.currentGameContext();
         final GameCheats cheats = gameContext.gameModel().cheats();
 
         // add default entries:
         if (cheats.isPacUsingAutopilot()) {
-            final Text autoPilotEntry = text(translations.translate("help.autopilot_on"), Color.ORANGE);
+            final Text autoPilotEntry = text(translate("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
         if (cheats.isPacImmune()) {
-            final Text immunityEntry = text(translations.translate("help.immunity_on"), Color.ORANGE);
+            final Text immunityEntry = text(translate("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);
             grid.add(immunityEntry, 0, grid.getRowCount() + 1);
@@ -116,44 +118,42 @@ public class HelpInfo {
         return text;
     }
 
-    private void addEntry(String lhsKey, String keyCode) {
-        final TranslationManager translations = appContext.ui().translations();
-        final Label label = label(translations.translate(lhsKey), Color.gray(0.9));
+    private void addTranslatedEntry(String lhsKey, String keyCode) {
+        final Label label = label(translate(lhsKey), Color.gray(0.9));
         final Text keyCodeText = text("[%s]".formatted(keyCode), Color.YELLOW);
         addRow(label, keyCodeText);
     }
 
     private void addQuitEntry() {
-        addEntry("help.show_intro", "Q");
+        addTranslatedEntry("help.show_intro", "Q");
     }
 
     private void addInfoForIntroScene(GameContext gameContext, GameModel game) {
         if (game.canStartNewGame(gameContext)) {
-            addEntry("help.start_game", "1");
+            addTranslatedEntry("help.start_game", "1");
         }
-        addEntry("help.add_credit", "5");
+        addTranslatedEntry("help.add_credit", "5");
         addQuitEntry();
     }
 
     private void addInfoForCreditScene(GameContext gameContext, GameModel game) {
         if (game.canStartNewGame(gameContext)) {
-            addEntry("help.start_game", "1");
+            addTranslatedEntry("help.start_game", "1");
         }
-        addEntry("help.add_credit", "5");
+        addTranslatedEntry("help.add_credit", "5");
         addQuitEntry();
     }
 
     private void addInfoForPlayScene() {
-        final TranslationManager translations = appContext.ui().translations();
-        addEntry("help.move_left",  translations.translate("help.cursor_left"));
-        addEntry("help.move_right", translations.translate("help.cursor_right"));
-        addEntry("help.move_up",    translations.translate("help.cursor_up"));
-        addEntry("help.move_down",  translations.translate("help.cursor_down"));
+        addTranslatedEntry("help.move_left",  translate("help.cursor_left"));
+        addTranslatedEntry("help.move_right", translate("help.cursor_right"));
+        addTranslatedEntry("help.move_up",    translate("help.cursor_up"));
+        addTranslatedEntry("help.move_down",  translate("help.cursor_down"));
         addQuitEntry();
     }
 
     private void addInfoForDemoLevelPlayScene() {
-        addEntry("help.add_credit", "5");
+        addTranslatedEntry("help.add_credit", "5");
         addQuitEntry();
     }
 }
