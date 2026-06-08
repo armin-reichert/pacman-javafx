@@ -86,12 +86,22 @@ public class Arcade_PlayScene2D extends GameScene2D {
         gameContext().optCurrentLevel().ifPresent(this::acceptGameLevel);
     }
 
-    // Others
-
     // Expose animation to scene renderer
     public Optional<LevelCompletedAnimation> optLevelCompletedAnimation() {
         return Optional.ofNullable(levelCompletedAnimation);
     }
+
+    // Called from game event handler
+    public void resetActorAnimations(GameLevel level) {
+        final Pac pac = level.entities().pac();
+        pac.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pac.animations().resetSelected();
+        level.entities().ghosts().forEach(ghost -> {
+            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            ghost.animations().resetSelected();
+        });
+    }
+
 
     /**
      * If the 3D play scene is active when the game level gets created, this method has not yet been called,
@@ -110,7 +120,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void acceptNormalLevel(GameLevel level) {
-        actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         actionBindings().registerAllBindings(AppConstants.STEERING_ACTION_BINDINGS);
         actionBindings().registerAllBindings(AppConstants.CHEAT_ACTION_BINDINGS);
 
@@ -126,16 +135,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void acceptDemoLevel() {
         actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
-
         appContext().ui().sounds().setEnabled(false);
-
-        //TODO check this
-        //levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameState().expire());
-
         Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
     }
-
-    // Private
 
     // While Pac-Man is not yet visible on game/level start, an additional lives symbol more is shown in the counter
     private void updateLivesCounter(GameState gameState, GameModel gameModel, Pac pac) {
@@ -143,15 +145,5 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final int livesToDisplay = gameModel.lives().count() - 1 + (oneMore ? 1 : 0);
         final int livesDisplayed = Math.clamp(livesToDisplay, 0, gameModel.hud().maxLivesDisplayed());
         gameModel.hud().setVisibleLifeCount(livesDisplayed);
-    }
-
-    protected void resetActorAnimations(GameLevel level) {
-        final Pac pac = level.entities().pac();
-        pac.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        pac.animations().resetSelected();
-        level.entities().ghosts().forEach(ghost -> {
-            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-            ghost.animations().resetSelected();
-        });
     }
 }
