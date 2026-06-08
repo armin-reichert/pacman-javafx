@@ -60,7 +60,7 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
-            app = GameBuilder.newGameApp(gamesCollection, primaryStage, size.x(), size.y())
+            app = GameBuilder.compose(gamesCollection, primaryStage, size.x(), size.y())
                 .gameVariant(
                     GameVariant.ARCADE_PACMAN,
                     Arcade_GameFlow::new,

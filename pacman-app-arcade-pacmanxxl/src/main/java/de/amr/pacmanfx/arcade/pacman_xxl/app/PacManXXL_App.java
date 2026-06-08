@@ -33,7 +33,7 @@ public class PacManXXL_App extends Application {
     private static final double HEIGHT_FRACTION = 0.8;
 
     private GamesCollection gamesCollection;
-    private Game app;
+    private Game game;
 
     @Override
     public void init() {
@@ -44,9 +44,7 @@ public class PacManXXL_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        app = GameBuilder
-
-            .newGameApp(gamesCollection, primaryStage, sceneSize.x(), sceneSize.y())
+        game = GameBuilder.compose(gamesCollection, primaryStage, sceneSize.x(), sceneSize.y())
 
             .gameVariant(
                 GameVariant.ARCADE_PACMAN_XXL,
@@ -69,7 +67,7 @@ public class PacManXXL_App extends Application {
             .interactiveTests(false)
             .build();
 
-        final GamePlayView playView = app.ui().subViews().gamePlayView();
+        final GamePlayView playView = game.ui().subViews().gamePlayView();
         playView.configureDashboard(List.of(
             CommonDashboardID.README,
             CommonDashboardID.GENERAL,
@@ -81,26 +79,26 @@ public class PacManXXL_App extends Application {
             CommonDashboardID.KEYS_GLOBAL,
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT
-        ), app.ui().translations());
+        ), game.ui().translations());
 
         playView.dashboard().findSection(CommonDashboardID.CUSTOM_MAPS).ifPresent(section -> {
             if (section instanceof DashboardSectionCustomMaps sectionCustomMaps) {
-                sectionCustomMaps.setCustomDirWatchDog(app.watchdog());
-                sectionCustomMaps.setMapEditFunction(mapFile -> CommonActions.editMapFile(app, mapFile));
+                sectionCustomMaps.setCustomDirWatchDog(game.watchdog());
+                sectionCustomMaps.setMapEditFunction(mapFile -> CommonActions.editMapFile(game, mapFile));
             }
         });
 
         final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
-        app.watchdog().addEventListener(xxlMapSelector);
+        game.watchdog().addEventListener(xxlMapSelector);
 
-        app.gamesContainer().gameSpecForVariant(GameVariant.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
-        app.gamesContainer().gameSpecForVariant(GameVariant.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
+        game.gamesContainer().gameSpecForVariant(GameVariant.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
+        game.gamesContainer().gameSpecForVariant(GameVariant.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
 
-        app.displayOnScreen();
+        game.displayOnScreen();
     }
 
     @Override
     public void stop() {
-        app.terminate();
+        game.terminate();
     }
 }

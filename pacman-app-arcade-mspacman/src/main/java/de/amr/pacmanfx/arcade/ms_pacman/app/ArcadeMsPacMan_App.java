@@ -26,7 +26,7 @@ public class ArcadeMsPacMan_App extends Application {
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
     private GamesCollection gamesCollection;
-    private Game app;
+    private Game game;
 
     @Override
     public void init() throws Exception {
@@ -36,8 +36,9 @@ public class ArcadeMsPacMan_App extends Application {
     @Override
     public void start(Stage primaryStage) {
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        app = GameBuilder
-            .newGameApp(gamesCollection, primaryStage, screenSize.x(), screenSize.y())
+
+        game = GameBuilder.compose(gamesCollection, primaryStage, screenSize.x(), screenSize.y())
+
             .gameVariant(
                 GameVariant.ARCADE_MS_PACMAN,
                 Arcade_GameFlow::new,
@@ -48,7 +49,7 @@ public class ArcadeMsPacMan_App extends Application {
             .startPage(ArcadeMsPacMan_StartPage::new)
             .build();
 
-        app.ui().subViews().gamePlayView().dashboard().addCommonSections(app.ui().translations(), List.of(
+        game.ui().subViews().gamePlayView().dashboard().addCommonSections(game.ui().translations(), List.of(
             CommonDashboardID.GENERAL,
             CommonDashboardID.GAME_CONTROL,
             CommonDashboardID.SETTINGS_3D,
@@ -58,13 +59,13 @@ public class ArcadeMsPacMan_App extends Application {
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT)
         );
-        app.displayOnScreen();
+        game.displayOnScreen();
     }
 
     @Override
     public void stop() {
-        if (app != null) {
-            app.terminate();
+        if (game != null) {
+            game.terminate();
         }
     }
 }

@@ -41,7 +41,7 @@ public class GameBuilder {
         Supplier<? extends UIConfig> uiConfigFactory,
         WorldMapSelector mapSelector) {}
 
-    public static GameBuilder newGameApp(
+    public static GameBuilder compose(
         GamesCollection gamesCollection,
         Stage stage,
         int mainSceneWidth,

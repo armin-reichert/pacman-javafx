@@ -42,7 +42,8 @@ public class TengenMsPacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        game = GameBuilder.newGameApp(gamesCollection, primaryStage, sceneSize.x(), sceneSize.y())
+        game = GameBuilder.compose(gamesCollection, primaryStage, sceneSize.x(), sceneSize.y())
+
             .gameVariant(
                 TENGEN_MS_PACMAN,
                 TengenMsPacMan_GameFlow::new,

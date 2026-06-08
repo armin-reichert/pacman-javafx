@@ -109,7 +109,7 @@ public class PacManGames3dApp extends Application {
         try {
             if (useBuilder) {
                 app = GameBuilder
-                    .newGameApp(gamesCollection, stage, sceneSize.x(), sceneSize.y())
+                    .compose(gamesCollection, stage, sceneSize.x(), sceneSize.y())
 
                     .gameVariant(
                         ARCADE_PACMAN,
