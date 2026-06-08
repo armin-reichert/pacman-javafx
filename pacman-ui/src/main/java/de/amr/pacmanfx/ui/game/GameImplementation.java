@@ -10,12 +10,8 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Globals;
-import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.model.test.LevelMediumTestState;
-import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -113,7 +109,7 @@ public final class GameImplementation implements Game {
     }
 
     private GameVariantImplementation createGameVariantImplementation(String variantName) {
-        final GameVariantSpecification spec = gamesCollection.gameSpecForVariant(variantName);
+        final GameVariantCartridge spec = gamesCollection.gameSpecForVariant(variantName);
         final var variantImpl = new GameVariantImplementation(
             spec.gameFlowFactory().get(),
             spec.gameModelFactory().get(),

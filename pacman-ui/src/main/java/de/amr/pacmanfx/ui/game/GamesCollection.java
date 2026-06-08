@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.game;
 
-import de.amr.pacmanfx.model.AbstractGameModel;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -22,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 public class GamesCollection {
 
 
-    private final Map<String, GameVariantSpecification> gameSpecsByVariantName = new HashMap<>();
+    private final Map<String, GameVariantCartridge> gameSpecsByVariantName = new HashMap<>();
 
     public GamesCollection() {
         final boolean ok = validateUserDirs();
@@ -35,7 +34,7 @@ public class GamesCollection {
      * @param variantName game variant name (e.g. "PACMAN", "MS_PACMAN", "MS_PACMAN_TENGEN", "PACMAN_XXL", "MS_PACMAN_XXL")
      * @param gameSpec the game specification implementing the game variant
      */
-    public void registerGame(String variantName, GameVariantSpecification gameSpec) {
+    public void registerGame(String variantName, GameVariantCartridge gameSpec) {
         requireNonNull(variantName);
         requireNonNull(gameSpec);
 
@@ -44,7 +43,7 @@ public class GamesCollection {
                 .formatted(variantName, GameConstants.GAME_VARIANT_NAME_PATTERN));
         }
 
-        final GameVariantSpecification previousGameSpec = gameSpecsByVariantName.putIfAbsent(variantName, gameSpec);
+        final GameVariantCartridge previousGameSpec = gameSpecsByVariantName.putIfAbsent(variantName, gameSpec);
         if (previousGameSpec != null) {
             Logger.warn("Game spec ({}) is already registered for variant {}", previousGameSpec.getClass().getName(), variantName);
         }
@@ -53,7 +52,7 @@ public class GamesCollection {
         Logger.info("Game spec {} registered for variant {}", gameSpec.getClass().getSimpleName(), variantName);
     }
 
-    public GameVariantSpecification gameSpecForVariant(String variantName) {
+    public GameVariantCartridge gameSpecForVariant(String variantName) {
         requireNonNull(variantName);
         if (gameSpecsByVariantName.containsKey(variantName)) {
             return gameSpecsByVariantName.get(variantName);

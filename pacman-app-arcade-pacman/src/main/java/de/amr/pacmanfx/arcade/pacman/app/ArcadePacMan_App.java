@@ -5,11 +5,8 @@
 package de.amr.pacmanfx.arcade.pacman.app;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.game.*;
@@ -51,12 +48,7 @@ public class ArcadePacMan_App extends Application {
     @Override
     public void init() throws Exception {
         gamesCollection = new GamesCollection();
-        gamesCollection.registerGame(GameVariant.ARCADE_PACMAN.name(), new GameVariantSpecification(
-            Arcade_GameFlow::new,
-            ArcadePacMan_GameModel::new,
-            ArcadePacMan_GameRules::new,
-            ArcadePacMan_UIConfig::new
-        ));
+        gamesCollection.registerGame(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_Cartridge.CARTRIDGE);
 
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
     }

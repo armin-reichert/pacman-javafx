@@ -171,37 +171,37 @@ public class PacManGames3dApp extends Application {
 
     private void fillGamesCollection(GamesCollection gamesCollection) {
         for (GameVariant variant : GameVariant.values()) {
-            final GameVariantSpecification game = switch (variant) {
+            final GameVariantCartridge game = switch (variant) {
 
-                case ARCADE_PACMAN -> new GameVariantSpecification(
+                case ARCADE_PACMAN ->  new GameVariantCartridge(
                     Arcade_GameFlow::new,
                     ArcadePacMan_GameModel::new,
                     ArcadePacMan_GameRules::new,
                     ArcadePacMan_UIConfig::new
                 );
 
-                case ARCADE_MS_PACMAN -> new GameVariantSpecification(
+                case ARCADE_MS_PACMAN -> new GameVariantCartridge(
                     Arcade_GameFlow::new,
                     ArcadeMsPacMan_GameModel::new,
                     ArcadeMsPacMan_GameRules::new,
                     ArcadeMsPacMan_UIConfig::new
                 );
 
-                case TENGEN_MS_PACMAN -> new GameVariantSpecification(
+                case TENGEN_MS_PACMAN -> new GameVariantCartridge(
                     TengenMsPacMan_GameFlow::new,
                     TengenMsPacMan_GameModel::new,
                     TengenMsPacMan_GameRules::new,
                     TengenMsPacMan_UIConfig::new
                 );
 
-                case ARCADE_PACMAN_XXL -> new GameVariantSpecification(
+                case ARCADE_PACMAN_XXL -> new GameVariantCartridge(
                     Arcade_GameFlow::new,
                     PacManXXL_PacMan_GameModel::new,
                     PacManXXL_PacMan_GameRules::new,
                     PacManXXL_PacMan_UIConfig::new
                 );
 
-                case ARCADE_MS_PACMAN_XXL -> new GameVariantSpecification(
+                case ARCADE_MS_PACMAN_XXL -> new GameVariantCartridge(
                     Arcade_GameFlow::new,
                     PacManXXL_MsPacMan_GameModel::new,
                     PacManXXL_MsPacMan_GameRules::new,

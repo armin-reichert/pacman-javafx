@@ -13,7 +13,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.ui.game.GameVariantSpecification;
+import de.amr.pacmanfx.ui.game.GameVariantCartridge;
 import de.amr.pacmanfx.ui.game.GamesCollection;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
@@ -37,7 +37,7 @@ public class TengenMsPacMan_App extends Application {
     @Override
     public void init() {
         gamesCollection = new GamesCollection();
-        gamesCollection.registerGame(TENGEN_MS_PACMAN.name(), new GameVariantSpecification(
+        gamesCollection.registerGame(TENGEN_MS_PACMAN.name(), new GameVariantCartridge(
             TengenMsPacMan_GameFlow::new,
             TengenMsPacMan_GameModel::new,
             TengenMsPacMan_GameRules::new,
