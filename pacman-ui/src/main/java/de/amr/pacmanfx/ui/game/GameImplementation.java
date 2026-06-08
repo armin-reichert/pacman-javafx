@@ -289,12 +289,12 @@ public final class GameImplementation implements Game {
     }
 
     private void initGameClock() {
-        clock().setUpdateAction(() -> {
+        gameClock.setUpdateAction(() -> {
             currentGameContext.flow().makeStep();
-            ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock().tickCount()));
+            ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameClock.tickCount()));
         });
-        clock().setPermanentAction(() -> ui.subViews().currentView().render());
-        clock().setErrorHandler(this::ka_tas_tro_phe);
+        gameClock.setPermanentAction(() -> ui.subViews().currentView().render());
+        gameClock.setErrorHandler(this::ka_tas_tro_phe);
     }
 
     private void initMainScene() {
