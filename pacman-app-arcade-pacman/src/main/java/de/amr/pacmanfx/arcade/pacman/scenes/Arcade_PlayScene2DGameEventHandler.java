@@ -23,22 +23,22 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
     @Override
     public void onBonusActivated(BonusActivatedEvent e) {
         // This is the sound in Ms. Pac-Man when the bonus wanders the maze. In Pac-Man, this is a no-op.
-        appContext().currentSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        appContext().currentSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
-        appContext().currentSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
     public void onCreditAdded(CreditAddedEvent e) {
-        appContext().currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
         final boolean silent = gameContext().model().isDemoLevelRunning() ||
             gameContext().state() instanceof TestState;
         if (!silent) {
-            appContext().currentSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
+            optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
     }
 
@@ -60,18 +60,18 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
         final GameState newState = (GameState) e.newState();
 
         if (GameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
-            appContext().currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             playScene2D.levelCompletedAnimation().play();
         }
         else if (GameStateID.GAME_OVER.identifies(newState)) {
             gameContext().model().hud().creditOn();
-            appContext().currentSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
+            optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
         }
     }
 
     @Override
     public void onGhostEaten(GhostEatenEvent e) {
-        appContext().currentSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
     }
 
     @Override
@@ -87,27 +87,27 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
 
     @Override
     public void onPacDying(PacDyingEvent e) {
-        appContext().currentSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound);
     }
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
         final long tick = appContext().gameClock().tickCount();
-        appContext().currentSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
+        optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 
     @Override
     public void onPacGetsPower(PacGetsPowerEvent e) {
-        appContext().currentSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
     }
 
     @Override
     public void onPacLostPower(PacLostPowerEvent e) {
-        appContext().currentSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 
     @Override
     public void onSpecialScore(SpecialScoreEvent e) {
-        appContext().currentSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 }

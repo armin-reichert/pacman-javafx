@@ -69,6 +69,9 @@ public abstract class GameScene implements Disposable {
         return Optional.empty();
     }
 
+    public Optional<GameSoundEffects> optSoundEffects() {
+        return appContext.currentSoundEffects();
+    }
     /**
      * @return action bindings for this scene
      */
@@ -96,7 +99,7 @@ public abstract class GameScene implements Disposable {
     public final void deactivate() {
         onDeactivate();
         actionBindings.dispose();
-        appContext.currentSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
         Logger.trace("Game scene {} deactivated", getClass().getSimpleName());
     }
 

@@ -20,7 +20,7 @@ import static java.util.Objects.requireNonNull;
  * unscaled scene dimensions, scaling, and background color. Subclasses
  * implement scene-specific activation, deactivation, and rendering logic.
  * <p>
- * The scene is reusable: {@link #onActivate(AppContext)} and {@link #onDeactivate()}
+ * The scene is reusable: {@link #onActivate()} and {@link #onDeactivate()}
  * must establish and release all bindings, listeners, and resources created
  * by the subclass.
  */

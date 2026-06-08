@@ -10,7 +10,6 @@ import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.flow.GameFlow;
@@ -63,7 +62,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         setGameEventHandler(new BaseGameSceneHandler(appContext) {
             @Override
             public void onCreditAdded(CreditAddedEvent e) {
-                appContext.currentSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
+                optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
             }
         });
 

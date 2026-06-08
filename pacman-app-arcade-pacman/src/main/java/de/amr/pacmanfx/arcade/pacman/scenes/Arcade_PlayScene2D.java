@@ -6,7 +6,9 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -44,8 +46,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public void onTick(long tick) {
         gameContext().optCurrentLevel().ifPresent(level -> {
-            updateLivesCounter(level);
-            appContext().currentSoundEffects().ifPresent(sfx -> {
+            updateLivesCounter(gameState(), gameModel(), level.entities().pac());
+            optSoundEffects().ifPresent(sfx -> {
                 sfx.setEnabled(!level.isDemoLevel());
                 sfx.playLevelRunningSound(gameContext(), level);
             });
@@ -132,12 +134,12 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     // Private
 
-    // While Pac-Man is not yet visible on level start, one symbol more is shown in the lives counter
-    private void updateLivesCounter(GameLevel level) {
-        final int additionalLives = GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameState())
-            && !level.entities().pac().isVisible() ? 1 : 0;
-        final int count = Math.clamp(gameModel().lives().count() - 1 + additionalLives, 0, gameModel().hud().maxLivesDisplayed());
-        gameModel().hud().setVisibleLifeCount(count);
+    // While Pac-Man is not yet visible on game/level start, an additional lives symbol more is shown in the counter
+    private void updateLivesCounter(GameState gameState, GameModel gameModel, Pac pac) {
+        final boolean oneMore = GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameState) && !pac.isVisible();
+        final int livesToDisplay = gameModel.lives().count() - 1 + (oneMore ? 1 : 0);
+        final int livesDisplayed = Math.clamp(livesToDisplay, 0, gameModel.hud().maxLivesDisplayed());
+        gameModel.hud().setVisibleLifeCount(livesDisplayed);
     }
 
     protected void resetActorAnimations(GameLevel level) {
