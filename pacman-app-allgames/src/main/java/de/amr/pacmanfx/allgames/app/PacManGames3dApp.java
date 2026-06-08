@@ -276,7 +276,7 @@ public class PacManGames3dApp extends Application {
         dashboard.addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
             new DashboardSectionJoypad(dashboard),
-            TengenMsPacMan_UIConfig.TEXT_BUNDLE.getString("infobox.joypad.title"),
+            app.ui().configurations().getOrCreateUIConfig(TENGEN_MS_PACMAN.name()).translate("infobox.joypad.title"),
             false);
 
         // Configure custom map section table

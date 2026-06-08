@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -48,7 +47,6 @@ public class TengenMsPacMan_App extends Application {
             .build();
 
         final GamePlayView playView = app.ui().subViews().gamePlayView();
-        final TranslationManager tengenTranslations = () -> TengenMsPacMan_UIConfig.TEXT_BUNDLE;
 
         playView.configureDashboard(List.of(
             CommonDashboardID.GENERAL,
@@ -65,7 +63,7 @@ public class TengenMsPacMan_App extends Application {
         playView.dashboard().addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
             new DashboardSectionJoypad(playView.dashboard()),
-            tengenTranslations.translate("infobox.joypad.title"),
+            app.ui().configurations().getOrCreateUIConfig(TENGEN_MS_PACMAN.name()).translate("infobox.joypad.title"),
             false);
 
         app.displayOnScreen();

@@ -19,6 +19,7 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentColors;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostStateColors;
@@ -73,7 +74,7 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
  * @see GameSceneConfig  companion interface handling scene creation and selection logic
  * @see AppContext           owner component that uses this configuration
  */
-public interface UIConfig extends Disposable {
+public interface UIConfig extends TranslationManager, Disposable {
 
     /**
      * Default 3D rendering configuration used when a variant does not override it.

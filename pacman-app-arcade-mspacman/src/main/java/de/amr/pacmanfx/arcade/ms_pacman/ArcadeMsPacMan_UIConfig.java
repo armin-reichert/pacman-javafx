@@ -54,12 +54,20 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
         return ArcadeMsPacMan_UIConfig.class;
     }
 
+    private final ResourceBundle textBundle;
     private final AssetMap assets = new AssetMap();
     private final Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
     private GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
-    public ArcadeMsPacMan_UIConfig() {}
+    public ArcadeMsPacMan_UIConfig() {
+        textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts");
+    }
+
+    @Override
+    public ResourceBundle textBundle() {
+        return textBundle;
+    }
 
     @Override
     public void init(AppContext context) {
@@ -93,11 +101,10 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
 
     private void loadAssets() {
         assets.clear();
-        assets.set("app_icon", loadImage("graphics/icons/mspacman.png"));
-        assets.set("logo.midway", loadImage("graphics/midway_logo.png"));
+        assets.register("app_icon", loadImage("graphics/icons/mspacman.png"));
+        assets.register("logo.midway", loadImage("graphics/midway_logo.png"));
         createBrightMazeImages();
-        assets.set("color.game_over_message", ARCADE_RED);
-        assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts"));
+        assets.register("color.game_over_message", ARCADE_RED);
     }
 
     @Override
@@ -234,7 +241,7 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
 
     private void createBrightMazeImages() {
         for (int i = 0; i < ArcadeMsPacMan_MapSelector.MAP_COLOR_SCHEMES.length; ++i) {
-            assets.set("maze.bright.%d".formatted(i), createBrightMazeImage(i));
+            assets.register("maze.bright.%d".formatted(i), createBrightMazeImage(i));
         }
     }
 

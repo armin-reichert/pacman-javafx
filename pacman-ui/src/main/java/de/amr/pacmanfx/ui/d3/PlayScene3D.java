@@ -74,7 +74,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
      */
     public PlayScene3D(AppContext context) {
         super(context);
-        gameOverMessagePicker = new RandomTextPicker(context.ui().translations().bundle(), "game.over");
+        gameOverMessagePicker = new RandomTextPicker(context.ui().translations().textBundle(), "game.over");
         createSubScene();
         createBindings();
         bindActions();

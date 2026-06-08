@@ -26,8 +26,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameScene2D extends GameScene {
 
-    private final IntegerProperty unscaledWidth = new SimpleIntegerProperty();
-    private final IntegerProperty unscaledHeight = new SimpleIntegerProperty();
+    private final IntegerProperty unscaledWidth = new SimpleIntegerProperty(Globals.ARCADE_MAP_SIZE_IN_PIXELS.x());
+    private final IntegerProperty unscaledHeight = new SimpleIntegerProperty(Globals.ARCADE_MAP_SIZE_IN_PIXELS.y());
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
 
@@ -35,8 +35,6 @@ public class GameScene2D extends GameScene {
 
     public GameScene2D(AppContext context) {
         super(context);
-        unscaledWidth.set(Globals.ARCADE_MAP_SIZE_IN_PIXELS.x());
-        unscaledHeight.set(Globals.ARCADE_MAP_SIZE_IN_PIXELS.y());
     }
 
     /**

@@ -13,36 +13,30 @@ import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * Data structure and API for game assets.
  */
-public class AssetMap implements TranslationManager, Disposable {
+public class AssetMap implements Disposable {
 
     private final Map<String, Object> assetsByID = new HashMap<>();
-    private ResourceBundle localizedTexts;
-
-    @Override
-    public ResourceBundle bundle() {
-        return localizedTexts;
-    }
 
     @Override
     public void dispose() {
         assetsByID.clear();
     }
 
-    public void setLocalizedTexts(ResourceBundle bundle) {
-        this.localizedTexts = bundle;
+    public void register(String key, Object asset) {
+        requireNonNull(key);
+        requireNonNull(asset);
+        assetsByID.put(key, asset);
     }
 
-    public void set(String key, Object value) {
+    public void unregister(String key) {
         requireNonNull(key);
-        requireNonNull(value);
-        assetsByID.put(key, value);
+        assetsByID.remove(key);
     }
 
     public void clear() {
@@ -51,11 +45,6 @@ public class AssetMap implements TranslationManager, Disposable {
 
     public int numAssets() {
         return assetsByID.size();
-    }
-
-    public void remove(String key) {
-        requireNonNull(key);
-        assetsByID.remove(key);
     }
 
     /**

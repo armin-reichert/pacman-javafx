@@ -45,6 +45,7 @@ public final class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManage
     private static final String XXL_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
     private static final String XXL_PKG = "de.amr.pacmanfx.arcade.pacman_xxl.";
 
+    private final ResourceBundle textBundle;
     private final AssetMap assets = new AssetMap();
     private final ArcadePacMan_Factory3D factory3D = new ArcadePacMan_Factory3D();
 
@@ -53,7 +54,14 @@ public final class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManage
 
     private AppContext context;
 
-    public PacManXXL_PacMan_UIConfig() {}
+    public PacManXXL_PacMan_UIConfig() {
+        textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman");
+    }
+
+    @Override
+    public ResourceBundle textBundle() {
+        return textBundle;
+    }
 
     @Override
     public Class<?> resourceRootClass() {
@@ -109,10 +117,8 @@ public final class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManage
     private void loadAssets() {
         assets.clear();
 
-        assets.set("app_icon", loadImage(XXL_PATH + "graphics/icons/pacman.png"));
-        assets.set("color.game_over_message", ARCADE_RED);
-
-        assets.setLocalizedTexts(ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman"));
+        assets.register("app_icon", loadImage(XXL_PATH + "graphics/icons/pacman.png"));
+        assets.register("color.game_over_message", ARCADE_RED);
     }
 
     private void registerSounds(SoundManager sounds) {

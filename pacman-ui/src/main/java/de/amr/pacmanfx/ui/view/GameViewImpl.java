@@ -117,10 +117,10 @@ public class GameViewImpl implements GameView {
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager appSpecificTranslator = context.currentUIConfig().assets();
+        final TranslationManager appSpecificTranslator = context.currentUIConfig();
         final String appTitleKey = paused ? "app.title.paused" : "app.title";
-        if (appSpecificTranslator.bundle() != null
-            && appSpecificTranslator.bundle().containsKey(appTitleKey)) {
+        if (appSpecificTranslator.textBundle() != null
+            && appSpecificTranslator.textBundle().containsKey(appTitleKey)) {
             return appSpecificTranslator.translate(appTitleKey, viewMode);
         } else {
             return "Unspecified Game";

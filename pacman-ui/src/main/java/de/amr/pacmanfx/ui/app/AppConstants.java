@@ -66,7 +66,7 @@ public class AppConstants {
     /**
      * Resource manager for UI assets (fonts, images, sounds).
      */
-    public static final ResourceManager UI_RESOURCES = () -> AppContext.class;
+    public static final ResourceManager UI_RESOURCES = () -> AppConstants.class;
 
     /**
      * Voice media for immunity activation.

@@ -12,14 +12,12 @@ import static java.util.Objects.requireNonNull;
 
 public interface TranslationManager {
 
-    ResourceBundle bundle();
+    ResourceBundle textBundle();
 
     default String translate(String key, Object... args) {
         requireNonNull(key);
-        final ResourceBundle bundle = bundle();
-        requireNonNull(bundle);
-        if (bundle.containsKey(key)) {
-            return replaceEscapeSequences(MessageFormat.format(bundle().getString(key), args));
+        if (textBundle().containsKey(key)) {
+            return replaceEscapeSequences(MessageFormat.format(textBundle().getString(key), args));
         }
         Logger.error("Missing localized text for key {}", key);
         return "[" + key + "]";

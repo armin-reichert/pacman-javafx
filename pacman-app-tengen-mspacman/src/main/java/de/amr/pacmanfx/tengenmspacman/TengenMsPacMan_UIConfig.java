@@ -151,8 +151,6 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     public static final String REL_PATH_ARCADE_MAPS_IMAGE = "graphics/arcade_mazes.png";
     public static final String REL_PATH_NON_ARCADE_MAPS_IMAGE = "graphics/non_arcade_mazes.png";
 
-    public static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
-
     /** Additional property keys used inside world map files. Values are set at runtime by the map selector. */
     public enum MapConfigKey {
         /** Map category. One of ARCADE, MINI, BIG, STRANGE. */
@@ -188,13 +186,20 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     // Non-static members
 
+    private final ResourceBundle textBundle;
     private final AssetMap assets = new AssetMap();
     private final TengenMsPacMan_Factory3D factory3D = new TengenMsPacMan_Factory3D();
     private TengenMsPacMan_GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
     public TengenMsPacMan_UIConfig() {
+        textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
         Logger.info("Created Tengen UI configuration {}:", getClass().getSimpleName());
+    }
+
+    @Override
+    public ResourceBundle textBundle() {
+        return textBundle;
     }
 
     @Override
@@ -325,12 +330,11 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     private void loadAssets() {
         assets.clear();
-        assets.set("app_icon",                         LOCAL_RESOURCES.loadImage("graphics/icons/mspacman.png"));
-        assets.set("startpage.image1",                 LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.png"));
-        assets.set("startpage.image2",                 LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.png"));
-        assets.set("color.game_over_message",          nesColor(0x11));
-        assets.set("color.ready_message",              nesColor(0x28));
-        assets.setLocalizedTexts(TEXT_BUNDLE);
+        assets.register("app_icon",                         LOCAL_RESOURCES.loadImage("graphics/icons/mspacman.png"));
+        assets.register("startpage.image1",                 LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.png"));
+        assets.register("startpage.image2",                 LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.png"));
+        assets.register("color.game_over_message",          nesColor(0x11));
+        assets.register("color.ready_message",              nesColor(0x28));
     }
 
     private void registerSoundObjects(SoundManager soundManager) {

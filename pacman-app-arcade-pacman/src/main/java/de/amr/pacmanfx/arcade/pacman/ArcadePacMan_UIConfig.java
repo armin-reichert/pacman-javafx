@@ -176,12 +176,20 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         Color.valueOf(WORLD_MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
     );
 
+    private final ResourceBundle textBundle;
     private final AssetMap assets = new AssetMap();
     private final ArcadePacMan_Factory3D factory3D = new ArcadePacMan_Factory3D();
     private GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
-    public ArcadePacMan_UIConfig() {}
+    public ArcadePacMan_UIConfig() {
+        textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts");
+    }
+
+    @Override
+    public ResourceBundle textBundle() {
+        return textBundle;
+    }
 
     @Override
     public Class<?> resourceRootClass() {
@@ -230,10 +238,9 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
 
     private void loadAssets() {
         assets.clear();
-        assets.set("app_icon", loadImage("graphics/icons/pacman.png"));
-        assets.set("color.game_over_message", ARCADE_RED);
-        assets.set("maze.bright", UfxImages.recolorImage(spriteSheet().image(SpriteID.MAP_EMPTY), BRIGHT_MAZE_COLOR_CHANGES));
-        assets.setLocalizedTexts(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts"));
+        assets.register("app_icon", loadImage("graphics/icons/pacman.png"));
+        assets.register("color.game_over_message", ARCADE_RED);
+        assets.register("maze.bright", UfxImages.recolorImage(spriteSheet().image(SpriteID.MAP_EMPTY), BRIGHT_MAZE_COLOR_CHANGES));
     }
 
     private void initSound(SoundManager soundManager) {
