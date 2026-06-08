@@ -106,10 +106,10 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage stage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+
         try {
             if (useBuilder) {
-                app = GameBuilder
-                    .compose(gamesCollection, stage, sceneSize.x(), sceneSize.y())
+                app = GameBuilder.compose(gamesCollection, stage, sceneSize.x(), sceneSize.y())
 
                     .gameVariant(
                         ARCADE_PACMAN,
