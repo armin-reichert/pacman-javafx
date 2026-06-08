@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.game;
 
-import de.amr.pacmanfx.model.GameModel;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -14,7 +13,10 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Collection of the game variants. Each game variant is represented by an instance of its game model (see {@link GameModel}).
+ * Collection of the playable game variants.
+ * <p>
+ * All games in a single box (only 1,99 € / game)!
+ * </p>
  */
 public class GamesCollection {
 

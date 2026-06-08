@@ -52,8 +52,7 @@ import static java.util.Objects.requireNonNull;
 
 public final class GameImplementation implements Game {
 
-    // All games in a single box (only 1,99 € / game)!
-    private final GamesCollection gamesCollection = new GamesCollection();
+    private final GamesCollection gamesCollection;
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
@@ -75,7 +74,8 @@ public final class GameImplementation implements Game {
 
     private GameContextImpl currentGameContext;
 
-    public GameImplementation(GameViewImplementation view, GameClock gameClock, CoinMechanism coinMechanism) {
+    public GameImplementation(GamesCollection gamesCollection, GameViewImplementation view, GameClock gameClock, CoinMechanism coinMechanism) {
+        this.gamesCollection = requireNonNull(gamesCollection);
         this.view = requireNonNull(view);
         this.gameClock = requireNonNull(gameClock);
         this.coinMechanism = requireNonNull(coinMechanism);

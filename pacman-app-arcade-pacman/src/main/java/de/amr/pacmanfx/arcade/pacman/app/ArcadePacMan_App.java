@@ -46,11 +46,13 @@ public class ArcadePacMan_App extends Application {
         CommonDashboardID.ABOUT
     );
 
+    private GamesCollection gamesCollection;
     private Game app;
     private boolean useBuilder;
 
     @Override
     public void init() throws Exception {
+        gamesCollection = new GamesCollection();
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
     }
 
@@ -58,7 +60,7 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
-            app = GameBuilder.newApp(primaryStage, size.x(), size.y())
+            app = GameBuilder.newApp(gamesCollection, primaryStage, size.x(), size.y())
                 .game(
                     GameVariant.ARCADE_PACMAN,
                     Arcade_GameFlow::new,
@@ -85,7 +87,11 @@ public class ArcadePacMan_App extends Application {
     // Private area
 
     private void createApp(Stage stage, Vector2i sceneSize) {
-        app = new GameImplementation(createView(stage, sceneSize.x(), sceneSize.y()), new GameClockFX(), new CoinMechanism());
+        app = new GameImplementation(
+            gamesCollection,
+            createView(stage, sceneSize.x(), sceneSize.y()),
+            new GameClockFX(),
+            new CoinMechanism());
 
         final AbstractGameModel gameModel = new ArcadePacMan_GameModel();
         final GameRules gameRules = new ArcadePacMan_GameRules();

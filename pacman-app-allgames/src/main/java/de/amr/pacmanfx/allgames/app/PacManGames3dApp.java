@@ -90,6 +90,7 @@ public class PacManGames3dApp extends Application {
         CommonDashboardID.ABOUT
     );
 
+    private GamesCollection gamesCollection;
     private Game app;
 
     private boolean useBuilder;
@@ -97,6 +98,7 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
+        gamesCollection = new GamesCollection();
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
     }
@@ -107,7 +109,7 @@ public class PacManGames3dApp extends Application {
         try {
             if (useBuilder) {
                 app = GameBuilder
-                    .newApp(stage, sceneSize.x(), sceneSize.y())
+                    .newApp(gamesCollection, stage, sceneSize.x(), sceneSize.y())
 
                     .game(
                         ARCADE_PACMAN,
@@ -161,6 +163,7 @@ public class PacManGames3dApp extends Application {
             }
             else {
                 app = new GameImplementation(
+                    gamesCollection,
                     createView(stage, sceneSize.x(), sceneSize.y()),
                     new GameClockFX(),
                     new CoinMechanism());

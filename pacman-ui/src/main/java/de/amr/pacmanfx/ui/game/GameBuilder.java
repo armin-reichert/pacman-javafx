@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.core.Validations.requireNonNegative;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Builder for constructing and configuring an application.
@@ -41,13 +42,15 @@ public class GameBuilder {
         WorldMapSelector mapSelector) {}
 
     public static GameBuilder newApp(
+        GamesCollection gamesCollection,
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight)
     {
-        return new GameBuilder(stage, mainSceneWidth, mainSceneHeight);
+        return new GameBuilder(gamesCollection, stage, mainSceneWidth, mainSceneHeight);
     }
 
+    private final GamesCollection gamesCollection;
     private final WindowConfig windowConfig;
     private final Map<String, GameConfig> gameConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
@@ -56,10 +59,12 @@ public class GameBuilder {
     private boolean includeTests;
 
     private GameBuilder(
+        GamesCollection gamesCollection,
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight)
     {
+        this.gamesCollection = requireNonNull(gamesCollection);
         windowConfig = new WindowConfig(stage, mainSceneWidth, mainSceneHeight);
     }
 
@@ -131,6 +136,7 @@ public class GameBuilder {
         validateConfigurationData();
 
         final var app = new GameImplementation(
+            gamesCollection,
             createGameView(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight()),
             new GameClockFX(),
             coinMechanism ? new CoinMechanism(99) : CoinMechanism.OUT_OF_SERVICE);

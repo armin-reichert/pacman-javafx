@@ -12,6 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GamesCollection;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
@@ -24,13 +25,19 @@ public class ArcadeMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = 1.2f; // 12:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
+    private GamesCollection gamesCollection;
     private Game app;
+
+    @Override
+    public void init() throws Exception {
+        gamesCollection = new GamesCollection();
+    }
 
     @Override
     public void start(Stage primaryStage) {
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         app = GameBuilder
-            .newApp(primaryStage, screenSize.x(), screenSize.y())
+            .newApp(gamesCollection, primaryStage, screenSize.x(), screenSize.y())
             .game(
                 GameVariant.ARCADE_MS_PACMAN,
                 Arcade_GameFlow::new,
