@@ -33,8 +33,8 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
     @Override
     public void draw(GameScene2D scene) {
         clearCanvas();
-        drawHorizontalBar(nesColor(0x20), nesColor(0x13), scene.getUnscaledWidth(), TS, 20);
-        drawHorizontalBar(nesColor(0x20), nesColor(0x13), scene.getUnscaledWidth(), TS, 212);
+        drawHorizontalBar(nesColor(0x20), nesColor(0x13), scene.unscaledWidth(), TS, 20);
+        drawHorizontalBar(nesColor(0x20), nesColor(0x13), scene.unscaledWidth(), TS, 212);
         ctx.setFont(arcadeFont8());
         y = 7 * TS; // important: reset on every draw!
         if (scene.gameState().timer().betweenSeconds(0, 0.5 * DISPLAY_SECONDS)) {

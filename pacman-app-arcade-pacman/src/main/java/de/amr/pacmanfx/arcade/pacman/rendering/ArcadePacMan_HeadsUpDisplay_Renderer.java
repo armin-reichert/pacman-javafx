@@ -59,8 +59,8 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
 
         if (hud.isLevelCounterOn()) {
             final RectShort[] bonusSymbolSprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
-            final float y = scene.getUnscaledHeight() - TS(2) + 2;
-            float x = scene.getUnscaledWidth() - TS(4);
+            final float y = scene.unscaledHeight() - TS(2) + 2;
+            float x = scene.unscaledWidth() - TS(4);
             for (int symbolCode : game.levelCounter().symbolCodes()) {
                 drawSprite(bonusSymbolSprites[symbolCode], x, y, true);
                 x -= TS(2); // symbols are drawn from right to left
@@ -70,7 +70,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
         if (hud.isLivesCounterOn()) {
             final RectShort livesCounterSprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             final float x = TS(2);
-            final float y = scene.getUnscaledHeight() - TS(2);
+            final float y = scene.unscaledHeight() - TS(2);
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(livesCounterSprite, x + i * TS(2), y, true);
             }
@@ -83,7 +83,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
         }
 
         if (hud.isCreditOn()) {
-            fillText(CREDIT_TEXT_PATTERN.formatted(hud.credit()), ARCADE_WHITE, arcadeFont8(), TS(2), scene.getUnscaledHeight());
+            fillText(CREDIT_TEXT_PATTERN.formatted(hud.credit()), ARCADE_WHITE, arcadeFont8(), TS(2), scene.unscaledHeight());
         }
     }
 

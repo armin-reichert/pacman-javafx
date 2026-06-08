@@ -171,7 +171,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     private void spawnJunior(UIConfig uiConfig, long tick) {
         var junior = TengenMsPacMan_ActorFactory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
-        junior.setPosition((float) randomX, getUnscaledHeight() - 4 * TS);
+        junior.setPosition((float) randomX, unscaledHeight() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
         junior.setAnimations(uiConfig.createPacAnimations(appContext().ui().sprites().animationSet()));
@@ -198,11 +198,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             computeNewMoveDir(junior);
         }
         junior.move();
-        if (junior.x() > getUnscaledWidth()) {
+        if (junior.x() > unscaledWidth()) {
             junior.setX(0);
         }
         if (junior.x() < 0) {
-            junior.setX(getUnscaledWidth());
+            junior.setX(unscaledWidth());
         }
     }
 
@@ -221,7 +221,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     private int compareBySmallestDistToSceneCenter(Pac junior, Direction dir1, Direction dir2) {
         Vector2f pos1 = junior.computeTile().plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = junior.computeTile().plus(dir2.vector()).scaled(TS).toVector2f();
-        Vector2f center = new Vector2f(0.5f * getUnscaledWidth(), 0.5f * getUnscaledHeight());
+        Vector2f center = new Vector2f(0.5f * unscaledWidth(), 0.5f * unscaledHeight());
         return Double.compare(pos1.euclideanDist(center), pos2.euclideanDist(center));
     }
 }

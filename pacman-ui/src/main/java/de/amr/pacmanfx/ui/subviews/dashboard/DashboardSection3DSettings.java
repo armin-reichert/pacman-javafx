@@ -142,8 +142,8 @@ public class DashboardSection3DSettings extends DashboardSection {
 
         if (gameScene instanceof GameScene2D gameScene2D) {
             return "%dx%d (scaled: %.0fx%.0f)".formatted(
-                gameScene2D.getUnscaledWidth(), gameScene2D.getUnscaledHeight(),
-                gameScene2D.getWidth(), gameScene2D.getHeight());
+                gameScene2D.unscaledWidth(), gameScene2D.unscaledHeight(),
+                gameScene2D.width(), gameScene2D.height());
         }
 
         if (game.optGameLevel().isPresent()) {

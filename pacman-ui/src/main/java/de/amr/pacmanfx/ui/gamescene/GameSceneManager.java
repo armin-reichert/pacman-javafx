@@ -269,8 +269,8 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         else {
             // Undecorated game scene taking complete height
             decorationPane.canvas().heightProperty().bind(gameUIView.mainScene().heightProperty());
-            decorationPane.canvas().widthProperty().bind(gameUIView.mainScene().heightProperty().map(h -> h.doubleValue() * gameScene2D.getAspectRatio()));
-            gameScene2D.scalingProperty().bind(gameUIView.mainScene().heightProperty().divide(gameScene2D.getUnscaledHeight()));
+            decorationPane.canvas().widthProperty().bind(gameUIView.mainScene().heightProperty().map(h -> h.doubleValue() * gameScene2D.aspectRatio()));
+            gameScene2D.scalingProperty().bind(gameUIView.mainScene().heightProperty().divide(gameScene2D.unscaledHeight()));
 
             playView.setGameSceneContent(decorationPane.canvas());
         }

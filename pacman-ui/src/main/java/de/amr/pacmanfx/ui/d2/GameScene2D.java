@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.d2;
 
 import de.amr.pacmanfx.core.Globals;
+import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.ui.app.AppContext;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -27,8 +28,11 @@ import static java.util.Objects.requireNonNull;
 public class GameScene2D extends GameScene {
 
     private final IntegerProperty unscaledWidth = new SimpleIntegerProperty(Globals.ARCADE_MAP_SIZE_IN_PIXELS.x());
+
     private final IntegerProperty unscaledHeight = new SimpleIntegerProperty(Globals.ARCADE_MAP_SIZE_IN_PIXELS.y());
-    private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
+
+    private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
+
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
 
     protected Canvas canvas;
@@ -37,15 +41,12 @@ public class GameScene2D extends GameScene {
         super(context);
     }
 
-    /**
-     * Releases bindings and resources held by this scene.
-     * Called when the scene is permanently discarded and will not be reused.
-     * Subclasses overriding this method must call {@code super.dispose()}.
-     */
     @Override
     public void dispose() {
-        backgroundColor.unbind();
+        unscaledHeight.unbind();
+        unscaledHeight.unbind();
         scaling.unbind();
+        backgroundColor.unbind();
     }
 
     /**
@@ -90,8 +91,8 @@ public class GameScene2D extends GameScene {
     }
 
     /** @return the current background color */
-    public Color getBackgroundColor() {
-        return backgroundColor.get();
+    public Color backgroundColor() {
+        return backgroundColorProperty().get();
     }
 
     /**
@@ -100,7 +101,7 @@ public class GameScene2D extends GameScene {
      * @param color the new background color
      */
     public void setBackgroundColor(Color color) {
-        backgroundColor.set(color);
+        backgroundColorProperty().set(color);
     }
 
     /** @return the unscaled scene width property */
@@ -109,8 +110,8 @@ public class GameScene2D extends GameScene {
     }
 
     /** @return the unscaled scene width in pixels */
-    public int getUnscaledWidth() {
-        return unscaledWidth.get();
+    public int unscaledWidth() {
+        return unscaledWidthProperty().get();
     }
 
     /** @return the unscaled scene height property */
@@ -119,13 +120,18 @@ public class GameScene2D extends GameScene {
     }
 
     /** @return the unscaled scene height in pixels */
-    public int getUnscaledHeight() {
-        return unscaledHeight.get();
+    public int unscaledHeight() {
+        return unscaledHeightProperty().get();
     }
 
     /** @return the scaling factor property */
     public DoubleProperty scalingProperty() {
         return scaling;
+    }
+
+    /** @return the current scaling factor */
+    public double scaling() {
+        return scaling.get();
     }
 
     /**
@@ -134,26 +140,22 @@ public class GameScene2D extends GameScene {
      * @param value the scaling factor (1.0 = original size)
      */
     public void setScaling(double value) {
-        scaling.set(value);
-    }
-
-    /** @return the current scaling factor */
-    public double scaling() {
-        return scaling.get();
+        Validations.requireNonNegative(value);
+        scalingProperty().set(value);
     }
 
     /** @return the scaled scene width in pixels */
-    public double getWidth() {
-        return scaling() * getUnscaledWidth();
+    public double width() {
+        return scaling() * unscaledWidth();
     }
 
     /** @return the scaled scene height in pixels */
-    public double getHeight() {
-        return scaling() * getUnscaledHeight();
+    public double height() {
+        return scaling() * unscaledHeight();
     }
 
     /** @return the aspect ratio (width / height) */
-    public double getAspectRatio() {
-        return getWidth() / getHeight();
+    public double aspectRatio() {
+        return width() / height();
     }
 }
