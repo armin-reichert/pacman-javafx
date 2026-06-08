@@ -10,8 +10,12 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Globals;
+import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
+import de.amr.pacmanfx.model.test.CutScenesTestState;
+import de.amr.pacmanfx.model.test.LevelMediumTestState;
+import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -57,7 +61,7 @@ public final class GameImplementation implements Game {
         return new File(GameConstants.USER_HOME_DIR, fileName);
     }
 
-    private final PacManGamesMachine gamesCollection;
+    private final PacManGamesMachine machine;
 
     private final Map<String, GameVariantRuntime> gameVariantImplMap = new HashMap<>();
 
@@ -81,8 +85,8 @@ public final class GameImplementation implements Game {
 
     private GameContextImpl currentGameContext;
 
-    public GameImplementation(PacManGamesMachine gamesCollection, GameViewImplementation view, GameClock gameClock, CoinMechanism coinMechanism) {
-        this.gamesCollection = requireNonNull(gamesCollection);
+    public GameImplementation(PacManGamesMachine machine, GameViewImplementation view, GameClock gameClock, CoinMechanism coinMechanism) {
+        this.machine = requireNonNull(machine);
         this.view = requireNonNull(view);
         this.gameClock = requireNonNull(gameClock);
         this.coinMechanism = requireNonNull(coinMechanism);
@@ -109,25 +113,21 @@ public final class GameImplementation implements Game {
     }
 
     private GameVariantRuntime createGameVariantImplementation(String variantName) {
-        final Cartridge cartridge = gamesCollection.cartridgeForVariant(variantName);
+        final Cartridge cartridge = machine.cartridgeForVariant(variantName);
         final var runtime = new GameVariantRuntime(
             cartridge.gameFlowFactory().get(),
             cartridge.gameModelFactory().get(),
             cartridge.gameRulesFactory().get(),
             cartridge.uiConfigFactory().get()
         );
+        //TODO make configurable again if tests should be available
+        final GameFlow flow = runtime.gameFlow();
+        flow.addState(new LevelShortTestState());
+        flow.addState(new LevelMediumTestState());
+        flow.addState(new CutScenesTestState());
 
-        //TODO reactivate
-        /*
-        if (spec.includeTests()) {
-            final GameFlow flow = variantImpl.gameFlow();
-            flow.addState(new LevelShortTestState());
-            flow.addState(new LevelMediumTestState());
-            flow.addState(new CutScenesTestState());
-        }
-
-         */
         runtime.gameModel().createHighScore(highScoreFile(variantName));
+
         return runtime;
     }
 
@@ -151,7 +151,7 @@ public final class GameImplementation implements Game {
     @Override
     public void selectGameVariant(String variantName) {
         requireNonNull(variantName);
-        if (gamesCollection.isCartridgeForVariantRegistered(variantName)) {
+        if (machine.isCartridgeForVariantRegistered(variantName)) {
             gameVariantName.set(variantName);
         }
         else {
@@ -170,8 +170,8 @@ public final class GameImplementation implements Game {
     }
 
     @Override
-    public PacManGamesMachine gamesContainer() {
-        return gamesCollection;
+    public PacManGamesMachine machine() {
+        return machine;
     }
 
     @Override
