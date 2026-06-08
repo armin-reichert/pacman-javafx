@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
@@ -80,9 +81,9 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         info.put(CommonRenderInfoKey.MAP_EMPTY, mapIsEmpty);
         info.put(CommonRenderInfoKey.MAP_BRIGHT, false);
         info.put(CommonRenderInfoKey.MAP_FLASHING, false);
-        playScene2D.optFlashingState().ifPresent(flashingState -> {
-            info.put(CommonRenderInfoKey.MAP_BRIGHT,   flashingState.isHighlighted());
-            info.put(CommonRenderInfoKey.MAP_FLASHING, flashingState.isFlashing());
+        playScene2D.optLevelCompletedAnimation().flatMap(LevelCompletedAnimation::flashingState).ifPresent(flashing -> {
+            info.put(CommonRenderInfoKey.MAP_BRIGHT,   flashing.isHighlighted());
+            info.put(CommonRenderInfoKey.MAP_FLASHING, flashing.isFlashing());
         });
         return info;
     }

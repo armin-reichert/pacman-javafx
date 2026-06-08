@@ -87,31 +87,47 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     // Others
 
-    // Expose flashing animation state to renderer
-    public Optional<LevelCompletedAnimation.FlashingState> optFlashingState() {
-        return Optional.ofNullable(levelCompletedAnimation).flatMap(LevelCompletedAnimation::flashingState);
+    // Expose animation to scene renderer
+    public Optional<LevelCompletedAnimation> optLevelCompletedAnimation() {
+        return Optional.ofNullable(levelCompletedAnimation);
     }
 
     /**
-     * If the 3D play scene is shown when the game level gets created, the onLevelCreated() method of this
-     * scene is not called, so we have to accept the game level again when switching from the 3D scene to this one.
+     * If the 3D play scene is active when the game level gets created, this method has not yet been called,
+     * but it gets called when the 3D->2D scene switch happens.
      */
     protected void acceptGameLevel(GameLevel level) {
-        actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
-        if (!level.isDemoLevel()) {
-            actionBindings().registerAllBindings(AppConstants.STEERING_ACTION_BINDINGS);
-            actionBindings().registerAllBindings(AppConstants.CHEAT_ACTION_BINDINGS);
+        if (level.isDemoLevel()) {
+            acceptDemoLevel(level);
+        } else {
+            acceptNormalLevel(level);
         }
-        Logger.info(actionBindings());
-
-        appContext().ui().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
-        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameState().expire());
-
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());
         unscaledHeightProperty().set(terrainSize.y());
+    }
+
+    protected void acceptNormalLevel(GameLevel level) {
+        actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(AppConstants.STEERING_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(AppConstants.CHEAT_ACTION_BINDINGS);
+
+        appContext().ui().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
+
+        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameState().expire());
 
         Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
+    }
+
+    protected void acceptDemoLevel(GameLevel demoLevel) {
+        actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+
+        appContext().ui().sounds().setEnabled(false);
+
+        //TODO check this
+        //levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameState().expire());
+
+        Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
     }
 
     // Private
