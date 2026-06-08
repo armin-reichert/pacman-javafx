@@ -63,7 +63,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate() {
-        final UIConfig uiConfig = appContext().currentUIConfig();
+        final UIConfig uiConfig = game().currentUIConfig();
 
         gameModel().hud().hide();
 
@@ -116,8 +116,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final UIConfig currentConfig = scene.appContext().currentUIConfig();
-                final SpriteAnimationSet spriteAnimationSet = scene.appContext().ui().sprites().animationSet();
+                final UIConfig currentConfig = scene.game().currentUIConfig();
+                final SpriteAnimationSet spriteAnimationSet = scene.game().ui().sprites().animationSet();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
@@ -179,7 +179,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
                 Ghost ghost = scene.ghosts.get(scene.ghostIndex);
-                Logger.debug("Tick {}: {} marching in", scene.appContext().clock().tickCount(), ghost.name());
+                Logger.debug("Tick {}: {} marching in", scene.game().clock().tickCount(), ghost.name());
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.x() <= GHOST_STOP_X) {
                         ghost.setX(GHOST_STOP_X);
@@ -222,7 +222,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 final GameContext gameContext = scene.gameContext();
 
                 scene.marquee.update(timer.tickCount());
-                Logger.debug("Tick {}: {} marching in", scene.appContext().clock().tickCount(), scene.msPacMan.name());
+                Logger.debug("Tick {}: {} marching in", scene.game().clock().tickCount(), scene.msPacMan.name());
 
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {

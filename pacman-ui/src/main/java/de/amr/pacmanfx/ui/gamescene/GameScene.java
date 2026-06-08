@@ -38,7 +38,7 @@ public abstract class GameScene implements Disposable {
         gameEventHandler = new BaseGameSceneHandler(appContext);
     }
 
-    public Game appContext() {
+    public Game game() {
         return appContext;
     }
 

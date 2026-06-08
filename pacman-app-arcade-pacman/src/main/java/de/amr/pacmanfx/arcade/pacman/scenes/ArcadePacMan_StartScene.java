@@ -34,6 +34,6 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void onDeactivate() {
-        appContext().ui().sounds().stopAndDisposeVoice();
+        game().ui().sounds().stopAndDisposeVoice();
     }
 }

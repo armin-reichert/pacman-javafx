@@ -67,8 +67,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public void onActivate() {
-        final UIConfig uiConfig = appContext().currentUIConfig();
-        final SpriteAnimationSet spriteAnimations = appContext().ui().sprites().animationSet();
+        final UIConfig uiConfig = game().currentUIConfig();
+        final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
 
         clapperboard = new Clapperboard(4, "THE END");
         clapperboard.setPosition(TS(3), TS(10));
@@ -84,17 +84,17 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniors = new ArrayList<>();
         juniorCreationTimes = new ArrayList<>();
 
-        appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_4);
+        game().ui().sounds().play(PacManGameSoundID.INTERMISSION_4);
     }
 
     @Override
     public void onDeactivate() {
-        appContext().ui().sounds().stop(PacManGameSoundID.INTERMISSION_4);
+        game().ui().sounds().stop(PacManGameSoundID.INTERMISSION_4);
     }
 
     @Override
     public void onTick(long tick) {
-        final UIConfig uiConfig = appContext().currentUIConfig();
+        final UIConfig uiConfig = game().currentUIConfig();
         final long gameStateTick = gameState().timer().tickCount();
 
         clapperboard.tick();
@@ -174,7 +174,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.setPosition((float) randomX, unscaledHeight() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(uiConfig.createPacAnimations(appContext().ui().sprites().animationSet()));
+        junior.setAnimations(uiConfig.createPacAnimations(game().ui().sprites().animationSet()));
         junior.animations().select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);
@@ -185,7 +185,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             case 2 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_2;
             default -> throw new IllegalArgumentException();
         };
-        appContext().ui().sounds().loop(soundID);
+        game().ui().sounds().loop(soundID);
 
         Logger.info("Junior spawned at tick {}", tick);
     }

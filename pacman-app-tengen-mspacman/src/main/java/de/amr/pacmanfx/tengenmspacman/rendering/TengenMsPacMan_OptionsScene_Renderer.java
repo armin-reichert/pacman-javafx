@@ -53,7 +53,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     }
 
     public void draw(GameScene2D scene) {
-        final UIConfig currentConfig = scene.appContext().currentUIConfig();
+        final UIConfig currentConfig = scene.game().currentUIConfig();
 
         clearCanvas();
 
@@ -64,7 +64,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
         ctx.setFont(arcadeFont8());
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            drawJoypadKeyBinding(scene.appContext().input().joypad().currentKeyBinding());
+            drawJoypadKeyBinding(scene.game().input().joypad().currentKeyBinding());
         }
 
         drawHorizontalBar(nesColor(0x20), nesColor(0x21), optionsScene.unscaledWidth(), TS, 20);

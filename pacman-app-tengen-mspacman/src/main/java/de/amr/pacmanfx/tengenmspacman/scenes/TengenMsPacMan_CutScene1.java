@@ -88,12 +88,12 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void onActivate() {
-        final UIConfig uiConfig = appContext().currentUIConfig();
-        final SpriteAnimationSet spriteAnimations = appContext().ui().sprites().animationSet();
+        final UIConfig uiConfig = game().currentUIConfig();
+        final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
         // Quit cut scene when "START" button on "joypad" is pressed
-        final Joypad joypad = appContext().input().joypad();
+        final Joypad joypad = game().input().joypad();
         actionBindings().setKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(1, "THEY MEET");
@@ -130,12 +130,12 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
         collided = false;
 
-        appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
+        game().ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
     }
 
     @Override
     public void onDeactivate() {
-        appContext().ui().sounds().stop(PacManGameSoundID.INTERMISSION_1);
+        game().ui().sounds().stop(PacManGameSoundID.INTERMISSION_1);
     }
 
     @Override

@@ -99,15 +99,15 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate() {
-        appContext().ui().sounds().playVoice(GameConstants.VOICE_EXPLAIN_GAME_START);
+        game().ui().sounds().playVoice(GameConstants.VOICE_EXPLAIN_GAME_START);
 
         actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // insert coin + start game actions
         actionBindings().registerAllBindings(GameConstants.SCENE_TESTS_BINDINGS); // actions for starting tests
 
         blinking = new Pulse(10, Pulse.State.ON);
 
-        final UIConfig uiConfig = appContext().currentUIConfig();
-        final SpriteAnimationSet spriteAnimations = appContext().ui().sprites().animationSet();
+        final UIConfig uiConfig = game().currentUIConfig();
+        final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
@@ -132,7 +132,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public void onDeactivate() {
         blinking.stop();
-        appContext().ui().sounds().stopAndDisposeVoice();
+        game().ui().sounds().stopAndDisposeVoice();
     }
 
     @Override

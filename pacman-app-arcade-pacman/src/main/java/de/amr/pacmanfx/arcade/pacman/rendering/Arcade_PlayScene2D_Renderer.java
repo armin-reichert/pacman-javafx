@@ -42,7 +42,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
 
-        final UIConfig currentConfig = scene.appContext().currentUIConfig();
+        final UIConfig currentConfig = scene.game().currentUIConfig();
         levelRenderer = scene.configureRenderer(currentConfig.createGameLevelRenderer(canvas));
         actorRenderer = scene.configureRenderer(currentConfig.createActorRenderer(canvas));
         debugRenderer = scene.configureRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(canvas));

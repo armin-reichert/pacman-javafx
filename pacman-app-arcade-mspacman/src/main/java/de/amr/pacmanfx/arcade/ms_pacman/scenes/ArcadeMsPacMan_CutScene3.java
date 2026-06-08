@@ -65,8 +65,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void onActivate() {
-        final UIConfig uiConfig = appContext().currentUIConfig();
-        final SpriteAnimationSet spriteAnimations = appContext().ui().sprites().animationSet();
+        final UIConfig uiConfig = game().currentUIConfig();
+        final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
@@ -113,7 +113,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (sceneTimer.atSecond(1)) {
-            appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
+            game().ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
         } else if (sceneTimer.atSecond(3)) {
             enterStateDeliverJunior();
         }

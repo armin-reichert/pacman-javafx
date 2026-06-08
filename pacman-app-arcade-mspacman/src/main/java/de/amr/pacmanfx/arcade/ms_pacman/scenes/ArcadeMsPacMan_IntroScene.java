@@ -71,10 +71,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate() {
-        final UIConfig uiConfig = appContext().currentUIConfig();
-        final SpriteAnimationSet spriteAnimations = appContext().ui().sprites().animationSet();
+        final UIConfig uiConfig = game().currentUIConfig();
+        final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
 
-        appContext().ui().sounds().playVoice(GameConstants.VOICE_EXPLAIN_GAME_START);
+        game().ui().sounds().playVoice(GameConstants.VOICE_EXPLAIN_GAME_START);
 
         actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         actionBindings().registerAllBindings(GameConstants.SCENE_TESTS_BINDINGS);
@@ -102,7 +102,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onDeactivate() {
-        appContext().ui().sounds().stopAndDisposeVoice();
+        game().ui().sounds().stopAndDisposeVoice();
     }
 
     @Override
@@ -207,7 +207,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameContext gameContext = scene.appContext().currentGameContext();
+                final GameContext gameContext = scene.game().currentGameContext();
                 final GameFlow flow = gameContext.flow();
                 final GameModel gameModel = gameContext.model();
                 scene.marquee.timer().doTick();

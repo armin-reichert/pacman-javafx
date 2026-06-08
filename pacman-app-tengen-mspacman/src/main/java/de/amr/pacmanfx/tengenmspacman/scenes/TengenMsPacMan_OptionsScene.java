@@ -56,7 +56,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private final IntegerProperty selectedOption = new SimpleIntegerProperty() {
         @Override
         protected void invalidated() {
-            appContext().ui().sounds().play(TengenMsPacManSoundID.OPTION_SELECTION_CHANGE);
+            game().ui().sounds().play(TengenMsPacManSoundID.OPTION_SELECTION_CHANGE);
             idleTicks = 0;
         }
     };
@@ -111,7 +111,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private TengenMsPacMan_GameModel tengenGame() { return (TengenMsPacMan_GameModel) gameModel(); }
     
     private void optionValueChanged() {
-        appContext().ui().sounds().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
+        game().ui().sounds().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
         idleTicks = 0;
     }
 
@@ -121,7 +121,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void onInput() {
-        final Input input = appContext().input();
+        final Input input = game().input();
 
         if (input.joypad().isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);

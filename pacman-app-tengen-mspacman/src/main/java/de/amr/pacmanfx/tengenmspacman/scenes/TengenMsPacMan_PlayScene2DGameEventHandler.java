@@ -21,7 +21,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameSceneHan
     private final TengenMsPacMan_PlayScene2D playScene;
 
     public TengenMsPacMan_PlayScene2DGameEventHandler(TengenMsPacMan_PlayScene2D playScene) {
-        super(playScene.appContext());
+        super(playScene.game());
         this.playScene = requireNonNull(playScene);
     }
 

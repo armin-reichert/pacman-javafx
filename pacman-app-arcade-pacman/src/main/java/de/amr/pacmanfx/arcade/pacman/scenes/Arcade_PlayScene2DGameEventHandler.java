@@ -17,7 +17,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
     private final Arcade_PlayScene2D playScene2D;
 
     public Arcade_PlayScene2DGameEventHandler(Arcade_PlayScene2D playScene2D) {
-        super(playScene2D.appContext());
+        super(playScene2D.game());
         this.playScene2D = playScene2D;
     }
 

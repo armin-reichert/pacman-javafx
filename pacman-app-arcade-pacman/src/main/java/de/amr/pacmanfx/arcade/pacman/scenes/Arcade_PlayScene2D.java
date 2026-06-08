@@ -49,7 +49,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        final TranslationManager translations = appContext().ui().translations();
+        final TranslationManager translations = game().ui().translations();
         final var contextMenu = new ContextMenu();
 
         addLocalizedTitleItem(contextMenu, translations, "pacman");
@@ -57,18 +57,18 @@ public class Arcade_PlayScene2D extends GameScene2D {
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacUsingAutopilotProperty(), "autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                CheatActions.ACTION_ACTIVATE_AUTOPILOT.executeIfEnabled(appContext());
+                CheatActions.ACTION_ACTIVATE_AUTOPILOT.executeIfEnabled(game());
             } else {
-                CheatActions.ACTION_DEACTIVATE_AUTOPILOT.executeIfEnabled(appContext());
+                CheatActions.ACTION_DEACTIVATE_AUTOPILOT.executeIfEnabled(game());
             }
         });
 
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                CheatActions.ACTION_ACTIVATE_IMMUNITY.executeIfEnabled(appContext());
+                CheatActions.ACTION_ACTIVATE_IMMUNITY.executeIfEnabled(game());
             } else {
-                CheatActions.ACTION_DEACTIVATE_IMMUNITY.executeIfEnabled(appContext());
+                CheatActions.ACTION_DEACTIVATE_IMMUNITY.executeIfEnabled(game());
             }
         });
 
@@ -76,7 +76,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
         addLocalizedCheckBox(contextMenu, translations, GameConstants.PROPERTY_MUTED, "muted");
 
-        addLocalizedActionItem(contextMenu, appContext(), translations, CommonActions.ACTION_QUIT_GAME_SCENE, "quit");
+        addLocalizedActionItem(contextMenu, game(), translations, CommonActions.ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(contextMenu);
     }
@@ -123,7 +123,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         actionBindings().registerAllBindings(GameConstants.STEERING_ACTION_BINDINGS);
         actionBindings().registerAllBindings(GameConstants.CHEAT_ACTION_BINDINGS);
 
-        appContext().ui().sounds().setEnabled(true);
+        game().ui().sounds().setEnabled(true);
 
         if (levelCompletedAnimation == null) {
             levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameState().expire());
@@ -135,7 +135,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void acceptDemoLevel() {
         actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
-        appContext().ui().sounds().setEnabled(false);
+        game().ui().sounds().setEnabled(false);
         Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
     }
 

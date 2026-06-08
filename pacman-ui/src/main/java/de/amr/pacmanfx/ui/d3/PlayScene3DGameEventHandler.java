@@ -45,7 +45,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
     private final PlayScene3D playScene3D;
 
     public PlayScene3DGameEventHandler(PlayScene3D playScene3D) {
-        super(playScene3D.appContext());
+        super(playScene3D.game());
         this.playScene3D = requireNonNull(playScene3D);
     }
 

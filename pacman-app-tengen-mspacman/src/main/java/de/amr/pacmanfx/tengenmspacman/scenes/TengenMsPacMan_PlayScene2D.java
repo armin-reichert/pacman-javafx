@@ -168,7 +168,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        final TranslationManager translations = appContext().ui().translations();
+        final TranslationManager translations = game().ui().translations();
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
         final var contextMenu = new ContextMenu();
 
@@ -189,7 +189,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "immunity");
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, GameConstants.PROPERTY_MUTED, "muted");
-        addLocalizedActionItem(contextMenu, appContext(), translations, ACTION_QUIT_GAME_SCENE, "quit");
+        addLocalizedActionItem(contextMenu, game(), translations, ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(contextMenu);
     }
@@ -205,7 +205,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(level.worldMap());
 
-        appContext().ui().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
+        game().ui().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
 
         if (level.isDemoLevel()) {
             actionBindings().registerFirstBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
