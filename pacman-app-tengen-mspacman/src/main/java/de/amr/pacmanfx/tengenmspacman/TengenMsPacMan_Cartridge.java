@@ -1,0 +1,16 @@
+package de.amr.pacmanfx.tengenmspacman;
+
+import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
+import de.amr.pacmanfx.ui.game.GameVariantCartridge;
+
+public class TengenMsPacMan_Cartridge {
+
+    public static final GameVariantCartridge CARTRIDGE = new GameVariantCartridge(
+        TengenMsPacMan_GameFlow::new,
+        TengenMsPacMan_GameModel::new,
+        TengenMsPacMan_GameRules::new,
+        TengenMsPacMan_UIConfig::new
+    );
+}

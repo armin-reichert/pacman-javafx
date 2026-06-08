@@ -5,32 +5,20 @@
 package de.amr.pacmanfx.allgames.app;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameRules;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
-import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameRules;
-import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameRules;
-import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_Cartridge;
+import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_Cartridge;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
-import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.*;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
@@ -161,7 +149,7 @@ public class PacManGames3dApp extends Application {
 
     // Private area
 
-    private GameViewImplementation createView(Stage stage, int width, int height) {
+    private static GameViewImplementation createView(Stage stage, int width, int height) {
         return new GameViewImplementation(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
@@ -169,44 +157,14 @@ public class PacManGames3dApp extends Application {
         );
     }
 
-    private void fillGamesCollection(GamesCollection gamesCollection) {
+    private static void fillGamesCollection(GamesCollection gamesCollection) {
         for (GameVariant variant : GameVariant.values()) {
             final GameVariantCartridge game = switch (variant) {
-
-                case ARCADE_PACMAN ->  new GameVariantCartridge(
-                    Arcade_GameFlow::new,
-                    ArcadePacMan_GameModel::new,
-                    ArcadePacMan_GameRules::new,
-                    ArcadePacMan_UIConfig::new
-                );
-
-                case ARCADE_MS_PACMAN -> new GameVariantCartridge(
-                    Arcade_GameFlow::new,
-                    ArcadeMsPacMan_GameModel::new,
-                    ArcadeMsPacMan_GameRules::new,
-                    ArcadeMsPacMan_UIConfig::new
-                );
-
-                case TENGEN_MS_PACMAN -> new GameVariantCartridge(
-                    TengenMsPacMan_GameFlow::new,
-                    TengenMsPacMan_GameModel::new,
-                    TengenMsPacMan_GameRules::new,
-                    TengenMsPacMan_UIConfig::new
-                );
-
-                case ARCADE_PACMAN_XXL -> new GameVariantCartridge(
-                    Arcade_GameFlow::new,
-                    PacManXXL_PacMan_GameModel::new,
-                    PacManXXL_PacMan_GameRules::new,
-                    PacManXXL_PacMan_UIConfig::new
-                );
-
-                case ARCADE_MS_PACMAN_XXL -> new GameVariantCartridge(
-                    Arcade_GameFlow::new,
-                    PacManXXL_MsPacMan_GameModel::new,
-                    PacManXXL_MsPacMan_GameRules::new,
-                    PacManXXL_MsPacMan_UIConfig::new
-                );
+                case ARCADE_PACMAN        -> ArcadePacMan_Cartridge.CARTRIDGE;
+                case ARCADE_MS_PACMAN     -> ArcadeMsPacMan_Cartridge.CARTRIDGE;
+                case TENGEN_MS_PACMAN     -> TengenMsPacMan_Cartridge.CARTRIDGE;
+                case ARCADE_PACMAN_XXL    -> PacManXXL_PacMan_Cartridge.CARTRIDGE;
+                case ARCADE_MS_PACMAN_XXL -> PacManXXL_MsPacMan_Cartridge.CARTRIDGE;
             };
             gamesCollection.registerGame(variant.name(), game);
         }
