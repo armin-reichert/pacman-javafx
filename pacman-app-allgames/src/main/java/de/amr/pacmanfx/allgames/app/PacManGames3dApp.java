@@ -38,7 +38,7 @@ import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
-import de.amr.pacmanfx.ui.view.GameViewImpl;
+import de.amr.pacmanfx.ui.view.GameViewImplementation;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
 import de.amr.pacmanfx.uilib.GameClockFX;
@@ -160,7 +160,7 @@ public class PacManGames3dApp extends Application {
                     .build();
             }
             else {
-                app = new AppContextImpl(
+                app = new GameImplementation(
                     createView(stage, sceneSize.x(), sceneSize.y()),
                     new GameClockFX(),
                     new CoinMechanism());
@@ -196,8 +196,8 @@ public class PacManGames3dApp extends Application {
 
     // Private area
 
-    private GameViewImpl createView(Stage stage, int width, int height) {
-        return new GameViewImpl(
+    private GameViewImplementation createView(Stage stage, int width, int height) {
+        return new GameViewImplementation(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
             new StatusIconBox(() -> AppConstants.LOCALIZED_TEXTS)

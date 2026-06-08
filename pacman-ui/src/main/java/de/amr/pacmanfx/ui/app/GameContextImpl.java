@@ -16,11 +16,11 @@ import static java.util.Objects.requireNonNull;
 
 public class GameContextImpl implements GameContext {
 
-    private final AppContextImpl appContextImpl;
+    private final GameImplementation appContextImpl;
     private GameFlow gameFlow;
     private HuntingStepResult huntingStepResult;
 
-    public GameContextImpl(AppContextImpl appContextImpl) {
+    public GameContextImpl(GameImplementation appContextImpl) {
         this.appContextImpl = requireNonNull(appContextImpl);
     }
 

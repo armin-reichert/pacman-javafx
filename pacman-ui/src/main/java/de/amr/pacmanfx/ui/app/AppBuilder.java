@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
-import de.amr.pacmanfx.ui.view.GameViewImpl;
+import de.amr.pacmanfx.ui.view.GameViewImplementation;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
 import de.amr.pacmanfx.uilib.GameClockFX;
@@ -130,7 +130,7 @@ public class AppBuilder {
     public Game build() {
         validateConfigurationData();
 
-        final var app = new AppContextImpl(
+        final var app = new GameImplementation(
             createGameView(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight()),
             new GameClockFX(),
             coinMechanism ? new CoinMechanism(99) : CoinMechanism.OUT_OF_SERVICE);
@@ -159,8 +159,8 @@ public class AppBuilder {
         return app;
     }
 
-    private GameViewImpl createGameView(Stage stage, int width, int height) {
-        return new GameViewImpl(
+    private GameViewImplementation createGameView(Stage stage, int width, int height) {
+        return new GameViewImplementation(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
             new StatusIconBox(() -> AppConstants.LOCALIZED_TEXTS)

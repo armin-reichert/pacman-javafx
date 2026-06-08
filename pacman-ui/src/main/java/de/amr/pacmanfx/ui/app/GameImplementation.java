@@ -31,7 +31,7 @@ import de.amr.pacmanfx.ui.subviews.editor.EditorView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.FlashMessageManager;
-import de.amr.pacmanfx.ui.view.GameViewImpl;
+import de.amr.pacmanfx.ui.view.GameViewImplementation;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
@@ -50,7 +50,7 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public final class AppContextImpl implements Game {
+public final class GameImplementation implements Game {
 
     // All games in a box (only 1,99 €!)
     private final GamesContainer gamesContainer = new GamesContainer();
@@ -63,7 +63,7 @@ public final class AppContextImpl implements Game {
 
     private final GameUI ui;
 
-    private final GameViewImpl view;
+    private final GameViewImplementation view;
 
     private final GameClock gameClock;
 
@@ -75,7 +75,7 @@ public final class AppContextImpl implements Game {
 
     private GameContextImpl currentGameContext;
 
-    public AppContextImpl(GameViewImpl view, GameClock gameClock, CoinMechanism coinMechanism) {
+    public GameImplementation(GameViewImplementation view, GameClock gameClock, CoinMechanism coinMechanism) {
         this.view = requireNonNull(view);
         this.gameClock = requireNonNull(gameClock);
         this.coinMechanism = requireNonNull(coinMechanism);

@@ -17,7 +17,7 @@ import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.ui.app.*;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
-import de.amr.pacmanfx.ui.view.GameViewImpl;
+import de.amr.pacmanfx.ui.view.GameViewImplementation;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
 import de.amr.pacmanfx.uilib.GameClockFX;
@@ -85,7 +85,7 @@ public class ArcadePacMan_App extends Application {
     // Private area
 
     private void createApp(Stage stage, Vector2i sceneSize) {
-        app = new AppContextImpl(createView(stage, sceneSize.x(), sceneSize.y()), new GameClockFX(), new CoinMechanism());
+        app = new GameImplementation(createView(stage, sceneSize.x(), sceneSize.y()), new GameClockFX(), new CoinMechanism());
 
         final AbstractGameModel gameModel = new ArcadePacMan_GameModel();
         final GameRules gameRules = new ArcadePacMan_GameRules();
@@ -105,8 +105,8 @@ public class ArcadePacMan_App extends Application {
         startView.setSelectedIndex(0);
     }
 
-    private GameViewImpl createView(Stage stage, int width, int height) {
-        return new GameViewImpl(
+    private GameViewImplementation createView(Stage stage, int width, int height) {
+        return new GameViewImplementation(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
             new StatusIconBox(() -> AppConstants.LOCALIZED_TEXTS)
