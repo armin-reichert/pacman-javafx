@@ -71,7 +71,7 @@ public class TengenMsPacMan_App extends Application {
         playView.dashboard().addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
             new DashboardSectionJoypad(playView.dashboard()),
-            game.gameVariantImpl(TENGEN_MS_PACMAN.name()).uiConfig().translate("infobox.joypad.title"),
+            game.gameVariantRuntime(TENGEN_MS_PACMAN.name()).uiConfig().translate("infobox.joypad.title"),
             false);
 
         game.displayOnScreen();

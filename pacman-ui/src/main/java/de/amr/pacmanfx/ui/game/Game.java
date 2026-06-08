@@ -39,7 +39,7 @@ public interface Game extends GameLifecycle {
 
     String currentGameVariantName();
 
-    GameVariantImplementation gameVariantImpl(String variantName);
+    GameVariantRuntime gameVariantRuntime(String variantName);
 
     GameContext currentGameContext();
 

@@ -59,7 +59,7 @@ public final class GameImplementation implements Game {
 
     private final GamesCollection gamesCollection;
 
-    private final Map<String, GameVariantImplementation> gameVariantImplMap = new HashMap<>();
+    private final Map<String, GameVariantRuntime> gameVariantImplMap = new HashMap<>();
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
@@ -102,15 +102,15 @@ public final class GameImplementation implements Game {
         createSubViews();
 
         gameVariantName.addListener((_, _, newVariantName) -> {
-            GameVariantImplementation variantImpl = gameVariantImpl(newVariantName);
-            currentGameContext = new GameContextImpl(this, variantImpl);
+            GameVariantRuntime runtime = gameVariantRuntime(newVariantName);
+            currentGameContext = new GameContextImpl(this, runtime);
             currentGameContext.model().hud().creditProperty().bind(coinMechanism.numCoinsProperty());
         });
     }
 
-    private GameVariantImplementation createGameVariantImplementation(String variantName) {
+    private GameVariantRuntime createGameVariantImplementation(String variantName) {
         final Cartridge cartridge = gamesCollection.cartridgeForVariant(variantName);
-        final var variantImpl = new GameVariantImplementation(
+        final var runtime = new GameVariantRuntime(
             cartridge.gameFlowFactory().get(),
             cartridge.gameModelFactory().get(),
             cartridge.gameRulesFactory().get(),
@@ -127,12 +127,12 @@ public final class GameImplementation implements Game {
         }
 
          */
-        variantImpl.gameModel().createHighScore(highScoreFile(variantName));
-        return variantImpl;
+        runtime.gameModel().createHighScore(highScoreFile(variantName));
+        return runtime;
     }
 
-    private GameVariantImplementation currentVariantImpl() {
-        return gameVariantImpl(currentGameVariantName());
+    private GameVariantRuntime currentVariantImpl() {
+        return gameVariantRuntime(currentGameVariantName());
     }
 
     public CollisionStrategy collisionStrategy() {
@@ -165,7 +165,7 @@ public final class GameImplementation implements Game {
     }
 
     @Override
-    public GameVariantImplementation gameVariantImpl(String variantName) {
+    public GameVariantRuntime gameVariantRuntime(String variantName) {
         return gameVariantImplMap.computeIfAbsent(variantName, this::createGameVariantImplementation);
     }
 

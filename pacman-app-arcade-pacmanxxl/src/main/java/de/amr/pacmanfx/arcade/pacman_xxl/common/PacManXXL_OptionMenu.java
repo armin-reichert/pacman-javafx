@@ -147,7 +147,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariant oldVariant, GameVariant newVariant) {
                 if (game != null) {
-                    final UIConfig uiConfig = game.gameVariantImpl(newVariant.name()).uiConfig();
+                    final UIConfig uiConfig = game.gameVariantRuntime(newVariant.name()).uiConfig();
                     chaseAnimation.init(uiConfig, canvas, game.ui().sprites().animationSet());
                 }
             }
