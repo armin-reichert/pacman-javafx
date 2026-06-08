@@ -29,8 +29,6 @@ public interface Game extends GameLifecycle {
 
     GameClock clock();
 
-    PacManGamesMachine machine();
-
     CoinMechanism coinMechanism();
 
     StringProperty variantNameProperty();

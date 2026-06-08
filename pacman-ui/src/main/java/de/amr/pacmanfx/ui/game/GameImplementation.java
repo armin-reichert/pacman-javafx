@@ -170,11 +170,6 @@ public final class GameImplementation implements Game {
     }
 
     @Override
-    public PacManGamesMachine machine() {
-        return machine;
-    }
-
-    @Override
     public GameContext currentGameContext() {
         return currentGameContext;
     }
