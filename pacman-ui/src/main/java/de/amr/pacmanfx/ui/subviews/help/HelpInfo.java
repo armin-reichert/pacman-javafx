@@ -26,18 +26,18 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    public static HelpInfo build(Game appContext) {
-        final GameContext gameContext = appContext.currentGameContext();
-        final GameModel game = appContext.currentGameContext().model();
-        final GameState state = appContext.currentGameContext().state();
-        final boolean demoLevel = game.isDemoLevelRunning();
+    public static HelpInfo build(Game game) {
+        final GameContext gameContext = game.currentGameContext();
+        final GameModel gameModel = gameContext.model();
+        final GameState state = gameContext.state();
+        final boolean demoLevel = gameModel.isDemoLevelRunning();
 
-        final HelpInfo helpInfo = new HelpInfo(appContext);
+        final HelpInfo helpInfo = new HelpInfo(game);
         if (GameStateID.GAME_INTRO.identifies(state)) {
-            helpInfo.addInfoForIntroScene(gameContext, game);
+            helpInfo.addInfoForIntroScene(gameContext, gameModel);
         }
         else if (GameStateID.GAME_PREPARATION.identifies(state)) {
-            helpInfo.addInfoForCreditScene(gameContext, game);
+            helpInfo.addInfoForCreditScene(gameContext, gameModel);
         }
         else if (state.isOneOf(GameStateID.GAME_OR_LEVEL_STARTING, GameStateID.GAME_LEVEL_PLAYING,
             GameStateID.GAME_LEVEL_PACMAN_DYING, GameStateID.GAME_LEVEL_EATING_GHOST)) {
@@ -53,20 +53,20 @@ public class HelpInfo {
         return helpInfo;
     }
 
-    private final Game appContext;
+    private final Game game;
 
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text>  column1 = new ArrayList<>();
 
-    public HelpInfo(Game appContext) {
-        this.appContext = requireNonNull(appContext);
+    public HelpInfo(Game game) {
+        this.game = requireNonNull(game);
     }
 
     private String translate(String key, Object... args) {
-        return appContext.ui().translations().translate(key, args);
+        return game.ui().translations().translate(key, args);
     }
 
-    public Pane createPane(Game appContext, Color backgroundColor, Font font) {
+    public Pane createPane(Game game, Color backgroundColor, Font font) {
         final var grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(10);
@@ -82,7 +82,7 @@ public class HelpInfo {
         pane.setPadding(new Insets(10));
         pane.setBackground(UfxBackgrounds.roundedBackground(backgroundColor, 10));
 
-        final GameContext gameContext = appContext.currentGameContext();
+        final GameContext gameContext = game.currentGameContext();
         final GameCheats cheats = gameContext.model().cheats();
 
         // add default entries:

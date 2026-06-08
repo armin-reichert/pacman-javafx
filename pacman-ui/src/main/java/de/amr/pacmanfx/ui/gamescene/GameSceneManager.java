@@ -63,13 +63,13 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         updateGameSceneAndForceReload(context, true);
     }
 
-    public void updateGameSceneAndForceReload(Game appContext, boolean forceReload) {
-        final UIConfig currentConfig = appContext.currentUIConfig();
-        final GameContext gameContext = appContext.currentGameContext();
-        final GameModel game = gameContext.model();
+    public void updateGameSceneAndForceReload(Game game, boolean forceReload) {
+        final UIConfig currentConfig = game.currentUIConfig();
+        final GameContext gameContext = game.currentGameContext();
+        final GameModel gameModel = gameContext.model();
 
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(appContext, game).orElseThrow();
+        final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(game, gameModel).orElseThrow();
 
         if (nextGameScene == prevGameScene && !forceReload) {
             return;
@@ -77,15 +77,15 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
         if (prevGameScene != null) {
             prevGameScene.deactivate();
-            removeFromPlayView(appContext, prevGameScene);
+            removeFromPlayView(game, prevGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
-        embedGameSceneIntoPlayView(appContext, nextGameScene);
+        embedGameSceneIntoPlayView(game, nextGameScene);
 
         nextGameScene.activate();
 
-        game.optGameLevel().ifPresent(level -> handle2D3DSwitch(currentConfig, gameContext, level, prevGameScene, nextGameScene));
+        gameModel.optGameLevel().ifPresent(level -> handle2D3DSwitch(currentConfig, gameContext, level, prevGameScene, nextGameScene));
 
         gameSceneProperty().set(nextGameScene);
     }

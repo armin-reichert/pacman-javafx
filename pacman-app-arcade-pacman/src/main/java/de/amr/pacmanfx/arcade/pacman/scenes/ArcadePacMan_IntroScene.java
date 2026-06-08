@@ -83,12 +83,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private int ghostIndex;
     private long lastGhostEatenTick;
 
-    public ArcadePacMan_IntroScene(Game appContext) {
-        super(appContext);
+    public ArcadePacMan_IntroScene(Game game) {
+        super(game);
 
         flow = new StateMachine<>(this, List.of(SceneState.values()));
 
-        final var gameEventHandler = new BaseGameSceneHandler(appContext) {
+        final var gameEventHandler = new BaseGameSceneHandler(game) {
             @Override
             public void onCreditAdded(CreditAddedEvent e) {
                 optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);

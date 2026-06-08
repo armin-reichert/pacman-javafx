@@ -22,18 +22,18 @@ import static java.util.Objects.requireNonNull;
  */
 public class BaseGameSceneHandler extends DefaultGameEventListener {
 
-    private final Game appContext;
+    private final Game game;
 
-    public BaseGameSceneHandler(Game appContext) {
-        this.appContext = requireNonNull(appContext);
+    public BaseGameSceneHandler(Game game) {
+        this.game = requireNonNull(game);
     }
 
-    public Game appContext() {
-        return appContext;
+    public Game game() {
+        return game;
     }
 
     public GameContext gameContext() {
-        return appContext.currentGameContext();
+        return game.currentGameContext();
     }
 
     public GameState gameState() {
@@ -49,7 +49,7 @@ public class BaseGameSceneHandler extends DefaultGameEventListener {
     }
 
     public Optional<GameSoundEffects> optSoundEffects() {
-        return appContext.currentSoundEffects();
+        return game.currentSoundEffects();
     }
 
     @Override

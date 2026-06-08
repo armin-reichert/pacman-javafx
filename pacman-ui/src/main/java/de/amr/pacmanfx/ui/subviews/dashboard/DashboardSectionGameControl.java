@@ -66,8 +66,8 @@ public class DashboardSectionGameControl extends DashboardSection {
     public void update() {
         super.update();
 
-        if (dashboard.appContext() != null) {
-            final GameContext gameContext = dashboard.appContext().currentGameContext();
+        if (dashboard.game() != null) {
+            final GameContext gameContext = dashboard.game().currentGameContext();
             final GameModel gameModel = gameContext.model();
             final GameState gameState = gameContext.state();
 

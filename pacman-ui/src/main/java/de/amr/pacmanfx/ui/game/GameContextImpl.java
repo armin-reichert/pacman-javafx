@@ -16,12 +16,12 @@ import static java.util.Objects.requireNonNull;
 
 public class GameContextImpl implements GameContext {
 
-    private final GameImplementation appContextImpl;
+    private final GameImplementation gameImpl;
     private GameFlow gameFlow;
     private HuntingStepResult huntingStepResult;
 
-    public GameContextImpl(GameImplementation appContextImpl) {
-        this.appContextImpl = requireNonNull(appContextImpl);
+    public GameContextImpl(GameImplementation gameImpl) {
+        this.gameImpl = requireNonNull(gameImpl);
     }
 
     public void setGameFlow(GameFlow gameFlow) {
@@ -29,12 +29,12 @@ public class GameContextImpl implements GameContext {
     }
 
     private GameVariantSpecification currentGame() {
-        return appContextImpl.gameForVariant(appContextImpl.currentGameVariantName());
+        return gameImpl.gameForVariant(gameImpl.currentGameVariantName());
     }
 
     @Override
     public CoinMechanism coinMechanism() {
-        return appContextImpl.coinMechanism();
+        return gameImpl.coinMechanism();
     }
 
     @Override
@@ -54,12 +54,12 @@ public class GameContextImpl implements GameContext {
 
     @Override
     public CollisionStrategy collisionStrategy() {
-        return appContextImpl.collisionStrategy();
+        return gameImpl.collisionStrategy();
     }
 
     @Override
     public boolean isCollisionDoubleChecked() {
-        return appContextImpl.isCollisionDoubleChecked();
+        return gameImpl.isCollisionDoubleChecked();
     }
 
     @Override

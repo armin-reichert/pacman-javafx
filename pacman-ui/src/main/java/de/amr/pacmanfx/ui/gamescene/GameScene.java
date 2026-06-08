@@ -29,21 +29,21 @@ public abstract class GameScene implements Disposable {
 
     private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for " + getClass().getSimpleName());
 
-    private final Game appContext;
+    private final Game game;
 
     private GameEventListener gameEventHandler;
 
-    public GameScene(Game appContext) {
-        this.appContext = requireNonNull(appContext);
-        gameEventHandler = new BaseGameSceneHandler(appContext);
+    public GameScene(Game game) {
+        this.game = requireNonNull(game);
+        gameEventHandler = new BaseGameSceneHandler(game);
     }
 
     public Game game() {
-        return appContext;
+        return game;
     }
 
     public GameContext gameContext() {
-        return appContext.currentGameContext();
+        return game.currentGameContext();
     }
 
     public GameModel gameModel() {
@@ -70,7 +70,7 @@ public abstract class GameScene implements Disposable {
     }
 
     public Optional<GameSoundEffects> optSoundEffects() {
-        return appContext.currentSoundEffects();
+        return game.currentSoundEffects();
     }
     /**
      * @return action bindings for this scene
@@ -120,8 +120,8 @@ public abstract class GameScene implements Disposable {
      * Executes the first matching action.
      */
     public void onInput() {
-        actionBindings().actionMatchingKeyboardState(appContext.input().keyboard())
-            .ifPresent(action -> action.executeIfEnabled(appContext));
+        actionBindings().actionMatchingKeyboardState(game.input().keyboard())
+            .ifPresent(action -> action.executeIfEnabled(game));
     }
 
     /**

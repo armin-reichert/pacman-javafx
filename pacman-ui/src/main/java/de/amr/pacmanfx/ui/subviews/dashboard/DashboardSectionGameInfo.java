@@ -33,12 +33,12 @@ public class DashboardSectionGameInfo extends DashboardSection {
     }
 
     @Override
-    public void connect(Game appContext) {
-        final Supplier<GameModel> gameSupplier = appContext.currentGameContext()::model;
+    public void connect(Game game) {
+        final Supplier<GameModel> gameSupplier = game.currentGameContext()::model;
 
-        addDynamicLabeledValue("Game State",  () -> "%s".formatted(appContext.currentGameContext().state().name()));
-        addDynamicLabeledValue("State Timer", () -> stateTimerInfo(appContext.currentGameContext().state()));
-        addDynamicLabeledValue("Game Scene", ifGameScenePresent(appContext, gameScene -> gameScene.getClass().getSimpleName()));
+        addDynamicLabeledValue("Game State",  () -> "%s".formatted(game.currentGameContext().state().name()));
+        addDynamicLabeledValue("State Timer", () -> stateTimerInfo(game.currentGameContext().state()));
+        addDynamicLabeledValue("Game Scene", ifGameScenePresent(game, gameScene -> gameScene.getClass().getSimpleName()));
 
         addDynamicLabeledValue("Level Number", ifGameLevel(gameSupplier, level ->
             (level.isDemoLevel() ? "%d (Demo Level)" : "%d").formatted(level.number())));
@@ -57,7 +57,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
                 colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
             }
             else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                colorScheme = appContext.currentUIConfig().colorScheme(worldMap);
+                colorScheme = game.currentUIConfig().colorScheme(worldMap);
             }
             if (colorScheme != null) {
                 return "%s / %s / %s".formatted(
@@ -72,7 +72,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
         addDynamicLabeledValue("-Running",        ifGameLevel(gameSupplier, level -> fmtHuntingTicksRunning(level.huntingTimer())));
         addDynamicLabeledValue("-Remaining",      ifGameLevel(gameSupplier, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
 
-        addDynamicLabeledValue("Collision mode",  () -> fmtCollisionMode(appContext.currentGameContext().collisionStrategy()));
+        addDynamicLabeledValue("Collision mode",  () -> fmtCollisionMode(game.currentGameContext().collisionStrategy()));
         addDynamicLabeledValue("Pac-Man speed",   ifGameLevel(gameSupplier, this::fmtPacNormalSpeed));
         addDynamicLabeledValue("- empowered",     ifGameLevel(gameSupplier, this::fmtPacSpeedPowered));
         addDynamicLabeledValue("Power Duration",  ifGameLevel(gameSupplier, this::fmtPacPowerTime));

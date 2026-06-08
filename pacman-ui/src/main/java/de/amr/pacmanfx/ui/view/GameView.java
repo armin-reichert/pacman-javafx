@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 public interface GameView {
 
-    void setAppContext(Game context);
+    void setGame(Game game);
 
     Stage stage();
 

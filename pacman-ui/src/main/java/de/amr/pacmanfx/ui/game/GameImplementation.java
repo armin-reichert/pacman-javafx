@@ -122,7 +122,7 @@ public final class GameImplementation implements Game {
     }
 
     @Override
-    public StringProperty gameVariantNameProperty() {
+    public StringProperty variantNameProperty() {
         return gameVariantName;
     }
 
@@ -204,7 +204,7 @@ public final class GameImplementation implements Game {
         initGameVariantAndRegisterChangeHandler();
         load3DAssets();
         initMainScene();
-        view.setAppContext(this);
+        view.setGame(this);
         initProperties();
         initGameClock();
         ui.subViews().connect(this);

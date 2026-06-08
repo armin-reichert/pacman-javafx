@@ -13,10 +13,10 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
-    public ArcadeMsPacMan_StartScene(Game appContext) {
-        super(appContext);
+    public ArcadeMsPacMan_StartScene(Game game) {
+        super(game);
 
-        final GameEventListener gameEventHandler = new BaseGameSceneHandler(appContext) {
+        final GameEventListener gameEventHandler = new BaseGameSceneHandler(game) {
             @Override
             public void onCreditAdded(CreditAddedEvent e) {
                 optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);

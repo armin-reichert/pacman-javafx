@@ -36,13 +36,13 @@ public class GameViewImplementation implements GameView {
     }
 
     @Override
-    public void setAppContext(Game context) {
+    public void setGame(Game game) {
         stageTitleBinding = createStringBinding(
-            () -> computeStageTitle(context),
-            context.clock().updatesDisabledProperty(),
-            context.gameVariantNameProperty(),
-            context.ui().subViews().selectedSubViewProperty(),
-            context.ui().gameScenes().gameSceneProperty(),
+            () -> computeStageTitle(game),
+            game.clock().updatesDisabledProperty(),
+            game.variantNameProperty(),
+            game.ui().subViews().selectedSubViewProperty(),
+            game.ui().gameScenes().gameSceneProperty(),
             GameConstants.PROPERTY_DEBUG_INFO_VISIBLE,
             GameConstants.PROPERTY_3D_ENABLED
         );

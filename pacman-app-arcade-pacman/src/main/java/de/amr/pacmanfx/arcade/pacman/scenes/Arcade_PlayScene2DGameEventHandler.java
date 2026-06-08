@@ -92,7 +92,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = appContext().clock().tickCount();
+        final long tick = game().clock().tickCount();
         optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 

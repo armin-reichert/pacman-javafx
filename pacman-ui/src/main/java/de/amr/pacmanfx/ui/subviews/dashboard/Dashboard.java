@@ -84,7 +84,7 @@ public class Dashboard {
         return section;
     }
 
-    private Game context;
+    private Game game;
 
     private final VBox rootPane = new VBox();
     private final Map<DashboardID, DashboardSection> sections = new LinkedHashMap<>();
@@ -108,12 +108,12 @@ public class Dashboard {
         return config;
     }
 
-    public Game appContext() {
-        return context;
+    public Game game() {
+        return game;
     }
 
     public void connect(Game context) {
-        this.context = requireNonNull(context);
+        this.game = requireNonNull(context);
         sections.values().forEach(section -> section.connect(context));
     }
 

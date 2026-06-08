@@ -66,8 +66,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public TengenMsPacMan_PlayScene2D(Game appContext) {
-        super(appContext);
+    public TengenMsPacMan_PlayScene2D(Game game) {
+        super(game);
 
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);

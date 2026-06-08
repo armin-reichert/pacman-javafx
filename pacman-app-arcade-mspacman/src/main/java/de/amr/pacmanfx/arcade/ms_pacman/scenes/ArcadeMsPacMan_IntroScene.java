@@ -56,10 +56,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private int numTicksBeforeRising;
 
-    public ArcadeMsPacMan_IntroScene(Game appContext) {
-        super(appContext);
+    public ArcadeMsPacMan_IntroScene(Game game) {
+        super(game);
 
-        setGameEventHandler(new BaseGameSceneHandler(appContext) {
+        setGameEventHandler(new BaseGameSceneHandler(game) {
             @Override
             public void onCreditAdded(CreditAddedEvent e) {
                 optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);

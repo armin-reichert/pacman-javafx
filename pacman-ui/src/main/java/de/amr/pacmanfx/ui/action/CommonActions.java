@@ -41,16 +41,16 @@ import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
  */
 public final class CommonActions {
 
-    public static void editMapFile(Game appContext, File worldMapFile) {
-        createEditMapFileAction(worldMapFile).executeIfEnabled(appContext);
+    public static void editMapFile(Game game, File worldMapFile) {
+        createEditMapFileAction(worldMapFile).executeIfEnabled(game);
     }
 
     public static GameAction createEditMapFileAction(File worldMapFile) {
         return new GameAction("edit_map_file") {
 
             @Override
-            protected void doAction(Game appContext) {
-                final SubViewManager subViews = appContext.ui().subViews();
+            protected void doAction(Game game) {
+                final SubViewManager subViews = game.ui().subViews();
                 subViews.ensureEditorViewCreated();
                 subViews.optEditorView().map(EditorView::editor).ifPresent(editor -> {
                     editor.init(GameConstants.CUSTOM_MAP_DIR);
@@ -60,15 +60,15 @@ public final class CommonActions {
                             if (worldMapFile != null) {
                                 editor.editFile(worldMapFile);
                             }
-                            appContext.stopGame();
+                            game.stopGame();
                         }
                     } catch (IOException x) {
                         Logger.error(x, "Could not open map file {}", worldMapFile);
-                        appContext.shortMessage("Cannot open world map file");
+                        game.shortMessage("Cannot open world map file");
                     }
                     catch (WorldMapParseException x) {
                         Logger.error(x, "Error reading map file data from {}", worldMapFile);
-                        appContext.shortMessage("Cannot read world map file data");
+                        game.shortMessage("Cannot read world map file data");
                     }
                 });
             }
@@ -81,32 +81,32 @@ public final class CommonActions {
 
     public static final GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("boot_show_play_view") {
         @Override
-        protected void doAction(Game appContext) {
-            appContext.coinMechanism().setNumCoins(0);
-            appContext.ui().subViews().selectGamePlayView();
-            appContext.startGame();
+        protected void doAction(Game game) {
+            game.coinMechanism().setNumCoins(0);
+            game.ui().subViews().selectGamePlayView();
+            game.startGame();
         }
     };
 
     public static final GameAction ACTION_ENTER_FULLSCREEN = new GameAction("enter_fullscreen") {
         @Override
-        protected void doAction(Game appContext) {
-            appContext.ui().view().stage().setFullScreen(true);
+        protected void doAction(Game game) {
+            game.ui().view().stage().setFullScreen(true);
         }
     };
 
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("let_game_state_expire") {
         @Override
-        protected void doAction(Game appContext) {
-            appContext.currentGameContext().state().expire();
+        protected void doAction(Game game) {
+            game.currentGameContext().state().expire();
         }
     };
 
     public static final GameAction ACTION_OPEN_EDITOR = new GameAction("open_editor") {
         @Override
-        protected void doAction(Game appContext) {
-            appContext.stopGame();
-            final SubViewManager subViews = appContext.ui().subViews();
+        protected void doAction(Game game) {
+            game.stopGame();
+            final SubViewManager subViews = game.ui().subViews();
             subViews.ensureEditorViewCreated();
             subViews.trySelectEditorView();
             subViews.optEditorView().map(EditorView::editor).ifPresent(editor -> {
@@ -118,150 +118,150 @@ public final class CommonActions {
 
     public static final GameAction ACTION_PERSPECTIVE_NEXT = new GameAction("perspective_next") {
         @Override
-        protected void doAction(Game appContext) {
+        protected void doAction(Game game) {
             final PerspectiveID nextID = GameConstants.PROPERTY_3D_PERSPECTIVE_ID.get().next();
             GameConstants.PROPERTY_3D_PERSPECTIVE_ID.set(nextID);
 
-            final TranslationManager translations = appContext.ui().translations();
+            final TranslationManager translations = game.ui().translations();
             final String msgKey = translations.translate(
                 "camera_perspective",
                 translations.translate("perspective_id_" + nextID.name())
             );
-            appContext.shortMessage(msgKey);
+            game.shortMessage(msgKey);
         }
     };
 
     public static final GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction("perspective_previous") {
         @Override
-        protected void doAction(Game appContext) {
+        protected void doAction(Game game) {
             final PerspectiveID prevID = GameConstants.PROPERTY_3D_PERSPECTIVE_ID.get().prev();
             GameConstants.PROPERTY_3D_PERSPECTIVE_ID.set(prevID);
 
-            final TranslationManager translations = appContext.ui().translations();
+            final TranslationManager translations = game.ui().translations();
             final String msgKey = translations.translate(
                 "camera_perspective",
                 translations.translate("perspective_id_" + prevID.name())
             );
-            appContext.shortMessage(msgKey);
+            game.shortMessage(msgKey);
         }
     };
 
     public static final GameAction ACTION_QUIT_GAME_SCENE = new GameAction("quit_game_scene") {
         @Override
-        protected void doAction(Game appContext) {
-            final GameModel gameModel = appContext.currentGameContext().model();
+        protected void doAction(Game game) {
+            final GameModel gameModel = game.currentGameContext().model();
             gameModel.cheats().clear(); //TODO needed?
-            appContext.stopGame();
-            appContext.ui().gameScenes().quitCurrentGameScene(appContext);
-            appContext.ui().subViews().selectStartView();
+            game.stopGame();
+            game.ui().gameScenes().quitCurrentGameScene(game);
+            game.ui().subViews().selectStartView();
         }
     };
 
     public static final GameAction ACTION_RESTART_INTRO = new GameAction("restart_intro") {
         @Override
-        protected void doAction(Game appContext) {
+        protected void doAction(Game game) {
             //TODO check this code
-            appContext.stopGame();
+            game.stopGame();
 
-            final GameContext gameContext = appContext.currentGameContext();
+            final GameContext gameContext = game.currentGameContext();
             final GameState gameState = gameContext.state();
             if (gameState instanceof LevelShortTestState) {
                 gameState.onExit(gameContext); //TODO exit normal game states too?
             }
-            appContext.clock().start();
+            game.clock().start();
             gameContext.flow().restartState(GameStateID.GAME_INTRO);
         }
     };
 
     public static final GameAction ACTION_SHOW_HELP = new GameAction("show_help") {
         @Override
-        protected void doAction(Game appContext) {
-            appContext.ui().subViews().gamePlayView().showHelp(appContext);
+        protected void doAction(Game game) {
+            game.ui().subViews().gamePlayView().showHelp(game);
         }
 
         @Override
-        public boolean isEnabled(Game appContext) {
-            final String variantName = appContext.currentGameVariantName();
+        public boolean isEnabled(Game game) {
+            final String variantName = game.currentGameVariantName();
             final boolean isArcadeGame = GameVariant.isArcadeGameName(variantName);
-            final GameSceneManager gameScenes = appContext.ui().gameScenes();
+            final GameSceneManager gameScenes = game.ui().gameScenes();
             return isArcadeGame &&
-                      (gameScenes.currentGameSceneHasID(appContext, CommonSceneID.INTRO_SCENE)
-                    || gameScenes.currentGameSceneHasID(appContext, CommonSceneID.START_SCENE)
-                    || gameScenes.currentGameSceneHasID(appContext, CommonSceneID.PLAY_SCENE_2D));
+                      (gameScenes.currentGameSceneHasID(game, CommonSceneID.INTRO_SCENE)
+                    || gameScenes.currentGameSceneHasID(game, CommonSceneID.START_SCENE)
+                    || gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D));
         }
     };
 
     public static final GameAction ACTION_SIMULATION_FASTER = new GameAction("simulation_faster") {
         @Override
-        protected void doAction(Game appContext) {
-            final GameClock clock = appContext.clock();
+        protected void doAction(Game game) {
+            final GameClock clock = game.clock();
             final int newRate = Math.clamp(clock.targetFrameRate() + SIM_SPEED_DELTA, SIM_SPEED_MIN, SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
             final String message = newRate == SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
-            appContext.shortMessage(Duration.seconds(0.75), message.formatted(newRate));
+            game.shortMessage(Duration.seconds(0.75), message.formatted(newRate));
         }
     };
 
     public static final GameAction ACTION_SIMULATION_FASTEST = new GameAction("simulation_fastest") {
         @Override
-        protected void doAction(Game appContext) {
-            appContext.clock().setTargetFrameRate(SIM_SPEED_MAX);
-            appContext.shortMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIM_SPEED_MAX);
+        protected void doAction(Game game) {
+            game.clock().setTargetFrameRate(SIM_SPEED_MAX);
+            game.shortMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIM_SPEED_MAX);
         }
     };
 
     public static final GameAction ACTION_SIMULATION_SLOWER = new GameAction("simulation_slower") {
         @Override
-        protected void doAction(Game appContext) {
-            final GameClock clock = appContext.clock();
+        protected void doAction(Game game) {
+            final GameClock clock = game.clock();
             final int newRate = Math.clamp(clock.targetFrameRate() - SIM_SPEED_DELTA, SIM_SPEED_MIN, SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
             final String message = newRate == SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
-            appContext.shortMessage(Duration.seconds(0.75), message.formatted(newRate));
+            game.shortMessage(Duration.seconds(0.75), message.formatted(newRate));
         }
     };
 
     public static final GameAction ACTION_SIMULATION_SLOWEST = new GameAction("simulation_slowest") {
         @Override
-        protected void doAction(Game appContext) {
-            appContext.clock().setTargetFrameRate(SIM_SPEED_MIN);
-            appContext.shortMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIM_SPEED_MIN);
+        protected void doAction(Game game) {
+            game.clock().setTargetFrameRate(SIM_SPEED_MIN);
+            game.shortMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIM_SPEED_MIN);
         }
     };
 
     public static final GameAction ACTION_SIMULATION_ONE_STEP = new GameAction("simulation_one_step") {
         @Override
-        protected void doAction(Game appContext) {
-            final boolean success = appContext.clock().makeOneStep(true);
+        protected void doAction(Game game) {
+            final boolean success = game.clock().makeOneStep(true);
             if (!success) {
-                appContext.shortMessage("Simulation step error, clock stopped!");
+                game.shortMessage("Simulation step error, clock stopped!");
             }
         }
 
         @Override
-        public boolean isEnabled(Game appContext) { return appContext.clock().getUpdatesDisabled(); }
+        public boolean isEnabled(Game game) { return game.clock().getUpdatesDisabled(); }
     };
 
     public static final GameAction ACTION_SIMULATION_TEN_STEPS = new GameAction("simulation_ten_steps") {
         @Override
-        protected void doAction(Game appContext) {
-            final boolean success = appContext.clock().makeSteps(10, true);
+        protected void doAction(Game game) {
+            final boolean success = game.clock().makeSteps(10, true);
             if (!success) {
-                appContext.shortMessage("Simulation step error, clock stopped!");
+                game.shortMessage("Simulation step error, clock stopped!");
             }
         }
 
         @Override
-        public boolean isEnabled(Game appContext) { return appContext.clock().getUpdatesDisabled(); }
+        public boolean isEnabled(Game game) { return game.clock().getUpdatesDisabled(); }
      };
 
     public static final GameAction ACTION_SIMULATION_RESET = new GameAction("simulation_reset") {
         @Override
-        protected void doAction(Game appContext) {
-            appContext.clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-            appContext.shortMessage(Duration.seconds(0.75), appContext.clock().targetFrameRate() + "Hz");
+        protected void doAction(Game game) {
+            game.clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
+            game.shortMessage(Duration.seconds(0.75), game.clock().targetFrameRate() + "Hz");
         }
     };
 
@@ -275,42 +275,42 @@ public final class CommonActions {
 
     public static final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction("toggle_collision_strategy") {
         @Override
-        protected void doAction(Game appContext) {
-            final CollisionStrategy strategy = appContext.currentGameContext().collisionStrategy();
+        protected void doAction(Game game) {
+            final CollisionStrategy strategy = game.currentGameContext().collisionStrategy();
             final CollisionStrategy newStrategy = strategy == CollisionStrategy.CENTER_DISTANCE
                 ? CollisionStrategy.SAME_TILE : CollisionStrategy.CENTER_DISTANCE;
-            appContext.setCollisionStrategy(newStrategy);
+            game.setCollisionStrategy(newStrategy);
             if (newStrategy == CollisionStrategy.SAME_TILE) {
-                appContext.shortMessage("Using original Arcade collision strategy (same tile check)"); //TODO localize
+                game.shortMessage("Using original Arcade collision strategy (same tile check)"); //TODO localize
             } else {
-                appContext.shortMessage("Using fail-safe collision strategy"); //TODO localize
+                game.shortMessage("Using fail-safe collision strategy"); //TODO localize
             }
         }
     };
 
     public static final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("toggle_dashboard") {
         @Override
-        protected void doAction(Game appContext) {
-            appContext.ui().subViews().gamePlayView().dashboard().toggleVisibility();
+        protected void doAction(Game game) {
+            game.ui().subViews().gamePlayView().dashboard().toggleVisibility();
         }
 
         @Override
-        public boolean isEnabled(Game appContext) {
-            final SubViewManager subViews = appContext.ui().subViews();
+        public boolean isEnabled(Game game) {
+            final SubViewManager subViews = game.ui().subViews();
             return subViews.isSelected(subViews.gamePlayView());
         }
     };
 
     public static final GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction("toggle_debug_info") {
         @Override
-        protected void doAction(Game appContext) {
+        protected void doAction(Game game) {
             toggleBooleanProperty(GameConstants.PROPERTY_DEBUG_INFO_VISIBLE);
         }
     };
 
     public static final GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction("toggle_draw_mode") {
         @Override
-        protected void doAction(Game appContext) {
+        protected void doAction(Game game) {
             GameConstants.PROPERTY_3D_DRAW_MODE.set(
                 GameConstants.PROPERTY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
         }
@@ -318,18 +318,18 @@ public final class CommonActions {
 
     public static final GameAction ACTION_TOGGLE_KEYBOARD_MONITOR = new GameAction("toggle_keyboard_monitor") {
         @Override
-        protected void doAction(Game appContext) {
+        protected void doAction(Game game) {
             toggleBooleanProperty(GameConstants.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
         }
     };
 
     public static final GameAction ACTION_TOGGLE_MINI_VIEW_VISIBILITY = new GameAction("toggle_mini_view_visibility") {
         @Override
-        protected void doAction(Game appContext) {
+        protected void doAction(Game game) {
             toggleBooleanProperty(GameConstants.PROPERTY_MINI_VIEW_ON);
-            if (!appContext.ui().gameScenes().currentGameSceneHasID(appContext, CommonSceneID.PLAY_SCENE_3D)) {
-                final TranslationManager translations = appContext.ui().translations();
-                appContext.shortMessage(
+            if (!game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)) {
+                final TranslationManager translations = game.ui().translations();
+                game.shortMessage(
                     translations.translate(GameConstants.PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
             }
         }
@@ -337,59 +337,59 @@ public final class CommonActions {
 
     public static final GameAction ACTION_TOGGLE_MUTED = new GameAction("toggle_muted") {
         @Override
-        protected void doAction(Game appContext) {
+        protected void doAction(Game game) {
             GameConstants.PROPERTY_MUTED.set(!GameConstants.PROPERTY_MUTED.get());
         }
     };
 
     public static final GameAction ACTION_TOGGLE_PAUSED = new GameAction("toggle_paused") {
         @Override
-        protected void doAction(Game appContext) {
-            final GameClock gameClock = appContext.clock();
+        protected void doAction(Game game) {
+            final GameClock gameClock = game.clock();
             toggleBooleanProperty(gameClock.updatesDisabledProperty());
             if (gameClock.getUpdatesDisabled()) {
-                final UIConfig currentConfig = appContext.currentUIConfig();
-                appContext.ui().sounds().stopAll();
+                final UIConfig currentConfig = game.currentUIConfig();
+                game.ui().sounds().stopAll();
                 currentConfig.optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             }
             Logger.info("Game ({}) {}",
-                appContext.currentGameVariantName(), gameClock.getUpdatesDisabled() ? "paused" : "resumed");
+                game.currentGameVariantName(), gameClock.getUpdatesDisabled() ? "paused" : "resumed");
         }
 
         @Override
-        public boolean isEnabled(Game appContext) {
-            final SubViewManager subViews = appContext.ui().subViews();
+        public boolean isEnabled(Game game) {
+            final SubViewManager subViews = game.ui().subViews();
             return subViews.isSelected(subViews.gamePlayView());
         }
     };
 
     public static final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction("toggle_play_scene_2d_3d") {
         @Override
-        protected void doAction(Game appContext) {
+        protected void doAction(Game game) {
             toggleBooleanProperty(GameConstants.PROPERTY_3D_ENABLED);
             final boolean is3DEnabled = GameConstants.PROPERTY_3D_ENABLED.get();
-            if (!inPlayScene(appContext)) {
-                appContext.shortMessage(appContext.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
+            if (!inPlayScene(game)) {
+                game.shortMessage(game.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
             }
-            if (isLevelPlaying(appContext)) {
-                appContext.ui().gameScenes().forceGameSceneUpdate(appContext);
+            if (isLevelPlaying(game)) {
+                game.ui().gameScenes().forceGameSceneUpdate(game);
             }
         }
 
         @Override
-        public boolean isEnabled(Game appContext) {
-            final SubViewManager subViews = appContext.ui().subViews();
+        public boolean isEnabled(Game game) {
+            final SubViewManager subViews = game.ui().subViews();
             return subViews.isSelected(subViews.gamePlayView());
         }
 
-        private boolean inPlayScene(Game appContext) {
-            final GameSceneManager gameScenes = appContext.ui().gameScenes();
-            return gameScenes.currentGameSceneHasID(appContext, CommonSceneID.PLAY_SCENE_2D)
-                || gameScenes.currentGameSceneHasID(appContext, CommonSceneID.PLAY_SCENE_3D);
+        private boolean inPlayScene(Game game) {
+            final GameSceneManager gameScenes = game.ui().gameScenes();
+            return gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D)
+                || gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D);
         }
 
-        private boolean isLevelPlaying(Game appContext) {
-            final GameState gameState = appContext.currentGameContext().state();
+        private boolean isLevelPlaying(Game game) {
+            final GameState gameState = game.currentGameContext().state();
             return GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
         }
     };

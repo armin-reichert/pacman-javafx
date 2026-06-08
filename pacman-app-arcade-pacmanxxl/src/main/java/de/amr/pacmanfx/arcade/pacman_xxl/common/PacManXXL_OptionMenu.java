@@ -79,12 +79,12 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         chaseAnimation.draw();
     }
 
-    public void init(Game appContext) {
-        this.context = requireNonNull(appContext);
+    public void init(Game game) {
+        this.context = requireNonNull(game);
 
-        final UIConfig currentConfig = appContext.currentUIConfig();
-        final GameContext gameContext = appContext.currentGameContext();
-        final GameVariant gameVariant = GameVariant.valueOf(appContext.currentGameVariantName());
+        final UIConfig currentConfig = game.currentUIConfig();
+        final GameContext gameContext = game.currentGameContext();
+        final GameVariant gameVariant = GameVariant.valueOf(game.currentGameVariantName());
         final GameModel gameModel = gameContext.model();
 
         if (!(gameModel.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
@@ -103,8 +103,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         logMenuState();
 
-        soundEnabledProperty().bind(appContext.ui().sounds().muteProperty().not());
-        chaseAnimation.init(currentConfig, canvas, appContext.ui().sprites().animationSet());
+        soundEnabledProperty().bind(game.ui().sounds().muteProperty().not());
+        chaseAnimation.init(currentConfig, canvas, game.ui().sprites().animationSet());
 
         requestFocus();
     }
