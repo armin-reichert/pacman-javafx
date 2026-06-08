@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
@@ -43,7 +43,7 @@ public class DashboardSection3DSettings extends DashboardSection {
     }
 
     @Override
-    public void connect(AppContext context) {
+    public void connect(Game context) {
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
         comboPerspectives = addChoiceBox("Perspective", PerspectiveID.values());
         addColorPicker("Light Color", AppConstants.PROPERTY_3D_LIGHT_COLOR);
@@ -116,14 +116,14 @@ public class DashboardSection3DSettings extends DashboardSection {
         cbWireframeMode.setSelected(AppConstants.PROPERTY_3D_DRAW_MODE.get() == DrawMode.LINE);
     }
 
-    private String subSceneSizeInfo(AppContext context) {
+    private String subSceneSizeInfo(Game context) {
         return context.ui().gameScenes().optCurrentGameScene()
             .flatMap(GameScene::optSubSceneFX)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
-    private String subSceneCameraInfo(AppContext context) {
+    private String subSceneCameraInfo(Game context) {
         final GameScene gameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
         return gameScene.optSubSceneFX().map(SubScene::getCamera)
@@ -135,7 +135,7 @@ public class DashboardSection3DSettings extends DashboardSection {
             .orElse(NO_INFO);
     }
 
-    private String sceneSizeInfo(AppContext context) {
+    private String sceneSizeInfo(Game context) {
         final GameModel game = context.currentGameContext().model();
         final GameScene gameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import javafx.scene.input.KeyCombination;
@@ -18,7 +18,7 @@ public class DashboardSectionKeyboardShortcutsCurrentGameScene extends Dashboard
     }
 
     @Override
-    public void connect(AppContext context) {
+    public void connect(Game context) {
         updateTableForCurrentGameScene(context);
     }
 
@@ -30,7 +30,7 @@ public class DashboardSectionKeyboardShortcutsCurrentGameScene extends Dashboard
         }
     }
 
-    private void updateTableForCurrentGameScene(AppContext context) {
+    private void updateTableForCurrentGameScene(Game context) {
         clearSection();
         final GameScene currentGameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (currentGameScene != null) {

@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.gamescene;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -64,7 +64,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public final Optional<GameScene> selectGameScene(AppContext appContext, GameModel game) {
+    public final Optional<GameScene> selectGameScene(Game appContext, GameModel game) {
         requireNonNull(game);
         final SceneID sceneID = determineSceneID(appContext.currentGameContext());
         final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);

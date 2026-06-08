@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.subviews.playview;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -62,7 +62,7 @@ public class GamePlayView implements SubView {
 
     private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for Play View");
 
-    private final AppContext context;
+    private final Game context;
     private final ContextMenu contextMenu = new ContextMenu();
 
     private StackPane rootPane;
@@ -87,7 +87,7 @@ public class GamePlayView implements SubView {
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
 
-    public GamePlayView(AppContext context, DashboardConfig dashboardConfig) {
+    public GamePlayView(Game context, DashboardConfig dashboardConfig) {
         this.context = requireNonNull(context);
         createLayout(requireNonNull(dashboardConfig));
         rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(context, this));
@@ -98,7 +98,7 @@ public class GamePlayView implements SubView {
         gameSceneFrame.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
     }
 
-    public AppContext context() {
+    public Game context() {
         return context;
     }
 
@@ -118,7 +118,7 @@ public class GamePlayView implements SubView {
         return miniPlaySceneView;
     }
 
-    public void showHelp(AppContext context) {
+    public void showHelp(Game context) {
         final double scaling = gameSceneFrame.scalingProperty().get();
         helpLayer.showHelpPopup(context, scaling, context.currentGameVariantName());
     }
@@ -137,7 +137,7 @@ public class GamePlayView implements SubView {
     }
 
     @Override
-    public void onInput(AppContext appContext, Input input) {
+    public void onInput(Game appContext, Input input) {
         // First lLook for an action binding in my bindings, if nothing found, delegate to the current game scene if any
         actionBindings.actionMatchingKeyboardState(input.keyboard()).ifPresentOrElse(
             action -> action.executeIfEnabled(appContext),
@@ -238,8 +238,8 @@ public class GamePlayView implements SubView {
         rootPane = new StackPane(gameSceneLayer, miniPlaySceneView.rootPane(), overlayLayer, helpLayer, pausedIcon);
     }
 
-    public void connect(AppContext context) {
-        pausedIcon.visibleProperty().bind(context.gameClock().updatesDisabledProperty());
+    public void connect(Game context) {
+        pausedIcon.visibleProperty().bind(context.clock().updatesDisabledProperty());
 
         AppConstants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 

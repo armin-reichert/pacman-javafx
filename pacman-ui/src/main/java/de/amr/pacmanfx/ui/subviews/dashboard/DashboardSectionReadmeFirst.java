@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,7 +23,7 @@ public class DashboardSectionReadmeFirst extends DashboardSection {
     }
 
     @Override
-    public void connect(AppContext context) {
+    public void connect(Game context) {
         final var readmeText = new Text();
         readmeText.setText(context.ui().translations().translate("infobox.readme.content"));
         readmeText.setFont(TEXT_FONT);

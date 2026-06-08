@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
@@ -63,7 +63,7 @@ public class PacManXXL_StartPage implements StartPage {
         private final ChangeListener<Boolean> play3DListener;
         private final ObservableValue<Double> scaling;
 
-        public MenuBinding(AppContext context) {
+        public MenuBinding(Game context) {
             gameVariantNameListener = (_, _, variant) -> context.selectGameVariant(variant.name());
             play3DListener = (_, _, enable3D) -> AppConstants.PROPERTY_3D_ENABLED.set(enable3D);
             cutScenesEnabledListener = (_, _, enableCutScenes) -> context.currentGameContext().flow().setCutScenesEnabled(enableCutScenes);
@@ -91,9 +91,9 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     private class KeyboardInputHandler implements Keyboard.StateListener{
-        private final AppContext context;
+        private final Game context;
 
-        public KeyboardInputHandler(AppContext context) {
+        public KeyboardInputHandler(Game context) {
             this.context = context;
         }
 
@@ -122,7 +122,7 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     @Override
-    public void init(AppContext context) {
+    public void init(Game context) {
         requireNonNull(context);
 
         if (menuBinding == null) {
@@ -146,7 +146,7 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     @Override
-    public void onEnterStartPage(AppContext context) {
+    public void onEnterStartPage(Game context) {
         final GameVariant selectedGameVariant = menu.entryGameVariant().value();
         switch (selectedGameVariant) {
             case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> context.selectGameVariant(selectedGameVariant.name());
@@ -158,7 +158,7 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     @Override
-    public void onExitStartPage(AppContext context) {
+    public void onExitStartPage(Game context) {
         context.ui().sounds().stopAndDisposeVoice();
         context.input().keyboard().removeStateListener(keyboardInputHandler);
         menu.stopDrawLoop();
@@ -177,13 +177,13 @@ public class PacManXXL_StartPage implements StartPage {
 
     // Private
 
-    private void openEditor(AppContext context) {
+    private void openEditor(Game context) {
         context.ui().sounds().stopAndDisposeVoice();
         context.ui().subViews().startView().pauseProgressTimer();
         CommonActions.ACTION_OPEN_EDITOR.executeIfEnabled(context);
     }
 
-    private void startSelectedGame(AppContext context) {
+    private void startSelectedGame(Game context) {
         context.ui().sounds().stopAndDisposeVoice();
         context.ui().subViews().startView().pauseProgressTimer();
         menu.startGame();

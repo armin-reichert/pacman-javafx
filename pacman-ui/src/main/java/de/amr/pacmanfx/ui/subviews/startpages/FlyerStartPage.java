@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.subviews.startpages;
 
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -62,7 +62,7 @@ public class FlyerStartPage extends StackPane implements StartPage {
     }
 
     @Override
-    public void init(AppContext context) {
+    public void init(Game context) {
         requireNonNull(context);
         startButton = createStartButton(context);
         getChildren().add(startButton);
@@ -75,18 +75,18 @@ public class FlyerStartPage extends StackPane implements StartPage {
     }
 
     @Override
-    public void onEnterStartPage(AppContext context) {
+    public void onEnterStartPage(Game context) {
         if (startButton != null) {
             startButton.requestFocus();
         }
     }
 
     @Override
-    public void onExitStartPage(AppContext context) {
+    public void onExitStartPage(Game context) {
         context.ui().sounds().stopAndDisposeVoice();
     }
 
-    public Node createStartButton(AppContext context) {
+    public Node createStartButton(Game context) {
         final var startButton = new FancyButton(context.ui().translations().translate("play_button"),
             DEFAULT_START_BUTTON_FONT, DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
         startButton.setAction(() -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(context));

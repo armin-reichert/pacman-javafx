@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 
 import static java.util.Objects.requireNonNull;
 
@@ -24,12 +24,12 @@ public class SteeringAction extends GameAction {
     }
 
     @Override
-    public void doAction(AppContext context) {
+    public void doAction(Game context) {
         context.currentGameContext().optCurrentLevel().ifPresent(level -> level.entities().pac().setWishDir(dir));
     }
 
     @Override
-    public boolean isEnabled(AppContext context) {
+    public boolean isEnabled(Game context) {
         final GameLevel level = context.currentGameContext().optCurrentLevel().orElse(null);
         return level != null && !level.isDemoLevel() && !level.entities().pac().isUsingAutopilot();
     }

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.ui.app.AppBuilder;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -29,7 +29,7 @@ public class TengenMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = NES_SCREEN_ASPECT_RATIO; // 32:30
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
-    private AppContext app;
+    private Game app;
 
     @Override
     public void start(Stage primaryStage) {

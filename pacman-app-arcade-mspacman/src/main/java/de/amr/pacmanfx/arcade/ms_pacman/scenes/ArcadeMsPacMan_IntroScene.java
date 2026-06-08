@@ -20,7 +20,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
@@ -56,7 +56,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private int numTicksBeforeRising;
 
-    public ArcadeMsPacMan_IntroScene(AppContext appContext) {
+    public ArcadeMsPacMan_IntroScene(Game appContext) {
         super(appContext);
 
         setGameEventHandler(new BaseGameSceneHandler(appContext) {

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.scene.control.Label;
@@ -20,7 +20,7 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
     }
 
     @Override
-    public void connect(AppContext context) {
+    public void connect(Game context) {
         updateTableForCurrentSubView(context);
     }
 
@@ -32,7 +32,7 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
         }
     }
 
-    private void updateTableForCurrentSubView(AppContext context) {
+    private void updateTableForCurrentSubView(Game context) {
         clearSection();
         final SubView currentSubView = context.ui().subViews().currentView();
         if (currentSubView == null) {

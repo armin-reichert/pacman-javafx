@@ -11,7 +11,7 @@ import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
@@ -29,16 +29,16 @@ public abstract class GameScene implements Disposable {
 
     private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for " + getClass().getSimpleName());
 
-    private final AppContext appContext;
+    private final Game appContext;
 
     private GameEventListener gameEventHandler;
 
-    public GameScene(AppContext appContext) {
+    public GameScene(Game appContext) {
         this.appContext = requireNonNull(appContext);
         gameEventHandler = new BaseGameSceneHandler(appContext);
     }
 
-    public AppContext appContext() {
+    public Game appContext() {
         return appContext;
     }
 

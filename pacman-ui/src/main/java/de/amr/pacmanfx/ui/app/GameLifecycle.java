@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.app;
 /**
  * Lifecycle methods.
  */
-public interface AppLifecycle {
+public interface GameLifecycle {
     /**
      * Stops the current game, including clock, sounds, and active scene.
      * <p>

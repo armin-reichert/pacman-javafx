@@ -28,7 +28,7 @@ public class GameContextImpl implements GameContext {
         this.gameFlow = requireNonNull(gameFlow);
     }
 
-    private GameSpecification currentGame() {
+    private GameVariantSpecification currentGame() {
         return appContextImpl.gameForVariant(appContextImpl.currentGameVariantName());
     }
 

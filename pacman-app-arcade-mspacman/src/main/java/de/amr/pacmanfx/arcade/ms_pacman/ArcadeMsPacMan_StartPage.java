@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.subviews.startpages.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.media.Media;
@@ -27,7 +27,7 @@ public class ArcadeMsPacMan_StartPage extends FlyerStartPage implements Resource
     }
 
     @Override
-    public void onEnterStartPage(AppContext context) {
+    public void onEnterStartPage(Game context) {
         flyer.selectPage(0);
         context.ui().sounds().playVoice(flyerTextSpeech);
         context.selectGameVariant(GameVariant.ARCADE_MS_PACMAN.name());

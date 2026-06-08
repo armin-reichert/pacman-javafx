@@ -90,7 +90,7 @@ public class PacManGames3dApp extends Application {
         CommonDashboardID.ABOUT
     );
 
-    private AppContext app;
+    private Game app;
 
     private boolean useBuilder;
     private boolean includeTests;
@@ -206,37 +206,37 @@ public class PacManGames3dApp extends Application {
 
     private void registerGames() {
         for (GameVariant variant : GameVariant.values()) {
-            final GameSpecification game = switch (variant) {
+            final GameVariantSpecification game = switch (variant) {
 
-                case ARCADE_PACMAN -> new GameSpecification(
+                case ARCADE_PACMAN -> new GameVariantSpecification(
                     Arcade_GameFlow::new,
                     new ArcadePacMan_GameModel(),
                     new ArcadePacMan_GameRules(),
                     includeTests
                 );
 
-                case ARCADE_MS_PACMAN -> new GameSpecification(
+                case ARCADE_MS_PACMAN -> new GameVariantSpecification(
                     Arcade_GameFlow::new,
                     new ArcadeMsPacMan_GameModel(),
                     new ArcadeMsPacMan_GameRules(),
                     includeTests
                 );
 
-                case TENGEN_MS_PACMAN -> new GameSpecification(
+                case TENGEN_MS_PACMAN -> new GameVariantSpecification(
                     TengenMsPacMan_GameFlow::new,
                     new TengenMsPacMan_GameModel(),
                     new TengenMsPacMan_GameRules(),
                     includeTests
                 );
 
-                case ARCADE_PACMAN_XXL -> new GameSpecification(
+                case ARCADE_PACMAN_XXL -> new GameVariantSpecification(
                     Arcade_GameFlow::new,
                     new PacManXXL_PacMan_GameModel(),
                     new PacManXXL_PacMan_GameRules(),
                     includeTests
                 );
 
-                case ARCADE_MS_PACMAN_XXL -> new GameSpecification(
+                case ARCADE_MS_PACMAN_XXL -> new GameVariantSpecification(
                     Arcade_GameFlow::new,
                     new PacManXXL_MsPacMan_GameModel(),
                     new PacManXXL_MsPacMan_GameRules(),

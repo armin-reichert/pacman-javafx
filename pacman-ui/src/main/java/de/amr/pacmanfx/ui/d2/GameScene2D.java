@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.d2;
 
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
@@ -37,7 +37,7 @@ public class GameScene2D extends GameScene {
 
     protected Canvas canvas;
 
-    public GameScene2D(AppContext context) {
+    public GameScene2D(Game context) {
         super(context);
     }
 

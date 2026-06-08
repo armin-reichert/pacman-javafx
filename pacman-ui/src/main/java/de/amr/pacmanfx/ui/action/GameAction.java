@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import org.tinylog.Logger;
 
 /**
@@ -18,11 +18,11 @@ public abstract class GameAction {
         this.id = Validations.requireValidIdentifier(id);
     }
 
-    protected abstract void doAction(AppContext context);
+    protected abstract void doAction(Game context);
 
-    public boolean isEnabled(AppContext context) { return true; }
+    public boolean isEnabled(Game context) { return true; }
 
-    public final boolean executeIfEnabled(AppContext context) {
+    public final boolean executeIfEnabled(Game context) {
         if (isEnabled(context)) {
             try {
                 doAction(context);

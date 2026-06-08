@@ -10,7 +10,7 @@ import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
@@ -36,10 +36,10 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSceneManager implements ChangeListener<GameScene> {
 
-    private final AppContext context;
+    private final Game context;
     private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
 
-    public GameSceneManager(AppContext context) {
+    public GameSceneManager(Game context) {
         this.context = requireNonNull(context);
         gameScene.addListener(this);
     }
@@ -59,11 +59,11 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         return gameScene;
     }
 
-    public void forceGameSceneUpdate(AppContext context) {
+    public void forceGameSceneUpdate(Game context) {
         updateGameSceneAndForceReload(context, true);
     }
 
-    public void updateGameSceneAndForceReload(AppContext appContext, boolean forceReload) {
+    public void updateGameSceneAndForceReload(Game appContext, boolean forceReload) {
         final UIConfig currentConfig = appContext.currentUIConfig();
         final GameContext gameContext = appContext.currentGameContext();
         final GameModel game = gameContext.model();
@@ -90,7 +90,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         gameSceneProperty().set(nextGameScene);
     }
 
-    public void quitCurrentGameScene(AppContext context) {
+    public void quitCurrentGameScene(Game context) {
         optCurrentGameScene().ifPresent(scene -> {
             //TODO Rethink this
             final CoinMechanism coinMechanism = context.coinMechanism();
@@ -110,7 +110,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
      * @param sceneID scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean hasGameSceneID(AppContext context, GameScene gameScene, GameSceneConfig.SceneID sceneID) {
+    public boolean hasGameSceneID(Game context, GameScene gameScene, GameSceneConfig.SceneID sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         final UIConfig currentConfig = context.currentUIConfig();
@@ -123,7 +123,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
      * @param sceneID scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean currentGameSceneHasID(AppContext context, GameSceneConfig.SceneID sceneID) {
+    public boolean currentGameSceneHasID(Game context, GameSceneConfig.SceneID sceneID) {
         final GameScene current = gameSceneProperty().get();
         return current != null && hasGameSceneID(context, current, sceneID);
     }
@@ -187,7 +187,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     // Scene embedding
 
-    public void removeFromPlayView(AppContext context, GameScene gameScene) {
+    public void removeFromPlayView(Game context, GameScene gameScene) {
         requireNonNull(context);
         requireNonNull(gameScene);
 
@@ -211,7 +211,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         Logger.info("Game scene {} REMOVED from play scene!", gameScene.getClass().getSimpleName());
     }
 
-    public void embedGameSceneIntoPlayView(AppContext context, GameScene gameScene) {
+    public void embedGameSceneIntoPlayView(Game context, GameScene gameScene) {
         final UIConfig currentConfig = context.currentUIConfig();
         final SubViewManager subViews = context.ui().subViews();
 
@@ -227,7 +227,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(AppContext context, GamePlayView playView, GameScene gameScene, SubScene subSceneFX) {
+    private void embedGameSceneWithSubSceneFX(Game context, GamePlayView playView, GameScene gameScene, SubScene subSceneFX) {
         final GameViewMainScene mainScene = context.ui().view().mainScene();
 
         // stretch sub scene to available space

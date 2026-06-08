@@ -6,7 +6,7 @@ import de.amr.pacmanfx.model.GameRules;
 
 import java.util.function.Supplier;
 
-public record GameSpecification(
+public record GameVariantSpecification(
     Supplier<? extends GameFlow> gameFlowFactory,
     AbstractGameModel gameModel,
     GameRules gameRules,

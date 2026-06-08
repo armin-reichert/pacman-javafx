@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -34,7 +34,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public Arcade_PlayScene2D(AppContext appContext) {
+    public Arcade_PlayScene2D(Game appContext) {
         super(appContext);
         setGameEventHandler(new Arcade_PlayScene2DGameEventHandler(this));
     }

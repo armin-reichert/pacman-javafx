@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene3D;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.gamescene.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
@@ -21,9 +21,9 @@ import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    private final AppContext context;
+    private final Game context;
 
-    public PacManXXL_MsPacMan_GameSceneConfig(AppContext context) {
+    public PacManXXL_MsPacMan_GameSceneConfig(Game context) {
         this.context = requireNonNull(context);
     }
 

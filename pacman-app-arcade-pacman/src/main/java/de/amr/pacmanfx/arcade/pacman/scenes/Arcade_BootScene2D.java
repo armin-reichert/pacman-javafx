@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 
 /**
@@ -21,7 +21,7 @@ public class Arcade_BootScene2D extends GameScene2D {
 
     public SceneState sceneState;
 
-    public Arcade_BootScene2D(AppContext context) {
+    public Arcade_BootScene2D(Game context) {
         super(context);
     }
 

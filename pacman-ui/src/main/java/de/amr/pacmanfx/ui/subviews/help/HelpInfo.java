@@ -8,7 +8,7 @@ import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    public static HelpInfo build(AppContext appContext) {
+    public static HelpInfo build(Game appContext) {
         final GameContext gameContext = appContext.currentGameContext();
         final GameModel game = appContext.currentGameContext().model();
         final GameState state = appContext.currentGameContext().state();
@@ -53,12 +53,12 @@ public class HelpInfo {
         return helpInfo;
     }
 
-    private final AppContext appContext;
+    private final Game appContext;
 
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text>  column1 = new ArrayList<>();
 
-    public HelpInfo(AppContext appContext) {
+    public HelpInfo(Game appContext) {
         this.appContext = requireNonNull(appContext);
     }
 
@@ -66,7 +66,7 @@ public class HelpInfo {
         return appContext.ui().translations().translate(key, args);
     }
 
-    public Pane createPane(AppContext appContext, Color backgroundColor, Font font) {
+    public Pane createPane(Game appContext, Color backgroundColor, Font font) {
         final var grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(10);

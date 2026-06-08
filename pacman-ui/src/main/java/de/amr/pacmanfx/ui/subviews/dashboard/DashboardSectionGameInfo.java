@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.MapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import javafx.scene.paint.Color;
 
 import java.net.URLDecoder;
@@ -33,7 +33,7 @@ public class DashboardSectionGameInfo extends DashboardSection {
     }
 
     @Override
-    public void connect(AppContext appContext) {
+    public void connect(Game appContext) {
         final Supplier<GameModel> gameSupplier = appContext.currentGameContext()::model;
 
         addDynamicLabeledValue("Game State",  () -> "%s".formatted(appContext.currentGameContext().state().name()));

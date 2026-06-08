@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.subviews.playview;
 
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import javafx.event.EventHandler;
@@ -19,10 +19,10 @@ import static java.util.Objects.requireNonNull;
 
 public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent> {
 
-    private final AppContext context;
+    private final Game context;
     private final GamePlayView playView;
 
-    public PlayViewContextMenuHandler(AppContext context, GamePlayView playView) {
+    public PlayViewContextMenuHandler(Game context, GamePlayView playView) {
         this.context = requireNonNull(context);
         this.playView = requireNonNull(playView);
 

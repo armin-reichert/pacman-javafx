@@ -22,7 +22,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -60,7 +60,7 @@ import static java.util.Objects.requireNonNull;
  * configuration for the authentic arcade‑style Pac‑Man experience. It acts
  * as the central theme provider for this variant, supplying all assets,
  * renderers, animations, color schemes, and game scenes required by the
- * {@link AppContext} framework.</p>
+ * {@link Game} framework.</p>
  *
  * <p>The configuration covers several major responsibilities:</p>
  *
@@ -105,7 +105,7 @@ import static java.util.Objects.requireNonNull;
  * specific to this variant is centralized here, keeping the rest of the UI
  * framework clean and variant‑agnostic.</p>
  *
- * <p>Instances of this configuration are created by the {@link AppContext}
+ * <p>Instances of this configuration are created by the {@link Game}
  * during initialization and remain active for the lifetime of the UI.</p>
  */
 public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
@@ -115,7 +115,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
      */
     public static final GameAction ACTION_INSERT_COIN = new GameAction("insert_coin") {
         @Override
-        public void doAction(AppContext appContext) {
+        public void doAction(Game appContext) {
             final CoinMechanism slot = appContext.coinMechanism();
             final GameContext gameContext = appContext.currentGameContext();
             appContext.ui().sounds().stopAndDisposeVoice();
@@ -126,7 +126,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         }
 
         @Override
-        public boolean isEnabled(AppContext appContext) {
+        public boolean isEnabled(Game appContext) {
             final CoinMechanism slot = appContext.coinMechanism();
             if (slot.isFull()) {
                 return false;
@@ -143,13 +143,13 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
 
     public static final GameAction ACTION_START_GAME = new GameAction("start_game") {
         @Override
-        public void doAction(AppContext context) {
+        public void doAction(Game context) {
             context.ui().sounds().stopAndDisposeVoice();
             context.currentGameContext().flow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
         }
 
         @Override
-        public boolean isEnabled(AppContext appContext) {
+        public boolean isEnabled(Game appContext) {
             final CoinMechanism slot = appContext.coinMechanism();
             if (slot.isEmpty()) {
                 return false;
@@ -197,7 +197,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public void init(AppContext context) {
+    public void init(Game context) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
         initSound(context.ui().sounds());

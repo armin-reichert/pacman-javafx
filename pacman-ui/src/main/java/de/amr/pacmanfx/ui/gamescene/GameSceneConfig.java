@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.gamescene;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 
 import java.util.Optional;
 
@@ -29,7 +29,7 @@ import java.util.Optional;
  * their own identifiers or use the built‑in {@link CommonSceneID} enumeration.
  *
  * <h2>Scene Selection</h2>
- * The method {@link #selectGameScene(AppContext, GameModel)} determines which scene should be displayed for the
+ * The method {@link #selectGameScene(Game, GameModel)} determines which scene should be displayed for the
  * current game state. This allows each game variant to define its own scene flow.
  */
 public interface GameSceneConfig extends Disposable {
@@ -67,7 +67,7 @@ public interface GameSceneConfig extends Disposable {
      * @param game the current game model
      * @return the scene to display, or an empty {@code Optional} if no scene applies
      */
-    Optional<GameScene> selectGameScene(AppContext context, GameModel game);
+    Optional<GameScene> selectGameScene(Game context, GameModel game);
 
     /**
      *

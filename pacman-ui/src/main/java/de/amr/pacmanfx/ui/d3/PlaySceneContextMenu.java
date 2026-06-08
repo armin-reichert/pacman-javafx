@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.value.ChangeListener;
@@ -62,7 +62,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         }
     };
 
-    public PlaySceneContextMenu(AppContext context) {
+    public PlaySceneContextMenu(Game context) {
         final GameModel game = context.currentGameContext().model();
         final TranslationManager translator = context.ui().translations();
 

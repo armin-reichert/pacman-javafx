@@ -4,13 +4,13 @@
 
 package de.amr.pacmanfx.ui.view;
 
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.stage.Stage;
 
 public interface GameView {
 
-    void setAppContext(AppContext context);
+    void setAppContext(Game context);
 
     Stage stage();
 

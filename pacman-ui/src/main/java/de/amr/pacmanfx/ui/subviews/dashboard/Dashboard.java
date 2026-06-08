@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -84,7 +84,7 @@ public class Dashboard {
         return section;
     }
 
-    private AppContext context;
+    private Game context;
 
     private final VBox rootPane = new VBox();
     private final Map<DashboardID, DashboardSection> sections = new LinkedHashMap<>();
@@ -108,11 +108,11 @@ public class Dashboard {
         return config;
     }
 
-    public AppContext appContext() {
+    public Game appContext() {
         return context;
     }
 
-    public void connect(AppContext context) {
+    public void connect(Game context) {
         this.context = requireNonNull(context);
         sections.values().forEach(section -> section.connect(context));
     }

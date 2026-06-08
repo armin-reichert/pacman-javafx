@@ -10,7 +10,7 @@ import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Input;
@@ -63,7 +63,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     private final GameAction actionSelectNextJoypadBinding = new GameAction("select_next_joypad_binding") {
         @Override
-        public void doAction(AppContext context) {
+        public void doAction(Game context) {
             context.input().joypad().selectNextBinding();
         }
     };
@@ -71,7 +71,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private int idleTicks;
     public int initialDelay;
 
-    public TengenMsPacMan_OptionsScene(AppContext context) {
+    public TengenMsPacMan_OptionsScene(Game context) {
         super(context);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);

@@ -21,13 +21,15 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public interface AppContext extends AppLifecycle {
+public interface Game extends GameLifecycle {
 
     Input input();
 
     GameUI ui();
 
-    GameClock gameClock();
+    GameClock clock();
+
+    GamesContainer gamesContainer();
 
     CoinMechanism coinMechanism();
 
@@ -37,9 +39,7 @@ public interface AppContext extends AppLifecycle {
 
     String currentGameVariantName();
 
-    GamesContainer gamesContainer();
-
-    GameSpecification gameForVariant(String variantName);
+    GameVariantSpecification gameForVariant(String variantName);
 
     GameContext currentGameContext();
 

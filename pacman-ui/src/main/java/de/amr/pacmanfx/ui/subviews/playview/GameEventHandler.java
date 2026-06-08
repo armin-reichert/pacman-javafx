@@ -10,16 +10,16 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 
 import static java.util.Objects.requireNonNull;
 
 public class GameEventHandler extends DefaultGameEventListener {
 
-    private final AppContext context;
+    private final Game context;
 
-    public GameEventHandler(AppContext context) {
+    public GameEventHandler(Game context) {
         this.context = requireNonNull(context);
     }
 

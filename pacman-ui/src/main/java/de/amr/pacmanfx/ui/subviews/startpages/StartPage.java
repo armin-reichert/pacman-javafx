@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews.startpages;
 
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
 
@@ -20,9 +20,9 @@ import org.tinylog.Logger;
  *
  * <h2>Lifecycle</h2>
  * <ol>
- *   <li>{@link #init(AppContext)} is called once when the page is constructed or first registered.</li>
- *   <li>{@link #onEnterStartPage(AppContext)} is invoked each time the page becomes visible.</li>
- *   <li>{@link #onExitStartPage(AppContext)} is invoked when the page is left.</li>
+ *   <li>{@link #init(Game)} is called once when the page is constructed or first registered.</li>
+ *   <li>{@link #onEnterStartPage(Game)} is invoked each time the page becomes visible.</li>
+ *   <li>{@link #onExitStartPage(Game)} is invoked when the page is left.</li>
  * </ol>
  *
  * Implementations should be lightweight and avoid long‑running operations in lifecycle methods,
@@ -44,7 +44,7 @@ public interface StartPage {
      * Performs one‑time initialization of the start page.
      * <p>
      * This method is called exactly once, typically during application startup or
-     * when the page is first registered with the {@link AppContext}.
+     * when the page is first registered with the {@link Game}.
      * Implementations may use this hook to:
      * <ul>
      *   <li>construct UI controls,</li>
@@ -55,7 +55,7 @@ public interface StartPage {
      *
      * @param context the global UI façade providing access to shared services
      */
-    void init(AppContext context);
+    void init(Game context);
 
     /**
      * Called whenever this start page becomes the active page.
@@ -69,7 +69,7 @@ public interface StartPage {
      *
      * @param context the global UI façade
      */
-    void onEnterStartPage(AppContext context);
+    void onEnterStartPage(Game context);
 
     /**
      * Called when the user navigates away from this start page.
@@ -79,7 +79,7 @@ public interface StartPage {
      *
      * @param context the global UI façade
      */
-    default void onExitStartPage(AppContext context) {
+    default void onExitStartPage(Game context) {
         Logger.info("Exit start page {}", this);
     }
 

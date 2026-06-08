@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.subviews.startpages;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -45,14 +45,14 @@ public class StartPagesView extends Carousel implements SubView {
 
     private final GameAction actionShowPrevPage = new GameAction("show_prev_page") {
         @Override
-        public void doAction(AppContext context) {
+        public void doAction(Game context) {
             showPreviousItem();
         }
     };
 
     private final GameAction actionShowNextPage = new GameAction("show_next_page") {
         @Override
-        public void doAction(AppContext context) {
+        public void doAction(Game context) {
             showNextItem();
         }
     };
@@ -60,9 +60,9 @@ public class StartPagesView extends Carousel implements SubView {
     private final List<StartPage> pages = new ArrayList<>();
     private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for Start View");
 
-    private final AppContext context;
+    private final Game context;
 
-    public StartPagesView(AppContext context) {
+    public StartPagesView(Game context) {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
         this.context = requireNonNull(context);
         selectedIndexProperty().addListener((_, ov, nv) -> {

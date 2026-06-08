@@ -25,7 +25,7 @@ public class GamesContainer {
     }
 
 
-    private final Map<String, GameSpecification> gamesByVariantName = new HashMap<>();
+    private final Map<String, GameVariantSpecification> gamesByVariantName = new HashMap<>();
 
     public GamesContainer() {
         final boolean ok = validateUserDirs();
@@ -38,7 +38,7 @@ public class GamesContainer {
      * @param variantName game variant name (e.g. "PACMAN", "MS_PACMAN", "MS_PACMAN_TENGEN", "PACMAN_XXL", "MS_PACMAN_XXL")
      * @param game the game specification implementing the game variant
      */
-    public void registerGame(String variantName, GameSpecification game) {
+    public void registerGame(String variantName, GameVariantSpecification game) {
         requireNonNull(variantName);
         requireNonNull(game);
 
@@ -47,7 +47,7 @@ public class GamesContainer {
                 .formatted(variantName, AppConstants.GAME_VARIANT_NAME_PATTERN));
         }
 
-        final GameSpecification previousGame = gamesByVariantName.putIfAbsent(variantName, game);
+        final GameVariantSpecification previousGame = gamesByVariantName.putIfAbsent(variantName, game);
         if (previousGame != null) {
             Logger.warn("Game ({}) is already registered for variant {}", previousGame.getClass().getName(), variantName);
         }
@@ -59,7 +59,7 @@ public class GamesContainer {
             game.getClass().getSimpleName(), variantName, highScoreFile);
     }
 
-    public GameSpecification gameForVariant(String variantName) {
+    public GameVariantSpecification gameForVariant(String variantName) {
         requireNonNull(variantName);
         if (gamesByVariantName.containsKey(variantName)) {
             return gamesByVariantName.get(variantName);

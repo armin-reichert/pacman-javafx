@@ -127,7 +127,7 @@ public class AppBuilder {
         return this;
     }
 
-    public AppContext build() {
+    public Game build() {
         validateConfigurationData();
 
         final var app = new AppContextImpl(
@@ -137,7 +137,7 @@ public class AppBuilder {
 
         gameConfigMap.forEach((variant, game) -> {
             app.gamesContainer().registerGame(variant,
-                new GameSpecification(
+                new GameVariantSpecification(
                     game.gameFlowFactory,
                     game.gameModelFactory.get(),
                     game.gameRulesFactory.get(),

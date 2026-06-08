@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.view;
 
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
@@ -29,7 +29,7 @@ public class GameViewMainScene extends Scene {
         rootPane().setPrefSize(width, height);
     }
 
-    public void init(AppContext context) {
+    public void init(Game context) {
         getStylesheets().add(AppConstants.STYLE_SHEET_PATH);
         
         final Keyboard keyboard = context.input().keyboard();
@@ -48,7 +48,7 @@ public class GameViewMainScene extends Scene {
         Logger.info(actionBindings);
     }
 
-    private void handleKeyboardStateChange(AppContext context, Keyboard keyboard) {
+    private void handleKeyboardStateChange(Game context, Keyboard keyboard) {
         // Check for "global" action first. otherwise let current sub views handle the keyboard state change
         actionBindings.actionMatchingKeyboardState(keyboard).ifPresentOrElse(
             action -> action.executeIfEnabled(context),

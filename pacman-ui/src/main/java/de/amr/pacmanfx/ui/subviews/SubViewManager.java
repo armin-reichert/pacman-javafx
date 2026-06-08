@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews;
 
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.subviews.editor.EditorView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
@@ -30,7 +30,7 @@ public final class SubViewManager {
 
     public SubViewManager() {}
 
-    public void connect(AppContext context) {
+    public void connect(Game context) {
         requireNonNull(context);
 
         selectedSubViewProperty().addListener((_, oldView, newView) -> {

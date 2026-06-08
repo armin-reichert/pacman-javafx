@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.subviews.editor;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.scene.control.MenuItem;
@@ -21,10 +21,10 @@ import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 
 public class EditorView implements SubView {
 
-    private final AppContext context;
+    private final Game context;
     private final TileMapEditor editor;
 
-    public EditorView(Stage stage, AppContext context) {
+    public EditorView(Stage stage, Game context) {
         this.context = context;
         editor = new TileMapEditor(stage);
         MenuItem miQuitEditor = createQuitEditorMenuItem();

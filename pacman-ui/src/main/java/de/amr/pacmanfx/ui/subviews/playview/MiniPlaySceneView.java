@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.animation.Animation;
@@ -47,7 +47,7 @@ public class MiniPlaySceneView {
     private final HBox rootPane;
     private final Canvas canvas;
 
-    private AppContext context;
+    private Game context;
 
     // Note: The level and actor renderers cannot be created in the constructor, because the game controller has not yet
     //       selected a game variant when the constructor is called, so no UI configuration is available!
@@ -93,7 +93,7 @@ public class MiniPlaySceneView {
         return rootPane;
     }
 
-    public void setUI(AppContext context) {
+    public void setUI(Game context) {
         this.context = requireNonNull(context);
     }
 
@@ -173,7 +173,7 @@ public class MiniPlaySceneView {
             CommonRenderInfoKey.MAP_BRIGHT, false,
             CommonRenderInfoKey.MAP_EMPTY, level.worldMap().foodLayer().remainingFoodCount() == 0,
             CommonRenderInfoKey.MAP_FLASHING, false,
-            CommonRenderInfoKey.TICK, context.gameClock().tickCount()
+            CommonRenderInfoKey.TICK, context.clock().tickCount()
         ));
         levelRenderer.applyLevelSettings(level, info);
         levelRenderer.drawLevel(level, info);

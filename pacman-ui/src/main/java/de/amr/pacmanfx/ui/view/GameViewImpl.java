@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.view;
 
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -36,10 +36,10 @@ public class GameViewImpl implements GameView {
     }
 
     @Override
-    public void setAppContext(AppContext context) {
+    public void setAppContext(Game context) {
         stageTitleBinding = createStringBinding(
             () -> computeStageTitle(context),
-            context.gameClock().updatesDisabledProperty(),
+            context.clock().updatesDisabledProperty(),
             context.gameVariantNameProperty(),
             context.ui().subViews().selectedSubViewProperty(),
             context.ui().gameScenes().gameSceneProperty(),
@@ -85,19 +85,19 @@ public class GameViewImpl implements GameView {
         return stageTitleBinding;
     }
 
-    private String computeStageTitle(AppContext context) {
+    private String computeStageTitle(Game context) {
         final SubView view = context.ui().subViews().currentView();
         return view == null
             ? context.ui().translations().translate("view.missing") // Should never happen
             : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(context));
     }
 
-    private String titleForCurrentGameScene(AppContext context) {
+    private String titleForCurrentGameScene(Game context) {
         final GameScene gameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
 
         final boolean debug = AppConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
         final boolean is3D = AppConstants.PROPERTY_3D_ENABLED.get();
-        final boolean paused = context.gameClock().getUpdatesDisabled();
+        final boolean paused = context.clock().getUpdatesDisabled();
 
         final String normalTitle = appTitle(context, paused, is3D);
         return (gameScene == null || !debug)
@@ -105,7 +105,7 @@ public class GameViewImpl implements GameView {
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String appTitle(AppContext context, boolean paused, boolean is3D) {
+    private String appTitle(Game context, boolean paused, boolean is3D) {
         final String gameVariantName = context.currentGameVariantName();
         if (gameVariantName == null) {
             return "";

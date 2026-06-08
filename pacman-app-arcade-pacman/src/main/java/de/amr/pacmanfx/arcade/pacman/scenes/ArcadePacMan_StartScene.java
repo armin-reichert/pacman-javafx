@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.event.CreditAddedEvent;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
  */
 public class ArcadePacMan_StartScene extends GameScene2D {
 
-    public ArcadePacMan_StartScene(AppContext appContext) {
+    public ArcadePacMan_StartScene(Game appContext) {
         super(appContext);
 
         final var gameEventHandler = new BaseGameSceneHandler(appContext) {

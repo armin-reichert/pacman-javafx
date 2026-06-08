@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
@@ -40,7 +40,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     private final OptionMenuEntry<WorldMapSelectionMode> entryMapOrder;
 
     private final ChaseAnimation chaseAnimation = new ChaseAnimation(NUM_TILES_X);
-    private AppContext context;
+    private Game context;
 
     public PacManXXL_OptionMenu() {
         super(NUM_TILES_X, NUM_TILES_Y, TEXT_COLUMN, VALUE_COLUMN);
@@ -79,7 +79,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         chaseAnimation.draw();
     }
 
-    public void init(AppContext appContext) {
+    public void init(Game appContext) {
         this.context = requireNonNull(appContext);
 
         final UIConfig currentConfig = appContext.currentUIConfig();

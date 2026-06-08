@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.action.ActionBinding;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
@@ -72,7 +72,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
-    public PlayScene3D(AppContext context) {
+    public PlayScene3D(Game context) {
         super(context);
         gameOverMessagePicker = new RandomTextPicker(context.ui().translations().textBundle(), "game.over");
         createSubScene();

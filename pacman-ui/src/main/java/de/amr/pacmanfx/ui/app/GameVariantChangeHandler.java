@@ -15,10 +15,10 @@ import static java.util.Objects.requireNonNull;
 
 public class GameVariantChangeHandler implements ChangeListener<String> {
 
-    private final AppContext appContext;
+    private final Game appContext;
     private final GameEventHandler gameEventHandler;
 
-    public GameVariantChangeHandler(AppContext appContext) {
+    public GameVariantChangeHandler(Game appContext) {
         this.appContext = requireNonNull(appContext);
         gameEventHandler = new GameEventHandler(appContext);
     }

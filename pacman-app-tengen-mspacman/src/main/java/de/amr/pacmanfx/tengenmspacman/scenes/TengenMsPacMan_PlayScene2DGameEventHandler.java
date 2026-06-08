@@ -111,7 +111,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameSceneHan
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = appContext().gameClock().tickCount();
+        final long tick = appContext().clock().tickCount();
         gameScene().optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 

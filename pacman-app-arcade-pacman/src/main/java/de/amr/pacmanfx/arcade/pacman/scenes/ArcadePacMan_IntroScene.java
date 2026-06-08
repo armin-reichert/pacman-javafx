@@ -16,7 +16,7 @@ import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
@@ -83,7 +83,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private int ghostIndex;
     private long lastGhostEatenTick;
 
-    public ArcadePacMan_IntroScene(AppContext appContext) {
+    public ArcadePacMan_IntroScene(Game appContext) {
         super(appContext);
 
         flow = new StateMachine<>(this, List.of(SceneState.values()));

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
@@ -20,7 +20,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     public float fadeProgress = 0;
 
-    public TengenMsPacMan_CreditsScene(AppContext context) {
+    public TengenMsPacMan_CreditsScene(Game context) {
         super(context);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);

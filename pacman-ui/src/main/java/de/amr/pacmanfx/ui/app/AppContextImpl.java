@@ -50,7 +50,7 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public final class AppContextImpl implements AppContext {
+public final class AppContextImpl implements Game {
 
     // All games in a box (only 1,99 €!)
     private final GamesContainer gamesContainer = new GamesContainer();
@@ -96,7 +96,7 @@ public final class AppContextImpl implements AppContext {
         createSubViews();
 
         gameVariantName.addListener((_, _, newVariantName) -> {
-            final GameSpecification newGame = gameForVariant(newVariantName);
+            final GameVariantSpecification newGame = gameForVariant(newVariantName);
             final GameFlow gameFlow = newGame.gameFlowFactory().get();
 
             //TODO avoid circular dependency
@@ -148,7 +148,7 @@ public final class AppContextImpl implements AppContext {
     }
 
     @Override
-    public GameSpecification gameForVariant(String variantName) {
+    public GameVariantSpecification gameForVariant(String variantName) {
         return gamesContainer.gameForVariant(variantName);
     }
 
@@ -163,7 +163,7 @@ public final class AppContextImpl implements AppContext {
     }
 
     @Override
-    public GameClock gameClock() {
+    public GameClock clock() {
         return gameClock;
     }
 
@@ -219,15 +219,15 @@ public final class AppContextImpl implements AppContext {
         stopGame();
         currentGameContext().flow().setGameContext(currentGameContext);
         currentGameContext().flow().restartState(GameStateID.BOOT);
-        Platform.runLater(gameClock()::start);
+        Platform.runLater(clock()::start);
     }
 
     @Override
     public void stopGame() {
         currentGameContext.model().prepareNewGame();
 
-        gameClock().stop();
-        gameClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        clock().stop();
+        clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
 
         ui.sounds().stopAll();
 
@@ -289,12 +289,12 @@ public final class AppContextImpl implements AppContext {
     }
 
     private void initGameClock() {
-        gameClock().setUpdateAction(() -> {
+        clock().setUpdateAction(() -> {
             currentGameContext.flow().makeStep();
-            ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameClock().tickCount()));
+            ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock().tickCount()));
         });
-        gameClock().setPermanentAction(() -> ui.subViews().currentView().render());
-        gameClock().setErrorHandler(this::ka_tas_tro_phe);
+        clock().setPermanentAction(() -> ui.subViews().currentView().render());
+        clock().setErrorHandler(this::ka_tas_tro_phe);
     }
 
     private void initMainScene() {

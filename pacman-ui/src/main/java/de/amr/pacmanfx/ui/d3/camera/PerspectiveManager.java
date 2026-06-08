@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.d3.camera;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.app.AppContext;
+import de.amr.pacmanfx.ui.app.Game;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import javafx.beans.property.ObjectProperty;
@@ -156,7 +156,7 @@ public class PerspectiveManager implements Disposable {
     private GameAction createDroneAction(String id, Consumer<DronePerspective> perspectiveAction) {
         return new GameAction(id) {
             @Override
-            public void doAction(AppContext context) {
+            public void doAction(Game context) {
                 currentPerspective()
                     .filter(DronePerspective.class::isInstance)
                     .map(DronePerspective.class::cast)
@@ -164,7 +164,7 @@ public class PerspectiveManager implements Disposable {
             }
 
             @Override
-            public boolean isEnabled(AppContext context) {
+            public boolean isEnabled(Game context) {
                 return activeID.get() == PerspectiveID.DRONE;
             }
         };
