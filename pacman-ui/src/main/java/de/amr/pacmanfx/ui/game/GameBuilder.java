@@ -145,8 +145,8 @@ public class GameBuilder {
             app.gamesContainer().registerGame(variant,
                 new GameVariantSpecification(
                     game.gameFlowFactory,
-                    game.gameModelFactory.get(),
-                    game.gameRulesFactory.get(),
+                    game.gameModelFactory,
+                    game.gameRulesFactory,
                     includeTests));
             app.ui().configurations().addConfigFactory(variant, game.uiConfigFactory);
         });

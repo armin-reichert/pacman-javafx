@@ -53,6 +53,13 @@ public class ArcadePacMan_App extends Application {
     @Override
     public void init() throws Exception {
         gamesCollection = new GamesCollection();
+        gamesCollection.registerGame(GameVariant.ARCADE_PACMAN.name(), new GameVariantSpecification(
+            Arcade_GameFlow::new,
+            ArcadePacMan_GameModel::new,
+            ArcadePacMan_GameRules::new,
+            false
+        ));
+
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
     }
 
@@ -92,12 +99,6 @@ public class ArcadePacMan_App extends Application {
             createView(stage, sceneSize.x(), sceneSize.y()),
             new GameClockFX(),
             new CoinMechanism());
-
-        final AbstractGameModel gameModel = new ArcadePacMan_GameModel();
-        final GameRules gameRules = new ArcadePacMan_GameRules();
-
-        final GameVariantSpecification game = new GameVariantSpecification(Arcade_GameFlow::new, gameModel, gameRules, false);
-        app.gamesContainer().registerGame(GameVariant.ARCADE_PACMAN.name(), game);
 
         app.ui().configurations().addConfigFactory(
             GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);

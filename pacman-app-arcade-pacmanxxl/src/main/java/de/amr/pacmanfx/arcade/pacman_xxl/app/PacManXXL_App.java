@@ -17,6 +17,7 @@ import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
+import de.amr.pacmanfx.ui.game.GameVariantSpecification;
 import de.amr.pacmanfx.ui.game.GamesCollection;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
@@ -38,6 +39,12 @@ public class PacManXXL_App extends Application {
     @Override
     public void init() {
         gamesCollection = new GamesCollection();
+        gamesCollection.registerGame(GameVariant.ARCADE_PACMAN_XXL.name(), new GameVariantSpecification(
+            Arcade_GameFlow::new,
+            PacManXXL_PacMan_GameModel::new,
+            PacManXXL_PacMan_GameRules::new,
+            false
+        ));
     }
 
     @Override
@@ -91,8 +98,8 @@ public class PacManXXL_App extends Application {
         final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
         game.watchdog().addEventListener(xxlMapSelector);
 
-        game.gamesContainer().gameSpecForVariant(GameVariant.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
-        game.gamesContainer().gameSpecForVariant(GameVariant.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
+        game.gameVariantImpl(GameVariant.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
+        game.gameVariantImpl(GameVariant.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
 
         game.displayOnScreen();
     }

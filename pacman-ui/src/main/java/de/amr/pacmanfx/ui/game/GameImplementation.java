@@ -48,11 +48,23 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 import static java.util.Objects.requireNonNull;
 
 public final class GameImplementation implements Game {
 
+    private static File highScoreFile(String gameVariantName) {
+        requireNonNull(gameVariantName);
+        final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
+        return new File(GameConstants.USER_HOME_DIR, fileName);
+    }
+
     private final GamesCollection gamesCollection;
+
+    private final Map<String, GameVariantImplementation> gameVariantImplMap = new HashMap<>();
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
@@ -96,21 +108,27 @@ public final class GameImplementation implements Game {
         createSubViews();
 
         gameVariantName.addListener((_, _, newVariantName) -> {
-            final GameVariantSpecification newGame = gameForVariant(newVariantName);
-            final GameFlow gameFlow = newGame.gameFlowFactory().get();
-
-            //TODO avoid circular dependency
-            currentGameContext = new GameContextImpl(this);
-            currentGameContext.setGameFlow(gameFlow);
-
-            if (newGame.includeTests()) {
-                gameFlow.addState(new LevelShortTestState());
-                gameFlow.addState(new LevelMediumTestState());
-                gameFlow.addState(new CutScenesTestState());
-            }
-
+            GameVariantImplementation variantImpl = gameVariantImpl(newVariantName);
+            currentGameContext = new GameContextImpl(this, variantImpl);
             currentGameContext.model().hud().creditProperty().bind(coinMechanism.numCoinsProperty());
         });
+    }
+
+    private GameVariantImplementation createGameVariantImplementation(String variantName) {
+        final GameVariantSpecification spec = gamesCollection.gameSpecForVariant(variantName);
+        final var variantImpl = new GameVariantImplementation(
+            spec.gameFlowFactory().get(),
+            spec.gameModelFactory().get(),
+            spec.gameRulesFactory().get()
+        );
+        if (spec.includeTests()) {
+            final GameFlow flow = variantImpl.gameFlow();
+            flow.addState(new LevelShortTestState());
+            flow.addState(new LevelMediumTestState());
+            flow.addState(new CutScenesTestState());
+        }
+        variantImpl.gameModel().createHighScore(highScoreFile(variantName));
+        return variantImpl;
     }
 
     public CollisionStrategy collisionStrategy() {
@@ -143,13 +161,13 @@ public final class GameImplementation implements Game {
     }
 
     @Override
-    public GamesCollection gamesContainer() {
-        return gamesCollection;
+    public GameVariantImplementation gameVariantImpl(String variantName) {
+        return gameVariantImplMap.computeIfAbsent(variantName, this::createGameVariantImplementation);
     }
 
     @Override
-    public GameVariantSpecification gameForVariant(String variantName) {
-        return gamesCollection.gameSpecForVariant(variantName);
+    public GamesCollection gamesContainer() {
+        return gamesCollection;
     }
 
     @Override

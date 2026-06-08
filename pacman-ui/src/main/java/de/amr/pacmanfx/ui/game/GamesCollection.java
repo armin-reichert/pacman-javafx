@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.game;
 
+import de.amr.pacmanfx.model.AbstractGameModel;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -19,12 +20,6 @@ import static java.util.Objects.requireNonNull;
  * </p>
  */
 public class GamesCollection {
-
-    public static File highScoreFile(String gameVariantName) {
-        requireNonNull(gameVariantName);
-        final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
-        return new File(GameConstants.USER_HOME_DIR, fileName);
-    }
 
 
     private final Map<String, GameVariantSpecification> gameSpecsByVariantName = new HashMap<>();
@@ -54,11 +49,8 @@ public class GamesCollection {
             Logger.warn("Game spec ({}) is already registered for variant {}", previousGameSpec.getClass().getName(), variantName);
         }
 
-        final File highScoreFile = highScoreFile(variantName);
-        gameSpec.gameModel().createHighScore(highScoreFile);
 
-        Logger.info("Game spec {} registered for variant {}, high-score file: {}",
-            gameSpec.getClass().getSimpleName(), variantName, highScoreFile);
+        Logger.info("Game spec {} registered for variant {}", gameSpec.getClass().getSimpleName(), variantName);
     }
 
     public GameVariantSpecification gameSpecForVariant(String variantName) {

@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 public record GameVariantSpecification(
     Supplier<? extends GameFlow> gameFlowFactory,
-    AbstractGameModel gameModel,
-    GameRules gameRules,
+    Supplier<? extends AbstractGameModel> gameModelFactory,
+    Supplier<? extends GameRules> gameRulesFactory,
     boolean includeTests)
 {}

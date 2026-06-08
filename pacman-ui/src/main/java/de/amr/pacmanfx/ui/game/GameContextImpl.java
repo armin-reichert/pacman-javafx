@@ -17,19 +17,17 @@ import static java.util.Objects.requireNonNull;
 public class GameContextImpl implements GameContext {
 
     private final GameImplementation gameImpl;
-    private GameFlow gameFlow;
+    private final GameVariantImplementation variantImpl;
+
     private HuntingStepResult huntingStepResult;
 
-    public GameContextImpl(GameImplementation gameImpl) {
+    public GameContextImpl(GameImplementation gameImpl, GameVariantImplementation variantImpl) {
         this.gameImpl = requireNonNull(gameImpl);
+        this.variantImpl = requireNonNull(variantImpl);
     }
 
-    public void setGameFlow(GameFlow gameFlow) {
-        this.gameFlow = requireNonNull(gameFlow);
-    }
-
-    private GameVariantSpecification currentGame() {
-        return gameImpl.gameForVariant(gameImpl.currentGameVariantName());
+    private GameVariantImplementation currentGameVariant() {
+        return variantImpl;
     }
 
     @Override
@@ -39,17 +37,17 @@ public class GameContextImpl implements GameContext {
 
     @Override
     public GameModel model() {
-        return currentGame().gameModel();
+        return variantImpl.gameModel();
     }
 
     @Override
     public GameRules rules() {
-        return currentGame().gameRules();
+        return variantImpl.gameRules();
     }
 
     @Override
     public GameFlow flow() {
-        return gameFlow;
+        return variantImpl.gameFlow();
     }
 
     @Override
