@@ -109,12 +109,12 @@ public final class GameImplementation implements Game {
     }
 
     private GameVariantImplementation createGameVariantImplementation(String variantName) {
-        final GameVariantCartridge spec = gamesCollection.gameSpecForVariant(variantName);
+        final Cartridge cartridge = gamesCollection.cartridgeForVariant(variantName);
         final var variantImpl = new GameVariantImplementation(
-            spec.gameFlowFactory().get(),
-            spec.gameModelFactory().get(),
-            spec.gameRulesFactory().get(),
-            spec.uiConfigFactory().get()
+            cartridge.gameFlowFactory().get(),
+            cartridge.gameModelFactory().get(),
+            cartridge.gameRulesFactory().get(),
+            cartridge.uiConfigFactory().get()
         );
 
         //TODO reactivate
@@ -151,7 +151,7 @@ public final class GameImplementation implements Game {
     @Override
     public void selectGameVariant(String variantName) {
         requireNonNull(variantName);
-        if (gamesCollection.isGameVariantRegistered(variantName)) {
+        if (gamesCollection.isCartridgeForVariantRegistered(variantName)) {
             gameVariantName.set(variantName);
         }
         else {

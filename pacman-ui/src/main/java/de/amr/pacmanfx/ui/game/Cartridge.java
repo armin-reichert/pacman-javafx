@@ -7,7 +7,7 @@ import de.amr.pacmanfx.ui.config.UIConfig;
 
 import java.util.function.Supplier;
 
-public record GameVariantCartridge(
+public record Cartridge(
     Supplier<? extends GameFlow> gameFlowFactory,
     Supplier<? extends AbstractGameModel> gameModelFactory,
     Supplier<? extends GameRules> gameRulesFactory,

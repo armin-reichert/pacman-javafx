@@ -159,7 +159,7 @@ public class PacManGames3dApp extends Application {
 
     private static void fillGamesCollection(GamesCollection gamesCollection) {
         for (GameVariant variant : GameVariant.values()) {
-            final GameVariantCartridge game = switch (variant) {
+            final Cartridge game = switch (variant) {
                 case ARCADE_PACMAN        -> ArcadePacMan_Cartridge.CARTRIDGE;
                 case ARCADE_MS_PACMAN     -> ArcadeMsPacMan_Cartridge.CARTRIDGE;
                 case TENGEN_MS_PACMAN     -> TengenMsPacMan_Cartridge.CARTRIDGE;

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.ui.game.GameVariantCartridge;
+import de.amr.pacmanfx.ui.game.Cartridge;
 import de.amr.pacmanfx.ui.game.GamesCollection;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -32,7 +32,7 @@ public class ArcadeMsPacMan_App extends Application {
     @Override
     public void init() throws Exception {
         gamesCollection = new GamesCollection();
-        gamesCollection.registerGame(GameVariant.ARCADE_MS_PACMAN.name(), new GameVariantCartridge(
+        gamesCollection.registerGame(GameVariant.ARCADE_MS_PACMAN.name(), new Cartridge(
             Arcade_GameFlow::new,
             ArcadeMsPacMan_GameModel::new,
             ArcadeMsPacMan_GameRules::new,

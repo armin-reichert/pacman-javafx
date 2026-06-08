@@ -20,8 +20,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GamesCollection {
 
-
-    private final Map<String, GameVariantCartridge> gameSpecsByVariantName = new HashMap<>();
+    private final Map<String, Cartridge> cartridges = new HashMap<>();
 
     public GamesCollection() {
         final boolean ok = validateUserDirs();
@@ -32,39 +31,39 @@ public class GamesCollection {
 
     /**
      * @param variantName game variant name (e.g. "PACMAN", "MS_PACMAN", "MS_PACMAN_TENGEN", "PACMAN_XXL", "MS_PACMAN_XXL")
-     * @param gameSpec the game specification implementing the game variant
+     * @param cartridge the game specification implementing the game variant
      */
-    public void registerGame(String variantName, GameVariantCartridge gameSpec) {
+    public void registerGame(String variantName, Cartridge cartridge) {
         requireNonNull(variantName);
-        requireNonNull(gameSpec);
+        requireNonNull(cartridge);
 
         if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(variantName).matches()) {
             throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
                 .formatted(variantName, GameConstants.GAME_VARIANT_NAME_PATTERN));
         }
 
-        final GameVariantCartridge previousGameSpec = gameSpecsByVariantName.putIfAbsent(variantName, gameSpec);
-        if (previousGameSpec != null) {
-            Logger.warn("Game spec ({}) is already registered for variant {}", previousGameSpec.getClass().getName(), variantName);
+        final Cartridge prevCartridge = cartridges.putIfAbsent(variantName, cartridge);
+        if (prevCartridge != null) {
+            Logger.warn("Game spec ({}) is already registered for variant {}", prevCartridge.getClass().getName(), variantName);
         }
 
 
-        Logger.info("Game spec {} registered for variant {}", gameSpec.getClass().getSimpleName(), variantName);
+        Logger.info("Game spec {} registered for variant {}", cartridge.getClass().getSimpleName(), variantName);
     }
 
-    public GameVariantCartridge gameSpecForVariant(String variantName) {
+    public Cartridge cartridgeForVariant(String variantName) {
         requireNonNull(variantName);
-        if (gameSpecsByVariantName.containsKey(variantName)) {
-            return gameSpecsByVariantName.get(variantName);
+        if (cartridges.containsKey(variantName)) {
+            return cartridges.get(variantName);
         }
         final String errorMessage = "No game spec was registered for game variant %s!".formatted(variantName);
         Logger.error(errorMessage);
         throw new IllegalArgumentException(errorMessage);
     }
 
-    public boolean isGameVariantRegistered(String variantName) {
+    public boolean isCartridgeForVariantRegistered(String variantName) {
         requireNonNull(variantName);
-        return gameSpecsByVariantName.containsKey(variantName);
+        return cartridges.containsKey(variantName);
     }
 
     // other stuff

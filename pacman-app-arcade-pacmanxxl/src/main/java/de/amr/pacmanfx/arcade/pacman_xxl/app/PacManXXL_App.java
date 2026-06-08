@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.ui.game.GameVariantCartridge;
+import de.amr.pacmanfx.ui.game.Cartridge;
 import de.amr.pacmanfx.ui.game.GamesCollection;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
@@ -39,13 +39,13 @@ public class PacManXXL_App extends Application {
     @Override
     public void init() {
         gamesCollection = new GamesCollection();
-        gamesCollection.registerGame(GameVariant.ARCADE_PACMAN_XXL.name(), new GameVariantCartridge(
+        gamesCollection.registerGame(GameVariant.ARCADE_PACMAN_XXL.name(), new Cartridge(
             Arcade_GameFlow::new,
             PacManXXL_PacMan_GameModel::new,
             PacManXXL_PacMan_GameRules::new,
             PacManXXL_PacMan_UIConfig::new
         ));
-        gamesCollection.registerGame(GameVariant.ARCADE_MS_PACMAN_XXL.name(), new GameVariantCartridge(
+        gamesCollection.registerGame(GameVariant.ARCADE_MS_PACMAN_XXL.name(), new Cartridge(
             Arcade_GameFlow::new,
             PacManXXL_MsPacMan_GameModel::new,
             PacManXXL_MsPacMan_GameRules::new,
