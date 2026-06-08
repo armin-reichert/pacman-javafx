@@ -53,7 +53,7 @@ jobs:
         working-directory: ${{ github.workspace }}/pacman-javafx/pacman-app-arcade-pacman
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew jpackage
+        run: gradle jpackage
 
       # ------------------------------------------------------------
       # 5. Upload installers
