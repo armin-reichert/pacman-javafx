@@ -41,14 +41,14 @@ public class ArcadePacMan_App extends Application {
         CommonDashboardID.ABOUT
     );
 
-    private GamesCollection gamesCollection;
+    private PacManGamesMachine gamesCollection;
     private Game game;
     private boolean useBuilder;
 
     @Override
     public void init() throws Exception {
-        gamesCollection = new GamesCollection();
-        gamesCollection.registerGame(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_Cartridge.CARTRIDGE);
+        gamesCollection = new PacManGamesMachine();
+        gamesCollection.insertCartridge(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_Cartridge.CARTRIDGE);
 
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
     }

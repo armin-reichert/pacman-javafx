@@ -57,7 +57,7 @@ public final class GameImplementation implements Game {
         return new File(GameConstants.USER_HOME_DIR, fileName);
     }
 
-    private final GamesCollection gamesCollection;
+    private final PacManGamesMachine gamesCollection;
 
     private final Map<String, GameVariantRuntime> gameVariantImplMap = new HashMap<>();
 
@@ -81,7 +81,7 @@ public final class GameImplementation implements Game {
 
     private GameContextImpl currentGameContext;
 
-    public GameImplementation(GamesCollection gamesCollection, GameViewImplementation view, GameClock gameClock, CoinMechanism coinMechanism) {
+    public GameImplementation(PacManGamesMachine gamesCollection, GameViewImplementation view, GameClock gameClock, CoinMechanism coinMechanism) {
         this.gamesCollection = requireNonNull(gamesCollection);
         this.view = requireNonNull(view);
         this.gameClock = requireNonNull(gameClock);
@@ -170,7 +170,7 @@ public final class GameImplementation implements Game {
     }
 
     @Override
-    public GamesCollection gamesContainer() {
+    public PacManGamesMachine gamesContainer() {
         return gamesCollection;
     }
 

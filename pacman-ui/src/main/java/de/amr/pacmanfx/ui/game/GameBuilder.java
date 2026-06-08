@@ -34,7 +34,7 @@ public class GameBuilder {
         boolean includeTests) {}
 
     public static GameBuilder compose(
-        GamesCollection gamesCollection,
+        PacManGamesMachine gamesCollection,
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight)
@@ -42,7 +42,7 @@ public class GameBuilder {
         return new GameBuilder(gamesCollection, stage, mainSceneWidth, mainSceneHeight);
     }
 
-    private final GamesCollection gamesCollection;
+    private final PacManGamesMachine gamesCollection;
     private final WindowConfig windowConfig;
     private final Map<String, GameVariantConfig> gameVariantConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
@@ -50,7 +50,7 @@ public class GameBuilder {
     private boolean coinMechanism;
 
     private GameBuilder(
-        GamesCollection gamesCollection,
+        PacManGamesMachine gamesCollection,
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight)

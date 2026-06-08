@@ -5,16 +5,12 @@ package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
-import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.ui.game.Cartridge;
-import de.amr.pacmanfx.ui.game.GamesCollection;
+import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -31,18 +27,13 @@ public class TengenMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = NES_SCREEN_ASPECT_RATIO; // 32:30
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
-    private GamesCollection gamesCollection;
+    private PacManGamesMachine gamesCollection;
     private Game game;
 
     @Override
     public void init() {
-        gamesCollection = new GamesCollection();
-        gamesCollection.registerGame(TENGEN_MS_PACMAN.name(), new Cartridge(
-            TengenMsPacMan_GameFlow::new,
-            TengenMsPacMan_GameModel::new,
-            TengenMsPacMan_GameRules::new,
-            TengenMsPacMan_UIConfig::new
-        ));
+        gamesCollection = new PacManGamesMachine();
+        gamesCollection.insertCartridge(TENGEN_MS_PACMAN.name(), TengenMsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override

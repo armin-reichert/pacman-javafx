@@ -4,21 +4,15 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
-import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameRules;
-import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameRules;
-import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_Cartridge;
+import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_Cartridge;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.ui.game.Cartridge;
-import de.amr.pacmanfx.ui.game.GamesCollection;
+import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
@@ -33,31 +27,21 @@ public class PacManXXL_App extends Application {
     private static final double ASPECT_RATIO    = 1.6;
     private static final double HEIGHT_FRACTION = 0.8;
 
-    private GamesCollection gamesCollection;
+    private PacManGamesMachine pacManGamesMachine;
     private Game game;
 
     @Override
     public void init() {
-        gamesCollection = new GamesCollection();
-        gamesCollection.registerGame(GameVariant.ARCADE_PACMAN_XXL.name(), new Cartridge(
-            Arcade_GameFlow::new,
-            PacManXXL_PacMan_GameModel::new,
-            PacManXXL_PacMan_GameRules::new,
-            PacManXXL_PacMan_UIConfig::new
-        ));
-        gamesCollection.registerGame(GameVariant.ARCADE_MS_PACMAN_XXL.name(), new Cartridge(
-            Arcade_GameFlow::new,
-            PacManXXL_MsPacMan_GameModel::new,
-            PacManXXL_MsPacMan_GameRules::new,
-            PacManXXL_MsPacMan_UIConfig::new
-        ));
+        pacManGamesMachine = new PacManGamesMachine();
+        pacManGamesMachine.insertCartridge(GameVariant.ARCADE_PACMAN_XXL.name(), PacManXXL_PacMan_Cartridge.CARTRIDGE);
+        pacManGamesMachine.insertCartridge(GameVariant.ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        game = GameBuilder.compose(gamesCollection, primaryStage, sceneSize.x(), sceneSize.y())
+        game = GameBuilder.compose(pacManGamesMachine, primaryStage, sceneSize.x(), sceneSize.y())
             .gameVariant(GameVariant.ARCADE_PACMAN_XXL.name(), false)
             .gameVariant(GameVariant.ARCADE_MS_PACMAN_XXL.name(), false)
             .startPage(PacManXXL_StartPage::new)

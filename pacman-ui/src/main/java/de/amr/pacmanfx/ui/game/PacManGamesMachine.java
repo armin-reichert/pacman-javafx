@@ -18,11 +18,11 @@ import static java.util.Objects.requireNonNull;
  * All games in a single box (only 1,99 € / game)!
  * </p>
  */
-public class GamesCollection {
+public class PacManGamesMachine {
 
     private final Map<String, Cartridge> cartridges = new HashMap<>();
 
-    public GamesCollection() {
+    public PacManGamesMachine() {
         final boolean ok = validateUserDirs();
         if (!ok) {
             throw new IllegalStateException("GameBox: User directory validation failed");
@@ -33,7 +33,7 @@ public class GamesCollection {
      * @param variantName game variant name (e.g. "PACMAN", "MS_PACMAN", "MS_PACMAN_TENGEN", "PACMAN_XXL", "MS_PACMAN_XXL")
      * @param cartridge the game specification implementing the game variant
      */
-    public void registerGame(String variantName, Cartridge cartridge) {
+    public void insertCartridge(String variantName, Cartridge cartridge) {
         requireNonNull(variantName);
         requireNonNull(cartridge);
 

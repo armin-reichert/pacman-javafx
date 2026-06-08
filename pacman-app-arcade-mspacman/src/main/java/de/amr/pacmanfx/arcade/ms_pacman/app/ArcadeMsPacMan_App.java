@@ -4,16 +4,12 @@
 package de.amr.pacmanfx.arcade.ms_pacman.app;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameRules;
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.ui.game.Cartridge;
-import de.amr.pacmanfx.ui.game.GamesCollection;
+import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
@@ -26,25 +22,20 @@ public class ArcadeMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = 1.2f; // 12:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    private GamesCollection gamesCollection;
+    private PacManGamesMachine pacManGamesMachine;
     private Game game;
 
     @Override
     public void init() throws Exception {
-        gamesCollection = new GamesCollection();
-        gamesCollection.registerGame(GameVariant.ARCADE_MS_PACMAN.name(), new Cartridge(
-            Arcade_GameFlow::new,
-            ArcadeMsPacMan_GameModel::new,
-            ArcadeMsPacMan_GameRules::new,
-            ArcadeMsPacMan_UIConfig::new
-        ));
+        pacManGamesMachine = new PacManGamesMachine();
+        pacManGamesMachine.insertCartridge(GameVariant.ARCADE_MS_PACMAN.name(), ArcadeMsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override
     public void start(Stage primaryStage) {
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        game = GameBuilder.compose(gamesCollection, primaryStage, screenSize.x(), screenSize.y())
+        game = GameBuilder.compose(pacManGamesMachine, primaryStage, screenSize.x(), screenSize.y())
             .gameVariant(GameVariant.ARCADE_MS_PACMAN.name(), false)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .build();
