@@ -29,7 +29,7 @@ public interface Game extends GameLifecycle {
 
     GameClock clock();
 
-    GamesContainer gamesContainer();
+    GamesCollection gamesContainer();
 
     CoinMechanism coinMechanism();
 

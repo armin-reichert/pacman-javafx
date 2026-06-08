@@ -52,8 +52,8 @@ import static java.util.Objects.requireNonNull;
 
 public final class GameImplementation implements Game {
 
-    // All games in a box (only 1,99 €!)
-    private final GamesContainer gamesContainer = new GamesContainer();
+    // All games in a single box (only 1,99 € / game)!
+    private final GamesCollection gamesCollection = new GamesCollection();
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
@@ -129,7 +129,7 @@ public final class GameImplementation implements Game {
     @Override
     public void selectGameVariant(String variantName) {
         requireNonNull(variantName);
-        if (gamesContainer.hasGameForVariantName(variantName)) {
+        if (gamesCollection.isGameVariantRegistered(variantName)) {
             gameVariantName.set(variantName);
         }
         else {
@@ -143,13 +143,13 @@ public final class GameImplementation implements Game {
     }
 
     @Override
-    public GamesContainer gamesContainer() {
-        return gamesContainer;
+    public GamesCollection gamesContainer() {
+        return gamesCollection;
     }
 
     @Override
     public GameVariantSpecification gameForVariant(String variantName) {
-        return gamesContainer.gameForVariant(variantName);
+        return gamesCollection.gameSpecForVariant(variantName);
     }
 
     @Override

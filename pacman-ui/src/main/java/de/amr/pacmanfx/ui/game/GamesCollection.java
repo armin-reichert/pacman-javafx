@@ -14,9 +14,9 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Container for the playable games. Each game variant is represented by an instance of its game model (see {@link GameModel}).
+ * Collection of the game variants. Each game variant is represented by an instance of its game model (see {@link GameModel}).
  */
-public class GamesContainer {
+public class GamesCollection {
 
     public static File highScoreFile(String gameVariantName) {
         requireNonNull(gameVariantName);
@@ -25,9 +25,9 @@ public class GamesContainer {
     }
 
 
-    private final Map<String, GameVariantSpecification> gamesByVariantName = new HashMap<>();
+    private final Map<String, GameVariantSpecification> gameSpecsByVariantName = new HashMap<>();
 
-    public GamesContainer() {
+    public GamesCollection() {
         final boolean ok = validateUserDirs();
         if (!ok) {
             throw new IllegalStateException("GameBox: User directory validation failed");
@@ -36,42 +36,42 @@ public class GamesContainer {
 
     /**
      * @param variantName game variant name (e.g. "PACMAN", "MS_PACMAN", "MS_PACMAN_TENGEN", "PACMAN_XXL", "MS_PACMAN_XXL")
-     * @param game the game specification implementing the game variant
+     * @param gameSpec the game specification implementing the game variant
      */
-    public void registerGame(String variantName, GameVariantSpecification game) {
+    public void registerGame(String variantName, GameVariantSpecification gameSpec) {
         requireNonNull(variantName);
-        requireNonNull(game);
+        requireNonNull(gameSpec);
 
         if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(variantName).matches()) {
             throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
                 .formatted(variantName, GameConstants.GAME_VARIANT_NAME_PATTERN));
         }
 
-        final GameVariantSpecification previousGame = gamesByVariantName.putIfAbsent(variantName, game);
-        if (previousGame != null) {
-            Logger.warn("Game ({}) is already registered for variant {}", previousGame.getClass().getName(), variantName);
+        final GameVariantSpecification previousGameSpec = gameSpecsByVariantName.putIfAbsent(variantName, gameSpec);
+        if (previousGameSpec != null) {
+            Logger.warn("Game spec ({}) is already registered for variant {}", previousGameSpec.getClass().getName(), variantName);
         }
 
         final File highScoreFile = highScoreFile(variantName);
-        game.gameModel().createHighScore(highScoreFile);
+        gameSpec.gameModel().createHighScore(highScoreFile);
 
-        Logger.info("Game model {} registered as {}, high score file: {}",
-            game.getClass().getSimpleName(), variantName, highScoreFile);
+        Logger.info("Game spec {} registered for variant {}, high-score file: {}",
+            gameSpec.getClass().getSimpleName(), variantName, highScoreFile);
     }
 
-    public GameVariantSpecification gameForVariant(String variantName) {
+    public GameVariantSpecification gameSpecForVariant(String variantName) {
         requireNonNull(variantName);
-        if (gamesByVariantName.containsKey(variantName)) {
-            return gamesByVariantName.get(variantName);
+        if (gameSpecsByVariantName.containsKey(variantName)) {
+            return gameSpecsByVariantName.get(variantName);
         }
-        final String errorMessage = "Game variant named '%s' has not been registered!".formatted(variantName);
+        final String errorMessage = "No game spec was registered for game variant %s!".formatted(variantName);
         Logger.error(errorMessage);
         throw new IllegalArgumentException(errorMessage);
     }
 
-    public boolean hasGameForVariantName(String variantName) {
+    public boolean isGameVariantRegistered(String variantName) {
         requireNonNull(variantName);
-        return gamesByVariantName.containsKey(variantName);
+        return gameSpecsByVariantName.containsKey(variantName);
     }
 
     // other stuff
