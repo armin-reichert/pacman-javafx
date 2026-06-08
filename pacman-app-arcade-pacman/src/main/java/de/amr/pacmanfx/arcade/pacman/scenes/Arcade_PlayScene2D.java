@@ -34,23 +34,16 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public Arcade_PlayScene2D(AppContext context) {
-        super(context);
+    public Arcade_PlayScene2D(AppContext appContext) {
+        super(appContext);
         setGameEventHandler(new Arcade_PlayScene2DGameEventHandler(this));
-    }
-
-    public LevelCompletedAnimation levelCompletedAnimation() {
-        return levelCompletedAnimation;
     }
 
     @Override
     public void onTick(long tick) {
         gameContext().optCurrentLevel().ifPresent(level -> {
             updateLivesCounter(gameState(), gameModel(), level.entities().pac());
-            optSoundEffects().ifPresent(sfx -> {
-                sfx.setEnabled(!level.isDemoLevel());
-                sfx.playLevelRunningSound(gameContext(), level);
-            });
+            optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(gameContext(), level));
         });
     }
 
@@ -58,7 +51,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public Optional<ContextMenu> supplyContextMenu() {
         final TranslationManager translations = appContext().ui().translations();
         final var contextMenu = new ContextMenu();
+
         addLocalizedTitleItem(contextMenu, translations, "pacman");
+
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacUsingAutopilotProperty(), "autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
@@ -67,6 +62,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
                 CheatActions.ACTION_DEACTIVATE_AUTOPILOT.executeIfEnabled(appContext());
             }
         });
+
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
@@ -75,8 +71,11 @@ public class Arcade_PlayScene2D extends GameScene2D {
                 CheatActions.ACTION_DEACTIVATE_IMMUNITY.executeIfEnabled(appContext());
             }
         });
+
         addSeparator(contextMenu);
+
         addLocalizedCheckBox(contextMenu, translations, AppConstants.PROPERTY_MUTED, "muted");
+
         addLocalizedActionItem(contextMenu, appContext(), translations, CommonActions.ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(contextMenu);
@@ -99,29 +98,33 @@ public class Arcade_PlayScene2D extends GameScene2D {
      * but it gets called when the 3D->2D scene switch happens.
      */
     protected void acceptGameLevel(GameLevel level) {
-        if (level.isDemoLevel()) {
-            acceptDemoLevel(level);
-        } else {
-            acceptNormalLevel(level);
-        }
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());
         unscaledHeightProperty().set(terrainSize.y());
+
+        if (level.isDemoLevel()) {
+            acceptDemoLevel();
+        } else {
+            acceptNormalLevel(level);
+        }
     }
 
-    protected void acceptNormalLevel(GameLevel level) {
+    private void acceptNormalLevel(GameLevel level) {
         actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         actionBindings().registerAllBindings(AppConstants.STEERING_ACTION_BINDINGS);
         actionBindings().registerAllBindings(AppConstants.CHEAT_ACTION_BINDINGS);
 
-        appContext().ui().sounds().setEnabled(!level.isDemoLevel()); //TODO is this needed?
+        appContext().ui().sounds().setEnabled(true);
 
-        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameState().expire());
+        if (levelCompletedAnimation == null) {
+            levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameState().expire());
+            Logger.info("Created 2D level flashing animation");
+        }
 
         Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
-    protected void acceptDemoLevel(GameLevel demoLevel) {
+    private void acceptDemoLevel() {
         actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
 
         appContext().ui().sounds().setEnabled(false);

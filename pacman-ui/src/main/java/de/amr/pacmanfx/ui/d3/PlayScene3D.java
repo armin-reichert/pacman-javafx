@@ -212,7 +212,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         perspectives.updatePerspective(level);
         optSoundEffects().ifPresent(soundEffects -> {
             soundEffects.setEnabled(!level.isDemoLevel());
-            soundEffects.playLevelRunningSound(gameContext(), level);
+            soundEffects.playAmbientGameLevelSound(gameContext(), level);
         });
     }
 

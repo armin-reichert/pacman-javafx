@@ -8,6 +8,7 @@ import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.test.TestState;
+import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
@@ -61,7 +62,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
 
         if (GameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-            playScene2D.levelCompletedAnimation().play();
+            playScene2D.optLevelCompletedAnimation().ifPresent(LevelCompletedAnimation::play);
         }
         else if (GameStateID.GAME_OVER.identifies(newState)) {
             gameContext().model().hud().creditOn();

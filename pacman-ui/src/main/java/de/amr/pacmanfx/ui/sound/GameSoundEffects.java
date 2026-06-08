@@ -190,7 +190,7 @@ public class GameSoundEffects implements Disposable {
      * @param gameContext the current game context
      * @param level the current game level
      */
-    public void playLevelRunningSound(GameContext gameContext, GameLevel level) {
+    public void playAmbientGameLevelSound(GameContext gameContext, GameLevel level) {
         if (!soundManager.isEnabled()) {
             return;
         }
