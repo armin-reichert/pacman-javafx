@@ -40,7 +40,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     private final OptionMenuEntry<WorldMapSelectionMode> entryMapOrder;
 
     private final ChaseAnimation chaseAnimation = new ChaseAnimation(NUM_TILES_X);
-    private Game context;
+    private Game game;
 
     public PacManXXL_OptionMenu() {
         super(NUM_TILES_X, NUM_TILES_Y, TEXT_COLUMN, VALUE_COLUMN);
@@ -80,7 +80,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     public void init(Game game) {
-        this.context = requireNonNull(game);
+        this.game = requireNonNull(game);
 
         final UIConfig currentConfig = game.currentUIConfig();
         final GameContext gameContext = game.currentGameContext();
@@ -110,8 +110,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     public void startGame() {
-        context.ui().subViews().selectGamePlayView();
-        context.startGame();
+        game.ui().subViews().selectGamePlayView();
+        game.startGame();
     }
 
     public void startDrawLoop() {
@@ -146,9 +146,9 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         {
             @Override
             public void onValueChanged(GameVariant oldVariant, GameVariant newVariant) {
-                if (context != null) {
-                    final UIConfig uiConfig = context.ui().configurations().getOrCreateUIConfig(newVariant.name());
-                    chaseAnimation.init(uiConfig, canvas, context.ui().sprites().animationSet());
+                if (game != null) {
+                    final UIConfig uiConfig = game.gameVariantImpl(newVariant.name()).uiConfig();
+                    chaseAnimation.init(uiConfig, canvas, game.ui().sprites().animationSet());
                 }
             }
         };

@@ -11,8 +11,9 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_Das
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
-import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameBuilder;
+import de.amr.pacmanfx.ui.game.GameVariantSpecification;
 import de.amr.pacmanfx.ui.game.GamesCollection;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
@@ -36,6 +37,12 @@ public class TengenMsPacMan_App extends Application {
     @Override
     public void init() {
         gamesCollection = new GamesCollection();
+        gamesCollection.registerGame(TENGEN_MS_PACMAN.name(), new GameVariantSpecification(
+            TengenMsPacMan_GameFlow::new,
+            TengenMsPacMan_GameModel::new,
+            TengenMsPacMan_GameRules::new,
+            TengenMsPacMan_UIConfig::new
+        ));
     }
 
     @Override
@@ -43,14 +50,7 @@ public class TengenMsPacMan_App extends Application {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         game = GameBuilder.compose(gamesCollection, primaryStage, sceneSize.x(), sceneSize.y())
-
-            .gameVariant(
-                TENGEN_MS_PACMAN,
-                TengenMsPacMan_GameFlow::new,
-                TengenMsPacMan_GameModel::new,
-                TengenMsPacMan_GameRules::new,
-                TengenMsPacMan_UIConfig::new
-            )
+            .gameVariant(TENGEN_MS_PACMAN.name(), false)
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
 
@@ -71,7 +71,7 @@ public class TengenMsPacMan_App extends Application {
         playView.dashboard().addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
             new DashboardSectionJoypad(playView.dashboard()),
-            game.ui().configurations().getOrCreateUIConfig(TENGEN_MS_PACMAN.name()).translate("infobox.joypad.title"),
+            game.gameVariantImpl(TENGEN_MS_PACMAN.name()).uiConfig().translate("infobox.joypad.title"),
             false);
 
         game.displayOnScreen();

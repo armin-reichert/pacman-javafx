@@ -43,9 +43,7 @@ public interface Game extends GameLifecycle {
 
     GameContext currentGameContext();
 
-    default UIConfig currentUIConfig() {
-        return ui().configurations().getOrCreateUIConfig(currentGameVariantName());
-    }
+    UIConfig currentUIConfig();
 
     default Optional<GameSoundEffects> currentSoundEffects() {
         return currentUIConfig().optSoundEffects();

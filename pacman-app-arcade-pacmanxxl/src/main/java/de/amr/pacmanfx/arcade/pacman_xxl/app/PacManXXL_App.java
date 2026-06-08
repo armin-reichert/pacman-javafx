@@ -43,7 +43,13 @@ public class PacManXXL_App extends Application {
             Arcade_GameFlow::new,
             PacManXXL_PacMan_GameModel::new,
             PacManXXL_PacMan_GameRules::new,
-            false
+            PacManXXL_PacMan_UIConfig::new
+        ));
+        gamesCollection.registerGame(GameVariant.ARCADE_MS_PACMAN_XXL.name(), new GameVariantSpecification(
+            Arcade_GameFlow::new,
+            PacManXXL_MsPacMan_GameModel::new,
+            PacManXXL_MsPacMan_GameRules::new,
+            PacManXXL_MsPacMan_UIConfig::new
         ));
     }
 
@@ -52,26 +58,10 @@ public class PacManXXL_App extends Application {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         game = GameBuilder.compose(gamesCollection, primaryStage, sceneSize.x(), sceneSize.y())
-
-            .gameVariant(
-                GameVariant.ARCADE_PACMAN_XXL,
-                Arcade_GameFlow::new,
-                PacManXXL_PacMan_GameModel::new,
-                PacManXXL_PacMan_GameRules::new,
-                PacManXXL_PacMan_UIConfig::new
-            )
-
-            .gameVariant(
-                GameVariant.ARCADE_MS_PACMAN_XXL,
-                Arcade_GameFlow::new,
-                PacManXXL_MsPacMan_GameModel::new,
-                PacManXXL_MsPacMan_GameRules::new,
-                PacManXXL_MsPacMan_UIConfig::new
-            )
-
+            .gameVariant(GameVariant.ARCADE_PACMAN_XXL.name(), false)
+            .gameVariant(GameVariant.ARCADE_MS_PACMAN_XXL.name(), false)
             .startPage(PacManXXL_StartPage::new)
             .coinMechanism(true)
-            .interactiveTests(false)
             .build();
 
         final GamePlayView playView = game.ui().subViews().gamePlayView();

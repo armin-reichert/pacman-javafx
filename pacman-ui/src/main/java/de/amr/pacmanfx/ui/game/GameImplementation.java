@@ -19,7 +19,6 @@ import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
-import de.amr.pacmanfx.ui.config.UIConfigManager;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
@@ -95,7 +94,6 @@ public final class GameImplementation implements Game {
         watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
         ui = new GameUI(
-            new UIConfigManager(),
             new FlashMessageManager(),
             new GameSceneManager(this),
             new SoundManager(),
@@ -119,16 +117,26 @@ public final class GameImplementation implements Game {
         final var variantImpl = new GameVariantImplementation(
             spec.gameFlowFactory().get(),
             spec.gameModelFactory().get(),
-            spec.gameRulesFactory().get()
+            spec.gameRulesFactory().get(),
+            spec.uiConfigFactory().get()
         );
+
+        //TODO reactivate
+        /*
         if (spec.includeTests()) {
             final GameFlow flow = variantImpl.gameFlow();
             flow.addState(new LevelShortTestState());
             flow.addState(new LevelMediumTestState());
             flow.addState(new CutScenesTestState());
         }
+
+         */
         variantImpl.gameModel().createHighScore(highScoreFile(variantName));
         return variantImpl;
+    }
+
+    private GameVariantImplementation currentVariantImpl() {
+        return gameVariantImpl(currentGameVariantName());
     }
 
     public CollisionStrategy collisionStrategy() {
@@ -173,6 +181,11 @@ public final class GameImplementation implements Game {
     @Override
     public GameContext currentGameContext() {
         return currentGameContext;
+    }
+
+    @Override
+    public UIConfig currentUIConfig() {
+        return currentVariantImpl().uiConfig();
     }
 
     @Override

@@ -32,7 +32,6 @@ import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.config.UIConfigManager;
 import de.amr.pacmanfx.ui.game.*;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
@@ -99,7 +98,7 @@ public class PacManGames3dApp extends Application {
     @Override
     public void init() {
         gamesCollection = new GamesCollection();
-        registerGames(gamesCollection);
+        fillGamesCollection(gamesCollection);
 
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
@@ -108,50 +107,17 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage stage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
 
         try {
             if (useBuilder) {
                 game = GameBuilder.compose(gamesCollection, stage, sceneSize.x(), sceneSize.y())
 
-                    .gameVariant(
-                        ARCADE_PACMAN,
-                        Arcade_GameFlow::new,
-                        ArcadePacMan_GameModel::new,
-                        ArcadePacMan_GameRules::new,
-                        ArcadePacMan_UIConfig::new
-                    )
-
-                    .gameVariant(
-                        ARCADE_MS_PACMAN,
-                        Arcade_GameFlow::new,
-                        ArcadeMsPacMan_GameModel::new,
-                        ArcadeMsPacMan_GameRules::new,
-                        ArcadeMsPacMan_UIConfig::new
-                    )
-
-                    .gameVariant(
-                        TENGEN_MS_PACMAN,
-                        TengenMsPacMan_GameFlow::new,
-                        TengenMsPacMan_GameModel::new,
-                        TengenMsPacMan_GameRules::new,
-                        TengenMsPacMan_UIConfig::new
-                    )
-
-                    .gameVariant(
-                        ARCADE_PACMAN_XXL,
-                        Arcade_GameFlow::new,
-                        PacManXXL_PacMan_GameModel::new,
-                        PacManXXL_PacMan_GameRules::new,
-                        PacManXXL_PacMan_UIConfig::new
-                    )
-
-                    .gameVariant(
-                        ARCADE_MS_PACMAN_XXL,
-                        Arcade_GameFlow::new,
-                        PacManXXL_MsPacMan_GameModel::new,
-                        PacManXXL_MsPacMan_GameRules::new,
-                        PacManXXL_MsPacMan_UIConfig::new
-                    )
+                    .gameVariant(ARCADE_PACMAN.name(), true)
+                    .gameVariant(ARCADE_MS_PACMAN.name(), true)
+                    .gameVariant(TENGEN_MS_PACMAN.name(), true)
+                    .gameVariant(ARCADE_PACMAN_XXL.name(), xxlMapSelector, true)
+                    .gameVariant(ARCADE_MS_PACMAN_XXL.name(), xxlMapSelector, true)
 
                     .startPage(ArcadePacMan_StartPage::new)
                     .startPage(ArcadeMsPacMan_StartPage::new)
@@ -159,8 +125,6 @@ public class PacManGames3dApp extends Application {
                     .startPage(PacManXXL_StartPage::new)
 
                     .coinMechanism(true)
-                    .interactiveTests(includeTests)
-
                     .build();
             }
             else {
@@ -169,17 +133,14 @@ public class PacManGames3dApp extends Application {
                     createView(stage, sceneSize.x(), sceneSize.y()),
                     new GameClockFX(),
                     new CoinMechanism());
-                addConfigFactories();
+
+                game.gameVariantImpl(GameVariant.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
+                game.gameVariantImpl(GameVariant.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
                 addStartPages();
             }
 
             configureDashboard();
-
-            final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
-            game.watchdog().addEventListener(xxlMapSelector);
-
-            game.gameVariantImpl(GameVariant.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
-            game.gameVariantImpl(GameVariant.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
+            game.watchdog().addEventListener(xxlMapSelector); //TODO
 
             Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
         }
@@ -208,7 +169,7 @@ public class PacManGames3dApp extends Application {
         );
     }
 
-    private void registerGames(GamesCollection gamesCollection) {
+    private void fillGamesCollection(GamesCollection gamesCollection) {
         for (GameVariant variant : GameVariant.values()) {
             final GameVariantSpecification game = switch (variant) {
 
@@ -216,48 +177,39 @@ public class PacManGames3dApp extends Application {
                     Arcade_GameFlow::new,
                     ArcadePacMan_GameModel::new,
                     ArcadePacMan_GameRules::new,
-                    includeTests
+                    ArcadePacMan_UIConfig::new
                 );
 
                 case ARCADE_MS_PACMAN -> new GameVariantSpecification(
                     Arcade_GameFlow::new,
                     ArcadeMsPacMan_GameModel::new,
                     ArcadeMsPacMan_GameRules::new,
-                    includeTests
+                    ArcadeMsPacMan_UIConfig::new
                 );
 
                 case TENGEN_MS_PACMAN -> new GameVariantSpecification(
                     TengenMsPacMan_GameFlow::new,
                     TengenMsPacMan_GameModel::new,
                     TengenMsPacMan_GameRules::new,
-                    includeTests
+                    TengenMsPacMan_UIConfig::new
                 );
 
                 case ARCADE_PACMAN_XXL -> new GameVariantSpecification(
                     Arcade_GameFlow::new,
                     PacManXXL_PacMan_GameModel::new,
                     PacManXXL_PacMan_GameRules::new,
-                    includeTests
+                    PacManXXL_PacMan_UIConfig::new
                 );
 
                 case ARCADE_MS_PACMAN_XXL -> new GameVariantSpecification(
                     Arcade_GameFlow::new,
                     PacManXXL_MsPacMan_GameModel::new,
                     PacManXXL_MsPacMan_GameRules::new,
-                    includeTests
+                    PacManXXL_MsPacMan_UIConfig::new
                 );
             };
             gamesCollection.registerGame(variant.name(), game);
         }
-    }
-
-    private void addConfigFactories() {
-        final UIConfigManager configManager = game.ui().configurations();
-        configManager.addConfigFactory(ARCADE_PACMAN.name(),        ArcadePacMan_UIConfig::new);
-        configManager.addConfigFactory(ARCADE_MS_PACMAN.name(),     ArcadeMsPacMan_UIConfig::new);
-        configManager.addConfigFactory(TENGEN_MS_PACMAN.name(),     TengenMsPacMan_UIConfig::new);
-        configManager.addConfigFactory(ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_UIConfig::new);
-        configManager.addConfigFactory(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_UIConfig::new);
     }
 
     private void addStartPages() {
@@ -270,7 +222,6 @@ public class PacManGames3dApp extends Application {
         startView.setSelectedIndex(0);
     }
 
-
     private void configureDashboard() {
         final Dashboard dashboard = game.ui().subViews().gamePlayView().dashboard();
 
@@ -280,7 +231,7 @@ public class PacManGames3dApp extends Application {
         dashboard.addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
             new DashboardSectionJoypad(dashboard),
-            game.ui().configurations().getOrCreateUIConfig(TENGEN_MS_PACMAN.name()).translate("infobox.joypad.title"),
+            game.gameVariantImpl(TENGEN_MS_PACMAN.name()).uiConfig().translate("infobox.joypad.title"),
             false);
 
         // Configure custom map section table

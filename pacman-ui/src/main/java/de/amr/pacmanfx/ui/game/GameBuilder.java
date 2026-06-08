@@ -4,12 +4,7 @@
 package de.amr.pacmanfx.ui.game;
 
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.flow.GameFlow;
-import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImplementation;
@@ -34,12 +29,9 @@ public class GameBuilder {
 
     record WindowConfig(Stage stage, int sceneWidth, int sceneHeight) {}
 
-    record GameConfig(
-        Supplier<? extends GameFlow> gameFlowFactory,
-        Supplier<? extends AbstractGameModel> gameModelFactory,
-        Supplier<? extends GameRules> gameRulesFactory,
-        Supplier<? extends UIConfig> uiConfigFactory,
-        WorldMapSelector mapSelector) {}
+    record GameVariantConfig(
+        WorldMapSelector mapSelector,
+        boolean includeTests) {}
 
     public static GameBuilder compose(
         GamesCollection gamesCollection,
@@ -52,11 +44,10 @@ public class GameBuilder {
 
     private final GamesCollection gamesCollection;
     private final WindowConfig windowConfig;
-    private final Map<String, GameConfig> gameConfigMap = new LinkedHashMap<>();
+    private final Map<String, GameVariantConfig> gameVariantConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
 
     private boolean coinMechanism;
-    private boolean includeTests;
 
     private GameBuilder(
         GamesCollection gamesCollection,
@@ -75,52 +66,20 @@ public class GameBuilder {
 
     public GameBuilder gameVariant(
         String gameVariantName,
-        Supplier<? extends GameFlow> gameFlowFactory,
-        Supplier<? extends AbstractGameModel> gameModelFactory,
-        Supplier<? extends GameRules> gameRulesFactory,
-        Supplier<? extends UIConfig> uiConfigFactory,
-        WorldMapSelector mapSelector)
+        WorldMapSelector mapSelector,
+        boolean includeTests)
     {
         validateGameVariantName(gameVariantName);
-
-        if (gameFlowFactory == null) {
-            error("Game flow factory for game variant '%s' is null".formatted(gameVariantName));
-        }
-        if (gameModelFactory == null) {
-            error("Game model factory for game variant '%s' is null".formatted(gameVariantName));
-        }
-        if (gameRulesFactory == null) {
-            error("Game rules factory for game variant '%s' is null".formatted(gameVariantName));
-        }
-        if (uiConfigFactory == null) {
-            error("UI configuration factory for game variant '%s' is null".formatted(gameVariantName));
-        }
-        gameConfigMap.put(gameVariantName, new GameConfig(gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, mapSelector));
+        gameVariantConfigMap.put(gameVariantName, new GameVariantConfig(mapSelector, includeTests));
         return this;
     }
 
     public GameBuilder gameVariant(
-        String variantName,
-        Supplier<? extends GameFlow> gameFlowFactory,
-        Supplier<? extends AbstractGameModel> gameModelFactory,
-        Supplier<? extends GameRules> gameRulesFactory,
-        Supplier<? extends UIConfig> uiConfigFactory)
+        String gameVariantName,
+        boolean includeTests)
     {
-        return gameVariant(variantName, gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, null);
-    }
-
-    public GameBuilder gameVariant(
-        GameVariant variant,
-        Supplier<? extends GameFlow> gameFlowFactory,
-        Supplier<? extends AbstractGameModel> gameModelFactory,
-        Supplier<? extends GameRules> gameRulesFactory,
-        Supplier<? extends UIConfig> uiConfigFactory)
-    {
-        return gameVariant(variant.name(), gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, null);
-    }
-
-    public GameBuilder interactiveTests(boolean include) {
-        includeTests = include;
+        validateGameVariantName(gameVariantName);
+        gameVariantConfigMap.put(gameVariantName, new GameVariantConfig(null, includeTests));
         return this;
     }
 
@@ -140,16 +99,6 @@ public class GameBuilder {
             createGameView(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight()),
             new GameClockFX(),
             coinMechanism ? new CoinMechanism(99) : CoinMechanism.OUT_OF_SERVICE);
-
-        gameConfigMap.forEach((variant, game) -> {
-            app.gamesContainer().registerGame(variant,
-                new GameVariantSpecification(
-                    game.gameFlowFactory,
-                    game.gameModelFactory,
-                    game.gameRulesFactory,
-                    includeTests));
-            app.ui().configurations().addConfigFactory(variant, game.uiConfigFactory);
-        });
 
         final StartPagesView startPagesCarousel = app.ui().subViews().startView();
         for (var startPageFactory : startPageFactories) {
@@ -174,7 +123,7 @@ public class GameBuilder {
     }
 
     private void validateConfigurationData() {
-        if (gameConfigMap.isEmpty()) {
+        if (gameVariantConfigMap.isEmpty()) {
             error("No game configuration specified");
         }
         if (windowConfig.sceneWidth() <= 0) {

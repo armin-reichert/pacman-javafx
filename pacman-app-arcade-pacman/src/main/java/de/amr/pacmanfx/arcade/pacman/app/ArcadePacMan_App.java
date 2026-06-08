@@ -12,8 +12,6 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.ui.game.*;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
@@ -47,7 +45,7 @@ public class ArcadePacMan_App extends Application {
     );
 
     private GamesCollection gamesCollection;
-    private Game app;
+    private Game game;
     private boolean useBuilder;
 
     @Override
@@ -57,7 +55,7 @@ public class ArcadePacMan_App extends Application {
             Arcade_GameFlow::new,
             ArcadePacMan_GameModel::new,
             ArcadePacMan_GameRules::new,
-            false
+            ArcadePacMan_UIConfig::new
         ));
 
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
@@ -67,46 +65,37 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
-            app = GameBuilder.compose(gamesCollection, primaryStage, size.x(), size.y())
-                .gameVariant(
-                    GameVariant.ARCADE_PACMAN,
-                    Arcade_GameFlow::new,
-                    ArcadePacMan_GameModel::new,
-                    ArcadePacMan_GameRules::new,
-                    ArcadePacMan_UIConfig::new)
+            game = GameBuilder.compose(gamesCollection, primaryStage, size.x(), size.y())
+                .gameVariant(GameVariant.ARCADE_PACMAN.name(), false)
                 .startPage(ArcadePacMan_StartPage::new)
                 .coinMechanism(true)
-                .interactiveTests(false)
                 .build();
         }
         else {
             createApp(primaryStage, size);
         }
-        app.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, app.ui().translations());
-        app.displayOnScreen();
+        game.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, game.ui().translations());
+        game.displayOnScreen();
     }
 
     @Override
     public void stop() {
-        app.terminate();
+        game.terminate();
     }
 
     // Private area
 
     private void createApp(Stage stage, Vector2i sceneSize) {
-        app = new GameImplementation(
+        game = new GameImplementation(
             gamesCollection,
             createView(stage, sceneSize.x(), sceneSize.y()),
             new GameClockFX(),
             new CoinMechanism());
 
-        app.ui().configurations().addConfigFactory(
-            GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_UIConfig::new);
-
-        final StartPagesView startView = app.ui().subViews().startView();
+        final StartPagesView startView = game.ui().subViews().startView();
 
         final var arcadePacManStartPage = new ArcadePacMan_StartPage();
-        arcadePacManStartPage.init(app);
+        arcadePacManStartPage.init(game);
 
         startView.addStartPage(arcadePacManStartPage);
         startView.setSelectedIndex(0);
