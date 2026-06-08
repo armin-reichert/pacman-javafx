@@ -19,8 +19,8 @@ import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
@@ -74,10 +74,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         final UIConfig uiConfig = appContext().currentUIConfig();
         final SpriteAnimationSet spriteAnimations = appContext().ui().sprites().animationSet();
 
-        appContext().ui().sounds().playVoice(AppConstants.VOICE_EXPLAIN_GAME_START);
+        appContext().ui().sounds().playVoice(GameConstants.VOICE_EXPLAIN_GAME_START);
 
         actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
-        actionBindings().registerAllBindings(AppConstants.SCENE_TESTS_BINDINGS);
+        actionBindings().registerAllBindings(GameConstants.SCENE_TESTS_BINDINGS);
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);

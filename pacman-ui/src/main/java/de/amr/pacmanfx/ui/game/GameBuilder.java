@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.app;
+package de.amr.pacmanfx.ui.game;
 
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
@@ -29,7 +29,7 @@ import static de.amr.pacmanfx.core.Validations.requireNonNegative;
 /**
  * Builder for constructing and configuring an application.
  */
-public class AppBuilder {
+public class GameBuilder {
 
     record WindowConfig(Stage stage, int sceneWidth, int sceneHeight) {}
 
@@ -40,12 +40,12 @@ public class AppBuilder {
         Supplier<? extends UIConfig> uiConfigFactory,
         WorldMapSelector mapSelector) {}
 
-    public static AppBuilder newApp(
+    public static GameBuilder newApp(
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight)
     {
-        return new AppBuilder(stage, mainSceneWidth, mainSceneHeight);
+        return new GameBuilder(stage, mainSceneWidth, mainSceneHeight);
     }
 
     private final WindowConfig windowConfig;
@@ -55,7 +55,7 @@ public class AppBuilder {
     private boolean coinMechanism;
     private boolean includeTests;
 
-    private AppBuilder(
+    private GameBuilder(
         Stage stage,
         int mainSceneWidth,
         int mainSceneHeight)
@@ -63,12 +63,12 @@ public class AppBuilder {
         windowConfig = new WindowConfig(stage, mainSceneWidth, mainSceneHeight);
     }
 
-    public AppBuilder coinMechanism(boolean coinMechanism) {
+    public GameBuilder coinMechanism(boolean coinMechanism) {
         this.coinMechanism = coinMechanism;
         return this;
     }
 
-    public AppBuilder game(
+    public GameBuilder game(
         String gameVariantName,
         Supplier<? extends GameFlow> gameFlowFactory,
         Supplier<? extends AbstractGameModel> gameModelFactory,
@@ -94,7 +94,7 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder game(
+    public GameBuilder game(
         String variantName,
         Supplier<? extends GameFlow> gameFlowFactory,
         Supplier<? extends AbstractGameModel> gameModelFactory,
@@ -104,7 +104,7 @@ public class AppBuilder {
         return game(variantName, gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, null);
     }
 
-    public AppBuilder game(
+    public GameBuilder game(
         GameVariant variant,
         Supplier<? extends GameFlow> gameFlowFactory,
         Supplier<? extends AbstractGameModel> gameModelFactory,
@@ -114,12 +114,12 @@ public class AppBuilder {
         return game(variant.name(), gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, null);
     }
 
-    public AppBuilder interactiveTests(boolean include) {
+    public GameBuilder interactiveTests(boolean include) {
         includeTests = include;
         return this;
     }
 
-    public AppBuilder startPage(Supplier<? extends StartPage> startPageFactory) {
+    public GameBuilder startPage(Supplier<? extends StartPage> startPageFactory) {
         if (startPageFactory == null) {
             error("Start page factory is null");
         }
@@ -163,7 +163,7 @@ public class AppBuilder {
         return new GameViewImplementation(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
-            new StatusIconBox(() -> AppConstants.LOCALIZED_TEXTS)
+            new StatusIconBox(() -> GameConstants.LOCALIZED_TEXTS)
         );
     }
 
@@ -186,8 +186,8 @@ public class AppBuilder {
         if (name.isBlank()) {
             error("Game variant name must not be blank");
         }
-        if (!AppConstants.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
-            error("Game variant name '%s' does not match pattern '%s'".formatted(name, AppConstants.GAME_VARIANT_NAME_PATTERN));
+        if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
+            error("Game variant name '%s' does not match pattern '%s'".formatted(name, GameConstants.GAME_VARIANT_NAME_PATTERN));
         }
     }
 

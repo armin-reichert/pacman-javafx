@@ -15,8 +15,8 @@ import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -47,7 +47,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode.SCROLLING;
 import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_QUIT_GAME_SCENE;
-import static de.amr.pacmanfx.ui.app.AppConstants.PROPERTY_CANVAS_BACKGROUND_COLOR;
+import static de.amr.pacmanfx.ui.game.GameConstants.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.subviews.ContextMenuSupport.*;
 import static java.util.Objects.requireNonNull;
 
@@ -188,7 +188,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacUsingAutopilotProperty(), "autopilot");
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "immunity");
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, AppConstants.PROPERTY_MUTED, "muted");
+        addLocalizedCheckBox(contextMenu, translations, GameConstants.PROPERTY_MUTED, "muted");
         addLocalizedActionItem(contextMenu, appContext(), translations, ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(contextMenu);
@@ -213,7 +213,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         } else {
             // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
             actionBindings().registerAllBindings(STEERING_BINDINGS);
-            actionBindings().registerAllBindings(AppConstants.CHEAT_ACTION_BINDINGS);
+            actionBindings().registerAllBindings(GameConstants.CHEAT_ACTION_BINDINGS);
             actionBindings().registerFirstBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
             actionBindings().registerFirstBinding(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
         }

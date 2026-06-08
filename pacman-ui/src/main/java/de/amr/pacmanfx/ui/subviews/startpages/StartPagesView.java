@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.ui.subviews.startpages;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameAction;
@@ -77,7 +77,7 @@ public class StartPagesView extends Carousel implements SubView {
                 startPage.rootPane().requestFocus();
             }
         });
-        setBackground(AppConstants.BACKGROUND_PAC_MAN_WALLPAPER);
+        setBackground(GameConstants.BACKGROUND_PAC_MAN_WALLPAPER);
     }
 
     @Override

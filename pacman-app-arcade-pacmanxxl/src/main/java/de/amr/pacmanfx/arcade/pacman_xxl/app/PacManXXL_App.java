@@ -15,8 +15,8 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.app.AppBuilder;
-import de.amr.pacmanfx.ui.app.Game;
+import de.amr.pacmanfx.ui.game.GameBuilder;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
@@ -37,7 +37,7 @@ public class PacManXXL_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        app = AppBuilder
+        app = GameBuilder
 
             .newApp(primaryStage, sceneSize.x(), sceneSize.y())
 

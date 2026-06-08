@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.view;
 
-import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
@@ -30,7 +30,7 @@ public class GameViewMainScene extends Scene {
     }
 
     public void init(Game context) {
-        getStylesheets().add(AppConstants.STYLE_SHEET_PATH);
+        getStylesheets().add(GameConstants.STYLE_SHEET_PATH);
         
         final Keyboard keyboard = context.input().keyboard();
         keyboard.filterEventsForScene(this);
@@ -40,10 +40,10 @@ public class GameViewMainScene extends Scene {
         setOnScroll(e -> context.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         // Global action bindings
-        actionBindings.registerFirstBinding(CommonActions.ACTION_ENTER_FULLSCREEN,        AppConstants.COMMON_BINDINGS);
-        actionBindings.registerFirstBinding(CommonActions.ACTION_OPEN_EDITOR,             AppConstants.COMMON_BINDINGS);
-        actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, AppConstants.COMMON_BINDINGS);
-        actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_MUTED,            AppConstants.COMMON_BINDINGS);
+        actionBindings.registerFirstBinding(CommonActions.ACTION_ENTER_FULLSCREEN,        GameConstants.COMMON_BINDINGS);
+        actionBindings.registerFirstBinding(CommonActions.ACTION_OPEN_EDITOR,             GameConstants.COMMON_BINDINGS);
+        actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameConstants.COMMON_BINDINGS);
+        actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_MUTED,            GameConstants.COMMON_BINDINGS);
 
         Logger.info(actionBindings);
     }

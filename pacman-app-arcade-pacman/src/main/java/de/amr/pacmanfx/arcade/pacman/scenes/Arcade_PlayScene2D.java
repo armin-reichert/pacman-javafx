@@ -14,8 +14,8 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -74,7 +74,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
         addSeparator(contextMenu);
 
-        addLocalizedCheckBox(contextMenu, translations, AppConstants.PROPERTY_MUTED, "muted");
+        addLocalizedCheckBox(contextMenu, translations, GameConstants.PROPERTY_MUTED, "muted");
 
         addLocalizedActionItem(contextMenu, appContext(), translations, CommonActions.ACTION_QUIT_GAME_SCENE, "quit");
 
@@ -120,8 +120,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void acceptNormalLevel(GameLevel level) {
-        actionBindings().registerAllBindings(AppConstants.STEERING_ACTION_BINDINGS);
-        actionBindings().registerAllBindings(AppConstants.CHEAT_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(GameConstants.STEERING_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(GameConstants.CHEAT_ACTION_BINDINGS);
 
         appContext().ui().sounds().setEnabled(true);
 

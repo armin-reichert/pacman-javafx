@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_CutScene3;
-import de.amr.pacmanfx.ui.app.AppConstants;
+import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -35,7 +35,7 @@ public class ArcadeMsPacMan_CutScene3_Renderer extends BaseRenderer implements G
         Stream.of(cutScene.clapperboard(), cutScene.msPacMan(), cutScene.pacMan(), cutScene.stork(), cutScene.bag())
             .forEach(actorRenderer::drawActor);
 
-        if (AppConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (GameConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

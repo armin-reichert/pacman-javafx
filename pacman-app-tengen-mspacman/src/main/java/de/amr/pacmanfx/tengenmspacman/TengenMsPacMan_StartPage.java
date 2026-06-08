@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.ui.app.Game;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.subviews.startpages.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.media.Media;

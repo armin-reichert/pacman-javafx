@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
-import de.amr.pacmanfx.ui.app.*;
+import de.amr.pacmanfx.ui.game.*;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImplementation;
@@ -58,7 +58,7 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
-            app = AppBuilder.newApp(primaryStage, size.x(), size.y())
+            app = GameBuilder.newApp(primaryStage, size.x(), size.y())
                 .game(
                     GameVariant.ARCADE_PACMAN,
                     Arcade_GameFlow::new,
@@ -109,7 +109,7 @@ public class ArcadePacMan_App extends Application {
         return new GameViewImplementation(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
-            new StatusIconBox(() -> AppConstants.LOCALIZED_TEXTS)
+            new StatusIconBox(() -> GameConstants.LOCALIZED_TEXTS)
         );
     }
 }

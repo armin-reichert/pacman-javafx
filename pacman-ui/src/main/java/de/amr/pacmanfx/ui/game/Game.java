@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.app;
+package de.amr.pacmanfx.ui.game;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.CoinMechanism;
@@ -79,6 +79,6 @@ public interface Game extends GameLifecycle {
      * @param args    formatting arguments
      */
     default void shortMessage(String message, Object... args) {
-        shortMessage(AppConstants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
+        shortMessage(GameConstants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 }

@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.app;
+package de.amr.pacmanfx.ui.game;
 
 import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.ui.action.ActionBinding;
@@ -38,9 +38,9 @@ import static de.amr.pacmanfx.ui.action.CommonActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;
 
-public class AppConstants {
+public class GameConstants {
 
-    private AppConstants() {}
+    private GameConstants() {}
 
     /**
      * Game variant names must match this pattern (e.g. "MS_PACMAN_2024").
@@ -66,7 +66,7 @@ public class AppConstants {
     /**
      * Resource manager for UI assets (fonts, images, sounds).
      */
-    public static final ResourceManager UI_RESOURCES = () -> AppConstants.class;
+    public static final ResourceManager UI_RESOURCES = () -> GameConstants.class;
 
     /**
      * Voice media for immunity activation.

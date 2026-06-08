@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.app;
+package de.amr.pacmanfx.ui.game;
 
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;

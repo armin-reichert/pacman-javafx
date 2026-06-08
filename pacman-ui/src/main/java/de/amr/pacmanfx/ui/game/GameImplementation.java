@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.app;
+package de.amr.pacmanfx.ui.game;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.math.RandomNumberSupport;
@@ -80,7 +80,7 @@ public final class GameImplementation implements Game {
         this.gameClock = requireNonNull(gameClock);
         this.coinMechanism = requireNonNull(coinMechanism);
         prefs = new PreferencesManager(getClass());
-        watchdog = new DirectoryWatchdog(AppConstants.CUSTOM_MAP_DIR);
+        watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
         ui = new GameUI(
             new UIConfigManager(),
@@ -88,7 +88,7 @@ public final class GameImplementation implements Game {
             new GameSceneManager(this),
             new SoundManager(),
             new SpriteAnimationManager(),
-            () -> AppConstants.LOCALIZED_TEXTS,
+            () -> GameConstants.LOCALIZED_TEXTS,
             view,
             new SubViewManager()
         );
@@ -270,7 +270,7 @@ public final class GameImplementation implements Game {
     }
 
     private GamePlayView createGamePlaySubView() {
-        final var playView = new GamePlayView(this, AppConstants.DEFAULT_DASHBOARD_CONFIG);
+        final var playView = new GamePlayView(this, GameConstants.DEFAULT_DASHBOARD_CONFIG);
         final ChangeListener<? super Number> resizeHandler = (_,_,_) -> playView.resizeToFit(view.mainScene());
         view.mainScene().widthProperty().addListener(resizeHandler);
         view.mainScene().heightProperty().addListener(resizeHandler);
@@ -318,10 +318,10 @@ public final class GameImplementation implements Game {
         final UIConfig currentConfig = currentUIConfig();
 
         final MazeConfig3D mazeConfig3D = currentConfig.worldConfig().maze();
-        AppConstants.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
-        AppConstants.PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
+        GameConstants.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
+        GameConstants.PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
 
-        ui.sounds().muteProperty().bind(AppConstants.PROPERTY_MUTED);
+        ui.sounds().muteProperty().bind(GameConstants.PROPERTY_MUTED);
 
         view.statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> ui.subViews().isSelected(ui.subViews().gamePlayView())
@@ -330,8 +330,8 @@ public final class GameImplementation implements Game {
 
         view.mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> ui.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
-                ? AppConstants.WALLPAPERS[RandomNumberSupport.randomInt(0, AppConstants.WALLPAPERS.length)]
-                : AppConstants.BACKGROUND_PAC_MAN_WALLPAPER,
+                ? GameConstants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameConstants.WALLPAPERS.length)]
+                : GameConstants.BACKGROUND_PAC_MAN_WALLPAPER,
             ui.subViews().selectedSubViewProperty(),
             ui.gameScenes().gameSceneProperty()
         ));

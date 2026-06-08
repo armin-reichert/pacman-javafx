@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.app;
+package de.amr.pacmanfx.ui.game;
 
 import de.amr.pacmanfx.model.GameModel;
 import org.tinylog.Logger;
@@ -21,7 +21,7 @@ public class GamesContainer {
     public static File highScoreFile(String gameVariantName) {
         requireNonNull(gameVariantName);
         final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
-        return new File(AppConstants.USER_HOME_DIR, fileName);
+        return new File(GameConstants.USER_HOME_DIR, fileName);
     }
 
 
@@ -42,9 +42,9 @@ public class GamesContainer {
         requireNonNull(variantName);
         requireNonNull(game);
 
-        if (!AppConstants.GAME_VARIANT_NAME_PATTERN.matcher(variantName).matches()) {
+        if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(variantName).matches()) {
             throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
-                .formatted(variantName, AppConstants.GAME_VARIANT_NAME_PATTERN));
+                .formatted(variantName, GameConstants.GAME_VARIANT_NAME_PATTERN));
         }
 
         final GameVariantSpecification previousGame = gamesByVariantName.putIfAbsent(variantName, game);
@@ -77,8 +77,8 @@ public class GamesContainer {
     // other stuff
 
     private boolean validateUserDirs() {
-        return dirExistsAndIsWritable(AppConstants.USER_HOME_DIR, "Home directory")
-            && dirExistsAndIsWritable(AppConstants.CUSTOM_MAP_DIR, "Custom map directory");
+        return dirExistsAndIsWritable(GameConstants.USER_HOME_DIR, "Home directory")
+            && dirExistsAndIsWritable(GameConstants.CUSTOM_MAP_DIR, "Custom map directory");
     }
 
     private static boolean dirExistsAndIsWritable(File dir, String description) {

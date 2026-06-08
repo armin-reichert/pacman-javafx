@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.view;
 
-import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -43,8 +43,8 @@ public class GameViewImplementation implements GameView {
             context.gameVariantNameProperty(),
             context.ui().subViews().selectedSubViewProperty(),
             context.ui().gameScenes().gameSceneProperty(),
-            AppConstants.PROPERTY_DEBUG_INFO_VISIBLE,
-            AppConstants.PROPERTY_3D_ENABLED
+            GameConstants.PROPERTY_DEBUG_INFO_VISIBLE,
+            GameConstants.PROPERTY_3D_ENABLED
         );
         stage.titleProperty().bind(stageTitleBindingProperty());
     }
@@ -55,8 +55,8 @@ public class GameViewImplementation implements GameView {
             stage.getIcons().setAll(icon);
         }
         stage.setScene(mainScene);
-        stage.setMinWidth(AppConstants.MIN_STAGE_WIDTH);
-        stage.setMinHeight(AppConstants.MIN_STAGE_HEIGHT);
+        stage.setMinWidth(GameConstants.MIN_STAGE_WIDTH);
+        stage.setMinHeight(GameConstants.MIN_STAGE_HEIGHT);
         stage.centerOnScreen();
         stage.show();
     }
@@ -95,8 +95,8 @@ public class GameViewImplementation implements GameView {
     private String titleForCurrentGameScene(Game context) {
         final GameScene gameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
 
-        final boolean debug = AppConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
-        final boolean is3D = AppConstants.PROPERTY_3D_ENABLED.get();
+        final boolean debug = GameConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
+        final boolean is3D = GameConstants.PROPERTY_3D_ENABLED.get();
         final boolean paused = context.clock().getUpdatesDisabled();
 
         final String normalTitle = appTitle(context, paused, is3D);

@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
-import de.amr.pacmanfx.ui.app.AppConstants;
+import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -71,7 +71,7 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
                 drawGrid(scene.unscaledWidth(), scene.unscaledHeight());
             }
         }
-        if (AppConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (GameConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

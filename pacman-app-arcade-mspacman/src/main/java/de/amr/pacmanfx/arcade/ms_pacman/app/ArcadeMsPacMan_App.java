@@ -10,8 +10,8 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.ui.app.AppBuilder;
-import de.amr.pacmanfx.ui.app.Game;
+import de.amr.pacmanfx.ui.game.GameBuilder;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
@@ -29,7 +29,7 @@ public class ArcadeMsPacMan_App extends Application {
     @Override
     public void start(Stage primaryStage) {
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        app = AppBuilder
+        app = GameBuilder
             .newApp(primaryStage, screenSize.x(), screenSize.y())
             .game(
                 GameVariant.ARCADE_MS_PACMAN,

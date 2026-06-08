@@ -13,8 +13,8 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.model.world.WorldMapParseException;
-import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
@@ -53,7 +53,7 @@ public final class CommonActions {
                 final SubViewManager subViews = appContext.ui().subViews();
                 subViews.ensureEditorViewCreated();
                 subViews.optEditorView().map(EditorView::editor).ifPresent(editor -> {
-                    editor.init(AppConstants.CUSTOM_MAP_DIR);
+                    editor.init(GameConstants.CUSTOM_MAP_DIR);
                     try {
                         if (subViews.trySelectEditorView()) {
                             editor.start();
@@ -110,7 +110,7 @@ public final class CommonActions {
             subViews.ensureEditorViewCreated();
             subViews.trySelectEditorView();
             subViews.optEditorView().map(EditorView::editor).ifPresent(editor -> {
-                editor.init(AppConstants.CUSTOM_MAP_DIR);
+                editor.init(GameConstants.CUSTOM_MAP_DIR);
                 editor.start();
             });
         }
@@ -119,8 +119,8 @@ public final class CommonActions {
     public static final GameAction ACTION_PERSPECTIVE_NEXT = new GameAction("perspective_next") {
         @Override
         protected void doAction(Game appContext) {
-            final PerspectiveID nextID = AppConstants.PROPERTY_3D_PERSPECTIVE_ID.get().next();
-            AppConstants.PROPERTY_3D_PERSPECTIVE_ID.set(nextID);
+            final PerspectiveID nextID = GameConstants.PROPERTY_3D_PERSPECTIVE_ID.get().next();
+            GameConstants.PROPERTY_3D_PERSPECTIVE_ID.set(nextID);
 
             final TranslationManager translations = appContext.ui().translations();
             final String msgKey = translations.translate(
@@ -134,8 +134,8 @@ public final class CommonActions {
     public static final GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction("perspective_previous") {
         @Override
         protected void doAction(Game appContext) {
-            final PerspectiveID prevID = AppConstants.PROPERTY_3D_PERSPECTIVE_ID.get().prev();
-            AppConstants.PROPERTY_3D_PERSPECTIVE_ID.set(prevID);
+            final PerspectiveID prevID = GameConstants.PROPERTY_3D_PERSPECTIVE_ID.get().prev();
+            GameConstants.PROPERTY_3D_PERSPECTIVE_ID.set(prevID);
 
             final TranslationManager translations = appContext.ui().translations();
             final String msgKey = translations.translate(
@@ -304,33 +304,33 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction("toggle_debug_info") {
         @Override
         protected void doAction(Game appContext) {
-            toggleBooleanProperty(AppConstants.PROPERTY_DEBUG_INFO_VISIBLE);
+            toggleBooleanProperty(GameConstants.PROPERTY_DEBUG_INFO_VISIBLE);
         }
     };
 
     public static final GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction("toggle_draw_mode") {
         @Override
         protected void doAction(Game appContext) {
-            AppConstants.PROPERTY_3D_DRAW_MODE.set(
-                AppConstants.PROPERTY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+            GameConstants.PROPERTY_3D_DRAW_MODE.set(
+                GameConstants.PROPERTY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
         }
     };
 
     public static final GameAction ACTION_TOGGLE_KEYBOARD_MONITOR = new GameAction("toggle_keyboard_monitor") {
         @Override
         protected void doAction(Game appContext) {
-            toggleBooleanProperty(AppConstants.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
+            toggleBooleanProperty(GameConstants.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
         }
     };
 
     public static final GameAction ACTION_TOGGLE_MINI_VIEW_VISIBILITY = new GameAction("toggle_mini_view_visibility") {
         @Override
         protected void doAction(Game appContext) {
-            toggleBooleanProperty(AppConstants.PROPERTY_MINI_VIEW_ON);
+            toggleBooleanProperty(GameConstants.PROPERTY_MINI_VIEW_ON);
             if (!appContext.ui().gameScenes().currentGameSceneHasID(appContext, CommonSceneID.PLAY_SCENE_3D)) {
                 final TranslationManager translations = appContext.ui().translations();
                 appContext.shortMessage(
-                    translations.translate(AppConstants.PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
+                    translations.translate(GameConstants.PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
             }
         }
     };
@@ -338,7 +338,7 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_MUTED = new GameAction("toggle_muted") {
         @Override
         protected void doAction(Game appContext) {
-            AppConstants.PROPERTY_MUTED.set(!AppConstants.PROPERTY_MUTED.get());
+            GameConstants.PROPERTY_MUTED.set(!GameConstants.PROPERTY_MUTED.get());
         }
     };
 
@@ -366,8 +366,8 @@ public final class CommonActions {
     public static final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction("toggle_play_scene_2d_3d") {
         @Override
         protected void doAction(Game appContext) {
-            toggleBooleanProperty(AppConstants.PROPERTY_3D_ENABLED);
-            final boolean is3DEnabled = AppConstants.PROPERTY_3D_ENABLED.get();
+            toggleBooleanProperty(GameConstants.PROPERTY_3D_ENABLED);
+            final boolean is3DEnabled = GameConstants.PROPERTY_3D_ENABLED.get();
             if (!inPlayScene(appContext)) {
                 appContext.shortMessage(appContext.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
             }

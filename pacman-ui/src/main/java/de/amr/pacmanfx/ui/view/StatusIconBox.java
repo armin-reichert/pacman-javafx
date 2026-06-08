@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.view;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.ui.app.AppConstants;
+import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
@@ -84,8 +84,8 @@ public class StatusIconBox implements Disposable {
         rootPane.setSpacing(spacing);
 
         // "autopilot", "cheated" and "immune" icon visibilities are bound to properties of current game model!
-        iconMuted.visibleProperty().bind(AppConstants.PROPERTY_MUTED);
-        icon3D   .visibleProperty().bind(AppConstants.PROPERTY_3D_ENABLED);
+        iconMuted.visibleProperty().bind(GameConstants.PROPERTY_MUTED);
+        icon3D   .visibleProperty().bind(GameConstants.PROPERTY_3D_ENABLED);
     }
 
     public Pane rootPane() {

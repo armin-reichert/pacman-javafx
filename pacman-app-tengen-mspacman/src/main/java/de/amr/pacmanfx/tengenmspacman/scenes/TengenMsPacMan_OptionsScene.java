@@ -9,8 +9,8 @@ import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Input;
@@ -86,7 +86,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         actionBindings().registerFirstBinding(ACTION_START_PLAYING, TENGEN_SPECIFIC_BINDINGS);
         actionBindings().registerFirstBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
         actionBindings().setKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));
-        actionBindings().registerAllBindings(AppConstants.SCENE_TESTS_BINDINGS);
+        actionBindings().registerAllBindings(GameConstants.SCENE_TESTS_BINDINGS);
 
         selectedOption.set(OPTION_PAC_BOOSTER);
         game.setCanStartNewGame(true);

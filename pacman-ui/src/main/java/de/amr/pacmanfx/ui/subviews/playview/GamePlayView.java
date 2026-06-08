@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.subviews.playview;
 
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.ui.app.AppConstants;
-import de.amr.pacmanfx.ui.app.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsSet;
 import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -148,7 +148,7 @@ public class GamePlayView implements SubView {
     @Override
     public void onEnter() {
         rootPane.requestFocus();
-        actionBindings.registerAllBindings(AppConstants.COMMON_BINDINGS);
+        actionBindings.registerAllBindings(GameConstants.COMMON_BINDINGS);
         Logger.info(actionBindings);
         gameSceneFrame.installBindings();
     }
@@ -192,7 +192,7 @@ public class GamePlayView implements SubView {
         final UIConfig currentConfig = context.currentUIConfig();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = currentConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
-            setFontSmoothing(AppConstants.PROPERTY_CANVAS_FONT_SMOOTHING.get());
+            setFontSmoothing(GameConstants.PROPERTY_CANVAS_FONT_SMOOTHING.get());
             hudRenderer = currentConfig.createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
@@ -241,9 +241,9 @@ public class GamePlayView implements SubView {
     public void connect(Game context) {
         pausedIcon.visibleProperty().bind(context.clock().updatesDisabledProperty());
 
-        AppConstants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
+        GameConstants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 
-        AppConstants.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug) -> {
+        GameConstants.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug) -> {
             gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);
             gameSceneLayer.setBorder(debug ? DEBUG_BORDER : null);
         });
@@ -251,9 +251,9 @@ public class GamePlayView implements SubView {
         overlayLayer.visibleProperty().bind(dashboard.rootPane().visibleProperty());
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
-            () -> AppConstants.PROPERTY_MINI_VIEW_ON.get()
+            () -> GameConstants.PROPERTY_MINI_VIEW_ON.get()
                 && context.ui().gameScenes().currentGameSceneHasID(context, CommonSceneID.PLAY_SCENE_3D),
-            AppConstants.PROPERTY_MINI_VIEW_ON,
+            GameConstants.PROPERTY_MINI_VIEW_ON,
             context.ui().gameScenes().gameSceneProperty()
         ));
 

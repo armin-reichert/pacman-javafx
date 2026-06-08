@@ -32,7 +32,7 @@ import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.app.*;
+import de.amr.pacmanfx.ui.game.*;
 import de.amr.pacmanfx.ui.config.UIConfigManager;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
@@ -106,7 +106,7 @@ public class PacManGames3dApp extends Application {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         try {
             if (useBuilder) {
-                app = AppBuilder
+                app = GameBuilder
                     .newApp(stage, sceneSize.x(), sceneSize.y())
 
                     .game(
@@ -200,7 +200,7 @@ public class PacManGames3dApp extends Application {
         return new GameViewImplementation(
             stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
-            new StatusIconBox(() -> AppConstants.LOCALIZED_TEXTS)
+            new StatusIconBox(() -> GameConstants.LOCALIZED_TEXTS)
         );
     }
 
