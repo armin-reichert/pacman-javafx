@@ -41,7 +41,7 @@ public class GameBuilder {
         Supplier<? extends UIConfig> uiConfigFactory,
         WorldMapSelector mapSelector) {}
 
-    public static GameBuilder newApp(
+    public static GameBuilder newGameApp(
         GamesCollection gamesCollection,
         Stage stage,
         int mainSceneWidth,
@@ -73,7 +73,7 @@ public class GameBuilder {
         return this;
     }
 
-    public GameBuilder game(
+    public GameBuilder gameVariant(
         String gameVariantName,
         Supplier<? extends GameFlow> gameFlowFactory,
         Supplier<? extends AbstractGameModel> gameModelFactory,
@@ -99,24 +99,24 @@ public class GameBuilder {
         return this;
     }
 
-    public GameBuilder game(
+    public GameBuilder gameVariant(
         String variantName,
         Supplier<? extends GameFlow> gameFlowFactory,
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends GameRules> gameRulesFactory,
         Supplier<? extends UIConfig> uiConfigFactory)
     {
-        return game(variantName, gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, null);
+        return gameVariant(variantName, gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, null);
     }
 
-    public GameBuilder game(
+    public GameBuilder gameVariant(
         GameVariant variant,
         Supplier<? extends GameFlow> gameFlowFactory,
         Supplier<? extends AbstractGameModel> gameModelFactory,
         Supplier<? extends GameRules> gameRulesFactory,
         Supplier<? extends UIConfig> uiConfigFactory)
     {
-        return game(variant.name(), gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, null);
+        return gameVariant(variant.name(), gameFlowFactory, gameModelFactory, gameRulesFactory, uiConfigFactory, null);
     }
 
     public GameBuilder interactiveTests(boolean include) {

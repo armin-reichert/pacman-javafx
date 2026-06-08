@@ -109,9 +109,9 @@ public class PacManGames3dApp extends Application {
         try {
             if (useBuilder) {
                 app = GameBuilder
-                    .newApp(gamesCollection, stage, sceneSize.x(), sceneSize.y())
+                    .newGameApp(gamesCollection, stage, sceneSize.x(), sceneSize.y())
 
-                    .game(
+                    .gameVariant(
                         ARCADE_PACMAN,
                         Arcade_GameFlow::new,
                         ArcadePacMan_GameModel::new,
@@ -119,7 +119,7 @@ public class PacManGames3dApp extends Application {
                         ArcadePacMan_UIConfig::new
                     )
 
-                    .game(
+                    .gameVariant(
                         ARCADE_MS_PACMAN,
                         Arcade_GameFlow::new,
                         ArcadeMsPacMan_GameModel::new,
@@ -127,7 +127,7 @@ public class PacManGames3dApp extends Application {
                         ArcadeMsPacMan_UIConfig::new
                     )
 
-                    .game(
+                    .gameVariant(
                         TENGEN_MS_PACMAN,
                         TengenMsPacMan_GameFlow::new,
                         TengenMsPacMan_GameModel::new,
@@ -135,7 +135,7 @@ public class PacManGames3dApp extends Application {
                         TengenMsPacMan_UIConfig::new
                     )
 
-                    .game(
+                    .gameVariant(
                         ARCADE_PACMAN_XXL,
                         Arcade_GameFlow::new,
                         PacManXXL_PacMan_GameModel::new,
@@ -143,7 +143,7 @@ public class PacManGames3dApp extends Application {
                         PacManXXL_PacMan_UIConfig::new
                     )
 
-                    .game(
+                    .gameVariant(
                         ARCADE_MS_PACMAN_XXL,
                         Arcade_GameFlow::new,
                         PacManXXL_MsPacMan_GameModel::new,

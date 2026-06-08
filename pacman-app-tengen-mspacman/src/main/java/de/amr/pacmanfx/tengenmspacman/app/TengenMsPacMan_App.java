@@ -31,7 +31,7 @@ public class TengenMsPacMan_App extends Application {
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
     private GamesCollection gamesCollection;
-    private Game app;
+    private Game game;
 
     @Override
     public void init() {
@@ -42,8 +42,8 @@ public class TengenMsPacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        app = GameBuilder.newApp(gamesCollection, primaryStage, sceneSize.x(), sceneSize.y())
-            .game(
+        game = GameBuilder.newGameApp(gamesCollection, primaryStage, sceneSize.x(), sceneSize.y())
+            .gameVariant(
                 TENGEN_MS_PACMAN,
                 TengenMsPacMan_GameFlow::new,
                 TengenMsPacMan_GameModel::new,
@@ -53,7 +53,7 @@ public class TengenMsPacMan_App extends Application {
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
 
-        final GamePlayView playView = app.ui().subViews().gamePlayView();
+        final GamePlayView playView = game.ui().subViews().gamePlayView();
 
         playView.configureDashboard(List.of(
             CommonDashboardID.GENERAL,
@@ -64,22 +64,22 @@ public class TengenMsPacMan_App extends Application {
             CommonDashboardID.KEYS_GLOBAL,
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT
-        ), app.ui().translations());
+        ), game.ui().translations());
 
         // Will be added before "ABOUT" section!
         playView.dashboard().addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
             new DashboardSectionJoypad(playView.dashboard()),
-            app.ui().configurations().getOrCreateUIConfig(TENGEN_MS_PACMAN.name()).translate("infobox.joypad.title"),
+            game.ui().configurations().getOrCreateUIConfig(TENGEN_MS_PACMAN.name()).translate("infobox.joypad.title"),
             false);
 
-        app.displayOnScreen();
+        game.displayOnScreen();
     }
 
     @Override
     public void stop() {
-        if (app != null) {
-            app.terminate();
+        if (game != null) {
+            game.terminate();
         }
     }
 }

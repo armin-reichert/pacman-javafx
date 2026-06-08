@@ -37,8 +37,8 @@ public class ArcadeMsPacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         app = GameBuilder
-            .newApp(gamesCollection, primaryStage, screenSize.x(), screenSize.y())
-            .game(
+            .newGameApp(gamesCollection, primaryStage, screenSize.x(), screenSize.y())
+            .gameVariant(
                 GameVariant.ARCADE_MS_PACMAN,
                 Arcade_GameFlow::new,
                 ArcadeMsPacMan_GameModel::new,

@@ -46,9 +46,9 @@ public class PacManXXL_App extends Application {
 
         app = GameBuilder
 
-            .newApp(gamesCollection, primaryStage, sceneSize.x(), sceneSize.y())
+            .newGameApp(gamesCollection, primaryStage, sceneSize.x(), sceneSize.y())
 
-            .game(
+            .gameVariant(
                 GameVariant.ARCADE_PACMAN_XXL,
                 Arcade_GameFlow::new,
                 PacManXXL_PacMan_GameModel::new,
@@ -56,7 +56,7 @@ public class PacManXXL_App extends Application {
                 PacManXXL_PacMan_UIConfig::new
             )
 
-            .game(
+            .gameVariant(
                 GameVariant.ARCADE_MS_PACMAN_XXL,
                 Arcade_GameFlow::new,
                 PacManXXL_MsPacMan_GameModel::new,
