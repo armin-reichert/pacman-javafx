@@ -58,10 +58,17 @@ public class GameConstants {
      */
     public static final File CUSTOM_MAP_DIR = new File(USER_HOME_DIR, "maps");
 
-
     public static final int MIN_STAGE_WIDTH  = 280;
 
     public static final int MIN_STAGE_HEIGHT = 360;
+
+    // Simulation speed changes
+
+    public static final int SIM_SPEED_DELTA = 2;
+
+    public static final int SIM_SPEED_MIN = 5;
+
+    public static final int SIM_SPEED_MAX = 300;
 
     /**
      * Resource manager for UI assets (fonts, images, sounds).

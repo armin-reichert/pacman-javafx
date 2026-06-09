@@ -65,7 +65,8 @@ public class PacManXXL_App extends Application {
         playView.dashboard().findSection(CommonDashboardID.CUSTOM_MAPS).ifPresent(section -> {
             if (section instanceof DashboardSectionCustomMaps sectionCustomMaps) {
                 sectionCustomMaps.setCustomDirWatchDog(game.watchdog());
-                sectionCustomMaps.setMapEditFunction(mapFile -> CommonActions.editMapFile(game, mapFile));
+                sectionCustomMaps.setMapEditFunction(mapFile ->
+                    CommonActions.createEditMapFileAction(mapFile).executeIfEnabled(game));
             }
         });
 

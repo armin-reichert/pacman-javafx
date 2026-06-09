@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
@@ -9,14 +10,14 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariant;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
+import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
-import de.amr.pacmanfx.model.world.WorldMapParseException;
-import de.amr.pacmanfx.ui.game.GameConstants;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
+import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -28,7 +29,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.core.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
@@ -36,59 +37,84 @@ import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
 /**
  * Common actions for all game variants.
  * <p>
- * For each action there must exist an entry in the {@code localized_texts} resource bundle
- * of the form {@code key=localized_action_name} where {@code key=action.name()} !
+ * For each action, there must exist a line of the form <pre>{@code action.<actionID>=localized text}</pre>
+ * in the global UI resource bundle.
  */
 public final class CommonActions {
 
-    public static void editMapFile(Game game, File worldMapFile) {
-        createEditMapFileAction(worldMapFile).executeIfEnabled(game);
-    }
+    // Map editor actions
 
-    public static GameAction createEditMapFileAction(File worldMapFile) {
+    /**
+     * @param mapFile map file to edit or {@code null}
+     * @return action which opens the map editor and edits the given map file if any
+     */
+    public static GameAction createEditMapFileAction(File mapFile) {
+
         return new GameAction("edit_map_file") {
 
             @Override
             protected void doAction(Game game) {
-                final SubViewManager subViews = game.ui().subViews();
-                subViews.ensureEditorViewCreated();
-                subViews.optEditorView().map(EditorView::editor).ifPresent(editor -> {
-                    editor.init(GameConstants.CUSTOM_MAP_DIR);
-                    try {
-                        if (subViews.trySelectEditorView()) {
-                            editor.start();
-                            if (worldMapFile != null) {
-                                editor.editFile(worldMapFile);
-                            }
-                            game.stopGame();
+                openMapEditor(game).ifPresent(editor -> {
+                    startEditor(game, editor);
+                    if (mapFile != null) {
+                        try {
+                            editor.editFile(mapFile);
+                        } catch (Exception x) {
+                            game.shortMessage("Cannot edit map file");
+                            Logger.error(x, "Cannot edit map file {}", mapFile);
                         }
-                    } catch (IOException x) {
-                        Logger.error(x, "Could not open map file {}", worldMapFile);
-                        game.shortMessage("Cannot open world map file");
-                    }
-                    catch (WorldMapParseException x) {
-                        Logger.error(x, "Error reading map file data from {}", worldMapFile);
-                        game.shortMessage("Cannot read world map file data");
                     }
                 });
             }
         };
     }
 
-    public static final int SIM_SPEED_DELTA = 2;
-    public static final int SIM_SPEED_MIN = 5;
-    public static final int SIM_SPEED_MAX = 300;
+    public static final GameAction ACTION_OPEN_EDITOR = new GameAction("open_editor") {
+
+        @Override
+        protected void doAction(Game game) {
+            openMapEditor(game).ifPresent(editor -> startEditor(game, editor));
+        }
+    };
+
+    private static void startEditor(Game game, TileMapEditor editor) {
+        game.stopGame();
+        editor.init(GameConstants.CUSTOM_MAP_DIR);
+        editor.start();
+    }
+
+    private static Optional<TileMapEditor> openMapEditor(Game game) {
+        final SubViewManager subViews = game.ui().subViews();
+        subViews.ensureEditorViewCreated();
+
+        final TileMapEditor editor = subViews.optEditorView().map(EditorView::editor).orElse(null);
+        if (editor == null) {
+            game.shortMessage("Cannot access the map editor.");
+            return Optional.empty();
+        }
+
+        if (!subViews.trySelectEditorView()) {
+            game.shortMessage("Cannot open the map editor.");
+            return Optional.empty();
+        }
+
+        return Optional.of(editor);
+    }
+
+    // Other actions
 
     public static final GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("boot_show_play_view") {
+
         @Override
         protected void doAction(Game game) {
             game.coinMechanism().setNumCoins(0);
-            game.ui().subViews().selectGamePlayView();
             game.startGame();
+            game.ui().subViews().selectGamePlayView();
         }
     };
 
     public static final GameAction ACTION_ENTER_FULLSCREEN = new GameAction("enter_fullscreen") {
+
         @Override
         protected void doAction(Game game) {
             game.ui().view().stage().setFullScreen(true);
@@ -96,27 +122,15 @@ public final class CommonActions {
     };
 
     public static final GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction("let_game_state_expire") {
+
         @Override
         protected void doAction(Game game) {
             game.currentGameContext().state().expire();
         }
     };
 
-    public static final GameAction ACTION_OPEN_EDITOR = new GameAction("open_editor") {
-        @Override
-        protected void doAction(Game game) {
-            game.stopGame();
-            final SubViewManager subViews = game.ui().subViews();
-            subViews.ensureEditorViewCreated();
-            subViews.trySelectEditorView();
-            subViews.optEditorView().map(EditorView::editor).ifPresent(editor -> {
-                editor.init(GameConstants.CUSTOM_MAP_DIR);
-                editor.start();
-            });
-        }
-    };
-
     public static final GameAction ACTION_PERSPECTIVE_NEXT = new GameAction("perspective_next") {
+
         @Override
         protected void doAction(Game game) {
             final PerspectiveID nextID = GameConstants.PROPERTY_3D_PERSPECTIVE_ID.get().next();
@@ -195,10 +209,11 @@ public final class CommonActions {
         @Override
         protected void doAction(Game game) {
             final GameClock clock = game.clock();
-            final int newRate = Math.clamp(clock.targetFrameRate() + SIM_SPEED_DELTA, SIM_SPEED_MIN, SIM_SPEED_MAX);
+            final int newRate = Math.clamp(clock.targetFrameRate() + GameConstants.SIM_SPEED_DELTA,
+                GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
-            final String message = newRate == SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
+            final String message = newRate == GameConstants.SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
             game.shortMessage(Duration.seconds(0.75), message.formatted(newRate));
         }
     };
@@ -206,8 +221,8 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_FASTEST = new GameAction("simulation_fastest") {
         @Override
         protected void doAction(Game game) {
-            game.clock().setTargetFrameRate(SIM_SPEED_MAX);
-            game.shortMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIM_SPEED_MAX);
+            game.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
+            game.shortMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", GameConstants.SIM_SPEED_MAX);
         }
     };
 
@@ -215,10 +230,11 @@ public final class CommonActions {
         @Override
         protected void doAction(Game game) {
             final GameClock clock = game.clock();
-            final int newRate = Math.clamp(clock.targetFrameRate() - SIM_SPEED_DELTA, SIM_SPEED_MIN, SIM_SPEED_MAX);
+            final int newRate = Math.clamp(clock.targetFrameRate() - GameConstants.SIM_SPEED_DELTA,
+                GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
-            final String message = newRate == SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
+            final String message = newRate == GameConstants.SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
             game.shortMessage(Duration.seconds(0.75), message.formatted(newRate));
         }
     };
@@ -226,8 +242,8 @@ public final class CommonActions {
     public static final GameAction ACTION_SIMULATION_SLOWEST = new GameAction("simulation_slowest") {
         @Override
         protected void doAction(Game game) {
-            game.clock().setTargetFrameRate(SIM_SPEED_MIN);
-            game.shortMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", SIM_SPEED_MIN);
+            game.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
+            game.shortMessage(Duration.seconds(0.75), "At minimum speed: %d Hz", GameConstants.SIM_SPEED_MIN);
         }
     };
 
