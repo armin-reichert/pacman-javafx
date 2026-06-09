@@ -190,7 +190,7 @@ public class PacManGames3dApp extends Application {
             .ifPresent(section -> {
                 section.setCustomDirWatchDog(game.watchdog());
                 section.setMapEditFunction(mapFile ->
-                    CommonActions.createEditMapFileAction(mapFile).executeIfEnabled(game));
+                    CommonActions.createEditMapFileAction(mapFile).execute(game));
             });
     }
 }

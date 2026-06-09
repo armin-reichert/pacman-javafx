@@ -93,8 +93,8 @@ public class DashboardSection3DSettings extends DashboardSection {
         setEditor(sliderWallOpacity, GameConstants.PROPERTY_3D_WALL_OPACITY);
         setEditor(comboPerspectives, GameConstants.PROPERTY_3D_PERSPECTIVE_ID);
 
-        cbUsePlayScene3D.setOnAction(_ -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(context));
-        cbWireframeMode.setOnAction(_ -> ACTION_TOGGLE_DRAW_MODE.executeIfEnabled(context));
+        cbUsePlayScene3D.setOnAction(_ -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute(context));
+        cbWireframeMode.setOnAction(_ -> ACTION_TOGGLE_DRAW_MODE.execute(context));
     }
 
     @Override

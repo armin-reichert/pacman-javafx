@@ -180,7 +180,7 @@ public class PacManXXL_StartPage implements StartPage {
     private void openEditor(Game context) {
         context.ui().sounds().stopAndDisposeVoice();
         context.ui().subViews().startView().pauseProgressTimer();
-        CommonActions.ACTION_OPEN_EDITOR.executeIfEnabled(context);
+        CommonActions.ACTION_OPEN_EDITOR.execute(context);
     }
 
     private void startSelectedGame(Game context) {

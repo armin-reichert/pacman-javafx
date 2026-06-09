@@ -109,7 +109,11 @@ public abstract class GameScene implements Disposable {
     /** Called when the scene is deactivated. */
     public void onDeactivate() {}
 
-    /** Called every game tick. */
+    /**
+     * Called every game tick.
+     *
+     * @param tick the tick count of the global game clock. Note that each game state has its own timer!
+     */
     public void onTick(long tick) {}
 
     /** Called when the scene is embedded into the UI. */
@@ -120,8 +124,7 @@ public abstract class GameScene implements Disposable {
      * Executes the first matching action.
      */
     public void onInput() {
-        actionBindings().triggeredAction(game.input().keyboard())
-            .ifPresent(action -> action.executeIfEnabled(game));
+        actionBindings().triggeredAction(game.input().keyboard()).ifPresent(action -> action.execute(game));
     }
 
     /**

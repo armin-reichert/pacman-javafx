@@ -141,7 +141,7 @@ public class GamePlayView implements SubView {
     public void onInput(Game game, Input input) {
         // First lLook for an action binding in my bindings, if nothing found, delegate to the current game scene if any
         actionBindings.triggeredAction(input.keyboard()).ifPresentOrElse(
-            action -> action.executeIfEnabled(game),
+            action -> action.execute(game),
             () -> game.ui().gameScenes().optCurrentGameScene().ifPresent(GameScene::onInput)
         );
     }

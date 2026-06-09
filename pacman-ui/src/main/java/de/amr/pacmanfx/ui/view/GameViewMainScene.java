@@ -52,7 +52,7 @@ public class GameViewMainScene extends Scene {
     private void handleKeyboardStateChange(Game context, Keyboard keyboard) {
         // Check for "global" action first. otherwise let current sub views handle the keyboard state change
         actionBindings.triggeredAction(keyboard).ifPresentOrElse(
-            action -> action.executeIfEnabled(context),
+            action -> action.execute(context),
             () -> context.ui().subViews().currentView().onInput(context, context.input()));
     }
 

@@ -43,7 +43,7 @@ public final class ContextMenuSupport {
 
     public static MenuItem addLocalizedActionItem(ContextMenu menu, Game context, TranslationManager translator, GameAction action, String globalAssetsKey, Object... args) {
         var actionItem = new MenuItem(translator.translate(globalAssetsKey, args));
-        actionItem.setOnAction(_ -> action.executeIfEnabled(context));
+        actionItem.setOnAction(_ -> action.execute(context));
         return add(menu, actionItem);
     }
 

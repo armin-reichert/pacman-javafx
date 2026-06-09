@@ -234,7 +234,7 @@ public abstract class DashboardSection extends TitledPane {
     }
 
     protected void setAction(Game context, Button button, GameAction gameAction) {
-        button.setOnAction(_ -> gameAction.executeIfEnabled(context));
+        button.setOnAction(_ -> gameAction.execute(context));
         //TODO add boolean property for enabled-state to game action and bind against it
     }
 

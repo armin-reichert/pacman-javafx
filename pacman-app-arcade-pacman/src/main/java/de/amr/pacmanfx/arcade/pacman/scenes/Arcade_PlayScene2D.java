@@ -58,18 +58,18 @@ public class Arcade_PlayScene2D extends GameScene2D {
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacUsingAutopilotProperty(), "autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                CheatActions.ACTION_ACTIVATE_AUTOPILOT.executeIfEnabled(game());
+                CheatActions.ACTION_ACTIVATE_AUTOPILOT.execute(game());
             } else {
-                CheatActions.ACTION_DEACTIVATE_AUTOPILOT.executeIfEnabled(game());
+                CheatActions.ACTION_DEACTIVATE_AUTOPILOT.execute(game());
             }
         });
 
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                CheatActions.ACTION_ACTIVATE_IMMUNITY.executeIfEnabled(game());
+                CheatActions.ACTION_ACTIVATE_IMMUNITY.execute(game());
             } else {
-                CheatActions.ACTION_DEACTIVATE_IMMUNITY.executeIfEnabled(game());
+                CheatActions.ACTION_DEACTIVATE_IMMUNITY.execute(game());
             }
         });
 

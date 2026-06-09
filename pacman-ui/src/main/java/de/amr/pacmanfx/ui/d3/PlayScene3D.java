@@ -219,9 +219,9 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     @Override
     public void onScroll(ScrollEvent scrollEvent) {
         if (scrollEvent.getDeltaY() < 0) {
-            perspectives.actionDroneClimb().executeIfEnabled(game());
+            perspectives.actionDroneClimb().execute(game());
         } else if (scrollEvent.getDeltaY() > 0) {
-            perspectives.actionDroneDescent().executeIfEnabled(game());
+            perspectives.actionDroneDescent().execute(game());
         }
     }
 

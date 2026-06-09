@@ -26,13 +26,13 @@ public interface SubView {
      * Processes the current keyboard state and executes the matching action, if any.
      * <p>
      * This method delegates to the view's {@link ActionBindingsRegistry} and executes
-     * the resolved action via {@link de.amr.pacmanfx.ui.action.GameAction#executeIfEnabled(Game)}.
+     * the resolved action via {@link de.amr.pacmanfx.ui.action.GameAction#execute(Game)}.
      *
      * @param context the global game UI façade
      * @param input the user input
      */
     default void onInput(Game context, Input input) {
-        actionBindings().triggeredAction(input.keyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(context));
+        actionBindings().triggeredAction(input.keyboard()).ifPresent(gameAction -> gameAction.execute(context));
     }
 
     /**

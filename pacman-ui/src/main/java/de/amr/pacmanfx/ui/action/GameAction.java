@@ -22,7 +22,7 @@ public abstract class GameAction {
 
     public boolean isEnabled(Game game) { return true; }
 
-    public final boolean executeIfEnabled(Game game) {
+    public final boolean execute(Game game) {
         if (isEnabled(game)) {
             try {
                 doAction(game);
