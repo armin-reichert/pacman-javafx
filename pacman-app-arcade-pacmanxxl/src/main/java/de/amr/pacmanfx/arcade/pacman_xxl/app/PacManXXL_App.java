@@ -73,8 +73,8 @@ public class PacManXXL_App extends Application {
         final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
         game.watchdog().addEventListener(xxlMapSelector);
 
-        game.gameVariantRuntime(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
-        game.gameVariantRuntime(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
+        game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
+        game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
 
         game.selectGameVariant(GameVariantID.ARCADE_PACMAN_XXL.name());
         game.show(primaryStage);

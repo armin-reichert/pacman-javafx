@@ -63,7 +63,7 @@ public final class GameImplementation implements Game {
 
     private final PacManGamesMachine machine;
 
-    private final Map<String, GameVariantRuntime> gameVariantImplMap = new HashMap<>();
+    private final Map<String, GameVariant> gameVariantImplMap = new HashMap<>();
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
@@ -108,15 +108,15 @@ public final class GameImplementation implements Game {
         view.setGame(this);
 
         gameVariantName.addListener((_, _, newVariantName) -> {
-            GameVariantRuntime runtime = gameVariantRuntime(newVariantName);
+            GameVariant runtime = gameVariant(newVariantName);
             currentGameContext = new GameContextImpl(this, runtime);
             currentGameContext.model().hud().creditProperty().bind(coinMechanism.numCoinsProperty());
         });
     }
 
-    private GameVariantRuntime createGameVariantImplementation(String variantName) {
+    private GameVariant createGameVariantImplementation(String variantName) {
         final Cartridge cartridge = machine.cartridgeForVariant(variantName);
-        final var runtime = new GameVariantRuntime(
+        final var runtime = new GameVariant(
             cartridge.gameFlowFactory().get(),
             cartridge.gameModelFactory().get(),
             cartridge.gameRulesFactory().get(),
@@ -134,8 +134,8 @@ public final class GameImplementation implements Game {
         return runtime;
     }
 
-    private GameVariantRuntime currentVariantImpl() {
-        return gameVariantRuntime(currentGameVariantName());
+    private GameVariant currentVariantImpl() {
+        return gameVariant(currentGameVariantName());
     }
 
     public CollisionStrategy collisionStrategy() {
@@ -168,7 +168,7 @@ public final class GameImplementation implements Game {
     }
 
     @Override
-    public GameVariantRuntime gameVariantRuntime(String variantName) {
+    public GameVariant gameVariant(String variantName) {
         return gameVariantImplMap.computeIfAbsent(variantName, this::createGameVariantImplementation);
     }
 

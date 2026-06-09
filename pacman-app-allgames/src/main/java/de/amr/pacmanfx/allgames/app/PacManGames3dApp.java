@@ -126,8 +126,8 @@ public class PacManGames3dApp extends Application {
                     new GameClockFX(),
                     new CoinMechanism());
 
-                game.gameVariantRuntime(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
-                game.gameVariantRuntime(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
+                game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
+                game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
                 addStartPages();
             }
 
@@ -180,7 +180,7 @@ public class PacManGames3dApp extends Application {
         dashboard.addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
             new DashboardSectionJoypad(dashboard),
-            game.gameVariantRuntime(TENGEN_MS_PACMAN.name()).uiConfig().translate("infobox.joypad.title"),
+            game.gameVariant(TENGEN_MS_PACMAN.name()).uiConfig().translate("infobox.joypad.title"),
             false);
 
         // Configure custom map section table

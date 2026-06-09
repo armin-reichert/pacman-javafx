@@ -102,7 +102,7 @@ public class GameBuilder {
         gameVariantConfigMap.forEach((variantName, config) -> {
             // Use explicitly specified map selector (e.g. for XXL game variants)
             if (config.mapSelector() != null) {
-                game.gameVariantRuntime(variantName).gameModel().setMapSelector(config.mapSelector());
+                game.gameVariant(variantName).gameModel().setMapSelector(config.mapSelector());
             }
         });
 

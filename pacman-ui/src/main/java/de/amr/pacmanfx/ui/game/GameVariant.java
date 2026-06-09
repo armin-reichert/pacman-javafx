@@ -5,7 +5,7 @@ import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.ui.config.UIConfig;
 
-public record GameVariantRuntime(
+public record GameVariant(
     GameFlow gameFlow,
     AbstractGameModel gameModel,
     GameRules gameRules,

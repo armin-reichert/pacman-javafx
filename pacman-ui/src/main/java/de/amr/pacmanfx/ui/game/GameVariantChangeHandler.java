@@ -8,8 +8,6 @@ import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.subviews.playview.GameEventHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.image.Image;
-import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -37,12 +35,12 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
     private void exitGameVariant(String variantName) {
         game.ui().view().stage().getIcons().removeAll();
         game.ui().sounds().dispose();
-        game.gameVariantRuntime(variantName).uiConfig().dispose();
+        game.gameVariant(variantName).uiConfig().dispose();
         game.currentGameContext().flow().removeGameEventListener(gameEventHandler);
     }
 
     public void enterGameVariant(String variantName) {
-        final UIConfig uiConfig = game.gameVariantRuntime(variantName).uiConfig();
+        final UIConfig uiConfig = game.gameVariant(variantName).uiConfig();
         uiConfig.init(game);
         game.currentGameContext().flow().addGameEventListener(gameEventHandler);
     }

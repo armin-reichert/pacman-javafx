@@ -16,48 +16,48 @@ import static java.util.Objects.requireNonNull;
 
 public class GameContextImpl implements GameContext {
 
-    private final GameImplementation gameImpl;
-    private final GameVariantRuntime variantRuntime;
+    private final GameImplementation game;
+    private final GameVariant gameVariant;
 
     private HuntingStepResult huntingStepResult;
 
-    public GameContextImpl(GameImplementation gameImpl, GameVariantRuntime variantRuntime) {
-        this.gameImpl = requireNonNull(gameImpl);
-        this.variantRuntime = requireNonNull(variantRuntime);
+    public GameContextImpl(GameImplementation game, GameVariant gameVariant) {
+        this.game = requireNonNull(game);
+        this.gameVariant = requireNonNull(gameVariant);
     }
 
-    private GameVariantRuntime currentVariantRuntime() {
-        return variantRuntime;
+    private GameVariant currentGameVariant() {
+        return gameVariant;
     }
 
     @Override
     public CoinMechanism coinMechanism() {
-        return gameImpl.coinMechanism();
+        return game.coinMechanism();
     }
 
     @Override
     public GameModel model() {
-        return variantRuntime.gameModel();
+        return gameVariant.gameModel();
     }
 
     @Override
     public GameRules rules() {
-        return variantRuntime.gameRules();
+        return gameVariant.gameRules();
     }
 
     @Override
     public GameFlow flow() {
-        return variantRuntime.gameFlow();
+        return gameVariant.gameFlow();
     }
 
     @Override
     public CollisionStrategy collisionStrategy() {
-        return gameImpl.collisionStrategy();
+        return game.collisionStrategy();
     }
 
     @Override
     public boolean isCollisionDoubleChecked() {
-        return gameImpl.isCollisionDoubleChecked();
+        return game.isCollisionDoubleChecked();
     }
 
     @Override
