@@ -106,11 +106,11 @@ public class PacManGames3dApp extends Application {
                 game = GameBuilder.compose(machine, sceneSize.x(), sceneSize.y())
                     .coinMechanism(true)
 
-                    .gameVariant(ARCADE_PACMAN.name(), true)
-                    .gameVariant(ARCADE_MS_PACMAN.name(), true)
-                    .gameVariant(TENGEN_MS_PACMAN.name(), true)
-                    .gameVariant(ARCADE_PACMAN_XXL.name(), xxlMapSelector, true)
-                    .gameVariant(ARCADE_MS_PACMAN_XXL.name(), xxlMapSelector, true)
+                    .gameVariant(ARCADE_PACMAN.name())
+                    .gameVariant(ARCADE_MS_PACMAN.name())
+                    .gameVariant(TENGEN_MS_PACMAN.name())
+                    .gameVariant(ARCADE_PACMAN_XXL.name(), xxlMapSelector)
+                    .gameVariant(ARCADE_MS_PACMAN_XXL.name(), xxlMapSelector)
 
                     .startPage(ArcadePacMan_StartPage::new)
                     .startPage(ArcadeMsPacMan_StartPage::new)

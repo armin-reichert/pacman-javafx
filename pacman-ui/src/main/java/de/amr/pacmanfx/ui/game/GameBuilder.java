@@ -28,9 +28,7 @@ public class GameBuilder {
 
     record WindowConfig(int sceneWidth, int sceneHeight) {}
 
-    record GameVariantConfig(
-        WorldMapSelector mapSelector,
-        boolean includeTests) {}
+    record GameVariantConfig(WorldMapSelector mapSelector) {}
 
     public static GameBuilder compose(
         PacManGamesMachine machine,
@@ -62,22 +60,15 @@ public class GameBuilder {
         return this;
     }
 
-    public GameBuilder gameVariant(
-        String gameVariantName,
-        WorldMapSelector mapSelector,
-        boolean includeTests)
-    {
+    public GameBuilder gameVariant(String gameVariantName, WorldMapSelector mapSelector) {
         validateGameVariantName(gameVariantName);
-        gameVariantConfigMap.put(gameVariantName, new GameVariantConfig(mapSelector, includeTests));
+        gameVariantConfigMap.put(gameVariantName, new GameVariantConfig(mapSelector));
         return this;
     }
 
-    public GameBuilder gameVariant(
-        String gameVariantName,
-        boolean includeTests)
-    {
+    public GameBuilder gameVariant(String gameVariantName) {
         validateGameVariantName(gameVariantName);
-        gameVariantConfigMap.put(gameVariantName, new GameVariantConfig(null, includeTests));
+        gameVariantConfigMap.put(gameVariantName, new GameVariantConfig(null));
         return this;
     }
 
