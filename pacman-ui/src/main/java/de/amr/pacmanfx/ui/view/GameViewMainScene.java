@@ -30,15 +30,15 @@ public class GameViewMainScene extends Scene {
         rootPane().setPrefSize(width, height);
     }
 
-    public void init(Game context) {
+    public void init(Game game) {
         getStylesheets().add(GameConstants.STYLE_SHEET_PATH);
         
-        final Keyboard keyboard = context.input().keyboard();
+        final Keyboard keyboard = game.input().keyboard();
         keyboard.filterEventsForScene(this);
-        keyboard.addStateListener(kb -> handleKeyboardStateChange(context, kb));
+        keyboard.addStateListener(kb -> handleKeyboardStateChange(game, kb));
 
         // Delegate mouse scroll events to scene
-        setOnScroll(e -> context.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        setOnScroll(e -> game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         // Global action bindings
         actionBindings.selectAnyMatchingBinding(CommonActions.ACTION_ENTER_FULLSCREEN,        GlobalActionBindings.COMMON_BINDINGS);
@@ -49,11 +49,11 @@ public class GameViewMainScene extends Scene {
         Logger.info(actionBindings);
     }
 
-    private void handleKeyboardStateChange(Game context, Keyboard keyboard) {
+    private void handleKeyboardStateChange(Game game, Keyboard keyboard) {
         // Check for "global" action first. otherwise let current sub views handle the keyboard state change
         actionBindings.triggeredAction(keyboard).ifPresentOrElse(
-            action -> action.execute(context),
-            () -> context.ui().subViews().currentView().onInput(context, context.input()));
+            action -> action.execute(game),
+            () -> game.ui().subViews().currentView().onInput(game, game.input()));
     }
 
     public StackPane rootPane() {
