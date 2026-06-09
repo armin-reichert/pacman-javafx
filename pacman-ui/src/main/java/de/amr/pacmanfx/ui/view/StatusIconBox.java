@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.view;
 
 import de.amr.basics.Disposable;
+import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -20,11 +21,10 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
-//import org.kordamp.ikonli.Ikon;
-//import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-//import org.kordamp.ikonli.javafx.FontIcon;
+import static java.util.Objects.requireNonNull;
 
 public class StatusIconBox implements Disposable {
 
@@ -56,6 +56,9 @@ public class StatusIconBox implements Disposable {
     }
     
     public StatusIconBox(TranslationManager translator, Config config) {
+        requireNonNull(translator);
+        requireNonNull(config);
+
         iconMuted = createIcon(config, FontAwesomeIcon.Symbol.DEAF, config.defaultIconColor(),
             translator.translate("status_icon.muted"));
 
@@ -71,19 +74,18 @@ public class StatusIconBox implements Disposable {
         iconCheated = createIcon(config, FontAwesomeIcon.Symbol.FLAG, Color.RED,
             translator.translate("status_icon.cheated"));
 
-
-        final int count = (int) iconsInOrder().count();
+        final int iconCount = (int) iconsInOrder().count();
         final int padding = config.iconPadding();
         final int spacing = config.iconSpacing();
         final int size = config.iconSize();
 
         rootPane.getChildren().setAll(iconsInOrder().toList());
         rootPane.setMaxHeight(size + 2 * padding);
-        rootPane.setMaxWidth(size + (count - 1) * spacing + 2 * padding);
+        rootPane.setMaxWidth(size + (iconCount - 1) * spacing + 2 * padding);
         rootPane.setPadding(new Insets(padding));
         rootPane.setSpacing(spacing);
 
-        // "autopilot", "cheated" and "immune" icon visibilities are bound to properties of current game model!
+        // "autopilot", "cheated" and "immune" icon visibilities are dynamically bound to current game model's cheat object!
         iconMuted.visibleProperty().bind(GameConstants.PROPERTY_MUTED);
         icon3D   .visibleProperty().bind(GameConstants.PROPERTY_3D_ENABLED);
     }
@@ -116,17 +118,19 @@ public class StatusIconBox implements Disposable {
         return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
     }
 
-    public void bind(GameModel game) {
+    public void bind(GameModel gameModel) {
+        final GameCheats cheats = gameModel.cheats();;
+
         iconAutopilot().visibleProperty().unbind();
-        iconAutopilot().visibleProperty().bind(game.cheats().pacUsingAutopilotProperty());
+        iconAutopilot().visibleProperty().bind(cheats.pacUsingAutopilotProperty());
 
         iconCheated()  .visibleProperty().unbind();
-        iconCheated()  .visibleProperty().bind(game.cheats().cheatUsedProperty());
+        iconCheated()  .visibleProperty().bind(cheats.cheatUsedProperty());
 
         iconImmune()   .visibleProperty().unbind();
-        iconImmune()   .visibleProperty().bind(game.cheats().pacImmuneProperty());
+        iconImmune()   .visibleProperty().bind(cheats.pacImmuneProperty());
 
-        Logger.info("Icons autopilot, cheated and immune visibility bound to game model {}", game);
+        Logger.info("Icons autopilot, cheated and immune visibility bound to game model {}", gameModel);
     }
 
     @Override
