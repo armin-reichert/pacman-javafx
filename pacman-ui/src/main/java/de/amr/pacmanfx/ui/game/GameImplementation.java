@@ -222,17 +222,21 @@ public final class GameImplementation implements Game {
     // Lifecycle
 
     @Override
-    public void displayOnScreen() {
-        initGameVariantAndRegisterChangeHandler();
+    public void show(Stage stage) {
+        view.setGame(this);
+        view.stageProperty().set(stage);
+
         load3DAssets();
         initMainScene();
-        view.setGame(this);
         initProperties();
         initGameClock();
+        initGameVariantAndRegisterChangeHandler();
+
         ui.subViews().connect(this);
-        view.setIcon(currentUIConfig().assets().image("app_icon"));
-        view.show();
         ui.subViews().selectStartView();
+
+        view.show();
+
         startServices();
     }
 

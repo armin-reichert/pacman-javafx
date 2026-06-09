@@ -44,12 +44,6 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
     public void enterGameVariant(String variantName) {
         final UIConfig uiConfig = game.gameVariantRuntime(variantName).uiConfig();
         uiConfig.init(game);
-        final Image icon = uiConfig.assets().image("app_icon");
-        if (icon != null) {
-            game.ui().view().stage().getIcons().setAll(icon);
-        } else {
-            Logger.error("Could not find application icon for game variant {}", variantName);
-        }
         game.currentGameContext().flow().addGameEventListener(gameEventHandler);
     }
 }

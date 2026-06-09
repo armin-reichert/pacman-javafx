@@ -40,7 +40,7 @@ public class TengenMsPacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        game = GameBuilder.compose(gamesCollection, primaryStage, sceneSize.x(), sceneSize.y())
+        game = GameBuilder.compose(gamesCollection, sceneSize.x(), sceneSize.y())
             .gameVariant(TENGEN_MS_PACMAN.name(), false)
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
@@ -65,7 +65,7 @@ public class TengenMsPacMan_App extends Application {
             game.gameVariantRuntime(TENGEN_MS_PACMAN.name()).uiConfig().translate("infobox.joypad.title"),
             false);
 
-        game.displayOnScreen();
+        game.show(primaryStage);
     }
 
     @Override

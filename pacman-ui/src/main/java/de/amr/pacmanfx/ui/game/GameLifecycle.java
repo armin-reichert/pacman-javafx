@@ -3,6 +3,8 @@
  */
 package de.amr.pacmanfx.ui.game;
 
+import javafx.stage.Stage;
+
 /**
  * Lifecycle methods.
  */
@@ -26,7 +28,7 @@ public interface GameLifecycle {
      * <p>
      * Called once after application initialization.
      */
-    void displayOnScreen();
+    void show(Stage stage);
 
     /**
      * Terminates the UI, stops the clock, and releases resources.

@@ -4,39 +4,44 @@
 
 package de.amr.pacmanfx.ui.view;
 
-import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
 
 import java.util.function.Supplier;
 
+import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
 public class GameViewImplementation implements GameView {
 
-    private final Stage stage;
-    private final GameViewMainScene mainScene;
-    private final StatusIconBox statusIconBox;
-    private StringBinding stageTitleBinding;
-    private Image icon;
+    private final ObjectProperty<Stage> stage = new SimpleObjectProperty<>(this, "stage");
 
-    public GameViewImplementation(Stage stage, GameViewMainScene mainScene, StatusIconBox statusIconBox) {
-        this.stage = stage;
+    private Game game;
+
+    private final GameViewMainScene mainScene;
+
+    private final StatusIconBox statusIconBox;
+
+    private StringBinding stageTitleBinding;
+
+    public GameViewImplementation(GameViewMainScene mainScene, StatusIconBox statusIconBox) {
         this.mainScene = mainScene;
         this.statusIconBox = statusIconBox;
     }
 
-    public void setIcon(Image icon) {
-        this.icon = icon;
-    }
-
     @Override
     public void setGame(Game game) {
+        this.game = requireNonNull(game);
+
         stageTitleBinding = createStringBinding(
             () -> computeStageTitle(game),
             game.clock().updatesDisabledProperty(),
@@ -46,19 +51,32 @@ public class GameViewImplementation implements GameView {
             GameConstants.PROPERTY_DEBUG_INFO_VISIBLE,
             GameConstants.PROPERTY_3D_ENABLED
         );
-        stage.titleProperty().bind(stageTitleBindingProperty());
+
+        game.variantNameProperty().addListener((_, _, _) -> updateStageIcon());
+    }
+
+    private void updateStageIcon() {
+        final Image icon = game.currentUIConfig().assets().image("app_icon");
+        if (icon != null) {
+            game.ui().view().stage().getIcons().setAll(icon);
+        } else {
+            Logger.error("Could not access stage icon");
+        }
     }
 
     @Override
     public void show() {
-        if (icon != null) {
-            stage.getIcons().setAll(icon);
+        final Stage theStage = stage();
+        if (theStage == null) {
+            throw new IllegalStateException("No stage assigned to game view");
         }
-        stage.setScene(mainScene);
-        stage.setMinWidth(GameConstants.MIN_STAGE_WIDTH);
-        stage.setMinHeight(GameConstants.MIN_STAGE_HEIGHT);
-        stage.centerOnScreen();
-        stage.show();
+        theStage.setScene(mainScene);
+        theStage.titleProperty().bind(stageTitleBindingProperty());
+        updateStageIcon();
+        theStage.setMinWidth(GameConstants.MIN_STAGE_WIDTH);
+        theStage.setMinHeight(GameConstants.MIN_STAGE_HEIGHT);
+        theStage.centerOnScreen();
+        theStage.show();
     }
 
     @Override
@@ -67,7 +85,7 @@ public class GameViewImplementation implements GameView {
     }
 
     @Override
-    public Stage stage() {
+    public ObjectProperty<Stage> stageProperty() {
         return stage;
     }
 

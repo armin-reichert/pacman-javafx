@@ -6,9 +6,9 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariant;
-import de.amr.pacmanfx.ui.game.GameConstants;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.CommonActions;
+import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -63,12 +63,13 @@ public class PacManXXL_StartPage implements StartPage {
         private final ChangeListener<Boolean> play3DListener;
         private final ObservableValue<Double> scaling;
 
-        public MenuBinding(Game context) {
-            gameVariantNameListener = (_, _, variant) -> context.selectGameVariant(variant.name());
+        public MenuBinding(Game game) {
+            gameVariantNameListener = (_, _, variant) -> game.selectGameVariant(variant.name());
             play3DListener = (_, _, enable3D) -> GameConstants.PROPERTY_3D_ENABLED.set(enable3D);
-            cutScenesEnabledListener = (_, _, enableCutScenes) -> context.currentGameContext().flow().setCutScenesEnabled(enableCutScenes);
-            scaling = context.ui().view().stage().heightProperty().map(h -> {
-                final double menuHeight = Math.clamp(h.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
+            cutScenesEnabledListener = (_, _, enableCutScenes) -> game.currentGameContext().flow().setCutScenesEnabled(enableCutScenes);
+
+            scaling = game.ui().view().stageProperty().map(stage -> {
+                final double menuHeight = Math.clamp(stage.getHeight() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
                 final double scaling = menuHeight / TS(menu.numTilesY());
                 return Math.round(scaling * 100.0) / 100.0; // rounded to 2 decimal digits to avoid too much resizing
             });

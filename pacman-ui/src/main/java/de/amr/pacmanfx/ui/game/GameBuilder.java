@@ -11,7 +11,6 @@ import de.amr.pacmanfx.ui.view.GameViewImplementation;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
 import de.amr.pacmanfx.uilib.GameClockFX;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,11 +22,11 @@ import static de.amr.pacmanfx.core.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Builder for constructing and configuring an application.
+ * Builder for constructing and configuring a game application.
  */
 public class GameBuilder {
 
-    record WindowConfig(Stage stage, int sceneWidth, int sceneHeight) {}
+    record WindowConfig(int sceneWidth, int sceneHeight) {}
 
     record GameVariantConfig(
         WorldMapSelector mapSelector,
@@ -35,28 +34,31 @@ public class GameBuilder {
 
     public static GameBuilder compose(
         PacManGamesMachine gamesCollection,
-        Stage stage,
         int mainSceneWidth,
         int mainSceneHeight)
     {
-        return new GameBuilder(gamesCollection, stage, mainSceneWidth, mainSceneHeight);
+        return new GameBuilder(gamesCollection, mainSceneWidth, mainSceneHeight);
     }
 
-    private final PacManGamesMachine gamesCollection;
     private final WindowConfig windowConfig;
     private final Map<String, GameVariantConfig> gameVariantConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
 
+    private PacManGamesMachine machine;
     private boolean coinMechanism;
 
     private GameBuilder(
-        PacManGamesMachine gamesCollection,
-        Stage stage,
+        PacManGamesMachine machine,
         int mainSceneWidth,
         int mainSceneHeight)
     {
-        this.gamesCollection = requireNonNull(gamesCollection);
-        windowConfig = new WindowConfig(stage, mainSceneWidth, mainSceneHeight);
+        this.machine = requireNonNull(machine);
+        windowConfig = new WindowConfig(mainSceneWidth, mainSceneHeight);
+    }
+
+    public GameBuilder machine(PacManGamesMachine machine) {
+        this.machine = machine;
+        return this;
     }
 
     public GameBuilder coinMechanism(boolean coinMechanism) {
@@ -94,29 +96,28 @@ public class GameBuilder {
     public Game build() {
         validateConfigurationData();
 
-        final var app = new GameImplementation(
-            gamesCollection,
-            createGameView(windowConfig.stage(), windowConfig.sceneWidth(), windowConfig.sceneHeight()),
+        final var game = new GameImplementation(
+            machine,
+            createGameView(windowConfig.sceneWidth(), windowConfig.sceneHeight()),
             new GameClockFX(),
             coinMechanism ? new CoinMechanism(99) : CoinMechanism.OUT_OF_SERVICE);
 
-        final StartPagesView startPagesCarousel = app.ui().subViews().startView();
+        final StartPagesView startPagesCarousel = game.ui().subViews().startView();
         for (var startPageFactory : startPageFactories) {
             final StartPage startPage = startPageFactory.get();
             if (startPage != null) {
                 startPagesCarousel.addStartPage(startPage);
-                startPage.init(app);
+                startPage.init(game);
             }
             else {
                 error("Start page could not be created");
             }
         }
-        return app;
+        return game;
     }
 
-    private GameViewImplementation createGameView(Stage stage, int width, int height) {
+    private GameViewImplementation createGameView(int width, int height) {
         return new GameViewImplementation(
-            stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
             new StatusIconBox(() -> GameConstants.LOCALIZED_TEXTS)
         );

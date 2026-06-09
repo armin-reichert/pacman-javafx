@@ -41,7 +41,7 @@ public class PacManXXL_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        game = GameBuilder.compose(pacManGamesMachine, primaryStage, sceneSize.x(), sceneSize.y())
+        game = GameBuilder.compose(pacManGamesMachine, sceneSize.x(), sceneSize.y())
             .gameVariant(GameVariant.ARCADE_PACMAN_XXL.name(), false)
             .gameVariant(GameVariant.ARCADE_MS_PACMAN_XXL.name(), false)
             .startPage(PacManXXL_StartPage::new)
@@ -76,7 +76,7 @@ public class PacManXXL_App extends Application {
         game.gameVariantRuntime(GameVariant.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
         game.gameVariantRuntime(GameVariant.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
 
-        game.displayOnScreen();
+        game.show(primaryStage);
     }
 
     @Override

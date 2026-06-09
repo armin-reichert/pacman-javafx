@@ -35,7 +35,7 @@ public class ArcadeMsPacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        game = GameBuilder.compose(pacManGamesMachine, primaryStage, screenSize.x(), screenSize.y())
+        game = GameBuilder.compose(pacManGamesMachine, screenSize.x(), screenSize.y())
             .gameVariant(GameVariant.ARCADE_MS_PACMAN.name(), false)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .build();
@@ -50,7 +50,7 @@ public class ArcadeMsPacMan_App extends Application {
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT)
         );
-        game.displayOnScreen();
+        game.show(primaryStage);
     }
 
     @Override

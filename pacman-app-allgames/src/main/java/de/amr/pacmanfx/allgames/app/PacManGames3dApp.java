@@ -103,7 +103,7 @@ public class PacManGames3dApp extends Application {
 
         try {
             if (useBuilder) {
-                game = GameBuilder.compose(pacManGamesMachine, stage, sceneSize.x(), sceneSize.y())
+                game = GameBuilder.compose(pacManGamesMachine, sceneSize.x(), sceneSize.y())
 
                     .gameVariant(ARCADE_PACMAN.name(), true)
                     .gameVariant(ARCADE_MS_PACMAN.name(), true)
@@ -122,7 +122,7 @@ public class PacManGames3dApp extends Application {
             else {
                 game = new GameImplementation(
                     pacManGamesMachine,
-                    createView(stage, sceneSize.x(), sceneSize.y()),
+                    createView(sceneSize.x(), sceneSize.y()),
                     new GameClockFX(),
                     new CoinMechanism());
 
@@ -141,7 +141,7 @@ public class PacManGames3dApp extends Application {
             Platform.exit();
         }
 
-        game.displayOnScreen();
+        game.show(stage);
     }
 
     @Override
@@ -153,9 +153,8 @@ public class PacManGames3dApp extends Application {
 
     // Private area
 
-    private static GameViewImplementation createView(Stage stage, int width, int height) {
+    private static GameViewImplementation createView(int width, int height) {
         return new GameViewImplementation(
-            stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
             new StatusIconBox(() -> GameConstants.LOCALIZED_TEXTS)
         );

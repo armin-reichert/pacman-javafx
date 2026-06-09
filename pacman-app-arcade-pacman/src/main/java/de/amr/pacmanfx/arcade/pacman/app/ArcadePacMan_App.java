@@ -57,17 +57,18 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
-            game = GameBuilder.compose(gamesCollection, primaryStage, size.x(), size.y())
+            game = GameBuilder.compose(gamesCollection, size.x(), size.y())
                 .gameVariant(GameVariant.ARCADE_PACMAN.name(), false)
                 .startPage(ArcadePacMan_StartPage::new)
                 .coinMechanism(true)
                 .build();
         }
         else {
-            createApp(primaryStage, size);
+            createGame(size);
         }
         game.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, game.ui().translations());
-        game.displayOnScreen();
+
+        game.show(primaryStage);
     }
 
     @Override
@@ -77,10 +78,10 @@ public class ArcadePacMan_App extends Application {
 
     // Private area
 
-    private void createApp(Stage stage, Vector2i sceneSize) {
+    private void createGame(Vector2i sceneSize) {
         game = new GameImplementation(
             gamesCollection,
-            createView(stage, sceneSize.x(), sceneSize.y()),
+            createView(sceneSize.x(), sceneSize.y()),
             new GameClockFX(),
             new CoinMechanism());
 
@@ -93,9 +94,8 @@ public class ArcadePacMan_App extends Application {
         startView.setSelectedIndex(0);
     }
 
-    private GameViewImplementation createView(Stage stage, int width, int height) {
+    private GameViewImplementation createView(int width, int height) {
         return new GameViewImplementation(
-            stage,
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
             new StatusIconBox(() -> GameConstants.LOCALIZED_TEXTS)
         );
