@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
@@ -91,7 +90,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
 
         scalingProperty().addListener((_, _, _) -> gameContext().optCurrentLevel().ifPresent(level ->
-            dynamicCamera.updateRange(level.worldMap())));
+            dynamicCamera.updateRange(level.worldMap().terrainLayer())));
     }
 
     public double canvasHeightUnscaled() {
@@ -202,14 +201,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void acceptGameLevel(GameLevel level) {
-        final WorldMap worldMap = level.worldMap();
-        final Vector2i terrainSize = worldMap.terrainLayer().sizeInPixel();
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final Vector2i terrainSize = terrain.sizeInPixel();
 
         unscaledWidthProperty().set(terrainSize.x());
         unscaledHeightProperty().set(terrainSize.y());
 
         dynamicCamera.enterTrackingMode();
-        dynamicCamera.updateRange(worldMap);
+        dynamicCamera.updateRange(terrain);
 
         if (level.isDemoLevel()) {
             acceptDemoLevel();
