@@ -6,10 +6,10 @@ package de.amr.pacmanfx.ui.subviews.startpages;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.action.ActionBindingsSet;
+import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
+import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
@@ -58,7 +58,7 @@ public class StartPagesView extends Carousel implements SubView {
     };
 
     private final List<StartPage> pages = new ArrayList<>();
-    private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for Start View");
+    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for Start View");
 
     private final Game context;
 
@@ -82,9 +82,9 @@ public class StartPagesView extends Carousel implements SubView {
 
     @Override
     public void onEnter() {
-        actionBindings.setKeyCombination(actionShowPrevPage, bare(KeyCode.LEFT));
-        actionBindings.setKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
-        actionBindings.setKeyCombination(CommonActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
+        actionBindings.bindActionToKeyCombination(actionShowPrevPage, bare(KeyCode.LEFT));
+        actionBindings.bindActionToKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
+        actionBindings.bindActionToKeyCombination(CommonActions.ACTION_BOOT_SHOW_PLAY_VIEW, bare(KeyCode.ENTER));
         Logger.info(actionBindings);
         restartProgressTimer();
         currentStartPage().ifPresent(page -> {
@@ -121,7 +121,7 @@ public class StartPagesView extends Carousel implements SubView {
     }
 
     @Override
-    public ActionBindingsSet actionBindings() {
+    public ActionBindingsRegistry actionBindings() {
         return actionBindings;
     }
 

@@ -34,7 +34,7 @@ public class DashboardSectionKeyboardShortcutsCurrentGameScene extends Dashboard
         clearSection();
         final GameScene currentGameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (currentGameScene != null) {
-            final var currentBindingsMap = currentGameScene.actionBindings().bindingMap();
+            final var currentBindingsMap = currentGameScene.actionBindings().actionBindings();
             if (currentBindingsMap.isEmpty()) {
                 addRow(createLabel(NO_INFO, false));
             } else {

@@ -9,8 +9,8 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.ui.action.ActionBindingsSet;
-import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
+import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class GameScene implements Disposable {
 
-    private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for " + getClass().getSimpleName());
+    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for " + getClass().getSimpleName());
 
     private final Game game;
 
@@ -75,7 +75,7 @@ public abstract class GameScene implements Disposable {
     /**
      * @return action bindings for this scene
      */
-    public ActionBindingsSet actionBindings() {
+    public ActionBindingsRegistry actionBindings() {
         return actionBindings;
     }
 
@@ -120,7 +120,7 @@ public abstract class GameScene implements Disposable {
      * Executes the first matching action.
      */
     public void onInput() {
-        actionBindings().actionMatchingKeyboardState(game.input().keyboard())
+        actionBindings().triggeredAction(game.input().keyboard())
             .ifPresent(action -> action.executeIfEnabled(game));
     }
 

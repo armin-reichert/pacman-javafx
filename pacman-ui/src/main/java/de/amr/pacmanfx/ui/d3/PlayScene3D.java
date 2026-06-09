@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.action.ActionBinding;
+import de.amr.pacmanfx.ui.action.ActionKeyBinding;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
@@ -48,7 +48,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     public final DoubleProperty scoreOpacity = new SimpleDoubleProperty(0);
 
     protected PerspectiveManager perspectives;
-    protected Set<ActionBinding> bindings;
+    protected Set<ActionKeyBinding> bindings;
 
     protected Group subSceneRoot;
     protected SubScene subScene;
@@ -258,12 +258,12 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     private void createBindings() {
         bindings = Set.of(
-            new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,       alt(KeyCode.LEFT)),
-            new ActionBinding(ACTION_PERSPECTIVE_NEXT,           alt(KeyCode.RIGHT)),
-            new ActionBinding(perspectives.actionDroneClimb(),   control(KeyCode.MINUS)),
-            new ActionBinding(perspectives.actionDroneDescent(), control(KeyCode.PLUS)),
-            new ActionBinding(perspectives.actionDroneReset(),   control(KeyCode.DIGIT0)),
-            new ActionBinding(ACTION_TOGGLE_DRAW_MODE,           alt(KeyCode.W))
+            new ActionKeyBinding(ACTION_PERSPECTIVE_PREVIOUS,       alt(KeyCode.LEFT)),
+            new ActionKeyBinding(ACTION_PERSPECTIVE_NEXT,           alt(KeyCode.RIGHT)),
+            new ActionKeyBinding(perspectives.actionDroneClimb(),   control(KeyCode.MINUS)),
+            new ActionKeyBinding(perspectives.actionDroneDescent(), control(KeyCode.PLUS)),
+            new ActionKeyBinding(perspectives.actionDroneReset(),   control(KeyCode.DIGIT0)),
+            new ActionKeyBinding(ACTION_TOGGLE_DRAW_MODE,           alt(KeyCode.W))
         );
     }
 

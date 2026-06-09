@@ -20,7 +20,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.action.ActionBinding;
+import de.amr.pacmanfx.ui.action.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -162,9 +162,9 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
         }
     };
 
-    public static final Set<ActionBinding> GAME_START_ACTION_BINDINGS = Set.of(
-        new ActionBinding(ACTION_INSERT_COIN, bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
-        new ActionBinding(ACTION_START_GAME,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
+    public static final Set<ActionKeyBinding> GAME_START_ACTION_BINDINGS = Set.of(
+        new ActionKeyBinding(ACTION_INSERT_COIN, bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
+        new ActionKeyBinding(ACTION_START_GAME,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
     );
 
     public static final WorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new WorldMapColorScheme(

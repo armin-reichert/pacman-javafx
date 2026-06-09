@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.subviews.editor;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.action.ActionBindingsSet;
+import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -43,7 +43,7 @@ public class EditorView implements SubView {
     }
 
     @Override
-    public ActionBindingsSet actionBindings() { return ActionBindingsSet.NO_BINDINGS; }
+    public ActionBindingsRegistry actionBindings() { return ActionBindingsRegistry.NO_BINDINGS; }
 
     @Override
     public void onEnter() {

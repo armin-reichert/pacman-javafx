@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.game;
 
 import de.amr.basics.math.Vector3f;
-import de.amr.pacmanfx.ui.action.ActionBinding;
+import de.amr.pacmanfx.ui.action.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.d3.animation.energizer.AttractionConfig;
@@ -162,52 +162,52 @@ public class GameConstants {
         .toArray(Background[]::new);
 
     /** Cheat key bindings (Alt + key). */
-    public static final Set<ActionBinding> CHEAT_ACTION_BINDINGS = Set.of(
-        new ActionBinding(CheatActions.ACTION_EAT_ALL_PELLETS,  alt(KeyCode.E)),
-        new ActionBinding(CheatActions.ACTION_ADD_LIVES,        alt(KeyCode.L)),
-        new ActionBinding(CheatActions.ACTION_ENTER_NEXT_LEVEL, alt(KeyCode.N)),
-        new ActionBinding(CheatActions.ACTION_KILL_GHOSTS,      alt(KeyCode.X))
+    public static final Set<ActionKeyBinding> CHEAT_ACTION_BINDINGS = Set.of(
+        new ActionKeyBinding(CheatActions.ACTION_EAT_ALL_PELLETS,  alt(KeyCode.E)),
+        new ActionKeyBinding(CheatActions.ACTION_ADD_LIVES,        alt(KeyCode.L)),
+        new ActionKeyBinding(CheatActions.ACTION_ENTER_NEXT_LEVEL, alt(KeyCode.N)),
+        new ActionKeyBinding(CheatActions.ACTION_KILL_GHOSTS,      alt(KeyCode.X))
     );
 
     /** Steering key bindings (arrow keys, optionally with Ctrl). */
-    public static final Set<ActionBinding> STEERING_ACTION_BINDINGS = Set.of(
-        new ActionBinding(ACTION_STEER_UP,    bare(KeyCode.UP),    control(KeyCode.UP)),
-        new ActionBinding(ACTION_STEER_DOWN,  bare(KeyCode.DOWN),  control(KeyCode.DOWN)),
-        new ActionBinding(ACTION_STEER_LEFT,  bare(KeyCode.LEFT),  control(KeyCode.LEFT)),
-        new ActionBinding(ACTION_STEER_RIGHT, bare(KeyCode.RIGHT), control(KeyCode.RIGHT))
+    public static final Set<ActionKeyBinding> STEERING_ACTION_BINDINGS = Set.of(
+        new ActionKeyBinding(ACTION_STEER_UP,    bare(KeyCode.UP),    control(KeyCode.UP)),
+        new ActionKeyBinding(ACTION_STEER_DOWN,  bare(KeyCode.DOWN),  control(KeyCode.DOWN)),
+        new ActionKeyBinding(ACTION_STEER_LEFT,  bare(KeyCode.LEFT),  control(KeyCode.LEFT)),
+        new ActionKeyBinding(ACTION_STEER_RIGHT, bare(KeyCode.RIGHT), control(KeyCode.RIGHT))
     );
 
     /** Key bindings for scene/level test utilities. */
-    public static final Set<ActionBinding> SCENE_TESTS_BINDINGS = Set.of(
-        new ActionBinding(TestActions.ACTION_CUT_SCENES_TEST,      alt(KeyCode.C)),
-        new ActionBinding(TestActions.ACTION_SHORT_LEVEL_TEST,     alt(KeyCode.T)),
-        new ActionBinding(TestActions.ACTION_MEDIUM_LEVEL_TEST,    alt_shift(KeyCode.T))
+    public static final Set<ActionKeyBinding> SCENE_TESTS_BINDINGS = Set.of(
+        new ActionKeyBinding(TestActions.ACTION_CUT_SCENES_TEST,      alt(KeyCode.C)),
+        new ActionKeyBinding(TestActions.ACTION_SHORT_LEVEL_TEST,     alt(KeyCode.T)),
+        new ActionKeyBinding(TestActions.ACTION_MEDIUM_LEVEL_TEST,    alt_shift(KeyCode.T))
     );
 
     /** Common global key bindings used across all views/scenes. */
-    public static final Set<ActionBinding> COMMON_BINDINGS = Set.of(
-        new ActionBinding(ACTION_BOOT_SHOW_PLAY_VIEW,              bare(KeyCode.F3)),
-        new ActionBinding(ACTION_ENTER_FULLSCREEN,                 bare(KeyCode.F11)),
-        new ActionBinding(ACTION_OPEN_EDITOR,                      alt_shift(KeyCode.E)),
-        new ActionBinding(ACTION_SHOW_HELP,                        bare(KeyCode.H)),
-        new ActionBinding(ACTION_QUIT_GAME_SCENE,                  bare(KeyCode.Q)),
-        new ActionBinding(ACTION_SIMULATION_SLOWER,                alt(KeyCode.MINUS)),
-        new ActionBinding(ACTION_SIMULATION_SLOWEST,               alt_shift(KeyCode.MINUS)),
-        new ActionBinding(ACTION_SIMULATION_FASTER,                alt(KeyCode.PLUS)),
-        new ActionBinding(ACTION_SIMULATION_FASTEST,               alt_shift(KeyCode.PLUS)),
-        new ActionBinding(ACTION_SIMULATION_RESET,                 alt(KeyCode.DIGIT0)),
-        new ActionBinding(ACTION_SIMULATION_ONE_STEP,              shift(KeyCode.P), shift(KeyCode.F5)),
-        new ActionBinding(ACTION_SIMULATION_TEN_STEPS,             shift(KeyCode.SPACE)),
-        new ActionBinding(ACTION_TOGGLE_AUTOPILOT,                 alt(KeyCode.A)),
-        new ActionBinding(ACTION_TOGGLE_COLLISION_STRATEGY,        alt(KeyCode.S)),
-        new ActionBinding(ACTION_TOGGLE_DEBUG_INFO,                alt(KeyCode.D)),
-        new ActionBinding(ACTION_TOGGLE_KEYBOARD_MONITOR,          alt(KeyCode.K)),
-        new ActionBinding(ACTION_TOGGLE_MUTED,                     alt(KeyCode.M)),
-        new ActionBinding(ACTION_TOGGLE_PAUSED,                    bare(KeyCode.P), bare(KeyCode.F5)),
-        new ActionBinding(ACTION_TOGGLE_DASHBOARD,                 bare(KeyCode.F1), alt(KeyCode.B)),
-        new ActionBinding(ACTION_TOGGLE_IMMUNITY,                  alt(KeyCode.I)),
-        new ActionBinding(ACTION_TOGGLE_MINI_VIEW_VISIBILITY,      bare(KeyCode.F2)),
-        new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D,          alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
+    public static final Set<ActionKeyBinding> COMMON_BINDINGS = Set.of(
+        new ActionKeyBinding(ACTION_BOOT_SHOW_PLAY_VIEW,              bare(KeyCode.F3)),
+        new ActionKeyBinding(ACTION_ENTER_FULLSCREEN,                 bare(KeyCode.F11)),
+        new ActionKeyBinding(ACTION_OPEN_EDITOR,                      alt_shift(KeyCode.E)),
+        new ActionKeyBinding(ACTION_SHOW_HELP,                        bare(KeyCode.H)),
+        new ActionKeyBinding(ACTION_QUIT_GAME_SCENE,                  bare(KeyCode.Q)),
+        new ActionKeyBinding(ACTION_SIMULATION_SLOWER,                alt(KeyCode.MINUS)),
+        new ActionKeyBinding(ACTION_SIMULATION_SLOWEST,               alt_shift(KeyCode.MINUS)),
+        new ActionKeyBinding(ACTION_SIMULATION_FASTER,                alt(KeyCode.PLUS)),
+        new ActionKeyBinding(ACTION_SIMULATION_FASTEST,               alt_shift(KeyCode.PLUS)),
+        new ActionKeyBinding(ACTION_SIMULATION_RESET,                 alt(KeyCode.DIGIT0)),
+        new ActionKeyBinding(ACTION_SIMULATION_ONE_STEP,              shift(KeyCode.P), shift(KeyCode.F5)),
+        new ActionKeyBinding(ACTION_SIMULATION_TEN_STEPS,             shift(KeyCode.SPACE)),
+        new ActionKeyBinding(ACTION_TOGGLE_AUTOPILOT,                 alt(KeyCode.A)),
+        new ActionKeyBinding(ACTION_TOGGLE_COLLISION_STRATEGY,        alt(KeyCode.S)),
+        new ActionKeyBinding(ACTION_TOGGLE_DEBUG_INFO,                alt(KeyCode.D)),
+        new ActionKeyBinding(ACTION_TOGGLE_KEYBOARD_MONITOR,          alt(KeyCode.K)),
+        new ActionKeyBinding(ACTION_TOGGLE_MUTED,                     alt(KeyCode.M)),
+        new ActionKeyBinding(ACTION_TOGGLE_PAUSED,                    bare(KeyCode.P), bare(KeyCode.F5)),
+        new ActionKeyBinding(ACTION_TOGGLE_DASHBOARD,                 bare(KeyCode.F1), alt(KeyCode.B)),
+        new ActionKeyBinding(ACTION_TOGGLE_IMMUNITY,                  alt(KeyCode.I)),
+        new ActionKeyBinding(ACTION_TOGGLE_MINI_VIEW_VISIBILITY,      bare(KeyCode.F2)),
+        new ActionKeyBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D,          alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
     );
 
     public static final ParticlesAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticlesAnimationConfig(

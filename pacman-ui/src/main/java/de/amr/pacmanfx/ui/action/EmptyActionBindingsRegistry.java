@@ -11,13 +11,13 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Null-object implementation of {@link ActionBindingsSet}.
+ * Null-object implementation of {@link ActionBindingsRegistry}.
  * <p>
  * This implementation performs no action, holds no bindings, and never matches input.
  * It is useful when a subsystem expects a bindings manager but no actual bindings
  * should be active.
  */
-public class EmptyActionBindingsSet implements ActionBindingsSet {
+public class EmptyActionBindingsRegistry implements ActionBindingsRegistry {
 
     @Override
     public String name() {
@@ -28,21 +28,21 @@ public class EmptyActionBindingsSet implements ActionBindingsSet {
     public void dispose() {}
 
     @Override
-    public Map<KeyCodeCombination, GameAction> bindingMap() {
+    public Map<KeyCodeCombination, GameAction> actionBindings() {
         return Map.of();
     }
 
     @Override
-    public void registerFirstBinding(GameAction action, Set<ActionBinding> bindings) {}
+    public void selectAnyMatchingBinding(GameAction action, Set<ActionKeyBinding> bindings) {}
 
     @Override
-    public void setKeyCombination(GameAction action, KeyCodeCombination combination) {}
+    public void bindActionToKeyCombination(GameAction action, KeyCodeCombination combination) {}
 
     @Override
-    public void registerAllBindings(Set<ActionBinding> bindings) {}
+    public void registerAllBindings(Set<ActionKeyBinding> bindings) {}
 
     @Override
-    public Optional<GameAction> actionMatchingKeyboardState(Keyboard keyboard) {
+    public Optional<GameAction> triggeredAction(Keyboard keyboard) {
         return Optional.empty();
     }
 }

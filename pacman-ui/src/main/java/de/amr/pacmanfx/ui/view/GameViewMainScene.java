@@ -6,9 +6,9 @@ package de.amr.pacmanfx.ui.view;
 
 import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.action.ActionBindingsSet;
+import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
+import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.scene.Scene;
@@ -22,7 +22,7 @@ public class GameViewMainScene extends Scene {
     /** Index in the main scene's root pane child list where the active view is embedded. */
     public static final int SUBVIEW_INDEX = 0;
 
-    private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for Main Scene");
+    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for Main Scene");
 
     public GameViewMainScene(double width, double height) {
         super(new StackPane(), width, height);
@@ -40,17 +40,17 @@ public class GameViewMainScene extends Scene {
         setOnScroll(e -> context.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         // Global action bindings
-        actionBindings.registerFirstBinding(CommonActions.ACTION_ENTER_FULLSCREEN,        GameConstants.COMMON_BINDINGS);
-        actionBindings.registerFirstBinding(CommonActions.ACTION_OPEN_EDITOR,             GameConstants.COMMON_BINDINGS);
-        actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameConstants.COMMON_BINDINGS);
-        actionBindings.registerFirstBinding(CommonActions.ACTION_TOGGLE_MUTED,            GameConstants.COMMON_BINDINGS);
+        actionBindings.selectAnyMatchingBinding(CommonActions.ACTION_ENTER_FULLSCREEN,        GameConstants.COMMON_BINDINGS);
+        actionBindings.selectAnyMatchingBinding(CommonActions.ACTION_OPEN_EDITOR,             GameConstants.COMMON_BINDINGS);
+        actionBindings.selectAnyMatchingBinding(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameConstants.COMMON_BINDINGS);
+        actionBindings.selectAnyMatchingBinding(CommonActions.ACTION_TOGGLE_MUTED,            GameConstants.COMMON_BINDINGS);
 
         Logger.info(actionBindings);
     }
 
     private void handleKeyboardStateChange(Game context, Keyboard keyboard) {
         // Check for "global" action first. otherwise let current sub views handle the keyboard state change
-        actionBindings.actionMatchingKeyboardState(keyboard).ifPresentOrElse(
+        actionBindings.triggeredAction(keyboard).ifPresentOrElse(
             action -> action.executeIfEnabled(context),
             () -> context.ui().subViews().currentView().onInput(context, context.input()));
     }

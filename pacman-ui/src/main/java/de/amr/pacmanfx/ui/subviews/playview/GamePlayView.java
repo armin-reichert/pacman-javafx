@@ -8,8 +8,8 @@ import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.action.ActionBindingsSet;
-import de.amr.pacmanfx.ui.action.GameActionBindingsSet;
+import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -60,7 +60,7 @@ public class GamePlayView implements SubView {
         new DecorationPane.FrameConfig(26, 10, 5, 55.0, ArcadePalette.ARCADE_WHITE)
     );
 
-    private final ActionBindingsSet actionBindings = new GameActionBindingsSet("Action Bindings for Play View");
+    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for Play View");
 
     private final Game context;
     private final ContextMenu contextMenu = new ContextMenu();
@@ -132,14 +132,14 @@ public class GamePlayView implements SubView {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public ActionBindingsSet actionBindings() {
+    public ActionBindingsRegistry actionBindings() {
         return actionBindings;
     }
 
     @Override
     public void onInput(Game game, Input input) {
         // First lLook for an action binding in my bindings, if nothing found, delegate to the current game scene if any
-        actionBindings.actionMatchingKeyboardState(input.keyboard()).ifPresentOrElse(
+        actionBindings.triggeredAction(input.keyboard()).ifPresentOrElse(
             action -> action.executeIfEnabled(game),
             () -> game.ui().gameScenes().optCurrentGameScene().ifPresent(GameScene::onInput)
         );

@@ -39,7 +39,7 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
             return;
         }
 
-        final Map<KeyCodeCombination, GameAction> currentBindingMap = currentSubView.actionBindings().bindingMap();
+        final Map<KeyCodeCombination, GameAction> currentBindingMap = currentSubView.actionBindings().actionBindings();
         if (currentBindingMap.isEmpty()) {
             addRow(createLabel(NO_INFO, false));
         }

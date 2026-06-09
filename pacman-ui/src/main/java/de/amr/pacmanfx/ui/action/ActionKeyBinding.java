@@ -5,4 +5,4 @@ package de.amr.pacmanfx.ui.action;
 
 import javafx.scene.input.KeyCodeCombination;
 
-public record ActionBinding(GameAction gameAction, KeyCodeCombination... keyCombinations) {}
+public record ActionKeyBinding(GameAction action, KeyCodeCombination... keyCombinations) {}

@@ -29,7 +29,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     public void onActivate() {
         gameModel().hud().hide();
-        actionBindings().registerFirstBinding(ACTION_ENTER_START_SCREEN, TENGEN_SPECIFIC_BINDINGS);
+        actionBindings().selectAnyMatchingBinding(ACTION_ENTER_START_SCREEN, TENGEN_SPECIFIC_BINDINGS);
         fadeProgress = 0;
     }
 
