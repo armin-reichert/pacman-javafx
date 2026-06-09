@@ -22,20 +22,19 @@ public class ArcadeMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = 1.2f; // 12:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    private PacManGamesMachine pacManGamesMachine;
+    private final PacManGamesMachine machine = new PacManGamesMachine();
     private Game game;
 
     @Override
-    public void init() throws Exception {
-        pacManGamesMachine = new PacManGamesMachine();
-        pacManGamesMachine.insertCartridge(GameVariantID.ARCADE_MS_PACMAN.name(), ArcadeMsPacMan_Cartridge.CARTRIDGE);
+    public void init() {
+        machine.insertCartridge(GameVariantID.ARCADE_MS_PACMAN.name(), ArcadeMsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override
     public void start(Stage primaryStage) {
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        game = GameBuilder.compose(pacManGamesMachine, screenSize.x(), screenSize.y())
+        game = GameBuilder.compose(machine, screenSize.x(), screenSize.y())
             .gameVariant(GameVariantID.ARCADE_MS_PACMAN.name())
             .startPage(ArcadeMsPacMan_StartPage::new)
             .build();

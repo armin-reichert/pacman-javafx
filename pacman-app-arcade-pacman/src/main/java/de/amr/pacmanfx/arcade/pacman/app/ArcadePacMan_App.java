@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.*;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImplementation;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
@@ -21,7 +20,6 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.core.Validations.requireNonNegative;
 import static de.amr.pacmanfx.uilib.Ufx.computeScreenSectionSize;
 
 public class ArcadePacMan_App extends Application {
@@ -30,26 +28,17 @@ public class ArcadePacMan_App extends Application {
     private static final float HEIGHT_FRACTION = 0.8f; // 80% of available height
 
     private static final List<CommonDashboardID> DASHBOARD_IDs = List.of(
-        CommonDashboardID.GENERAL,
-        CommonDashboardID.GAME_CONTROL,
-        CommonDashboardID.SETTINGS_3D,
-        CommonDashboardID.ANIMATION_INFO,
-        CommonDashboardID.GAME_INFO,
-        CommonDashboardID.ACTOR_INFO,
-        CommonDashboardID.KEYS_GLOBAL,
-        CommonDashboardID.KEYS_LOCAL,
-        CommonDashboardID.ABOUT
-    );
+        CommonDashboardID.GENERAL, CommonDashboardID.GAME_CONTROL, CommonDashboardID.SETTINGS_3D,
+        CommonDashboardID.ANIMATION_INFO, CommonDashboardID.GAME_INFO, CommonDashboardID.ACTOR_INFO,
+        CommonDashboardID.KEYS_GLOBAL, CommonDashboardID.KEYS_LOCAL, CommonDashboardID.ABOUT);
 
-    private PacManGamesMachine gamesCollection;
+    private final PacManGamesMachine machine = new PacManGamesMachine();
     private Game game;
     private boolean useBuilder;
 
     @Override
-    public void init() throws Exception {
-        gamesCollection = new PacManGamesMachine();
-        gamesCollection.insertCartridge(GameVariantID.ARCADE_PACMAN.name(), ArcadePacMan_Cartridge.CARTRIDGE);
-
+    public void init() {
+        machine.insertCartridge(GameVariantID.ARCADE_PACMAN.name(), ArcadePacMan_Cartridge.CARTRIDGE);
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
     }
 
@@ -57,47 +46,31 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage primaryStage) {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
-            game = GameBuilder.compose(gamesCollection, size.x(), size.y())
+            game = GameBuilder.compose(machine, size.x(), size.y())
+                .coinMechanism(true)
                 .gameVariant(GameVariantID.ARCADE_PACMAN.name())
                 .startPage(ArcadePacMan_StartPage::new)
-                .coinMechanism(true)
                 .build();
         }
         else {
-            createGame(size);
+            game = new GameImplementation(machine,
+                new GameViewImplementation(
+                    new GameViewMainScene(size.x(), size.y()),
+                    new StatusIconBox(() -> GameConstants.LOCALIZED_TEXTS)),
+                new GameClockFX(),
+                new CoinMechanism());
+            final var arcadePacManStartPage = new ArcadePacMan_StartPage();
+            arcadePacManStartPage.init(game);
+            game.ui().subViews().startView().addStartPage(arcadePacManStartPage);
+            game.ui().subViews().startView().setSelectedIndex(0);
         }
         game.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, game.ui().translations());
-
+        game.selectGameVariant(GameVariantID.ARCADE_PACMAN.name());
         game.show(primaryStage);
     }
 
     @Override
     public void stop() {
         game.terminate();
-    }
-
-    // Private area
-
-    private void createGame(Vector2i sceneSize) {
-        game = new GameImplementation(
-            gamesCollection,
-            createView(sceneSize.x(), sceneSize.y()),
-            new GameClockFX(),
-            new CoinMechanism());
-
-        final StartPagesView startView = game.ui().subViews().startView();
-
-        final var arcadePacManStartPage = new ArcadePacMan_StartPage();
-        arcadePacManStartPage.init(game);
-
-        startView.addStartPage(arcadePacManStartPage);
-        startView.setSelectedIndex(0);
-    }
-
-    private GameViewImplementation createView(int width, int height) {
-        return new GameViewImplementation(
-            new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
-            new StatusIconBox(() -> GameConstants.LOCALIZED_TEXTS)
-        );
     }
 }
