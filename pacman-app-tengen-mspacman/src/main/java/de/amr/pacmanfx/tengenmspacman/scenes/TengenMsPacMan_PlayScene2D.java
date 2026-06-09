@@ -26,7 +26,6 @@ import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -163,15 +162,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         });
     }
 
-    private void updateDemoLevelMessage(GameLevel level) {
-        if (level.isDemoLevel()) {
-            level.optMessage()
-                .filter(MovingGameLevelMessage.class::isInstance)
-                .map(MovingGameLevelMessage.class::cast)
-                .ifPresent(MovingGameLevelMessage::updateMovement);
-        }
-    }
-
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
         final TranslationManager translations = game().ui().translations();
@@ -243,8 +233,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         actionBindings().selectAnyMatchingBinding(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_ActionBindings.SPECIFIC_BINDINGS);
     }
 
-    // private
-
     private void updateScaling() {
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
         scalingProperty().set(switch (displayMode) {
@@ -272,12 +260,21 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         }
     }
 
-    protected void playLevelCompleteAnimation(GameLevel level) {
+    private void updateDemoLevelMessage(GameLevel level) {
+        if (level.isDemoLevel()) {
+            level.optMessage()
+                .filter(MovingGameLevelMessage.class::isInstance)
+                .map(MovingGameLevelMessage.class::cast)
+                .ifPresent(MovingGameLevelMessage::updateMovement);
+        }
+    }
+
+    void playLevelCompleteAnimation(GameLevel level) {
         levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameState().expire());
         levelCompletedAnimation.play();
     }
 
-    protected void startGameOverMessageAnimation(GameLevelMessage message) {
+    void startGameOverMessageAnimation(GameLevelMessage message) {
         if (message instanceof MovingGameLevelMessage movingMessage) {
             final Font font = Font.font(BaseRenderer.ARCADE_FONT.getFamily(), TS);
             final double width = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, font);
@@ -285,7 +282,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         }
     }
 
-    protected void resetAnimations(GameLevel level) {
+    void resetAnimations(GameLevel level) {
         final Pac pac = level.entities().pac();
 
         pac.animations().select(gameModel().isBoosterActive()
