@@ -27,20 +27,19 @@ public class TengenMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = NES_SCREEN_ASPECT_RATIO; // 32:30
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
-    private PacManGamesMachine gamesCollection;
+    private final PacManGamesMachine machine = new PacManGamesMachine();
     private Game game;
 
     @Override
     public void init() {
-        gamesCollection = new PacManGamesMachine();
-        gamesCollection.insertCartridge(TENGEN_MS_PACMAN.name(), TengenMsPacMan_Cartridge.CARTRIDGE);
+        machine.insertCartridge(TENGEN_MS_PACMAN.name(), TengenMsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        game = GameBuilder.compose(gamesCollection, sceneSize.x(), sceneSize.y())
+        game = GameBuilder.compose(machine, sceneSize.x(), sceneSize.y())
             .gameVariant(TENGEN_MS_PACMAN.name())
             .startPage(TengenMsPacMan_StartPage::new)
             .build();
@@ -58,7 +57,6 @@ public class TengenMsPacMan_App extends Application {
             CommonDashboardID.ABOUT
         ), game.ui().translations());
 
-        // Will be added before "ABOUT" section!
         playView.dashboard().addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
             new DashboardSectionJoypad(playView.dashboard()),
