@@ -64,7 +64,7 @@ public class Ghost extends MovingActor {
     public Ghost(byte personality, String name) {
         super(name);
         this.personality = Validations.requireValidGhostPersonality(personality);
-        corneringSpeedDelta = -1.0f;
+        corneringSpeedDelta = -1.25f;
     }
 
     @Override
