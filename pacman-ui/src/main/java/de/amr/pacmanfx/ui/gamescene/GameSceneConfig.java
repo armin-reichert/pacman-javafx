@@ -63,7 +63,7 @@ public interface GameSceneConfig extends Disposable {
      *   <li>selecting the appropriate cutscene after a level is completed.</li>
      * </ul>
      *
-     * @param game the game UI
+     * @param game the game
      * @param gameModel the current game model
      * @return the scene to display, or an empty {@code Optional} if no scene applies
      */

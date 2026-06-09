@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.playview.DecorationPane;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
-import de.amr.pacmanfx.ui.view.GameView;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
@@ -220,7 +219,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         if (gameScene.optSubSceneFX().isPresent()) {
             embedGameSceneWithSubSceneFX(game, subViews.gamePlayView(), gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(game.ui().view(), subViews.gamePlayView(), currentConfig.gameSceneConfig(), gameScene2D);
+            embedGameScene2D(game, currentConfig.gameSceneConfig(), gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }
@@ -243,7 +242,9 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     // 2D scenes without camera which are shown at full size
-    private void embedGameScene2D(GameView gameUIView, GamePlayView playView, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
+    private void embedGameScene2D(Game game, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
+        final GameViewMainScene mainScene = game.ui().view().mainScene();
+        final GamePlayView playView = game.ui().subViews().gamePlayView();
         final DecorationPane decorationPane = playView.gameSceneFrame();
 
         gameScene2D.backgroundColorProperty().bind(GameConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
@@ -262,15 +263,18 @@ public class GameSceneManager implements ChangeListener<GameScene> {
             gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
                 scaling -> Math.min(scaling.doubleValue(), GamePlayView.MAX_GAME_SCENE_SCALING)));
 
-            decorationPane.stretchTo(gameUIView.mainScene().getWidth(), gameUIView.mainScene().getHeight());
+            decorationPane.stretchTo(mainScene.getWidth(), mainScene.getHeight());
 
             playView.setGameSceneContent(decorationPane);
         }
         else {
             // Undecorated game scene taking complete height
-            decorationPane.canvas().heightProperty().bind(gameUIView.mainScene().heightProperty());
-            decorationPane.canvas().widthProperty().bind(gameUIView.mainScene().heightProperty().map(h -> h.doubleValue() * gameScene2D.aspectRatio()));
-            gameScene2D.scalingProperty().bind(gameUIView.mainScene().heightProperty().divide(gameScene2D.unscaledHeight()));
+            decorationPane.canvas().heightProperty().bind(mainScene.heightProperty());
+
+            decorationPane.canvas().widthProperty().bind(mainScene.heightProperty()
+                .map(h -> h.doubleValue() * gameScene2D.aspectRatio()));
+
+            gameScene2D.scalingProperty().bind(mainScene.heightProperty().divide(gameScene2D.unscaledHeight()));
 
             playView.setGameSceneContent(decorationPane.canvas());
         }
