@@ -85,39 +85,39 @@ public class GameViewImplementation implements GameView {
         return stageTitleBinding;
     }
 
-    private String computeStageTitle(Game context) {
-        final SubView view = context.ui().subViews().currentView();
+    private String computeStageTitle(Game game) {
+        final SubView view = game.ui().subViews().currentView();
         return view == null
-            ? context.ui().translations().translate("view.missing") // Should never happen
-            : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(context));
+            ? game.ui().translations().translate("view.missing") // Should never happen
+            : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(game));
     }
 
-    private String titleForCurrentGameScene(Game context) {
-        final GameScene gameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
+    private String titleForCurrentGameScene(Game game) {
+        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
 
         final boolean debug = GameConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
         final boolean is3D = GameConstants.PROPERTY_3D_ENABLED.get();
-        final boolean paused = context.clock().getUpdatesDisabled();
+        final boolean paused = game.clock().getUpdatesDisabled();
 
-        final String normalTitle = appTitle(context, paused, is3D);
+        final String normalTitle = stageTitle(game, paused, is3D);
         return (gameScene == null || !debug)
             ? normalTitle
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String appTitle(Game context, boolean paused, boolean is3D) {
-        final String gameVariantName = context.currentGameVariantName();
+    private String stageTitle(Game game, boolean paused, boolean is3D) {
+        final String gameVariantName = game.currentGameVariantName();
         if (gameVariantName == null) {
             return "";
         }
 
-        final String viewMode = context.ui().translations().translate(is3D ? "threeD" : "twoD");
+        final String viewMode = game.ui().translations().translate(is3D ? "threeD" : "twoD");
 
         // In game-variant specific resource bundles, there should be two entries with placeholder
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager appSpecificTranslator = context.currentUIConfig();
+        final TranslationManager appSpecificTranslator = game.currentUIConfig();
         final String appTitleKey = paused ? "app.title.paused" : "app.title";
         if (appSpecificTranslator.textBundle() != null
             && appSpecificTranslator.textBundle().containsKey(appTitleKey)) {
