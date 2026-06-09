@@ -98,12 +98,20 @@ public class GameBuilder {
             new GameClockFX(),
             coinMechanism ? new CoinMechanism(99) : CoinMechanism.OUT_OF_SERVICE);
 
-        final StartPagesView startPagesCarousel = game.ui().subViews().startView();
-        for (var startPageFactory : startPageFactories) {
-            final StartPage startPage = startPageFactory.get();
-            if (startPage != null) {
-                startPagesCarousel.addStartPage(startPage);
-                startPage.init(game);
+        //TODO Find better solution
+        gameVariantConfigMap.forEach((variantName, config) -> {
+            // Use explicitly specified map selector (e.g. for XXL game variants)
+            if (config.mapSelector() != null) {
+                game.gameVariantRuntime(variantName).gameModel().setMapSelector(config.mapSelector());
+            }
+        });
+
+        final StartPagesView startPagesView = game.ui().subViews().startView();
+        for (var factory : startPageFactories) {
+            final StartPage page = factory.get();
+            if (page != null) {
+                page.init(game);
+                startPagesView.addStartPage(page);
             }
             else {
                 error("Start page could not be created");
