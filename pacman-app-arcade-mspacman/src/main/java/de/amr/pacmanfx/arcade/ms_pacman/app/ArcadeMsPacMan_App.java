@@ -50,6 +50,7 @@ public class ArcadeMsPacMan_App extends Application {
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT)
         );
+        game.selectGameVariant(GameVariant.ARCADE_MS_PACMAN.name());
         game.show(primaryStage);
     }
 

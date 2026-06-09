@@ -141,6 +141,7 @@ public class PacManGames3dApp extends Application {
             Platform.exit();
         }
 
+        game.selectGameVariant(ARCADE_PACMAN.name());
         game.show(stage);
     }
 

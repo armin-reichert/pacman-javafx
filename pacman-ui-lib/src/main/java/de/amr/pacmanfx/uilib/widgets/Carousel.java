@@ -150,9 +150,6 @@ public class Carousel extends StackPane {
     public void addItem(Node item) {
         requireNonNull(item);
         items.add(item);
-        if (selectedIndex() == -1 && !items.isEmpty()) {
-            setSelectedIndex(0);
-        }
     }
 
     public Optional<Node> currentItem() {

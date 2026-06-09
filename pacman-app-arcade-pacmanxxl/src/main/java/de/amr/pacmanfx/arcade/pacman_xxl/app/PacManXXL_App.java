@@ -76,6 +76,7 @@ public class PacManXXL_App extends Application {
         game.gameVariantRuntime(GameVariant.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
         game.gameVariantRuntime(GameVariant.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
 
+        game.selectGameVariant(GameVariant.ARCADE_PACMAN_XXL.name());
         game.show(primaryStage);
     }
 

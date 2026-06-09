@@ -122,6 +122,7 @@ public final class GameImplementation implements Game {
             cartridge.gameRulesFactory().get(),
             cartridge.uiConfigFactory().get()
         );
+
         //TODO make configurable again if tests should be available
         final GameFlow flow = runtime.gameFlow();
         flow.addState(new LevelShortTestState());
@@ -229,13 +230,15 @@ public final class GameImplementation implements Game {
 
         load3DAssets();
         initMainScene();
-        initProperties();
         initGameClock();
         initGameVariantAndRegisterChangeHandler();
+        initProperties();
 
         ui.subViews().connect(this);
         ui.subViews().selectStartView();
+        ui.subViews().startView().setSelectedIndex(0);
 
+        view.statusIconBox().bind(currentGameContext().model());
         view.show();
 
         startServices();
@@ -337,8 +340,6 @@ public final class GameImplementation implements Game {
         keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
 
         view.mainScene().init(this);
-
-        view.statusIconBox().bind(currentGameContext().model());
     }
 
     private void initProperties() {

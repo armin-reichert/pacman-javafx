@@ -10,28 +10,25 @@ import de.amr.pacmanfx.ui.subviews.startpages.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.media.Media;
 
-public class ArcadePacMan_StartPage extends FlyerStartPage implements ResourceManager {
+public class ArcadePacMan_StartPage extends FlyerStartPage {
 
-    private final Media flyerTextSpeech = loadMedia("sound/flyer-text.mp3");
+    private static final ResourceManager RM = () -> ArcadePacMan_StartPage.class;
+
+    private static final Media VOICE = RM.loadMedia("/de/amr/pacmanfx/arcade/pacman/sound/flyer-text.mp3");
 
     public ArcadePacMan_StartPage() {
         super("Pac-Man (Arcade)");
         flyer.setImages(
-            loadImage("graphics/flyer-page-1.jpg"),
-            loadImage("graphics/flyer-page-2.jpg"),
-            loadImage("graphics/flyer-page-3.jpg")
+            RM.loadImage("/de/amr/pacmanfx/arcade/pacman/graphics/flyer-page-1.jpg"),
+            RM.loadImage("/de/amr/pacmanfx/arcade/pacman/graphics/flyer-page-2.jpg"),
+            RM.loadImage("/de/amr/pacmanfx/arcade/pacman/graphics/flyer-page-3.jpg")
         );
     }
 
     @Override
-    public final Class<?> resourceRootClass() {
-        return ArcadePacMan_StartPage.class;
-    }
-
-    @Override
-    public void onEnterStartPage(Game context) {
+    public void onEnterStartPage(Game game) {
         flyer.selectPage(0);
-        context.ui().sounds().playVoice(flyerTextSpeech);
-        context.selectGameVariant(GameVariant.ARCADE_PACMAN.name());
+        game.ui().sounds().playVoice(VOICE);
+        game.selectGameVariant(GameVariant.ARCADE_PACMAN.name());
     }
 }

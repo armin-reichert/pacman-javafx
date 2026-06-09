@@ -65,6 +65,7 @@ public class TengenMsPacMan_App extends Application {
             game.gameVariantRuntime(TENGEN_MS_PACMAN.name()).uiConfig().translate("infobox.joypad.title"),
             false);
 
+        game.selectGameVariant(TENGEN_MS_PACMAN.name());
         game.show(primaryStage);
     }
 
