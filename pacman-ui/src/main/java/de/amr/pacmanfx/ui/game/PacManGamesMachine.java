@@ -44,11 +44,11 @@ public class PacManGamesMachine {
 
         final Cartridge prevCartridge = cartridges.putIfAbsent(variantName, cartridge);
         if (prevCartridge != null) {
-            Logger.warn("Game spec ({}) is already registered for variant {}", prevCartridge.getClass().getName(), variantName);
+            Logger.warn("Cartridge already registered for variant {}", variantName);
         }
 
 
-        Logger.info("Game spec {} registered for variant {}", cartridge.getClass().getSimpleName(), variantName);
+        Logger.info("Cartridge registered for variant {}", variantName);
     }
 
     public Cartridge cartridgeForVariant(String variantName) {
@@ -56,7 +56,7 @@ public class PacManGamesMachine {
         if (cartridges.containsKey(variantName)) {
             return cartridges.get(variantName);
         }
-        final String errorMessage = "No game spec was registered for game variant %s!".formatted(variantName);
+        final String errorMessage = "No cartridge registered for game variant %s!".formatted(variantName);
         Logger.error(errorMessage);
         throw new IllegalArgumentException(errorMessage);
     }
@@ -69,8 +69,8 @@ public class PacManGamesMachine {
     // other stuff
 
     private boolean validateUserDirs() {
-        return dirExistsAndIsWritable(GameConstants.USER_HOME_DIR, "Home directory")
-            && dirExistsAndIsWritable(GameConstants.CUSTOM_MAP_DIR, "Custom map directory");
+        return dirExistsAndIsWritable(GameConstants.USER_HOME_DIR, "Game root directory")
+            && dirExistsAndIsWritable(GameConstants.CUSTOM_MAP_DIR, "Custom maps directory");
     }
 
     private static boolean dirExistsAndIsWritable(File dir, String description) {

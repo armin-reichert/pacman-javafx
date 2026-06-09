@@ -37,7 +37,7 @@ public class GameActionBindingsMap implements ActionBindingsRegistry {
     }
 
     private String formatEntry(Map.Entry<KeyCodeCombination, GameAction> e) {
-        return "%-20s: %s".formatted(e.getKey(), e.getValue().resourceBundleKey());
+        return "%-15s: %s".formatted(e.getKey(), e.getValue().resourceBundleKey());
     }
 
     @Override
