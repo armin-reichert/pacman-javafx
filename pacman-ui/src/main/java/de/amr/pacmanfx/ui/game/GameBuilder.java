@@ -33,18 +33,19 @@ public class GameBuilder {
         boolean includeTests) {}
 
     public static GameBuilder compose(
-        PacManGamesMachine gamesCollection,
+        PacManGamesMachine machine,
         int mainSceneWidth,
         int mainSceneHeight)
     {
-        return new GameBuilder(gamesCollection, mainSceneWidth, mainSceneHeight);
+        return new GameBuilder(machine, mainSceneWidth, mainSceneHeight);
     }
 
+
+    private final PacManGamesMachine machine;
     private final WindowConfig windowConfig;
     private final Map<String, GameVariantConfig> gameVariantConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
 
-    private PacManGamesMachine machine;
     private boolean coinMechanism;
 
     private GameBuilder(
@@ -54,11 +55,6 @@ public class GameBuilder {
     {
         this.machine = requireNonNull(machine);
         windowConfig = new WindowConfig(mainSceneWidth, mainSceneHeight);
-    }
-
-    public GameBuilder machine(PacManGamesMachine machine) {
-        this.machine = machine;
-        return this;
     }
 
     public GameBuilder coinMechanism(boolean coinMechanism) {

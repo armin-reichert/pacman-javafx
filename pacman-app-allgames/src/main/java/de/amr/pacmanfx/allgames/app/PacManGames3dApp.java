@@ -77,7 +77,7 @@ public class PacManGames3dApp extends Application {
         CommonDashboardID.ABOUT
     );
 
-    private PacManGamesMachine pacManGamesMachine;
+    private final PacManGamesMachine machine = new PacManGamesMachine();
     private Game game;
 
     private boolean useBuilder;
@@ -85,12 +85,11 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
-        pacManGamesMachine = new PacManGamesMachine();
-        pacManGamesMachine.insertCartridge(ARCADE_PACMAN.name()       , ArcadePacMan_Cartridge.CARTRIDGE);
-        pacManGamesMachine.insertCartridge(ARCADE_MS_PACMAN.name()    , ArcadeMsPacMan_Cartridge.CARTRIDGE);
-        pacManGamesMachine.insertCartridge(TENGEN_MS_PACMAN.name()    , TengenMsPacMan_Cartridge.CARTRIDGE);
-        pacManGamesMachine.insertCartridge(ARCADE_PACMAN_XXL.name()   , PacManXXL_PacMan_Cartridge.CARTRIDGE);
-        pacManGamesMachine.insertCartridge(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
+        machine.insertCartridge(ARCADE_PACMAN.name()       , ArcadePacMan_Cartridge.CARTRIDGE);
+        machine.insertCartridge(ARCADE_MS_PACMAN.name()    , ArcadeMsPacMan_Cartridge.CARTRIDGE);
+        machine.insertCartridge(TENGEN_MS_PACMAN.name()    , TengenMsPacMan_Cartridge.CARTRIDGE);
+        machine.insertCartridge(ARCADE_PACMAN_XXL.name()   , PacManXXL_PacMan_Cartridge.CARTRIDGE);
+        machine.insertCartridge(ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
 
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
@@ -103,7 +102,9 @@ public class PacManGames3dApp extends Application {
 
         try {
             if (useBuilder) {
-                game = GameBuilder.compose(pacManGamesMachine, sceneSize.x(), sceneSize.y())
+
+                game = GameBuilder.compose(machine, sceneSize.x(), sceneSize.y())
+                    .coinMechanism(true)
 
                     .gameVariant(ARCADE_PACMAN.name(), true)
                     .gameVariant(ARCADE_MS_PACMAN.name(), true)
@@ -116,12 +117,11 @@ public class PacManGames3dApp extends Application {
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
 
-                    .coinMechanism(true)
                     .build();
             }
             else {
                 game = new GameImplementation(
-                    pacManGamesMachine,
+                    machine,
                     createView(sceneSize.x(), sceneSize.y()),
                     new GameClockFX(),
                     new CoinMechanism());
