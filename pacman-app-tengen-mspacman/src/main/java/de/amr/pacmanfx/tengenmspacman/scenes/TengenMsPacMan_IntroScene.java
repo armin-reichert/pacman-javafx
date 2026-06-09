@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.Globals.*;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.SPECIFIC_BINDINGS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
@@ -69,8 +69,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        actionBindings().selectAnyMatchingBinding(ACTION_ENTER_START_SCREEN,             TENGEN_SPECIFIC_BINDINGS);
-        actionBindings().selectAnyMatchingBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
+        actionBindings().selectAnyMatchingBinding(ACTION_ENTER_START_SCREEN, SPECIFIC_BINDINGS);
+        actionBindings().selectAnyMatchingBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, SPECIFIC_BINDINGS);
 
         final List<GhostConfig> ghostConfigs = uiConfig.worldConfig().ghostConfigs();
         ghostColors = Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)

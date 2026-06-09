@@ -22,7 +22,7 @@ import org.tinylog.Logger;
 
 import java.io.IOException;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.SPECIFIC_BINDINGS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_START_PLAYING;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
@@ -83,8 +83,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
         game.hud().hide();
 
-        actionBindings().selectAnyMatchingBinding(ACTION_START_PLAYING, TENGEN_SPECIFIC_BINDINGS);
-        actionBindings().selectAnyMatchingBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, TENGEN_SPECIFIC_BINDINGS);
+        actionBindings().selectAnyMatchingBinding(ACTION_START_PLAYING, SPECIFIC_BINDINGS);
+        actionBindings().selectAnyMatchingBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, SPECIFIC_BINDINGS);
         actionBindings().bindActionToKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));
         actionBindings().registerAllBindings(GlobalActionBindings.SCENE_TESTS_BINDINGS);
 

@@ -33,7 +33,7 @@ public final class TengenMsPacMan_ActionBindings {
         new ActionKeyBinding(CommonActions.ACTION_STEER_RIGHT, keyFor(JoypadButton.RIGHT), control(KeyCode.RIGHT))
     );
 
-    public static final Set<ActionKeyBinding> TENGEN_SPECIFIC_BINDINGS = Set.of(
+    public static final Set<ActionKeyBinding> SPECIFIC_BINDINGS = Set.of(
         new ActionKeyBinding(ACTION_QUIT_DEMO_LEVEL, keyFor(JoypadButton.START)),
         new ActionKeyBinding(ACTION_ENTER_START_SCREEN, keyFor(JoypadButton.START)),
         new ActionKeyBinding(ACTION_START_PLAYING, keyFor(JoypadButton.START)),

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.SPECIFIC_BINDINGS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
@@ -29,7 +29,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     public void onActivate() {
         gameModel().hud().hide();
-        actionBindings().selectAnyMatchingBinding(ACTION_ENTER_START_SCREEN, TENGEN_SPECIFIC_BINDINGS);
+        actionBindings().selectAnyMatchingBinding(ACTION_ENTER_START_SCREEN, SPECIFIC_BINDINGS);
         fadeProgress = 0;
     }
 
