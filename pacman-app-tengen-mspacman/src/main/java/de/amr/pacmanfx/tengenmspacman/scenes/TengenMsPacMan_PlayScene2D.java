@@ -19,6 +19,7 @@ import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.game.GlobalActionBindings;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -213,7 +214,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         } else {
             // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
             actionBindings().registerAllBindings(STEERING_BINDINGS);
-            actionBindings().registerAllBindings(GameConstants.CHEAT_ACTION_BINDINGS);
+            actionBindings().registerAllBindings(GlobalActionBindings.CHEAT_ACTION_BINDINGS);
             actionBindings().selectAnyMatchingBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_SPECIFIC_BINDINGS);
             actionBindings().selectAnyMatchingBinding(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_SPECIFIC_BINDINGS);
         }

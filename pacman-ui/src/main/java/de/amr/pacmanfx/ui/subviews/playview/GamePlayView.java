@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.game.GlobalActionBindings;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.input.Input;
@@ -148,7 +149,7 @@ public class GamePlayView implements SubView {
     @Override
     public void onEnter() {
         rootPane.requestFocus();
-        actionBindings.registerAllBindings(GameConstants.COMMON_BINDINGS);
+        actionBindings.registerAllBindings(GlobalActionBindings.COMMON_BINDINGS);
         Logger.info(actionBindings);
         gameSceneFrame.installBindings();
     }

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
+import de.amr.pacmanfx.ui.game.GlobalActionBindings;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.scene.Scene;
@@ -40,10 +41,10 @@ public class GameViewMainScene extends Scene {
         setOnScroll(e -> context.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         // Global action bindings
-        actionBindings.selectAnyMatchingBinding(CommonActions.ACTION_ENTER_FULLSCREEN,        GameConstants.COMMON_BINDINGS);
-        actionBindings.selectAnyMatchingBinding(CommonActions.ACTION_OPEN_EDITOR,             GameConstants.COMMON_BINDINGS);
-        actionBindings.selectAnyMatchingBinding(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GameConstants.COMMON_BINDINGS);
-        actionBindings.selectAnyMatchingBinding(CommonActions.ACTION_TOGGLE_MUTED,            GameConstants.COMMON_BINDINGS);
+        actionBindings.selectAnyMatchingBinding(CommonActions.ACTION_ENTER_FULLSCREEN,        GlobalActionBindings.COMMON_BINDINGS);
+        actionBindings.selectAnyMatchingBinding(CommonActions.ACTION_OPEN_EDITOR,             GlobalActionBindings.COMMON_BINDINGS);
+        actionBindings.selectAnyMatchingBinding(CommonActions.ACTION_TOGGLE_KEYBOARD_MONITOR, GlobalActionBindings.COMMON_BINDINGS);
+        actionBindings.selectAnyMatchingBinding(CommonActions.ACTION_TOGGLE_MUTED,            GlobalActionBindings.COMMON_BINDINGS);
 
         Logger.info(actionBindings);
     }

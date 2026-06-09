@@ -9,11 +9,11 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
+import de.amr.pacmanfx.ui.game.GlobalActionBindings;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -91,7 +91,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         } else {
             actionBindings().registerAllBindings(TengenMsPacMan_ActionBindings.STEERING_BINDINGS);
             actionBindings().selectAnyMatchingBinding(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_ActionBindings.TENGEN_SPECIFIC_BINDINGS);
-            actionBindings().registerAllBindings(GameConstants.CHEAT_ACTION_BINDINGS);
+            actionBindings().registerAllBindings(GlobalActionBindings.CHEAT_ACTION_BINDINGS);
         }
         bindActions();
 

@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.game.GlobalActionBindings;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
@@ -120,8 +121,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void acceptNormalLevel(GameLevel level) {
-        actionBindings().registerAllBindings(GameConstants.STEERING_ACTION_BINDINGS);
-        actionBindings().registerAllBindings(GameConstants.CHEAT_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(GlobalActionBindings.STEERING_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(GlobalActionBindings.CHEAT_ACTION_BINDINGS);
 
         game().ui().sounds().setEnabled(true);
 
