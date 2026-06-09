@@ -96,22 +96,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
         return Optional.ofNullable(levelCompletedAnimation);
     }
 
-    // Called from game event handler
-    public void resetActorAnimations(GameLevel level) {
-        final Pac pac = level.entities().pac();
-        pac.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
-        pac.animations().resetSelected();
-        level.entities().ghosts().forEach(ghost -> {
-            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-            ghost.animations().resetSelected();
-        });
-    }
-
-    /**
-     * If the 3D play scene is active when the game level gets created, this method has not yet been called,
-     * but it gets called when the 3D->2D scene switch happens.
-     */
-    protected void acceptGameLevel(GameLevel level) {
+    @Override
+    public void acceptGameLevel(GameLevel level) {
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());
         unscaledHeightProperty().set(terrainSize.y());
@@ -121,6 +107,17 @@ public class Arcade_PlayScene2D extends GameScene2D {
         } else {
             acceptNormalLevel(level);
         }
+    }
+
+    // Called from game event handler
+    public void resetActorAnimations(GameLevel level) {
+        final Pac pac = level.entities().pac();
+        pac.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pac.animations().resetSelected();
+        level.entities().ghosts().forEach(ghost -> {
+            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            ghost.animations().resetSelected();
+        });
     }
 
     private void acceptNormalLevel(GameLevel level) {

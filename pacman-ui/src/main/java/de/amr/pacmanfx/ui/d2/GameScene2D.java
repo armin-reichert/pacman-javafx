@@ -3,8 +3,10 @@
  */
 package de.amr.pacmanfx.ui.d2;
 
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.core.Validations;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -157,5 +159,15 @@ public class GameScene2D extends GameScene {
     /** @return the aspect ratio (width / height) */
     public double aspectRatio() {
         return width() / height();
+    }
+
+    /**
+     * If a 3D-variant of this game scene is active when the game level gets created, this method has not yet been called,
+     * but it gets called when the 3D->2D scene switch happens.
+     */
+    public void acceptGameLevel(GameLevel level) {
+        final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
+        unscaledWidthProperty().set(terrainSize.x());
+        unscaledHeightProperty().set(terrainSize.y());
     }
 }
