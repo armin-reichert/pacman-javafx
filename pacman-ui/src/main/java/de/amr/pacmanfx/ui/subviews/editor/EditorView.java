@@ -21,11 +21,11 @@ import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 
 public class EditorView implements SubView {
 
-    private final Game context;
+    private final Game game;
     private final TileMapEditor editor;
 
-    public EditorView(Stage stage, Game context) {
-        this.context = context;
+    public EditorView(Stage stage, Game game) {
+        this.game = game;
         editor = new TileMapEditor(stage);
         MenuItem miQuitEditor = createQuitEditorMenuItem();
         editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
@@ -33,7 +33,7 @@ public class EditorView implements SubView {
     }
 
     private MenuItem createQuitEditorMenuItem() {
-        var miQuitEditor = new MenuItem(context.ui().translations().translate("back_to_game"));
+        var miQuitEditor = new MenuItem(game.ui().translations().translate("back_to_game"));
         miQuitEditor.setOnAction(_ -> editor.quit());
         return miQuitEditor;
     }

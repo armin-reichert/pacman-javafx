@@ -112,9 +112,9 @@ public class Dashboard {
         return game;
     }
 
-    public void connect(Game context) {
-        this.game = requireNonNull(context);
-        sections.values().forEach(section -> section.connect(context));
+    public void connect(Game game) {
+        this.game = requireNonNull(game);
+        sections.values().forEach(section -> section.connect(game));
     }
 
     public void update() {

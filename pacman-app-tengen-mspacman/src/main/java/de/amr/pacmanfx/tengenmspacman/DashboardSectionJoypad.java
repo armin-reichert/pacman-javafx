@@ -18,8 +18,8 @@ public class DashboardSectionJoypad extends DashboardSection {
     }
 
     @Override
-    public void connect(Game context) {
-        final Joypad joypad = context.input().joypad();
+    public void connect(Game game) {
+        final Joypad joypad = game.input().joypad();
 
         // NES controller image is located in "pacman-ui" module, use a class from that module to load it
         final ResourceManager resourceManager = () -> Game.class;

@@ -27,7 +27,7 @@ public class DashboardSectionGeneral extends DashboardSection {
     }
 
     @Override
-    public void connect(Game context) {
+    public void connect(Game game) {
         addStaticLabeledValue("Java Version",   Runtime.version().toString());
         addStaticLabeledValue("JavaFX Version", System.getProperty("javafx.runtime.version"));
 
@@ -47,24 +47,24 @@ public class DashboardSectionGeneral extends DashboardSection {
         final Button btnPlayPause = buttonsSimulationControl[0];
         btnPlayPause.setText(null);
         btnPlayPause.setStyle("-fx-background-color: transparent");
-        btnPlayPause.graphicProperty().bind(context.clock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
-        btnPlayPause.tooltipProperty().bind(context.clock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
-        setAction(context, btnPlayPause, CommonActions.ACTION_TOGGLE_PAUSED);
+        btnPlayPause.graphicProperty().bind(game.clock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
+        btnPlayPause.tooltipProperty().bind(game.clock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
+        setAction(game, btnPlayPause, CommonActions.ACTION_TOGGLE_PAUSED);
 
         final Button btnStep = buttonsSimulationControl[1];
         btnStep.setGraphic(iconStep);
         btnStep.setStyle("-fx-background-color: transparent");
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
-        btnStep.disableProperty().bind(context.clock().updatesDisabledProperty().not());
-        setAction(btnStep, () -> context.clock().makeSteps(GameConstants.PROPERTY_SIMULATION_STEPS.get(), true));
+        btnStep.disableProperty().bind(game.clock().updatesDisabledProperty().not());
+        setAction(btnStep, () -> game.clock().makeSteps(GameConstants.PROPERTY_SIMULATION_STEPS.get(), true));
 
         addIntSpinner("Num Steps", 1, 50, GameConstants.PROPERTY_SIMULATION_STEPS);
 
         final var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
-        setEditor(sliderTargetFPS, context.clock().targetFrameRateProperty());
+        setEditor(sliderTargetFPS, game.clock().targetFrameRateProperty());
 
-        final GameClock gameClock = context.clock();
+        final GameClock gameClock = game.clock();
         addDynamicLabeledValue("", () -> "FPS: %.1f (Target: %d)".formatted(
             gameClock.fps(),
             gameClock.targetFrameRate()));

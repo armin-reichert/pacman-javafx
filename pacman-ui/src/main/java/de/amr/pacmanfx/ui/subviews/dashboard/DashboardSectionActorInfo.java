@@ -27,8 +27,8 @@ public class DashboardSectionActorInfo extends DashboardSection {
     }
 
     @Override
-    public void connect(Game context) {
-        final Supplier<GameModel> gameSupplier = context.currentGameContext()::model;
+    public void connect(Game game) {
+        final Supplier<GameModel> gameSupplier = game.currentGameContext()::model;
 
         addDynamicLabeledValue("Pac Name", supplyPacInfo(gameSupplier, (_, pac) -> pac.name()));
         addDynamicLabeledValue("Lives",    ifGameLevel(gameSupplier, _ -> "%d".formatted(gameSupplier.get().lives().count())));

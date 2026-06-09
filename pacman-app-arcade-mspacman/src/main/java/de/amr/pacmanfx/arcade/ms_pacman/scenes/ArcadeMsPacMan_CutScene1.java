@@ -44,8 +44,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private Actor heart;
     private Clapperboard clapperboard;
 
-    public ArcadeMsPacMan_CutScene1(Game context) {
-        super(context);
+    public ArcadeMsPacMan_CutScene1(Game game) {
+        super(game);
     }
 
     public Pac pacMan() {

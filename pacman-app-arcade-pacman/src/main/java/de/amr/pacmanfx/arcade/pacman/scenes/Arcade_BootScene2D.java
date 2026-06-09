@@ -21,8 +21,8 @@ public class Arcade_BootScene2D extends GameScene2D {
 
     public SceneState sceneState;
 
-    public Arcade_BootScene2D(Game context) {
-        super(context);
+    public Arcade_BootScene2D(Game game) {
+        super(game);
     }
 
     @Override

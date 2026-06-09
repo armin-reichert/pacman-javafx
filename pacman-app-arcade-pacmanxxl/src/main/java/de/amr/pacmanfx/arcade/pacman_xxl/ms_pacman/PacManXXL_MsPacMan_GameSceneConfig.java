@@ -23,8 +23,8 @@ public class PacManXXL_MsPacMan_GameSceneConfig extends AbstractGameSceneConfig 
 
     private final Game context;
 
-    public PacManXXL_MsPacMan_GameSceneConfig(Game context) {
-        this.context = requireNonNull(context);
+    public PacManXXL_MsPacMan_GameSceneConfig(Game game) {
+        this.context = requireNonNull(game);
     }
 
     @Override

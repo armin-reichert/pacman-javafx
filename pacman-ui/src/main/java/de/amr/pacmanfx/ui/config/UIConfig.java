@@ -141,9 +141,9 @@ public interface UIConfig extends TranslationManager, Disposable {
      *   <li>preparing any internal caches</li>
      * </ul>
      *
-     * @param context the {@code GameUI} instance that owns this configuration
+     * @param game the {@code GameUI} instance that owns this configuration
      */
-    void init(Game context);
+    void init(Game game);
 
     /**
      * Disposes all resources held by this configuration.

@@ -21,7 +21,7 @@ public class DashboardSectionAbout extends DashboardSection {
     }
 
     @Override
-    public void connect(Game context) {
+    public void connect(Game game) {
         final ResourceManager rm = () -> DashboardSectionAbout.class;
         final Image armin1970 = rm.loadImage("/de/amr/pacmanfx/ui/graphics/armin1970.jpg");
         final Font handwriting = rm.loadFont("/de/amr/pacmanfx/ui/fonts/Molle-Italic.ttf", 20);

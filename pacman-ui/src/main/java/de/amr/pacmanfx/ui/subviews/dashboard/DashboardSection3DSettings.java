@@ -43,14 +43,14 @@ public class DashboardSection3DSettings extends DashboardSection {
     }
 
     @Override
-    public void connect(Game context) {
+    public void connect(Game game) {
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
         comboPerspectives = addChoiceBox("Perspective", PerspectiveID.values());
         addColorPicker("Light Color", GameConstants.PROPERTY_3D_LIGHT_COLOR);
         addColorPicker("Floor Color", GameConstants.PROPERTY_3D_FLOOR_COLOR);
-        addDynamicLabeledValue("Camera",         () -> subSceneCameraInfo(context));
-        addDynamicLabeledValue("Sub-scene Size", () -> subSceneSizeInfo(context));
-        addDynamicLabeledValue("Scene Size",     () -> sceneSizeInfo(context));
+        addDynamicLabeledValue("Camera",         () -> subSceneCameraInfo(game));
+        addDynamicLabeledValue("Sub-scene Size", () -> subSceneSizeInfo(game));
+        addDynamicLabeledValue("Scene Size",     () -> sceneSizeInfo(game));
 
         cbMiniViewVisible = addCheckBox("Mini View", GameConstants.PROPERTY_MINI_VIEW_ON);
 
@@ -93,8 +93,8 @@ public class DashboardSection3DSettings extends DashboardSection {
         setEditor(sliderWallOpacity, GameConstants.PROPERTY_3D_WALL_OPACITY);
         setEditor(comboPerspectives, GameConstants.PROPERTY_3D_PERSPECTIVE_ID);
 
-        cbUsePlayScene3D.setOnAction(_ -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute(context));
-        cbWireframeMode.setOnAction(_ -> ACTION_TOGGLE_DRAW_MODE.execute(context));
+        cbUsePlayScene3D.setOnAction(_ -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute(game));
+        cbWireframeMode.setOnAction(_ -> ACTION_TOGGLE_DRAW_MODE.execute(game));
     }
 
     @Override
@@ -116,15 +116,15 @@ public class DashboardSection3DSettings extends DashboardSection {
         cbWireframeMode.setSelected(GameConstants.PROPERTY_3D_DRAW_MODE.get() == DrawMode.LINE);
     }
 
-    private String subSceneSizeInfo(Game context) {
-        return context.ui().gameScenes().optCurrentGameScene()
+    private String subSceneSizeInfo(Game game) {
+        return game.ui().gameScenes().optCurrentGameScene()
             .flatMap(GameScene::optSubSceneFX)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
-    private String subSceneCameraInfo(Game context) {
-        final GameScene gameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
+    private String subSceneCameraInfo(Game game) {
+        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
         return gameScene.optSubSceneFX().map(SubScene::getCamera)
             .map(camera -> "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
@@ -135,9 +135,9 @@ public class DashboardSection3DSettings extends DashboardSection {
             .orElse(NO_INFO);
     }
 
-    private String sceneSizeInfo(Game context) {
-        final GameModel game = context.currentGameContext().model();
-        final GameScene gameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
+    private String sceneSizeInfo(Game game) {
+        final GameModel gameModel = game.currentGameContext().model();
+        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
 
         if (gameScene instanceof GameScene2D gameScene2D) {
@@ -146,8 +146,8 @@ public class DashboardSection3DSettings extends DashboardSection {
                 gameScene2D.width(), gameScene2D.height());
         }
 
-        if (game.optGameLevel().isPresent()) {
-            final WorldMap worldMap = game.optGameLevel().get().worldMap();
+        if (gameModel.optGameLevel().isPresent()) {
+            final WorldMap worldMap = gameModel.optGameLevel().get().worldMap();
             return "%dx%d (map size px)".formatted(worldMap.numCols() * TS, worldMap.numRows() * TS);
         }
 

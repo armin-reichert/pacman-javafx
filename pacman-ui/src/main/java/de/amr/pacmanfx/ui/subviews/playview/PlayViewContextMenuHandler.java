@@ -19,15 +19,15 @@ import static java.util.Objects.requireNonNull;
 
 public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent> {
 
-    private final Game context;
+    private final Game game;
     private final GamePlayView playView;
 
-    public PlayViewContextMenuHandler(Game context, GamePlayView playView) {
-        this.context = requireNonNull(context);
+    public PlayViewContextMenuHandler(Game game, GamePlayView playView) {
+        this.game = requireNonNull(game);
         this.playView = requireNonNull(playView);
 
         //TODO is there a better way to hide the context menu?
-        context.ui().view().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+        game.ui().view().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() != MouseButton.SECONDARY) {
                 playView.contextMenu().hide();
             }
@@ -39,11 +39,11 @@ public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent
         final ContextMenu menu = playView.contextMenu();
         menu.getItems().clear();
 
-        context.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+        game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             // Add 2D play scene-specific entries
-            if (context.ui().gameScenes().currentGameSceneHasID(context, CommonSceneID.PLAY_SCENE_2D)) {
-                addLocalizedTitleItem(menu, context.ui().translations(), "scene_display");
-                addLocalizedActionItem(menu, context, context.ui().translations(), CommonActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
+            if (game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D)) {
+                addLocalizedTitleItem(menu, game.ui().translations(), "scene_display");
+                addLocalizedActionItem(menu, game, game.ui().translations(), CommonActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
             }
             // Add scene-specific entries
             gameScene.supplyContextMenu().ifPresent(sceneMenu -> menu.getItems().addAll(sceneMenu.getItems()));

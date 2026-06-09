@@ -63,7 +63,7 @@ public class GamePlayView implements SubView {
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for Play View");
 
-    private final Game context;
+    private final Game game;
     private final ContextMenu contextMenu = new ContextMenu();
 
     private StackPane rootPane;
@@ -88,19 +88,19 @@ public class GamePlayView implements SubView {
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
 
-    public GamePlayView(Game context, DashboardConfig dashboardConfig) {
-        this.context = requireNonNull(context);
+    public GamePlayView(Game game, DashboardConfig dashboardConfig) {
+        this.game = requireNonNull(game);
         createLayout(requireNonNull(dashboardConfig));
-        rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(context, this));
-        miniPlaySceneView.setUI(context);
+        rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(game, this));
+        miniPlaySceneView.setUI(game);
     }
 
     public void resizeToFit(Scene parentSceneFX) {
         gameSceneFrame.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
     }
 
-    public Game context() {
-        return context;
+    public Game game() {
+        return game;
     }
 
     public ContextMenu contextMenu() {
@@ -119,9 +119,9 @@ public class GamePlayView implements SubView {
         return miniPlaySceneView;
     }
 
-    public void showHelp(Game context) {
+    public void showHelp(Game game) {
         final double scaling = gameSceneFrame.scalingProperty().get();
-        helpLayer.showHelpPopup(context, scaling, context.currentGameVariantName());
+        helpLayer.showHelpPopup(game, scaling, game.currentGameVariantName());
     }
 
     public void setGameSceneContent(Node gameSceneContent) {
@@ -169,9 +169,9 @@ public class GamePlayView implements SubView {
     public void render() {
 
         // Render current 2D game scene
-        final GameScene gameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final GameModel game = context.currentGameContext().model();
+            final GameModel game = this.game.currentGameContext().model();
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D);
             }
@@ -190,7 +190,7 @@ public class GamePlayView implements SubView {
     }
 
     public void updateGameSceneRenderers(GameScene2D gameScene2D) {
-        final UIConfig currentConfig = context.currentUIConfig();
+        final UIConfig currentConfig = game.currentUIConfig();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = currentConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
             setFontSmoothing(GameConstants.PROPERTY_CANVAS_FONT_SMOOTHING.get());
@@ -239,8 +239,8 @@ public class GamePlayView implements SubView {
         rootPane = new StackPane(gameSceneLayer, miniPlaySceneView.rootPane(), overlayLayer, helpLayer, pausedIcon);
     }
 
-    public void connect(Game context) {
-        pausedIcon.visibleProperty().bind(context.clock().updatesDisabledProperty());
+    public void connect(Game game) {
+        pausedIcon.visibleProperty().bind(game.clock().updatesDisabledProperty());
 
         GameConstants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 
@@ -253,12 +253,12 @@ public class GamePlayView implements SubView {
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameConstants.PROPERTY_MINI_VIEW_ON.get()
-                && context.ui().gameScenes().currentGameSceneHasID(context, CommonSceneID.PLAY_SCENE_3D),
+                && game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D),
             GameConstants.PROPERTY_MINI_VIEW_ON,
-            context.ui().gameScenes().gameSceneProperty()
+            game.ui().gameScenes().gameSceneProperty()
         ));
 
-        dashboard.connect(context);
+        dashboard.connect(game);
     }
 
     private void setFontSmoothing(boolean smoothing) {

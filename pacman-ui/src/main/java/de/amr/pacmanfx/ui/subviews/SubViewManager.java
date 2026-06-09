@@ -30,16 +30,16 @@ public final class SubViewManager {
 
     public SubViewManager() {}
 
-    public void connect(Game context) {
-        requireNonNull(context);
+    public void connect(Game game) {
+        requireNonNull(game);
 
         selectedSubViewProperty().addListener((_, oldView, newView) -> {
             if (oldView != null) {
                 oldView.onExit();
                 oldView.actionBindings().dispose();
             }
-            context.ui().view().replaceSubView(newView);
-            context.ui().flashMessages().clearMessage();
+            game.ui().view().replaceSubView(newView);
+            game.ui().flashMessages().clearMessage();
             newView.onEnter();
         });
 
@@ -50,13 +50,13 @@ public final class SubViewManager {
             if (isSelected(startView)) return true;
 
             if (isSelected(gamePlayView)) {
-                return !context.currentGameContext().model().isPlaying();
+                return !game.currentGameContext().model().isPlaying();
             }
 
             return false;
         });
 
-        gamePlayView.connect(context);
+        gamePlayView.connect(game);
     }
 
     public void setGamePlayView(GamePlayView newGamePlayView) {

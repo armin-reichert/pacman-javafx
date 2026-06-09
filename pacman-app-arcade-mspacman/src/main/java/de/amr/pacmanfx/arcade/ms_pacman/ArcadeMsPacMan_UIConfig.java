@@ -70,11 +70,11 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public void init(Game context) {
+    public void init(Game game) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
-        initSound(context.ui().sounds());
-        gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig(context);
+        initSound(game.ui().sounds());
+        gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig(game);
     }
 
     @Override

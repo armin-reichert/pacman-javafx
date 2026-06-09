@@ -62,12 +62,12 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         }
     };
 
-    public PlaySceneContextMenu(Game context) {
-        final GameModel game = context.currentGameContext().model();
-        final TranslationManager translator = context.ui().translations();
+    public PlaySceneContextMenu(Game game) {
+        final GameModel gameModel = game.currentGameContext().model();
+        final TranslationManager translator = game.ui().translations();
 
         addLocalizedTitleItem(this, translator, "scene_display");
-        addLocalizedActionItem(this, context, translator, ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
+        addLocalizedActionItem(this, game, translator, ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
         addLocalizedCheckBox(this, translator, GameConstants.PROPERTY_MINI_VIEW_ON, "pip");
 
         addLocalizedTitleItem(this, translator, "select_perspective");
@@ -84,12 +84,12 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         }
 
         addLocalizedTitleItem(this, translator, "pacman");
-        addLocalizedCheckBox(this, translator, game.cheats().pacUsingAutopilotProperty(), "autopilot");
-        addLocalizedCheckBox(this, translator, game.cheats().pacImmuneProperty(), "immunity");
+        addLocalizedCheckBox(this, translator, gameModel.cheats().pacUsingAutopilotProperty(), "autopilot");
+        addLocalizedCheckBox(this, translator, gameModel.cheats().pacImmuneProperty(), "immunity");
 
         addSeparator(this);
         addLocalizedCheckBox(this, translator, GameConstants.PROPERTY_MUTED, "muted");
-        addLocalizedActionItem(this, context, translator, ACTION_QUIT_GAME_SCENE, "quit");
+        addLocalizedActionItem(this, game, translator, ACTION_QUIT_GAME_SCENE, "quit");
 
         GameConstants.PROPERTY_3D_PERSPECTIVE_ID.addListener(perspectiveListener);
     }

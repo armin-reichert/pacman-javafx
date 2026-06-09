@@ -60,20 +60,20 @@ public class StartPagesView extends Carousel implements SubView {
     private final List<StartPage> pages = new ArrayList<>();
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for Start View");
 
-    private final Game context;
+    private final Game game;
 
-    public StartPagesView(Game context) {
+    public StartPagesView(Game game) {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
-        this.context = requireNonNull(context);
+        this.game = requireNonNull(game);
         selectedIndexProperty().addListener((_, ov, nv) -> {
             Logger.debug("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
-                pages.get(oldIndex).onExitStartPage(context);
+                pages.get(oldIndex).onExitStartPage(game);
             }
             if (newIndex != -1) {
                 StartPage startPage = pages.get(newIndex);
-                startPage.onEnterStartPage(context);
+                startPage.onEnterStartPage(game);
                 startPage.rootPane().requestFocus();
             }
         });
@@ -97,7 +97,7 @@ public class StartPagesView extends Carousel implements SubView {
     public void onExit() {
         pauseProgressTimer();
         actionBindings.dispose();
-        currentStartPage().ifPresent(startPage -> startPage.onExitStartPage(context));
+        currentStartPage().ifPresent(startPage -> startPage.onExitStartPage(game));
     }
 
     @Override
@@ -152,6 +152,6 @@ public class StartPagesView extends Carousel implements SubView {
 
     private String composeTitle() {
         final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
-        return context != null ? context.ui().translations().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
+        return game != null ? game.ui().translations().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

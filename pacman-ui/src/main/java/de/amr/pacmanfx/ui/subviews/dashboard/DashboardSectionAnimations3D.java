@@ -100,8 +100,8 @@ public class DashboardSectionAnimations3D extends DashboardSection {
     }
 
     @Override
-    public void connect(Game context) {
-        tableView.prefHeightProperty().bind(context.ui().view().stage().heightProperty()
+    public void connect(Game game) {
+        tableView.prefHeightProperty().bind(game.ui().view().stage().heightProperty()
             .map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
     }
 

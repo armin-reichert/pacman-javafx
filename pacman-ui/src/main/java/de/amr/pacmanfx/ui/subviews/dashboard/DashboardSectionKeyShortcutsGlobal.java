@@ -20,8 +20,8 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
     }
 
     @Override
-    public void connect(Game context) {
-        updateTableForCurrentSubView(context);
+    public void connect(Game game) {
+        updateTableForCurrentSubView(game);
     }
 
     @Override
@@ -32,9 +32,9 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
         }
     }
 
-    private void updateTableForCurrentSubView(Game context) {
+    private void updateTableForCurrentSubView(Game game) {
         clearSection();
-        final SubView currentSubView = context.ui().subViews().currentView();
+        final SubView currentSubView = game.ui().subViews().currentView();
         if (currentSubView == null) {
             return;
         }
@@ -48,8 +48,8 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
                 .sorted(Comparator.comparing(KeyCombination::getDisplayText))
                 .forEach(key -> {
                     final GameAction action = currentBindingMap.get(key);
-                    final String actionText = context.ui().translations().translate(action.resourceBundleKey());
-                    final Label label = createLabel(actionText, action.isEnabled(context));
+                    final String actionText = game.ui().translations().translate(action.resourceBundleKey());
+                    final Label label = createLabel(actionText, action.isEnabled(game));
                     addRow(key.getDisplayText(), label);
                 });
         }

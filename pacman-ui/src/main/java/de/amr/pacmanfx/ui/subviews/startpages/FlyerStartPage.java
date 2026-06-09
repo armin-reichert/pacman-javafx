@@ -62,34 +62,34 @@ public class FlyerStartPage extends StackPane implements StartPage {
     }
 
     @Override
-    public void init(Game context) {
-        requireNonNull(context);
-        startButton = createStartButton(context);
+    public void init(Game game) {
+        requireNonNull(game);
+        startButton = createStartButton(game);
         getChildren().add(startButton);
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             if (e.getCode() == SHUT_UP_KEYCODE) {
-                context.ui().sounds().stopAndDisposeVoice();
+                game.ui().sounds().stopAndDisposeVoice();
             }
         });
     }
 
     @Override
-    public void onEnterStartPage(Game context) {
+    public void onEnterStartPage(Game game) {
         if (startButton != null) {
             startButton.requestFocus();
         }
     }
 
     @Override
-    public void onExitStartPage(Game context) {
-        context.ui().sounds().stopAndDisposeVoice();
+    public void onExitStartPage(Game game) {
+        game.ui().sounds().stopAndDisposeVoice();
     }
 
-    public Node createStartButton(Game context) {
-        final var startButton = new FancyButton(context.ui().translations().translate("play_button"),
+    public Node createStartButton(Game game) {
+        final var startButton = new FancyButton(game.ui().translations().translate("play_button"),
             DEFAULT_START_BUTTON_FONT, DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
-        startButton.setAction(() -> ACTION_BOOT_SHOW_PLAY_VIEW.execute(context));
+        startButton.setAction(() -> ACTION_BOOT_SHOW_PLAY_VIEW.execute(game));
         startButton.translateYProperty().bind(heightProperty().multiply(-0.1));
         startButton.fontProperty().bind(heightProperty()
             .map(h -> Font.font(DEFAULT_START_BUTTON_FONT.getFamily(), Math.min(h.doubleValue() / 25, 48))));

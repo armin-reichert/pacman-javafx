@@ -92,19 +92,19 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     private class KeyboardInputHandler implements Keyboard.StateListener{
-        private final Game context;
+        private final Game game;
 
-        public KeyboardInputHandler(Game context) {
-            this.context = context;
+        public KeyboardInputHandler(Game game) {
+            this.game = game;
         }
 
         @Override
         public void onKeyboardStateChange(Keyboard keyboard) {
             if (keyboard.isKeyPressed(KeyCode.E)) {
-                openEditor(context);
+                openEditor(game);
             }
             else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
-                startSelectedGame(context);
+                startSelectedGame(game);
             }
 
         }
@@ -123,24 +123,24 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     @Override
-    public void init(Game context) {
-        requireNonNull(context);
+    public void init(Game game) {
+        requireNonNull(game);
 
         if (menuBinding == null) {
-            menuBinding = new MenuBinding(context);
+            menuBinding = new MenuBinding(game);
         }
         menuBinding.update();
 
         if (keyboardInputHandler == null) {
-            keyboardInputHandler = new KeyboardInputHandler(context);
+            keyboardInputHandler = new KeyboardInputHandler(game);
         }
 
         rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
             if (hasFocus) {
-                menu.init(context);
+                menu.init(game);
                 menuBinding.update();
-                context.input().keyboard().removeStateListener(keyboardInputHandler);
-                context.input().keyboard().addStateListener(keyboardInputHandler);
+                game.input().keyboard().removeStateListener(keyboardInputHandler);
+                game.input().keyboard().addStateListener(keyboardInputHandler);
             }
         });
 
@@ -159,9 +159,9 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     @Override
-    public void onExitStartPage(Game context) {
-        context.ui().sounds().stopAndDisposeVoice();
-        context.input().keyboard().removeStateListener(keyboardInputHandler);
+    public void onExitStartPage(Game game) {
+        game.ui().sounds().stopAndDisposeVoice();
+        game.input().keyboard().removeStateListener(keyboardInputHandler);
         menu.stopDrawLoop();
         menuBinding.clear();
     }
@@ -178,15 +178,15 @@ public class PacManXXL_StartPage implements StartPage {
 
     // Private
 
-    private void openEditor(Game context) {
-        context.ui().sounds().stopAndDisposeVoice();
-        context.ui().subViews().startView().pauseProgressTimer();
-        CommonActions.ACTION_OPEN_EDITOR.execute(context);
+    private void openEditor(Game game) {
+        game.ui().sounds().stopAndDisposeVoice();
+        game.ui().subViews().startView().pauseProgressTimer();
+        CommonActions.ACTION_OPEN_EDITOR.execute(game);
     }
 
-    private void startSelectedGame(Game context) {
-        context.ui().sounds().stopAndDisposeVoice();
-        context.ui().subViews().startView().pauseProgressTimer();
+    private void startSelectedGame(Game game) {
+        game.ui().sounds().stopAndDisposeVoice();
+        game.ui().subViews().startView().pauseProgressTimer();
         menu.startGame();
     }
 }

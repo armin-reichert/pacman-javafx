@@ -39,8 +39,8 @@ public class GameScene2D extends GameScene {
 
     protected Canvas canvas;
 
-    public GameScene2D(Game context) {
-        super(context);
+    public GameScene2D(Game game) {
+        super(game);
     }
 
     @Override

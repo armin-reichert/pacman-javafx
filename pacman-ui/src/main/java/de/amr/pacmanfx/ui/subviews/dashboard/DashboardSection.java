@@ -77,7 +77,7 @@ public abstract class DashboardSection extends TitledPane {
         });
     }
 
-    public abstract void connect(Game context);
+    public abstract void connect(Game game);
 
     public void update() {
         infoTexts.forEach(DynamicInfoText::update);
@@ -233,8 +233,8 @@ public abstract class DashboardSection extends TitledPane {
         button.setOnAction(_ -> action.run());
     }
 
-    protected void setAction(Game context, Button button, GameAction gameAction) {
-        button.setOnAction(_ -> gameAction.execute(context));
+    protected void setAction(Game game, Button button, GameAction gameAction) {
+        button.setOnAction(_ -> gameAction.execute(game));
         //TODO add boolean property for enabled-state to game action and bind against it
     }
 

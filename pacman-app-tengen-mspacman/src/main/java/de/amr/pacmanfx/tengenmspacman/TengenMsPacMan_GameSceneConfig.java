@@ -19,10 +19,10 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    private final Game context;
+    private final Game game;
 
-    public TengenMsPacMan_GameSceneConfig(Game context) {
-        this.context = requireNonNull(context);
+    public TengenMsPacMan_GameSceneConfig(Game game) {
+        this.game = requireNonNull(game);
     }
 
     @Override
@@ -35,16 +35,16 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     protected GameScene createGameScene(SceneID sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
-            case CommonSceneID.BOOT_SCENE -> new TengenMsPacMan_BootScene(context);
-            case CommonSceneID.INTRO_SCENE -> new TengenMsPacMan_IntroScene(context);
-            case CommonSceneID.START_SCENE -> new TengenMsPacMan_OptionsScene(context);
-            case TengenSceneID.HALL_OF_FAME -> new TengenMsPacMan_CreditsScene(context);
-            case CommonSceneID.PLAY_SCENE_2D -> new TengenMsPacMan_PlayScene2D(context);
-            case CommonSceneID.PLAY_SCENE_3D -> new TengenMsPacMan_PlayScene3D(context);
-            case CommonSceneID.CUTSCENE_1 -> new TengenMsPacMan_CutScene1(context);
-            case CommonSceneID.CUTSCENE_2 -> new TengenMsPacMan_CutScene2(context);
-            case CommonSceneID.CUTSCENE_3 -> new TengenMsPacMan_CutScene3(context);
-            case CommonSceneID.CUTSCENE_4 -> new TengenMsPacMan_CutScene4(context);
+            case CommonSceneID.BOOT_SCENE -> new TengenMsPacMan_BootScene(game);
+            case CommonSceneID.INTRO_SCENE -> new TengenMsPacMan_IntroScene(game);
+            case CommonSceneID.START_SCENE -> new TengenMsPacMan_OptionsScene(game);
+            case TengenSceneID.HALL_OF_FAME -> new TengenMsPacMan_CreditsScene(game);
+            case CommonSceneID.PLAY_SCENE_2D -> new TengenMsPacMan_PlayScene2D(game);
+            case CommonSceneID.PLAY_SCENE_3D -> new TengenMsPacMan_PlayScene3D(game);
+            case CommonSceneID.CUTSCENE_1 -> new TengenMsPacMan_CutScene1(game);
+            case CommonSceneID.CUTSCENE_2 -> new TengenMsPacMan_CutScene2(game);
+            case CommonSceneID.CUTSCENE_3 -> new TengenMsPacMan_CutScene3(game);
+            case CommonSceneID.CUTSCENE_4 -> new TengenMsPacMan_CutScene4(game);
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
     }

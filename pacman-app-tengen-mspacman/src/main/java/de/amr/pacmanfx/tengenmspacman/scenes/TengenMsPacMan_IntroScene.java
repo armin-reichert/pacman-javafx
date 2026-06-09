@@ -54,8 +54,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     private int waitBeforeRising;
     public boolean dark;
 
-    public TengenMsPacMan_IntroScene(Game context) {
-        super(context);
+    public TengenMsPacMan_IntroScene(Game game) {
+        super(game);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
         sceneFlow = new StateMachine<>(this, List.of(SceneState.values()));

@@ -64,7 +64,7 @@ public class DashboardSectionCustomMaps extends DashboardSection {
     }
 
     @Override
-    public void connect(Game context) {
+    public void connect(Game game) {
     }
 
     public void setCustomDirWatchDog(DirectoryWatchdog watchdog) {

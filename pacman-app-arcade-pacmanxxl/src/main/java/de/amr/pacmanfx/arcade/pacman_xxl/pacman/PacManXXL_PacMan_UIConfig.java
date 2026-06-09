@@ -52,7 +52,7 @@ public final class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManage
     private GameSceneConfig gameSceneConfig;
     private GameSoundEffects sfx;
 
-    private Game context;
+    private Game game;
 
     public PacManXXL_PacMan_UIConfig() {
         textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman");
@@ -69,17 +69,17 @@ public final class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManage
     }
 
     @Override
-    public void init(Game context) {
-        this.context = context;
+    public void init(Game game) {
+        this.game = game;
 
-        gameSceneConfig = new PacManXXL_PacMan_GameSceneConfig(context);
+        gameSceneConfig = new PacManXXL_PacMan_GameSceneConfig(game);
 
         Logger.info("Load assets of UI configuration {}", getClass().getSimpleName());
         loadAssets();
 
         Logger.info("Register sounds and effects of UI configuration {}", getClass().getSimpleName());
-        registerSounds(context.ui().sounds());
-        sfx = new GameSoundEffects(context.ui().sounds());
+        registerSounds(game.ui().sounds());
+        sfx = new GameSoundEffects(game.ui().sounds());
         initSoundEffects();
     }
 
@@ -92,9 +92,9 @@ public final class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManage
         Logger.info("Dispose assets of UI configuration {}", getClass().getSimpleName());
         disposeAssets();
 
-        if (context != null) {
+        if (game != null) {
             Logger.info("Unregister sounds and effects of UI configuration {}", getClass().getSimpleName());
-            unregisterSounds(context.ui().sounds());
+            unregisterSounds(game.ui().sounds());
             sfx.dispose();
         }
     }

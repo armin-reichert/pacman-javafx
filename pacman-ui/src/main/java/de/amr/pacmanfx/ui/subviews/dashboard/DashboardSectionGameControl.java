@@ -41,25 +41,25 @@ public class DashboardSectionGameControl extends DashboardSection {
     }
 
     @Override
-    public void connect(Game context) {
-        final CoinMechanism coinMechanism = context.coinMechanism();
+    public void connect(Game game) {
+        final CoinMechanism coinMechanism = game.coinMechanism();
         spinnerCredit            = addIntSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
-        addDynamicLabeledValue("Collision Mode", context.currentGameContext()::collisionStrategy);
+        addDynamicLabeledValue("Collision Mode", game.currentGameContext()::collisionStrategy);
         cbCollisionCheckedTwice  = addCheckBox("Collision Check 2x");
 
-        setAction(choiceBoxInitialLives, () -> context.currentGameContext().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
+        setAction(choiceBoxInitialLives, () -> game.currentGameContext().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
 
         //setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO FIXME!
-        setAction(context, buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
-        setAction(context, buttonGroupLevelActions[GAME_LEVEL_NEXT], ACTION_ENTER_NEXT_LEVEL);
+        setAction(game, buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
+        setAction(game, buttonGroupLevelActions[GAME_LEVEL_NEXT], ACTION_ENTER_NEXT_LEVEL);
 
-        setAction(context, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
-        setAction(context, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
+        setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
+        setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
 
-        cbCollisionCheckedTwice.setOnAction(_ -> context.setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected()));
+        cbCollisionCheckedTwice.setOnAction(_ -> game.setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected()));
     }
 
     @Override

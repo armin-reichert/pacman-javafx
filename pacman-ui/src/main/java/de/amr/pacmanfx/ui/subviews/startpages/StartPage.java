@@ -53,9 +53,9 @@ public interface StartPage {
      *   <li>load resources needed by the page.</li>
      * </ul>
      *
-     * @param context the global UI façade providing access to shared services
+     * @param game the global UI façade providing access to shared services
      */
-    void init(Game context);
+    void init(Game game);
 
     /**
      * Called whenever this start page becomes the active page.
@@ -67,9 +67,9 @@ public interface StartPage {
      *   <li>resetting UI state specific to this page.</li>
      * </ul>
      *
-     * @param context the global UI façade
+     * @param game the global UI façade
      */
-    void onEnterStartPage(Game context);
+    void onEnterStartPage(Game game);
 
     /**
      * Called when the user navigates away from this start page.
@@ -77,9 +77,9 @@ public interface StartPage {
      * The default implementation logs the transition. Implementations may override
      * this method to stop animations, release temporary resources, or persist state.
      *
-     * @param context the global UI façade
+     * @param game the global UI façade
      */
-    default void onExitStartPage(Game context) {
+    default void onExitStartPage(Game game) {
         Logger.info("Exit start page {}", this);
     }
 

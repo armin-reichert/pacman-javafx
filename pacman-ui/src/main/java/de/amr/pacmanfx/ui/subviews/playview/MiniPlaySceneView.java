@@ -47,7 +47,7 @@ public class MiniPlaySceneView {
     private final HBox rootPane;
     private final Canvas canvas;
 
-    private Game context;
+    private Game game;
 
     // Note: The level and actor renderers cannot be created in the constructor, because the game controller has not yet
     //       selected a game variant when the constructor is called, so no UI configuration is available!
@@ -93,8 +93,8 @@ public class MiniPlaySceneView {
         return rootPane;
     }
 
-    public void setUI(Game context) {
-        this.context = requireNonNull(context);
+    public void setUI(Game game) {
+        this.game = requireNonNull(game);
     }
 
     public void setWorldSizeInPixel(Vector2i size) {
@@ -152,7 +152,7 @@ public class MiniPlaySceneView {
         canvasRenderer.clearCanvas();
 
         if (levelRenderer != null && actorRenderer != null) {
-            context.currentGameContext().optCurrentLevel().ifPresent(this::drawGameLevel);
+            game.currentGameContext().optCurrentLevel().ifPresent(this::drawGameLevel);
         }
 
         if (GameConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
@@ -173,7 +173,7 @@ public class MiniPlaySceneView {
             CommonRenderInfoKey.MAP_BRIGHT, false,
             CommonRenderInfoKey.MAP_EMPTY, level.worldMap().foodLayer().remainingFoodCount() == 0,
             CommonRenderInfoKey.MAP_FLASHING, false,
-            CommonRenderInfoKey.TICK, context.clock().tickCount()
+            CommonRenderInfoKey.TICK, game.clock().tickCount()
         ));
         levelRenderer.applyLevelSettings(level, info);
         levelRenderer.drawLevel(level, info);

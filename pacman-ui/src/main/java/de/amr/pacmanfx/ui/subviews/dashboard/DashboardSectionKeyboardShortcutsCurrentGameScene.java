@@ -18,8 +18,8 @@ public class DashboardSectionKeyboardShortcutsCurrentGameScene extends Dashboard
     }
 
     @Override
-    public void connect(Game context) {
-        updateTableForCurrentGameScene(context);
+    public void connect(Game game) {
+        updateTableForCurrentGameScene(game);
     }
 
     @Override
@@ -30,9 +30,9 @@ public class DashboardSectionKeyboardShortcutsCurrentGameScene extends Dashboard
         }
     }
 
-    private void updateTableForCurrentGameScene(Game context) {
+    private void updateTableForCurrentGameScene(Game game) {
         clearSection();
-        final GameScene currentGameScene = context.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene currentGameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (currentGameScene != null) {
             final var currentBindingsMap = currentGameScene.actionBindings().actionBindings();
             if (currentBindingsMap.isEmpty()) {
@@ -43,8 +43,8 @@ public class DashboardSectionKeyboardShortcutsCurrentGameScene extends Dashboard
                     .forEach(entry -> {
                         final KeyCombination keyCombination = entry.getKey();
                         final GameAction action = entry.getValue();
-                        final String localizedActionText = context.ui().translations().translate(action.resourceBundleKey());
-                        addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(context)));
+                        final String localizedActionText = game.ui().translations().translate(action.resourceBundleKey());
+                        addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(game)));
                     });
             }
         }

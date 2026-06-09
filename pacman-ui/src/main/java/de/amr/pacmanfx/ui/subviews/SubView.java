@@ -28,11 +28,11 @@ public interface SubView {
      * This method delegates to the view's {@link ActionBindingsRegistry} and executes
      * the resolved action via {@link de.amr.pacmanfx.ui.action.GameAction#execute(Game)}.
      *
-     * @param context the global game UI façade
+     * @param game the global game UI façade
      * @param input the user input
      */
-    default void onInput(Game context, Input input) {
-        actionBindings().triggeredAction(input.keyboard()).ifPresent(gameAction -> gameAction.execute(context));
+    default void onInput(Game game, Input input) {
+        actionBindings().triggeredAction(input.keyboard()).ifPresent(gameAction -> gameAction.execute(game));
     }
 
     /**

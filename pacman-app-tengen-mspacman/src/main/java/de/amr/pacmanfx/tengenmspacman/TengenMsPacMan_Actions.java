@@ -32,9 +32,9 @@ public interface TengenMsPacMan_Actions {
         }
 
         @Override
-        public boolean isEnabled(Game context) {
-            final GameModel game = context.currentGameContext().model();
-            return game.isDemoLevelRunning();
+        public boolean isEnabled(Game game) {
+            final GameModel gameModel = game.currentGameContext().model();
+            return gameModel.isDemoLevelRunning();
         }
     };
 
