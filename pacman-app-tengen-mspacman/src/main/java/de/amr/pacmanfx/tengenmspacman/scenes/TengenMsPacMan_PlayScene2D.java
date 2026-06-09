@@ -200,9 +200,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         return Optional.of(subScene);
     }
 
-    // private
-
-    protected void acceptGameLevel(GameLevel level) {
+    @Override
+    public void acceptGameLevel(GameLevel level) {
         dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(level.worldMap());
 
@@ -226,6 +225,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
+
+    // private
 
     private void updateScaling() {
         final SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
