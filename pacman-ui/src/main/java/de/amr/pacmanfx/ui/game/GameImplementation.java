@@ -105,6 +105,8 @@ public final class GameImplementation implements Game {
 
         createSubViews();
 
+        view.setGame(this);
+
         gameVariantName.addListener((_, _, newVariantName) -> {
             GameVariantRuntime runtime = gameVariantRuntime(newVariantName);
             currentGameContext = new GameContextImpl(this, runtime);
@@ -223,7 +225,6 @@ public final class GameImplementation implements Game {
 
     @Override
     public void show(Stage stage) {
-        view.setGame(this);
         view.stageProperty().set(stage);
 
         load3DAssets();

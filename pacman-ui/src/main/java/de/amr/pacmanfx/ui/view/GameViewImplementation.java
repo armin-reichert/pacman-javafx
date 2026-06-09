@@ -12,6 +12,7 @@ import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -51,17 +52,6 @@ public class GameViewImplementation implements GameView {
             GameConstants.PROPERTY_DEBUG_INFO_VISIBLE,
             GameConstants.PROPERTY_3D_ENABLED
         );
-
-        game.variantNameProperty().addListener((_, _, _) -> updateStageIcon());
-    }
-
-    private void updateStageIcon() {
-        final Image icon = game.currentUIConfig().assets().image("app_icon");
-        if (icon != null) {
-            game.ui().view().stage().getIcons().setAll(icon);
-        } else {
-            Logger.error("Could not access stage icon");
-        }
     }
 
     @Override
@@ -72,7 +62,10 @@ public class GameViewImplementation implements GameView {
         }
         theStage.setScene(mainScene);
         theStage.titleProperty().bind(stageTitleBindingProperty());
-        updateStageIcon();
+
+        updateStageIcon(game);
+        registerIconUpdater(game);
+
         theStage.setMinWidth(GameConstants.MIN_STAGE_WIDTH);
         theStage.setMinHeight(GameConstants.MIN_STAGE_HEIGHT);
         theStage.centerOnScreen();
@@ -108,6 +101,24 @@ public class GameViewImplementation implements GameView {
         return view == null
             ? game.ui().translations().translate("view.missing") // Should never happen
             : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(game));
+    }
+
+    // Private area
+
+    private void updateStageIcon(Game game) {
+        final Image icon = game.currentUIConfig().assets().image("app_icon");
+        if (icon != null) {
+            game.ui().view().stage().getIcons().setAll(icon);
+        } else {
+            Logger.error("Could not access stage icon");
+        }
+    }
+
+    private final ChangeListener<String> iconUpdateListener = (_, _, _) -> updateStageIcon(game);
+
+    private void registerIconUpdater(Game game) {
+        game.variantNameProperty().removeListener(iconUpdateListener);
+        game.variantNameProperty().addListener(iconUpdateListener);
     }
 
     private String titleForCurrentGameScene(Game game) {
