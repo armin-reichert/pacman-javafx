@@ -95,7 +95,8 @@ public final class Keyboard {
     private void onKeyPressed(KeyEvent event) {
         boolean changed = updateModifierState(event);
         if (!event.getCode().isModifierKey()) {
-            changed = pressedKeys.add(event.getCode());
+            // Handle CTRL+key differently: always report changes (e.g. to zoom in by holding CTRL+PLUS etc.)
+            changed = pressedKeys.add(event.getCode()) || controlDown;
         }
         if (changed) {
             listeners.forEach(listener -> listener.onKeyboardStateChange(this));
