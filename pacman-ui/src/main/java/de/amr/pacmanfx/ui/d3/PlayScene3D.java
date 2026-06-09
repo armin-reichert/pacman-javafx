@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.ui.action.ActionKeyBinding;
+import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
@@ -15,6 +16,7 @@ import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
@@ -32,8 +34,6 @@ import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,7 +42,6 @@ import static de.amr.pacmanfx.ui.action.CommonActions.*;
 import static de.amr.pacmanfx.ui.game.GameConstants.PROPERTY_3D_DRAW_MODE;
 import static de.amr.pacmanfx.ui.game.GameConstants.PROPERTY_3D_LIGHT_COLOR;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
-import static de.amr.pacmanfx.ui.input.Keyboard.control;
 import static java.util.Objects.requireNonNull;
 
 public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
@@ -190,6 +189,22 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     @Override
+    public void onInput() {
+        final Keyboard keyboard = game().input().keyboard();
+        final GameAction gameAction = actionBindings().triggeredAction(keyboard).orElse(null);
+        if (gameAction != null) {
+            gameAction.execute(game());
+        } else {
+            // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
+            perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {
+                if (perspective instanceof DronePerspective dronePerspective) {
+                    dronePerspective.handleKeyPressed(keyboard);
+                }
+            });
+        }
+    }
+
+    @Override
     public void onTick(long tick) {
         final GameLevel level = gameContext().optCurrentLevel().orElse(null);
 
@@ -216,16 +231,11 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onScroll(ScrollEvent scrollEvent) {
-        if (perspectiveManager.currentPerspective().isPresent()
-            && perspectiveManager.currentPerspective().get() instanceof DronePerspective dronePerspective) {
-            if (scrollEvent.getDeltaY() < 0) {
-                dronePerspective.actionClimb().execute(game());
-            } else if (scrollEvent.getDeltaY() > 0) {
-                dronePerspective.actionDescent().execute(game());
+        perspectiveManager.currentPerspective().ifPresent(perspective -> {
+            if (perspective instanceof DronePerspective dronePerspective) {
+                dronePerspective.handleScrollEvent(scrollEvent);
             }
-        } else {
-            Logger.warn("Scroll event ignored");
-        }
+        });
     }
 
     @Override
@@ -260,21 +270,10 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     private void createBindings() {
-        final Set<ActionKeyBinding> bindings = new HashSet<>();
-        bindings.add(new ActionKeyBinding(ACTION_PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT)));
-        bindings.add(new ActionKeyBinding(ACTION_PERSPECTIVE_NEXT,     alt(KeyCode.RIGHT)));
-        bindings.add(new ActionKeyBinding(ACTION_TOGGLE_DRAW_MODE,     alt(KeyCode.W)));
-
-        perspectiveManager.optPerspective(PerspectiveID.DRONE)
-            .filter(DronePerspective.class::isInstance)
-            .map(DronePerspective.class::cast)
-            .ifPresent(dronePerspective -> {
-                bindings.add(new ActionKeyBinding(dronePerspective.actionClimb(),   control(KeyCode.MINUS)));
-                bindings.add(new ActionKeyBinding(dronePerspective.actionDescent(), control(KeyCode.PLUS)));
-                bindings.add(new ActionKeyBinding(dronePerspective.actionReset(),   control(KeyCode.DIGIT0)));
-            });
-
-        actionBindings = Collections.unmodifiableSet(bindings);
+        actionBindings = Set.of(
+            new ActionKeyBinding(ACTION_PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT)),
+            new ActionKeyBinding(ACTION_PERSPECTIVE_NEXT, alt(KeyCode.RIGHT)),
+            new ActionKeyBinding(ACTION_TOGGLE_DRAW_MODE, alt(KeyCode.W)));
     }
 
     /**

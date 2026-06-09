@@ -4,9 +4,10 @@
 package de.amr.pacmanfx.ui.d3.camera;
 
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.transform.Rotate;
 
 import static de.amr.pacmanfx.core.Globals.lerp;
@@ -14,64 +15,28 @@ import static java.util.Objects.requireNonNull;
 
 public class DronePerspective implements Perspective<GameLevel> {
 
-    public static final int DEFAULT_Z = -200;
-
-    private final GameAction actionClimb;
-    private final GameAction actionDescent;
-    private final GameAction actionReset;
+    public static final float DEFAULT_Z = -200;
+    public static final float DEFAULT_LOWEST_Z = -50;
+    public static final float DEFAULT_HIGHEST_Z = -500;
 
     private final PerspectiveCamera camera;
-    private double speed;
-    private int nearestGroundZ;
-    private int farestGroundZ;
+    private float speed;
+    private float lowestZ;
+    private float highestZ;
 
     public DronePerspective(PerspectiveCamera camera) {
         this.camera = requireNonNull(camera);
-        speed = 0.05;
-        nearestGroundZ = -50;
-        farestGroundZ = -500;
-
-        actionClimb = new GameAction("drone_climb") {
-            @Override
-            protected void doAction(Game game) {
-                moveUp();
-            }
-        };
-
-        actionDescent = new GameAction("drone_descent") {
-            @Override
-            protected void doAction(Game game) {
-                moveDown();
-            }
-        };
-
-        actionReset = new GameAction("drone_reset") {
-
-            @Override
-            protected void doAction(Game game) {
-                moveDefaultHeight();
-            }
-        };
+        speed = 0.05f;
+        lowestZ = DEFAULT_LOWEST_Z;
+        highestZ = DEFAULT_HIGHEST_Z;
     }
 
-    public GameAction actionClimb() {
-        return actionClimb;
+    public void setLowestZ(float lowestZ) {
+        this.lowestZ = lowestZ;
     }
 
-    public GameAction actionDescent() {
-        return actionDescent;
-    }
-
-    public GameAction actionReset() {
-        return actionReset;
-    }
-
-    public void setNearestGroundZ(int nearestGroundZ) {
-        this.nearestGroundZ = nearestGroundZ;
-    }
-
-    public void setFarestGroundZ(int farestGroundZ) {
-        this.farestGroundZ = farestGroundZ;
+    public void setHighestZ(float highestZ) {
+        this.highestZ = highestZ;
     }
 
     public double speed() {
@@ -79,7 +44,7 @@ public class DronePerspective implements Perspective<GameLevel> {
     }
 
     public void setSpeed(double speed) {
-        this.speed = speed;
+        this.speed = (float) speed;
     }
 
     @Override
@@ -102,26 +67,45 @@ public class DronePerspective implements Perspective<GameLevel> {
         camera.setTranslateY(y);
     }
 
+    public void handleKeyPressed(Keyboard keyboard) {
+        if (keyboard.isKeyPressed(KeyCode.MINUS) && keyboard.controlDown()) {
+            moveUp();
+        }
+        else if (keyboard.isKeyPressed(KeyCode.PLUS) && keyboard.controlDown()) {
+            moveDown();
+        }
+        else if (keyboard.isKeyPressed(KeyCode.DIGIT0) || keyboard.isKeyPressed(KeyCode.NUMPAD0)) {
+            moveToDefaultHeight();
+        }
+    }
+
+    public void handleScrollEvent(ScrollEvent e) {
+        if (e.getDeltaY() < 0) {
+            moveUp();
+        } else if (e.getDeltaY() > 0) {
+            moveDown();
+        }
+    }
+
     public void moveUp() {
-        changeZ(-currentDeltaZ());
+        changeCameraZ(-heightSensitiveDelta());
     }
 
     public void moveDown() {
-        changeZ(currentDeltaZ());
+        changeCameraZ(heightSensitiveDelta());
     }
 
-    public void moveDefaultHeight() {
+    public void moveToDefaultHeight() {
         camera.setTranslateZ(DEFAULT_Z);
     }
 
-    private void changeZ(double deltaZ) {
+    private void changeCameraZ(double deltaZ) {
         final double oldZ = camera.getTranslateZ();
-        final double newZ = Math.clamp(oldZ + deltaZ, farestGroundZ, nearestGroundZ);
+        final double newZ = Math.clamp(oldZ + deltaZ, highestZ, lowestZ);
         camera.setTranslateZ(newZ);
     }
 
-    private double currentDeltaZ() {
-        final double logZ = Math.log10(Math.abs(camera.getTranslateZ()));
-        return 5 + logZ;
+    private double heightSensitiveDelta() {
+        return 5 + Math.log10(Math.abs(camera.getTranslateZ()));
     }
 }
