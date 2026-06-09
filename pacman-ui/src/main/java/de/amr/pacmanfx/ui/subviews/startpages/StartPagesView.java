@@ -45,14 +45,14 @@ public class StartPagesView extends Carousel implements SubView {
 
     private final GameAction actionShowPrevPage = new GameAction("show_prev_page") {
         @Override
-        public void doAction(Game context) {
+        public void doAction(Game game) {
             showPreviousItem();
         }
     };
 
     private final GameAction actionShowNextPage = new GameAction("show_next_page") {
         @Override
-        public void doAction(Game context) {
+        public void doAction(Game game) {
             showNextItem();
         }
     };

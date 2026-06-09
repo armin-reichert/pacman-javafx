@@ -84,9 +84,9 @@ public final class CheatActions {
         }
 
         @Override
-        public boolean isEnabled(Game context) {
-            final GameState gameState = context.currentGameContext().state();
-            return normalLevel(context).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
+        public boolean isEnabled(Game game) {
+            final GameState gameState = game.currentGameContext().state();
+            return normalLevel(game).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
         }
     };
 
@@ -103,10 +103,10 @@ public final class CheatActions {
         }
 
         @Override
-        public boolean isEnabled(Game context) {
-            final GameContext gameContext = context.currentGameContext();
+        public boolean isEnabled(Game game) {
+            final GameContext gameContext = game.currentGameContext();
             final GameState gameState = gameContext.state();
-            final GameLevel level = normalLevel(context).orElse(null);
+            final GameLevel level = normalLevel(game).orElse(null);
             return level != null
                 && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState)
                 && level.number() < gameContext.rules().lastLevelNumber();

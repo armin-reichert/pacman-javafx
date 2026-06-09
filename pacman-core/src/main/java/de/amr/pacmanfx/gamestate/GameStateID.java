@@ -24,5 +24,5 @@ public enum GameStateID implements GameStateIdentifier {
     GAME_LEVEL_EATING_GHOST,
     GAME_LEVEL_PACMAN_DYING,
     GAME_LEVEL_INTERMISSION,
-    GAME_OVER;
+    GAME_OVER
 }

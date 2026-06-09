@@ -156,7 +156,7 @@ public class PerspectiveManager implements Disposable {
     private GameAction createDroneAction(String id, Consumer<DronePerspective> perspectiveAction) {
         return new GameAction(id) {
             @Override
-            public void doAction(Game context) {
+            public void doAction(Game game) {
                 currentPerspective()
                     .filter(DronePerspective.class::isInstance)
                     .map(DronePerspective.class::cast)
@@ -164,7 +164,7 @@ public class PerspectiveManager implements Disposable {
             }
 
             @Override
-            public boolean isEnabled(Game context) {
+            public boolean isEnabled(Game game) {
                 return activeID.get() == PerspectiveID.DRONE;
             }
         };

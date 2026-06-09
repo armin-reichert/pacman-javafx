@@ -63,8 +63,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     private final GameAction actionSelectNextJoypadBinding = new GameAction("select_next_joypad_binding") {
         @Override
-        public void doAction(Game context) {
-            context.input().joypad().selectNextBinding();
+        public void doAction(Game game) {
+            game.input().joypad().selectNextBinding();
         }
     };
 
