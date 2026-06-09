@@ -64,6 +64,8 @@ public class GameConstants {
 
     // Simulation speed changes
 
+    public static float SIM_STEP_MESSAGE_SEC = 0.75f;
+
     public static final int SIM_SPEED_DELTA = 2;
 
     public static final int SIM_SPEED_MIN = 5;

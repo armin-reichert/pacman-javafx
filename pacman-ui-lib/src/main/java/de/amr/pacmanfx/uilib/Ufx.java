@@ -10,6 +10,7 @@ import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -82,6 +83,18 @@ public final class Ufx {
      */
     public static void toggleBooleanProperty(BooleanProperty booleanProperty) {
         booleanProperty.set(!booleanProperty.get());
+    }
+
+    public static <T> void toggleProperty(ObjectProperty<T> property, T either, T other) {
+        requireNonNull(property);
+        requireNonNull(either);
+        requireNonNull(other);
+        final T value = property.getValue();
+        if (either.equals(value)) {
+            property.set(other);
+        } else if (other.equals(value)) {
+            property.set(either);
+        }
     }
 
     /**
