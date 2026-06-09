@@ -27,21 +27,20 @@ public class PacManXXL_App extends Application {
     private static final double ASPECT_RATIO    = 1.6;
     private static final double HEIGHT_FRACTION = 0.8;
 
-    private PacManGamesMachine pacManGamesMachine;
+    private final PacManGamesMachine machine = new PacManGamesMachine();
     private Game game;
 
     @Override
     public void init() {
-        pacManGamesMachine = new PacManGamesMachine();
-        pacManGamesMachine.insertCartridge(GameVariantID.ARCADE_PACMAN_XXL.name(), PacManXXL_PacMan_Cartridge.CARTRIDGE);
-        pacManGamesMachine.insertCartridge(GameVariantID.ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
+        machine.insertCartridge(GameVariantID.ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_Cartridge.CARTRIDGE);
+        machine.insertCartridge(GameVariantID.ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override
     public void start(Stage primaryStage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        game = GameBuilder.compose(pacManGamesMachine, sceneSize.x(), sceneSize.y())
+        game = GameBuilder.compose(machine, sceneSize.x(), sceneSize.y())
             .gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())
             .gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name())
             .startPage(PacManXXL_StartPage::new)
@@ -65,8 +64,7 @@ public class PacManXXL_App extends Application {
         playView.dashboard().findSection(CommonDashboardID.CUSTOM_MAPS).ifPresent(section -> {
             if (section instanceof DashboardSectionCustomMaps sectionCustomMaps) {
                 sectionCustomMaps.setCustomDirWatchDog(game.watchdog());
-                sectionCustomMaps.setMapEditFunction(mapFile ->
-                    CommonActions.createEditMapFileAction(mapFile).execute(game));
+                sectionCustomMaps.setMapEditFunction(mapFile -> CommonActions.createEditMapFileAction(mapFile).execute(game));
             }
         });
 
