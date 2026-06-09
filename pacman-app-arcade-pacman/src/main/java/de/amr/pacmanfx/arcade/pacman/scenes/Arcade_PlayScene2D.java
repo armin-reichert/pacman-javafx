@@ -87,6 +87,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
         gameContext().optCurrentLevel().ifPresent(this::acceptGameLevel);
     }
 
+    public void setLevelCompletedAnimation(LevelCompletedAnimation levelCompletedAnimation) {
+        this.levelCompletedAnimation = levelCompletedAnimation;
+    }
+
     // Expose animation to scene renderer
     public Optional<LevelCompletedAnimation> optLevelCompletedAnimation() {
         return Optional.ofNullable(levelCompletedAnimation);
@@ -102,7 +106,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
             ghost.animations().resetSelected();
         });
     }
-
 
     /**
      * If the 3D play scene is active when the game level gets created, this method has not yet been called,
@@ -125,11 +128,6 @@ public class Arcade_PlayScene2D extends GameScene2D {
         actionBindings().registerAllBindings(GlobalActionBindings.CHEAT_ACTION_BINDINGS);
 
         game().ui().sounds().setEnabled(true);
-
-        if (levelCompletedAnimation == null) {
-            levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameState().expire());
-            Logger.info("Created 2D level flashing animation");
-        }
 
         Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }

@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
@@ -60,8 +61,12 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
         final GameState newState = (GameState) e.newState();
 
         if (GameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
+            final GameLevel level = optGameLevel().orElseThrow();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-            playScene2D.optLevelCompletedAnimation().ifPresent(LevelCompletedAnimation::play);
+
+            final var completedAnimation = new LevelCompletedAnimation(level, () -> gameState().expire());
+            playScene2D.setLevelCompletedAnimation(completedAnimation);
+            completedAnimation.play();
         }
         else if (GameStateID.GAME_OVER.identifies(newState)) {
             gameModel().hud().creditOn();
