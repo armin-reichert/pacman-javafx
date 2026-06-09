@@ -9,12 +9,12 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.game.GameConstants;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
+import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.playview.DecorationPane;
@@ -85,7 +85,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
         nextGameScene.activate();
 
-        gameModel.optGameLevel().ifPresent(level -> handle2D3DSwitch(currentConfig, gameContext, level, prevGameScene, nextGameScene));
+        gameModel.optGameLevel().ifPresent(level -> handle2D3DSwitch(currentConfig, level, prevGameScene, nextGameScene));
 
         gameSceneProperty().set(nextGameScene);
     }
@@ -130,37 +130,37 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     // 2D-3D scene switch
 
-    private void handle2D3DSwitch(UIConfig uiConfig, GameContext gameContext, GameLevel level, GameScene prevGameScene, GameScene nextGameScene) {
+    private void handle2D3DSwitch(UIConfig uiConfig, GameLevel level, GameScene prevGameScene, GameScene nextGameScene) {
         final GameSceneSwitchType sceneSwitchType = identifySceneSwitchType(prevGameScene, nextGameScene);
         switch (sceneSwitchType) {
-            case FROM_2D_TO_3D -> switchPlaySceneTo3D(uiConfig, gameContext, level, prevGameScene, nextGameScene);
+            case FROM_2D_TO_3D -> switchPlaySceneTo3D(uiConfig, level, prevGameScene, nextGameScene);
             case FROM_3D_TO_2D -> switchPlaySceneTo2D(prevGameScene, nextGameScene);
             case NONE -> {}
             default -> throw new IllegalArgumentException("Illegal scene switch type: " + sceneSwitchType);
         }
     }
 
-    private void switchPlaySceneTo3D(UIConfig uiConfig, GameContext gameContext, GameLevel level, GameScene currentScene, GameScene nextScene) {
+    private void switchPlaySceneTo3D(UIConfig uiConfig, GameLevel level, GameScene currentScene, GameScene nextScene) {
         if (!(nextScene instanceof PlayScene3D playScene3D)) {
             throw new IllegalArgumentException("Expected PlayScene3D, but scene has class %s"
                 .formatted(nextScene.getClass().getSimpleName()));
         }
 
-        playScene3D.replaceGameLevel3D(gameContext, level);
+        playScene3D.replaceGameLevel3D(level);
         playScene3D.updateHUD3D(level);
         playScene3D.replaceActionBindings(level);
-        playScene3D.initFood3D(level.worldMap().foodLayer(), true);
+        playScene3D.initFood3D(level, true);
 
         final GameLevel3D level3D = playScene3D.optGameLevel3D().orElseThrow();
         final Pac3D pac3D = level3D.entities().pac3D();
-        playScene3D.initPac3D(gameContext, pac3D, level);
+        playScene3D.initPac3D(pac3D, level);
         level3D.startLivesCounterTrackingPac();
 
         if (level.entities().pac().powerTimer().isRunning()) {
             uiConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
 
-        Logger.info("3D scene {} entered from 3D scene {}", playScene3D.getClass().getSimpleName(), currentScene.getClass().getSimpleName());
+        Logger.info("3D scene {} entered from 2D game scene {}", playScene3D.getClass().getSimpleName(), currentScene.getClass().getSimpleName());
 
         playScene3D.fadeInAnimation().playFromStart();
     }
@@ -208,7 +208,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
             gameScene2D.scalingProperty().unbind();
         }
 
-        Logger.info("Game scene {} REMOVED from play scene!", gameScene.getClass().getSimpleName());
+        Logger.info("Game scene {} REMOVED from play view!", gameScene.getClass().getSimpleName());
     }
 
     public void embedGameSceneIntoPlayView(Game context, GameScene gameScene) {

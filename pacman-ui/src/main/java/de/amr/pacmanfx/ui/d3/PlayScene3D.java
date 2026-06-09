@@ -4,18 +4,18 @@
 
 package de.amr.pacmanfx.ui.d3;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.score.Score;
-import de.amr.pacmanfx.ui.game.GameConstants;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.ActionKeyBinding;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
+import de.amr.pacmanfx.ui.d3.camera.DronePerspective;
+import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
+import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Scores3D;
@@ -32,13 +32,15 @@ import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import static de.amr.pacmanfx.core.Globals.TS;
+import static de.amr.pacmanfx.ui.action.CommonActions.*;
 import static de.amr.pacmanfx.ui.game.GameConstants.PROPERTY_3D_DRAW_MODE;
 import static de.amr.pacmanfx.ui.game.GameConstants.PROPERTY_3D_LIGHT_COLOR;
-import static de.amr.pacmanfx.ui.action.CommonActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
 import static java.util.Objects.requireNonNull;
@@ -47,11 +49,11 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     public final DoubleProperty scoreOpacity = new SimpleDoubleProperty(0);
 
-    protected PerspectiveManager perspectives;
-    protected Set<ActionKeyBinding> bindings;
+    protected PerspectiveManager perspectiveManager;
+    protected Set<ActionKeyBinding> actionBindings;
 
-    protected Group subSceneRoot;
     protected SubScene subScene;
+    protected Group subSceneRoot;
     protected PerspectiveCamera camera;
     protected Group level3DParent = new Group();
     protected GameLevel3D level3D;
@@ -65,18 +67,17 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         }
     };
 
-    private final RandomTextPicker gameOverMessagePicker;
-
     private final ManagedAnimation fadeInAnimation = new PlaySceneFadeInAnimation(Duration.seconds(3), this);
 
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
-    public PlayScene3D(Game context) {
-        super(context);
-        gameOverMessagePicker = new RandomTextPicker(context.ui().translations().textBundle(), "game.over");
+    public PlayScene3D(Game game) {
+        super(game);
+
         createSubScene();
         createBindings();
+
         bindActions();
         setGameEventHandler(new PlayScene3DGameEventHandler(this));
     }
@@ -86,7 +87,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     public PerspectiveManager perspectiveManager() {
-        return perspectives;
+        return perspectiveManager;
     }
 
     public Optional<GameLevel3D> optGameLevel3D() {
@@ -103,7 +104,8 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     public void updateHUD3D(GameLevel level) {
         requireNonNull(level);
-        // If score is disabled, show "GAME OVER" text
+
+        // If score is disabled, show "GAME OVER" text instead
         final Score score = level.game().score();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
@@ -118,17 +120,19 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
     }
 
-    public void initPac3D(GameContext gameContext, Pac3D pac3D, GameLevel level) {
-        requireNonNull(gameContext);
+    public void initPac3D(Pac3D pac3D, GameLevel level) {
         requireNonNull(pac3D);
         requireNonNull(level);
-        pac3D.init(gameContext, level);
-        pac3D.update(gameContext, level);
+
+        pac3D.init(gameContext(), level);
+        pac3D.update(gameContext(), level);
     }
 
-    public void initFood3D(FoodLayer foodLayer, boolean startEnergizerPumping) {
-        requireNonNull(foodLayer);
+    public void initFood3D(GameLevel level, boolean startEnergizerPumping) {
+        final FoodLayer foodLayer = level.worldMap().foodLayer();
+
         level3D.pellets3D().forEach(pellet3D -> pellet3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
+
         level3D.energizers3D().forEach(energizer3D -> {
             energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile()));
             if (startEnergizerPumping && energizer3D.shape().isVisible()) {
@@ -137,41 +141,33 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         });
     }
 
-    public void replaceGameLevel3D(GameContext gameContext, GameLevel level) {
+    public void replaceGameLevel3D(GameLevel level) {
         requireNonNull(level);
+
         if (level3D != null) {
-            Logger.info("Old 3D game level gets disposed...");
+            Logger.info("Old 3D game level is disposed...");
             level3D.dispose();
         }
-        level3D = new GameLevel3D(gameContext, level, game().currentUIConfig());
+        level3D = new GameLevel3D(gameContext(), level, game().currentUIConfig());
         decorate(level3D);
         level3DParent.getChildren().setAll(level3D);
 
-        level3D.entities().selectAll().forEach(entity -> entity.init(gameContext, level));
+        level3D.createAnimations(GameConstants.DEFAULT_PARTICLE_ANIMATION_CONFIG);
+        level3D.entities().selectAll().forEach(entity -> entity.init(gameContext(), level));
         level3D.startLivesCounterTrackingPac();
 
-        level3D.createAnimations(GameConstants.DEFAULT_PARTICLE_ANIMATION_CONFIG);
-
-        Logger.info("Created and added new 3D game level to play scene");
-    }
-
-    public void showRandomGameOverMessage() {
-        game().shortMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
+        Logger.info("New 3D game level created");
     }
 
     @Override
     public void dispose() {
         actionBindings().dispose();
-        perspectives.dispose();
+        perspectiveManager.dispose();
         disposeContextMenu();
         removeAndDisposeGameLevel3D();
         cleanupLight(ambientLight);
         ambientLight = null;
     }
-
-    // ────────────────────────────────────────────────────────────────────────────
-    // GameScene interface implementation
-    // ────────────────────────────────────────────────────────────────────────────
 
     @Override
     public void onEmbedded() {
@@ -181,14 +177,14 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onActivate() {
-        perspectives.activeIDProperty().bind(GameConstants.PROPERTY_3D_PERSPECTIVE_ID);
+        perspectiveManager.activeIDProperty().bind(GameConstants.PROPERTY_3D_PERSPECTIVE_ID);
         PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
     }
 
     @Override
     public void onDeactivate() {
-        perspectives.activeIDProperty().unbind();
+        perspectiveManager.activeIDProperty().unbind();
         PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
         disposeContextMenu();
     }
@@ -208,8 +204,10 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         }
 
         level3D.entities().selectAll().forEach(entity -> entity.update(gameContext(), level));
+
+        perspectiveManager.updatePerspective(level);
         updateHUD3D(level);
-        perspectives.updatePerspective(level);
+
         optSoundEffects().ifPresent(soundEffects -> {
             soundEffects.setEnabled(!level.isDemoLevel());
             soundEffects.playAmbientGameLevelSound(gameContext(), level);
@@ -218,10 +216,15 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onScroll(ScrollEvent scrollEvent) {
-        if (scrollEvent.getDeltaY() < 0) {
-            perspectives.actionDroneClimb().execute(game());
-        } else if (scrollEvent.getDeltaY() > 0) {
-            perspectives.actionDroneDescent().execute(game());
+        if (perspectiveManager.currentPerspective().isPresent()
+            && perspectiveManager.currentPerspective().get() instanceof DronePerspective dronePerspective) {
+            if (scrollEvent.getDeltaY() < 0) {
+                dronePerspective.actionClimb().execute(game());
+            } else if (scrollEvent.getDeltaY() > 0) {
+                dronePerspective.actionDescent().execute(game());
+            }
+        } else {
+            Logger.warn("Scroll event ignored");
         }
     }
 
@@ -244,7 +247,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
 
         camera = new PerspectiveCamera(true);
-        perspectives = new PerspectiveManager(camera);
+        perspectiveManager = new PerspectiveManager(camera);
         subScene.setCamera(camera);
 
         final var coordinateSystem = new CoordinateSystem();
@@ -257,14 +260,21 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     }
 
     private void createBindings() {
-        bindings = Set.of(
-            new ActionKeyBinding(ACTION_PERSPECTIVE_PREVIOUS,       alt(KeyCode.LEFT)),
-            new ActionKeyBinding(ACTION_PERSPECTIVE_NEXT,           alt(KeyCode.RIGHT)),
-            new ActionKeyBinding(perspectives.actionDroneClimb(),   control(KeyCode.MINUS)),
-            new ActionKeyBinding(perspectives.actionDroneDescent(), control(KeyCode.PLUS)),
-            new ActionKeyBinding(perspectives.actionDroneReset(),   control(KeyCode.DIGIT0)),
-            new ActionKeyBinding(ACTION_TOGGLE_DRAW_MODE,           alt(KeyCode.W))
-        );
+        final Set<ActionKeyBinding> bindings = new HashSet<>();
+        bindings.add(new ActionKeyBinding(ACTION_PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT)));
+        bindings.add(new ActionKeyBinding(ACTION_PERSPECTIVE_NEXT,     alt(KeyCode.RIGHT)));
+        bindings.add(new ActionKeyBinding(ACTION_TOGGLE_DRAW_MODE,     alt(KeyCode.W)));
+
+        perspectiveManager.optPerspective(PerspectiveID.DRONE)
+            .filter(DronePerspective.class::isInstance)
+            .map(DronePerspective.class::cast)
+            .ifPresent(dronePerspective -> {
+                bindings.add(new ActionKeyBinding(dronePerspective.actionClimb(),   control(KeyCode.MINUS)));
+                bindings.add(new ActionKeyBinding(dronePerspective.actionDescent(), control(KeyCode.PLUS)));
+                bindings.add(new ActionKeyBinding(dronePerspective.actionReset(),   control(KeyCode.DIGIT0)));
+            });
+
+        actionBindings = Collections.unmodifiableSet(bindings);
     }
 
     /**
@@ -274,7 +284,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     protected void decorate(GameLevel3D level3D) {}
 
     protected void bindActions() {
-        actionBindings().registerAllBindings(bindings);
+        actionBindings().registerAllBindings(actionBindings);
     }
 
     private void replaceScores3D() {

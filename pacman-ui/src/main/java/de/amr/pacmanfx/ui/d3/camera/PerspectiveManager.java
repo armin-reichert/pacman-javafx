@@ -5,9 +5,6 @@ package de.amr.pacmanfx.ui.d3.camera;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.PerspectiveCamera;
@@ -15,46 +12,16 @@ import org.tinylog.Logger;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 
-/**
- * Manages all available camera perspectives in the 3D play scene.
- * <p>
- * This class is responsible for:
- * <ul>
- *   <li>Creating and holding instances of all {@link Perspective} implementations</li>
- *   <li>Tracking the currently active perspective via an {@link ObjectProperty}</li>
- *   <li>Automatically starting/stopping control when the active perspective changes</li>
- *   <li>Providing update calls to the active perspective each frame</li>
- *   <li>Exposing drone-specific control actions (climb, descend, reset) that are only enabled
- *       when the drone perspective is active</li>
- * </ul>
- * <p>
- * The manager is used by {@link PlayScene3D} to delegate all camera-related logic,
- * keeping the scene class cleaner and more focused.
- * <p>
- * Drone actions are package-visible so they can be directly bound to keyboard/scroll
- * inputs from the play scene.
- *
- * @see Perspective
- * @see DronePerspective
- * @see PlayScene3D
- */
+import static java.util.Objects.requireNonNull;
+
 public class PerspectiveManager implements Disposable {
 
     private final Map<PerspectiveID, Perspective<GameLevel>> perspectivesByID;
     private final ObjectProperty<PerspectiveID> activeID;
 
-    private final GameAction actionDroneClimb;
-    private final GameAction actionDroneDescent;
-    private final GameAction actionDroneReset;
-
-    /**
-     * Creates a new perspective manager and initializes all supported camera perspectives.
-     *
-     * @param camera the perspective camera that all views will control
-     */
     public PerspectiveManager(PerspectiveCamera camera) {
         perspectivesByID = new EnumMap<>(PerspectiveID.class);
         activeID = new SimpleObjectProperty<>(PerspectiveID.NEAR_PLAYER);
@@ -64,11 +31,6 @@ public class PerspectiveManager implements Disposable {
         perspectivesByID.put(PerspectiveID.TOTAL,         new TotalPerspective(camera));
         perspectivesByID.put(PerspectiveID.TRACK_PLAYER,  new TrackingPlayerPerspective(camera));
         perspectivesByID.put(PerspectiveID.NEAR_PLAYER,   new StalkingPlayerPerspective(camera));
-
-        // Initialize drone control actions
-        actionDroneClimb   = createDroneAction("drone_climb",   DronePerspective::moveUp);
-        actionDroneDescent = createDroneAction("drone_descent", DronePerspective::moveDown);
-        actionDroneReset   = createDroneAction("drone_reset",   DronePerspective::moveDefaultHeight);
 
         // Automatically (de)activate control when perspective changes
         activeID.addListener((_, oldID, newID) -> {
@@ -89,84 +51,30 @@ public class PerspectiveManager implements Disposable {
         });
     }
 
-    /**
-     * Releases all held references. Called when the 3D scene is disposed.
-     */
     @Override
     public void dispose() {
         perspectivesByID.clear();
         activeID.set(null);
     }
 
-
-    public GameAction actionDroneClimb() {
-        return actionDroneClimb;
-    }
-
-    public GameAction actionDroneDescent() {
-        return actionDroneDescent;
-    }
-
-    public GameAction actionDroneReset() {
-        return actionDroneReset;
-    }
-
-    /**
-     * Returns the property that holds the currently active perspective identifier.
-     * <p>
-     * This property is typically bound to {@code GameUI.PROPERTY_3D_PERSPECTIVE_ID}.
-     *
-     * @return the active perspective ID property
-     */
     public ObjectProperty<PerspectiveID> activeIDProperty() {
         return activeID;
     }
 
-    /**
-     * Returns the currently active perspective, if any.
-     *
-     * @return an Optional containing the active perspective, or empty if none is active
-     */
-    public Optional<Perspective<GameLevel>> currentPerspective() {
-        PerspectiveID id = activeID.get();
-        return (id != null) ? Optional.ofNullable(perspectivesByID.get(id)) : Optional.empty();
+    public Optional<Perspective<GameLevel>> optPerspective(PerspectiveID id) {
+        requireNonNull(id);
+        return Optional.ofNullable(perspectivesByID.get(id));
     }
 
-    /**
-     * Updates the currently active perspective with the latest game level state.
-     *
-     * @param level the current game level
-     */
+    public Optional<Perspective<GameLevel>> currentPerspective() {
+        final PerspectiveID id = activeID.get();
+        return id == null ? Optional.empty() : optPerspective(id);
+    }
+
     public void updatePerspective(GameLevel level) {
         currentPerspective().ifPresentOrElse(
             perspective -> perspective.update(level),
             () -> Logger.error("Cannot update: no active perspective")
         );
-    }
-
-    /**
-     * Factory method for creating drone-specific control actions.
-     * <p>
-     * The returned action is only enabled when the drone perspective is active.
-     *
-     * @param id             the action ID
-     * @param perspectiveAction the function to invoke on the drone perspective
-     * @return a new {@link GameAction} instance
-     */
-    private GameAction createDroneAction(String id, Consumer<DronePerspective> perspectiveAction) {
-        return new GameAction(id) {
-            @Override
-            public void doAction(Game game) {
-                currentPerspective()
-                    .filter(DronePerspective.class::isInstance)
-                    .map(DronePerspective.class::cast)
-                    .ifPresent(perspectiveAction);
-            }
-
-            @Override
-            public boolean isEnabled(Game game) {
-                return activeID.get() == PerspectiveID.DRONE;
-            }
-        };
     }
 }

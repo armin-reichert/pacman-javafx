@@ -4,6 +4,8 @@
 package de.amr.pacmanfx.ui.d3.camera;
 
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.ui.action.GameAction;
+import de.amr.pacmanfx.ui.game.Game;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
@@ -13,6 +15,10 @@ import static java.util.Objects.requireNonNull;
 public class DronePerspective implements Perspective<GameLevel> {
 
     public static final int DEFAULT_Z = -200;
+
+    private final GameAction actionClimb;
+    private final GameAction actionDescent;
+    private final GameAction actionReset;
 
     private final PerspectiveCamera camera;
     private double speed;
@@ -24,6 +30,40 @@ public class DronePerspective implements Perspective<GameLevel> {
         speed = 0.05;
         nearestGroundZ = -50;
         farestGroundZ = -500;
+
+        actionClimb = new GameAction("drone_climb") {
+            @Override
+            protected void doAction(Game game) {
+                moveUp();
+            }
+        };
+
+        actionDescent = new GameAction("drone_descent") {
+            @Override
+            protected void doAction(Game game) {
+                moveDown();
+            }
+        };
+
+        actionReset = new GameAction("drone_reset") {
+
+            @Override
+            protected void doAction(Game game) {
+                moveDefaultHeight();
+            }
+        };
+    }
+
+    public GameAction actionClimb() {
+        return actionClimb;
+    }
+
+    public GameAction actionDescent() {
+        return actionDescent;
+    }
+
+    public GameAction actionReset() {
+        return actionReset;
     }
 
     public void setNearestGroundZ(int nearestGroundZ) {

@@ -12,16 +12,17 @@ import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
+import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
@@ -32,6 +33,7 @@ import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
+import javafx.util.Duration;
 
 import java.util.Optional;
 
@@ -43,10 +45,12 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
     public static final double PELLET_EATING_DELAY_SEC = 0.05;
 
     private final PlayScene3D playScene3D;
+    private final RandomTextPicker gameOverMessagePicker;
 
     public PlayScene3DGameEventHandler(PlayScene3D playScene3D) {
         super(playScene3D.game());
         this.playScene3D = requireNonNull(playScene3D);
+        gameOverMessagePicker = new RandomTextPicker(game().ui().translations().textBundle(), "game.over");
     }
 
     @Override
@@ -116,7 +120,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
 
     @Override
     public void onLevelCreated(LevelCreatedEvent event) {
-        playScene3D.replaceGameLevel3D(gameContext(), event.level());
+        playScene3D.replaceGameLevel3D(event.level());
     }
 
     @Override
@@ -126,7 +130,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         final State<GameContext> gameState = gameContext.state();
         //TODO rethink
         if (gameState instanceof TestState) {
-            playScene3D.replaceGameLevel3D(gameContext, level);
+            playScene3D.replaceGameLevel3D(level);
             final GameLevel3D level3D = assertLevel3D();
             level3D.energizers3D().forEach(Energizer3D::startPumping);
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level.number());
@@ -331,7 +335,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
     private void onGameOver() {
         GameLevel3D level3D = assertLevel3D();
         if (!level3D.level().isDemoLevel() && RandomNumberSupport.chance(0.25)) {
-            playScene3D.showRandomGameOverMessage();
+            game().shortMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
         }
         level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).stop();
         level3D.cleanupFoodAndParticles();
@@ -341,7 +345,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
 
     private void handleTestState() {
         playScene3D.optGameLevel3D().ifPresent(level3D -> {
-            playScene3D.replaceGameLevel3D(gameContext(), level3D.level());
+            playScene3D.replaceGameLevel3D(level3D.level());
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level3D.level().number());
             GameConstants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
         });
