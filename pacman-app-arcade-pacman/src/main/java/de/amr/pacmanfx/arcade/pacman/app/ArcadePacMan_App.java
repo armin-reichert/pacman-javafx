@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.core.GameVariant;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.*;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
@@ -48,7 +48,7 @@ public class ArcadePacMan_App extends Application {
     @Override
     public void init() throws Exception {
         gamesCollection = new PacManGamesMachine();
-        gamesCollection.insertCartridge(GameVariant.ARCADE_PACMAN.name(), ArcadePacMan_Cartridge.CARTRIDGE);
+        gamesCollection.insertCartridge(GameVariantID.ARCADE_PACMAN.name(), ArcadePacMan_Cartridge.CARTRIDGE);
 
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
     }
@@ -58,7 +58,7 @@ public class ArcadePacMan_App extends Application {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
             game = GameBuilder.compose(gamesCollection, size.x(), size.y())
-                .gameVariant(GameVariant.ARCADE_PACMAN.name(), false)
+                .gameVariant(GameVariantID.ARCADE_PACMAN.name(), false)
                 .startPage(ArcadePacMan_StartPage::new)
                 .coinMechanism(true)
                 .build();

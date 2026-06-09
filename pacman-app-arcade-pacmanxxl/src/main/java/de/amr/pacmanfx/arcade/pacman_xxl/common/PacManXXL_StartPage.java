@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
-import de.amr.pacmanfx.core.GameVariant;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameConstants;
@@ -58,7 +58,7 @@ public class PacManXXL_StartPage implements StartPage {
     // Menu must adapt to selected game variant and global property change and scales with scene resize
     private class MenuBinding {
 
-        private final ChangeListener<GameVariant> gameVariantNameListener;
+        private final ChangeListener<GameVariantID> gameVariantNameListener;
         private final ChangeListener<Boolean> cutScenesEnabledListener;
         private final ChangeListener<Boolean> play3DListener;
         private final ObservableValue<Double> scaling;
@@ -148,7 +148,7 @@ public class PacManXXL_StartPage implements StartPage {
 
     @Override
     public void onEnterStartPage(Game game) {
-        final GameVariant selectedGameVariant = menu.entryGameVariant().value();
+        final GameVariantID selectedGameVariant = menu.entryGameVariant().value();
         switch (selectedGameVariant) {
             case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> game.selectGameVariant(selectedGameVariant.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);

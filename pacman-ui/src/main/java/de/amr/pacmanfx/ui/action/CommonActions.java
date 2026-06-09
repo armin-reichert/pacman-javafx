@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameVariant;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
@@ -214,7 +214,7 @@ public final class CommonActions {
         public boolean isEnabled(Game game) {
             final GameSceneManager gameScenes = game.ui().gameScenes();
             final String variantName = game.currentGameVariantName();
-            final boolean isArcadeGame = GameVariant.isArcadeGameName(variantName);
+            final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
             return isArcadeGame &&
                   (gameScenes.currentGameSceneHasID(game, CommonSceneID.INTRO_SCENE)
                 || gameScenes.currentGameSceneHasID(game, CommonSceneID.START_SCENE)

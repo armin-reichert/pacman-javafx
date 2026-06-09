@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.app;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
-import de.amr.pacmanfx.core.GameVariant;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
@@ -28,7 +28,7 @@ public class ArcadeMsPacMan_App extends Application {
     @Override
     public void init() throws Exception {
         pacManGamesMachine = new PacManGamesMachine();
-        pacManGamesMachine.insertCartridge(GameVariant.ARCADE_MS_PACMAN.name(), ArcadeMsPacMan_Cartridge.CARTRIDGE);
+        pacManGamesMachine.insertCartridge(GameVariantID.ARCADE_MS_PACMAN.name(), ArcadeMsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ArcadeMsPacMan_App extends Application {
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         game = GameBuilder.compose(pacManGamesMachine, screenSize.x(), screenSize.y())
-            .gameVariant(GameVariant.ARCADE_MS_PACMAN.name(), false)
+            .gameVariant(GameVariantID.ARCADE_MS_PACMAN.name(), false)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .build();
 
@@ -50,7 +50,7 @@ public class ArcadeMsPacMan_App extends Application {
             CommonDashboardID.KEYS_LOCAL,
             CommonDashboardID.ABOUT)
         );
-        game.selectGameVariant(GameVariant.ARCADE_MS_PACMAN.name());
+        game.selectGameVariant(GameVariantID.ARCADE_MS_PACMAN.name());
         game.show(primaryStage);
     }
 

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_Cartridge;
-import de.amr.pacmanfx.core.GameVariant;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
@@ -33,8 +33,8 @@ public class PacManXXL_App extends Application {
     @Override
     public void init() {
         pacManGamesMachine = new PacManGamesMachine();
-        pacManGamesMachine.insertCartridge(GameVariant.ARCADE_PACMAN_XXL.name(), PacManXXL_PacMan_Cartridge.CARTRIDGE);
-        pacManGamesMachine.insertCartridge(GameVariant.ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
+        pacManGamesMachine.insertCartridge(GameVariantID.ARCADE_PACMAN_XXL.name(), PacManXXL_PacMan_Cartridge.CARTRIDGE);
+        pacManGamesMachine.insertCartridge(GameVariantID.ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override
@@ -42,8 +42,8 @@ public class PacManXXL_App extends Application {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         game = GameBuilder.compose(pacManGamesMachine, sceneSize.x(), sceneSize.y())
-            .gameVariant(GameVariant.ARCADE_PACMAN_XXL.name(), false)
-            .gameVariant(GameVariant.ARCADE_MS_PACMAN_XXL.name(), false)
+            .gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name(), false)
+            .gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name(), false)
             .startPage(PacManXXL_StartPage::new)
             .coinMechanism(true)
             .build();
@@ -73,10 +73,10 @@ public class PacManXXL_App extends Application {
         final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
         game.watchdog().addEventListener(xxlMapSelector);
 
-        game.gameVariantRuntime(GameVariant.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
-        game.gameVariantRuntime(GameVariant.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
+        game.gameVariantRuntime(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
+        game.gameVariantRuntime(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
 
-        game.selectGameVariant(GameVariant.ARCADE_PACMAN_XXL.name());
+        game.selectGameVariant(GameVariantID.ARCADE_PACMAN_XXL.name());
         game.show(primaryStage);
     }
 

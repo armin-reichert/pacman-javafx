@@ -14,7 +14,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_Cartridge;
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.core.GameVariant;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
@@ -37,7 +37,7 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.core.GameVariant.*;
+import static de.amr.pacmanfx.core.GameVariantID.*;
 import static de.amr.pacmanfx.core.Validations.requireNonNegative;
 
 /**
@@ -126,8 +126,8 @@ public class PacManGames3dApp extends Application {
                     new GameClockFX(),
                     new CoinMechanism());
 
-                game.gameVariantRuntime(GameVariant.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
-                game.gameVariantRuntime(GameVariant.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
+                game.gameVariantRuntime(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
+                game.gameVariantRuntime(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
                 addStartPages();
             }
 

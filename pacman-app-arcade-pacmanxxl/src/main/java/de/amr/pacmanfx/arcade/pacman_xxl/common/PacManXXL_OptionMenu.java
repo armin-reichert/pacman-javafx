@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameVariant;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.game.GameConstants;
@@ -18,8 +18,8 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.core.GameVariant.ARCADE_MS_PACMAN_XXL;
-import static de.amr.pacmanfx.core.GameVariant.ARCADE_PACMAN_XXL;
+import static de.amr.pacmanfx.core.GameVariantID.ARCADE_MS_PACMAN_XXL;
+import static de.amr.pacmanfx.core.GameVariantID.ARCADE_PACMAN_XXL;
 import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.model.world.WorldMapSelectionMode.*;
 import static java.util.Objects.requireNonNull;
@@ -34,7 +34,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     public static final int CHASE_ANIMATION_Y = (NUM_TILES_Y - 12) * TS;
 
-    private final OptionMenuEntry<GameVariant>           entryGameVariant;
+    private final OptionMenuEntry<GameVariantID>           entryGameVariant;
     private final OptionMenuEntry<Boolean>               entryPlay3D;
     private final OptionMenuEntry<Boolean> entryCutScenes;
     private final OptionMenuEntry<WorldMapSelectionMode> entryMapOrder;
@@ -84,7 +84,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         final UIConfig currentConfig = game.currentUIConfig();
         final GameContext gameContext = game.currentGameContext();
-        final GameVariant gameVariant = GameVariant.valueOf(game.currentGameVariantName());
+        final GameVariantID gameVariant = GameVariantID.valueOf(game.currentGameVariantName());
         final GameModel gameModel = gameContext.model();
 
         if (!(gameModel.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
@@ -124,7 +124,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         chaseAnimation.stop();
     }
 
-    public OptionMenuEntry<GameVariant> entryGameVariant() {
+    public OptionMenuEntry<GameVariantID> entryGameVariant() {
         return entryGameVariant;
     }
 
@@ -138,14 +138,14 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     // Private
 
-    private OptionMenuEntry<GameVariant> createGameVariantEntry() {
+    private OptionMenuEntry<GameVariantID> createGameVariantEntry() {
         final var entry = new OptionMenuEntry<>(
             "GAME VARIANT",
             List.of(ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL),
             ARCADE_PACMAN_XXL)
         {
             @Override
-            public void onValueChanged(GameVariant oldVariant, GameVariant newVariant) {
+            public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
                 if (game != null) {
                     final UIConfig uiConfig = game.gameVariantRuntime(newVariant.name()).uiConfig();
                     chaseAnimation.init(uiConfig, canvas, game.ui().sprites().animationSet());

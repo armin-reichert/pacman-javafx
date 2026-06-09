@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.pacmanfx.core.GameVariant;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.subviews.startpages.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -29,6 +29,6 @@ public class ArcadePacMan_StartPage extends FlyerStartPage {
     public void onEnterStartPage(Game game) {
         flyer.selectPage(0);
         game.ui().sounds().playVoice(VOICE);
-        game.selectGameVariant(GameVariant.ARCADE_PACMAN.name());
+        game.selectGameVariant(GameVariantID.ARCADE_PACMAN.name());
     }
 }
