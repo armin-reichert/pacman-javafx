@@ -7,29 +7,29 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.subviews.startpages.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 
-public class TengenMsPacMan_StartPage extends FlyerStartPage implements ResourceManager {
+public class TengenMsPacMan_StartPage extends FlyerStartPage {
 
-    private final Media flyerTextSpeech = loadMedia("sound/flyer-text.mp3");
+    private static final ResourceManager RM = () -> TengenMsPacMan_StartPage.class;
+
+    private static final Media VOICE = RM.loadMedia("/de/amr/pacmanfx/tengenmspacman/sound/flyer-text.mp3");
+
+    private static final Image[] FLYER_IMAGES = {
+        RM.loadImage("/de/amr/pacmanfx/tengenmspacman/graphics/flyer-page-1.png"),
+        RM.loadImage("/de/amr/pacmanfx/tengenmspacman/graphics/flyer-page-2.png")
+    };
 
     public TengenMsPacMan_StartPage() {
         super("Ms. Pac-Man (Tengen)");
-        flyer.setImages(
-            loadImage("graphics/flyer-page-1.png"),
-            loadImage("graphics/flyer-page-2.png")
-        );
+        flyer.setImages(FLYER_IMAGES);
     }
 
     @Override
-    public final Class<?> resourceRootClass() {
-        return TengenMsPacMan_StartPage.class;
-    }
-
-    @Override
-    public void onEnterStartPage(Game context) {
-        context.selectGameVariant(GameVariantID.TENGEN_MS_PACMAN.name());
+    public void onEnterStartPage(Game game) {
+        game.selectGameVariant(GameVariantID.TENGEN_MS_PACMAN.name());
+        game.ui().sounds().playVoice(VOICE); // must be called after selecting game variant!
         flyer.selectPage(0);
-        context.ui().sounds().playVoice(flyerTextSpeech);
     }
 }
