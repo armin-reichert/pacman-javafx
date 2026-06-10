@@ -114,7 +114,7 @@ public class GameBuilder {
     private GameViewImplementation createGameView(int width, int height) {
         return new GameViewImplementation(
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
-            new StatusIconBox(() -> GameConstants.LOCALIZED_TEXTS)
+            new StatusIconBox(() -> GameGlobals.LOCALIZED_TEXTS)
         );
     }
 
@@ -137,8 +137,8 @@ public class GameBuilder {
         if (name.isBlank()) {
             error("Game variant name must not be blank");
         }
-        if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
-            error("Game variant name '%s' does not match pattern '%s'".formatted(name, GameConstants.GAME_VARIANT_NAME_PATTERN));
+        if (!GameGlobals.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
+            error("Game variant name '%s' does not match pattern '%s'".formatted(name, GameGlobals.GAME_VARIANT_NAME_PATTERN));
         }
     }
 

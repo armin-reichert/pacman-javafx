@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.GameGlobals;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.playview.DecorationPane;
@@ -247,7 +247,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         final GamePlayView playView = game.ui().subViews().gamePlayView();
         final DecorationPane decorationPane = playView.gameSceneFrame();
 
-        gameScene2D.backgroundColorProperty().bind(GameConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        gameScene2D.backgroundColorProperty().bind(GameGlobals.PROPERTY_CANVAS_BACKGROUND_COLOR);
 
         final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
         if (decorated) {

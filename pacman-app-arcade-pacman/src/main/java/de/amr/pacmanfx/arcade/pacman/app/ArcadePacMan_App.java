@@ -56,7 +56,7 @@ public class ArcadePacMan_App extends Application {
             game = new GameImplementation(machine,
                 new GameViewImplementation(
                     new GameViewMainScene(size.x(), size.y()),
-                    new StatusIconBox(() -> GameConstants.LOCALIZED_TEXTS)),
+                    new StatusIconBox(() -> GameGlobals.LOCALIZED_TEXTS)),
                 new GameClockFX(),
                 new CoinMechanism());
             final var arcadePacManStartPage = new ArcadePacMan_StartPage();

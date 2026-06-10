@@ -9,7 +9,7 @@ import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.GameGlobals;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
@@ -77,7 +77,7 @@ public class StartPagesView extends Carousel implements SubView {
                 startPage.rootPane().requestFocus();
             }
         });
-        setBackground(GameConstants.BACKGROUND_PAC_MAN_WALLPAPER);
+        setBackground(GameGlobals.BACKGROUND_PAC_MAN_WALLPAPER);
     }
 
     @Override

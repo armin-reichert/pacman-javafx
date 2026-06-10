@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.view;
 
-import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.GameGlobals;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.CommonActions;
@@ -31,7 +31,7 @@ public class GameViewMainScene extends Scene {
     }
 
     public void init(Game game) {
-        getStylesheets().add(GameConstants.STYLE_SHEET_PATH);
+        getStylesheets().add(GameGlobals.STYLE_SHEET_PATH);
         
         final Keyboard keyboard = game.input().keyboard();
         keyboard.filterEventsForScene(this);

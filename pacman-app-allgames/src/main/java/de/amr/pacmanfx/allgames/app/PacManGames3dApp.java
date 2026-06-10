@@ -157,7 +157,7 @@ public class PacManGames3dApp extends Application {
     private static GameViewImplementation createView(int width, int height) {
         return new GameViewImplementation(
             new GameViewMainScene(width, height),
-            new StatusIconBox(() -> GameConstants.LOCALIZED_TEXTS)
+            new StatusIconBox(() -> GameGlobals.LOCALIZED_TEXTS)
         );
     }
 

@@ -59,7 +59,7 @@ public final class GameImplementation implements Game {
     private static File highScoreFile(String gameVariantName) {
         requireNonNull(gameVariantName);
         final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
-        return new File(GameConstants.USER_HOME_DIR, fileName);
+        return new File(GameGlobals.USER_HOME_DIR, fileName);
     }
 
     private final PacManGamesMachine machine;
@@ -92,14 +92,14 @@ public final class GameImplementation implements Game {
         this.gameClock = requireNonNull(gameClock);
         this.coinMechanism = requireNonNull(coinMechanism);
         prefs = new PreferencesManager(getClass());
-        watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
+        watchdog = new DirectoryWatchdog(GameGlobals.CUSTOM_MAP_DIR);
 
         ui = new GameUI(
             new FlashMessageManager(),
             new GameSceneManager(this),
             new SoundManager(),
             new SpriteAnimationManager(),
-            () -> GameConstants.LOCALIZED_TEXTS,
+            () -> GameGlobals.LOCALIZED_TEXTS,
             view,
             new SubViewManager()
         );
@@ -301,7 +301,7 @@ public final class GameImplementation implements Game {
     }
 
     private GamePlayView createGamePlaySubView() {
-        final var playView = new GamePlayView(this, GameConstants.DEFAULT_DASHBOARD_CONFIG);
+        final var playView = new GamePlayView(this, GameGlobals.DEFAULT_DASHBOARD_CONFIG);
         final ChangeListener<? super Number> resizeHandler = (_,_,_) -> playView.resizeToFit(view.mainScene());
         view.mainScene().widthProperty().addListener(resizeHandler);
         view.mainScene().heightProperty().addListener(resizeHandler);
@@ -350,7 +350,7 @@ public final class GameImplementation implements Game {
         Globals3D.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
         Globals3D.PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
 
-        ui.sounds().muteProperty().bind(GameConstants.PROPERTY_MUTED);
+        ui.sounds().muteProperty().bind(GameGlobals.PROPERTY_MUTED);
 
         view.statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> ui.subViews().isSelected(ui.subViews().gamePlayView())
@@ -359,8 +359,8 @@ public final class GameImplementation implements Game {
 
         view.mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> ui.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
-                ? GameConstants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameConstants.WALLPAPERS.length)]
-                : GameConstants.BACKGROUND_PAC_MAN_WALLPAPER,
+                ? GameGlobals.WALLPAPERS[RandomNumberSupport.randomInt(0, GameGlobals.WALLPAPERS.length)]
+                : GameGlobals.BACKGROUND_PAC_MAN_WALLPAPER,
             ui.subViews().selectedSubViewProperty(),
             ui.gameScenes().gameSceneProperty()
         ));

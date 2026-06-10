@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.GameGlobals;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -290,7 +290,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         scores3D = new Scores3D(
             game().ui().translations().translate("score.score"),
             game().ui().translations().translate("score.high_score"),
-            GameConstants.FONT_ARCADE_8);
+            GameGlobals.FONT_ARCADE_8);
 
         scores3D.textOpacity.bind(scoreOpacity);
 

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_PlayScene2D;
-import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.GameGlobals;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -110,7 +110,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             actorsInZOrder.forEach(actorRenderer::drawActor);
             ctx.restore();
 
-            if (GameConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+            if (GameGlobals.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
                 debugRenderer.draw(playScene2D);
             }
             else {

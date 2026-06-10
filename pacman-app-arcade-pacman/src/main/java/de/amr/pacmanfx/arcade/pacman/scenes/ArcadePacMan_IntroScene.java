@@ -15,7 +15,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.GameGlobals;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -100,7 +100,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate() {
-        game().ui().sounds().playVoice(GameConstants.VOICE_EXPLAIN_GAME_START);
+        game().ui().sounds().playVoice(GameGlobals.VOICE_EXPLAIN_GAME_START);
 
         actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // insert coin + start game actions
         actionBindings().registerAllBindings(GlobalActionBindings.SCENE_TESTS_BINDINGS); // actions for starting tests

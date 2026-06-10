@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.GameGlobals;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -57,9 +57,9 @@ public class DashboardSectionGeneral extends DashboardSection {
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
         btnStep.disableProperty().bind(game.clock().updatesDisabledProperty().not());
-        setAction(btnStep, () -> game.clock().makeSteps(GameConstants.PROPERTY_SIMULATION_STEPS.get(), true));
+        setAction(btnStep, () -> game.clock().makeSteps(GameGlobals.PROPERTY_SIMULATION_STEPS.get(), true));
 
-        addIntSpinner("Num Steps", 1, 50, GameConstants.PROPERTY_SIMULATION_STEPS);
+        addIntSpinner("Num Steps", 1, 50, GameGlobals.PROPERTY_SIMULATION_STEPS);
 
         final var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
         setEditor(sliderTargetFPS, game.clock().targetFrameRateProperty());
@@ -71,10 +71,10 @@ public class DashboardSectionGeneral extends DashboardSection {
 
         addDynamicLabeledValue("Total Updates",  gameClock::pausableUpdatesCount);
 
-        addColorPicker("Canvas Color", GameConstants.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        addColorPicker("Canvas Color", GameGlobals.PROPERTY_CANVAS_BACKGROUND_COLOR);
 
-        addCheckBox("Font Smoothing", GameConstants.PROPERTY_CANVAS_FONT_SMOOTHING);
-        addCheckBox("Show Debug Info", GameConstants.PROPERTY_DEBUG_INFO_VISIBLE);
+        addCheckBox("Font Smoothing", GameGlobals.PROPERTY_CANVAS_FONT_SMOOTHING);
+        addCheckBox("Show Debug Info", GameGlobals.PROPERTY_DEBUG_INFO_VISIBLE);
         addCheckBox("Time Measured", gameClock.timeMeasuredProperty());
     }
 }

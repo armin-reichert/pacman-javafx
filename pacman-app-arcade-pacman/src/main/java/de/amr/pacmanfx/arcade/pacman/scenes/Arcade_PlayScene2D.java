@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.GameGlobals;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
@@ -75,7 +75,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
         addSeparator(contextMenu);
 
-        addLocalizedCheckBox(contextMenu, translations, GameConstants.PROPERTY_MUTED, "muted");
+        addLocalizedCheckBox(contextMenu, translations, GameGlobals.PROPERTY_MUTED, "muted");
 
         addLocalizedActionItem(contextMenu, game(), translations, CommonActions.ACTION_QUIT_GAME_SCENE, "quit");
 

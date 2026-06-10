@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.game.GameGlobals;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -31,7 +31,7 @@ public class ArcadePacMan_StartScene_Renderer extends BaseRenderer implements Ga
         fillText("PTS",                     ARCADE_ROSE,   arcadeFont6(), TS(25), TS(25));
         fillText("© 1980 MIDWAY MFG.CO.",   ARCADE_PINK,   arcadeFont8(), TS(4),  TS(29));
 
-        if (GameConstants.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (GameGlobals.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

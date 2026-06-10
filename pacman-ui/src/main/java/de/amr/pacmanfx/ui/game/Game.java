@@ -75,6 +75,6 @@ public interface Game extends GameLifecycle {
      * @param args    formatting arguments
      */
     default void shortMessage(String message, Object... args) {
-        shortMessage(GameConstants.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
+        shortMessage(GameGlobals.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 }
