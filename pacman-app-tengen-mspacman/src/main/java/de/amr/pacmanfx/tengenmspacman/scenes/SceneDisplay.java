@@ -3,6 +3,6 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
-public enum SceneDisplayMode {
+public enum SceneDisplay {
     SCROLLING, SCALED_TO_FIT
 }

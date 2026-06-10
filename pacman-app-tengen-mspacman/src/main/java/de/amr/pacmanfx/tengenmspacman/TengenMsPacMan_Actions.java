@@ -7,7 +7,7 @@ import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode;
+import de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplay;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
@@ -51,10 +51,10 @@ public final class TengenMsPacMan_Actions {
             final var uiSettings = game.ui().extensions()
                 .getExtension(TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
-            final SceneDisplayMode mode = uiSettings.playSceneDisplayMode.get();
-            uiSettings.playSceneDisplayMode.set(mode == SceneDisplayMode.SCROLLING
-                ? SceneDisplayMode.SCALED_TO_FIT
-                : SceneDisplayMode.SCROLLING);
+            final SceneDisplay mode = uiSettings.playSceneDisplay.get();
+            uiSettings.playSceneDisplay.set(mode == SceneDisplay.SCROLLING
+                ? SceneDisplay.SCALED_TO_FIT
+                : SceneDisplay.SCROLLING);
         }
 
         @Override

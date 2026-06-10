@@ -46,7 +46,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
-import static de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode.SCROLLING;
+import static de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplay.SCROLLING;
 import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.subviews.ContextMenuSupport.*;
 import static java.util.Objects.requireNonNull;
@@ -82,7 +82,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         final var uiSettings = game().ui().extensions().getExtension(
             TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
-        subScene.cameraProperty().bind(uiSettings.playSceneDisplayMode.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
+        subScene.cameraProperty().bind(uiSettings.playSceneDisplay.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
 
         scalingProperty().addListener((_, _, _) -> gameContext().optCurrentLevel().ifPresent(level ->
@@ -171,16 +171,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
         final TranslationManager translations = game().ui().translations();
-        final SceneDisplayMode displayMode = uiSettings.playSceneDisplayMode.get();
+        final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
         final var contextMenu = new ContextMenu();
 
         final RadioMenuItem miScaledToFit = addLocalizedRadioButton(contextMenu, translations, "scaled_to_fit");
-        miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
-        miScaledToFit.setOnAction(_ -> uiSettings.playSceneDisplayMode.set(SceneDisplayMode.SCALED_TO_FIT));
+        miScaledToFit.setSelected(displayMode == SceneDisplay.SCALED_TO_FIT);
+        miScaledToFit.setOnAction(_ -> uiSettings.playSceneDisplay.set(SceneDisplay.SCALED_TO_FIT));
 
         final RadioMenuItem miScrolling = addLocalizedRadioButton(contextMenu, translations, "scrolling");
         miScrolling.setSelected(displayMode == SCROLLING);
-        miScrolling.setOnAction(_ -> uiSettings.playSceneDisplayMode.set(SCROLLING));
+        miScrolling.setOnAction(_ -> uiSettings.playSceneDisplay.set(SCROLLING));
 
         final ToggleGroup toggleGroup = new ToggleGroup();
         miScaledToFit.setToggleGroup(toggleGroup);
@@ -243,7 +243,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         final var uiSettings = game().ui().extensions().getExtension(
             TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
-        final SceneDisplayMode displayMode = uiSettings.playSceneDisplayMode.get();
+        final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
 
         scalingProperty().set(switch (displayMode) {
             case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode;
+import de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplay;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -14,5 +14,5 @@ public class TengenMsPacMan_UISettings {
 
     public final BooleanProperty joypadBindingsDisplayed = new SimpleBooleanProperty(false);
 
-    public final ObjectProperty<SceneDisplayMode> playSceneDisplayMode = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
+    public final ObjectProperty<SceneDisplay> playSceneDisplay = new SimpleObjectProperty<>(SceneDisplay.SCROLLING);
 }
