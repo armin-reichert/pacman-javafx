@@ -5,7 +5,7 @@
 package experiments.custommaps;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.pacmanfx.ui.game.GameGlobals;
+import de.amr.pacmanfx.ui.game.Globals;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -36,7 +36,7 @@ public class CustomMapsWatchApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        watchedDirectory = GameGlobals.CUSTOM_MAP_DIR;
+        watchedDirectory = Globals.CUSTOM_MAP_DIR;
 
         final var root = new BorderPane();
 

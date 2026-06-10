@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.view;
 
-import de.amr.pacmanfx.ui.UIGlobals;
+import de.amr.pacmanfx.ui.GlobalsUI;
 import de.amr.pacmanfx.ui.d3.Globals3D;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
@@ -50,7 +50,7 @@ public class GameViewImplementation implements GameView {
             game.variantNameProperty(),
             game.ui().subViews().selectedSubViewProperty(),
             game.ui().gameScenes().gameSceneProperty(),
-            UIGlobals.PROPERTY_DEBUG_INFO_VISIBLE,
+            GlobalsUI.PROPERTY_DEBUG_INFO_VISIBLE,
             Globals3D.PROPERTY_3D_ENABLED
         );
     }
@@ -67,8 +67,8 @@ public class GameViewImplementation implements GameView {
         updateStageIcon(game);
         registerIconUpdater(game);
 
-        theStage.setMinWidth(UIGlobals.MIN_STAGE_WIDTH);
-        theStage.setMinHeight(UIGlobals.MIN_STAGE_HEIGHT);
+        theStage.setMinWidth(GlobalsUI.MIN_STAGE_WIDTH);
+        theStage.setMinHeight(GlobalsUI.MIN_STAGE_HEIGHT);
         theStage.centerOnScreen();
         theStage.show();
     }
@@ -125,7 +125,7 @@ public class GameViewImplementation implements GameView {
     private String titleForCurrentGameScene(Game game) {
         final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
 
-        final boolean debug = UIGlobals.PROPERTY_DEBUG_INFO_VISIBLE.get();
+        final boolean debug = GlobalsUI.PROPERTY_DEBUG_INFO_VISIBLE.get();
         final boolean is3D = Globals3D.PROPERTY_3D_ENABLED.get();
         final boolean paused = game.clock().getUpdatesDisabled();
 

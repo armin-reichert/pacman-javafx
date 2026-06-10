@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_OptionsScene;
-import de.amr.pacmanfx.ui.UIGlobals;
+import de.amr.pacmanfx.ui.GlobalsUI;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -136,7 +136,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
         drawHorizontalBar(nesColor(0x20), nesColor(0x21), optionsScene.unscaledWidth(), TS, 212);
 
-        if (UIGlobals.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (GlobalsUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

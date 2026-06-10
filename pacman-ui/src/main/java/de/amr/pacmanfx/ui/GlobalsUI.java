@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.ui.game.GameGlobals;
+import de.amr.pacmanfx.ui.game.Globals;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardConfig;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;
 
-public final class UIGlobals {
+public final class GlobalsUI {
 
 
     public static final int MIN_STAGE_WIDTH  = 280;
@@ -25,7 +25,7 @@ public final class UIGlobals {
     /**
      * Resource manager for UI assets (fonts, images, sounds).
      */
-    public static final ResourceManager UI_RESOURCES = () -> GameGlobals.class;
+    public static final ResourceManager UI_RESOURCES = () -> Globals.class;
     /**
      * Localized text bundle for the UI.
      */
@@ -124,5 +124,5 @@ public final class UIGlobals {
     /** Default duration for flash messages. */
     public static final Duration DEFAULT_FLASH_MESSAGE_DURATION = Duration.seconds(1.5);
 
-    private UIGlobals() {}
+    private GlobalsUI() {}
 }

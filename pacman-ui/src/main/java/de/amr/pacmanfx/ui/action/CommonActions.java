@@ -14,11 +14,11 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.UIGlobals;
+import de.amr.pacmanfx.ui.GlobalsUI;
 import de.amr.pacmanfx.ui.d3.Globals3D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GameGlobals;
+import de.amr.pacmanfx.ui.game.Globals;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -92,7 +92,7 @@ public final class CommonActions {
 
     private static void startEditor(Game game, TileMapEditor editor) {
         game.stopGame();
-        editor.init(GameGlobals.CUSTOM_MAP_DIR);
+        editor.init(Globals.CUSTOM_MAP_DIR);
         editor.start();
     }
 
@@ -230,12 +230,12 @@ public final class CommonActions {
         @Override
         protected void doAction(Game game) {
             final GameClock clock = game.clock();
-            final int newRate = Math.clamp(clock.targetFrameRate() + GameGlobals.SIM_SPEED_DELTA,
-                GameGlobals.SIM_SPEED_MIN, GameGlobals.SIM_SPEED_MAX);
+            final int newRate = Math.clamp(clock.targetFrameRate() + Globals.SIM_SPEED_DELTA,
+                Globals.SIM_SPEED_MIN, Globals.SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
-            final String msg = newRate == GameGlobals.SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
-            game.shortMessage(Duration.seconds(GameGlobals.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+            final String msg = newRate == Globals.SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
+            game.shortMessage(Duration.seconds(Globals.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
         }
     };
 
@@ -244,9 +244,9 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            game.clock().setTargetFrameRate(GameGlobals.SIM_SPEED_MAX);
-            final String msg = "At maximum speed: %d Hz".formatted(GameGlobals.SIM_SPEED_MAX);
-            game.shortMessage(Duration.seconds(GameGlobals.SIM_STEP_MESSAGE_SEC), msg);
+            game.clock().setTargetFrameRate(Globals.SIM_SPEED_MAX);
+            final String msg = "At maximum speed: %d Hz".formatted(Globals.SIM_SPEED_MAX);
+            game.shortMessage(Duration.seconds(Globals.SIM_STEP_MESSAGE_SEC), msg);
         }
     };
 
@@ -256,12 +256,12 @@ public final class CommonActions {
         @Override
         protected void doAction(Game game) {
             final GameClock clock = game.clock();
-            final int newRate = Math.clamp(clock.targetFrameRate() - GameGlobals.SIM_SPEED_DELTA,
-                GameGlobals.SIM_SPEED_MIN, GameGlobals.SIM_SPEED_MAX);
+            final int newRate = Math.clamp(clock.targetFrameRate() - Globals.SIM_SPEED_DELTA,
+                Globals.SIM_SPEED_MIN, Globals.SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
-            final String msg = newRate == GameGlobals.SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
-            game.shortMessage(Duration.seconds(GameGlobals.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+            final String msg = newRate == Globals.SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
+            game.shortMessage(Duration.seconds(Globals.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
         }
     };
 
@@ -270,9 +270,9 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            game.clock().setTargetFrameRate(GameGlobals.SIM_SPEED_MIN);
-            final String msg = "At minimum speed: %d Hz".formatted(GameGlobals.SIM_SPEED_MIN);
-            game.shortMessage(Duration.seconds(GameGlobals.SIM_STEP_MESSAGE_SEC), msg);
+            game.clock().setTargetFrameRate(Globals.SIM_SPEED_MIN);
+            final String msg = "At minimum speed: %d Hz".formatted(Globals.SIM_SPEED_MIN);
+            game.shortMessage(Duration.seconds(Globals.SIM_STEP_MESSAGE_SEC), msg);
         }
     };
 
@@ -309,7 +309,7 @@ public final class CommonActions {
         @Override
         protected void doAction(Game game) {
             game.clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-            game.shortMessage(Duration.seconds(GameGlobals.SIM_STEP_MESSAGE_SEC), game.clock().targetFrameRate() + "Hz");
+            game.shortMessage(Duration.seconds(Globals.SIM_STEP_MESSAGE_SEC), game.clock().targetFrameRate() + "Hz");
         }
     };
 
@@ -350,7 +350,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(UIGlobals.PROPERTY_DEBUG_INFO_VISIBLE);
+            toggleBooleanProperty(GlobalsUI.PROPERTY_DEBUG_INFO_VISIBLE);
         }
     };
 
@@ -366,7 +366,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(UIGlobals.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
+            toggleBooleanProperty(GlobalsUI.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
         }
     };
 
@@ -374,10 +374,10 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(UIGlobals.PROPERTY_MINI_VIEW_ON);
+            toggleBooleanProperty(GlobalsUI.PROPERTY_MINI_VIEW_ON);
             if (!game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)) {
                 final String msg = game.ui().translations().translate(
-                    UIGlobals.PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off");
+                    GlobalsUI.PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off");
                 game.shortMessage(msg);
             }
         }
@@ -387,7 +387,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(UIGlobals.PROPERTY_MUTED);
+            toggleBooleanProperty(GlobalsUI.PROPERTY_MUTED);
         }
     };
 

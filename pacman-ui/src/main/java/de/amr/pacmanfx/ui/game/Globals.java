@@ -4,16 +4,15 @@
 
 package de.amr.pacmanfx.ui.game;
 
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 import java.io.File;
 import java.util.regex.Pattern;
 
-import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;
+public class Globals {
 
-public class GameGlobals {
-
-    private GameGlobals() {}
+    private Globals() {}
 
     /**
      * Game variant names must match this pattern (e.g. "MS_PACMAN_2024").

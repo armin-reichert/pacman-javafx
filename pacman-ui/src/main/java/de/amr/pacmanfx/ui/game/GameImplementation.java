@@ -9,7 +9,6 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
@@ -17,7 +16,7 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.UIGlobals;
+import de.amr.pacmanfx.ui.GlobalsUI;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
@@ -60,7 +59,7 @@ public final class GameImplementation implements Game {
     private static File highScoreFile(String gameVariantName) {
         requireNonNull(gameVariantName);
         final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
-        return new File(GameGlobals.USER_HOME_DIR, fileName);
+        return new File(Globals.USER_HOME_DIR, fileName);
     }
 
     private final PacManGamesMachine machine;
@@ -93,14 +92,14 @@ public final class GameImplementation implements Game {
         this.gameClock = requireNonNull(gameClock);
         this.coinMechanism = requireNonNull(coinMechanism);
         prefs = new PreferencesManager(getClass());
-        watchdog = new DirectoryWatchdog(GameGlobals.CUSTOM_MAP_DIR);
+        watchdog = new DirectoryWatchdog(Globals.CUSTOM_MAP_DIR);
 
         ui = new GameUI(
             new FlashMessageManager(),
             new GameSceneManager(this),
             new SoundManager(),
             new SpriteAnimationManager(),
-            () -> UIGlobals.LOCALIZED_TEXTS,
+            () -> GlobalsUI.LOCALIZED_TEXTS,
             view,
             new SubViewManager()
         );
@@ -259,7 +258,7 @@ public final class GameImplementation implements Game {
         currentGameContext.model().prepareNewGame();
 
         clock().stop();
-        clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        clock().setTargetFrameRate(de.amr.pacmanfx.core.Globals.NUM_TICKS_PER_SEC);
 
         ui.sounds().stopAll();
 
@@ -302,7 +301,7 @@ public final class GameImplementation implements Game {
     }
 
     private GamePlayView createGamePlaySubView() {
-        final var playView = new GamePlayView(this, UIGlobals.DEFAULT_DASHBOARD_CONFIG);
+        final var playView = new GamePlayView(this, GlobalsUI.DEFAULT_DASHBOARD_CONFIG);
         final ChangeListener<? super Number> resizeHandler = (_,_,_) -> playView.resizeToFit(view.mainScene());
         view.mainScene().widthProperty().addListener(resizeHandler);
         view.mainScene().heightProperty().addListener(resizeHandler);
@@ -351,7 +350,7 @@ public final class GameImplementation implements Game {
         Globals3D.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
         Globals3D.PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
 
-        ui.sounds().muteProperty().bind(UIGlobals.PROPERTY_MUTED);
+        ui.sounds().muteProperty().bind(GlobalsUI.PROPERTY_MUTED);
 
         view.statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> ui.subViews().isSelected(ui.subViews().gamePlayView())
@@ -360,8 +359,8 @@ public final class GameImplementation implements Game {
 
         view.mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> ui.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
-                ? UIGlobals.WALLPAPERS[RandomNumberSupport.randomInt(0, UIGlobals.WALLPAPERS.length)]
-                : UIGlobals.BACKGROUND_PAC_MAN_WALLPAPER,
+                ? GlobalsUI.WALLPAPERS[RandomNumberSupport.randomInt(0, GlobalsUI.WALLPAPERS.length)]
+                : GlobalsUI.BACKGROUND_PAC_MAN_WALLPAPER,
             ui.subViews().selectedSubViewProperty(),
             ui.gameScenes().gameSceneProperty()
         ));

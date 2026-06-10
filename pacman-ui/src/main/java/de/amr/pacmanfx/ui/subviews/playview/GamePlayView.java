@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.subviews.playview;
 
 import de.amr.pacmanfx.core.Globals;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.ui.UIGlobals;
+import de.amr.pacmanfx.ui.GlobalsUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
@@ -193,7 +193,7 @@ public class GamePlayView implements SubView {
         final UIConfig currentConfig = game.currentUIConfig();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = currentConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
-            setFontSmoothing(UIGlobals.PROPERTY_CANVAS_FONT_SMOOTHING.get());
+            setFontSmoothing(GlobalsUI.PROPERTY_CANVAS_FONT_SMOOTHING.get());
             hudRenderer = currentConfig.createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
@@ -243,9 +243,9 @@ public class GamePlayView implements SubView {
     public void connect(Game game) {
         pausedIcon.visibleProperty().bind(game.clock().updatesDisabledProperty());
 
-        UIGlobals.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
+        GlobalsUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 
-        UIGlobals.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug) -> {
+        GlobalsUI.PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug) -> {
             gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);
             gameSceneLayer.setBorder(debug ? DEBUG_BORDER : null);
         });
@@ -253,9 +253,9 @@ public class GamePlayView implements SubView {
         overlayLayer.visibleProperty().bind(dashboard.rootPane().visibleProperty());
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
-            () -> UIGlobals.PROPERTY_MINI_VIEW_ON.get()
+            () -> GlobalsUI.PROPERTY_MINI_VIEW_ON.get()
                 && game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D),
-            UIGlobals.PROPERTY_MINI_VIEW_ON,
+            GlobalsUI.PROPERTY_MINI_VIEW_ON,
             game.ui().gameScenes().gameSceneProperty()
         ));
 

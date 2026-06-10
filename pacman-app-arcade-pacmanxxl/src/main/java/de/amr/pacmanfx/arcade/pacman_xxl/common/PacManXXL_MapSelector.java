@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.filesystem.PathWatchEventListener;
 import de.amr.pacmanfx.model.world.*;
-import de.amr.pacmanfx.ui.game.GameGlobals;
+import de.amr.pacmanfx.ui.game.Globals;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.tinylog.Logger;
@@ -55,7 +55,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
         Logger.info("Detected custom map directory changes:");
         for (WatchEvent<Path> event : watchEvents) {
             final Path relPath = event.context(); // file or directory name in custom map dir
-            final File file = GameGlobals.CUSTOM_MAP_DIR.toPath().resolve(relPath).toFile();
+            final File file = Globals.CUSTOM_MAP_DIR.toPath().resolve(relPath).toFile();
             Logger.info("WatchEvent kind={}, relative path='{}' file='{}'", event.kind(), relPath, file);
             if (!file.getAbsolutePath().toLowerCase().endsWith(".world")) {
                 Logger.info("Ignored: File '{}' is no world map file or has wrong extension", file);
@@ -113,13 +113,13 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
             Logger.info("Custom maps have already been loaded");
             return;
         }
-        final File[] worldMapFiles = GameGlobals.CUSTOM_MAP_DIR.listFiles((_, name) -> name.endsWith(".world"));
+        final File[] worldMapFiles = Globals.CUSTOM_MAP_DIR.listFiles((_, name) -> name.endsWith(".world"));
         if (worldMapFiles == null) {
-            Logger.error("Could not access custom map directory '{}'", GameGlobals.CUSTOM_MAP_DIR);
+            Logger.error("Could not access custom map directory '{}'", Globals.CUSTOM_MAP_DIR);
             return;
         }
         if (worldMapFiles.length == 0) {
-            Logger.info("No custom maps found in directory '{}'", GameGlobals.CUSTOM_MAP_DIR);
+            Logger.info("No custom maps found in directory '{}'", Globals.CUSTOM_MAP_DIR);
         } else {
             Logger.info("Found {} custom map(s)", worldMapFiles.length);
         }
@@ -182,9 +182,9 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
     }
 
     private void addJuniorPacMapPrototypesIfEmptyDir() {
-        final File[] files = GameGlobals.CUSTOM_MAP_DIR.listFiles();
+        final File[] files = Globals.CUSTOM_MAP_DIR.listFiles();
         if (files == null) {
-            Logger.error("Could not access custom map directory '{}'", GameGlobals.CUSTOM_MAP_DIR);
+            Logger.error("Could not access custom map directory '{}'", Globals.CUSTOM_MAP_DIR);
             return;
         }
         if (files.length == 0) {
@@ -194,7 +194,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
                 final String path = "/de/amr/pacmanfx/arcade/pacman_xxl/maps/junior_pacman/" + mapName;
                 final URL url = PacManXXL_MapSelector.class.getResource(path);
                 if (url != null) {
-                    final File targetFile = new File(GameGlobals.CUSTOM_MAP_DIR, mapName);
+                    final File targetFile = new File(Globals.CUSTOM_MAP_DIR, mapName);
                     WorldMap.fromURL(url).ifPresentOrElse(worldMap -> {
                         try {
                             worldMap.saveToFile(targetFile);
