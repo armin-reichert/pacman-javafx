@@ -22,9 +22,9 @@ import java.util.regex.Pattern;
 
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;
 
-public class GameConstants {
+public class GameGlobals {
 
-    private GameConstants() {}
+    private GameGlobals() {}
 
     /**
      * Game variant names must match this pattern (e.g. "MS_PACMAN_2024").
@@ -59,7 +59,7 @@ public class GameConstants {
     /**
      * Resource manager for UI assets (fonts, images, sounds).
      */
-    public static final ResourceManager UI_RESOURCES = () -> GameConstants.class;
+    public static final ResourceManager UI_RESOURCES = () -> GameGlobals.class;
 
     /**
      * Voice media for immunity activation.
