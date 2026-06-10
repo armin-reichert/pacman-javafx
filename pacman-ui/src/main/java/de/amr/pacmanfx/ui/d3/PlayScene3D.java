@@ -39,8 +39,6 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.ui.action.CommonActions.*;
-import static de.amr.pacmanfx.ui.d3.Constants3D.PROPERTY_3D_DRAW_MODE;
-import static de.amr.pacmanfx.ui.d3.Constants3D.PROPERTY_3D_LIGHT_COLOR;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static java.util.Objects.requireNonNull;
 
@@ -177,14 +175,14 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     @Override
     public void onActivate() {
         perspectiveManager.activeIDProperty().bind(Constants3D.PROPERTY_3D_PERSPECTIVE_ID);
-        PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
+        Constants3D.PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
     }
 
     @Override
     public void onDeactivate() {
         perspectiveManager.activeIDProperty().unbind();
-        PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
+        Constants3D.PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
         disposeContextMenu();
     }
 
@@ -264,7 +262,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         coordinateSystem.visibleProperty().bind(Constants3D.PROPERTY_3D_AXES_VISIBLE);
 
         ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
+        ambientLight.colorProperty().bind(Constants3D.PROPERTY_3D_LIGHT_COLOR);
 
         subSceneRoot.getChildren().addAll(level3DParent, coordinateSystem, ambientLight);
     }
