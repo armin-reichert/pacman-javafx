@@ -25,13 +25,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer implements SpriteRendererMixin, HeadsUpDisplay_Renderer {
 
-    private static final Color SCORE_TEXT_COLOR = nesColor(0x20);
-    private static final Color SCORE_TEXT_COLOR_DISABLED = nesColor(0x10);
+    private static final Color SCORE_TEXT_COLOR = NES_Palette.color(0x20);
+    private static final Color SCORE_TEXT_COLOR_DISABLED = NES_Palette.color(0x10);
 
     public static final float LEVEL_COUNTER_POS_LEFT = TS(2);
     public static final float LEVEL_COUNTER_POS_RIGHT = TS(28);
@@ -121,7 +120,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             drawSprite(symbolSprite, TS(4 + i * 2), y, true);
         }
         if (game.lives().count() > game.hud().maxLivesDisplayed()) {
-            fillText("(%d)".formatted(game.lives().count()), nesColor(0x28), totalLivesFont.get(), TS(14), y + TS);
+            fillText("(%d)".formatted(game.lives().count()), NES_Palette.color(0x28), totalLivesFont.get(), TS(14), y + TS);
         }
     }
 

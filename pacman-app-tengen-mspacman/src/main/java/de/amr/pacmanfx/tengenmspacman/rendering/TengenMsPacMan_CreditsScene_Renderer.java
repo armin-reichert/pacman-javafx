@@ -11,7 +11,6 @@ import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CreditsScene.DISPLAY_SECONDS;
 
 public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, TengenMsPacMan_SceneRendererMixin {
@@ -32,8 +31,8 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
     @Override
     public void draw(GameScene2D scene) {
         clearCanvas();
-        drawHorizontalBar(nesColor(0x20), nesColor(0x13), scene.unscaledWidth(), TS, 20);
-        drawHorizontalBar(nesColor(0x20), nesColor(0x13), scene.unscaledWidth(), TS, 212);
+        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), scene.unscaledWidth(), TS, 20);
+        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), scene.unscaledWidth(), TS, 212);
         ctx.setFont(arcadeFont8());
         y = 7 * TS; // important: reset on every draw!
         if (scene.gameState().timer().betweenSeconds(0, 0.5 * DISPLAY_SECONDS)) {
@@ -75,7 +74,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
     }
 
     private void drawTextAndSkip(int numTiles, String text, int colorIndex, int tilesX) {
-        fillText(text, nesColor(colorIndex), TS(tilesX), y);
+        fillText(text, NES_Palette.color(colorIndex), TS(tilesX), y);
         y += numTiles * TS;
     }
 }

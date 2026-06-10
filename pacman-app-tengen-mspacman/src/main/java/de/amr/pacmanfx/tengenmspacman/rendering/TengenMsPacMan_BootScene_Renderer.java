@@ -12,8 +12,6 @@ import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
-
 public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer implements GameScene2D_Renderer {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
@@ -33,7 +31,7 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer implements G
 
         final TengenMsPacMan_BootScene bootScene = (TengenMsPacMan_BootScene) scene;
         if (bootScene.gray) {
-            actorRenderer.fillCanvas(nesColor(0x10));
+            actorRenderer.fillCanvas(NES_Palette.color(0x10));
         } else {
             actorRenderer.fillText(TENGEN_PRESENTS, bootScene.shadeOfBlue, actorRenderer.arcadeFont8(),
                 bootScene.movingText.x(), bootScene.movingText.y());

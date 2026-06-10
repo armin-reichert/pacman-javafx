@@ -3,12 +3,18 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
+import javafx.scene.paint.Color;
+
+import java.util.stream.Stream;
+
 /**
  * Got this info from the <a href="https://www.mesen.ca/">Mesen NES emulator</a>.
  */
-public interface NES_Palette {
+public final class NES_Palette {
 
-    String[] RGB_COLORS = {
+    private NES_Palette() {}
+
+    public static final String[] RGB = {
         // 00,     01,      02,        03,      04,       05,       06,       07
         "666666", "002a88", "1412a7", "3b00a4", "5c007e", "6e0040", "6c0600", "561d00",
 
@@ -34,20 +40,31 @@ public interface NES_Palette {
         "e4e594", "cfef96", "bdf4ab", "b3f3cc", "b5ebf2", "b8b8b8", "000000", "000000",
     };
 
+    // Map of RGB color values to JavaFX color objects
+    public static final Color[] COLORS = Stream.of(NES_Palette.RGB).map(Color::valueOf).toArray(Color[]::new);
+
+    /**
+     * @param index NES color palette index
+     * @return RGB color for palette entry
+     */
+    public static Color color(int index) {
+        return NES_Palette.COLORS[index];
+    }
+
     /**
      * Returns the RGB color value for the NES palette entry at the given index.
      *
      * @param index byte number from range {@code 00} to {@code 3F}
      * @return color in RGB hex string notation e.g. "bcbe00"
      */
-    static String rgbColor(int index) {
+    public static String rgb(int index) {
         if (isValidIndex(index)) {
-            return RGB_COLORS[index];
+            return RGB[index];
         }
         throw new IllegalArgumentException("Illegal NES palette index: " + index);
     }
 
-    static boolean isValidIndex(int index) {
-        return 0 <= index && index < RGB_COLORS.length;
+    private static boolean isValidIndex(int index) {
+        return 0 <= index && index < RGB.length;
     }
 }

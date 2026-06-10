@@ -20,7 +20,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengenmspacman.rendering.NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED;
 import static java.util.Objects.requireNonNull;
@@ -157,7 +156,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
     private void drawTestMessage(GameLevel gameLevel, GameLevelMessage message) {
         fillTextCentered(LEVEL_TEST_MESSAGE_TEXT_PATTERN.formatted(
-            gameLevel.number()), nesColor(0x28), arcadeFont8(), message.x(), message.y());
+            gameLevel.number()), NES_Palette.color(0x28), arcadeFont8(), message.x(), message.y());
     }
 
     public void drawDoor(WorldMap worldMap) {

@@ -104,7 +104,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
             scores3D.showTextForScore(game().ui().translations().translate("score.game_over"),
-                Color.valueOf(NES_Palette.rgbColor(0x16)));
+                Color.valueOf(NES_Palette.rgb(0x16)));
         }
         // Always show high score
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());

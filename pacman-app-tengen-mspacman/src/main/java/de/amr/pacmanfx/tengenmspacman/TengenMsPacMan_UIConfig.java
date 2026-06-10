@@ -17,10 +17,10 @@ import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -41,7 +41,6 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class TengenMsPacMan_UIConfig implements UIConfig {
 
@@ -50,55 +49,44 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     // Local resources are stored inside main resource folder subdirectories named after package name of this class
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
 
-    // Map of RGB color values to JavaFX color objects
-    public static final Color[] NES_COLORS = Stream.of(NES_Palette.RGB_COLORS).map(Color::valueOf).toArray(Color[]::new);
-
-    /**
-     * @param index NES color palette index
-     * @return RGB color for palette entry
-     */
-    public static Color nesColor(int index) {
-        return NES_COLORS[index];
-    }
-
     public static final WorldConfig TENGEN_WORLD_CONFIG = new WorldConfig(
         new PacConfig(
             new PacColors(
-                nesColor(0x28), // headColor
-                nesColor(0x2d), // palateColor
-                nesColor(0x02)  // eyesColor
+                NES_Palette.color(0x28), // headColor
+                NES_Palette.color(0x2d), // palateColor
+                NES_Palette.color(0x02)  // eyesColor
             ),
             new MsPacManComponentColors(
-                nesColor(0x05), // hair bow
-                nesColor(0x02), // hair bow pearls
-                nesColor(0x28).deriveColor(0, 1.0, 0.96, 1.0) // boobs
+                NES_Palette.color(0x05), // hair bow
+                NES_Palette.color(0x02), // hair bow pearls
+                NES_Palette.color(0x28).deriveColor(0, 1.0, 0.96, 1.0) // boobs
             ),
             8.0f,
             16.0f),
         List.of(
             new GhostConfig(8.0f, 15.5f,
                 new GhostStateColors(
-                    new GhostComponentColors(nesColor(0x05), nesColor(0x20), nesColor(0x11)),
-                    new GhostComponentColors(nesColor(0x01), nesColor(0x20), nesColor(0x20)),
-                    new GhostComponentColors(nesColor(0x20), nesColor(0x20), nesColor(0x20)))
+                    new GhostComponentColors(NES_Palette.color(0x05), NES_Palette.color(0x20), NES_Palette.color(0x11)),
+                    new GhostComponentColors(NES_Palette.color(0x01), NES_Palette.color(0x20), NES_Palette.color(0x20)),
+                    new GhostComponentColors(NES_Palette.color(0x20), NES_Palette.color(0x20), NES_Palette.color(0x20)))
             ),
             new GhostConfig(8.0f, 15.5f,
                 new GhostStateColors(
-                    new GhostComponentColors(nesColor(0x25), nesColor(0x20), nesColor(0x11)),
-                    new GhostComponentColors(nesColor(0x01), nesColor(0x20), nesColor(0x20)),
-                    new GhostComponentColors(nesColor(0x20), nesColor(0x20), nesColor(0x20)))
+                    new GhostComponentColors(NES_Palette.color(0x25), NES_Palette.color(0x20), NES_Palette.color(0x11)),
+                    new GhostComponentColors(NES_Palette.color(0x01), NES_Palette.color(0x20), NES_Palette.color(0x20)),
+                    new GhostComponentColors(NES_Palette.color(0x20), NES_Palette.color(0x20), NES_Palette.color(0x20)))
             ),
             new GhostConfig(8.0f, 15.5f,
                 new GhostStateColors(
-                    new GhostComponentColors(nesColor(0x11), nesColor(0x20), nesColor(0x11)),
-                    new GhostComponentColors(nesColor(0x01), nesColor(0x20), nesColor(0x20)),
-                    new GhostComponentColors(nesColor(0x20), nesColor(0x20), nesColor(0x20)))
+                    new GhostComponentColors(NES_Palette.color(0x11), NES_Palette.color(0x20), NES_Palette.color(0x11)),
+                    new GhostComponentColors(NES_Palette.color(0x01), NES_Palette.color(0x20), NES_Palette.color(0x20)),
+                    new GhostComponentColors(NES_Palette.color(0x20), NES_Palette.color(0x20), NES_Palette.color(0x20)))
             ),
             new GhostConfig(8.0f, 15.5f,
                 new GhostStateColors(
-                    new GhostComponentColors(nesColor(0x16), nesColor(0x20), nesColor(0x11)),
-                    new GhostComponentColors(nesColor(0x01), nesColor(0x20), nesColor(0x20)),
-                    new GhostComponentColors(nesColor(0x20), nesColor(0x20), nesColor(0x20)))
+                    new GhostComponentColors(NES_Palette.color(0x16), NES_Palette.color(0x20), NES_Palette.color(0x11)),
+                    new GhostComponentColors(NES_Palette.color(0x01), NES_Palette.color(0x20), NES_Palette.color(0x20)),
+                    new GhostComponentColors(NES_Palette.color(0x20), NES_Palette.color(0x20), NES_Palette.color(0x20)))
             )
         ),
         new BonusConfig(8.0f, 14.5f),
@@ -174,7 +162,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     /** Shades of blue sequence used by animation. */
     private static final Color[] SHADES_OF_BLUE = {
-        NES_COLORS[0x01], NES_COLORS[0x11], NES_COLORS[0x21], NES_COLORS[0x31]
+        NES_Palette.color(0x01), NES_Palette.color(0x11), NES_Palette.color(0x21), NES_Palette.color(0x31)
     };
 
     /**
@@ -331,8 +319,8 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
         assets.register("app_icon",                         LOCAL_RESOURCES.loadImage("graphics/icons/mspacman.png"));
         assets.register("startpage.image1",                 LOCAL_RESOURCES.loadImage("graphics/flyer-page-1.png"));
         assets.register("startpage.image2",                 LOCAL_RESOURCES.loadImage("graphics/flyer-page-2.png"));
-        assets.register("color.game_over_message",          nesColor(0x11));
-        assets.register("color.ready_message",              nesColor(0x28));
+        assets.register("color.game_over_message",          NES_Palette.color(0x11));
+        assets.register("color.ready_message",              NES_Palette.color(0x28));
     }
 
     private void registerSoundObjects(SoundManager soundManager) {

@@ -4,13 +4,12 @@
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.util.BitSet;
-
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 
 public class Marquee extends Actor {
     private static final int NUM_BULBS = 96;
@@ -36,7 +35,8 @@ public class Marquee extends Actor {
     public void draw(GraphicsContext ctx) {
         double xMin = x(), xMax = xMin + 132, yMin = y(), yMax = yMin + 60;
         for (int i = 0; i < NUM_BULBS; ++i) {
-            ctx.setFill(bulbOn.get(i) ? nesColor(0x20) : nesColor(0x15));
+            boolean on = bulbOn.get(i);
+            ctx.setFill(NES_Palette.color(on ? 0x20 : 0x15));
             if (i <= 33) { // lower border left-to-right
                 drawBulb(ctx, xMin + 4 * i, yMax);
             } else if (i <= 48) { // right border bottom-to-top

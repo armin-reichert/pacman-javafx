@@ -20,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_OptionsScene.*;
 import static java.util.Objects.requireNonNull;
 
@@ -32,8 +31,8 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     private static final int COL_COLON = 19 * TS;
     private static final int COL_VALUE = 21  * TS;
 
-    private static final Color NES_YELLOW = nesColor(0x28);
-    private static final Color NES_WHITE = nesColor(0x20);
+    private static final Color NES_YELLOW = NES_Palette.color(0x28);
+    private static final Color NES_WHITE = NES_Palette.color(0x20);
 
     private final BaseDebugInfoRenderer debugRenderer;
 
@@ -72,7 +71,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
             drawJoypadKeyBinding(scene.game().input().joypad().currentKeyBinding());
         }
 
-        drawHorizontalBar(nesColor(0x20), nesColor(0x21), optionsScene.unscaledWidth(), TS, 20);
+        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), optionsScene.unscaledWidth(), TS, 20);
 
         float y = 48;
         fillText("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
@@ -83,7 +82,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         fillText("TYPE", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, y);
         // gray out
-        fillText("1 PLAYER", nesColor(0x10), COL_LABEL + 6 * TS, y);
+        fillText("1 PLAYER", NES_Palette.color(0x10), COL_LABEL + 6 * TS, y);
 
         y += TS(3);
         // Pac-Booster
@@ -139,7 +138,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         y += TS(1);
         fillText("PRESS START TO START GAME",   NES_YELLOW, TS(3), y);
 
-        drawHorizontalBar(nesColor(0x20), nesColor(0x21), optionsScene.unscaledWidth(), TS, 212);
+        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), optionsScene.unscaledWidth(), TS, 212);
 
         if (scene.game().ui().settings().debugInfoVisibleProperty.get()) {
             debugRenderer.draw(scene);

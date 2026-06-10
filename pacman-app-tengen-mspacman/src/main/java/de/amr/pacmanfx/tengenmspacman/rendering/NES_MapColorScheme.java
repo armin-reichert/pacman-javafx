@@ -44,9 +44,9 @@ public enum NES_MapColorScheme implements MapColorScheme {
     _28_20_2A_YELLOW_WHITE_GREEN  (0x28, 0x20, 0x2a);
 
     NES_MapColorScheme(int fillIndex, int strokeIndex, int pelletIndex) {
-        fill = NES_Palette.rgbColor((byte) fillIndex);
-        stroke = NES_Palette.rgbColor((byte) strokeIndex);
-        pellet = NES_Palette.rgbColor((byte) pelletIndex);
+        fill = NES_Palette.rgb((byte) fillIndex);
+        stroke = NES_Palette.rgb((byte) strokeIndex);
+        pellet = NES_Palette.rgb((byte) pelletIndex);
     }
 
     public static NES_MapColorScheme randomScheme() {

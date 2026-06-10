@@ -17,7 +17,6 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.bonusValueSpriteIndex;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRendererMixin, ActorRenderer {
@@ -119,7 +118,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             ctx.restore();
 
             ctx.setFont(arcadeFont8());
-            ctx.setFill(nesColor(0x20));
+            ctx.setFill(NES_Palette.color(0x20));
             ctx.fillText(String.valueOf(clapperboard.number()), scaled(numberX), scaled(numberY));
             if (clapperboard.isTextVisible()) {
                 double textX = clapperboard.x() + sprite.width(), textY = clapperboard.y() + 2;
