@@ -7,15 +7,16 @@ package de.amr.pacmanfx.arcade.pacman.app;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.GlobalsUI;
-import de.amr.pacmanfx.ui.game.*;
+import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameBuilder;
+import de.amr.pacmanfx.ui.game.GameImplementation;
+import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.view.GameViewImplementation;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
-import de.amr.pacmanfx.uilib.GameClockFX;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -48,7 +49,6 @@ public class ArcadePacMan_App extends Application {
         final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         if (useBuilder) {
             game = GameBuilder.compose(machine, size.x(), size.y())
-                .coinMechanism(true)
                 .gameVariant(GameVariantID.ARCADE_PACMAN.name())
                 .startPage(ArcadePacMan_StartPage::new)
                 .build();
@@ -57,9 +57,7 @@ public class ArcadePacMan_App extends Application {
             game = new GameImplementation(machine,
                 new GameViewImplementation(
                     new GameViewMainScene(size.x(), size.y()),
-                    new StatusIconBox(() -> GlobalsUI.LOCALIZED_TEXTS)),
-                new GameClockFX(),
-                new CoinMechanism());
+                    new StatusIconBox(() -> GlobalsUI.LOCALIZED_TEXTS)));
             final var arcadePacManStartPage = new ArcadePacMan_StartPage();
             arcadePacManStartPage.init(game);
             game.ui().subViews().startView().addStartPage(arcadePacManStartPage);

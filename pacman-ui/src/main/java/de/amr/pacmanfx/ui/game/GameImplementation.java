@@ -32,6 +32,7 @@ import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.FlashMessageManager;
 import de.amr.pacmanfx.ui.view.GameViewImplementation;
+import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
@@ -64,7 +65,7 @@ public final class GameImplementation implements Game {
 
     private final PacManGamesMachine machine;
 
-    private final Map<String, GameVariant> gameVariantImplMap = new HashMap<>();
+    private final Map<String, GameVariant> gameVariantsMap = new HashMap<>();
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
@@ -86,11 +87,11 @@ public final class GameImplementation implements Game {
 
     private GameContextImpl currentGameContext;
 
-    public GameImplementation(PacManGamesMachine machine, GameViewImplementation view, GameClock gameClock, CoinMechanism coinMechanism) {
+    public GameImplementation(PacManGamesMachine machine, GameViewImplementation view) {
         this.machine = requireNonNull(machine);
         this.view = requireNonNull(view);
-        this.gameClock = requireNonNull(gameClock);
-        this.coinMechanism = requireNonNull(coinMechanism);
+        this.gameClock = new GameClockFX();
+        this.coinMechanism = new CoinMechanism();
         prefs = new PreferencesManager(getClass());
         watchdog = new DirectoryWatchdog(Globals.CUSTOM_MAP_DIR);
 
@@ -170,7 +171,7 @@ public final class GameImplementation implements Game {
 
     @Override
     public GameVariant gameVariant(String variantName) {
-        return gameVariantImplMap.computeIfAbsent(variantName, this::createGameVariantImplementation);
+        return gameVariantsMap.computeIfAbsent(variantName, this::createGameVariantImplementation);
     }
 
     @Override

@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.game;
 
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.GlobalsUI;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
@@ -11,7 +10,6 @@ import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImplementation;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
-import de.amr.pacmanfx.uilib.GameClockFX;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -45,8 +43,6 @@ public class GameBuilder {
     private final Map<String, GameVariantConfig> gameVariantConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
 
-    private boolean coinMechanism;
-
     private GameBuilder(
         PacManGamesMachine machine,
         int mainSceneWidth,
@@ -54,11 +50,6 @@ public class GameBuilder {
     {
         this.machine = requireNonNull(machine);
         windowConfig = new WindowConfig(mainSceneWidth, mainSceneHeight);
-    }
-
-    public GameBuilder coinMechanism(boolean coinMechanism) {
-        this.coinMechanism = coinMechanism;
-        return this;
     }
 
     public GameBuilder gameVariant(String gameVariantName, WorldMapSelector mapSelector) {
@@ -86,9 +77,7 @@ public class GameBuilder {
 
         final var game = new GameImplementation(
             machine,
-            createGameView(windowConfig.sceneWidth(), windowConfig.sceneHeight()),
-            new GameClockFX(),
-            coinMechanism ? new CoinMechanism(99) : CoinMechanism.OUT_OF_SERVICE);
+            createGameView(windowConfig.sceneWidth(), windowConfig.sceneHeight()));
 
         //TODO Find better solution
         gameVariantConfigMap.forEach((variantName, config) -> {

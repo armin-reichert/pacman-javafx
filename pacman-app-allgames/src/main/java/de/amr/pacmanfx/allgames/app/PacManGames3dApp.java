@@ -13,7 +13,6 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_Cartridge;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Cartridge;
@@ -29,7 +28,6 @@ import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImplementation;
 import de.amr.pacmanfx.ui.view.GameViewMainScene;
 import de.amr.pacmanfx.ui.view.StatusIconBox;
-import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -39,7 +37,6 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.pacmanfx.core.GameVariantID.*;
-import static de.amr.pacmanfx.core.Validations.requireNonNegative;
 
 /**
  * Application containing all game variants, the 3D play scenes, the map editor etc.
@@ -105,7 +102,6 @@ public class PacManGames3dApp extends Application {
             if (useBuilder) {
 
                 game = GameBuilder.compose(machine, sceneSize.x(), sceneSize.y())
-                    .coinMechanism(true)
 
                     .gameVariant(ARCADE_PACMAN.name())
                     .gameVariant(ARCADE_MS_PACMAN.name())
@@ -123,9 +119,7 @@ public class PacManGames3dApp extends Application {
             else {
                 game = new GameImplementation(
                     machine,
-                    createView(sceneSize.x(), sceneSize.y()),
-                    new GameClockFX(),
-                    new CoinMechanism());
+                    createView(sceneSize.x(), sceneSize.y()));
 
                 game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
                 game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
