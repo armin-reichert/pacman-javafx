@@ -85,8 +85,8 @@ public class StatusIconBox implements Disposable {
         rootPane.setSpacing(spacing);
 
         // "autopilot", "cheated" and "immune" icon visibilities are dynamically bound to current game model's cheat object!
-        iconMuted.node().visibleProperty().bind(GameConstants.PROPERTY_MUTED);
-        icon3D.node()   .visibleProperty().bind(GameConstants.PROPERTY_3D_ENABLED);
+        iconMuted.visibleProperty().bind(GameConstants.PROPERTY_MUTED);
+        icon3D   .visibleProperty().bind(GameConstants.PROPERTY_3D_ENABLED);
     }
 
     public Pane rootPane() {
@@ -100,14 +100,14 @@ public class StatusIconBox implements Disposable {
     public void bind(GameModel gameModel) {
         final GameCheats cheats = gameModel.cheats();
 
-        iconAutopilot.node().visibleProperty().unbind();
-        iconAutopilot.node().visibleProperty().bind(cheats.pacUsingAutopilotProperty());
+        iconAutopilot.visibleProperty().unbind();
+        iconAutopilot.visibleProperty().bind(cheats.pacUsingAutopilotProperty());
 
-        iconCheated.node()  .visibleProperty().unbind();
-        iconCheated.node()  .visibleProperty().bind(cheats.cheatUsedProperty());
+        iconCheated.visibleProperty().unbind();
+        iconCheated.visibleProperty().bind(cheats.cheatUsedProperty());
 
-        iconImmune.node()   .visibleProperty().unbind();
-        iconImmune.node()   .visibleProperty().bind(cheats.pacImmuneProperty());
+        iconImmune.visibleProperty().unbind();
+        iconImmune.visibleProperty().bind(cheats.pacImmuneProperty());
 
         Logger.info("Icons autopilot, cheated and immune visibility bound to game model {}", gameModel);
     }
@@ -122,9 +122,9 @@ public class StatusIconBox implements Disposable {
     }
 
     private FontAwesomeIcon createIcon(Config config, FontAwesomeIcon.Symbol symbol, Color color, String tooltipText) {
-        final FontAwesomeIcon icon = FontAwesomeIcon.icon(symbol, config.iconSize(), color);
-        icon.node().setVisible(false);
-        icon.node().visibleProperty().addListener(this::rearrangeIcons);
+        final FontAwesomeIcon icon = new FontAwesomeIcon(symbol, config.iconSize());
+        icon.setFill(color);
+        icon.visibleProperty().addListener(this::rearrangeIcons);
 
         final Tooltip tooltip = new Tooltip(tooltipText);
         tooltip.setFont(config.tooltipFont);

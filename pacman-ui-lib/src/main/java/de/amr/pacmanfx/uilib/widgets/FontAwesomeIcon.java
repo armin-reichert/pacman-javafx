@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.uilib.widgets;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
@@ -17,11 +18,14 @@ import java.net.URL;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A text control displaying a FontAwesome icon.
+ * Displays a FontAwesome icon.
  */
 public class FontAwesomeIcon {
 
-    //TODO generate full enum from FontAwesome catalog
+    public static final String FONT_PATH = "/de/amr/pacmanfx/uilib/fonts/fa7/Font Awesome 7 Free-Solid-900.otf";
+    public static final int DEFAULT_SIZE = 16;
+
+    //TODO incomplete
     public enum Symbol {
         CHEVRON_CIRCLE_LEFT('\uf137'),
         CHEVRON_CIRCLE_RIGHT('\uf138'),
@@ -39,35 +43,51 @@ public class FontAwesomeIcon {
         private final char unicode;
     }
 
-    private static final Font FONT;
+    private static final Font FONT = loadFont();
 
-    static {
-        final URL url = FontAwesomeIcon.class.getResource("/de/amr/pacmanfx/uilib/fonts/fa7/Font Awesome 7 Free-Solid-900.otf");
+    private static Font loadFont() {
+        final int size = DEFAULT_SIZE;
+        final URL url = FontAwesomeIcon.class.getResource(FONT_PATH);
+        Font font;
         if (url != null) {
-            FONT = Font.loadFont(url.toExternalForm(), 20);
+            font = Font.loadFont(url.toExternalForm(), size);
+            Logger.info("FontAwesome font loaded successfully: {}", font);
         } else {
-            Logger.error("Could not load Font Awesome fonts");
-            FONT = Font.font(20);
+            font = Font.font(size);
+            Logger.error("Could not load Font Awesome fonts, using default font");
         }
+        return font;
     }
 
-    public static FontAwesomeIcon icon(Symbol symbol, double fontSize, Color color) {
-        requireNonNull(symbol);
-        requireNonNull(color);
-
-        final FontAwesomeIcon icon = new FontAwesomeIcon();
-        icon.text.setFill(color);
-        icon.fontSizeProperty().set(fontSize);
-        icon.text.fontProperty().bind(icon.fontSizeProperty().map(s -> Font.font(FONT.getFamily(), s.doubleValue())));
-        icon.text.setText(String.valueOf(symbol.unicode));
-        return icon;
-    }
+    private final DoubleProperty size = new SimpleDoubleProperty(DEFAULT_SIZE);
 
     private final Text text = new Text();
-    private final DoubleProperty fontSize = new SimpleDoubleProperty(16);
 
-    public DoubleProperty fontSizeProperty() {
-        return fontSize;
+    public FontAwesomeIcon(Symbol symbol, int size) {
+        text.fontProperty().bind(sizeProperty().map(s -> Font.font(FONT.getFamily(), s.doubleValue())));
+        text.setText(String.valueOf(symbol.unicode));
+        sizeProperty().set(size);
+    }
+
+    public FontAwesomeIcon(Symbol symbol) {
+        this(symbol, DEFAULT_SIZE);
+    }
+
+    public void setFill(Color color) {
+        requireNonNull(color);
+        text.setFill(color);
+    }
+
+    public DoubleProperty opacityProperty() {
+        return text.opacityProperty();
+    }
+
+    public BooleanProperty visibleProperty() {
+        return node().visibleProperty();
+    }
+
+    public DoubleProperty sizeProperty() {
+        return size;
     }
 
     public Node node() {

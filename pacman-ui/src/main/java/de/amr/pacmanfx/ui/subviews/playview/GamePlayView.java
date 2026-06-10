@@ -232,7 +232,8 @@ public class GamePlayView implements SubView {
         helpLayer = new HelpView(gameSceneLayer);
 
         // Layer 4: "Paused" icon
-        pausedIcon  = FontAwesomeIcon.icon(FontAwesomeIcon.Symbol.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
+        pausedIcon  = new FontAwesomeIcon(FontAwesomeIcon.Symbol.PAUSE, 80);
+        pausedIcon.setFill(ArcadePalette.ARCADE_WHITE);
         pausedIcon.node().setFocusTraversable(false);
         StackPane.setAlignment(pausedIcon.node(), Pos.CENTER);
 
@@ -240,7 +241,7 @@ public class GamePlayView implements SubView {
     }
 
     public void connect(Game game) {
-        pausedIcon.node().visibleProperty().bind(game.clock().updatesDisabledProperty());
+        pausedIcon.visibleProperty().bind(game.clock().updatesDisabledProperty());
 
         GameConstants.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 

@@ -4,12 +4,12 @@
 package de.amr.pacmanfx.ui.subviews.startpages;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.ui.game.GameConstants;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
+import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
@@ -104,10 +104,11 @@ public class StartPagesView extends Carousel implements SubView {
     protected Node createNavigationButton(Direction dir) {
         final Color iconColor = Color.gray(0.69);
         final FontAwesomeIcon icon = switch (dir) {
-            case LEFT  -> FontAwesomeIcon.icon(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_LEFT, NAV_BUTTON_SIZE, iconColor);
-            case RIGHT -> FontAwesomeIcon.icon(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_RIGHT, NAV_BUTTON_SIZE, iconColor);
+            case LEFT  -> new FontAwesomeIcon(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_LEFT, NAV_BUTTON_SIZE);
+            case RIGHT -> new FontAwesomeIcon(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_RIGHT, NAV_BUTTON_SIZE);
             default -> throw new IllegalArgumentException("Illegal navigation direction: %s".formatted(dir));
         };
+        icon.setFill(iconColor);
         icon.node().setOpacity(0.2);
         icon.node().setOnMouseEntered(_ -> icon.node().setOpacity(0.8));
         icon.node().setOnMouseExited(_ -> icon.node().setOpacity(0.2));
