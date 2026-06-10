@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
+import de.amr.pacmanfx.ui.d3.Globals_3D;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
@@ -19,5 +20,6 @@ public record GameUI(
     SpriteAnimationManager sprites,
     TranslationManager translations,
     GameView view,
-    SubViewManager subViews
+    SubViewManager subViews,
+    Globals_3D globals3D
 ) {}

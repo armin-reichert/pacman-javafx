@@ -78,8 +78,6 @@ public final class GameImplementation implements Game {
 
     private final GameViewImplementation view;
 
-    private final Globals_3D globals3D;
-
     private final GameClock gameClock;
 
     private final CoinMechanism coinMechanism;
@@ -93,7 +91,6 @@ public final class GameImplementation implements Game {
     public GameImplementation(PacManGamesMachine machine, GameViewImplementation view) {
         this.machine = requireNonNull(machine);
         this.view = requireNonNull(view);
-        this.globals3D = new Globals_3D();
         this.gameClock = new GameClockFX();
         this.coinMechanism = new CoinMechanism();
         this.prefs = new PreferencesManager(getClass());
@@ -106,7 +103,8 @@ public final class GameImplementation implements Game {
             new SpriteAnimationManager(),
             () -> Globals_GameUI.LOCALIZED_TEXTS,
             view,
-            new SubViewManager()
+            new SubViewManager(),
+            new Globals_3D()
         );
 
         createSubViews();
@@ -196,11 +194,6 @@ public final class GameImplementation implements Game {
     @Override
     public CoinMechanism coinMechanism() {
         return coinMechanism;
-    }
-
-    @Override
-    public Globals_3D globals3D() {
-        return globals3D;
     }
 
     @Override
@@ -353,8 +346,8 @@ public final class GameImplementation implements Game {
 
         final MazeConfig3D mazeConfig3D = currentConfig.worldConfig().maze();
 
-        globals3D.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
-        globals3D.PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
+        ui().globals3D().PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
+        ui().globals3D().PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
 
         ui.sounds().muteProperty().bind(Globals_GameUI.PROPERTY_MUTED);
 

@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
-import de.amr.pacmanfx.ui.d3.Globals_3D;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
@@ -96,7 +95,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         // Init menu items
         entryGameVariant.setValue(gameVariant);
-        entryPlay3D.setValue(Globals_3D.PROPERTY_3D_ENABLED.get());
+        entryPlay3D.setValue(game.ui().globals3D().PROPERTY_3D_ENABLED.get());
         entryCutScenes.setValue(gameContext.flow().cutScenesEnabled());
         entryMapOrder.setValue(mapSelector.selectionMode());
         entryMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());

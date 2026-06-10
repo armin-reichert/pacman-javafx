@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.config.UIConfig;
-import de.amr.pacmanfx.ui.d3.Globals_3D;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
@@ -56,8 +55,6 @@ public interface Game extends GameLifecycle {
     void setCollisionDoubleChecked(boolean value);
 
     void setCollisionStrategy(CollisionStrategy collisionStrategy);
-
-    Globals_3D globals3D();
 
     /**
      * Displays a flash message.

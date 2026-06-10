@@ -51,7 +51,7 @@ public class GameViewImplementation implements GameView {
             game.ui().subViews().selectedSubViewProperty(),
             game.ui().gameScenes().gameSceneProperty(),
             Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE,
-            game.globals3D().PROPERTY_3D_ENABLED
+            game.ui().globals3D().PROPERTY_3D_ENABLED
         );
     }
 
@@ -126,7 +126,7 @@ public class GameViewImplementation implements GameView {
         final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
 
         final boolean debug = Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get();
-        final boolean is3D = game.globals3D().PROPERTY_3D_ENABLED.get();
+        final boolean is3D = game.ui().globals3D().PROPERTY_3D_ENABLED.get();
         final boolean paused = game.clock().getUpdatesDisabled();
 
         final String normalTitle = stageTitle(game, paused, is3D);

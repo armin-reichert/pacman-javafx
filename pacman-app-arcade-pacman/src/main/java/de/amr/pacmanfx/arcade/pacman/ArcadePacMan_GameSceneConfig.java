@@ -17,8 +17,6 @@ import static java.util.Objects.requireNonNull;
 
 class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    private final Game game;
-
     public ArcadePacMan_GameSceneConfig(Game game) {
         this.game = requireNonNull(game);
     }
@@ -57,6 +55,6 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
         if (GameStateID.GAME_PREPARATION.identifies(state)) {
             return CommonSceneID.START_SCENE;
         }
-        return game.globals3D().PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
+        return game.ui().globals3D().PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
     }
 }

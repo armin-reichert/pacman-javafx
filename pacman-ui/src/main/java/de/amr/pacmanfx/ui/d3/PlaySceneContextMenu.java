@@ -81,11 +81,11 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
             item.setUserData(id);
             item.setToggleGroup(perspectivesGroup);
 
-            if (id == game.globals3D().PROPERTY_3D_PERSPECTIVE_ID.get()) {
+            if (id == game.ui().globals3D().PROPERTY_3D_PERSPECTIVE_ID.get()) {
                 item.setSelected(true);
             }
 
-            item.setOnAction(_ -> game.globals3D().PROPERTY_3D_PERSPECTIVE_ID.set(id));
+            item.setOnAction(_ -> game.ui().globals3D().PROPERTY_3D_PERSPECTIVE_ID.set(id));
         }
 
         addLocalizedTitleItem(this, translator, "pacman");
@@ -96,7 +96,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         addLocalizedCheckBox(this, translator, Globals_GameUI.PROPERTY_MUTED, "muted");
         addLocalizedActionItem(this, game, translator, ACTION_QUIT_GAME_SCENE, "quit");
 
-        game.globals3D().PROPERTY_3D_PERSPECTIVE_ID.addListener(perspectiveListener);
+        game.ui().globals3D().PROPERTY_3D_PERSPECTIVE_ID.addListener(perspectiveListener);
     }
 
     /**
@@ -106,6 +106,6 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
      */
     @Override
     public void dispose() {
-        game.globals3D().PROPERTY_3D_PERSPECTIVE_ID.removeListener(perspectiveListener);
+        game.ui().globals3D().PROPERTY_3D_PERSPECTIVE_ID.removeListener(perspectiveListener);
     }
 }

@@ -35,6 +35,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
         };
     }
 
+    protected Game game;
     protected final Map<SceneID, GameScene> scenesByID = new HashMap<>();
 
     @Override

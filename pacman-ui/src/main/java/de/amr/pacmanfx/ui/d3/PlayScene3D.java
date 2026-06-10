@@ -144,11 +144,11 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
             Logger.info("Old 3D game level is disposed...");
             level3D.dispose();
         }
-        level3D = new GameLevel3D(game().globals3D(), gameContext(), level, game().currentUIConfig());
+        level3D = new GameLevel3D(game().ui().globals3D(), gameContext(), level, game().currentUIConfig());
         decorate(level3D);
         level3DParent.getChildren().setAll(level3D);
 
-        level3D.createAnimations(game().globals3D().DEFAULT_PARTICLE_ANIMATION_CONFIG);
+        level3D.createAnimations(game().ui().globals3D().DEFAULT_PARTICLE_ANIMATION_CONFIG);
         level3D.entities().selectAll().forEach(entity -> entity.init(gameContext(), level));
         level3D.startLivesCounterTrackingPac();
 
@@ -173,8 +173,8 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onActivate() {
-        perspectiveManager.activeIDProperty().bind(game().globals3D().PROPERTY_3D_PERSPECTIVE_ID);
-        game().globals3D().PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
+        perspectiveManager.activeIDProperty().bind(game().ui().globals3D().PROPERTY_3D_PERSPECTIVE_ID);
+        game().ui().globals3D().PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
         bindActions();
     }
@@ -182,7 +182,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     @Override
     public void onDeactivate() {
         perspectiveManager.activeIDProperty().unbind();
-        game().globals3D().PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
+        game().ui().globals3D().PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
         disposeContextMenu();
         actionBindings().dispose();
     }
@@ -260,10 +260,10 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         subScene.setCamera(camera);
 
         final var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(game().globals3D().PROPERTY_3D_AXES_VISIBLE);
+        coordinateSystem.visibleProperty().bind(game().ui().globals3D().PROPERTY_3D_AXES_VISIBLE);
 
         ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(game().globals3D().PROPERTY_3D_LIGHT_COLOR);
+        ambientLight.colorProperty().bind(game().ui().globals3D().PROPERTY_3D_LIGHT_COLOR);
 
         subSceneRoot.getChildren().addAll(level3DParent, coordinateSystem, ambientLight);
     }

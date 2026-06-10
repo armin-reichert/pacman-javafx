@@ -145,8 +145,8 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            final PerspectiveID nextID = game.globals3D().PROPERTY_3D_PERSPECTIVE_ID.get().next();
-            game.globals3D().PROPERTY_3D_PERSPECTIVE_ID.set(nextID);
+            final PerspectiveID nextID = game.ui().globals3D().PROPERTY_3D_PERSPECTIVE_ID.get().next();
+            game.ui().globals3D().PROPERTY_3D_PERSPECTIVE_ID.set(nextID);
 
             final TranslationManager translations = game.ui().translations();
             final String msgKey = translations.translate(
@@ -161,8 +161,8 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            final PerspectiveID prevID = game.globals3D().PROPERTY_3D_PERSPECTIVE_ID.get().prev();
-            game.globals3D().PROPERTY_3D_PERSPECTIVE_ID.set(prevID);
+            final PerspectiveID prevID = game.ui().globals3D().PROPERTY_3D_PERSPECTIVE_ID.get().prev();
+            game.ui().globals3D().PROPERTY_3D_PERSPECTIVE_ID.set(prevID);
 
             final TranslationManager translations = game.ui().translations();
             final String msgKey = translations.translate(
@@ -357,7 +357,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            Ufx.toggleProperty(game.globals3D().PROPERTY_3D_DRAW_MODE, DrawMode.LINE, DrawMode.FILL);
+            Ufx.toggleProperty(game.ui().globals3D().PROPERTY_3D_DRAW_MODE, DrawMode.LINE, DrawMode.FILL);
         }
     };
 
@@ -414,8 +414,8 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(game.globals3D().PROPERTY_3D_ENABLED);
-            final boolean is3DEnabled = game.globals3D().PROPERTY_3D_ENABLED.get();
+            toggleBooleanProperty(game.ui().globals3D().PROPERTY_3D_ENABLED);
+            final boolean is3DEnabled = game.ui().globals3D().PROPERTY_3D_ENABLED.get();
             if (!inPlayScene(game)) {
                 game.shortMessage(game.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
             }

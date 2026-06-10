@@ -8,7 +8,6 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.d3.Globals_3D;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
@@ -66,7 +65,7 @@ public class PacManXXL_StartPage implements StartPage {
 
         public MenuBinding(Game game) {
             gameVariantNameListener = (_, _, variant) -> game.selectGameVariant(variant.name());
-            play3DListener = (_, _, enable3D) -> Globals_3D.PROPERTY_3D_ENABLED.set(enable3D);
+            play3DListener = (_, _, enable3D) -> game.ui().globals3D().PROPERTY_3D_ENABLED.set(enable3D);
             cutScenesEnabledListener = (_, _, enableCutScenes) -> game.currentGameContext().flow().setCutScenesEnabled(enableCutScenes);
 
             scaling = game.ui().view().stageProperty().map(stage -> {

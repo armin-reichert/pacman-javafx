@@ -14,12 +14,9 @@ import de.amr.pacmanfx.ui.gamescene.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 
-import static de.amr.pacmanfx.ui.d3.Globals_3D.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 class PacManXXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
-
-    private final Game game;
 
     public PacManXXL_PacMan_GameSceneConfig(Game game) {
         this.game = game;
@@ -62,6 +59,6 @@ class PacManXXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
         if (GameStateID.GAME_PREPARATION.identifies(state)) {
             return CommonSceneID.START_SCENE;
         }
-        return PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
+        return game.ui().globals3D().PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
     }
 }

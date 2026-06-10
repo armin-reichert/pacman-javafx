@@ -23,7 +23,6 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_PAC_BOOSTER;
-import static de.amr.pacmanfx.ui.d3.Globals_3D.PROPERTY_3D_FLOOR_COLOR;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.
@@ -58,7 +57,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final double infoHeight = TS(2);
         levelInfo.setFitWidth(infoWidth);
         levelInfo.setFitHeight(infoHeight);
-        levelInfo.imageProperty().bind(PROPERTY_3D_FLOOR_COLOR.map(
+        levelInfo.imageProperty().bind(game().ui().globals3D().PROPERTY_3D_FLOOR_COLOR.map(
             color -> createLevelInfoImage(gameModel, level.number(), infoWidth, infoHeight, color)));
         // Display the level info at front side of floor just over the surface
         final Maze3D maze3D = level3D.entities().maze3D();

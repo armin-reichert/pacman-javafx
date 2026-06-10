@@ -57,7 +57,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         final var gameState = event.newState();
 
         if (gameState instanceof TestState) {
-            handleTestState(game().globals3D());
+            handleTestState(game().ui().globals3D());
         }
         else if (GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameState)) {
             onStartingGameOrLevel();
@@ -292,7 +292,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.messageManager().hideMessage();
 
-        playLevelEndAnimation(level3D.animationRegistry(), game().globals3D(), level3D.entities().maze3D(), level3D.level().cutSceneNumber() != 0);
+        playLevelEndAnimation(level3D.animationRegistry(), game().ui().globals3D(), level3D.entities().maze3D(), level3D.level().cutSceneNumber() != 0);
     }
 
     private void playLevelEndAnimation(AnimationRegistry animationRegistry, Globals_3D globals3D, Maze3D maze3D, boolean cutSceneAfter) {
