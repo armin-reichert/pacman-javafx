@@ -10,7 +10,7 @@ import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
-public final class Constants3D {
+public final class Globals3D {
 
     public static final ParticlesAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticlesAnimationConfig(
         new ExplosionConfig(
@@ -48,5 +48,5 @@ public final class Constants3D {
     /** Opacity of 3D walls (0.0–1.0). */
     public static final DoubleProperty PROPERTY_3D_WALL_OPACITY = new SimpleDoubleProperty(1.0);
 
-    private Constants3D() {}
+    private Globals3D() {}
 }

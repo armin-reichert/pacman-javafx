@@ -14,7 +14,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.d3.Constants3D;
+import de.amr.pacmanfx.ui.d3.Globals3D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameConstants;
@@ -145,8 +145,8 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            final PerspectiveID nextID = Constants3D.PROPERTY_3D_PERSPECTIVE_ID.get().next();
-            Constants3D.PROPERTY_3D_PERSPECTIVE_ID.set(nextID);
+            final PerspectiveID nextID = Globals3D.PROPERTY_3D_PERSPECTIVE_ID.get().next();
+            Globals3D.PROPERTY_3D_PERSPECTIVE_ID.set(nextID);
 
             final TranslationManager translations = game.ui().translations();
             final String msgKey = translations.translate(
@@ -161,8 +161,8 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            final PerspectiveID prevID = Constants3D.PROPERTY_3D_PERSPECTIVE_ID.get().prev();
-            Constants3D.PROPERTY_3D_PERSPECTIVE_ID.set(prevID);
+            final PerspectiveID prevID = Globals3D.PROPERTY_3D_PERSPECTIVE_ID.get().prev();
+            Globals3D.PROPERTY_3D_PERSPECTIVE_ID.set(prevID);
 
             final TranslationManager translations = game.ui().translations();
             final String msgKey = translations.translate(
@@ -357,7 +357,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            Ufx.toggleProperty(Constants3D.PROPERTY_3D_DRAW_MODE, DrawMode.LINE, DrawMode.FILL);
+            Ufx.toggleProperty(Globals3D.PROPERTY_3D_DRAW_MODE, DrawMode.LINE, DrawMode.FILL);
         }
     };
 
@@ -414,8 +414,8 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(Constants3D.PROPERTY_3D_ENABLED);
-            final boolean is3DEnabled = Constants3D.PROPERTY_3D_ENABLED.get();
+            toggleBooleanProperty(Globals3D.PROPERTY_3D_ENABLED);
+            final boolean is3DEnabled = Globals3D.PROPERTY_3D_ENABLED.get();
             if (!inPlayScene(game)) {
                 game.shortMessage(game.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
             }

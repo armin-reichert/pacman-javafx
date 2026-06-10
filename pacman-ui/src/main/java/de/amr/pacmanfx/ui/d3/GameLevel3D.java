@@ -289,9 +289,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         entitySet.maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.worldConfig(), colorScheme, animationRegistry);
-        entitySet.maze3D.wallOpacityProperty().bind(Constants3D.PROPERTY_3D_WALL_OPACITY);
-        entitySet.maze3D.wallBaseHeightProperty().bind(Constants3D.PROPERTY_3D_WALL_HEIGHT);
-        entitySet.maze3D.floorColorProperty().bind(Constants3D.PROPERTY_3D_FLOOR_COLOR);
+        entitySet.maze3D.wallOpacityProperty().bind(Globals3D.PROPERTY_3D_WALL_OPACITY);
+        entitySet.maze3D.wallBaseHeightProperty().bind(Globals3D.PROPERTY_3D_WALL_HEIGHT);
+        entitySet.maze3D.floorColorProperty().bind(Globals3D.PROPERTY_3D_FLOOR_COLOR);
         entitySet.add(entitySet.maze3D);
     }
 

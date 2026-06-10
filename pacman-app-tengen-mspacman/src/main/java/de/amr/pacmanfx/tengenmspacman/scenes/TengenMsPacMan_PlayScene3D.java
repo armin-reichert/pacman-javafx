@@ -23,7 +23,7 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_PAC_BOOSTER;
-import static de.amr.pacmanfx.ui.d3.Constants3D.PROPERTY_3D_FLOOR_COLOR;
+import static de.amr.pacmanfx.ui.d3.Globals3D.PROPERTY_3D_FLOOR_COLOR;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.

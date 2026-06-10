@@ -149,7 +149,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         decorate(level3D);
         level3DParent.getChildren().setAll(level3D);
 
-        level3D.createAnimations(Constants3D.DEFAULT_PARTICLE_ANIMATION_CONFIG);
+        level3D.createAnimations(Globals3D.DEFAULT_PARTICLE_ANIMATION_CONFIG);
         level3D.entities().selectAll().forEach(entity -> entity.init(gameContext(), level));
         level3D.startLivesCounterTrackingPac();
 
@@ -174,15 +174,15 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onActivate() {
-        perspectiveManager.activeIDProperty().bind(Constants3D.PROPERTY_3D_PERSPECTIVE_ID);
-        Constants3D.PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
+        perspectiveManager.activeIDProperty().bind(Globals3D.PROPERTY_3D_PERSPECTIVE_ID);
+        Globals3D.PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
     }
 
     @Override
     public void onDeactivate() {
         perspectiveManager.activeIDProperty().unbind();
-        Constants3D.PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
+        Globals3D.PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
         disposeContextMenu();
     }
 
@@ -259,10 +259,10 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         subScene.setCamera(camera);
 
         final var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(Constants3D.PROPERTY_3D_AXES_VISIBLE);
+        coordinateSystem.visibleProperty().bind(Globals3D.PROPERTY_3D_AXES_VISIBLE);
 
         ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(Constants3D.PROPERTY_3D_LIGHT_COLOR);
+        ambientLight.colorProperty().bind(Globals3D.PROPERTY_3D_LIGHT_COLOR);
 
         subSceneRoot.getChildren().addAll(level3DParent, coordinateSystem, ambientLight);
     }
