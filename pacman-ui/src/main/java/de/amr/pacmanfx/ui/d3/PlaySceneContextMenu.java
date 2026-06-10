@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
  * </ul>
  *
  * The menu keeps its perspective selection synchronized with the global
- * {@link Globals_3D#cameraPerspectiveIdProperty} property. When the property changes
+ * {@link Settings3D#cameraPerspectiveIdProperty} property. When the property changes
  * externally, the corresponding radio button is automatically selected.
  *
  * <p>Instances must be disposed via {@link #dispose()} to remove listeners and
@@ -81,11 +81,11 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
             item.setUserData(id);
             item.setToggleGroup(perspectivesGroup);
 
-            if (id == game.ui().globals3D().cameraPerspectiveIdProperty.get()) {
+            if (id == game.ui().settings3D().cameraPerspectiveIdProperty.get()) {
                 item.setSelected(true);
             }
 
-            item.setOnAction(_ -> game.ui().globals3D().cameraPerspectiveIdProperty.set(id));
+            item.setOnAction(_ -> game.ui().settings3D().cameraPerspectiveIdProperty.set(id));
         }
 
         addLocalizedTitleItem(this, translator, "pacman");
@@ -96,7 +96,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         addLocalizedCheckBox(this, translator, Globals_GameUI.PROPERTY_MUTED, "muted");
         addLocalizedActionItem(this, game, translator, ACTION_QUIT_GAME_SCENE, "quit");
 
-        game.ui().globals3D().cameraPerspectiveIdProperty.addListener(perspectiveListener);
+        game.ui().settings3D().cameraPerspectiveIdProperty.addListener(perspectiveListener);
     }
 
     /**
@@ -106,6 +106,6 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
      */
     @Override
     public void dispose() {
-        game.ui().globals3D().cameraPerspectiveIdProperty.removeListener(perspectiveListener);
+        game.ui().settings3D().cameraPerspectiveIdProperty.removeListener(perspectiveListener);
     }
 }

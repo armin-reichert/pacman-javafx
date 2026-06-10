@@ -55,7 +55,7 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Maze3D createMaze3D(Globals_3D globals3D, TerrainLayer terrain, WorldConfig config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
+    public Maze3D createMaze3D(Settings3D globals3D, TerrainLayer terrain, WorldConfig config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
         requireNonNull(terrain);
         requireNonNull(config);
         requireNonNull(colorScheme);

@@ -46,8 +46,8 @@ public class DashboardSection3DSettings extends DashboardSection {
 
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
         comboPerspectives = addChoiceBox("Perspective", PerspectiveID.values());
-        addColorPicker("Light Color", game.ui().globals3D().mazeLightColorProperty);
-        addColorPicker("Floor Color", game.ui().globals3D().mazeFloorColorProperty);
+        addColorPicker("Light Color", game.ui().settings3D().mazeLightColorProperty);
+        addColorPicker("Floor Color", game.ui().settings3D().mazeFloorColorProperty);
         addDynamicLabeledValue("Camera",         () -> subSceneCameraInfo(game));
         addDynamicLabeledValue("Sub-scene Size", () -> subSceneSizeInfo(game));
         addDynamicLabeledValue("Scene Size",     () -> sceneSizeInfo(game));
@@ -69,16 +69,16 @@ public class DashboardSection3DSettings extends DashboardSection {
         sliderWallHeight = addSlider(
             "Wall Height",
             0, 16,
-            game.ui().globals3D().mazeWallHeightProperty.get(),
+            game.ui().settings3D().mazeWallHeightProperty.get(),
             false, false);
 
         sliderWallOpacity = addSlider(
             "Wall Opacity",
             0, 1,
-            game.ui().globals3D().mazeWallOpacityProperty.get(),
+            game.ui().settings3D().mazeWallOpacityProperty.get(),
             false, false);
 
-        cbAxesVisible = addCheckBox("Show Axes", game.ui().globals3D().axesVisibleProperty);
+        cbAxesVisible = addCheckBox("Show Axes", game.ui().settings3D().axesVisibleProperty);
         cbWireframeMode = addCheckBox("Wireframe Mode");
 
         setTooltip(sliderMiniViewSceneHeight, sliderMiniViewSceneHeight.valueProperty(), "%.0f px");
@@ -89,9 +89,9 @@ public class DashboardSection3DSettings extends DashboardSection {
 
         setEditor(sliderMiniViewSceneHeight, Globals_GameUI.PROPERTY_MINI_VIEW_HEIGHT);
         setEditor(sliderMiniViewOpacityPercentage, Globals_GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT);
-        setEditor(sliderWallHeight, game.ui().globals3D().mazeWallHeightProperty);
-        setEditor(sliderWallOpacity, game.ui().globals3D().mazeWallOpacityProperty);
-        setEditor(comboPerspectives, game.ui().globals3D().cameraPerspectiveIdProperty);
+        setEditor(sliderWallHeight, game.ui().settings3D().mazeWallHeightProperty);
+        setEditor(sliderWallOpacity, game.ui().settings3D().mazeWallOpacityProperty);
+        setEditor(comboPerspectives, game.ui().settings3D().cameraPerspectiveIdProperty);
 
         cbUsePlayScene3D.setOnAction(_ -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute(game));
         cbWireframeMode.setOnAction(_ -> ACTION_TOGGLE_DRAW_MODE.execute(game));
@@ -101,19 +101,19 @@ public class DashboardSection3DSettings extends DashboardSection {
     public void update() {
         super.update();
 
-        comboPerspectives.setValue(game().ui().globals3D().cameraPerspectiveIdProperty.get());
+        comboPerspectives.setValue(game().ui().settings3D().cameraPerspectiveIdProperty.get());
         sliderMiniViewSceneHeight.setValue(Globals_GameUI.PROPERTY_MINI_VIEW_HEIGHT.get());
         if (dashboard.game() != null) {
             sliderMiniViewSceneHeight.setDisable(dashboard.game().ui().subViews().gamePlayView().miniPlaySceneView().isMoving());
         }
         sliderMiniViewOpacityPercentage.setValue(Globals_GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
-        sliderWallHeight.setValue(game().ui().globals3D().mazeWallHeightProperty.get());
-        sliderWallOpacity.setValue(game().ui().globals3D().mazeWallOpacityProperty.get());
-        cbUsePlayScene3D.setSelected(game().ui().globals3D().d3EnabledProperty.get());
+        sliderWallHeight.setValue(game().ui().settings3D().mazeWallHeightProperty.get());
+        sliderWallOpacity.setValue(game().ui().settings3D().mazeWallOpacityProperty.get());
+        cbUsePlayScene3D.setSelected(game().ui().settings3D().d3EnabledProperty.get());
         cbMiniViewVisible.setSelected(Globals_GameUI.PROPERTY_MINI_VIEW_ON.getValue());
-        comboPerspectives.setValue(game().ui().globals3D().cameraPerspectiveIdProperty.get());
-        cbAxesVisible.setSelected(game().ui().globals3D().axesVisibleProperty.get());
-        cbWireframeMode.setSelected(game().ui().globals3D().drawModeProperty.get() == DrawMode.LINE);
+        comboPerspectives.setValue(game().ui().settings3D().cameraPerspectiveIdProperty.get());
+        cbAxesVisible.setSelected(game().ui().settings3D().axesVisibleProperty.get());
+        cbWireframeMode.setSelected(game().ui().settings3D().drawModeProperty.get() == DrawMode.LINE);
     }
 
     private String subSceneSizeInfo(Game game) {

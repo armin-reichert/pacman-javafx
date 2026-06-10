@@ -35,7 +35,7 @@ public interface Factory3D extends Disposable {
      * @param animationRegistry the animation registry
      * @return a 3D maze representing the given terrain
      */
-    Maze3D createMaze3D(Globals_3D globals3D, TerrainLayer terrain, WorldConfig config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry);
+    Maze3D createMaze3D(Settings3D globals3D, TerrainLayer terrain, WorldConfig config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry);
 
     /**
      * Creates the 3D representation of Pac for this game variant, including model,

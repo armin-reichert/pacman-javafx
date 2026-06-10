@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
-import de.amr.pacmanfx.ui.d3.Globals_3D;
+import de.amr.pacmanfx.ui.d3.Settings3D;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
@@ -104,7 +104,7 @@ public final class GameImplementation implements Game {
             () -> Globals_GameUI.LOCALIZED_TEXTS,
             view,
             new SubViewManager(),
-            new Globals_3D()
+            new Settings3D()
         );
 
         createSubViews();
@@ -346,8 +346,8 @@ public final class GameImplementation implements Game {
 
         final MazeConfig3D mazeConfig3D = currentConfig.worldConfig().maze();
 
-        ui().globals3D().mazeWallHeightProperty.set(mazeConfig3D.obstacleBaseHeight());
-        ui().globals3D().mazeWallOpacityProperty.set(mazeConfig3D.obstacleOpacity());
+        ui().settings3D().mazeWallHeightProperty.set(mazeConfig3D.obstacleBaseHeight());
+        ui().settings3D().mazeWallOpacityProperty.set(mazeConfig3D.obstacleOpacity());
 
         ui.sounds().muteProperty().bind(Globals_GameUI.PROPERTY_MUTED);
 

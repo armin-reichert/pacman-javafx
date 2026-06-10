@@ -57,7 +57,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         final var gameState = event.newState();
 
         if (gameState instanceof TestState) {
-            handleTestState(game().ui().globals3D());
+            handleTestState(game().ui().settings3D());
         }
         else if (GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameState)) {
             onStartingGameOrLevel();
@@ -292,10 +292,10 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.messageManager().hideMessage();
 
-        playLevelEndAnimation(level3D.animationRegistry(), game().ui().globals3D(), level3D.entities().maze3D(), level3D.level().cutSceneNumber() != 0);
+        playLevelEndAnimation(level3D.animationRegistry(), game().ui().settings3D(), level3D.entities().maze3D(), level3D.level().cutSceneNumber() != 0);
     }
 
-    private void playLevelEndAnimation(AnimationRegistry animationRegistry, Globals_3D globals3D, Maze3D maze3D, boolean cutSceneAfter) {
+    private void playLevelEndAnimation(AnimationRegistry animationRegistry, Settings3D globals3D, Maze3D maze3D, boolean cutSceneAfter) {
         final GameLevel3D.AnimationID animationID = cutSceneAfter
             ? GameLevel3D.AnimationID.LEVEL_COMPLETED_SHORT
             : GameLevel3D.AnimationID.LEVEL_COMPLETED_FULL;
@@ -342,7 +342,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 
-    private void handleTestState(Globals_3D globals3D) {
+    private void handleTestState(Settings3D globals3D) {
         playScene3D.optGameLevel3D().ifPresent(level3D -> {
             playScene3D.replaceGameLevel3D(level3D.level());
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level3D.level().number());

@@ -10,7 +10,7 @@ import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
-public final class Globals_3D {
+public final class Settings3D {
 
     public final ParticlesAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticlesAnimationConfig(
         new ExplosionConfig(
