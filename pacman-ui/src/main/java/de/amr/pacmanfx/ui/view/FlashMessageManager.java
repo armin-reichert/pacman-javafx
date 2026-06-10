@@ -130,11 +130,11 @@ public class FlashMessageManager {
         return messageView;
     }
 
-    public void startTimer() {
+    public void startAnimationTimer() {
         timer.start();
     }
 
-    public void stopTimer() {
+    public void stopAnimationTimer() {
         timer.stop();
         clearMessage();
     }

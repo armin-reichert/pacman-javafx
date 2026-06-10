@@ -243,7 +243,7 @@ public final class GameImplementation implements Game {
         view.statusIconBox().bind(currentGameContext().model());
         view.show();
 
-        startServices();
+        startServicesLater();
     }
 
     @Override
@@ -278,7 +278,7 @@ public final class GameImplementation implements Game {
         stopGame();
         ui.sprites().stopAnimationTimer();
         ui.sprites().animationSet().clear();
-        ui.flashMessages().stopTimer();
+        ui.flashMessages().stopAnimationTimer();
         watchdog.dispose();
     }
 
@@ -367,18 +367,18 @@ public final class GameImplementation implements Game {
         ));
     }
 
-    private void startServices() {
+    private void startServicesLater() {
         Platform.runLater(() -> {
             watchdog.startWatching();
-            ui.flashMessages().startTimer();
+            ui.flashMessages().startAnimationTimer();
             ui.sprites().startAnimationTimer();
         });
     }
 
     private void initGameVariantAndRegisterChangeHandler() {
-        final GameVariantChangeHandler gameVariantChangeHandler = new GameVariantChangeHandler(this);
-        gameVariantName.addListener(gameVariantChangeHandler);
-        gameVariantChangeHandler.enterGameVariant(currentGameVariantName());
+        final var changeHandler = new GameVariantChangeHandler(this);
+        gameVariantName.addListener(changeHandler);
+        changeHandler.enterGameVariant(currentGameVariantName());
     }
 
     /**
