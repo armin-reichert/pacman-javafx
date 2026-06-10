@@ -104,15 +104,15 @@ public class StartPagesView extends Carousel implements SubView {
     protected Node createNavigationButton(Direction dir) {
         final Color iconColor = Color.gray(0.69);
         final FontAwesomeIcon icon = switch (dir) {
-            case LEFT  -> FontAwesomeIcon.of(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_LEFT, NAV_BUTTON_SIZE, iconColor);
-            case RIGHT -> FontAwesomeIcon.of(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_RIGHT, NAV_BUTTON_SIZE, iconColor);
+            case LEFT  -> FontAwesomeIcon.icon(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_LEFT, NAV_BUTTON_SIZE, iconColor);
+            case RIGHT -> FontAwesomeIcon.icon(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_RIGHT, NAV_BUTTON_SIZE, iconColor);
             default -> throw new IllegalArgumentException("Illegal navigation direction: %s".formatted(dir));
         };
-        icon.setOpacity(0.2);
-        icon.setOnMouseEntered(_ -> icon.setOpacity(0.8));
-        icon.setOnMouseExited(_ -> icon.setOpacity(0.2));
+        icon.node().setOpacity(0.2);
+        icon.node().setOnMouseEntered(_ -> icon.node().setOpacity(0.8));
+        icon.node().setOnMouseExited(_ -> icon.node().setOpacity(0.2));
 
-        final var button = new HBox(icon);
+        final var button = new HBox(icon.node());
         button.setMaxHeight(NAV_BUTTON_SIZE);
         button.setMaxWidth(NAV_BUTTON_SIZE);
         button.setPadding(new Insets(5));

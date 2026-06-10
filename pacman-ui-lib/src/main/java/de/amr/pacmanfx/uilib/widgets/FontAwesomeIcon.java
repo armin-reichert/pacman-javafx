@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.widgets;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -18,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * A text control displaying a FontAwesome icon.
  */
-public class FontAwesomeIcon extends Text {
+public class FontAwesomeIcon {
 
     //TODO generate full enum from FontAwesome catalog
     public enum Symbol {
@@ -50,20 +51,26 @@ public class FontAwesomeIcon extends Text {
         }
     }
 
+    public static FontAwesomeIcon icon(Symbol symbol, double fontSize, Color color) {
+        requireNonNull(symbol);
+        requireNonNull(color);
+
+        final FontAwesomeIcon icon = new FontAwesomeIcon();
+        icon.text.setFill(color);
+        icon.fontSizeProperty().set(fontSize);
+        icon.text.fontProperty().bind(icon.fontSizeProperty().map(s -> Font.font(FONT.getFamily(), s.doubleValue())));
+        icon.text.setText(String.valueOf(symbol.unicode));
+        return icon;
+    }
+
+    private final Text text = new Text();
     private final DoubleProperty fontSize = new SimpleDoubleProperty(16);
 
     public DoubleProperty fontSizeProperty() {
         return fontSize;
     }
 
-    public static FontAwesomeIcon of(Symbol symbol, double fontSize, Color color) {
-        requireNonNull(symbol);
-        requireNonNull(color);
-        final FontAwesomeIcon icon = new FontAwesomeIcon();
-        icon.setFill(color);
-        icon.fontSizeProperty().set(fontSize);
-        icon.fontProperty().bind(icon.fontSizeProperty().map(s -> Font.font(FONT.getFamily(), s.doubleValue())));
-        icon.setText(String.valueOf(symbol.unicode));
-        return icon;
+    public Node node() {
+        return text;
     }
 }
