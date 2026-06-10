@@ -309,16 +309,16 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
 
         gameContext().state().lock();
 
-        final PerspectiveID perspectiveBeforeAnimation = globals3D.PROPERTY_3D_PERSPECTIVE_ID.get();
+        final PerspectiveID perspectiveBeforeAnimation = globals3D.property3DPerspectiveId.get();
 
         final Animation resetCameraPerspective = pauseSecThen(2, () -> {
-            globals3D.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+            globals3D.property3DPerspectiveId.set(PerspectiveID.TOTAL);
             maze3D.wallBaseHeightProperty().unbind();
         });
 
         final Animation restoreCameraPerspective = Ufx.pauseSecThen(0.25, () -> {
-            globals3D.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
-            maze3D.wallBaseHeightProperty().bind(globals3D.PROPERTY_3D_WALL_HEIGHT);
+            globals3D.property3DPerspectiveId.set(perspectiveBeforeAnimation);
+            maze3D.wallBaseHeightProperty().bind(globals3D.property3DWallHeight);
         });
 
         final var seq = new SequentialTransition(
@@ -346,7 +346,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         playScene3D.optGameLevel3D().ifPresent(level3D -> {
             playScene3D.replaceGameLevel3D(level3D.level());
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level3D.level().number());
-            globals3D.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+            globals3D.property3DPerspectiveId.set(PerspectiveID.TOTAL);
         });
     }
 

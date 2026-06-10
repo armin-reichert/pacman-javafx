@@ -60,6 +60,6 @@ class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
         if (GameStateID.GAME_PREPARATION.identifies(state)) {
             return CommonSceneID.START_SCENE;
         }
-        return game.ui().globals3D().PROPERTY_3D_ENABLED.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
+        return game.ui().globals3D().property3DEnabled.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
     }
 }

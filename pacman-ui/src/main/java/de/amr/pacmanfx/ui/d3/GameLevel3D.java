@@ -293,9 +293,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             colorScheme,
             animationRegistry);
 
-        entitySet.maze3D.wallOpacityProperty()   .bind(globals3D.PROPERTY_3D_WALL_OPACITY);
-        entitySet.maze3D.wallBaseHeightProperty().bind(globals3D.PROPERTY_3D_WALL_HEIGHT);
-        entitySet.maze3D.floorColorProperty()    .bind(globals3D.PROPERTY_3D_FLOOR_COLOR);
+        entitySet.maze3D.wallOpacityProperty()   .bind(globals3D.property3DWallOpacity);
+        entitySet.maze3D.wallBaseHeightProperty().bind(globals3D.property3DWallHeight);
+        entitySet.maze3D.floorColorProperty()    .bind(globals3D.property3DFloorColor);
 
         entitySet.add(entitySet.maze3D);
     }
