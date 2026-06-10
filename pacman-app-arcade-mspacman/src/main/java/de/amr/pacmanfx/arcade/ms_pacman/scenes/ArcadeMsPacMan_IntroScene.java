@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.fsm.State;
@@ -45,7 +46,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private static final float ACTOR_SPEED = 1.11f;
 
-    private final StateMachine<ArcadeMsPacMan_IntroScene> sceneController;
+    private final StateMachine<ArcadeMsPacMan_IntroScene> sceneFlow;
 
     // Public for access by renderer
     public Marquee marquee;
@@ -57,15 +58,28 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     public ArcadeMsPacMan_IntroScene(Game game) {
         super(game);
-        sceneController = new StateMachine<>(this, List.of(SceneState.values()));
 
-        actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
-        actionBindings().registerAllBindings(GlobalActionBindings.SCENE_TESTS_BINDINGS);
+        sceneFlow = new StateMachine<>(this, List.of(SceneState.values()));
+
     }
 
     @Override
     public void onActivate() {
-        sceneController.restartState(SceneState.STARTING);
+        actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(GlobalActionBindings.SCENE_TESTS_BINDINGS);
+
+        sceneFlow.restartState(SceneState.STARTING);
+    }
+
+    @Override
+    public void onDeactivate() {
+        game().ui().sounds().stopAndDisposeVoice();
+        actionBindings().dispose();
+    }
+
+    @Override
+    public void onTick(long tick) {
+        sceneFlow.update();
     }
 
     private void initScene() {
@@ -110,20 +124,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         game().ui().sounds().playVoice(Globals_GameUI.VOICE_EXPLAIN_GAME_START);
     }
 
-    @Override
-    public void onDeactivate() {
-        game().ui().sounds().stopAndDisposeVoice();
-    }
-
-    @Override
-    public void onTick(long tick) {
-        sceneController.update();
-    }
-
-    // Scene controller FSM
+    // Scene flow state machine
 
     public State<ArcadeMsPacMan_IntroScene> sceneState() {
-        return sceneController.state();
+        return sceneFlow.state();
     }
 
     public enum SceneState implements State<ArcadeMsPacMan_IntroScene> {
@@ -137,8 +141,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marquee.timer().doTick();
-                if (sceneTimer.atSecond(1)) {
-                    scene.sceneController.enterState(GHOSTS_MARCHING_IN);
+                if (timer.atSecond(1)) {
+                    scene.sceneFlow.enterState(GHOSTS_MARCHING_IN);
                 }
             }
         },
@@ -150,7 +154,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 boolean atEndPosition = letGhostWalkIn(scene);
                 if (atEndPosition) {
                     if (scene.presentedGhostPersonality == GameModel.ORANGE_GHOST_POKEY) {
-                        scene.sceneController.enterState(MS_PACMAN_MARCHING_IN);
+                        scene.sceneFlow.enterState(MS_PACMAN_MARCHING_IN);
                     } else {
                         ++scene.presentedGhostPersonality;
                     }
@@ -196,7 +200,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 if (scene.msPacMan.x() <= STOP_X_MS_PACMAN) {
                     scene.msPacMan.setSpeed(0);
                     scene.msPacMan.animations().resetSelected();
-                    scene.sceneController.enterState(READY_TO_PLAY);
+                    scene.sceneFlow.enterState(READY_TO_PLAY);
                 }
             }
         },
@@ -208,19 +212,19 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 final GameFlow flow = gameContext.flow();
                 final GameModel gameModel = gameContext.model();
                 scene.marquee.timer().doTick();
-                if (sceneTimer.atSecond(2.0) && !gameModel.canStartNewGame(gameContext)) {
+                if (timer.atSecond(2.0) && !gameModel.canStartNewGame(gameContext)) {
                     flow.enterState(GameStateID.GAME_OR_LEVEL_STARTING); // demo level
-                } else if (sceneTimer.atSecond(5)) {
+                } else if (timer.atSecond(5)) {
                     flow.enterState(GameStateID.GAME_PREPARATION);
                 }
             }
         };
 
-        final TickTimer sceneTimer = new TickTimer("Timer-" + name());
+        final TickTimer timer = new TickTimer("Timer-" + name());
 
         @Override
         public TickTimer timer() {
-            return sceneTimer;
+            return timer;
         }
     }
 }
