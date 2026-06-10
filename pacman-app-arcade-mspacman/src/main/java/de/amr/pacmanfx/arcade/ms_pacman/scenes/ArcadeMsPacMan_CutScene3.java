@@ -65,6 +65,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void onActivate() {
+        initScene();
         setSceneState(SceneState.CLAPPERBOARD, TickTimer.INDEFINITE);
     }
 
