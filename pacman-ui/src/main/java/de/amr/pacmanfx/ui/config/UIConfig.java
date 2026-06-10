@@ -309,7 +309,7 @@ public interface UIConfig extends TranslationManager, Disposable {
      * @param personality ghost personality code (e.g. RED_GHOST_SHADOW, …)
      * @return configured ghost ready to be added to the game
      */
-    Ghost createGhostWithAnimations(SpriteAnimationSet animationSet, byte personality);
+    Ghost createAnimatedGhost(SpriteAnimationSet animationSet, byte personality);
 
     /**
      * Creates the animation manager containing all movement & state animations

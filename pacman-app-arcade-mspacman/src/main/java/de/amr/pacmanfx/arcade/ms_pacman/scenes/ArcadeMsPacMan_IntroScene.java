@@ -58,37 +58,56 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public ArcadeMsPacMan_IntroScene(Game game) {
         super(game);
         sceneController = new StateMachine<>(this, List.of(SceneState.values()));
+
+        actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(GlobalActionBindings.SCENE_TESTS_BINDINGS);
     }
 
     @Override
     public void onActivate() {
+        sceneController.restartState(SceneState.STARTING);
+    }
+
+    private void initScene() {
         final UIConfig uiConfig = game().currentUIConfig();
         final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
-
-        game().ui().sounds().playVoice(Globals_GameUI.VOICE_EXPLAIN_GAME_START);
-
-        actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
-        actionBindings().registerAllBindings(GlobalActionBindings.SCENE_TESTS_BINDINGS);
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);
         marquee.setBulbOnColor(ARCADE_WHITE);
+        marquee.timer().restartIndefinitely();
 
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
+        msPacMan.setPosition(WorldMap.TS * 31, WorldMap.TS * 20);
+        msPacMan.setMoveDir(Direction.LEFT);
+        msPacMan.setSpeed(ACTOR_SPEED);
+        msPacMan.setVisible(true);
         msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
         msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        msPacMan.animations().playSelected();
 
         ghosts = List.of(
-            uiConfig.createGhostWithAnimations(spriteAnimations, GameModel.RED_GHOST_SHADOW),
-            uiConfig.createGhostWithAnimations(spriteAnimations, GameModel.PINK_GHOST_SPEEDY),
-            uiConfig.createGhostWithAnimations(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL),
-            uiConfig.createGhostWithAnimations(spriteAnimations, GameModel.ORANGE_GHOST_POKEY)
+            uiConfig.createAnimatedGhost(spriteAnimations, GameModel.RED_GHOST_SHADOW),
+            uiConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY),
+            uiConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL),
+            uiConfig.createAnimatedGhost(spriteAnimations, GameModel.ORANGE_GHOST_POKEY)
         );
+
+        for (Ghost ghost : ghosts) {
+            ghost.setPosition(WorldMap.TS * 33.5f, WorldMap.TS * 20);
+            ghost.setMoveDir(Direction.LEFT);
+            ghost.setWishDir(Direction.LEFT);
+            ghost.setSpeed(ACTOR_SPEED);
+            ghost.setState(GhostState.HUNTING_PAC);
+            ghost.setVisible(true);
+            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            ghost.animations().playSelected();
+        }
 
         presentedGhostPersonality = GameModel.RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        sceneController.restartState(SceneState.STARTING);
+        game().ui().sounds().playVoice(Globals_GameUI.VOICE_EXPLAIN_GAME_START);
     }
 
     @Override
@@ -112,24 +131,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         STARTING {
             @Override
             public void onEnter(ArcadeMsPacMan_IntroScene scene) {
-                scene.marquee.timer().restartIndefinitely();
-                scene.msPacMan.setPosition(WorldMap.TS * 31, WorldMap.TS * 20);
-                scene.msPacMan.setMoveDir(Direction.LEFT);
-                scene.msPacMan.setSpeed(ACTOR_SPEED);
-                scene.msPacMan.setVisible(true);
-                scene.msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
-                scene.msPacMan.animations().playSelected();
-                for (Ghost ghost : scene.ghosts) {
-                    ghost.setPosition(WorldMap.TS * 33.5f, WorldMap.TS * 20);
-                    ghost.setMoveDir(Direction.LEFT);
-                    ghost.setWishDir(Direction.LEFT);
-                    ghost.setSpeed(ACTOR_SPEED);
-                    ghost.setState(GhostState.HUNTING_PAC);
-                    ghost.setVisible(true);
-                    ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-                    ghost.animations().playSelected();
-                }
-                scene.presentedGhostPersonality = GameModel.RED_GHOST_SHADOW;
+                scene.initScene();
             }
 
             @Override

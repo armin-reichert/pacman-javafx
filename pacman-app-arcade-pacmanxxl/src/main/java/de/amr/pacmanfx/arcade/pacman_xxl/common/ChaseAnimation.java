@@ -91,10 +91,10 @@ class ChaseAnimation {
         pac.setVisible(true);
 
         ghosts = List.of(
-            uiConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.RED_GHOST_SHADOW),
-            uiConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.PINK_GHOST_SPEEDY),
-            uiConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.CYAN_GHOST_BASHFUL),
-            uiConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.ORANGE_GHOST_POKEY)
+            uiConfig.createAnimatedGhost(spriteAnimationSet, GameModel.RED_GHOST_SHADOW),
+            uiConfig.createAnimatedGhost(spriteAnimationSet, GameModel.PINK_GHOST_SPEEDY),
+            uiConfig.createAnimatedGhost(spriteAnimationSet, GameModel.CYAN_GHOST_BASHFUL),
+            uiConfig.createAnimatedGhost(spriteAnimationSet, GameModel.ORANGE_GHOST_POKEY)
         );
         for (Ghost ghost : ghosts) {
             ghost.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);

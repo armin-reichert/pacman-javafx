@@ -170,7 +170,7 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
         return actorRenderer;
     }
 
-    public Ghost createGhostWithAnimations(SpriteAnimationSet animationSet, byte personality) {
+    public Ghost createAnimatedGhost(SpriteAnimationSet animationSet, byte personality) {
         final Ghost ghost = ArcadeMsPacMan_GameModel.createGhost(personality);
         ghost.setAnimations(createGhostAnimations(animationSet, personality));
         ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);

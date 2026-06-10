@@ -132,10 +132,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setVisible(true);
 
                 scene.ghosts = List.of(
-                    currentConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.RED_GHOST_SHADOW),
-                    currentConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.CYAN_GHOST_BASHFUL),
-                    currentConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.PINK_GHOST_SPEEDY),
-                    currentConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.ORANGE_GHOST_POKEY)
+                    currentConfig.createAnimatedGhost(spriteAnimationSet, GameModel.RED_GHOST_SHADOW),
+                    currentConfig.createAnimatedGhost(spriteAnimationSet, GameModel.CYAN_GHOST_BASHFUL),
+                    currentConfig.createAnimatedGhost(spriteAnimationSet, GameModel.PINK_GHOST_SPEEDY),
+                    currentConfig.createAnimatedGhost(spriteAnimationSet, GameModel.ORANGE_GHOST_POKEY)
                 );
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(WorldMap.TS * 33, ACTOR_Y);

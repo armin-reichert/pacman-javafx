@@ -70,7 +70,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         final SpriteAnimationSet spriteAnimationSet = game().ui().sprites().animationSet();
         pacMan = createPacMan();
         pacMan.setAnimations(game().currentUIConfig().createPacAnimations(spriteAnimationSet));
-        blinky = game().currentUIConfig().createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW);
+        blinky = game().currentUIConfig().createAnimatedGhost(spriteAnimationSet, RED_GHOST_SHADOW);
         nailDressAnimation = SpriteAnimationBuilder.builder()
             .sprites(ArcadePacMan_SpriteSheet.instance().sprites(SpriteID.RED_GHOST_STRETCHED))
             .initiallyStopped()

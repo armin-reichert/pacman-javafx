@@ -242,7 +242,7 @@ public final class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManage
     }
 
     @Override
-    public Ghost createGhostWithAnimations(SpriteAnimationSet animationSet, byte personality) {
+    public Ghost createAnimatedGhost(SpriteAnimationSet animationSet, byte personality) {
         final Ghost ghost = switch (personality) {
             case GameModel.RED_GHOST_SHADOW -> GhostFactory.createRedGhostShadow("Blinky");
             case GameModel.PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky");
