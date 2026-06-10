@@ -23,7 +23,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;
 
@@ -40,7 +39,7 @@ public class Preview2D extends Canvas {
     private final FoodMapRenderer foodRenderer;
     private final ArcadeHouseRenderer houseRenderer;
 
-    private final DoubleProperty gridSize = new SimpleDoubleProperty(TS);
+    private final DoubleProperty gridSize = new SimpleDoubleProperty(WorldMap.TS);
     private final BooleanProperty terrainVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty foodVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty actorsVisible = new SimpleBooleanProperty(true);
@@ -65,7 +64,7 @@ public class Preview2D extends Canvas {
                 || code == TerrainTile.WALL_V.$;
         });
 
-        DoubleBinding scaling = gridSize.divide(TS);
+        DoubleBinding scaling = gridSize.divide(WorldMap.TS);
         terrainRenderer.scalingProperty().bind(scaling);
         terrainTileRenderer.scalingProperty().bind(scaling);
         foodRenderer.scalingProperty().bind(scaling);

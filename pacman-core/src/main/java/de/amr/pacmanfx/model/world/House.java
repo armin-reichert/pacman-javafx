@@ -9,8 +9,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.core.Globals_Core.HTS;
-import static de.amr.pacmanfx.core.Globals_Core.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.HTS;
 import static java.util.Objects.requireNonNull;
 
 public interface House {
@@ -49,8 +48,8 @@ public interface House {
     default Vector2f centerPositionUnderHouse() {
         Vector2i sizeTiles = sizeInTiles();
         return vec2_float(
-            TS * (minTile().x() + 0.5f * sizeTiles.x()),
-            TS * (minTile().y() +        sizeTiles.y())
+            WorldMap.TS * (minTile().x() + 0.5f * sizeTiles.x()),
+            WorldMap.TS * (minTile().y() +        sizeTiles.y())
         );
     }
 
@@ -69,6 +68,6 @@ public interface House {
     }
 
     default Vector2f center() {
-        return minTile().toVector2f().scaled(TS).plus(sizeInTiles().toVector2f().scaled(HTS));
+        return minTile().toVector2f().scaled(WorldMap.TS).plus(sizeInTiles().toVector2f().scaled(HTS));
     }
 }

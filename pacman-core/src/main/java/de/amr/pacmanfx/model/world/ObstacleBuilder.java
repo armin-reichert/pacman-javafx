@@ -9,7 +9,6 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.model.world.TerrainTile.*;
 import static java.util.function.Predicate.not;
 
@@ -57,20 +56,20 @@ public class ObstacleBuilder {
         final Vector2i start = obstacle.startPoint();
         final TerrainLayer terrainLayer = worldMap.terrainLayer();
         if (obstacle.isClosed()) {
-            return start.x() == TS || start.y() == terrainLayer.emptyRowsOverMaze() * TS + HTS;
+            return start.x() == WorldMap.TS || start.y() == terrainLayer.emptyRowsOverMaze() * WorldMap.TS + WorldMap.HTS;
         }
-        return start.x() == 0 || start.x() == terrainLayer.numCols() * TS;
+        return start.x() == 0 || start.x() == terrainLayer.numCols() * WorldMap.TS;
     }
 
 
     // Arcs are represented by "diagonal" vectors
-    private static final Vector2i SEG_ARC_NW_UP   = tile(HTS, -HTS);
+    private static final Vector2i SEG_ARC_NW_UP   = WorldMap.tile(WorldMap.HTS, -WorldMap.HTS);
     private static final Vector2i SEG_ARC_NW_DOWN = SEG_ARC_NW_UP.inverse();
-    private static final Vector2i SEG_ARC_SW_UP   = tile(-HTS, -HTS);
+    private static final Vector2i SEG_ARC_SW_UP   = WorldMap.tile(-WorldMap.HTS, -WorldMap.HTS);
     private static final Vector2i SEG_ARC_SW_DOWN = SEG_ARC_SW_UP.inverse();
-    private static final Vector2i SEG_ARC_SE_UP   = tile(HTS, -HTS);
+    private static final Vector2i SEG_ARC_SE_UP   = WorldMap.tile(WorldMap.HTS, -WorldMap.HTS);
     private static final Vector2i SEG_ARC_SE_DOWN = SEG_ARC_SE_UP.inverse();
-    private static final Vector2i SEG_ARC_NE_UP   = tile(-HTS, -HTS);
+    private static final Vector2i SEG_ARC_NE_UP   = WorldMap.tile(-WorldMap.HTS, -WorldMap.HTS);
     private static final Vector2i SEG_ARC_NE_DOWN = SEG_ARC_NE_UP.inverse();
 
     private final TerrainLayer terrainLayer;
@@ -131,7 +130,7 @@ public class ObstacleBuilder {
     }
 
     private Obstacle buildObstacle(Vector2i cornerNW, List<Vector2i> tilesWithErrors) {
-        Vector2i startPoint = cornerNW.scaled(TS).plus(TS, HTS);
+        Vector2i startPoint = cornerNW.scaled(WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS);
         byte startTileContent = terrainLayer.content(cornerNW);
         Obstacle obstacle = new Obstacle(startPoint);
         obstacle.addSegment(SEG_ARC_NW_DOWN, true, startTileContent);
@@ -147,13 +146,13 @@ public class ObstacleBuilder {
     }
 
     private Obstacle buildBorderObstacle(Vector2i startTile, boolean startsAtLeftBorder, List<Vector2i> tilesWithErrors) {
-        Vector2i startPoint = startTile.scaled(TS).plus(startsAtLeftBorder ? 0 : TS, HTS);
+        Vector2i startPoint = startTile.scaled(WorldMap.TS).plus(startsAtLeftBorder ? 0 : WorldMap.TS, WorldMap.HTS);
         byte startTileContent = terrainLayer.content(startTile);
         var obstacle = new Obstacle(startPoint);
         cursor = new Cursor(startTile);
         if (startTileContent == WALL_H.$) {
             Direction startDir = startsAtLeftBorder ? Direction.RIGHT : Direction.LEFT;
-            obstacle.addSegment(startDir.vector().scaled(TS), true, WALL_H.$);
+            obstacle.addSegment(startDir.vector().scaled(WorldMap.TS), true, WALL_H.$);
             cursor.move(startDir);
         }
         else if (startsAtLeftBorder && startTileContent == ARC_SE.$) {
@@ -201,10 +200,10 @@ public class ObstacleBuilder {
             byte tileContent = terrainLayer.content(cursor.currentTile);
             if (tileContent == WALL_V.$) {
                 if (cursor.points(Direction.DOWN)) {
-                    obstacle.addSegment(Direction.DOWN.vector().scaled(TS), counterClockwise, tileContent);
+                    obstacle.addSegment(Direction.DOWN.vector().scaled(WorldMap.TS), counterClockwise, tileContent);
                     cursor.move(Direction.DOWN);
                 } else if (cursor.points(Direction.UP)) {
-                    obstacle.addSegment(Direction.UP.vector().scaled(TS), counterClockwise, tileContent);
+                    obstacle.addSegment(Direction.UP.vector().scaled(WorldMap.TS), counterClockwise, tileContent);
                     cursor.move(Direction.UP);
                 } else {
                     errorAtCurrentTile(tilesWithErrors);
@@ -212,10 +211,10 @@ public class ObstacleBuilder {
             }
             else if (tileContent == WALL_H.$ || tileContent == DOOR.$) {
                 if (cursor.points(Direction.RIGHT)) {
-                    obstacle.addSegment(Direction.RIGHT.vector().scaled(TS), counterClockwise, tileContent);
+                    obstacle.addSegment(Direction.RIGHT.vector().scaled(WorldMap.TS), counterClockwise, tileContent);
                     cursor.move(Direction.RIGHT);
                 } else if (cursor.points(Direction.LEFT)) {
-                    obstacle.addSegment(Direction.LEFT.vector().scaled(TS), counterClockwise, tileContent);
+                    obstacle.addSegment(Direction.LEFT.vector().scaled(WorldMap.TS), counterClockwise, tileContent);
                     cursor.move(Direction.LEFT);
                 } else {
                     errorAtCurrentTile(tilesWithErrors);

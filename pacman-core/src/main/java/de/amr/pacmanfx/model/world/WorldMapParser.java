@@ -39,15 +39,15 @@ public class WorldMapParser {
     }
 
     private static boolean isTerrainSectionStart(String line) {
-        return line.startsWith(WorldMap.MARKER_BEGIN_TERRAIN_LAYER);
+        return line.startsWith(WorldMap.Marker.BEGIN_TERRAIN_LAYER.literal());
     }
 
     private static boolean isFoodSectionStart(String line) {
-        return line.startsWith(WorldMap.MARKER_BEGIN_FOOD_LAYER);
+        return line.startsWith(WorldMap.Marker.BEGIN_FOOD_LAYER.literal());
     }
 
     private static boolean isDataSectionStart(String line) {
-        return line.startsWith(WorldMap.MARKER_BEGIN_DATA_SECTION);
+        return line.startsWith(WorldMap.Marker.BEGIN_DATA_SECTION.literal());
     }
 
     private final List<String> terrainLayerSection = new ArrayList<>();
@@ -190,7 +190,7 @@ public class WorldMapParser {
         final var properties = new HashMap<String, String>();
         final String[] lines = text.split("\n");
         for (String line : lines) {
-            if (line.startsWith(WorldMap.MARKER_COMMENT)) continue;
+            if (line.startsWith(WorldMap.Marker.COMMENT.literal())) continue;
             final String[] sides = line.split("=");
             if (sides.length != 2) {
                 Logger.error("Invalid line inside property section: {}", line);

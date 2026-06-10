@@ -17,7 +17,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.Globals_Core.tile;
+import static de.amr.pacmanfx.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
 /**

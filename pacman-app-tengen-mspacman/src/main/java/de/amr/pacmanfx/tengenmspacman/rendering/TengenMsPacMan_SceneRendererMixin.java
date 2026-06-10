@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
@@ -10,7 +11,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static java.util.Objects.requireNonNull;
 
 public interface TengenMsPacMan_SceneRendererMixin {
@@ -53,13 +53,13 @@ public interface TengenMsPacMan_SceneRendererMixin {
             binding.key(JoypadButton.START),
             binding.key(JoypadButton.B),
             binding.key(JoypadButton.A)
-        ), 0, scaling*TS);
+        ), 0, scaling* WorldMap.TS);
         ctx.strokeText(" [UP]=%s   [DOWN]=%s   [LEFT]=%s   [RIGHT]=%s".formatted(
             binding.key(JoypadButton.UP),
             binding.key(JoypadButton.DOWN),
             binding.key(JoypadButton.LEFT),
             binding.key(JoypadButton.RIGHT)
-        ), 0, scaling*(2*TS));
+        ), 0, scaling*(2*WorldMap.TS));
         ctx.restore();
     }
 }

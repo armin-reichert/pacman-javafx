@@ -38,7 +38,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.mapeditor.EditMode.INSPECT;
 import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.*;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
@@ -609,7 +608,7 @@ public class TileMapEditorUI {
     }
 
     private boolean isTemplateImageSizeOk(Image image) {
-        return image.getHeight() % TS == 0 && image.getWidth() % TS == 0;
+        return image.getHeight() % WorldMap.TS == 0 && image.getWidth() % WorldMap.TS == 0;
     }
 
     private Node createPreview3DNavigationHint() {

@@ -10,6 +10,7 @@ import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
@@ -82,7 +83,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         marquee.scalingProperty().bind(scalingProperty());
 
         presentsText = new Actor();
-        presentsText.setPosition(9 * TS, MARQUEE_Y - TS);
+        presentsText.setPosition(9 * WorldMap.TS, MARQUEE_Y - WorldMap.TS);
 
         sceneFlow.restartState(SceneState.WAITING_FOR_START);
     }
@@ -125,7 +126,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setAnimations(currentConfig.createPacAnimations(spriteAnimationSet));
                 scene.msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
                 scene.msPacMan.animations().playSelected();
-                scene.msPacMan.setPosition(TS * 33, ACTOR_Y);
+                scene.msPacMan.setPosition(WorldMap.TS * 33, ACTOR_Y);
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(SPEED);
                 scene.msPacMan.setVisible(true);
@@ -137,7 +138,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     currentConfig.createGhostWithAnimations(spriteAnimationSet, ORANGE_GHOST_POKEY)
                 );
                 for (Ghost ghost : scene.ghosts) {
-                    ghost.setPosition(TS * 33, ACTOR_Y);
+                    ghost.setPosition(WorldMap.TS * 33, ACTOR_Y);
                     ghost.setMoveDir(Direction.LEFT);
                     ghost.setWishDir(Direction.LEFT);
                     ghost.setSpeed(SPEED);

@@ -6,10 +6,10 @@ package de.amr.pacmanfx.model.actors;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.AnimationFacade;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -163,7 +163,7 @@ public class Actor {
      *
      * @return the center position of the actor
      */
-    public Vector2f computeCenter() { return new Vector2f(x + HTS, y + HTS); }
+    public Vector2f computeCenter() { return new Vector2f(x + WorldMap.HTS, y + WorldMap.HTS); }
 
     /**
      * In Pac-Man games, the current tile coordinate of an actor is defined as the tile containing the
@@ -172,9 +172,9 @@ public class Actor {
      * @return the tile coordinate containing the {@link #computeCenter()} position of the actor.
      */
     public Vector2i computeTile() {
-        final float cx = x + HTS;
-        final float cy = y + HTS;
-        return computeTileAt(cx, cy);
+        final float cx = x + WorldMap.HTS;
+        final float cy = y + WorldMap.HTS;
+        return WorldMap.computeTileAt(cx, cy);
     }
 
     /**
@@ -182,7 +182,7 @@ public class Actor {
      */
     public float computeOffsetX() {
         final Vector2i tile = computeTile();
-        return x - tile.x() * TS;
+        return x - tile.x() * WorldMap.TS;
     }
 
     /**
@@ -190,7 +190,7 @@ public class Actor {
      */
     public float computeOffsetY() {
         final Vector2i tile = computeTile();
-        return y - tile.y() * TS;
+        return y - tile.y() * WorldMap.TS;
     }
 
     protected AnimationFacade animations = AnimationFacade.emptyAnimationFacade();

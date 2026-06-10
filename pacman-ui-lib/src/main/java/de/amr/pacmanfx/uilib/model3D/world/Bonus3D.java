@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntity;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -26,8 +27,6 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
-import static de.amr.pacmanfx.core.Globals_Core.HTS;
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.core.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
@@ -170,9 +169,9 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
         final Vector2f center = bonus.computeCenter();
         translate.setX(center.x());
         translate.setY(center.y());
-        translate.setZ(-HTS);
+        translate.setZ(-WorldMap.HTS);
 
-        boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
+        boolean outsideWorld = center.x() < WorldMap.HTS || center.x() > level.worldMap().numCols() * WorldMap.TS - WorldMap.HTS;
         root.setVisible(bonus.state() == BonusState.EDIBLE && !outsideWorld);
     }
 }

@@ -20,7 +20,7 @@ public class ArcadeHouse implements House {
     /**
      * Size of house in tiles (x=width, y=height).
      */
-    public static final Vector2i SIZE_IN_TILES = tile(8, 5);
+    public static final Vector2i SIZE_IN_TILES = WorldMap.tile(8, 5);
 
     public static final byte[][] CONTENT = {
         { ARC_NW.$, WALL_H.$, WALL_H.$, DOOR.$,   DOOR.$,   WALL_H.$, WALL_H.$, ARC_NE.$ },
@@ -84,7 +84,7 @@ public class ArcadeHouse implements House {
      * @return position at which ghosts can enter the house, one tile above and horizontally between the two door tiles
      */
     public Vector2f entryPosition() {
-        return rightDoorTile().toVector2f().scaled(TS).minus(HTS, TS);
+        return rightDoorTile().toVector2f().scaled(WorldMap.TS).minus(WorldMap.HTS, WorldMap.TS);
     }
 
     /**

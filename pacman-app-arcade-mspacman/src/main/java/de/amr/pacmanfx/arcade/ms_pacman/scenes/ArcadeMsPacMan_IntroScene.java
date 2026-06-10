@@ -19,6 +19,7 @@ import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -40,11 +41,11 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
  */
 public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
-    public static final int TITLE_X          = TS * 10;
-    public static final int TITLE_Y          = TS * 8;
-    public static final int TOP_Y            = TS * 11;
-    public static final int STOP_X_GHOST     = TS * 6 - 4;
-    public static final int STOP_X_MS_PACMAN = TS * 15 + 2;
+    public static final int TITLE_X          = WorldMap.TS * 10;
+    public static final int TITLE_Y          = WorldMap.TS * 8;
+    public static final int TOP_Y            = WorldMap.TS * 11;
+    public static final int STOP_X_GHOST     = WorldMap.TS * 6 - 4;
+    public static final int STOP_X_MS_PACMAN = WorldMap.TS * 15 + 2;
 
     private static final float ACTOR_SPEED = 1.11f;
 
@@ -119,14 +120,14 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onEnter(ArcadeMsPacMan_IntroScene scene) {
                 scene.marquee.timer().restartIndefinitely();
-                scene.msPacMan.setPosition(TS * 31, TS * 20);
+                scene.msPacMan.setPosition(WorldMap.TS * 31, WorldMap.TS * 20);
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(ACTOR_SPEED);
                 scene.msPacMan.setVisible(true);
                 scene.msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
                 scene.msPacMan.animations().playSelected();
                 for (Ghost ghost : scene.ghosts) {
-                    ghost.setPosition(TS * 33.5f, TS * 20);
+                    ghost.setPosition(WorldMap.TS * 33.5f, WorldMap.TS * 20);
                     ghost.setMoveDir(Direction.LEFT);
                     ghost.setWishDir(Direction.LEFT);
                     ghost.setSpeed(ACTOR_SPEED);

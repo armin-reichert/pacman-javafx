@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import javafx.scene.canvas.Canvas;
@@ -39,8 +40,8 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
         scene.gameContext().optCurrentLevel().ifPresent(level -> {
             // We assume all ghosts have the same set of special terrain tiles
             level.ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
-                final double x = scaled(tile.x() * TS);
-                final double y = scaled(tile.y() * TS + HTS), size = scaled(TS);
+                final double x = scaled(tile.x() * WorldMap.TS);
+                final double y = scaled(tile.y() * WorldMap.TS + WorldMap.HTS), size = scaled(WorldMap.TS);
                 ctx.setFill(Color.RED);
                 ctx.fillRect(x, y, size, 2);
             });
@@ -52,12 +53,12 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
                 .filter(tile -> tile.y() < terrain.numRows() - terrain.emptyRowsBelowMaze())
                 .filter(terrain::isIntersection)
                 .forEach(tile -> {
-                    final double cx = tile.x() * TS + HTS;
-                    final double cy = tile.y() * TS + HTS;
+                    final double cx = tile.x() * WorldMap.TS + WorldMap.HTS;
+                    final double cy = tile.y() * WorldMap.TS + WorldMap.HTS;
                     for (Direction dir : CLOCK_ORDER) {
                         if (!terrain.isTileBlocked(tile.plus(dir.vector()))) {
-                            final double x = cx + dir.vector().x() * HTS;
-                            final double y = cy + dir.vector().y() * HTS;
+                            final double x = cx + dir.vector().x() * WorldMap.HTS;
+                            final double y = cy + dir.vector().y() * WorldMap.HTS;
                             ctx.setStroke(Color.WHITE);
                             ctx.setLineWidth(2);
                             ctx.strokeLine(scaled(cx), scaled(cy), scaled(x), scaled(y));
@@ -75,7 +76,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
             ctx.setFill(debugTextFill);
             ctx.setStroke(debugTextStroke);
             ctx.setFont(debugTextFont);
-            ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, TS(8));
+            ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, WorldMap.TS(8));
 
             updateActorDrawingOrder(level);
             actorsInZOrder.stream()

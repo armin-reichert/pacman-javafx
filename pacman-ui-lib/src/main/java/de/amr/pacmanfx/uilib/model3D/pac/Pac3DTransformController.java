@@ -8,8 +8,6 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
 
-import static de.amr.pacmanfx.core.Globals_Core.HTS;
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 
 public class Pac3DTransformController {
 
@@ -39,7 +37,7 @@ public class Pac3DTransformController {
             case DOWN  -> 270;
         });
 
-        final boolean outside = center.x() < HTS || center.x() > TS * worldMap.numCols() - HTS;
+        final boolean outside = center.x() < WorldMap.HTS || center.x() > WorldMap.TS * worldMap.numCols() - WorldMap.HTS;
         pac3D.setVisible(pac.isVisible() && !outside);
     }
 }

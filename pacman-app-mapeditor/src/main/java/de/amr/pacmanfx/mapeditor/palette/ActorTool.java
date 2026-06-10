@@ -7,6 +7,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainProperty;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.GraphicsContext;
@@ -14,7 +15,6 @@ import javafx.scene.paint.Color;
 
 import java.util.function.Consumer;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.TOOL_SIZE;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.SPRITE_SHEET;
 import static java.util.Objects.requireNonNull;
@@ -40,7 +40,7 @@ public class ActorTool extends PropertyValueEditorTool {
         GraphicsContext ctx = renderer.ctx();
         ctx.save();
         ctx.setImageSmoothing(true);
-        ctx.scale(TOOL_SIZE / (double) TS, TOOL_SIZE / (double) TS);
+        ctx.scale(TOOL_SIZE / (double) WorldMap.TS, TOOL_SIZE / (double) WorldMap.TS);
         Vector2i tile = new Vector2i(col, row);
         switch (propertyName) {
             case WorldMapPropertyName.POS_SCATTER_RED_GHOST -> drawScatterTarget(ctx, tile, Color.RED);
@@ -48,7 +48,7 @@ public class ActorTool extends PropertyValueEditorTool {
             case WorldMapPropertyName.POS_SCATTER_CYAN_GHOST -> drawScatterTarget(ctx, tile, Color.CYAN);
             case WorldMapPropertyName.POS_SCATTER_ORANGE_GHOST -> drawScatterTarget(ctx, tile, Color.ORANGE);
             default -> {
-                double x = col * TS, y = row * TS;
+                double x = col * WorldMap.TS, y = row * WorldMap.TS;
                 drawSprite(ctx, x, y, sprite);
             }
         }
@@ -56,18 +56,18 @@ public class ActorTool extends PropertyValueEditorTool {
     }
 
     private void drawScatterTarget(GraphicsContext ctx, Vector2i tile, Color color) {
-        double x = tile.x() * TS, y = tile.y() * TS;
+        double x = tile.x() * WorldMap.TS, y = tile.y() * WorldMap.TS;
         ctx.setFill(color);
-        ctx.fillOval(x + 2, y + 2, TS - 4, TS - 4);
+        ctx.fillOval(x + 2, y + 2, WorldMap.TS - 4, WorldMap.TS - 4);
         ctx.setStroke(Color.WHITE);
         ctx.setLineWidth(0.4);
-        ctx.strokeLine(x + 0.5 * TS, y, x + 0.5 * TS, y + TS);
-        ctx.strokeLine(x, y + 0.5 * TS, x + TS, y + 0.5 * TS);
+        ctx.strokeLine(x + 0.5 * WorldMap.TS, y, x + 0.5 * WorldMap.TS, y + WorldMap.TS);
+        ctx.strokeLine(x, y + 0.5 * WorldMap.TS, x + WorldMap.TS, y + 0.5 * WorldMap.TS);
     }
 
     private void drawSprite(GraphicsContext g, double x, double y, RectShort sprite) {
         g.drawImage(SPRITE_SHEET,
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
-                x + 1, y + 1, TS - 2, TS - 2);
+                x + 1, y + 1, WorldMap.TS - 2, WorldMap.TS - 2);
     }
 }

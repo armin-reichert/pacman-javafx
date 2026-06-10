@@ -17,7 +17,7 @@ import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.TS;
 
 /**
  * Intermission scene 3: "Junior".

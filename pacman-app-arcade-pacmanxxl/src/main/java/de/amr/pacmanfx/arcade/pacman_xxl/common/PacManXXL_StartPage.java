@@ -27,7 +27,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
 /**

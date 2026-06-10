@@ -5,13 +5,11 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
-
-import static de.amr.pacmanfx.core.Globals_Core.HTS;
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 
 public class ArcadeHouseRenderer extends BaseRenderer {
 
@@ -45,17 +43,17 @@ public class ArcadeHouseRenderer extends BaseRenderer {
     }
 
     private void drawHouseWalls(Vector2i origin, Vector2i size, Color color, double lineWidth) {
-        Vector2i p = origin.scaled(TS).plus(HTS, HTS);
-        double w = (size.x() - 1) * TS, h = (size.y() - 1) * TS - 2;
+        Vector2i p = origin.scaled(WorldMap.TS).plus(WorldMap.HTS, WorldMap.HTS);
+        double w = (size.x() - 1) * WorldMap.TS, h = (size.y() - 1) * WorldMap.TS - 2;
         ctx.save();
         ctx.beginPath();
         ctx.moveTo(p.x(), p.y());
         ctx.lineTo(p.x(), p.y() + h);
         ctx.lineTo(p.x() + w, p.y() + h);
         ctx.lineTo(p.x() + w, p.y());
-        ctx.lineTo(p.x() + w - 2 * TS, p.y());
+        ctx.lineTo(p.x() + w - 2 * WorldMap.TS, p.y());
         ctx.moveTo(p.x(), p.y());
-        ctx.lineTo(p.x() + 2 * TS, p.y());
+        ctx.lineTo(p.x() + 2 * WorldMap.TS, p.y());
         ctx.setLineWidth(lineWidth);
         ctx.setStroke(color);
         ctx.stroke();
@@ -64,10 +62,10 @@ public class ArcadeHouseRenderer extends BaseRenderer {
 
     // assume we always have a pair of horizontally neighbored doors
     private void drawDoors(Vector2i tile, Color floorColor, Color doorColor) {
-        double x = tile.x() * TS, y = tile.y() * TS + 3;
+        double x = tile.x() * WorldMap.TS, y = tile.y() * WorldMap.TS + 3;
         ctx.setFill(floorColor);
-        ctx.fillRect(x, y - 1, 2 * TS, 4);
+        ctx.fillRect(x, y - 1, 2 * WorldMap.TS, 4);
         ctx.setFill(doorColor);
-        ctx.fillRect(x-2, y, 2 * TS + 4, 2);
+        ctx.fillRect(x-2, y, 2 * WorldMap.TS + 4, 2);
     }
 }

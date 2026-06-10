@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -32,8 +33,6 @@ import javafx.util.Duration;
 import java.util.Set;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.core.Globals_Core.HTS;
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
 import static java.util.Objects.requireNonNull;
@@ -120,13 +119,13 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         barThicknessProperty.set(barThickness);
 
         // Compute house corner coordinates in world space
-        float xMin = house.minTile().x() * TS + HTS, yMin = house.minTile().y() * TS + HTS;
-        float xMax = house.maxTile().x() * TS + HTS, yMax = house.maxTile().y() * TS + HTS;
+        float xMin = house.minTile().x() * WorldMap.TS + WorldMap.HTS, yMin = house.minTile().y() * WorldMap.TS + WorldMap.HTS;
+        float xMax = house.maxTile().x() * WorldMap.TS + WorldMap.HTS, yMax = house.maxTile().y() * WorldMap.TS + WorldMap.HTS;
 
         // Define wall corner points
         Vector2f p0 = vec2_float(xMin, yMin);
-        Vector2f p1 = house.leftDoorTile().scaled((float) TS).plus(0, HTS);
-        Vector2f p2 = house.rightDoorTile().scaled((float) TS).plus(TS, HTS);
+        Vector2f p1 = house.leftDoorTile().scaled((float) WorldMap.TS).plus(0, WorldMap.HTS);
+        Vector2f p2 = house.rightDoorTile().scaled((float) WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS);
         Vector2f p3 = vec2_float(xMax, yMin);
         Vector2f p4 = vec2_float(xMin, yMax);
         Vector2f p5 = vec2_float(xMax, yMax);
@@ -159,7 +158,7 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         // Interior light
         Vector2f houseCenter = p0.midpoint(p5);
         light = new PointLight(Color.GHOSTWHITE);
-        light.setMaxRange(2.5 * TS);
+        light.setMaxRange(2.5 * WorldMap.TS);
         light.setTranslateX(houseCenter.x());
         light.setTranslateY(houseCenter.y());
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
@@ -206,10 +205,10 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
      */
     private Group createDoor(Vector2i tile, double height) {
         var door = new Group();
-        door.setTranslateX(tile.x() * TS);
-        door.setTranslateY(tile.y() * TS + HTS);
+        door.setTranslateX(tile.x() * WorldMap.TS);
+        door.setTranslateY(tile.y() * WorldMap.TS + WorldMap.HTS);
 
-        float barDistance = (float) TS / DOOR_VERTICAL_BAR_COUNT;
+        float barDistance = (float) WorldMap.TS / DOOR_VERTICAL_BAR_COUNT;
 
         // Vertical bars
         for (int i = 0; i < DOOR_VERTICAL_BAR_COUNT; ++i) {
@@ -224,12 +223,12 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         }
 
         // Horizontal top bar
-        var hBar = new Cylinder(barThicknessProperty.get(), 2 * TS);
+        var hBar = new Cylinder(barThicknessProperty.get(), 2 * WorldMap.TS);
         hBar.radiusProperty().bind(barThicknessProperty);
         hBar.setMaterial(barMaterial);
         hBar.setRotationAxis(Rotate.Z_AXIS);
         hBar.setRotate(90);
-        hBar.setTranslateX(HTS);
+        hBar.setTranslateX(WorldMap.HTS);
         hBar.setTranslateZ(-0.5 * (height + barThickness));
         door.getChildren().add(hBar);
 

@@ -11,8 +11,8 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.Globals_Core.isEven;
-import static de.amr.pacmanfx.core.Globals_Core.isOdd;
+import static de.amr.basics.math.MoreMath.isEven;
+import static de.amr.basics.math.MoreMath.isOdd;
 import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 

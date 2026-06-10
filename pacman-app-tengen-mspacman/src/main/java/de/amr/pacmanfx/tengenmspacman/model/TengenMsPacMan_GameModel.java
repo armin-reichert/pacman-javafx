@@ -46,7 +46,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public static final String READY_MESSAGE_TEXT = "READY!";
     public static final String LEVEL_TEST_MESSAGE_TEXT_PATTERN = "TEST    L%02d";
 
-    public static final Vector2i HOUSE_MIN_TILE = tile(10, 15);
+    public static final Vector2i HOUSE_MIN_TILE = WorldMap.tile(10, 15);
 
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
     public static final byte GAME_OVER_MESSAGE_DELAY_SEC = 2;
@@ -245,10 +245,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     protected void setGhostStartPosition(Ghost ghost, Vector2i tile) {
         if (ghost.personality() == RED_GHOST_SHADOW) {
-            ghost.setStartPosition(halfTileRightOf(tile));
+            ghost.setStartPosition(WorldMap.halfTileRightOf(tile));
         } else {
             // The ghosts starting inside the house sit at the *bottom*!
-            ghost.setStartPosition(halfTileRightOf(tile).plus(0, HTS));
+            ghost.setStartPosition(WorldMap.halfTileRightOf(tile).plus(0, WorldMap.HTS));
         }
     }
 
@@ -345,7 +345,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             return;
         }
 
-        final Vector2i houseEntry = computeTileAt(house.entryPosition());
+        final Vector2i houseEntry = WorldMap.computeTileAt(house.entryPosition());
         final Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
 
         final List<HPortal> portals = terrain.horizontalPortals();

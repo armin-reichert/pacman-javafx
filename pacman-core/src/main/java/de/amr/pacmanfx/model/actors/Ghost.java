@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.TerrainTile;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -24,7 +25,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import static de.amr.basics.math.Direction.*;
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.core.Validations.differsAtMost;
 import static de.amr.pacmanfx.core.Validations.stateIsOneOf;
 import static java.util.Objects.requireNonNull;
@@ -299,8 +299,8 @@ public class Ghost extends MovingActor {
      */
     private void updateStateLocked(GameLevel level, float speed) {
         if (home.isVisitedBy(this)) {
-            final float minY = (home.minTile().y() + 1) * TS + HTS;
-            final float maxY = (home.maxTile().y() - 1) * TS - HTS;
+            final float minY = (home.minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
+            final float maxY = (home.maxTile().y() - 1) * WorldMap.TS - WorldMap.HTS;
             if (y() <= minY) {
                 setMoveDir(DOWN);
                 setWishDir(DOWN);
@@ -342,11 +342,11 @@ public class Ghost extends MovingActor {
         }
         else {
             // still inside house
-            final float centerX = x() + HTS;
+            final float centerX = x() + WorldMap.HTS;
             final float houseCenterX = home.center().x();
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
                 // align horizontally and raise
-                setX(houseCenterX - HTS);
+                setX(houseCenterX - WorldMap.HTS);
                 setMoveDir(UP);
                 setWishDir(UP);
             } else {
@@ -454,7 +454,7 @@ public class Ghost extends MovingActor {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     private void updateStateEnteringHouse(GameLevel ignored, float speed) {
-        final Vector2f revivalPosition = halfTileRightOf(home.ghostRevivalTile(personality()));
+        final Vector2f revivalPosition = WorldMap.halfTileRightOf(home.ghostRevivalTile(personality()));
         //TODO
         final Vector2f position = new Vector2f(x(), y());
         if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {

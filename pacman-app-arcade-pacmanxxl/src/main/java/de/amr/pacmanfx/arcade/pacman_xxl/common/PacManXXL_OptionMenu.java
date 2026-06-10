@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.d3.Globals_3D;
 import de.amr.pacmanfx.ui.game.Game;
@@ -20,7 +21,6 @@ import java.util.List;
 
 import static de.amr.pacmanfx.core.GameVariantID.ARCADE_MS_PACMAN_XXL;
 import static de.amr.pacmanfx.core.GameVariantID.ARCADE_PACMAN_XXL;
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.model.world.WorldMapSelectionMode.*;
 import static java.util.Objects.requireNonNull;
 
@@ -32,7 +32,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public static final int TEXT_COLUMN  = 6;
     public static final int VALUE_COLUMN = 20;
 
-    public static final int CHASE_ANIMATION_Y = (NUM_TILES_Y - 12) * TS;
+    public static final int CHASE_ANIMATION_Y = (NUM_TILES_Y - 12) * WorldMap.TS;
 
     private final OptionMenuEntry<GameVariantID>           entryGameVariant;
     private final OptionMenuEntry<Boolean>               entryPlay3D;

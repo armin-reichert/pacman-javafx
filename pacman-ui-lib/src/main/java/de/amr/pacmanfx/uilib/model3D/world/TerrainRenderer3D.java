@@ -7,13 +7,11 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.world.Obstacle;
 import de.amr.pacmanfx.model.world.ObstacleSegment;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.util.Callback;
 import org.tinylog.Logger;
 
 import java.util.List;
-
-import static de.amr.pacmanfx.core.Globals_Core.HTS;
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 
 /**
  * Renders 3D terrain. To add the created walls to some group, use the callback function.
@@ -72,11 +70,11 @@ public class TerrainRenderer3D {
     }
 
     public Wall3D createWallBetweenTileCoordinates(Vector2i t1, Vector2i t2, double wallThickness) {
-        final Vector2f center = t1.midpoint(t2).scaled(TS).plus(HTS, HTS);
+        final Vector2f center = t1.midpoint(t2).scaled(WorldMap.TS).plus(WorldMap.HTS, WorldMap.HTS);
         if (t1.x() == t2.x()) { // vertical wall
-            return createBoxWall(center, wallThickness, TS * t1.manhattanDist(t2));
+            return createBoxWall(center, wallThickness, WorldMap.TS * t1.manhattanDist(t2));
         } else if (t1.y() == t2.y()) { // horizontal wall
-            return createBoxWall(center, TS * t1.manhattanDist(t2) + wallThickness, wallThickness);
+            return createBoxWall(center, WorldMap.TS * t1.manhattanDist(t2) + wallThickness, wallThickness);
         } else {
             throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(t1, t2));
         }
@@ -99,12 +97,12 @@ public class TerrainRenderer3D {
             if ("dcgbfceb".equals(obstacle.encoding())) { // O-shape with hole
                 final List<Vector2f> corners = obstacle.cornerCenterPoints();
                 for (Vector2f corner : corners) {
-                    createCylinderWall(corner, HTS);
+                    createCylinderWall(corner, WorldMap.HTS);
                 }
-                createWallBetween(corners.get(0), corners.get(1), TS);
-                createWallBetween(corners.get(1), corners.get(2), TS);
-                createWallBetween(corners.get(2), corners.get(3), TS);
-                createWallBetween(corners.get(3), corners.get(0), TS);
+                createWallBetween(corners.get(0), corners.get(1), WorldMap.TS);
+                createWallBetween(corners.get(1), corners.get(2), WorldMap.TS);
+                createWallBetween(corners.get(2), corners.get(3), WorldMap.TS);
+                createWallBetween(corners.get(3), corners.get(0), WorldMap.TS);
             } else {
                 // My way (c) for creating closed obstacles:
                 // Create a cylindric wall at each corner, use the rectangular partition of the inner area to
@@ -120,7 +118,7 @@ public class TerrainRenderer3D {
     }
 
     private void renderSegmentPath(Obstacle obstacle, double wallThickness) {
-        final float r = HTS;
+        final float r = WorldMap.HTS;
         for (ObstacleSegment segment : obstacle.segments()) {
             final boolean counterClockwise = segment.ccw();
             final Vector2f start = segment.startPoint().toVector2f();

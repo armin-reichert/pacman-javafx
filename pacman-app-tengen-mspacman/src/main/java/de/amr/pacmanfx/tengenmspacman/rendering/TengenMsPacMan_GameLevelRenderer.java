@@ -20,7 +20,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengenmspacman.rendering.NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED;
@@ -76,7 +75,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         }
         final Image mazeImage = info.get(CommonRenderInfoKey.MAZE_IMAGE, Image.class);
         final RectShort mazeSprite = info.get(CommonRenderInfoKey.MAZE_SPRITE, RectShort.class);
-        final int x = 0, y = worldMap.terrainLayer().emptyRowsOverMaze() * TS;
+        final int x = 0, y = worldMap.terrainLayer().emptyRowsOverMaze() * WorldMap.TS;
         ctx.setImageSmoothing(imageSmoothing());
         ctx.drawImage(mazeImage,
             mazeSprite.x(), mazeSprite.y(), mazeSprite.width(), mazeSprite.height(),
@@ -124,21 +123,21 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void drawEnergizers(FoodLayer foodLayer, Color pelletColor, boolean blinkingOn) {
-        final double size = TS;
-        final double centerOffset = 0.5 * HTS;
+        final double size = WorldMap.TS;
+        final double centerOffset = 0.5 * WorldMap.HTS;
         foodLayer.tiles().filter(foodLayer::isEnergizerTile).forEach(tile -> {
             // overpaint energizer pixels from map image
             ctx.setFill(backgroundColor());
-            fillSquareAtTileCenter(tile, TS + 2);
+            fillSquareAtTileCenter(tile, WorldMap.TS + 2);
             // draw energizer if not eaten and blinking is in ON phase
             if (!foodLayer.hasEatenFoodAtTile(tile) && blinkingOn) {
-                final int x = tile.x() * TS;
-                final int y = tile.y() * TS;
+                final int x = tile.x() * WorldMap.TS;
+                final int y = tile.y() * WorldMap.TS;
                 // draw pixelated "circle"
                 // TODO use sprite instead?
                 ctx.setFill(pelletColor);
-                ctx.fillRect(x + centerOffset, y, HTS, size);
-                ctx.fillRect(x, y + centerOffset, size, HTS);
+                ctx.fillRect(x + centerOffset, y, WorldMap.HTS, size);
+                ctx.fillRect(x, y + centerOffset, size, WorldMap.HTS);
                 ctx.fillRect(x + 1, y + 1, size - 2, size - 2);
             }
         });
@@ -168,7 +167,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         }
         final MapImageSet recoloredImageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
         final Color strokeColor = Color.valueOf(recoloredImageSet.mapImage().colorScheme().wallStroke());
-        final double scaledTileSize = scaled(TS);
+        final double scaledTileSize = scaled(WorldMap.TS);
         final double xMin = house.leftDoorTile().x() * scaledTileSize;
         final double yMin = house.leftDoorTile().y() * scaledTileSize + scaled(5); // 5 pixels down
         ctx.setFill(strokeColor);
@@ -183,7 +182,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
         // Over-paint area at house bottom where the ghost sprites are shown in map
         final double margin = scaling();
-        final double scaledTileSize = scaled(TS);
+        final double scaledTileSize = scaled(WorldMap.TS);
         final var inHouseArea = new Rectangle2D(
             0.5 * margin + scaledTileSize * (house.minTile().x() + 1),
             0.5 * margin + scaledTileSize * (house.minTile().y() + 2),
@@ -196,20 +195,20 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
         // Now the actor sprites outside the house. Be careful not to over-paint nearby obstacle edges!
         final Vector2i pacTile = gameLevel.worldMap().terrainLayer()
-            .getTilePropertyOrDefault(WorldMapPropertyName.POS_PAC, tile(14, 26));
+            .getTilePropertyOrDefault(WorldMapPropertyName.POS_PAC, WorldMap.tile(14, 26));
         overPaintActorSprite(pacTile, margin);
 
         final Vector2i redGhostTile = gameLevel.worldMap().terrainLayer()
-            .getTilePropertyOrDefault(WorldMapPropertyName.POS_GHOST_1_RED, tile(13, 14));
+            .getTilePropertyOrDefault(WorldMapPropertyName.POS_GHOST_1_RED, WorldMap.tile(13, 14));
         overPaintActorSprite(redGhostTile, margin);
     }
 
     private void overPaintActorSprite(Vector2i tile, double margin) {
         final double halfMargin = 0.5f * margin;
-        final double overPaintSize = scaled(2 * TS) - margin;
+        final double overPaintSize = scaled(2 * WorldMap.TS) - margin;
         ctx.fillRect(
-            halfMargin + scaled(tile.x() * TS),
-            halfMargin + scaled(tile.y() * TS - HTS),
+            halfMargin + scaled(tile.x() * WorldMap.TS),
+            halfMargin + scaled(tile.y() * WorldMap.TS - WorldMap.HTS),
             overPaintSize, overPaintSize);
     }
 

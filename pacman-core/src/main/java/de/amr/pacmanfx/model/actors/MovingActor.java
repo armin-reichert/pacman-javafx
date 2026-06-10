@@ -9,6 +9,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntity;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -18,7 +19,6 @@ import java.util.Optional;
 
 import static de.amr.basics.math.Direction.RIGHT;
 import static de.amr.basics.math.Direction.UP;
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -160,8 +160,8 @@ public abstract class MovingActor extends Actor implements GameLevelEntity {
      */
     public void placeAtTile(int tx, int ty, float ox, float oy) {
         var prevTile = computeTile();
-        setX(tx * TS + ox);
-        setY(ty * TS + oy);
+        setX(tx * WorldMap.TS + ox);
+        setY(ty * WorldMap.TS + oy);
         newTileEntered = !computeTile().equals(prevTile);
     }
 
@@ -374,8 +374,8 @@ public abstract class MovingActor extends Actor implements GameLevelEntity {
 
     private void tryMovingTowards(GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
         final Vector2f newVelocity = dir.vector().scaled(computeSpeed());
-        final Vector2f touchPosition = computeCenter().plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
-        final Vector2i touchedTile = computeTileAt(touchPosition);
+        final Vector2f touchPosition = computeCenter().plus(dir.vector().scaled((float) WorldMap.HTS)).plus(newVelocity);
+        final Vector2i touchedTile = WorldMap.computeTileAt(touchPosition);
         final boolean turn = dir.vector().isOrthogonalTo(moveDir().vector());
 
         if (!canAccessTile(level, touchedTile)) {

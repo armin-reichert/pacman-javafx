@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.animation.Animation;
@@ -83,7 +84,7 @@ class ChaseAnimation {
         pac.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
         pac.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
         pac.animations().playSelected();
-        pac.setX(numTilesX * TS);
+        pac.setX(numTilesX * WorldMap.TS);
         pac.setMoveDir(Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
         pac.setSpeed(PAC_FLEEING_SPEED);
@@ -96,7 +97,7 @@ class ChaseAnimation {
             uiConfig.createGhostWithAnimations(spriteAnimationSet, ORANGE_GHOST_POKEY)
         );
         for (Ghost ghost : ghosts) {
-            ghost.setX((numTilesX + 4) * TS + ghost.personality() * GHOST_DISTANCE);
+            ghost.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
             ghost.setMoveDir(Direction.LEFT);
             ghost.setWishDir(Direction.LEFT);
             ghost.setSpeed(GHOST_CHASE_SPEED);
@@ -125,15 +126,15 @@ class ChaseAnimation {
     private void pacManChasesGhosts() {
         moveActors();
         // If ghosts and Pac leave screen at right border, ghosts start chasing Pac moving left
-        if (pac.x() > (numTilesX + 14) * TS) {
+        if (pac.x() > (numTilesX + 14) * WorldMap.TS) {
             pac.setMoveDir(Direction.LEFT);
             pac.setWishDir(Direction.LEFT);
-            pac.setX(numTilesX * TS);
+            pac.setX(numTilesX * WorldMap.TS);
             for (Ghost ghost : ghosts) {
                 ghost.setVisible(true);
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
-                ghost.setX((numTilesX + 4) * TS + ghost.personality() * 2 * TS);
+                ghost.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * 2 * WorldMap.TS);
                 ghost.setSpeed(1.05f);
                 ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
                 ghost.animations().playSelected();
@@ -162,13 +163,13 @@ class ChaseAnimation {
 
     private void ghostsChasePacMan() {
         moveActors();
-        if (ghosts.getLast().x() < -4 * TS) { // ghosts left screen on the left side
+        if (ghosts.getLast().x() < -4 * WorldMap.TS) { // ghosts left screen on the left side
             pac.setMoveDir(Direction.RIGHT);
             pac.setWishDir(Direction.RIGHT);
-            pac.setX(-(numTilesX - 6) * TS);
+            pac.setX(-(numTilesX - 6) * WorldMap.TS);
             for (Ghost ghost : ghosts) {
                 ghost.setVisible(true);
-                ghost.setX(pac.x() + 22 * TS + ghost.personality() * GHOST_DISTANCE);
+                ghost.setX(pac.x() + 22 * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
                 ghost.setMoveDir(Direction.RIGHT);
                 ghost.setWishDir(Direction.RIGHT);
                 ghost.setSpeed(0.58f);

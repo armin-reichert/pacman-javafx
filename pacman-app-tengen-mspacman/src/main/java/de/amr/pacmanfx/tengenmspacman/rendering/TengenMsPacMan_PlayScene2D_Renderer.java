@@ -33,7 +33,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     extends BaseRenderer
     implements GameScene2D_Renderer, SpriteRendererMixin, TengenMsPacMan_SceneRendererMixin
 {
-    private static final int CONTENT_INDENT = 2 * TS;
+    private static final int CONTENT_INDENT = 2 * WorldMap.TS;
     private static final List<Byte> GHOSTS_Z_ORDER = List.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW);
 
     private static class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
@@ -54,12 +54,12 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             ctx.translate(scaled(CONTENT_INDENT), 0);
             ctx.setFill(debugTextFill);
             ctx.setFont(debugTextFont);
-            ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * TS));
+            ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * WorldMap.TS));
             game.optGameLevel().ifPresent(level -> {
                 drawMovingActorInfo(level.entities().pac());
                 level.entities().ghosts().forEach(this::drawMovingActorInfo);
             });
-            ctx.fillText("Camera y=%.2f".formatted(playScene.dynamicCamera().getTranslateY()), scaled(11*TS), scaled(15*TS));
+            ctx.fillText("Camera y=%.2f".formatted(playScene.dynamicCamera().getTranslateY()), scaled(11* WorldMap.TS), scaled(15* WorldMap.TS));
             ctx.restore();
         }
     }

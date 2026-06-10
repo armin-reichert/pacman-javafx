@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.world.FoodTile;
 import de.amr.pacmanfx.model.world.TerrainTile;
 import de.amr.pacmanfx.model.world.WorldMap;
 
-import static de.amr.pacmanfx.core.Globals_Core.tile;
+import static de.amr.pacmanfx.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
 /**

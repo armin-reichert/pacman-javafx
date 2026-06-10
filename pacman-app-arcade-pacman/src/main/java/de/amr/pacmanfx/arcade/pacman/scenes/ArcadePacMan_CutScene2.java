@@ -13,13 +13,13 @@ import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.core.Globals_Core.RED_GHOST_SHADOW;
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 
 /**
  * Second cut scene in Arcade Pac-Man game:<br>
@@ -54,8 +54,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public static final int TICK_BLINK_INSPECTS_DAMAGE  = TICK_ANIMATION_START + 420;
     public static final int TICK_ANIMATION_ENDS         = TICK_ANIMATION_START + 508;
 
-    public final int nailX = TS * 14;
-    public final int nailY = TS * 19 + 3;
+    public final int nailX = WorldMap.TS * 14;
+    public final int nailY = WorldMap.TS * 19 + 3;
     public int sceneTick;
     public Pac pacMan;
     public Ghost blinky;

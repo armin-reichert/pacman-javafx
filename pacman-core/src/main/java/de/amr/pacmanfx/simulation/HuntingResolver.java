@@ -9,10 +9,8 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import org.tinylog.Logger;
-
-import static de.amr.pacmanfx.core.Globals_Core.HTS;
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 
 public final class HuntingResolver {
 
@@ -96,9 +94,9 @@ public final class HuntingResolver {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         terrain.hPortalContainingTile(pac.computeTile()).ifPresent(hPortal -> {
             if (pac.moveDir() == Direction.LEFT) {
-                pac.setX(hPortal.rightBorderEntryTile().x() * TS + HTS);
+                pac.setX(hPortal.rightBorderEntryTile().x() * WorldMap.TS + WorldMap.HTS);
             } else if (pac.moveDir() == Direction.RIGHT) {
-                pac.setX(hPortal.leftBorderEntryTile().x() * TS - HTS);
+                pac.setX(hPortal.leftBorderEntryTile().x() * WorldMap.TS - WorldMap.HTS);
             }
             // Not sure if colliding ghosts should also be moved back to visible area
             Logger.info("Detected collision while teleporting, moved Pac-Man back into world");

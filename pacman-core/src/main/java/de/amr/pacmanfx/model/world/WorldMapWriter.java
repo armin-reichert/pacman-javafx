@@ -44,12 +44,12 @@ public class WorldMapWriter {
 
     public void printWorldMap() {
         final TerrainLayer terrain = worldMap.terrainLayer();
-        printer.println(WorldMap.MARKER_BEGIN_TERRAIN_LAYER);
+        printer.println(WorldMap.Marker.BEGIN_TERRAIN_LAYER.literal());
         printLayerProperties(terrain);
         printLayerData(terrain);
 
         final FoodLayer foodLayer = worldMap.foodLayer();
-        printer.println(WorldMap.MARKER_BEGIN_FOOD_LAYER);
+        printer.println(WorldMap.Marker.BEGIN_FOOD_LAYER.literal());
         printComment(" Pellets (total): %d".formatted(foodLayer.totalFoodCount()));
         printComment(" Energizers: %d".formatted(foodLayer.energizerTiles().size()));
         printLayerProperties(foodLayer);
@@ -57,7 +57,7 @@ public class WorldMapWriter {
     }
 
     private void printLayerData(WorldMapLayer layer) {
-        printer.println(WorldMap.MARKER_BEGIN_DATA_SECTION);
+        printer.println(WorldMap.Marker.BEGIN_DATA_SECTION.literal());
         for (int row = 0; row < layer.numRows(); ++row) {
             final StringJoiner joiner = new StringJoiner(",");
             for (int col = 0; col < layer.numCols(); ++col) {
@@ -75,6 +75,6 @@ public class WorldMapWriter {
     }
 
     private void printComment(String comment) {
-        printer.println(WorldMap.MARKER_COMMENT + comment);
+        printer.println(WorldMap.Marker.COMMENT.literal() + comment);
     }
 }

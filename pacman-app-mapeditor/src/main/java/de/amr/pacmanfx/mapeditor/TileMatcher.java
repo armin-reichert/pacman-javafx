@@ -4,12 +4,12 @@
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.model.world.FoodTile;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.scene.paint.Color;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.model.world.TerrainTile.*;
 
 public class TileMatcher {
@@ -76,11 +76,11 @@ public class TileMatcher {
     private IntStream allIndices() { return IntStream.range(0, 64); }
 
     private IntStream row(int[] tilePixels, int rowIndex) {
-        return allIndices().filter(i -> i / TS == rowIndex).map(i -> tilePixels[i]);
+        return allIndices().filter(i -> i / WorldMap.TS == rowIndex).map(i -> tilePixels[i]);
     }
 
     private IntStream col(int[] tilePixels, int columnIndex) {
-        return allIndices().filter(i -> i % TS == columnIndex).map(i -> tilePixels[i]);
+        return allIndices().filter(i -> i % WorldMap.TS == columnIndex).map(i -> tilePixels[i]);
     }
 
     private IntStream subset(int[] tilePixels, int... indices) {

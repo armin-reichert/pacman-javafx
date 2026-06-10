@@ -13,7 +13,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.Globals_Core.tile;
+import static de.amr.pacmanfx.model.world.WorldMap.tile;
 
 
 class TilePropertyEditor extends AbstractPropertyEditor {

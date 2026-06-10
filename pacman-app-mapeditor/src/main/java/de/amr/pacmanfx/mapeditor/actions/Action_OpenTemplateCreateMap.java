@@ -6,6 +6,7 @@ package de.amr.pacmanfx.mapeditor.actions;
 import de.amr.pacmanfx.mapeditor.EditMode;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import org.tinylog.Logger;
@@ -15,7 +16,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.*;
 
 public class Action_OpenTemplateCreateMap extends EditorUIAction<Void> {
@@ -41,7 +41,7 @@ public class Action_OpenTemplateCreateMap extends EditorUIAction<Void> {
     }
 
     private boolean isTemplateImageSizeOk(Image image) {
-        return image.getHeight() % TS == 0 && image.getWidth() % TS == 0;
+        return image.getHeight() % WorldMap.TS == 0 && image.getWidth() % WorldMap.TS == 0;
     }
 
     private Optional<Image> openTemplateImage() {

@@ -5,6 +5,7 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.beans.property.DoubleProperty;
@@ -17,8 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
-import static de.amr.pacmanfx.core.Globals_Core.HTS;
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static java.util.Objects.requireNonNull;
 
 public class BaseRenderer implements Renderer {
@@ -125,7 +124,8 @@ public class BaseRenderer implements Renderer {
      */
     public void fillSquareAtTileCenter(Vector2i tile, double sideLength) {
         requireNonNull(tile);
-        final double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
+        final double centerX = tile.x() * WorldMap.TS + WorldMap.HTS;
+        final double centerY = tile.y() * WorldMap.TS + WorldMap.HTS;
         final double halfSideLength = 0.5f * sideLength;
         ctx.fillRect(centerX - halfSideLength, centerY - halfSideLength, sideLength, sideLength);
     }
@@ -175,9 +175,9 @@ public class BaseRenderer implements Renderer {
     }
 
     public void drawTileGrid(double sizeX, double sizeY, Color gridColor) {
-        final double scaledTileSize = scaled(TS);
+        final double scaledTileSize = scaled(WorldMap.TS);
         final double thin = 0.2, medium = 0.4, thick = 0.8;
-        final int numCols = (int) (sizeX / TS), numRows = (int) (sizeY / TS);
+        final int numCols = (int) (sizeX / WorldMap.TS), numRows = (int) (sizeY / WorldMap.TS);
         final double width = numCols * scaledTileSize, height = numRows * scaledTileSize;
         ctx.save();
         ctx.setStroke(Color.YELLOW);

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.action.ActionKeyBinding;
@@ -37,7 +38,6 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.ui.action.CommonActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static java.util.Objects.requireNonNull;
@@ -298,9 +298,9 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
-        scores3D.translateXProperty().bind(level3DParent.translateXProperty().add(TS));
-        scores3D.translateYProperty().bind(level3DParent.translateYProperty().subtract(4.5 * TS));
-        scores3D.translateZProperty().bind(level3DParent.translateZProperty().subtract(4.5 * TS));
+        scores3D.translateXProperty().bind(level3DParent.translateXProperty().add(WorldMap.TS));
+        scores3D.translateYProperty().bind(level3DParent.translateYProperty().subtract(4.5 * WorldMap.TS));
+        scores3D.translateZProperty().bind(level3DParent.translateZProperty().subtract(4.5 * WorldMap.TS));
 
         if (oldScores3D != null) {
             subSceneRoot.getChildren().remove(oldScores3D);

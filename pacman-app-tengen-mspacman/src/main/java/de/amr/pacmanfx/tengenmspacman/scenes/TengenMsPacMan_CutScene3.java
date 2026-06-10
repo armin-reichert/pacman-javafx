@@ -8,6 +8,7 @@ import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.game.Game;
@@ -17,7 +18,6 @@ import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_LET_GAME_STATE_EXPIRE;
@@ -34,8 +34,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     public static final int TICK_EXPIRES = 660;
 
-    private static final int GROUND_Y = TS * 24;
-    private static final int RIGHT_BORDER = TS * 30;
+    private static final int GROUND_Y = WorldMap.TS * 24;
+    private static final int RIGHT_BORDER = WorldMap.TS * 30;
 
     private Clapperboard clapperboard;
     private Pac pacMan;
@@ -85,7 +85,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         actionBindings().bindActionToKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(3, "JUNIOR");
-        clapperboard.setPosition(3 * TS, 10 * TS);
+        clapperboard.setPosition(3 * WorldMap.TS, 10 * WorldMap.TS);
         clapperboard.show();
         clapperboard.startAnimation();
 
@@ -115,20 +115,20 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             switch ((int) gameStateTick) {
                 case 130 -> {
                     pacMan.setMoveDir(Direction.RIGHT);
-                    pacMan.setPosition(TS * 3, GROUND_Y - 4);
+                    pacMan.setPosition(WorldMap.TS * 3, GROUND_Y - 4);
                     pacMan.setSpeed(0);
                     pacMan.animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations().stopSelected();
                     pacMan.show();
 
                     msPacMan.setMoveDir(Direction.RIGHT);
-                    msPacMan.setPosition(TS * 5, GROUND_Y - 4);
+                    msPacMan.setPosition(WorldMap.TS * 5, GROUND_Y - 4);
                     msPacMan.setSpeed(0);
                     msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
                     msPacMan.animations().stopSelected();
                     msPacMan.show();
 
-                    stork.setPosition(RIGHT_BORDER, TS * 7);
+                    stork.setPosition(RIGHT_BORDER, WorldMap.TS * 7);
                     stork.setVelocity(-0.8f, 0);
                     stork.setBagReleasedFromBeak(false);
                     stork.animations().select(ArcadeMsPacMan_AnimationID.STORK_FLYING);

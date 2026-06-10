@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.Globals_Core;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -125,7 +126,7 @@ public class RuleBasedPacSteering implements Steering {
             pac.setTargetTile(prey.computeTile());
         } else if (isEdibleBonusNearPac(level, pac)) {
             Logger.trace("Active bonus detected, get it!");
-            level.optBonus().ifPresent(bonus -> pac.setTargetTile(Globals_Core.computeTileAt(bonus.x(), bonus.y())));
+            level.optBonus().ifPresent(bonus -> pac.setTargetTile(WorldMap.computeTileAt(bonus.x(), bonus.y())));
         } else {
             pac.setTargetTile(findTileFarthestFromGhosts(level, pac, findNearestFoodTiles(level)));
         }
@@ -138,7 +139,7 @@ public class RuleBasedPacSteering implements Steering {
     private boolean isEdibleBonusNearPac(GameLevel gameLevel, Pac pac) {
         if (gameLevel.optBonus().isPresent()) {
             var bonus = gameLevel.optBonus().get();
-            var tile = Globals_Core.computeTileAt(bonus.x(), bonus.y());
+            var tile = WorldMap.computeTileAt(bonus.x(), bonus.y());
             return bonus.state() == BonusState.EDIBLE
                 && tile.manhattanDist(pac.computeTile()) <= CollectedData.MAX_BONUS_HARVEST_DIST;
         }

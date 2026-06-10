@@ -7,6 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import javafx.scene.paint.Color;
@@ -19,7 +20,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.*;
  */
 public class TengenMsPacMan_BootScene extends GameScene2D {
 
-    private static final float GHOST_Y = TS(21.5f);
+    private static final float GHOST_Y = WorldMap.TS(21.5f);
 
     public boolean gray;
     public Actor movingText;
@@ -35,7 +36,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     public void onActivate() {
         movingText = new Actor();
-        movingText.setPosition(TS(9), unscaledHeight()); // lower border of screen
+        movingText.setPosition(WorldMap.TS(9), unscaledHeight()); // lower border of screen
         ghost = game().currentUIConfig().createGhostWithAnimations(game().ui().sprites().animationSet(), RED_GHOST_SHADOW);
     }
 
@@ -48,21 +49,21 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             case   7 -> gray(true);
             case  12 -> gray(false);
             case  21 -> {
-                movingText.setVelocity(0, -HTS);
+                movingText.setVelocity(0, -WorldMap.HTS);
                 movingText.show();
             }
             case  55 -> {
-                movingText.setPosition(TS(9), TS(13));
+                movingText.setPosition(WorldMap.TS(9), WorldMap.TS(13));
                 movingText.setVelocity(0, 0);
             }
             case 113 -> {
-                ghost.setPosition(unscaledWidth() - TS, GHOST_Y);
+                ghost.setPosition(unscaledWidth() - WorldMap.TS, GHOST_Y);
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
-                ghost.setSpeed(TS);
+                ghost.setSpeed(WorldMap.TS);
                 ghost.show();
             }
-            case 181 -> movingText.setVelocity(0, TS);
+            case 181 -> movingText.setVelocity(0, WorldMap.TS);
             case 203 -> {
                 movingText.hide();
                 ghost.hide();

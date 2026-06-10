@@ -10,8 +10,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.core.Globals_Core.HTS;
-import static de.amr.pacmanfx.core.Globals_Core.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.HTS;
+import static de.amr.pacmanfx.model.world.WorldMap.TS;
 import static de.amr.pacmanfx.uilib.Ufx.scaleFontBy;
 
 /**

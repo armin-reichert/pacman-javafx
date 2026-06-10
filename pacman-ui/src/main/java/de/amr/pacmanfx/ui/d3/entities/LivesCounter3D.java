@@ -26,7 +26,7 @@ import javafx.scene.transform.Rotate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
 /**

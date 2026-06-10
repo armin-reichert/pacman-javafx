@@ -16,8 +16,7 @@ import org.tinylog.Logger;
 import java.nio.IntBuffer;
 import java.time.LocalTime;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
-import static de.amr.pacmanfx.core.Globals_Core.tile;
+import static de.amr.pacmanfx.model.world.WorldMap.tile;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;
 
 public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
@@ -74,8 +73,8 @@ public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
             for (int col = 0; col < numMazeCols; ++col) {
                 Vector2i worldMapTile = tile(col, row + emptyRowsTop);
                 try {
-                    int[] pixelsOfTile = new int[TS*TS]; // pixels row-wise
-                    rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);
+                    int[] pixelsOfTile = new int[WorldMap.TS * WorldMap.TS]; // pixels row-wise
+                    rdr.getPixels(col * WorldMap.TS, row * WorldMap.TS, WorldMap.TS, WorldMap.TS, pixelFormat, pixelsOfTile, 0, WorldMap.TS);
                     byte foodValue = matcher.matchFoodTile(pixelsOfTile);
                     if (foodValue == FoodTile.PELLET.$ || foodValue == FoodTile.ENERGIZER.$) {
                         worldMap.foodLayer().setContent(worldMapTile, foodValue);

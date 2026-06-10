@@ -7,11 +7,11 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 import static java.util.function.Predicate.not;
 
@@ -44,7 +44,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
 
     protected void drawMap(GameLevel level, RenderInfo info) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final int emptySpaceOverMazePixels = terrain.emptyRowsOverMaze() * TS;
+        final int emptySpaceOverMazePixels = terrain.emptyRowsOverMaze() * WorldMap.TS;
         ctx.save();
         ctx.scale(scaling(), scaling());
         if (info.getBoolean(CommonRenderInfoKey.MAP_EMPTY)) {
@@ -62,10 +62,10 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
                 terrain.optHouse().ifPresent(house -> {
                     ctx.setFill(backgroundColor());
                     if (house.leftDoorTile() != null) {
-                        fillSquareAtTileCenter(house.leftDoorTile(), TS + 0.5);
+                        fillSquareAtTileCenter(house.leftDoorTile(), WorldMap.TS + 0.5);
                     }
                     if (house.rightDoorTile() != null) {
-                        fillSquareAtTileCenter(house.rightDoorTile(), TS + 0.5);
+                        fillSquareAtTileCenter(house.rightDoorTile(), WorldMap.TS + 0.5);
                     }
                 });
             }

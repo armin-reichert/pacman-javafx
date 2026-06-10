@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.AnimationIdentifier;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -21,8 +22,6 @@ import javafx.util.Duration;
 
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.core.Globals_Core.HTS;
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static java.util.Objects.requireNonNull;
 
 public class Energizer3D implements DisposableGraphicsObject {
@@ -82,12 +81,12 @@ public class Energizer3D implements DisposableGraphicsObject {
     public Energizer3D(AnimationRegistry animations) {
         this.animations = requireNonNull(animations);
         this.shapeFactory = Energizer3D::createDefaultShape;
-        setLocation(Vector2i.ZERO, HTS);
+        setLocation(Vector2i.ZERO, WorldMap.HTS);
     }
 
     public void setLocation(Vector2i tile, double centerZ) {
         this.tile = requireNonNull(tile);
-        final Vector2i centerXY = tile.scaled(TS).plus(HTS, HTS);
+        final Vector2i centerXY = tile.scaled(WorldMap.TS).plus(WorldMap.HTS, WorldMap.HTS);
         center = new Point3D(centerXY.x(), centerXY.y(), centerZ);
         if (shape != null) {
             updateShapeLocation();

@@ -5,11 +5,11 @@ package de.amr.pacmanfx.ui.d3.camera;
 
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
-import static de.amr.pacmanfx.core.Globals_Core.lerp;
+import static de.amr.basics.math.MoreMath.lerp;
 import static java.util.Objects.requireNonNull;
 
 public class TrackingPlayerPerspective implements Perspective<GameLevel> {
@@ -35,7 +35,7 @@ public class TrackingPlayerPerspective implements Perspective<GameLevel> {
         final Pac pac = level.entities().pac();
         double speedX = 0.03;
         double speedY = 0.06;
-        double worldWidth = level.worldMap().numCols() * TS;
+        double worldWidth = level.worldMap().numCols() * WorldMap.TS;
         double targetX = Math.clamp(pac.x(), 80, worldWidth - 80);
         double targetY = pac.y() + 150;
         camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));

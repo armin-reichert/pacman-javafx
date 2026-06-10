@@ -3,14 +3,13 @@
  */
 package de.amr.pacmanfx.uilib.model3D.world;
 
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 
 /**
  * Displays score and high score in 3D play scene.
@@ -42,7 +41,7 @@ public class Scores3D extends GridPane {
         textDisplayRight.setFill(Color.YELLOW);
         textDisplayRight.setFont(font);
 
-        setHgap(5 * TS);
+        setHgap(5 * WorldMap.TS);
         add(titleDisplayLeft, 0,0);
         add(textDisplayLeft, 0,1);
         add(titleDisplayRight,1,0);

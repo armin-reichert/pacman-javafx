@@ -27,7 +27,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.translated;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.*;
 import static java.util.Objects.requireNonNull;
@@ -56,14 +55,14 @@ public class TemplateImageCanvas extends Canvas {
         widthProperty().bind(Bindings.createDoubleBinding(
             () -> {
                 Image image = templateImage.get();
-                double scaling = gridSize() / (double)TS;
+                double scaling = gridSize() / (double) WorldMap.TS;
                 return image != null ? image.getWidth() * scaling : 0;
             }, gridSize, templateImage));
 
         heightProperty().bind(Bindings.createDoubleBinding(
             () -> {
                 Image image = templateImage.get();
-                double scaling = gridSize() / (double)TS;
+                double scaling = gridSize() / (double) WorldMap.TS;
                 return image != null ? image.getHeight() * scaling : 0;
             }, gridSize, templateImage));
 
@@ -196,19 +195,19 @@ public class TemplateImageCanvas extends Canvas {
         g.fillRect(0, 0, getWidth(), getHeight());
         Image image = templateImage.get();
         if (image != null) {
-            double scaling = (double) gridSize() / TS;
+            double scaling = (double) gridSize() / WorldMap.TS;
             double width = scaling * image.getWidth(), height = scaling * image.getHeight();
             g.setImageSmoothing(false);
             g.drawImage(image, 0, 0, width, height);
             if (gridVisible.get()) {
                 g.setStroke(Color.grayRgb(180));
                 g.setLineWidth(0.5);
-                for (int row = 1; row < height / TS; ++row) {
-                    double y = scaling * row * TS;
+                for (int row = 1; row < height / WorldMap.TS; ++row) {
+                    double y = scaling * row * WorldMap.TS;
                     g.strokeLine(0, y, width, y);
                 }
-                for (int col = 1; col < width / TS; ++col) {
-                    double x = scaling * col * TS;
+                for (int col = 1; col < width / WorldMap.TS; ++col) {
+                    double x = scaling * col * WorldMap.TS;
                     g.strokeLine(x, 0, x, height);
                 }
             }

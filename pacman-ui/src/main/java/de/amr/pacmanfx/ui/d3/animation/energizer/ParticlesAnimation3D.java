@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.d3.animation.energizer;
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.model.world.House;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticle3D;
 import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticle3D.ParticleState;
@@ -80,7 +81,7 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
         // The 3 ghost revival positions inside the house from left to right
         swirlBases = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
             .map(house::ghostRevivalTile)
-            .map(tile -> tile.scaled(TS).plus(HTS, HTS))
+            .map(tile -> tile.scaled(WorldMap.TS).plus(WorldMap.HTS, WorldMap.HTS))
             .map(pos -> new Vector3f(pos.x(), pos.y(), 0))
             .toList();
 

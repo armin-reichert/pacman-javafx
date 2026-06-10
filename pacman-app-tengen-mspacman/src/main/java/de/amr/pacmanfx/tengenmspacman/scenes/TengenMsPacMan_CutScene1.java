@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
@@ -37,11 +38,11 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     public static final int TICK_EXPIRES = 775;
 
-    private static final int UPPER_LANE   = TS * 8;
-    private static final int LOWER_LANE   = TS * 24;
-    private static final int MIDDLE_LANE  = TS * 16;
-    private static final int LEFT_BORDER  = TS;
-    private static final int RIGHT_BORDER = TS * 30;
+    private static final int UPPER_LANE   = WorldMap.TS * 8;
+    private static final int LOWER_LANE   = WorldMap.TS * 24;
+    private static final int MIDDLE_LANE  = WorldMap.TS * 16;
+    private static final int LEFT_BORDER  = WorldMap.TS;
+    private static final int RIGHT_BORDER = WorldMap.TS * 30;
 
     private static final float SPEED_CHASING = 2.0f;
     private static final float SPEED_RISING = 1.0f;
@@ -97,7 +98,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         actionBindings().bindActionToKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(1, "THEY MEET");
-        clapperboard.setPosition(3 * TS, 10 * TS);
+        clapperboard.setPosition(3 * WorldMap.TS, 10 * WorldMap.TS);
         clapperboard.show();
         clapperboard.startAnimation();
 
@@ -188,11 +189,11 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                     pacMan.setPosition(RIGHT_BORDER, MIDDLE_LANE);
                     pacMan.setMoveDir(Direction.LEFT);
 
-                    pinky.setPosition(msPacMan.x() - TS * 11, msPacMan.y());
+                    pinky.setPosition(msPacMan.x() - WorldMap.TS * 11, msPacMan.y());
                     pinky.setMoveDir(Direction.RIGHT);
                     pinky.setWishDir(Direction.RIGHT);
 
-                    inky.setPosition(pacMan.x() + TS * 11, pacMan.y());
+                    inky.setPosition(pacMan.x() + WorldMap.TS * 11, pacMan.y());
                     inky.setMoveDir(Direction.LEFT);
                     inky.setWishDir(Direction.LEFT);
                 }
@@ -230,7 +231,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
                     msPacMan.animations().resetSelected();
                 }
                 case 560 -> {
-                    heart.setPosition(0.5f * (pacMan.x() + msPacMan.x()), pacMan.y() - TS(2));
+                    heart.setPosition(0.5f * (pacMan.x() + msPacMan.x()), pacMan.y() - WorldMap.TS(2));
                     heart.show();
                 }
                 case 760 -> {

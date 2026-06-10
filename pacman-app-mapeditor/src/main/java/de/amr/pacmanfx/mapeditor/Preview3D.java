@@ -16,7 +16,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static java.util.Objects.requireNonNull;
 
 public class Preview3D {
@@ -99,8 +98,8 @@ public class Preview3D {
         camera.setRotationAxis(Rotate.X_AXIS);
         camera.setRotate(DEFAULT_CAMERA_ROTATE);
         if (worldMap() != null) {
-            double mapWidth = worldMap().numCols() * TS;
-            double mapHeight = worldMap().numRows() * TS;
+            double mapWidth = worldMap().numCols() * WorldMap.TS;
+            double mapHeight = worldMap().numRows() * WorldMap.TS;
             camera.setTranslateX(mapWidth * 0.5);
             camera.setTranslateY(mapHeight);
             camera.setTranslateZ(-mapWidth * 0.5);

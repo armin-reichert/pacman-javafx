@@ -7,7 +7,7 @@ import de.amr.pacmanfx.mapeditor.actions.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;
 
-import static de.amr.pacmanfx.core.Globals_Core.tile;
+import static de.amr.pacmanfx.model.world.WorldMap.tile;
 import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.NO_GRAPHIC;
 import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.translated;
 

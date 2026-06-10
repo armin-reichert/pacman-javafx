@@ -12,10 +12,7 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntitySet;
-import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.model.world.House;
-import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.ui.config.BonusConfig;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
@@ -370,16 +367,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createLivesCounter3D() {
         entitySet.livesCounter3D = new LivesCounter3D(uiConfig.factory3D(), uiConfig.worldConfig());
-        entitySet.livesCounter3D.setTranslateX(2 * TS);
-        entitySet.livesCounter3D.setTranslateY(2 * TS);
+        entitySet.livesCounter3D.setTranslateX(2 * WorldMap.TS);
+        entitySet.livesCounter3D.setTranslateY(2 * WorldMap.TS);
         entitySet.add(entitySet.livesCounter3D);
     }
 
     private void createLevelCounter3D() {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         entitySet.levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
-        entitySet.levelCounter3D.setTranslateX(TS(terrain.numCols() - 2));
-        entitySet.levelCounter3D.setTranslateY(TS(2));
+        entitySet.levelCounter3D.setTranslateX(WorldMap.TS(terrain.numCols() - 2));
+        entitySet.levelCounter3D.setTranslateY(WorldMap.TS(2));
         entitySet.levelCounter3D.setTranslateZ(-uiConfig.worldConfig().levelCounter().elevation());
         entitySet.add(entitySet.levelCounter3D);
     }
@@ -391,11 +388,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             house -> messageManager.setMessageCenter(MessageManager3D.MessageType.READY, house.centerPositionUnderHouse()),
             () -> {
                 Logger.error("No house in this game level! WTF?");
-                final double x = terrain.numCols() * HTS, y = terrain.numRows() * HTS;
+                final double x = terrain.numCols() * WorldMap.HTS, y = terrain.numRows() * WorldMap.HTS;
                 messageManager.setMessageCenter(MessageManager3D.MessageType.READY, vec2_float(x, y));
             });
         messageManager.setMessageCenter(MessageManager3D.MessageType.TEST,
-            vec2_float(terrain.numCols() * HTS, (terrain.numRows() - 2) * TS));
+            vec2_float(terrain.numCols() * WorldMap.HTS, (terrain.numRows() - 2) * WorldMap.TS));
     }
 
     // Order matters for correct transparency!

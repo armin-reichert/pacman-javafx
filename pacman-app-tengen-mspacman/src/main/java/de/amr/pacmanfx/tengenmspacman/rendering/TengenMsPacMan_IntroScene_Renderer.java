@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene.SceneState;
 import de.amr.pacmanfx.ui.Globals_GameUI;
@@ -17,7 +18,6 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.shadeOfBlue;
@@ -63,11 +63,11 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
                 if (!introScene.dark) {
                     boolean showPressStart = tick % 60 < 30;
                     fillText("TENGEN PRESENTS", shadeOfBlue(tick), introScene.presentsText.x(), introScene.presentsText.y());
-                    drawSprite(spriteSheet().sprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * TS, MARQUEE_Y, true);
-                    if (showPressStart) fillText("PRESS START", nesColor(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
-                    fillText("MS PAC-MAN TM NAMCO LTD", nesColor(0x25), 6 * TS, MARQUEE_Y + 15 * TS);
-                    fillText("©1990 TENGEN INC",        nesColor(0x25), 8 * TS, MARQUEE_Y + 16 * TS);
-                    fillText("ALL RIGHTS RESERVED",     nesColor(0x25), 7 * TS, MARQUEE_Y + 17 * TS);
+                    drawSprite(spriteSheet().sprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * WorldMap.TS, MARQUEE_Y, true);
+                    if (showPressStart) fillText("PRESS START", nesColor(0x20), 11 * WorldMap.TS, MARQUEE_Y + 9 * WorldMap.TS);
+                    fillText("MS PAC-MAN TM NAMCO LTD", nesColor(0x25), 6 * WorldMap.TS, MARQUEE_Y + 15 * WorldMap.TS);
+                    fillText("©1990 TENGEN INC",        nesColor(0x25), 8 * WorldMap.TS, MARQUEE_Y + 16 * WorldMap.TS);
+                    fillText("ALL RIGHTS RESERVED",     nesColor(0x25), 7 * WorldMap.TS, MARQUEE_Y + 17 * WorldMap.TS);
                 }
             }
             case SceneState.SHOWING_MARQUEE -> {

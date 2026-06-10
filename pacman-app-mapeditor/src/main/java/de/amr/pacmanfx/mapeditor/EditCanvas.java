@@ -36,7 +36,6 @@ import org.tinylog.Logger;
 
 import java.util.function.Predicate;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.translated;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;
@@ -113,7 +112,7 @@ public class EditCanvas extends Canvas {
         obstacleInnerAreaDisplayedProperty().bind(ui.obstacleInnerAreaDisplayedProperty());
         obstaclesJoiningProperty()          .bind(ui.obstaclesJoiningProperty());
         segmentNumbersVisibleProperty()     .bind(ui.segmentNumbersVisibleProperty());
-        scalingProperty()                   .bind(gridSize.divide(TS));
+        scalingProperty()                   .bind(gridSize.divide(WorldMap.TS));
         symmetricEditModeProperty()         .bind(ui.editor().symmetricEditModeProperty());
         templateImageGrayProperty()         .bind(ui.editor().templateImageProperty().map(UfxImages::imageToGreyscale));
         terrainVisibleProperty()            .bind(ui.terrainVisibleProperty());
@@ -257,7 +256,7 @@ public class EditCanvas extends Canvas {
     public void draw(TerrainMapColoring colorScheme) {
         double width = getWidth(), height = getHeight();
         final TerrainLayer terrain = worldMap().terrainLayer();
-        final double scaledTileSize = scaling() * TS;
+        final double scaledTileSize = scaling() * WorldMap.TS;
 
         ctx.setImageSmoothing(false);
 

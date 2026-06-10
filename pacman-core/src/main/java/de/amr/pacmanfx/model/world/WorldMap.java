@@ -3,6 +3,8 @@
  */
 package de.amr.pacmanfx.model.world;
 
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import org.tinylog.Logger;
 
 import java.io.*;
@@ -14,19 +16,95 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
 public class WorldMap {
 
-    public static final Charset CHARSET = StandardCharsets.UTF_8;
+    // Tile coordinates
 
+    /** Tile size: 8px */
+    public static final byte TS = 8;
+
+    /** Half tile size: 4px */
+    public static final byte HTS = 4;
+
+    public static Vector2i tile(int x, int y) {
+        return new Vector2i(x, y);
+    }
+
+    /**
+     * @param numTiles number of tiles
+     * @return number of pixels corresponding to given number of tiles
+     */
+    public static float TS(double numTiles) { return (float) numTiles * TS; }
+
+    /**
+     * @param position a position
+     * @return tile containing given position
+     */
+    public static Vector2i computeTileAt(Vector2f position) {
+        requireNonNull(position);
+        return computeTileAt(position.x(), position.y());
+    }
+
+    /**
+     * @param x x position
+     * @param y y position
+     * @return tile containing given position
+     */
+    public static Vector2i computeTileAt(float x, float y) {
+        float tx = x >= 0 ? x / TS : (x - TS) / TS;
+        float ty = y >= 0 ? y / TS : (y - TS) / TS;
+        return new Vector2i((int) tx, (int) ty);
+    }
+
+    /**
+     * @param tileX tile x coordinate
+     * @param tileY tile y coordinate
+     * @return position (scaled by tile size) half tile right of tile origin
+     */
+    public static Vector2f halfTileRightOf(int tileX, int tileY) {
+        return vec2_float(TS * tileX + HTS, TS * tileY);
+    }
+
+    /**
+     * @param tile some tile
+     * @return position (scaled by tile size) half tile right of tile origin
+     */
+    public static Vector2f halfTileRightOf(Vector2i tile) {
+        return halfTileRightOf(tile.x(), tile.y());
+    }
+
+    // Map creation
+
+    public static final Charset MAP_FILE_CHARSET = StandardCharsets.UTF_8;
+
+    /** Tiles are store inside map files like {@code (12,29)} */
     public static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
 
-    public static final String MARKER_COMMENT = "#";
-    public static final String MARKER_BEGIN_TERRAIN_LAYER = "!terrain";
-    public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
-    public static final String MARKER_BEGIN_DATA_SECTION = "!data";
+    public enum Marker {
+        COMMENT("#"),
+        BEGIN_TERRAIN_LAYER("!terrain"),
+        BEGIN_FOOD_LAYER("!food"),
+        BEGIN_DATA_SECTION("!data");
+
+        Marker(String literal) {
+            this.literal = literal;
+        }
+
+        public String literal() {
+            return literal;
+        }
+
+        @Override
+        public String toString() {
+            return literal;
+        }
+
+        private final String literal;
+    }
 
     public static Optional<WorldMap> fromURL(URL url) {
         requireNonNull(url);
@@ -55,7 +133,7 @@ public class WorldMap {
     private static Optional<WorldMap> fromStream(InputStream is) {
         requireNonNull(is);
         final WorldMapParser parser = new WorldMapParser();
-        try (var rdr = new BufferedReader(new InputStreamReader(is, CHARSET))) {
+        try (var rdr = new BufferedReader(new InputStreamReader(is, MAP_FILE_CHARSET))) {
             final WorldMap worldMap = parser.parse(rdr.lines(), TerrainTile::isValidCode, FoodTile::isValidCode);
             return Optional.of(worldMap);
         } catch (Exception x) {
@@ -72,7 +150,7 @@ public class WorldMap {
     public void saveToFile(File file) throws IOException {
         requireNonNull(file);
         final String source = WorldMapWriter.createSourceCode(this, false);
-        try (var fileWriter = new PrintWriter(file, CHARSET)) {
+        try (var fileWriter = new PrintWriter(file, MAP_FILE_CHARSET)) {
             fileWriter.println(source);
         }
     }

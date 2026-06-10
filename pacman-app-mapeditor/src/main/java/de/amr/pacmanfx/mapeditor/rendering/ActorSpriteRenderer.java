@@ -5,10 +5,9 @@ package de.amr.pacmanfx.mapeditor.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
-import static de.amr.pacmanfx.core.Globals_Core.HTS;
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 
 public interface ActorSpriteRenderer extends Renderer {
 
@@ -18,7 +17,7 @@ public interface ActorSpriteRenderer extends Renderer {
      * @param sprite actor sprite
      */
     default void drawActorSprite(Vector2i tile, RectShort sprite) {
-        Vector2i center = tile.scaled(TS).plus(TS, HTS);
+        Vector2i center = tile.scaled(WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS);
         ctx().save();
         ctx().scale(scaling(), scaling());
         ctx().drawImage(ArcadeSprites.SPRITE_SHEET,

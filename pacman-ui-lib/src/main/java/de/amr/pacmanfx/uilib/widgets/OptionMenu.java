@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.widgets;
 
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -11,7 +12,10 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
 import org.tinylog.Logger;
 
@@ -19,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static java.util.Objects.requireNonNull;
 
 public class OptionMenu {
@@ -60,8 +63,8 @@ public class OptionMenu {
         this.textColumn = textColumn;
         this.valueColumn = valueColumn;
 
-        canvas.widthProperty() .bind(scaling.multiply(numTilesX * TS));
-        canvas.heightProperty().bind(scaling.multiply(numTilesY * TS));
+        canvas.widthProperty() .bind(scaling.multiply(numTilesX * WorldMap.TS));
+        canvas.heightProperty().bind(scaling.multiply(numTilesY * WorldMap.TS));
 
         canvas.focusedProperty().addListener((_, _, _) -> Logger.debug("Option menu canvas has focus"));
 

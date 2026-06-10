@@ -7,16 +7,16 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_LET_GAME_STATE_EXPIRE;
@@ -31,11 +31,11 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     public static final int TICK_EXPIRES = 1380;
 
-    private static final int UPPER_LANE = TS * 8;
-    private static final int LOWER_LANE = TS * 22;
-    private static final int MIDDLE_LANE = TS * 10;
-    private static final int LEFT_BORDER = TS;
-    private static final int RIGHT_BORDER = TS * 30;
+    private static final int UPPER_LANE = WorldMap.TS * 8;
+    private static final int LOWER_LANE = WorldMap.TS * 22;
+    private static final int MIDDLE_LANE = WorldMap.TS * 10;
+    private static final int LEFT_BORDER = WorldMap.TS;
+    private static final int RIGHT_BORDER = WorldMap.TS * 30;
 
     private Clapperboard clapperboard;
     private Pac pacMan;
@@ -69,7 +69,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         actionBindings().bindActionToKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(2, "THE CHASE");
-        clapperboard.setPosition(3 * TS, 10 * TS);
+        clapperboard.setPosition(3 * WorldMap.TS, 10 * WorldMap.TS);
         clapperboard.show();
         clapperboard.startAnimation();
 

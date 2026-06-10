@@ -15,6 +15,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -143,7 +144,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private void startChasingPacMan() {
         blinking.start();
-        pacMan.setPosition(TS * 28, TS * 20);
+        pacMan.setPosition(WorldMap.TS * 28, WorldMap.TS * 20);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(CHASING_SPEED);
         pacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);

@@ -1,13 +1,11 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.core;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-
-import static de.amr.basics.math.Vector2f.vec2_float;
-import static java.util.Objects.requireNonNull;
+import de.amr.pacmanfx.model.world.WorldMap;
 
 public final class Globals_Core {
 
@@ -54,80 +52,9 @@ public final class Globals_Core {
 
     public static final byte NUM_TICKS_PER_SEC = 60;
 
-    /** Tile size: 8px. */
-    public static final byte TS = 8;
-
-    /** Half tile size: 4px. */
-    public static final byte HTS = 4;
-
-    /**
-     * @param numTiles number of tiles
-     * @return number of pixels corresponding to given number of tiles
-     */
-    public static float TS(double numTiles) { return (float) numTiles * TS; }
-
     /**
      * Arcade maps have a size of 28x36 tiles (28 cols, 36 rows, including the empty rows over and under the maze).
      * The tile size is 8px which gives a map size of 224x288px.
      */
-    public static final Vector2i ARCADE_MAP_SIZE_IN_PIXELS = new Vector2i(224, 288); // 28x36 tiles
-
-    public static Vector2i tile(int x, int y) {
-        return new Vector2i(x, y);
-    }
-
-    /**
-     * @param position a position
-     * @return tile containing given position
-     */
-    public static Vector2i computeTileAt(Vector2f position) {
-        requireNonNull(position);
-        return computeTileAt(position.x(), position.y());
-    }
-
-    /**
-     * @param x x position
-     * @param y y position
-     * @return tile containing given position
-     */
-    public static Vector2i computeTileAt(float x, float y) {
-        float tx = x >= 0 ? x / TS : (x - TS) / TS;
-        float ty = y >= 0 ? y / TS : (y - TS) / TS;
-        return new Vector2i((int) tx, (int) ty);
-    }
-
-    /**
-     * @param tileX tile x coordinate
-     * @param tileY tile y coordinate
-     * @return position (scaled by tile size) half tile right of tile origin
-     */
-    public static Vector2f halfTileRightOf(int tileX, int tileY) {
-        return vec2_float(TS * tileX + HTS, TS * tileY);
-    }
-
-    /**
-     * @param tile some tile
-     * @return position (scaled by tile size) half tile right of tile origin
-     */
-    public static Vector2f halfTileRightOf(Vector2i tile) {
-        return halfTileRightOf(tile.x(), tile.y());
-    }
-
-    public static boolean isEven(int n) {
-        return n % 2 == 0;
-    }
-
-    public static boolean isOdd(int n) {
-        return n % 2 != 0;
-    }
-
-    /**
-     * @param from value1
-     * @param to value2
-     * @param t      "time" between 0 and 1
-     * @return linear interpolation between {@code from} and {@code to} values
-     */
-    public static double lerp(double from, double to, double t) {
-        return (1 - t) * from + t * to;
-    }
+    public static final Vector2i ARCADE_MAP_SIZE_IN_PIXELS = new Vector2i(28 * WorldMap.TS, 36 * WorldMap.TS);
 }

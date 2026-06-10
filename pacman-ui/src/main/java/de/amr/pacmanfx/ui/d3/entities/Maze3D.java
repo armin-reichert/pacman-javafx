@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.level.GameLevelEntity;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.Obstacle;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.d3.Globals_3D;
 import de.amr.pacmanfx.ui.config.FloorConfig3D;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
@@ -31,7 +32,6 @@ import org.tinylog.Logger;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -136,7 +136,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         // render all obstacles found in map except the house placeholder obstacle
         for (Obstacle obstacle : terrain.obstacles()) {
             final Vector2f startPoint = obstacle.startPoint().toVector2f();
-            if (house == null || !house.contains(computeTileAt(startPoint))) {
+            if (house == null || !house.contains(WorldMap.computeTileAt(startPoint))) {
                 renderer3D.renderObstacle3D(obstacle, isWorldBorder(obstacle), wallThickness, cornerRadius);
             }
         }
@@ -147,9 +147,9 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
     private boolean isWorldBorder(Obstacle obstacle) {
         final Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {
-            return start.x() == TS || start.y() == terrain.emptyRowsOverMaze() * TS + HTS;
+            return start.x() == WorldMap.TS || start.y() == terrain.emptyRowsOverMaze() * WorldMap.TS + WorldMap.HTS;
         } else {
-            return start.x() == 0 || start.x() == terrain.numCols() * TS;
+            return start.x() == 0 || start.x() == terrain.numCols() * WorldMap.TS;
         }
     }
 

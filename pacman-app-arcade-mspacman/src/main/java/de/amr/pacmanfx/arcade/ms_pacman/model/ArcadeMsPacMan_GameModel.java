@@ -226,7 +226,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         final var bonus = new Bonus(bonusSymbolCode, gameContext.rules().pointsForBonus(bonusSymbolCode));
         if (terrain.horizontalPortals().isEmpty()) {
             final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
-            bonus.setPosition(halfTileRightOf(bonusTile));
+            bonus.setPosition(WorldMap.halfTileRightOf(bonusTile));
             bonus.showEdibleForSeconds(randomFloat(9, 10));
         } else {
             computeBonusRoute(bonus, terrain, house);
@@ -324,7 +324,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
             }
         }
 
-        final Vector2i houseEntry = computeTileAt(house.entryPosition());
+        final Vector2i houseEntry = WorldMap.computeTileAt(house.entryPosition());
         final Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         final List<Vector2i> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).toList();
 

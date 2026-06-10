@@ -10,7 +10,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.TS;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 public class ArcadePacMan_StartScene_Renderer extends BaseRenderer implements GameScene2D_Renderer {

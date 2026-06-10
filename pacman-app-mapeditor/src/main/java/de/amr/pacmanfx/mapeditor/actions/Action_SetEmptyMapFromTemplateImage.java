@@ -8,8 +8,6 @@ import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.scene.image.Image;
 
-import static de.amr.pacmanfx.core.Globals_Core.TS;
-
 public class Action_SetEmptyMapFromTemplateImage extends EditorUIAction<Void> {
 
     //TODO currently it is assumed that image has this format
@@ -25,8 +23,8 @@ public class Action_SetEmptyMapFromTemplateImage extends EditorUIAction<Void> {
 
     @Override
     public Void execute() {
-        int numRows = EMPTY_ROWS_OVER_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / TS);
-        int numCols = (int) (image.getWidth() / TS);
+        int numRows = EMPTY_ROWS_OVER_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (image.getHeight() / WorldMap.TS);
+        int numCols = (int) (image.getWidth() / WorldMap.TS);
         WorldMap emptyMap = new WorldMap(numCols, numRows);
         editor.setCurrentWorldMap(emptyMap);
         editor.setEdited(true);

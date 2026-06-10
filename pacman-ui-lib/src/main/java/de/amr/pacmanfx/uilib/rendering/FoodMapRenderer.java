@@ -5,13 +5,12 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.world.FoodTile;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.core.Globals_Core.HTS;
-import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static java.util.Objects.requireNonNull;
 
 public class FoodMapRenderer extends BaseRenderer implements TileRenderer {
@@ -44,23 +43,23 @@ public class FoodMapRenderer extends BaseRenderer implements TileRenderer {
     }
 
     public void drawPellet(Vector2i tile) {
-        double offset = 0.5 * (TS - PELLET_SIZE);
+        double offset = 0.5 * (WorldMap.TS - PELLET_SIZE);
         ctx.save();
         ctx.scale(scaling(), scaling());
         ctx.setFill(pelletColor.get());
-        ctx.fillRect(tile.x() * TS + offset, tile.y() * TS + offset, PELLET_SIZE, PELLET_SIZE);
+        ctx.fillRect(tile.x() * WorldMap.TS + offset, tile.y() * WorldMap.TS + offset, PELLET_SIZE, PELLET_SIZE);
         ctx.restore();
     }
 
     public void drawEnergizer(Vector2i tile) {
-        double offset = 0.5 * HTS;
-        double x = tile.x() * TS, y = tile.y() * TS;
+        double offset = 0.5 * WorldMap.HTS;
+        double x = tile.x() * WorldMap.TS, y = tile.y() * WorldMap.TS;
         ctx.save();
         ctx.scale(scaling(), scaling());
         ctx.setFill(energizerColor.get());
         // draw pixelated "circle"
-        ctx.fillRect(x + offset, y, HTS, ENERGIZER_SIZE);
-        ctx.fillRect(x, y + offset, ENERGIZER_SIZE, HTS);
+        ctx.fillRect(x + offset, y, WorldMap.HTS, ENERGIZER_SIZE);
+        ctx.fillRect(x, y + offset, ENERGIZER_SIZE, WorldMap.HTS);
         ctx.fillRect(x + 1, y + 1, ENERGIZER_SIZE - 2, ENERGIZER_SIZE - 2);
         ctx.restore();
     }

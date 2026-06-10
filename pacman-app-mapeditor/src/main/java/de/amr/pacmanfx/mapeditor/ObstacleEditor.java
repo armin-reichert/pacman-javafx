@@ -15,7 +15,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import static de.amr.pacmanfx.core.Globals_Core.isEven;
+import static de.amr.basics.math.MoreMath.isEven;
 import static de.amr.pacmanfx.model.world.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
 
