@@ -93,8 +93,8 @@ public final class GameImplementation implements Game {
         this.view = requireNonNull(view);
         this.gameClock = new GameClockFX();
         this.coinMechanism = new CoinMechanism();
-        prefs = new PreferencesManager(getClass());
-        watchdog = new DirectoryWatchdog(Globals_Game.CUSTOM_MAP_DIR);
+        this.prefs = new PreferencesManager(getClass());
+        this.watchdog = new DirectoryWatchdog(Globals_Game.CUSTOM_MAP_DIR);
 
         ui = new GameUI(
             new FlashMessageManager(),
@@ -111,15 +111,15 @@ public final class GameImplementation implements Game {
         view.setGame(this);
 
         gameVariantName.addListener((_, _, newVariantName) -> {
-            GameVariant runtime = gameVariant(newVariantName);
-            currentGameContext = new GameContextImpl(this, runtime);
+            final GameVariant gameVariant = gameVariant(newVariantName);
+            currentGameContext = new GameContextImpl(this, gameVariant);
             currentGameContext.model().hud().creditProperty().bind(coinMechanism.numCoinsProperty());
         });
     }
 
-    private GameVariant createGameVariantImplementation(String variantName) {
+    private GameVariant createGameVariant(String variantName) {
         final Cartridge cartridge = machine.cartridgeForVariant(variantName);
-        final var runtime = new GameVariant(
+        final var gameVariant = new GameVariant(
             cartridge.gameFlowFactory().get(),
             cartridge.gameModelFactory().get(),
             cartridge.gameRulesFactory().get(),
@@ -127,14 +127,14 @@ public final class GameImplementation implements Game {
         );
 
         //TODO make configurable again if tests should be available
-        final GameFlow flow = runtime.gameFlow();
+        final GameFlow flow = gameVariant.gameFlow();
         flow.addState(new LevelShortTestState());
         flow.addState(new LevelMediumTestState());
         flow.addState(new CutScenesTestState());
 
-        runtime.gameModel().createHighScore(highScoreFile(variantName));
+        gameVariant.gameModel().createHighScore(highScoreFile(variantName));
 
-        return runtime;
+        return gameVariant;
     }
 
     private GameVariant currentVariantImpl() {
@@ -172,7 +172,7 @@ public final class GameImplementation implements Game {
 
     @Override
     public GameVariant gameVariant(String variantName) {
-        return gameVariantsMap.computeIfAbsent(variantName, this::createGameVariantImplementation);
+        return gameVariantsMap.computeIfAbsent(variantName, this::createGameVariant);
     }
 
     @Override
