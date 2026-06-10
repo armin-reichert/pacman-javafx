@@ -8,15 +8,12 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.GlobalsUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.GameImplementation;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.view.GameViewImplementation;
-import de.amr.pacmanfx.ui.view.GameViewMainScene;
-import de.amr.pacmanfx.ui.view.StatusIconBox;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -54,10 +51,7 @@ public class ArcadePacMan_App extends Application {
                 .build();
         }
         else {
-            game = new GameImplementation(machine,
-                new GameViewImplementation(
-                    new GameViewMainScene(size.x(), size.y()),
-                    new StatusIconBox(() -> GlobalsUI.LOCALIZED_TEXTS)));
+            game = new GameImplementation(machine, new GameViewImplementation(size.x(), size.y()));
             final var arcadePacManStartPage = new ArcadePacMan_StartPage();
             arcadePacManStartPage.init(game);
             game.ui().subViews().startView().addStartPage(arcadePacManStartPage);

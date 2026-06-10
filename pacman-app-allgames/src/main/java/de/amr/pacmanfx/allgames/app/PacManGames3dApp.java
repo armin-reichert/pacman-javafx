@@ -18,16 +18,16 @@ import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
-import de.amr.pacmanfx.ui.GlobalsUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.game.*;
+import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameBuilder;
+import de.amr.pacmanfx.ui.game.GameImplementation;
+import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImplementation;
-import de.amr.pacmanfx.ui.view.GameViewMainScene;
-import de.amr.pacmanfx.ui.view.StatusIconBox;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -119,7 +119,8 @@ public class PacManGames3dApp extends Application {
             else {
                 game = new GameImplementation(
                     machine,
-                    createView(sceneSize.x(), sceneSize.y()));
+                    new GameViewImplementation(sceneSize.x(), sceneSize.y())
+                );
 
                 game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
                 game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
@@ -148,13 +149,6 @@ public class PacManGames3dApp extends Application {
     }
 
     // Private area
-
-    private static GameViewImplementation createView(int width, int height) {
-        return new GameViewImplementation(
-            new GameViewMainScene(width, height),
-            new StatusIconBox(() -> GlobalsUI.LOCALIZED_TEXTS)
-        );
-    }
 
     private void addStartPages() {
         final StartPagesView startView = game.ui().subViews().startView();

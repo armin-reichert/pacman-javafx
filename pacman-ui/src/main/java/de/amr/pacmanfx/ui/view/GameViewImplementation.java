@@ -35,9 +35,9 @@ public class GameViewImplementation implements GameView {
 
     private StringBinding stageTitleBinding;
 
-    public GameViewImplementation(GameViewMainScene mainScene, StatusIconBox statusIconBox) {
-        this.mainScene = mainScene;
-        this.statusIconBox = statusIconBox;
+    public GameViewImplementation(int width, int height) {
+        this.mainScene = new GameViewMainScene(width, height);
+        this.statusIconBox = new StatusIconBox(() -> GlobalsUI.LOCALIZED_TEXTS);
     }
 
     @Override

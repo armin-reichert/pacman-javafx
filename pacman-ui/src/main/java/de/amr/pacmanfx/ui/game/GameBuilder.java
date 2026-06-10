@@ -4,12 +4,9 @@
 package de.amr.pacmanfx.ui.game;
 
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.ui.GlobalsUI;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImplementation;
-import de.amr.pacmanfx.ui.view.GameViewMainScene;
-import de.amr.pacmanfx.ui.view.StatusIconBox;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -17,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.core.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -64,7 +60,8 @@ public class GameBuilder {
 
         final var game = new GameImplementation(
             machine,
-            createGameView(windowConfig.sceneWidth(), windowConfig.sceneHeight()));
+            new GameViewImplementation(windowConfig.sceneWidth(), windowConfig.sceneHeight())
+        );
 
         //TODO Find better solution
         gameVariantConfigMap.forEach((variantName, config) -> {
@@ -86,13 +83,6 @@ public class GameBuilder {
             }
         }
         return game;
-    }
-
-    private GameViewImplementation createGameView(int width, int height) {
-        return new GameViewImplementation(
-            new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
-            new StatusIconBox(() -> GlobalsUI.LOCALIZED_TEXTS)
-        );
     }
 
     private void validateConfigurationData() {
