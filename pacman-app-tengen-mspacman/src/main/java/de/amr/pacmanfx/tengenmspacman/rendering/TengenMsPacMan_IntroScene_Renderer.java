@@ -60,10 +60,10 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         switch (introScene.sceneFlow.state()) {
             case SceneState.WAITING_FOR_START -> {
                 if (!introScene.dark) {
-                    boolean showPressStart = tick % 60 < 30;
+                    boolean blinkingOn = tick % 60 < 30;
                     fillText("TENGEN PRESENTS", shadeOfBlue(tick), introScene.presentsText.x(), introScene.presentsText.y());
                     drawSprite(spriteSheet().sprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * WorldMap.TS, MARQUEE_Y, true);
-                    if (showPressStart) fillText("PRESS START", NES_Palette.color(0x20), 11 * WorldMap.TS, MARQUEE_Y + 9 * WorldMap.TS);
+                    if (blinkingOn) fillText("PRESS START", NES_Palette.color(0x20), 11 * WorldMap.TS, MARQUEE_Y + 9 * WorldMap.TS);
                     fillText("MS PAC-MAN TM NAMCO LTD", NES_Palette.color(0x25), 6 * WorldMap.TS, MARQUEE_Y + 15 * WorldMap.TS);
                     fillText("©1990 TENGEN INC",        NES_Palette.color(0x25), 8 * WorldMap.TS, MARQUEE_Y + 16 * WorldMap.TS);
                     fillText("ALL RIGHTS RESERVED",     NES_Palette.color(0x25), 7 * WorldMap.TS, MARQUEE_Y + 17 * WorldMap.TS);
@@ -71,11 +71,11 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             }
             case SceneState.SHOWING_MARQUEE -> {
                 introScene.marquee.draw(ctx());
-                fillText("\"MS PAC-MAN\"", NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
+                fillText(quote("MS PAC-MAN"), NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
             }
             case SceneState.GHOSTS_MARCHING_IN -> {
                 introScene.marquee.draw(ctx());
-                fillText("\"MS PAC-MAN\"", NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
+                fillText(quote("MS PAC-MAN"), NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (introScene.ghostIndex == 0) {
                     fillText("WITH", NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
@@ -86,7 +86,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             }
             case SceneState.MS_PACMAN_MARCHING_IN -> {
                 introScene.marquee.draw(ctx());
-                fillText("\"MS PAC-MAN\"", NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
+                fillText(quote("MS PAC-MAN"), NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 fillText("STARRING", NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 fillText("MS PAC-MAN", NES_Palette.color(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
                 introScene.ghosts.forEach(actorRenderer::drawActor);
@@ -105,5 +105,9 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         if (scene.game().ui().settings().debugInfoVisibleProperty.get()) {
             debugRenderer.draw(scene);
         }
+    }
+
+    private static String quote(String s) {
+        return "\"" + s + "\"";
     }
 }
