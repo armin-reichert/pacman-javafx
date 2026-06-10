@@ -12,9 +12,9 @@ import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
@@ -65,6 +65,21 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void onActivate() {
+        setSceneState(SceneState.CLAPPERBOARD, TickTimer.INDEFINITE);
+    }
+
+    @Override
+    public void onTick(long tick) {
+        switch (sceneState) {
+            case SceneState.CLAPPERBOARD -> updateStateClapperboard();
+            case SceneState.DELIVER_JUNIOR -> updateStateDeliverJunior();
+            case SceneState.STORK_LEAVES_SCENE -> updateStateStorkLeavesScene();
+            default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
+        }
+        sceneTimer.doTick();
+    }
+
+    private void initScene() {
         final UIConfig uiConfig = game().currentUIConfig();
         final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
 
@@ -82,19 +97,6 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.setPosition(TS(3), TS(10));
         clapperboard.startAnimation();
-
-        setSceneState(SceneState.CLAPPERBOARD, TickTimer.INDEFINITE);
-    }
-
-    @Override
-    public void onTick(long tick) {
-        switch (sceneState) {
-            case SceneState.CLAPPERBOARD -> updateStateClapperboard();
-            case SceneState.DELIVER_JUNIOR -> updateStateDeliverJunior();
-            case SceneState.STORK_LEAVES_SCENE -> updateStateStorkLeavesScene();
-            default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
-        }
-        sceneTimer.doTick();
     }
 
     // Scene controller state machine

@@ -76,6 +76,23 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void onActivate() {
+        initScene();
+        setState(SceneState.CLAPPERBOARD, 120);
+    }
+
+    @Override
+    public void onTick(long tick) {
+        switch (sceneState) {
+            case CLAPPERBOARD -> updateStateClapperboard();
+            case CHASED_BY_GHOSTS -> updateStateChasedByGhosts();
+            case COMING_TOGETHER -> updateStateComingTogether();
+            case IN_HEAVEN -> updateStateInHeaven();
+            default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
+        }
+        sceneTimer.doTick();
+    }
+
+    private void initScene() {
         final UIConfig uiConfig = game().currentUIConfig();
         final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
@@ -96,20 +113,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.setPosition(WorldMap.TS(3), WorldMap.TS(10));
         clapperboard.startAnimation();
-
-        setState(SceneState.CLAPPERBOARD, 120);
-    }
-
-    @Override
-    public void onTick(long tick) {
-        switch (sceneState) {
-            case CLAPPERBOARD -> updateStateClapperboard();
-            case CHASED_BY_GHOSTS -> updateStateChasedByGhosts();
-            case COMING_TOGETHER -> updateStateComingTogether();
-            case IN_HEAVEN -> updateStateInHeaven();
-            default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
-        }
-        sceneTimer.doTick();
     }
 
     // Scene controller state machine

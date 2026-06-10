@@ -53,15 +53,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void onActivate() {
-        final UIConfig uiConfig = game().currentUIConfig();
-        final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
-        pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
-        msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
-        clapperboard = new Clapperboard("2", "THE CHASE");
-        clapperboard.setPosition(TS(3), TS(10));
-        clapperboard.startAnimation();
+        initScene();
         setSceneState(SceneState.CLAPPERBOARD, 120);
     }
 
@@ -73,6 +65,18 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             default -> throw new IllegalStateException("Illegal scene state: " + state);
         }
         timer.doTick();
+    }
+
+    private void initScene() {
+        final UIConfig uiConfig = game().currentUIConfig();
+        final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
+        pacMan = ArcadePacMan_GameModel.createPacMan();
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
+        msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
+        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
+        clapperboard = new Clapperboard("2", "THE CHASE");
+        clapperboard.setPosition(TS(3), TS(10));
+        clapperboard.startAnimation();
     }
 
     // Scene controller state machine
