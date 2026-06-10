@@ -6,16 +6,15 @@ package de.amr.pacmanfx.uilib.widgets;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.tinylog.Logger;
 
 import java.net.URL;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Displays a FontAwesome icon.
@@ -73,9 +72,8 @@ public class FontAwesomeIcon {
         this(symbol, DEFAULT_SIZE);
     }
 
-    public void setFill(Color color) {
-        requireNonNull(color);
-        text.setFill(color);
+    public ObjectProperty<Paint> fillProperty() {
+        return text.fillProperty();
     }
 
     public DoubleProperty opacityProperty() {
@@ -83,7 +81,7 @@ public class FontAwesomeIcon {
     }
 
     public BooleanProperty visibleProperty() {
-        return node().visibleProperty();
+        return text.visibleProperty();
     }
 
     public DoubleProperty sizeProperty() {

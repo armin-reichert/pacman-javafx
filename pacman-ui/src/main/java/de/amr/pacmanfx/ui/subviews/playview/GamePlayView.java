@@ -233,7 +233,7 @@ public class GamePlayView implements SubView {
 
         // Layer 4: "Paused" icon
         pausedIcon  = new FontAwesomeIcon(FontAwesomeIcon.Symbol.PAUSE, 80);
-        pausedIcon.setFill(ArcadePalette.ARCADE_WHITE);
+        pausedIcon.fillProperty().set(ArcadePalette.ARCADE_WHITE);
         pausedIcon.node().setFocusTraversable(false);
         StackPane.setAlignment(pausedIcon.node(), Pos.CENTER);
 

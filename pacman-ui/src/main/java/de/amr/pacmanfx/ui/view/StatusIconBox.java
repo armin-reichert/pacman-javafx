@@ -123,7 +123,7 @@ public class StatusIconBox implements Disposable {
 
     private FontAwesomeIcon createIcon(Config config, FontAwesomeIcon.Symbol symbol, Color color, String tooltipText) {
         final FontAwesomeIcon icon = new FontAwesomeIcon(symbol, config.iconSize());
-        icon.setFill(color);
+        icon.fillProperty().set(color);
         icon.visibleProperty().addListener(this::rearrangeIcons);
 
         final Tooltip tooltip = new Tooltip(tooltipText);

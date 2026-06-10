@@ -108,7 +108,7 @@ public class StartPagesView extends Carousel implements SubView {
             case RIGHT -> new FontAwesomeIcon(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_RIGHT, NAV_BUTTON_SIZE);
             default -> throw new IllegalArgumentException("Illegal navigation direction: %s".formatted(dir));
         };
-        icon.setFill(iconColor);
+        icon.fillProperty().set(iconColor);
         icon.node().setOpacity(0.2);
         icon.node().setOnMouseEntered(_ -> icon.node().setOpacity(0.8));
         icon.node().setOnMouseExited(_ -> icon.node().setOpacity(0.2));
