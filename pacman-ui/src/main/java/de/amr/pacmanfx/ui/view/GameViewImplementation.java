@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.view;
 
+import de.amr.pacmanfx.ui.d3.Constants3D;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
@@ -50,7 +51,7 @@ public class GameViewImplementation implements GameView {
             game.ui().subViews().selectedSubViewProperty(),
             game.ui().gameScenes().gameSceneProperty(),
             GameConstants.PROPERTY_DEBUG_INFO_VISIBLE,
-            GameConstants.PROPERTY_3D_ENABLED
+            Constants3D.PROPERTY_3D_ENABLED
         );
     }
 
@@ -125,7 +126,7 @@ public class GameViewImplementation implements GameView {
         final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
 
         final boolean debug = GameConstants.PROPERTY_DEBUG_INFO_VISIBLE.get();
-        final boolean is3D = GameConstants.PROPERTY_3D_ENABLED.get();
+        final boolean is3D = Constants3D.PROPERTY_3D_ENABLED.get();
         final boolean paused = game.clock().getUpdatesDisabled();
 
         final String normalTitle = stageTitle(game, paused, is3D);

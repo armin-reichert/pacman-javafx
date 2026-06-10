@@ -4,12 +4,6 @@
 
 package de.amr.pacmanfx.ui.game;
 
-import de.amr.basics.math.Vector3f;
-import de.amr.pacmanfx.ui.d3.animation.energizer.AttractionConfig;
-import de.amr.pacmanfx.ui.d3.animation.energizer.ExplosionConfig;
-import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimationConfig;
-import de.amr.pacmanfx.ui.d3.animation.energizer.SwirlConfig;
-import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardConfig;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
@@ -17,7 +11,6 @@ import javafx.beans.property.*;
 import javafx.scene.layout.Background;
 import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
@@ -161,18 +154,6 @@ public class GameConstants {
         .map(Background::fill)
         .toArray(Background[]::new);
 
-    public static final ParticlesAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticlesAnimationConfig(
-        new ExplosionConfig(
-            new Vector3f(0, 0, 0.1f), // gravity
-            500,        // num particles by explosion
-            0.25f,      // mean particle radius
-            0.1f, 0.4f, // min/max particle speed horizontally (xy-plane)
-            1.5f, 6     // min/max particle speed horizontally (z-direction)
-        ),
-        new AttractionConfig(0.004f, 0.4f, 0.3f, 0.5f),
-        new SwirlConfig(4, 20, 0.3f, 0.05f)
-    );
-
     /**
      * Global property for the canvas background color.
      * <p>
@@ -204,30 +185,6 @@ public class GameConstants {
 
     /** Number of simulation steps executed per clock tick. */
     public static final IntegerProperty PROPERTY_SIMULATION_STEPS = new SimpleIntegerProperty(1);
-
-    /** Whether 3D axes are visible in the 3D play scene. */
-    public static final BooleanProperty PROPERTY_3D_AXES_VISIBLE = new SimpleBooleanProperty(false);
-
-    /** Draw mode for 3D geometry (fill or wireframe). */
-    public static final ObjectProperty<DrawMode> PROPERTY_3D_DRAW_MODE = new SimpleObjectProperty<>(DrawMode.FILL);
-
-    /** Whether 3D rendering is enabled at all. */
-    public static final BooleanProperty PROPERTY_3D_ENABLED = new SimpleBooleanProperty(false);
-
-    /** Floor color used in 3D mode. */
-    public static final ObjectProperty<Color> PROPERTY_3D_FLOOR_COLOR = new SimpleObjectProperty<>(Color.rgb(20, 20, 20));
-
-    /** Light color used in 3D mode. */
-    public static final ObjectProperty<Color> PROPERTY_3D_LIGHT_COLOR = new SimpleObjectProperty<>(Color.WHITE);
-
-    /** Currently active 3D camera perspective. */
-    public static final ObjectProperty<PerspectiveID> PROPERTY_3D_PERSPECTIVE_ID = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
-
-    /** Height of 3D walls (in world units). */
-    public static final DoubleProperty PROPERTY_3D_WALL_HEIGHT = new SimpleDoubleProperty();
-
-    /** Opacity of 3D walls (0.0–1.0). */
-    public static final DoubleProperty PROPERTY_3D_WALL_OPACITY = new SimpleDoubleProperty(1.0);
 
     /** Default duration for flash messages. */
     public static final Duration DEFAULT_FLASH_MESSAGE_DURATION = Duration.seconds(1.5);

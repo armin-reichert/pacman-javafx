@@ -39,8 +39,8 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.core.Globals.TS;
 import static de.amr.pacmanfx.ui.action.CommonActions.*;
-import static de.amr.pacmanfx.ui.game.GameConstants.PROPERTY_3D_DRAW_MODE;
-import static de.amr.pacmanfx.ui.game.GameConstants.PROPERTY_3D_LIGHT_COLOR;
+import static de.amr.pacmanfx.ui.d3.Constants3D.PROPERTY_3D_DRAW_MODE;
+import static de.amr.pacmanfx.ui.d3.Constants3D.PROPERTY_3D_LIGHT_COLOR;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static java.util.Objects.requireNonNull;
 
@@ -151,7 +151,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         decorate(level3D);
         level3DParent.getChildren().setAll(level3D);
 
-        level3D.createAnimations(GameConstants.DEFAULT_PARTICLE_ANIMATION_CONFIG);
+        level3D.createAnimations(Constants3D.DEFAULT_PARTICLE_ANIMATION_CONFIG);
         level3D.entities().selectAll().forEach(entity -> entity.init(gameContext(), level));
         level3D.startLivesCounterTrackingPac();
 
@@ -176,7 +176,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onActivate() {
-        perspectiveManager.activeIDProperty().bind(GameConstants.PROPERTY_3D_PERSPECTIVE_ID);
+        perspectiveManager.activeIDProperty().bind(Constants3D.PROPERTY_3D_PERSPECTIVE_ID);
         PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
     }
@@ -261,7 +261,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         subScene.setCamera(camera);
 
         final var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(GameConstants.PROPERTY_3D_AXES_VISIBLE);
+        coordinateSystem.visibleProperty().bind(Constants3D.PROPERTY_3D_AXES_VISIBLE);
 
         ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);

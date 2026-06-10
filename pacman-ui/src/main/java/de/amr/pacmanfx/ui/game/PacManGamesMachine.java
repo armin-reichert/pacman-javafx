@@ -47,7 +47,6 @@ public class PacManGamesMachine {
             Logger.warn("Cartridge already registered for variant {}", variantName);
         }
 
-
         Logger.info("Cartridge registered for variant {}", variantName);
     }
 

@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
-import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -310,16 +309,16 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
 
         gameContext().state().lock();
 
-        final PerspectiveID perspectiveBeforeAnimation = GameConstants.PROPERTY_3D_PERSPECTIVE_ID.get();
+        final PerspectiveID perspectiveBeforeAnimation = Constants3D.PROPERTY_3D_PERSPECTIVE_ID.get();
 
         final Animation resetCameraPerspective = pauseSecThen(2, () -> {
-            GameConstants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+            Constants3D.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
             maze3D.wallBaseHeightProperty().unbind();
         });
 
         final Animation restoreCameraPerspective = Ufx.pauseSecThen(0.25, () -> {
-            GameConstants.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
-            maze3D.wallBaseHeightProperty().bind(GameConstants.PROPERTY_3D_WALL_HEIGHT);
+            Constants3D.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
+            maze3D.wallBaseHeightProperty().bind(Constants3D.PROPERTY_3D_WALL_HEIGHT);
         });
 
         final var seq = new SequentialTransition(
@@ -347,7 +346,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         playScene3D.optGameLevel3D().ifPresent(level3D -> {
             playScene3D.replaceGameLevel3D(level3D.level());
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level3D.level().number());
-            GameConstants.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+            Constants3D.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
         });
     }
 
