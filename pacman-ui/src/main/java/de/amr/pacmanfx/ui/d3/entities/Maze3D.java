@@ -126,8 +126,8 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
             wall3D.setBaseMaterial(materials.get("wallBaseMaterial"));
             wall3D.setTopMaterial(materials.get("wallTopMaterial"));
             wall3D.bindBaseHeight(wallBaseHeight);
-            wall3D.base().drawModeProperty().bind(globals3D.property3DDrawMode);
-            wall3D.top() .drawModeProperty().bind(globals3D.property3DDrawMode);
+            wall3D.base().drawModeProperty().bind(globals3D.drawModeProperty);
+            wall3D.top() .drawModeProperty().bind(globals3D.drawModeProperty);
             getChildren().addAll(wall3D.base(), wall3D.top());
             return wall3D;
         });
@@ -160,7 +160,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         final float thickness = floorConfig.thickness();
 
         floor3D = new Box(width, height, thickness);
-        floor3D.drawModeProperty().bind(globals3D.property3DDrawMode);
+        floor3D.drawModeProperty().bind(globals3D.drawModeProperty);
         floor3D.setMaterial(materials.get("floorMaterial"));
 
         floor3D.setTranslateX(0.5 * width - floorConfig.padding());

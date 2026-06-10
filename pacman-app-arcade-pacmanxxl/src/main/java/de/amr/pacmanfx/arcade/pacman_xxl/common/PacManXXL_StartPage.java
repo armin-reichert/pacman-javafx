@@ -65,7 +65,7 @@ public class PacManXXL_StartPage implements StartPage {
 
         public MenuBinding(Game game) {
             gameVariantNameListener = (_, _, variant) -> game.selectGameVariant(variant.name());
-            play3DListener = (_, _, enable3D) -> game.ui().globals3D().property3DEnabled.set(enable3D);
+            play3DListener = (_, _, enable3D) -> game.ui().globals3D().d3EnabledProperty.set(enable3D);
             cutScenesEnabledListener = (_, _, enableCutScenes) -> game.currentGameContext().flow().setCutScenesEnabled(enableCutScenes);
 
             scaling = game.ui().view().stageProperty().map(stage -> {

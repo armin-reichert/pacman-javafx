@@ -25,26 +25,26 @@ public final class Globals_3D {
     );
 
     /** Whether 3D axes are visible in the 3D play scene. */
-    public final BooleanProperty property3DAxesVisible = new SimpleBooleanProperty(false);
-
-    /** Draw mode for 3D geometry (fill or wireframe). */
-    public final ObjectProperty<DrawMode> property3DDrawMode = new SimpleObjectProperty<>(DrawMode.FILL);
-
-    /** Whether 3D rendering is enabled at all. */
-    public final BooleanProperty property3DEnabled = new SimpleBooleanProperty(false);
-
-    /** Floor color used in 3D mode. */
-    public final ObjectProperty<Color> property3DFloorColor = new SimpleObjectProperty<>(Color.rgb(20, 20, 20));
-
-    /** Light color used in 3D mode. */
-    public final ObjectProperty<Color> property3DLightColor = new SimpleObjectProperty<>(Color.WHITE);
+    public final BooleanProperty axesVisibleProperty = new SimpleBooleanProperty(false);
 
     /** Currently active 3D camera perspective. */
-    public final ObjectProperty<PerspectiveID> property3DPerspectiveId = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
+    public final ObjectProperty<PerspectiveID> cameraPerspectiveIdProperty = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
+
+    /** Draw mode for 3D geometry (fill or wireframe). */
+    public final ObjectProperty<DrawMode> drawModeProperty = new SimpleObjectProperty<>(DrawMode.FILL);
+
+    /** Whether 3D rendering is enabled at all. */
+    public final BooleanProperty d3EnabledProperty = new SimpleBooleanProperty(false);
+
+    /** Floor color used in 3D mode. */
+    public final ObjectProperty<Color> mazeFloorColorProperty = new SimpleObjectProperty<>(Color.rgb(20, 20, 20));
+
+    /** Light color used in 3D mode. */
+    public final ObjectProperty<Color> mazeLightColorProperty = new SimpleObjectProperty<>(Color.WHITE);
 
     /** Height of 3D walls (in world units). */
-    public final DoubleProperty property3DWallHeight = new SimpleDoubleProperty();
+    public final DoubleProperty mazeWallHeightProperty = new SimpleDoubleProperty();
 
     /** Opacity of 3D walls (0.0–1.0). */
-    public final DoubleProperty property3DWallOpacity = new SimpleDoubleProperty(1.0);
+    public final DoubleProperty mazeWallOpacityProperty = new SimpleDoubleProperty(1.0);
 }

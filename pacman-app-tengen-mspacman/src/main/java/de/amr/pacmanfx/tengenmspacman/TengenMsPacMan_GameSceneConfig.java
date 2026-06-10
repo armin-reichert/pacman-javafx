@@ -69,6 +69,6 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
         if (TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME.identifies(state)) {
             return TengenSceneID.HALL_OF_FAME;
         }
-        return game.ui().globals3D().property3DEnabled.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
+        return game.ui().globals3D().d3EnabledProperty.get() ? CommonSceneID.PLAY_SCENE_3D : CommonSceneID.PLAY_SCENE_2D;
     }
 }

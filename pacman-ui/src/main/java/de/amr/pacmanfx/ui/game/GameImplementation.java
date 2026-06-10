@@ -346,8 +346,8 @@ public final class GameImplementation implements Game {
 
         final MazeConfig3D mazeConfig3D = currentConfig.worldConfig().maze();
 
-        ui().globals3D().property3DWallHeight.set(mazeConfig3D.obstacleBaseHeight());
-        ui().globals3D().property3DWallOpacity.set(mazeConfig3D.obstacleOpacity());
+        ui().globals3D().mazeWallHeightProperty.set(mazeConfig3D.obstacleBaseHeight());
+        ui().globals3D().mazeWallOpacityProperty.set(mazeConfig3D.obstacleOpacity());
 
         ui.sounds().muteProperty().bind(Globals_GameUI.PROPERTY_MUTED);
 
