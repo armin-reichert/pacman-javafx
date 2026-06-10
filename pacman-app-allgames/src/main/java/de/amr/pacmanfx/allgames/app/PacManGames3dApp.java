@@ -128,8 +128,7 @@ public class PacManGames3dApp extends Application {
             Platform.exit();
         }
 
-        //TODO find a better solution
-        game.ui().extensions().put(TengenMsPacMan_UIConfig.EXT_KEY_UI_SETTINGS, new TengenMsPacMan_UISettings());
+        game.ui().extensions().addExtension(TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, new TengenMsPacMan_UISettings());
 
         game.show(GameVariantID.ARCADE_PACMAN, stage);
     }

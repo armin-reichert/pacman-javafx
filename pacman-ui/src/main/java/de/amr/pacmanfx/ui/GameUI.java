@@ -14,8 +14,6 @@ import de.amr.pacmanfx.ui.view.FlashMessageManager;
 import de.amr.pacmanfx.ui.view.GameView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 
-import java.util.Map;
-
 public record GameUI(
     FlashMessageManager flashMessages,
     GameSceneManager gameScenes,
@@ -26,5 +24,5 @@ public record GameUI(
     SubViewManager subViews,
     UISettings settings,
     UISettings3D settings3D,
-    Map<Object, Object> extensions
+    GameUIExtensions extensions
 ) {}

@@ -45,7 +45,7 @@ import java.util.stream.Stream;
 
 public class TengenMsPacMan_UIConfig implements UIConfig {
 
-    public static final String EXT_KEY_UI_SETTINGS = "ui.settings";
+    public static final String EXT_UI_SETTINGS = "ui.settings";
 
     // Local resources are stored inside main resource folder subdirectories named after package name of this class
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;

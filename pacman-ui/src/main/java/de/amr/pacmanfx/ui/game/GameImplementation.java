@@ -18,6 +18,7 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUIExtensions;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -107,7 +108,7 @@ public final class GameImplementation implements Game {
             new SubViewManager(),
             new UISettings(),
             new UISettings3D(),
-            new HashMap<>()
+            new GameUIExtensions()
         );
 
         createSubViews();

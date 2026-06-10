@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
@@ -63,8 +64,11 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         if (optionsScene.initialDelay > 0) return;
 
         ctx.setFont(arcadeFont8());
-        final var uiSettings = (TengenMsPacMan_UISettings) scene.game().ui().extensions().get(TengenMsPacMan_UIConfig.EXT_KEY_UI_SETTINGS);
-        if (uiSettings.propertyJoypadBindingsDisplayed.get()) {
+
+        final var uiSettings = scene.game().ui().extensions().getExtension(
+            TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+
+        if (uiSettings.joypadBindingsDisplayed.get()) {
             drawJoypadKeyBinding(scene.game().input().joypad().currentKeyBinding());
         }
 
