@@ -75,7 +75,6 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         createSubScene();
         createBindings();
 
-        bindActions();
         setGameEventHandler(new PlayScene3DGameEventHandler(this));
     }
 
@@ -177,6 +176,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         perspectiveManager.activeIDProperty().bind(Globals_3D.PROPERTY_3D_PERSPECTIVE_ID);
         Globals_3D.PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
+        bindActions();
     }
 
     @Override
@@ -184,6 +184,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         perspectiveManager.activeIDProperty().unbind();
         Globals_3D.PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
         disposeContextMenu();
+        actionBindings().dispose();
     }
 
     @Override
