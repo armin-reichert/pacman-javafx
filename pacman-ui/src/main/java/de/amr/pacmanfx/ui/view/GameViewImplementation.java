@@ -50,7 +50,7 @@ public class GameViewImplementation implements GameView {
             game.gameVariantNameProperty(),
             game.ui().subViews().selectedSubViewProperty(),
             game.ui().gameScenes().gameSceneProperty(),
-            Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE,
+            game.ui().settings().PROPERTY_DEBUG_INFO_VISIBLE,
             game.ui().settings3D().d3EnabledProperty
         );
     }
@@ -125,7 +125,7 @@ public class GameViewImplementation implements GameView {
     private String titleForCurrentGameScene(Game game) {
         final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
 
-        final boolean debug = Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get();
+        final boolean debug = game.ui().settings().PROPERTY_DEBUG_INFO_VISIBLE.get();
         final boolean is3D = game.ui().settings3D().d3EnabledProperty.get();
         final boolean paused = game.clock().getUpdatesDisabled();
 

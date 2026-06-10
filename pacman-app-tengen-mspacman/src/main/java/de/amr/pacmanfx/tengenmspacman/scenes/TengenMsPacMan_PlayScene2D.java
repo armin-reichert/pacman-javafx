@@ -16,7 +16,6 @@ import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.game.Game;
@@ -47,7 +46,6 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode.SCROLLING;
 import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_QUIT_GAME_SCENE;
-import static de.amr.pacmanfx.ui.Globals_GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.subviews.ContextMenuSupport.*;
 import static java.util.Objects.requireNonNull;
 
@@ -72,11 +70,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         dynamicCamera = new PlayScene2DCamera();
         dynamicCamera.scalingProperty().bind(scalingProperty());
 
-        rootPane.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
+        rootPane.backgroundProperty().bind(game.ui().settings().PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
 
         // Scene size gets bound to parent scene when embedded in game view, initial size doesn't matter.
         subScene = new SubScene(rootPane, 88, 88);
-        subScene.fillProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+        subScene.fillProperty().bind(game.ui().settings().PROPERTY_CANVAS_BACKGROUND_COLOR);
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
 
         subScene.cameraProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
@@ -184,7 +182,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacUsingAutopilotProperty(), "autopilot");
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "immunity");
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, Globals_GameUI.PROPERTY_MUTED, "muted");
+        addLocalizedCheckBox(contextMenu, translations, game().ui().settings().PROPERTY_MUTED, "muted");
         addLocalizedActionItem(contextMenu, game(), translations, ACTION_QUIT_GAME_SCENE, "quit");
 
         return Optional.of(contextMenu);

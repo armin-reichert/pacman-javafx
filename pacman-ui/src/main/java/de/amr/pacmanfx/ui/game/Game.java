@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -76,6 +75,6 @@ public interface Game extends GameLifecycle {
      * @param args    formatting arguments
      */
     default void shortMessage(String message, Object... args) {
-        shortMessage(Globals_GameUI.DEFAULT_FLASH_MESSAGE_DURATION, message, args);
+        shortMessage(ui().settings().DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 }

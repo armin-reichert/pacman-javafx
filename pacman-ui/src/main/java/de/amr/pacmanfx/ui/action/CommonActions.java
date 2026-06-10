@@ -14,7 +14,6 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.Globals_Game;
@@ -349,7 +348,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
+            toggleBooleanProperty(game.ui().settings().PROPERTY_DEBUG_INFO_VISIBLE);
         }
     };
 
@@ -365,7 +364,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(Globals_GameUI.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
+            toggleBooleanProperty(game.ui().settings().PROPERTY_KEYBOARD_MONITOR_VISIBLE);
         }
     };
 
@@ -373,10 +372,10 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(Globals_GameUI.PROPERTY_MINI_VIEW_ON);
+            toggleBooleanProperty(game.ui().settings().PROPERTY_MINI_VIEW_ON);
             if (!game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)) {
                 final String msg = game.ui().translations().translate(
-                    Globals_GameUI.PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off");
+                    game.ui().settings().PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off");
                 game.shortMessage(msg);
             }
         }
@@ -386,7 +385,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(Globals_GameUI.PROPERTY_MUTED);
+            toggleBooleanProperty(game.ui().settings().PROPERTY_MUTED);
         }
     };
 

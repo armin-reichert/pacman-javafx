@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.ui.input;
 
-import de.amr.pacmanfx.ui.Globals_GameUI;
+import de.amr.pacmanfx.ui.GameUI;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
@@ -24,7 +24,7 @@ public class KeyboardInfo {
 
     private final VBox rootPane = new VBox();
 
-    public KeyboardInfo(Keyboard keyboard) {
+    public KeyboardInfo(GameUI ui, Keyboard keyboard) {
         rootPane.setBackground(Background.fill(Color.TRANSPARENT));
         rootPane.setPrefSize(280, 50);
         rootPane.setMaxSize(280, 200);
@@ -37,7 +37,7 @@ public class KeyboardInfo {
             """);
         StackPane.setMargin(rootPane, new Insets(10));
         StackPane.setAlignment(rootPane, Pos.TOP_RIGHT);
-        rootPane.visibleProperty().bind(Globals_GameUI.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
+        rootPane.visibleProperty().bind(ui.settings().PROPERTY_KEYBOARD_MONITOR_VISIBLE);
 
         final Text title = new Text("Keyboard State");
         title.setFill(Color.WHITE);

@@ -151,7 +151,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param level       the game level to visualize
      * @param uiConfig    the global UI configuration (provides 3D settings, colors, models)
      */
-    public GameLevel3D(Settings3D globals3D, GameContext gameContext, GameLevel level, UIConfig uiConfig) {
+    public GameLevel3D(UISettings3D globals3D, GameContext gameContext, GameLevel level, UIConfig uiConfig) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
 
@@ -282,7 +282,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Private area, no trespassing!
 
-    private void createMaze3D(Settings3D globals3D) {
+    private void createMaze3D(UISettings3D globals3D) {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 

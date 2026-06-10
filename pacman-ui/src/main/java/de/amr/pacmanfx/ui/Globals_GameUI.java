@@ -3,13 +3,11 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardConfig;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
-import javafx.beans.property.*;
 import javafx.scene.layout.Background;
 import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.util.Duration;
 
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -122,38 +120,6 @@ public final class Globals_GameUI {
         .map(Gradients.Samples::gradient)
         .map(Background::fill)
         .toArray(Background[]::new);
-
-    /**
-     * Global property for the canvas background color.
-     * <p>
-     * Implementations should bind this to the rendering surface.
-     */
-
-    public static final ObjectProperty<Color> PROPERTY_CANVAS_BACKGROUND_COLOR = new SimpleObjectProperty<>(Color.BLACK);
-
-    /** Whether canvas font smoothing is enabled. */
-    public static final BooleanProperty PROPERTY_CANVAS_FONT_SMOOTHING = new SimpleBooleanProperty(false);
-
-    /** Whether debug information overlays are visible. */
-    public static final BooleanProperty PROPERTY_DEBUG_INFO_VISIBLE = new SimpleBooleanProperty(false);
-
-    /** Whether information about the currently pressed keys is displayed. */
-    public static final BooleanProperty PROPERTY_KEYBOARD_MONITOR_VISIBLE = new SimpleBooleanProperty(false);
-
-    /** Height of the mini-view (in pixels). */
-    public static final IntegerProperty PROPERTY_MINI_VIEW_HEIGHT = new SimpleIntegerProperty(400);
-
-    /** Whether the mini-view is currently visible. */
-    public static final BooleanProperty PROPERTY_MINI_VIEW_ON = new SimpleBooleanProperty(false);
-
-    /** Opacity of the mini-view (0–100%). */
-    public static final IntegerProperty PROPERTY_MINI_VIEW_OPACITY_PERCENT = new SimpleIntegerProperty(69);
-
-    /** Whether all audio output is muted. */
-    public static final BooleanProperty PROPERTY_MUTED = new SimpleBooleanProperty(false);
-
-    /** Default duration of flash messages. */
-    public static final Duration DEFAULT_FLASH_MESSAGE_DURATION = Duration.seconds(1.5);
 
     private Globals_GameUI() {}
 }

@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -34,7 +33,7 @@ public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implem
     public void draw(GameScene2D scene) {
         clearCanvas();
         drawSceneContent(scene);
-        if (Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (scene.game().ui().settings().PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

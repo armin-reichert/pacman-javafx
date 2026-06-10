@@ -5,7 +5,6 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -36,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  * </ul>
  *
  * The menu keeps its perspective selection synchronized with the global
- * {@link Settings3D#cameraPerspectiveIdProperty} property. When the property changes
+ * {@link UISettings3D#cameraPerspectiveIdProperty} property. When the property changes
  * externally, the corresponding radio button is automatically selected.
  *
  * <p>Instances must be disposed via {@link #dispose()} to remove listeners and
@@ -73,7 +72,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
 
         addLocalizedTitleItem(this, translator, "scene_display");
         addLocalizedActionItem(this, game, translator, ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_2D_scene");
-        addLocalizedCheckBox(this, translator, Globals_GameUI.PROPERTY_MINI_VIEW_ON, "pip");
+        addLocalizedCheckBox(this, translator, game.ui().settings().PROPERTY_MINI_VIEW_ON, "pip");
 
         addLocalizedTitleItem(this, translator, "select_perspective");
         for (PerspectiveID id : PerspectiveID.values()) {
@@ -93,7 +92,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         addLocalizedCheckBox(this, translator, gameModel.cheats().pacImmuneProperty(), "immunity");
 
         addSeparator(this);
-        addLocalizedCheckBox(this, translator, Globals_GameUI.PROPERTY_MUTED, "muted");
+        addLocalizedCheckBox(this, translator, game.ui().settings().PROPERTY_MUTED, "muted");
         addLocalizedActionItem(this, game, translator, ACTION_QUIT_GAME_SCENE, "quit");
 
         game.ui().settings3D().cameraPerspectiveIdProperty.addListener(perspectiveListener);

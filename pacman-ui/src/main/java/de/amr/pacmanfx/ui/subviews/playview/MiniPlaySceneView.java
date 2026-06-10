@@ -8,7 +8,6 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.uilib.rendering.*;
@@ -64,30 +63,16 @@ public class MiniPlaySceneView {
 
     public MiniPlaySceneView() {
         canvas = new Canvas();
-        canvas.heightProperty().bind(Globals_GameUI.PROPERTY_MINI_VIEW_HEIGHT);
-        canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> {
-                final double aspect = (double) worldSize.get().x() / worldSize.get().y();
-                return aspect * canvas.getHeight();
-            },
-            worldSize, canvas.heightProperty()
-        ));
 
         rootPane = new HBox(canvas);
         rootPane.setBorder(Border.stroke(Color.grayRgb(66)));
         rootPane.setPadding(PADDING);
 
-        rootPane.backgroundProperty().bind(Globals_GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
-        rootPane.opacityProperty().bind(Globals_GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
 
         // Canvas size determines mini view size
         rootPane.maxWidthProperty().bind(canvas.widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
         rootPane.maxHeightProperty().bind(canvas.heightProperty());
 
-        scaling.bind(Bindings.createDoubleBinding(
-            () -> canvas.getHeight() / worldSize.get().y(),
-            canvas.heightProperty(), worldSize
-        ));
     }
 
     public Pane rootPane() {
@@ -96,6 +81,23 @@ public class MiniPlaySceneView {
 
     public void setUI(Game game) {
         this.game = requireNonNull(game);
+
+        rootPane.backgroundProperty().bind(game.ui().settings().PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
+        rootPane.opacityProperty().bind(game.ui().settings().PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
+
+        canvas.heightProperty().bind(game.ui().settings().PROPERTY_MINI_VIEW_HEIGHT);
+        canvas.widthProperty().bind(Bindings.createDoubleBinding(
+            () -> {
+                final double aspect = (double) worldSize.get().x() / worldSize.get().y();
+                return aspect * canvas.getHeight();
+            },
+            worldSize, canvas.heightProperty()
+        ));
+
+        scaling.bind(Bindings.createDoubleBinding(
+            () -> canvas.getHeight() / worldSize.get().y(),
+            canvas.heightProperty(), worldSize
+        ));
     }
 
     public void setWorldSizeInPixel(Vector2i size) {
@@ -107,11 +109,11 @@ public class MiniPlaySceneView {
 
         levelRenderer = uiConfig.createGameLevelRenderer(canvas);
         levelRenderer.scalingProperty().bind(scaling);
-        levelRenderer.backgroundColorProperty().bind(Globals_GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        levelRenderer.backgroundColorProperty().bind(game.ui().settings().PROPERTY_CANVAS_BACKGROUND_COLOR);
 
         actorRenderer = uiConfig.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scaling);
-        actorRenderer.backgroundColorProperty().bind(Globals_GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        actorRenderer.backgroundColorProperty().bind(game.ui().settings().PROPERTY_CANVAS_BACKGROUND_COLOR);
     }
 
     public void slideIn() {
@@ -156,7 +158,7 @@ public class MiniPlaySceneView {
             game.currentGameContext().optCurrentLevel().ifPresent(this::drawGameLevel);
         }
 
-        if (Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (game.ui().settings().PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             canvasRenderer.fillTextCentered(
                 "scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
                 Color.WHITE, Font.font(12 * scaling.get()),

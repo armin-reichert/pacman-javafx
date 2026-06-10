@@ -5,10 +5,11 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.Globals_GameUI;
+import de.amr.pacmanfx.ui.d3.UISettings3D;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
+import de.amr.pacmanfx.ui.game.UISettings;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
@@ -52,18 +53,18 @@ public class DashboardSection3DSettings extends DashboardSection {
         addDynamicLabeledValue("Sub-scene Size", () -> subSceneSizeInfo(game));
         addDynamicLabeledValue("Scene Size",     () -> sceneSizeInfo(game));
 
-        cbMiniViewVisible = addCheckBox("Mini View", Globals_GameUI.PROPERTY_MINI_VIEW_ON);
+        cbMiniViewVisible = addCheckBox("Mini View", game.ui().settings().PROPERTY_MINI_VIEW_ON);
 
         sliderMiniViewSceneHeight = addSlider(
             " - Height",
             MINI_VIEW_MIN_HEIGHT, MINI_VIEW_MAX_HEIGHT,
-            Globals_GameUI.PROPERTY_MINI_VIEW_HEIGHT.get(),
+            game.ui().settings().PROPERTY_MINI_VIEW_HEIGHT.get(),
             false, false);
 
         sliderMiniViewOpacityPercentage = addSlider(
             " - Opacity",
             0, 100,
-            Globals_GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get(),
+            game.ui().settings().PROPERTY_MINI_VIEW_OPACITY_PERCENT.get(),
             false, false);
 
         sliderWallHeight = addSlider(
@@ -87,8 +88,8 @@ public class DashboardSection3DSettings extends DashboardSection {
         setTooltip(sliderWallHeight, sliderWallHeight.valueProperty(), "%.0f px");
         setTooltip(sliderWallOpacity, sliderWallOpacity.valueProperty().multiply(100), "%.0f %%");
 
-        setEditor(sliderMiniViewSceneHeight, Globals_GameUI.PROPERTY_MINI_VIEW_HEIGHT);
-        setEditor(sliderMiniViewOpacityPercentage, Globals_GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT);
+        setEditor(sliderMiniViewSceneHeight, game.ui().settings().PROPERTY_MINI_VIEW_HEIGHT);
+        setEditor(sliderMiniViewOpacityPercentage, game.ui().settings().PROPERTY_MINI_VIEW_OPACITY_PERCENT);
         setEditor(sliderWallHeight, game.ui().settings3D().mazeWallHeightProperty);
         setEditor(sliderWallOpacity, game.ui().settings3D().mazeWallOpacityProperty);
         setEditor(comboPerspectives, game.ui().settings3D().cameraPerspectiveIdProperty);
@@ -101,19 +102,22 @@ public class DashboardSection3DSettings extends DashboardSection {
     public void update() {
         super.update();
 
-        comboPerspectives.setValue(game().ui().settings3D().cameraPerspectiveIdProperty.get());
-        sliderMiniViewSceneHeight.setValue(Globals_GameUI.PROPERTY_MINI_VIEW_HEIGHT.get());
+        final UISettings settings = game().ui().settings();
+        final UISettings3D settings3D = game().ui().settings3D();
+
+        comboPerspectives.setValue(settings3D.cameraPerspectiveIdProperty.get());
+        sliderMiniViewSceneHeight.setValue(settings.PROPERTY_MINI_VIEW_HEIGHT.get());
         if (dashboard.game() != null) {
             sliderMiniViewSceneHeight.setDisable(dashboard.game().ui().subViews().gamePlayView().miniPlaySceneView().isMoving());
         }
-        sliderMiniViewOpacityPercentage.setValue(Globals_GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
-        sliderWallHeight.setValue(game().ui().settings3D().mazeWallHeightProperty.get());
-        sliderWallOpacity.setValue(game().ui().settings3D().mazeWallOpacityProperty.get());
-        cbUsePlayScene3D.setSelected(game().ui().settings3D().d3EnabledProperty.get());
-        cbMiniViewVisible.setSelected(Globals_GameUI.PROPERTY_MINI_VIEW_ON.getValue());
-        comboPerspectives.setValue(game().ui().settings3D().cameraPerspectiveIdProperty.get());
-        cbAxesVisible.setSelected(game().ui().settings3D().axesVisibleProperty.get());
-        cbWireframeMode.setSelected(game().ui().settings3D().drawModeProperty.get() == DrawMode.LINE);
+        sliderMiniViewOpacityPercentage.setValue(settings.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
+        sliderWallHeight.setValue(settings3D.mazeWallHeightProperty.get());
+        sliderWallOpacity.setValue(settings3D.mazeWallOpacityProperty.get());
+        cbUsePlayScene3D.setSelected(settings3D.d3EnabledProperty.get());
+        cbMiniViewVisible.setSelected(settings.PROPERTY_MINI_VIEW_ON.getValue());
+        comboPerspectives.setValue(settings3D.cameraPerspectiveIdProperty.get());
+        cbAxesVisible.setSelected(settings3D.axesVisibleProperty.get());
+        cbWireframeMode.setSelected(settings3D.drawModeProperty.get() == DrawMode.LINE);
     }
 
     private String subSceneSizeInfo(Game game) {

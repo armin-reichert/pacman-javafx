@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
-import de.amr.pacmanfx.ui.d3.Settings3D;
+import de.amr.pacmanfx.ui.d3.UISettings3D;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
@@ -99,12 +99,13 @@ public final class GameImplementation implements Game {
         ui = new GameUI(
             new FlashMessageManager(),
             new GameSceneManager(this),
-            new SoundManager(),
+            new SoundManager(this),
             new SpriteAnimationManager(),
             () -> Globals_GameUI.LOCALIZED_TEXTS,
             view,
             new SubViewManager(),
-            new Settings3D()
+            new UISettings(),
+            new UISettings3D()
         );
 
         createSubViews();
@@ -327,7 +328,7 @@ public final class GameImplementation implements Game {
     }
 
     private void initMainScene() {
-        final KeyboardInfo keyboardInfo = new KeyboardInfo(input().keyboard());
+        final KeyboardInfo keyboardInfo = new KeyboardInfo(ui, input().keyboard());
 
         view.mainScene().rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)
@@ -349,7 +350,7 @@ public final class GameImplementation implements Game {
         ui().settings3D().mazeWallHeightProperty.set(mazeConfig3D.obstacleBaseHeight());
         ui().settings3D().mazeWallOpacityProperty.set(mazeConfig3D.obstacleOpacity());
 
-        ui.sounds().muteProperty().bind(Globals_GameUI.PROPERTY_MUTED);
+        ui.sounds().muteProperty().bind(ui().settings().PROPERTY_MUTED);
 
         view.statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> ui.subViews().isSelected(ui.subViews().gamePlayView())

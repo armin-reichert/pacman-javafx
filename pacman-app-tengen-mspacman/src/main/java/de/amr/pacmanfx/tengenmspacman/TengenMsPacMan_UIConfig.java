@@ -43,8 +43,6 @@ import org.tinylog.Logger;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.Globals_GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR;
-
 public class TengenMsPacMan_UIConfig implements UIConfig {
 
     // Local resources are stored inside main resource folder subdirectories named after package name of this class
@@ -266,9 +264,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     @Override
     public TengenMsPacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
-        final var renderer = new TengenMsPacMan_GameLevelRenderer(canvas, this);
-        renderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
-        return renderer;
+        return new TengenMsPacMan_GameLevelRenderer(canvas, this);
     }
 
     @Override

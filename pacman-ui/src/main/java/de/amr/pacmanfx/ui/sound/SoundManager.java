@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.sound;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.ui.Globals_GameUI;
+import de.amr.pacmanfx.ui.game.Game;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -28,7 +28,11 @@ public class SoundManager implements Disposable {
 
     private final Map<SoundID, Object> soundMap = new HashMap<>();
 
-    public SoundManager() {}
+    private final Game game;
+
+    public SoundManager(Game game) {
+        this.game = requireNonNull(game);
+    }
 
     private MediaPlayer voicePlayer;
 
@@ -40,7 +44,7 @@ public class SoundManager implements Disposable {
         }
         stopAndDisposeVoice();
         voicePlayer = new MediaPlayer(voiceMedia);
-        voicePlayer.muteProperty().bind(Globals_GameUI.PROPERTY_MUTED);
+        voicePlayer.muteProperty().bind(game.ui().settings().PROPERTY_MUTED);
         voicePlayer.setOnError(() ->
             Logger.error("Voice playback error: {}", voicePlayer.getError())
         );
