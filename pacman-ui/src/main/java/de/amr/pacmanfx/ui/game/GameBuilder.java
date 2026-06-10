@@ -29,25 +29,12 @@ public class GameBuilder {
 
     record GameVariantConfig(WorldMapSelector mapSelector) {}
 
-    public static GameBuilder compose(
-        PacManGamesMachine machine,
-        int mainSceneWidth,
-        int mainSceneHeight)
-    {
-        return new GameBuilder(machine, mainSceneWidth, mainSceneHeight);
-    }
-
-
     private final PacManGamesMachine machine;
     private final WindowConfig windowConfig;
     private final Map<String, GameVariantConfig> gameVariantConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
 
-    private GameBuilder(
-        PacManGamesMachine machine,
-        int mainSceneWidth,
-        int mainSceneHeight)
-    {
+    public GameBuilder(PacManGamesMachine machine, int mainSceneWidth, int mainSceneHeight) {
         this.machine = requireNonNull(machine);
         windowConfig = new WindowConfig(mainSceneWidth, mainSceneHeight);
     }
