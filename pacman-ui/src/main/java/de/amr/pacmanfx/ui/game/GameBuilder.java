@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.game;
 
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
@@ -35,15 +36,15 @@ public class GameBuilder {
         windowConfig = new WindowConfig(mainSceneWidth, mainSceneHeight);
     }
 
-    public GameBuilder gameVariant(String gameVariantName, WorldMapSelector mapSelector) {
-        validateGameVariantName(gameVariantName);
-        gameVariantConfigMap.put(gameVariantName, new GameVariantConfig(mapSelector));
+    public GameBuilder gameVariant(GameVariantID gameVariantID, WorldMapSelector mapSelector) {
+        validateGameVariantName(gameVariantID.name());
+        gameVariantConfigMap.put(gameVariantID.name(), new GameVariantConfig(mapSelector));
         return this;
     }
 
-    public GameBuilder gameVariant(String gameVariantName) {
-        validateGameVariantName(gameVariantName);
-        gameVariantConfigMap.put(gameVariantName, new GameVariantConfig(null));
+    public GameBuilder gameVariant(GameVariantID gameVariantID) {
+        validateGameVariantName(gameVariantID.name());
+        gameVariantConfigMap.put(gameVariantID.name(), new GameVariantConfig(null));
         return this;
     }
 
