@@ -53,7 +53,6 @@ public class ArcadePacMan_App extends Application {
         else {
             game = new GameImplementation(machine, new GameViewImplementation(size.x(), size.y()));
             final var arcadePacManStartPage = new ArcadePacMan_StartPage();
-            arcadePacManStartPage.init(game);
             game.ui().subViews().startView().addStartPage(arcadePacManStartPage);
             game.ui().subViews().startView().setSelectedIndex(0);
         }

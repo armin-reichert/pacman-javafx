@@ -61,8 +61,7 @@ public class FlyerStartPage extends StackPane implements StartPage {
         return title;
     }
 
-    @Override
-    public void init(Game game) {
+    protected void init(Game game) {
         requireNonNull(game);
         startButton = createStartButton(game);
         getChildren().add(startButton);

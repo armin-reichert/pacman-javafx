@@ -31,5 +31,6 @@ public class TengenMsPacMan_StartPage extends FlyerStartPage {
         game.selectGameVariant(GameVariantID.TENGEN_MS_PACMAN.name());
         game.ui().sounds().playVoice(VOICE); // must be called after selecting game variant!
         flyer.selectPage(0);
+        init(game);
     }
 }

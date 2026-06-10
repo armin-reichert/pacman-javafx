@@ -75,7 +75,6 @@ public class GameBuilder {
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();
             if (page != null) {
-                page.init(game);
                 startPagesView.addStartPage(page);
             }
             else {

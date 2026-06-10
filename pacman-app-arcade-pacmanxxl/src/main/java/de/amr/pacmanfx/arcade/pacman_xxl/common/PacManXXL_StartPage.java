@@ -123,8 +123,7 @@ public class PacManXXL_StartPage implements StartPage {
         menu.setStyle(MENU_STYLE);
     }
 
-    @Override
-    public void init(Game game) {
+    private void init(Game game) {
         requireNonNull(game);
 
         if (menuBinding == null) {
@@ -154,6 +153,7 @@ public class PacManXXL_StartPage implements StartPage {
             case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> game.selectGameVariant(selectedGameVariant.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);
         }
+        init(game);
         menu.init(game);
         game.input().keyboard().addStateListener(keyboardInputHandler);
         game.ui().sounds().playVoice(VOICE);

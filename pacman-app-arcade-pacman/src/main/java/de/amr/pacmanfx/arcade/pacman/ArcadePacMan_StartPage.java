@@ -33,5 +33,6 @@ public class ArcadePacMan_StartPage extends FlyerStartPage {
         game.selectGameVariant(GameVariantID.ARCADE_PACMAN.name());
         game.ui().sounds().playVoice(VOICE);
         flyer.selectPage(0);
+        init(game);
     }
 }

@@ -156,7 +156,6 @@ public class PacManGames3dApp extends Application {
         startView.addStartPage(new ArcadeMsPacMan_StartPage());
         startView.addStartPage(new TengenMsPacMan_StartPage());
         startView.addStartPage(new PacManXXL_StartPage());
-        startView.startPages().forEach(startPage -> startPage.init(game));
         startView.setSelectedIndex(0);
     }
 

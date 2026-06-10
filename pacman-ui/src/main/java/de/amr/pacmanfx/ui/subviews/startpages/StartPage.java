@@ -41,23 +41,6 @@ public interface StartPage {
     Pane rootPane();
 
     /**
-     * Performs one‑time initialization of the start page.
-     * <p>
-     * This method is called exactly once, typically during application startup or
-     * when the page is first registered with the {@link Game}.
-     * Implementations may use this hook to:
-     * <ul>
-     *   <li>construct UI controls,</li>
-     *   <li>bind properties to global UI state,</li>
-     *   <li>register event handlers,</li>
-     *   <li>load resources needed by the page.</li>
-     * </ul>
-     *
-     * @param game the global UI façade providing access to shared services
-     */
-    void init(Game game);
-
-    /**
      * Called whenever this start page becomes the active page.
      * <p>
      * Typical uses include:
