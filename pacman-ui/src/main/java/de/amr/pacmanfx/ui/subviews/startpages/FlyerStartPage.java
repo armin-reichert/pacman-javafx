@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews.startpages;
 
-import de.amr.pacmanfx.ui.Globals_GameUI;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 
 public class FlyerStartPage implements StartPage {
 
-    public static final Font  DEFAULT_START_BUTTON_FONT = Ufx.deriveFont(Globals_GameUI.FONT_ARCADE_8, 32);
+    public static final Font  DEFAULT_START_BUTTON_FONT = Ufx.deriveFont(GameUI_Constants.FONT_ARCADE_8, 32);
     public static final Color DEFAULT_START_BUTTON_BGCOLOR = Color.rgb(0, 155, 252, 0.6);
     public static final Color DEFAULT_START_BUTTON_FILL = Color.WHITE;
 

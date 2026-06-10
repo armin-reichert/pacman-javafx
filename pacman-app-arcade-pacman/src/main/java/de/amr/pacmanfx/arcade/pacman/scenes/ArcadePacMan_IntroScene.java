@@ -16,7 +16,7 @@ import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.Globals_GameUI;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.game.Game;
@@ -131,7 +131,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         lastGhostEatenTick = 0;
         numGhostsEaten = 0;
 
-        game().ui().sounds().playVoice(Globals_GameUI.VOICE_EXPLAIN_GAME_START);
+        game().ui().sounds().playVoice(GameUI_Constants.VOICE_EXPLAIN_GAME_START);
     }
 
     private void startChasingPacMan() {

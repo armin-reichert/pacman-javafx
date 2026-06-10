@@ -17,7 +17,7 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.Globals_GameUI;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
@@ -101,7 +101,7 @@ public final class GameImplementation implements Game {
             new GameSceneManager(this),
             new SoundManager(this),
             new SpriteAnimationManager(),
-            () -> Globals_GameUI.LOCALIZED_TEXTS,
+            () -> GameUI_Constants.LOCALIZED_TEXTS,
             view,
             new SubViewManager(),
             new UISettings(),
@@ -300,7 +300,7 @@ public final class GameImplementation implements Game {
     }
 
     private GamePlayView createGamePlaySubView() {
-        final var playView = new GamePlayView(this, Globals_GameUI.DEFAULT_DASHBOARD_CONFIG);
+        final var playView = new GamePlayView(this, GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
         final ChangeListener<? super Number> resizeHandler = (_,_,_) -> playView.resizeToFit(view.mainScene());
         view.mainScene().widthProperty().addListener(resizeHandler);
         view.mainScene().heightProperty().addListener(resizeHandler);
@@ -359,8 +359,8 @@ public final class GameImplementation implements Game {
 
         view.mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> ui.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
-                ? Globals_GameUI.WALLPAPERS[RandomNumberSupport.randomInt(0, Globals_GameUI.WALLPAPERS.length)]
-                : Globals_GameUI.BACKGROUND_PAC_MAN_WALLPAPER,
+                ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
+                : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
             ui.subViews().selectedSubViewProperty(),
             ui.gameScenes().gameSceneProperty()
         ));

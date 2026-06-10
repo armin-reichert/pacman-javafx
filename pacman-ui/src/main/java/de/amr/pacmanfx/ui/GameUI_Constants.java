@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;
 
-public final class Globals_GameUI {
+public final class GameUI_Constants {
 
     public static final int MIN_STAGE_WIDTH  = 280;
 
@@ -25,7 +25,7 @@ public final class Globals_GameUI {
     /**
      * Resource manager for UI assets (fonts, images, sounds).
      */
-    public static final ResourceManager RES_MGR = () -> Globals_GameUI.class;
+    public static final ResourceManager RES_MGR = () -> GameUI_Constants.class;
 
     /**
      * Localized text bundle for the UI.
@@ -121,5 +121,5 @@ public final class Globals_GameUI {
         .map(Background::fill)
         .toArray(Background[]::new);
 
-    private Globals_GameUI() {}
+    private GameUI_Constants() {}
 }

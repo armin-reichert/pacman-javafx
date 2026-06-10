@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.view;
 
-import de.amr.pacmanfx.ui.Globals_GameUI;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.subviews.SubView;
@@ -67,8 +67,8 @@ public class GameViewImplementation implements GameView {
         updateStageIcon(game);
         registerIconUpdater(game);
 
-        theStage.setMinWidth(Globals_GameUI.MIN_STAGE_WIDTH);
-        theStage.setMinHeight(Globals_GameUI.MIN_STAGE_HEIGHT);
+        theStage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
+        theStage.setMinHeight(GameUI_Constants.MIN_STAGE_HEIGHT);
         theStage.centerOnScreen();
         theStage.show();
     }
