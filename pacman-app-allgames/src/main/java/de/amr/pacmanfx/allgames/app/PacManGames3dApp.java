@@ -14,11 +14,8 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_Cartridge;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Cartridge;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
+import de.amr.pacmanfx.tengenmspacman.*;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
@@ -132,7 +129,7 @@ public class PacManGames3dApp extends Application {
         }
 
         //TODO find a better solution
-        game.ui().extensions().put("ui.settings", new TengenMsPacMan_UISettings());
+        game.ui().extensions().put(TengenMsPacMan_UIConfig.EXT_KEY_UI_SETTINGS, new TengenMsPacMan_UISettings());
 
         game.show(GameVariantID.ARCADE_PACMAN, stage);
     }

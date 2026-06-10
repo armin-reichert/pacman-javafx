@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_OptionsScene;
@@ -62,7 +63,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         if (optionsScene.initialDelay > 0) return;
 
         ctx.setFont(arcadeFont8());
-        final var uiSettings = (TengenMsPacMan_UISettings) scene.game().ui().extensions().get("ui.settings");
+        final var uiSettings = (TengenMsPacMan_UISettings) scene.game().ui().extensions().get(TengenMsPacMan_UIConfig.EXT_KEY_UI_SETTINGS);
         if (uiSettings.propertyJoypadBindingsDisplayed.get()) {
             drawJoypadKeyBinding(scene.game().input().joypad().currentKeyBinding());
         }

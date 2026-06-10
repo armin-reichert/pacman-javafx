@@ -4,11 +4,8 @@
 package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Cartridge;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
+import de.amr.pacmanfx.tengenmspacman.*;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
@@ -64,7 +61,7 @@ public class TengenMsPacMan_App extends Application {
             game.gameVariant(TENGEN_MS_PACMAN.name()).uiConfig().translate("infobox.joypad.title"),
             false);
 
-        game.ui().extensions().put("ui.settings", new TengenMsPacMan_UISettings());
+        game.ui().extensions().put(TengenMsPacMan_UIConfig.EXT_KEY_UI_SETTINGS, new TengenMsPacMan_UISettings());
 
         game.show(TENGEN_MS_PACMAN, primaryStage);
     }
