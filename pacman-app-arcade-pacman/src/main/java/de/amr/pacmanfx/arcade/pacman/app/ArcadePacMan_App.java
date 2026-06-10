@@ -57,8 +57,7 @@ public class ArcadePacMan_App extends Application {
             game.ui().subViews().startView().setSelectedIndex(0);
         }
         game.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, game.ui().translations());
-        game.selectGameVariant(GameVariantID.ARCADE_PACMAN.name());
-        game.show(primaryStage);
+        game.show(GameVariantID.ARCADE_PACMAN, primaryStage);
     }
 
     @Override

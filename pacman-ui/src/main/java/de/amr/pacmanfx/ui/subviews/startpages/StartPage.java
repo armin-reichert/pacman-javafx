@@ -20,7 +20,6 @@ import org.tinylog.Logger;
  *
  * <h2>Lifecycle</h2>
  * <ol>
- *   <li>{@link #init(Game)} is called once when the page is constructed or first registered.</li>
  *   <li>{@link #onEnterStartPage(Game)} is invoked each time the page becomes visible.</li>
  *   <li>{@link #onExitStartPage(Game)} is invoked when the page is left.</li>
  * </ol>

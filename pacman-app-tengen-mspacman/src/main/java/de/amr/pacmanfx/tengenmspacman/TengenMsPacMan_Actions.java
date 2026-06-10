@@ -12,8 +12,6 @@ import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
 
 public final class TengenMsPacMan_Actions {
@@ -50,8 +48,9 @@ public final class TengenMsPacMan_Actions {
     public static final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction("toggle_play_scene_display_mode") {
         @Override
         public void doAction(Game game) {
-            SceneDisplayMode mode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
-            PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(mode == SceneDisplayMode.SCROLLING
+            final var uiSettings = (TengenMsPacMan_UISettings) game.ui().customSettings().get("ui.settings");
+            final SceneDisplayMode mode = uiSettings.propertyPlaySceneDisplayMode.get();
+            uiSettings.propertyPlaySceneDisplayMode.set(mode == SceneDisplayMode.SCROLLING
                 ? SceneDisplayMode.SCALED_TO_FIT
                 : SceneDisplayMode.SCROLLING);
         }
@@ -65,7 +64,8 @@ public final class TengenMsPacMan_Actions {
     public static final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new GameAction("toggle_joypad_bindings_displayed") {
         @Override
         public void doAction(Game game) {
-            toggleBooleanProperty(PROPERTY_JOYPAD_BINDINGS_DISPLAYED);
+            final var uiSettings = (TengenMsPacMan_UISettings) game.ui().customSettings().get("ui.settings");
+            toggleBooleanProperty(uiSettings.propertyJoypadBindingsDisplayed);
         }
     };
 

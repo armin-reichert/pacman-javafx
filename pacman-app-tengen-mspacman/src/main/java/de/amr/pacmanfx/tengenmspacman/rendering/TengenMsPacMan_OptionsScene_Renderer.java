@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -17,7 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_OptionsScene.*;
 import static java.util.Objects.requireNonNull;
@@ -62,7 +62,8 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         if (optionsScene.initialDelay > 0) return;
 
         ctx.setFont(arcadeFont8());
-        if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
+        final var uiSettings = (TengenMsPacMan_UISettings) scene.game().ui().customSettings().get("ui.settings");
+        if (uiSettings.propertyJoypadBindingsDisplayed.get()) {
             drawJoypadKeyBinding(scene.game().input().joypad().currentKeyBinding());
         }
 

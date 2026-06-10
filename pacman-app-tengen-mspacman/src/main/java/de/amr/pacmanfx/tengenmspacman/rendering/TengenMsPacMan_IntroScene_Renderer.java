@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene.SceneState;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -17,7 +18,6 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.shadeOfBlue;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene.MARQUEE_X;
@@ -95,7 +95,8 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             default -> {}
         }
 
-        if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
+        final var uiSettings = (TengenMsPacMan_UISettings) scene.game().ui().customSettings().get("ui.settings");
+        if (uiSettings.propertyJoypadBindingsDisplayed.get()) {
             drawJoypadKeyBinding(scene.game().input().joypad().currentKeyBinding());
         }
 

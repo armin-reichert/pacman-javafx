@@ -18,6 +18,7 @@ import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
@@ -100,20 +101,13 @@ public class PacManGames3dApp extends Application {
 
         try {
             if (useBuilder) {
-
                 game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
-
-                    .gameVariant(ARCADE_PACMAN.name())
-                    .gameVariant(ARCADE_MS_PACMAN.name())
-                    .gameVariant(TENGEN_MS_PACMAN.name())
                     .gameVariant(ARCADE_PACMAN_XXL.name(), xxlMapSelector)
                     .gameVariant(ARCADE_MS_PACMAN_XXL.name(), xxlMapSelector)
-
                     .startPage(ArcadePacMan_StartPage::new)
                     .startPage(ArcadeMsPacMan_StartPage::new)
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
-
                     .build();
             }
             else {
@@ -137,8 +131,10 @@ public class PacManGames3dApp extends Application {
             Platform.exit();
         }
 
-        game.selectGameVariant(ARCADE_PACMAN.name());
-        game.show(stage);
+        //TODO find a better solution
+        game.ui().customSettings().put("ui.settings", new TengenMsPacMan_UISettings());
+
+        game.show(GameVariantID.ARCADE_PACMAN, stage);
     }
 
     @Override

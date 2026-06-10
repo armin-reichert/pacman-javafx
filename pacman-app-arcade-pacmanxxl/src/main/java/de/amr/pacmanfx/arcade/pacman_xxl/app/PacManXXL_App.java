@@ -73,8 +73,7 @@ public class PacManXXL_App extends Application {
         game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
         game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
 
-        game.selectGameVariant(GameVariantID.ARCADE_PACMAN_XXL.name());
-        game.show(primaryStage);
+        game.show(GameVariantID.ARCADE_PACMAN_XXL, primaryStage);
     }
 
     @Override

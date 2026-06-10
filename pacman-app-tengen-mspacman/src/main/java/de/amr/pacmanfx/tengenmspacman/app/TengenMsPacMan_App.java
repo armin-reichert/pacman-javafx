@@ -8,6 +8,7 @@ import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
@@ -63,8 +64,9 @@ public class TengenMsPacMan_App extends Application {
             game.gameVariant(TENGEN_MS_PACMAN.name()).uiConfig().translate("infobox.joypad.title"),
             false);
 
-        game.selectGameVariant(TENGEN_MS_PACMAN.name());
-        game.show(primaryStage);
+        game.ui().customSettings().put("ui.settings", new TengenMsPacMan_UISettings());
+
+        game.show(TENGEN_MS_PACMAN, primaryStage);
     }
 
     @Override

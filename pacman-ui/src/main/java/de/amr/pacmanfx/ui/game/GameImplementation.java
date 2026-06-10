@@ -9,6 +9,7 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameRules;
@@ -105,7 +106,8 @@ public final class GameImplementation implements Game {
             view,
             new SubViewManager(),
             new UISettings(),
-            new UISettings3D()
+            new UISettings3D(),
+            new HashMap<>()
         );
 
         createSubViews();
@@ -225,8 +227,10 @@ public final class GameImplementation implements Game {
     // Lifecycle
 
     @Override
-    public void show(Stage stage) {
+    public void show(GameVariantID variantID, Stage stage) {
         view.stageProperty().set(stage);
+
+        selectGameVariant(variantID.name());
 
         load3DAssets();
         initMainScene();
