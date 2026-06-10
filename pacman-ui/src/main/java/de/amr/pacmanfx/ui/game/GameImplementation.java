@@ -119,12 +119,7 @@ public final class GameImplementation implements Game {
 
     private GameVariant createGameVariant(String variantName) {
         final Cartridge cartridge = machine.cartridgeForVariant(variantName);
-        final var gameVariant = new GameVariant(
-            cartridge.gameFlowFactory().get(),
-            cartridge.gameModelFactory().get(),
-            cartridge.gameRulesFactory().get(),
-            cartridge.uiConfigFactory().get()
-        );
+        final var gameVariant = new GameVariant(cartridge);
 
         //TODO make configurable again if tests should be available
         final GameFlow flow = gameVariant.gameFlow();
@@ -137,7 +132,7 @@ public final class GameImplementation implements Game {
         return gameVariant;
     }
 
-    private GameVariant currentVariantImpl() {
+    private GameVariant currentGameVariant() {
         return gameVariant(currentGameVariantName());
     }
 
@@ -150,7 +145,7 @@ public final class GameImplementation implements Game {
     }
 
     @Override
-    public StringProperty variantNameProperty() {
+    public StringProperty gameVariantNameProperty() {
         return gameVariantName;
     }
 
@@ -182,7 +177,7 @@ public final class GameImplementation implements Game {
 
     @Override
     public UIConfig currentUIConfig() {
-        return currentVariantImpl().uiConfig();
+        return currentGameVariant().uiConfig();
     }
 
     @Override

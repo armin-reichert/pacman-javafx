@@ -47,7 +47,7 @@ public class GameViewImplementation implements GameView {
         stageTitleBinding = createStringBinding(
             () -> computeStageTitle(game),
             game.clock().updatesDisabledProperty(),
-            game.variantNameProperty(),
+            game.gameVariantNameProperty(),
             game.ui().subViews().selectedSubViewProperty(),
             game.ui().gameScenes().gameSceneProperty(),
             Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE,
@@ -118,8 +118,8 @@ public class GameViewImplementation implements GameView {
     private final ChangeListener<String> iconUpdateListener = (_, _, _) -> updateStageIcon(game);
 
     private void registerIconUpdater(Game game) {
-        game.variantNameProperty().removeListener(iconUpdateListener);
-        game.variantNameProperty().addListener(iconUpdateListener);
+        game.gameVariantNameProperty().removeListener(iconUpdateListener);
+        game.gameVariantNameProperty().addListener(iconUpdateListener);
     }
 
     private String titleForCurrentGameScene(Game game) {

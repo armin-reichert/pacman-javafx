@@ -10,4 +10,14 @@ public record GameVariant(
     AbstractGameModel gameModel,
     GameRules gameRules,
     UIConfig uiConfig
-) {}
+) {
+
+    public GameVariant(Cartridge cartridge) {
+        this(
+            cartridge.gameFlowFactory().get(),
+            cartridge.gameModelFactory().get(),
+            cartridge.gameRulesFactory().get(),
+            cartridge.uiConfigFactory().get()
+        );
+    }
+}

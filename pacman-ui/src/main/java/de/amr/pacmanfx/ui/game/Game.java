@@ -32,7 +32,7 @@ public interface Game extends GameLifecycle {
 
     CoinMechanism coinMechanism();
 
-    StringProperty variantNameProperty();
+    StringProperty gameVariantNameProperty();
 
     void selectGameVariant(String variantName);
 
