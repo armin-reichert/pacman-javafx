@@ -6,7 +6,7 @@ package de.amr.pacmanfx.mapeditor.actions;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.world.WorldMap;
 
-import static de.amr.pacmanfx.core.Globals.tile;
+import static de.amr.pacmanfx.core.Globals_Core.tile;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 

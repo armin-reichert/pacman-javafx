@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.mapeditor.GlobalsMapEditor;
+import de.amr.pacmanfx.mapeditor.Globals_MapEditor;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.model.world.WorldMap;
@@ -70,7 +70,7 @@ abstract class AbstractPropertyEditor {
         var btnDelete = new Button(SYMBOL_DELETE);
         btnDelete.disableProperty().bind(enabled.not());
         Tooltip tooltip = new Tooltip("Delete"); //TODO localize
-        tooltip.setFont(GlobalsMapEditor.FONT_TOOL_TIPS);
+        tooltip.setFont(Globals_MapEditor.FONT_TOOL_TIPS);
         btnDelete.setTooltip(tooltip);
         return btnDelete;
     }

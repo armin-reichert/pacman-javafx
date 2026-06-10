@@ -27,8 +27,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-import static de.amr.pacmanfx.core.Globals.TS;
-import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.translated;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
+import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.translated;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.*;
 import static java.util.Objects.requireNonNull;
 

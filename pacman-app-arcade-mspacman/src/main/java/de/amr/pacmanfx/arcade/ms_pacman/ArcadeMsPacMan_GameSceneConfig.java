@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.gamescene.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 
-import static de.amr.pacmanfx.ui.d3.Globals3D.PROPERTY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.d3.Globals_3D.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {

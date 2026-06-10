@@ -4,14 +4,14 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CreditsScene;
-import de.amr.pacmanfx.ui.GlobalsUI;
+import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
-import static de.amr.pacmanfx.core.Globals.TS;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CreditsScene.DISPLAY_SECONDS;
 
@@ -45,7 +45,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
             drawJavaFXRemakeCreditsText();
             ctx.setGlobalAlpha(1);
         }
-        if (GlobalsUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

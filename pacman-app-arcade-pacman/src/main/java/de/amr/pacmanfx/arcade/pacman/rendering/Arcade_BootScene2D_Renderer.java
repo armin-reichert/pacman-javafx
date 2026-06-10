@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
-import de.amr.pacmanfx.ui.GlobalsUI;
+import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
@@ -16,8 +16,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.basics.math.RandomNumberSupport.*;
-import static de.amr.pacmanfx.core.Globals.TS;
-import static de.amr.pacmanfx.core.Globals.lerp;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
+import static de.amr.pacmanfx.core.Globals_Core.lerp;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.lang.Math.clamp;
 import static java.util.Objects.requireNonNull;
@@ -71,7 +71,7 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
                 drawGrid(scene.unscaledWidth(), scene.unscaledHeight());
             }
         }
-        if (GlobalsUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             debugRenderer.draw(scene);
         }
     }

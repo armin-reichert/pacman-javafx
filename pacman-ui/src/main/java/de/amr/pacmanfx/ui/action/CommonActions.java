@@ -14,11 +14,11 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.GlobalsUI;
-import de.amr.pacmanfx.ui.d3.Globals3D;
+import de.amr.pacmanfx.ui.Globals_GameUI;
+import de.amr.pacmanfx.ui.d3.Globals_3D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.Globals;
+import de.amr.pacmanfx.ui.game.Globals_Game;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -33,7 +33,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.Globals.NUM_TICKS_PER_SEC;
+import static de.amr.pacmanfx.core.Globals_Core.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
 
 /**
@@ -92,7 +92,7 @@ public final class CommonActions {
 
     private static void startEditor(Game game, TileMapEditor editor) {
         game.stopGame();
-        editor.init(Globals.CUSTOM_MAP_DIR);
+        editor.init(Globals_Game.CUSTOM_MAP_DIR);
         editor.start();
     }
 
@@ -146,8 +146,8 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            final PerspectiveID nextID = Globals3D.PROPERTY_3D_PERSPECTIVE_ID.get().next();
-            Globals3D.PROPERTY_3D_PERSPECTIVE_ID.set(nextID);
+            final PerspectiveID nextID = Globals_3D.PROPERTY_3D_PERSPECTIVE_ID.get().next();
+            Globals_3D.PROPERTY_3D_PERSPECTIVE_ID.set(nextID);
 
             final TranslationManager translations = game.ui().translations();
             final String msgKey = translations.translate(
@@ -162,8 +162,8 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            final PerspectiveID prevID = Globals3D.PROPERTY_3D_PERSPECTIVE_ID.get().prev();
-            Globals3D.PROPERTY_3D_PERSPECTIVE_ID.set(prevID);
+            final PerspectiveID prevID = Globals_3D.PROPERTY_3D_PERSPECTIVE_ID.get().prev();
+            Globals_3D.PROPERTY_3D_PERSPECTIVE_ID.set(prevID);
 
             final TranslationManager translations = game.ui().translations();
             final String msgKey = translations.translate(
@@ -230,12 +230,12 @@ public final class CommonActions {
         @Override
         protected void doAction(Game game) {
             final GameClock clock = game.clock();
-            final int newRate = Math.clamp(clock.targetFrameRate() + Globals.SIM_SPEED_DELTA,
-                Globals.SIM_SPEED_MIN, Globals.SIM_SPEED_MAX);
+            final int newRate = Math.clamp(clock.targetFrameRate() + Globals_Game.SIM_SPEED_DELTA,
+                Globals_Game.SIM_SPEED_MIN, Globals_Game.SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
-            final String msg = newRate == Globals.SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
-            game.shortMessage(Duration.seconds(Globals.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+            final String msg = newRate == Globals_Game.SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
+            game.shortMessage(Duration.seconds(Globals_Game.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
         }
     };
 
@@ -244,9 +244,9 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            game.clock().setTargetFrameRate(Globals.SIM_SPEED_MAX);
-            final String msg = "At maximum speed: %d Hz".formatted(Globals.SIM_SPEED_MAX);
-            game.shortMessage(Duration.seconds(Globals.SIM_STEP_MESSAGE_SEC), msg);
+            game.clock().setTargetFrameRate(Globals_Game.SIM_SPEED_MAX);
+            final String msg = "At maximum speed: %d Hz".formatted(Globals_Game.SIM_SPEED_MAX);
+            game.shortMessage(Duration.seconds(Globals_Game.SIM_STEP_MESSAGE_SEC), msg);
         }
     };
 
@@ -256,12 +256,12 @@ public final class CommonActions {
         @Override
         protected void doAction(Game game) {
             final GameClock clock = game.clock();
-            final int newRate = Math.clamp(clock.targetFrameRate() - Globals.SIM_SPEED_DELTA,
-                Globals.SIM_SPEED_MIN, Globals.SIM_SPEED_MAX);
+            final int newRate = Math.clamp(clock.targetFrameRate() - Globals_Game.SIM_SPEED_DELTA,
+                Globals_Game.SIM_SPEED_MIN, Globals_Game.SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
-            final String msg = newRate == Globals.SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
-            game.shortMessage(Duration.seconds(Globals.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+            final String msg = newRate == Globals_Game.SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
+            game.shortMessage(Duration.seconds(Globals_Game.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
         }
     };
 
@@ -270,9 +270,9 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            game.clock().setTargetFrameRate(Globals.SIM_SPEED_MIN);
-            final String msg = "At minimum speed: %d Hz".formatted(Globals.SIM_SPEED_MIN);
-            game.shortMessage(Duration.seconds(Globals.SIM_STEP_MESSAGE_SEC), msg);
+            game.clock().setTargetFrameRate(Globals_Game.SIM_SPEED_MIN);
+            final String msg = "At minimum speed: %d Hz".formatted(Globals_Game.SIM_SPEED_MIN);
+            game.shortMessage(Duration.seconds(Globals_Game.SIM_STEP_MESSAGE_SEC), msg);
         }
     };
 
@@ -309,7 +309,7 @@ public final class CommonActions {
         @Override
         protected void doAction(Game game) {
             game.clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-            game.shortMessage(Duration.seconds(Globals.SIM_STEP_MESSAGE_SEC), game.clock().targetFrameRate() + "Hz");
+            game.shortMessage(Duration.seconds(Globals_Game.SIM_STEP_MESSAGE_SEC), game.clock().targetFrameRate() + "Hz");
         }
     };
 
@@ -350,7 +350,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(GlobalsUI.PROPERTY_DEBUG_INFO_VISIBLE);
+            toggleBooleanProperty(Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
         }
     };
 
@@ -358,7 +358,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            Ufx.toggleProperty(Globals3D.PROPERTY_3D_DRAW_MODE, DrawMode.LINE, DrawMode.FILL);
+            Ufx.toggleProperty(Globals_3D.PROPERTY_3D_DRAW_MODE, DrawMode.LINE, DrawMode.FILL);
         }
     };
 
@@ -366,7 +366,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(GlobalsUI.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
+            toggleBooleanProperty(Globals_GameUI.PROPERTY_KEYBOARD_MONITOR_VISIBLE);
         }
     };
 
@@ -374,10 +374,10 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(GlobalsUI.PROPERTY_MINI_VIEW_ON);
+            toggleBooleanProperty(Globals_GameUI.PROPERTY_MINI_VIEW_ON);
             if (!game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)) {
                 final String msg = game.ui().translations().translate(
-                    GlobalsUI.PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off");
+                    Globals_GameUI.PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off");
                 game.shortMessage(msg);
             }
         }
@@ -387,7 +387,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(GlobalsUI.PROPERTY_MUTED);
+            toggleBooleanProperty(Globals_GameUI.PROPERTY_MUTED);
         }
     };
 
@@ -415,8 +415,8 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(Globals3D.PROPERTY_3D_ENABLED);
-            final boolean is3DEnabled = Globals3D.PROPERTY_3D_ENABLED.get();
+            toggleBooleanProperty(Globals_3D.PROPERTY_3D_ENABLED);
+            final boolean is3DEnabled = Globals_3D.PROPERTY_3D_ENABLED.get();
             if (!inPlayScene(game)) {
                 game.shortMessage(game.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
             }

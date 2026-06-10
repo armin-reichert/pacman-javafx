@@ -15,7 +15,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.ui.GlobalsUI;
+import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.Globals.*;
+import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 
@@ -100,7 +100,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate() {
-        game().ui().sounds().playVoice(GlobalsUI.VOICE_EXPLAIN_GAME_START);
+        game().ui().sounds().playVoice(Globals_GameUI.VOICE_EXPLAIN_GAME_START);
 
         actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // insert coin + start game actions
         actionBindings().registerAllBindings(GlobalActionBindings.SCENE_TESTS_BINDINGS); // actions for starting tests

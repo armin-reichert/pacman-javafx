@@ -13,7 +13,7 @@ import javafx.scene.image.Image;
 
 import java.util.stream.IntStream;
 
-import static de.amr.pacmanfx.core.Globals.*;
+import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.*;
 
 public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {

@@ -15,7 +15,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.core.Globals.TS;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
 
 public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_Renderer {
 

@@ -8,8 +8,8 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.pacmanfx.core.Globals.TS;
-import static de.amr.pacmanfx.core.Globals.lerp;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
+import static de.amr.pacmanfx.core.Globals_Core.lerp;
 import static java.util.Objects.requireNonNull;
 
 public class StalkingPlayerPerspective implements Perspective<GameLevel> {

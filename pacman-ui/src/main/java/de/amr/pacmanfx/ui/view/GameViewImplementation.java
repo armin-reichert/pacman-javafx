@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.view;
 
-import de.amr.pacmanfx.ui.GlobalsUI;
-import de.amr.pacmanfx.ui.d3.Globals3D;
+import de.amr.pacmanfx.ui.Globals_GameUI;
+import de.amr.pacmanfx.ui.d3.Globals_3D;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.subviews.SubView;
@@ -37,7 +37,7 @@ public class GameViewImplementation implements GameView {
 
     public GameViewImplementation(int width, int height) {
         this.mainScene = new GameViewMainScene(width, height);
-        this.statusIconBox = new StatusIconBox(() -> GlobalsUI.LOCALIZED_TEXTS);
+        this.statusIconBox = new StatusIconBox(() -> Globals_GameUI.LOCALIZED_TEXTS);
     }
 
     @Override
@@ -50,8 +50,8 @@ public class GameViewImplementation implements GameView {
             game.variantNameProperty(),
             game.ui().subViews().selectedSubViewProperty(),
             game.ui().gameScenes().gameSceneProperty(),
-            GlobalsUI.PROPERTY_DEBUG_INFO_VISIBLE,
-            Globals3D.PROPERTY_3D_ENABLED
+            Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE,
+            Globals_3D.PROPERTY_3D_ENABLED
         );
     }
 
@@ -67,8 +67,8 @@ public class GameViewImplementation implements GameView {
         updateStageIcon(game);
         registerIconUpdater(game);
 
-        theStage.setMinWidth(GlobalsUI.MIN_STAGE_WIDTH);
-        theStage.setMinHeight(GlobalsUI.MIN_STAGE_HEIGHT);
+        theStage.setMinWidth(Globals_GameUI.MIN_STAGE_WIDTH);
+        theStage.setMinHeight(Globals_GameUI.MIN_STAGE_HEIGHT);
         theStage.centerOnScreen();
         theStage.show();
     }
@@ -125,8 +125,8 @@ public class GameViewImplementation implements GameView {
     private String titleForCurrentGameScene(Game game) {
         final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
 
-        final boolean debug = GlobalsUI.PROPERTY_DEBUG_INFO_VISIBLE.get();
-        final boolean is3D = Globals3D.PROPERTY_3D_ENABLED.get();
+        final boolean debug = Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get();
+        final boolean is3D = Globals_3D.PROPERTY_3D_ENABLED.get();
         final boolean paused = game.clock().getUpdatesDisabled();
 
         final String normalTitle = stageTitle(game, paused, is3D);

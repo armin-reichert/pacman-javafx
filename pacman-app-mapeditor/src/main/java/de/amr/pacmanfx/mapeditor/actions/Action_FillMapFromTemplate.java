@@ -16,8 +16,8 @@ import org.tinylog.Logger;
 import java.nio.IntBuffer;
 import java.time.LocalTime;
 
-import static de.amr.pacmanfx.core.Globals.TS;
-import static de.amr.pacmanfx.core.Globals.tile;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
+import static de.amr.pacmanfx.core.Globals_Core.tile;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;
 
 public class Action_FillMapFromTemplate extends EditorUIAction<Void> {

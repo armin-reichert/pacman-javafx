@@ -8,7 +8,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.scene.image.Image;
 
-import static de.amr.pacmanfx.core.Globals.TS;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
 
 public class Action_SetEmptyMapFromTemplateImage extends EditorUIAction<Void> {
 

@@ -21,9 +21,9 @@ import java.util.ResourceBundle;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
-public final class GlobalsMapEditor {
+public final class Globals_MapEditor {
 
-    private GlobalsMapEditor() {}
+    private Globals_MapEditor() {}
 
     public static final int UPDATE_FREQ = 20; // Hz
 

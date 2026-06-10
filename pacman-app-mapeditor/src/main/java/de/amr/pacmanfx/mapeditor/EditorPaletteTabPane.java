@@ -20,7 +20,7 @@ import javafx.scene.text.Text;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.*;
+import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.*;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 
 public class EditorPaletteTabPane extends TabPane {

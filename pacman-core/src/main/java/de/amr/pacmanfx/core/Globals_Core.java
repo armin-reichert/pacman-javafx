@@ -9,9 +9,9 @@ import de.amr.basics.math.Vector2i;
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static java.util.Objects.requireNonNull;
 
-public final class Globals {
+public final class Globals_Core {
 
-    private Globals() {}
+    private Globals_Core() {}
 
     /**
      * The red ghost's character is aptly described as that of a shadow and is best-known as “Blinky”.

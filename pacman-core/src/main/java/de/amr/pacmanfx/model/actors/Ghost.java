@@ -8,7 +8,7 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.Globals;
+import de.amr.pacmanfx.core.Globals_Core;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.House;
@@ -24,7 +24,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import static de.amr.basics.math.Direction.*;
-import static de.amr.pacmanfx.core.Globals.*;
+import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.core.Validations.differsAtMost;
 import static de.amr.pacmanfx.core.Validations.stateIsOneOf;
 import static java.util.Objects.requireNonNull;
@@ -108,9 +108,9 @@ public class Ghost extends MovingActor {
     }
 
     /**
-     * @return this ghost's personality, see {@link Globals#RED_GHOST_SHADOW},
-     * {@link Globals#PINK_GHOST_SPEEDY}, {@link Globals#CYAN_GHOST_BASHFUL} and
-     * {@link Globals#ORANGE_GHOST_POKEY}.
+     * @return this ghost's personality, see {@link Globals_Core#RED_GHOST_SHADOW},
+     * {@link Globals_Core#PINK_GHOST_SPEEDY}, {@link Globals_Core#CYAN_GHOST_BASHFUL} and
+     * {@link Globals_Core#ORANGE_GHOST_POKEY}.
      */
     public byte personality() {
         return personality;

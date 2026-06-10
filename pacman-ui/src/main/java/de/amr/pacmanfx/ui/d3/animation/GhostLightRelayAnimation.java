@@ -17,7 +17,7 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.Globals.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.core.Globals_Core.RED_GHOST_SHADOW;
 import static java.util.Objects.requireNonNull;
 
 /**

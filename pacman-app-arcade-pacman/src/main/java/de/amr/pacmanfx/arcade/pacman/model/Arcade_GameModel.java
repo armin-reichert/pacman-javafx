@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.Globals;
+import de.amr.pacmanfx.core.Globals_Core;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.event.LevelStartedEvent;
 import de.amr.pacmanfx.model.AbstractGameModel;
@@ -17,7 +17,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.Globals.tile;
+import static de.amr.pacmanfx.core.Globals_Core.tile;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -61,7 +61,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
-        final Ghost redGhost = level.ghost(Globals.RED_GHOST_SHADOW);
+        final Ghost redGhost = level.ghost(Globals_Core.RED_GHOST_SHADOW);
         if (redGhost != null) {
             final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
             final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();

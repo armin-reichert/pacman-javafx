@@ -10,7 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.pacmanfx.core.Globals.lerp;
+import static de.amr.pacmanfx.core.Globals_Core.lerp;
 import static java.util.Objects.requireNonNull;
 
 public class DronePerspective implements Perspective<GameLevel> {

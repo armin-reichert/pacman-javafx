@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static de.amr.pacmanfx.core.Globals.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.core.Globals_Core.RED_GHOST_SHADOW;
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.*;
 

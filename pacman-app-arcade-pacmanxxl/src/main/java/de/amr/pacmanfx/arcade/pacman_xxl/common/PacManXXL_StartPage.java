@@ -6,9 +6,9 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.GlobalsUI;
+import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.d3.Globals3D;
+import de.amr.pacmanfx.ui.d3.Globals_3D;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
@@ -27,7 +27,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 
-import static de.amr.pacmanfx.core.Globals.TS;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -46,9 +46,9 @@ public class PacManXXL_StartPage implements StartPage {
     private static final float MENU_REL_HEIGHT = 0.66f;
 
     private static final OptionMenuStyle MENU_STYLE = OptionMenuStyle.builder()
-        .titleFont(Ufx.deriveFont(GlobalsUI.FONT_PAC_FONT_GOOD, 4 * TS))
+        .titleFont(Ufx.deriveFont(Globals_GameUI.FONT_PAC_FONT_GOOD, 4 * TS))
         .titleTextFill(ArcadePalette.ARCADE_RED)
-        .textFont(Ufx.deriveFont(GlobalsUI.FONT_ARCADE_8, TS))
+        .textFont(Ufx.deriveFont(Globals_GameUI.FONT_ARCADE_8, TS))
         .entryTextFill(ArcadePalette.ARCADE_YELLOW)
         .entryValueFill(ArcadePalette.ARCADE_WHITE)
         .usageTextFill(ArcadePalette.ARCADE_YELLOW)
@@ -66,7 +66,7 @@ public class PacManXXL_StartPage implements StartPage {
 
         public MenuBinding(Game game) {
             gameVariantNameListener = (_, _, variant) -> game.selectGameVariant(variant.name());
-            play3DListener = (_, _, enable3D) -> Globals3D.PROPERTY_3D_ENABLED.set(enable3D);
+            play3DListener = (_, _, enable3D) -> Globals_3D.PROPERTY_3D_ENABLED.set(enable3D);
             cutScenesEnabledListener = (_, _, enableCutScenes) -> game.currentGameContext().flow().setCutScenesEnabled(enableCutScenes);
 
             scaling = game.ui().view().stageProperty().map(stage -> {

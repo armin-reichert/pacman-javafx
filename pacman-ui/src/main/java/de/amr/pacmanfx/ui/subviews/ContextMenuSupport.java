@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews;
 
-import de.amr.pacmanfx.ui.GlobalsUI;
+import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -27,8 +27,8 @@ public final class ContextMenuSupport {
 
     public static MenuItem addTitleItem(ContextMenu menu, String itemText) {
         final var text = new Text(itemText);
-        text.setFont(GlobalsUI.CONTEXT_MENU_DEFAULT_TITLE_FONT);
-        text.setFill(GlobalsUI.CONTEXT_MENU_DEFAULT_TITLE_COLOR);
+        text.setFont(Globals_GameUI.CONTEXT_MENU_DEFAULT_TITLE_FONT);
+        text.setFill(Globals_GameUI.CONTEXT_MENU_DEFAULT_TITLE_COLOR);
         text.getStyleClass().add("custom-menu-title");
         final var item = new CustomMenuItem(text, false);
         menu.getItems().add(item);

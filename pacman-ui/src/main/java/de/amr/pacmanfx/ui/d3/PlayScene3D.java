@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.d3;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.score.Score;
-import de.amr.pacmanfx.ui.GlobalsUI;
+import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.action.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.d3.animation.PlaySceneFadeInAnimation;
@@ -37,7 +37,7 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.core.Globals.TS;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.ui.action.CommonActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static java.util.Objects.requireNonNull;
@@ -149,7 +149,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         decorate(level3D);
         level3DParent.getChildren().setAll(level3D);
 
-        level3D.createAnimations(Globals3D.DEFAULT_PARTICLE_ANIMATION_CONFIG);
+        level3D.createAnimations(Globals_3D.DEFAULT_PARTICLE_ANIMATION_CONFIG);
         level3D.entities().selectAll().forEach(entity -> entity.init(gameContext(), level));
         level3D.startLivesCounterTrackingPac();
 
@@ -174,15 +174,15 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onActivate() {
-        perspectiveManager.activeIDProperty().bind(Globals3D.PROPERTY_3D_PERSPECTIVE_ID);
-        Globals3D.PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
+        perspectiveManager.activeIDProperty().bind(Globals_3D.PROPERTY_3D_PERSPECTIVE_ID);
+        Globals_3D.PROPERTY_3D_DRAW_MODE.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
     }
 
     @Override
     public void onDeactivate() {
         perspectiveManager.activeIDProperty().unbind();
-        Globals3D.PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
+        Globals_3D.PROPERTY_3D_DRAW_MODE.removeListener(drawModeChangeListener);
         disposeContextMenu();
     }
 
@@ -259,10 +259,10 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         subScene.setCamera(camera);
 
         final var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(Globals3D.PROPERTY_3D_AXES_VISIBLE);
+        coordinateSystem.visibleProperty().bind(Globals_3D.PROPERTY_3D_AXES_VISIBLE);
 
         ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(Globals3D.PROPERTY_3D_LIGHT_COLOR);
+        ambientLight.colorProperty().bind(Globals_3D.PROPERTY_3D_LIGHT_COLOR);
 
         subSceneRoot.getChildren().addAll(level3DParent, coordinateSystem, ambientLight);
     }
@@ -290,7 +290,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         scores3D = new Scores3D(
             game().ui().translations().translate("score.score"),
             game().ui().translations().translate("score.high_score"),
-            GlobalsUI.FONT_ARCADE_8);
+            Globals_GameUI.FONT_ARCADE_8);
 
         scores3D.textOpacity.bind(scoreOpacity);
 

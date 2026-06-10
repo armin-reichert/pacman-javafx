@@ -11,8 +11,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.ParallelCamera;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.Globals.TS;
-import static de.amr.pacmanfx.core.Globals.lerp;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
+import static de.amr.pacmanfx.core.Globals_Core.lerp;
 
 public class PlayScene2DCamera extends ParallelCamera {
 

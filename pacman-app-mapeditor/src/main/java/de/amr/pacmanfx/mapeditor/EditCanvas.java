@@ -36,9 +36,9 @@ import org.tinylog.Logger;
 
 import java.util.function.Predicate;
 
-import static de.amr.pacmanfx.core.Globals.TS;
-import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.ACTOR_SPRITES;
-import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.translated;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
+import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.ACTOR_SPRITES;
+import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.translated;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.COLOR_FOOD;
 import static java.util.Objects.requireNonNull;

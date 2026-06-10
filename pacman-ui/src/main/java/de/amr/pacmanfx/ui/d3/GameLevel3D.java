@@ -59,7 +59,7 @@ import java.util.stream.Stream;
 import static de.amr.basics.math.RandomNumberSupport.RANDOM_GENERATOR;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.core.Globals.*;
+import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
@@ -289,9 +289,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         entitySet.maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.worldConfig(), colorScheme, animationRegistry);
-        entitySet.maze3D.wallOpacityProperty().bind(Globals3D.PROPERTY_3D_WALL_OPACITY);
-        entitySet.maze3D.wallBaseHeightProperty().bind(Globals3D.PROPERTY_3D_WALL_HEIGHT);
-        entitySet.maze3D.floorColorProperty().bind(Globals3D.PROPERTY_3D_FLOOR_COLOR);
+        entitySet.maze3D.wallOpacityProperty().bind(Globals_3D.PROPERTY_3D_WALL_OPACITY);
+        entitySet.maze3D.wallBaseHeightProperty().bind(Globals_3D.PROPERTY_3D_WALL_HEIGHT);
+        entitySet.maze3D.floorColorProperty().bind(Globals_3D.PROPERTY_3D_FLOOR_COLOR);
         entitySet.add(entitySet.maze3D);
     }
 

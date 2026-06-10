@@ -11,8 +11,8 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.Globals.HTS;
-import static de.amr.pacmanfx.core.Globals.TS;
+import static de.amr.pacmanfx.core.Globals_Core.HTS;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
 
 public final class HuntingResolver {
 

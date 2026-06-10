@@ -8,7 +8,7 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 
-import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.*;
+import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.*;
 
 public class Action_OpenMapFileInteractively extends EditorUIAction<File> {
 

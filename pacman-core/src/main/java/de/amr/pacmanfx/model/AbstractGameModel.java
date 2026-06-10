@@ -34,7 +34,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.core.Globals.halfTileRightOf;
+import static de.amr.pacmanfx.core.Globals_Core.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
 /**

@@ -10,9 +10,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 import java.io.File;
 import java.util.regex.Pattern;
 
-public class Globals {
+public class Globals_Game {
 
-    private Globals() {}
+    private Globals_Game() {}
 
     /**
      * Game variant names must match this pattern (e.g. "MS_PACMAN_2024").

@@ -38,9 +38,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.Globals.TS;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static de.amr.pacmanfx.mapeditor.EditMode.INSPECT;
-import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.*;
+import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.*;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
 

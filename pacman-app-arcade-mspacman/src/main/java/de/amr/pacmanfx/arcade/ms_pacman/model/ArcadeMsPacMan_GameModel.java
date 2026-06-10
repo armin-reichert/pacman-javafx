@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.basics.math.RandomNumberSupport.*;
-import static de.amr.pacmanfx.core.Globals.*;
+import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;

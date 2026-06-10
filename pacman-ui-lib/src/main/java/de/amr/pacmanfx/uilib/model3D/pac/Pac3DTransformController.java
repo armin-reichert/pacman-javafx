@@ -8,8 +8,8 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
 
-import static de.amr.pacmanfx.core.Globals.HTS;
-import static de.amr.pacmanfx.core.Globals.TS;
+import static de.amr.pacmanfx.core.Globals_Core.HTS;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
 
 public class Pac3DTransformController {
 

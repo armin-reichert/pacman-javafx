@@ -9,8 +9,8 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.core.Globals.HTS;
-import static de.amr.pacmanfx.core.Globals.TS;
+import static de.amr.pacmanfx.core.Globals_Core.HTS;
+import static de.amr.pacmanfx.core.Globals_Core.TS;
 import static java.util.Objects.requireNonNull;
 
 public interface House {

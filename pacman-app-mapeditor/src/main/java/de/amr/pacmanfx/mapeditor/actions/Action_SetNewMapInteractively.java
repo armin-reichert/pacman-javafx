@@ -9,7 +9,7 @@ import de.amr.pacmanfx.mapeditor.SizeInputDialog;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.model.world.WorldMap;
 
-import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.translated;
+import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.translated;
 
 public class Action_SetNewMapInteractively extends EditorUIAction<Void> {
 

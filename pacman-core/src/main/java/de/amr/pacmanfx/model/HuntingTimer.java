@@ -4,15 +4,15 @@
 package de.amr.pacmanfx.model;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.Globals;
+import de.amr.pacmanfx.core.Globals_Core;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.Globals.isEven;
-import static de.amr.pacmanfx.core.Globals.isOdd;
+import static de.amr.pacmanfx.core.Globals_Core.isEven;
+import static de.amr.pacmanfx.core.Globals_Core.isOdd;
 import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 
@@ -134,7 +134,7 @@ public class HuntingTimer {
     public void logPhase() {
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds). {}",
             phaseIndex(), currentHuntingPhase().name(),
-            tickTimer.durationTicks(), (float) tickTimer.durationTicks() / Globals.NUM_TICKS_PER_SEC,
+            tickTimer.durationTicks(), (float) tickTimer.durationTicks() / Globals_Core.NUM_TICKS_PER_SEC,
             this);
     }
 

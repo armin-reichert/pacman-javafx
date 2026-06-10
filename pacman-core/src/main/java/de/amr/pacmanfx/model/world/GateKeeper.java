@@ -16,7 +16,7 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 import static de.amr.basics.math.Direction.LEFT;
-import static de.amr.pacmanfx.core.Globals.*;
+import static de.amr.pacmanfx.core.Globals_Core.*;
 import static java.util.Objects.requireNonNull;
 
 /**

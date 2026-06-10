@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.world.WorldMap;
 
-import static de.amr.pacmanfx.core.Globals.tile;
+import static de.amr.pacmanfx.core.Globals_Core.tile;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.canPlaceFoodAtTile;
 import static java.util.Objects.requireNonNull;
 

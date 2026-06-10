@@ -19,7 +19,7 @@ import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.GlobalsUI;
+import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -29,7 +29,7 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.core.Globals.*;
+import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 
@@ -75,7 +75,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         final UIConfig uiConfig = game().currentUIConfig();
         final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
 
-        game().ui().sounds().playVoice(GlobalsUI.VOICE_EXPLAIN_GAME_START);
+        game().ui().sounds().playVoice(Globals_GameUI.VOICE_EXPLAIN_GAME_START);
 
         actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
         actionBindings().registerAllBindings(GlobalActionBindings.SCENE_TESTS_BINDINGS);

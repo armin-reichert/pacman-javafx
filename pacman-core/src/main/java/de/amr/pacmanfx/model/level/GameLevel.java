@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.model.level;
 
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.Globals;
+import de.amr.pacmanfx.core.Globals_Core;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -316,7 +316,7 @@ public class GameLevel {
     }
 
     /**
-     * @param personality a valid ghost ID (e.g. {@link Globals#ORANGE_GHOST_POKEY})
+     * @param personality a valid ghost ID (e.g. {@link Globals_Core#ORANGE_GHOST_POKEY})
      * @return the ghost with this ID
      */
     public Ghost ghost(byte personality) {

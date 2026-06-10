@@ -13,7 +13,7 @@ import javafx.scene.image.Image;
 
 import java.util.stream.IntStream;
 
-import static de.amr.pacmanfx.core.Globals.*;
+import static de.amr.pacmanfx.core.Globals_Core.*;
 
 public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 

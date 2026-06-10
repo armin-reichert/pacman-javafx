@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;
 
-public final class GlobalsUI {
+public final class Globals_GameUI {
 
     public static final int MIN_STAGE_WIDTH  = 280;
 
@@ -27,7 +27,7 @@ public final class GlobalsUI {
     /**
      * Resource manager for UI assets (fonts, images, sounds).
      */
-    public static final ResourceManager RES_MGR = () -> GlobalsUI.class;
+    public static final ResourceManager RES_MGR = () -> Globals_GameUI.class;
 
     /**
      * Localized text bundle for the UI.
@@ -155,5 +155,5 @@ public final class GlobalsUI {
     /** Default duration of flash messages. */
     public static final Duration DEFAULT_FLASH_MESSAGE_DURATION = Duration.seconds(1.5);
 
-    private GlobalsUI() {}
+    private Globals_GameUI() {}
 }
