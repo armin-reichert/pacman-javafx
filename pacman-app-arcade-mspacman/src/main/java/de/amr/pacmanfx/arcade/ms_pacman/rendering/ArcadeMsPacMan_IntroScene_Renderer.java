@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
         introScene.ghosts.forEach(actorRenderer::drawActor);
         actorRenderer.drawActor(introScene.msPacMan);
 
-        switch (introScene.sceneController.state()) {
+        switch (introScene.sceneState()) {
             case SceneState.GHOSTS_MARCHING_IN -> {
                 String ghostName = GHOST_NAMES[introScene.presentedGhostPersonality];
                 Color ghostColor = GHOST_COLORS[introScene.presentedGhostPersonality];

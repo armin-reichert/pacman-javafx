@@ -13,13 +13,15 @@ import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
+import static java.util.Objects.requireNonNull;
+
 public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
 
     private final Arcade_PlayScene2D playScene2D;
 
     public Arcade_PlayScene2DGameEventHandler(Arcade_PlayScene2D playScene2D) {
         super(playScene2D.game());
-        this.playScene2D = playScene2D;
+        this.playScene2D = requireNonNull(playScene2D);
     }
 
     @Override
@@ -36,11 +38,6 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
     @Override
     public void onBonusExpired(BonusExpiredEvent e) {
         optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
-    }
-
-    @Override
-    public void onCreditAdded(CreditAddedEvent e) {
-        optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
 
     @Override

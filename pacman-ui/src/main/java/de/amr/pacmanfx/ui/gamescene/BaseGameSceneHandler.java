@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.gamestate.GameState;
@@ -50,6 +51,11 @@ public class BaseGameSceneHandler extends DefaultGameEventListener {
 
     public Optional<GameSoundEffects> optSoundEffects() {
         return game.currentSoundEffects();
+    }
+
+    @Override
+    public void onCreditAdded(CreditAddedEvent e) {
+        optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
 
     @Override

@@ -11,7 +11,6 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
@@ -21,12 +20,10 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.Globals_GameUI;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GlobalActionBindings;
-import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import java.util.List;
 
@@ -43,13 +40,14 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public static final int TITLE_X          = WorldMap.TS * 10;
     public static final int TITLE_Y          = WorldMap.TS * 8;
     public static final int TOP_Y            = WorldMap.TS * 11;
-    public static final int STOP_X_GHOST     = WorldMap.TS * 6 - 4;
+    public static final int STOP_X_GHOST     = WorldMap.TS * 6 - WorldMap.HTS;
     public static final int STOP_X_MS_PACMAN = WorldMap.TS * 15 + 2;
 
     private static final float ACTOR_SPEED = 1.11f;
 
-    public final StateMachine<ArcadeMsPacMan_IntroScene> sceneController;
+    private final StateMachine<ArcadeMsPacMan_IntroScene> sceneController;
 
+    // Public for access by renderer
     public Marquee marquee;
     public Pac msPacMan;
     public List<Ghost> ghosts;
@@ -59,14 +57,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     public ArcadeMsPacMan_IntroScene(Game game) {
         super(game);
-
-        setGameEventHandler(new BaseGameSceneHandler(game) {
-            @Override
-            public void onCreditAdded(CreditAddedEvent e) {
-                optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
-            }
-        });
-
         sceneController = new StateMachine<>(this, List.of(SceneState.values()));
     }
 
@@ -112,6 +102,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     // Scene controller FSM
+
+    public State<ArcadeMsPacMan_IntroScene> sceneState() {
+        return sceneController.state();
+    }
 
     public enum SceneState implements State<ArcadeMsPacMan_IntroScene> {
 

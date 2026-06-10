@@ -12,18 +12,15 @@ import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.Globals_GameUI;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GlobalActionBindings;
-import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import java.util.Arrays;
 import java.util.List;
@@ -89,14 +86,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         super(game);
 
         flow = new StateMachine<>(this, List.of(SceneState.values()));
-
-        final var gameEventHandler = new BaseGameSceneHandler(game) {
-            @Override
-            public void onCreditAdded(CreditAddedEvent e) {
-                optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
-            }
-        };
-        setGameEventHandler(gameEventHandler);
     }
 
     @Override
