@@ -42,6 +42,7 @@ public class FlyerStartPage extends StackPane implements StartPage {
                 case S -> {
                     if (game != null) {
                         game.ui().sounds().stopAndDisposeVoice();
+                        game.shortMessage("OK, I shut my mouth");
                     }
                 }
             }
