@@ -4,44 +4,49 @@
 package de.amr.pacmanfx.ui.subviews.startpages;
 
 import de.amr.pacmanfx.ui.GlobalsUI;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_BOOT_SHOW_PLAY_VIEW;
 import static java.util.Objects.requireNonNull;
 
 public class FlyerStartPage extends StackPane implements StartPage {
 
     public static final Font  DEFAULT_START_BUTTON_FONT = Ufx.deriveFont(GlobalsUI.FONT_ARCADE_8, 32);
     public static final Color DEFAULT_START_BUTTON_BGCOLOR = Color.rgb(0, 155, 252, 0.6);
-    public static final Color DEFAULT_START_BUTTON_FILLCOLOR = Color.WHITE;
-
-    public static final KeyCode SHUT_UP_KEYCODE = KeyCode.S;
+    public static final Color DEFAULT_START_BUTTON_FILL = Color.WHITE;
 
     protected final Flyer flyer = new Flyer();
     protected final String title;
-    protected Node startButton;
+    protected FancyButton startButton;
+    protected Game game;
 
     protected FlyerStartPage(String title) {
         this.title = requireNonNull(title);
         getChildren().add(flyer);
+
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
                 case UP -> flyer.prevFlyerPage();
+                case S -> {
+                    if (game != null) {
+                        game.ui().sounds().stopAndDisposeVoice();
+                    }
+                }
             }
         });
+
         addEventHandler(ScrollEvent.SCROLL, e-> {
             if (e.getDeltaY() < 0) {
                 flyer.nextFlyerPage();
@@ -61,18 +66,6 @@ public class FlyerStartPage extends StackPane implements StartPage {
         return title;
     }
 
-    protected void init(Game game) {
-        requireNonNull(game);
-        startButton = createStartButton(game);
-        getChildren().add(startButton);
-
-        addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            if (e.getCode() == SHUT_UP_KEYCODE) {
-                game.ui().sounds().stopAndDisposeVoice();
-            }
-        });
-    }
-
     @Override
     public void onEnterStartPage(Game game) {
         if (startButton != null) {
@@ -85,14 +78,38 @@ public class FlyerStartPage extends StackPane implements StartPage {
         game.ui().sounds().stopAndDisposeVoice();
     }
 
-    public Node createStartButton(Game game) {
-        final var startButton = new FancyButton(game.ui().translations().translate("play_button"),
-            DEFAULT_START_BUTTON_FONT, DEFAULT_START_BUTTON_BGCOLOR, DEFAULT_START_BUTTON_FILLCOLOR);
-        startButton.setAction(() -> ACTION_BOOT_SHOW_PLAY_VIEW.execute(game));
-        startButton.translateYProperty().bind(heightProperty().multiply(-0.1));
-        startButton.fontProperty().bind(heightProperty()
-            .map(h -> Font.font(DEFAULT_START_BUTTON_FONT.getFamily(), Math.min(h.doubleValue() / 25, 48))));
-        StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
-        return startButton;
+    protected void init(Game game) {
+        requireNonNull(game);
+        if (this.game == null) {
+            final String buttonText = game.ui().translations().translate("play_button");
+            startButton = createStartButton(buttonText);
+            StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
+            getChildren().add(startButton);
+            startButton.setAction(() -> CommonActions.ACTION_BOOT_SHOW_PLAY_VIEW.execute(game));
+            Logger.info("Start button for page {} created", this);
+        }
+        this.game = game;
+    }
+
+    private FancyButton createStartButton(String text) {
+        final var button = new FancyButton(
+            text,
+            DEFAULT_START_BUTTON_FONT,
+            DEFAULT_START_BUTTON_BGCOLOR,
+            DEFAULT_START_BUTTON_FILL);
+
+        button.translateYProperty().bind(heightProperty().multiply(-0.1));
+
+        button.fontProperty().bind(heightProperty().map(
+            pageHeight -> Font.font(
+                DEFAULT_START_BUTTON_FONT.getFamily(),
+                computeButtonHeight(pageHeight.doubleValue())))
+        );
+
+        return button;
+    }
+
+    private static double computeButtonHeight(double pageHeight) {
+        return Math.min(pageHeight / 25, 48);
     }
 }
