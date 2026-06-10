@@ -3,32 +3,34 @@
  */
 package de.amr.pacmanfx.tengenmspacman;
 
+import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplayMode;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.GameAction;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
 
-public interface TengenMsPacMan_Actions {
+public final class TengenMsPacMan_Actions {
 
-    GameAction ACTION_ENTER_START_SCREEN = new GameAction("enter_start_screen") {
+    private TengenMsPacMan_Actions() {}
+
+    public static final GameAction ACTION_ENTER_START_SCREEN = new GameAction("enter_start_screen") {
         @Override
         public void doAction(Game game) {
-            game.currentGameContext().flow().enterState(TengenMsPacMan_GameState.GAME_PREPARATION.state());
+            game.currentGameContext().flow().enterState(GameStateID.GAME_PREPARATION);
         }
     };
 
-    GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction("quit_demo_level") {
+    public static final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction("quit_demo_level") {
         @Override
         public void doAction(Game game) {
-            game.currentGameContext().flow().enterState(TengenMsPacMan_GameState.GAME_PREPARATION.state());
+            game.currentGameContext().flow().enterState(GameStateID.GAME_PREPARATION);
         }
 
         @Override
@@ -38,14 +40,14 @@ public interface TengenMsPacMan_Actions {
         }
     };
 
-    GameAction ACTION_START_PLAYING = new GameAction("start_playing") {
+    public static final GameAction ACTION_START_PLAYING = new GameAction("start_playing") {
         @Override
         public void doAction(Game game) {
-            game.currentGameContext().flow().enterState(TengenMsPacMan_GameState.GAME_OR_LEVEL_STARTING.state());
+            game.currentGameContext().flow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
         }
     };
 
-    GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction("toggle_play_scene_display_mode") {
+    public static final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction("toggle_play_scene_display_mode") {
         @Override
         public void doAction(Game game) {
             SceneDisplayMode mode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
@@ -60,14 +62,14 @@ public interface TengenMsPacMan_Actions {
         }
     };
 
-    GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new GameAction("toggle_joypad_bindings_displayed") {
+    public static final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new GameAction("toggle_joypad_bindings_displayed") {
         @Override
         public void doAction(Game game) {
             toggleBooleanProperty(PROPERTY_JOYPAD_BINDINGS_DISPLAYED);
         }
     };
 
-    GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction("toggle_pac_booster") {
+    public static final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction("toggle_pac_booster") {
         @Override
         public void doAction(Game game) {
             game.currentGameContext().optCurrentLevel().ifPresent(gameLevel -> {
