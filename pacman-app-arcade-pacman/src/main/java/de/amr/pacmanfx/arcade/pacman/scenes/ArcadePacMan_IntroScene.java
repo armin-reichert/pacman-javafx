@@ -90,15 +90,29 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate() {
-        game().ui().sounds().playVoice(Globals_GameUI.VOICE_EXPLAIN_GAME_START);
-
         actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS); // insert coin + start game actions
         actionBindings().registerAllBindings(GlobalActionBindings.SCENE_TESTS_BINDINGS); // actions for starting tests
 
-        blinking = new Pulse(10, Pulse.State.ON);
+        flow.restartState(SceneState.STARTING);
+    }
 
+    @Override
+    public void onDeactivate() {
+        blinking.stop();
+        game().ui().sounds().stopAndDisposeVoice();
+        actionBindings().dispose();
+    }
+
+    @Override
+    public void onTick(long tick) {
+        flow.update();
+    }
+
+    private void initScene() {
         final UIConfig uiConfig = game().currentUIConfig();
         final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
+
+        blinking = new Pulse(10, Pulse.State.ON);
 
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
@@ -117,19 +131,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         lastGhostEatenTick = 0;
         numGhostsEaten = 0;
 
-        flow.restartState(SceneState.STARTING);
-    }
-
-    @Override
-    public void onDeactivate() {
-        blinking.stop();
-        game().ui().sounds().stopAndDisposeVoice();
-        actionBindings().dispose();
-    }
-
-    @Override
-    public void onTick(long tick) {
-        flow.update();
+        game().ui().sounds().playVoice(Globals_GameUI.VOICE_EXPLAIN_GAME_START);
     }
 
     private void startChasingPacMan() {
@@ -234,9 +236,16 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         }
     }
 
+    // Scene flow state machine
+
     public enum SceneState implements State<ArcadePacMan_IntroScene> {
 
         STARTING {
+            @Override
+            public void onEnter(ArcadePacMan_IntroScene scene) {
+                scene.initScene();
+            }
+
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (timer.tickCount() == TICK_TITLE_VISIBLE) {
