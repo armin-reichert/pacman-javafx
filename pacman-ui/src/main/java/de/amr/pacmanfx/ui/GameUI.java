@@ -26,5 +26,5 @@ public record GameUI(
     SubViewManager subViews,
     UISettings settings,
     UISettings3D settings3D,
-    Map<Object, Object> customSettings
+    Map<Object, Object> extensions
 ) {}

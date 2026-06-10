@@ -95,7 +95,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             default -> {}
         }
 
-        final var uiSettings = (TengenMsPacMan_UISettings) scene.game().ui().customSettings().get("ui.settings");
+        final var uiSettings = (TengenMsPacMan_UISettings) scene.game().ui().extensions().get("ui.settings");
         if (uiSettings.propertyJoypadBindingsDisplayed.get()) {
             drawJoypadKeyBinding(scene.game().input().joypad().currentKeyBinding());
         }

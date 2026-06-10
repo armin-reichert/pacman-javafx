@@ -62,7 +62,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         if (optionsScene.initialDelay > 0) return;
 
         ctx.setFont(arcadeFont8());
-        final var uiSettings = (TengenMsPacMan_UISettings) scene.game().ui().customSettings().get("ui.settings");
+        final var uiSettings = (TengenMsPacMan_UISettings) scene.game().ui().extensions().get("ui.settings");
         if (uiSettings.propertyJoypadBindingsDisplayed.get()) {
             drawJoypadKeyBinding(scene.game().input().joypad().currentKeyBinding());
         }

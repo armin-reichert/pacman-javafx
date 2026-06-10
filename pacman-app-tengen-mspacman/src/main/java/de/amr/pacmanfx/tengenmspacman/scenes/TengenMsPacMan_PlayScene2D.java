@@ -77,7 +77,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         subScene.fillProperty().bind(game.ui().settings().canvasBackgroundColorProperty);
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
 
-        final var uiSettings = (TengenMsPacMan_UISettings) game.ui().customSettings().get("ui.settings");
+        final var uiSettings = (TengenMsPacMan_UISettings) game.ui().extensions().get("ui.settings");
         subScene.cameraProperty().bind(uiSettings.propertyPlaySceneDisplayMode.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
 
@@ -163,7 +163,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        final var uiSettings = (TengenMsPacMan_UISettings) game().ui().customSettings().get("ui.settings");
+        final var uiSettings = (TengenMsPacMan_UISettings) game().ui().extensions().get("ui.settings");
 
         final TranslationManager translations = game().ui().translations();
         final SceneDisplayMode displayMode = uiSettings.propertyPlaySceneDisplayMode.get();
@@ -235,7 +235,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     private void updateScaling() {
-        final var uiSettings = (TengenMsPacMan_UISettings) game().ui().customSettings().get("ui.settings");
+        final var uiSettings = (TengenMsPacMan_UISettings) game().ui().extensions().get("ui.settings");
         final SceneDisplayMode displayMode = uiSettings.propertyPlaySceneDisplayMode.get();
         scalingProperty().set(switch (displayMode) {
             case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();
