@@ -61,7 +61,7 @@ public final class GameImplementation implements Game {
     private static File highScoreFile(String gameVariantName) {
         requireNonNull(gameVariantName);
         final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
-        return new File(Globals_Game.USER_HOME_DIR, fileName);
+        return new File(GameConstants.USER_HOME_DIR, fileName);
     }
 
     private final PacManGamesMachine machine;
@@ -94,7 +94,7 @@ public final class GameImplementation implements Game {
         this.gameClock = new GameClockFX();
         this.coinMechanism = new CoinMechanism();
         this.prefs = new PreferencesManager(getClass());
-        this.watchdog = new DirectoryWatchdog(Globals_Game.CUSTOM_MAP_DIR);
+        this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
         ui = new GameUI(
             new FlashMessageManager(),

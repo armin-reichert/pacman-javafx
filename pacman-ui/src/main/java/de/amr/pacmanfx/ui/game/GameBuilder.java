@@ -103,8 +103,8 @@ public class GameBuilder {
         if (name.isBlank()) {
             error("Game variant name must not be blank");
         }
-        if (!Globals_Game.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
-            error("Game variant name '%s' does not match pattern '%s'".formatted(name, Globals_Game.GAME_VARIANT_NAME_PATTERN));
+        if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
+            error("Game variant name '%s' does not match pattern '%s'".formatted(name, GameConstants.GAME_VARIANT_NAME_PATTERN));
         }
     }
 

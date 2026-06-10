@@ -16,7 +16,7 @@ import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.Globals_Game;
+import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -90,7 +90,7 @@ public final class CommonActions {
 
     private static void startEditor(Game game, TileMapEditor editor) {
         game.stopGame();
-        editor.init(Globals_Game.CUSTOM_MAP_DIR);
+        editor.init(GameConstants.CUSTOM_MAP_DIR);
         editor.start();
     }
 
@@ -228,12 +228,12 @@ public final class CommonActions {
         @Override
         protected void doAction(Game game) {
             final GameClock clock = game.clock();
-            final int newRate = Math.clamp(clock.targetFrameRate() + Globals_Game.SIM_SPEED_DELTA,
-                Globals_Game.SIM_SPEED_MIN, Globals_Game.SIM_SPEED_MAX);
+            final int newRate = Math.clamp(clock.targetFrameRate() + GameConstants.SIM_SPEED_DELTA,
+                GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
-            final String msg = newRate == Globals_Game.SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
-            game.shortMessage(Duration.seconds(Globals_Game.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+            final String msg = newRate == GameConstants.SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
+            game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
         }
     };
 
@@ -242,9 +242,9 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            game.clock().setTargetFrameRate(Globals_Game.SIM_SPEED_MAX);
-            final String msg = "At maximum speed: %d Hz".formatted(Globals_Game.SIM_SPEED_MAX);
-            game.shortMessage(Duration.seconds(Globals_Game.SIM_STEP_MESSAGE_SEC), msg);
+            game.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
+            final String msg = "At maximum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MAX);
+            game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
         }
     };
 
@@ -254,12 +254,12 @@ public final class CommonActions {
         @Override
         protected void doAction(Game game) {
             final GameClock clock = game.clock();
-            final int newRate = Math.clamp(clock.targetFrameRate() - Globals_Game.SIM_SPEED_DELTA,
-                Globals_Game.SIM_SPEED_MIN, Globals_Game.SIM_SPEED_MAX);
+            final int newRate = Math.clamp(clock.targetFrameRate() - GameConstants.SIM_SPEED_DELTA,
+                GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
             clock.setTargetFrameRate(newRate);
 
-            final String msg = newRate == Globals_Game.SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
-            game.shortMessage(Duration.seconds(Globals_Game.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+            final String msg = newRate == GameConstants.SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
+            game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
         }
     };
 
@@ -268,9 +268,9 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            game.clock().setTargetFrameRate(Globals_Game.SIM_SPEED_MIN);
-            final String msg = "At minimum speed: %d Hz".formatted(Globals_Game.SIM_SPEED_MIN);
-            game.shortMessage(Duration.seconds(Globals_Game.SIM_STEP_MESSAGE_SEC), msg);
+            game.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
+            final String msg = "At minimum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MIN);
+            game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
         }
     };
 
@@ -307,7 +307,7 @@ public final class CommonActions {
         @Override
         protected void doAction(Game game) {
             game.clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-            game.shortMessage(Duration.seconds(Globals_Game.SIM_STEP_MESSAGE_SEC), game.clock().targetFrameRate() + "Hz");
+            game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), game.clock().targetFrameRate() + "Hz");
         }
     };
 

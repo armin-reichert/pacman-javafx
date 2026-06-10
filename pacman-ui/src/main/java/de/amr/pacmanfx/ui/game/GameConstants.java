@@ -4,15 +4,12 @@
 
 package de.amr.pacmanfx.ui.game;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-
 import java.io.File;
 import java.util.regex.Pattern;
 
-public class Globals_Game {
+public class GameConstants {
 
-    private Globals_Game() {}
+    private GameConstants() {}
 
     /**
      * Game variant names must match this pattern (e.g. "MS_PACMAN_2024").
@@ -39,8 +36,5 @@ public class Globals_Game {
     public static final int SIM_SPEED_MIN = 5;
 
     public static final int SIM_SPEED_MAX = 300;
-
-    /** Number of simulation steps executed per clock tick. */
-    public static final IntegerProperty PROPERTY_SIMULATION_STEPS = new SimpleIntegerProperty(1);
 
 }

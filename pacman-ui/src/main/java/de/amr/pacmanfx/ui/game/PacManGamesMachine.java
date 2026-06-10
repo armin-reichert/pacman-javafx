@@ -37,9 +37,9 @@ public class PacManGamesMachine {
         requireNonNull(variantName);
         requireNonNull(cartridge);
 
-        if (!Globals_Game.GAME_VARIANT_NAME_PATTERN.matcher(variantName).matches()) {
+        if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(variantName).matches()) {
             throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
-                .formatted(variantName, Globals_Game.GAME_VARIANT_NAME_PATTERN));
+                .formatted(variantName, GameConstants.GAME_VARIANT_NAME_PATTERN));
         }
 
         final Cartridge prevCartridge = cartridges.putIfAbsent(variantName, cartridge);
@@ -68,8 +68,8 @@ public class PacManGamesMachine {
     // other stuff
 
     private boolean validateUserDirs() {
-        return dirExistsAndIsWritable(Globals_Game.USER_HOME_DIR, "Game root directory")
-            && dirExistsAndIsWritable(Globals_Game.CUSTOM_MAP_DIR, "Custom maps directory");
+        return dirExistsAndIsWritable(GameConstants.USER_HOME_DIR, "Game root directory")
+            && dirExistsAndIsWritable(GameConstants.CUSTOM_MAP_DIR, "Custom maps directory");
     }
 
     private static boolean dirExistsAndIsWritable(File dir, String description) {

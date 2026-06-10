@@ -36,4 +36,7 @@ public final class UISettings {
 
     /** Whether all audio output is muted. */
     public final BooleanProperty mutedProperty = new SimpleBooleanProperty(false);
+
+    /** Number of simulation steps executed per clock tick. */
+    public final IntegerProperty numSimulationStepsProperty = new SimpleIntegerProperty(1);
 }
