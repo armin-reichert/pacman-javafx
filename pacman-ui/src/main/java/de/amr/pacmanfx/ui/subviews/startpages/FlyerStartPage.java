@@ -20,12 +20,13 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class FlyerStartPage extends StackPane implements StartPage {
+public class FlyerStartPage implements StartPage {
 
     public static final Font  DEFAULT_START_BUTTON_FONT = Ufx.deriveFont(GlobalsUI.FONT_ARCADE_8, 32);
     public static final Color DEFAULT_START_BUTTON_BGCOLOR = Color.rgb(0, 155, 252, 0.6);
     public static final Color DEFAULT_START_BUTTON_FILL = Color.WHITE;
 
+    protected final StackPane rootPane = new StackPane();
     protected final Flyer flyer = new Flyer();
     protected final String title;
     protected FancyButton startButton;
@@ -33,9 +34,10 @@ public class FlyerStartPage extends StackPane implements StartPage {
 
     protected FlyerStartPage(String title) {
         this.title = requireNonNull(title);
-        getChildren().add(flyer);
 
-        addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+        rootPane.getChildren().add(flyer);
+
+        rootPane.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
                 case UP -> flyer.prevFlyerPage();
@@ -48,7 +50,7 @@ public class FlyerStartPage extends StackPane implements StartPage {
             }
         });
 
-        addEventHandler(ScrollEvent.SCROLL, e-> {
+        rootPane.addEventHandler(ScrollEvent.SCROLL, e-> {
             if (e.getDeltaY() < 0) {
                 flyer.nextFlyerPage();
             } else if (e.getDeltaY() > 0) {
@@ -59,7 +61,7 @@ public class FlyerStartPage extends StackPane implements StartPage {
 
     @Override
     public Pane rootPane() {
-        return this;
+        return rootPane;
     }
 
     @Override
@@ -85,7 +87,7 @@ public class FlyerStartPage extends StackPane implements StartPage {
             final String buttonText = game.ui().translations().translate("play_button");
             startButton = createStartButton(buttonText);
             StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
-            getChildren().add(startButton);
+            rootPane.getChildren().add(startButton);
             startButton.setAction(() -> CommonActions.ACTION_BOOT_SHOW_PLAY_VIEW.execute(game));
             Logger.info("Start button for page {} created", this);
         }
@@ -99,9 +101,9 @@ public class FlyerStartPage extends StackPane implements StartPage {
             DEFAULT_START_BUTTON_BGCOLOR,
             DEFAULT_START_BUTTON_FILL);
 
-        button.translateYProperty().bind(heightProperty().multiply(-0.1));
+        button.translateYProperty().bind(rootPane.heightProperty().multiply(-0.1));
 
-        button.fontProperty().bind(heightProperty().map(
+        button.fontProperty().bind(rootPane.heightProperty().map(
             pageHeight -> Font.font(
                 DEFAULT_START_BUTTON_FONT.getFamily(),
                 computeButtonHeight(pageHeight.doubleValue())))
