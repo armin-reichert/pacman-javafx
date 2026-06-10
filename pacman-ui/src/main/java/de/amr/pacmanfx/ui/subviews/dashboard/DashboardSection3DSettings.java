@@ -5,8 +5,8 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.ui.UIGlobals;
 import de.amr.pacmanfx.ui.d3.Globals3D;
-import de.amr.pacmanfx.ui.game.GameGlobals;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
@@ -53,18 +53,18 @@ public class DashboardSection3DSettings extends DashboardSection {
         addDynamicLabeledValue("Sub-scene Size", () -> subSceneSizeInfo(game));
         addDynamicLabeledValue("Scene Size",     () -> sceneSizeInfo(game));
 
-        cbMiniViewVisible = addCheckBox("Mini View", GameGlobals.PROPERTY_MINI_VIEW_ON);
+        cbMiniViewVisible = addCheckBox("Mini View", UIGlobals.PROPERTY_MINI_VIEW_ON);
 
         sliderMiniViewSceneHeight = addSlider(
             " - Height",
             MINI_VIEW_MIN_HEIGHT, MINI_VIEW_MAX_HEIGHT,
-            GameGlobals.PROPERTY_MINI_VIEW_HEIGHT.get(),
+            UIGlobals.PROPERTY_MINI_VIEW_HEIGHT.get(),
             false, false);
 
         sliderMiniViewOpacityPercentage = addSlider(
             " - Opacity",
             0, 100,
-            GameGlobals.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get(),
+            UIGlobals.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get(),
             false, false);
 
         sliderWallHeight = addSlider(
@@ -88,8 +88,8 @@ public class DashboardSection3DSettings extends DashboardSection {
         setTooltip(sliderWallHeight, sliderWallHeight.valueProperty(), "%.0f px");
         setTooltip(sliderWallOpacity, sliderWallOpacity.valueProperty().multiply(100), "%.0f %%");
 
-        setEditor(sliderMiniViewSceneHeight, GameGlobals.PROPERTY_MINI_VIEW_HEIGHT);
-        setEditor(sliderMiniViewOpacityPercentage, GameGlobals.PROPERTY_MINI_VIEW_OPACITY_PERCENT);
+        setEditor(sliderMiniViewSceneHeight, UIGlobals.PROPERTY_MINI_VIEW_HEIGHT);
+        setEditor(sliderMiniViewOpacityPercentage, UIGlobals.PROPERTY_MINI_VIEW_OPACITY_PERCENT);
         setEditor(sliderWallHeight, Globals3D.PROPERTY_3D_WALL_HEIGHT);
         setEditor(sliderWallOpacity, Globals3D.PROPERTY_3D_WALL_OPACITY);
         setEditor(comboPerspectives, Globals3D.PROPERTY_3D_PERSPECTIVE_ID);
@@ -103,15 +103,15 @@ public class DashboardSection3DSettings extends DashboardSection {
         super.update();
 
         comboPerspectives.setValue(Globals3D.PROPERTY_3D_PERSPECTIVE_ID.get());
-        sliderMiniViewSceneHeight.setValue(GameGlobals.PROPERTY_MINI_VIEW_HEIGHT.get());
+        sliderMiniViewSceneHeight.setValue(UIGlobals.PROPERTY_MINI_VIEW_HEIGHT.get());
         if (dashboard.game() != null) {
             sliderMiniViewSceneHeight.setDisable(dashboard.game().ui().subViews().gamePlayView().miniPlaySceneView().isMoving());
         }
-        sliderMiniViewOpacityPercentage.setValue(GameGlobals.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
+        sliderMiniViewOpacityPercentage.setValue(UIGlobals.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
         sliderWallHeight.setValue(Globals3D.PROPERTY_3D_WALL_HEIGHT.get());
         sliderWallOpacity.setValue(Globals3D.PROPERTY_3D_WALL_OPACITY.get());
         cbUsePlayScene3D.setSelected(Globals3D.PROPERTY_3D_ENABLED.get());
-        cbMiniViewVisible.setSelected(GameGlobals.PROPERTY_MINI_VIEW_ON.getValue());
+        cbMiniViewVisible.setSelected(UIGlobals.PROPERTY_MINI_VIEW_ON.getValue());
         comboPerspectives.setValue(Globals3D.PROPERTY_3D_PERSPECTIVE_ID.get());
         cbAxesVisible.setSelected(Globals3D.PROPERTY_3D_AXES_VISIBLE.get());
         cbWireframeMode.setSelected(Globals3D.PROPERTY_3D_DRAW_MODE.get() == DrawMode.LINE);

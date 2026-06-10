@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui.game;
 
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
+import de.amr.pacmanfx.ui.UIGlobals;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImplementation;
@@ -114,7 +115,7 @@ public class GameBuilder {
     private GameViewImplementation createGameView(int width, int height) {
         return new GameViewImplementation(
             new GameViewMainScene(requireNonNegative(width), requireNonNegative(height)),
-            new StatusIconBox(() -> GameGlobals.LOCALIZED_TEXTS)
+            new StatusIconBox(() -> UIGlobals.LOCALIZED_TEXTS)
         );
     }
 

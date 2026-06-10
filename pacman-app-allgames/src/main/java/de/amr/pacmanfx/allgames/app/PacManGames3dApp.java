@@ -19,6 +19,7 @@ import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
+import de.amr.pacmanfx.ui.UIGlobals;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.*;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
@@ -157,7 +158,7 @@ public class PacManGames3dApp extends Application {
     private static GameViewImplementation createView(int width, int height) {
         return new GameViewImplementation(
             new GameViewMainScene(width, height),
-            new StatusIconBox(() -> GameGlobals.LOCALIZED_TEXTS)
+            new StatusIconBox(() -> UIGlobals.LOCALIZED_TEXTS)
         );
     }
 

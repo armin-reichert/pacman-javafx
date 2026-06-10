@@ -4,12 +4,12 @@
 package de.amr.pacmanfx.ui.subviews.startpages;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.ui.UIGlobals;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GameGlobals;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
@@ -77,7 +77,7 @@ public class StartPagesView extends Carousel implements SubView {
                 startPage.rootPane().requestFocus();
             }
         });
-        setBackground(GameGlobals.BACKGROUND_PAC_MAN_WALLPAPER);
+        setBackground(UIGlobals.BACKGROUND_PAC_MAN_WALLPAPER);
     }
 
     @Override

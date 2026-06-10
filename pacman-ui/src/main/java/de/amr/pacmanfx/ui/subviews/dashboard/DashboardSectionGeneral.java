@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.ui.UIGlobals;
 import de.amr.pacmanfx.ui.game.GameGlobals;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.CommonActions;
@@ -71,10 +72,10 @@ public class DashboardSectionGeneral extends DashboardSection {
 
         addDynamicLabeledValue("Total Updates",  gameClock::pausableUpdatesCount);
 
-        addColorPicker("Canvas Color", GameGlobals.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        addColorPicker("Canvas Color", UIGlobals.PROPERTY_CANVAS_BACKGROUND_COLOR);
 
-        addCheckBox("Font Smoothing", GameGlobals.PROPERTY_CANVAS_FONT_SMOOTHING);
-        addCheckBox("Show Debug Info", GameGlobals.PROPERTY_DEBUG_INFO_VISIBLE);
+        addCheckBox("Font Smoothing", UIGlobals.PROPERTY_CANVAS_FONT_SMOOTHING);
+        addCheckBox("Show Debug Info", UIGlobals.PROPERTY_DEBUG_INFO_VISIBLE);
         addCheckBox("Time Measured", gameClock.timeMeasuredProperty());
     }
 }

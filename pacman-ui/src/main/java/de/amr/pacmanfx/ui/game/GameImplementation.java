@@ -17,6 +17,7 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.UIGlobals;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
@@ -99,7 +100,7 @@ public final class GameImplementation implements Game {
             new GameSceneManager(this),
             new SoundManager(),
             new SpriteAnimationManager(),
-            () -> GameGlobals.LOCALIZED_TEXTS,
+            () -> UIGlobals.LOCALIZED_TEXTS,
             view,
             new SubViewManager()
         );
@@ -301,7 +302,7 @@ public final class GameImplementation implements Game {
     }
 
     private GamePlayView createGamePlaySubView() {
-        final var playView = new GamePlayView(this, GameGlobals.DEFAULT_DASHBOARD_CONFIG);
+        final var playView = new GamePlayView(this, UIGlobals.DEFAULT_DASHBOARD_CONFIG);
         final ChangeListener<? super Number> resizeHandler = (_,_,_) -> playView.resizeToFit(view.mainScene());
         view.mainScene().widthProperty().addListener(resizeHandler);
         view.mainScene().heightProperty().addListener(resizeHandler);
@@ -350,7 +351,7 @@ public final class GameImplementation implements Game {
         Globals3D.PROPERTY_3D_WALL_HEIGHT .set(mazeConfig3D.obstacleBaseHeight());
         Globals3D.PROPERTY_3D_WALL_OPACITY.set(mazeConfig3D.obstacleOpacity());
 
-        ui.sounds().muteProperty().bind(GameGlobals.PROPERTY_MUTED);
+        ui.sounds().muteProperty().bind(UIGlobals.PROPERTY_MUTED);
 
         view.statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> ui.subViews().isSelected(ui.subViews().gamePlayView())
@@ -359,8 +360,8 @@ public final class GameImplementation implements Game {
 
         view.mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> ui.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
-                ? GameGlobals.WALLPAPERS[RandomNumberSupport.randomInt(0, GameGlobals.WALLPAPERS.length)]
-                : GameGlobals.BACKGROUND_PAC_MAN_WALLPAPER,
+                ? UIGlobals.WALLPAPERS[RandomNumberSupport.randomInt(0, UIGlobals.WALLPAPERS.length)]
+                : UIGlobals.BACKGROUND_PAC_MAN_WALLPAPER,
             ui.subViews().selectedSubViewProperty(),
             ui.gameScenes().gameSceneProperty()
         ));

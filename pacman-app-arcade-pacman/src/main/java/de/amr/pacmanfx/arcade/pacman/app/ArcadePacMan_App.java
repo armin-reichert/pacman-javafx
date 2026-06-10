@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.ui.UIGlobals;
 import de.amr.pacmanfx.ui.game.*;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.view.GameViewImplementation;
@@ -56,7 +57,7 @@ public class ArcadePacMan_App extends Application {
             game = new GameImplementation(machine,
                 new GameViewImplementation(
                     new GameViewMainScene(size.x(), size.y()),
-                    new StatusIconBox(() -> GameGlobals.LOCALIZED_TEXTS)),
+                    new StatusIconBox(() -> UIGlobals.LOCALIZED_TEXTS)),
                 new GameClockFX(),
                 new CoinMechanism());
             final var arcadePacManStartPage = new ArcadePacMan_StartPage();
