@@ -124,6 +124,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void onDeactivate() {
         blinking.stop();
         game().ui().sounds().stopAndDisposeVoice();
+        actionBindings().dispose();
     }
 
     @Override
