@@ -7,7 +7,7 @@ import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.Globals_GameUI;
-import de.amr.pacmanfx.ui.d3.Globals_3D;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
@@ -51,28 +51,30 @@ public class StatusIconBox implements Disposable {
     private final FontAwesomeIcon iconImmune;
     private final FontAwesomeIcon iconCheated;
 
-    public StatusIconBox(TranslationManager translator) {
-        this(translator, DEFAULT_CONFIG);
+    public StatusIconBox(Game game) {
+        this(game, DEFAULT_CONFIG);
     }
     
-    public StatusIconBox(TranslationManager translator, Config config) {
-        requireNonNull(translator);
+    public StatusIconBox(Game game, Config config) {
+        requireNonNull(game);
         requireNonNull(config);
 
+        final TranslationManager translations = game.ui().translations();
+
         iconMuted = createIcon(config, FontAwesomeIcon.Symbol.DEAF, config.defaultIconColor(),
-            translator.translate("status_icon.muted"));
+            translations.translate("status_icon.muted"));
 
         icon3D = createIcon(config, FontAwesomeIcon.Symbol.CUBES, config.defaultIconColor(),
-            translator.translate("status_icon.3d"));
+            translations.translate("status_icon.3d"));
 
         iconAutopilot = createIcon(config, FontAwesomeIcon.Symbol.TAXI, config.defaultIconColor(),
-            translator.translate("status_icon.autopilot"));
+            translations.translate("status_icon.autopilot"));
 
         iconImmune = createIcon(config, FontAwesomeIcon.Symbol.USER_SECRET, config.defaultIconColor(),
-            translator.translate("status_icon.immune"));
+            translations.translate("status_icon.immune"));
 
         iconCheated = createIcon(config, FontAwesomeIcon.Symbol.FLAG, Color.RED,
-            translator.translate("status_icon.cheated"));
+            translations.translate("status_icon.cheated"));
 
         final int iconCount = (int) iconNodesInOrder().count();
         final int padding = config.iconPadding();
@@ -87,7 +89,8 @@ public class StatusIconBox implements Disposable {
 
         // "autopilot", "cheated" and "immune" icon visibilities are dynamically bound to current game model's cheat object!
         iconMuted.visibleProperty().bind(Globals_GameUI.PROPERTY_MUTED);
-        icon3D   .visibleProperty().bind(Globals_3D.PROPERTY_3D_ENABLED);
+
+        icon3D   .visibleProperty().bind(game.globals3D().PROPERTY_3D_ENABLED);
     }
 
     public Pane rootPane() {

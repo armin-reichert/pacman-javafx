@@ -55,7 +55,7 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Maze3D createMaze3D(TerrainLayer terrain, WorldConfig config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
+    public Maze3D createMaze3D(Globals_3D globals3D, TerrainLayer terrain, WorldConfig config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
         requireNonNull(terrain);
         requireNonNull(config);
         requireNonNull(colorScheme);
@@ -64,7 +64,7 @@ public class DefaultFactory3D implements Factory3D {
         final Map<String, PhongMaterial> materials = createMazeMaterialMap(config, colorScheme);
 
         final var maze3D = new Maze3D(terrain);
-        maze3D.build(materials, config.maze(), config.floor());
+        maze3D.build(globals3D, materials, config.maze(), config.floor());
 
         bindFloorMaterialColor(maze3D, materials.get("floorMaterial"));
         bindWallBaseMaterialColor(maze3D, materials.get("wallBaseMaterial"), Color.valueOf(colorScheme.wallStroke()));

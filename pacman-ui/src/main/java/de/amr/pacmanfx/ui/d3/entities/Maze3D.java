@@ -13,9 +13,9 @@ import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.Obstacle;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.d3.Globals_3D;
 import de.amr.pacmanfx.ui.config.FloorConfig3D;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
+import de.amr.pacmanfx.ui.d3.Globals_3D;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
@@ -61,10 +61,10 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         house3D.update(gameContext, level);
     }
 
-    public void build(Map<String, PhongMaterial> materials, MazeConfig3D mazeConfig, FloorConfig3D floorConfig3D) {
+    public void build(Globals_3D globals3D, Map<String, PhongMaterial> materials, MazeConfig3D mazeConfig, FloorConfig3D floorConfig3D) {
         this.materials = materials;
-        buildFloor(floorConfig3D);
-        addObstacles(mazeConfig.obstacleWallThickness(), mazeConfig.obstacleCornerRadius());
+        buildFloor(globals3D, floorConfig3D);
+        addObstacles(globals3D, mazeConfig.obstacleWallThickness(), mazeConfig.obstacleCornerRadius());
     }
 
     public Map<String, PhongMaterial> materials() {
@@ -117,7 +117,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         cleanupGroup(this, true);
     }
 
-    private void addObstacles(float wallThickness, float cornerRadius) {
+    private void addObstacles(Globals_3D globals3D, float wallThickness, float cornerRadius) {
         final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
         final House house = terrain.optHouse().orElse(null);
         final var wallCount = new AtomicInteger(0);
@@ -126,8 +126,8 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
             wall3D.setBaseMaterial(materials.get("wallBaseMaterial"));
             wall3D.setTopMaterial(materials.get("wallTopMaterial"));
             wall3D.bindBaseHeight(wallBaseHeight);
-            wall3D.base().drawModeProperty().bind(Globals_3D.PROPERTY_3D_DRAW_MODE);
-            wall3D.top().drawModeProperty().bind(Globals_3D.PROPERTY_3D_DRAW_MODE);
+            wall3D.base().drawModeProperty().bind(globals3D.PROPERTY_3D_DRAW_MODE);
+            wall3D.top() .drawModeProperty().bind(globals3D.PROPERTY_3D_DRAW_MODE);
             getChildren().addAll(wall3D.base(), wall3D.top());
             return wall3D;
         });
@@ -153,14 +153,14 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         }
     }
 
-    private void buildFloor(FloorConfig3D floorConfig) {
+    private void buildFloor(Globals_3D globals3D, FloorConfig3D floorConfig) {
         final Vector2i terrainSize = terrain.sizeInPixel();
         final float width = terrainSize.x() + 2 * floorConfig.padding();
         final float height = terrainSize.y();
         final float thickness = floorConfig.thickness();
 
         floor3D = new Box(width, height, thickness);
-        floor3D.drawModeProperty().bind(Globals_3D.PROPERTY_3D_DRAW_MODE);
+        floor3D.drawModeProperty().bind(globals3D.PROPERTY_3D_DRAW_MODE);
         floor3D.setMaterial(materials.get("floorMaterial"));
 
         floor3D.setTranslateX(0.5 * width - floorConfig.padding());

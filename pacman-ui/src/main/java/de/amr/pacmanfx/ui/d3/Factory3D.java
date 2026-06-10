@@ -28,13 +28,14 @@ public interface Factory3D extends Disposable {
     /**
      * Creates a 3D maze.
      *
+     * @param globals3D global 3D settings
      * @param terrain the terrain layer
      * @param config world configuration
      * @param colorScheme the map color scheme
      * @param animationRegistry the animation registry
      * @return a 3D maze representing the given terrain
      */
-    Maze3D createMaze3D(TerrainLayer terrain, WorldConfig config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry);
+    Maze3D createMaze3D(Globals_3D globals3D, TerrainLayer terrain, WorldConfig config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry);
 
     /**
      * Creates the 3D representation of Pac for this game variant, including model,

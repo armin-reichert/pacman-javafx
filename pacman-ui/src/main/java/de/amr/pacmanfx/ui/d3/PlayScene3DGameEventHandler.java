@@ -57,7 +57,7 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         final var gameState = event.newState();
 
         if (gameState instanceof TestState) {
-            handleTestState();
+            handleTestState(game().globals3D());
         }
         else if (GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameState)) {
             onStartingGameOrLevel();
@@ -292,10 +292,10 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.messageManager().hideMessage();
 
-        playLevelEndAnimation(level3D.animationRegistry(), level3D.entities().maze3D(), level3D.level().cutSceneNumber() != 0);
+        playLevelEndAnimation(level3D.animationRegistry(), game().globals3D(), level3D.entities().maze3D(), level3D.level().cutSceneNumber() != 0);
     }
 
-    private void playLevelEndAnimation(AnimationRegistry animationRegistry, Maze3D maze3D, boolean cutSceneAfter) {
+    private void playLevelEndAnimation(AnimationRegistry animationRegistry, Globals_3D globals3D, Maze3D maze3D, boolean cutSceneAfter) {
         final GameLevel3D.AnimationID animationID = cutSceneAfter
             ? GameLevel3D.AnimationID.LEVEL_COMPLETED_SHORT
             : GameLevel3D.AnimationID.LEVEL_COMPLETED_FULL;
@@ -309,16 +309,16 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
 
         gameContext().state().lock();
 
-        final PerspectiveID perspectiveBeforeAnimation = Globals_3D.PROPERTY_3D_PERSPECTIVE_ID.get();
+        final PerspectiveID perspectiveBeforeAnimation = globals3D.PROPERTY_3D_PERSPECTIVE_ID.get();
 
         final Animation resetCameraPerspective = pauseSecThen(2, () -> {
-            Globals_3D.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+            globals3D.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
             maze3D.wallBaseHeightProperty().unbind();
         });
 
         final Animation restoreCameraPerspective = Ufx.pauseSecThen(0.25, () -> {
-            Globals_3D.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
-            maze3D.wallBaseHeightProperty().bind(Globals_3D.PROPERTY_3D_WALL_HEIGHT);
+            globals3D.PROPERTY_3D_PERSPECTIVE_ID.set(perspectiveBeforeAnimation);
+            maze3D.wallBaseHeightProperty().bind(globals3D.PROPERTY_3D_WALL_HEIGHT);
         });
 
         final var seq = new SequentialTransition(
@@ -342,11 +342,11 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 
-    private void handleTestState() {
+    private void handleTestState(Globals_3D globals3D) {
         playScene3D.optGameLevel3D().ifPresent(level3D -> {
             playScene3D.replaceGameLevel3D(level3D.level());
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level3D.level().number());
-            Globals_3D.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
+            globals3D.PROPERTY_3D_PERSPECTIVE_ID.set(PerspectiveID.TOTAL);
         });
     }
 

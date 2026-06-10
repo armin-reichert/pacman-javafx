@@ -151,11 +151,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param level       the game level to visualize
      * @param uiConfig    the global UI configuration (provides 3D settings, colors, models)
      */
-    public GameLevel3D(GameContext gameContext, GameLevel level, UIConfig uiConfig) {
+    public GameLevel3D(Globals_3D globals3D, GameContext gameContext, GameLevel level, UIConfig uiConfig) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
 
-        createMaze3D();
+        createMaze3D(globals3D);
         createFood3D();
         createPac3D();
         createGhosts3D(gameContext);
@@ -282,13 +282,21 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Private area, no trespassing!
 
-    private void createMaze3D() {
+    private void createMaze3D(Globals_3D globals3D) {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        entitySet.maze3D = uiConfig.factory3D().createMaze3D(terrain, uiConfig.worldConfig(), colorScheme, animationRegistry);
-        entitySet.maze3D.wallOpacityProperty().bind(Globals_3D.PROPERTY_3D_WALL_OPACITY);
-        entitySet.maze3D.wallBaseHeightProperty().bind(Globals_3D.PROPERTY_3D_WALL_HEIGHT);
-        entitySet.maze3D.floorColorProperty().bind(Globals_3D.PROPERTY_3D_FLOOR_COLOR);
+
+        entitySet.maze3D = uiConfig.factory3D().createMaze3D(
+            globals3D,
+            terrain,
+            uiConfig.worldConfig(),
+            colorScheme,
+            animationRegistry);
+
+        entitySet.maze3D.wallOpacityProperty()   .bind(globals3D.PROPERTY_3D_WALL_OPACITY);
+        entitySet.maze3D.wallBaseHeightProperty().bind(globals3D.PROPERTY_3D_WALL_HEIGHT);
+        entitySet.maze3D.floorColorProperty()    .bind(globals3D.PROPERTY_3D_FLOOR_COLOR);
+
         entitySet.add(entitySet.maze3D);
     }
 

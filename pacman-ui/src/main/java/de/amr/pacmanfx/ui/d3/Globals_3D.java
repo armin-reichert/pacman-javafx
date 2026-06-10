@@ -12,7 +12,7 @@ import javafx.scene.shape.DrawMode;
 
 public final class Globals_3D {
 
-    public static final ParticlesAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticlesAnimationConfig(
+    public final ParticlesAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticlesAnimationConfig(
         new ExplosionConfig(
             new Vector3f(0, 0, 0.1f), // gravity
             500,        // num particles by explosion
@@ -25,28 +25,26 @@ public final class Globals_3D {
     );
 
     /** Whether 3D axes are visible in the 3D play scene. */
-    public static final BooleanProperty PROPERTY_3D_AXES_VISIBLE = new SimpleBooleanProperty(false);
+    public final BooleanProperty PROPERTY_3D_AXES_VISIBLE = new SimpleBooleanProperty(false);
 
     /** Draw mode for 3D geometry (fill or wireframe). */
-    public static final ObjectProperty<DrawMode> PROPERTY_3D_DRAW_MODE = new SimpleObjectProperty<>(DrawMode.FILL);
+    public final ObjectProperty<DrawMode> PROPERTY_3D_DRAW_MODE = new SimpleObjectProperty<>(DrawMode.FILL);
 
     /** Whether 3D rendering is enabled at all. */
-    public static final BooleanProperty PROPERTY_3D_ENABLED = new SimpleBooleanProperty(false);
+    public final BooleanProperty PROPERTY_3D_ENABLED = new SimpleBooleanProperty(false);
 
     /** Floor color used in 3D mode. */
-    public static final ObjectProperty<Color> PROPERTY_3D_FLOOR_COLOR = new SimpleObjectProperty<>(Color.rgb(20, 20, 20));
+    public final ObjectProperty<Color> PROPERTY_3D_FLOOR_COLOR = new SimpleObjectProperty<>(Color.rgb(20, 20, 20));
 
     /** Light color used in 3D mode. */
-    public static final ObjectProperty<Color> PROPERTY_3D_LIGHT_COLOR = new SimpleObjectProperty<>(Color.WHITE);
+    public final ObjectProperty<Color> PROPERTY_3D_LIGHT_COLOR = new SimpleObjectProperty<>(Color.WHITE);
 
     /** Currently active 3D camera perspective. */
-    public static final ObjectProperty<PerspectiveID> PROPERTY_3D_PERSPECTIVE_ID = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
+    public final ObjectProperty<PerspectiveID> PROPERTY_3D_PERSPECTIVE_ID = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
 
     /** Height of 3D walls (in world units). */
-    public static final DoubleProperty PROPERTY_3D_WALL_HEIGHT = new SimpleDoubleProperty();
+    public final DoubleProperty PROPERTY_3D_WALL_HEIGHT = new SimpleDoubleProperty();
 
     /** Opacity of 3D walls (0.0–1.0). */
-    public static final DoubleProperty PROPERTY_3D_WALL_OPACITY = new SimpleDoubleProperty(1.0);
-
-    private Globals_3D() {}
+    public final DoubleProperty PROPERTY_3D_WALL_OPACITY = new SimpleDoubleProperty(1.0);
 }

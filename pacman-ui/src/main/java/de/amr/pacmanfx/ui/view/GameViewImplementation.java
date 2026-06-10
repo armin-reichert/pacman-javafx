@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.view;
 
 import de.amr.pacmanfx.ui.Globals_GameUI;
-import de.amr.pacmanfx.ui.d3.Globals_3D;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.subviews.SubView;
@@ -31,18 +30,19 @@ public class GameViewImplementation implements GameView {
 
     private final GameViewMainScene mainScene;
 
-    private final StatusIconBox statusIconBox;
+    private StatusIconBox statusIconBox;
 
     private StringBinding stageTitleBinding;
 
     public GameViewImplementation(int width, int height) {
         this.mainScene = new GameViewMainScene(width, height);
-        this.statusIconBox = new StatusIconBox(() -> Globals_GameUI.LOCALIZED_TEXTS);
     }
 
     @Override
     public void setGame(Game game) {
         this.game = requireNonNull(game);
+
+        this.statusIconBox = new StatusIconBox(game);
 
         stageTitleBinding = createStringBinding(
             () -> computeStageTitle(game),
@@ -51,7 +51,7 @@ public class GameViewImplementation implements GameView {
             game.ui().subViews().selectedSubViewProperty(),
             game.ui().gameScenes().gameSceneProperty(),
             Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE,
-            Globals_3D.PROPERTY_3D_ENABLED
+            game.globals3D().PROPERTY_3D_ENABLED
         );
     }
 
@@ -126,7 +126,7 @@ public class GameViewImplementation implements GameView {
         final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
 
         final boolean debug = Globals_GameUI.PROPERTY_DEBUG_INFO_VISIBLE.get();
-        final boolean is3D = Globals_3D.PROPERTY_3D_ENABLED.get();
+        final boolean is3D = game.globals3D().PROPERTY_3D_ENABLED.get();
         final boolean paused = game.clock().getUpdatesDisabled();
 
         final String normalTitle = stageTitle(game, paused, is3D);
