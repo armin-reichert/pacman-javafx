@@ -32,7 +32,7 @@ public class TengenMsPacMan_CutScene1_Renderer extends BaseRenderer implements G
             actorRenderer.drawActor(cutScene.pinky());
             actorRenderer.drawActor(cutScene.heart());
         }
-        if (scene.game().ui().settings().PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (scene.game().ui().settings().debugInfoVisibleProperty.get()) {
             debugRenderer.draw(scene);
         }
     }

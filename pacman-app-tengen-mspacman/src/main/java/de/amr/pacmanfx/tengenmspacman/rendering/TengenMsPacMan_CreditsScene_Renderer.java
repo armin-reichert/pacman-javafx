@@ -44,7 +44,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
             drawJavaFXRemakeCreditsText();
             ctx.setGlobalAlpha(1);
         }
-        if (scene.game().ui().settings().PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (scene.game().ui().settings().debugInfoVisibleProperty.get()) {
             debugRenderer.draw(scene);
         }
     }

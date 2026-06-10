@@ -246,7 +246,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         final GamePlayView playView = game.ui().subViews().gamePlayView();
         final DecorationPane decorationPane = playView.gameSceneFrame();
 
-        gameScene2D.backgroundColorProperty().bind(game.ui().settings().PROPERTY_CANVAS_BACKGROUND_COLOR);
+        gameScene2D.backgroundColorProperty().bind(game.ui().settings().canvasBackgroundColorProperty);
 
         final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
         if (decorated) {

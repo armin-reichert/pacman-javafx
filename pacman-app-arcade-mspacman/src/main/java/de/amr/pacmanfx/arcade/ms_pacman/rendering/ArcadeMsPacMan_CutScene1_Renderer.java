@@ -33,7 +33,7 @@ public class ArcadeMsPacMan_CutScene1_Renderer extends BaseRenderer implements G
         Stream.of(cutScene.clapperboard(), cutScene.msPacMan(), cutScene.pacMan(), cutScene.inky(), cutScene.pinky(), cutScene.heart())
             .forEach(actorRenderer::drawActor);
 
-        if (scene.game().ui().settings().PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (scene.game().ui().settings().debugInfoVisibleProperty.get()) {
             debugRenderer.draw(scene);
         }
     }

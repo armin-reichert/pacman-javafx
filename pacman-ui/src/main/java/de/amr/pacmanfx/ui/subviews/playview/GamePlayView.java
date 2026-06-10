@@ -192,7 +192,7 @@ public class GamePlayView implements SubView {
         final UIConfig currentConfig = game.currentUIConfig();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = currentConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
-            setFontSmoothing(game.ui().settings().PROPERTY_CANVAS_FONT_SMOOTHING.get());
+            setFontSmoothing(game.ui().settings().canvasFontSmoothingProperty.get());
             hudRenderer = currentConfig.createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
@@ -242,9 +242,9 @@ public class GamePlayView implements SubView {
     public void connect(Game game) {
         pausedIcon.visibleProperty().bind(game.clock().updatesDisabledProperty());
 
-        game.ui().settings().PROPERTY_CANVAS_FONT_SMOOTHING.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
+        game.ui().settings().canvasFontSmoothingProperty.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 
-        game.ui().settings().PROPERTY_DEBUG_INFO_VISIBLE.addListener((_, _, debug) -> {
+        game.ui().settings().debugInfoVisibleProperty.addListener((_, _, debug) -> {
             gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);
             gameSceneLayer.setBorder(debug ? DEBUG_BORDER : null);
         });
@@ -252,9 +252,9 @@ public class GamePlayView implements SubView {
         overlayLayer.visibleProperty().bind(dashboard.rootPane().visibleProperty());
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
-            () -> game.ui().settings().PROPERTY_MINI_VIEW_ON.get()
+            () -> game.ui().settings().miniViewOnProperty.get()
                 && game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D),
-            game.ui().settings().PROPERTY_MINI_VIEW_ON,
+            game.ui().settings().miniViewOnProperty,
             game.ui().gameScenes().gameSceneProperty()
         ));
 

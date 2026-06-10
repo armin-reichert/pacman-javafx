@@ -350,7 +350,7 @@ public final class GameImplementation implements Game {
         ui().settings3D().mazeWallHeightProperty.set(mazeConfig3D.obstacleBaseHeight());
         ui().settings3D().mazeWallOpacityProperty.set(mazeConfig3D.obstacleOpacity());
 
-        ui.sounds().muteProperty().bind(ui().settings().PROPERTY_MUTED);
+        ui.sounds().muteProperty().bind(ui().settings().mutedProperty);
 
         view.statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> ui.subViews().isSelected(ui.subViews().gamePlayView())

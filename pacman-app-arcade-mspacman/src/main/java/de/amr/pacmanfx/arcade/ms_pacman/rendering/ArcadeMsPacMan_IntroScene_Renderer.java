@@ -70,7 +70,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
         }
         copyrightRenderer.drawCopyright(TS(6), TS(28));
 
-        if (scene.game().ui().settings().PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (scene.game().ui().settings().debugInfoVisibleProperty.get()) {
             debugRenderer.draw(scene);
         }
     }

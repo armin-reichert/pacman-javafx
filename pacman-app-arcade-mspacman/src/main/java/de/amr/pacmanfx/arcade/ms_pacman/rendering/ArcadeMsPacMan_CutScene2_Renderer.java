@@ -33,7 +33,7 @@ public class ArcadeMsPacMan_CutScene2_Renderer extends BaseRenderer implements G
         cutScene.clapperboard().setFont(arcadeFont8());
         Stream.of(cutScene.clapperboard(), cutScene.msPacMan(), cutScene.pacMan()).forEach(actorRenderer::drawActor);
 
-        if (scene.game().ui().settings().PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (scene.game().ui().settings().debugInfoVisibleProperty.get()) {
             debugRenderer.draw(scene);
         }
     }

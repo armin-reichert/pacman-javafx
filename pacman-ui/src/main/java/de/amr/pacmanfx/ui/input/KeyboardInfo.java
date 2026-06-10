@@ -37,7 +37,7 @@ public class KeyboardInfo {
             """);
         StackPane.setMargin(rootPane, new Insets(10));
         StackPane.setAlignment(rootPane, Pos.TOP_RIGHT);
-        rootPane.visibleProperty().bind(ui.settings().PROPERTY_KEYBOARD_MONITOR_VISIBLE);
+        rootPane.visibleProperty().bind(ui.settings().keyboardMonitorVisibleProperty);
 
         final Text title = new Text("Keyboard State");
         title.setFill(Color.WHITE);

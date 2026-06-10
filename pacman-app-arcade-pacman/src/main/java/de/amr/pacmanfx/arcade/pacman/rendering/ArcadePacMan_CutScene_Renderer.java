@@ -33,7 +33,7 @@ public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implem
     public void draw(GameScene2D scene) {
         clearCanvas();
         drawSceneContent(scene);
-        if (scene.game().ui().settings().PROPERTY_DEBUG_INFO_VISIBLE.get()) {
+        if (scene.game().ui().settings().debugInfoVisibleProperty.get()) {
             debugRenderer.draw(scene);
         }
     }

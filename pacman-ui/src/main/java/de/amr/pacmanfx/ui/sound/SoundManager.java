@@ -44,7 +44,7 @@ public class SoundManager implements Disposable {
         }
         stopAndDisposeVoice();
         voicePlayer = new MediaPlayer(voiceMedia);
-        voicePlayer.muteProperty().bind(game.ui().settings().PROPERTY_MUTED);
+        voicePlayer.muteProperty().bind(game.ui().settings().mutedProperty);
         voicePlayer.setOnError(() ->
             Logger.error("Voice playback error: {}", voicePlayer.getError())
         );

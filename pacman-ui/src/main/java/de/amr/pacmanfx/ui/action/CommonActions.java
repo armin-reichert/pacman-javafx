@@ -348,7 +348,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(game.ui().settings().PROPERTY_DEBUG_INFO_VISIBLE);
+            toggleBooleanProperty(game.ui().settings().debugInfoVisibleProperty);
         }
     };
 
@@ -364,7 +364,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(game.ui().settings().PROPERTY_KEYBOARD_MONITOR_VISIBLE);
+            toggleBooleanProperty(game.ui().settings().keyboardMonitorVisibleProperty);
         }
     };
 
@@ -372,10 +372,10 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(game.ui().settings().PROPERTY_MINI_VIEW_ON);
+            toggleBooleanProperty(game.ui().settings().miniViewOnProperty);
             if (!game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)) {
                 final String msg = game.ui().translations().translate(
-                    game.ui().settings().PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off");
+                    game.ui().settings().miniViewOnProperty.get() ? "pip_on" : "pip_off");
                 game.shortMessage(msg);
             }
         }
@@ -385,7 +385,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(game.ui().settings().PROPERTY_MUTED);
+            toggleBooleanProperty(game.ui().settings().mutedProperty);
         }
     };
 
