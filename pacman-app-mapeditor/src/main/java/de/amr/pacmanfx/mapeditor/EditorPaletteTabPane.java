@@ -20,7 +20,7 @@ import javafx.scene.text.Text;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
+import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.*;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 
 public class EditorPaletteTabPane extends TabPane {
@@ -47,7 +47,7 @@ public class EditorPaletteTabPane extends TabPane {
         getTabs().setAll(tabTerrain, tabFood, tabActors);
         getSelectionModel().select(tabTerrain);
 
-        getSelectionModel().selectedItemProperty().addListener((py, ov, selectedTab) -> highlightSelectedTab(selectedTab));
+        getSelectionModel().selectedItemProperty().addListener((_, _, selectedTab) -> highlightSelectedTab(selectedTab));
         highlightSelectedTab(getSelectionModel().getSelectedItem());
     }
 

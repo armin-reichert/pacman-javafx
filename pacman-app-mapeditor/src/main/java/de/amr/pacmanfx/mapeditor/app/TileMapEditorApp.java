@@ -14,7 +14,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 
-import static de.amr.pacmanfx.mapeditor.EditorGlobals.translated;
+import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.translated;
 
 /**
  * Standalone tile map editor application.

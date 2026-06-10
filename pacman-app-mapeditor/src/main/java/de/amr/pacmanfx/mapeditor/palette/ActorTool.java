@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import java.util.function.Consumer;
 
 import static de.amr.pacmanfx.core.Globals.TS;
-import static de.amr.pacmanfx.mapeditor.EditorGlobals.TOOL_SIZE;
+import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.TOOL_SIZE;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.SPRITE_SHEET;
 import static java.util.Objects.requireNonNull;
 

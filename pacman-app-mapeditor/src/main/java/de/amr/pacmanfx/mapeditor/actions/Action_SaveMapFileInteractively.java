@@ -11,7 +11,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 
-import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
+import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.*;
 
 public class Action_SaveMapFileInteractively extends EditorUIAction<File> {
 

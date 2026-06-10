@@ -8,8 +8,8 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;
 
 import static de.amr.pacmanfx.core.Globals.tile;
-import static de.amr.pacmanfx.mapeditor.EditorGlobals.NO_GRAPHIC;
-import static de.amr.pacmanfx.mapeditor.EditorGlobals.translated;
+import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.NO_GRAPHIC;
+import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.translated;
 
 public class EditorMenuBar extends MenuBar {
 

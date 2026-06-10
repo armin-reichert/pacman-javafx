@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static de.amr.pacmanfx.mapeditor.EditorGlobals.*;
+import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.*;
 import static java.util.Objects.requireNonNull;
 
 public class TileMapEditor {
@@ -324,7 +324,7 @@ public class TileMapEditor {
     private long lastAnimationFrame = 0;
 
     private AnimationTimer createAnimationTimer() {
-        final long frameDurationNanos = 1_000_000_000 / EditorGlobals.UPDATE_FREQ;
+        final long frameDurationNanos = 1_000_000_000 / GlobalsMapEditor.UPDATE_FREQ;
         return new AnimationTimer() {
             @Override
             public void handle(long now) {

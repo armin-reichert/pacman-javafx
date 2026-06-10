@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.mapeditor.EditorGlobals.FONT_TOOL_TIPS;
-import static de.amr.pacmanfx.mapeditor.EditorGlobals.TOOL_SIZE;
+import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.FONT_TOOL_TIPS;
+import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.TOOL_SIZE;
 import static java.util.Objects.requireNonNull;
 
 public class Palette extends Canvas {

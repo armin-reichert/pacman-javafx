@@ -5,7 +5,7 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 
-import static de.amr.pacmanfx.mapeditor.EditorGlobals.MIN_GRID_SIZE;
+import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.MIN_GRID_SIZE;
 
 public class Action_ZoomOut extends EditorUIAction<Void> {
 

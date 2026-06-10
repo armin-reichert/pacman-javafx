@@ -24,7 +24,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.core.Globals.TS;
-import static de.amr.pacmanfx.mapeditor.EditorGlobals.ACTOR_SPRITES;
+import static de.amr.pacmanfx.mapeditor.GlobalsMapEditor.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;
 
 public class Preview2D extends Canvas {
