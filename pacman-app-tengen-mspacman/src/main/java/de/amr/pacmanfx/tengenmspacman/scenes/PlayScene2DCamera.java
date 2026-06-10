@@ -12,7 +12,7 @@ import javafx.scene.ParallelCamera;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.basics.math.MoreMath.lerp;
+import static de.amr.basics.math.MathAdds.lerp;
 
 public class PlayScene2DCamera extends ParallelCamera {
 

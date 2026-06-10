@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.subviews.playview;
 
-import de.amr.pacmanfx.core.Globals_Core;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
@@ -211,8 +211,8 @@ public class GamePlayView implements SubView {
         // Layer 1: Game scene with or without decoration
         gameSceneFrame = new DecorationPane(
             DECORATION_CONFIG,
-            Globals_Core.ARCADE_MAP_SIZE_IN_PIXELS.x(),
-            Globals_Core.ARCADE_MAP_SIZE_IN_PIXELS.y()
+            WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x(),
+            WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y()
         );
         gameSceneLayer = new BorderPane();
         gameSceneLayer.setCenter(gameSceneFrame);

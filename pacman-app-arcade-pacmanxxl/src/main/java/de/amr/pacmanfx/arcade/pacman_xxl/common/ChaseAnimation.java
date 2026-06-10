@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -24,7 +25,6 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -91,10 +91,10 @@ class ChaseAnimation {
         pac.setVisible(true);
 
         ghosts = List.of(
-            uiConfig.createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW),
-            uiConfig.createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY),
-            uiConfig.createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL),
-            uiConfig.createGhostWithAnimations(spriteAnimationSet, ORANGE_GHOST_POKEY)
+            uiConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.RED_GHOST_SHADOW),
+            uiConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.PINK_GHOST_SPEEDY),
+            uiConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.CYAN_GHOST_BASHFUL),
+            uiConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.ORANGE_GHOST_POKEY)
         );
         for (Ghost ghost : ghosts) {
             ghost.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);

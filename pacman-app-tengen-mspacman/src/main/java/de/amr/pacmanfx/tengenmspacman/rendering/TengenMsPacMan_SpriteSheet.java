@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
@@ -13,7 +14,6 @@ import javafx.scene.image.Image;
 
 import java.util.stream.IntStream;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.*;
 
 public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
@@ -252,25 +252,25 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     public RectShort[] ghostNormalSprites(byte personality, Direction dir) {
         return switch (personality) {
-            case RED_GHOST_SHADOW -> switch (dir) {
+            case GameModel.RED_GHOST_SHADOW -> switch (dir) {
                 case Direction.RIGHT -> sprites(SpriteID.RED_GHOST_RIGHT);
                 case Direction.LEFT  -> sprites(SpriteID.RED_GHOST_LEFT);
                 case Direction.UP    -> sprites(SpriteID.RED_GHOST_UP);
                 case Direction.DOWN  -> sprites(SpriteID.RED_GHOST_DOWN);
             };
-            case PINK_GHOST_SPEEDY   -> switch (dir) {
+            case GameModel.PINK_GHOST_SPEEDY   -> switch (dir) {
                 case Direction.RIGHT -> sprites(SpriteID.PINK_GHOST_RIGHT);
                 case Direction.LEFT  -> sprites(SpriteID.PINK_GHOST_LEFT);
                 case Direction.UP    -> sprites(SpriteID.PINK_GHOST_UP);
                 case Direction.DOWN  -> sprites(SpriteID.PINK_GHOST_DOWN);
             };
-            case CYAN_GHOST_BASHFUL  -> switch (dir) {
+            case GameModel.CYAN_GHOST_BASHFUL  -> switch (dir) {
                 case Direction.RIGHT -> sprites(SpriteID.CYAN_GHOST_RIGHT);
                 case Direction.LEFT  -> sprites(SpriteID.CYAN_GHOST_LEFT);
                 case Direction.UP    -> sprites(SpriteID.CYAN_GHOST_UP);
                 case Direction.DOWN  -> sprites(SpriteID.CYAN_GHOST_DOWN);
             };
-            case ORANGE_GHOST_POKEY  -> switch (dir) {
+            case GameModel.ORANGE_GHOST_POKEY  -> switch (dir) {
                 case Direction.RIGHT -> sprites(SpriteID.ORANGE_GHOST_RIGHT);
                 case Direction.LEFT  -> sprites(SpriteID.ORANGE_GHOST_LEFT);
                 case Direction.UP    -> sprites(SpriteID.ORANGE_GHOST_UP);

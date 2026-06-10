@@ -48,7 +48,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
@@ -321,10 +320,10 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     @Override
     public Ghost createGhostWithAnimations(SpriteAnimationSet animationSet, byte personality) {
         final Ghost ghost = switch (personality) {
-            case RED_GHOST_SHADOW -> GhostFactory.createRedGhostShadow("Blinky");
-            case PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky");
-            case CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
-            case ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
+            case GameModel.RED_GHOST_SHADOW -> GhostFactory.createRedGhostShadow("Blinky");
+            case GameModel.PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky");
+            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
+            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);
         };
         ghost.setAnimations(createGhostAnimations(animationSet, personality));

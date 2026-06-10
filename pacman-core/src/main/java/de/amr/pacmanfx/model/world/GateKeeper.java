@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.model.world;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -16,7 +17,6 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 import static de.amr.basics.math.Direction.LEFT;
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -137,10 +137,10 @@ public class GateKeeper {
         pacStarvingLimit = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
         Arrays.fill(ghostLimits, (byte) 0);
         if (levelNumber == 1) {
-            ghostLimits[CYAN_GHOST_BASHFUL] = 30;
-            ghostLimits[ORANGE_GHOST_POKEY] = 60;
+            ghostLimits[GameModel.CYAN_GHOST_BASHFUL] = 30;
+            ghostLimits[GameModel.ORANGE_GHOST_POKEY] = 60;
         } else if (levelNumber == 2) {
-            ghostLimits[ORANGE_GHOST_POKEY] = 50;
+            ghostLimits[GameModel.ORANGE_GHOST_POKEY] = 50;
         }
         Arrays.fill(ghostCounters, 0);
         globalCounterValue = 0;
@@ -154,7 +154,7 @@ public class GateKeeper {
      */
     private Optional<String> checkReleaseOfGhost(GameLevel level, Ghost prisoner) {
         final byte personality = prisoner.personality();
-        if (personality == RED_GHOST_SHADOW) {
+        if (personality == GameModel.RED_GHOST_SHADOW) {
             return Optional.of("Red ghost gets released unconditionally");
         }
         // check individual dot counter first (if enabled)
@@ -184,9 +184,9 @@ public class GateKeeper {
         requireNonNull(level);
         requireNonNull(house);
         if (globalCounterEnabled) {
-            if (level.ghost(ORANGE_GHOST_POKEY).state() == GhostState.LOCKED && globalCounterValue == 32) {
+            if (level.ghost(GameModel.ORANGE_GHOST_POKEY).state() == GhostState.LOCKED && globalCounterValue == 32) {
                 Logger.info("{} inside house when global counter reached {}",
-                    level.ghost(ORANGE_GHOST_POKEY).name(), globalCounterValue);
+                    level.ghost(GameModel.ORANGE_GHOST_POKEY).name(), globalCounterValue);
                 resetCounterAndSetEnabled(false);
             } else {
                 globalCounterValue++;
@@ -202,7 +202,7 @@ public class GateKeeper {
 
     public void unlockGhostIfPossible(GameLevel level, House house) {
         requireNonNull(level);
-        final Ghost blinky = level.ghost(RED_GHOST_SHADOW);
+        final Ghost blinky = level.ghost(GameModel.RED_GHOST_SHADOW);
         if (blinky.state() == GhostState.LOCKED) {
             if (house.isVisitedBy(blinky)) {
                 // Leave house immediately again after being eaten
@@ -216,7 +216,7 @@ public class GateKeeper {
                 blinky.setState(GhostState.HUNTING_PAC);
             }
         }
-        Stream.of(PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
+        Stream.of(GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .filter(ghost -> ghost.state() == GhostState.LOCKED)
             .findFirst()

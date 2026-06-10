@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.Globals_GameUI;
@@ -20,7 +21,6 @@ import javafx.scene.canvas.Canvas;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {
 
-    private static final List<Byte> GHOST_Z_ORDER = List.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW);
+    private static final List<Byte> GHOST_Z_ORDER = List.of(GameModel.ORANGE_GHOST_POKEY, GameModel.CYAN_GHOST_BASHFUL, GameModel.PINK_GHOST_SPEEDY, GameModel.RED_GHOST_SHADOW);
 
     private final SpriteSheet<?> spriteSheet;
     private final GameLevelRenderer levelRenderer;

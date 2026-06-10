@@ -5,7 +5,9 @@ package de.amr.pacmanfx.ui.subviews.playview;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.Globals_GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -31,7 +33,6 @@ import javafx.util.Duration;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static java.util.Objects.requireNonNull;
 
 public class MiniPlaySceneView {
@@ -42,7 +43,7 @@ public class MiniPlaySceneView {
     public static final Duration SLIDE_OUT_DURATION = Duration.seconds(2);
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
-    private final ObjectProperty<Vector2i> worldSize = new SimpleObjectProperty<>(ARCADE_MAP_SIZE_IN_PIXELS);
+    private final ObjectProperty<Vector2i> worldSize = new SimpleObjectProperty<>(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS);
 
     private final HBox rootPane;
     private final Canvas canvas;
@@ -180,7 +181,7 @@ public class MiniPlaySceneView {
 
         level.optBonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
         actorRenderer.drawActor(level.entities().pac());
-        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(level::ghost)
+        Stream.of(GameModel.ORANGE_GHOST_POKEY, GameModel.CYAN_GHOST_BASHFUL, GameModel.PINK_GHOST_SPEEDY, GameModel.RED_GHOST_SHADOW).map(level::ghost)
             .forEach(ghost -> actorRenderer.drawActor(ghost));
     }
 }

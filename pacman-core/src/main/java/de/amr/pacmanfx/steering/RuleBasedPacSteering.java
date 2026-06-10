@@ -5,7 +5,7 @@ package de.amr.pacmanfx.steering;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.Globals_Core;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
@@ -119,7 +119,7 @@ public class RuleBasedPacSteering implements Steering {
         if (pac.moveInfo().moved && !level.worldMap().terrainLayer().isIntersection(pac.computeTile()))
             return;
 
-        if (!data.frightenedGhosts.isEmpty() && pac.powerTimer().remainingTicks() >= Globals_Core.NUM_TICKS_PER_SEC) {
+        if (!data.frightenedGhosts.isEmpty() && pac.powerTimer().remainingTicks() >= GameRules.NUM_TICKS_PER_SEC) {
             Ghost prey = data.frightenedGhosts.getFirst();
             Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(),
                 prey.computeTile().manhattanDist(pac.computeTile()));
@@ -228,7 +228,7 @@ public class RuleBasedPacSteering implements Steering {
                     continue;
                 }
                 if (gameLevel.worldMap().foodLayer().isEnergizerTile(tile)
-                    && gameLevel.entities().pac().powerTimer().remainingTicks() > 2 * Globals_Core.NUM_TICKS_PER_SEC
+                    && gameLevel.entities().pac().powerTimer().remainingTicks() > 2 * GameRules.NUM_TICKS_PER_SEC
                     && foodLayer.remainingFoodCount() > 1) {
                     continue;
                 }

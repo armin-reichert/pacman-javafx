@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.model.actor;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameException;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -16,7 +17,6 @@ import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.core.Validations.inClosedRange;
 import static java.util.Objects.requireNonNull;
 
@@ -136,10 +136,10 @@ public class TengenMsPacMan_ActorSpeedControl implements ActorSpeedControl {
 
     private static float ghostSpeedDelta(byte personality) {
         return speedUnitsToPixels(switch (personality) {
-            case RED_GHOST_SHADOW -> 3;
-            case ORANGE_GHOST_POKEY -> 2;
-            case CYAN_GHOST_BASHFUL -> 1;
-            case PINK_GHOST_SPEEDY -> 0;
+            case GameModel.RED_GHOST_SHADOW -> 3;
+            case GameModel.ORANGE_GHOST_POKEY -> 2;
+            case GameModel.CYAN_GHOST_BASHFUL -> 1;
+            case GameModel.PINK_GHOST_SPEEDY -> 0;
             default -> throw GameException.invalidGhostPersonality(personality);
         });
     }

@@ -30,7 +30,6 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 
@@ -90,13 +89,13 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
 
         ghosts = List.of(
-            uiConfig.createGhostWithAnimations(spriteAnimations, RED_GHOST_SHADOW),
-            uiConfig.createGhostWithAnimations(spriteAnimations, PINK_GHOST_SPEEDY),
-            uiConfig.createGhostWithAnimations(spriteAnimations, CYAN_GHOST_BASHFUL),
-            uiConfig.createGhostWithAnimations(spriteAnimations, ORANGE_GHOST_POKEY)
+            uiConfig.createGhostWithAnimations(spriteAnimations, GameModel.RED_GHOST_SHADOW),
+            uiConfig.createGhostWithAnimations(spriteAnimations, GameModel.PINK_GHOST_SPEEDY),
+            uiConfig.createGhostWithAnimations(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL),
+            uiConfig.createGhostWithAnimations(spriteAnimations, GameModel.ORANGE_GHOST_POKEY)
         );
 
-        presentedGhostPersonality = RED_GHOST_SHADOW;
+        presentedGhostPersonality = GameModel.RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
         sceneController.restartState(SceneState.STARTING);
@@ -136,7 +135,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
                     ghost.animations().playSelected();
                 }
-                scene.presentedGhostPersonality = RED_GHOST_SHADOW;
+                scene.presentedGhostPersonality = GameModel.RED_GHOST_SHADOW;
             }
 
             @Override
@@ -154,7 +153,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.marquee.timer().doTick();
                 boolean atEndPosition = letGhostWalkIn(scene);
                 if (atEndPosition) {
-                    if (scene.presentedGhostPersonality == ORANGE_GHOST_POKEY) {
+                    if (scene.presentedGhostPersonality == GameModel.ORANGE_GHOST_POKEY) {
                         scene.sceneController.enterState(MS_PACMAN_MARCHING_IN);
                     } else {
                         ++scene.presentedGhostPersonality;

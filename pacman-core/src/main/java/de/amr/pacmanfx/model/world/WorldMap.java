@@ -77,6 +77,12 @@ public class WorldMap {
         return halfTileRightOf(tile.x(), tile.y());
     }
 
+    /**
+     * Arcade maps have a size of 28x36 tiles (28 cols, 36 rows, including the empty rows over and under the maze).
+     * The tile size is 8px which gives a map size of 224x288px.
+     */
+    public static final Vector2i ARCADE_MAP_SIZE_IN_PIXELS = new Vector2i(28 * TS, 36 * TS);
+
     // Map creation
 
     public static final Charset MAP_FILE_CHARSET = StandardCharsets.UTF_8;

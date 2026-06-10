@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.d3.animation.energizer;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector3f;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -26,7 +27,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static de.amr.basics.math.RandomNumberSupport.*;
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -37,14 +37,14 @@ import static java.util.Objects.requireNonNull;
 public class ParticlesAnimation3D extends ManagedAnimation implements Disposable {
 
     private static final byte[] GHOST_PERSONALITIES = {
-        RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY
+        GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY
     };
 
     private static byte computeTargetSwirlIndex(byte personality) {
         return switch (personality) {
-            case CYAN_GHOST_BASHFUL -> 0;
-            case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> 1;
-            case ORANGE_GHOST_POKEY -> 2;
+            case GameModel.CYAN_GHOST_BASHFUL -> 0;
+            case GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY -> 1;
+            case GameModel.ORANGE_GHOST_POKEY -> 2;
             default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
         };
     }
@@ -79,7 +79,7 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
         this.outOfWorldTest = requireNonNull(outOfWorldTest);
 
         // The 3 ghost revival positions inside the house from left to right
-        swirlBases = Stream.of(CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, ORANGE_GHOST_POKEY)
+        swirlBases = Stream.of(GameModel.CYAN_GHOST_BASHFUL, GameModel.PINK_GHOST_SPEEDY, GameModel.ORANGE_GHOST_POKEY)
             .map(house::ghostRevivalTile)
             .map(tile -> tile.scaled(WorldMap.TS).plus(WorldMap.HTS, WorldMap.HTS))
             .map(pos -> new Vector3f(pos.x(), pos.y(), 0))

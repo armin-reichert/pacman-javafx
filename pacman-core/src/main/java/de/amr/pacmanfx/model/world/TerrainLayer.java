@@ -6,13 +6,13 @@ package de.amr.pacmanfx.model.world;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.model.GameModel;
 import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.model.world.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.model.world.TerrainTile.isBlocked;
@@ -44,10 +44,10 @@ public final class TerrainLayer extends WorldMapLayer {
         } else {
             pacStartPosition = halfTileRightOf(pacTile);
         }
-        scatterTiles[RED_GHOST_SHADOW]   = getTilePropertyOrDefault(POS_SCATTER_RED_GHOST,    WorldMap.tile(0, numCols() - 3));
-        scatterTiles[PINK_GHOST_SPEEDY]  = getTilePropertyOrDefault(POS_SCATTER_PINK_GHOST,   WorldMap.tile(0, 3));
-        scatterTiles[CYAN_GHOST_BASHFUL] = getTilePropertyOrDefault(POS_SCATTER_CYAN_GHOST,   WorldMap.tile(numRows() - emptyRowsBelowMaze(), numCols() - 1));
-        scatterTiles[ORANGE_GHOST_POKEY] = getTilePropertyOrDefault(POS_SCATTER_ORANGE_GHOST, WorldMap.tile(numRows() - emptyRowsBelowMaze(), 0));
+        scatterTiles[GameModel.RED_GHOST_SHADOW]   = getTilePropertyOrDefault(POS_SCATTER_RED_GHOST,    WorldMap.tile(0, numCols() - 3));
+        scatterTiles[GameModel.PINK_GHOST_SPEEDY]  = getTilePropertyOrDefault(POS_SCATTER_PINK_GHOST,   WorldMap.tile(0, 3));
+        scatterTiles[GameModel.CYAN_GHOST_BASHFUL] = getTilePropertyOrDefault(POS_SCATTER_CYAN_GHOST,   WorldMap.tile(numRows() - emptyRowsBelowMaze(), numCols() - 1));
+        scatterTiles[GameModel.ORANGE_GHOST_POKEY] = getTilePropertyOrDefault(POS_SCATTER_ORANGE_GHOST, WorldMap.tile(numRows() - emptyRowsBelowMaze(), 0));
 
         this.house = layer.house; // TODO make copy
         if (layer.obstacleSet != null) {

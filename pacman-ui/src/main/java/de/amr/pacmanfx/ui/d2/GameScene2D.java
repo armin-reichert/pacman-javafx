@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.ui.d2;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.Globals_Core;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -29,9 +29,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameScene2D extends GameScene {
 
-    private final IntegerProperty unscaledWidth = new SimpleIntegerProperty(Globals_Core.ARCADE_MAP_SIZE_IN_PIXELS.x());
+    private final IntegerProperty unscaledWidth = new SimpleIntegerProperty(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
 
-    private final IntegerProperty unscaledHeight = new SimpleIntegerProperty(Globals_Core.ARCADE_MAP_SIZE_IN_PIXELS.y());
+    private final IntegerProperty unscaledHeight = new SimpleIntegerProperty(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
 

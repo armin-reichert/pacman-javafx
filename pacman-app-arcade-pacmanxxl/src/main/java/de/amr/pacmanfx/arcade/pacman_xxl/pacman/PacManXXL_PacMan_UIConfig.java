@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Factory3D;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostFactory;
@@ -35,7 +36,6 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
 public final class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManager {
@@ -244,10 +244,10 @@ public final class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManage
     @Override
     public Ghost createGhostWithAnimations(SpriteAnimationSet animationSet, byte personality) {
         final Ghost ghost = switch (personality) {
-            case RED_GHOST_SHADOW -> GhostFactory.createRedGhostShadow("Blinky");
-            case PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky");
-            case CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
-            case ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
+            case GameModel.RED_GHOST_SHADOW -> GhostFactory.createRedGhostShadow("Blinky");
+            case GameModel.PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky");
+            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
+            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);
         };
         ghost.setAnimations(createGhostAnimations(animationSet, personality));

@@ -8,8 +8,8 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.Globals_Core;
 import de.amr.pacmanfx.core.Validations;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
@@ -108,9 +108,9 @@ public class Ghost extends MovingActor {
     }
 
     /**
-     * @return this ghost's personality, see {@link Globals_Core#RED_GHOST_SHADOW},
-     * {@link Globals_Core#PINK_GHOST_SPEEDY}, {@link Globals_Core#CYAN_GHOST_BASHFUL} and
-     * {@link Globals_Core#ORANGE_GHOST_POKEY}.
+     * @return this ghost's personality, see {@link GameModel#RED_GHOST_SHADOW},
+     * {@link GameModel#PINK_GHOST_SPEEDY}, {@link GameModel#CYAN_GHOST_BASHFUL} and
+     * {@link GameModel#ORANGE_GHOST_POKEY}.
      */
     public byte personality() {
         return personality;

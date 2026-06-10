@@ -5,15 +5,15 @@
 package de.amr.pacmanfx.model.actors;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.Globals_Core;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 
-import static de.amr.pacmanfx.core.Globals_Core.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.model.GameModel.RED_GHOST_SHADOW;
 
 public class GhostFactory {
 
     public static Ghost createRedGhostShadow(String name) {
-        final Ghost ghost = new Ghost(Globals_Core.RED_GHOST_SHADOW, name);
+        final Ghost ghost = new Ghost(GameModel.RED_GHOST_SHADOW, name);
 
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             ghost.setSpeed(speed);
@@ -32,7 +32,7 @@ public class GhostFactory {
     }
 
     public static Ghost createPinkGhostAmbusher(String name) {
-        final Ghost ghost = new Ghost(Globals_Core.PINK_GHOST_SPEEDY, name);
+        final Ghost ghost = new Ghost(GameModel.PINK_GHOST_SPEEDY, name);
 
         ghost.setChasingTargetTileStrategy(level -> level.entities().pac().tilesAheadWithOverflowBug(4));
 
@@ -41,7 +41,7 @@ public class GhostFactory {
     }
 
     public static Ghost createCyanGhostBashful(String name) {
-        final Ghost ghost = new Ghost(Globals_Core.CYAN_GHOST_BASHFUL, name);
+        final Ghost ghost = new Ghost(GameModel.CYAN_GHOST_BASHFUL, name);
 
         ghost.setChasingTargetTileStrategy(level ->
             level.entities().pac().tilesAheadWithOverflowBug(2)
@@ -53,7 +53,7 @@ public class GhostFactory {
     }
 
     public static Ghost createOrangeGhostPokey(String name) {
-        final Ghost ghost = new Ghost(Globals_Core.ORANGE_GHOST_POKEY, name);
+        final Ghost ghost = new Ghost(GameModel.ORANGE_GHOST_POKEY, name);
 
         ghost.setChasingTargetTileStrategy(level ->
             ghost.computeTile().euclideanDist(level.entities().pac().computeTile()) < 8

@@ -9,6 +9,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
@@ -25,7 +26,6 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.SPECIFIC_BINDINGS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
@@ -74,7 +74,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         actionBindings().selectAnyMatchingBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, SPECIFIC_BINDINGS);
 
         final List<GhostConfig> ghostConfigs = uiConfig.worldConfig().ghostConfigs();
-        ghostColors = Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
+        ghostColors = Stream.of(GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
             .map(personality -> ghostConfigs.get(personality).colors().normalColors().dressColor())
             .toArray(Color[]::new);
 
@@ -132,10 +132,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setVisible(true);
 
                 scene.ghosts = List.of(
-                    currentConfig.createGhostWithAnimations(spriteAnimationSet, RED_GHOST_SHADOW),
-                    currentConfig.createGhostWithAnimations(spriteAnimationSet, CYAN_GHOST_BASHFUL),
-                    currentConfig.createGhostWithAnimations(spriteAnimationSet, PINK_GHOST_SPEEDY),
-                    currentConfig.createGhostWithAnimations(spriteAnimationSet, ORANGE_GHOST_POKEY)
+                    currentConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.RED_GHOST_SHADOW),
+                    currentConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.CYAN_GHOST_BASHFUL),
+                    currentConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.PINK_GHOST_SPEEDY),
+                    currentConfig.createGhostWithAnimations(spriteAnimationSet, GameModel.ORANGE_GHOST_POKEY)
                 );
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(WorldMap.TS * 33, ACTOR_Y);

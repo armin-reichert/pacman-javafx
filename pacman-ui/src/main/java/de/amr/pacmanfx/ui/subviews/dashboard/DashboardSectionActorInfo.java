@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
@@ -18,7 +19,6 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static de.amr.basics.timer.TickTimer.ticksToString;
-import static de.amr.pacmanfx.core.Globals_Core.*;
 
 public class DashboardSectionActorInfo extends DashboardSection {
 
@@ -41,13 +41,13 @@ public class DashboardSectionActorInfo extends DashboardSection {
                 : "No Power";
         }));
         addEmptyRow();
-        addGhostInfo(gameSupplier, RED_GHOST_SHADOW);
+        addGhostInfo(gameSupplier, GameModel.RED_GHOST_SHADOW);
         addEmptyRow();
-        addGhostInfo(gameSupplier, PINK_GHOST_SPEEDY);
+        addGhostInfo(gameSupplier, GameModel.PINK_GHOST_SPEEDY);
         addEmptyRow();
-        addGhostInfo(gameSupplier, CYAN_GHOST_BASHFUL);
+        addGhostInfo(gameSupplier, GameModel.CYAN_GHOST_BASHFUL);
         addEmptyRow();
-        addGhostInfo(gameSupplier, ORANGE_GHOST_POKEY);
+        addGhostInfo(gameSupplier, GameModel.ORANGE_GHOST_POKEY);
     }
 
     private String actorLocationInfo(GameLevel level, MovingActor actor) {
@@ -65,7 +65,7 @@ public class DashboardSectionActorInfo extends DashboardSection {
 
     private String actorMovementInfo(GameLevel level, MovingActor movingActor) {
         if (movingActor == null) return NO_INFO;
-        var speed = movingActor.computeSpeed() * NUM_TICKS_PER_SEC;
+        var speed = movingActor.computeSpeed() * GameRules.NUM_TICKS_PER_SEC;
         var blocked = !movingActor.moveInfo().moved;
         var reverseText = movingActor.turnBackRequested() ? "REV!" : "";
         return blocked
@@ -82,10 +82,10 @@ public class DashboardSectionActorInfo extends DashboardSection {
 
     private void addGhostInfo(Supplier<GameModel> gameSupplier, byte personality) {
         String name = switch (personality) {
-            case RED_GHOST_SHADOW   -> "Red Ghost";
-            case PINK_GHOST_SPEEDY  -> "Pink Ghost";
-            case CYAN_GHOST_BASHFUL -> "Cyan Ghost";
-            case ORANGE_GHOST_POKEY -> "Orange Ghost";
+            case GameModel.RED_GHOST_SHADOW   -> "Red Ghost";
+            case GameModel.PINK_GHOST_SPEEDY  -> "Pink Ghost";
+            case GameModel.CYAN_GHOST_BASHFUL -> "Cyan Ghost";
+            case GameModel.ORANGE_GHOST_POKEY -> "Orange Ghost";
             default -> "Unknown Ghost";
         };
         addDynamicLabeledValue(name,        supplyGhostInfo(gameSupplier, this::ghostNameAndState, personality));

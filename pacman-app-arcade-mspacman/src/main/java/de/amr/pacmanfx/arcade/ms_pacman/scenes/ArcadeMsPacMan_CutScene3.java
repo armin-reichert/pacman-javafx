@@ -8,7 +8,7 @@ import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.core.Globals_Core;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -167,7 +167,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
             } else {
                 bag.setOpen(true);
                 bag.setVelocity(0, 0);
-                setSceneState(SceneState.STORK_LEAVES_SCENE, 3 * Globals_Core.NUM_TICKS_PER_SEC);
+                setSceneState(SceneState.STORK_LEAVES_SCENE, 3 * GameRules.NUM_TICKS_PER_SEC);
             }
         }
     }

@@ -9,9 +9,9 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.Globals_Core;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
@@ -260,7 +260,7 @@ public final class GameImplementation implements Game {
         currentGameContext.model().prepareNewGame();
 
         clock().stop();
-        clock().setTargetFrameRate(Globals_Core.NUM_TICKS_PER_SEC);
+        clock().setTargetFrameRate(GameRules.NUM_TICKS_PER_SEC);
 
         ui.sounds().stopAll();
 

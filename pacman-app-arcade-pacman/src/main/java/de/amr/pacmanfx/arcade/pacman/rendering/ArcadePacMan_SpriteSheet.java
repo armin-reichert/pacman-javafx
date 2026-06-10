@@ -6,14 +6,13 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.stream.IntStream;
-
-import static de.amr.pacmanfx.core.Globals_Core.*;
 
 public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
@@ -165,25 +164,25 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     public RectShort[] ghostNormalSprites(byte personality, Direction dir) {
         return sprites(switch (personality) {
-            case RED_GHOST_SHADOW -> switch (dir) {
+            case GameModel.RED_GHOST_SHADOW -> switch (dir) {
                 case RIGHT -> SpriteID.RED_GHOST_RIGHT;
                 case LEFT ->  SpriteID.RED_GHOST_LEFT;
                 case UP ->    SpriteID.RED_GHOST_UP;
                 case DOWN ->  SpriteID.RED_GHOST_DOWN;
             };
-            case PINK_GHOST_SPEEDY -> switch (dir) {
+            case GameModel.PINK_GHOST_SPEEDY -> switch (dir) {
                 case RIGHT -> SpriteID.PINK_GHOST_RIGHT;
                 case LEFT ->  SpriteID.PINK_GHOST_LEFT;
                 case UP ->    SpriteID.PINK_GHOST_UP;
                 case DOWN ->  SpriteID.PINK_GHOST_DOWN;
             };
-            case CYAN_GHOST_BASHFUL -> switch (dir) {
+            case GameModel.CYAN_GHOST_BASHFUL -> switch (dir) {
                 case RIGHT -> SpriteID.CYAN_GHOST_RIGHT;
                 case LEFT ->  SpriteID.CYAN_GHOST_LEFT;
                 case UP ->    SpriteID.CYAN_GHOST_UP;
                 case DOWN ->  SpriteID.CYAN_GHOST_DOWN;
             };
-            case ORANGE_GHOST_POKEY -> switch (dir) {
+            case GameModel.ORANGE_GHOST_POKEY -> switch (dir) {
                 case RIGHT -> SpriteID.ORANGE_GHOST_RIGHT;
                 case LEFT ->  SpriteID.ORANGE_GHOST_LEFT;
                 case UP ->    SpriteID.ORANGE_GHOST_UP;

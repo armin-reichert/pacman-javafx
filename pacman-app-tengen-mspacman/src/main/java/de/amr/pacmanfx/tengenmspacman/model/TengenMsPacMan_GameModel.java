@@ -31,7 +31,6 @@ import java.util.Set;
 
 import static de.amr.basics.math.RandomNumberSupport.randomBoolean;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
@@ -140,7 +139,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final Vector2f center = level.worldMap().terrainLayer().messageCenterPosition();
         // Non-Arcade maps show a moving "Game Over" message
         final GameLevelMessage message = type == GameLevelMessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
-            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * NUM_TICKS_PER_SEC)
+            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * GameRules.NUM_TICKS_PER_SEC)
             : new GameLevelMessage(type, center);
         level.setMessage(message);
     }

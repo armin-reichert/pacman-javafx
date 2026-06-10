@@ -6,14 +6,13 @@ package de.amr.pacmanfx.tengenmspacman.model.actor;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import org.tinylog.Logger;
-
-import static de.amr.pacmanfx.core.Globals_Core.*;
 
 public interface TengenMsPacMan_ActorFactory {
 
@@ -39,10 +38,10 @@ public interface TengenMsPacMan_ActorFactory {
      */
     static Ghost createGhost(byte personality) {
         return switch (personality) {
-            case RED_GHOST_SHADOW   -> modifyShadowBehavior(GhostFactory.createRedGhostShadow("Blinky"));
-            case PINK_GHOST_SPEEDY  -> modifyAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky"));
-            case CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
-            case ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue");
+            case GameModel.RED_GHOST_SHADOW   -> modifyShadowBehavior(GhostFactory.createRedGhostShadow("Blinky"));
+            case GameModel.PINK_GHOST_SPEEDY  -> modifyAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky"));
+            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
+            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue");
             default -> throw new IllegalArgumentException();
         };
     }

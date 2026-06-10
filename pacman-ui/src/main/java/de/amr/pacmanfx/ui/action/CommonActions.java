@@ -33,7 +33,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.Globals_Core.NUM_TICKS_PER_SEC;
+import static de.amr.pacmanfx.model.GameRules.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
 
 /**

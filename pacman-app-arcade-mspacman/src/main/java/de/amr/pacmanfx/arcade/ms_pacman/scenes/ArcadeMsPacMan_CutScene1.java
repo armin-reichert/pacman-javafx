@@ -10,6 +10,8 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.game.Game;
@@ -18,7 +20,6 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.basics.spriteanim.AnimationFacade.singletonAnimationFacade;
-import static de.amr.pacmanfx.core.Globals_Core.*;
 
 /**
  * Intermission scene 1: "They meet".
@@ -85,9 +86,9 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
 
-        inky = uiConfig.createGhostWithAnimations(spriteAnimations, CYAN_GHOST_BASHFUL);
+        inky = uiConfig.createGhostWithAnimations(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
 
-        pinky = uiConfig.createGhostWithAnimations(spriteAnimations, PINK_GHOST_SPEEDY);
+        pinky = uiConfig.createGhostWithAnimations(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
 
         heart = new Actor();
         heart.setAnimations(singletonAnimationFacade(spriteSheet.sprite(SpriteID.HEART)));
@@ -261,7 +262,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         heart.setPosition((pacMan.x() + msPacMan.x()) * 0.5f, pacMan.y() - WorldMap.TS * 2);
         heart.show();
 
-        setState(SceneState.IN_HEAVEN, 3 * NUM_TICKS_PER_SEC);
+        setState(SceneState.IN_HEAVEN, 3 * GameRules.NUM_TICKS_PER_SEC);
     }
 
     private void updateStateInHeaven() {

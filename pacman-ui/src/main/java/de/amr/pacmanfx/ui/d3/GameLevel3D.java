@@ -8,6 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.math.Vector3f;
 import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -56,7 +57,6 @@ import java.util.stream.Stream;
 import static de.amr.basics.math.RandomNumberSupport.RANDOM_GENERATOR;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
@@ -345,7 +345,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createGhosts3D(GameContext gameContext) {
         final List<GhostConfig> ghostConfigs = uiConfig.worldConfig().ghostConfigs();
-        entitySet.ghosts3D = Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
+        entitySet.ghosts3D = Stream.of(GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .map(ghost -> {
                 final Ghost3D ghost3D = createGhost3D(ghostConfigs.get(ghost.personality()), ghost);

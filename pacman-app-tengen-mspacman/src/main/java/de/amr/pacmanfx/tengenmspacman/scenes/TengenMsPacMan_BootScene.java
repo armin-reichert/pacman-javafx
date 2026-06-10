@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.gamestate.GameState;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
@@ -12,7 +13,6 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.*;
 
 /**
@@ -37,7 +37,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     public void onActivate() {
         movingText = new Actor();
         movingText.setPosition(WorldMap.TS(9), unscaledHeight()); // lower border of screen
-        ghost = game().currentUIConfig().createGhostWithAnimations(game().ui().sprites().animationSet(), RED_GHOST_SHADOW);
+        ghost = game().currentUIConfig().createGhostWithAnimations(game().ui().sprites().animationSet(), GameModel.RED_GHOST_SHADOW);
     }
 
     @Override

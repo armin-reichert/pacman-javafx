@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel.createPacMan;
-import static de.amr.pacmanfx.core.Globals_Core.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.model.GameModel.RED_GHOST_SHADOW;
 
 /**
  * Second cut scene in Arcade Pac-Man game:<br>

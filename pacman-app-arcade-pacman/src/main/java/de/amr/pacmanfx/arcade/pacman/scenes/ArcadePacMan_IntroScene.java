@@ -14,6 +14,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.gamestate.GameStateID;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.Globals_GameUI;
@@ -29,7 +30,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 
@@ -114,10 +114,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
 
-        ghosts[0] = uiConfig.createGhostWithAnimations(spriteAnimations, RED_GHOST_SHADOW);
-        ghosts[1] = uiConfig.createGhostWithAnimations(spriteAnimations, PINK_GHOST_SPEEDY);
-        ghosts[2] = uiConfig.createGhostWithAnimations(spriteAnimations, CYAN_GHOST_BASHFUL);
-        ghosts[3] = uiConfig.createGhostWithAnimations(spriteAnimations, ORANGE_GHOST_POKEY);
+        ghosts[0] = uiConfig.createGhostWithAnimations(spriteAnimations, GameModel.RED_GHOST_SHADOW);
+        ghosts[1] = uiConfig.createGhostWithAnimations(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
+        ghosts[2] = uiConfig.createGhostWithAnimations(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
+        ghosts[3] = uiConfig.createGhostWithAnimations(spriteAnimations, GameModel.ORANGE_GHOST_POKEY);
 
         Arrays.fill(ghostImageVisible, false);
         Arrays.fill(ghostNicknameVisible, false);
@@ -171,8 +171,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         // "shaking" effect
         final long tick_0_to_5 = tick % 6;
-        final Ghost pinkGhost = ghosts[PINK_GHOST_SPEEDY];
-        final Ghost cyanGhost = ghosts[CYAN_GHOST_BASHFUL];
+        final Ghost pinkGhost = ghosts[GameModel.PINK_GHOST_SPEEDY];
+        final Ghost cyanGhost = ghosts[GameModel.CYAN_GHOST_BASHFUL];
         if (tick_0_to_5 == 2) {
             pinkGhost.setX(pinkGhost.x() + 0.5);
             cyanGhost.setX(cyanGhost.x() - 0.5);
@@ -352,7 +352,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
-                    scene.ghosts[ORANGE_GHOST_POKEY].hide();
+                    scene.ghosts[GameModel.ORANGE_GHOST_POKEY].hide();
                     scene.gameContext().flow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
                 }
             }

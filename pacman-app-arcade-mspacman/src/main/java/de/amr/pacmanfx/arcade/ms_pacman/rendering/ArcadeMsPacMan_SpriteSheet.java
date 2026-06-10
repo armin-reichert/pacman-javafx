@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -14,7 +15,6 @@ import javafx.scene.image.Image;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
-import static de.amr.pacmanfx.core.Globals_Core.*;
 
 public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
@@ -140,25 +140,25 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     public RectShort[] ghostNormalSprites(byte personality, Direction dir) {
         return sprites(switch (personality) {
-            case RED_GHOST_SHADOW -> switch (dir) {
+            case GameModel.RED_GHOST_SHADOW -> switch (dir) {
                 case RIGHT -> RED_GHOST_RIGHT;
                 case LEFT -> RED_GHOST_LEFT;
                 case UP -> RED_GHOST_UP;
                 case DOWN -> RED_GHOST_DOWN;
             };
-            case PINK_GHOST_SPEEDY -> switch (dir) {
+            case GameModel.PINK_GHOST_SPEEDY -> switch (dir) {
                 case RIGHT -> PINK_GHOST_RIGHT;
                 case LEFT -> PINK_GHOST_LEFT;
                 case UP -> PINK_GHOST_UP;
                 case DOWN -> PINK_GHOST_DOWN;
             };
-            case CYAN_GHOST_BASHFUL -> switch (dir) {
+            case GameModel.CYAN_GHOST_BASHFUL -> switch (dir) {
                 case RIGHT -> CYAN_GHOST_RIGHT;
                 case LEFT -> CYAN_GHOST_LEFT;
                 case UP -> CYAN_GHOST_UP;
                 case DOWN -> CYAN_GHOST_DOWN;
             };
-            case ORANGE_GHOST_POKEY -> switch (dir) {
+            case GameModel.ORANGE_GHOST_POKEY -> switch (dir) {
                 case RIGHT -> ORANGE_GHOST_RIGHT;
                 case LEFT -> ORANGE_GHOST_LEFT;
                 case UP -> ORANGE_GHOST_UP;

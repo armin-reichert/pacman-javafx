@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.Globals_GameUI;
@@ -20,7 +21,6 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene.SceneState.*;
-import static de.amr.pacmanfx.core.Globals_Core.*;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {
@@ -89,7 +89,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
             fillText("CHARACTER / NICKNAME", ARCADE_WHITE, WorldMap.TS(LEFT_TILE_X + 3), WorldMap.TS(6));
         }
         final int y = WorldMap.TS * 8;
-        for (byte p = RED_GHOST_SHADOW; p <= ORANGE_GHOST_POKEY; ++p) {
+        for (byte p = GameModel.RED_GHOST_SHADOW; p <= GameModel.ORANGE_GHOST_POKEY; ++p) {
             int offsetY = 3 * p * WorldMap.TS;
             if (introScene.ghostImageVisible[p]) {
                 RectShort sprite = spriteSheet().sprites(GALLERY_GHOSTS)[p];

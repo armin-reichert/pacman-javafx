@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
@@ -20,8 +21,6 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static de.amr.pacmanfx.core.Globals_Core.*;
 
 public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer {
 
@@ -39,7 +38,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
         scene.gameContext().optCurrentLevel().ifPresent(level -> {
             // We assume all ghosts have the same set of special terrain tiles
-            level.ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
+            level.ghost(GameModel.RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
                 final double x = scaled(tile.x() * WorldMap.TS);
                 final double y = scaled(tile.y() * WorldMap.TS + WorldMap.HTS), size = scaled(WorldMap.TS);
                 ctx.setFill(Color.RED);
@@ -90,7 +89,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
         actorsInZOrder.clear();
         level.optBonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(level.entities().pac());
-        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
+        Stream.of(GameModel.ORANGE_GHOST_POKEY, GameModel.CYAN_GHOST_BASHFUL, GameModel.PINK_GHOST_SPEEDY, GameModel.RED_GHOST_SHADOW)
             .map(level::ghost)
             .forEach(actorsInZOrder::add);
     }

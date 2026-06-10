@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.basics.math.MoreMath.lerp;
+import static de.amr.basics.math.MathAdds.lerp;
 import static java.util.Objects.requireNonNull;
 
 public class StalkingPlayerPerspective implements Perspective<GameLevel> {
