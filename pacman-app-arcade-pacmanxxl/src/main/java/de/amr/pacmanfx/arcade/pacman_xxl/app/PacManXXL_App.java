@@ -39,8 +39,6 @@ public class PacManXXL_App extends Application {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
-            .gameVariant(GameVariantID.ARCADE_PACMAN_XXL)
-            .gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL)
             .startPage(PacManXXL_StartPage::new)
             .build();
 

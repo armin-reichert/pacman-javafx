@@ -42,12 +42,6 @@ public class GameBuilder {
         return this;
     }
 
-    public GameBuilder gameVariant(GameVariantID gameVariantID) {
-        validateGameVariantName(gameVariantID.name());
-        gameVariantConfigMap.put(gameVariantID.name(), new GameVariantConfig(null));
-        return this;
-    }
-
     public GameBuilder startPage(Supplier<? extends StartPage> startPageFactory) {
         if (startPageFactory == null) {
             error("Start page factory is null");
