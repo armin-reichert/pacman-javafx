@@ -26,7 +26,7 @@ public class SoundManager implements Disposable {
 
     public record AudioClipResource(AudioClip clip) implements SoundResource {}
 
-    public record MediaPlayerResource(MediaPlayer mediaPlayer) implements SoundResource {}
+    public record MediaPlayerResource(MediaPlayer player) implements SoundResource {}
 
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
 
