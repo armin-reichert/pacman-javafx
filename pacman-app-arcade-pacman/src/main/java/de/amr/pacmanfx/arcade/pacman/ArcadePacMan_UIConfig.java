@@ -22,6 +22,8 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.action.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.GameAction;
+import de.amr.pacmanfx.ui.d3.DefaultFactory3D;
+import de.amr.pacmanfx.ui.d3.Factory3D;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -177,7 +179,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
 
     private final ResourceBundle textBundle;
     private final AssetMap assets = new AssetMap();
-    private final ArcadePacMan_Factory3D factory3D = new ArcadePacMan_Factory3D();
+    private final Factory3D factory3D = new DefaultFactory3D();
     private GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
@@ -216,7 +218,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public ArcadePacMan_Factory3D factory3D() {
+    public Factory3D factory3D() {
         return factory3D;
     }
 

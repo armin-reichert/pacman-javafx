@@ -5,7 +5,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Factory3D;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
@@ -16,11 +15,13 @@ import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.d3.DefaultFactory3D;
+import de.amr.pacmanfx.ui.d3.Factory3D;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -47,7 +48,7 @@ public final class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManage
 
     private final ResourceBundle textBundle;
     private final AssetMap assets = new AssetMap();
-    private final ArcadePacMan_Factory3D factory3D = new ArcadePacMan_Factory3D();
+    private final Factory3D factory3D = new DefaultFactory3D();
 
     private GameSceneConfig gameSceneConfig;
     private GameSoundEffects sfx;
@@ -110,7 +111,7 @@ public final class PacManXXL_PacMan_UIConfig implements UIConfig, ResourceManage
     }
 
     @Override
-    public ArcadePacMan_Factory3D factory3D() {
+    public Factory3D factory3D() {
         return factory3D;
     }
 
