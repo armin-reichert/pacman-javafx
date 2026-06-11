@@ -24,5 +24,5 @@ public record GameUI(
     SubViewManager subViews,
     UISettings settings,
     UISettings3D settings3D,
-    GameUIExtensions extensions
+    GameUI_Extensions extensions
 ) {}
