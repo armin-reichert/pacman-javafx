@@ -67,8 +67,6 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void stop() {
-        if (game != null) {
-            game.terminate();
-        }
+        game.terminate();
     }
 }
