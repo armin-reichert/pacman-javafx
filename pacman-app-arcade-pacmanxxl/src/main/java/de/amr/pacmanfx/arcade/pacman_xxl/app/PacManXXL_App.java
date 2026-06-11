@@ -30,8 +30,8 @@ public class PacManXXL_App extends Application {
 
     @Override
     public void init() {
-        machine.insertCartridge(GameVariantID.ARCADE_PACMAN_XXL.name(),    PacManXXL_PacMan_Cartridge.CARTRIDGE);
-        machine.insertCartridge(GameVariantID.ARCADE_MS_PACMAN_XXL.name(), PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
+        machine.insertCartridge(PacManXXL_PacMan_Cartridge.CARTRIDGE);
+        machine.insertCartridge(PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override

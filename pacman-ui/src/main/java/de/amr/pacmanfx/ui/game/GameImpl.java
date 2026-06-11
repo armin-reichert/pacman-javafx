@@ -126,7 +126,7 @@ public final class GameImpl implements Game {
     }
 
     private GameVariant createGameVariant(String variantName) {
-        final Cartridge cartridge = machine.cartridgeForVariant(variantName);
+        final Cartridge cartridge = machine.cartridgeByName(variantName);
         final var gameVariant = new GameVariant(cartridge);
 
         //TODO make configurable again if tests should be available
@@ -160,7 +160,7 @@ public final class GameImpl implements Game {
     @Override
     public void selectGameVariant(String variantName) {
         requireNonNull(variantName);
-        if (machine.isCartridgeForVariantRegistered(variantName)) {
+        if (machine.containsCartridgeWithName(variantName)) {
             gameVariantName.set(variantName);
         }
         else {

@@ -7,8 +7,9 @@ package de.amr.pacmanfx.ui.game;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -20,7 +21,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManGamesMachine {
 
-    private final Map<String, Cartridge> cartridges = new HashMap<>();
+    private final Set<Cartridge> cartridges = new HashSet<>();
 
     public PacManGamesMachine() {
         final boolean ok = validateUserDirs();
@@ -30,39 +31,43 @@ public class PacManGamesMachine {
     }
 
     /**
-     * @param variantName game variant name (e.g. "PACMAN", "MS_PACMAN", "MS_PACMAN_TENGEN", "PACMAN_XXL", "MS_PACMAN_XXL")
      * @param cartridge the game specification implementing the game variant
      */
-    public void insertCartridge(String variantName, Cartridge cartridge) {
-        requireNonNull(variantName);
+    public void insertCartridge(Cartridge cartridge) {
         requireNonNull(cartridge);
 
-        if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(variantName).matches()) {
+        if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(cartridge.name()).matches()) {
             throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
-                .formatted(variantName, GameConstants.GAME_VARIANT_NAME_PATTERN));
+                .formatted(cartridge.name(), GameConstants.GAME_VARIANT_NAME_PATTERN));
         }
 
-        final Cartridge prevCartridge = cartridges.putIfAbsent(variantName, cartridge);
-        if (prevCartridge != null) {
-            Logger.warn("Cartridge already registered for variant {}", variantName);
+        final boolean added = cartridges.add(cartridge);
+        if (added) {
+            Logger.info("Cartridge {} inserted into machine", cartridge.name());
         }
-
-        Logger.info("Cartridge registered for variant {}", variantName);
+        else {
+            Logger.info("Cartridge {} already inserted", cartridge.name());
+        }
     }
 
-    public Cartridge cartridgeForVariant(String variantName) {
-        requireNonNull(variantName);
-        if (cartridges.containsKey(variantName)) {
-            return cartridges.get(variantName);
-        }
-        final String errorMessage = "No cartridge registered for game variant %s!".formatted(variantName);
-        Logger.error(errorMessage);
-        throw new IllegalArgumentException(errorMessage);
+    public Cartridge cartridgeByName(String name) {
+        requireNonNull(name);
+        return findCartridgeByName(name).orElseThrow(
+            () -> {
+                final String errorMessage = "No cartridge for game variant %s has been inserted!".formatted(name);
+                Logger.error(errorMessage);
+                return new IllegalArgumentException(errorMessage);
+            }
+        );
     }
 
-    public boolean isCartridgeForVariantRegistered(String variantName) {
-        requireNonNull(variantName);
-        return cartridges.containsKey(variantName);
+    public boolean containsCartridgeWithName(String name) {
+        requireNonNull(name);
+        return findCartridgeByName(name).isPresent();
+    }
+
+    private Optional<Cartridge> findCartridgeByName(String name) {
+        return cartridges.stream().filter(cartridge -> cartridge.name().equals(name)).findFirst();
     }
 
     // other stuff

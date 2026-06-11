@@ -36,7 +36,7 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void init() {
-        machine.insertCartridge(GameVariantID.ARCADE_PACMAN.name(), ArcadePacMan_Cartridge.CARTRIDGE);
+        machine.insertCartridge(ArcadePacMan_Cartridge.CARTRIDGE);
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
     }
 
