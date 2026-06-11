@@ -62,6 +62,7 @@ public class GameViewImpl implements GameView {
             throw new IllegalStateException("No stage assigned to game view");
         }
         theStage.setScene(mainScene);
+
         theStage.titleProperty().bind(stageTitleBindingProperty());
 
         updateStageIcon(game);
@@ -70,6 +71,7 @@ public class GameViewImpl implements GameView {
         theStage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
         theStage.setMinHeight(GameUI_Constants.MIN_STAGE_HEIGHT);
         theStage.centerOnScreen();
+
         theStage.show();
     }
 

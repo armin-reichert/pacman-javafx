@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.arcade.ms_pacman.app;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;

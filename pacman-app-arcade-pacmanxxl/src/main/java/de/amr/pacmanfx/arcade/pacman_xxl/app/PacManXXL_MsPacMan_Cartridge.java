@@ -1,6 +1,9 @@
-package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
+package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameRules;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_UIConfig;
 import de.amr.pacmanfx.ui.game.Cartridge;
 
 public class PacManXXL_MsPacMan_Cartridge {

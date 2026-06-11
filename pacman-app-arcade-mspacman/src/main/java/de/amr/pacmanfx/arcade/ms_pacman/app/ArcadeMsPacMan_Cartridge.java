@@ -1,5 +1,6 @@
-package de.amr.pacmanfx.arcade.ms_pacman;
+package de.amr.pacmanfx.arcade.ms_pacman.app;
 
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
