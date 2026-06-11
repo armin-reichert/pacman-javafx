@@ -19,40 +19,48 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
         ANIM_BIG_PAC_MAN,
     }
 
-    private final SpriteAnimationSet animationSet;
+    private final SpriteAnimationSet container;
 
-    public ArcadePacMan_PacAnimations(SpriteAnimationSet animationSet, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_PacAnimations(SpriteAnimationSet container, ArcadePacMan_SpriteSheet spriteSheet) {
         super(spriteSheet);
-        this.animationSet = requireNonNull(animationSet);
+        this.container = requireNonNull(container);
+    }
+
+    @Override
+    public SpriteAnimationSet container() {
+        return container;
     }
 
     @Override
     protected SpriteAnimation createAnimation(Named animationID) {
-        return switch (animationID) {
+        final SpriteAnimation animation = switch (animationID) {
             case ArcadePacMan_AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))
                 .initiallyStopped()
-                .build(animationSet);
+                .build();
 
             // Renderer draws sprites depending on Pac-Man move direction!
             case ArcadePacMan_AnimationID.PAC_MUNCHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().pacMunchingSprites(Direction.LEFT))
                 .repeated()
-                .build(animationSet);
+                .build();
 
             case ArcadePacMan_AnimationID.PAC_DYING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_DYING))
                 .frameTicks(8)
-                .build(animationSet);
+                .build();
 
             case AnimationID.ANIM_BIG_PAC_MAN -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_BIG))
                 .frameTicks(3)
                 .repeated()
-                .build(animationSet);
+                .build();
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };
+
+        animation.setContainer(container);
+        return animation;
     }
 
     @Override

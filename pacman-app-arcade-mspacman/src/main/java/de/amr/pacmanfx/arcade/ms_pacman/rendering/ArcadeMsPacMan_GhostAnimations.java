@@ -17,47 +17,56 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationSet animationSet;
+    private final SpriteAnimationSet container;
     private final byte personality;
 
-    public ArcadeMsPacMan_GhostAnimations(SpriteAnimationSet animationSet, byte personality) {
+    public ArcadeMsPacMan_GhostAnimations(SpriteAnimationSet container, byte personality) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
-        this.animationSet = requireNonNull(animationSet);
+
+        this.container = requireNonNull(container);
         this.personality = requireValidGhostPersonality(personality);
     }
 
     @Override
+    public SpriteAnimationSet container() {
+        return container;
+    }
+
+    @Override
     protected SpriteAnimation createAnimation(Named animationID) {
-        return switch (animationID) {
+        final SpriteAnimation animation = switch (animationID) {
             case ArcadePacMan_AnimationID.GHOST_NORMAL -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().ghostNormalSprites(personality, Direction.LEFT))
                 .frameTicks(8)
                 .repeated()
-                .build(animationSet);
+                .build();
 
             case ArcadePacMan_AnimationID.GHOST_FRIGHTENED -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(GHOST_FRIGHTENED))
                 .frameTicks(8)
                 .repeated()
-                .build(animationSet);
+                .build();
 
             case ArcadePacMan_AnimationID.GHOST_FLASHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(GHOST_FLASHING))
                 .frameTicks(7)
                 .repeated()
-                .build(animationSet);
+                .build();
 
             case ArcadePacMan_AnimationID.GHOST_EYES -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet().ghostEyesSprite(Direction.LEFT))
-                .build(animationSet);
+                .build();
 
             case ArcadePacMan_AnimationID.GHOST_POINTS -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().sprites(GHOST_NUMBERS))
                 .initiallyStopped()
-                .build(animationSet);
+                .build();
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };
+
+        animation.setContainer(container);
+        return animation;
     }
 
     @Override

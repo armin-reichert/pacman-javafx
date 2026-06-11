@@ -17,21 +17,28 @@ public class Stork extends Actor {
 
     public static class StorkAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationSet animationSet;
+        private final SpriteAnimationSet container;
 
-        public StorkAnimations(SpriteAnimationSet animationSet) {
+        public StorkAnimations(SpriteAnimationSet container) {
             super(ArcadeMsPacMan_SpriteSheet.instance());
-            this.animationSet = animationSet;
+            this.container = container;
+        }
+
+        @Override
+        public SpriteAnimationSet container() {
+            return container;
         }
 
         @Override
         protected SpriteAnimation createAnimation(Named animationID) {
             if (animationID.equals(ArcadeMsPacMan_AnimationID.STORK_FLYING)) {
-                return SpriteAnimationBuilder.builder()
+                final SpriteAnimation animation = SpriteAnimationBuilder.builder()
                     .sprites(spriteSheet.sprites(SpriteID.STORK))
                     .frameTicks(8)
                     .repeated()
-                    .build(animationSet);
+                    .build();
+                animation.setContainer(container);
+                return animation;
             }
             throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         }

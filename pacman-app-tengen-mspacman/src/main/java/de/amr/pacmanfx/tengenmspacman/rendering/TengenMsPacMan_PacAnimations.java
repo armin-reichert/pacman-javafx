@@ -19,76 +19,84 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationSet animationSet;
+    private final SpriteAnimationSet container;
 
-    public TengenMsPacMan_PacAnimations(SpriteAnimationSet animationSet) {
+    public TengenMsPacMan_PacAnimations(SpriteAnimationSet container) {
         super(TengenMsPacMan_SpriteSheet.instance());
-        this.animationSet = requireNonNull(animationSet);
+        this.container = requireNonNull(container);
+    }
+
+    @Override
+    public SpriteAnimationSet container() {
+        return container;
     }
 
     @Override
     protected SpriteAnimation createAnimation(Named animationID) {
-        return switch (animationID) {
+        final SpriteAnimation animation = switch (animationID) {
             case ArcadePacMan_AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.MS_PAC_FULL))
-                .build(animationSet);
+                .build();
 
             case ArcadePacMan_AnimationID.PAC_DYING -> SpriteAnimationBuilder.builder()
                 .sprites(pacDyingSprites(spriteSheet))
                 .frameTicks(8)
-                .build(animationSet);
+                .build();
 
             case ArcadePacMan_AnimationID.PAC_MUNCHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.MS_PAC_MUNCHING))
                 .repeated()
-                .build(animationSet);
+                .build();
 
             case MS_PAC_MAN_BOOSTER -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.MS_PAC_MUNCHING_BOOSTER))
                 .repeated()
-                .build(animationSet);
+                .build();
 
             case MS_PAC_MAN_WAVING_HAND -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.MS_PAC_WAVING_HAND))
                 .frameTicks(8)
                 .repeated()
-                .build(animationSet);
+                .build();
 
             case MS_PAC_MAN_TURNING_AWAY -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.MS_PAC_TURNING_AWAY))
                 .frameTicks(15)
-                .build(animationSet);
+                .build();
 
             case MR_PAC_MAN_MUNCHING -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.MR_PAC_MUNCHING))
                 .frameTicks(2)
                 .repeated()
-                .build(animationSet);
+                .build();
 
             case ANIM_PAC_MAN_BOOSTER -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.MR_PAC_MUNCHING_BOOSTER))
                 .frameTicks(2)
                 .repeated()
-                .build(animationSet);
+                .build();
 
             case MR_PAC_MAN_WAVING_HAND -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.MR_PAC_WAVING_HAND))
                 .frameTicks(8)
                 .repeated()
-                .build(animationSet);
+                .build();
 
             case MR_PAC_MAN_TURNING_AWAY -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet.sprites(SpriteID.MR_PAC_TURNING_AWAY))
                 .frameTicks(15)
-                .build(animationSet);
+                .build();
 
             case ANIM_JUNIOR -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC))
                 .initiallyStopped()
-                .build(animationSet);
+                .build();
 
             default -> throw new IllegalArgumentException("Illegal animation ID " + animationID);
         };
+
+        animation.setContainer(container);
+        return animation;
     }
 
     @Override

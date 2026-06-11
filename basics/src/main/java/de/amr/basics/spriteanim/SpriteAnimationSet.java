@@ -52,7 +52,7 @@ public class SpriteAnimationSet {
 
         // Now safe to iterate
         for (SpriteAnimation animation : active) {
-            animation.update(now);
+            animation.update(this, now);
         }
     }
 

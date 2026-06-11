@@ -17,35 +17,43 @@ public class Bag extends Actor {
 
     public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationSet animationSet;
+        private final SpriteAnimationSet container;
 
-        public BagAnimations(SpriteAnimationSet animationSet) {
+        public BagAnimations(SpriteAnimationSet container) {
             super(TengenMsPacMan_SpriteSheet.instance());
-            this.animationSet = animationSet;
+            this.container = container;
+        }
+
+        @Override
+        public SpriteAnimationSet container() {
+            return container;
         }
 
         @Override
         protected SpriteAnimation createAnimation(Named animationID) {
-            return switch (animationID) {
+            final SpriteAnimation animation = switch (animationID) {
                 case ArcadeMsPacMan_AnimationID.BAG -> SpriteAnimationBuilder.builder()
                     .singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG))
                     .initiallyStopped()
-                    .build(animationSet);
+                    .build();
 
                 case ArcadeMsPacMan_AnimationID.JUNIOR -> SpriteAnimationBuilder.builder()
                     .singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC))
                     .initiallyStopped()
-                    .build(animationSet);
+                    .build();
 
                 default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
             };
+
+            animation.setContainer(container);
+            return animation;
         }
     }
 
     private boolean open;
 
-    public Bag(SpriteAnimationSet animationSet) {
-        setAnimations(new BagAnimations(animationSet));
+    public Bag(SpriteAnimationSet container) {
+        setAnimations(new BagAnimations(container));
         setOpen(false);
     }
 

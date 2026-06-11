@@ -195,8 +195,8 @@ public class Actor {
 
     protected SpriteAnimationAccessor animations = SpriteAnimationAccessor.emptyAnimation();
 
-    public void setAnimations(SpriteAnimationAccessor animationManager) {
-        this.animations = animationManager;
+    public void setAnimations(SpriteAnimationAccessor animations) {
+        this.animations = animations;
     }
 
     public SpriteAnimationAccessor animations() {

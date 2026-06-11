@@ -5,6 +5,8 @@ package de.amr.basics.spriteanim;
 
 import de.amr.basics.math.RectShort;
 
+import java.util.Objects;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -12,9 +14,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class SpriteAnimation {
 
-    private final SpriteAnimationSet animationSet;
+    public static final int FRAME_RATE = 60;
 
-    private final int fps;
+    private SpriteAnimationSet container;
+
     private RectShort[] sprites;
     private int currentFrameIndex;
     private boolean loop;
@@ -22,12 +25,7 @@ public class SpriteAnimation {
     private long lastUpdateTime;
     private long frameDuration;
 
-    public SpriteAnimation(SpriteAnimationSet animationSet, int fps) {
-        this.animationSet = requireNonNull(animationSet);
-        if (fps <= 0) {
-            throw new IllegalArgumentException("Illegal FPS value: %d".formatted(fps));
-        }
-        this.fps = fps;
+    public SpriteAnimation() {
         sprites = new RectShort[0];
         currentFrameIndex = 0;
         loop = false;
@@ -36,7 +34,11 @@ public class SpriteAnimation {
         setFrameTicks(1);
     }
 
-    public void update(long now) {
+    public void setContainer(SpriteAnimationSet container) {
+        this.container = Objects.requireNonNull(container);
+    }
+
+    public void update(SpriteAnimationSet container, long now) {
         if (!running) {
             return;
         }
@@ -48,14 +50,18 @@ public class SpriteAnimation {
 
     public void start() {
         if (!running) {
-            animationSet.register(this);
+            if (container != null) {
+                container.register(this);
+            }
             running = true;
             lastUpdateTime = now();
         }
     }
 
     public void stop() {
-        animationSet.unregister(this);
+        if (container != null) {
+            container.unregister(this);
+        }
         running = false;
     }
 
@@ -63,6 +69,18 @@ public class SpriteAnimation {
         stop();
         currentFrameIndex = 0;
         lastUpdateTime = now();
+    }
+
+    public void advanceFrame() {
+        if (currentFrameIndex == sprites.length - 1) {
+            if (loop) {
+                currentFrameIndex = 0;
+            } else {
+                stop();
+            }
+        } else {
+            ++currentFrameIndex;
+        }
     }
 
     public void setSprites(RectShort[] sprites) {
@@ -79,7 +97,7 @@ public class SpriteAnimation {
         if (numTicks <= 0) {
             throw new IllegalArgumentException("Frame ticks must be a positive number, but you gave me " + numTicks);
         }
-        frameDuration = 1_000_000_000L / fps * numTicks;
+        frameDuration = 1_000_000_000L / FRAME_RATE * numTicks;
     }
 
     public void setLoop(boolean loop) {
@@ -96,18 +114,6 @@ public class SpriteAnimation {
     public int currentFrame() { return currentFrameIndex; }
 
     public RectShort currentSprite() { return sprites[currentFrameIndex]; }
-
-    public void advanceFrame() {
-        if (currentFrameIndex == sprites.length - 1) {
-            if (loop) {
-                currentFrameIndex = 0;
-            } else {
-                stop();
-            }
-        } else {
-            ++currentFrameIndex;
-        }
-    }
 
     private boolean isValidFrame(int index) { return 0 <= index && index < sprites.length; }
 

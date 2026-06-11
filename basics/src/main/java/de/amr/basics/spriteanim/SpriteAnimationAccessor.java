@@ -24,6 +24,8 @@ public interface SpriteAnimationAccessor {
         return new SingleSpriteAnimationAccessor(sprite);
     }
 
+    SpriteAnimationSet container();
+
     Object animation(Named animationID);
 
     Named selectedAnimationID();
@@ -42,13 +44,16 @@ public interface SpriteAnimationAccessor {
         setAnimationFrame(animationID, frameIndex);
     }
 
+    RectShort currentSprite();
+
+    int currentFrame();
+
+    // playing
+
     void playSelected();
 
     void stopSelected();
 
     void resetSelected();
 
-    RectShort currentSprite();
-
-    int currentFrame();
 }

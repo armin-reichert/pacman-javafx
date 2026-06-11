@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -67,14 +68,21 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void onActivate() {
+        final UIConfig uiConfig = game().currentUIConfig();
         final SpriteAnimationSet spriteAnimationSet = game().ui().sprites().animationSet();
+        final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
+
         pacMan = createPacMan();
-        pacMan.setAnimations(game().currentUIConfig().createPacAnimations(spriteAnimationSet));
-        blinky = game().currentUIConfig().createAnimatedGhost(spriteAnimationSet, RED_GHOST_SHADOW);
+        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+
+        blinky = uiConfig.createAnimatedGhost(spriteAnimationSet, RED_GHOST_SHADOW);
+
         nailDressAnimation = SpriteAnimationBuilder.builder()
-            .sprites(ArcadePacMan_SpriteSheet.instance().sprites(SpriteID.RED_GHOST_STRETCHED))
+            .sprites(spriteSheet.sprites(SpriteID.RED_GHOST_STRETCHED))
             .initiallyStopped()
-            .build(spriteAnimationSet);
+            .build();
+        nailDressAnimation.setContainer(spriteAnimationSet);
+
         sceneTick = -1;
     }
 
