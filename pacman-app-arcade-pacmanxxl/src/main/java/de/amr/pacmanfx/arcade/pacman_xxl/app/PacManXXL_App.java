@@ -56,13 +56,6 @@ public class PacManXXL_App extends Application {
             CommonDashboardID.ABOUT
         ), game.ui().translations());
 
-        playView.dashboard().findSection(CommonDashboardID.CUSTOM_MAPS).ifPresent(section -> {
-            if (section instanceof DashboardSectionCustomMaps sectionCustomMaps) {
-                sectionCustomMaps.setCustomDirWatchDog(game.watchdog());
-                sectionCustomMaps.setMapEditFunction(mapFile -> CommonActions.createEditMapFileAction(mapFile).execute(game));
-            }
-        });
-
         final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
         game.watchdog().addEventListener(xxlMapSelector);
 

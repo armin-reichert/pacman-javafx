@@ -36,7 +36,7 @@ public class GameBuilder {
         windowConfig = new WindowConfig(mainSceneWidth, mainSceneHeight);
     }
 
-    public GameBuilder gameVariant(GameVariantID gameVariantID, WorldMapSelector mapSelector) {
+    public GameBuilder worldMapSelector(GameVariantID gameVariantID, WorldMapSelector mapSelector) {
         validateGameVariantName(gameVariantID.name());
         gameVariantConfigMap.put(gameVariantID.name(), new GameVariantConfig(mapSelector));
         return this;
@@ -55,14 +55,6 @@ public class GameBuilder {
 
         final var game = new GameImpl(machine, new GameViewImpl(windowConfig.sceneWidth(), windowConfig.sceneHeight()));
 
-        //TODO Find better solution
-        gameVariantConfigMap.forEach((variantName, config) -> {
-            // Use explicitly specified map selector (e.g. for XXL game variants)
-            if (config.mapSelector() != null) {
-                game.gameVariant(variantName).gameModel().setMapSelector(config.mapSelector());
-            }
-        });
-
         final StartPagesView startPagesView = game.ui().subViews().startView();
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();
@@ -70,16 +62,21 @@ public class GameBuilder {
                 startPagesView.addStartPage(page);
             }
             else {
-                error("Start page could not be created");
+                error("Start page could not be created using factory: " + factory);
             }
         }
+
+        //TODO Find better solution for shared world map selector
+        gameVariantConfigMap.forEach((variantName, config) -> {
+            if (config.mapSelector() != null) {
+                game.gameVariant(variantName).gameModel().setMapSelector(config.mapSelector());
+            }
+        });
+
         return game;
     }
 
     private void validateConfigurationData() {
-        if (gameVariantConfigMap.isEmpty()) {
-            error("No game configuration specified");
-        }
         if (windowConfig.sceneWidth() <= 0) {
             error("Main scene width must be a positive number");
         }

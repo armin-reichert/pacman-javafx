@@ -41,21 +41,20 @@ public class ArcadePacMan_App extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        final Vector2i size = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+    public void start(Stage stage) {
+        final Vector2i sceneSize = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+
         if (useBuilder) {
-            game = new GameBuilder(machine, size.x(), size.y())
+            game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
                 .startPage(ArcadePacMan_StartPage::new)
                 .build();
         }
         else {
-            game = new GameImpl(machine, new GameViewImpl(size.x(), size.y()));
-            final var startPage = new ArcadePacMan_StartPage();
-            game.ui().subViews().startView().addStartPage(startPage);
-            game.ui().subViews().startView().setSelectedIndex(0);
+            game = new GameImpl(machine, new GameViewImpl(sceneSize.x(), sceneSize.y()));
+            game.ui().subViews().startView().addStartPage(new ArcadePacMan_StartPage());
         }
         game.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, game.ui().translations());
-        game.show(GameVariantID.ARCADE_PACMAN, primaryStage);
+        game.show(GameVariantID.ARCADE_PACMAN, stage);
     }
 
     @Override

@@ -100,8 +100,8 @@ public class PacManGames3dApp extends Application {
         try {
             if (useBuilder) {
                 game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
-                    .gameVariant(ARCADE_PACMAN_XXL, xxlMapSelector)
-                    .gameVariant(ARCADE_MS_PACMAN_XXL, xxlMapSelector)
+                    .worldMapSelector(ARCADE_PACMAN_XXL, xxlMapSelector)
+                    .worldMapSelector(ARCADE_MS_PACMAN_XXL, xxlMapSelector)
                     .startPage(ArcadePacMan_StartPage::new)
                     .startPage(ArcadeMsPacMan_StartPage::new)
                     .startPage(TengenMsPacMan_StartPage::new)
