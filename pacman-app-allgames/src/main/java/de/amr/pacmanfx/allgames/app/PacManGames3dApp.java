@@ -5,26 +5,27 @@
 package de.amr.pacmanfx.allgames.app;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.arcade.ms_pacman.app.ArcadeMsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
-import de.amr.pacmanfx.arcade.pacman.app.ArcadePacMan_Cartridge;
+import de.amr.pacmanfx.arcade.ms_pacman.app.ArcadeMsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
-import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
-import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
+import de.amr.pacmanfx.arcade.pacman.app.ArcadePacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.app.PacManXXL_MsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.app.PacManXXL_PacMan_Cartridge;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.tengenmspacman.*;
+import de.amr.pacmanfx.tengenmspacman.DashboardSectionJoypad;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_DashboardID;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
-import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.GameImpl;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
-import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImpl;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -159,15 +160,5 @@ public class PacManGames3dApp extends Application {
             new DashboardSectionJoypad(dashboard),
             game.gameVariant(TENGEN_MS_PACMAN.name()).uiConfig().translate("infobox.joypad.title"),
             false);
-
-        // Configure custom map section table
-        dashboard.findSection(CommonDashboardID.CUSTOM_MAPS)
-            .filter(DashboardSectionCustomMaps.class::isInstance)
-            .map(DashboardSectionCustomMaps.class::cast)
-            .ifPresent(section -> {
-                section.setCustomDirWatchDog(game.watchdog());
-                section.setMapEditFunction(mapFile ->
-                    CommonActions.createEditMapFileAction(mapFile).execute(game));
-            });
     }
 }
