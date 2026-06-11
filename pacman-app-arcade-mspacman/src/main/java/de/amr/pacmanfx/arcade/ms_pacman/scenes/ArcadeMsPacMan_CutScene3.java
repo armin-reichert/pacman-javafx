@@ -5,17 +5,19 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
+import org.tinylog.Logger;
+
+import java.util.Optional;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
 
@@ -37,7 +39,11 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     public Bag bag;
     public Clapperboard clapperboard;
 
+    private boolean bagReleased;
     private int numBagBounces;
+
+    private SceneState sceneState;
+    private long sceneTick;
 
     public ArcadeMsPacMan_CutScene3(Game game) {
         super(game);
@@ -46,18 +52,13 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public void onActivate() {
         initScene();
-        setSceneState(SceneState.CLAPPERBOARD, TickTimer.INDEFINITE);
+        sceneTick = 0;
+        sceneState = SceneState.CLAPPERBOARD;
     }
 
     @Override
     public void onTick(long tick) {
-        switch (sceneState) {
-            case SceneState.CLAPPERBOARD -> updateStateClapperboard();
-            case SceneState.DELIVER_JUNIOR -> updateStateDeliverJunior();
-            case SceneState.STORK_LEAVES_SCENE -> updateStateStorkLeavesScene();
-            default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
-        }
-        sceneTimer.doTick();
+        updateSceneState();
     }
 
     private void initScene() {
@@ -82,27 +83,59 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     // Scene controller state machine
 
-    private enum SceneState { CLAPPERBOARD, DELIVER_JUNIOR, STORK_LEAVES_SCENE }
+    private enum SceneState {
+        CLAPPERBOARD        (0),
+        DELIVER_JUNIOR      (180),
+        END                 (540);
 
-    private SceneState sceneState;
-    private final TickTimer sceneTimer = new TickTimer("Timer-MsPacMan_CutScene3");
+        SceneState(int start) {
+            this.start = start;
+        }
 
-    private void setSceneState(SceneState state, long ticks) {
-        sceneState = state;
-        sceneTimer.reset(ticks);
-        sceneTimer.start();
+        public int start() {
+            return start;
+        }
+
+        private final int start;
     }
 
-    private void updateStateClapperboard() {
+    private Optional<SceneState> transition(SceneState state) {
+        return sceneTick == state.start() ? Optional.of(state) : Optional.empty();
+    }
+
+    private void updateSceneState() {
+        switch (sceneState) {
+
+            case CLAPPERBOARD -> transition(SceneState.DELIVER_JUNIOR)
+                .ifPresentOrElse(this::enterDeliverJuniorState, this::updateClapperboardState);
+
+            case DELIVER_JUNIOR -> transition(SceneState.END)
+                .ifPresentOrElse(this::changeState, this::updateDeliverJuniorState);
+
+            case END -> gameState().expire();
+
+            default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
+        }
+        ++sceneTick;
+    }
+
+    // Generic state change
+    private void changeState(SceneState newState) {
+        sceneState = newState;
+    }
+
+    // State CLAPPERBOARD
+
+    private void updateClapperboardState() {
         clapperboard.tick();
-        if (sceneTimer.atSecond(1)) {
+        if (sceneTick == SceneState.CLAPPERBOARD.start() + 60) {
             game().ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
-        } else if (sceneTimer.atSecond(3)) {
-            enterStateDeliverJunior();
         }
     }
 
-    private void enterStateDeliverJunior() {
+    // State DELIVER_JUNIOR
+
+    private void enterDeliverJuniorState(SceneState newState) {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * 3, GROUND_Y - 4);
         pacMan.animations().select(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
@@ -126,39 +159,37 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         bag.setAcceleration(0, 0);
         bag.show();
         bag.setOpen(false);
+
+        bagReleased = false;
         numBagBounces = 0;
 
-        setSceneState(SceneState.DELIVER_JUNIOR, TickTimer.INDEFINITE);
+        sceneState = newState;
     }
 
-    private void updateStateDeliverJunior() {
-        stork.move();
-        bag.move();
-
-        // release bag from storks beak?
-        if (stork.computeTile().x() == 20) {
-            bag.setAcceleration(0, 0.04f); // gravity
-            stork.setVelocity(-1, 0);
+    private void updateDeliverJuniorState() {
+        // release bag from beak when stork reaches tile 20
+        if (stork.x() <= 20 * WorldMap.TS && !bagReleased) {
+            bag.setAcceleration(0, 0.04f); // set y-gravity to let bag fall to ground
+            stork.setVelocity(-1, 0); // fly faster without heavy bag
+            bagReleased = true;
         }
 
-        // (closed) bag reaches ground for first time?
-        if (!bag.isOpen() && bag.y() > GROUND_Y) {
-            ++numBagBounces;
-            if (numBagBounces < 3) {
-                bag.setVelocity(-0.2f, -1f / numBagBounces);
-                bag.setY(GROUND_Y);
-            } else {
-                bag.setOpen(true);
-                bag.setVelocity(0, 0);
-                setSceneState(SceneState.STORK_LEAVES_SCENE, 3 * GameRules.NUM_TICKS_PER_SEC);
+        if (!bag.isOpen()) {
+            bag.move();
+            if (bag.y() >= GROUND_Y) {
+                ++numBagBounces;
+                if (numBagBounces < 3) {
+                    bag.setVelocity(-0.2f, -1.0f / numBagBounces); // add upwards velocity to bounce
+                    bag.setY(GROUND_Y);
+                } else {
+                    bag.setOpen(true);
+                    bag.setY(GROUND_Y);
+                    bag.setVelocity(0, 0);
+                    bag.setAcceleration(0, 0);
+                    Logger.info("Delivery of Junior at tick {}", sceneTick);            }
             }
         }
-    }
 
-    private void updateStateStorkLeavesScene() {
         stork.move();
-        if (sceneTimer.hasExpired()) {
-            gameState().expire();
-        }
     }
 }
