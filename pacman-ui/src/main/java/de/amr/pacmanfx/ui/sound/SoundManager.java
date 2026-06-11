@@ -22,11 +22,17 @@ import static java.util.Objects.requireNonNull;
 
 public class SoundManager implements Disposable {
 
+    public sealed interface SoundResource permits AudioClipResource, MediaPlayerResource {}
+
+    public record AudioClipResource(URL url) implements SoundResource {}
+
+    public record MediaPlayerResource(MediaPlayer mediaPlayer) implements SoundResource {}
+
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
 
     private final BooleanProperty muteProperty = new SimpleBooleanProperty(false);
 
-    private final Map<SoundID, Object> soundMap = new HashMap<>();
+    private final Map<SoundID, SoundResource> soundMap = new HashMap<>();
 
     private final Game game;
 
@@ -75,7 +81,8 @@ public class SoundManager implements Disposable {
     public void setAudioClip(SoundID soundID, URL url) {
         requireNonNull(soundID);
         requireNonNull(url);
-        registerSoundURL(soundID, url);
+
+        registerSoundResource(soundID, new AudioClipResource(url));
     }
 
     public void setMediaPlayer(SoundID soundID, URL url) {
@@ -88,8 +95,7 @@ public class SoundManager implements Disposable {
             () -> muteProperty().get() || !enabledProperty().get(),
             muteProperty(), enabledProperty()
         ));
-
-        registerSoundURL(soundID, player);
+        registerSoundResource(soundID, new MediaPlayerResource(player));
     }
 
     public void unregisterSound(SoundID soundID) {
@@ -120,11 +126,11 @@ public class SoundManager implements Disposable {
     public void loop(SoundID soundID) {
         requireNonNull(soundID);
 
-        final Object value = soundMap.get(soundID);
+        final SoundResource value = soundMap.get(soundID);
         if (value == null) {
             return; // ignore missing sound
         }
-        if (value instanceof MediaPlayer mediaPlayer) {
+        if (value instanceof MediaPlayerResource(MediaPlayer mediaPlayer)) {
             mediaPlayer.stop();
             mediaPlayer.seek(Duration.ZERO);
         }
@@ -144,13 +150,13 @@ public class SoundManager implements Disposable {
             Logger.error("Sound '{}' not played (reason: not registered)", soundID);
             return;
         }
-        final Object value = soundMap.get(soundID);
+        final SoundResource value = soundMap.get(soundID);
         switch (value) {
-            case MediaPlayer player -> {
+            case MediaPlayerResource(MediaPlayer player) -> {
                 player.setCycleCount(repetitions);
                 player.play();
             }
-            case URL url -> {
+            case AudioClipResource(URL url) -> {
                 final var clip = new AudioClip(url.toExternalForm());
                 clip.setCycleCount(repetitions);
                 clip.play(1.0); //TODO add volume parameter?
@@ -161,59 +167,53 @@ public class SoundManager implements Disposable {
 
     public boolean isPlaying(SoundID soundID) {
         requireNonNull(soundID);
-        final Object value = soundMap.get(soundID);
-        return value instanceof MediaPlayer player
-            && (player.getStatus() == MediaPlayer.Status.PLAYING);
+        return switch (soundMap.get(soundID)) {
+            case MediaPlayerResource(MediaPlayer player) -> player.getStatus().equals(MediaPlayer.Status.PLAYING);
+            case AudioClipResource(_) -> false;
+        };
     }
 
     public void pause(SoundID soundID) {
         requireNonNull(soundID);
-        final Object value = soundMap.get(soundID);
-        if (value instanceof MediaPlayer player) {
-            player.pause();
-        }
-        else if (value instanceof URL url) {
-            Logger.warn("Audio clip id='{}' url='{}' cannot be paused", soundID, url);
+        switch (soundMap.get(soundID)) {
+            case MediaPlayerResource(MediaPlayer player) -> player.pause();
+            case AudioClipResource(URL url) -> Logger.warn("Audio clip id='{}' url='{}' cannot be paused", soundID, url);
         }
     }
 
     public void stop(SoundID soundID)  {
         requireNonNull(soundID);
-        final Object value = soundMap.get(soundID);
-        if (value instanceof MediaPlayer player) {
-            player.stop();
-        }
-        else if (value instanceof URL url) {
-            Logger.warn("Audio clip id='{}' url='{}' cannot be stopped", soundID, url);
+        switch (soundMap.get(soundID)) {
+            case MediaPlayerResource(MediaPlayer player) -> player.stop();
+            case AudioClipResource(URL url) -> Logger.warn("Audio clip id='{}' url='{}' cannot be stopped", soundID, url);
         }
     }
 
     public void stopAll() {
         soundMap.values().stream()
-            .filter(MediaPlayer.class::isInstance)
-            .map(MediaPlayer.class::cast)
+            .filter(MediaPlayerResource.class::isInstance)
+            .map(MediaPlayerResource.class::cast)
+            .map(MediaPlayerResource::mediaPlayer)
             .forEach(MediaPlayer::stop);
-        Logger.debug("All sounds (media players, siren, voice) stopped");
+        Logger.debug("All media players stopped");
     }
 
     public MediaPlayer mediaPlayer(SoundID soundID) {
         requireNonNull(soundID);
-        if (!soundMap.containsKey(soundID)) {
-            throw new IllegalArgumentException("Unknown sound ID '%s'".formatted(soundID));
-        }
-        if (!(soundMap.get(soundID) instanceof MediaPlayer player)) {
-            throw new IllegalArgumentException("Sound entry with id='%s' is not a media player".formatted(soundID));
-        }
-        return player;
+        return switch (soundMap.get(soundID)) {
+            case MediaPlayerResource(MediaPlayer player) -> player;
+            case AudioClipResource(URL _) -> throw new IllegalArgumentException(
+                "Sound entry with id='%s' is not a media player".formatted(soundID));
+        };
     }
 
     // private
 
-    private void registerSoundURL(SoundID soundID, Object object) {
-        final Object prevValue = soundMap.put(soundID, object);
+    private void registerSoundResource(SoundID soundID, SoundResource defaultValue) {
+        final SoundResource prevValue = soundMap.put(soundID, defaultValue);
         if (prevValue != null) {
-            Logger.warn("Replaced sound id='{}': {} (was: {})", soundID, object);
+            Logger.warn("Replaced sound id='{}': {} (was: {})", soundID, defaultValue);
         }
-        Logger.info("Registered sound id='{}': {}", soundID, object);
+        Logger.info("Registered sound id='{}': {}", soundID, defaultValue);
     }
 }
