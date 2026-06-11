@@ -89,7 +89,7 @@ public class StatusIconBox implements Disposable {
         // "autopilot", "cheated" and "immune" icon visibilities are dynamically bound to current game model's cheat object!
         iconMuted.visibleProperty().bind(game.ui().settings().mutedProperty);
 
-        icon3D   .visibleProperty().bind(game.ui().settings3D().d3EnabledProperty);
+        icon3D.visibleProperty().bind(game.ui().settings3D().view3DEnabledProperty());
     }
 
     public Pane rootPane() {

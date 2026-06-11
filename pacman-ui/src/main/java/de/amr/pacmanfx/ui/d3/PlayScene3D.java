@@ -173,8 +173,9 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     @Override
     public void onActivate() {
-        perspectiveManager.activeIDProperty().bind(game().ui().settings3D().cameraPerspectiveIdProperty);
-        game().ui().settings3D().drawModeProperty.addListener(drawModeChangeListener);
+        final UISettings3D settings3D = game().ui().settings3D();
+        perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIdProperty());
+        settings3D.drawModeProperty().addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
         bindActions();
     }
@@ -182,7 +183,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
     @Override
     public void onDeactivate() {
         perspectiveManager.activeIDProperty().unbind();
-        game().ui().settings3D().drawModeProperty.removeListener(drawModeChangeListener);
+        game().ui().settings3D().drawModeProperty().removeListener(drawModeChangeListener);
         disposeContextMenu();
         actionBindings().dispose();
     }
@@ -260,10 +261,10 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         subScene.setCamera(camera);
 
         final var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(game().ui().settings3D().axesVisibleProperty);
+        coordinateSystem.visibleProperty().bind(game().ui().settings3D().axesVisibleProperty());
 
         ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(game().ui().settings3D().mazeLightColorProperty);
+        ambientLight.colorProperty().bind(game().ui().settings3D().mazeLightColorProperty());
 
         subSceneRoot.getChildren().addAll(level3DParent, coordinateSystem, ambientLight);
     }

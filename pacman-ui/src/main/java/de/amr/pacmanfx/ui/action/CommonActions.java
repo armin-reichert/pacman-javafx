@@ -144,8 +144,8 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            final PerspectiveID nextID = game.ui().settings3D().cameraPerspectiveIdProperty.get().next();
-            game.ui().settings3D().cameraPerspectiveIdProperty.set(nextID);
+            final PerspectiveID nextID = game.ui().settings3D().cameraPerspectiveIdProperty().get().next();
+            game.ui().settings3D().cameraPerspectiveIdProperty().set(nextID);
 
             final TranslationManager translations = game.ui().translations();
             final String msgKey = translations.translate(
@@ -160,8 +160,8 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            final PerspectiveID prevID = game.ui().settings3D().cameraPerspectiveIdProperty.get().prev();
-            game.ui().settings3D().cameraPerspectiveIdProperty.set(prevID);
+            final PerspectiveID prevID = game.ui().settings3D().cameraPerspectiveIdProperty().get().prev();
+            game.ui().settings3D().cameraPerspectiveIdProperty().set(prevID);
 
             final TranslationManager translations = game.ui().translations();
             final String msgKey = translations.translate(
@@ -356,7 +356,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            Ufx.toggleProperty(game.ui().settings3D().drawModeProperty, DrawMode.LINE, DrawMode.FILL);
+            Ufx.toggleProperty(game.ui().settings3D().drawModeProperty(), DrawMode.LINE, DrawMode.FILL);
         }
     };
 
@@ -413,8 +413,8 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            toggleBooleanProperty(game.ui().settings3D().d3EnabledProperty);
-            final boolean is3DEnabled = game.ui().settings3D().d3EnabledProperty.get();
+            toggleBooleanProperty(game.ui().settings3D().view3DEnabledProperty());
+            final boolean is3DEnabled = game.ui().settings3D().view3DEnabledProperty().get();
             if (!inPlayScene(game)) {
                 game.shortMessage(game.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
             }

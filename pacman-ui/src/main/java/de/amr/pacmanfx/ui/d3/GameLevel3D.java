@@ -287,15 +287,15 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         entitySet.maze3D = uiConfig.factory3D().createMaze3D(
-            globals3D.drawModeProperty,
+            globals3D.drawModeProperty(),
             terrain,
             uiConfig.worldConfig(),
             colorScheme,
             animationRegistry);
 
-        entitySet.maze3D.wallOpacityProperty()   .bind(globals3D.mazeWallOpacityProperty);
-        entitySet.maze3D.wallBaseHeightProperty().bind(globals3D.mazeWallHeightProperty);
-        entitySet.maze3D.floorColorProperty()    .bind(globals3D.mazeFloorColorProperty);
+        entitySet.maze3D.wallOpacityProperty()   .bind(globals3D.mazeWallOpacityProperty());
+        entitySet.maze3D.wallBaseHeightProperty().bind(globals3D.mazeWallHeightProperty());
+        entitySet.maze3D.floorColorProperty()    .bind(globals3D.mazeFloorColorProperty());
 
         entitySet.add(entitySet.maze3D);
     }
