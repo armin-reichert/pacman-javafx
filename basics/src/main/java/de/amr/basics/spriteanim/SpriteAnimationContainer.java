@@ -11,17 +11,16 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public class SpriteAnimationSet {
+public class SpriteAnimationContainer {
 
     private final Set<SpriteAnimation> active = new HashSet<>();
     private final Set<SpriteAnimation> pendingAdd = new HashSet<>();
     private final Set<SpriteAnimation> pendingRemove = new HashSet<>();
     private boolean clearRequest;
 
-    public SpriteAnimationSet() {}
+    public SpriteAnimationContainer() {}
 
-    public void updateAnimations(long now) {
-
+    public Iterable<SpriteAnimation> activeAnimations() {
         if (clearRequest) {
             active.clear();
             pendingAdd.clear();
@@ -50,18 +49,15 @@ public class SpriteAnimationSet {
             }
         }
 
-        // Now safe to iterate
-        for (SpriteAnimation animation : active) {
-            animation.update(this, now);
-        }
+        return active;
     }
 
-    public void register(SpriteAnimation animation) {
+    public void add(SpriteAnimation animation) {
         requireNonNull(animation);
         pendingAdd.add(animation);
     }
 
-    public void unregister(SpriteAnimation animation) {
+    public void remove(SpriteAnimation animation) {
         requireNonNull(animation);
         pendingRemove.add(animation);
     }

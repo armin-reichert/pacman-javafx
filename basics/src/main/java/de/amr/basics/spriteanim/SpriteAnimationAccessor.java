@@ -24,7 +24,7 @@ public interface SpriteAnimationAccessor {
         return new SingleSpriteAnimationAccessor(sprite);
     }
 
-    SpriteAnimationSet container();
+    SpriteAnimationContainer container();
 
     Object animation(Named animationID);
 

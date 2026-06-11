@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
@@ -68,7 +68,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     @Override
     public void onActivate() {
         final UIConfig uiConfig = game().currentUIConfig();
-        final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
+        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         clapperboard = new Clapperboard(4, "THE END");
         clapperboard.setPosition(TS(3), TS(10));
@@ -174,7 +174,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.setPosition((float) randomX, unscaledHeight() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(uiConfig.createPacAnimations(game().ui().sprites().animationSet()));
+        junior.setAnimations(uiConfig.createPacAnimations(game().ui().sprites().animations()));
         junior.animations().select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);

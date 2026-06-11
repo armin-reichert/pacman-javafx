@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.Named;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
@@ -17,10 +17,10 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationSet container;
+    private final SpriteAnimationContainer container;
     private final byte personality;
 
-    public ArcadeMsPacMan_GhostAnimations(SpriteAnimationSet container, byte personality) {
+    public ArcadeMsPacMan_GhostAnimations(SpriteAnimationContainer container, byte personality) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
 
         this.container = requireNonNull(container);
@@ -28,7 +28,7 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     }
 
     @Override
-    public SpriteAnimationSet container() {
+    public SpriteAnimationContainer container() {
         return container;
     }
 

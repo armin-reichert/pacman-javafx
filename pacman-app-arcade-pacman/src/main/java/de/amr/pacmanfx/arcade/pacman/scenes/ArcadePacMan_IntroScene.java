@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
@@ -110,7 +110,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private void initScene() {
         final UIConfig uiConfig = game().currentUIConfig();
-        final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
+        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         blinking = new Pulse(10, Pulse.State.ON);
 

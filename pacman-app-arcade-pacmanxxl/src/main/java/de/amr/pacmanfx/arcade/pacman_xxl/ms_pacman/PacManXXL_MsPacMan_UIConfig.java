@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_Factory3D;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
@@ -236,7 +236,7 @@ public final class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceMana
     }
 
     @Override
-    public Ghost createAnimatedGhost(SpriteAnimationSet animationSet, byte personality) {
+    public Ghost createAnimatedGhost(SpriteAnimationContainer animationSet, byte personality) {
         final Ghost ghost = ArcadeMsPacMan_GameModel.createGhost(personality);
         ghost.setAnimations(createGhostAnimations(animationSet, personality));
         ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
@@ -244,12 +244,12 @@ public final class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceMana
     }
 
     @Override
-    public SpriteAnimationMap<SpriteID> createGhostAnimations(SpriteAnimationSet animationSet, byte personality) {
+    public SpriteAnimationMap<SpriteID> createGhostAnimations(SpriteAnimationContainer animationSet, byte personality) {
         return new ArcadeMsPacMan_GhostAnimations(animationSet, personality);
     }
 
     @Override
-    public SpriteAnimationMap<SpriteID> createPacAnimations(SpriteAnimationSet animationSet) {
+    public SpriteAnimationMap<SpriteID> createPacAnimations(SpriteAnimationContainer animationSet) {
         return new ArcadeMsPacMan_PacAnimations(animationSet);
     }
 

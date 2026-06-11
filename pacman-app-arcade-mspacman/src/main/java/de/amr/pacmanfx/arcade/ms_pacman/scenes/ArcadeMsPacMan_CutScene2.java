@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private void initScene() {
         final UIConfig uiConfig = game().currentUIConfig();
-        final SpriteAnimationSet spriteAnimations = game().ui().sprites().animationSet();
+        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
         pacMan = ArcadePacMan_GameModel.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
         msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();

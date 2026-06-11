@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.basics.Named;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
@@ -19,15 +19,15 @@ public class Stork extends Actor {
 
     private static class StorkAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationSet container;
+        private final SpriteAnimationContainer container;
 
-        public StorkAnimations(SpriteAnimationSet container) {
+        public StorkAnimations(SpriteAnimationContainer container) {
             super(TengenMsPacMan_SpriteSheet.instance());
             this.container = container;
         }
 
         @Override
-        public SpriteAnimationSet container() {
+        public SpriteAnimationContainer container() {
             return container;
         }
 
@@ -48,7 +48,7 @@ public class Stork extends Actor {
 
     private boolean bagReleasedFromBeak;
 
-    public Stork(SpriteAnimationSet container) {
+    public Stork(SpriteAnimationContainer container) {
         setAnimations(new StorkAnimations(container));
     }
 

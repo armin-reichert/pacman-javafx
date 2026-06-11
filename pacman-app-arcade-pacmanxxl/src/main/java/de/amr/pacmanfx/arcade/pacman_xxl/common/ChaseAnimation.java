@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
@@ -73,7 +73,7 @@ class ChaseAnimation {
         timeline.stop();
     }
 
-    public void init(UIConfig uiConfig, Canvas canvas, SpriteAnimationSet spriteAnimationSet) {
+    public void init(UIConfig uiConfig, Canvas canvas, SpriteAnimationContainer spriteAnimationContainer) {
         requireNonNull(uiConfig);
         requireNonNull(canvas);
 
@@ -81,7 +81,7 @@ class ChaseAnimation {
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         pac = ArcadePacMan_GameModel.createPacMan();
-        pac.setAnimations(uiConfig.createPacAnimations(spriteAnimationSet));
+        pac.setAnimations(uiConfig.createPacAnimations(spriteAnimationContainer));
         pac.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
         pac.animations().playSelected();
         pac.setX(numTilesX * WorldMap.TS);
@@ -91,10 +91,10 @@ class ChaseAnimation {
         pac.setVisible(true);
 
         ghosts = List.of(
-            uiConfig.createAnimatedGhost(spriteAnimationSet, GameModel.RED_GHOST_SHADOW),
-            uiConfig.createAnimatedGhost(spriteAnimationSet, GameModel.PINK_GHOST_SPEEDY),
-            uiConfig.createAnimatedGhost(spriteAnimationSet, GameModel.CYAN_GHOST_BASHFUL),
-            uiConfig.createAnimatedGhost(spriteAnimationSet, GameModel.ORANGE_GHOST_POKEY)
+            uiConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.RED_GHOST_SHADOW),
+            uiConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.PINK_GHOST_SPEEDY),
+            uiConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.CYAN_GHOST_BASHFUL),
+            uiConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.ORANGE_GHOST_POKEY)
         );
         for (Ghost ghost : ghosts) {
             ghost.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);

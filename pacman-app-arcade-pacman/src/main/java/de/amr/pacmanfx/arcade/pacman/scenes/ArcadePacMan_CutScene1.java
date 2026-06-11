@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimations;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
@@ -35,10 +35,10 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     
     @Override
     public void onActivate() {
-        final SpriteAnimationSet spriteAnimationSet = game().ui().sprites().animationSet();
+        final SpriteAnimationContainer spriteAnimationContainer = game().ui().sprites().animations();
         pacMan = ArcadePacMan_GameModel.createPacMan();
-        pacMan.setAnimations(game().currentUIConfig().createPacAnimations(spriteAnimationSet));
-        blinky = game().currentUIConfig().createAnimatedGhost(spriteAnimationSet, RED_GHOST_SHADOW);
+        pacMan.setAnimations(game().currentUIConfig().createPacAnimations(spriteAnimationContainer));
+        blinky = game().currentUIConfig().createAnimatedGhost(spriteAnimationContainer, RED_GHOST_SHADOW);
         sceneTick = -1;
     }
 

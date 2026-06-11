@@ -4,28 +4,36 @@
 
 package de.amr.pacmanfx.ui.d2;
 
-import de.amr.basics.spriteanim.SpriteAnimationSet;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationTimer;
+import de.amr.basics.spriteanim.SpriteAnimation;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import javafx.animation.AnimationTimer;
 
 public class SpriteAnimationManager {
 
-    private final SpriteAnimationSet animationSet;
-    private final SpriteAnimationTimer animationTimer;
+    private final SpriteAnimationContainer context;
+    private final AnimationTimer timer;
 
     public SpriteAnimationManager() {
-        animationSet = new SpriteAnimationSet();
-        animationTimer = new SpriteAnimationTimer(animationSet);
+        context = new SpriteAnimationContainer();
+        timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                for (SpriteAnimation sa : context.activeAnimations()) {
+                    sa.update(now);
+                }
+            }
+        };
     }
 
-    public SpriteAnimationSet animationSet() {
-        return animationSet;
+    public SpriteAnimationContainer animations() {
+        return context;
     }
 
     public void startAnimationTimer() {
-        animationTimer.start();
+        timer.start();
     }
 
     public void stopAnimationTimer() {
-        animationTimer.stop();
+        timer.stop();
     }
 }

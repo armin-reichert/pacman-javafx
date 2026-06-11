@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.Named;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
@@ -20,17 +20,17 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
     public static final int FLASHING_TICKS = 7;  // TODO check this in emulator
 
-    private final SpriteAnimationSet container;
+    private final SpriteAnimationContainer container;
     private final byte personality;
 
-    public TengenMsPacMan_GhostAnimations(SpriteAnimationSet container, byte personality) {
+    public TengenMsPacMan_GhostAnimations(SpriteAnimationContainer container, byte personality) {
         super(TengenMsPacMan_SpriteSheet.instance());
         this.container = requireNonNull(container);
         this.personality = requireValidGhostPersonality(personality);
     }
 
     @Override
-    public SpriteAnimationSet container() {
+    public SpriteAnimationContainer container() {
         return container;
     }
 

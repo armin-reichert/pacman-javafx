@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
@@ -118,12 +118,12 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
                 final UIConfig currentConfig = scene.game().currentUIConfig();
-                final SpriteAnimationSet spriteAnimationSet = scene.game().ui().sprites().animationSet();
+                final SpriteAnimationContainer spriteAnimationContainer = scene.game().ui().sprites().animations();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
                 scene.msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-                scene.msPacMan.setAnimations(currentConfig.createPacAnimations(spriteAnimationSet));
+                scene.msPacMan.setAnimations(currentConfig.createPacAnimations(spriteAnimationContainer));
                 scene.msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
                 scene.msPacMan.animations().playSelected();
                 scene.msPacMan.setPosition(WorldMap.TS * 33, ACTOR_Y);
@@ -132,10 +132,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setVisible(true);
 
                 scene.ghosts = List.of(
-                    currentConfig.createAnimatedGhost(spriteAnimationSet, GameModel.RED_GHOST_SHADOW),
-                    currentConfig.createAnimatedGhost(spriteAnimationSet, GameModel.CYAN_GHOST_BASHFUL),
-                    currentConfig.createAnimatedGhost(spriteAnimationSet, GameModel.PINK_GHOST_SPEEDY),
-                    currentConfig.createAnimatedGhost(spriteAnimationSet, GameModel.ORANGE_GHOST_POKEY)
+                    currentConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.RED_GHOST_SHADOW),
+                    currentConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.CYAN_GHOST_BASHFUL),
+                    currentConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.PINK_GHOST_SPEEDY),
+                    currentConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.ORANGE_GHOST_POKEY)
                 );
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(WorldMap.TS * 33, ACTOR_Y);

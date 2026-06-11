@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
@@ -318,7 +318,7 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public Ghost createAnimatedGhost(SpriteAnimationSet animationSet, byte personality) {
+    public Ghost createAnimatedGhost(SpriteAnimationContainer animationSet, byte personality) {
         final Ghost ghost = switch (personality) {
             case GameModel.RED_GHOST_SHADOW -> GhostFactory.createRedGhostShadow("Blinky");
             case GameModel.PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky");
@@ -332,13 +332,13 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationSet animationSet, byte personality) {
+    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer animationSet, byte personality) {
         Validations.requireValidGhostPersonality(personality);
         return new ArcadePacMan_GhostAnimations(animationSet, personality);
     }
 
     @Override
-    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationSet animationSet) {
+    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationContainer animationSet) {
         return new ArcadePacMan_PacAnimations(animationSet, spriteSheet());
     }
 

@@ -16,7 +16,7 @@ public class SpriteAnimation {
 
     public static final int FRAME_RATE = 60;
 
-    private SpriteAnimationSet container;
+    private SpriteAnimationContainer container;
 
     private RectShort[] sprites;
     private int currentFrameIndex;
@@ -34,11 +34,11 @@ public class SpriteAnimation {
         setFrameTicks(1);
     }
 
-    public void setContainer(SpriteAnimationSet container) {
+    public void setContainer(SpriteAnimationContainer container) {
         this.container = Objects.requireNonNull(container);
     }
 
-    public void update(SpriteAnimationSet container, long now) {
+    public void update(long now) {
         if (!running) {
             return;
         }
@@ -51,7 +51,7 @@ public class SpriteAnimation {
     public void start() {
         if (!running) {
             if (container != null) {
-                container.register(this);
+                container.add(this);
             }
             running = true;
             lastUpdateTime = now();
@@ -60,7 +60,7 @@ public class SpriteAnimation {
 
     public void stop() {
         if (container != null) {
-            container.unregister(this);
+            container.remove(this);
         }
         running = false;
     }

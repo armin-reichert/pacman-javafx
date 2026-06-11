@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.Named;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
@@ -19,15 +19,15 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
         ANIM_BIG_PAC_MAN,
     }
 
-    private final SpriteAnimationSet container;
+    private final SpriteAnimationContainer container;
 
-    public ArcadePacMan_PacAnimations(SpriteAnimationSet container, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_PacAnimations(SpriteAnimationContainer container, ArcadePacMan_SpriteSheet spriteSheet) {
         super(spriteSheet);
         this.container = requireNonNull(container);
     }
 
     @Override
-    public SpriteAnimationSet container() {
+    public SpriteAnimationContainer container() {
         return container;
     }
 

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.MapColorScheme;
@@ -295,7 +295,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     @Override
-    public Ghost createAnimatedGhost(SpriteAnimationSet animationSet, byte personality) {
+    public Ghost createAnimatedGhost(SpriteAnimationContainer animationSet, byte personality) {
         final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
         ghost.setAnimations(createGhostAnimations(animationSet, personality));
         ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
@@ -303,12 +303,12 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     @Override
-    public TengenMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationSet animationSet, byte personality) {
+    public TengenMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer animationSet, byte personality) {
         return new TengenMsPacMan_GhostAnimations(animationSet, personality);
     }
 
     @Override
-    public TengenMsPacMan_PacAnimations createPacAnimations(SpriteAnimationSet animationSet) {
+    public TengenMsPacMan_PacAnimations createPacAnimations(SpriteAnimationContainer animationSet) {
         return new TengenMsPacMan_PacAnimations(animationSet);
     }
 

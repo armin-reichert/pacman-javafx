@@ -20,7 +20,7 @@ record SingleSpriteAnimationAccessor(RectShort sprite) implements SpriteAnimatio
     }
 
     @Override
-    public SpriteAnimationSet container() {
+    public SpriteAnimationContainer container() {
         return null; //TODO check
     }
 

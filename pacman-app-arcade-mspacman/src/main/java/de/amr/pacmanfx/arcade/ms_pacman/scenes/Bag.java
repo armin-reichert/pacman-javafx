@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 import de.amr.basics.Named;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -20,15 +20,15 @@ public class Bag extends Actor {
 
     public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationSet container;
+        private final SpriteAnimationContainer container;
 
-        public BagAnimations(SpriteAnimationSet container) {
+        public BagAnimations(SpriteAnimationContainer container) {
             super(ArcadeMsPacMan_SpriteSheet.instance());
             this.container = container;
         }
 
         @Override
-        public SpriteAnimationSet container() {
+        public SpriteAnimationContainer container() {
             return container;
         }
 
@@ -56,7 +56,7 @@ public class Bag extends Actor {
 
     private boolean open;
 
-    public Bag(SpriteAnimationSet container) {
+    public Bag(SpriteAnimationContainer container) {
         setAnimations(new BagAnimations(container));
     }
 

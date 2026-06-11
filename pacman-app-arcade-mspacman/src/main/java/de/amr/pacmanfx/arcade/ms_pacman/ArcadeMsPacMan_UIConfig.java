@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
@@ -170,7 +170,7 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
         return actorRenderer;
     }
 
-    public Ghost createAnimatedGhost(SpriteAnimationSet animationSet, byte personality) {
+    public Ghost createAnimatedGhost(SpriteAnimationContainer animationSet, byte personality) {
         final Ghost ghost = ArcadeMsPacMan_GameModel.createGhost(personality);
         ghost.setAnimations(createGhostAnimations(animationSet, personality));
         ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
@@ -178,13 +178,13 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public ArcadeMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationSet animationSet, byte personality) {
+    public ArcadeMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer animationSet, byte personality) {
         requireValidGhostPersonality(personality);
         return new ArcadeMsPacMan_GhostAnimations(animationSet, personality);
     }
 
     @Override
-    public ArcadeMsPacMan_PacAnimations createPacAnimations(SpriteAnimationSet animationSet) {
+    public ArcadeMsPacMan_PacAnimations createPacAnimations(SpriteAnimationContainer animationSet) {
         return new ArcadeMsPacMan_PacAnimations(animationSet);
     }
 

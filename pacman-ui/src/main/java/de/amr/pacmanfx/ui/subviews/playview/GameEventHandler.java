@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.subviews.playview;
 
 import de.amr.basics.fsm.State;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameStateID;
@@ -30,12 +30,12 @@ public class GameEventHandler extends DefaultGameEventListener {
             case LevelCreatedEvent levelCreatedEvent -> {
                 final GameLevel level = levelCreatedEvent.level();
                 final UIConfig currentConfig = game.currentUIConfig();
-                final SpriteAnimationSet spriteAnimationSet = game.ui().sprites().animationSet();
+                final SpriteAnimationContainer spriteAnimationContainer = game.ui().sprites().animations();
 
                 //TODO this should be done elsewhere
-                level.entities().pac().setAnimations(currentConfig.createPacAnimations(spriteAnimationSet));
+                level.entities().pac().setAnimations(currentConfig.createPacAnimations(spriteAnimationContainer));
                 level.entities().ghosts().forEach(ghost ->
-                    ghost.setAnimations(currentConfig.createGhostAnimations(spriteAnimationSet, ghost.personality())));
+                    ghost.setAnimations(currentConfig.createGhostAnimations(spriteAnimationContainer, ghost.personality())));
 
                 final MiniPlaySceneView miniPlayView = game.ui().subViews().gamePlayView().miniPlaySceneView();
                 miniPlayView.setUIConfig(currentConfig);

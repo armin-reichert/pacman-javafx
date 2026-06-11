@@ -280,7 +280,7 @@ public final class GameImplementation implements Game {
         Logger.info("Application is terminated now. There is no way back!");
         stopGame();
         ui.sprites().stopAnimationTimer();
-        ui.sprites().animationSet().clear();
+        ui.sprites().animations().clear();
         ui.flashMessages().stopAnimationTimer();
         watchdog.dispose();
     }

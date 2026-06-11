@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.config;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.spriteanim.SpriteAnimationAccessor;
-import de.amr.basics.spriteanim.SpriteAnimationSet;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
@@ -309,7 +309,7 @@ public interface UIConfig extends TranslationManager, Disposable {
      * @param personality ghost personality code (e.g. RED_GHOST_SHADOW, …)
      * @return configured ghost ready to be added to the game
      */
-    Ghost createAnimatedGhost(SpriteAnimationSet animationSet, byte personality);
+    Ghost createAnimatedGhost(SpriteAnimationContainer animationSet, byte personality);
 
     /**
      * Creates the animation manager containing all movement & state animations
@@ -319,7 +319,7 @@ public interface UIConfig extends TranslationManager, Disposable {
      * @param personality ghost personality code
      * @return animation manager for that ghost type
      */
-    SpriteAnimationAccessor createGhostAnimations(SpriteAnimationSet animationSet, byte personality);
+    SpriteAnimationAccessor createGhostAnimations(SpriteAnimationContainer animationSet, byte personality);
 
     /**
      * Creates the animation manager for Pac-Man (or Ms. Pac-Man in Ms. Pac-Man variants).
@@ -327,7 +327,7 @@ public interface UIConfig extends TranslationManager, Disposable {
      * @param animationSet sprite animator
      * @return Pac-Man animation manager
      */
-    SpriteAnimationAccessor createPacAnimations(SpriteAnimationSet animationSet);
+    SpriteAnimationAccessor createPacAnimations(SpriteAnimationContainer animationSet);
 
     /**
      * Returns the image showing the points awarded for eating a ghost

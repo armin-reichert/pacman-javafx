@@ -13,7 +13,7 @@ import de.amr.basics.math.RectShort;
 public class EmptySpriteAnimationAccessor implements SpriteAnimationAccessor {
 
     @Override
-    public SpriteAnimationSet container() {
+    public SpriteAnimationContainer container() {
         return null;
     }
 
