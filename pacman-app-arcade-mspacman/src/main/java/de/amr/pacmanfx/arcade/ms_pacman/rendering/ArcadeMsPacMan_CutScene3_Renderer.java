@@ -29,10 +29,16 @@ public class ArcadeMsPacMan_CutScene3_Renderer extends BaseRenderer implements G
     public void draw(GameScene2D scene) {
         clearCanvas();
 
-        final ArcadeMsPacMan_CutScene3 cutScene = (ArcadeMsPacMan_CutScene3) scene;
-        cutScene.clapperboard().setFont(arcadeFont8());
-        Stream.of(cutScene.clapperboard(), cutScene.msPacMan(), cutScene.pacMan(), cutScene.stork(), cutScene.bag())
-            .forEach(actorRenderer::drawActor);
+        if (scene instanceof ArcadeMsPacMan_CutScene3 cutScene) {
+            cutScene.clapperboard.setFont(arcadeFont8());
+            Stream.of(
+                cutScene.clapperboard,
+                    cutScene.msPacMan,
+                    cutScene.pacMan,
+                    cutScene.stork,
+                    cutScene.bag)
+                .forEach(actorRenderer::drawActor);
+        }
 
         if (scene.game().ui().settings().debugInfoVisibleProperty.get()) {
             debugRenderer.draw(scene);

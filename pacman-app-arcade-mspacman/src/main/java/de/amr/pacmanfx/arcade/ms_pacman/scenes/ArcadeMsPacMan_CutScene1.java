@@ -97,7 +97,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private enum SceneState {CLAPPERBOARD, CHASED_BY_GHOSTS, COMING_TOGETHER, IN_HEAVEN}
 
     private SceneState sceneState;
-    private final TickTimer sceneTimer = new TickTimer("MsPacMan_CutScene1");
+    private final TickTimer sceneTimer = new TickTimer("Timer-MsPacMan_CutScene1");
 
     private void setState(SceneState state, long ticks) {
         sceneState = state;

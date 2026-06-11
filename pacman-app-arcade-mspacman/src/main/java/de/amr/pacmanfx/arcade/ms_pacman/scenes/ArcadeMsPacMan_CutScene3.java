@@ -29,38 +29,18 @@ import static de.amr.pacmanfx.model.world.WorldMap.TS;
  */
 public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
-    private static final int LANE_Y = TS * 24;
+    private static final int GROUND_Y = TS * 24;
 
-    private Pac pacMan;
-    private Pac msPacMan;
-    private Stork stork;
-    private Bag bag;
+    public Pac pacMan;
+    public Pac msPacMan;
+    public Stork stork;
+    public Bag bag;
+    public Clapperboard clapperboard;
+
     private int numBagBounces;
-
-    private Clapperboard clapperboard;
 
     public ArcadeMsPacMan_CutScene3(Game game) {
         super(game);
-    }
-
-    public Pac pacMan() {
-        return pacMan;
-    }
-
-    public Pac msPacMan() {
-        return msPacMan;
-    }
-
-    public Stork stork() {
-        return stork;
-    }
-
-    public Bag bag() {
-        return bag;
-    }
-
-    public Clapperboard clapperboard() {
-        return clapperboard;
     }
 
     @Override
@@ -105,7 +85,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private enum SceneState { CLAPPERBOARD, DELIVER_JUNIOR, STORK_LEAVES_SCENE }
 
     private SceneState sceneState;
-    private final TickTimer sceneTimer = new TickTimer("MsPacMan_CutScene3");
+    private final TickTimer sceneTimer = new TickTimer("Timer-MsPacMan_CutScene3");
 
     private void setSceneState(SceneState state, long ticks) {
         sceneState = state;
@@ -124,13 +104,13 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     private void enterStateDeliverJunior() {
         pacMan.setMoveDir(Direction.RIGHT);
-        pacMan.setPosition(TS * 3, LANE_Y - 4);
+        pacMan.setPosition(TS * 3, GROUND_Y - 4);
         pacMan.animations().select(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
         pacMan.animations().stopSelected();
         pacMan.show();
 
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.setPosition(TS * 5, LANE_Y - 4);
+        msPacMan.setPosition(TS * 5, GROUND_Y - 4);
         msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
         msPacMan.animations().stopSelected();
         msPacMan.show();
@@ -162,11 +142,11 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         }
 
         // (closed) bag reaches ground for first time?
-        if (!bag.isOpen() && bag.y() > LANE_Y) {
+        if (!bag.isOpen() && bag.y() > GROUND_Y) {
             ++numBagBounces;
             if (numBagBounces < 3) {
                 bag.setVelocity(-0.2f, -1f / numBagBounces);
-                bag.setY(LANE_Y);
+                bag.setY(GROUND_Y);
             } else {
                 bag.setOpen(true);
                 bag.setVelocity(0, 0);
