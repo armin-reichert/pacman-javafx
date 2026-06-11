@@ -34,7 +34,7 @@ import de.amr.pacmanfx.ui.subviews.editor.EditorView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.FlashMessageManager;
-import de.amr.pacmanfx.ui.view.GameViewImplementation;
+import de.amr.pacmanfx.ui.view.GameViewImpl;
 import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
@@ -58,7 +58,7 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public final class GameImplementation implements Game {
+public final class GameImpl implements Game {
 
     private static File highScoreFile(String gameVariantName) {
         requireNonNull(gameVariantName);
@@ -78,7 +78,7 @@ public final class GameImplementation implements Game {
 
     private final GameUI ui;
 
-    private final GameViewImplementation view;
+    private final GameViewImpl view;
 
     private final GameClock gameClock;
 
@@ -90,7 +90,7 @@ public final class GameImplementation implements Game {
 
     private GameContextImpl currentGameContext;
 
-    public GameImplementation(PacManGamesMachine machine, GameViewImplementation view) {
+    public GameImpl(PacManGamesMachine machine, GameViewImpl view) {
         this.machine = requireNonNull(machine);
         this.view = requireNonNull(view);
         this.gameClock = new GameClockFX();
@@ -98,7 +98,20 @@ public final class GameImplementation implements Game {
         this.prefs = new PreferencesManager(getClass());
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
-        ui = new GameUI(
+        this.ui = createUI();
+
+        view.setGame(this);
+        createSubViews(ui);
+
+        gameVariantName.addListener((_, _, newVariantName) -> {
+            final GameVariant gameVariant = gameVariant(newVariantName);
+            currentGameContext = new GameContextImpl(this, gameVariant);
+            currentGameContext.model().hud().creditProperty().bind(coinMechanism.numCoinsProperty());
+        });
+    }
+
+    private GameUI createUI() {
+        return new GameUI(
             new FlashMessageManager(),
             new GameSceneManager(this),
             new SoundManager(this),
@@ -110,16 +123,6 @@ public final class GameImplementation implements Game {
             new UISettings3D(),
             new GameUIExtensions()
         );
-
-        createSubViews();
-
-        view.setGame(this);
-
-        gameVariantName.addListener((_, _, newVariantName) -> {
-            final GameVariant gameVariant = gameVariant(newVariantName);
-            currentGameContext = new GameContextImpl(this, gameVariant);
-            currentGameContext.model().hud().creditProperty().bind(coinMechanism.numCoinsProperty());
-        });
     }
 
     private GameVariant createGameVariant(String variantName) {
@@ -292,7 +295,7 @@ public final class GameImplementation implements Game {
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing singleton
     }
 
-    private void createSubViews() {
+    private void createSubViews(GameUI ui) {
         final SubViewManager subViews = ui.subViews();
 
         final StartPagesView startView = new StartPagesView(this);

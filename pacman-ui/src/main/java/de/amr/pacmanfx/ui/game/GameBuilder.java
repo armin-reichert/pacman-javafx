@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
-import de.amr.pacmanfx.ui.view.GameViewImplementation;
+import de.amr.pacmanfx.ui.view.GameViewImpl;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -59,10 +59,7 @@ public class GameBuilder {
     public Game build() {
         validateConfigurationData();
 
-        final var game = new GameImplementation(
-            machine,
-            new GameViewImplementation(windowConfig.sceneWidth(), windowConfig.sceneHeight())
-        );
+        final var game = new GameImpl(machine, new GameViewImpl(windowConfig.sceneWidth(), windowConfig.sceneHeight()));
 
         //TODO Find better solution
         gameVariantConfigMap.forEach((variantName, config) -> {

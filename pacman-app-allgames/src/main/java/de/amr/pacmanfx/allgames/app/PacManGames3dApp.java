@@ -19,13 +19,13 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.TengenMsPacMan_Das
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.ui.game.GameImplementation;
+import de.amr.pacmanfx.ui.game.GameImpl;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
-import de.amr.pacmanfx.ui.view.GameViewImplementation;
+import de.amr.pacmanfx.ui.view.GameViewImpl;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -108,11 +108,7 @@ public class PacManGames3dApp extends Application {
                     .build();
             }
             else {
-                game = new GameImplementation(
-                    machine,
-                    new GameViewImplementation(sceneSize.x(), sceneSize.y())
-                );
-
+                game = new GameImpl(machine, new GameViewImpl(sceneSize.x(), sceneSize.y()));
                 game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
                 game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
                 addStartPages();

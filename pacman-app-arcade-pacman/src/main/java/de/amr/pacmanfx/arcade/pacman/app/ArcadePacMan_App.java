@@ -10,10 +10,10 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.ui.game.GameImplementation;
+import de.amr.pacmanfx.ui.game.GameImpl;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.ui.view.GameViewImplementation;
+import de.amr.pacmanfx.ui.view.GameViewImpl;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -51,9 +51,9 @@ public class ArcadePacMan_App extends Application {
                 .build();
         }
         else {
-            game = new GameImplementation(machine, new GameViewImplementation(size.x(), size.y()));
-            final var arcadePacManStartPage = new ArcadePacMan_StartPage();
-            game.ui().subViews().startView().addStartPage(arcadePacManStartPage);
+            game = new GameImpl(machine, new GameViewImpl(size.x(), size.y()));
+            final var startPage = new ArcadePacMan_StartPage();
+            game.ui().subViews().startView().addStartPage(startPage);
             game.ui().subViews().startView().setSelectedIndex(0);
         }
         game.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, game.ui().translations());

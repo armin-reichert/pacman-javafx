@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
-public class GameViewImplementation implements GameView {
+public class GameViewImpl implements GameView {
 
     private final ObjectProperty<Stage> stage = new SimpleObjectProperty<>(this, "stage");
 
@@ -34,7 +34,7 @@ public class GameViewImplementation implements GameView {
 
     private StringBinding stageTitleBinding;
 
-    public GameViewImplementation(int width, int height) {
+    public GameViewImpl(int width, int height) {
         this.mainScene = new GameViewMainScene(width, height);
     }
 
