@@ -211,7 +211,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private void eatGhostAndStopChasing(Ghost victim, long tick) {
         victim.setState(EATEN);
-        victim.animations().selectAtFrame(ArcadePacMan_AnimationID.GHOST_POINTS, numGhostsEaten++);
+        victim.animations().selectAndSetFrame(ArcadePacMan_AnimationID.GHOST_POINTS, numGhostsEaten++);
         pacMan.hide();
         pacMan.setSpeed(0);
         for (Ghost ghost : ghosts) {

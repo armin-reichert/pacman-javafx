@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
+import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -58,7 +58,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
             ctx.setFont(debugTextFont);
             ctx.fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
         }
-        if (movingActor.animations() instanceof SpriteAnimationContainer<?> spriteAnimations) {
+        if (movingActor.animations() instanceof SpriteAnimationMap<?> spriteAnimations) {
             Object animationID = spriteAnimations.selectedAnimationID();
             if (animationID != null) {
                 ctx.setFont(debugTextFont);
@@ -71,7 +71,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         }
     }
 
-    private void drawAnimationInfo(Actor actor, SpriteAnimationContainer<?> spriteAnimationMap, Object selectedID) {
+    private void drawAnimationInfo(Actor actor, SpriteAnimationMap<?> spriteAnimationMap, Object selectedID) {
         ctx.save();
         String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().currentFrame());
         double x = scaled(actor.x() - 4), y = scaled(actor.y() - 4);

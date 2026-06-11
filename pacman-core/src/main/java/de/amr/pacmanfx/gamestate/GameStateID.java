@@ -4,6 +4,8 @@
 
 package de.amr.pacmanfx.gamestate;
 
+import de.amr.basics.Named;
+
 /**
  * Enumeration of game state identifiers.
  *
@@ -11,7 +13,7 @@ package de.amr.pacmanfx.gamestate;
  * game‑variant‑independent code. Implementations may define additional
  * states, but these represent the canonical set used across Pac‑Man FX.</p>
  */
-public enum GameStateID implements GameStateIdentifier {
+public enum GameStateID implements Named {
     BOOT,
     GAME_INTRO,
     GAME_PREPARATION,

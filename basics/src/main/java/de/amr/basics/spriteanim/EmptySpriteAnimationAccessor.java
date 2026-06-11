@@ -4,33 +4,34 @@
 
 package de.amr.basics.spriteanim;
 
+import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
 
 /**
  * Null object for sprite animation facade interface.
  */
-public class EmptyAnimationFacade implements AnimationFacade {
+public class EmptySpriteAnimationAccessor implements SpriteAnimationAccessor {
 
     @Override
-    public Object animation(AnimationIdentifier animationID) {
+    public Object animation(Named animationID) {
         return null;
     }
 
     @Override
-    public AnimationIdentifier selectedAnimationID() {
+    public Named selectedAnimationID() {
         return null;
     }
 
     @Override
-    public boolean isSelected(AnimationIdentifier animationID) {
-        return AnimationFacade.super.isSelected(animationID);
+    public boolean isSelected(Named animationID) {
+        return SpriteAnimationAccessor.super.isSelected(animationID);
     }
 
     @Override
-    public void setAnimationFrame(AnimationIdentifier animationID, int frameIndex) {}
+    public void setAnimationFrame(Named animationID, int frameIndex) {}
 
     @Override
-    public void select(AnimationIdentifier animationID) {}
+    public void select(Named animationID) {}
 
     @Override
     public void playSelected() {}

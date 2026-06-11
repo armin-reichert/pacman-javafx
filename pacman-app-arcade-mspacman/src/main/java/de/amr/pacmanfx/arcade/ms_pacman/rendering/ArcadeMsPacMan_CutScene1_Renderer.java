@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_CutScene1;
@@ -28,10 +29,16 @@ public class ArcadeMsPacMan_CutScene1_Renderer extends BaseRenderer implements G
     public void draw(GameScene2D scene) {
         clearCanvas();
 
-        final ArcadeMsPacMan_CutScene1 cutScene = (ArcadeMsPacMan_CutScene1) scene;
-        cutScene.clapperboard().setFont(arcadeFont8());
-        Stream.of(cutScene.clapperboard(), cutScene.msPacMan(), cutScene.pacMan(), cutScene.inky(), cutScene.pinky(), cutScene.heart())
-            .forEach(actorRenderer::drawActor);
+        if (scene instanceof ArcadeMsPacMan_CutScene1 cutScene) {
+            cutScene.clapperboard.setFont(arcadeFont8());
+            Stream.of(
+                cutScene.clapperboard,
+                cutScene.msPacMan,
+                cutScene.pacMan,
+                cutScene.inky,
+                cutScene.pinky,
+                cutScene.heart).forEach(actorRenderer::drawActor);
+        }
 
         if (scene.game().ui().settings().debugInfoVisibleProperty.get()) {
             debugRenderer.draw(scene);

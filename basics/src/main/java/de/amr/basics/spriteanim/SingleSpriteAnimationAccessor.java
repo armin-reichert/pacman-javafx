@@ -3,6 +3,7 @@
  */
 package de.amr.basics.spriteanim;
 
+import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
 
 import static java.util.Objects.requireNonNull;
@@ -12,9 +13,9 @@ import static java.util.Objects.requireNonNull;
  *
  * @param sprite the singleton sprite
  */
-record SingletonAnimationFacade(RectShort sprite) implements AnimationFacade {
+record SingleSpriteAnimationAccessor(RectShort sprite) implements SpriteAnimationAccessor {
 
-    public SingletonAnimationFacade(RectShort sprite) {
+    public SingleSpriteAnimationAccessor(RectShort sprite) {
         this.sprite = requireNonNull(sprite);
     }
 
@@ -24,20 +25,20 @@ record SingletonAnimationFacade(RectShort sprite) implements AnimationFacade {
     }
 
     @Override
-    public Object animation(AnimationIdentifier animationID) {
+    public Object animation(Named animationID) {
         return null;
     }
 
     @Override
-    public AnimationIdentifier selectedAnimationID() {
+    public Named selectedAnimationID() {
         return null;
     }
 
     @Override
-    public void setAnimationFrame(AnimationIdentifier animationID, int frameIndex) {}
+    public void setAnimationFrame(Named animationID, int frameIndex) {}
 
     @Override
-    public void select(AnimationIdentifier animationID) {}
+    public void select(Named animationID) {}
 
     @Override
     public int currentFrame() {

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.basics.spriteanim.AnimationIdentifier;
+import de.amr.basics.Named;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
@@ -11,14 +11,14 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
+import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
 
 public class Bag extends Actor {
 
-    public static class BagAnimations extends SpriteAnimationContainer<SpriteID> {
+    public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
         private final SpriteAnimationSet animationSet;
 
@@ -28,7 +28,7 @@ public class Bag extends Actor {
         }
 
         @Override
-        protected SpriteAnimation createAnimation(AnimationIdentifier animationID) {
+        protected SpriteAnimation createAnimation(Named animationID) {
             return switch (animationID) {
                 case ArcadeMsPacMan_AnimationID.JUNIOR ->
                     SpriteAnimationBuilder.builder()

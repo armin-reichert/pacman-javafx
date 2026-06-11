@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.spriteanim.AnimationFacade;
+import de.amr.basics.spriteanim.SpriteAnimationAccessor;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.Clapperboard;
@@ -46,7 +46,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        final AnimationFacade animations = ghost.animations();
+        final SpriteAnimationAccessor animations = ghost.animations();
         if (animations.isSelected(ArcadePacMan_AnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
             return spriteOrDefault(sprites, animations.currentFrame());
@@ -60,7 +60,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private FacingSprite computePacSprite(Pac pac) {
-        final AnimationFacade animationManager = pac.animations();
+        final SpriteAnimationAccessor animationManager = pac.animations();
         final int frame = animationManager.currentFrame();
         final Direction dir = pac.moveDir();
         return switch (animationManager.selectedAnimationID()) {

@@ -32,7 +32,7 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
+import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -244,12 +244,12 @@ public final class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceMana
     }
 
     @Override
-    public SpriteAnimationContainer<SpriteID> createGhostAnimations(SpriteAnimationSet animationSet, byte personality) {
+    public SpriteAnimationMap<SpriteID> createGhostAnimations(SpriteAnimationSet animationSet, byte personality) {
         return new ArcadeMsPacMan_GhostAnimations(animationSet, personality);
     }
 
     @Override
-    public SpriteAnimationContainer<SpriteID> createPacAnimations(SpriteAnimationSet animationSet) {
+    public SpriteAnimationMap<SpriteID> createPacAnimations(SpriteAnimationSet animationSet) {
         return new ArcadeMsPacMan_PacAnimations(animationSet);
     }
 

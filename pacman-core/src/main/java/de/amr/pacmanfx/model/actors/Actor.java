@@ -5,7 +5,7 @@ package de.amr.pacmanfx.model.actors;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.spriteanim.AnimationFacade;
+import de.amr.basics.spriteanim.SpriteAnimationAccessor;
 import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -193,13 +193,13 @@ public class Actor {
         return y - tile.y() * WorldMap.TS;
     }
 
-    protected AnimationFacade animations = AnimationFacade.emptyAnimationFacade();
+    protected SpriteAnimationAccessor animations = SpriteAnimationAccessor.emptyAnimation();
 
-    public void setAnimations(AnimationFacade animationManager) {
+    public void setAnimations(SpriteAnimationAccessor animationManager) {
         this.animations = animationManager;
     }
 
-    public AnimationFacade animations() {
+    public SpriteAnimationAccessor animations() {
         return animations;
     }
 }

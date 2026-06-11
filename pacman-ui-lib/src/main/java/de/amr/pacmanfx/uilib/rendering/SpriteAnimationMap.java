@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.uilib.rendering;
 
+import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.AnimationFacade;
-import de.amr.basics.spriteanim.AnimationIdentifier;
 import de.amr.basics.spriteanim.SpriteAnimation;
+import de.amr.basics.spriteanim.SpriteAnimationAccessor;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import org.tinylog.Logger;
 
@@ -16,29 +16,31 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A sprite animation container implementing the sprite animation facade interface.
+ * A sprite animation container implementing the sprite animation accessor facade.
+ *
+ * @param <ID> Sprite animation ID type
  */
-public abstract class SpriteAnimationContainer<SID> implements AnimationFacade {
+public abstract class SpriteAnimationMap<ID extends Named> implements SpriteAnimationAccessor {
 
-    protected final SpriteSheet<SID> spriteSheet;
-    protected final Map<AnimationIdentifier, SpriteAnimation> animationsByID = new HashMap<>();
-    protected AnimationIdentifier selectedAnimationID;
+    protected final SpriteSheet<ID> spriteSheet;
+    protected final Map<Named, SpriteAnimation> animationsByID = new HashMap<>();
+    protected Named selectedAnimationID;
 
-    public SpriteAnimationContainer(SpriteSheet<SID> spriteSheet) {
+    public SpriteAnimationMap(SpriteSheet<ID> spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
     }
 
-    protected abstract SpriteAnimation createAnimation(AnimationIdentifier animationID);
+    protected abstract SpriteAnimation createAnimation(Named animationID);
 
-    public SpriteSheet<SID> spriteSheet() { return spriteSheet; }
+    public SpriteSheet<ID> spriteSheet() { return spriteSheet; }
 
-    public boolean isSelected(AnimationIdentifier id) {
+    public boolean isSelected(Named id) {
         requireNonNull(id);
         return id.equals(selectedAnimationID);
     }
 
     @Override
-    public void select(AnimationIdentifier animationID) {
+    public void select(Named animationID) {
         selectedAnimationID = animationID;
     }
 
@@ -49,7 +51,7 @@ public abstract class SpriteAnimationContainer<SID> implements AnimationFacade {
     }
 
     @Override
-    public SpriteAnimation animation(AnimationIdentifier animationID) {
+    public SpriteAnimation animation(Named animationID) {
         if (!animationsByID.containsKey(animationID)) {
             SpriteAnimation spriteAnimation = createAnimation(animationID);
             animationsByID.put(animationID, spriteAnimation);
@@ -57,7 +59,7 @@ public abstract class SpriteAnimationContainer<SID> implements AnimationFacade {
         return animationsByID.get(animationID);
     }
 
-    public void setAnimation(AnimationIdentifier animationID, SpriteAnimation animation) {
+    public void setAnimation(Named animationID, SpriteAnimation animation) {
         requireNonNull(animationID);
         requireNonNull(animation);
         animationsByID.put(animationID, animation);
@@ -68,12 +70,12 @@ public abstract class SpriteAnimationContainer<SID> implements AnimationFacade {
     }
 
     @Override
-    public AnimationIdentifier selectedAnimationID() {
+    public Named selectedAnimationID() {
         return selectedAnimationID;
     }
 
     @Override
-    public void setAnimationFrame(AnimationIdentifier animationID, int frameIndex) {
+    public void setAnimationFrame(Named animationID, int frameIndex) {
         if (!animationID.equals(selectedAnimationID)) {
             selectedAnimationID = animationID;
             if (currentAnimation() != null) {

@@ -4,20 +4,20 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.AnimationIdentifier;
+import de.amr.basics.Named;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationSet;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationContainer;
+import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import java.util.Arrays;
 
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID.*;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_PacAnimations extends SpriteAnimationContainer<SpriteID> {
+public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
     private final SpriteAnimationSet animationSet;
 
@@ -27,7 +27,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationContainer<Sprit
     }
 
     @Override
-    protected SpriteAnimation createAnimation(AnimationIdentifier animationID) {
+    protected SpriteAnimation createAnimation(Named animationID) {
         return switch (animationID) {
             case ArcadePacMan_AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.MS_PAC_FULL))

@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.basics.spriteanim.SpriteIdentifier;
+import de.amr.basics.Named;
 
-public enum SpriteID implements SpriteIdentifier {
+public enum SpriteID implements Named {
     MAP_FULL,
     MAP_EMPTY,
     ENERGIZER,
