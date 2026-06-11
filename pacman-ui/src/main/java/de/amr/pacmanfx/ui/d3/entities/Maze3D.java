@@ -15,7 +15,6 @@ import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.config.FloorConfig3D;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
-import de.amr.pacmanfx.ui.d3.UISettings3D;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
@@ -27,6 +26,7 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
 import java.util.Map;
@@ -61,10 +61,29 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         house3D.update(gameContext, level);
     }
 
-    public void build(UISettings3D globals3D, Map<String, PhongMaterial> materials, MazeConfig3D mazeConfig, FloorConfig3D floorConfig3D) {
+    @Override
+    public void dispose() {
+        wallBaseHeight.unbind();
+        wallOpacity.unbind();
+
+        if (house3D != null) {
+            house3D.dispose();
+            house3D = null;
+        }
+
+        cleanupGroup(particlesGroup, true);
+        cleanupGroup(this, true);
+    }
+
+    public void build(
+        ObjectProperty<DrawMode> drawMode,
+        Map<String, PhongMaterial> materials,
+        MazeConfig3D mazeConfig,
+        FloorConfig3D floorConfig3D)
+    {
         this.materials = materials;
-        buildFloor(globals3D, floorConfig3D);
-        addObstacles(globals3D, mazeConfig.obstacleWallThickness(), mazeConfig.obstacleCornerRadius());
+        buildFloor(drawMode, floorConfig3D);
+        addObstacles(drawMode, mazeConfig.obstacleWallThickness(), mazeConfig.obstacleCornerRadius());
     }
 
     public Map<String, PhongMaterial> materials() {
@@ -103,21 +122,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         return particlesGroup;
     }
 
-    @Override
-    public void dispose() {
-        wallBaseHeight.unbind();
-        wallOpacity.unbind();
-
-        if (house3D != null) {
-            house3D.dispose();
-            house3D = null;
-        }
-
-        cleanupGroup(particlesGroup, true);
-        cleanupGroup(this, true);
-    }
-
-    private void addObstacles(UISettings3D globals3D, float wallThickness, float cornerRadius) {
+    private void addObstacles(ObjectProperty<DrawMode> drawMode, float wallThickness, float cornerRadius) {
         final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
         final House house = terrain.optHouse().orElse(null);
         final var wallCount = new AtomicInteger(0);
@@ -126,8 +131,8 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
             wall3D.setBaseMaterial(materials.get("wallBaseMaterial"));
             wall3D.setTopMaterial(materials.get("wallTopMaterial"));
             wall3D.bindBaseHeight(wallBaseHeight);
-            wall3D.base().drawModeProperty().bind(globals3D.drawModeProperty);
-            wall3D.top() .drawModeProperty().bind(globals3D.drawModeProperty);
+            wall3D.base().drawModeProperty().bindBidirectional(drawMode);
+            wall3D.top() .drawModeProperty().bindBidirectional(drawMode);
             getChildren().addAll(wall3D.base(), wall3D.top());
             return wall3D;
         });
@@ -153,14 +158,14 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         }
     }
 
-    private void buildFloor(UISettings3D globals3D, FloorConfig3D floorConfig) {
+    private void buildFloor(ObjectProperty<DrawMode> drawMode, FloorConfig3D floorConfig) {
         final Vector2i terrainSize = terrain.sizeInPixel();
         final float width = terrainSize.x() + 2 * floorConfig.padding();
         final float height = terrainSize.y();
         final float thickness = floorConfig.thickness();
 
         floor3D = new Box(width, height, thickness);
-        floor3D.drawModeProperty().bind(globals3D.drawModeProperty);
+        floor3D.drawModeProperty().bindBidirectional(drawMode);
         floor3D.setMaterial(materials.get("floorMaterial"));
 
         floor3D.setTranslateX(0.5 * width - floorConfig.padding());

@@ -287,7 +287,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         entitySet.maze3D = uiConfig.factory3D().createMaze3D(
-            globals3D,
+            globals3D.drawModeProperty,
             terrain,
             uiConfig.worldConfig(),
             colorScheme,

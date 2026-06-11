@@ -148,7 +148,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         decorate(level3D);
         level3DParent.getChildren().setAll(level3D);
 
-        level3D.createAnimations(game().ui().settings3D().DEFAULT_PARTICLE_ANIMATION_CONFIG);
+        level3D.createAnimations(UISettings3D.DEFAULT_PARTICLE_ANIMATION_CONFIG);
         level3D.entities().selectAll().forEach(entity -> entity.init(gameContext(), level));
         level3D.startLivesCounterTrackingPac();
 

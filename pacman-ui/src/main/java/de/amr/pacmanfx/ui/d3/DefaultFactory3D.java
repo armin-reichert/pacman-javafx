@@ -6,16 +6,12 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
 import de.amr.pacmanfx.ui.config.PelletConfig3D;
 import de.amr.pacmanfx.ui.config.WorldConfig;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
-import de.amr.pacmanfx.ui.d3.entities.MazeHouse3D;
-import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.*;
@@ -24,11 +20,10 @@ import de.amr.pacmanfx.uilib.model3D.pac.Pac3DFactory;
 import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
-import javafx.geometry.Bounds;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.MeshView;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Sphere;
 import javafx.scene.shape.TriangleMesh;
 
@@ -36,17 +31,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
-import static java.lang.Math.max;
 import static java.util.Objects.requireNonNull;
 
 public class DefaultFactory3D implements Factory3D {
 
-    public static final int FLOOR_SPECULAR_POWER = 128;
-    public static final int WALL_BASE_SPECULAR_POWER = 64;
-    public static final int WALL_TOP_SPECULAR_POWER = 128;
-
     protected final Map<GhostStateColors, GhostMaterialSet> ghostMaterialsCache = new HashMap<>();
     protected final Map<Float, TriangleMesh> pelletMeshesCache = new HashMap<>();
+    protected final MazeFactory3D mazeFactory3D;
+
+    public DefaultFactory3D() {
+        mazeFactory3D = new MazeFactory3D();
+    }
 
     @Override
     public void dispose() {
@@ -55,57 +50,13 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Maze3D createMaze3D(UISettings3D globals3D, TerrainLayer terrain, WorldConfig config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
-        requireNonNull(terrain);
-        requireNonNull(config);
-        requireNonNull(colorScheme);
-        requireNonNull(animationRegistry);
+    public Maze3D createMaze3D(
+        ObjectProperty<DrawMode> drawMode, TerrainLayer terrain, WorldConfig config,
+        WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
 
-        final Map<String, PhongMaterial> materials = createMazeMaterialMap(config, colorScheme);
-
-        final var maze3D = new Maze3D(terrain);
-        maze3D.build(globals3D, materials, config.maze(), config.floor());
-
-        bindFloorMaterialColor(maze3D, materials.get("floorMaterial"));
-        bindWallBaseMaterialColor(maze3D, materials.get("wallBaseMaterial"), Color.valueOf(colorScheme.wallStroke()));
-
-        // Currently, only Arcade house is supported
-        terrain.optHouse()
-            .filter(ArcadeHouse.class::isInstance)
-            .map(ArcadeHouse.class::cast)
-            .map(house -> new MazeHouse3D(colorScheme, config.house(), animationRegistry, house))
-            .ifPresent(maze3D::setHouse3D);
-
-        return maze3D;
+        return mazeFactory3D.createMaze3D(terrain, config, colorScheme, animationRegistry, drawMode);
     }
 
-    private Map<String, PhongMaterial> createMazeMaterialMap(WorldConfig config, WorldMapColorScheme colorScheme) {
-        final PhongMaterial floorMaterial = new PhongMaterial();
-        floorMaterial.setSpecularPower(FLOOR_SPECULAR_POWER);
-
-        final PhongMaterial wallBaseMaterial = new PhongMaterial();
-        wallBaseMaterial.setSpecularPower(WALL_BASE_SPECULAR_POWER);
-
-        final PhongMaterial wallTopMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.wallFill()));
-        wallTopMaterial.setSpecularPower(WALL_TOP_SPECULAR_POWER);
-
-        return Map.of(
-            "floorMaterial", floorMaterial,
-            "wallBaseMaterial", wallBaseMaterial,
-            "wallTopMaterial", wallTopMaterial
-        );
-    }
-
-    private void bindFloorMaterialColor(Maze3D maze3D, PhongMaterial floorMaterial) {
-        floorMaterial.diffuseColorProperty().bind(maze3D.floorColorProperty());
-        floorMaterial.specularColorProperty().bind(maze3D.floorColorProperty().map(Color::brighter));
-    }
-
-    private void bindWallBaseMaterialColor(Maze3D maze3D, PhongMaterial wallBaseMaterial, Color wallStrokeColor) {
-        wallBaseMaterial.diffuseColorProperty().bind(maze3D.wallOpacityProperty()
-            .map(opacity -> UfxColors.colorWithOpacity(wallStrokeColor, opacity.doubleValue()))
-        );
-    }
 
     @Override
     public Pac3D createPac3D(Pac pac, PacConfig config, AnimationRegistry animationRegistry) {
@@ -187,13 +138,5 @@ public class DefaultFactory3D implements Factory3D {
         );
 
         return new GhostMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
-    }
-
-    private TriangleMesh scaledPelletMesh(TriangleMesh pelletMesh, PelletConfig3D config) {
-        return pelletMeshesCache.computeIfAbsent(config.radius(), r -> {
-            final Bounds bounds = new MeshView(pelletMesh).getBoundsInLocal();
-            final double extend = max( max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
-            return Ufx.createScaledTriangleMesh(pelletMesh, (2 * r) / extend);
-        });
     }
 }

@@ -12,7 +12,7 @@ import javafx.scene.shape.DrawMode;
 
 public final class UISettings3D {
 
-    public final ParticlesAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticlesAnimationConfig(
+    public static final ParticlesAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticlesAnimationConfig(
         new ExplosionConfig(
             new Vector3f(0, 0, 0.1f), // gravity
             500,        // num particles by explosion
