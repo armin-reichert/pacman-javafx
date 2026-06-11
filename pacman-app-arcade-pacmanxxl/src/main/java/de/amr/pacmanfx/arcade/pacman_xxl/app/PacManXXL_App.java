@@ -7,12 +7,10 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
-import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSectionCustomMaps;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
@@ -56,11 +54,11 @@ public class PacManXXL_App extends Application {
             CommonDashboardID.ABOUT
         ), game.ui().translations());
 
-        final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
-        game.watchdog().addEventListener(xxlMapSelector);
+        final PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
+        game.watchdog().addEventListener(sharedMapSelector);
 
-        game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
-        game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
+        game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(sharedMapSelector);
+        game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
 
         game.show(GameVariantID.ARCADE_PACMAN_XXL, primaryStage);
     }

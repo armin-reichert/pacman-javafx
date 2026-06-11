@@ -42,7 +42,9 @@ public class DirectoryWatchdog {
     }
 
     public void addEventListener(PathWatchEventListener listener) {
-        listeners.add(listener);
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
     }
 
     public void removeEventListener(PathWatchEventListener listener) {
