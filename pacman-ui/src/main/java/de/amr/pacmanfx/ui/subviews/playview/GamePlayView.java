@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.game.GlobalActionBindings;
+import de.amr.pacmanfx.ui.game.UISettings;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.input.Input;
@@ -240,11 +241,13 @@ public class GamePlayView implements SubView {
     }
 
     public void connect(Game game) {
+        final UISettings settings = game.ui().settings();
+
         pausedIcon.visibleProperty().bind(game.clock().updatesDisabledProperty());
 
-        game.ui().settings().canvasFontSmoothingProperty.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
+        settings.canvasFontSmoothingProperty.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 
-        game.ui().settings().debugInfoVisibleProperty.addListener((_, _, debug) -> {
+        settings.debugInfoVisibleProperty.addListener((_, _, debug) -> {
             gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);
             gameSceneLayer.setBorder(debug ? DEBUG_BORDER : null);
         });
@@ -252,9 +255,9 @@ public class GamePlayView implements SubView {
         overlayLayer.visibleProperty().bind(dashboard.rootPane().visibleProperty());
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
-            () -> game.ui().settings().miniViewOnProperty.get()
+            () -> settings.miniViewOnProperty.get()
                 && game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D),
-            game.ui().settings().miniViewOnProperty,
+            settings.miniViewOnProperty,
             game.ui().gameScenes().gameSceneProperty()
         ));
 

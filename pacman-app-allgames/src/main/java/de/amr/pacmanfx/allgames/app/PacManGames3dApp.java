@@ -26,6 +26,7 @@ import de.amr.pacmanfx.ui.game.GameImpl;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImpl;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -149,12 +150,13 @@ public class PacManGames3dApp extends Application {
         startView.setSelectedIndex(0);
     }
 
+    //TODO builder support
     private void configureDashboard() {
-        final Dashboard dashboard = game.ui().subViews().gamePlayView().dashboard();
+        final GamePlayView playView = game.ui().subViews().gamePlayView();
+        final Dashboard dashboard = playView.dashboard();
 
-        game.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, game.ui().translations());
-
-        // Add Joypad controller section
+        playView.configureDashboard(DASHBOARD_IDs, game.ui().translations());
+        // Add "Joypad" section
         dashboard.addSection(
             TengenMsPacMan_DashboardID.JOYPAD,
             new DashboardSectionJoypad(dashboard),
