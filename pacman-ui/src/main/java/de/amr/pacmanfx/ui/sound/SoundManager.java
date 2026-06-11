@@ -24,7 +24,7 @@ public class SoundManager implements Disposable {
 
     public sealed interface SoundResource permits AudioClipResource, MediaPlayerResource {}
 
-    public record AudioClipResource(URL url) implements SoundResource {}
+    public record AudioClipResource(AudioClip clip) implements SoundResource {}
 
     public record MediaPlayerResource(MediaPlayer mediaPlayer) implements SoundResource {}
 
@@ -82,7 +82,7 @@ public class SoundManager implements Disposable {
         requireNonNull(soundID);
         requireNonNull(url);
 
-        registerSoundResource(soundID, new AudioClipResource(url));
+        registerSoundResource(soundID, new AudioClipResource(new AudioClip(url.toExternalForm())));
     }
 
     public void setMediaPlayer(SoundID soundID, URL url) {
@@ -156,18 +156,17 @@ public class SoundManager implements Disposable {
                 player.setCycleCount(repetitions);
                 player.play();
             }
-            case AudioClipResource(URL url) -> {
-                final var clip = new AudioClip(url.toExternalForm());
+            case AudioClipResource(AudioClip clip) -> {
                 clip.setCycleCount(repetitions);
                 clip.play(1.0); //TODO add volume parameter?
             }
-            default -> throw new IllegalStateException("Unexpected sound map value %s".formatted(value));
         }
     }
 
     public boolean isPlaying(SoundID soundID) {
         requireNonNull(soundID);
         return switch (soundMap.get(soundID)) {
+            case null -> false;
             case MediaPlayerResource(MediaPlayer player) -> player.getStatus().equals(MediaPlayer.Status.PLAYING);
             case AudioClipResource(_) -> false;
         };
@@ -176,25 +175,27 @@ public class SoundManager implements Disposable {
     public void pause(SoundID soundID) {
         requireNonNull(soundID);
         switch (soundMap.get(soundID)) {
+            case null -> {}
             case MediaPlayerResource(MediaPlayer player) -> player.pause();
-            case AudioClipResource(URL url) -> Logger.warn("Audio clip id='{}' url='{}' cannot be paused", soundID, url);
+            case AudioClipResource(AudioClip _) -> Logger.warn("Audio clip id='{}' cannot be paused", soundID);
         }
     }
 
     public void stop(SoundID soundID)  {
         requireNonNull(soundID);
         switch (soundMap.get(soundID)) {
+            case null -> {}
             case MediaPlayerResource(MediaPlayer player) -> player.stop();
-            case AudioClipResource(URL url) -> Logger.warn("Audio clip id='{}' url='{}' cannot be stopped", soundID, url);
+            case AudioClipResource(AudioClip _) -> Logger.warn("Audio clip id='{}' cannot be stopped", soundID);
         }
     }
 
     public void stopAll() {
-        soundMap.values().stream()
-            .filter(MediaPlayerResource.class::isInstance)
-            .map(MediaPlayerResource.class::cast)
-            .map(MediaPlayerResource::mediaPlayer)
-            .forEach(MediaPlayer::stop);
+        soundMap.values().forEach(sound -> {
+            if (sound instanceof MediaPlayerResource(MediaPlayer mediaPlayer)) {
+                mediaPlayer.stop();
+            }
+        });
         Logger.debug("All media players stopped");
     }
 
@@ -202,7 +203,7 @@ public class SoundManager implements Disposable {
         requireNonNull(soundID);
         return switch (soundMap.get(soundID)) {
             case MediaPlayerResource(MediaPlayer player) -> player;
-            case AudioClipResource(URL _) -> throw new IllegalArgumentException(
+            case AudioClipResource(AudioClip _) -> throw new IllegalArgumentException(
                 "Sound entry with id='%s' is not a media player".formatted(soundID));
         };
     }
