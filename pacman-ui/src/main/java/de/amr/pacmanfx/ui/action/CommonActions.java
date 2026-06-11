@@ -52,7 +52,6 @@ public final class CommonActions {
 
     public static final GameAction ACTION_STEER_RIGHT = new SteeringAction(Direction.RIGHT);
 
-
     // Map editor actions
 
     /**
