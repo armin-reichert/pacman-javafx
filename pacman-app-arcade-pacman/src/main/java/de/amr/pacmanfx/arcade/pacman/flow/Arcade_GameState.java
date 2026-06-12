@@ -176,6 +176,8 @@ public enum Arcade_GameState {
             final GameModel game = gameContext.model();
             final GameLevel level = gameContext.requireLevel();
             timer().restartTicks(level.gameOverStateTicks());
+            // In case, entering game over state was forced by user:
+            gameContext.model().lives().setCount(0);
             game.onGameOver(gameContext, level);
         }
 

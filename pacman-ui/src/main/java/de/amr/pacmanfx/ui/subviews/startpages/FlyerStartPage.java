@@ -88,7 +88,7 @@ public class FlyerStartPage implements StartPage {
             startButton = createStartButton(buttonText);
             StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
             rootPane.getChildren().add(startButton);
-            startButton.setAction(() -> CommonActions.ACTION_BOOT_SHOW_PLAY_VIEW.execute(game));
+            startButton.setAction(() -> CommonActions.ACTION_START_GAME.execute(game));
             Logger.info("Start button for page {} created", this);
         }
         this.game = game;

@@ -113,11 +113,23 @@ public final class CommonActions {
 
     // Other actions
 
-    public static final GameAction ACTION_BOOT_SHOW_PLAY_VIEW = new GameAction("boot_show_play_view") {
+    public static final GameAction ACTION_START_GAME = new GameAction("start_game") {
 
         @Override
         protected void doAction(Game game) {
             game.startGame();
+        }
+    };
+
+    public static final GameAction ACTION_QUIT_GAME_SCENE = new GameAction("quit_game_scene") {
+
+        @Override
+        protected void doAction(Game game) {
+            final GameContext gameContext = game.currentGameContext();
+
+            if (gameContext.model().isPlaying()) {
+                gameContext.flow().enterState(GameStateID.GAME_OVER);
+            }
         }
     };
 
@@ -166,18 +178,6 @@ public final class CommonActions {
                 translations.translate("perspective_id_" + prevID.name())
             );
             game.shortMessage(msgKey);
-        }
-    };
-
-    public static final GameAction ACTION_QUIT_GAME_SCENE = new GameAction("quit_game_scene") {
-
-        @Override
-        protected void doAction(Game game) {
-            final GameModel gameModel = game.currentGameContext().model();
-
-            game.stopGame();
-            gameModel.cheats().clear(); //TODO needed?
-            game.ui().subViews().selectStartView();
         }
     };
 

@@ -43,7 +43,7 @@ public final class GlobalActionBindings {
 
     /** Common global key bindings used across all views/scenes. */
     public static final Set<ActionKeyBinding> COMMON_BINDINGS = Set.of(
-        new ActionKeyBinding(ACTION_BOOT_SHOW_PLAY_VIEW,              bare(KeyCode.F3)),
+        new ActionKeyBinding(ACTION_START_GAME,                       bare(KeyCode.F3)),
         new ActionKeyBinding(ACTION_ENTER_FULLSCREEN,                 bare(KeyCode.F11)),
         new ActionKeyBinding(ACTION_OPEN_EDITOR,                      alt_shift(KeyCode.E)),
         new ActionKeyBinding(ACTION_SHOW_HELP,                        bare(KeyCode.H)),

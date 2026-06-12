@@ -204,6 +204,8 @@ public enum TengenMsPacMan_GameState {
             final GameModel gameModel = gameContext.model();
             final GameLevel level = gameContext.requireLevel();
 
+            // In case, entering game over state was forced by user:
+            gameContext.model().lives().setCount(0);
             timer().restartTicks(level.gameOverStateTicks());
             gameModel.onGameOver(gameContext, level);
         }
