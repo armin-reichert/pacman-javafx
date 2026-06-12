@@ -3,7 +3,9 @@
  */
 package de.amr.pacmanfx.tengenmspacman;
 
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameVariant;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
@@ -26,6 +28,7 @@ public class DashboardSectionJoypad extends DashboardSection {
 
         final ImageView nesControllerImage = new ImageView(
             resourceManager.loadImage("/de/amr/pacmanfx/ui/graphics/nes-controller.jpg"));
+
         addRow(nesControllerImage);
 
         addDynamicLabeledValue("[SELECT]",
@@ -45,6 +48,12 @@ public class DashboardSectionJoypad extends DashboardSection {
                 buttonKey(joypad, JoypadButton.LEFT),
                 buttonKey(joypad, JoypadButton.RIGHT))
         );
+
+        // Take dashboard title from Tengen Ms. Pac-Man text bundle
+        final GameVariant tengenGameVariant = game.gameVariant(GameVariantID.TENGEN_MS_PACMAN.name());
+        setText(tengenGameVariant.uiConfig().translate("infobox.joypad.title"));
+
+        visibleProperty().bind(game.gameVariantNameProperty().isEqualTo(GameVariantID.TENGEN_MS_PACMAN.name()));
     }
 
     private static String buttonKey(Joypad joypad, JoypadButton button) {

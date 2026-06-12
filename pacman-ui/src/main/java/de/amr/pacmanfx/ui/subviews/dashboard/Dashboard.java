@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -79,25 +80,17 @@ public class Dashboard {
         return false;
     }
 
-    private static DashboardSection configure(DashboardSection section, String title, boolean maximized) {
-        section.setText(title);
-        section.setDisplayedMaximized(maximized);
-        return section;
-    }
-
-    private Game game;
-
     private final VBox rootPane = new VBox();
     private final Map<Identifier, DashboardSection> sections = new LinkedHashMap<>();
     private final DashboardConfig config;
 
+    private Game game;
+
+    private final ChangeListener<Boolean> visibilityChangeHandler = (_, _, _) -> updateLayout();
+
     public Dashboard(DashboardConfig config) {
         this.config = requireNonNull(config);
-        rootPane.visibleProperty().addListener((_, _, visible) -> {
-            if (visible) {
-                updateLayout();
-            }
-        });
+        rootPane.visibleProperty().addListener(visibilityChangeHandler);
         rootPane.setPadding(new Insets(10));
     }
 
@@ -130,8 +123,25 @@ public class Dashboard {
 
     public void removeSection(Identifier id) {
         requireNonNull(id);
-        sections.remove(id);
-        updateLayout();
+        final DashboardSection section = sections.get(id);
+        if (section != null) {
+            section.visibleProperty().removeListener(visibilityChangeHandler);
+            sections.remove(id);
+            updateLayout();
+        }
+    }
+
+    public void addSection(Identifier id, DashboardSection section) {
+        requireNonNull(id);
+        requireNonNull(section);
+        sections.put(id, section);
+        section.visibleProperty().addListener(visibilityChangeHandler);
+    }
+
+    public void addSection(Identifier id, DashboardSection section, String title, boolean maximized) {
+        section.setText(title);
+        section.setDisplayedMaximized(maximized);
+        addSection(id, section);
     }
 
     /**
@@ -143,29 +153,24 @@ public class Dashboard {
     public void addCommonSection(TranslationManager translator, DashboardID id) {
         requireNonNull(translator);
         requireNonNull(id);
-        final DashboardSection section = createCommonSection(this, id);
-        final boolean maximized = isSectionMaximizedByDefault(id);
-        sections.put(id, configure(section, translator.translate(titleKey(id)), maximized));
-    }
 
-    public void addSection(Identifier id, DashboardSection section, String title, boolean maximized) {
-        requireNonNull(id);
-        requireNonNull(section);
-        requireNonNull(title);
-        sections.put(id, configure(section, title, maximized));
+        final DashboardSection section = createCommonSection(this, id);
+        section.setText(translator.translate(titleKey(id)));
+        section.setDisplayedMaximized(isSectionMaximizedByDefault(id));
+        addSection(id, section);
     }
 
     /**
      * Adds all dashboard sections defined by the given ID. The README info box is automatically inserted at the first position.
      *
      * @param translator translator for localized text keys
-     * @param ids list of dashboard section IDs
+     * @param idList list of dashboard section IDs
      */
-    public void addCommonSections(TranslationManager translator, List<DashboardID> ids) {
-        requireNonNull(translator);
-        requireNonNull(ids);
+    public void addCommonSections(TranslationManager translator, List<DashboardID> idList) {
+        requireNonNull(idList);
+
         addCommonSection(translator, DashboardID.README);
-        for (DashboardID id : ids) {
+        for (DashboardID id : idList) {
             if (id != DashboardID.README) addCommonSection(translator, id);
         }
     }
@@ -175,8 +180,9 @@ public class Dashboard {
         return Optional.ofNullable(sections.get(id));
     }
 
-    private void updateLayout() {
+    public void updateLayout() {
         final List<DashboardSection> reorderedSections = new ArrayList<>(sections.entrySet().stream()
+            .filter(e -> e.getValue().isVisible())
             .filter(e -> e.getKey() != DashboardID.README)
             .filter(e -> e.getKey() != DashboardID.ABOUT)
             .map(Map.Entry::getValue)

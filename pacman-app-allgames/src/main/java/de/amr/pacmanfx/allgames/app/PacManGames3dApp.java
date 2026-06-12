@@ -154,13 +154,7 @@ public class PacManGames3dApp extends Application {
     private void configureDashboard() {
         final GamePlayView playView = game.ui().subViews().gamePlayView();
         final Dashboard dashboard = playView.dashboard();
-
         playView.configureDashboard(DASHBOARD_IDs, game.ui().translations());
-        // Add "Joypad" section
-        dashboard.addSection(
-            TengenMsPacMan_DashboardID.JOYPAD,
-            new DashboardSectionJoypad(dashboard),
-            game.gameVariant(TENGEN_MS_PACMAN.name()).uiConfig().translate("infobox.joypad.title"),
-            false);
+        dashboard.addSection(TengenMsPacMan_DashboardID.JOYPAD, new DashboardSectionJoypad(dashboard));
     }
 }

@@ -42,7 +42,6 @@ public class TengenMsPacMan_App extends Application {
             .build();
 
         final GamePlayView playView = game.ui().subViews().gamePlayView();
-
         playView.configureDashboard(List.of(
             DashboardID.GENERAL,
             DashboardID.GAME_CONTROL,
@@ -54,11 +53,7 @@ public class TengenMsPacMan_App extends Application {
             DashboardID.ABOUT
         ), game.ui().translations());
 
-        playView.dashboard().addSection(
-            TengenMsPacMan_DashboardID.JOYPAD,
-            new DashboardSectionJoypad(playView.dashboard()),
-            game.gameVariant(TENGEN_MS_PACMAN.name()).uiConfig().translate("infobox.joypad.title"),
-            false);
+        playView.dashboard().addSection(TengenMsPacMan_DashboardID.JOYPAD, new DashboardSectionJoypad(playView.dashboard()));
 
         game.ui().extensions().addExtension(TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, new TengenMsPacMan_UISettings());
 
