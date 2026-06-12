@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static java.util.Objects.requireNonNull;
@@ -69,11 +68,12 @@ public class StartPagesView extends Carousel implements SubView {
             Logger.debug("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
-                pages.get(oldIndex).onExitStartPage(game);
+                pages.get(oldIndex).onExit();
             }
             if (newIndex != -1) {
                 StartPage startPage = pages.get(newIndex);
-                startPage.onEnterStartPage(game);
+                startPage.connect(game);
+                startPage.onEnter();
                 startPage.rootPane().requestFocus();
             }
         });
@@ -97,7 +97,7 @@ public class StartPagesView extends Carousel implements SubView {
     public void onExit() {
         pauseProgressTimer();
         actionBindings.dispose();
-        currentStartPage().ifPresent(startPage -> startPage.onExitStartPage(game));
+        currentStartPage().ifPresent(StartPage::onExit);
     }
 
     @Override
@@ -137,10 +137,6 @@ public class StartPagesView extends Carousel implements SubView {
     @Override
     public Optional<Supplier<String>> optTitleSupplier() {
         return Optional.of(this::composeTitle);
-    }
-
-    public Stream<StartPage> startPages() {
-        return pages.stream();
     }
 
     public Optional<StartPage> currentStartPage() {

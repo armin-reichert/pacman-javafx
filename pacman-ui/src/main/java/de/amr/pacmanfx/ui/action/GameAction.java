@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.Validations;
@@ -26,7 +27,6 @@ public abstract class GameAction {
         if (isEnabled(game)) {
             try {
                 doAction(game);
-                Logger.trace("Action '{}' executed", id);
                 return true;
             }
             catch (Exception x) {
@@ -34,7 +34,7 @@ public abstract class GameAction {
                 return false;
             }
         } else {
-            Logger.warn("Action '{}' not executed (disabled)", id);
+            Logger.warn("Action {}' not executed (disabled)", id);
             return false;
         }
     }

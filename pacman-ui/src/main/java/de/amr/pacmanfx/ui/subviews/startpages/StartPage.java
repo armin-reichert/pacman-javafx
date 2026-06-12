@@ -9,68 +9,18 @@ import org.tinylog.Logger;
 
 /**
  * Represents a single start page in the application's start‑view system.
- * <p>
- * A {@code StartPage} encapsulates:
- * <ul>
- *   <li>its visual root node,</li>
- *   <li>initialization logic executed once when the page is created,</li>
- *   <li>lifecycle callbacks for entering and leaving the page,</li>
- *   <li>a human‑readable title used by navigation components.</li>
- * </ul>
- *
- * <h2>Lifecycle</h2>
- * <ol>
- *   <li>{@link #onEnterStartPage(Game)} is invoked each time the page becomes visible.</li>
- *   <li>{@link #onExitStartPage(Game)} is invoked when the page is left.</li>
- * </ol>
- *
- * Implementations should be lightweight and avoid long‑running operations in lifecycle methods,
- * as these are typically executed on the JavaFX Application Thread.
  */
 public interface StartPage {
 
-    /**
-     * Returns the root layout node representing this start page.
-     * <p>
-     * The returned {@link Pane} is inserted into the start‑view container.
-     * Implementations should create this node once and reuse it.
-     *
-     * @return the root JavaFX layout node for this page
-     */
     Pane rootPane();
 
-    /**
-     * Called whenever this start page becomes the active page.
-     * <p>
-     * Typical uses include:
-     * <ul>
-     *   <li>refreshing dynamic content,</li>
-     *   <li>starting animations,</li>
-     *   <li>resetting UI state specific to this page.</li>
-     * </ul>
-     *
-     * @param game the global UI façade
-     */
-    void onEnterStartPage(Game game);
+    void connect(Game game);
 
-    /**
-     * Called when the user navigates away from this start page.
-     * <p>
-     * The default implementation logs the transition. Implementations may override
-     * this method to stop animations, release temporary resources, or persist state.
-     *
-     * @param game the global UI façade
-     */
-    default void onExitStartPage(Game game) {
+    void onEnter();
+
+    default void onExit() {
         Logger.info("Exit start page {}", this);
     }
 
-    /**
-     * Returns the human‑readable title of this start page.
-     * <p>
-     * Titles are used by navigation components, menus, or debugging tools.
-     *
-     * @return the page title
-     */
     String title();
 }

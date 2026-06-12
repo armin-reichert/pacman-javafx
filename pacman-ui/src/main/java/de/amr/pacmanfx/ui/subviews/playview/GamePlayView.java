@@ -156,7 +156,7 @@ public class GamePlayView implements SubView {
 
     @Override
     public void onExit() {
-        game.stopGame();
+        game.stop();
         game.ui().sounds().stopAll();
         game.ui().sounds().stopAndDisposeVoice();
         actionBindings.dispose();

@@ -37,7 +37,7 @@ public class PacManXXL_StartPage implements StartPage {
     private static final ResourceManager XXL_RES = () -> PacManXXL_PacMan_UIConfig.class;
     private static final String XXL_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
 
-    private static final Image WALLPAPER = XXL_RES.loadImage(XXL_PATH + "graphics/screenshot.png");
+    private static final Image WALLPAPER_IMAGE = XXL_RES.loadImage(XXL_PATH + "graphics/screenshot.png");
     private static final Media VOICE     = XXL_RES.loadMedia(XXL_PATH + "sound/game-description.mp3");
 
     private static final int   MENU_MIN_HEIGHT = 400;
@@ -56,14 +56,14 @@ public class PacManXXL_StartPage implements StartPage {
     private final StringProperty title = new SimpleStringProperty("Pac-Man XXL games");
 
     // Menu must adapt to selected game variant and global property change and scales with scene resize
-    private class MenuBinding {
+    private class MenuUpdater {
 
         private final ChangeListener<GameVariantID> gameVariantNameListener;
         private final ChangeListener<Boolean> cutScenesEnabledListener;
         private final ChangeListener<Boolean> play3DListener;
         private final ObservableValue<Double> scaling;
 
-        public MenuBinding(Game game) {
+        public MenuUpdater(Game game) {
             gameVariantNameListener = (_, _, variant) -> game.selectGameVariant(variant.name());
             play3DListener = (_, _, enable3D) -> game.ui().settings3D().view3DEnabledProperty().set(enable3D);
             cutScenesEnabledListener = (_, _, enableCutScenes) -> game.currentGameContext().flow().setCutScenesEnabled(enableCutScenes);
@@ -101,36 +101,39 @@ public class PacManXXL_StartPage implements StartPage {
         @Override
         public void onKeyboardStateChange(Keyboard keyboard) {
             if (keyboard.isKeyPressed(KeyCode.E)) {
-                openEditor(game);
+                pauseProgressTimer(game);
+                CommonActions.ACTION_OPEN_EDITOR.execute(game);
             }
             else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
-                startSelectedGame(game);
+                pauseProgressTimer(game);
+                game.start();
             }
             else if (keyboard.isKeyPressed(KeyCode.S)) {
-                game.ui().sounds().stopAndDisposeVoice();
                 game.shortMessage("OK, I shut my mouth");
+                stopTalking(game);
             }
-
         }
     }
 
     private final StackPane rootPane = new StackPane();
     private final PacManXXL_OptionMenu menu = new PacManXXL_OptionMenu();
 
-    private MenuBinding menuBinding;
+    private Game game;
+    private MenuUpdater menuBinding;
     private KeyboardInputHandler keyboardInputHandler;
 
     public PacManXXL_StartPage() {
         rootPane.getChildren().add(menu.rootPane());
-        rootPane.setBackground(UfxBackgrounds.createWallpaper(WALLPAPER));
+        rootPane.setBackground(UfxBackgrounds.createWallpaper(WALLPAPER_IMAGE));
         menu.setStyle(MENU_STYLE);
     }
 
-    private void init(Game game) {
-        requireNonNull(game);
+    @Override
+    public void connect(Game game) {
+        this.game = requireNonNull(game);
 
         if (menuBinding == null) {
-            menuBinding = new MenuBinding(game);
+            menuBinding = new MenuUpdater(game);
         }
         menuBinding.update();
 
@@ -146,28 +149,26 @@ public class PacManXXL_StartPage implements StartPage {
                 game.input().keyboard().addStateListener(keyboardInputHandler);
             }
         });
-
     }
 
     @Override
-    public void onEnterStartPage(Game game) {
+    public void onEnter() {
         final GameVariantID selectedGameVariant = menu.entryGameVariant().value();
         switch (selectedGameVariant) {
-            case ARCADE_PACMAN_XXL,ARCADE_MS_PACMAN_XXL -> game.selectGameVariant(selectedGameVariant.name());
+            case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> game.selectGameVariant(selectedGameVariant.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);
         }
-        init(game);
         menu.init(game);
-        game.input().keyboard().addStateListener(keyboardInputHandler);
         game.ui().sounds().playVoice(VOICE);
+        game.input().keyboard().addStateListener(keyboardInputHandler);
     }
 
     @Override
-    public void onExitStartPage(Game game) {
-        game.ui().sounds().stopAndDisposeVoice();
-        game.input().keyboard().removeStateListener(keyboardInputHandler);
+    public void onExit() {
+        stopTalking(game);
         menu.stopDrawLoop();
         menuBinding.clear();
+        game.input().keyboard().removeStateListener(keyboardInputHandler);
     }
 
     @Override
@@ -180,17 +181,14 @@ public class PacManXXL_StartPage implements StartPage {
         return title.get();
     }
 
-    // Private
+    // Private area
 
-    private void openEditor(Game game) {
-        game.ui().sounds().stopAndDisposeVoice();
+
+    private void pauseProgressTimer(Game game) {
         game.ui().subViews().startView().pauseProgressTimer();
-        CommonActions.ACTION_OPEN_EDITOR.execute(game);
     }
 
-    private void startSelectedGame(Game game) {
+    private void stopTalking(Game game) {
         game.ui().sounds().stopAndDisposeVoice();
-        game.ui().subViews().startView().pauseProgressTimer();
-        menu.startGame();
     }
 }

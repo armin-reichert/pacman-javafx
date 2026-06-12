@@ -16,7 +16,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -60,6 +59,26 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
+    public void connect(Game game) {
+        this.game = requireNonNull(game);
+        if (startButton == null) {
+            createAndAddStartButton(game);
+        }
+    }
+
+    @Override
+    public void onEnter() {
+        if (startButton != null) {
+            startButton.requestFocus();
+        }
+    }
+
+    @Override
+    public void onExit() {
+        stopTalking();
+    }
+
+    @Override
     public Pane rootPane() {
         return rootPane;
     }
@@ -69,32 +88,19 @@ public class FlyerStartPage implements StartPage {
         return title;
     }
 
-    @Override
-    public void onEnterStartPage(Game game) {
-        if (startButton != null) {
-            startButton.requestFocus();
-        }
-    }
-
-    @Override
-    public void onExitStartPage(Game game) {
+    protected void stopTalking() {
         game.ui().sounds().stopAndDisposeVoice();
     }
 
-    protected void init(Game game) {
-        requireNonNull(game);
-        if (this.game == null) {
-            final String buttonText = game.ui().translations().translate("play_button");
-            startButton = createStartButton(buttonText);
-            StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
-            rootPane.getChildren().add(startButton);
-            startButton.setAction(() -> CommonActions.ACTION_START_GAME.execute(game));
-            Logger.info("Start button for page {} created", this);
-        }
-        this.game = game;
+    private void createAndAddStartButton(Game game) {
+        final String buttonText = game.ui().translations().translate("play_button");
+        startButton = createAndAddStartButton(buttonText);
+        StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
+        rootPane.getChildren().add(startButton);
+        startButton.setAction(() -> CommonActions.ACTION_START_GAME.execute(game));
     }
 
-    private FancyButton createStartButton(String text) {
+    private FancyButton createAndAddStartButton(String text) {
         final var button = new FancyButton(
             text,
             DEFAULT_START_BUTTON_FONT,

@@ -108,10 +108,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         requestFocus();
     }
 
-    public void startGame() {
-        game.startGame();
-    }
-
     public void startDrawLoop() {
         super.startDrawLoop();
         chaseAnimation.start();

@@ -87,7 +87,7 @@ public final class CommonActions {
     };
 
     private static void startEditor(Game game, TileMapEditor editor) {
-        game.stopGame();
+        game.stop();
         editor.init(GameConstants.CUSTOM_MAP_DIR);
         editor.start();
     }
@@ -116,7 +116,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            game.startGame();
+            game.start();
         }
     };
 
@@ -189,7 +189,7 @@ public final class CommonActions {
                 gameState.onExit(gameContext);
             }
 
-            game.stopGame();
+            game.stop();
             game.clock().start();
             gameContext.flow().restartState(GameStateID.GAME_INTRO);
         }

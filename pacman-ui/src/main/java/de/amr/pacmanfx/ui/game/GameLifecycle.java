@@ -8,9 +8,9 @@ import javafx.stage.Stage;
 
 public interface GameLifecycle {
 
-    void stopGame();
+    void stop();
 
-    void startGame();
+    void start();
 
     void show(GameVariantID variantID, Stage stage);
 

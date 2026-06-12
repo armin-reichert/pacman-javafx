@@ -246,8 +246,7 @@ public final class GameImpl implements Game {
     }
 
     @Override
-    public void startGame() {
-        stopGame();
+    public void start() {
         currentGameContext().flow().setGameContext(currentGameContext);
         currentGameContext().flow().restartState(GameStateID.BOOT);
         ui().subViews().selectGamePlayView();
@@ -255,7 +254,7 @@ public final class GameImpl implements Game {
     }
 
     @Override
-    public void stopGame() {
+    public void stop() {
         currentGameContext.model().prepareNewGame();
 
         clock().stop();
@@ -275,7 +274,7 @@ public final class GameImpl implements Game {
     @Override
     public void terminate() {
         Logger.info("Application is terminated now. There is no way back!");
-        stopGame();
+        stop();
         ui.sprites().stopAnimationTimer();
         ui.sprites().animations().clear();
         ui.flashMessages().stopAnimationTimer();
@@ -389,7 +388,7 @@ public final class GameImpl implements Game {
         Platform.runLater(() -> {
             final String errorMessage = ui.translations().translate("error.oh_no_my_program");
             shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
-            stopGame();
+            stop();
             Logger.error("*** SOMETHING VERY BAD HAPPENED:");
             Logger.error(reason);
         });
