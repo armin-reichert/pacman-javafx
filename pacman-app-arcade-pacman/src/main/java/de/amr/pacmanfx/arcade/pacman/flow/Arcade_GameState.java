@@ -105,15 +105,15 @@ public enum Arcade_GameState {
 
         @Override
         public void onEnter(GameContext gameContext) {
-            final GameModel game = gameContext.model();
+            final GameModel gameModel = gameContext.model();
             final GameLevel level = gameContext.requireLevel();
 
-            game.prepareLevelForPlaying(level);
+            gameModel.prepareLevelForPlaying(level);
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
 
-            game.showLevelMessage(level, GameLevelMessageType.READY);
-            game.hud().creditOff().livesCounterOn();
+            gameModel.showLevelMessage(level, GameLevelMessageType.READY);
+            gameModel.hud().creditOff().livesCounterOn();
         }
 
         @Override
@@ -136,9 +136,9 @@ public enum Arcade_GameState {
 
         @Override
         public void onEnter(GameContext gameContext) {
-            final GameModel game = gameContext.model();
+            final GameModel gameModel = gameContext.model();
             lock(); // UI triggers timeout
-            game.onLevelCompleted(gameContext.requireLevel());
+            gameModel.onLevelCompleted(gameContext.requireLevel());
         }
 
         @Override
@@ -173,25 +173,25 @@ public enum Arcade_GameState {
 
         @Override
         public void onEnter(GameContext gameContext) {
-            final GameModel game = gameContext.model();
+            final GameModel gameModel = gameContext.model();
             final GameLevel level = gameContext.requireLevel();
 
             timer().restartTicks(level.gameOverStateTicks());
             //TODO check if this is needed
             gameContext.model().lives().setCount(0);
-            game.onGameOver(gameContext, level);
+            gameModel.onGameOver(gameContext, level);
         }
 
         @Override
         public void onUpdate(GameContext gameContext) {
             final GameFlow flow = gameContext.flow();
-            final GameModel game = gameContext.model();
+            final GameModel gameModel = gameContext.model();
 
             if (timer().hasExpired()) {
                 final GameLevel level = gameContext.requireLevel();
                 level.clearMessage();
-                game.cheats().clear();
-                if (game.canStartNewGame(gameContext)) {
+                gameModel.cheats().clear();
+                if (gameModel.canStartNewGame(gameContext)) {
                     flow.enterState(GameStateID.GAME_PREPARATION);
                 } else {
                     flow.enterState(GameStateID.GAME_INTRO);
