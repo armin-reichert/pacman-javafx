@@ -21,15 +21,23 @@ import static java.util.Objects.requireNonNull;
 
 public class FlyerStartPage implements StartPage {
 
-    public static final Font  DEFAULT_START_BUTTON_FONT = Ufx.deriveFont(GameUI_Constants.FONT_ARCADE_8, 32);
-    public static final Color DEFAULT_START_BUTTON_BGCOLOR = Color.rgb(0, 155, 252, 0.6);
-    public static final Color DEFAULT_START_BUTTON_FILL = Color.WHITE;
+    public record Config(
+        Font startButtonFont,
+        Color startButtonBgColor,
+        Color startButtonTextColor
+    ) {}
+
+    public static final Config DEFAULT_CONFIG = new Config(
+        Ufx.deriveFont(GameUI_Constants.FONT_ARCADE_8, 32),
+        Color.rgb(0, 155, 252, 0.6),
+        Color.WHITE);
 
     protected final StackPane rootPane = new StackPane();
     protected final Flyer flyer = new Flyer();
     protected final String title;
     protected FancyButton startButton;
     protected Game game;
+    protected Config config = DEFAULT_CONFIG;
 
     protected FlyerStartPage(String title) {
         this.title = requireNonNull(title);
@@ -101,20 +109,13 @@ public class FlyerStartPage implements StartPage {
     }
 
     private FancyButton createAndAddStartButton(String text) {
-        final var button = new FancyButton(
-            text,
-            DEFAULT_START_BUTTON_FONT,
-            DEFAULT_START_BUTTON_BGCOLOR,
-            DEFAULT_START_BUTTON_FILL);
-
+        final var button = new FancyButton(text, config.startButtonFont(), config.startButtonBgColor(), config.startButtonTextColor());
         button.translateYProperty().bind(rootPane.heightProperty().multiply(-0.1));
-
         button.fontProperty().bind(rootPane.heightProperty().map(
             pageHeight -> Font.font(
-                DEFAULT_START_BUTTON_FONT.getFamily(),
+                config.startButtonFont().getFamily(),
                 computeButtonHeight(pageHeight.doubleValue())))
         );
-
         return button;
     }
 
