@@ -97,13 +97,13 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage stage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
+        final PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
 
         try {
             if (useBuilder) {
                 game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
-                    .worldMapSelector(ARCADE_PACMAN_XXL, xxlMapSelector)
-                    .worldMapSelector(ARCADE_MS_PACMAN_XXL, xxlMapSelector)
+                    .worldMapSelector(ARCADE_PACMAN_XXL, sharedMapSelector)
+                    .worldMapSelector(ARCADE_MS_PACMAN_XXL, sharedMapSelector)
                     .startPage(ArcadePacMan_StartPage::new)
                     .startPage(ArcadeMsPacMan_StartPage::new)
                     .startPage(TengenMsPacMan_StartPage::new)
@@ -112,49 +112,41 @@ public class PacManGames3dApp extends Application {
             }
             else {
                 game = new GameImpl(machine, new GameViewImpl(sceneSize.x(), sceneSize.y()));
-                game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(xxlMapSelector);
-                game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(xxlMapSelector);
-                addStartPages();
+
+                game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(sharedMapSelector);
+                game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
+
+                final StartPagesView startView = game.ui().subViews().startView();
+                startView.addStartPage(new ArcadePacMan_StartPage());
+                startView.addStartPage(new ArcadeMsPacMan_StartPage());
+                startView.addStartPage(new TengenMsPacMan_StartPage());
+                startView.addStartPage(new PacManXXL_StartPage());
+                startView.setSelectedIndex(0);
             }
 
-            configureDashboard();
-            game.watchdog().addEventListener(xxlMapSelector); //TODO
+            game.ui().extensions().addExtension(TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, new TengenMsPacMan_UISettings());
+
+            //TODO add builder methods for dashboard configuration
+            final GamePlayView playView = game.ui().subViews().gamePlayView();
+            final Dashboard dashboard = playView.dashboard();
+            playView.configureDashboard(DASHBOARD_IDs, game.ui().translations());
+            dashboard.addSection(TengenMsPacMan_DashboardID.JOYPAD, new DashboardSectionJoypad(dashboard));
+
+            //TODO find more elegant solution
+            game.watchdog().addEventListener(sharedMapSelector);
 
             Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
+
+            game.show(GameVariantID.ARCADE_PACMAN, stage);
         }
         catch (RuntimeException x) {
             Logger.error(x, "An error occurred starting the game.");
             Platform.exit();
         }
-
-        game.ui().extensions().addExtension(TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, new TengenMsPacMan_UISettings());
-
-        game.show(GameVariantID.ARCADE_PACMAN, stage);
     }
 
     @Override
     public void stop() {
-        if (game != null) {
-            game.terminate();
-        }
-    }
-
-    // Private area
-
-    private void addStartPages() {
-        final StartPagesView startView = game.ui().subViews().startView();
-        startView.addStartPage(new ArcadePacMan_StartPage());
-        startView.addStartPage(new ArcadeMsPacMan_StartPage());
-        startView.addStartPage(new TengenMsPacMan_StartPage());
-        startView.addStartPage(new PacManXXL_StartPage());
-        startView.setSelectedIndex(0);
-    }
-
-    //TODO builder support
-    private void configureDashboard() {
-        final GamePlayView playView = game.ui().subViews().gamePlayView();
-        final Dashboard dashboard = playView.dashboard();
-        playView.configureDashboard(DASHBOARD_IDs, game.ui().translations());
-        dashboard.addSection(TengenMsPacMan_DashboardID.JOYPAD, new DashboardSectionJoypad(dashboard));
+        game.terminate();
     }
 }
