@@ -21,6 +21,12 @@ public interface ActionBindingsRegistry extends Disposable {
 
     Optional<GameAction> triggeredAction(Keyboard keyboard);
 
+    default void bindActionToKeyCombinations(GameAction action, KeyCodeCombination... combinations) {
+        for (var combination : combinations) {
+            bindActionToKeyCombination(action, combination);
+        }
+    }
+
     void bindActionToKeyCombination(GameAction action, KeyCodeCombination combination);
 
     void selectAnyMatchingBinding(GameAction action, Set<ActionKeyBinding> bindings);

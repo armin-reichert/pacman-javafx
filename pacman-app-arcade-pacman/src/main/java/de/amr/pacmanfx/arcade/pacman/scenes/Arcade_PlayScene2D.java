@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.ui.action.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
@@ -22,10 +23,15 @@ import de.amr.pacmanfx.ui.game.GlobalActionBindings;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 
+import static de.amr.pacmanfx.ui.action.CommonActions.*;
+import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_STEER_RIGHT;
+import static de.amr.pacmanfx.ui.input.Keyboard.bare;
+import static de.amr.pacmanfx.ui.input.Keyboard.control;
 import static de.amr.pacmanfx.ui.subviews.ContextMenuSupport.*;
 
 /**
@@ -134,6 +140,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
         actionBindings().registerAllBindings(GlobalActionBindings.STEERING_ACTION_BINDINGS);
         actionBindings().registerAllBindings(GlobalActionBindings.CHEAT_ACTION_BINDINGS);
 
+        Logger.info(actionBindings());
+
         game().ui().sounds().setEnabled(true);
 
         Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
@@ -141,7 +149,10 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void acceptDemoLevel() {
         actionBindings().registerAllBindings(ArcadePacMan_Actions.GAME_START_ACTION_BINDINGS);
+        Logger.info(actionBindings());
+
         game().ui().sounds().setEnabled(false);
+
         Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
     }
 
