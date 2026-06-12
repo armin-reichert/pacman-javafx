@@ -47,7 +47,7 @@ public final class GlobalActionBindings {
         new ActionKeyBinding(ACTION_ENTER_FULLSCREEN,                 bare(KeyCode.F11)),
         new ActionKeyBinding(ACTION_OPEN_EDITOR,                      alt_shift(KeyCode.E)),
         new ActionKeyBinding(ACTION_SHOW_HELP,                        bare(KeyCode.H)),
-        new ActionKeyBinding(ACTION_QUIT_GAME_SCENE,                  bare(KeyCode.Q)),
+        new ActionKeyBinding(ACTION_QUIT_PLAY_VIEW,                   bare(KeyCode.Q)),
         new ActionKeyBinding(ACTION_SIMULATION_SLOWER,                alt(KeyCode.MINUS)),
         new ActionKeyBinding(ACTION_SIMULATION_SLOWEST,               alt_shift(KeyCode.MINUS)),
         new ActionKeyBinding(ACTION_SIMULATION_FASTER,                alt(KeyCode.PLUS)),

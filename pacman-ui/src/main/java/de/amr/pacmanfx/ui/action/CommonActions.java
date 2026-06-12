@@ -121,14 +121,16 @@ public final class CommonActions {
         }
     };
 
-    public static final GameAction ACTION_QUIT_GAME_SCENE = new GameAction("quit_game_scene") {
+    public static final GameAction ACTION_QUIT_PLAY_VIEW = new GameAction("quit_play_view") {
 
         @Override
         protected void doAction(Game game) {
             final GameContext gameContext = game.currentGameContext();
-
             if (gameContext.model().isPlaying()) {
                 gameContext.flow().enterState(GameStateID.GAME_OVER);
+            }
+            else {
+                game.ui().subViews().selectStartView();
             }
         }
     };

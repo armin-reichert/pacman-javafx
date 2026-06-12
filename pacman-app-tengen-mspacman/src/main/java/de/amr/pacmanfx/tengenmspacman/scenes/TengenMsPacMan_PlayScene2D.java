@@ -19,6 +19,7 @@ import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.game.Game;
@@ -47,7 +48,6 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplay.SCROLLING;
-import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_QUIT_GAME_SCENE;
 import static de.amr.pacmanfx.ui.subviews.ContextMenuSupport.*;
 import static java.util.Objects.requireNonNull;
 
@@ -191,7 +191,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "immunity");
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, game().ui().settings().mutedProperty, "muted");
-        addLocalizedActionItem(contextMenu, game(), translations, ACTION_QUIT_GAME_SCENE, "quit");
+        addLocalizedActionItem(contextMenu, game(), translations, CommonActions.ACTION_QUIT_PLAY_VIEW, "quit");
 
         return Optional.of(contextMenu);
     }
