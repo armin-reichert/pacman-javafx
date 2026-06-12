@@ -5,6 +5,8 @@
 package de.amr.pacmanfx.ui.game;
 
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.uilib.GameClockFX;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -22,8 +24,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManGamesMachine {
 
-    private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private final Set<Cartridge> cartridges = new HashSet<>();
+    private final CoinMechanism coinMechanism = new CoinMechanism(99);
+    private final GameClock clock = new GameClockFX();
 
     public PacManGamesMachine() {
         final boolean ok = validateUserDirs();
@@ -34,6 +37,10 @@ public class PacManGamesMachine {
 
     public CoinMechanism coinMechanism() {
         return coinMechanism;
+    }
+
+    public GameClock clock() {
+        return clock;
     }
 
     /**

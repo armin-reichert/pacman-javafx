@@ -140,7 +140,7 @@ public interface GameClock {
      *
      * @return the total tick count
      */
-    long tickCount();
+    long currentTick();
 
     /**
      * Returns the number of pausable updates executed. This count increases

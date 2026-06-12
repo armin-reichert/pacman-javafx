@@ -53,7 +53,7 @@ public final class ArcadePacMan_Actions {
         }
     };
 
-    public static final GameAction ACTION_START_GAME = new GameAction("start_game") {
+    public static final GameAction ACTION_START_PLAYING = new GameAction("start_playing") {
         @Override
         public void doAction(Game game) {
             game.ui().sounds().stopAndDisposeVoice();
@@ -76,7 +76,7 @@ public final class ArcadePacMan_Actions {
 
     public static final Set<ActionKeyBinding> GAME_START_ACTION_BINDINGS = Set.of(
         new ActionKeyBinding(ACTION_INSERT_COIN, bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
-        new ActionKeyBinding(ACTION_START_GAME,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
+        new ActionKeyBinding(ACTION_START_PLAYING,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
     );
 
     private ArcadePacMan_Actions() {}

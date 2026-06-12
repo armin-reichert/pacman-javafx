@@ -160,7 +160,7 @@ public class GameClockFX implements GameClock {
     }
 
     @Override
-    public long tickCount() { return tickCount; }
+    public long currentTick() { return tickCount; }
 
     @Override
     public long pausableUpdatesCount() {

@@ -94,6 +94,11 @@ public enum Arcade_GameState {
                 flow.enterState(GameStateID.GAME_LEVEL_PLAYING);
             }
         }
+
+        @Override
+        public void onExit(GameContext gameContext) {
+            gameContext.coinMechanism().consumeCoin();
+        }
     }),
 
     GAME_LEVEL_CONTINUE( new GameState(GameStateID.GAME_LEVEL_CONTINUE) {

@@ -4,9 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene;
 
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -86,19 +84,6 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         gameModel.optGameLevel().ifPresent(level -> handle2D3DSwitch(currentConfig, level, prevGameScene, nextGameScene));
 
         gameSceneProperty().set(nextGameScene);
-    }
-
-    public void quitCurrentGameScene(Game game) {
-        optCurrentGameScene().ifPresent(scene -> {
-            //TODO Rethink this
-            final CoinMechanism coinMechanism = game.coinMechanism();
-            boolean shouldConsumeCoin = game.currentGameContext().state().nameIsOneOf(GameStateID.GAME_OR_LEVEL_STARTING.name())
-                || game.currentGameContext().model().isPlaying();
-            if (shouldConsumeCoin && !coinMechanism.isEmpty()) {
-                coinMechanism.consumeCoin();
-            }
-            Logger.info("Quit game scene ({}), returning to start view", scene.getClass().getSimpleName());
-        });
     }
 
     /**

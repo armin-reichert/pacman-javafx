@@ -117,9 +117,7 @@ public final class CommonActions {
 
         @Override
         protected void doAction(Game game) {
-            game.coinMechanism().setNumCoins(0);
             game.startGame();
-            game.ui().subViews().selectGamePlayView();
         }
     };
 
@@ -179,7 +177,6 @@ public final class CommonActions {
 
             game.stopGame();
             gameModel.cheats().clear(); //TODO needed?
-            game.ui().gameScenes().quitCurrentGameScene(game);
             game.ui().subViews().selectStartView();
         }
     };

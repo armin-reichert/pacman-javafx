@@ -17,6 +17,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
+import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,13 +31,14 @@ public class TestEatingFood {
 
     static class TestContext implements GameContext {
 
+        private final PacManGamesMachine machine = new PacManGamesMachine();
         private final GameFlow  gameFlow  = new Arcade_GameFlow();
         private final GameModel gameModel = new ArcadePacMan_GameModel();
         private final GameRules gameRules = new ArcadePacMan_GameRules();
 
         @Override
         public CoinMechanism coinMechanism() {
-            return CoinMechanism.OUT_OF_SERVICE;
+            return machine.coinMechanism();
         }
 
         @Override

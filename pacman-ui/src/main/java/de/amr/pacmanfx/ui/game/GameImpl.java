@@ -35,7 +35,6 @@ import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.FlashMessageManager;
 import de.amr.pacmanfx.ui.view.GameViewImpl;
-import de.amr.pacmanfx.uilib.GameClockFX;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
@@ -80,8 +79,6 @@ public final class GameImpl implements Game {
 
     private final GameViewImpl view;
 
-    private final GameClock gameClock;
-
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
 
     private CollisionStrategy collisionStrategy = CollisionStrategy.SAME_TILE;
@@ -91,7 +88,6 @@ public final class GameImpl implements Game {
     public GameImpl(PacManGamesMachine machine, GameViewImpl view) {
         this.machine = requireNonNull(machine);
         this.view = requireNonNull(view);
-        this.gameClock = new GameClockFX();
         this.prefs = new PreferencesManager(getClass());
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
@@ -192,7 +188,7 @@ public final class GameImpl implements Game {
 
     @Override
     public GameClock clock() {
-        return gameClock;
+        return machine.clock();
     }
 
     @Override
@@ -254,6 +250,7 @@ public final class GameImpl implements Game {
         stopGame();
         currentGameContext().flow().setGameContext(currentGameContext);
         currentGameContext().flow().restartState(GameStateID.BOOT);
+        ui().subViews().selectGamePlayView();
         Platform.runLater(clock()::start);
     }
 
@@ -324,12 +321,12 @@ public final class GameImpl implements Game {
     }
 
     private void initGameClock() {
-        gameClock.setUpdateAction(() -> {
+        clock().setUpdateAction(() -> {
             currentGameContext.flow().makeStep();
-            ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameClock.tickCount()));
+            ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock().currentTick()));
         });
-        gameClock.setPermanentAction(() -> ui.subViews().currentView().render());
-        gameClock.setErrorHandler(this::ka_tas_tro_phe);
+        clock().setPermanentAction(() -> ui.subViews().currentView().render());
+        clock().setErrorHandler(this::ka_tas_tro_phe);
     }
 
     private void initMainScene() {

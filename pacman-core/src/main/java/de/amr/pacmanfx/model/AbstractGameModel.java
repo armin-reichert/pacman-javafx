@@ -177,9 +177,6 @@ public abstract class AbstractGameModel implements GameModel {
 
     @Override
     public void onGameOver(GameContext gameContext, GameLevel level) {
-        if (!gameContext.coinMechanism().isEmpty()) {
-            gameContext.coinMechanism().consumeCoin(); //TODO not sure if coin should be consumed after game is over
-        }
         updateHighScore();
         setPlaying(false);
         showLevelMessage(level, GameLevelMessageType.GAME_OVER);

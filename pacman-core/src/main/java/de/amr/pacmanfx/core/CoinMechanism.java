@@ -4,25 +4,17 @@
 
 package de.amr.pacmanfx.core;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
 public class CoinMechanism {
 
-    public static final CoinMechanism OUT_OF_SERVICE = new CoinMechanism(0) {
-
-        @Override
-        public void setNumCoins(int n) {}
-
-        @Override
-        public void insertCoin() {}
-
-        @Override
-        public void consumeCoin() {}
-    };
-
     private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
+
+    private final BooleanProperty enabled = new SimpleBooleanProperty(true);
 
     private final int maxCoins;
 
@@ -31,6 +23,18 @@ public class CoinMechanism {
             throw new IllegalArgumentException("maxCoins < 0");
         }
         this.maxCoins = maxCoins;
+    }
+
+    public boolean isEnabled() {
+        return enabled.get();
+    }
+
+    public void setEnabled(boolean enabled) {
+        enabledProperty().set(enabled);
+    }
+
+    public BooleanProperty enabledProperty() {
+        return enabled;
     }
 
     public IntegerProperty numCoinsProperty() {
@@ -53,7 +57,7 @@ public class CoinMechanism {
         return numCoins() == 0;
     }
 
-    public void setNumCoins(int n) {
+    private void setNumCoins(int n) {
         if (n >= 0 && n <= maxCoins) {
             numCoinsProperty().set(n);
         } else {
