@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.core.GameVariantID;
@@ -11,17 +12,19 @@ import javafx.scene.media.Media;
 
 public class TengenMsPacMan_StartPage extends FlyerStartPage {
 
+    private static final String ROOT_PATH = "/de/amr/pacmanfx/tengenmspacman/";
+
     private static final ResourceManager RM = () -> TengenMsPacMan_StartPage.class;
 
-    private static final Media VOICE = RM.loadMedia("/de/amr/pacmanfx/tengenmspacman/sound/flyer-text.mp3");
+    private static final Media VOICE = RM.loadMedia(ROOT_PATH + "sound/flyer-text.mp3");
 
     private static final Image[] FLYER_IMAGES = {
-        RM.loadImage("/de/amr/pacmanfx/tengenmspacman/graphics/flyer-page-1.png"),
-        RM.loadImage("/de/amr/pacmanfx/tengenmspacman/graphics/flyer-page-2.png")
+        RM.loadImage(ROOT_PATH + "graphics/flyer-page-1.png"),
+        RM.loadImage(ROOT_PATH + "graphics/flyer-page-2.png")
     };
 
     public TengenMsPacMan_StartPage() {
-        super("Ms. Pac-Man (Tengen)");
+        super("Ms. Pac-Man (Tengen)"); //TODO localize
         flyer.setImages(FLYER_IMAGES);
     }
 
