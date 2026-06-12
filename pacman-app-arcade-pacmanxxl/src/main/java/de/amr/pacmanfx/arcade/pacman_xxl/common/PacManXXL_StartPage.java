@@ -16,8 +16,6 @@ import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
@@ -46,7 +44,7 @@ public class PacManXXL_StartPage implements StartPage {
     private static final int   MENU_MAX_HEIGHT = 800;
     private static final float MENU_REL_HEIGHT = 0.66f;
 
-    private static final OptionMenuStyle MENU_STYLE = OptionMenuStyle.builder()
+    private static final OptionMenuStyle DEFAULT_MENU_STYLE = OptionMenuStyle.builder()
         .titleFont(Ufx.deriveFont(GameUI_Constants.FONT_PAC_FONT_GOOD, 4 * TS))
         .titleTextFill(ArcadePalette.ARCADE_RED)
         .textFont(Ufx.deriveFont(GameUI_Constants.FONT_ARCADE_8, TS))
@@ -55,17 +53,15 @@ public class PacManXXL_StartPage implements StartPage {
         .usageTextFill(ArcadePalette.ARCADE_YELLOW)
         .build();
 
-    private final StringProperty title = new SimpleStringProperty();
-
     // Menu must adapt to selected game variant and global property change and scales with scene resize
     private class MenuUpdater {
 
-        private final ChangeListener<GameVariantID> gameVariantNameListener;
-        private final ChangeListener<Boolean> cutScenesEnabledListener;
-        private final ChangeListener<Boolean> play3DListener;
-        private final ObservableValue<Double> scaling;
+        private ChangeListener<GameVariantID> gameVariantNameListener;
+        private ChangeListener<Boolean> cutScenesEnabledListener;
+        private ChangeListener<Boolean> play3DListener;
+        private ObservableValue<Double> scaling;
 
-        public MenuUpdater(Game game) {
+        public void connect(Game game) {
             gameVariantNameListener = (_, _, variant) -> game.selectGameVariant(variant.name());
             play3DListener = (_, _, enable3D) -> game.ui().settings3D().view3DEnabledProperty().set(enable3D);
             cutScenesEnabledListener = (_, _, enableCutScenes) -> game.currentGameContext().flow().setCutScenesEnabled(enableCutScenes);
@@ -116,37 +112,32 @@ public class PacManXXL_StartPage implements StartPage {
     private final PacManXXL_OptionMenu menu = new PacManXXL_OptionMenu();
 
     private Game game;
-    private MenuUpdater menuBinding;
-    private KeyboardInputHandler keyboardInputHandler;
+    private final String title;
+
+    private final MenuUpdater menuUpdater = new MenuUpdater();
+    private final KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler();
 
     public PacManXXL_StartPage() {
+        title = "Pac-Man XXL games"; // TODO localize
+        menu.setStyle(DEFAULT_MENU_STYLE);
         rootPane.getChildren().add(menu.rootPane());
         rootPane.setBackground(UfxBackgrounds.createWallpaper(WALLPAPER_IMAGE));
-        menu.setStyle(MENU_STYLE);
-        title.set("Pac-Man XXL games"); // TODO localize
+
+        rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
+            if (hasFocus) {
+                menu.init(game);
+                menuUpdater.update();
+                game.input().keyboard().removeStateListener(keyboardInputHandler);
+                game.input().keyboard().addStateListener(keyboardInputHandler);
+            }
+        });
     }
 
     @Override
     public void connect(Game game) {
         this.game = requireNonNull(game);
-
-        if (menuBinding == null) {
-            menuBinding = new MenuUpdater(game);
-        }
-        menuBinding.update();
-
-        if (keyboardInputHandler == null) {
-            keyboardInputHandler = new KeyboardInputHandler();
-        }
-
-        rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
-            if (hasFocus) {
-                menu.init(game);
-                menuBinding.update();
-                game.input().keyboard().removeStateListener(keyboardInputHandler);
-                game.input().keyboard().addStateListener(keyboardInputHandler);
-            }
-        });
+        menuUpdater.connect(game);
+        menuUpdater.update();
     }
 
     @Override
@@ -165,7 +156,7 @@ public class PacManXXL_StartPage implements StartPage {
     public void onExit() {
         stopTalking(game);
         menu.stopDrawLoop();
-        menuBinding.clear();
+        menuUpdater.clear();
         game.input().keyboard().removeStateListener(keyboardInputHandler);
     }
 
@@ -176,7 +167,7 @@ public class PacManXXL_StartPage implements StartPage {
 
     @Override
     public String title() {
-        return title.get();
+        return title;
     }
 
     // Private area

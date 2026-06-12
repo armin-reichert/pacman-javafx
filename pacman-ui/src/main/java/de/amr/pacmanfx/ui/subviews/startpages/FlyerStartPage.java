@@ -44,6 +44,7 @@ public class FlyerStartPage implements StartPage {
 
         rootPane.getChildren().add(flyer);
 
+        //TODO use global keyboard instead?
         rootPane.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
