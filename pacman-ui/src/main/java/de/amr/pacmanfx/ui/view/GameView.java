@@ -9,8 +9,6 @@ import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.beans.property.ObjectProperty;
 import javafx.stage.Stage;
 
-import java.util.Objects;
-
 public interface GameView {
 
     void setGame(Game game);

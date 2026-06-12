@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui.d3;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -16,7 +17,6 @@ import javafx.scene.control.ToggleGroup;
 
 import java.util.Objects;
 
-import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_QUIT_PLAY_VIEW;
 import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
 import static de.amr.pacmanfx.ui.subviews.ContextMenuSupport.*;
 import static java.util.Objects.requireNonNull;
@@ -77,7 +77,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
 
         addSeparator(this);
         addLocalizedCheckBox(this, translator, game.ui().settings().mutedProperty, "muted");
-        addLocalizedActionItem(this, game, translator, ACTION_QUIT_PLAY_VIEW, "quit");
+        addLocalizedActionItem(this, game, translator, CommonActions.ACTION_QUIT, "quit");
 
         settings3D.cameraPerspectiveIdProperty().addListener(perspectiveListener);
     }

@@ -55,6 +55,11 @@ public class EditorView implements SubView {
     }
 
     @Override
+    public void handleQuit(Game game) {
+        editor.quit();
+    }
+
+    @Override
     public Region rootPane() {
         return editor.ui().layoutPane();
     }

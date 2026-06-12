@@ -4,15 +4,16 @@
 
 package de.amr.pacmanfx.ui.subviews;
 
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.QuitHandler;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
 import javafx.scene.Node;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public interface SubView {
+public interface SubView extends QuitHandler {
 
     /**
      * Returns the action bindings manager responsible for resolving keyboard input

@@ -121,17 +121,12 @@ public final class CommonActions {
         }
     };
 
-    public static final GameAction ACTION_QUIT_PLAY_VIEW = new GameAction("quit_play_view") {
+    public static final GameAction ACTION_QUIT = new GameAction("quit") {
 
         @Override
         protected void doAction(Game game) {
-            final GameContext gameContext = game.currentGameContext();
-            if (gameContext.model().isPlaying()) {
-                gameContext.flow().enterState(GameStateID.GAME_OVER);
-            }
-            else {
-                game.ui().subViews().selectStartView();
-            }
+            Logger.info("Call QUIT handler for {}", game.ui().subViews().currentView());
+            game.ui().subViews().currentView().handleQuit(game);
         }
     };
 

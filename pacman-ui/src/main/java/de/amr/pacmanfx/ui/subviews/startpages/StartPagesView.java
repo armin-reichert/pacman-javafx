@@ -101,6 +101,11 @@ public class StartPagesView extends Carousel implements SubView {
     }
 
     @Override
+    public void handleQuit(Game game) {
+
+    }
+
+    @Override
     protected Node createNavigationButton(Direction dir) {
         final Color iconColor = Color.gray(0.69);
         final FontAwesomeIcon icon = switch (dir) {

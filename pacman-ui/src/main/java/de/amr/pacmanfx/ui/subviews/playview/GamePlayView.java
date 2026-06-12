@@ -4,26 +4,25 @@
 
 package de.amr.pacmanfx.ui.subviews.playview;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GlobalActionBindings;
 import de.amr.pacmanfx.ui.game.UISettings;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.SubView;
-import de.amr.pacmanfx.ui.subviews.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardConfig;
+import de.amr.pacmanfx.ui.subviews.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.subviews.help.HelpView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
@@ -33,7 +32,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
@@ -152,17 +150,32 @@ public class GamePlayView implements SubView {
     @Override
     public void onEnter() {
         rootPane.requestFocus();
-        //TODO Handle "quit" action
         actionBindings.registerAllBindings(GlobalActionBindings.COMMON_BINDINGS);
-        actionBindings.bindActionToKeyCombination(CommonActions.ACTION_QUIT_PLAY_VIEW, Keyboard.bare(KeyCode.Q));
         Logger.info(actionBindings);
         gameSceneFrame.installBindings();
     }
 
     @Override
     public void onExit() {
+        game.stopGame();
+        game.ui().sounds().stopAll();
+        game.ui().sounds().stopAndDisposeVoice();
         actionBindings.dispose();
         gameSceneFrame.uninstallBindings();
+    }
+
+    @Override
+    public void handleQuit(Game game) {
+        final GameContext gameContext = game.currentGameContext();
+        final GameModel gameModel = gameContext.model();
+
+        if (gameModel.isPlaying()) {
+            gameContext.optCurrentLevel().ifPresent(level -> gameModel.onGameOver(gameContext, level));
+            gameModel.cheats().clear();
+            gameModel.lives().setCount(0);
+        }
+        onExit();
+        game.ui().subViews().selectStartView();
     }
 
     @Override
