@@ -84,11 +84,11 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
-        machine.insertCartridge(ArcadePacMan_Cartridge.CARTRIDGE);
-        machine.insertCartridge(ArcadeMsPacMan_Cartridge.CARTRIDGE);
-        machine.insertCartridge(TengenMsPacMan_Cartridge.CARTRIDGE);
-        machine.insertCartridge(PacManXXL_PacMan_Cartridge.CARTRIDGE);
-        machine.insertCartridge(PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
+        machine.loadCartridge(ArcadePacMan_Cartridge.CARTRIDGE);
+        machine.loadCartridge(ArcadeMsPacMan_Cartridge.CARTRIDGE);
+        machine.loadCartridge(TengenMsPacMan_Cartridge.CARTRIDGE);
+        machine.loadCartridge(PacManXXL_PacMan_Cartridge.CARTRIDGE);
+        machine.loadCartridge(PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
 
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));

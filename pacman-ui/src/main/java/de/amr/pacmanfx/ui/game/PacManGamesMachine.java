@@ -33,7 +33,7 @@ public class PacManGamesMachine {
     /**
      * @param cartridge the game specification implementing the game variant
      */
-    public void insertCartridge(Cartridge cartridge) {
+    public void loadCartridge(Cartridge cartridge) {
         requireNonNull(cartridge);
 
         if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(cartridge.name()).matches()) {

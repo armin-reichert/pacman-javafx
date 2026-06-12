@@ -30,7 +30,7 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        machine.insertCartridge(TengenMsPacMan_Cartridge.CARTRIDGE);
+        machine.loadCartridge(TengenMsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override

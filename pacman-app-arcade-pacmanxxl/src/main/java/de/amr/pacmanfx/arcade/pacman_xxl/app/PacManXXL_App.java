@@ -28,8 +28,8 @@ public class PacManXXL_App extends Application {
 
     @Override
     public void init() {
-        machine.insertCartridge(PacManXXL_PacMan_Cartridge.CARTRIDGE);
-        machine.insertCartridge(PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
+        machine.loadCartridge(PacManXXL_PacMan_Cartridge.CARTRIDGE);
+        machine.loadCartridge(PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override

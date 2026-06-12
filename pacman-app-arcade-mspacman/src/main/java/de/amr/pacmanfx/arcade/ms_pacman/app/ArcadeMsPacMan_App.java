@@ -26,7 +26,7 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        machine.insertCartridge(ArcadeMsPacMan_Cartridge.CARTRIDGE);
+        machine.loadCartridge(ArcadeMsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override
