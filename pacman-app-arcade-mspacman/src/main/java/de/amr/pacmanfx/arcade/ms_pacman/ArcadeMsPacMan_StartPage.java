@@ -26,12 +26,13 @@ public class ArcadeMsPacMan_StartPage extends FlyerStartPage {
     public ArcadeMsPacMan_StartPage()  {
         super("Ms. Pac-Man (Arcade)"); // TODO; localize
         flyer.setImages(FLYER_IMAGES);
+        setVoice(VOICE);
     }
 
     @Override
     public void onEnter() {
         game.selectGameVariant(GameVariantID.ARCADE_MS_PACMAN.name());
-        game.ui().sounds().playVoice(VOICE);
         flyer.selectPage(0);
+        startTalking();
     }
 }

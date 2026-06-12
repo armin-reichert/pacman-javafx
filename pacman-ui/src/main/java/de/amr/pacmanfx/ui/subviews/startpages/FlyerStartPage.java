@@ -14,6 +14,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -32,12 +33,14 @@ public class FlyerStartPage implements StartPage {
         Color.rgb(0, 155, 252, 0.6),
         Color.WHITE);
 
+    protected Config config = DEFAULT_CONFIG;
+
     protected final StackPane rootPane = new StackPane();
     protected final Flyer flyer = new Flyer();
     protected final String title;
     protected FancyButton startButton;
     protected Game game;
-    protected Config config = DEFAULT_CONFIG;
+    protected Media voice;
 
     protected FlyerStartPage(String title) {
         this.title = requireNonNull(title);
@@ -95,6 +98,16 @@ public class FlyerStartPage implements StartPage {
     @Override
     public String title() {
         return title;
+    }
+
+    protected void setVoice(Media voice) {
+        this.voice = voice;
+    }
+
+    protected void startTalking() {
+        if (voice != null) {
+            game.ui().sounds().playVoice(voice);
+        }
     }
 
     protected void stopTalking() {

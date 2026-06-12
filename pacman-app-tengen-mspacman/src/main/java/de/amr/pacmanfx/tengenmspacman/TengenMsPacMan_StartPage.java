@@ -26,12 +26,13 @@ public class TengenMsPacMan_StartPage extends FlyerStartPage {
     public TengenMsPacMan_StartPage() {
         super("Ms. Pac-Man (Tengen)"); //TODO localize
         flyer.setImages(FLYER_IMAGES);
+        setVoice(VOICE);
     }
 
     @Override
     public void onEnter() {
         game.selectGameVariant(GameVariantID.TENGEN_MS_PACMAN.name());
-        game.ui().sounds().playVoice(VOICE); // must be called after selecting game variant!
         flyer.selectPage(0);
+        startTalking();
     }
 }
