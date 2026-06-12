@@ -1,35 +1,27 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
-import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.event.CreditAddedEvent;
-import de.amr.pacmanfx.gamestate.GameState;
-import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.action.ActionKeyBinding;
-import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.d3.DefaultFactory3D;
-import de.amr.pacmanfx.ui.d3.Factory3D;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.d2.HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.gamescene.GameScene;
+import de.amr.pacmanfx.ui.d3.DefaultFactory3D;
+import de.amr.pacmanfx.ui.d3.Factory3D;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -41,132 +33,20 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 
 /**
  * UI configuration for the Arcade Pac‑Man game variant.
- *
- * <p>This class defines the complete visual, audio, and scene‑selection
- * configuration for the authentic arcade‑style Pac‑Man experience. It acts
- * as the central theme provider for this variant, supplying all assets,
- * renderers, animations, color schemes, and game scenes required by the
- * {@link Game} framework.</p>
- *
- * <p>The configuration covers several major responsibilities:</p>
- *
- * <ul>
- *   <li><strong>Asset management</strong> – loads and disposes images,
- *       colors, localized texts, and sprite sheets used throughout the
- *       arcade UI. All assets are stored in an {@link AssetMap} for easy
- *       lookup by renderers and scenes.</li>
- *
- *   <li><strong>Sound initialization</strong> – registers all sound effects,
- *       voice clips, and siren loops with the {@link SoundManager}, ensuring
- *       that audio playback matches the original arcade behavior.</li>
- *
- *   <li><strong>Renderer factories</strong> – creates specialized renderers
- *       for 2D scenes, the game level, the HUD, and individual actors. These
- *       renderers use arcade‑accurate palettes, sprite sheets, and smoothing
- *       rules.</li>
- *
- *   <li><strong>3D model factories</strong> – provides 3D shapes and models
- *       for Pac‑Man and the lives counter when the 3D play scene is enabled.
- *       Colors and lighting are derived from the arcade palette.</li>
- *
- *   <li><strong>Animation factories</strong> – constructs animation sets for
- *       Pac‑Man and each ghost personality, ensuring that movement and state
- *       transitions match the arcade rules.</li>
- *
- *   <li><strong>Scene creation and caching</strong> – lazily creates and
- *       caches all game scenes (boot, intro, start, play, cutscenes, 3D
- *       play scene). Scenes are reused across the game lifecycle and
- *       disposed when the configuration is released.</li>
- *
- *   <li><strong>Scene selection logic</strong> – maps the current game state
- *       to the appropriate {@link GameScene}, including support for
- *       intermissions, cutscenes, and developer test states.</li>
- *
- *   <li><strong>Color scheme selection</strong> – provides the arcade
- *       wall/door color scheme for maze rendering.</li>
- * </ul>
- *
- * <p>Although this class is large, it serves as the authoritative definition
- * of the Arcade Pac‑Man presentation layer. All visual and audio behavior
- * specific to this variant is centralized here, keeping the rest of the UI
- * framework clean and variant‑agnostic.</p>
- *
- * <p>Instances of this configuration are created by the {@link Game}
- * during initialization and remain active for the lifetime of the UI.</p>
  */
 public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
-
-    /**
-     * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
-     */
-    public static final GameAction ACTION_INSERT_COIN = new GameAction("insert_coin") {
-        @Override
-        public void doAction(Game game) {
-            final CoinMechanism slot = game.coinMechanism();
-            final GameContext gameContext = game.currentGameContext();
-            game.ui().sounds().stopAndDisposeVoice();
-            game.ui().sounds().setEnabled(true);
-            slot.insertCoin();
-            gameContext.flow().publishGameEvent(new CreditAddedEvent(gameContext, 1));
-            gameContext.flow().enterState(GameStateID.GAME_PREPARATION);
-        }
-
-        @Override
-        public boolean isEnabled(Game game) {
-            final CoinMechanism slot = game.coinMechanism();
-            if (slot.isFull()) {
-                return false;
-            }
-            final GameContext gameContext = game.currentGameContext();
-            // In demo level, coin can always be inserted
-            if (gameContext.model().isDemoLevelRunning()) {
-                return true;
-            }
-            final GameState gameState = gameContext.state();
-            return GameStateID.GAME_INTRO.identifies(gameState) || GameStateID.GAME_PREPARATION.identifies(gameState);
-        }
-    };
-
-    public static final GameAction ACTION_START_GAME = new GameAction("start_game") {
-        @Override
-        public void doAction(Game game) {
-            game.ui().sounds().stopAndDisposeVoice();
-            game.currentGameContext().flow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
-        }
-
-        @Override
-        public boolean isEnabled(Game game) {
-            final CoinMechanism slot = game.coinMechanism();
-            if (slot.isEmpty()) {
-                return false;
-            }
-            final GameContext gameContext = game.currentGameContext();
-            final GameModel gameModel = gameContext.model();
-            final GameState gameState = gameContext.state();
-            return (GameStateID.GAME_INTRO.identifies(gameState) || GameStateID.GAME_PREPARATION.identifies(gameState))
-                && gameModel.canStartNewGame(gameContext);
-        }
-    };
-
-    public static final Set<ActionKeyBinding> GAME_START_ACTION_BINDINGS = Set.of(
-        new ActionKeyBinding(ACTION_INSERT_COIN, bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
-        new ActionKeyBinding(ACTION_START_GAME,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
-    );
 
     public static final WorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new WorldMapColorScheme(
         ARCADE_BLACK.toString(), ARCADE_BLUE.toString(), ARCADE_PINK.toString(), ARCADE_ROSE.toString()

@@ -10,7 +10,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Actions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
@@ -65,7 +65,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate() {
-        actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(ArcadePacMan_Actions.GAME_START_ACTION_BINDINGS);
         actionBindings().registerAllBindings(GlobalActionBindings.SCENE_TESTS_BINDINGS);
 
         sceneFlow.restartState(SceneState.STARTING);

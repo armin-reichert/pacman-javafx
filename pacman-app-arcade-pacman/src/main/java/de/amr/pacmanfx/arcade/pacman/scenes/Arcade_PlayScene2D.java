@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Actions;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
@@ -129,7 +129,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void acceptDemoLevel() {
-        actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(ArcadePacMan_Actions.GAME_START_ACTION_BINDINGS);
         game().ui().sounds().setEnabled(false);
         Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
     }

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Actions;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
@@ -20,7 +20,7 @@ public class Arcade_PlayScene3D extends PlayScene3D {
     public void replaceActionBindings(GameLevel level) {
         actionBindings().dispose();
         if (level.isDemoLevel()) {
-            actionBindings().registerAllBindings(ArcadePacMan_UIConfig.GAME_START_ACTION_BINDINGS);
+            actionBindings().registerAllBindings(ArcadePacMan_Actions.GAME_START_ACTION_BINDINGS);
         } else {
             actionBindings().registerAllBindings(GlobalActionBindings.STEERING_ACTION_BINDINGS);
             actionBindings().registerAllBindings(GlobalActionBindings.CHEAT_ACTION_BINDINGS);
