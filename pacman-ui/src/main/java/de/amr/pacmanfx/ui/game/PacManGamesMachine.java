@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.game;
 
+import de.amr.pacmanfx.core.CoinMechanism;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -21,6 +22,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManGamesMachine {
 
+    private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private final Set<Cartridge> cartridges = new HashSet<>();
 
     public PacManGamesMachine() {
@@ -28,6 +30,10 @@ public class PacManGamesMachine {
         if (!ok) {
             throw new IllegalStateException("GameBox: User directory validation failed");
         }
+    }
+
+    public CoinMechanism coinMechanism() {
+        return coinMechanism;
     }
 
     /**

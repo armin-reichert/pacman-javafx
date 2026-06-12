@@ -26,10 +26,6 @@ public class CoinMechanism {
 
     private final int maxCoins;
 
-    public CoinMechanism() {
-        this(99);
-    }
-
     public CoinMechanism(int maxCoins) {
         if (maxCoins < 0) {
             throw new IllegalArgumentException("maxCoins < 0");

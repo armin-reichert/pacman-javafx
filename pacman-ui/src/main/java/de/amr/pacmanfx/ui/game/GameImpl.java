@@ -82,8 +82,6 @@ public final class GameImpl implements Game {
 
     private final GameClock gameClock;
 
-    private final CoinMechanism coinMechanism;
-
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
 
     private CollisionStrategy collisionStrategy = CollisionStrategy.SAME_TILE;
@@ -94,7 +92,6 @@ public final class GameImpl implements Game {
         this.machine = requireNonNull(machine);
         this.view = requireNonNull(view);
         this.gameClock = new GameClockFX();
-        this.coinMechanism = new CoinMechanism();
         this.prefs = new PreferencesManager(getClass());
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
@@ -106,7 +103,7 @@ public final class GameImpl implements Game {
         gameVariantName.addListener((_, _, newVariantName) -> {
             final GameVariant gameVariant = gameVariant(newVariantName);
             currentGameContext = new GameContextImpl(this, gameVariant);
-            currentGameContext.model().hud().creditProperty().bind(coinMechanism.numCoinsProperty());
+            currentGameContext.model().hud().creditProperty().bind(coinMechanism().numCoinsProperty());
         });
     }
 
@@ -200,7 +197,7 @@ public final class GameImpl implements Game {
 
     @Override
     public CoinMechanism coinMechanism() {
-        return coinMechanism;
+        return machine.coinMechanism();
     }
 
     @Override
