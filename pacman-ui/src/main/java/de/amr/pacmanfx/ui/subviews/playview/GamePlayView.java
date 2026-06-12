@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.subviews.playview;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
@@ -166,14 +165,7 @@ public class GamePlayView implements SubView {
 
     @Override
     public void handleQuit(Game game) {
-        final GameContext gameContext = game.currentGameContext();
-        final GameModel gameModel = gameContext.model();
-
-        if (gameModel.isPlaying()) {
-            gameContext.optCurrentLevel().ifPresent(level -> gameModel.onGameOver(gameContext, level));
-            gameModel.cheats().clear();
-            gameModel.lives().setCount(0);
-        }
+        game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.handleQuit(game));
         onExit();
         game.ui().subViews().selectStartView();
     }

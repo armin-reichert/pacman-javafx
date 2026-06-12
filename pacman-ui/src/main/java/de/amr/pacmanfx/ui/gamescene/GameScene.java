@@ -11,6 +11,7 @@ import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
+import de.amr.pacmanfx.ui.action.QuitHandler;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
@@ -25,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Abstract base class for all game scenes (2D and 3D).
  */
-public abstract class GameScene implements Disposable {
+public abstract class GameScene implements QuitHandler, Disposable {
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for " + getClass().getSimpleName());
 
@@ -108,6 +109,11 @@ public abstract class GameScene implements Disposable {
 
     /** Called when the scene is deactivated. */
     public void onDeactivate() {}
+
+    @Override
+    public void handleQuit(Game game) {
+        onDeactivate();
+    }
 
     /**
      * Called every game tick.

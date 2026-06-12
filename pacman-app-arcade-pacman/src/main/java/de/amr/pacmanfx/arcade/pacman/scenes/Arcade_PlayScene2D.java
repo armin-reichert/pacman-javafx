@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Actions;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
@@ -45,6 +46,16 @@ public class Arcade_PlayScene2D extends GameScene2D {
             updateLivesCounter(gameState(), gameModel(), level.entities().pac());
             optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(gameContext(), level));
         });
+    }
+
+    @Override
+    public void handleQuit(Game game) {
+        if (gameModel().isPlaying()) {
+            gameContext().optCurrentLevel().ifPresent(level -> gameModel().onGameOver(gameContext(), level));
+            gameModel().cheats().clear();
+            gameModel().lives().setCount(0);
+        }
+        onDeactivate();
     }
 
     @Override
