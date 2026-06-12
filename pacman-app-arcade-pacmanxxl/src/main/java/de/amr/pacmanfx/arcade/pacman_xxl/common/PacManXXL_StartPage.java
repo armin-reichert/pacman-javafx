@@ -34,11 +34,13 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManXXL_StartPage implements StartPage {
 
-    private static final ResourceManager XXL_RES = () -> PacManXXL_PacMan_UIConfig.class;
-    private static final String XXL_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
+    private static final String ROOT_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
 
-    private static final Image WALLPAPER_IMAGE = XXL_RES.loadImage(XXL_PATH + "graphics/screenshot.png");
-    private static final Media VOICE     = XXL_RES.loadMedia(XXL_PATH + "sound/game-description.mp3");
+    private static final ResourceManager RM = () -> PacManXXL_PacMan_UIConfig.class;
+
+    private static final Image WALLPAPER_IMAGE = RM.loadImage(ROOT_PATH + "graphics/screenshot.png");
+
+    private static final Media VOICE = RM.loadMedia(ROOT_PATH + "sound/game-description.mp3");
 
     private static final int   MENU_MIN_HEIGHT = 400;
     private static final int   MENU_MAX_HEIGHT = 800;
@@ -53,7 +55,7 @@ public class PacManXXL_StartPage implements StartPage {
         .usageTextFill(ArcadePalette.ARCADE_YELLOW)
         .build();
 
-    private final StringProperty title = new SimpleStringProperty("Pac-Man XXL games");
+    private final StringProperty title = new SimpleStringProperty();
 
     // Menu must adapt to selected game variant and global property change and scales with scene resize
     private class MenuUpdater {
@@ -92,11 +94,6 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     private class KeyboardInputHandler implements Keyboard.StateListener{
-        private final Game game;
-
-        public KeyboardInputHandler(Game game) {
-            this.game = game;
-        }
 
         @Override
         public void onKeyboardStateChange(Keyboard keyboard) {
@@ -126,6 +123,7 @@ public class PacManXXL_StartPage implements StartPage {
         rootPane.getChildren().add(menu.rootPane());
         rootPane.setBackground(UfxBackgrounds.createWallpaper(WALLPAPER_IMAGE));
         menu.setStyle(MENU_STYLE);
+        title.set("Pac-Man XXL games"); // TODO localize
     }
 
     @Override
@@ -138,7 +136,7 @@ public class PacManXXL_StartPage implements StartPage {
         menuBinding.update();
 
         if (keyboardInputHandler == null) {
-            keyboardInputHandler = new KeyboardInputHandler(game);
+            keyboardInputHandler = new KeyboardInputHandler();
         }
 
         rootPane.focusedProperty().addListener((_, _, hasFocus) -> {

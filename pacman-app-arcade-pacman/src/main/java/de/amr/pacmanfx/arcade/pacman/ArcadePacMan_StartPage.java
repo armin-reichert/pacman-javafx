@@ -12,18 +12,20 @@ import javafx.scene.media.Media;
 
 public class ArcadePacMan_StartPage extends FlyerStartPage {
 
+    private static final String ROOT_PATH = "/de/amr/pacmanfx/arcade/pacman/";
+
     private static final ResourceManager RM = () -> ArcadePacMan_StartPage.class;
 
-    private static final Media VOICE = RM.loadMedia("/de/amr/pacmanfx/arcade/pacman/sound/flyer-text.mp3");
+    private static final Media VOICE = RM.loadMedia(ROOT_PATH + "sound/flyer-text.mp3");
 
     private static final Image[] FLYER_IMAGES = {
-        RM.loadImage("/de/amr/pacmanfx/arcade/pacman/graphics/flyer-page-1.jpg"),
-        RM.loadImage("/de/amr/pacmanfx/arcade/pacman/graphics/flyer-page-2.jpg"),
-        RM.loadImage("/de/amr/pacmanfx/arcade/pacman/graphics/flyer-page-3.jpg")
+        RM.loadImage(ROOT_PATH + "graphics/flyer-page-1.jpg"),
+        RM.loadImage(ROOT_PATH + "graphics/flyer-page-2.jpg"),
+        RM.loadImage(ROOT_PATH + "graphics/flyer-page-3.jpg")
     };
 
     public ArcadePacMan_StartPage() {
-        super("Pac-Man (Arcade)");
+        super("Pac-Man (Arcade)"); // TODO: localize
         flyer.setImages(FLYER_IMAGES);
     }
 
