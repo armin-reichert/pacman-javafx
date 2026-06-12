@@ -28,11 +28,11 @@ public final class ArcadePacMan_Actions {
     public static final GameAction ACTION_INSERT_COIN = new GameAction("insert_coin") {
         @Override
         public void doAction(Game game) {
-            final CoinMechanism slot = game.coinMechanism();
+            final CoinMechanism coinMechanism = game.coinMechanism();
             final GameContext gameContext = game.currentGameContext();
             game.ui().sounds().stopAndDisposeVoice();
             game.ui().sounds().setEnabled(true);
-            slot.insertCoin();
+            coinMechanism.insertCoin();
             gameContext.flow().publishGameEvent(new CreditAddedEvent(gameContext, 1));
             gameContext.flow().enterState(GameStateID.GAME_PREPARATION);
         }
