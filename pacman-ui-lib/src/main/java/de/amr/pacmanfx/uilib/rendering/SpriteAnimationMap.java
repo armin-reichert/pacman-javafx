@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationAccessor;
@@ -20,27 +20,27 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <ID> Sprite animation ID type
  */
-public abstract class SpriteAnimationMap<ID extends Named> implements SpriteAnimationAccessor {
+public abstract class SpriteAnimationMap<ID extends Identifier> implements SpriteAnimationAccessor {
 
     protected final SpriteSheet<ID> spriteSheet;
-    protected final Map<Named, SpriteAnimation> animationsByID = new HashMap<>();
-    protected Named selectedAnimationID;
+    protected final Map<Identifier, SpriteAnimation> animationsByID = new HashMap<>();
+    protected Identifier selectedAnimationID;
 
     public SpriteAnimationMap(SpriteSheet<ID> spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
     }
 
-    protected abstract SpriteAnimation createAnimation(Named animationID);
+    protected abstract SpriteAnimation createAnimation(Identifier animationID);
 
     public SpriteSheet<ID> spriteSheet() { return spriteSheet; }
 
-    public boolean isSelected(Named id) {
+    public boolean isSelected(Identifier id) {
         requireNonNull(id);
         return id.equals(selectedAnimationID);
     }
 
     @Override
-    public void select(Named animationID) {
+    public void select(Identifier animationID) {
         selectedAnimationID = animationID;
     }
 
@@ -51,7 +51,7 @@ public abstract class SpriteAnimationMap<ID extends Named> implements SpriteAnim
     }
 
     @Override
-    public SpriteAnimation animation(Named animationID) {
+    public SpriteAnimation animation(Identifier animationID) {
         if (!animationsByID.containsKey(animationID)) {
             SpriteAnimation spriteAnimation = createAnimation(animationID);
             animationsByID.put(animationID, spriteAnimation);
@@ -59,7 +59,7 @@ public abstract class SpriteAnimationMap<ID extends Named> implements SpriteAnim
         return animationsByID.get(animationID);
     }
 
-    public void setAnimation(Named animationID, SpriteAnimation animation) {
+    public void setAnimation(Identifier animationID, SpriteAnimation animation) {
         requireNonNull(animationID);
         requireNonNull(animation);
         animationsByID.put(animationID, animation);
@@ -70,12 +70,12 @@ public abstract class SpriteAnimationMap<ID extends Named> implements SpriteAnim
     }
 
     @Override
-    public Named selectedAnimationID() {
+    public Identifier selectedAnimationID() {
         return selectedAnimationID;
     }
 
     @Override
-    public void setAnimationFrame(Named animationID, int frameIndex) {
+    public void setAnimationFrame(Identifier animationID, int frameIndex) {
         if (!animationID.equals(selectedAnimationID)) {
             selectedAnimationID = animationID;
             if (currentAnimation() != null) {

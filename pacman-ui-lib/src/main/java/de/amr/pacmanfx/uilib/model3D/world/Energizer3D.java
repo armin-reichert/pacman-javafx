@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 
 public class Energizer3D implements DisposableGraphicsObject {
 
-    public enum AnimationID implements Named {
+    public enum AnimationID implements Identifier {
         ENERGIZER_PUMPING;
 
         public String atTile(Vector2i tile) {

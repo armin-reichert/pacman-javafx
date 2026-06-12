@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
@@ -32,7 +32,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     }
 
     @Override
-    protected SpriteAnimation createAnimation(Named animationID) {
+    protected SpriteAnimation createAnimation(Identifier animationID) {
         final SpriteAnimation animation = switch (animationID) {
             case ArcadePacMan_AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.MS_PAC_FULL))

@@ -24,7 +24,7 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.GameImpl;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
-import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
+import de.amr.pacmanfx.ui.subviews.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
@@ -63,17 +63,17 @@ public class PacManGames3dApp extends Application {
         return b ? "using" : "without using";
     }
 
-    private static final List<CommonDashboardID> DASHBOARD_IDs = List.of(
-        CommonDashboardID.GENERAL,
-        CommonDashboardID.GAME_CONTROL,
-        CommonDashboardID.SETTINGS_3D,
-        CommonDashboardID.ANIMATION_INFO,
-        CommonDashboardID.GAME_INFO,
-        CommonDashboardID.ACTOR_INFO,
-        CommonDashboardID.CUSTOM_MAPS,
-        CommonDashboardID.KEYS_GLOBAL,
-        CommonDashboardID.KEYS_LOCAL,
-        CommonDashboardID.ABOUT
+    private static final List<DashboardID> DASHBOARD_IDs = List.of(
+        DashboardID.GENERAL,
+        DashboardID.GAME_CONTROL,
+        DashboardID.SETTINGS_3D,
+        DashboardID.ANIMATION_INFO,
+        DashboardID.GAME_INFO,
+        DashboardID.ACTOR_INFO,
+        DashboardID.CUSTOM_MAPS,
+        DashboardID.KEYS_GLOBAL,
+        DashboardID.KEYS_LOCAL,
+        DashboardID.ABOUT
     );
 
     private final PacManGamesMachine machine = new PacManGamesMachine();

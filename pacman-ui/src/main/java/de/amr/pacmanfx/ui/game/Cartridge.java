@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.game;
 
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
@@ -13,11 +13,11 @@ import de.amr.pacmanfx.ui.config.UIConfig;
 import java.util.function.Supplier;
 
 public record Cartridge(
-    Named id,
+    Identifier id,
     Supplier<? extends GameFlow> gameFlowFactory,
     Supplier<? extends AbstractGameModel> gameModelFactory,
     Supplier<? extends GameRules> gameRulesFactory,
-    Supplier<? extends UIConfig > uiConfigFactory) implements Named
+    Supplier<? extends UIConfig > uiConfigFactory) implements Identifier
 {
     @Override
     public String name() {

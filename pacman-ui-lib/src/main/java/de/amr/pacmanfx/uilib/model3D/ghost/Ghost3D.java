@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.model3D.ghost;
 
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
 
-    public enum AnimationID implements Named {
+    public enum AnimationID implements Identifier {
         BRAKING, DRESS, FLASHING;
 
         public AnimationKey key(Ghost ghost) {

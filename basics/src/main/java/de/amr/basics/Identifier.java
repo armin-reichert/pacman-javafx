@@ -8,10 +8,10 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public interface Named {
+public interface Identifier {
     String name();
 
-    default boolean identifies(Named thing) {
+    default boolean identifies(Identifier thing) {
         requireNonNull(thing);
         return thing.name().equals(name());
     }

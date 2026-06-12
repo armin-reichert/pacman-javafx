@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
@@ -30,7 +30,7 @@ public class Stork extends Actor {
         }
 
         @Override
-        protected SpriteAnimation createAnimation(Named animationID) {
+        protected SpriteAnimation createAnimation(Identifier animationID) {
             if (animationID.equals(ArcadeMsPacMan_AnimationID.STORK_FLYING)) {
                 final SpriteAnimation animation = SpriteAnimationBuilder.builder()
                     .sprites(spriteSheet.sprites(SpriteID.STORK))

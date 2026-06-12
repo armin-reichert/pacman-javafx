@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
@@ -29,7 +29,7 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     }
 
     @Override
-    protected SpriteAnimation createAnimation(Named animationID) {
+    protected SpriteAnimation createAnimation(Identifier animationID) {
         final SpriteAnimation animation = switch (animationID) {
             case ArcadePacMan_AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.MS_PACMAN_FULL))

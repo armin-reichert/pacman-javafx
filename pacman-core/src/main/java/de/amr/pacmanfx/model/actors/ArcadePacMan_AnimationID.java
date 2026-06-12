@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 
-public enum ArcadePacMan_AnimationID implements Named {
+public enum ArcadePacMan_AnimationID implements Identifier {
     PAC_DYING,
     PAC_FULL,
     PAC_MUNCHING,

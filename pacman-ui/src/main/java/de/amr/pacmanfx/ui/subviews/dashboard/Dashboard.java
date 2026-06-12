@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
+import de.amr.basics.Identifier;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.geometry.Insets;
@@ -17,62 +18,62 @@ import static java.util.Objects.requireNonNull;
 
 public class Dashboard {
 
-    private static final EnumMap<CommonDashboardID, Boolean> MAXIMIZED = new EnumMap<>(CommonDashboardID.class);
+    private static final EnumMap<DashboardID, Boolean> MAXIMIZED = new EnumMap<>(DashboardID.class);
     static {
-        MAXIMIZED.put(CommonDashboardID.ABOUT, true);
-        MAXIMIZED.put(CommonDashboardID.ACTOR_INFO, true);
-        MAXIMIZED.put(CommonDashboardID.ANIMATION_INFO, true);
-        MAXIMIZED.put(CommonDashboardID.CUSTOM_MAPS, true);
-        MAXIMIZED.put(CommonDashboardID.GENERAL, false);
-        MAXIMIZED.put(CommonDashboardID.GAME_CONTROL, false);
-        MAXIMIZED.put(CommonDashboardID.GAME_INFO, true);
-        MAXIMIZED.put(CommonDashboardID.KEYS_GLOBAL, true);
-        MAXIMIZED.put(CommonDashboardID.KEYS_LOCAL, false);
-        MAXIMIZED.put(CommonDashboardID.README, false);
-        MAXIMIZED.put(CommonDashboardID.SETTINGS_3D, true);
+        MAXIMIZED.put(DashboardID.ABOUT, true);
+        MAXIMIZED.put(DashboardID.ACTOR_INFO, true);
+        MAXIMIZED.put(DashboardID.ANIMATION_INFO, true);
+        MAXIMIZED.put(DashboardID.CUSTOM_MAPS, true);
+        MAXIMIZED.put(DashboardID.GENERAL, false);
+        MAXIMIZED.put(DashboardID.GAME_CONTROL, false);
+        MAXIMIZED.put(DashboardID.GAME_INFO, true);
+        MAXIMIZED.put(DashboardID.KEYS_GLOBAL, true);
+        MAXIMIZED.put(DashboardID.KEYS_LOCAL, false);
+        MAXIMIZED.put(DashboardID.README, false);
+        MAXIMIZED.put(DashboardID.SETTINGS_3D, true);
     }
 
-    private static DashboardSection createCommonSection(Dashboard dashboard, DashboardID id) {
+    private static DashboardSection createCommonSection(Dashboard dashboard, Identifier id) {
         requireNonNull(dashboard);
         requireNonNull(id);
         return switch (id) {
-            case CommonDashboardID.ABOUT          -> new DashboardSectionAbout(dashboard);
-            case CommonDashboardID.ACTOR_INFO     -> new DashboardSectionActorInfo(dashboard);
-            case CommonDashboardID.ANIMATION_INFO -> new DashboardSectionAnimations3D(dashboard);
+            case DashboardID.ABOUT          -> new DashboardSectionAbout(dashboard);
+            case DashboardID.ACTOR_INFO     -> new DashboardSectionActorInfo(dashboard);
+            case DashboardID.ANIMATION_INFO -> new DashboardSectionAnimations3D(dashboard);
             // this dashboard section needs additional configuration to work!
-            case CommonDashboardID.CUSTOM_MAPS    -> new DashboardSectionCustomMaps(dashboard);
-            case CommonDashboardID.GENERAL        -> new DashboardSectionGeneral(dashboard);
-            case CommonDashboardID.GAME_CONTROL   -> new DashboardSectionGameControl(dashboard);
-            case CommonDashboardID.GAME_INFO      -> new DashboardSectionGameInfo(dashboard);
-            case CommonDashboardID.KEYS_GLOBAL    -> new DashboardSectionKeyShortcutsGlobal(dashboard);
-            case CommonDashboardID.KEYS_LOCAL     -> new DashboardSectionKeyboardShortcutsCurrentGameScene(dashboard);
-            case CommonDashboardID.README         -> new DashboardSectionReadmeFirst(dashboard);
-            case CommonDashboardID.SETTINGS_3D    -> new DashboardSection3DSettings(dashboard);
+            case DashboardID.CUSTOM_MAPS    -> new DashboardSectionCustomMaps(dashboard);
+            case DashboardID.GENERAL        -> new DashboardSectionGeneral(dashboard);
+            case DashboardID.GAME_CONTROL   -> new DashboardSectionGameControl(dashboard);
+            case DashboardID.GAME_INFO      -> new DashboardSectionGameInfo(dashboard);
+            case DashboardID.KEYS_GLOBAL    -> new DashboardSectionKeyShortcutsGlobal(dashboard);
+            case DashboardID.KEYS_LOCAL     -> new DashboardSectionKeyboardShortcutsCurrentGameScene(dashboard);
+            case DashboardID.README         -> new DashboardSectionReadmeFirst(dashboard);
+            case DashboardID.SETTINGS_3D    -> new DashboardSection3DSettings(dashboard);
             default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);
         };
     }
 
-    private static String titleKey(DashboardID id) {
+    private static String titleKey(Identifier id) {
         requireNonNull(id);
         return switch (id) {
-            case CommonDashboardID.ABOUT          -> "infobox.about.title";
-            case CommonDashboardID.ACTOR_INFO     -> "infobox.actor_info.title";
-            case CommonDashboardID.ANIMATION_INFO -> "infobox.animation_info.title";
-            case CommonDashboardID.CUSTOM_MAPS    -> "infobox.custom_maps.title";
-            case CommonDashboardID.GENERAL        -> "infobox.general.title";
-            case CommonDashboardID.GAME_CONTROL   -> "infobox.game_control.title";
-            case CommonDashboardID.GAME_INFO      -> "infobox.game_info.title";
-            case CommonDashboardID.KEYS_GLOBAL    -> "infobox.keyboard_shortcuts_global.title";
-            case CommonDashboardID.KEYS_LOCAL     -> "infobox.keyboard_shortcuts_local.title";
-            case CommonDashboardID.README         -> "infobox.readme.title";
-            case CommonDashboardID.SETTINGS_3D    -> "infobox.3D_settings.title";
+            case DashboardID.ABOUT          -> "infobox.about.title";
+            case DashboardID.ACTOR_INFO     -> "infobox.actor_info.title";
+            case DashboardID.ANIMATION_INFO -> "infobox.animation_info.title";
+            case DashboardID.CUSTOM_MAPS    -> "infobox.custom_maps.title";
+            case DashboardID.GENERAL        -> "infobox.general.title";
+            case DashboardID.GAME_CONTROL   -> "infobox.game_control.title";
+            case DashboardID.GAME_INFO      -> "infobox.game_info.title";
+            case DashboardID.KEYS_GLOBAL    -> "infobox.keyboard_shortcuts_global.title";
+            case DashboardID.KEYS_LOCAL     -> "infobox.keyboard_shortcuts_local.title";
+            case DashboardID.README         -> "infobox.readme.title";
+            case DashboardID.SETTINGS_3D    -> "infobox.3D_settings.title";
             default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);
         };
     }
 
-    private static boolean isSectionMaximizedByDefault(DashboardID id) {
+    private static boolean isSectionMaximizedByDefault(Identifier id) {
         requireNonNull(id);
-        if (id instanceof CommonDashboardID commonID) {
+        if (id instanceof DashboardID commonID) {
             return MAXIMIZED.getOrDefault(commonID, false);
         }
         return false;
@@ -87,7 +88,7 @@ public class Dashboard {
     private Game game;
 
     private final VBox rootPane = new VBox();
-    private final Map<DashboardID, DashboardSection> sections = new LinkedHashMap<>();
+    private final Map<Identifier, DashboardSection> sections = new LinkedHashMap<>();
     private final DashboardConfig config;
 
     public Dashboard(DashboardConfig config) {
@@ -127,7 +128,7 @@ public class Dashboard {
 
     public Stream<DashboardSection> sections() { return sections.values().stream(); }
 
-    public void removeSection(DashboardID id) {
+    public void removeSection(Identifier id) {
         requireNonNull(id);
         sections.remove(id);
         updateLayout();
@@ -139,7 +140,7 @@ public class Dashboard {
      * @param translator translator for localized text keys
      * @param id common dashboard section ID
      */
-    public void addCommonSection(TranslationManager translator, CommonDashboardID id) {
+    public void addCommonSection(TranslationManager translator, DashboardID id) {
         requireNonNull(translator);
         requireNonNull(id);
         final DashboardSection section = createCommonSection(this, id);
@@ -147,7 +148,7 @@ public class Dashboard {
         sections.put(id, configure(section, translator.translate(titleKey(id)), maximized));
     }
 
-    public void addSection(DashboardID id, DashboardSection section, String title, boolean maximized) {
+    public void addSection(Identifier id, DashboardSection section, String title, boolean maximized) {
         requireNonNull(id);
         requireNonNull(section);
         requireNonNull(title);
@@ -160,32 +161,32 @@ public class Dashboard {
      * @param translator translator for localized text keys
      * @param ids list of dashboard section IDs
      */
-    public void addCommonSections(TranslationManager translator, List<CommonDashboardID> ids) {
+    public void addCommonSections(TranslationManager translator, List<DashboardID> ids) {
         requireNonNull(translator);
         requireNonNull(ids);
-        addCommonSection(translator, CommonDashboardID.README);
-        for (CommonDashboardID id : ids) {
-            if (id != CommonDashboardID.README) addCommonSection(translator, id);
+        addCommonSection(translator, DashboardID.README);
+        for (DashboardID id : ids) {
+            if (id != DashboardID.README) addCommonSection(translator, id);
         }
     }
 
-    public Optional<DashboardSection> findSection(DashboardID id) {
+    public Optional<DashboardSection> findSection(Identifier id) {
         requireNonNull(id);
         return Optional.ofNullable(sections.get(id));
     }
 
     private void updateLayout() {
         final List<DashboardSection> reorderedSections = new ArrayList<>(sections.entrySet().stream()
-            .filter(e -> e.getKey() != CommonDashboardID.README)
-            .filter(e -> e.getKey() != CommonDashboardID.ABOUT)
+            .filter(e -> e.getKey() != DashboardID.README)
+            .filter(e -> e.getKey() != DashboardID.ABOUT)
             .map(Map.Entry::getValue)
             .toList());
 
-        if (sections.containsKey(CommonDashboardID.README)) {
-            reorderedSections.addFirst(sections.get(CommonDashboardID.README));
+        if (sections.containsKey(DashboardID.README)) {
+            reorderedSections.addFirst(sections.get(DashboardID.README));
         }
-        if (sections.containsKey(CommonDashboardID.ABOUT)) {
-            reorderedSections.addLast(sections.get(CommonDashboardID.ABOUT));
+        if (sections.containsKey(DashboardID.ABOUT)) {
+            reorderedSections.addLast(sections.get(DashboardID.ABOUT));
         }
 
         rootPane.getChildren().clear();

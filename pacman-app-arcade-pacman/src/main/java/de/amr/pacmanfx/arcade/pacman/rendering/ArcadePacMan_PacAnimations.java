@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
@@ -15,7 +15,7 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
-    public enum AnimationID implements Named {
+    public enum AnimationID implements Identifier {
         ANIM_BIG_PAC_MAN,
     }
 
@@ -32,7 +32,7 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     }
 
     @Override
-    protected SpriteAnimation createAnimation(Named animationID) {
+    protected SpriteAnimation createAnimation(Identifier animationID) {
         final SpriteAnimation animation = switch (animationID) {
             case ArcadePacMan_AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
                 .singleSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))

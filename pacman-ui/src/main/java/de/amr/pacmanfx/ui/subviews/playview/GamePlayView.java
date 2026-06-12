@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.subviews.SubView;
-import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
+import de.amr.pacmanfx.ui.subviews.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.subviews.help.HelpView;
@@ -200,7 +200,7 @@ public class GamePlayView implements SubView {
         }
     }
 
-    public void configureDashboard(List<CommonDashboardID> dashboardIDList, TranslationManager translations) {
+    public void configureDashboard(List<DashboardID> dashboardIDList, TranslationManager translations) {
         dashboard.addCommonSections(translations, dashboardIDList);
     }
 

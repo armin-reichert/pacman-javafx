@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.flow;
 
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
@@ -29,7 +29,7 @@ public interface GameFlow {
 
     void enterState(State<GameContext> gameState);
 
-    default void enterState(Named id) {
+    default void enterState(Identifier id) {
         Objects.requireNonNull(id);
         enterState(id.name());
     }

@@ -4,7 +4,7 @@
 
 package de.amr.basics.spriteanim;
 
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.basics.math.RectShort;
 
 import static java.util.Objects.requireNonNull;
@@ -26,20 +26,20 @@ public interface SpriteAnimationAccessor {
 
     SpriteAnimationContainer container();
 
-    Object animation(Named animationID);
+    Object animation(Identifier animationID);
 
-    Named selectedAnimationID();
+    Identifier selectedAnimationID();
 
-    default boolean isSelected(Named animationID) {
+    default boolean isSelected(Identifier animationID) {
         requireNonNull(animationID);
         return animationID == selectedAnimationID();
     }
 
-    void setAnimationFrame(Named animationID, int frameIndex);
+    void setAnimationFrame(Identifier animationID, int frameIndex);
 
-    void select(Named animationID);
+    void select(Identifier animationID);
 
-    default void selectAndSetFrame(Named animationID, int frameIndex) {
+    default void selectAndSetFrame(Identifier animationID, int frameIndex) {
         select(animationID);
         setAnimationFrame(animationID, frameIndex);
     }

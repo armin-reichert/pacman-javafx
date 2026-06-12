@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
+import de.amr.basics.Identifier;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
@@ -25,7 +26,6 @@ import de.amr.pacmanfx.ui.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.ui.subviews.dashboard.DashboardID;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentColors;
@@ -100,7 +100,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     );
 
     /** Defines additional Tengen-specific dashboard IDs */
-    public enum TengenMsPacMan_DashboardID implements DashboardID { JOYPAD }
+    public enum TengenMsPacMan_DashboardID implements Identifier { JOYPAD }
 
     // Note: Order of bonus symbols in spritesheet is not 1:1 with order of bonus values!
     // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000

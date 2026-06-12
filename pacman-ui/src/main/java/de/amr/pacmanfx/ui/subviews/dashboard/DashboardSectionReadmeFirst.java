@@ -38,7 +38,7 @@ public class DashboardSectionReadmeFirst extends DashboardSection {
 
         final var btnGotIt = new Button(game.ui().translations().translate("infobox.readme.got_it"));
         buttonPane.getChildren().add(btnGotIt);
-        btnGotIt.setOnAction(_ -> dashboard.removeSection(CommonDashboardID.README));
+        btnGotIt.setOnAction(_ -> dashboard.removeSection(DashboardID.README));
 
         pane.setCenter(readmeText);
         pane.setBottom(buttonPane);

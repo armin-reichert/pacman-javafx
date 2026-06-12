@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.gamestate;
 
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
@@ -13,7 +13,7 @@ import org.tinylog.Logger;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public class GameState implements State<GameContext>, Named {
+public class GameState implements State<GameContext>, Identifier {
 
     private final String name;
     private final TickTimer timer;
@@ -23,7 +23,7 @@ public class GameState implements State<GameContext>, Named {
         this.timer = new TickTimer("GameStateTimer-" + getClass().getSimpleName());
     }
 
-    public GameState(Named id) {
+    public GameState(Identifier id) {
         this.name = Objects.requireNonNull(id).name();
         this.timer = new TickTimer("GameStateTimer-" + getClass().getSimpleName());
     }

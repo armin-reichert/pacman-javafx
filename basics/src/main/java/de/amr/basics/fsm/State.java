@@ -4,10 +4,8 @@
 
 package de.amr.basics.fsm;
 
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.basics.timer.TickTimer;
-
-import java.util.stream.Stream;
 
 /**
  * Interface implemented by all states (enums) of a FSM. Each state has a timer.
@@ -15,7 +13,7 @@ import java.util.stream.Stream;
  * @param <C> the (context) type that the hook methods {@link #onEnter(C)}, {@link #onUpdate(C)}, {@link #onExit(C)} get
  *            passed as parameter
  */
-public interface State<C> extends Named {
+public interface State<C> extends Identifier {
 
     /**
      * The hook method that gets executed when the state is entered.

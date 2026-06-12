@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 
-public enum ArcadeMsPacMan_AnimationID implements Named {
+public enum ArcadeMsPacMan_AnimationID implements Identifier {
     MR_PAC_MAN_MUNCHING,
     BAG, JUNIOR,
     STORK_FLYING

@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
@@ -31,7 +31,7 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
     }
 
     @Override
-    public SpriteAnimation createAnimation(Named animationID) {
+    public SpriteAnimation createAnimation(Identifier animationID) {
         final SpriteAnimation animation = switch (animationID) {
             case ArcadePacMan_AnimationID.GHOST_NORMAL -> SpriteAnimationBuilder.builder()
                 .sprites(spriteSheet().ghostNormalSprites(personality, Direction.LEFT))
@@ -91,7 +91,7 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
     }
 
     @Override
-    public void setAnimationFrame(Named animationID, int frameIndex) {
+    public void setAnimationFrame(Identifier animationID, int frameIndex) {
         super.setAnimationFrame(animationID, frameIndex);
         if (ArcadePacMan_AnimationID.GHOST_POINTS.equals(animationID)) {
             animation(ArcadePacMan_AnimationID.GHOST_POINTS).setCurrentFrameIndex(frameIndex);

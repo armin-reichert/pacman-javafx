@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
-import de.amr.pacmanfx.ui.subviews.dashboard.CommonDashboardID;
+import de.amr.pacmanfx.ui.subviews.dashboard.DashboardID;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -38,14 +38,14 @@ public class ArcadeMsPacMan_App extends Application {
             .build();
 
         game.ui().subViews().gamePlayView().dashboard().addCommonSections(game.ui().translations(), List.of(
-            CommonDashboardID.GENERAL,
-            CommonDashboardID.GAME_CONTROL,
-            CommonDashboardID.SETTINGS_3D,
-            CommonDashboardID.GAME_INFO,
-            CommonDashboardID.ACTOR_INFO,
-            CommonDashboardID.KEYS_GLOBAL,
-            CommonDashboardID.KEYS_LOCAL,
-            CommonDashboardID.ABOUT)
+            DashboardID.GENERAL,
+            DashboardID.GAME_CONTROL,
+            DashboardID.SETTINGS_3D,
+            DashboardID.GAME_INFO,
+            DashboardID.ACTOR_INFO,
+            DashboardID.KEYS_GLOBAL,
+            DashboardID.KEYS_LOCAL,
+            DashboardID.ABOUT)
         );
 
         game.show(GameVariantID.ARCADE_MS_PACMAN, primaryStage);

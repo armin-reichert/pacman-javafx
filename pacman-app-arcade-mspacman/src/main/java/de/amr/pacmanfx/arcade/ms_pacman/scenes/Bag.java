@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
@@ -33,7 +33,7 @@ public class Bag extends Actor {
         }
 
         @Override
-        protected SpriteAnimation createAnimation(Named animationID) {
+        protected SpriteAnimation createAnimation(Identifier animationID) {
             final SpriteAnimation animation = switch (animationID) {
                 case ArcadeMsPacMan_AnimationID.JUNIOR ->
                     SpriteAnimationBuilder.builder()

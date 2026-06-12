@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 
-public enum SpriteID implements Named {
+public enum SpriteID implements Identifier {
     LARGE_MS_PAC_MAN_TEXT,
     INFO_FRAME,
     INFO_BOOSTER,

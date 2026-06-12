@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -30,7 +30,7 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
     }
 
     // Map IDs as they appear in the sprite sheet (row by row)
-    public enum MapID implements Named {
+    public enum MapID implements Identifier {
         MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7, MAP8,
         MAP9, MAP10_BIG, MAP11, MAP12, MAP13, MAP14_BIG, MAP15, MAP16_MINI,
         MAP17_BIG, MAP18, MAP19_BIG, MAP20_BIG, MAP21_BIG, MAP22_BIG, MAP23_BIG, MAP24,

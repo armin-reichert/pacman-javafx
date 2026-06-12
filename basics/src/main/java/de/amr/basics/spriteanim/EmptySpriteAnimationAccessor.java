@@ -4,7 +4,7 @@
 
 package de.amr.basics.spriteanim;
 
-import de.amr.basics.Named;
+import de.amr.basics.Identifier;
 import de.amr.basics.math.RectShort;
 
 /**
@@ -18,25 +18,25 @@ public class EmptySpriteAnimationAccessor implements SpriteAnimationAccessor {
     }
 
     @Override
-    public Object animation(Named animationID) {
+    public Object animation(Identifier animationID) {
         return null;
     }
 
     @Override
-    public Named selectedAnimationID() {
+    public Identifier selectedAnimationID() {
         return null;
     }
 
     @Override
-    public boolean isSelected(Named animationID) {
+    public boolean isSelected(Identifier animationID) {
         return SpriteAnimationAccessor.super.isSelected(animationID);
     }
 
     @Override
-    public void setAnimationFrame(Named animationID, int frameIndex) {}
+    public void setAnimationFrame(Identifier animationID, int frameIndex) {}
 
     @Override
-    public void select(Named animationID) {}
+    public void select(Identifier animationID) {}
 
     @Override
     public void playSelected() {}
