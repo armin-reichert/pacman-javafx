@@ -34,23 +34,23 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     @Override
     protected SpriteAnimation createAnimation(Identifier animationID) {
         final SpriteAnimation animation = switch (animationID) {
-            case ArcadePacMan_AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.PAC_FULL -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.sprite(SpriteID.PACMAN_FULL))
                 .initiallyStopped()
                 .build();
 
             // Renderer draws sprites depending on Pac-Man move direction!
-            case ArcadePacMan_AnimationID.PAC_MUNCHING -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().pacMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build();
 
-            case ArcadePacMan_AnimationID.PAC_DYING -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.PAC_DYING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_DYING))
                 .frameTicks(8)
                 .build();
 
-            case AnimationID.ANIM_BIG_PAC_MAN -> SpriteAnimationBuilder.builder()
+            case AnimationID.ANIM_BIG_PAC_MAN -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.sprites(SpriteID.PACMAN_BIG))
                 .frameTicks(3)
                 .repeated()

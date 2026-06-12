@@ -36,13 +36,13 @@ public class Bag extends Actor {
         protected SpriteAnimation createAnimation(Identifier animationID) {
             final SpriteAnimation animation = switch (animationID) {
                 case ArcadeMsPacMan_AnimationID.JUNIOR ->
-                    SpriteAnimationBuilder.builder()
+                    new SpriteAnimationBuilder()
                         .singleSprite(spriteSheet.sprite(JUNIOR_PAC))
                         .initiallyStopped()
                         .build();
 
                 case ArcadeMsPacMan_AnimationID.BAG ->
-                    SpriteAnimationBuilder.builder()
+                    new SpriteAnimationBuilder()
                         .singleSprite(spriteSheet.sprite(BLUE_BAG))
                         .initiallyStopped()
                         .build();

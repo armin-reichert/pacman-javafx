@@ -42,29 +42,29 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     @Override
     protected SpriteAnimation createAnimation(Identifier animationID) {
         final SpriteAnimation animation = switch (animationID) {
-            case ArcadePacMan_AnimationID.GHOST_NORMAL -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().ghostNormalSprites(personality, Direction.LEFT))
                 .frameTicks(NORMAL_TICKS)
                 .repeated()
                 .build();
 
-            case ArcadePacMan_AnimationID.GHOST_FRIGHTENED -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.sprites(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(FRIGHTENED_TICKS)
                 .repeated()
                 .build();
 
-            case ArcadePacMan_AnimationID.GHOST_FLASHING -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.sprites(SpriteID.GHOST_FLASHING))
                 .frameTicks(FLASHING_TICKS)
                 .repeated()
                 .build();
 
-            case ArcadePacMan_AnimationID.GHOST_EYES -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_EYES -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet().ghostEyesSprite(Direction.LEFT))
                 .build();
 
-            case ArcadePacMan_AnimationID.GHOST_POINTS -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_POINTS -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.sprites(SpriteID.GHOST_NUMBERS))
                 .initiallyStopped()
                 .build();

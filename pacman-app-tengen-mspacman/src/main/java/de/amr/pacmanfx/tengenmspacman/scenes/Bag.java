@@ -32,12 +32,12 @@ public class Bag extends Actor {
         @Override
         protected SpriteAnimation createAnimation(Identifier animationID) {
             final SpriteAnimation animation = switch (animationID) {
-                case ArcadeMsPacMan_AnimationID.BAG -> SpriteAnimationBuilder.builder()
+                case ArcadeMsPacMan_AnimationID.BAG -> new SpriteAnimationBuilder()
                     .singleSprite(spriteSheet.sprite(SpriteID.BLUE_BAG))
                     .initiallyStopped()
                     .build();
 
-                case ArcadeMsPacMan_AnimationID.JUNIOR -> SpriteAnimationBuilder.builder()
+                case ArcadeMsPacMan_AnimationID.JUNIOR -> new SpriteAnimationBuilder()
                     .singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC))
                     .initiallyStopped()
                     .build();

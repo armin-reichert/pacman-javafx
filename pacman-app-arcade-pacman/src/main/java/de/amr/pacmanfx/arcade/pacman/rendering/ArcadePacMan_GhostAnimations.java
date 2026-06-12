@@ -33,46 +33,46 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
     @Override
     public SpriteAnimation createAnimation(Identifier animationID) {
         final SpriteAnimation animation = switch (animationID) {
-            case ArcadePacMan_AnimationID.GHOST_NORMAL -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().ghostNormalSprites(personality, Direction.LEFT))
                 .frameTicks(8)
                 .repeated()
                 .build();
 
-            case ArcadePacMan_AnimationID.GHOST_FRIGHTENED -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(8)
                 .repeated()
                 .build();
 
-            case ArcadePacMan_AnimationID.GHOST_FLASHING -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_FLASHING))
                 .frameTicks(7)
                 .repeated()
                 .build();
 
-            case ArcadePacMan_AnimationID.GHOST_EYES -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_EYES -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet().ghostEyesSprite(Direction.LEFT))
                 .build();
 
-            case ArcadePacMan_AnimationID.GHOST_POINTS -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.GHOST_POINTS -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().sprites(SpriteID.GHOST_NUMBERS))
                 .initiallyStopped()
                 .build();
 
-            case ArcadePacMan_AnimationID.BLINKY_DAMAGED -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.BLINKY_DAMAGED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_DAMAGED))
                 .initiallyStopped()
                 .build();
 
-            case ArcadePacMan_AnimationID.BLINKY_DRESS_PATCHED -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.BLINKY_DRESS_PATCHED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_PATCHED))
                 .frameTicks(4)
                 .repeated()
                 .initiallyStopped()
                 .build();
 
-            case ArcadePacMan_AnimationID.BLINKY_NAKED -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.BLINKY_NAKED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_NAKED))
                 .frameTicks(4)
                 .repeated()

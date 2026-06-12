@@ -31,21 +31,21 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     @Override
     protected SpriteAnimation createAnimation(Identifier animationID) {
         final SpriteAnimation animation = switch (animationID) {
-            case ArcadePacMan_AnimationID.PAC_FULL -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.PAC_FULL -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.sprite(SpriteID.MS_PACMAN_FULL))
                 .build();
 
-            case ArcadePacMan_AnimationID.PAC_MUNCHING -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().msPacManMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build();
 
-            case ArcadePacMan_AnimationID.PAC_DYING -> SpriteAnimationBuilder.builder()
+            case ArcadePacMan_AnimationID.PAC_DYING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().sprites(SpriteID.MS_PACMAN_DYING))
                 .frameTicks(8)
                 .build();
 
-            case ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING -> SpriteAnimationBuilder.builder()
+            case ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.sprites(SpriteID.MR_PACMAN_MUNCHING_LEFT))
                 .frameTicks(2)
                 .repeated()

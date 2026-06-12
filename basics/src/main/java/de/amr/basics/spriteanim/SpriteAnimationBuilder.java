@@ -13,30 +13,10 @@ import static java.util.Objects.requireNonNull;
 
 public class SpriteAnimationBuilder {
 
-    /**
-     * Creates a new sprite animation builder for animations running at 60 frames/second.
-     *
-     * @return new  builder
-     */
-    public static SpriteAnimationBuilder builder() {
-        return new SpriteAnimationBuilder(60);
-    }
-
-    /**
-     * Creates a new sprite animation builder for animations running at the specified frame rate (frames/second).
-     *
-     * @param fps the frame rate at which the build animation is played
-     * @return new  builder
-     */
-    public static SpriteAnimationBuilder builder(int fps) {
-        return new SpriteAnimationBuilder(fps);
-    }
-
     private static class BuildData {
         RectShort[] sprites;
         boolean initiallyStopped = false;
         boolean loop = false;
-        int fps;
         int frameTicks = 1;
     }
 
@@ -48,12 +28,8 @@ public class SpriteAnimationBuilder {
         }
     }
 
-    private SpriteAnimationBuilder(int fps) {
-        if (fps <= 0) {
-            throw new IllegalArgumentException("Sprite animation frame rate must be positive, but is %d".formatted(fps));
-        }
+    public SpriteAnimationBuilder() {
         data = new BuildData();
-        data.fps = fps;
     }
 
     public SpriteAnimationBuilder sprites(RectShort... sprites) {
