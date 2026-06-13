@@ -19,7 +19,6 @@ public class SteeringActions {
     private final Set<ActionKeyBinding> bindings;
 
     public SteeringActions(Game game) {
-
         actionSteerUp = new SteeringAction(game, Direction.UP);
         actionSteerDown = new SteeringAction(game, Direction.DOWN);
         actionSteerLeft = new SteeringAction(game, Direction.LEFT);
