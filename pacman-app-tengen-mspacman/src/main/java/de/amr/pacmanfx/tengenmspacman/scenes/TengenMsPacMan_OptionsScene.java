@@ -73,7 +73,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
         game.hud().hide();
 
-        final TengenMsPacMan_Actions tengenActions = game().ui().extensions().getExtension(
+        final TengenMsPacMan_Actions tengenActions = game().extensions().get(
             TengenMsPacMan_UIConfig.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindings().selectAnyMatchingBinding(tengenActions.actionStartPlaying(), tengenActions.localBindings());

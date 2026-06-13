@@ -64,7 +64,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
         ctx.setFont(arcadeFont8());
 
-        final var uiSettings = scene.game().ui().extensions().getExtension(
+        final var uiSettings = scene.game().extensions().get(
             TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
         if (uiSettings.joypadBindingsDisplayed.get()) {

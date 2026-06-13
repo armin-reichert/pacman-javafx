@@ -83,7 +83,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     public void replaceActionBindings(GameLevel level) {
         actionBindings().dispose();
 
-        final TengenMsPacMan_Actions actions = game().ui().extensions().getExtension(
+        final TengenMsPacMan_Actions actions = game().extensions().get(
             TengenMsPacMan_UIConfig.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         if (level.isDemoLevel()) {

@@ -18,7 +18,6 @@ import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.GameUI_Extensions;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -64,6 +63,8 @@ public final class GameImpl implements Game {
 
     private final DirectoryWatchdog watchdog;
 
+    private final GameExtensions extensions;
+
     private final CommonActions commonActions;
 
     private final GameUI ui;
@@ -84,6 +85,7 @@ public final class GameImpl implements Game {
 
         this.commonActions = new CommonActions(this);
 
+        this.extensions = new GameExtensions();
         this.prefs = new PreferencesManager(getClass());
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
@@ -107,8 +109,7 @@ public final class GameImpl implements Game {
             view,
             new SubViewManager(),
             new UISettings(),
-            UISettings3D.create(),
-            new GameUI_Extensions()
+            UISettings3D.create()
         );
     }
 
@@ -191,6 +192,11 @@ public final class GameImpl implements Game {
     @Override
     public CommonActions actions() {
         return commonActions;
+    }
+
+    @Override
+    public GameExtensions extensions() {
+        return extensions;
     }
 
     @Override

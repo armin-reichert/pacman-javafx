@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.input.Input;
@@ -50,6 +49,8 @@ public interface Game extends GameLifecycle {
     default Optional<GameSoundEffects> currentSoundEffects() {
         return currentUIConfig().optSoundEffects();
     }
+
+    GameExtensions extensions();
 
     DirectoryWatchdog watchdog();
 

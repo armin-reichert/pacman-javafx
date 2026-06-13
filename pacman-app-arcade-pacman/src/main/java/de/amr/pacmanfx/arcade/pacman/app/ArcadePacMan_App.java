@@ -58,7 +58,7 @@ public class ArcadePacMan_App extends Application {
 
         game.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, game.ui().translations());
 
-        game.ui().extensions().addExtension(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, new Arcade_Actions(game));
+        game.extensions().add(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, new Arcade_Actions(game));
 
         game.show(GameVariantID.ARCADE_PACMAN, stage);
     }

@@ -123,10 +123,10 @@ public class PacManGames3dApp extends Application {
                 startView.setSelectedIndex(0);
             }
 
-            game.ui().extensions().addExtension(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, new Arcade_Actions(game));
+            game.extensions().add(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, new Arcade_Actions(game));
 
-            game.ui().extensions().addExtension(TengenMsPacMan_UIConfig.EXT_ACTIONS, new TengenMsPacMan_Actions(game));
-            game.ui().extensions().addExtension(TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, new TengenMsPacMan_UISettings());
+            game.extensions().add(TengenMsPacMan_UIConfig.EXT_ACTIONS, new TengenMsPacMan_Actions(game));
+            game.extensions().add(TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, new TengenMsPacMan_UISettings());
 
             //TODO add builder methods for dashboard configuration
             final GamePlayView playView = game.ui().subViews().gamePlayView();
