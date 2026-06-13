@@ -51,7 +51,9 @@ public class StartPagesView extends Carousel implements SubView {
 
     public StartPagesView(Game game) {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
+
         this.game = requireNonNull(game);
+
         selectedIndexProperty().addListener((_, ov, nv) -> {
             Logger.debug("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
@@ -69,14 +71,14 @@ public class StartPagesView extends Carousel implements SubView {
 
         actionShowPrevPage = new GameAction(game, "show_prev_page") {
             @Override
-            public void doAction(Game game) {
+            public void doAction() {
                 showPreviousItem();
             }
         };
 
         actionShowNextPage = new GameAction(game, "show_next_page") {
             @Override
-            public void doAction(Game game) {
+            public void doAction() {
                 showNextItem();
             }
         };
@@ -86,7 +88,7 @@ public class StartPagesView extends Carousel implements SubView {
     public void onEnter() {
         actionBindings.bindActionToKeyCombination(actionShowPrevPage, bare(KeyCode.LEFT));
         actionBindings.bindActionToKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
-        actionBindings.bindActionToKeyCombination(game.commonActions().ACTION_START_GAME, bare(KeyCode.ENTER));
+        actionBindings.bindActionToKeyCombination(game.actions().ACTION_START_GAME, bare(KeyCode.ENTER));
         Logger.info(actionBindings);
         restartProgressTimer();
         currentStartPage().ifPresent(page -> {

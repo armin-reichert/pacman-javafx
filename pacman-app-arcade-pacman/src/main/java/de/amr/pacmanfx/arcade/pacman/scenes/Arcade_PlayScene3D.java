@@ -26,8 +26,8 @@ public class Arcade_PlayScene3D extends PlayScene3D {
         if (level.isDemoLevel()) {
             actionBindings().registerAllBindings(actions.GAME_START_ACTION_BINDINGS);
         } else {
-            actionBindings().registerAllBindings(game().commonActions().steeringActionBindings);
-            actionBindings().registerAllBindings(game().commonActions().cheatActionBindings);
+            actionBindings().registerAllBindings(game().actions().steeringActionBindings);
+            actionBindings().registerAllBindings(game().actions().cheatActionBindings);
         }
         bindActions();
         Logger.info(actionBindings());

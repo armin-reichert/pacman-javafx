@@ -25,7 +25,7 @@ public final class Arcade_Actions {
     abstract class AbstractGameAction extends GameAction {
 
         protected AbstractGameAction(String key) {
-            super(game, key);
+            super(Arcade_Actions.this.game, key);
         }
     }
 
@@ -47,7 +47,7 @@ public final class Arcade_Actions {
      */
     public final GameAction ACTION_INSERT_COIN = new AbstractGameAction("insert_coin") {
         @Override
-        public void doAction(Game game) {
+        public void doAction() {
             final CoinMechanism coinMechanism = game.coinMechanism();
             final GameContext gameContext = game.currentGameContext();
             game.ui().sounds().stopAndDisposeVoice();
@@ -58,7 +58,7 @@ public final class Arcade_Actions {
         }
 
         @Override
-        public boolean isEnabled(Game game) {
+        public boolean isEnabled() {
             final CoinMechanism coinMechanism = game.coinMechanism();
             if (coinMechanism.isFull()) {
                 return false;
@@ -75,13 +75,13 @@ public final class Arcade_Actions {
 
     public final GameAction ACTION_START_PLAYING = new AbstractGameAction("start_playing") {
         @Override
-        public void doAction(Game game) {
+        public void doAction() {
             game.ui().sounds().stopAndDisposeVoice();
             game.currentGameContext().flow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
         }
 
         @Override
-        public boolean isEnabled(Game game) {
+        public boolean isEnabled() {
             final CoinMechanism coinMechanism = game.coinMechanism();
             if (coinMechanism.isEmpty()) {
                 return false;

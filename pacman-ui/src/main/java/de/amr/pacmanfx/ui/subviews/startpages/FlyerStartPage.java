@@ -118,7 +118,7 @@ public class FlyerStartPage implements StartPage {
         startButton = createAndAddStartButton(buttonText);
         StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
         rootPane.getChildren().add(startButton);
-        startButton.setAction(() -> game.commonActions().ACTION_START_GAME.execute(game));
+        startButton.setAction(() -> game.actions().ACTION_START_GAME.execute());
     }
 
     private FancyButton createAndAddStartButton(String text) {

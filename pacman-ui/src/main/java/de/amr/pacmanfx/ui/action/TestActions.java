@@ -14,7 +14,7 @@ public class TestActions {
     abstract class AbstractGameAction extends GameAction {
 
         protected AbstractGameAction(String key) {
-            super(game, key);
+            super(TestActions.this.game, key);
         }
     }
 
@@ -26,39 +26,39 @@ public class TestActions {
 
     public final GameAction ACTION_CUT_SCENES_TEST = new AbstractGameAction("test_cut_scenes") {
         @Override
-        public void doAction(Game game) {
+        public void doAction() {
             game.currentGameContext().flow().enterState(CutScenesTestState.class.getSimpleName());
             game.shortMessage("Cut scenes test"); //TODO localize
         }
 
         @Override
-        public boolean isEnabled(Game game) {
+        public boolean isEnabled() {
             return game.currentGameContext().flow().optState(CutScenesTestState.class.getSimpleName()).isPresent();
         }
     };
 
     public final GameAction ACTION_SHORT_LEVEL_TEST = new AbstractGameAction("short_level_test") {
         @Override
-        public void doAction(Game game) {
+        public void doAction() {
             game.currentGameContext().flow().restartState(LevelShortTestState.class.getSimpleName());
             game.shortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
         }
 
         @Override
-        public boolean isEnabled(Game game) {
+        public boolean isEnabled() {
             return game.currentGameContext().flow().optState(LevelShortTestState.class.getSimpleName()).isPresent();
         }
     };
 
     public final GameAction ACTION_MEDIUM_LEVEL_TEST = new AbstractGameAction("medium_level_test") {
         @Override
-        public void doAction(Game game) {
+        public void doAction() {
             game.currentGameContext().flow().restartState(LevelMediumTestState.class.getSimpleName());
             game.shortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
         }
 
         @Override
-        public boolean isEnabled(Game game) {
+        public boolean isEnabled() {
             return game.currentGameContext().flow().optState(LevelMediumTestState.class.getSimpleName()).isPresent();
         }
     };

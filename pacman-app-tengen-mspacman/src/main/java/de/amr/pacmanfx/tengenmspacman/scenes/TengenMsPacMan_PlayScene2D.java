@@ -198,7 +198,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "immunity");
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, game().ui().settings().mutedProperty, "muted");
-        addLocalizedActionItem(contextMenu, game(), translations, game().commonActions().ACTION_QUIT, "quit");
+        addLocalizedActionItem(contextMenu, translations, game().actions().ACTION_QUIT, "quit");
 
         return Optional.of(contextMenu);
     }
@@ -237,7 +237,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
         actionBindings().registerAllBindings(actions.STEERING_BINDINGS);
-        actionBindings().registerAllBindings(game().commonActions().cheatActionBindings);
+        actionBindings().registerAllBindings(game().actions().cheatActionBindings);
         actionBindings().selectAnyMatchingBinding(actions.ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, actions.TENGEN_LOCAL_BINDINGS);
         actionBindings().selectAnyMatchingBinding(actions.ACTION_TOGGLE_PAC_BOOSTER, actions.TENGEN_LOCAL_BINDINGS);
     }

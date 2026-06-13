@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.view;
 
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -39,10 +40,10 @@ public class GameViewMainScene extends Scene {
         setOnScroll(e -> game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         // Global action bindings
-        actionBindings.selectAnyMatchingBinding(game.commonActions().ACTION_ENTER_FULLSCREEN,        game.commonActions().commonBindings);
-        actionBindings.selectAnyMatchingBinding(game.commonActions().ACTION_OPEN_EDITOR,             game.commonActions().commonBindings);
-        actionBindings.selectAnyMatchingBinding(game.commonActions().ACTION_TOGGLE_KEYBOARD_MONITOR, game.commonActions().commonBindings);
-        actionBindings.selectAnyMatchingBinding(game.commonActions().ACTION_TOGGLE_MUTED,            game.commonActions().commonBindings);
+        actionBindings.selectAnyMatchingBinding(game.actions().ACTION_ENTER_FULLSCREEN,        game.actions().commonBindings);
+        actionBindings.selectAnyMatchingBinding(game.actions().ACTION_OPEN_EDITOR,             game.actions().commonBindings);
+        actionBindings.selectAnyMatchingBinding(game.actions().ACTION_TOGGLE_KEYBOARD_MONITOR, game.actions().commonBindings);
+        actionBindings.selectAnyMatchingBinding(game.actions().ACTION_TOGGLE_MUTED,            game.actions().commonBindings);
 
         Logger.info(actionBindings);
     }
@@ -50,7 +51,7 @@ public class GameViewMainScene extends Scene {
     private void handleKeyboardStateChange(Game game, Keyboard keyboard) {
         // Check for "global" action first. otherwise let current sub views handle the keyboard state change
         actionBindings.triggeredAction(keyboard).ifPresentOrElse(
-            action -> action.execute(game),
+            GameAction::execute,
             () -> game.ui().subViews().currentView().onInput(game, game.input()));
     }
 

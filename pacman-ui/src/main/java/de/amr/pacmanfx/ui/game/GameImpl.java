@@ -193,7 +193,7 @@ public final class GameImpl implements Game {
     }
 
     @Override
-    public CommonActions commonActions() {
+    public CommonActions actions() {
         return commonActions;
     }
 

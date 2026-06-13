@@ -45,13 +45,6 @@ import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
  */
 public final class CommonActions {
 
-    abstract class AbstractGameAction extends GameAction {
-    
-        protected AbstractGameAction(String key) {
-            super(game, key);
-        }
-    }
-    
     private final Game game;
 
     private final TestActions sceneTestActions;
@@ -93,10 +86,9 @@ public final class CommonActions {
      */
     public GameAction createEditMapFileAction(File mapFile) {
 
-        return new AbstractGameAction("edit_map_file") {
-
+        return new GameAction(game, "edit_map_file") {
             @Override
-            protected void doAction(Game game) {
+            protected void doAction() {
                 openMapEditor().ifPresent(editor -> {
                     startEditor(editor);
                     if (mapFile != null) {
@@ -112,13 +104,19 @@ public final class CommonActions {
         };
     }
 
-    public final GameAction ACTION_OPEN_EDITOR = new AbstractGameAction("open_editor") {
+    private GameAction actionOpenEditor;
 
-        @Override
-        protected void doAction(Game game) {
-            openMapEditor().ifPresent(editor -> startEditor(editor));
+    public GameAction actionOpenEditor() {
+        if (actionOpenEditor == null) {
+            actionOpenEditor = new GameAction(game, "open_editor") {
+                @Override
+                protected void doAction() {
+                    openMapEditor().ifPresent(editor -> startEditor(editor));
+                }
+            };
         }
-    };
+        return actionOpenEditor;
+    }
 
     private void startEditor(TileMapEditor editor) {
         game.stop();
@@ -146,202 +144,287 @@ public final class CommonActions {
 
     // Other actions
 
-    public final GameAction ACTION_START_GAME = new AbstractGameAction("start_game") {
-
-        @Override
-        protected void doAction(Game game) {
-            game.start();
+    private GameAction actionStartGame;
+    
+    public GameAction actionStartGame() {
+        if (actionStartGame == null) {
+            actionStartGame = new GameAction(game, "start_game") {
+                @Override
+                protected void doAction() {
+                    game.start();
+                }
+            };
         }
-    };
+        return actionStartGame;
+    }
 
-    public final GameAction ACTION_QUIT = new AbstractGameAction("quit") {
+    private GameAction actionQuit;
 
-        @Override
-        protected void doAction(Game game) {
-            Logger.info("Call QUIT handler for {}", game.ui().subViews().currentView());
-            game.ui().subViews().currentView().handleQuit(game);
+    public GameAction actionQuit() {
+        if (actionQuit == null) {
+            actionQuit = new GameAction(game, "quit") {
+                @Override
+                protected void doAction() {
+                    Logger.info("Call QUIT handler for {}", game.ui().subViews().currentView());
+                    game.ui().subViews().currentView().handleQuit(game);
+                }
+            };
         }
-    };
+        return actionQuit;
+    }
 
-    public final GameAction ACTION_ENTER_FULLSCREEN = new AbstractGameAction("enter_fullscreen") {
+    private GameAction actionEnterFullScreen;
 
-        @Override
-        protected void doAction(Game game) {
-            game.ui().view().stage().setFullScreen(true);
+    public GameAction actionEnterFullScreen() {
+        if (actionEnterFullScreen == null) {
+            actionEnterFullScreen = new GameAction(game, "enter_fullscreen") {
+                @Override
+                protected void doAction() {
+                    game.ui().view().stage().setFullScreen(true);
+                }
+            };
         }
-    };
+        return actionEnterFullScreen;
+    }
 
-    public final GameAction ACTION_LET_GAME_STATE_EXPIRE = new AbstractGameAction("let_game_state_expire") {
+    private GameAction actionLetGameStateExpire;
 
-        @Override
-        protected void doAction(Game game) {
-            game.currentGameContext().state().expire();
+    public GameAction actionLetGameStateExpire() {
+        if (actionLetGameStateExpire == null) {
+            actionLetGameStateExpire = new GameAction(game, "let_game_state_expire") {
+                @Override
+                protected void doAction() {
+                    game.currentGameContext().state().expire();
+                }
+            };
         }
-    };
+        return actionLetGameStateExpire;
+    }
 
-    public final GameAction ACTION_PERSPECTIVE_NEXT = new AbstractGameAction("perspective_next") {
+    private GameAction actionPerspectiveNext;
 
-        @Override
-        protected void doAction(Game game) {
-            final PerspectiveID nextID = game.ui().settings3D().cameraPerspectiveIdProperty().get().next();
-            game.ui().settings3D().cameraPerspectiveIdProperty().set(nextID);
+    public GameAction actionPerspectiveNext() {
+        if (actionPerspectiveNext == null) {
+            actionPerspectiveNext = new GameAction(game, "perspective_next") {
+                @Override
+                protected void doAction() {
+                    final PerspectiveID nextID = game.ui().settings3D().cameraPerspectiveIdProperty().get().next();
+                    game.ui().settings3D().cameraPerspectiveIdProperty().set(nextID);
 
-            final TranslationManager translations = game.ui().translations();
-            final String msgKey = translations.translate(
-                "camera_perspective",
-                translations.translate("perspective_id_" + nextID.name())
-            );
-            game.shortMessage(msgKey);
+                    final TranslationManager translations = game.ui().translations();
+                    final String msgKey = translations.translate(
+                        "camera_perspective",
+                        translations.translate("perspective_id_" + nextID.name())
+                    );
+                    game.shortMessage(msgKey);
+                }
+            };
         }
-    };
+        return actionPerspectiveNext;
+    }
 
-    public final GameAction ACTION_PERSPECTIVE_PREVIOUS = new AbstractGameAction("perspective_previous") {
+    private GameAction actionPerspectivePrevious;
 
-        @Override
-        protected void doAction(Game game) {
-            final PerspectiveID prevID = game.ui().settings3D().cameraPerspectiveIdProperty().get().prev();
-            game.ui().settings3D().cameraPerspectiveIdProperty().set(prevID);
+    public GameAction actionPerspectivePrevious() {
+        if (actionPerspectivePrevious == null) {
+            actionPerspectivePrevious = new GameAction(game, "perspective_previous") {
+                @Override
+                protected void doAction() {
+                    final PerspectiveID prevID = game.ui().settings3D().cameraPerspectiveIdProperty().get().prev();
+                    game.ui().settings3D().cameraPerspectiveIdProperty().set(prevID);
 
-            final TranslationManager translations = game.ui().translations();
-            final String msgKey = translations.translate(
-                "camera_perspective",
-                translations.translate("perspective_id_" + prevID.name())
-            );
-            game.shortMessage(msgKey);
+                    final TranslationManager translations = game.ui().translations();
+                    final String msgKey = translations.translate(
+                        "camera_perspective",
+                        translations.translate("perspective_id_" + prevID.name())
+                    );
+                    game.shortMessage(msgKey);
+                }
+            };
         }
-    };
+        return actionPerspectivePrevious;
+    }
 
-    //TODO check this code
-    public final GameAction ACTION_RESTART_INTRO = new AbstractGameAction("restart_intro") {
+    private GameAction actionRestartIntro;
 
-        @Override
-        protected void doAction(Game game) {
-            final GameContext gameContext = game.currentGameContext();
-            final GameState gameState = gameContext.state();
+    public GameAction actionRestartIntro() {
+        if (actionRestartIntro == null) {
+            actionRestartIntro = new GameAction(game, "restart_intro") {
+                @Override
+                protected void doAction() {
+                    final GameContext gameContext = game.currentGameContext();
+                    final GameState gameState = gameContext.state();
 
-            if (gameState instanceof TestState) {
-                gameState.onExit(gameContext);
-            }
+                    if (gameState instanceof TestState) {
+                        gameState.onExit(gameContext);
+                    }
 
-            game.stop();
-            game.clock().start();
-            gameContext.flow().restartState(GameStateID.GAME_INTRO);
+                    game.stop();
+                    game.clock().start();
+                    gameContext.flow().restartState(GameStateID.GAME_INTRO);
+                }
+            };
         }
-    };
+        return actionRestartIntro;
+    }
 
-    public final GameAction ACTION_SHOW_HELP = new AbstractGameAction("show_help") {
+    private GameAction actionShowHelp;
 
-        @Override
-        protected void doAction(Game game) {
-            game.ui().subViews().gamePlayView().showHelp(game);
+    public GameAction actionShowHelp() {
+        if (actionShowHelp == null) {
+            actionShowHelp = new GameAction(game, "show_help") {
+                @Override
+                protected void doAction() {
+                    game.ui().subViews().gamePlayView().showHelp(game);
+                }
+
+                @Override
+                public boolean isEnabled() {
+                    final GameSceneManager gameScenes = game.ui().gameScenes();
+                    final String variantName = game.currentGameVariantName();
+                    final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
+                    return isArcadeGame &&
+                        (gameScenes.currentGameSceneHasID(game, CommonSceneID.INTRO_SCENE)
+                            || gameScenes.currentGameSceneHasID(game, CommonSceneID.START_SCENE)
+                            || gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D));
+                }
+            };
         }
+        return actionShowHelp;
+    }
 
-        @Override
-        public boolean isEnabled(Game game) {
-            final GameSceneManager gameScenes = game.ui().gameScenes();
-            final String variantName = game.currentGameVariantName();
-            final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
-            return isArcadeGame &&
-                  (gameScenes.currentGameSceneHasID(game, CommonSceneID.INTRO_SCENE)
-                || gameScenes.currentGameSceneHasID(game, CommonSceneID.START_SCENE)
-                || gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D));
+    private GameAction actionSimulationFaster;
+
+    public GameAction actionSimulationFaster() {
+        if (actionSimulationFaster == null) {
+            actionSimulationFaster = new GameAction(game, "simulation_faster") {
+                @Override
+                protected void doAction() {
+                    final GameClock clock = game.clock();
+                    final int newRate = Math.clamp(clock.targetFrameRate() + GameConstants.SIM_SPEED_DELTA,
+                        GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
+                    clock.setTargetFrameRate(newRate);
+
+                    final String msg = newRate == GameConstants.SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
+                    game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+                }
+            };
         }
-    };
+        return actionSimulationFaster;
+    }
+
+    private GameAction actionSimulationFastest;
+
+    public GameAction actionSimulationFastest() {
+        if (actionSimulationFastest == null) {
+            actionSimulationFastest = new GameAction(game, "simulation_fastest") {
+                @Override
+                protected void doAction() {
+                    game.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
+                    final String msg = "At maximum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MAX);
+                    game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
+                }
+            };
+        }
+        return actionSimulationFastest;
+    }
+
+    private GameAction actionSimulationSlower;
+
+    public GameAction actionSimulationSlower() {
+        if (actionSimulationSlower == null) {
+            actionSimulationSlower = new GameAction(game, "simulation_slower") {
+                @Override
+                protected void doAction() {
+                    final GameClock clock = game.clock();
+                    final int newRate = Math.clamp(clock.targetFrameRate() - GameConstants.SIM_SPEED_DELTA,
+                        GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
+                    clock.setTargetFrameRate(newRate);
+
+                    final String msg = newRate == GameConstants.SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
+                    game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+                }
+            };
+        }
+        return actionSimulationSlower;
+    }
+
+    private GameAction actionSimulationSlowest;
+
+    public GameAction actionSimulationSlowest() {
+        if (actionSimulationSlowest == null) {
+            actionSimulationSlowest = new GameAction(game, "simulation_slowest") {
+                @Override
+                protected void doAction() {
+                    game.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
+                    final String msg = "At minimum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MIN);
+                    game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
+                }
+            };
+        }
+        return actionSimulationSlowest;
+    }
+
+    private GameAction actionSimulationOneStep;
+
+    public GameAction actionSimulationOneStep() {
+        if (actionSimulationOneStep == null) {
+            actionSimulationOneStep = new GameAction(game, "simulation_one_step") {
+                @Override
+                protected void doAction() {
+                    final boolean failure = !game.clock().makeOneStep(true);
+                    if (failure) {
+                        game.shortMessage("Simulation step error!");
+                    }
+                }
+
+                @Override
+                public boolean isEnabled() { return game.clock().getUpdatesDisabled(); }
+            };
+        }
+        return actionSimulationOneStep;
+    }
+
+    private GameAction actionSimulationTenSteps;
+
+    public GameAction actionSimulationTenSteps() {
+        if (actionSimulationTenSteps == null) {
+            actionSimulationTenSteps = new GameAction(game, "simulation_ten_steps") {
+                @Override
+                protected void doAction() {
+                    final boolean failure = !game.clock().makeSteps(10, true);
+                    if (failure) {
+                        game.shortMessage("Simulation steps error!");
+                    }
+                }
+
+                @Override
+                public boolean isEnabled() { return game.clock().getUpdatesDisabled(); }
+            };
+        }
+        return actionSimulationTenSteps;
+    }
+
+    private GameAction actionSimulationReset;
+
+    public GameAction actionSimulationReset() {
+        if (actionSimulationReset == null) {
+            actionSimulationReset = new GameAction(game, "simulation_reset") {
+                @Override
+                protected void doAction() {
+                    game.clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
+                    game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), game.clock().targetFrameRate() + "Hz");
+                }
+            };
+        }
+        return actionSimulationReset;
+    }
 
     //TODO localize message
-    public final GameAction ACTION_SIMULATION_FASTER = new AbstractGameAction("simulation_faster") {
+    public final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction(game, "toggle_collision_strategy") {
 
         @Override
-        protected void doAction(Game game) {
-            final GameClock clock = game.clock();
-            final int newRate = Math.clamp(clock.targetFrameRate() + GameConstants.SIM_SPEED_DELTA,
-                GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
-            clock.setTargetFrameRate(newRate);
-
-            final String msg = newRate == GameConstants.SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
-            game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
-        }
-    };
-
-    //TODO localize message
-    public final GameAction ACTION_SIMULATION_FASTEST = new AbstractGameAction("simulation_fastest") {
-
-        @Override
-        protected void doAction(Game game) {
-            game.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
-            final String msg = "At maximum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MAX);
-            game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
-        }
-    };
-
-    //TODO localize message
-    public final GameAction ACTION_SIMULATION_SLOWER = new AbstractGameAction("simulation_slower") {
-
-        @Override
-        protected void doAction(Game game) {
-            final GameClock clock = game.clock();
-            final int newRate = Math.clamp(clock.targetFrameRate() - GameConstants.SIM_SPEED_DELTA,
-                GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
-            clock.setTargetFrameRate(newRate);
-
-            final String msg = newRate == GameConstants.SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
-            game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
-        }
-    };
-
-    //TODO localize message
-    public final GameAction ACTION_SIMULATION_SLOWEST = new AbstractGameAction("simulation_slowest") {
-
-        @Override
-        protected void doAction(Game game) {
-            game.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
-            final String msg = "At minimum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MIN);
-            game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
-        }
-    };
-
-    public final GameAction ACTION_SIMULATION_ONE_STEP = new AbstractGameAction("simulation_one_step") {
-
-        @Override
-        protected void doAction(Game game) {
-            final boolean failure = !game.clock().makeOneStep(true);
-            if (failure) {
-                game.shortMessage("Simulation step error!");
-            }
-        }
-
-        @Override
-        public boolean isEnabled(Game game) { return game.clock().getUpdatesDisabled(); }
-    };
-
-    public final GameAction ACTION_SIMULATION_TEN_STEPS = new AbstractGameAction("simulation_ten_steps") {
-
-        @Override
-        protected void doAction(Game game) {
-            final boolean failure = !game.clock().makeSteps(10, true);
-            if (failure) {
-                game.shortMessage("Simulation steps error!");
-            }
-        }
-
-        @Override
-        public boolean isEnabled(Game game) { return game.clock().getUpdatesDisabled(); }
-     };
-
-    public final GameAction ACTION_SIMULATION_RESET = new AbstractGameAction("simulation_reset") {
-
-        @Override
-        protected void doAction(Game game) {
-            game.clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-            game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), game.clock().targetFrameRate() + "Hz");
-        }
-    };
-
-    //TODO localize message
-    public final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new AbstractGameAction("toggle_collision_strategy") {
-
-        @Override
-        protected void doAction(Game game) {
+        protected void doAction() {
             final CollisionStrategy strategy = game.currentGameContext().collisionStrategy();
             final CollisionStrategy newStrategy = strategy == CollisionStrategy.CENTER_DISTANCE
                 ? CollisionStrategy.SAME_TILE : CollisionStrategy.CENTER_DISTANCE;
@@ -356,48 +439,48 @@ public final class CommonActions {
         }
     };
 
-    public final GameAction ACTION_TOGGLE_DASHBOARD = new AbstractGameAction("toggle_dashboard") {
+    public final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction(game, "toggle_dashboard") {
 
         @Override
-        protected void doAction(Game game) {
+        protected void doAction() {
             game.ui().subViews().gamePlayView().dashboard().toggleVisibility();
         }
 
         @Override
-        public boolean isEnabled(Game game) {
+        public boolean isEnabled() {
             final SubViewManager subViews = game.ui().subViews();
             return subViews.isSelected(subViews.gamePlayView());
         }
     };
 
-    public final GameAction ACTION_TOGGLE_DEBUG_INFO = new AbstractGameAction("toggle_debug_info") {
+    public final GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction(game, "toggle_debug_info") {
 
         @Override
-        protected void doAction(Game game) {
+        protected void doAction() {
             toggleBooleanProperty(game.ui().settings().debugInfoVisibleProperty);
         }
     };
 
-    public final GameAction ACTION_TOGGLE_DRAW_MODE = new AbstractGameAction("toggle_draw_mode") {
+    public final GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction(game, "toggle_draw_mode") {
 
         @Override
-        protected void doAction(Game game) {
+        protected void doAction() {
             Ufx.toggleProperty(game.ui().settings3D().drawModeProperty(), DrawMode.LINE, DrawMode.FILL);
         }
     };
 
-    public final GameAction ACTION_TOGGLE_KEYBOARD_MONITOR = new AbstractGameAction("toggle_keyboard_monitor") {
+    public final GameAction ACTION_TOGGLE_KEYBOARD_MONITOR = new GameAction(game, "toggle_keyboard_monitor") {
 
         @Override
-        protected void doAction(Game game) {
+        protected void doAction() {
             toggleBooleanProperty(game.ui().settings().keyboardMonitorVisibleProperty);
         }
     };
 
-    public final GameAction ACTION_TOGGLE_MINI_VIEW_VISIBILITY = new AbstractGameAction("toggle_mini_view_visibility") {
+    public final GameAction ACTION_TOGGLE_MINI_VIEW_VISIBILITY = new GameAction(game, "toggle_mini_view_visibility") {
 
         @Override
-        protected void doAction(Game game) {
+        protected void doAction() {
             toggleBooleanProperty(game.ui().settings().miniViewOnProperty);
             if (!game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)) {
                 final String msg = game.ui().translations().translate(
@@ -407,18 +490,18 @@ public final class CommonActions {
         }
     };
 
-    public final GameAction ACTION_TOGGLE_MUTED = new AbstractGameAction("toggle_muted") {
+    public final GameAction ACTION_TOGGLE_MUTED = new GameAction(game, "toggle_muted") {
 
         @Override
-        protected void doAction(Game game) {
+        protected void doAction() {
             toggleBooleanProperty(game.ui().settings().mutedProperty);
         }
     };
 
-    public final GameAction ACTION_TOGGLE_PAUSED = new AbstractGameAction("toggle_paused") {
+    public final GameAction ACTION_TOGGLE_PAUSED = new GameAction(game, "toggle_paused") {
 
         @Override
-        protected void doAction(Game game) {
+        protected void doAction() {
             final GameClock gameClock = game.clock();
             toggleBooleanProperty(gameClock.updatesDisabledProperty());
             final boolean paused = gameClock.getUpdatesDisabled();
@@ -429,39 +512,39 @@ public final class CommonActions {
         }
 
         @Override
-        public boolean isEnabled(Game game) {
+        public boolean isEnabled() {
             final SubViewManager subViews = game.ui().subViews();
             return subViews.isSelected(subViews.gamePlayView());
         }
     };
 
-    public final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new AbstractGameAction("toggle_play_scene_2d_3d") {
+    public final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction(game, "toggle_play_scene_2d_3d") {
 
         @Override
-        protected void doAction(Game game) {
+        protected void doAction() {
             toggleBooleanProperty(game.ui().settings3D().view3DEnabledProperty());
             final boolean is3DEnabled = game.ui().settings3D().view3DEnabledProperty().get();
-            if (!inPlayScene(game)) {
+            if (!inPlayScene()) {
                 game.shortMessage(game.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
             }
-            if (isLevelPlaying(game)) {
+            if (isLevelPlaying()) {
                 game.ui().gameScenes().forceGameSceneUpdate(game);
             }
         }
 
         @Override
-        public boolean isEnabled(Game game) {
+        public boolean isEnabled() {
             final SubViewManager subViews = game.ui().subViews();
             return subViews.isSelected(subViews.gamePlayView());
         }
 
-        private boolean inPlayScene(Game game) {
+        private boolean inPlayScene() {
             final GameSceneManager gameScenes = game.ui().gameScenes();
             return gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D)
                 || gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D);
         }
 
-        private boolean isLevelPlaying(Game game) {
+        private boolean isLevelPlaying() {
             final GameState gameState = game.currentGameContext().state();
             return GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
         }
@@ -483,18 +566,18 @@ public final class CommonActions {
 
     private Set<ActionKeyBinding> createCommonBindings() {
         return Set.of(
-            new ActionKeyBinding(ACTION_ENTER_FULLSCREEN,                     bare(KeyCode.F11)),
-            new ActionKeyBinding(ACTION_OPEN_EDITOR,                          alt_shift(KeyCode.E)),
-            new ActionKeyBinding(ACTION_QUIT,                                 bare(KeyCode.Q)),
-            new ActionKeyBinding(ACTION_SHOW_HELP,                            bare(KeyCode.H)),
-            new ActionKeyBinding(ACTION_SIMULATION_SLOWER,                    alt(KeyCode.MINUS)),
-            new ActionKeyBinding(ACTION_SIMULATION_SLOWEST,                   alt_shift(KeyCode.MINUS)),
-            new ActionKeyBinding(ACTION_SIMULATION_FASTER,                    alt(KeyCode.PLUS)),
-            new ActionKeyBinding(ACTION_SIMULATION_FASTEST,                   alt_shift(KeyCode.PLUS)),
-            new ActionKeyBinding(ACTION_SIMULATION_RESET,                     alt(KeyCode.DIGIT0)),
-            new ActionKeyBinding(ACTION_SIMULATION_ONE_STEP,                  shift(KeyCode.P), shift(KeyCode.F5)),
-            new ActionKeyBinding(ACTION_SIMULATION_TEN_STEPS,                 shift(KeyCode.SPACE)),
-            new ActionKeyBinding(ACTION_START_GAME,                           bare(KeyCode.F3)),
+            new ActionKeyBinding(actionEnterFullScreen(),                     bare(KeyCode.F11)),
+            new ActionKeyBinding(actionOpenEditor(),                          alt_shift(KeyCode.E)),
+            new ActionKeyBinding(actionQuit(),                                bare(KeyCode.Q)),
+            new ActionKeyBinding(actionShowHelp(),                            bare(KeyCode.H)),
+            new ActionKeyBinding(actionSimulationSlower(),                    alt(KeyCode.MINUS)),
+            new ActionKeyBinding(actionSimulationSlowest(),                   alt_shift(KeyCode.MINUS)),
+            new ActionKeyBinding(actionSimulationFaster(),                    alt(KeyCode.PLUS)),
+            new ActionKeyBinding(actionSimulationFastest(),                   alt_shift(KeyCode.PLUS)),
+            new ActionKeyBinding(actionSimulationReset(),                     alt(KeyCode.DIGIT0)),
+            new ActionKeyBinding(actionSimulationOneStep(),                  shift(KeyCode.P), shift(KeyCode.F5)),
+            new ActionKeyBinding(actionSimulationTenSteps(),                 shift(KeyCode.SPACE)),
+            new ActionKeyBinding(actionStartGame(),                           bare(KeyCode.F3)),
             new ActionKeyBinding(ACTION_TOGGLE_COLLISION_STRATEGY,            alt(KeyCode.S)),
             new ActionKeyBinding(ACTION_TOGGLE_DASHBOARD,                     bare(KeyCode.F1), alt(KeyCode.B)),
             new ActionKeyBinding(ACTION_TOGGLE_DEBUG_INFO,                    alt(KeyCode.D)),

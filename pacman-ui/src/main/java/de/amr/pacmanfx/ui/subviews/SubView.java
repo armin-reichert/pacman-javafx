@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.subviews;
 
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.QuitHandler;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
@@ -27,13 +28,13 @@ public interface SubView extends QuitHandler {
      * Processes the current keyboard state and executes the matching action, if any.
      * <p>
      * This method delegates to the view's {@link ActionBindingsRegistry} and executes
-     * the resolved action via {@link de.amr.pacmanfx.ui.action.GameAction#execute(Game)}.
+     * the resolved action via {@link de.amr.pacmanfx.ui.action.GameAction#execute()}.
      *
      * @param game the global game UI façade
      * @param input the user input
      */
     default void onInput(Game game, Input input) {
-        actionBindings().triggeredAction(input.keyboard()).ifPresent(gameAction -> gameAction.execute(game));
+        actionBindings().triggeredAction(input.keyboard()).ifPresent(GameAction::execute);
     }
 
     /**

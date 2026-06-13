@@ -49,7 +49,7 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
                 .forEach(key -> {
                     final GameAction action = currentBindingMap.get(key);
                     final String actionText = game.ui().translations().translate(action.resourceBundleKey());
-                    final Label label = createLabel(actionText, action.isEnabled(game));
+                    final Label label = createLabel(actionText, action.isEnabled());
                     addRow(key.getDisplayText(), label);
                 });
         }

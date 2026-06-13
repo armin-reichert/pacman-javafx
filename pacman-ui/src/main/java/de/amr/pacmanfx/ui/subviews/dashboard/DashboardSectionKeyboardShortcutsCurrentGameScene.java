@@ -44,7 +44,7 @@ public class DashboardSectionKeyboardShortcutsCurrentGameScene extends Dashboard
                         final KeyCombination keyCombination = entry.getKey();
                         final GameAction action = entry.getValue();
                         final String localizedActionText = game.ui().translations().translate(action.resourceBundleKey());
-                        addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(game)));
+                        addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled()));
                     });
             }
         }

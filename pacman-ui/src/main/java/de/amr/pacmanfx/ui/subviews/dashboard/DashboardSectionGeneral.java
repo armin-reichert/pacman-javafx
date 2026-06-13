@@ -47,7 +47,7 @@ public class DashboardSectionGeneral extends DashboardSection {
         btnPlayPause.setStyle("-fx-background-color: transparent");
         btnPlayPause.graphicProperty().bind(game.clock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
         btnPlayPause.tooltipProperty().bind(game.clock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
-        setAction(game, btnPlayPause, game.commonActions().ACTION_TOGGLE_PAUSED);
+        setAction(game, btnPlayPause, game.actions().ACTION_TOGGLE_PAUSED);
 
         final Button btnStep = buttonsSimulationControl[1];
         btnStep.setGraphic(iconStep);

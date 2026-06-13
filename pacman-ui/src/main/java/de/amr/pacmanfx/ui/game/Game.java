@@ -39,7 +39,7 @@ public interface Game extends GameLifecycle {
 
     String currentGameVariantName();
 
-    CommonActions commonActions();
+    CommonActions actions();
 
     CheatActions cheatActions();
 

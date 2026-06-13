@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.subviews.playview;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
@@ -140,7 +141,7 @@ public class GamePlayView implements SubView {
     public void onInput(Game game, Input input) {
         // First lLook for an action binding in my bindings, if nothing found, delegate to the current game scene if any
         actionBindings.triggeredAction(input.keyboard()).ifPresentOrElse(
-            action -> action.execute(game),
+            GameAction::execute,
             () -> game.ui().gameScenes().optCurrentGameScene().ifPresent(GameScene::onInput)
         );
     }
@@ -148,7 +149,7 @@ public class GamePlayView implements SubView {
     @Override
     public void onEnter() {
         rootPane.requestFocus();
-        actionBindings.registerAllBindings(game.commonActions().commonBindings);
+        actionBindings.registerAllBindings(game.actions().commonBindings);
         Logger.info(actionBindings);
         gameSceneFrame.installBindings();
     }

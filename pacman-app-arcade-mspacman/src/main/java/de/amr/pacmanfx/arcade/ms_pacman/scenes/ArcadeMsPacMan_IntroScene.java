@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             .getExtension(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.GAME_START_ACTION_BINDINGS);
-        actionBindings().registerAllBindings(game().commonActions().sceneTestsBindings);
+        actionBindings().registerAllBindings(game().actions().sceneTestsBindings);
 
         sceneFlow.restartState(SceneState.STARTING);
     }

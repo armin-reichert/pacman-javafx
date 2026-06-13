@@ -10,6 +10,7 @@ import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.QuitHandler;
 import de.amr.pacmanfx.ui.game.Game;
@@ -130,7 +131,7 @@ public abstract class GameScene implements QuitHandler, Disposable {
      * Executes the first matching action.
      */
     public void onInput() {
-        actionBindings().triggeredAction(game.input().keyboard()).ifPresent(action -> action.execute(game));
+        actionBindings().triggeredAction(game.input().keyboard()).ifPresent(GameAction::execute);
     }
 
     /**

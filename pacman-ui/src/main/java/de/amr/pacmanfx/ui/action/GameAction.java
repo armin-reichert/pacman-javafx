@@ -13,26 +13,22 @@ import org.tinylog.Logger;
  */
 public abstract class GameAction {
 
-    private final Game game;
-    private final String id;
+    protected final Game game;
+    protected final String id;
 
     protected GameAction(Game game, String id) {
         this.game = game;
         this.id = Validations.requireValidIdentifier(id);
     }
 
-    protected Game game() {
-        return game;
-    }
+    protected abstract void doAction();
 
-    protected abstract void doAction(Game game);
+    public boolean isEnabled() { return true; }
 
-    public boolean isEnabled(Game game) { return true; }
-
-    public final boolean execute(Game game) {
-        if (isEnabled(game)) {
+    public final boolean execute() {
+        if (isEnabled()) {
             try {
-                doAction(game);
+                doAction();
                 return true;
             }
             catch (Exception x) {

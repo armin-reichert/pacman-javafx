@@ -192,7 +192,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         final Keyboard keyboard = game().input().keyboard();
         final GameAction gameAction = actionBindings().triggeredAction(keyboard).orElse(null);
         if (gameAction != null) {
-            gameAction.execute(game());
+            gameAction.execute();
         } else {
             // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
             perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {
@@ -280,9 +280,9 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     private void createBindings() {
         actionBindings = Set.of(
-            new ActionKeyBinding(game().commonActions().ACTION_PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT)),
-            new ActionKeyBinding(game().commonActions().ACTION_PERSPECTIVE_NEXT, alt(KeyCode.RIGHT)),
-            new ActionKeyBinding(game().commonActions().ACTION_TOGGLE_DRAW_MODE, alt(KeyCode.W)));
+            new ActionKeyBinding(game().actions().ACTION_PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT)),
+            new ActionKeyBinding(game().actions().ACTION_PERSPECTIVE_NEXT, alt(KeyCode.RIGHT)),
+            new ActionKeyBinding(game().actions().ACTION_TOGGLE_DRAW_MODE, alt(KeyCode.W)));
     }
 
     /**
