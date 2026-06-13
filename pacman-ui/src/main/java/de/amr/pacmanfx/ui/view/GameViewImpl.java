@@ -44,7 +44,7 @@ public class GameViewImpl implements GameView {
     private Game game;
 
     private StatusIconBox statusIconBox;
-    private KeyboardInfo keyboardInfo;
+    private KeyboardInfo keyboardInfoPopup;
     private StringBinding stageTitleBinding;
 
     public GameViewImpl(int width, int height) {
@@ -137,7 +137,7 @@ public class GameViewImpl implements GameView {
             new Region(), // placeholder, will be replaced by current view (start, play, edit)
             statusIconBox.rootPane(),
             ui.flashMessages().messageView().rootPane(),
-            keyboardInfo.rootPane()
+            keyboardInfoPopup.rootPane()
         );
     }
 
@@ -177,8 +177,8 @@ public class GameViewImpl implements GameView {
     }
 
     private void createKeyboardInfo(Game game) {
-        keyboardInfo = new KeyboardInfo(game.ui(), game.input().keyboard());
-        keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
+        keyboardInfoPopup = new KeyboardInfo(game.ui(), game.input().keyboard());
+        keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
     }
 
     private GamePlayView createGamePlaySubView(Game game) {

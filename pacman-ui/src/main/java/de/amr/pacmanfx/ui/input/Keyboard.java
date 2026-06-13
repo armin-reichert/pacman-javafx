@@ -104,8 +104,13 @@ public final class Keyboard {
     }
 
     private void onKeyReleased(KeyEvent event) {
+        boolean changed = false;
         if (!event.getCode().isModifierKey()) {
-            pressedKeys.remove(event.getCode());
+            changed = pressedKeys.remove(event.getCode());
+        }
+        changed = changed || updateModifierState(event);
+        if (changed) {
+            listeners.forEach(listener -> listener.onKeyboardStateChange(this));
         }
     }
 
