@@ -125,7 +125,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void acceptNormalLevel(GameLevel level) {
-        actionBindings().registerAllBindings(game().actions().steeringActionBindings());
+        actionBindings().registerAllBindings(game().actions().steeringActions().bindings());
         actionBindings().registerAllBindings(game().actions().cheatActionBindings());
 
         Logger.info(actionBindings());

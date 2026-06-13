@@ -34,10 +34,10 @@ public final class TengenMsPacMan_Actions {
         this.game = Objects.requireNonNull(game);
 
         steeringBindings = Set.of(
-            new ActionKeyBinding(game.actions().actionSteerUp(),    keyFor(JoypadButton.UP),    control(KeyCode.UP)),
-            new ActionKeyBinding(game.actions().actionSteerDown(),  keyFor(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-            new ActionKeyBinding(game.actions().actionSteerLeft(),  keyFor(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-            new ActionKeyBinding(game.actions().actionSteerRight(), keyFor(JoypadButton.RIGHT), control(KeyCode.RIGHT))
+            new ActionKeyBinding(game.actions().steeringActions().actionSteerUp(),    keyFor(JoypadButton.UP),    control(KeyCode.UP)),
+            new ActionKeyBinding(game.actions().steeringActions().actionSteerDown(),  keyFor(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+            new ActionKeyBinding(game.actions().steeringActions().actionSteerLeft(),  keyFor(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+            new ActionKeyBinding(game.actions().steeringActions().actionSteerRight(), keyFor(JoypadButton.RIGHT), control(KeyCode.RIGHT))
         );
 
         localBindings = Set.of(

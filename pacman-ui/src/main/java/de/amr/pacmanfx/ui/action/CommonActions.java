@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
@@ -47,16 +46,9 @@ public final class CommonActions {
 
     private final Game game;
 
-    // Pac-Man steering actions
-
-    private final GameAction actionSteerUp;
-    private final GameAction actionSteerDown;
-    private final GameAction actionSteerLeft;
-    private final GameAction actionSteerRight;
-
+    private final SteeringActions steeringActions;
     private final TestActions sceneTestActions;
 
-    private final Set<ActionKeyBinding> steeringActionBindings;
     private final Set<ActionKeyBinding> commonBindings;
     private final Set<ActionKeyBinding> cheatActionBindings;
     private final Set<ActionKeyBinding> sceneTestsBindings;
@@ -64,30 +56,23 @@ public final class CommonActions {
     public CommonActions(Game game) {
         this.game = Objects.requireNonNull(game);
 
-        actionSteerUp = new SteeringAction(game, Direction.UP);
-        actionSteerDown = new SteeringAction(game, Direction.DOWN);
-        actionSteerLeft = new SteeringAction(game, Direction.LEFT);
-        actionSteerRight = new SteeringAction(game, Direction.RIGHT);
-
+        steeringActions = new SteeringActions(game);
         sceneTestActions = new TestActions(game);
 
         commonBindings = createCommonBindings();
         cheatActionBindings = createCheatActionBindings();
-        steeringActionBindings = createSteeringActionBindings();
         sceneTestsBindings = createSceneTestsBindings();
     }
 
-    // Scene test actions
+    public SteeringActions steeringActions() {
+        return steeringActions;
+    }
 
     public TestActions sceneTestActions() {
         return sceneTestActions;
     }
 
     // Bindings sets
-
-    public Set<ActionKeyBinding> steeringActionBindings() {
-        return steeringActionBindings;
-    }
 
     public Set<ActionKeyBinding> commonBindings() {
         return commonBindings;
@@ -100,25 +85,6 @@ public final class CommonActions {
     public Set<ActionKeyBinding> sceneTestsBindings() {
         return sceneTestsBindings;
     }
-
-    // Steering actions
-
-    public GameAction actionSteerUp() {
-        return actionSteerUp;
-    }
-
-    public GameAction actionSteerDown() {
-        return actionSteerDown;
-    }
-
-    public GameAction actionSteerLeft() {
-        return actionSteerLeft;
-    }
-
-    public GameAction actionSteerRight() {
-        return actionSteerRight;
-    }
-
 
     // Map editor actions
 
@@ -684,15 +650,6 @@ public final class CommonActions {
             new ActionKeyBinding(game.cheatActions().actionAddLives(),       alt(KeyCode.L)),
             new ActionKeyBinding(game.cheatActions().actionEnterNextLevel(), alt(KeyCode.N)),
             new ActionKeyBinding(game.cheatActions().actionKillGhosts(),     alt(KeyCode.X))
-        );
-    }
-
-    private Set<ActionKeyBinding> createSteeringActionBindings() {
-        return Set.of(
-            new ActionKeyBinding(actionSteerUp, bare(KeyCode.UP), control(KeyCode.UP)),
-            new ActionKeyBinding(actionSteerDown, bare(KeyCode.DOWN), control(KeyCode.DOWN)),
-            new ActionKeyBinding(actionSteerLeft, bare(KeyCode.LEFT), control(KeyCode.LEFT)),
-            new ActionKeyBinding(actionSteerRight, bare(KeyCode.RIGHT), control(KeyCode.RIGHT))
         );
     }
 
