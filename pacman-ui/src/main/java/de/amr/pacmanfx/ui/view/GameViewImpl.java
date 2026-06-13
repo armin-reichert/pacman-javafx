@@ -37,14 +37,14 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 
 public class GameViewImpl implements GameView {
 
-    private final ObjectProperty<Stage> stage = new SimpleObjectProperty<>(this, "stage");
-
-    private Game game;
+    private final ObjectProperty<Stage> stage = new SimpleObjectProperty<>();
 
     private final GameViewMainScene mainScene;
 
-    private StatusIconBox statusIconBox;
+    private Game game;
 
+    private StatusIconBox statusIconBox;
+    private KeyboardInfo keyboardInfo;
     private StringBinding stageTitleBinding;
 
     public GameViewImpl(int width, int height) {
@@ -53,84 +53,31 @@ public class GameViewImpl implements GameView {
 
     @Override
     public void connect(Game game) {
+
+        if (this.game != null) {
+            Logger.warn("Game view already connect to game!");
+            return;
+        }
+
         this.game = requireNonNull(game);
 
         final GameUI ui = game.ui();
         final SubViewManager subViews = ui.subViews();
         final GameSceneManager gameScenes = ui.gameScenes();
 
-        createSubViews(subViews, game);
+        subViews.setStartView(new StartPagesView(game));
+        subViews.setGamePlayView(createGamePlaySubView(game));
+        subViews.setEditorViewFactory(() -> createEditorSubView(subViews, game));
 
-        statusIconBox = new StatusIconBox(game);
-        statusIconBox.rootPane().visibleProperty().bind(
-            Bindings.createBooleanBinding(
-                () -> subViews.isSelected(subViews.gamePlayView()) || subViews.isSelected(subViews.startView()),
-                subViews.selectedSubViewProperty()
-            )
-        );
-        StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
+        createStatusIconBox(subViews, game);
+        createKeyboardInfo(game);
+        createStageTitleBinding(ui, subViews, gameScenes);
+        populateMainScene(ui);
+        initMainScene(game, subViews, gameScenes);
 
-        final KeyboardInfo keyboardInfo = new KeyboardInfo(game.ui(), game.input().keyboard());
-        keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
-
-        mainScene.rootPane().getChildren().addAll(
-            new Region(), // placeholder, will be replaced by current view (start, play, edit)
-            statusIconBox.rootPane(),
-            ui.flashMessages().messageView().rootPane(),
-            keyboardInfo.rootPane()
-        );
-
-        mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)
-                ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
-                : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
-            subViews.selectedSubViewProperty(),
-            gameScenes.gameSceneProperty()
-        ));
-
-        mainScene.init(game);
-
-        stageTitleBinding = createStringBinding(
-            () -> computeStageTitle(game),
-            game.clock().updatesDisabledProperty(),
-            game.gameVariantNameProperty(),
-            subViews.selectedSubViewProperty(),
-            gameScenes.gameSceneProperty(),
-            ui.settings().debugInfoVisibleProperty,
-            ui.settings3D().view3DEnabledProperty()
-        );
-
+        // Some status icons are bound to the game model of the current game variant
         game.gameVariantNameProperty().addListener(
             (_,_,variantName) -> statusIconBox.bind(game.gameVariant(variantName).gameModel()));
-    }
-
-    private void createSubViews(SubViewManager subViews, Game game) {
-        final StartPagesView startView = new StartPagesView(game);
-        subViews.setStartView(startView);
-
-        final GamePlayView playView = createGamePlaySubView(game);
-        subViews.setGamePlayView(playView);
-
-        subViews.setEditorViewFactory(() -> createEditorSubView(subViews, game));
-    }
-
-    private GamePlayView createGamePlaySubView(Game game) {
-        final var playView = new GamePlayView(game, GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
-        final ChangeListener<? super Number> resizeHandler = (_,_,_) -> playView.resizeToFit(mainScene);
-        mainScene.widthProperty().addListener(resizeHandler);
-        mainScene.heightProperty().addListener(resizeHandler);
-        return playView;
-    }
-
-    private EditorView createEditorSubView(SubViewManager subViews, Game game) {
-        final var editorView = new EditorView(stage(), game);
-        editorView.editor().setOnQuit(_ -> {
-            // restore title (editor changed it)
-            stage().titleProperty().unbind();
-            stage().titleProperty().bind(stageTitleBindingProperty());
-            subViews.selectStartView();
-        });
-        return editorView;
     }
 
     @Override
@@ -185,6 +132,74 @@ public class GameViewImpl implements GameView {
     }
 
     // Private area
+
+    private void populateMainScene(GameUI ui) {
+        mainScene.rootPane().getChildren().addAll(
+            new Region(), // placeholder, will be replaced by current view (start, play, edit)
+            statusIconBox.rootPane(),
+            ui.flashMessages().messageView().rootPane(),
+            keyboardInfo.rootPane()
+        );
+    }
+
+    private void initMainScene(Game game, SubViewManager subViews, GameSceneManager gameScenes) {
+        mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
+            () -> gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)
+                ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
+                : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
+            subViews.selectedSubViewProperty(),
+            gameScenes.gameSceneProperty()
+        ));
+
+        mainScene.init(game);
+    }
+
+    private void createStageTitleBinding(GameUI ui, SubViewManager subViews, GameSceneManager gameScenes) {
+        stageTitleBinding = createStringBinding(
+            () -> computeStageTitle(game),
+            game.clock().updatesDisabledProperty(),
+            game.gameVariantNameProperty(),
+            subViews.selectedSubViewProperty(),
+            gameScenes.gameSceneProperty(),
+            ui.settings().debugInfoVisibleProperty,
+            ui.settings3D().view3DEnabledProperty()
+        );
+    }
+
+    private void createStatusIconBox(SubViewManager subViews, Game game) {
+        statusIconBox = new StatusIconBox(game);
+        statusIconBox.rootPane().visibleProperty().bind(
+            Bindings.createBooleanBinding(
+                () -> subViews.isSelected(subViews.gamePlayView()) || subViews.isSelected(subViews.startView()),
+                subViews.selectedSubViewProperty()
+            )
+        );
+        StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
+    }
+
+    private void createKeyboardInfo(Game game) {
+        keyboardInfo = new KeyboardInfo(game.ui(), game.input().keyboard());
+        keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
+    }
+
+    private GamePlayView createGamePlaySubView(Game game) {
+        final var playView = new GamePlayView(game, GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
+        final ChangeListener<? super Number> resizeHandler = (_,_,_) -> playView.resizeToFit(mainScene);
+        mainScene.widthProperty().addListener(resizeHandler);
+        mainScene.heightProperty().addListener(resizeHandler);
+        return playView;
+    }
+
+    private EditorView createEditorSubView(SubViewManager subViews, Game game) {
+        final var editorView = new EditorView(stage(), game);
+        editorView.editor().setOnQuit(_ -> {
+            // restore title (editor changed it)
+            stage().titleProperty().unbind();
+            stage().titleProperty().bind(stageTitleBindingProperty());
+            subViews.selectStartView();
+        });
+        return editorView;
+    }
 
     private void updateStageIcon(Game game) {
         final Image icon = game.currentUIConfig().assets().image("app_icon");
