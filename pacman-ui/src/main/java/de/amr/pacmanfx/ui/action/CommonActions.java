@@ -65,7 +65,6 @@ public final class CommonActions {
         final Set<ActionKeyBinding> bindings = new HashSet<>();
         bindings.addAll(simulationActions.bindings());
         bindings.addAll(gameFlowActions.bindings());
-        bindings.addAll(uiSettingsActions.bindings());
         bindings.addAll(editorActions.bindings());
         bindings.addAll(uiSettingsActions.bindings());
         bindings.add(new ActionKeyBinding(actionToggleCollisionStrategy(), alt(KeyCode.S)));
