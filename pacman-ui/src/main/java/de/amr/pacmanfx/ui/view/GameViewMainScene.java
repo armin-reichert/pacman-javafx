@@ -41,7 +41,7 @@ public class GameViewMainScene extends Scene {
 
         // Global action bindings
         actionBindings.selectAnyMatchingBinding(game.actions().uiSettingsActions().actionToggleKeyboardMonitor(), game.actions().commonBindings());
-        actionBindings.selectAnyMatchingBinding(game.actions().actionToggleMuted(), game.actions().commonBindings());
+        actionBindings.selectAnyMatchingBinding(game.actions().simulationActions().actionToggleMuted(), game.actions().commonBindings());
 
         actionBindings.selectAnyMatchingBinding(game.actions().uiSettingsActions().actionEnterFullScreen(), game.actions().commonBindings());
         actionBindings.selectAnyMatchingBinding(game.actions().editorActions().actionOpenEditor(), game.actions().commonBindings());

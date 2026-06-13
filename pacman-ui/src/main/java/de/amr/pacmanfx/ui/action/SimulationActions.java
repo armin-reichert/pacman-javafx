@@ -25,6 +25,7 @@ public class SimulationActions {
     private final GameAction actionTenSteps;
     private final GameAction actionReset;
     private final GameAction actionTogglePaused;
+    private final GameAction actionToggleMuted;
 
     private final Set<ActionKeyBinding> bindings;
 
@@ -127,6 +128,13 @@ public class SimulationActions {
             }
         };
 
+        actionToggleMuted = new GameAction(game, "toggle_muted") {
+            @Override
+            protected void doAction() {
+                toggleBooleanProperty(game.ui().settings().mutedProperty);
+            }
+        };
+
         bindings = Set.of(
             new ActionKeyBinding(actionSlower,       alt(KeyCode.MINUS)),
             new ActionKeyBinding(actionSlowest,      alt_shift(KeyCode.MINUS)),
@@ -135,7 +143,8 @@ public class SimulationActions {
             new ActionKeyBinding(actionReset,        alt(KeyCode.DIGIT0)),
             new ActionKeyBinding(actionOneStep,      shift(KeyCode.P), shift(KeyCode.F5)),
             new ActionKeyBinding(actionTenSteps,     shift(KeyCode.SPACE)),
-            new ActionKeyBinding(actionTogglePaused, bare(KeyCode.P), bare(KeyCode.F5))
+            new ActionKeyBinding(actionTogglePaused, bare(KeyCode.P), bare(KeyCode.F5)),
+            new ActionKeyBinding(actionToggleMuted,  alt(KeyCode.M))
         );
     }
 
@@ -169,6 +178,10 @@ public class SimulationActions {
 
     public GameAction actionTogglePaused() {
         return actionTogglePaused;
+    }
+
+    public GameAction actionToggleMuted() {
+        return actionToggleMuted;
     }
 
     public Set<ActionKeyBinding> bindings() {

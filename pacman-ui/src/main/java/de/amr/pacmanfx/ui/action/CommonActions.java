@@ -21,7 +21,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.Keyboard.*;
+import static de.amr.pacmanfx.ui.input.Keyboard.alt;
+import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
 
 /**
@@ -182,20 +183,6 @@ public final class CommonActions {
         return actionToggleCollisionStrategy;
     }
 
-    private GameAction actionToggleMuted;
-
-    public GameAction actionToggleMuted() {
-        if (actionToggleMuted == null) {
-            actionToggleMuted = new GameAction(game, "toggle_muted") {
-                @Override
-                protected void doAction() {
-                    toggleBooleanProperty(game.ui().settings().mutedProperty);
-                }
-            };
-        }
-        return actionToggleMuted;
-    }
-
     private GameAction actionTogglePlayScene2D3D;
 
     public GameAction actionTogglePlayScene2D3D() {
@@ -244,7 +231,6 @@ public final class CommonActions {
             new ActionKeyBinding(actionQuit(),                    bare(KeyCode.Q)),
             new ActionKeyBinding(actionStartGame(),               bare(KeyCode.F3)),
             new ActionKeyBinding(actionToggleCollisionStrategy(), alt(KeyCode.S)),
-            new ActionKeyBinding(actionToggleMuted(),             alt(KeyCode.M)),
             new ActionKeyBinding(actionTogglePlayScene2D3D(),     alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
         ));
 
