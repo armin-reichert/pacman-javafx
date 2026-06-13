@@ -5,17 +5,14 @@
 package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.gamestate.GameState;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.QuitHandler;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameFacade;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ScrollEvent;
 import org.tinylog.Logger;
@@ -27,7 +24,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Abstract base class for all game scenes (2D and 3D).
  */
-public abstract class AbstractGameScene implements QuitHandler, Disposable {
+public abstract class AbstractGameScene implements GameFacade, QuitHandler, Disposable {
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for " + getClass().getSimpleName());
 
@@ -44,18 +41,6 @@ public abstract class AbstractGameScene implements QuitHandler, Disposable {
         return game;
     }
 
-    public GameContext gameContext() {
-        return game.currentGameContext();
-    }
-
-    public GameModel gameModel() {
-        return gameContext().model();
-    }
-
-    public GameState gameState() {
-        return gameContext().state();
-    }
-
     public void setGameEventHandler(GameEventListener delegate) {
         gameEventHandler = requireNonNull(delegate);
     }
@@ -64,16 +49,6 @@ public abstract class AbstractGameScene implements QuitHandler, Disposable {
         return gameEventHandler;
     }
 
-    /**
-     * @return optional JavaFX subscene for this scene (3D scenes override)
-     */
-    public Optional<SubScene> optSubSceneFX() {
-        return Optional.empty();
-    }
-
-    public Optional<GameSoundEffects> optSoundEffects() {
-        return game.currentSoundEffects();
-    }
     /**
      * @return action bindings for this scene
      */
