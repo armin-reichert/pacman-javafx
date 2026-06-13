@@ -51,9 +51,9 @@ public class Arcade_PlayScene2D extends GameScene2D {
     public void handleQuit(Game game) {
         if (gameModel().isPlaying()) {
             gameContext().optCurrentLevel().ifPresent(level -> gameModel().onGameOver(gameContext(), level));
-            gameModel().cheats().clear();
-            gameModel().lives().setCount(0);
         }
+        gameModel().cheats().clear();
+        gameModel().lives().setCount(0);
         onDeactivate();
     }
 
