@@ -92,6 +92,7 @@ public final class GameImpl implements Game {
             final GameVariant gameVariant = gameVariant(newVariantName);
             currentGameContext = new GameContextImpl(this, gameVariant);
             currentGameContext.model().hud().creditProperty().bind(coinMechanism().numCoinsProperty());
+            updateSettings3D(gameVariant.uiConfig());
         });
     }
 
@@ -317,14 +318,15 @@ public final class GameImpl implements Game {
     }
 
     private void initProperties() {
-        final UIConfig currentConfig = currentUIConfig();
+        ui.sounds().muteProperty().bind(ui.settings().mutedProperty);
+    }
 
-        final MazeConfig3D mazeConfig3D = currentConfig.worldConfig().maze();
-
-        ui().settings3D().mazeWallHeightProperty().set(mazeConfig3D.obstacleBaseHeight());
-        ui().settings3D().mazeWallOpacityProperty().set(mazeConfig3D.obstacleOpacity());
-
-        ui.sounds().muteProperty().bind(ui().settings().mutedProperty);
+    private void updateSettings3D(UIConfig uiConfig) {
+        final MazeConfig3D mazeConfig3D = uiConfig.worldConfig().maze();
+        ui.settings3D().mazeWallHeightProperty().set(mazeConfig3D.obstacleBaseHeight());
+        ui.settings3D().mazeWallOpacityProperty().set(mazeConfig3D.obstacleOpacity());
+        Logger.info("Update maze 3D settings for UI config {}", uiConfig);
+        Logger.info("Maze 3D settings: {}", mazeConfig3D);
     }
 
     private void startServicesLater() {
