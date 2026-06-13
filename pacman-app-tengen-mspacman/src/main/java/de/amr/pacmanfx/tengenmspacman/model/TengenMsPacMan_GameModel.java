@@ -21,8 +21,6 @@ import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
-import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
-import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorSpeedControl;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import org.tinylog.Logger;
 

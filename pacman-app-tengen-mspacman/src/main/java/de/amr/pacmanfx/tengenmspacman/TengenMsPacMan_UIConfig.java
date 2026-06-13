@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
-import de.amr.pacmanfx.tengenmspacman.model.actor.TengenMsPacMan_ActorFactory;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.config.*;

@@ -10,7 +10,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.gamestate.GameStateID;
