@@ -28,7 +28,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.*;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -38,7 +37,6 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static java.util.Objects.requireNonNull;
 
 public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
@@ -72,7 +70,7 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         super(game);
 
         createSubScene();
-        createBindings();
+        actionBindings = game().actions().camera3DActions().bindings();
 
         setGameEventHandler(new PlayScene3DGameEventHandler(this));
     }
@@ -276,13 +274,6 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         ambientLight.colorProperty().bind(game().ui().settings3D().mazeLightColorProperty());
 
         subSceneRoot.getChildren().addAll(level3DParent, coordinateSystem, ambientLight);
-    }
-
-    private void createBindings() {
-        actionBindings = Set.of(
-            new ActionKeyBinding(game().actions().actionPerspectivePrevious(), alt(KeyCode.LEFT)),
-            new ActionKeyBinding(game().actions().actionPerspectiveNext(), alt(KeyCode.RIGHT)),
-            new ActionKeyBinding(game().actions().actionToggleDrawMode(), alt(KeyCode.W)));
     }
 
     /**

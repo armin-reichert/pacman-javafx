@@ -93,7 +93,7 @@ public class DashboardSection3DSettings extends DashboardSection {
         setEditor(comboPerspectives, settings3D.cameraPerspectiveIdProperty());
 
         cbUsePlayScene3D.setOnAction(_ -> game.actions().actionTogglePlayScene2D3D().execute());
-        cbWireframeMode.setOnAction(_ -> game.actions().actionToggleDrawMode().execute());
+        cbWireframeMode.setOnAction(_ -> game.actions().camera3DActions().actionToggleDrawMode().execute());
     }
 
     @Override

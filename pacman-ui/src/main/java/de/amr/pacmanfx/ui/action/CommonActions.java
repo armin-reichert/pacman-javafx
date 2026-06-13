@@ -11,19 +11,18 @@ import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
-import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.input.KeyCode;
-import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
@@ -40,6 +39,7 @@ public final class CommonActions {
 
     private final SimulationActions simulationActions;
     private final SteeringActions steeringActions;
+    private final Camera3DActions camera3DActions;
     private final EditorActions editorActions;
     private final CheatActions cheatActions;
     private final TestActions sceneTestActions;
@@ -52,6 +52,7 @@ public final class CommonActions {
 
         simulationActions = new SimulationActions(game);
         steeringActions = new SteeringActions(game);
+        camera3DActions = new Camera3DActions(game);
         editorActions = new EditorActions(game);
         cheatActions = new CheatActions(game);
         sceneTestActions = new TestActions(game);
@@ -66,6 +67,10 @@ public final class CommonActions {
 
     public SteeringActions steeringActions() {
         return steeringActions;
+    }
+
+    public Camera3DActions camera3DActions() {
+        return camera3DActions;
     }
 
     public EditorActions editorActions() {
@@ -148,50 +153,6 @@ public final class CommonActions {
             };
         }
         return actionLetGameStateExpire;
-    }
-
-    private GameAction actionPerspectiveNext;
-
-    public GameAction actionPerspectiveNext() {
-        if (actionPerspectiveNext == null) {
-            actionPerspectiveNext = new GameAction(game, "perspective_next") {
-                @Override
-                protected void doAction() {
-                    final PerspectiveID nextID = game.ui().settings3D().cameraPerspectiveIdProperty().get().next();
-                    game.ui().settings3D().cameraPerspectiveIdProperty().set(nextID);
-
-                    final TranslationManager translations = game.ui().translations();
-                    final String msgKey = translations.translate(
-                        "camera_perspective",
-                        translations.translate("perspective_id_" + nextID.name())
-                    );
-                    game.shortMessage(msgKey);
-                }
-            };
-        }
-        return actionPerspectiveNext;
-    }
-
-    private GameAction actionPerspectivePrevious;
-
-    public GameAction actionPerspectivePrevious() {
-        if (actionPerspectivePrevious == null) {
-            actionPerspectivePrevious = new GameAction(game, "perspective_previous") {
-                @Override
-                protected void doAction() {
-                    final PerspectiveID prevID = game.ui().settings3D().cameraPerspectiveIdProperty().get().prev();
-                    game.ui().settings3D().cameraPerspectiveIdProperty().set(prevID);
-
-                    final TranslationManager translations = game.ui().translations();
-                    final String msgKey = translations.translate(
-                        "camera_perspective",
-                        translations.translate("perspective_id_" + prevID.name())
-                    );
-                    game.shortMessage(msgKey);
-                }
-            };
-        }
-        return actionPerspectivePrevious;
     }
 
     private GameAction actionRestartIntro;
@@ -302,19 +263,6 @@ public final class CommonActions {
         return actionToggleDebugInfo;
     }
 
-    private GameAction actionToggleDrawMode;
-
-    public GameAction actionToggleDrawMode() {
-        if (actionToggleDrawMode == null) {
-            actionToggleDrawMode = new GameAction(game, "toggle_draw_mode") {
-                @Override
-                protected void doAction() {
-                    Ufx.toggleProperty(game.ui().settings3D().drawModeProperty(), DrawMode.LINE, DrawMode.FILL);
-                }
-            };
-        }
-        return actionToggleDrawMode;
-    }
 
     private GameAction actionToggleKeyboardMonitor;
 
