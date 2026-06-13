@@ -14,6 +14,9 @@ import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
+import de.amr.pacmanfx.ui.subviews.editor.EditorView;
+import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
+import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -56,6 +59,8 @@ public class GameViewImpl implements GameView {
         final SubViewManager subViews = ui.subViews();
         final GameSceneManager gameScenes = ui.gameScenes();
 
+        createSubViews(subViews, game);
+
         statusIconBox = new StatusIconBox(game);
         statusIconBox.rootPane().visibleProperty().bind(
             Bindings.createBooleanBinding(
@@ -97,6 +102,35 @@ public class GameViewImpl implements GameView {
 
         game.gameVariantNameProperty().addListener(
             (_,_,variantName) -> statusIconBox.bind(game.gameVariant(variantName).gameModel()));
+    }
+
+    private void createSubViews(SubViewManager subViews, Game game) {
+        final StartPagesView startView = new StartPagesView(game);
+        subViews.setStartView(startView);
+
+        final GamePlayView playView = createGamePlaySubView(game);
+        subViews.setGamePlayView(playView);
+
+        subViews.setEditorViewFactory(() -> createEditorSubView(subViews, game));
+    }
+
+    private GamePlayView createGamePlaySubView(Game game) {
+        final var playView = new GamePlayView(game, GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
+        final ChangeListener<? super Number> resizeHandler = (_,_,_) -> playView.resizeToFit(mainScene);
+        mainScene.widthProperty().addListener(resizeHandler);
+        mainScene.heightProperty().addListener(resizeHandler);
+        return playView;
+    }
+
+    private EditorView createEditorSubView(SubViewManager subViews, Game game) {
+        final var editorView = new EditorView(stage(), game);
+        editorView.editor().setOnQuit(_ -> {
+            // restore title (editor changed it)
+            stage().titleProperty().unbind();
+            stage().titleProperty().bind(stageTitleBindingProperty());
+            subViews.selectStartView();
+        });
+        return editorView;
     }
 
     @Override

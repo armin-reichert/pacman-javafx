@@ -27,9 +27,6 @@ import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
-import de.amr.pacmanfx.ui.subviews.editor.EditorView;
-import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
-import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.FlashMessageManager;
 import de.amr.pacmanfx.ui.view.GameViewImpl;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
@@ -39,7 +36,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -86,7 +82,6 @@ public final class GameImpl implements Game {
         this.ui = createUI();
 
         view.connect(this);
-        createSubViews(ui);
 
         gameVariantName.addListener((_, _, newVariantName) -> {
             final GameVariant gameVariant = gameVariant(newVariantName);
@@ -275,37 +270,6 @@ public final class GameImpl implements Game {
     private static void load3DAssets() {
         //noinspection ResultOfMethodCallIgnored
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing singleton
-    }
-
-    private void createSubViews(GameUI ui) {
-        final SubViewManager subViews = ui.subViews();
-
-        final StartPagesView startView = new StartPagesView(this);
-        subViews.setStartView(startView);
-
-        final GamePlayView playView = createGamePlaySubView();
-        subViews.setGamePlayView(playView);
-
-        subViews.setEditorViewFactory(() -> createEditorSubView(view.stage()));
-    }
-
-    private GamePlayView createGamePlaySubView() {
-        final var playView = new GamePlayView(this, GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
-        final ChangeListener<? super Number> resizeHandler = (_,_,_) -> playView.resizeToFit(view.mainScene());
-        view.mainScene().widthProperty().addListener(resizeHandler);
-        view.mainScene().heightProperty().addListener(resizeHandler);
-        return playView;
-    }
-
-    private EditorView createEditorSubView(Stage stage) {
-        final var editorView = new EditorView(stage, this);
-        editorView.editor().setOnQuit(_ -> {
-            // restore title (editor changed it)
-            stage.titleProperty().unbind();
-            stage.titleProperty().bind(view.stageTitleBindingProperty());
-            ui.subViews().selectStartView();
-        });
-        return editorView;
     }
 
     private void initGameClock() {
