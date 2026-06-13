@@ -92,7 +92,7 @@ public class DashboardSection3DSettings extends DashboardSection {
         setEditor(sliderWallOpacity, settings3D.mazeWallOpacityProperty());
         setEditor(comboPerspectives, settings3D.cameraPerspectiveIdProperty());
 
-        cbUsePlayScene3D.setOnAction(_ -> game.actions().actionTogglePlayScene2D3D().execute());
+        cbUsePlayScene3D.setOnAction(_ -> game.actions().uiSettingsActions().actionTogglePlayScene2D3D().execute());
         cbWireframeMode.setOnAction(_ -> game.actions().camera3DActions().actionToggleDrawMode().execute());
     }
 

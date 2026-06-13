@@ -81,7 +81,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
         // Quit cut scene when "START" button on "joypad" is pressed
         final Joypad joypad = game().input().joypad();
-        actionBindings().bindActionToKeyCombination(game().actions().actionLetGameStateExpire(), joypad.keyForButton(JoypadButton.START));
+        actionBindings().bindActionToKeyCombination(game().actions().gameFlowActions().actionLetGameStateExpire(),
+            joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(3, "JUNIOR");
         clapperboard.setPosition(3 * WorldMap.TS, 10 * WorldMap.TS);

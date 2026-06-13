@@ -53,7 +53,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         final UISettings3D settings3D = game.ui().settings3D();
 
         addLocalizedTitleItem(this, translator, "scene_display");
-        addLocalizedActionItem(this, translator, game.actions().actionTogglePlayScene2D3D(), "use_2D_scene");
+        addLocalizedActionItem(this, translator, game.actions().uiSettingsActions().actionTogglePlayScene2D3D(), "use_2D_scene");
         addLocalizedCheckBox(this, translator, game.ui().settings().miniViewOnProperty, "pip");
 
         addLocalizedTitleItem(this, translator, "select_perspective");

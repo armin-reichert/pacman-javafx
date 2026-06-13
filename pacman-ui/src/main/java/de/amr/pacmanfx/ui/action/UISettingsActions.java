@@ -5,6 +5,8 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.gamestate.GameState;
+import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
@@ -25,6 +27,7 @@ public class UISettingsActions {
     private final GameAction actionToggleDebugInfo;
     private final GameAction actionToggleKeyboardMonitor;
     private final GameAction actionToggleMiniViewVisibility;
+    private final GameAction actionTogglePlayScene2D3D;
 
     private final Set<ActionKeyBinding> bindings;
 
@@ -94,13 +97,45 @@ public class UISettingsActions {
             }
         };
 
+        actionTogglePlayScene2D3D = new GameAction(game, "toggle_play_scene_2d_3d") {
+            @Override
+            protected void doAction() {
+                toggleBooleanProperty(game.ui().settings3D().view3DEnabledProperty());
+                final boolean is3DEnabled = game.ui().settings3D().view3DEnabledProperty().get();
+                if (!inPlayScene()) {
+                    game.shortMessage(game.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
+                }
+                if (isLevelPlaying()) {
+                    game.ui().gameScenes().forceGameSceneUpdate(game);
+                }
+            }
+
+            @Override
+            public boolean isEnabled() {
+                final SubViewManager subViews = game.ui().subViews();
+                return subViews.isSelected(subViews.gamePlayView());
+            }
+
+            private boolean inPlayScene() {
+                final GameSceneManager gameScenes = game.ui().gameScenes();
+                return gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D)
+                    || gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D);
+            }
+
+            private boolean isLevelPlaying() {
+                final GameState gameState = game.currentGameContext().state();
+                return GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
+            }
+        };
+
         bindings = Set.of(
             new ActionKeyBinding(actionEnterFullScreen(), bare(KeyCode.F11)),
             new ActionKeyBinding(actionShowHelp(), bare(KeyCode.H)),
             new ActionKeyBinding(actionToggleDashboard, bare(KeyCode.F1), alt(KeyCode.B)),
             new ActionKeyBinding(actionToggleDebugInfo, alt(KeyCode.D)),
             new ActionKeyBinding(actionToggleKeyboardMonitor, alt(KeyCode.K)),
-            new ActionKeyBinding(actionToggleMiniViewVisibility, bare(KeyCode.F2))
+            new ActionKeyBinding(actionToggleMiniViewVisibility, bare(KeyCode.F2)),
+            new ActionKeyBinding(actionTogglePlayScene2D3D(), alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
         );
     }
 
@@ -126,6 +161,10 @@ public class UISettingsActions {
 
     public GameAction actionToggleMiniViewVisibility() {
         return actionToggleMiniViewVisibility;
+    }
+
+    public GameAction actionTogglePlayScene2D3D() {
+        return actionTogglePlayScene2D3D;
     }
 
     public Set<ActionKeyBinding> bindings() {

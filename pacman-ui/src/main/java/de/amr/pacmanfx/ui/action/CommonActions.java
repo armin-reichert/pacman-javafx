@@ -4,11 +4,9 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
-import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
@@ -95,43 +93,6 @@ public final class CommonActions {
         return commonBindings;
     }
 
-    private GameAction actionLetGameStateExpire;
-
-    public GameAction actionLetGameStateExpire() {
-        if (actionLetGameStateExpire == null) {
-            actionLetGameStateExpire = new GameAction(game, "let_game_state_expire") {
-                @Override
-                protected void doAction() {
-                    game.currentGameContext().state().expire();
-                }
-            };
-        }
-        return actionLetGameStateExpire;
-    }
-
-    private GameAction actionRestartIntro;
-
-    public GameAction actionRestartIntro() {
-        if (actionRestartIntro == null) {
-            actionRestartIntro = new GameAction(game, "restart_intro") {
-                @Override
-                protected void doAction() {
-                    final GameContext gameContext = game.currentGameContext();
-                    final GameState gameState = gameContext.state();
-
-                    if (gameState instanceof TestState) {
-                        gameState.onExit(gameContext);
-                    }
-
-                    game.stop();
-                    game.clock().start();
-                    gameContext.flow().restartState(GameStateID.GAME_INTRO);
-                }
-            };
-        }
-        return actionRestartIntro;
-    }
-
     private GameAction actionToggleCollisionStrategy;
 
     public GameAction actionToggleCollisionStrategy() {
@@ -156,53 +117,11 @@ public final class CommonActions {
         return actionToggleCollisionStrategy;
     }
 
-    private GameAction actionTogglePlayScene2D3D;
-
-    public GameAction actionTogglePlayScene2D3D() {
-        if  (actionTogglePlayScene2D3D == null) {
-            actionTogglePlayScene2D3D = new GameAction(game, "toggle_play_scene_2d_3d") {
-
-                @Override
-                protected void doAction() {
-                    toggleBooleanProperty(game.ui().settings3D().view3DEnabledProperty());
-                    final boolean is3DEnabled = game.ui().settings3D().view3DEnabledProperty().get();
-                    if (!inPlayScene()) {
-                        game.shortMessage(game.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
-                    }
-                    if (isLevelPlaying()) {
-                        game.ui().gameScenes().forceGameSceneUpdate(game);
-                    }
-                }
-
-                @Override
-                public boolean isEnabled() {
-                    final SubViewManager subViews = game.ui().subViews();
-                    return subViews.isSelected(subViews.gamePlayView());
-                }
-
-                private boolean inPlayScene() {
-                    final GameSceneManager gameScenes = game.ui().gameScenes();
-                    return gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D)
-                        || gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D);
-                }
-
-                private boolean isLevelPlaying() {
-                    final GameState gameState = game.currentGameContext().state();
-                    return GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
-                }
-            };
-        }
-        return actionTogglePlayScene2D3D;
-    }
-
-    // Binding sets
-
     private Set<ActionKeyBinding> createBindings() {
         final Set<ActionKeyBinding> bindings = new HashSet<>();
 
         bindings.addAll(Set.of(
-            new ActionKeyBinding(actionToggleCollisionStrategy(), alt(KeyCode.S)),
-            new ActionKeyBinding(actionTogglePlayScene2D3D(),     alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
+            new ActionKeyBinding(actionToggleCollisionStrategy(), alt(KeyCode.S))
         ));
         bindings.addAll(simulationActions.bindings());
         bindings.addAll(gameFlowActions.bindings());
