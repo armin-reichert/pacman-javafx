@@ -3,6 +3,8 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 
@@ -11,6 +13,7 @@ import java.util.Set;
 import static de.amr.pacmanfx.model.GameRules.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.shift;
+import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
 
 public class SimulationActions {
 
@@ -21,6 +24,7 @@ public class SimulationActions {
     private final GameAction actionOneStep;
     private final GameAction actionTenSteps;
     private final GameAction actionReset;
+    private final GameAction actionTogglePaused;
 
     private final Set<ActionKeyBinding> bindings;
 
@@ -104,14 +108,34 @@ public class SimulationActions {
             }
         };
 
+        actionTogglePaused = new GameAction(game, "toggle_paused") {
+            @Override
+            protected void doAction() {
+                final GameClock gameClock = game.clock();
+                toggleBooleanProperty(gameClock.updatesDisabledProperty());
+                final boolean paused = gameClock.getUpdatesDisabled();
+                if (paused) {
+                    game.ui().sounds().stopAll();
+                    game.currentUIConfig().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+                }
+            }
+
+            @Override
+            public boolean isEnabled() {
+                final SubViewManager subViews = game.ui().subViews();
+                return subViews.isSelected(subViews.gamePlayView());
+            }
+        };
+
         bindings = Set.of(
-            new ActionKeyBinding(actionSlower(),   alt(KeyCode.MINUS)),
-            new ActionKeyBinding(actionSlowest(),  alt_shift(KeyCode.MINUS)),
-            new ActionKeyBinding(actionFaster(),   alt(KeyCode.PLUS)),
-            new ActionKeyBinding(actionFastest(),  alt_shift(KeyCode.PLUS)),
-            new ActionKeyBinding(actionReset(),    alt(KeyCode.DIGIT0)),
-            new ActionKeyBinding(actionOneStep(),  shift(KeyCode.P), shift(KeyCode.F5)),
-            new ActionKeyBinding(actionTenSteps(), shift(KeyCode.SPACE))
+            new ActionKeyBinding(actionSlower,       alt(KeyCode.MINUS)),
+            new ActionKeyBinding(actionSlowest,      alt_shift(KeyCode.MINUS)),
+            new ActionKeyBinding(actionFaster,       alt(KeyCode.PLUS)),
+            new ActionKeyBinding(actionFastest,      alt_shift(KeyCode.PLUS)),
+            new ActionKeyBinding(actionReset,        alt(KeyCode.DIGIT0)),
+            new ActionKeyBinding(actionOneStep,      shift(KeyCode.P), shift(KeyCode.F5)),
+            new ActionKeyBinding(actionTenSteps,     shift(KeyCode.SPACE)),
+            new ActionKeyBinding(actionTogglePaused, bare(KeyCode.P), bare(KeyCode.F5))
         );
     }
 
@@ -141,6 +165,10 @@ public class SimulationActions {
 
     public GameAction actionReset() {
         return actionReset;
+    }
+
+    public GameAction actionTogglePaused() {
+        return actionTogglePaused;
     }
 
     public Set<ActionKeyBinding> bindings() {

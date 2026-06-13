@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
@@ -13,7 +12,6 @@ import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
@@ -198,32 +196,6 @@ public final class CommonActions {
         return actionToggleMuted;
     }
 
-    private GameAction actionTogglePaused;
-
-    public GameAction actionTogglePaused() {
-        if (actionTogglePaused == null) {
-            actionTogglePaused = new GameAction(game, "toggle_paused") {
-                @Override
-                protected void doAction() {
-                    final GameClock gameClock = game.clock();
-                    toggleBooleanProperty(gameClock.updatesDisabledProperty());
-                    final boolean paused = gameClock.getUpdatesDisabled();
-                    if (paused) {
-                        game.ui().sounds().stopAll();
-                        game.currentUIConfig().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-                    }
-                }
-
-                @Override
-                public boolean isEnabled() {
-                    final SubViewManager subViews = game.ui().subViews();
-                    return subViews.isSelected(subViews.gamePlayView());
-                }
-            };
-        }
-        return actionTogglePaused;
-    }
-
     private GameAction actionTogglePlayScene2D3D;
 
     public GameAction actionTogglePlayScene2D3D() {
@@ -273,7 +245,6 @@ public final class CommonActions {
             new ActionKeyBinding(actionStartGame(),               bare(KeyCode.F3)),
             new ActionKeyBinding(actionToggleCollisionStrategy(), alt(KeyCode.S)),
             new ActionKeyBinding(actionToggleMuted(),             alt(KeyCode.M)),
-            new ActionKeyBinding(actionTogglePaused(),            bare(KeyCode.P), bare(KeyCode.F5)),
             new ActionKeyBinding(actionTogglePlayScene2D3D(),     alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
         ));
 
