@@ -10,7 +10,6 @@ import javafx.scene.input.KeyCode;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
@@ -23,8 +22,6 @@ import static de.amr.pacmanfx.ui.input.Keyboard.alt;
  */
 public final class CommonActions {
 
-    private final Game game;
-
     private final SimulationActions simulationActions;
     private final GameFlowActions gameFlowActions;
     private final SteeringActions steeringActions;
@@ -34,11 +31,11 @@ public final class CommonActions {
     private final TestActions sceneTestActions;
     private final UISettingsActions uiSettingsActions;
 
+    private final GameAction actionToggleCollisionStrategy;
+
     private final Set<ActionKeyBinding> commonBindings;
 
     public CommonActions(Game game) {
-        this.game = Objects.requireNonNull(game);
-
         simulationActions = new SimulationActions(game);
         gameFlowActions = new GameFlowActions(game);
         steeringActions = new SteeringActions(game);
@@ -48,7 +45,32 @@ public final class CommonActions {
         sceneTestActions = new TestActions(game);
         uiSettingsActions = new UISettingsActions(game);
 
-        commonBindings = createBindings();
+        actionToggleCollisionStrategy = new GameAction(game, "toggle_collision_strategy") {
+            @Override
+            protected void doAction() {
+                final CollisionStrategy strategy = game.currentGameContext().collisionStrategy();
+                final CollisionStrategy newStrategy = strategy == CollisionStrategy.CENTER_DISTANCE
+                    ? CollisionStrategy.SAME_TILE : CollisionStrategy.CENTER_DISTANCE;
+
+                game.setCollisionStrategy(newStrategy);
+
+                if (newStrategy == CollisionStrategy.SAME_TILE) {
+                    game.shortMessage("Using original Arcade collision strategy (same tile check)");
+                } else {
+                    game.shortMessage("Using fail-safe collision strategy");
+                }
+            }
+        };
+
+        final Set<ActionKeyBinding> bindings = new HashSet<>();
+        bindings.addAll(simulationActions.bindings());
+        bindings.addAll(gameFlowActions.bindings());
+        bindings.addAll(uiSettingsActions.bindings());
+        bindings.addAll(editorActions.bindings());
+        bindings.addAll(uiSettingsActions.bindings());
+        bindings.add(new ActionKeyBinding(actionToggleCollisionStrategy(), alt(KeyCode.S)));
+
+        commonBindings = Collections.unmodifiableSet(bindings);
     }
 
     public SimulationActions simulationActions() {
@@ -83,44 +105,11 @@ public final class CommonActions {
         return uiSettingsActions;
     }
 
-    public Set<ActionKeyBinding> commonBindings() {
-        return commonBindings;
-    }
-
-    private GameAction actionToggleCollisionStrategy;
-
     public GameAction actionToggleCollisionStrategy() {
-        if (actionToggleCollisionStrategy == null) {
-            actionToggleCollisionStrategy = new GameAction(game, "toggle_collision_strategy") {
-                @Override
-                protected void doAction() {
-                    final CollisionStrategy strategy = game.currentGameContext().collisionStrategy();
-                    final CollisionStrategy newStrategy = strategy == CollisionStrategy.CENTER_DISTANCE
-                        ? CollisionStrategy.SAME_TILE : CollisionStrategy.CENTER_DISTANCE;
-
-                    game.setCollisionStrategy(newStrategy);
-
-                    if (newStrategy == CollisionStrategy.SAME_TILE) {
-                        game.shortMessage("Using original Arcade collision strategy (same tile check)");
-                    } else {
-                        game.shortMessage("Using fail-safe collision strategy");
-                    }
-                }
-            };
-        }
         return actionToggleCollisionStrategy;
     }
 
-    private Set<ActionKeyBinding> createBindings() {
-        final Set<ActionKeyBinding> bindings = new HashSet<>();
-
-        bindings.add(new ActionKeyBinding(actionToggleCollisionStrategy(), alt(KeyCode.S)));
-        bindings.addAll(simulationActions.bindings());
-        bindings.addAll(gameFlowActions.bindings());
-        bindings.addAll(uiSettingsActions.bindings());
-        bindings.addAll(editorActions.bindings());
-        bindings.addAll(uiSettingsActions.bindings());
-
-        return Collections.unmodifiableSet(bindings);
+    public Set<ActionKeyBinding> commonBindings() {
+        return commonBindings;
     }
 }
