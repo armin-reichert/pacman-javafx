@@ -4,10 +4,13 @@
 
 package de.amr.pacmanfx.ui.view;
 
+import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
+import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
@@ -51,6 +54,7 @@ public class GameViewImpl implements GameView {
 
         final GameUI ui = game.ui();
         final SubViewManager subViews = ui.subViews();
+        final GameSceneManager gameScenes = ui.gameScenes();
 
         statusIconBox = new StatusIconBox(game);
         statusIconBox.rootPane().visibleProperty().bind(
@@ -59,17 +63,25 @@ public class GameViewImpl implements GameView {
                 subViews.selectedSubViewProperty()
             )
         );
+        StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
 
         final KeyboardInfo keyboardInfo = new KeyboardInfo(game.ui(), game.input().keyboard());
+        keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
 
         mainScene.rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)
             statusIconBox.rootPane(),
-            game.ui().flashMessages().messageView().rootPane(),
-            keyboardInfo.rootPane());
+            ui.flashMessages().messageView().rootPane(),
+            keyboardInfo.rootPane()
+        );
 
-        StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
-        keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
+        mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
+            () -> gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)
+                ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
+                : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
+            subViews.selectedSubViewProperty(),
+            gameScenes.gameSceneProperty()
+        ));
 
         mainScene.init(game);
 
@@ -77,15 +89,14 @@ public class GameViewImpl implements GameView {
             () -> computeStageTitle(game),
             game.clock().updatesDisabledProperty(),
             game.gameVariantNameProperty(),
-            game.ui().subViews().selectedSubViewProperty(),
-            game.ui().gameScenes().gameSceneProperty(),
-            game.ui().settings().debugInfoVisibleProperty,
-            game.ui().settings3D().view3DEnabledProperty()
+            subViews.selectedSubViewProperty(),
+            gameScenes.gameSceneProperty(),
+            ui.settings().debugInfoVisibleProperty,
+            ui.settings3D().view3DEnabledProperty()
         );
 
-        game.gameVariantNameProperty().addListener((_,_,variantName) -> {
-            statusIconBox.bind(game.gameVariant(variantName).gameModel());
-        });
+        game.gameVariantNameProperty().addListener(
+            (_,_,variantName) -> statusIconBox.bind(game.gameVariant(variantName).gameModel()));
     }
 
     @Override

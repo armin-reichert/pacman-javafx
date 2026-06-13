@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.game;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
@@ -24,7 +23,6 @@ import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.d3.UISettings3D;
-import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -37,7 +35,6 @@ import de.amr.pacmanfx.ui.view.GameViewImpl;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -328,14 +325,6 @@ public final class GameImpl implements Game {
         ui().settings3D().mazeWallOpacityProperty().set(mazeConfig3D.obstacleOpacity());
 
         ui.sounds().muteProperty().bind(ui().settings().mutedProperty);
-
-        view.mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> ui.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
-                ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
-                : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
-            ui.subViews().selectedSubViewProperty(),
-            ui.gameScenes().gameSceneProperty()
-        ));
     }
 
     private void startServicesLater() {
