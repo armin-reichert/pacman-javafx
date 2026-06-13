@@ -67,7 +67,8 @@ public class DashboardSectionCustomMaps extends DashboardSection {
     public void connect(Game game) {
         requireNonNull(game);
         setCustomDirWatchDog(game.watchdog());
-        setMapEditFunction(mapFile -> game.actions().createEditMapFileAction(mapFile).execute());
+        setMapEditFunction(mapFile ->
+            game.actions().editorActions().createEditMapFileAction(mapFile).execute());
     }
 
     public void setCustomDirWatchDog(DirectoryWatchdog watchdog) {

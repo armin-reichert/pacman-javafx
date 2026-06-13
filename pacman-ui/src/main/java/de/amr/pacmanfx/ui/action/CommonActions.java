@@ -9,24 +9,20 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
-import de.amr.pacmanfx.ui.subviews.editor.EditorView;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.*;
 
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
@@ -44,6 +40,7 @@ public final class CommonActions {
 
     private final SimulationActions simulationActions;
     private final SteeringActions steeringActions;
+    private final EditorActions editorActions;
     private final CheatActions cheatActions;
     private final TestActions sceneTestActions;
 
@@ -55,6 +52,7 @@ public final class CommonActions {
 
         simulationActions = new SimulationActions(game);
         steeringActions = new SteeringActions(game);
+        editorActions = new EditorActions(game);
         cheatActions = new CheatActions(game);
         sceneTestActions = new TestActions(game);
 
@@ -68,6 +66,10 @@ public final class CommonActions {
 
     public SteeringActions steeringActions() {
         return steeringActions;
+    }
+
+    public EditorActions editorActions() {
+        return editorActions;
     }
 
     public CheatActions cheatActions() {
@@ -88,69 +90,6 @@ public final class CommonActions {
         return sceneTestsBindings;
     }
 
-    // Map editor actions
-
-    /**
-     * @param mapFile map file to edit or {@code null}
-     * @return action which opens the map editor and edits the given map file if any
-     */
-    public GameAction createEditMapFileAction(File mapFile) {
-
-        return new GameAction(game, "edit_map_file") {
-            @Override
-            protected void doAction() {
-                openMapEditor().ifPresent(editor -> {
-                    startEditor(editor);
-                    if (mapFile != null) {
-                        try {
-                            editor.editFile(mapFile);
-                        } catch (Exception x) {
-                            game.shortMessage("Cannot edit map file");
-                            Logger.error(x, "Cannot edit map file {}", mapFile);
-                        }
-                    }
-                });
-            }
-        };
-    }
-
-    private GameAction actionOpenEditor;
-
-    public GameAction actionOpenEditor() {
-        if (actionOpenEditor == null) {
-            actionOpenEditor = new GameAction(game, "open_editor") {
-                @Override
-                protected void doAction() {
-                    openMapEditor().ifPresent(editor -> startEditor(editor));
-                }
-            };
-        }
-        return actionOpenEditor;
-    }
-
-    private void startEditor(TileMapEditor editor) {
-        game.stop();
-        editor.init(GameConstants.CUSTOM_MAP_DIR);
-        editor.start();
-    }
-
-    private Optional<TileMapEditor> openMapEditor() {
-        final SubViewManager subViews = game.ui().subViews();
-        subViews.ensureEditorViewCreated();
-
-        final TileMapEditor editor = subViews.optEditorView().map(EditorView::editor).orElse(null);
-        if (editor == null) {
-            game.shortMessage("Cannot access the map editor.");
-            return Optional.empty();
-        }
-
-        if (!subViews.trySelectEditorView()) {
-            game.shortMessage("Cannot open the map editor.");
-            return Optional.empty();
-        }
-
-        return Optional.of(editor);
-    }
 
     // Other actions
 
@@ -495,19 +434,19 @@ public final class CommonActions {
         final Set<ActionKeyBinding> bindings = new HashSet<>();
 
         bindings.addAll(Set.of(
-            new ActionKeyBinding(actionEnterFullScreen(),          bare(KeyCode.F11)),
-            new ActionKeyBinding(actionOpenEditor(),               alt_shift(KeyCode.E)),
-            new ActionKeyBinding(actionQuit(),                     bare(KeyCode.Q)),
-            new ActionKeyBinding(actionShowHelp(),                 bare(KeyCode.H)),
-            new ActionKeyBinding(actionStartGame(),                bare(KeyCode.F3)),
-            new ActionKeyBinding(actionToggleCollisionStrategy(),  alt(KeyCode.S)),
-            new ActionKeyBinding(actionToggleDashboard(),          bare(KeyCode.F1), alt(KeyCode.B)),
-            new ActionKeyBinding(actionToggleDebugInfo(),          alt(KeyCode.D)),
-            new ActionKeyBinding(actionToggleKeyboardMonitor(),    alt(KeyCode.K)),
-            new ActionKeyBinding(actionToggleMiniViewVisibility(), bare(KeyCode.F2)),
-            new ActionKeyBinding(actionToggleMuted(),              alt(KeyCode.M)),
-            new ActionKeyBinding(actionTogglePaused(),             bare(KeyCode.P), bare(KeyCode.F5)),
-            new ActionKeyBinding(actionTogglePlayScene2D3D(),      alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
+            new ActionKeyBinding(actionEnterFullScreen(),            bare(KeyCode.F11)),
+            new ActionKeyBinding(editorActions().actionOpenEditor(), alt_shift(KeyCode.E)),
+            new ActionKeyBinding(actionQuit(),                       bare(KeyCode.Q)),
+            new ActionKeyBinding(actionShowHelp(),                   bare(KeyCode.H)),
+            new ActionKeyBinding(actionStartGame(),                  bare(KeyCode.F3)),
+            new ActionKeyBinding(actionToggleCollisionStrategy(),    alt(KeyCode.S)),
+            new ActionKeyBinding(actionToggleDashboard(),            bare(KeyCode.F1), alt(KeyCode.B)),
+            new ActionKeyBinding(actionToggleDebugInfo(),            alt(KeyCode.D)),
+            new ActionKeyBinding(actionToggleKeyboardMonitor(),      alt(KeyCode.K)),
+            new ActionKeyBinding(actionToggleMiniViewVisibility(),   bare(KeyCode.F2)),
+            new ActionKeyBinding(actionToggleMuted(),                alt(KeyCode.M)),
+            new ActionKeyBinding(actionTogglePaused(),               bare(KeyCode.P), bare(KeyCode.F5)),
+            new ActionKeyBinding(actionTogglePlayScene2D3D(),        alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
         ));
 
         bindings.addAll(simulationActions().bindings());
