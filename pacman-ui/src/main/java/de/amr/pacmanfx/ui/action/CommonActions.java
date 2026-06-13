@@ -45,7 +45,6 @@ public final class CommonActions {
     private final TestActions sceneTestActions;
 
     private final Set<ActionKeyBinding> commonBindings;
-    private final Set<ActionKeyBinding> sceneTestsBindings;
 
     public CommonActions(Game game) {
         this.game = Objects.requireNonNull(game);
@@ -58,7 +57,6 @@ public final class CommonActions {
         sceneTestActions = new TestActions(game);
 
         commonBindings = createBindings();
-        sceneTestsBindings = createSceneTestsBindings();
     }
 
     public SimulationActions simulationActions() {
@@ -85,16 +83,9 @@ public final class CommonActions {
         return sceneTestActions;
     }
 
-    // Bindings sets
-
     public Set<ActionKeyBinding> commonBindings() {
         return commonBindings;
     }
-
-    public Set<ActionKeyBinding> sceneTestsBindings() {
-        return sceneTestsBindings;
-    }
-
 
     // Other actions
 
@@ -400,13 +391,5 @@ public final class CommonActions {
         bindings.addAll(simulationActions().bindings());
 
         return Collections.unmodifiableSet(bindings);
-    }
-
-    private Set<ActionKeyBinding> createSceneTestsBindings() {
-        return Set.of(
-            new ActionKeyBinding(sceneTestActions.ACTION_CUT_SCENES_TEST, alt(KeyCode.C)),
-            new ActionKeyBinding(sceneTestActions.ACTION_SHORT_LEVEL_TEST, alt(KeyCode.T)),
-            new ActionKeyBinding(sceneTestActions.ACTION_MEDIUM_LEVEL_TEST, alt_shift(KeyCode.T))
-        );
     }
 }

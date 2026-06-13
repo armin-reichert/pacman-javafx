@@ -48,10 +48,15 @@ public class DashboardSectionGameControl extends DashboardSection {
 
         setAction(choiceBoxInitialLives, () -> game.currentGameContext().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
 
-        setAction(game, buttonGroupLevelActions[GAME_LEVEL_QUIT], game.actions().actionRestartIntro());
-        setAction(game, buttonGroupLevelActions[GAME_LEVEL_NEXT], game.actions().cheatActions().actionEnterNextLevel());
+        setAction(game, buttonGroupLevelActions[GAME_LEVEL_QUIT],
+            game.actions().actionRestartIntro());
 
-        setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], game.actions().sceneTestActions().ACTION_CUT_SCENES_TEST);
+        setAction(game, buttonGroupLevelActions[GAME_LEVEL_NEXT],
+            game.actions().cheatActions().actionEnterNextLevel());
+
+        setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_START],
+            game.actions().sceneTestActions().actionTestCutScenes());
+
         setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], game.actions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ -> game.setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected()));
