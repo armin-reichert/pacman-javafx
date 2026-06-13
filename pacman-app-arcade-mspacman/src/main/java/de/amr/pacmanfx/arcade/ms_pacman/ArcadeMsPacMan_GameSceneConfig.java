@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 
 import static java.util.Objects.requireNonNull;
 
@@ -26,7 +26,7 @@ class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected GameScene createGameScene(Identifier sceneID) {
+    protected AbstractGameScene createGameScene(Identifier sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
             case CommonSceneID.BOOT_SCENE -> new Arcade_BootScene2D(game);

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.subviews.SubView;
@@ -219,7 +219,7 @@ public class GameViewImpl implements GameView {
     }
 
     private String titleForCurrentGameScene(Game game) {
-        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final AbstractGameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
 
         final boolean debug = game.ui().settings().debugInfoVisibleProperty.get();
         final boolean is3D = game.ui().settings3D().view3DEnabledProperty().get();

@@ -30,12 +30,12 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     protected Game game;
-    protected final Map<Identifier, GameScene> scenesByID = new HashMap<>();
+    protected final Map<Identifier, AbstractGameScene> scenesByID = new HashMap<>();
 
     @Override
     public void dispose() {
         Logger.info("Dispose {} game scenes", scenesByID.size());
-        scenesByID.values().forEach(GameScene::dispose);
+        scenesByID.values().forEach(AbstractGameScene::dispose);
         scenesByID.clear();
     }
 
@@ -53,27 +53,27 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public boolean sceneDecorationRequested(GameScene gameScene) {
+    public boolean sceneDecorationRequested(AbstractGameScene gameScene) {
         requireNonNull(gameScene);
         return true;
     }
 
     @Override
-    public final Optional<GameScene> selectGameScene(Game game, GameModel gameModel) {
+    public final Optional<AbstractGameScene> selectGameScene(Game game, GameModel gameModel) {
         requireNonNull(game);
         final Identifier Identifier = determineSceneID(game.currentGameContext());
-        final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, this::createGameScene);
+        final AbstractGameScene gameScene = scenesByID.computeIfAbsent(Identifier, this::createGameScene);
         return Optional.of(gameScene);
     }
 
     @Override
-    public final boolean gameSceneHasID(GameScene gameScene, Identifier Identifier) {
+    public final boolean gameSceneHasID(AbstractGameScene gameScene, Identifier Identifier) {
         requireNonNull(gameScene);
         requireNonNull(Identifier);
         return scenesByID.get(Identifier) == gameScene;
     }
 
-    protected abstract GameScene createGameScene(Identifier Identifier);
+    protected abstract AbstractGameScene createGameScene(Identifier Identifier);
 
     protected abstract Identifier determineSceneID(GameContext gameContext);
 }

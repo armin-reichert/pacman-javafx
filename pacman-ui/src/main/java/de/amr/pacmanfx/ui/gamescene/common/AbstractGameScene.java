@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Abstract base class for all game scenes (2D and 3D).
  */
-public abstract class GameScene implements QuitHandler, Disposable {
+public abstract class AbstractGameScene implements QuitHandler, Disposable {
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for " + getClass().getSimpleName());
 
@@ -35,7 +35,7 @@ public abstract class GameScene implements QuitHandler, Disposable {
 
     private GameEventListener gameEventHandler;
 
-    public GameScene(Game game) {
+    public AbstractGameScene(Game game) {
         this.game = requireNonNull(game);
         gameEventHandler = new BaseGameEventHandler(game);
     }

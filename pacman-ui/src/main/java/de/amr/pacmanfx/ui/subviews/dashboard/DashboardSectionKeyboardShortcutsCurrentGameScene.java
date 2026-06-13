@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import javafx.scene.input.KeyCombination;
 
 import java.util.Comparator;
@@ -32,7 +32,7 @@ public class DashboardSectionKeyboardShortcutsCurrentGameScene extends Dashboard
 
     private void updateTableForCurrentGameScene(Game game) {
         clearSection();
-        final GameScene currentGameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final AbstractGameScene currentGameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (currentGameScene != null) {
             final var currentBindingsMap = currentGameScene.actionBindings().actionBindings();
             if (currentBindingsMap.isEmpty()) {

@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -39,7 +39,7 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
+public class PlayScene3D extends AbstractGameScene implements DisposableGraphicsObject {
 
     public final DoubleProperty scoreOpacity = new SimpleDoubleProperty(0);
 

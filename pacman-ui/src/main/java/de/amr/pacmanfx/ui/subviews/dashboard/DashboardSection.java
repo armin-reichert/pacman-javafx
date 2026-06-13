@@ -7,7 +7,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -94,7 +94,7 @@ public abstract class DashboardSection extends TitledPane {
         grid.setBackground(background);
     }
 
-    protected Supplier<String> ifGameScenePresent(Game context, Function<GameScene, String> fnInfo) {
+    protected Supplier<String> ifGameScenePresent(Game context, Function<AbstractGameScene, String> fnInfo) {
         return () -> context.ui().gameScenes().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 

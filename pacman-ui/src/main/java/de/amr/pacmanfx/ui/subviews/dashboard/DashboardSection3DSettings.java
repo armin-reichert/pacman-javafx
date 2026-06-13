@@ -10,7 +10,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.UISettings3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.UISettings;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -120,13 +120,13 @@ public class DashboardSection3DSettings extends DashboardSection {
 
     private String subSceneSizeInfo(Game game) {
         return game.ui().gameScenes().optCurrentGameScene()
-            .flatMap(GameScene::optSubSceneFX)
+            .flatMap(AbstractGameScene::optSubSceneFX)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
     private String subSceneCameraInfo(Game game) {
-        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final AbstractGameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
         return gameScene.optSubSceneFX().map(SubScene::getCamera)
             .map(camera -> "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
@@ -139,7 +139,7 @@ public class DashboardSection3DSettings extends DashboardSection {
 
     private String sceneSizeInfo(Game game) {
         final GameModel gameModel = game.currentGameContext().model();
-        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final AbstractGameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
 
         if (gameScene instanceof GameScene2D gameScene2D) {

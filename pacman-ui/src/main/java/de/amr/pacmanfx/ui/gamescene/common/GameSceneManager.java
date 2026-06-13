@@ -31,10 +31,10 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameSceneManager implements ChangeListener<GameScene> {
+public class GameSceneManager implements ChangeListener<AbstractGameScene> {
 
     private final Game game;
-    private final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>();
+    private final ObjectProperty<AbstractGameScene> gameScene = new SimpleObjectProperty<>();
 
     public GameSceneManager(Game game) {
         this.game = requireNonNull(game);
@@ -42,17 +42,17 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     @Override
-    public void changed(ObservableValue<? extends GameScene> py, GameScene oldGameScene, GameScene newGameScene) {
+    public void changed(ObservableValue<? extends AbstractGameScene> py, AbstractGameScene oldGameScene, AbstractGameScene newGameScene) {
         if (newGameScene != null) {
             embedGameSceneIntoPlayView(game, newGameScene);
         }
     }
 
-    public Optional<GameScene> optCurrentGameScene() {
+    public Optional<AbstractGameScene> optCurrentGameScene() {
         return Optional.ofNullable(gameScene.get());
     }
 
-    public ObjectProperty<GameScene> gameSceneProperty() {
+    public ObjectProperty<AbstractGameScene> gameSceneProperty() {
         return gameScene;
     }
 
@@ -65,8 +65,8 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         final GameContext gameContext = game.currentGameContext();
         final GameModel gameModel = gameContext.model();
 
-        final GameScene prevGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(game, gameModel).orElseThrow();
+        final AbstractGameScene prevGameScene = optCurrentGameScene().orElse(null);
+        final AbstractGameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(game, gameModel).orElseThrow();
 
         if (nextGameScene == prevGameScene && !forceReload) {
             return;
@@ -94,7 +94,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
      * @param sceneID scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean hasGameSceneID(Game game, GameScene gameScene, Identifier sceneID) {
+    public boolean hasGameSceneID(Game game, AbstractGameScene gameScene, Identifier sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         final UIConfig currentConfig = game.currentUIConfig();
@@ -108,13 +108,13 @@ public class GameSceneManager implements ChangeListener<GameScene> {
      * @return {@code true} if the active scene has the given ID
      */
     public boolean currentGameSceneHasID(Game game, Identifier sceneID) {
-        final GameScene current = gameSceneProperty().get();
+        final AbstractGameScene current = gameSceneProperty().get();
         return current != null && hasGameSceneID(game, current, sceneID);
     }
 
     // 2D-3D scene switch
 
-    private void handle2D3DSwitch(UIConfig uiConfig, GameLevel level, GameScene prevGameScene, GameScene nextGameScene) {
+    private void handle2D3DSwitch(UIConfig uiConfig, GameLevel level, AbstractGameScene prevGameScene, AbstractGameScene nextGameScene) {
         final GameSceneSwitchType sceneSwitchType = identifySceneSwitchType(prevGameScene, nextGameScene);
         switch (sceneSwitchType) {
             case FROM_2D_TO_3D -> switchPlaySceneTo3D(uiConfig, level, prevGameScene, nextGameScene);
@@ -124,7 +124,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         }
     }
 
-    private void switchPlaySceneTo3D(UIConfig uiConfig, GameLevel level, GameScene currentScene, GameScene nextScene) {
+    private void switchPlaySceneTo3D(UIConfig uiConfig, GameLevel level, AbstractGameScene currentScene, AbstractGameScene nextScene) {
         if (!(nextScene instanceof PlayScene3D playScene3D)) {
             throw new IllegalArgumentException("Expected PlayScene3D, but scene has class %s"
                 .formatted(nextScene.getClass().getSimpleName()));
@@ -149,7 +149,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         playScene3D.fadeInAnimation().playFromStart();
     }
 
-    private void switchPlaySceneTo2D(GameScene currentScene, GameScene nextScene) {
+    private void switchPlaySceneTo2D(AbstractGameScene currentScene, AbstractGameScene nextScene) {
         if (!(nextScene instanceof GameScene2D playScene2D)) {
             throw new IllegalArgumentException("Expected GameScene2D, but scene has class %s"
                 .formatted(nextScene.getClass().getSimpleName()));
@@ -158,7 +158,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         Logger.info("2D scene {} entered from 3D scene {}", playScene2D.getClass().getSimpleName(), currentScene.getClass().getSimpleName());
     }
 
-    private GameSceneSwitchType identifySceneSwitchType(GameScene sceneBefore, GameScene sceneAfter) {
+    private GameSceneSwitchType identifySceneSwitchType(AbstractGameScene sceneBefore, AbstractGameScene sceneAfter) {
         if (sceneBefore == null && sceneAfter == null) {
             throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
         }
@@ -171,7 +171,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
 
     // Scene embedding
 
-    public void removeFromPlayView(Game game, GameScene gameScene) {
+    public void removeFromPlayView(Game game, AbstractGameScene gameScene) {
         requireNonNull(game);
         requireNonNull(gameScene);
 
@@ -195,7 +195,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
         Logger.info("Game scene {} REMOVED from play view!", gameScene.getClass().getSimpleName());
     }
 
-    public void embedGameSceneIntoPlayView(Game game, GameScene gameScene) {
+    public void embedGameSceneIntoPlayView(Game game, AbstractGameScene gameScene) {
         final UIConfig currentConfig = game.currentUIConfig();
         final SubViewManager subViews = game.ui().subViews();
 
@@ -211,7 +211,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
     }
 
     // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(Game game, GamePlayView playView, GameScene gameScene, SubScene subSceneFX) {
+    private void embedGameSceneWithSubSceneFX(Game game, GamePlayView playView, AbstractGameScene gameScene, SubScene subSceneFX) {
         final GameViewMainScene mainScene = game.ui().view().mainScene();
 
         // stretch sub scene to available space

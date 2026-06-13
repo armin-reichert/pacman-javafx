@@ -13,7 +13,7 @@ import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 
 import static java.util.Objects.requireNonNull;
 
@@ -24,13 +24,13 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    public boolean sceneDecorationRequested(GameScene gameScene) {
+    public boolean sceneDecorationRequested(AbstractGameScene gameScene) {
         requireNonNull(gameScene);
         return false;
     }
 
     @Override
-    protected GameScene createGameScene(Identifier sceneID) {
+    protected AbstractGameScene createGameScene(Identifier sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
             case CommonSceneID.BOOT_SCENE -> new TengenMsPacMan_BootScene(game);

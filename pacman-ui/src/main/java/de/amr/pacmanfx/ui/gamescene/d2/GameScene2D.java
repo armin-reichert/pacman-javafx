@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
  * must establish and release all bindings, listeners, and resources created
  * by the subclass.
  */
-public class GameScene2D extends GameScene {
+public class GameScene2D extends AbstractGameScene {
 
     private final IntegerProperty unscaledWidth = new SimpleIntegerProperty(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
 

@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.UISettings;
 import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
@@ -142,7 +142,7 @@ public class GamePlayView implements SubView {
         // First lLook for an action binding in my bindings, if nothing found, delegate to the current game scene if any
         actionBindings.triggeredAction(input.keyboard()).ifPresentOrElse(
             GameAction::execute,
-            () -> game.ui().gameScenes().optCurrentGameScene().ifPresent(GameScene::onInput)
+            () -> game.ui().gameScenes().optCurrentGameScene().ifPresent(AbstractGameScene::onInput)
         );
     }
 
@@ -179,7 +179,7 @@ public class GamePlayView implements SubView {
     public void render() {
 
         // Render current 2D game scene
-        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final AbstractGameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof GameScene2D gameScene2D) {
             final GameModel game = this.game.currentGameContext().model();
             if (sceneRenderer != null) {
