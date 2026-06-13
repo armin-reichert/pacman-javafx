@@ -434,10 +434,8 @@ public abstract class AbstractGameModel implements GameModel {
      * Score management
      * ---------------------------------------------------------------------- */
 
-    public void createHighScore(File highScoreFile) {
-        requireNonNull(highScoreFile);
-        //TODO more checks
-        highScore = new PersistentScore(highScoreFile);
+    public void setHighScoreFile(File file) {
+        highScore = new PersistentScore(file);
     }
 
     protected void scorePoints(GameContext gameContext, int points, int levelNumber) {

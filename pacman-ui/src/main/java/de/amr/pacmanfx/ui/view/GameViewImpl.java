@@ -7,13 +7,17 @@ package de.amr.pacmanfx.ui.view;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
+import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -35,14 +39,28 @@ public class GameViewImpl implements GameView {
     private StringBinding stageTitleBinding;
 
     public GameViewImpl(int width, int height) {
-        this.mainScene = new GameViewMainScene(width, height);
+        mainScene = new GameViewMainScene(width, height);
     }
 
     @Override
-    public void setGame(Game game) {
+    public void connect(Game game) {
         this.game = requireNonNull(game);
 
         this.statusIconBox = new StatusIconBox(game);
+
+        final KeyboardInfo keyboardInfo = new KeyboardInfo(
+            game.ui(), game.input().keyboard());
+
+        mainScene.rootPane().getChildren().addAll(
+            new Region(), // placeholder, will be replaced by current view (start, play, edit)
+            statusIconBox.rootPane(),
+            game.ui().flashMessages().messageView().rootPane(),
+            keyboardInfo.rootPane());
+
+        StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
+        keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
+
+        mainScene.init(game);
 
         stageTitleBinding = createStringBinding(
             () -> computeStageTitle(game),

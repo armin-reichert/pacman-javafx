@@ -27,7 +27,6 @@ import de.amr.pacmanfx.ui.d3.UISettings3D;
 import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.editor.EditorView;
@@ -44,9 +43,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.geometry.Pos;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -59,9 +55,8 @@ import static java.util.Objects.requireNonNull;
 
 public final class GameImpl implements Game {
 
-    private static File highScoreFile(String gameVariantName) {
-        requireNonNull(gameVariantName);
-        final String fileName = "highscore-%s.xml".formatted(gameVariantName).toLowerCase();
+    private static File highScoreFile(String variantName) {
+        final String fileName = "highscore-%s.xml".formatted(variantName).toLowerCase();
         return new File(GameConstants.USER_HOME_DIR, fileName);
     }
 
@@ -93,7 +88,7 @@ public final class GameImpl implements Game {
 
         this.ui = createUI();
 
-        view.setGame(this);
+        view.connect(this);
         createSubViews(ui);
 
         gameVariantName.addListener((_, _, newVariantName) -> {
@@ -128,7 +123,7 @@ public final class GameImpl implements Game {
         flow.addState(new LevelMediumTestState());
         flow.addState(new CutScenesTestState());
 
-        gameVariant.gameModel().createHighScore(highScoreFile(variantName));
+        gameVariant.gameModel().setHighScoreFile(highScoreFile(variantName));
 
         return gameVariant;
     }
@@ -230,7 +225,6 @@ public final class GameImpl implements Game {
         selectGameVariant(variantID.name());
 
         load3DAssets();
-        initMainScene();
         initGameClock();
         initGameVariantAndRegisterChangeHandler();
         initProperties();
@@ -326,21 +320,6 @@ public final class GameImpl implements Game {
         });
         clock().setPermanentAction(() -> ui.subViews().currentView().render());
         clock().setErrorHandler(this::ka_tas_tro_phe);
-    }
-
-    private void initMainScene() {
-        final KeyboardInfo keyboardInfo = new KeyboardInfo(ui, input().keyboard());
-
-        view.mainScene().rootPane().getChildren().addAll(
-            new Region(), // placeholder, will be replaced by current view (start, play, edit)
-            view.statusIconBox().rootPane(),
-            ui.flashMessages().messageView().rootPane(),
-            keyboardInfo.rootPane());
-
-        StackPane.setAlignment(view.statusIconBox().rootPane(), Pos.BOTTOM_LEFT);
-        keyboardInfo.rootPane().setAlignment(Pos.TOP_CENTER);
-
-        view.mainScene().init(this);
     }
 
     private void initProperties() {

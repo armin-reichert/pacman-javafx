@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 public interface GameView {
 
-    void setGame(Game game);
+    void connect(Game game);
 
     ObjectProperty<Stage> stageProperty();
 

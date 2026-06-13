@@ -9,9 +9,8 @@ public record GameVariant(
     GameFlow gameFlow,
     AbstractGameModel gameModel,
     GameRules gameRules,
-    UIConfig uiConfig
-) {
-
+    UIConfig uiConfig)
+{
     public GameVariant(Cartridge cartridge) {
         this(
             cartridge.gameFlowFactory().get(),
