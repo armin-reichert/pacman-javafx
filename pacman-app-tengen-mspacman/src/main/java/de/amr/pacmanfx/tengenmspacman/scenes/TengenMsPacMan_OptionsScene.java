@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
@@ -73,12 +73,11 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
         game.hud().hide();
 
-        final TengenMsPacMan_Actions tengenActions = game().extensions().get(
-            TengenMsPacMan_UIConfig.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = game().extensions().get(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
-        actionBindings().selectAnyMatchingBinding(tengenActions.actionStartPlaying(), tengenActions.localBindings());
-        actionBindings().selectAnyMatchingBinding(tengenActions.actionToggleJoypadBindingsDisplayed(), tengenActions.localBindings());
-        actionBindings().bindActionToKeyCombination(tengenActions.actionSelectNextJoypadKeyBinding(), alt(KeyCode.J));
+        actionBindings().selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());
+        actionBindings().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
+        actionBindings().bindActionToKeyCombination(actions.actionSelectNextJoypadKeyBinding(), alt(KeyCode.J));
         actionBindings().registerAllBindings(game().actions().sceneTestActions().bindings());
 
         selectedOption.set(OPTION_PAC_BOOSTER);

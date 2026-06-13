@@ -48,8 +48,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
 
-    public static final String EXT_ARCADE_ACTIONS = "arcade.actions";
-
     public static final WorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new WorldMapColorScheme(
         ARCADE_BLACK.toString(), ARCADE_BLUE.toString(), ARCADE_PINK.toString(), ARCADE_ROSE.toString()
     );

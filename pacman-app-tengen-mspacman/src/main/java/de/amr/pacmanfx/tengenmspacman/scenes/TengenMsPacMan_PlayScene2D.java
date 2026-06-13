@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
@@ -76,8 +76,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         subScene.fillProperty().bind(game.ui().settings().canvasBackgroundColorProperty);
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
 
-        final var uiSettings = game().extensions().get(
-            TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        final var uiSettings = game().extensions().get(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
         subScene.cameraProperty().bind(uiSettings.playSceneDisplay.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
@@ -174,8 +173,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
-        final var uiSettings = game().extensions().get(
-            TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        final var uiSettings = game().extensions().get(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
         final TranslationManager translations = game().ui().translations();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
@@ -232,8 +230,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private void acceptNormalLevel() {
         game().ui().sounds().setEnabled(true); //TODO needed?
 
-        final TengenMsPacMan_Actions actions = game().extensions().get(
-            TengenMsPacMan_UIConfig.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = game().extensions().get(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
         actionBindings().registerAllBindings(actions.steeringBindings());
@@ -245,16 +242,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private void acceptDemoLevel() {
         game().ui().sounds().setEnabled(false); //TODO needed?
 
-        final TengenMsPacMan_Actions actions = game().extensions().get(
-            TengenMsPacMan_UIConfig.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = game().extensions().get(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindings().selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
         actionBindings().selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings());
     }
 
     private void updateScaling() {
-        final var uiSettings = game().extensions().get(
-            TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        final var uiSettings = game().extensions().get(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
 

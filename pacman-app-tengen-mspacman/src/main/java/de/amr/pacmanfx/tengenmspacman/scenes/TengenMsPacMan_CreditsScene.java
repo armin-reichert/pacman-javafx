@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 
@@ -28,8 +28,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void onActivate() {
-        final TengenMsPacMan_Actions actions = game().extensions().get(
-            TengenMsPacMan_UIConfig.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = game().extensions().get(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         gameModel().hud().hide();
         actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());

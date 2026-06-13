@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_IntroScene;
@@ -95,8 +96,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             default -> {}
         }
 
-        final var uiSettings = scene.game().extensions()
-            .get(TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        final var uiSettings = scene.game().extensions().get(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
         if (uiSettings.joypadBindingsDisplayed.get()) {
             drawJoypadKeyBinding(scene.game().input().joypad().currentKeyBinding());

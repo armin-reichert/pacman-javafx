@@ -4,10 +4,10 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
+import de.amr.pacmanfx.ui.game.Game;
 import org.tinylog.Logger;
 
 public class Arcade_PlayScene3D extends PlayScene3D {
@@ -20,8 +20,7 @@ public class Arcade_PlayScene3D extends PlayScene3D {
     public void replaceActionBindings(GameLevel level) {
         actionBindings().dispose();
 
-        final Arcade_Actions actions = game().extensions()
-            .get(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = game().extensions().get(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         if (level.isDemoLevel()) {
             actionBindings().registerAllBindings(actions.gameStartActionBindings());

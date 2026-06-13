@@ -6,14 +6,14 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
+import de.amr.pacmanfx.ui.game.Game;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -83,8 +83,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     public void replaceActionBindings(GameLevel level) {
         actionBindings().dispose();
 
-        final TengenMsPacMan_Actions actions = game().extensions().get(
-            TengenMsPacMan_UIConfig.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = game().extensions().get(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         if (level.isDemoLevel()) {
             // In demo level, allow going back to options screen

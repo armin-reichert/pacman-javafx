@@ -8,6 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
+import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
@@ -58,7 +59,7 @@ public class ArcadePacMan_App extends Application {
 
         game.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, game.ui().translations());
 
-        game.extensions().add(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, new Arcade_Actions(game));
+        game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
 
         game.show(GameVariantID.ARCADE_PACMAN, stage);
     }

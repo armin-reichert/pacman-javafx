@@ -10,8 +10,8 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
+import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
@@ -91,7 +91,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public void onActivate() {
         final Arcade_Actions actions = game().extensions()
-            .get(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, Arcade_Actions.class);
+            .get(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
         actionBindings().registerAllBindings(game().actions().sceneTestActions().bindings()); // actions for starting tests

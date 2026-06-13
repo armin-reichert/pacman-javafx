@@ -7,9 +7,9 @@ package de.amr.pacmanfx.allgames.app;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.app.ArcadeMsPacMan_Cartridge;
-import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
+import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.app.ArcadePacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.app.PacManXXL_MsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.app.PacManXXL_PacMan_Cartridge;
@@ -23,8 +23,8 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.GameImpl;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
-import de.amr.pacmanfx.ui.subviews.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.subviews.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImpl;
@@ -36,7 +36,8 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.core.GameVariantID.*;
+import static de.amr.pacmanfx.core.GameVariantID.ARCADE_MS_PACMAN_XXL;
+import static de.amr.pacmanfx.core.GameVariantID.ARCADE_PACMAN_XXL;
 
 /**
  * Application containing all game variants, the 3D play scenes, the map editor etc.
@@ -123,10 +124,10 @@ public class PacManGames3dApp extends Application {
                 startView.setSelectedIndex(0);
             }
 
-            game.extensions().add(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, new Arcade_Actions(game));
+            game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
 
-            game.extensions().add(TengenMsPacMan_UIConfig.EXT_ACTIONS, new TengenMsPacMan_Actions(game));
-            game.extensions().add(TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, new TengenMsPacMan_UISettings());
+            game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS, new TengenMsPacMan_Actions(game));
+            game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS, new TengenMsPacMan_UISettings());
 
             //TODO add builder methods for dashboard configuration
             final GamePlayView playView = game.ui().subViews().gamePlayView();

@@ -4,29 +4,31 @@
 
 package de.amr.pacmanfx.ui.game;
 
+import de.amr.basics.Identifier;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class GameExtensions {
 
-    private final Map<String, Object> extensionMap = new HashMap<>();
+    private final Map<Identifier, Object> extensionMap = new HashMap<>();
 
-    public void add(String key, Object value) {
-        extensionMap.put(key, value);
+    public void add(Identifier identifier, Object value) {
+        extensionMap.put(identifier, value);
     }
 
-    public void remove(String key) {
-        extensionMap.remove(key);
+    public void remove(Identifier identifier) {
+        extensionMap.remove(identifier);
     }
 
-    public Map<String, Object> getExtensionMap() {
+    public Map<Identifier, Object> getExtensionMap() {
         return extensionMap;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T get(String key, Class<T> type) {
-        if (type.isInstance(extensionMap.get(key))) {
-            return (T) extensionMap.get(key);
+    public <T> T get(Identifier identifier, Class<T> type) {
+        if (type.isInstance(extensionMap.get(identifier))) {
+            return (T) extensionMap.get(identifier);
         }
         return null;
     }
