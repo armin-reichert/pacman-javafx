@@ -10,12 +10,12 @@ import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.gamescene.common.BaseGameSceneHandler;
+import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import static java.util.Objects.requireNonNull;
 
-public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
+public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
 
     private final Arcade_PlayScene2D playScene2D;
 

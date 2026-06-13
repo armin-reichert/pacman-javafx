@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
-import de.amr.pacmanfx.ui.gamescene.common.BaseGameSceneHandler;
+import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -39,7 +39,7 @@ import java.util.Optional;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
-public class PlayScene3DGameEventHandler extends BaseGameSceneHandler {
+public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
 
     public static final double PELLET_EATING_DELAY_SEC = 0.05;
 

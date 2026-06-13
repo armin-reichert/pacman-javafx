@@ -37,7 +37,7 @@ public abstract class GameScene implements QuitHandler, Disposable {
 
     public GameScene(Game game) {
         this.game = requireNonNull(game);
-        gameEventHandler = new BaseGameSceneHandler(game);
+        gameEventHandler = new BaseGameEventHandler(game);
     }
 
     public Game game() {

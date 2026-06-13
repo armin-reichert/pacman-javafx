@@ -21,11 +21,11 @@ import static java.util.Objects.requireNonNull;
 /**
  * Default event handler used by scenes unless replaced. Handles generic UI updates and global sound stop events.
  */
-public class BaseGameSceneHandler extends DefaultGameEventListener {
+public class BaseGameEventHandler extends DefaultGameEventListener {
 
     private final Game game;
 
-    public BaseGameSceneHandler(Game game) {
+    public BaseGameEventHandler(Game game) {
         this.game = requireNonNull(game);
     }
 
