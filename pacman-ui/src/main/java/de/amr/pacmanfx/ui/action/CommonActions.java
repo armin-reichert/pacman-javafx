@@ -48,9 +48,10 @@ public final class CommonActions {
         actionToggleCollisionStrategy = new GameAction(game, "toggle_collision_strategy") {
             @Override
             protected void doAction() {
-                final CollisionStrategy strategy = game.currentGameContext().collisionStrategy();
-                final CollisionStrategy newStrategy = strategy == CollisionStrategy.CENTER_DISTANCE
-                    ? CollisionStrategy.SAME_TILE : CollisionStrategy.CENTER_DISTANCE;
+                final CollisionStrategy oldStrategy = game.currentGameContext().collisionStrategy();
+                final CollisionStrategy newStrategy = oldStrategy == CollisionStrategy.CENTER_DISTANCE
+                    ? CollisionStrategy.SAME_TILE
+                    : CollisionStrategy.CENTER_DISTANCE;
 
                 game.setCollisionStrategy(newStrategy);
 
@@ -67,7 +68,7 @@ public final class CommonActions {
         bindings.addAll(gameFlowActions.bindings());
         bindings.addAll(editorActions.bindings());
         bindings.addAll(uiSettingsActions.bindings());
-        bindings.add(new ActionKeyBinding(actionToggleCollisionStrategy(), alt(KeyCode.S)));
+        bindings.add(new ActionKeyBinding(actionToggleCollisionStrategy, alt(KeyCode.S)));
 
         commonBindings = Collections.unmodifiableSet(bindings);
     }
