@@ -88,7 +88,7 @@ public class StartPagesView extends Carousel implements SubView {
     public void onEnter() {
         actionBindings.bindActionToKeyCombination(actionShowPrevPage, bare(KeyCode.LEFT));
         actionBindings.bindActionToKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
-        actionBindings.bindActionToKeyCombination(game.actions().ACTION_START_GAME, bare(KeyCode.ENTER));
+        actionBindings.bindActionToKeyCombination(game.actions().actionStartGame(), bare(KeyCode.ENTER));
         Logger.info(actionBindings);
         restartProgressTimer();
         currentStartPage().ifPresent(page -> {

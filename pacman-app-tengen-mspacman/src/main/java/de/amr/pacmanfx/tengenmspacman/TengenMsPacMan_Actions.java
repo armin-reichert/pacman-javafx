@@ -25,124 +25,173 @@ import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
 
 public final class TengenMsPacMan_Actions {
 
-    abstract class AbstractGameAction extends GameAction {
-
-        protected AbstractGameAction(String key) {
-            super(TengenMsPacMan_Actions.this.game, key);
-        }
-    }
-
     private final Game game;
-    
+
+    private final Set<ActionKeyBinding> steeringBindings;
+    private final Set<ActionKeyBinding> localBindings;
+
     public TengenMsPacMan_Actions(Game game) {
         this.game = Objects.requireNonNull(game);
 
-        STEERING_BINDINGS = Set.of(
-            new ActionKeyBinding(game.actions().actionSteerUp,    keyFor(JoypadButton.UP),    control(KeyCode.UP)),
-            new ActionKeyBinding(game.actions().actionSteerDown,  keyFor(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-            new ActionKeyBinding(game.actions().actionSteerLeft,  keyFor(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-            new ActionKeyBinding(game.actions().actionSteerRight, keyFor(JoypadButton.RIGHT), control(KeyCode.RIGHT))
+        steeringBindings = Set.of(
+            new ActionKeyBinding(game.actions().actionSteerUp(),    keyFor(JoypadButton.UP),    control(KeyCode.UP)),
+            new ActionKeyBinding(game.actions().actionSteerDown(),  keyFor(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+            new ActionKeyBinding(game.actions().actionSteerLeft(),  keyFor(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+            new ActionKeyBinding(game.actions().actionSteerRight(), keyFor(JoypadButton.RIGHT), control(KeyCode.RIGHT))
         );
 
-        TENGEN_LOCAL_BINDINGS = Set.of(
-            new ActionKeyBinding(ACTION_QUIT_DEMO_LEVEL, keyFor(JoypadButton.START)),
-            new ActionKeyBinding(ACTION_ENTER_START_SCREEN, keyFor(JoypadButton.START)),
-            new ActionKeyBinding(ACTION_START_PLAYING, keyFor(JoypadButton.START)),
-            new ActionKeyBinding(ACTION_TOGGLE_PAC_BOOSTER, keyFor(JoypadButton.A), keyFor(JoypadButton.B)),
-            new ActionKeyBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
-            new ActionKeyBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, bare(KeyCode.SPACE))
+        localBindings = Set.of(
+            new ActionKeyBinding(actionQuitDemoLevel(), keyFor(JoypadButton.START)),
+            new ActionKeyBinding(actionEnterStartScreen(), keyFor(JoypadButton.START)),
+            new ActionKeyBinding(actionStartPlaying(), keyFor(JoypadButton.START)),
+            new ActionKeyBinding(actionTogglePacBooster(), keyFor(JoypadButton.A), keyFor(JoypadButton.B)),
+            new ActionKeyBinding(actionTogglePlaySceneDisplayMode(), alt(KeyCode.C)),
+            new ActionKeyBinding(actionToggleJoypadBindingsDisplayed(), bare(KeyCode.SPACE))
         );
     }
 
-    public final GameAction ACTION_ENTER_START_SCREEN = new AbstractGameAction("enter_start_screen") {
-        @Override
-        public void doAction() {
-            game.currentGameContext().flow().enterState(GameStateID.GAME_PREPARATION);
-        }
-    };
+    public Set<ActionKeyBinding> steeringBindings() {
+        return steeringBindings;
+    }
 
-    public final GameAction ACTION_QUIT_DEMO_LEVEL = new AbstractGameAction("quit_demo_level") {
-        @Override
-        public void doAction() {
-            game.currentGameContext().flow().enterState(GameStateID.GAME_PREPARATION);
-        }
+    public Set<ActionKeyBinding> localBindings() {
+        return localBindings;
+    }
 
-        @Override
-        public boolean isEnabled() {
-            final GameModel gameModel = game.currentGameContext().model();
-            return gameModel.isDemoLevelRunning();
-        }
-    };
+    private GameAction actionEnterStartScreen;
 
-    public final GameAction ACTION_START_PLAYING = new AbstractGameAction("start_playing") {
-        @Override
-        public void doAction() {
-            game.currentGameContext().flow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
-        }
-    };
-
-    public final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new AbstractGameAction("toggle_play_scene_display_mode") {
-        @Override
-        public void doAction() {
-            final var uiSettings = game.ui().extensions()
-                .getExtension(TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
-
-            final SceneDisplay mode = uiSettings.playSceneDisplay.get();
-            uiSettings.playSceneDisplay.set(mode == SceneDisplay.SCROLLING
-                ? SceneDisplay.SCALED_TO_FIT
-                : SceneDisplay.SCROLLING);
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D);
-        }
-    };
-
-    public final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new AbstractGameAction("toggle_joypad_bindings_displayed") {
-        @Override
-        public void doAction() {
-            final var uiSettings = game.ui().extensions()
-                .getExtension(TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
-
-            toggleBooleanProperty(uiSettings.joypadBindingsDisplayed);
-        }
-    };
-
-    public final GameAction ACTION_TOGGLE_PAC_BOOSTER = new AbstractGameAction("toggle_pac_booster") {
-        @Override
-        public void doAction() {
-            game.currentGameContext().optCurrentLevel().ifPresent(gameLevel -> {
-                final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game.currentGameContext().model();
-                tengenGame.activatePacBooster(gameLevel.entities().pac(), !tengenGame.isBoosterActive());
-                if (tengenGame.isBoosterActive()) {
-                    game.shortMessage("Booster!"); //TODO localize
+    public GameAction actionEnterStartScreen() {
+        if (actionEnterStartScreen == null) {
+            actionEnterStartScreen = new GameAction(game, "enter_start_screen") {
+                @Override
+                public void doAction() {
+                    game.currentGameContext().flow().enterState(GameStateID.GAME_PREPARATION);
                 }
-            });
+            };
         }
+        return actionEnterStartScreen;
+    }
 
-        @Override
-        public boolean isEnabled() {
-            final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game.currentGameContext().model();
-            return tengenGame.pacBoosterMode() == PacBooster.USE_A_OR_B && tengenGame.optGameLevel().isPresent();
-        }
-    };
+    private GameAction actionQuitDemoLevel;
 
-    public final GameAction ACTION_SELECT_NEXT_JOYPAD_KEYBINDING = new AbstractGameAction("select_next_joypad_binding") {
-        @Override
-        public void doAction() {
-            game.input().joypad().selectNextBinding();
+    public GameAction actionQuitDemoLevel() {
+        if (actionQuitDemoLevel == null) {
+            actionQuitDemoLevel = new GameAction(game, "quit_demo_level") {
+                @Override
+                public void doAction() {
+                    game.currentGameContext().flow().enterState(GameStateID.GAME_PREPARATION);
+                }
+
+                @Override
+                public boolean isEnabled() {
+                    final GameModel gameModel = game.currentGameContext().model();
+                    return gameModel.isDemoLevelRunning();
+                }
+            };
         }
-    };
+        return actionQuitDemoLevel;
+    }
+
+    private GameAction actionStartPlaying;
+
+    public GameAction actionStartPlaying() {
+        if  (actionStartPlaying == null) {
+            actionStartPlaying = new GameAction(game, "start_playing") {
+                @Override
+                public void doAction() {
+                    game.currentGameContext().flow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
+                }
+            };
+        }
+        return actionStartPlaying;
+    }
+
+    private GameAction actionTogglePlaySceneDisplayMode;
+
+    public GameAction actionTogglePlaySceneDisplayMode() {
+        if (actionTogglePlaySceneDisplayMode == null) {
+            actionTogglePlaySceneDisplayMode = new GameAction(game, "toggle_play_scene_display_mode") {
+                @Override
+                public void doAction() {
+                    final var uiSettings = game.ui().extensions()
+                        .getExtension(TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+
+                    final SceneDisplay mode = uiSettings.playSceneDisplay.get();
+                    uiSettings.playSceneDisplay.set(mode == SceneDisplay.SCROLLING
+                        ? SceneDisplay.SCALED_TO_FIT
+                        : SceneDisplay.SCROLLING);
+                }
+
+                @Override
+                public boolean isEnabled() {
+                    return game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D);
+                }
+            };
+        }
+        return actionTogglePlaySceneDisplayMode;
+    }
+
+    private GameAction actionToggleJoypadBindingsDisplayed;
+
+    public GameAction actionToggleJoypadBindingsDisplayed() {
+        if (actionToggleJoypadBindingsDisplayed == null) {
+            actionToggleJoypadBindingsDisplayed = new GameAction(game, "toggle_joypad_bindings_displayed") {
+                @Override
+                public void doAction() {
+                    final var uiSettings = game.ui().extensions()
+                        .getExtension(TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+
+                    toggleBooleanProperty(uiSettings.joypadBindingsDisplayed);
+                }
+            };
+        }
+        return actionToggleJoypadBindingsDisplayed;
+    }
+
+    private GameAction actionTogglePacBooster;
+
+    public GameAction actionTogglePacBooster() {
+        if (actionTogglePacBooster == null) {
+            actionTogglePacBooster = new GameAction(game, "toggle_pac_booster") {
+                @Override
+                public void doAction() {
+                    game.currentGameContext().optCurrentLevel().ifPresent(gameLevel -> {
+                        final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game.currentGameContext().model();
+                        tengenGame.activatePacBooster(gameLevel.entities().pac(), !tengenGame.isBoosterActive());
+                        if (tengenGame.isBoosterActive()) {
+                            game.shortMessage("Booster!"); //TODO localize
+                        }
+                    });
+                }
+
+                @Override
+                public boolean isEnabled() {
+                    final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game.currentGameContext().model();
+                    return tengenGame.pacBoosterMode() == PacBooster.USE_A_OR_B && tengenGame.optGameLevel().isPresent();
+                }
+            };
+        }
+        return actionTogglePacBooster;
+    }
+
+    private GameAction actionSelectNextJoypadKeyBinding;
+
+    public GameAction actionSelectNextJoypadKeyBinding() {
+        if (actionSelectNextJoypadKeyBinding == null) {
+            actionSelectNextJoypadKeyBinding = new GameAction(game, "select_next_joypad_binding") {
+                @Override
+                public void doAction() {
+                    game.input().joypad().selectNextBinding();
+                }
+            };
+        }
+        return actionSelectNextJoypadKeyBinding;
+    }
 
     // Bindings
 
     private KeyCodeCombination keyFor(JoypadButton button) {
         return Input.instance().joypad().keyForButton(button);
     }
-
-    public final Set<ActionKeyBinding> STEERING_BINDINGS;
-
-    public final Set<ActionKeyBinding> TENGEN_LOCAL_BINDINGS;
 
 }

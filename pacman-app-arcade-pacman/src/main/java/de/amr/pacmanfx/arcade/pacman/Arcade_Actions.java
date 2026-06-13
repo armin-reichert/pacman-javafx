@@ -22,75 +22,86 @@ import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 
 public final class Arcade_Actions {
 
-    abstract class AbstractGameAction extends GameAction {
-
-        protected AbstractGameAction(String key) {
-            super(Arcade_Actions.this.game, key);
-        }
-    }
-
     private final Game game;
 
-    public final Set<ActionKeyBinding> GAME_START_ACTION_BINDINGS;
+    private final Set<ActionKeyBinding> gameStartActionBindings;
 
     public Arcade_Actions(Game game) {
         this.game = game;
 
-        GAME_START_ACTION_BINDINGS = Set.of(
-            new ActionKeyBinding(ACTION_INSERT_COIN, bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
-            new ActionKeyBinding(ACTION_START_PLAYING,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
+        gameStartActionBindings = Set.of(
+            new ActionKeyBinding(actionInsertCoin(),    bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
+            new ActionKeyBinding(actionStartPlaying(),  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
         );
     }
+
+    public Set<ActionKeyBinding> gameStartActionBindings() {
+        return gameStartActionBindings;
+    }
+
+    private GameAction actionInsertCoin;
 
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
      */
-    public final GameAction ACTION_INSERT_COIN = new AbstractGameAction("insert_coin") {
-        @Override
-        public void doAction() {
-            final CoinMechanism coinMechanism = game.coinMechanism();
-            final GameContext gameContext = game.currentGameContext();
-            game.ui().sounds().stopAndDisposeVoice();
-            game.ui().sounds().setEnabled(true);
-            coinMechanism.insertCoin();
-            gameContext.flow().publishGameEvent(new CreditAddedEvent(gameContext, 1));
-            gameContext.flow().enterState(GameStateID.GAME_PREPARATION);
-        }
+    public GameAction actionInsertCoin() {
+        if (actionInsertCoin == null) {
+            actionInsertCoin = new GameAction(game, "insert_coin") {
+                @Override
+                public void doAction() {
+                    final CoinMechanism coinMechanism = game.coinMechanism();
+                    final GameContext gameContext = game.currentGameContext();
+                    game.ui().sounds().stopAndDisposeVoice();
+                    game.ui().sounds().setEnabled(true);
+                    coinMechanism.insertCoin();
+                    gameContext.flow().publishGameEvent(new CreditAddedEvent(gameContext, 1));
+                    gameContext.flow().enterState(GameStateID.GAME_PREPARATION);
+                }
 
-        @Override
-        public boolean isEnabled() {
-            final CoinMechanism coinMechanism = game.coinMechanism();
-            if (coinMechanism.isFull()) {
-                return false;
-            }
-            final GameContext gameContext = game.currentGameContext();
-            // In demo level, coin can always be inserted
-            if (gameContext.model().isDemoLevelRunning()) {
-                return true;
-            }
-            final GameState gameState = gameContext.state();
-            return GameStateID.GAME_INTRO.identifies(gameState) || GameStateID.GAME_PREPARATION.identifies(gameState);
+                @Override
+                public boolean isEnabled() {
+                    final CoinMechanism coinMechanism = game.coinMechanism();
+                    if (coinMechanism.isFull()) {
+                        return false;
+                    }
+                    final GameContext gameContext = game.currentGameContext();
+                    // In demo level, coin can always be inserted
+                    if (gameContext.model().isDemoLevelRunning()) {
+                        return true;
+                    }
+                    final GameState gameState = gameContext.state();
+                    return GameStateID.GAME_INTRO.identifies(gameState) || GameStateID.GAME_PREPARATION.identifies(gameState);
+                }
+            };
         }
-    };
+        return actionInsertCoin;
+    }
 
-    public final GameAction ACTION_START_PLAYING = new AbstractGameAction("start_playing") {
-        @Override
-        public void doAction() {
-            game.ui().sounds().stopAndDisposeVoice();
-            game.currentGameContext().flow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
-        }
+    private GameAction actionStartPlaying;
 
-        @Override
-        public boolean isEnabled() {
-            final CoinMechanism coinMechanism = game.coinMechanism();
-            if (coinMechanism.isEmpty()) {
-                return false;
-            }
-            final GameContext gameContext = game.currentGameContext();
-            final GameModel gameModel = gameContext.model();
-            final GameState gameState = gameContext.state();
-            return (GameStateID.GAME_INTRO.identifies(gameState) || GameStateID.GAME_PREPARATION.identifies(gameState))
-                && gameModel.canStartNewGame(gameContext);
+    public GameAction actionStartPlaying() {
+        if (actionStartPlaying == null) {
+            actionStartPlaying = new GameAction(game, "start_playing") {
+                @Override
+                public void doAction() {
+                    game.ui().sounds().stopAndDisposeVoice();
+                    game.currentGameContext().flow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
+                }
+
+                @Override
+                public boolean isEnabled() {
+                    final CoinMechanism coinMechanism = game.coinMechanism();
+                    if (coinMechanism.isEmpty()) {
+                        return false;
+                    }
+                    final GameContext gameContext = game.currentGameContext();
+                    final GameModel gameModel = gameContext.model();
+                    final GameState gameState = gameContext.state();
+                    return (GameStateID.GAME_INTRO.identifies(gameState) || GameStateID.GAME_PREPARATION.identifies(gameState))
+                        && gameModel.canStartNewGame(gameContext);
+                }
+            };
         }
-    };
+        return actionStartPlaying;
+    }
 }

@@ -66,22 +66,22 @@ public class Arcade_PlayScene2D extends GameScene2D {
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacUsingAutopilotProperty(), "autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                cheatActions.ACTION_ACTIVATE_AUTOPILOT.execute();
+                cheatActions.actionActivateAutopilot().execute();
             } else {
-                cheatActions.ACTION_DEACTIVATE_AUTOPILOT.execute();
+                cheatActions.actionDeactivateAutopilot().execute();
             }
         });
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                cheatActions.ACTION_ACTIVATE_IMMUNITY.execute();
+                cheatActions.actionActivateImmunity().execute();
             } else {
-                cheatActions.ACTION_DEACTIVATE_IMMUNITY.execute();
+                cheatActions.actionDeactivateImmunity().execute();
             }
         });
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, game().ui().settings().mutedProperty, "muted");
-        addLocalizedActionItem(contextMenu, translations, game().actions().ACTION_QUIT, "quit");
+        addLocalizedActionItem(contextMenu, translations, game().actions().actionQuit(), "quit");
 
         return Optional.of(contextMenu);
     }
@@ -125,8 +125,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     private void acceptNormalLevel(GameLevel level) {
-        actionBindings().registerAllBindings(game().actions().steeringActionBindings);
-        actionBindings().registerAllBindings(game().actions().cheatActionBindings);
+        actionBindings().registerAllBindings(game().actions().steeringActionBindings());
+        actionBindings().registerAllBindings(game().actions().cheatActionBindings());
 
         Logger.info(actionBindings());
 
@@ -139,7 +139,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final Arcade_Actions actions = game().ui().extensions()
             .getExtension(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, Arcade_Actions.class);
 
-        actionBindings().registerAllBindings(actions.GAME_START_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(actions.gameStartActionBindings());
         Logger.info(actionBindings());
 
         game().ui().sounds().setEnabled(false);

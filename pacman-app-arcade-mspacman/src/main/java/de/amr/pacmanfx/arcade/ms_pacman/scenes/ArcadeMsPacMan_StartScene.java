@@ -21,7 +21,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
             .getExtension(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, Arcade_Actions.class);
 
         // Insert coin + start game actions
-        actionBindings().registerAllBindings(actions.GAME_START_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(actions.gameStartActionBindings());
     }
 
     @Override

@@ -198,7 +198,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "immunity");
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, game().ui().settings().mutedProperty, "muted");
-        addLocalizedActionItem(contextMenu, translations, game().actions().ACTION_QUIT, "quit");
+        addLocalizedActionItem(contextMenu, translations, game().actions().actionQuit(), "quit");
 
         return Optional.of(contextMenu);
     }
@@ -236,10 +236,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             TengenMsPacMan_UIConfig.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
-        actionBindings().registerAllBindings(actions.STEERING_BINDINGS);
-        actionBindings().registerAllBindings(game().actions().cheatActionBindings);
-        actionBindings().selectAnyMatchingBinding(actions.ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, actions.TENGEN_LOCAL_BINDINGS);
-        actionBindings().selectAnyMatchingBinding(actions.ACTION_TOGGLE_PAC_BOOSTER, actions.TENGEN_LOCAL_BINDINGS);
+        actionBindings().registerAllBindings(actions.steeringBindings());
+        actionBindings().registerAllBindings(game().actions().cheatActionBindings());
+        actionBindings().selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
+        actionBindings().selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
     }
 
     private void acceptDemoLevel() {
@@ -248,8 +248,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         final TengenMsPacMan_Actions actions = game().ui().extensions().getExtension(
             TengenMsPacMan_UIConfig.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
-        actionBindings().selectAnyMatchingBinding(actions.ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, actions.TENGEN_LOCAL_BINDINGS);
-        actionBindings().selectAnyMatchingBinding(actions.ACTION_QUIT_DEMO_LEVEL, actions.TENGEN_LOCAL_BINDINGS);
+        actionBindings().selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
+        actionBindings().selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings());
     }
 
     private void updateScaling() {

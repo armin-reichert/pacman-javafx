@@ -88,11 +88,11 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         if (level.isDemoLevel()) {
             // In demo level, allow going back to options screen
-            actionBindings().selectAnyMatchingBinding(actions.ACTION_QUIT_DEMO_LEVEL, actions.TENGEN_LOCAL_BINDINGS);
+            actionBindings().selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings());
         } else {
-            actionBindings().registerAllBindings(actions.STEERING_BINDINGS);
-            actionBindings().selectAnyMatchingBinding(actions.ACTION_TOGGLE_PAC_BOOSTER, actions.TENGEN_LOCAL_BINDINGS);
-            actionBindings().registerAllBindings(game().actions().cheatActionBindings);
+            actionBindings().registerAllBindings(actions.steeringBindings());
+            actionBindings().selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
+            actionBindings().registerAllBindings(game().actions().cheatActionBindings());
         }
         bindActions();
 

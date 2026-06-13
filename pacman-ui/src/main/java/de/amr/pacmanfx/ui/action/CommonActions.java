@@ -47,7 +47,19 @@ public final class CommonActions {
 
     private final Game game;
 
+    // Pac-Man steering actions
+
+    private final GameAction actionSteerUp;
+    private final GameAction actionSteerDown;
+    private final GameAction actionSteerLeft;
+    private final GameAction actionSteerRight;
+
     private final TestActions sceneTestActions;
+
+    private final Set<ActionKeyBinding> steeringActionBindings;
+    private final Set<ActionKeyBinding> commonBindings;
+    private final Set<ActionKeyBinding> cheatActionBindings;
+    private final Set<ActionKeyBinding> sceneTestsBindings;
 
     public CommonActions(Game game) {
         this.game = Objects.requireNonNull(game);
@@ -71,12 +83,42 @@ public final class CommonActions {
         return sceneTestActions;
     }
 
-    // Pac-Man steering actions
+    // Bindings sets
 
-    public final GameAction actionSteerUp;
-    public final GameAction actionSteerDown;
-    public final GameAction actionSteerLeft;
-    public final GameAction actionSteerRight;
+    public Set<ActionKeyBinding> steeringActionBindings() {
+        return steeringActionBindings;
+    }
+
+    public Set<ActionKeyBinding> commonBindings() {
+        return commonBindings;
+    }
+
+    public Set<ActionKeyBinding> cheatActionBindings() {
+        return cheatActionBindings;
+    }
+
+    public Set<ActionKeyBinding> sceneTestsBindings() {
+        return sceneTestsBindings;
+    }
+
+    // Steering actions
+
+    public GameAction actionSteerUp() {
+        return actionSteerUp;
+    }
+
+    public GameAction actionSteerDown() {
+        return actionSteerDown;
+    }
+
+    public GameAction actionSteerLeft() {
+        return actionSteerLeft;
+    }
+
+    public GameAction actionSteerRight() {
+        return actionSteerRight;
+    }
+
 
     // Map editor actions
 
@@ -420,185 +462,228 @@ public final class CommonActions {
         return actionSimulationReset;
     }
 
-    //TODO localize message
-    public final GameAction ACTION_TOGGLE_COLLISION_STRATEGY = new GameAction(game, "toggle_collision_strategy") {
+    private GameAction actionToggleCollisionStrategy;
 
-        @Override
-        protected void doAction() {
-            final CollisionStrategy strategy = game.currentGameContext().collisionStrategy();
-            final CollisionStrategy newStrategy = strategy == CollisionStrategy.CENTER_DISTANCE
-                ? CollisionStrategy.SAME_TILE : CollisionStrategy.CENTER_DISTANCE;
+    public GameAction actionToggleCollisionStrategy() {
+        if (actionToggleCollisionStrategy == null) {
+            actionToggleCollisionStrategy = new GameAction(game, "toggle_collision_strategy") {
+                @Override
+                protected void doAction() {
+                    final CollisionStrategy strategy = game.currentGameContext().collisionStrategy();
+                    final CollisionStrategy newStrategy = strategy == CollisionStrategy.CENTER_DISTANCE
+                        ? CollisionStrategy.SAME_TILE : CollisionStrategy.CENTER_DISTANCE;
 
-            game.setCollisionStrategy(newStrategy);
+                    game.setCollisionStrategy(newStrategy);
 
-            if (newStrategy == CollisionStrategy.SAME_TILE) {
-                game.shortMessage("Using original Arcade collision strategy (same tile check)");
-            } else {
-                game.shortMessage("Using fail-safe collision strategy");
-            }
+                    if (newStrategy == CollisionStrategy.SAME_TILE) {
+                        game.shortMessage("Using original Arcade collision strategy (same tile check)");
+                    } else {
+                        game.shortMessage("Using fail-safe collision strategy");
+                    }
+                }
+            };
         }
-    };
+        return actionToggleCollisionStrategy;
+    }
 
-    public final GameAction ACTION_TOGGLE_DASHBOARD = new GameAction(game, "toggle_dashboard") {
+    private GameAction actionToggleDashboard;
 
-        @Override
-        protected void doAction() {
-            game.ui().subViews().gamePlayView().dashboard().toggleVisibility();
+    public GameAction actionToggleDashboard() {
+        if (actionToggleDashboard == null) {
+            actionToggleDashboard = new GameAction(game, "toggle_dashboard") {
+                @Override
+                protected void doAction() {
+                    game.ui().subViews().gamePlayView().dashboard().toggleVisibility();
+                }
+
+                @Override
+                public boolean isEnabled() {
+                    final SubViewManager subViews = game.ui().subViews();
+                    return subViews.isSelected(subViews.gamePlayView());
+                }
+            };
         }
+        return actionToggleDashboard;
+    }
 
-        @Override
-        public boolean isEnabled() {
-            final SubViewManager subViews = game.ui().subViews();
-            return subViews.isSelected(subViews.gamePlayView());
+
+    private GameAction actionToggleDebugInfo;
+
+    public GameAction actionToggleDebugInfo() {
+        if (actionToggleDebugInfo == null) {
+            actionToggleDebugInfo = new GameAction(game, "toggle_debug_info") {
+                @Override
+                protected void doAction() {
+                    toggleBooleanProperty(game.ui().settings().debugInfoVisibleProperty);
+                }
+            };
         }
-    };
+        return actionToggleDebugInfo;
+    }
 
-    public final GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction(game, "toggle_debug_info") {
+    private GameAction actionToggleDrawMode;
 
-        @Override
-        protected void doAction() {
-            toggleBooleanProperty(game.ui().settings().debugInfoVisibleProperty);
+    public GameAction actionToggleDrawMode() {
+        if (actionToggleDrawMode == null) {
+            actionToggleDrawMode = new GameAction(game, "toggle_draw_mode") {
+                @Override
+                protected void doAction() {
+                    Ufx.toggleProperty(game.ui().settings3D().drawModeProperty(), DrawMode.LINE, DrawMode.FILL);
+                }
+            };
         }
-    };
+        return actionToggleDrawMode;
+    }
 
-    public final GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction(game, "toggle_draw_mode") {
+    private GameAction actionToggleKeyboardMonitor;
 
-        @Override
-        protected void doAction() {
-            Ufx.toggleProperty(game.ui().settings3D().drawModeProperty(), DrawMode.LINE, DrawMode.FILL);
+    public GameAction actionToggleKeyboardMonitor() {
+        if (actionToggleKeyboardMonitor == null) {
+            actionToggleKeyboardMonitor = new GameAction(game, "toggle_keyboard_monitor") {
+                @Override
+                protected void doAction() {
+                    toggleBooleanProperty(game.ui().settings().keyboardMonitorVisibleProperty);
+                }
+            };
         }
-    };
+        return actionToggleKeyboardMonitor;
+    }
 
-    public final GameAction ACTION_TOGGLE_KEYBOARD_MONITOR = new GameAction(game, "toggle_keyboard_monitor") {
+    private GameAction actionToggleMiniViewVisibility;
 
-        @Override
-        protected void doAction() {
-            toggleBooleanProperty(game.ui().settings().keyboardMonitorVisibleProperty);
+    public GameAction actionToggleMiniViewVisibility() {
+        if (actionToggleMiniViewVisibility == null) {
+            actionToggleMiniViewVisibility = new GameAction(game, "toggle_mini_view_visibility") {
+                @Override
+                protected void doAction() {
+                    toggleBooleanProperty(game.ui().settings().miniViewOnProperty);
+                    if (!game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)) {
+                        final String msg = game.ui().translations().translate(
+                            game.ui().settings().miniViewOnProperty.get() ? "pip_on" : "pip_off");
+                        game.shortMessage(msg);
+                    }
+                }
+            };
         }
-    };
+        return actionToggleMiniViewVisibility;
+    }
 
-    public final GameAction ACTION_TOGGLE_MINI_VIEW_VISIBILITY = new GameAction(game, "toggle_mini_view_visibility") {
+    private GameAction actionToggleMuted;
 
-        @Override
-        protected void doAction() {
-            toggleBooleanProperty(game.ui().settings().miniViewOnProperty);
-            if (!game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)) {
-                final String msg = game.ui().translations().translate(
-                    game.ui().settings().miniViewOnProperty.get() ? "pip_on" : "pip_off");
-                game.shortMessage(msg);
-            }
+    public GameAction actionToggleMuted() {
+        if (actionToggleMuted == null) {
+            actionToggleMuted = new GameAction(game, "toggle_muted") {
+                @Override
+                protected void doAction() {
+                    toggleBooleanProperty(game.ui().settings().mutedProperty);
+                }
+            };
         }
-    };
+        return actionToggleMuted;
+    }
 
-    public final GameAction ACTION_TOGGLE_MUTED = new GameAction(game, "toggle_muted") {
+    private GameAction actionTogglePaused;
 
-        @Override
-        protected void doAction() {
-            toggleBooleanProperty(game.ui().settings().mutedProperty);
+    public GameAction actionTogglePaused() {
+        if (actionTogglePaused == null) {
+            actionTogglePaused = new GameAction(game, "toggle_paused") {
+                @Override
+                protected void doAction() {
+                    final GameClock gameClock = game.clock();
+                    toggleBooleanProperty(gameClock.updatesDisabledProperty());
+                    final boolean paused = gameClock.getUpdatesDisabled();
+                    if (paused) {
+                        game.ui().sounds().stopAll();
+                        game.currentUIConfig().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+                    }
+                }
+
+                @Override
+                public boolean isEnabled() {
+                    final SubViewManager subViews = game.ui().subViews();
+                    return subViews.isSelected(subViews.gamePlayView());
+                }
+            };
         }
-    };
+        return actionTogglePaused;
+    }
 
-    public final GameAction ACTION_TOGGLE_PAUSED = new GameAction(game, "toggle_paused") {
+    private GameAction actionTogglePlayScene2D3D;
 
-        @Override
-        protected void doAction() {
-            final GameClock gameClock = game.clock();
-            toggleBooleanProperty(gameClock.updatesDisabledProperty());
-            final boolean paused = gameClock.getUpdatesDisabled();
-            if (paused) {
-                game.ui().sounds().stopAll();
-                game.currentUIConfig().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-            }
+    public GameAction actionTogglePlayScene2D3D() {
+        if  (actionTogglePlayScene2D3D == null) {
+            actionTogglePlayScene2D3D = new GameAction(game, "toggle_play_scene_2d_3d") {
+
+                @Override
+                protected void doAction() {
+                    toggleBooleanProperty(game.ui().settings3D().view3DEnabledProperty());
+                    final boolean is3DEnabled = game.ui().settings3D().view3DEnabledProperty().get();
+                    if (!inPlayScene()) {
+                        game.shortMessage(game.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
+                    }
+                    if (isLevelPlaying()) {
+                        game.ui().gameScenes().forceGameSceneUpdate(game);
+                    }
+                }
+
+                @Override
+                public boolean isEnabled() {
+                    final SubViewManager subViews = game.ui().subViews();
+                    return subViews.isSelected(subViews.gamePlayView());
+                }
+
+                private boolean inPlayScene() {
+                    final GameSceneManager gameScenes = game.ui().gameScenes();
+                    return gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D)
+                        || gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D);
+                }
+
+                private boolean isLevelPlaying() {
+                    final GameState gameState = game.currentGameContext().state();
+                    return GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
+                }
+            };
         }
-
-        @Override
-        public boolean isEnabled() {
-            final SubViewManager subViews = game.ui().subViews();
-            return subViews.isSelected(subViews.gamePlayView());
-        }
-    };
-
-    public final GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction(game, "toggle_play_scene_2d_3d") {
-
-        @Override
-        protected void doAction() {
-            toggleBooleanProperty(game.ui().settings3D().view3DEnabledProperty());
-            final boolean is3DEnabled = game.ui().settings3D().view3DEnabledProperty().get();
-            if (!inPlayScene()) {
-                game.shortMessage(game.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
-            }
-            if (isLevelPlaying()) {
-                game.ui().gameScenes().forceGameSceneUpdate(game);
-            }
-        }
-
-        @Override
-        public boolean isEnabled() {
-            final SubViewManager subViews = game.ui().subViews();
-            return subViews.isSelected(subViews.gamePlayView());
-        }
-
-        private boolean inPlayScene() {
-            final GameSceneManager gameScenes = game.ui().gameScenes();
-            return gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D)
-                || gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D);
-        }
-
-        private boolean isLevelPlaying() {
-            final GameState gameState = game.currentGameContext().state();
-            return GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
-        }
-    };
+        return actionTogglePlayScene2D3D;
+    }
 
     // Binding sets
 
-    /** Steering key bindings (arrow keys, optionally with Ctrl). */
-    public final Set<ActionKeyBinding> steeringActionBindings;
-
-    /** Common global key bindings used across all views/scenes. */
-    public final Set<ActionKeyBinding> commonBindings;
-
-    /** Cheat key bindings (Alt + key). */
-    public final Set<ActionKeyBinding> cheatActionBindings;
-
-    /** Key bindings for scene/level test utilities. */
-    public final Set<ActionKeyBinding> sceneTestsBindings;
-
     private Set<ActionKeyBinding> createCommonBindings() {
         return Set.of(
-            new ActionKeyBinding(actionEnterFullScreen(),                     bare(KeyCode.F11)),
-            new ActionKeyBinding(actionOpenEditor(),                          alt_shift(KeyCode.E)),
-            new ActionKeyBinding(actionQuit(),                                bare(KeyCode.Q)),
-            new ActionKeyBinding(actionShowHelp(),                            bare(KeyCode.H)),
-            new ActionKeyBinding(actionSimulationSlower(),                    alt(KeyCode.MINUS)),
-            new ActionKeyBinding(actionSimulationSlowest(),                   alt_shift(KeyCode.MINUS)),
-            new ActionKeyBinding(actionSimulationFaster(),                    alt(KeyCode.PLUS)),
-            new ActionKeyBinding(actionSimulationFastest(),                   alt_shift(KeyCode.PLUS)),
-            new ActionKeyBinding(actionSimulationReset(),                     alt(KeyCode.DIGIT0)),
-            new ActionKeyBinding(actionSimulationOneStep(),                  shift(KeyCode.P), shift(KeyCode.F5)),
-            new ActionKeyBinding(actionSimulationTenSteps(),                 shift(KeyCode.SPACE)),
-            new ActionKeyBinding(actionStartGame(),                           bare(KeyCode.F3)),
-            new ActionKeyBinding(ACTION_TOGGLE_COLLISION_STRATEGY,            alt(KeyCode.S)),
-            new ActionKeyBinding(ACTION_TOGGLE_DASHBOARD,                     bare(KeyCode.F1), alt(KeyCode.B)),
-            new ActionKeyBinding(ACTION_TOGGLE_DEBUG_INFO,                    alt(KeyCode.D)),
-            new ActionKeyBinding(ACTION_TOGGLE_KEYBOARD_MONITOR,              alt(KeyCode.K)),
-            new ActionKeyBinding(ACTION_TOGGLE_MINI_VIEW_VISIBILITY,          bare(KeyCode.F2)),
-            new ActionKeyBinding(ACTION_TOGGLE_MUTED,                         alt(KeyCode.M)),
-            new ActionKeyBinding(ACTION_TOGGLE_PAUSED,                        bare(KeyCode.P), bare(KeyCode.F5)),
-            new ActionKeyBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D,              alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3)),
+            new ActionKeyBinding(actionEnterFullScreen(),          bare(KeyCode.F11)),
+            new ActionKeyBinding(actionOpenEditor(),               alt_shift(KeyCode.E)),
+            new ActionKeyBinding(actionQuit(),                     bare(KeyCode.Q)),
+            new ActionKeyBinding(actionShowHelp(),                 bare(KeyCode.H)),
+            new ActionKeyBinding(actionSimulationSlower(),         alt(KeyCode.MINUS)),
+            new ActionKeyBinding(actionSimulationSlowest(),        alt_shift(KeyCode.MINUS)),
+            new ActionKeyBinding(actionSimulationFaster(),         alt(KeyCode.PLUS)),
+            new ActionKeyBinding(actionSimulationFastest(),        alt_shift(KeyCode.PLUS)),
+            new ActionKeyBinding(actionSimulationReset(),          alt(KeyCode.DIGIT0)),
+            new ActionKeyBinding(actionSimulationOneStep(),        shift(KeyCode.P), shift(KeyCode.F5)),
+            new ActionKeyBinding(actionSimulationTenSteps(),       shift(KeyCode.SPACE)),
+            new ActionKeyBinding(actionStartGame(),                bare(KeyCode.F3)),
+            new ActionKeyBinding(actionToggleCollisionStrategy(),  alt(KeyCode.S)),
+            new ActionKeyBinding(actionToggleDashboard(),          bare(KeyCode.F1), alt(KeyCode.B)),
+            new ActionKeyBinding(actionToggleDebugInfo(),          alt(KeyCode.D)),
+            new ActionKeyBinding(actionToggleKeyboardMonitor(),    alt(KeyCode.K)),
+            new ActionKeyBinding(actionToggleMiniViewVisibility(), bare(KeyCode.F2)),
+            new ActionKeyBinding(actionToggleMuted(),              alt(KeyCode.M)),
+            new ActionKeyBinding(actionTogglePaused(),             bare(KeyCode.P), bare(KeyCode.F5)),
+            new ActionKeyBinding(actionTogglePlayScene2D3D(),      alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3)),
 
             // Cheats
-            new ActionKeyBinding(game.cheatActions().ACTION_TOGGLE_AUTOPILOT, alt(KeyCode.A)),
-            new ActionKeyBinding(game.cheatActions().ACTION_TOGGLE_IMMUNITY,  alt(KeyCode.I))
+            new ActionKeyBinding(game.cheatActions().actionToggleAutopilot(), alt(KeyCode.A)),
+            new ActionKeyBinding(game.cheatActions().actionToggleImmunity(),  alt(KeyCode.I))
         );
     }
 
     private Set<ActionKeyBinding> createCheatActionBindings() {
         return Set.of(
-            new ActionKeyBinding(game.cheatActions().ACTION_EAT_ALL_PELLETS,  alt(KeyCode.E)),
-            new ActionKeyBinding(game.cheatActions().ACTION_ADD_LIVES,        alt(KeyCode.L)),
-            new ActionKeyBinding(game.cheatActions().ACTION_ENTER_NEXT_LEVEL, alt(KeyCode.N)),
-            new ActionKeyBinding(game.cheatActions().ACTION_KILL_GHOSTS,      alt(KeyCode.X))
+            new ActionKeyBinding(game.cheatActions().actionEatAllPellets(),  alt(KeyCode.E)),
+            new ActionKeyBinding(game.cheatActions().actionAddLives(),       alt(KeyCode.L)),
+            new ActionKeyBinding(game.cheatActions().actionEnterNextLevel(), alt(KeyCode.N)),
+            new ActionKeyBinding(game.cheatActions().actionKillGhosts(),     alt(KeyCode.X))
         );
     }
 

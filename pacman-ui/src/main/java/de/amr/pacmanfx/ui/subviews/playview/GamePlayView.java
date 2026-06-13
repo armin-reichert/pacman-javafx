@@ -149,7 +149,7 @@ public class GamePlayView implements SubView {
     @Override
     public void onEnter() {
         rootPane.requestFocus();
-        actionBindings.registerAllBindings(game.actions().commonBindings);
+        actionBindings.registerAllBindings(game.actions().commonBindings());
         Logger.info(actionBindings);
         gameSceneFrame.installBindings();
     }

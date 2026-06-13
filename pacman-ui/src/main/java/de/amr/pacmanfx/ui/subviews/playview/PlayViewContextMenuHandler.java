@@ -44,7 +44,7 @@ public class PlayViewContextMenuHandler implements EventHandler<ContextMenuEvent
             // Add 2D play scene-specific entries
             if (game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D)) {
                 addLocalizedTitleItem(menu, translations, "scene_display");
-                addLocalizedActionItem(menu, translations, game.actions().ACTION_TOGGLE_PLAY_SCENE_2D_3D, "use_3D_scene");
+                addLocalizedActionItem(menu, translations, game.actions().actionTogglePlayScene2D3D(), "use_3D_scene");
             }
             // Add scene-specific entries
             gameScene.supplyContextMenu().ifPresent(sceneMenu -> menu.getItems().addAll(sceneMenu.getItems()));

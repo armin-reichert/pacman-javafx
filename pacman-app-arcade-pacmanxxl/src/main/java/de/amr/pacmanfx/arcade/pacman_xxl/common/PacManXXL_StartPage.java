@@ -94,7 +94,7 @@ public class PacManXXL_StartPage implements StartPage {
         public void onKeyboardStateChange(Keyboard keyboard) {
             if (keyboard.isKeyPressed(KeyCode.E)) {
                 pauseProgressTimer(game);
-                game.actions().ACTION_OPEN_EDITOR.execute();
+                game.actions().actionOpenEditor().execute();
             }
             else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
                 pauseProgressTimer(game);

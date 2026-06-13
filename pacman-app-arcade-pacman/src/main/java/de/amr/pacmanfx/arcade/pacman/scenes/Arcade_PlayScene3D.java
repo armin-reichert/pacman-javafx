@@ -24,10 +24,10 @@ public class Arcade_PlayScene3D extends PlayScene3D {
             .getExtension(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, Arcade_Actions.class);
 
         if (level.isDemoLevel()) {
-            actionBindings().registerAllBindings(actions.GAME_START_ACTION_BINDINGS);
+            actionBindings().registerAllBindings(actions.gameStartActionBindings());
         } else {
-            actionBindings().registerAllBindings(game().actions().steeringActionBindings);
-            actionBindings().registerAllBindings(game().actions().cheatActionBindings);
+            actionBindings().registerAllBindings(game().actions().steeringActionBindings());
+            actionBindings().registerAllBindings(game().actions().cheatActionBindings());
         }
         bindActions();
         Logger.info(actionBindings());

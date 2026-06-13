@@ -280,9 +280,9 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     private void createBindings() {
         actionBindings = Set.of(
-            new ActionKeyBinding(game().actions().ACTION_PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT)),
-            new ActionKeyBinding(game().actions().ACTION_PERSPECTIVE_NEXT, alt(KeyCode.RIGHT)),
-            new ActionKeyBinding(game().actions().ACTION_TOGGLE_DRAW_MODE, alt(KeyCode.W)));
+            new ActionKeyBinding(game().actions().actionPerspectivePrevious(), alt(KeyCode.LEFT)),
+            new ActionKeyBinding(game().actions().actionPerspectiveNext(), alt(KeyCode.RIGHT)),
+            new ActionKeyBinding(game().actions().actionToggleDrawMode(), alt(KeyCode.W)));
     }
 
     /**

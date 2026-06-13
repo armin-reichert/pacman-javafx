@@ -40,10 +40,10 @@ public class GameViewMainScene extends Scene {
         setOnScroll(e -> game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         // Global action bindings
-        actionBindings.selectAnyMatchingBinding(game.actions().ACTION_ENTER_FULLSCREEN,        game.actions().commonBindings);
-        actionBindings.selectAnyMatchingBinding(game.actions().ACTION_OPEN_EDITOR,             game.actions().commonBindings);
-        actionBindings.selectAnyMatchingBinding(game.actions().ACTION_TOGGLE_KEYBOARD_MONITOR, game.actions().commonBindings);
-        actionBindings.selectAnyMatchingBinding(game.actions().ACTION_TOGGLE_MUTED,            game.actions().commonBindings);
+        actionBindings.selectAnyMatchingBinding(game.actions().actionEnterFullScreen(),       game.actions().commonBindings());
+        actionBindings.selectAnyMatchingBinding(game.actions().actionOpenEditor(),            game.actions().commonBindings());
+        actionBindings.selectAnyMatchingBinding(game.actions().actionToggleKeyboardMonitor(), game.actions().commonBindings());
+        actionBindings.selectAnyMatchingBinding(game.actions().actionToggleMuted(),           game.actions().commonBindings());
 
         Logger.info(actionBindings);
     }

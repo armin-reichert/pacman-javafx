@@ -22,7 +22,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
         final Arcade_Actions actions = game().ui().extensions()
             .getExtension(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, Arcade_Actions.class);
 
-        actionBindings().registerAllBindings(actions.GAME_START_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(actions.gameStartActionBindings());
     }
 
     @Override
