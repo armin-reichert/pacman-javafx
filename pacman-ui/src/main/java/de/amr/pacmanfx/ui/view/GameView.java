@@ -21,8 +21,6 @@ public interface GameView {
 
     GameViewMainScene mainScene();
 
-    StatusIconBox statusIconBox();
-
     void replaceSubView(SubView subView);
 
     void show();

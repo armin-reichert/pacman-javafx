@@ -53,51 +53,39 @@ public class GameViewImpl implements GameView {
 
     @Override
     public void connect(Game game) {
+        requireNonNull(game);
 
         if (this.game != null) {
             Logger.warn("Game view already connect to game!");
             return;
         }
+        this.game = game;
 
-        this.game = requireNonNull(game);
+        final SubViewManager subViews = game.ui().subViews();
+        final GameSceneManager gameScenes = game.ui().gameScenes();
 
-        final GameUI ui = game.ui();
-        final SubViewManager subViews = ui.subViews();
-        final GameSceneManager gameScenes = ui.gameScenes();
-
+        // Create sub views
         subViews.setStartView(new StartPagesView(game));
         subViews.setGamePlayView(createGamePlaySubView(game));
         subViews.setEditorViewFactory(() -> createEditorSubView(subViews, game));
 
         createStatusIconBox(subViews, game);
         createKeyboardInfo(game);
-        createStageTitleBinding(ui, subViews, gameScenes);
-        populateMainScene(ui);
+        createStageTitleBinding(game.ui(), subViews, gameScenes);
+
+        populateMainScene(game.ui());
         initMainScene(game, subViews, gameScenes);
 
-        // Some status icons are bound to the game model of the current game variant
+        // Some status icons are bound to the game model of the *current* game variant
         game.gameVariantNameProperty().addListener(
             (_,_,variantName) -> statusIconBox.bind(game.gameVariant(variantName).gameModel()));
     }
 
     @Override
     public void show() {
-        final Stage theStage = stage();
-        if (theStage == null) {
-            throw new IllegalStateException("No stage assigned to game view");
-        }
-        theStage.setScene(mainScene);
-
-        theStage.titleProperty().bind(stageTitleBindingProperty());
-
-        updateStageIcon(game);
-        registerIconUpdater(game);
-
-        theStage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
-        theStage.setMinHeight(GameUI_Constants.MIN_STAGE_HEIGHT);
-        theStage.centerOnScreen();
-
-        theStage.show();
+        initStage();
+        stage().centerOnScreen();
+        stage().show();
     }
 
     @Override
@@ -115,11 +103,6 @@ public class GameViewImpl implements GameView {
         return mainScene;
     }
 
-    @Override
-    public StatusIconBox statusIconBox() {
-        return statusIconBox;
-    }
-
     public StringBinding stageTitleBindingProperty() {
         return stageTitleBinding;
     }
@@ -132,6 +115,22 @@ public class GameViewImpl implements GameView {
     }
 
     // Private area
+
+    private void initStage() {
+        final Stage theStage = stage();
+        if (theStage == null) {
+            throw new IllegalStateException("No stage assigned to game view");
+        }
+
+        theStage.setScene(mainScene);
+        theStage.titleProperty().bind(stageTitleBindingProperty());
+
+        updateStageIcon(game);
+        registerIconUpdater(game);
+
+        theStage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
+        theStage.setMinHeight(GameUI_Constants.MIN_STAGE_HEIGHT);
+    }
 
     private void populateMainScene(GameUI ui) {
         mainScene.rootPane().getChildren().addAll(
