@@ -9,15 +9,21 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.editor.EditorView;
+import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.Optional;
+import java.util.Set;
+
+import static de.amr.pacmanfx.ui.input.Keyboard.alt_shift;
 
 public class EditorActions {
 
     private final Game game;
     private final GameAction actionOpenEditor;
+
+    private final Set<ActionKeyBinding> bindings;
 
     public EditorActions(Game game) {
         this.game = game;
@@ -28,6 +34,10 @@ public class EditorActions {
                 openMapEditor().ifPresent(editor -> startEditor(editor));
             }
         };
+
+        bindings = Set.of(
+            new ActionKeyBinding(actionOpenEditor, alt_shift(KeyCode.E))
+        );
     }
 
     /**
@@ -57,6 +67,12 @@ public class EditorActions {
     public GameAction actionOpenEditor() {
         return actionOpenEditor;
     }
+
+    public Set<ActionKeyBinding> bindings() {
+        return bindings;
+    }
+
+    // Private
 
     private void startEditor(TileMapEditor editor) {
         game.stop();

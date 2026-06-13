@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
@@ -43,6 +42,7 @@ public final class CommonActions {
     private final EditorActions editorActions;
     private final CheatActions cheatActions;
     private final TestActions sceneTestActions;
+    private final UISettingsActions uiSettingsActions;
 
     private final Set<ActionKeyBinding> commonBindings;
 
@@ -55,6 +55,7 @@ public final class CommonActions {
         editorActions = new EditorActions(game);
         cheatActions = new CheatActions(game);
         sceneTestActions = new TestActions(game);
+        uiSettingsActions = new UISettingsActions(game);
 
         commonBindings = createBindings();
     }
@@ -81,6 +82,10 @@ public final class CommonActions {
 
     public TestActions sceneTestActions() {
         return sceneTestActions;
+    }
+
+    public UISettingsActions uiSettingsActions() {
+        return uiSettingsActions;
     }
 
     public Set<ActionKeyBinding> commonBindings() {
@@ -116,20 +121,6 @@ public final class CommonActions {
             };
         }
         return actionQuit;
-    }
-
-    private GameAction actionEnterFullScreen;
-
-    public GameAction actionEnterFullScreen() {
-        if (actionEnterFullScreen == null) {
-            actionEnterFullScreen = new GameAction(game, "enter_fullscreen") {
-                @Override
-                protected void doAction() {
-                    game.ui().view().stage().setFullScreen(true);
-                }
-            };
-        }
-        return actionEnterFullScreen;
     }
 
     private GameAction actionLetGameStateExpire;
@@ -169,32 +160,6 @@ public final class CommonActions {
         return actionRestartIntro;
     }
 
-    private GameAction actionShowHelp;
-
-    public GameAction actionShowHelp() {
-        if (actionShowHelp == null) {
-            actionShowHelp = new GameAction(game, "show_help") {
-                @Override
-                protected void doAction() {
-                    game.ui().subViews().gamePlayView().showHelp(game);
-                }
-
-                @Override
-                public boolean isEnabled() {
-                    final GameSceneManager gameScenes = game.ui().gameScenes();
-                    final String variantName = game.currentGameVariantName();
-                    final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
-                    return isArcadeGame &&
-                        (gameScenes.currentGameSceneHasID(game, CommonSceneID.INTRO_SCENE)
-                            || gameScenes.currentGameSceneHasID(game, CommonSceneID.START_SCENE)
-                            || gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D));
-                }
-            };
-        }
-        return actionShowHelp;
-    }
-
-
     private GameAction actionToggleCollisionStrategy;
 
     public GameAction actionToggleCollisionStrategy() {
@@ -217,75 +182,6 @@ public final class CommonActions {
             };
         }
         return actionToggleCollisionStrategy;
-    }
-
-    private GameAction actionToggleDashboard;
-
-    public GameAction actionToggleDashboard() {
-        if (actionToggleDashboard == null) {
-            actionToggleDashboard = new GameAction(game, "toggle_dashboard") {
-                @Override
-                protected void doAction() {
-                    game.ui().subViews().gamePlayView().dashboard().toggleVisibility();
-                }
-
-                @Override
-                public boolean isEnabled() {
-                    final SubViewManager subViews = game.ui().subViews();
-                    return subViews.isSelected(subViews.gamePlayView());
-                }
-            };
-        }
-        return actionToggleDashboard;
-    }
-
-
-    private GameAction actionToggleDebugInfo;
-
-    public GameAction actionToggleDebugInfo() {
-        if (actionToggleDebugInfo == null) {
-            actionToggleDebugInfo = new GameAction(game, "toggle_debug_info") {
-                @Override
-                protected void doAction() {
-                    toggleBooleanProperty(game.ui().settings().debugInfoVisibleProperty);
-                }
-            };
-        }
-        return actionToggleDebugInfo;
-    }
-
-
-    private GameAction actionToggleKeyboardMonitor;
-
-    public GameAction actionToggleKeyboardMonitor() {
-        if (actionToggleKeyboardMonitor == null) {
-            actionToggleKeyboardMonitor = new GameAction(game, "toggle_keyboard_monitor") {
-                @Override
-                protected void doAction() {
-                    toggleBooleanProperty(game.ui().settings().keyboardMonitorVisibleProperty);
-                }
-            };
-        }
-        return actionToggleKeyboardMonitor;
-    }
-
-    private GameAction actionToggleMiniViewVisibility;
-
-    public GameAction actionToggleMiniViewVisibility() {
-        if (actionToggleMiniViewVisibility == null) {
-            actionToggleMiniViewVisibility = new GameAction(game, "toggle_mini_view_visibility") {
-                @Override
-                protected void doAction() {
-                    toggleBooleanProperty(game.ui().settings().miniViewOnProperty);
-                    if (!game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)) {
-                        final String msg = game.ui().translations().translate(
-                            game.ui().settings().miniViewOnProperty.get() ? "pip_on" : "pip_off");
-                        game.shortMessage(msg);
-                    }
-                }
-            };
-        }
-        return actionToggleMiniViewVisibility;
     }
 
     private GameAction actionToggleMuted;
@@ -373,21 +269,16 @@ public final class CommonActions {
         final Set<ActionKeyBinding> bindings = new HashSet<>();
 
         bindings.addAll(Set.of(
-            new ActionKeyBinding(actionEnterFullScreen(),            bare(KeyCode.F11)),
-            new ActionKeyBinding(editorActions().actionOpenEditor(), alt_shift(KeyCode.E)),
-            new ActionKeyBinding(actionQuit(),                       bare(KeyCode.Q)),
-            new ActionKeyBinding(actionShowHelp(),                   bare(KeyCode.H)),
-            new ActionKeyBinding(actionStartGame(),                  bare(KeyCode.F3)),
-            new ActionKeyBinding(actionToggleCollisionStrategy(),    alt(KeyCode.S)),
-            new ActionKeyBinding(actionToggleDashboard(),            bare(KeyCode.F1), alt(KeyCode.B)),
-            new ActionKeyBinding(actionToggleDebugInfo(),            alt(KeyCode.D)),
-            new ActionKeyBinding(actionToggleKeyboardMonitor(),      alt(KeyCode.K)),
-            new ActionKeyBinding(actionToggleMiniViewVisibility(),   bare(KeyCode.F2)),
-            new ActionKeyBinding(actionToggleMuted(),                alt(KeyCode.M)),
-            new ActionKeyBinding(actionTogglePaused(),               bare(KeyCode.P), bare(KeyCode.F5)),
-            new ActionKeyBinding(actionTogglePlayScene2D3D(),        alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
+            new ActionKeyBinding(actionQuit(),                    bare(KeyCode.Q)),
+            new ActionKeyBinding(actionStartGame(),               bare(KeyCode.F3)),
+            new ActionKeyBinding(actionToggleCollisionStrategy(), alt(KeyCode.S)),
+            new ActionKeyBinding(actionToggleMuted(),             alt(KeyCode.M)),
+            new ActionKeyBinding(actionTogglePaused(),            bare(KeyCode.P), bare(KeyCode.F5)),
+            new ActionKeyBinding(actionTogglePlayScene2D3D(),     alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
         ));
 
+        bindings.addAll(editorActions.bindings());
+        bindings.addAll(uiSettingsActions.bindings());
         bindings.addAll(simulationActions().bindings());
 
         return Collections.unmodifiableSet(bindings);
