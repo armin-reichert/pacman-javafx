@@ -11,8 +11,6 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.GameLevelMessage;
-import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.simulation.HuntingCollisionDetector;
 
 import java.util.List;
@@ -40,10 +38,6 @@ public class LevelMediumTestState extends GameState implements TestState {
         final List<Ghost> ghosts = level.entities().ghosts();
         ghosts.forEach(ghost -> ghost.animations().playSelected());
         ghosts.forEach(Ghost::show);
-
-        final var message = new GameLevelMessage(GameLevelMessageType.TEST);
-        message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
-        level.setMessage(message);
 
         gameModel.hud().show();
 

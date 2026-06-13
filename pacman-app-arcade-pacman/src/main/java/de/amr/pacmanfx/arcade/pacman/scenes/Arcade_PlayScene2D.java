@@ -6,32 +6,25 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Actions;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.action.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GlobalActionBindings;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.ui.action.CommonActions.*;
-import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_STEER_RIGHT;
-import static de.amr.pacmanfx.ui.input.Keyboard.bare;
-import static de.amr.pacmanfx.ui.input.Keyboard.control;
 import static de.amr.pacmanfx.ui.subviews.ContextMenuSupport.*;
 
 /**

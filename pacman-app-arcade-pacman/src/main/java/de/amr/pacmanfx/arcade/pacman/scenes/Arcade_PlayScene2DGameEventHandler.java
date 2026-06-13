@@ -112,4 +112,9 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneHandler {
     public void onSpecialScore(SpecialScoreEvent e) {
         optSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
+
+    @Override
+    public void onTestStarted(TestStartedEvent e) {
+        game().shortMessage("Testing level %d".formatted(e.level().number()));
+    }
 }

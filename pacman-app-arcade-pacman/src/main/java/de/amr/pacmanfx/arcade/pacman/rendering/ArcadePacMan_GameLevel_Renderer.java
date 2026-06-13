@@ -12,7 +12,8 @@ import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.function.Predicate.not;
 
 /**
@@ -39,7 +40,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     @Override
     public void drawLevel(GameLevel level, RenderInfo info) {
         drawMap(level, info);
-        level.optMessage().ifPresent(message -> drawLevelMessage(level, message));
+        level.optMessage().ifPresent(this::drawLevelMessage);
     }
 
     protected void drawMap(GameLevel level, RenderInfo info) {
@@ -86,11 +87,10 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
         ctx.restore();
     }
 
-    protected void drawLevelMessage(GameLevel level, GameLevelMessage msg) {
+    protected void drawLevelMessage(GameLevelMessage msg) {
         switch (msg.type()) {
             case GAME_OVER -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), msg.x(), msg.y());
             case READY -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), msg.x(), msg.y());
-            case TEST -> fillTextCentered("TEST    L%02d".formatted(level.number()), ARCADE_WHITE, arcadeFont8(), msg.x(), msg.y());
         }
     }
 }

@@ -5,12 +5,12 @@ package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusEatenEvent;
+import de.amr.pacmanfx.event.TestStartedEvent;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 
 public class LevelShortTestState extends GameState implements TestState {
@@ -54,10 +54,9 @@ public class LevelShortTestState extends GameState implements TestState {
             gameModel.showLevelMessage(level, GameLevelMessageType.READY);
             gameModel.hud().creditOff().livesCounterOn();
 
-            GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
-            message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
-            level.setMessage(message);
             level.heartbeat().restart();
+
+            gameContext.flow().publishGameEvent(new TestStartedEvent(gameContext, level));
         }
         else if (timer().atSecond(START + 1)) {
             level.clearMessage();
@@ -87,14 +86,10 @@ public class LevelShortTestState extends GameState implements TestState {
         }
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
-                //coinMechanism.setNumCoins(0);
                 gameContext.flow().restartState(GameStateID.BOOT);
             } else {
                 lock();
                 gameModel.startNextLevel(gameContext);
-                GameLevelMessage message = new GameLevelMessage(GameLevelMessageType.TEST);
-                message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
-                level.setMessage(message);
             }
         } else {
             gameModel.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.update(gameContext, level));
@@ -104,7 +99,6 @@ public class LevelShortTestState extends GameState implements TestState {
     @Override
     public void onExit(GameContext context) {
         final GameModel game = context.model();
-        //coinMechanism.setNumCoins(0);
         game.init();
         game.levelCounter().clear();
     }

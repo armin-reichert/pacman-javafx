@@ -86,7 +86,6 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             switch (message.type()) {
                 case GAME_OVER -> drawGameOverMessage(level, message);
                 case READY -> drawReadyMessage(message);
-                case TEST -> drawTestMessage(level, message);
             }
         });
     }
@@ -152,11 +151,6 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
     private void drawReadyMessage(GameLevelMessage message) {
         fillTextCentered(READY_MESSAGE_TEXT, uiConfig.assets().color("color.ready_message"), arcadeFont8(), message.x(), message.y());
-    }
-
-    private void drawTestMessage(GameLevel gameLevel, GameLevelMessage message) {
-        fillTextCentered(LEVEL_TEST_MESSAGE_TEXT_PATTERN.formatted(
-            gameLevel.number()), NES_Palette.color(0x28), arcadeFont8(), message.x(), message.y());
     }
 
     public void drawDoor(WorldMap worldMap) {

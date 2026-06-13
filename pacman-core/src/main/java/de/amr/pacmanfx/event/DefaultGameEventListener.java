@@ -34,6 +34,7 @@ public class DefaultGameEventListener implements GameEventListener{
             case PacPowerFadesEvent e            -> onPacPowerFades(e);
             case SpecialScoreEvent e             -> onSpecialScore(e);
             case StopAllSoundsEvent e            -> onStopAllSounds(e);
+            case TestStartedEvent e              -> onTestStarted(e);
         }
     }
 
@@ -63,5 +64,7 @@ public class DefaultGameEventListener implements GameEventListener{
     public void onPacLostPower(PacLostPowerEvent e) {}
     public void onPacPowerFades(PacPowerFadesEvent e) {}
     public void onStopAllSounds(StopAllSoundsEvent e) {}
+    public void onTestStarted(TestStartedEvent e) {}
+
     public void onGenericChange(GenericChangeEvent e) {}
 }
