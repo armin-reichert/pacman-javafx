@@ -77,8 +77,10 @@ public class GameViewImpl implements GameView {
         initMainScene(game, subViews, gameScenes);
 
         // Some status icons are bound to the game model of the *current* game variant
-        game.gameVariantNameProperty().addListener(
-            (_,_,variantName) -> statusIconBox.bind(game.gameVariant(variantName).gameModel()));
+        game.gameVariantNameProperty().addListener((_,_,variantName) -> {
+            statusIconBox.bind(game.gameVariant(variantName).gameModel());
+            subViews.gamePlayView().gameSceneFrame().clearCanvas();
+        });
     }
 
     @Override

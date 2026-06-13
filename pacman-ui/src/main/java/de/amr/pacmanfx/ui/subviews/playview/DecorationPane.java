@@ -164,6 +164,10 @@ public class DecorationPane extends StackPane {
         );
     }
 
+    public void clearCanvas() {
+        canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
+
     public void stretchTo(double width, double height) {
         final double realWidth  = config.scalingX() * width;
         final double realHeight = config.scalingY() * height;
