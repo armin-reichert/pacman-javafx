@@ -151,9 +151,7 @@ public final class GameImpl implements Game {
         if (machine.containsCartridgeWithName(variantName)) {
             gameVariantName.set(variantName);
         }
-        else {
-            throw new IllegalArgumentException("Game with name '" + variantName + "' not found");
-        }
+        else throw new IllegalArgumentException("Game with name '" + variantName + "' not found");
     }
 
     @Override
@@ -233,7 +231,6 @@ public final class GameImpl implements Game {
         ui.subViews().selectStartView();
         ui.subViews().startView().setSelectedIndex(0);
 
-        view.statusIconBox().bind(currentGameContext().model());
         view.show();
 
         startServicesLater();

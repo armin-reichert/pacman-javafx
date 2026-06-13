@@ -46,7 +46,7 @@ public class GameViewImpl implements GameView {
     public void connect(Game game) {
         this.game = requireNonNull(game);
 
-        this.statusIconBox = new StatusIconBox(game);
+        statusIconBox = new StatusIconBox(game);
 
         final KeyboardInfo keyboardInfo = new KeyboardInfo(
             game.ui(), game.input().keyboard());
@@ -71,6 +71,10 @@ public class GameViewImpl implements GameView {
             game.ui().settings().debugInfoVisibleProperty,
             game.ui().settings3D().view3DEnabledProperty()
         );
+
+        game.gameVariantNameProperty().addListener((_,_,variantName) -> {
+            statusIconBox.bind(game.gameVariant(variantName).gameModel());
+        });
     }
 
     @Override
