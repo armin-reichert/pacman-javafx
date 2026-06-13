@@ -4,13 +4,8 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.gamestate.GameState;
-import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
-import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
-import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import javafx.scene.input.KeyCode;
 
 import java.util.Collections;
@@ -19,7 +14,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
-import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
 
 /**
  * Common actions for all game variants.
@@ -120,9 +114,7 @@ public final class CommonActions {
     private Set<ActionKeyBinding> createBindings() {
         final Set<ActionKeyBinding> bindings = new HashSet<>();
 
-        bindings.addAll(Set.of(
-            new ActionKeyBinding(actionToggleCollisionStrategy(), alt(KeyCode.S))
-        ));
+        bindings.add(new ActionKeyBinding(actionToggleCollisionStrategy(), alt(KeyCode.S)));
         bindings.addAll(simulationActions.bindings());
         bindings.addAll(gameFlowActions.bindings());
         bindings.addAll(uiSettingsActions.bindings());
