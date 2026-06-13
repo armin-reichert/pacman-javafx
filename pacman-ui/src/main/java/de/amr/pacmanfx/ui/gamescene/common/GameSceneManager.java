@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.common;
 
+import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -93,7 +94,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
      * @param sceneID scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean hasGameSceneID(Game game, GameScene gameScene, GameSceneConfig.SceneID sceneID) {
+    public boolean hasGameSceneID(Game game, GameScene gameScene, Identifier sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         final UIConfig currentConfig = game.currentUIConfig();
@@ -106,7 +107,7 @@ public class GameSceneManager implements ChangeListener<GameScene> {
      * @param sceneID scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean currentGameSceneHasID(Game game, GameSceneConfig.SceneID sceneID) {
+    public boolean currentGameSceneHasID(Game game, Identifier sceneID) {
         final GameScene current = gameSceneProperty().get();
         return current != null && hasGameSceneID(game, current, sceneID);
     }

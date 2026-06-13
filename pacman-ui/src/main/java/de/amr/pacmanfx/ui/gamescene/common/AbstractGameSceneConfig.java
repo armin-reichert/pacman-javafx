@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.common;
 
+import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -18,14 +19,7 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
-    /**
-     * Returns the {@link SceneID} for the numbered cutscene.
-     *
-     * @param n cutscene number (1–4)
-     * @return the corresponding {@link CommonSceneID}
-     * @throws IllegalArgumentException if the number is outside the valid range
-     */
-    public static SceneID cutSceneID(int n) {
+    public static Identifier cutSceneID(int n) {
         return switch (n) {
             case 1 -> CommonSceneID.CUTSCENE_1;
             case 2 -> CommonSceneID.CUTSCENE_2;
@@ -36,7 +30,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     protected Game game;
-    protected final Map<SceneID, GameScene> scenesByID = new HashMap<>();
+    protected final Map<Identifier, GameScene> scenesByID = new HashMap<>();
 
     @Override
     public void dispose() {
@@ -46,7 +40,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public SceneID resolveCutSceneID(GameContext gameContext) {
+    public Identifier resolveCutSceneID(GameContext gameContext) {
         final Optional<GameLevel> optGameLevel = gameContext.model().optGameLevel();
         if (optGameLevel.isEmpty()) {
             throw new IllegalStateException("Cannot determine cut scene, no game level available");
@@ -67,19 +61,19 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     @Override
     public final Optional<GameScene> selectGameScene(Game game, GameModel gameModel) {
         requireNonNull(game);
-        final SceneID sceneID = determineSceneID(game.currentGameContext());
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, this::createGameScene);
+        final Identifier Identifier = determineSceneID(game.currentGameContext());
+        final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, this::createGameScene);
         return Optional.of(gameScene);
     }
 
     @Override
-    public final boolean gameSceneHasID(GameScene gameScene, SceneID sceneID) {
+    public final boolean gameSceneHasID(GameScene gameScene, Identifier Identifier) {
         requireNonNull(gameScene);
-        requireNonNull(sceneID);
-        return scenesByID.get(sceneID) == gameScene;
+        requireNonNull(Identifier);
+        return scenesByID.get(Identifier) == gameScene;
     }
 
-    protected abstract GameScene createGameScene(SceneID sceneID);
+    protected abstract GameScene createGameScene(Identifier Identifier);
 
-    protected abstract SceneID determineSceneID(GameContext gameContext);
+    protected abstract Identifier determineSceneID(GameContext gameContext);
 }
