@@ -36,6 +36,7 @@ public final class CommonActions {
     private final Game game;
 
     private final SimulationActions simulationActions;
+    private final GameFlowActions gameFlowActions;
     private final SteeringActions steeringActions;
     private final Camera3DActions camera3DActions;
     private final EditorActions editorActions;
@@ -49,6 +50,7 @@ public final class CommonActions {
         this.game = Objects.requireNonNull(game);
 
         simulationActions = new SimulationActions(game);
+        gameFlowActions = new GameFlowActions(game);
         steeringActions = new SteeringActions(game);
         camera3DActions = new Camera3DActions(game);
         editorActions = new EditorActions(game);
@@ -61,6 +63,10 @@ public final class CommonActions {
 
     public SimulationActions simulationActions() {
         return simulationActions;
+    }
+
+    public GameFlowActions gameFlowActions() {
+        return gameFlowActions;
     }
 
     public SteeringActions steeringActions() {
@@ -89,22 +95,6 @@ public final class CommonActions {
 
     public Set<ActionKeyBinding> commonBindings() {
         return commonBindings;
-    }
-
-    // Other actions
-
-    private GameAction actionStartGame;
-    
-    public GameAction actionStartGame() {
-        if (actionStartGame == null) {
-            actionStartGame = new GameAction(game, "start_game") {
-                @Override
-                protected void doAction() {
-                    game.start();
-                }
-            };
-        }
-        return actionStartGame;
     }
 
     private GameAction actionQuit;
@@ -229,7 +219,6 @@ public final class CommonActions {
 
         bindings.addAll(Set.of(
             new ActionKeyBinding(actionQuit(),                    bare(KeyCode.Q)),
-            new ActionKeyBinding(actionStartGame(),               bare(KeyCode.F3)),
             new ActionKeyBinding(actionToggleCollisionStrategy(), alt(KeyCode.S)),
             new ActionKeyBinding(actionTogglePlayScene2D3D(),     alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
         ));
