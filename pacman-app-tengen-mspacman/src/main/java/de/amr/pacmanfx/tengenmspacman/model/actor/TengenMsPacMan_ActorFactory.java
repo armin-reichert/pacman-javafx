@@ -11,18 +11,22 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import org.tinylog.Logger;
 
-public interface TengenMsPacMan_ActorFactory {
+public final class TengenMsPacMan_ActorFactory {
 
-    static Pac createPacMan() {
+    private TengenMsPacMan_ActorFactory() {}
+
+    public static Pac createPacMan() {
         final var pacMan = new Pac("Pac-Man");
         pacMan.reset();
         return pacMan;
     }
 
-    static Pac createMsPacMan() {
+    public static Pac createMsPacMan() {
         final var msPacMan = new Pac("Ms. Pac-Man");
         msPacMan.reset();
         return msPacMan;
@@ -36,7 +40,7 @@ public interface TengenMsPacMan_ActorFactory {
      * I use the same behavior here, however I do not know what the real Tengen implementation does.
      * </p>
      */
-    static Ghost createGhost(byte personality) {
+    public static Ghost createGhost(byte personality) {
         return switch (personality) {
             case GameModel.RED_GHOST_SHADOW   -> modifyShadowBehavior(GhostFactory.createRedGhostShadow("Blinky"));
             case GameModel.PINK_GHOST_SPEEDY  -> modifyAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky"));
@@ -45,6 +49,19 @@ public interface TengenMsPacMan_ActorFactory {
             default -> throw new IllegalArgumentException();
         };
     }
+
+    public static Ghost createGhost(byte personality, House house, TerrainLayer terrain, String startTileProperty) {
+        final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
+        ghost.setHome(house);
+        if (ghost.personality() == GameModel.RED_GHOST_SHADOW) {
+            ghost.setStartPosition(WorldMap.halfTileRightOf(terrain.getTileProperty(startTileProperty)));
+        } else {
+            // The ghosts starting inside the house sit at the *bottom*!
+            ghost.setStartPosition(WorldMap.halfTileRightOf(terrain.getTileProperty(startTileProperty)).plus(0, WorldMap.HTS));
+        }
+        return ghost;
+    }
+
 
     private static Ghost modifyShadowBehavior(Ghost ghost) {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {

@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -80,7 +80,7 @@ class ChaseAnimation {
         actorRenderer = uiConfig.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
 
-        pac = ArcadePacMan_GameModel.createPacMan();
+        pac = ArcadePacMan_ActorFactory.createPacMan();
         pac.setAnimations(uiConfig.createPacAnimations(spriteAnimationContainer));
         pac.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
         pac.animations().playSelected();

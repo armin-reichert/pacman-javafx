@@ -43,7 +43,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public static final String GAME_OVER_MESSAGE_TEXT = "GAME OVER";
     public static final String READY_MESSAGE_TEXT = "READY!";
-    public static final String LEVEL_TEST_MESSAGE_TEXT_PATTERN = "TEST    L%02d";
 
     public static final Vector2i HOUSE_MIN_TILE = WorldMap.tile(10, 15);
 
@@ -242,16 +241,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    protected void setGhostStartPosition(Ghost ghost, Vector2i tile) {
-        if (ghost.personality() == RED_GHOST_SHADOW) {
-            ghost.setStartPosition(WorldMap.halfTileRightOf(tile));
-        } else {
-            // The ghosts starting inside the house sit at the *bottom*!
-            ghost.setStartPosition(WorldMap.halfTileRightOf(tile).plus(0, WorldMap.HTS));
-        }
-    }
-
-    @Override
     public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber, mapCategory);
         final TerrainLayer terrain = worldMap.terrainLayer();
@@ -393,18 +382,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private void setGhosts(GameLevel level, House house) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         level.setGhosts(
-            createGhost(RED_GHOST_SHADOW,   house, terrain, POS_GHOST_1_RED),
-            createGhost(PINK_GHOST_SPEEDY,  house, terrain, POS_GHOST_2_PINK),
-            createGhost(CYAN_GHOST_BASHFUL, house, terrain, POS_GHOST_3_CYAN),
-            createGhost(ORANGE_GHOST_POKEY, house, terrain, POS_GHOST_4_ORANGE)
+            TengenMsPacMan_ActorFactory.createGhost(RED_GHOST_SHADOW,   house, terrain, POS_GHOST_1_RED),
+            TengenMsPacMan_ActorFactory.createGhost(PINK_GHOST_SPEEDY,  house, terrain, POS_GHOST_2_PINK),
+            TengenMsPacMan_ActorFactory.createGhost(CYAN_GHOST_BASHFUL, house, terrain, POS_GHOST_3_CYAN),
+            TengenMsPacMan_ActorFactory.createGhost(ORANGE_GHOST_POKEY, house, terrain, POS_GHOST_4_ORANGE)
         );
-    }
-
-    private Ghost createGhost(byte personality, House house, TerrainLayer terrain, String startTileProperty) {
-        final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
-        ghost.setHome(house);
-        setGhostStartPosition(ghost, terrain.getTileProperty(startTileProperty));
-        return ghost;
     }
 
     private HuntingTimer createHuntingTimer(GameRules gameRules) {

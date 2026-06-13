@@ -10,9 +10,9 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
@@ -117,7 +117,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         blinking = new Pulse(10, Pulse.State.ON);
 
-        pacMan = ArcadePacMan_GameModel.createPacMan();
+        pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
 
         ghosts[0] = uiConfig.createAnimatedGhost(spriteAnimations, GameModel.RED_GHOST_SHADOW);

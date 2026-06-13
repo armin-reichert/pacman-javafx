@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
@@ -171,7 +171,7 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     public Ghost createAnimatedGhost(SpriteAnimationContainer animationSet, byte personality) {
-        final Ghost ghost = ArcadeMsPacMan_GameModel.createGhost(personality);
+        final Ghost ghost = ArcadeMsPacMan_ActorFactory.createGhost(personality);
         ghost.setAnimations(createGhostAnimations(animationSet, personality));
         ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;

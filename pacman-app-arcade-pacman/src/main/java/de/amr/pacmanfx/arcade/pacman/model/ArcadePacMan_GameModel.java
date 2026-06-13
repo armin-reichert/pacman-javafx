@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.model.GameRules;
@@ -39,12 +40,6 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
 public class ArcadePacMan_GameModel extends Arcade_GameModel {
-
-    public static Pac createPacMan() {
-        final var pacMan = new Pac("Pac-Man");
-        pacMan.reset();
-        return pacMan;
-    }
 
     protected static final List<Vector2i> DEMO_LEVEL_ROUTE = List.of(
         WorldMap.tile( 9,26), WorldMap.tile( 9,29), WorldMap.tile(12,29), WorldMap.tile(12,32), WorldMap.tile(26,32),
@@ -135,7 +130,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     // helpers
 
     protected void createAndSetPacMan(GameLevel level) {
-        final Pac pacMan = createPacMan();
+        final Pac pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAutomaticSteering(automaticSteering);
         level.setPac(pacMan);
     }
@@ -149,27 +144,13 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
             .collect(Collectors.toUnmodifiableSet());
 
         level.setGhosts(
-            createGhost(RED_GHOST_SHADOW,   terrain, house, POS_GHOST_1_RED,    oneWayDownTiles),
-            createGhost(PINK_GHOST_SPEEDY,  terrain, house, POS_GHOST_2_PINK,   oneWayDownTiles),
-            createGhost(CYAN_GHOST_BASHFUL, terrain, house, POS_GHOST_3_CYAN,   oneWayDownTiles),
-            createGhost(ORANGE_GHOST_POKEY, terrain, house, POS_GHOST_4_ORANGE, oneWayDownTiles)
+            ArcadePacMan_ActorFactory.createGhost(RED_GHOST_SHADOW,   terrain, house, POS_GHOST_1_RED,    oneWayDownTiles),
+            ArcadePacMan_ActorFactory.createGhost(PINK_GHOST_SPEEDY,  terrain, house, POS_GHOST_2_PINK,   oneWayDownTiles),
+            ArcadePacMan_ActorFactory.createGhost(CYAN_GHOST_BASHFUL, terrain, house, POS_GHOST_3_CYAN,   oneWayDownTiles),
+            ArcadePacMan_ActorFactory.createGhost(ORANGE_GHOST_POKEY, terrain, house, POS_GHOST_4_ORANGE, oneWayDownTiles)
         );
     }
 
-    protected Ghost createGhost(byte personality, TerrainLayer terrain, House house, String startTileProperty,
-                                Set<Vector2i> specialTiles) {
-        final Ghost ghost = switch (personality) {
-            case RED_GHOST_SHADOW   -> GhostFactory.createRedGhostShadow("Blinky");
-            case PINK_GHOST_SPEEDY  -> GhostFactory.createPinkGhostAmbusher("Pinky");
-            case CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
-            case ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
-            default -> throw new IllegalArgumentException("Unknown personality: " + personality);
-        };
-        ghost.setHome(house);
-        ghost.setSpecialTerrainTiles(specialTiles);
-        setGhostStartPosition(ghost, terrain.getTileProperty(startTileProperty));
-        return ghost;
-    }
 
     protected void createGateKeeper() {
         gateKeeper = new GateKeeper();

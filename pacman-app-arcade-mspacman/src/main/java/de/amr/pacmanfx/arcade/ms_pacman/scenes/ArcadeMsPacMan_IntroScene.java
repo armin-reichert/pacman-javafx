@@ -9,7 +9,7 @@ import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
@@ -93,7 +93,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         marquee.setBulbOnColor(ARCADE_WHITE);
         marquee.timer().restartIndefinitely();
 
-        msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
+        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setPosition(WorldMap.TS * 31, WorldMap.TS * 20);
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setSpeed(ACTOR_SPEED);

@@ -34,7 +34,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.model.world.WorldMap.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -415,18 +414,6 @@ public abstract class AbstractGameModel implements GameModel {
             if (highScore != null) {
                 highScore.setEnabled(false);
             }
-        }
-    }
-
-    /* -------------------------------------------------------------------------
-     * Utility methods
-     * ---------------------------------------------------------------------- */
-
-    protected void setGhostStartPosition(Ghost ghost, Vector2i tile) {
-        if (tile != null) {
-            ghost.setStartPosition(halfTileRightOf(tile));
-        } else {
-            Logger.error("{} start tile not specified", ghost.name());
         }
     }
 

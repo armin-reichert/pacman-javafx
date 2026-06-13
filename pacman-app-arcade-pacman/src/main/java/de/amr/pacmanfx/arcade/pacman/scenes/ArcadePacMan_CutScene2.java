@@ -8,6 +8,7 @@ import de.amr.basics.Identifier;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
@@ -19,7 +20,6 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
-import static de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.model.GameModel.RED_GHOST_SHADOW;
 
 /**
@@ -72,7 +72,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         final SpriteAnimationContainer spriteAnimationContainer = game().ui().sprites().animations();
         final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
 
-        pacMan = createPacMan();
+        pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationContainer));
 
         blinky = uiConfig.createAnimatedGhost(spriteAnimationContainer, RED_GHOST_SHADOW);

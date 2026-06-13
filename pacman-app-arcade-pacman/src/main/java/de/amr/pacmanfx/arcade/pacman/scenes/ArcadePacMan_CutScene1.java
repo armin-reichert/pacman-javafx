@@ -5,13 +5,13 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimations;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.pacmanfx.model.GameModel.RED_GHOST_SHADOW;
@@ -36,7 +36,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     @Override
     public void onActivate() {
         final SpriteAnimationContainer spriteAnimationContainer = game().ui().sprites().animations();
-        pacMan = ArcadePacMan_GameModel.createPacMan();
+        pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAnimations(game().currentUIConfig().createPacAnimations(spriteAnimationContainer));
         blinky = game().currentUIConfig().createAnimatedGhost(spriteAnimationContainer, RED_GHOST_SHADOW);
         sceneTick = -1;

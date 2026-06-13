@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -57,9 +57,9 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private void initScene() {
         final UIConfig uiConfig = game().currentUIConfig();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
-        pacMan = ArcadePacMan_GameModel.createPacMan();
+        pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
-        msPacMan = ArcadeMsPacMan_GameModel.createMsPacMan();
+        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.setPosition(TS(3), TS(10));
