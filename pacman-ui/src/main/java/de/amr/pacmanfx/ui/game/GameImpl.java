@@ -329,11 +329,6 @@ public final class GameImpl implements Game {
 
         ui.sounds().muteProperty().bind(ui().settings().mutedProperty);
 
-        view.statusIconBox().rootPane().visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> ui.subViews().isSelected(ui.subViews().gamePlayView())
-                || ui.subViews().isSelected(ui.subViews().startView()),
-            ui.subViews().selectedSubViewProperty()));
-
         view.mainScene().rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> ui.gameScenes().currentGameSceneHasID(this, CommonSceneID.PLAY_SCENE_3D)
                 ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]

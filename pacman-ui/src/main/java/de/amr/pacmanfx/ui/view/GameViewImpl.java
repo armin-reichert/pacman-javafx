@@ -4,12 +4,15 @@
 
 package de.amr.pacmanfx.ui.view;
 
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.GameScene;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.subviews.SubView;
+import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -46,10 +49,18 @@ public class GameViewImpl implements GameView {
     public void connect(Game game) {
         this.game = requireNonNull(game);
 
-        statusIconBox = new StatusIconBox(game);
+        final GameUI ui = game.ui();
+        final SubViewManager subViews = ui.subViews();
 
-        final KeyboardInfo keyboardInfo = new KeyboardInfo(
-            game.ui(), game.input().keyboard());
+        statusIconBox = new StatusIconBox(game);
+        statusIconBox.rootPane().visibleProperty().bind(
+            Bindings.createBooleanBinding(
+                () -> subViews.isSelected(subViews.gamePlayView()) || subViews.isSelected(subViews.startView()),
+                subViews.selectedSubViewProperty()
+            )
+        );
+
+        final KeyboardInfo keyboardInfo = new KeyboardInfo(game.ui(), game.input().keyboard());
 
         mainScene.rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)
