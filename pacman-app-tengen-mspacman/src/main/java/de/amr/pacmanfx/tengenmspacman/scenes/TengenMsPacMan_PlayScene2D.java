@@ -198,7 +198,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "immunity");
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, game().ui().settings().mutedProperty, "muted");
-        addLocalizedActionItem(contextMenu, translations, game().actions().actionQuit(), "quit");
+        addLocalizedActionItem(contextMenu, translations, game().actions().gameFlowActions().actionQuit(), "quit");
 
         return Optional.of(contextMenu);
     }

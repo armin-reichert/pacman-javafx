@@ -75,7 +75,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
 
         addSeparator(this);
         addLocalizedCheckBox(this, translator, game.ui().settings().mutedProperty, "muted");
-        addLocalizedActionItem(this, translator, game.actions().actionQuit(), "quit");
+        addLocalizedActionItem(this, translator, game.actions().gameFlowActions().actionQuit(), "quit");
 
         settings3D.cameraPerspectiveIdProperty().addListener(perspectiveListener);
     }

@@ -14,7 +14,6 @@ import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import javafx.scene.input.KeyCode;
-import org.tinylog.Logger;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -22,7 +21,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
-import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
 
 /**
@@ -95,21 +93,6 @@ public final class CommonActions {
 
     public Set<ActionKeyBinding> commonBindings() {
         return commonBindings;
-    }
-
-    private GameAction actionQuit;
-
-    public GameAction actionQuit() {
-        if (actionQuit == null) {
-            actionQuit = new GameAction(game, "quit") {
-                @Override
-                protected void doAction() {
-                    Logger.info("Call QUIT handler for {}", game.ui().subViews().currentView());
-                    game.ui().subViews().currentView().handleQuit(game);
-                }
-            };
-        }
-        return actionQuit;
     }
 
     private GameAction actionLetGameStateExpire;
@@ -218,14 +201,14 @@ public final class CommonActions {
         final Set<ActionKeyBinding> bindings = new HashSet<>();
 
         bindings.addAll(Set.of(
-            new ActionKeyBinding(actionQuit(),                    bare(KeyCode.Q)),
             new ActionKeyBinding(actionToggleCollisionStrategy(), alt(KeyCode.S)),
             new ActionKeyBinding(actionTogglePlayScene2D3D(),     alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
         ));
-
+        bindings.addAll(simulationActions.bindings());
+        bindings.addAll(gameFlowActions.bindings());
+        bindings.addAll(uiSettingsActions.bindings());
         bindings.addAll(editorActions.bindings());
         bindings.addAll(uiSettingsActions.bindings());
-        bindings.addAll(simulationActions().bindings());
 
         return Collections.unmodifiableSet(bindings);
     }
