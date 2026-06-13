@@ -59,7 +59,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     @Override
     public Optional<ContextMenu> supplyContextMenu() {
         final TranslationManager translations = game().ui().translations();
-        final CheatActions cheatActions = game().cheatActions();
+        final CheatActions cheatActions = game().actions().cheatActions();
 
         final var contextMenu = new ContextMenu();
         addLocalizedTitleItem(contextMenu, translations, "pacman");
@@ -126,7 +126,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void acceptNormalLevel(GameLevel level) {
         actionBindings().registerAllBindings(game().actions().steeringActions().bindings());
-        actionBindings().registerAllBindings(game().actions().cheatActionBindings());
+        actionBindings().registerAllBindings(game().actions().cheatActions().bindings());
 
         Logger.info(actionBindings());
 

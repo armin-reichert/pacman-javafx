@@ -67,8 +67,6 @@ public final class GameImpl implements Game {
 
     private final CommonActions commonActions;
 
-    private final CheatActions cheatActions;
-
     private final GameUI ui;
 
     private final GameViewImpl view;
@@ -85,7 +83,6 @@ public final class GameImpl implements Game {
 
         this.ui = createUI();
 
-        this.cheatActions = new CheatActions(this);
         this.commonActions = new CommonActions(this);
 
         this.prefs = new PreferencesManager(getClass());
@@ -195,11 +192,6 @@ public final class GameImpl implements Game {
     @Override
     public CommonActions actions() {
         return commonActions;
-    }
-
-    @Override
-    public CheatActions cheatActions() {
-        return cheatActions;
     }
 
     @Override

@@ -24,15 +24,11 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.DrawMode;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
-import static de.amr.pacmanfx.model.GameRules.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
 
@@ -46,26 +42,36 @@ public final class CommonActions {
 
     private final Game game;
 
+    private final SimulationActions simulationActions;
     private final SteeringActions steeringActions;
+    private final CheatActions cheatActions;
     private final TestActions sceneTestActions;
 
     private final Set<ActionKeyBinding> commonBindings;
-    private final Set<ActionKeyBinding> cheatActionBindings;
     private final Set<ActionKeyBinding> sceneTestsBindings;
 
     public CommonActions(Game game) {
         this.game = Objects.requireNonNull(game);
 
+        simulationActions = new SimulationActions(game);
         steeringActions = new SteeringActions(game);
+        cheatActions = new CheatActions(game);
         sceneTestActions = new TestActions(game);
 
-        commonBindings = createCommonBindings();
-        cheatActionBindings = createCheatActionBindings();
+        commonBindings = createBindings();
         sceneTestsBindings = createSceneTestsBindings();
+    }
+
+    public SimulationActions simulationActions() {
+        return simulationActions;
     }
 
     public SteeringActions steeringActions() {
         return steeringActions;
+    }
+
+    public CheatActions cheatActions() {
+        return cheatActions;
     }
 
     public TestActions sceneTestActions() {
@@ -76,10 +82,6 @@ public final class CommonActions {
 
     public Set<ActionKeyBinding> commonBindings() {
         return commonBindings;
-    }
-
-    public Set<ActionKeyBinding> cheatActionBindings() {
-        return cheatActionBindings;
     }
 
     public Set<ActionKeyBinding> sceneTestsBindings() {
@@ -301,132 +303,6 @@ public final class CommonActions {
         return actionShowHelp;
     }
 
-    private GameAction actionSimulationFaster;
-
-    public GameAction actionSimulationFaster() {
-        if (actionSimulationFaster == null) {
-            actionSimulationFaster = new GameAction(game, "simulation_faster") {
-                @Override
-                protected void doAction() {
-                    final GameClock clock = game.clock();
-                    final int newRate = Math.clamp(clock.targetFrameRate() + GameConstants.SIM_SPEED_DELTA,
-                        GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
-                    clock.setTargetFrameRate(newRate);
-
-                    final String msg = newRate == GameConstants.SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
-                    game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
-                }
-            };
-        }
-        return actionSimulationFaster;
-    }
-
-    private GameAction actionSimulationFastest;
-
-    public GameAction actionSimulationFastest() {
-        if (actionSimulationFastest == null) {
-            actionSimulationFastest = new GameAction(game, "simulation_fastest") {
-                @Override
-                protected void doAction() {
-                    game.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
-                    final String msg = "At maximum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MAX);
-                    game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
-                }
-            };
-        }
-        return actionSimulationFastest;
-    }
-
-    private GameAction actionSimulationSlower;
-
-    public GameAction actionSimulationSlower() {
-        if (actionSimulationSlower == null) {
-            actionSimulationSlower = new GameAction(game, "simulation_slower") {
-                @Override
-                protected void doAction() {
-                    final GameClock clock = game.clock();
-                    final int newRate = Math.clamp(clock.targetFrameRate() - GameConstants.SIM_SPEED_DELTA,
-                        GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
-                    clock.setTargetFrameRate(newRate);
-
-                    final String msg = newRate == GameConstants.SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
-                    game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
-                }
-            };
-        }
-        return actionSimulationSlower;
-    }
-
-    private GameAction actionSimulationSlowest;
-
-    public GameAction actionSimulationSlowest() {
-        if (actionSimulationSlowest == null) {
-            actionSimulationSlowest = new GameAction(game, "simulation_slowest") {
-                @Override
-                protected void doAction() {
-                    game.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
-                    final String msg = "At minimum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MIN);
-                    game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
-                }
-            };
-        }
-        return actionSimulationSlowest;
-    }
-
-    private GameAction actionSimulationOneStep;
-
-    public GameAction actionSimulationOneStep() {
-        if (actionSimulationOneStep == null) {
-            actionSimulationOneStep = new GameAction(game, "simulation_one_step") {
-                @Override
-                protected void doAction() {
-                    final boolean failure = !game.clock().makeOneStep(true);
-                    if (failure) {
-                        game.shortMessage("Simulation step error!");
-                    }
-                }
-
-                @Override
-                public boolean isEnabled() { return game.clock().getUpdatesDisabled(); }
-            };
-        }
-        return actionSimulationOneStep;
-    }
-
-    private GameAction actionSimulationTenSteps;
-
-    public GameAction actionSimulationTenSteps() {
-        if (actionSimulationTenSteps == null) {
-            actionSimulationTenSteps = new GameAction(game, "simulation_ten_steps") {
-                @Override
-                protected void doAction() {
-                    final boolean failure = !game.clock().makeSteps(10, true);
-                    if (failure) {
-                        game.shortMessage("Simulation steps error!");
-                    }
-                }
-
-                @Override
-                public boolean isEnabled() { return game.clock().getUpdatesDisabled(); }
-            };
-        }
-        return actionSimulationTenSteps;
-    }
-
-    private GameAction actionSimulationReset;
-
-    public GameAction actionSimulationReset() {
-        if (actionSimulationReset == null) {
-            actionSimulationReset = new GameAction(game, "simulation_reset") {
-                @Override
-                protected void doAction() {
-                    game.clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-                    game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), game.clock().targetFrameRate() + "Hz");
-                }
-            };
-        }
-        return actionSimulationReset;
-    }
 
     private GameAction actionToggleCollisionStrategy;
 
@@ -615,19 +491,14 @@ public final class CommonActions {
 
     // Binding sets
 
-    private Set<ActionKeyBinding> createCommonBindings() {
-        return Set.of(
+    private Set<ActionKeyBinding> createBindings() {
+        final Set<ActionKeyBinding> bindings = new HashSet<>();
+
+        bindings.addAll(Set.of(
             new ActionKeyBinding(actionEnterFullScreen(),          bare(KeyCode.F11)),
             new ActionKeyBinding(actionOpenEditor(),               alt_shift(KeyCode.E)),
             new ActionKeyBinding(actionQuit(),                     bare(KeyCode.Q)),
             new ActionKeyBinding(actionShowHelp(),                 bare(KeyCode.H)),
-            new ActionKeyBinding(actionSimulationSlower(),         alt(KeyCode.MINUS)),
-            new ActionKeyBinding(actionSimulationSlowest(),        alt_shift(KeyCode.MINUS)),
-            new ActionKeyBinding(actionSimulationFaster(),         alt(KeyCode.PLUS)),
-            new ActionKeyBinding(actionSimulationFastest(),        alt_shift(KeyCode.PLUS)),
-            new ActionKeyBinding(actionSimulationReset(),          alt(KeyCode.DIGIT0)),
-            new ActionKeyBinding(actionSimulationOneStep(),        shift(KeyCode.P), shift(KeyCode.F5)),
-            new ActionKeyBinding(actionSimulationTenSteps(),       shift(KeyCode.SPACE)),
             new ActionKeyBinding(actionStartGame(),                bare(KeyCode.F3)),
             new ActionKeyBinding(actionToggleCollisionStrategy(),  alt(KeyCode.S)),
             new ActionKeyBinding(actionToggleDashboard(),          bare(KeyCode.F1), alt(KeyCode.B)),
@@ -636,21 +507,12 @@ public final class CommonActions {
             new ActionKeyBinding(actionToggleMiniViewVisibility(), bare(KeyCode.F2)),
             new ActionKeyBinding(actionToggleMuted(),              alt(KeyCode.M)),
             new ActionKeyBinding(actionTogglePaused(),             bare(KeyCode.P), bare(KeyCode.F5)),
-            new ActionKeyBinding(actionTogglePlayScene2D3D(),      alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3)),
+            new ActionKeyBinding(actionTogglePlayScene2D3D(),      alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
+        ));
 
-            // Cheats
-            new ActionKeyBinding(game.cheatActions().actionToggleAutopilot(), alt(KeyCode.A)),
-            new ActionKeyBinding(game.cheatActions().actionToggleImmunity(),  alt(KeyCode.I))
-        );
-    }
+        bindings.addAll(simulationActions().bindings());
 
-    private Set<ActionKeyBinding> createCheatActionBindings() {
-        return Set.of(
-            new ActionKeyBinding(game.cheatActions().actionEatAllPellets(),  alt(KeyCode.E)),
-            new ActionKeyBinding(game.cheatActions().actionAddLives(),       alt(KeyCode.L)),
-            new ActionKeyBinding(game.cheatActions().actionEnterNextLevel(), alt(KeyCode.N)),
-            new ActionKeyBinding(game.cheatActions().actionKillGhosts(),     alt(KeyCode.X))
-        );
+        return Collections.unmodifiableSet(bindings);
     }
 
     private Set<ActionKeyBinding> createSceneTestsBindings() {

@@ -41,8 +41,6 @@ public interface Game extends GameLifecycle {
 
     CommonActions actions();
 
-    CheatActions cheatActions();
-
     GameVariant gameVariant(String variantName);
 
     GameContext currentGameContext();

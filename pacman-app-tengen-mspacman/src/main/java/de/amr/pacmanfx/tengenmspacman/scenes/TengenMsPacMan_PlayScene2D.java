@@ -237,7 +237,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
         actionBindings().registerAllBindings(actions.steeringBindings());
-        actionBindings().registerAllBindings(game().actions().cheatActionBindings());
+        actionBindings().registerAllBindings(game().actions().cheatActions().bindings());
         actionBindings().selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
         actionBindings().selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
     }
