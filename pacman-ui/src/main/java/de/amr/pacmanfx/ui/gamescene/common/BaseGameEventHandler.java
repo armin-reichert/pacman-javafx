@@ -19,7 +19,7 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Default event handler used by scenes unless replaced. Handles generic UI updates and global sound stop events.
+ * Default event handler used by scenes unless replaced.
  */
 public class BaseGameEventHandler extends DefaultGameEventListener {
 
