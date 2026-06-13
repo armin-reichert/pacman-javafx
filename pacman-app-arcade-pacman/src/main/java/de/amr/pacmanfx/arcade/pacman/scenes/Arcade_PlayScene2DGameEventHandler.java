@@ -9,8 +9,8 @@ import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
+import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.gamescene.common.BaseGameSceneHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import static java.util.Objects.requireNonNull;

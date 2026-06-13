@@ -19,7 +19,7 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.config.UIConfig;
-import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.game.Game;
 
 import java.util.Arrays;

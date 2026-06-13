@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.gamescene.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import javafx.scene.input.KeyCombination;
 
 import java.util.Comparator;

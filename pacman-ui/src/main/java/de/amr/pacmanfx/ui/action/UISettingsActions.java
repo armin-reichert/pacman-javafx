@@ -8,8 +8,8 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
-import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
+import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import javafx.scene.input.KeyCode;
 

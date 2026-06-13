@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.pacmanfx.ui.gamescene.GameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 
 /**
  * Defines additional Tengen-specific scene IDs

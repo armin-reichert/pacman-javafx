@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.gamescene.BaseGameSceneHandler;
+import de.amr.pacmanfx.ui.gamescene.common.BaseGameSceneHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import static java.util.Objects.requireNonNull;

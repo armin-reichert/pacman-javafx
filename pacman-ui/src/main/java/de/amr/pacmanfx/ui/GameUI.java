@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
-import de.amr.pacmanfx.ui.d3.UISettings3D;
+import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
+import de.amr.pacmanfx.ui.gamescene.d3.UISettings3D;
 import de.amr.pacmanfx.ui.game.UISettings;
-import de.amr.pacmanfx.ui.gamescene.GameSceneManager;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.view.FlashMessageManager;

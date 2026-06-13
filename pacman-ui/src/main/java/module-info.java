@@ -15,19 +15,18 @@ open module de.amr.pacmanfx.ui {
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.mapeditor;
-    requires java.desktop;
 
     exports de.amr.pacmanfx.ui;
     exports de.amr.pacmanfx.ui.action;
     exports de.amr.pacmanfx.ui.game;
     exports de.amr.pacmanfx.ui.config;
     exports de.amr.pacmanfx.ui.subviews.dashboard;
-    exports de.amr.pacmanfx.ui.d2;
-    exports de.amr.pacmanfx.ui.d3;
-    exports de.amr.pacmanfx.ui.d3.animation;
-    exports de.amr.pacmanfx.ui.d3.animation.energizer;
-    exports de.amr.pacmanfx.ui.d3.camera;
-    exports de.amr.pacmanfx.ui.d3.entities;
+    exports de.amr.pacmanfx.ui.gamescene.d2;
+    exports de.amr.pacmanfx.ui.gamescene.d3;
+    exports de.amr.pacmanfx.ui.gamescene.d3.animation;
+    exports de.amr.pacmanfx.ui.gamescene.d3.animation.energizer;
+    exports de.amr.pacmanfx.ui.gamescene.d3.camera;
+    exports de.amr.pacmanfx.ui.gamescene.d3.entities;
     exports de.amr.pacmanfx.ui.input;
     exports de.amr.pacmanfx.ui.subviews;
     exports de.amr.pacmanfx.ui.sound;
@@ -36,5 +35,5 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.subviews.editor;
     exports de.amr.pacmanfx.ui.subviews.help;
     exports de.amr.pacmanfx.ui.view;
-    exports de.amr.pacmanfx.ui.gamescene;
+    exports de.amr.pacmanfx.ui.gamescene.common;
 }

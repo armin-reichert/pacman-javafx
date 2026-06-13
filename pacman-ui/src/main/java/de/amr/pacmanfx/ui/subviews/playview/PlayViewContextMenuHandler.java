@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.subviews.playview;
 
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
+import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;

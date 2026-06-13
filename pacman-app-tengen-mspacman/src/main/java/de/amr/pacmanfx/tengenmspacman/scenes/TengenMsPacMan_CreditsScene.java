@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;

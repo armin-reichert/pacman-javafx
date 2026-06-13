@@ -10,9 +10,9 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameStateID;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.AbstractGameSceneConfig;
-import de.amr.pacmanfx.ui.gamescene.CommonSceneID;
-import de.amr.pacmanfx.ui.gamescene.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 
 import static java.util.Objects.requireNonNull;
 

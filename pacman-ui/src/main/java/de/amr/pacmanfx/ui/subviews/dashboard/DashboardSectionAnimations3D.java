@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.d3.GameLevel3D;
-import de.amr.pacmanfx.ui.d3.PlayScene3D;
+import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
+import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
