@@ -5,14 +5,14 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
-import de.amr.pacmanfx.ui.game.GlobalActionBindings;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import javafx.beans.property.IntegerProperty;
@@ -22,9 +22,6 @@ import org.tinylog.Logger;
 
 import java.io.IOException;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings.SPECIFIC_BINDINGS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_START_PLAYING;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
@@ -61,13 +58,6 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
     };
 
-    private final GameAction actionSelectNextJoypadBinding = new GameAction("select_next_joypad_binding") {
-        @Override
-        public void doAction(Game game) {
-            game.input().joypad().selectNextBinding();
-        }
-    };
-
     private int idleTicks;
     public int initialDelay;
 
@@ -83,10 +73,13 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
         game.hud().hide();
 
-        actionBindings().selectAnyMatchingBinding(ACTION_START_PLAYING, SPECIFIC_BINDINGS);
-        actionBindings().selectAnyMatchingBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, SPECIFIC_BINDINGS);
-        actionBindings().bindActionToKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));
-        actionBindings().registerAllBindings(GlobalActionBindings.SCENE_TESTS_BINDINGS);
+        final TengenMsPacMan_Actions tengenActions = game().ui().extensions().getExtension(
+            TengenMsPacMan_UIConfig.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+
+        actionBindings().selectAnyMatchingBinding(tengenActions.ACTION_START_PLAYING, tengenActions.TENGEN_LOCAL_BINDINGS);
+        actionBindings().selectAnyMatchingBinding(tengenActions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenActions.TENGEN_LOCAL_BINDINGS);
+        actionBindings().bindActionToKeyCombination(tengenActions.ACTION_SELECT_NEXT_JOYPAD_KEYBINDING, alt(KeyCode.J));
+        actionBindings().registerAllBindings(game().commonActions().sceneTestsBindings);
 
         selectedOption.set(OPTION_PAC_BOOSTER);
         game.setCanStartNewGame(true);

@@ -17,11 +17,24 @@ import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public final class CheatActions {
 
-    public static final GameAction ACTION_ADD_LIVES = new GameAction("cheat_add_lives") {
+    abstract class AbstractCheatAction extends GameAction {
+        public AbstractCheatAction(String id) {
+            super(game, id);
+        }
+    }
+
+    private final Game game;
+    
+    public CheatActions(Game game) {
+        this.game = Objects.requireNonNull(game);
+    }
+    
+    public final GameAction ACTION_ADD_LIVES = new AbstractCheatAction("cheat_add_lives") {
 
         @Override
         public void doAction(Game game) {
@@ -37,7 +50,7 @@ public final class CheatActions {
         public boolean isEnabled(Game game) { return normalLevel(game).isPresent(); }
     };
 
-    public static final GameAction ACTION_EAT_ALL_PELLETS = new GameAction("cheat_eat_all_pellets") {
+    public final GameAction ACTION_EAT_ALL_PELLETS = new AbstractCheatAction("cheat_eat_all_pellets") {
 
         @Override
         public void doAction(Game game) {
@@ -58,7 +71,7 @@ public final class CheatActions {
         }
     };
 
-    public static final GameAction ACTION_KILL_GHOSTS = new GameAction("cheat_kill_ghosts") {
+    public final GameAction ACTION_KILL_GHOSTS = new AbstractCheatAction("cheat_kill_ghosts") {
 
         @Override
         public void doAction(Game game) {
@@ -86,7 +99,7 @@ public final class CheatActions {
         }
     };
 
-    public static final GameAction ACTION_ENTER_NEXT_LEVEL = new GameAction("cheat_enter_next_level") {
+    public final GameAction ACTION_ENTER_NEXT_LEVEL = new AbstractCheatAction("cheat_enter_next_level") {
 
         @Override
         public void doAction(Game game) {
@@ -109,7 +122,7 @@ public final class CheatActions {
         }
     };
 
-    public static final GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction("toggle_autopilot") {
+    public final GameAction ACTION_TOGGLE_AUTOPILOT = new AbstractCheatAction("toggle_autopilot") {
 
         @Override
         public void doAction(Game game) {
@@ -124,7 +137,7 @@ public final class CheatActions {
         }
     };
 
-    public static final GameAction ACTION_ACTIVATE_AUTOPILOT = new GameAction("activate_autopilot") {
+    public final GameAction ACTION_ACTIVATE_AUTOPILOT = new AbstractCheatAction("activate_autopilot") {
 
         @Override
         public void doAction(Game game) {
@@ -137,7 +150,7 @@ public final class CheatActions {
         }
     };
 
-    public static final GameAction ACTION_DEACTIVATE_AUTOPILOT = new GameAction("deactivate_autopilot") {
+    public final GameAction ACTION_DEACTIVATE_AUTOPILOT = new AbstractCheatAction("deactivate_autopilot") {
 
         @Override
         public void doAction(Game game) {
@@ -150,7 +163,7 @@ public final class CheatActions {
         }
     };
 
-    public static final GameAction ACTION_ACTIVATE_IMMUNITY = new GameAction("activate_immunity") {
+    public final GameAction ACTION_ACTIVATE_IMMUNITY = new AbstractCheatAction("activate_immunity") {
 
         @Override
         public void doAction(Game game) {
@@ -163,7 +176,7 @@ public final class CheatActions {
         }
     };
 
-    public static final GameAction ACTION_DEACTIVATE_IMMUNITY = new GameAction("deactivate_immunity") {
+    public final GameAction ACTION_DEACTIVATE_IMMUNITY = new AbstractCheatAction("deactivate_immunity") {
 
         @Override
         public void doAction(Game game) {
@@ -176,7 +189,7 @@ public final class CheatActions {
         }
     };
 
-    public static final GameAction ACTION_TOGGLE_IMMUNITY = new GameAction("toggle_immunity") {
+    public final GameAction ACTION_TOGGLE_IMMUNITY = new AbstractCheatAction("toggle_immunity") {
 
         @Override
         public void doAction(Game game) {
@@ -193,7 +206,7 @@ public final class CheatActions {
 
     // Helpers
 
-    private static void setAutopilot(Game game, boolean auto) {
+    private void setAutopilot(Game game, boolean auto) {
         final GameCheats cheats = game.currentGameContext().model().cheats();
 
         cheats.pacUsingAutopilotProperty().set(auto);
@@ -202,7 +215,7 @@ public final class CheatActions {
         game.ui().sounds().playVoice(auto ? GameUI_Constants.VOICE_AUTOPILOT_ON : GameUI_Constants.VOICE_AUTOPILOT_OFF);
     }
 
-    private static void setPacImmune(Game game, boolean immune) {
+    private void setPacImmune(Game game, boolean immune) {
         final GameCheats cheats = game.currentGameContext().model().cheats();
 
         cheats.pacImmuneProperty().set(immune);
@@ -211,7 +224,7 @@ public final class CheatActions {
         game.ui().sounds().playVoice(immune ? GameUI_Constants.VOICE_IMMUNITY_ON : GameUI_Constants.VOICE_IMMUNITY_OFF);
     }
 
-    private static Optional<GameLevel> normalLevel(Game game) {
+    private Optional<GameLevel> normalLevel(Game game) {
         return game.currentGameContext().optCurrentLevel().filter(level -> !level.isDemoLevel());
     }
 }

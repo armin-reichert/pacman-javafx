@@ -56,6 +56,7 @@ public class TengenMsPacMan_App extends Application {
         playView.dashboard().addSection(TengenMsPacMan_DashboardID.JOYPAD, new DashboardSectionJoypad(playView.dashboard()));
 
         game.ui().extensions().addExtension(TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, new TengenMsPacMan_UISettings());
+        game.ui().extensions().addExtension(TengenMsPacMan_UIConfig.EXT_ACTIONS, new TengenMsPacMan_Actions(game));
 
         game.show(TENGEN_MS_PACMAN, primaryStage);
     }

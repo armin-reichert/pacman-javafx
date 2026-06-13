@@ -3,7 +3,8 @@
  */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Actions;
+import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.game.Game;
 
@@ -18,7 +19,10 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void onActivate() {
-        actionBindings().registerAllBindings(ArcadePacMan_Actions.GAME_START_ACTION_BINDINGS);
+        final Arcade_Actions actions = game().ui().extensions()
+            .getExtension(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, Arcade_Actions.class);
+
+        actionBindings().registerAllBindings(actions.GAME_START_ACTION_BINDINGS);
     }
 
     @Override

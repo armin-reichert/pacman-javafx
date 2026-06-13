@@ -11,7 +11,20 @@ import javafx.util.Duration;
 
 public class TestActions {
 
-    public static final GameAction ACTION_CUT_SCENES_TEST = new GameAction("test_cut_scenes") {
+    abstract class AbstractGameAction extends GameAction {
+
+        protected AbstractGameAction(String key) {
+            super(game, key);
+        }
+    }
+
+    private final Game game;
+
+    public TestActions(Game game) {
+        this.game = game;
+    }
+
+    public final GameAction ACTION_CUT_SCENES_TEST = new AbstractGameAction("test_cut_scenes") {
         @Override
         public void doAction(Game game) {
             game.currentGameContext().flow().enterState(CutScenesTestState.class.getSimpleName());
@@ -24,7 +37,7 @@ public class TestActions {
         }
     };
 
-    public static final GameAction ACTION_SHORT_LEVEL_TEST = new GameAction("short_level_test") {
+    public final GameAction ACTION_SHORT_LEVEL_TEST = new AbstractGameAction("short_level_test") {
         @Override
         public void doAction(Game game) {
             game.currentGameContext().flow().restartState(LevelShortTestState.class.getSimpleName());
@@ -37,7 +50,7 @@ public class TestActions {
         }
     };
 
-    public static final GameAction ACTION_MEDIUM_LEVEL_TEST = new GameAction("medium_level_test") {
+    public final GameAction ACTION_MEDIUM_LEVEL_TEST = new AbstractGameAction("medium_level_test") {
         @Override
         public void doAction(Game game) {
             game.currentGameContext().flow().restartState(LevelMediumTestState.class.getSimpleName());

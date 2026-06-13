@@ -38,7 +38,6 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.action.CommonActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static java.util.Objects.requireNonNull;
 
@@ -249,6 +248,16 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
         return Optional.of(contextMenu);
     }
 
+    @Override
+    public void handleQuit(Game game) {
+        if (gameModel().isPlaying()) {
+            gameContext().optCurrentLevel().ifPresent(level -> gameModel().onGameOver(gameContext(), level));
+        }
+        gameModel().cheats().clear();
+        gameModel().lives().setCount(0);
+        onDeactivate();
+    }
+
     // Other stuff
 
     // Initial subscene size is irrelevant (will be bound to parent scene size)
@@ -271,9 +280,9 @@ public class PlayScene3D extends GameScene implements DisposableGraphicsObject {
 
     private void createBindings() {
         actionBindings = Set.of(
-            new ActionKeyBinding(ACTION_PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT)),
-            new ActionKeyBinding(ACTION_PERSPECTIVE_NEXT, alt(KeyCode.RIGHT)),
-            new ActionKeyBinding(ACTION_TOGGLE_DRAW_MODE, alt(KeyCode.W)));
+            new ActionKeyBinding(game().commonActions().ACTION_PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT)),
+            new ActionKeyBinding(game().commonActions().ACTION_PERSPECTIVE_NEXT, alt(KeyCode.RIGHT)),
+            new ActionKeyBinding(game().commonActions().ACTION_TOGGLE_DRAW_MODE, alt(KeyCode.W)));
     }
 
     /**

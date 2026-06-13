@@ -5,7 +5,6 @@ package de.amr.pacmanfx.ui.subviews.dashboard;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -68,7 +67,7 @@ public class DashboardSectionCustomMaps extends DashboardSection {
     public void connect(Game game) {
         requireNonNull(game);
         setCustomDirWatchDog(game.watchdog());
-        setMapEditFunction(mapFile -> CommonActions.createEditMapFileAction(mapFile).execute(game));
+        setMapEditFunction(mapFile -> game.commonActions().createEditMapFileAction(mapFile).execute(game));
     }
 
     public void setCustomDirWatchDog(DirectoryWatchdog watchdog) {

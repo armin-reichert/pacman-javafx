@@ -10,6 +10,8 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.action.CheatActions;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -36,6 +38,10 @@ public interface Game extends GameLifecycle {
     void selectGameVariant(String variantName);
 
     String currentGameVariantName();
+
+    CommonActions commonActions();
+
+    CheatActions cheatActions();
 
     GameVariant gameVariant(String variantName);
 

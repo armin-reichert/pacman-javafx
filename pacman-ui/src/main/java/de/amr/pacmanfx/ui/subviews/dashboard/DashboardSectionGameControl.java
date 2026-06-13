@@ -9,7 +9,6 @@ import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.ui.action.TestActions;
 import de.amr.pacmanfx.ui.game.Game;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -17,9 +16,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
 
 import java.util.List;
-
-import static de.amr.pacmanfx.ui.action.CheatActions.ACTION_ENTER_NEXT_LEVEL;
-import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_RESTART_INTRO;
 
 public class DashboardSectionGameControl extends DashboardSection {
 
@@ -52,12 +48,11 @@ public class DashboardSectionGameControl extends DashboardSection {
 
         setAction(choiceBoxInitialLives, () -> game.currentGameContext().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
 
-        //setAction(buttonGroupLevelActions[GAME_LEVEL_START], ArcadeActions.ACTION_START_GAME); //TODO FIXME!
-        setAction(game, buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
-        setAction(game, buttonGroupLevelActions[GAME_LEVEL_NEXT], ACTION_ENTER_NEXT_LEVEL);
+        setAction(game, buttonGroupLevelActions[GAME_LEVEL_QUIT], game.commonActions().ACTION_RESTART_INTRO);
+        setAction(game, buttonGroupLevelActions[GAME_LEVEL_NEXT], game.cheatActions().ACTION_ENTER_NEXT_LEVEL);
 
-        setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], TestActions.ACTION_CUT_SCENES_TEST);
-        setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], ACTION_RESTART_INTRO);
+        setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], game.commonActions().sceneTestActions().ACTION_CUT_SCENES_TEST);
+        setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], game.commonActions().ACTION_RESTART_INTRO);
 
         cbCollisionCheckedTwice.setOnAction(_ -> game.setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected()));
     }

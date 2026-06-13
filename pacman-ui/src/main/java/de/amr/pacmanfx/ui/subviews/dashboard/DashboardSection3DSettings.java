@@ -17,9 +17,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_TOGGLE_DRAW_MODE;
-import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
-
 /**
  * Infobox with 3D related settings.
  */
@@ -95,8 +92,8 @@ public class DashboardSection3DSettings extends DashboardSection {
         setEditor(sliderWallOpacity, settings3D.mazeWallOpacityProperty());
         setEditor(comboPerspectives, settings3D.cameraPerspectiveIdProperty());
 
-        cbUsePlayScene3D.setOnAction(_ -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute(game));
-        cbWireframeMode.setOnAction(_ -> ACTION_TOGGLE_DRAW_MODE.execute(game));
+        cbUsePlayScene3D.setOnAction(_ -> game.commonActions().ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute(game));
+        cbWireframeMode.setOnAction(_ -> game.commonActions().ACTION_TOGGLE_DRAW_MODE.execute(game));
     }
 
     @Override

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.subviews.startpages;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
@@ -42,19 +41,8 @@ public class StartPagesView extends Carousel implements SubView {
     //TODO start pages should define their preferred duration
     public static final int PAGE_CHANGE_SECONDS = 90;
 
-    private final GameAction actionShowPrevPage = new GameAction("show_prev_page") {
-        @Override
-        public void doAction(Game game) {
-            showPreviousItem();
-        }
-    };
-
-    private final GameAction actionShowNextPage = new GameAction("show_next_page") {
-        @Override
-        public void doAction(Game game) {
-            showNextItem();
-        }
-    };
+    private final GameAction actionShowPrevPage;
+    private final GameAction actionShowNextPage;
 
     private final List<StartPage> pages = new ArrayList<>();
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for Start View");
@@ -78,13 +66,27 @@ public class StartPagesView extends Carousel implements SubView {
             }
         });
         setBackground(GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER);
+
+        actionShowPrevPage = new GameAction(game, "show_prev_page") {
+            @Override
+            public void doAction(Game game) {
+                showPreviousItem();
+            }
+        };
+
+        actionShowNextPage = new GameAction(game, "show_next_page") {
+            @Override
+            public void doAction(Game game) {
+                showNextItem();
+            }
+        };
     }
 
     @Override
     public void onEnter() {
         actionBindings.bindActionToKeyCombination(actionShowPrevPage, bare(KeyCode.LEFT));
         actionBindings.bindActionToKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
-        actionBindings.bindActionToKeyCombination(CommonActions.ACTION_START_GAME, bare(KeyCode.ENTER));
+        actionBindings.bindActionToKeyCombination(game.commonActions().ACTION_START_GAME, bare(KeyCode.ENTER));
         Logger.info(actionBindings);
         restartProgressTimer();
         currentStartPage().ifPresent(page -> {

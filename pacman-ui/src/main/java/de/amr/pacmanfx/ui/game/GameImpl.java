@@ -19,6 +19,8 @@ import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.GameUI_Extensions;
+import de.amr.pacmanfx.ui.action.CheatActions;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.d2.SpriteAnimationManager;
@@ -63,6 +65,10 @@ public final class GameImpl implements Game {
 
     private final DirectoryWatchdog watchdog;
 
+    private final CommonActions commonActions;
+
+    private final CheatActions cheatActions;
+
     private final GameUI ui;
 
     private final GameViewImpl view;
@@ -76,10 +82,14 @@ public final class GameImpl implements Game {
     public GameImpl(PacManGamesMachine machine, GameViewImpl view) {
         this.machine = requireNonNull(machine);
         this.view = requireNonNull(view);
-        this.prefs = new PreferencesManager(getClass());
-        this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
         this.ui = createUI();
+
+        this.cheatActions = new CheatActions(this);
+        this.commonActions = new CommonActions(this);
+
+        this.prefs = new PreferencesManager(getClass());
+        this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
         view.connect(this);
 
@@ -180,6 +190,16 @@ public final class GameImpl implements Game {
     @Override
     public CoinMechanism coinMechanism() {
         return machine.coinMechanism();
+    }
+
+    @Override
+    public CommonActions commonActions() {
+        return commonActions;
+    }
+
+    @Override
+    public CheatActions cheatActions() {
+        return cheatActions;
     }
 
     @Override

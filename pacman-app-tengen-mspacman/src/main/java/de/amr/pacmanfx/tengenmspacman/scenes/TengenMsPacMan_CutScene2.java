@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
-import static de.amr.pacmanfx.ui.action.CommonActions.ACTION_LET_GAME_STATE_EXPIRE;
 
 /**
  * Intermission scene 2: "The chase".
@@ -66,7 +65,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
         // Quit cut scene when "START" button on "joypad" is pressed
         final Joypad joypad = game().input().joypad();
-        actionBindings().bindActionToKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
+        actionBindings().bindActionToKeyCombination(game().commonActions().ACTION_LET_GAME_STATE_EXPIRE, joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(2, "THE CHASE");
         clapperboard.setPosition(3 * WorldMap.TS, 10 * WorldMap.TS);

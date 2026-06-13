@@ -4,7 +4,8 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_Actions;
+import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.game.Game;
 
@@ -16,8 +17,11 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void onActivate() {
+        final Arcade_Actions actions = game().ui().extensions()
+            .getExtension(ArcadePacMan_UIConfig.EXT_ARCADE_ACTIONS, Arcade_Actions.class);
+
         // Insert coin + start game actions
-        actionBindings().registerAllBindings(ArcadePacMan_Actions.GAME_START_ACTION_BINDINGS);
+        actionBindings().registerAllBindings(actions.GAME_START_ACTION_BINDINGS);
     }
 
     @Override

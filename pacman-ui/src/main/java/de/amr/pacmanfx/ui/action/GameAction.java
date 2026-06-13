@@ -13,10 +13,16 @@ import org.tinylog.Logger;
  */
 public abstract class GameAction {
 
+    private final Game game;
     private final String id;
 
-    protected GameAction(String id) {
+    protected GameAction(Game game, String id) {
+        this.game = game;
         this.id = Validations.requireValidIdentifier(id);
+    }
+
+    protected Game game() {
+        return game;
     }
 
     protected abstract void doAction(Game game);

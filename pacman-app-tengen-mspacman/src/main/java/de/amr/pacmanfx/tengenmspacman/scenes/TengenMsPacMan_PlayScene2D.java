@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
@@ -19,11 +19,9 @@ import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.d2.GameScene2D;
 import de.amr.pacmanfx.ui.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GlobalActionBindings;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -43,7 +41,6 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
@@ -166,6 +163,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     @Override
+    public void handleQuit(Game game) {
+        if (gameModel().isPlaying()) {
+            gameContext().optCurrentLevel().ifPresent(level -> gameModel().onGameOver(gameContext(), level));
+        }
+        gameModel().cheats().clear();
+        gameModel().lives().setCount(0);
+        onDeactivate();
+    }
+
+    @Override
     public Optional<ContextMenu> supplyContextMenu() {
         final var uiSettings = game().ui().extensions().getExtension(
             TengenMsPacMan_UIConfig.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
@@ -191,7 +198,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "immunity");
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, game().ui().settings().mutedProperty, "muted");
-        addLocalizedActionItem(contextMenu, game(), translations, CommonActions.ACTION_QUIT, "quit");
+        addLocalizedActionItem(contextMenu, game(), translations, game().commonActions().ACTION_QUIT, "quit");
 
         return Optional.of(contextMenu);
     }
@@ -225,18 +232,24 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private void acceptNormalLevel() {
         game().ui().sounds().setEnabled(true); //TODO needed?
 
+        final TengenMsPacMan_Actions actions = game().ui().extensions().getExtension(
+            TengenMsPacMan_UIConfig.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
-        actionBindings().registerAllBindings(TengenMsPacMan_ActionBindings.STEERING_BINDINGS);
-        actionBindings().registerAllBindings(GlobalActionBindings.CHEAT_ACTION_BINDINGS);
-        actionBindings().selectAnyMatchingBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TengenMsPacMan_ActionBindings.SPECIFIC_BINDINGS);
-        actionBindings().selectAnyMatchingBinding(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_ActionBindings.SPECIFIC_BINDINGS);
+        actionBindings().registerAllBindings(actions.STEERING_BINDINGS);
+        actionBindings().registerAllBindings(game().commonActions().cheatActionBindings);
+        actionBindings().selectAnyMatchingBinding(actions.ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, actions.TENGEN_LOCAL_BINDINGS);
+        actionBindings().selectAnyMatchingBinding(actions.ACTION_TOGGLE_PAC_BOOSTER, actions.TENGEN_LOCAL_BINDINGS);
     }
 
     private void acceptDemoLevel() {
         game().ui().sounds().setEnabled(false); //TODO needed?
 
-        actionBindings().selectAnyMatchingBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TengenMsPacMan_ActionBindings.SPECIFIC_BINDINGS);
-        actionBindings().selectAnyMatchingBinding(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_ActionBindings.SPECIFIC_BINDINGS);
+        final TengenMsPacMan_Actions actions = game().ui().extensions().getExtension(
+            TengenMsPacMan_UIConfig.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+
+        actionBindings().selectAnyMatchingBinding(actions.ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, actions.TENGEN_LOCAL_BINDINGS);
+        actionBindings().selectAnyMatchingBinding(actions.ACTION_QUIT_DEMO_LEVEL, actions.TENGEN_LOCAL_BINDINGS);
     }
 
     private void updateScaling() {

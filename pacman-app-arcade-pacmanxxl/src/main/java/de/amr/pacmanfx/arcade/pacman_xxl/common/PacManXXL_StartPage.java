@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
@@ -95,7 +94,7 @@ public class PacManXXL_StartPage implements StartPage {
         public void onKeyboardStateChange(Keyboard keyboard) {
             if (keyboard.isKeyPressed(KeyCode.E)) {
                 pauseProgressTimer(game);
-                CommonActions.ACTION_OPEN_EDITOR.execute(game);
+                game.commonActions().ACTION_OPEN_EDITOR.execute(game);
             }
             else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
                 pauseProgressTimer(game);

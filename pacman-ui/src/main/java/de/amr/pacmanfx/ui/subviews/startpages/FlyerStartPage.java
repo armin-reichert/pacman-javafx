@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.subviews.startpages;
 
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
@@ -119,7 +118,7 @@ public class FlyerStartPage implements StartPage {
         startButton = createAndAddStartButton(buttonText);
         StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
         rootPane.getChildren().add(startButton);
-        startButton.setAction(() -> CommonActions.ACTION_START_GAME.execute(game));
+        startButton.setAction(() -> game.commonActions().ACTION_START_GAME.execute(game));
     }
 
     private FancyButton createAndAddStartButton(String text) {

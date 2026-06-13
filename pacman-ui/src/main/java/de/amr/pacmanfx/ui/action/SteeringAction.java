@@ -18,8 +18,8 @@ public class SteeringAction extends GameAction {
 
     private final Direction dir;
 
-    public SteeringAction(Direction dir) {
-        super(createActionID(requireNonNull(dir)));
+    public SteeringAction(Game game, Direction dir) {
+        super(game, createActionID(requireNonNull(dir)));
         this.dir = requireNonNull(dir);
     }
 

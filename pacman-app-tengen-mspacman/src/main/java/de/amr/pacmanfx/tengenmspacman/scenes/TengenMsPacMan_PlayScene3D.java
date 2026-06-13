@@ -5,7 +5,8 @@ package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.score.Score;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ActionBindings;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
@@ -13,7 +14,6 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.d3.entities.Maze3D;
-import de.amr.pacmanfx.ui.game.GlobalActionBindings;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,8 +21,6 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_QUIT_DEMO_LEVEL;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions.ACTION_TOGGLE_PAC_BOOSTER;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.
@@ -84,13 +82,17 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     public void replaceActionBindings(GameLevel level) {
         actionBindings().dispose();
+
+        final TengenMsPacMan_Actions actions = game().ui().extensions().getExtension(
+            TengenMsPacMan_UIConfig.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+
         if (level.isDemoLevel()) {
             // In demo level, allow going back to options screen
-            actionBindings().selectAnyMatchingBinding(ACTION_QUIT_DEMO_LEVEL, TengenMsPacMan_ActionBindings.SPECIFIC_BINDINGS);
+            actionBindings().selectAnyMatchingBinding(actions.ACTION_QUIT_DEMO_LEVEL, actions.TENGEN_LOCAL_BINDINGS);
         } else {
-            actionBindings().registerAllBindings(TengenMsPacMan_ActionBindings.STEERING_BINDINGS);
-            actionBindings().selectAnyMatchingBinding(ACTION_TOGGLE_PAC_BOOSTER, TengenMsPacMan_ActionBindings.SPECIFIC_BINDINGS);
-            actionBindings().registerAllBindings(GlobalActionBindings.CHEAT_ACTION_BINDINGS);
+            actionBindings().registerAllBindings(actions.STEERING_BINDINGS);
+            actionBindings().selectAnyMatchingBinding(actions.ACTION_TOGGLE_PAC_BOOSTER, actions.TENGEN_LOCAL_BINDINGS);
+            actionBindings().registerAllBindings(game().commonActions().cheatActionBindings);
         }
         bindActions();
 

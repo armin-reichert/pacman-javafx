@@ -20,12 +20,32 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.ui.input.Keyboard.bare;
 
-public final class ArcadePacMan_Actions {
+public final class Arcade_Actions {
+
+    abstract class AbstractGameAction extends GameAction {
+
+        protected AbstractGameAction(String key) {
+            super(game, key);
+        }
+    }
+
+    private final Game game;
+
+    public final Set<ActionKeyBinding> GAME_START_ACTION_BINDINGS;
+
+    public Arcade_Actions(Game game) {
+        this.game = game;
+
+        GAME_START_ACTION_BINDINGS = Set.of(
+            new ActionKeyBinding(ACTION_INSERT_COIN, bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
+            new ActionKeyBinding(ACTION_START_PLAYING,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
+        );
+    }
 
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
      */
-    public static final GameAction ACTION_INSERT_COIN = new GameAction("insert_coin") {
+    public final GameAction ACTION_INSERT_COIN = new AbstractGameAction("insert_coin") {
         @Override
         public void doAction(Game game) {
             final CoinMechanism coinMechanism = game.coinMechanism();
@@ -53,7 +73,7 @@ public final class ArcadePacMan_Actions {
         }
     };
 
-    public static final GameAction ACTION_START_PLAYING = new GameAction("start_playing") {
+    public final GameAction ACTION_START_PLAYING = new AbstractGameAction("start_playing") {
         @Override
         public void doAction(Game game) {
             game.ui().sounds().stopAndDisposeVoice();
@@ -73,11 +93,4 @@ public final class ArcadePacMan_Actions {
                 && gameModel.canStartNewGame(gameContext);
         }
     };
-
-    public static final Set<ActionKeyBinding> GAME_START_ACTION_BINDINGS = Set.of(
-        new ActionKeyBinding(ACTION_INSERT_COIN, bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
-        new ActionKeyBinding(ACTION_START_PLAYING,  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
-    );
-
-    private ArcadePacMan_Actions() {}
 }
