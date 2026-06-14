@@ -79,9 +79,11 @@ public final class Keyboard {
     }
 
     public void filterKeyEventsFrom(EventTarget target) {
+        // As there is no API contract that event filter is never added twice, I remove it first to be safe
         target.removeEventFilter(KeyEvent.KEY_PRESSED,  this::onKeyPressed);
-        target.removeEventFilter(KeyEvent.KEY_RELEASED, this::onKeyPressed);
         target.addEventFilter(KeyEvent.KEY_PRESSED,  this::onKeyPressed);
+
+        target.removeEventFilter(KeyEvent.KEY_RELEASED, this::onKeyPressed);
         target.addEventFilter(KeyEvent.KEY_RELEASED, this::onKeyReleased);
     }
 
