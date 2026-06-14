@@ -84,7 +84,7 @@ public class SpriteAnimationBuilder {
         final SpriteAnimation animation = new SpriteAnimation();
         animation.setLoop(data.loop);
         animation.setSprites(data.sprites);
-        animation.setFrameTicks(data.frameTicks);
+        animation.setFrameDurationTicks(data.frameTicks);
         if (data.initiallyStopped) {
             animation.stop();
         }

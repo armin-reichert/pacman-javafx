@@ -6,31 +6,36 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import javafx.animation.AnimationTimer;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 public class SpriteAnimationManager {
 
     private final SpriteAnimationContainer context;
-    private final AnimationTimer timer;
+    private Animation timer;
 
     public SpriteAnimationManager() {
         context = new SpriteAnimationContainer();
-        timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                for (SpriteAnimation sa : context.activeAnimations()) {
-                    sa.update(now);
-                }
-            }
-        };
+        createAnimationTimer();
     }
 
     public SpriteAnimationContainer animations() {
         return context;
     }
 
+    public void createAnimationTimer() {
+        timer = new Timeline(new KeyFrame(Duration.seconds(1.0 / 60), e -> {
+            for (SpriteAnimation animation : context.activeAnimations()) {
+                animation.tick();
+            }
+        }));
+        timer.setCycleCount(Animation.INDEFINITE);
+    }
+
     public void startAnimationTimer() {
-        timer.start();
+        timer.playFromStart();
     }
 
     public void stopAnimationTimer() {

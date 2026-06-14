@@ -133,7 +133,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     private void blinkyGetsCaughtOnNail() {
         blinky.setSpeed(0.09f);
-        blinkyAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL).setFrameTicks(32);
+        blinkyAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
     }
 
     private void blinkyStartsRunning() {

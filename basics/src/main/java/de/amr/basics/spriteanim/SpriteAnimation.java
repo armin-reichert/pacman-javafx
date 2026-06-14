@@ -14,38 +14,37 @@ import static java.util.Objects.requireNonNull;
  */
 public class SpriteAnimation {
 
-    public static final int FRAME_RATE = 60;
-
     private SpriteAnimationContainer container;
 
     private RectShort[] sprites;
     private int currentFrameIndex;
     private boolean loop;
     private boolean running;
-    private long lastUpdateTime;
-    private long frameDuration;
+
+    private int frameDurationTicks;
+    private int smallTick;
 
     public SpriteAnimation() {
         sprites = new RectShort[0];
         currentFrameIndex = 0;
         loop = false;
         running = false;
-        lastUpdateTime = now();
-        setFrameTicks(1);
+        smallTick = 0;
+        setFrameDurationTicks(1);
     }
 
     public void setContainer(SpriteAnimationContainer container) {
         this.container = Objects.requireNonNull(container);
     }
 
-    public void update(long now) {
+    public void tick() {
         if (!running) {
             return;
         }
-        if (now - lastUpdateTime > frameDuration) {
+        if (smallTick == frameDurationTicks - 1) {
             advanceFrame();
-            lastUpdateTime = now;
         }
+        smallTick = (smallTick + 1) % frameDurationTicks;
     }
 
     public void start() {
@@ -54,7 +53,6 @@ public class SpriteAnimation {
                 container.add(this);
             }
             running = true;
-            lastUpdateTime = now();
         }
     }
 
@@ -68,7 +66,6 @@ public class SpriteAnimation {
     public void reset() {
         stop();
         currentFrameIndex = 0;
-        lastUpdateTime = now();
     }
 
     public void advanceFrame() {
@@ -93,11 +90,11 @@ public class SpriteAnimation {
         }
     }
 
-    public void setFrameTicks(int numTicks) {
+    public void setFrameDurationTicks(int numTicks) {
         if (numTicks <= 0) {
             throw new IllegalArgumentException("Frame ticks must be a positive number, but you gave me " + numTicks);
         }
-        frameDuration = 1_000_000_000L / FRAME_RATE * numTicks;
+        frameDurationTicks = numTicks;
     }
 
     public void setLoop(boolean loop) {
@@ -116,8 +113,4 @@ public class SpriteAnimation {
     public RectShort currentSprite() { return sprites[currentFrameIndex]; }
 
     private boolean isValidFrame(int index) { return 0 <= index && index < sprites.length; }
-
-    private long now() {
-        return System.nanoTime();
-    }
 }
