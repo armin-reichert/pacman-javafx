@@ -90,6 +90,7 @@ public class StartPagesView extends Carousel implements SubView {
         actionBindings.bindActionToKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
         actionBindings.bindActionToKeyCombination(game.actions().gameFlowActions().actionStartGame(), bare(KeyCode.ENTER));
         Logger.info(actionBindings);
+
         restartProgressTimer();
         currentStartPage().ifPresent(page -> {
             page.rootPane().requestFocus();
@@ -105,9 +106,7 @@ public class StartPagesView extends Carousel implements SubView {
     }
 
     @Override
-    public void handleQuit(Game game) {
-
-    }
+    public void handleQuit(Game game) {}
 
     @Override
     protected Node createNavigationButton(Direction dir) {

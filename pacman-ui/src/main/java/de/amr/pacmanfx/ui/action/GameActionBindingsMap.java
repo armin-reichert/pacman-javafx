@@ -88,8 +88,13 @@ public class GameActionBindingsMap implements ActionBindingsRegistry {
     @Override
     public Optional<GameAction> triggeredAction(Keyboard keyboard) {
         return actionBindingsMap.keySet().stream()
+            .filter(kcc -> keyboard.isKeyPressed(kcc.getCode()))
             .filter(keyboard::stateMatches)
+            .peek(kcc -> Logger.info("Matching combination: {}", kcc))
             .map(actionBindingsMap::get)
+            .peek(action -> Logger.info("Matching action: {}", action))
+            .peek(_ -> keyboard.clearState())
+            .peek(_ -> Logger.info("Keyboard state cleared"))
             .findFirst();
     }
 

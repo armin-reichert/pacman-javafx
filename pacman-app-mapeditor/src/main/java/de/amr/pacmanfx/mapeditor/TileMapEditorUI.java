@@ -827,15 +827,15 @@ public class TileMapEditorUI {
 
     private void onKeyPressed(KeyEvent keyEvent) {
         boolean alt = keyEvent.isAltDown();
-        switch (keyEvent.getCode()) {
-            case LEFT -> {
-                if (alt) new Action_SelectNextMapFile(editor, false).execute();
-            }
-            case RIGHT -> {
-                if (alt) new Action_SelectNextMapFile(editor, true).execute();
-            }
-            case PLUS -> new Action_ZoomIn(this).execute();
-            case MINUS -> new Action_ZoomOut(this).execute();
+        final EditorAction<?> action = switch (keyEvent.getCode()) {
+            case LEFT  -> alt ? new Action_SelectNextMapFile(editor, false) : null;
+            case RIGHT -> alt ? new Action_SelectNextMapFile(editor, true) : null;
+            case PLUS  -> new Action_ZoomIn(this);
+            case MINUS -> new Action_ZoomOut(this);
+            default -> null;
+        };
+        if (action != null) {
+            consumeEventAndExecuteAction(keyEvent, action);
         }
     }
 
@@ -843,7 +843,12 @@ public class TileMapEditorUI {
         actionBindings.entrySet().stream()
             .filter(entry -> e.getCharacter().equals(entry.getKey()))
             .findFirst()
-            .ifPresent(entry -> entry.getValue().execute());
+            .ifPresent(entry -> consumeEventAndExecuteAction(e, entry.getValue()));
+    }
+
+    private void consumeEventAndExecuteAction(KeyEvent e, EditorAction<?> action) {
+        e.consume();
+        action.execute();
     }
 
     // Model change handling

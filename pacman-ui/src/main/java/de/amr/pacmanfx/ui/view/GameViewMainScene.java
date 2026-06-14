@@ -33,8 +33,11 @@ public class GameViewMainScene extends Scene {
         getStylesheets().add(GameUI_Constants.STYLE_SHEET_PATH);
         
         final Keyboard keyboard = game.input().keyboard();
-        keyboard.filterEventsForScene(this);
+        keyboard.enabledProperty().bind(game.ui().subViews().selectedSubViewProperty().map(
+            subView -> subView == game.ui().subViews().startView() || subView == game.ui().subViews().gamePlayView()
+        ));
         keyboard.addStateListener(kb -> handleKeyboardStateChange(game, kb));
+        keyboard.filterKeyEventsFrom(this);
 
         // Delegate mouse scroll events to scene
         setOnScroll(e -> game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));

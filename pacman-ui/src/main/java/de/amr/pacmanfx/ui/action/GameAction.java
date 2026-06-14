@@ -21,6 +21,11 @@ public abstract class GameAction {
         this.id = Validations.requireValidIdentifier(id);
     }
 
+    @Override
+    public String toString() {
+        return "GameAction{" + "id='" + id + '\'' + '}';
+    }
+
     protected abstract void doAction();
 
     public boolean isEnabled() { return true; }

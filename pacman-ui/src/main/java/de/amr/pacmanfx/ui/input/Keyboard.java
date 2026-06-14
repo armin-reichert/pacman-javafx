@@ -3,7 +3,9 @@
  */
 package de.amr.pacmanfx.ui.input;
 
-import javafx.scene.Scene;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.EventTarget;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
@@ -44,6 +46,8 @@ public final class Keyboard {
 
     private final Set<StateListener> listeners = ConcurrentHashMap.newKeySet();
 
+    private final BooleanProperty enabled = new SimpleBooleanProperty(true);
+
     // Current state
     private final Collection<KeyCode> pressedKeys = new LinkedHashSet<>();
     private boolean shiftDown;
@@ -53,11 +57,31 @@ public final class Keyboard {
 
     Keyboard() {}
 
-    public void filterEventsForScene(Scene scene) {
-        scene.removeEventFilter(KeyEvent.KEY_PRESSED,  this::onKeyPressed);
-        scene.removeEventFilter(KeyEvent.KEY_RELEASED, this::onKeyPressed);
-        scene.addEventFilter(KeyEvent.KEY_PRESSED,  this::onKeyPressed);
-        scene.addEventFilter(KeyEvent.KEY_RELEASED, this::onKeyReleased);
+    public boolean isEnabled() {
+        return enabled.get();
+    }
+
+    public BooleanProperty enabledProperty() {
+        return enabled;
+    }
+
+    public void clearState() {
+        pressedKeys.clear();
+        shiftDown = controlDown = altDown = metaDown = false;
+    }
+
+    @Override
+    public String toString() {
+        return "Keyboard, pressed keys=%s, shift=%s, alt=%s, control=%s, meta=%s".formatted(
+            pressedKeys, shiftDown, altDown, controlDown, metaDown
+        );
+    }
+
+    public void filterKeyEventsFrom(EventTarget target) {
+        target.removeEventFilter(KeyEvent.KEY_PRESSED,  this::onKeyPressed);
+        target.removeEventFilter(KeyEvent.KEY_RELEASED, this::onKeyPressed);
+        target.addEventFilter(KeyEvent.KEY_PRESSED,  this::onKeyPressed);
+        target.addEventFilter(KeyEvent.KEY_RELEASED, this::onKeyReleased);
     }
 
     public void addStateListener(StateListener stateListener) {
@@ -93,24 +117,28 @@ public final class Keyboard {
     }
 
     private void onKeyPressed(KeyEvent event) {
+        if (!isEnabled()) return;
+
         boolean changed = updateModifierState(event);
         if (!event.getCode().isModifierKey()) {
             // Handle CTRL+key differently: always report changes (e.g. to zoom in by holding CTRL+PLUS etc.)
             changed = pressedKeys.add(event.getCode()) || controlDown;
         }
         if (changed) {
-            listeners.forEach(listener -> listener.onKeyboardStateChange(this));
+            fireStateChange();
         }
     }
 
     private void onKeyReleased(KeyEvent event) {
+        if (!isEnabled()) return;
+
         boolean changed = false;
         if (!event.getCode().isModifierKey()) {
             changed = pressedKeys.remove(event.getCode());
         }
         changed = changed || updateModifierState(event);
         if (changed) {
-            listeners.forEach(listener -> listener.onKeyboardStateChange(this));
+            fireStateChange();
         }
     }
 
@@ -135,9 +163,9 @@ public final class Keyboard {
         return changed;
     }
 
-    public boolean isKeyPressed(KeyCode keyCode) {
-        requireNonNull(keyCode);
-        return pressedKeys.contains(keyCode);
+    public boolean isKeyPressed(KeyCode code) {
+        requireNonNull(code);
+        return pressedKeys.contains(code);
     }
 
     public boolean stateMatches(KeyCodeCombination combination) {
@@ -145,16 +173,22 @@ public final class Keyboard {
         return isKeyPressed(keyCode) && combination.match(syntheticKeyPressedEvent(keyCode));
     }
 
-    private KeyEvent syntheticKeyPressedEvent(KeyCode keyCode) {
+    private KeyEvent syntheticKeyPressedEvent(KeyCode code) {
         return new KeyEvent(
             KeyEvent.KEY_PRESSED,
             "",
             "",
-            keyCode,
+            code,
             shiftDown,
             controlDown,
             altDown,
             metaDown
         );
+    }
+
+    private void fireStateChange() {
+        if (isEnabled()) {
+            listeners.forEach(listener -> listener.onKeyboardStateChange(this));
+        }
     }
 }

@@ -63,7 +63,7 @@ public class GameFlowActions {
 
         bindings = Set.of(
             new ActionKeyBinding(actionStartGame, bare(KeyCode.F3)),
-            new ActionKeyBinding(actionQuit,bare(KeyCode.Q))
+            new ActionKeyBinding(actionQuit, bare(KeyCode.Q))
         );
     }
 

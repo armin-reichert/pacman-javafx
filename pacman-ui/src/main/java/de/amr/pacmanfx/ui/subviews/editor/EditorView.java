@@ -7,12 +7,14 @@ package de.amr.pacmanfx.ui.subviews.editor;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -51,7 +53,11 @@ public class EditorView implements SubView {
     }
 
     @Override
-    public void onExit() {
+    public void onExit() {}
+
+    @Override
+    public void onInput(Game game, Input input) {
+        Logger.warn("I should never get input from the global keyboard!");
     }
 
     @Override
