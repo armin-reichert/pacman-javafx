@@ -68,6 +68,7 @@ public final class Keyboard {
     public void clearState() {
         pressedKeys.clear();
         shiftDown = controlDown = altDown = metaDown = false;
+        fireStateChange();
     }
 
     @Override
