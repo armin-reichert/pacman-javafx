@@ -35,14 +35,19 @@ public class GameMainScene extends Scene {
 
         // Keyboard should not be sensitive to any key events triggered inside the map editor
         keyboard.enabledProperty().bind(subViews.selectedSubViewProperty().map(
-            _ -> subViews.isSelected(subViews.startView()) || subViews.isSelected(subViews.gamePlayView())
+            subView -> isGlobalKeyboardAvailableFor(subViews, subView)
         ));
 
         keyboard.addStateListener(_ -> {
             // Check for "global" action first, if no one matches, let current sub view handle the keyboard state change
             actionBindings.triggeredAction(game.input().keyboard()).ifPresentOrElse(
                 GameAction::execute,
-                () -> game.ui().subViews().currentView().onInput(game, game.input()));
+                () -> {
+                    final SubView currentSubView = game.ui().subViews().currentView();
+                    if (isGlobalKeyboardAvailableFor(subViews, currentSubView)) {
+                        currentSubView.onInput(game, game.input());
+                    }
+                });
         });
 
         keyboard.filterKeyEventsFrom(this);
@@ -68,5 +73,9 @@ public class GameMainScene extends Scene {
             throw new IllegalStateException("Root pane has no placeholder for embedding view");
         }
         rootPane().getChildren().set(SUBVIEW_CHILD_INDEX, subView.rootPane());
+    }
+
+    private boolean isGlobalKeyboardAvailableFor(SubViewManager subViews, SubView subView) {
+        return subView == subViews.startView() || subView == subViews.gamePlayView();
     }
 }

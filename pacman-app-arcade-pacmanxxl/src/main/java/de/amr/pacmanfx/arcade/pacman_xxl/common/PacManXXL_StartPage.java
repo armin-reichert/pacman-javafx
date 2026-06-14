@@ -116,6 +116,7 @@ public class PacManXXL_StartPage implements StartPage {
     private final MenuUpdater menuUpdater = new MenuUpdater();
     private final KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler();
 
+
     public PacManXXL_StartPage() {
         title = "Pac-Man XXL games"; // TODO localize
         menu.setStyle(DEFAULT_MENU_STYLE);

@@ -215,6 +215,6 @@ public class SoundManager implements Disposable {
         if (prevValue != null) {
             Logger.warn("Replaced sound id='{}': {} (was: {})", soundID, defaultValue);
         }
-        Logger.info("Registered sound id='{}': {}", soundID, defaultValue);
+        Logger.debug("Registered sound id='{}': {}", soundID, defaultValue);
     }
 }

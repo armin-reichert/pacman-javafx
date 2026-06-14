@@ -9,6 +9,7 @@ import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
@@ -108,6 +109,11 @@ public class StartPagesView extends Carousel implements SubView {
 
     @Override
     public void handleQuit(Game game) {}
+
+    @Override
+    public void onInput(Game game, Input input) {
+        actionBindings.triggeredAction(input.keyboard()).ifPresent(GameAction::execute);
+    }
 
     @Override
     protected Node createNavigationButton(Direction dir) {

@@ -31,19 +31,21 @@ public abstract class GameAction {
     public boolean isEnabled() { return true; }
 
     public final boolean execute() {
+        boolean success = false;
         if (isEnabled()) {
             try {
                 doAction();
-                return true;
+                success = true;
             }
             catch (Exception x) {
                 Logger.error(x, "An error occurred executing action '{}'", id);
-                return false;
             }
         } else {
             Logger.warn("Action {}' not executed (disabled)", id);
-            return false;
         }
+
+        game.input().keyboard().clearState();
+        return success;
     }
 
     public final String id() {
