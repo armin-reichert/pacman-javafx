@@ -7,9 +7,9 @@ import de.amr.pacmanfx.mapeditor.actions.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;
 
-import static de.amr.pacmanfx.model.world.WorldMap.tile;
 import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.NO_GRAPHIC;
 import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.translated;
+import static de.amr.pacmanfx.model.world.WorldMap.tile;
 
 public class EditorMenuBar extends MenuBar {
 
@@ -64,7 +64,7 @@ public class EditorMenuBar extends MenuBar {
 
         var miAddBorder = new MenuItem(translated("menu.edit.add_border"));
         miAddBorder.setOnAction(_ -> new Action_AddBorderWall(editor).execute());
-        miAddBorder.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
+        miAddBorder.disableProperty().bind(ui.editModeProperty().isEqualTo(EditMode.INSPECT));
 
         var miAddHouse = new MenuItem(translated("menu.edit.add_house"));
         miAddHouse.setOnAction(_ -> {
@@ -72,19 +72,19 @@ public class EditorMenuBar extends MenuBar {
             new Action_MoveArcadeHouse(editor, tile(numCols / 2 - 4, numRows / 2 - 3)).execute();
         });
 
-        miAddHouse.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
+        miAddHouse.disableProperty().bind(ui.editModeProperty().isEqualTo(EditMode.INSPECT));
 
         var miDeleteHouse = new MenuItem(translated("menu.edit.delete_house"));
         miDeleteHouse.setOnAction(_ -> new Action_DeleteArcadeHouse(editor).execute());
-        miDeleteHouse.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
+        miDeleteHouse.disableProperty().bind(ui.editModeProperty().isEqualTo(EditMode.INSPECT));
 
         var miClearTerrain = new MenuItem(translated("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(_ -> new Action_ClearTerrain(editor).execute());
-        miClearTerrain.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
+        miClearTerrain.disableProperty().bind(ui.editModeProperty().isEqualTo(EditMode.INSPECT));
 
         var miClearFood = new MenuItem(translated("menu.edit.clear_food"));
         miClearFood.setOnAction(_ -> new Action_ClearFood(editor).execute());
-        miClearFood.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
+        miClearFood.disableProperty().bind(ui.editModeProperty().isEqualTo(EditMode.INSPECT));
 
         var miIdentifyTiles = new MenuItem(translated("menu.edit.identify_tiles"));
         miIdentifyTiles.disableProperty().bind(Bindings.createBooleanBinding(
@@ -96,7 +96,7 @@ public class EditorMenuBar extends MenuBar {
 
         var miAssignDefaultColors = new MenuItem(translated("menu.edit.assign_default_colors"));
         miAssignDefaultColors.setOnAction(_ -> new Action_SetDefaultMapColors(editor).execute());
-        miAssignDefaultColors.disableProperty().bind(ui.editModeProperty().map(mode -> mode == EditMode.INSPECT));
+        miAssignDefaultColors.disableProperty().bind(ui.editModeProperty().isEqualTo(EditMode.INSPECT));
 
         Menu menuEdit = new Menu(translated("menu.edit"), NO_GRAPHIC,
             miObstacleJoining,
