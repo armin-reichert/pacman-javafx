@@ -14,7 +14,7 @@ import javafx.scene.shape.DrawMode;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.Keyboard.alt;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
 public class Camera3DActions {
 
@@ -65,9 +65,9 @@ public class Camera3DActions {
         };
 
         bindings = Set.of(
-            new ActionKeyBinding(actionPreviousPerspective, alt(KeyCode.LEFT)),
-            new ActionKeyBinding(actionNextPerspective,     alt(KeyCode.RIGHT)),
-            new ActionKeyBinding(actionToggleDrawMode,      alt(KeyCode.W))
+            new ActionKeyBinding(actionPreviousPerspective, combine().alt().key(KeyCode.LEFT)),
+            new ActionKeyBinding(actionNextPerspective,     combine().alt().key(KeyCode.RIGHT)),
+            new ActionKeyBinding(actionToggleDrawMode,      combine().alt().key(KeyCode.W))
         );
     }
 

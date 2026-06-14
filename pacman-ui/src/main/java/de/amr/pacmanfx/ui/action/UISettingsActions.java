@@ -15,8 +15,8 @@ import javafx.scene.input.KeyCode;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.Keyboard.alt;
-import static de.amr.pacmanfx.ui.input.Keyboard.bare;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
 
 public class UISettingsActions {
@@ -129,13 +129,13 @@ public class UISettingsActions {
         };
 
         bindings = Set.of(
-            new ActionKeyBinding(actionEnterFullScreen(), bare(KeyCode.F11)),
-            new ActionKeyBinding(actionShowHelp(), bare(KeyCode.H)),
-            new ActionKeyBinding(actionToggleDashboard, bare(KeyCode.F1), alt(KeyCode.B)),
-            new ActionKeyBinding(actionToggleDebugInfo, alt(KeyCode.D)),
-            new ActionKeyBinding(actionToggleKeyboardMonitor, alt(KeyCode.K)),
-            new ActionKeyBinding(actionToggleMiniViewVisibility, bare(KeyCode.F2)),
-            new ActionKeyBinding(actionTogglePlayScene2D3D(), alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))
+            new ActionKeyBinding(actionEnterFullScreen(), bareKey(KeyCode.F11)),
+            new ActionKeyBinding(actionShowHelp(), bareKey(KeyCode.H)),
+            new ActionKeyBinding(actionToggleDashboard, bareKey(KeyCode.F1), combine().alt().key(KeyCode.B)),
+            new ActionKeyBinding(actionToggleDebugInfo, combine().alt().key(KeyCode.D)),
+            new ActionKeyBinding(actionToggleKeyboardMonitor, combine().alt().key(KeyCode.K)),
+            new ActionKeyBinding(actionToggleMiniViewVisibility, bareKey(KeyCode.F2)),
+            new ActionKeyBinding(actionTogglePlayScene2D3D(), combine().alt().key(KeyCode.DIGIT3), combine().alt().key(KeyCode.NUMPAD3))
         );
     }
 

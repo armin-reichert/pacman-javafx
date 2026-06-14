@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.Keyboard.alt;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
 /**
  * Common actions for all game variants.
@@ -68,7 +68,7 @@ public final class CommonActions {
         bindings.addAll(gameFlowActions.bindings());
         bindings.addAll(editorActions.bindings());
         bindings.addAll(uiSettingsActions.bindings());
-        bindings.add(new ActionKeyBinding(actionToggleCollisionStrategy, alt(KeyCode.S)));
+        bindings.add(new ActionKeyBinding(actionToggleCollisionStrategy, combine().alt().key(KeyCode.S)));
 
         commonBindings = Collections.unmodifiableSet(bindings);
     }

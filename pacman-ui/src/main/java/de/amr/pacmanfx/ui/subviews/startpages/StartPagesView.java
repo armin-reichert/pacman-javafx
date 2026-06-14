@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.ui.input.Keyboard.bare;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -88,9 +88,9 @@ public class StartPagesView extends Carousel implements SubView {
 
     @Override
     public void onEnter() {
-        actionBindings.bindActionToKeyCombination(actionShowPrevPage, bare(KeyCode.LEFT));
-        actionBindings.bindActionToKeyCombination(actionShowNextPage, bare(KeyCode.RIGHT));
-        actionBindings.bindActionToKeyCombination(game.actions().gameFlowActions().actionStartGame(), bare(KeyCode.ENTER));
+        actionBindings.bindActionToKeyCombination(actionShowPrevPage, bareKey(KeyCode.LEFT));
+        actionBindings.bindActionToKeyCombination(actionShowNextPage, bareKey(KeyCode.RIGHT));
+        actionBindings.bindActionToKeyCombination(game.actions().gameFlowActions().actionStartGame(), bareKey(KeyCode.ENTER));
         Logger.info(actionBindings);
 
         restartProgressTimer();

@@ -18,11 +18,11 @@ import de.amr.pacmanfx.ui.game.Game;
 import javafx.scene.input.KeyCode;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.Keyboard.alt;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
+
 
 public final class CheatActions {
 
@@ -204,12 +204,12 @@ public final class CheatActions {
         };
 
         bindings = Set.of(
-            new ActionKeyBinding(actionToggleAutopilot(), alt(KeyCode.A)),
-            new ActionKeyBinding(actionToggleImmunity(),  alt(KeyCode.I)),
-            new ActionKeyBinding(actionEatAllPellets(),  alt(KeyCode.E)),
-            new ActionKeyBinding(actionAddLives(),       alt(KeyCode.L)),
-            new ActionKeyBinding(actionEnterNextLevel(), alt(KeyCode.N)),
-            new ActionKeyBinding(actionKillGhosts(),     alt(KeyCode.X))
+            new ActionKeyBinding(actionToggleAutopilot(), combine().alt().key(KeyCode.A)),
+            new ActionKeyBinding(actionToggleImmunity(),  combine().alt().key(KeyCode.I)),
+            new ActionKeyBinding(actionEatAllPellets(),   combine().alt().key(KeyCode.E)),
+            new ActionKeyBinding(actionAddLives(),        combine().alt().key(KeyCode.L)),
+            new ActionKeyBinding(actionEnterNextLevel(),  combine().alt().key(KeyCode.N)),
+            new ActionKeyBinding(actionKillGhosts(),      combine().alt().key(KeyCode.X))
         );
     }
 

@@ -11,8 +11,8 @@ import javafx.util.Duration;
 import java.util.Set;
 
 import static de.amr.pacmanfx.model.GameRules.NUM_TICKS_PER_SEC;
-import static de.amr.pacmanfx.ui.input.Keyboard.*;
-import static de.amr.pacmanfx.ui.input.Keyboard.shift;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
 
 public class SimulationActions {
@@ -136,15 +136,15 @@ public class SimulationActions {
         };
 
         bindings = Set.of(
-            new ActionKeyBinding(actionSlower,       alt(KeyCode.MINUS)),
-            new ActionKeyBinding(actionSlowest,      alt_shift(KeyCode.MINUS)),
-            new ActionKeyBinding(actionFaster,       alt(KeyCode.PLUS)),
-            new ActionKeyBinding(actionFastest,      alt_shift(KeyCode.PLUS)),
-            new ActionKeyBinding(actionReset,        alt(KeyCode.DIGIT0)),
-            new ActionKeyBinding(actionOneStep,      shift(KeyCode.P), shift(KeyCode.F5)),
-            new ActionKeyBinding(actionTenSteps,     shift(KeyCode.SPACE)),
-            new ActionKeyBinding(actionTogglePaused, bare(KeyCode.P), bare(KeyCode.F5)),
-            new ActionKeyBinding(actionToggleMuted,  alt(KeyCode.M))
+            new ActionKeyBinding(actionSlower,       combine().alt().key(KeyCode.MINUS)),
+            new ActionKeyBinding(actionSlowest,      combine().alt().shift().key(KeyCode.MINUS)),
+            new ActionKeyBinding(actionFaster,       combine().alt().key(KeyCode.PLUS)),
+            new ActionKeyBinding(actionFastest,      combine().alt().shift().key(KeyCode.PLUS)),
+            new ActionKeyBinding(actionReset,        combine().alt().key(KeyCode.DIGIT0)),
+            new ActionKeyBinding(actionOneStep,      combine().shift().key(KeyCode.P), combine().shift().key(KeyCode.F5)),
+            new ActionKeyBinding(actionTenSteps,     combine().shift().key(KeyCode.SPACE)),
+            new ActionKeyBinding(actionTogglePaused, bareKey(KeyCode.P), bareKey(KeyCode.F5)),
+            new ActionKeyBinding(actionToggleMuted,  combine().alt().key(KeyCode.M))
         );
     }
 

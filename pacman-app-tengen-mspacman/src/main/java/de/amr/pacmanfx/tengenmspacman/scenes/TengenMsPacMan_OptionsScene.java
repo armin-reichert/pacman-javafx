@@ -24,7 +24,7 @@ import java.io.IOException;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
-import static de.amr.pacmanfx.ui.input.Keyboard.alt;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
 /**
  * Options scene for Ms. Pac-Man Tengen.
@@ -77,7 +77,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
         actionBindings().selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());
         actionBindings().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
-        actionBindings().bindActionToKeyCombination(actions.actionSelectNextJoypadKeyBinding(), alt(KeyCode.J));
+        actionBindings().bindActionToKeyCombination(actions.actionSelectNextJoypadKeyBinding(), combine().alt().key(KeyCode.J));
         actionBindings().registerAllBindings(game().actions().sceneTestActions().bindings());
 
         selectedOption.set(OPTION_PAC_BOOSTER);

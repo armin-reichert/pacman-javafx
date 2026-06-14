@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.Keyboard.alt_shift;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
 public class EditorActions {
 
@@ -36,7 +36,7 @@ public class EditorActions {
         };
 
         bindings = Set.of(
-            new ActionKeyBinding(actionOpenEditor, alt_shift(KeyCode.E))
+            new ActionKeyBinding(actionOpenEditor, combine().alt().shift().key(KeyCode.E))
         );
     }
 

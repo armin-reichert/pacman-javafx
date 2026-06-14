@@ -12,8 +12,7 @@ import javafx.util.Duration;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.Keyboard.alt;
-import static de.amr.pacmanfx.ui.input.Keyboard.alt_shift;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
 public class TestActions {
 
@@ -65,9 +64,9 @@ public class TestActions {
         };
 
         bindings = Set.of(
-            new ActionKeyBinding(actionTestCutScenes, alt(KeyCode.C)),
-            new ActionKeyBinding(actionTestLevelShort, alt(KeyCode.T)),
-            new ActionKeyBinding(actionTestLevelMedium, alt_shift(KeyCode.T))
+            new ActionKeyBinding(actionTestCutScenes,   combine().alt().key(KeyCode.C)),
+            new ActionKeyBinding(actionTestLevelShort,  combine().alt().key(KeyCode.T)),
+            new ActionKeyBinding(actionTestLevelMedium, combine().alt().shift().key(KeyCode.T))
         );
     }
 

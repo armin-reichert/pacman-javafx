@@ -10,7 +10,7 @@ import org.tinylog.Logger;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.Keyboard.bare;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
 
 public class GameFlowActions {
 
@@ -62,8 +62,8 @@ public class GameFlowActions {
         };
 
         bindings = Set.of(
-            new ActionKeyBinding(actionStartGame, bare(KeyCode.F3)),
-            new ActionKeyBinding(actionQuit, bare(KeyCode.Q))
+            new ActionKeyBinding(actionStartGame, bareKey(KeyCode.F3)),
+            new ActionKeyBinding(actionQuit, bareKey(KeyCode.Q))
         );
     }
 

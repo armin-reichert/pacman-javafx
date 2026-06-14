@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.input;
 
 import javafx.beans.property.BooleanProperty;
@@ -18,31 +19,12 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.requireNonNull;
-import static javafx.scene.input.KeyCombination.*;
 
 public final class Keyboard {
 
     public interface StateListener {
         void onKeyboardStateChange(Keyboard keyboard);
     }
-
-    // API for the most common cases
-
-    public static KeyCodeCombination bare(KeyCode code) { return new KeyCodeCombination(code); }
-
-    public static KeyCodeCombination alt(KeyCode code) {
-        return new KeyCodeCombination(code, ALT_DOWN);
-    }
-
-    public static KeyCodeCombination control(KeyCode code) {
-        return new KeyCodeCombination(code, CONTROL_DOWN);
-    }
-
-    public static KeyCodeCombination shift(KeyCode code) {
-        return new KeyCodeCombination(code, SHIFT_DOWN);
-    }
-
-    public static KeyCodeCombination alt_shift(KeyCode code) { return new KeyCodeCombination(code, SHIFT_DOWN, ALT_DOWN); }
 
     private final Set<StateListener> listeners = ConcurrentHashMap.newKeySet();
 

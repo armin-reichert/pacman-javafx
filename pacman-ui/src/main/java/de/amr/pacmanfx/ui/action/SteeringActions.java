@@ -6,8 +6,8 @@ import javafx.scene.input.KeyCode;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.Keyboard.bare;
-import static de.amr.pacmanfx.ui.input.Keyboard.control;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
 public class SteeringActions {
 
@@ -25,10 +25,10 @@ public class SteeringActions {
         actionSteerRight = new SteeringAction(game, Direction.RIGHT);
 
         bindings = Set.of(
-            new ActionKeyBinding(actionSteerUp, bare(KeyCode.UP), control(KeyCode.UP)),
-            new ActionKeyBinding(actionSteerDown, bare(KeyCode.DOWN), control(KeyCode.DOWN)),
-            new ActionKeyBinding(actionSteerLeft, bare(KeyCode.LEFT), control(KeyCode.LEFT)),
-            new ActionKeyBinding(actionSteerRight, bare(KeyCode.RIGHT), control(KeyCode.RIGHT))
+            new ActionKeyBinding(actionSteerUp,    bareKey(KeyCode.UP),    combine().ctrl().key(KeyCode.UP)),
+            new ActionKeyBinding(actionSteerDown,  bareKey(KeyCode.DOWN),  combine().ctrl().key(KeyCode.DOWN)),
+            new ActionKeyBinding(actionSteerLeft,  bareKey(KeyCode.LEFT),  combine().ctrl().key(KeyCode.LEFT)),
+            new ActionKeyBinding(actionSteerRight, bareKey(KeyCode.RIGHT), combine().ctrl().key(KeyCode.RIGHT))
         );
     }
 

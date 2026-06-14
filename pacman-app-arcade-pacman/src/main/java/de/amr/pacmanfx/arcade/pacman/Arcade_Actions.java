@@ -18,7 +18,7 @@ import javafx.scene.input.KeyCode;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.Keyboard.bare;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
 
 public final class Arcade_Actions {
 
@@ -30,8 +30,8 @@ public final class Arcade_Actions {
         this.game = game;
 
         gameStartActionBindings = Set.of(
-            new ActionKeyBinding(actionInsertCoin(),    bare(KeyCode.DIGIT5), bare(KeyCode.NUMPAD5)),
-            new ActionKeyBinding(actionStartPlaying(),  bare(KeyCode.DIGIT1), bare(KeyCode.NUMPAD1))
+            new ActionKeyBinding(actionInsertCoin(),    bareKey(KeyCode.DIGIT5), bareKey(KeyCode.NUMPAD5)),
+            new ActionKeyBinding(actionStartPlaying(),  bareKey(KeyCode.DIGIT1), bareKey(KeyCode.NUMPAD1))
         );
     }
 

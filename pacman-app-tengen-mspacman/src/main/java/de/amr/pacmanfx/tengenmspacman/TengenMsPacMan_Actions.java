@@ -20,7 +20,8 @@ import javafx.scene.input.KeyCodeCombination;
 import java.util.Objects;
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.input.Keyboard.*;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
+import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
 
 public final class TengenMsPacMan_Actions {
@@ -34,10 +35,10 @@ public final class TengenMsPacMan_Actions {
         this.game = Objects.requireNonNull(game);
 
         steeringBindings = Set.of(
-            new ActionKeyBinding(game.actions().steeringActions().actionSteerUp(),    keyFor(JoypadButton.UP),    control(KeyCode.UP)),
-            new ActionKeyBinding(game.actions().steeringActions().actionSteerDown(),  keyFor(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-            new ActionKeyBinding(game.actions().steeringActions().actionSteerLeft(),  keyFor(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-            new ActionKeyBinding(game.actions().steeringActions().actionSteerRight(), keyFor(JoypadButton.RIGHT), control(KeyCode.RIGHT))
+            new ActionKeyBinding(game.actions().steeringActions().actionSteerUp(),    keyFor(JoypadButton.UP),    combine().ctrl().key(KeyCode.UP)),
+            new ActionKeyBinding(game.actions().steeringActions().actionSteerDown(),  keyFor(JoypadButton.DOWN),  combine().ctrl().key(KeyCode.DOWN)),
+            new ActionKeyBinding(game.actions().steeringActions().actionSteerLeft(),  keyFor(JoypadButton.LEFT),  combine().ctrl().key(KeyCode.LEFT)),
+            new ActionKeyBinding(game.actions().steeringActions().actionSteerRight(), keyFor(JoypadButton.RIGHT), combine().ctrl().key(KeyCode.RIGHT))
         );
 
         localBindings = Set.of(
@@ -45,8 +46,8 @@ public final class TengenMsPacMan_Actions {
             new ActionKeyBinding(actionEnterStartScreen(), keyFor(JoypadButton.START)),
             new ActionKeyBinding(actionStartPlaying(), keyFor(JoypadButton.START)),
             new ActionKeyBinding(actionTogglePacBooster(), keyFor(JoypadButton.A), keyFor(JoypadButton.B)),
-            new ActionKeyBinding(actionTogglePlaySceneDisplayMode(), alt(KeyCode.C)),
-            new ActionKeyBinding(actionToggleJoypadBindingsDisplayed(), bare(KeyCode.SPACE))
+            new ActionKeyBinding(actionTogglePlaySceneDisplayMode(), combine().alt().key(KeyCode.C)),
+            new ActionKeyBinding(actionToggleJoypadBindingsDisplayed(), bareKey(KeyCode.SPACE))
         );
     }
 
