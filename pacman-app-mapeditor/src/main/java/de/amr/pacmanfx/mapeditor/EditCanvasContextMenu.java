@@ -33,7 +33,7 @@ public class EditCanvasContextMenu extends ContextMenu {
         });
     }
 
-    public void update(ContextMenuEvent menuEvent) {
+    public void updateState(ContextMenuEvent menuEvent) {
         final TileMapEditor editor = ui.editor();
         final Vector2i tile = editCanvas.tileAt(menuEvent.getX(), menuEvent.getY());
         final WorldMap worldMap = editCanvas.worldMap();

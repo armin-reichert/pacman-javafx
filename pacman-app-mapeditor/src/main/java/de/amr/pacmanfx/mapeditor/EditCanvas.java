@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.basics.math.Direction;
@@ -39,6 +40,10 @@ import static de.amr.pacmanfx.model.world.WorldMapPropertyName.COLOR_FOOD;
 import static java.util.Objects.requireNonNull;
 
 public class EditCanvas extends Canvas {
+
+    public static final Color GRID_LINE_COLOR = Color.grayRgb(180);
+    public static final double GRID_LINE_WIDTH = 0.5;
+    public static final Color MAZE_AREA_SEPARATOR_COLOR = Color.grayRgb(222, 0.75);
 
     static class TerrainAndActorRenderer extends TerrainMapTileRenderer implements ActorSpriteRenderer {
         public TerrainAndActorRenderer(Canvas canvas) {
@@ -254,7 +259,6 @@ public class EditCanvas extends Canvas {
 
     public void draw(TerrainMapColoring colors) {
         final double scaledTileSize = scaling() * WorldMap.TS;
-
         final TerrainLayer terrain = worldMap().terrainLayer();
 
         ctx.setImageSmoothing(false);
@@ -262,6 +266,7 @@ public class EditCanvas extends Canvas {
         ctx.setFill(colors.floorColor());
         ctx.fillRect(0, 0, getWidth(), getHeight());
 
+        // Indicate if edit canvas has focus by a dashed yellow border
         if (isFocused()) {
             ctx.setStroke(Color.YELLOW);
             ctx.setLineWidth(2);
@@ -282,18 +287,22 @@ public class EditCanvas extends Canvas {
             drawGrid();
         }
 
-        // Indicate start and end of reserved areas at top and bottom
+        // Indicate top and bottom of maze area with dashed horizontal lines
         ctx.save();
-        ctx.setStroke(Color.grayRgb(200, 0.75));
+        ctx.setStroke(MAZE_AREA_SEPARATOR_COLOR);
         ctx.setLineWidth(0.75);
         ctx.setLineDashes(5, 5);
-        ctx.strokeLine(0, terrain.emptyRowsOverMaze() * scaledTileSize, getWidth(), terrain.emptyRowsOverMaze() * scaledTileSize);
+        ctx.strokeLine(
+            0, terrain.emptyRowsOverMaze() * scaledTileSize,
+            getWidth(), terrain.emptyRowsOverMaze() * scaledTileSize
+        );
         ctx.strokeLine(
             0, getHeight() - terrain.emptyRowsBelowMaze() * scaledTileSize,
-            getWidth(), getHeight() - terrain.emptyRowsBelowMaze() * scaledTileSize);
+            getWidth(), getHeight() - terrain.emptyRowsBelowMaze() * scaledTileSize
+        );
         ctx.restore();
 
-        // Terrain
+        // Draw terrain
         if (terrainVisible.get()) {
             renderer.setMapColoring(colors);
             renderer.setSegmentNumbersDisplayed(segmentNumbersVisible.get());
@@ -302,18 +311,18 @@ public class EditCanvas extends Canvas {
             obstacleEditor.draw(renderer);
         }
 
-        // Tiles that seem to be wrong
+        // Indicate tiles that seem to be wrong
         ctx.setFont(Font.font("sans", gridSize() - 2));
         ctx.setFill(Color.grayRgb(200, 0.8));
         for (Vector2i tile : ui.editor().checkResult().tilesWithErrors()) {
             ctx.fillText("?", tile.x() * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             if (symmetricEditMode.get()) {
-                int x = worldMap().numCols() - tile.x() - 1;
+                final int x = worldMap().numCols() - tile.x() - 1;
                 ctx.fillText("?", x * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             }
         }
 
-        // Vertical separator to indicate symmetric edit mode
+        // Draw vertical separator to indicate symmetric edit mode
         if (editMode.get() == EditMode.EDIT && symmetricEditMode.get()) {
             final double centerX = 0.5 * getWidth();
             ctx.save();
@@ -324,7 +333,7 @@ public class EditCanvas extends Canvas {
             ctx.restore();
         }
 
-        // Food
+        // Draw food
         if (foodVisible.get()) {
             final FoodLayer foodLayer = worldMap().foodLayer();
             final Color foodColor = getColorFromMapLayer(foodLayer, COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
@@ -333,6 +342,7 @@ public class EditCanvas extends Canvas {
             foodLayer.tiles().forEach(tile -> foodRenderer.drawTile(tile, foodLayer.content(tile)));
         }
 
+        // Draw actors
         if (actorsVisible.get()) {
             ACTOR_SPRITES.forEach((positionProperty, sprite) -> {
                 final Vector2i tile = terrain.getTileProperty(positionProperty);
@@ -342,6 +352,7 @@ public class EditCanvas extends Canvas {
             });
         }
 
+        // Indicate focussed tile by a square
         if (focussedTile() != null) {
             ctx.save();
             ctx.setLineWidth(1);
@@ -353,8 +364,8 @@ public class EditCanvas extends Canvas {
 
     private void drawGrid() {
         ctx.save();
-        ctx.setLineWidth(0.5);
-        ctx.setStroke(Color.grayRgb(180));
+        ctx.setLineWidth(GRID_LINE_WIDTH);
+        ctx.setStroke(GRID_LINE_COLOR);
         for (int row = 1; row < worldMap().numRows(); ++row) {
             ctx.strokeLine(0, row * gridSize(), getWidth(), row * gridSize());
         }
@@ -478,11 +489,11 @@ public class EditCanvas extends Canvas {
         mouseEvent.consume();
     }
 
-    public void onContextMenuRequested(ContextMenuEvent menuEvent) {
-        if (ui.editModeIs(EditMode.INSPECT) || menuEvent.isKeyboardTrigger()) {
+    public void onContextMenuRequested(ContextMenuEvent event) {
+        if (ui.editModeIs(EditMode.INSPECT) || event.isKeyboardTrigger()) {
             return;
         }
-        contextMenu.update(menuEvent);
-        contextMenu.show(this, menuEvent.getScreenX(), menuEvent.getScreenY());
+        contextMenu.updateState(event);
+        contextMenu.show(this, event.getScreenX(), event.getScreenY());
     }
 }
