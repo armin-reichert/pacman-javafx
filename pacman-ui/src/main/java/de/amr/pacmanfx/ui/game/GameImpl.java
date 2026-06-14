@@ -104,7 +104,7 @@ public final class GameImpl implements Game {
             new FlashMessageManager(),
             new GameSceneManager(this),
             new SoundManager(this),
-            new SpriteAnimationManager(),
+            new SpriteAnimationManager(60),
             () -> GameUI_Constants.LOCALIZED_TEXTS,
             view,
             new SubViewManager(),
