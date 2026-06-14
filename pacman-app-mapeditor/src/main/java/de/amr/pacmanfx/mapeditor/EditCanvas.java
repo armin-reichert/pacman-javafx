@@ -40,8 +40,8 @@ import static java.util.Objects.requireNonNull;
 
 public class EditCanvas extends Canvas {
 
-    static class EditRenderer extends TerrainMapTileRenderer implements ActorSpriteRenderer {
-        public EditRenderer(Canvas canvas) {
+    static class TerrainAndActorRenderer extends TerrainMapTileRenderer implements ActorSpriteRenderer {
+        public TerrainAndActorRenderer(Canvas canvas) {
             super(canvas);
         }
     }
@@ -71,7 +71,7 @@ public class EditCanvas extends Canvas {
     private final ObstacleEditor obstacleEditor;
     private final EditCanvasContextMenu contextMenu;
 
-    private final EditRenderer renderer;
+    private final TerrainAndActorRenderer renderer;
     private final FoodMapRenderer foodRenderer;
 
     private final TileMapEditorUI ui;
@@ -117,7 +117,7 @@ public class EditCanvas extends Canvas {
         terrainVisibleProperty()            .bind(ui.terrainVisibleProperty());
         worldMapProperty()                  .bind(ui.editor().currentWorldMapProperty());
 
-        renderer = new EditRenderer(this);
+        renderer = new TerrainAndActorRenderer(this);
         renderer.scalingProperty().bind(scaling);
 
         foodRenderer = new FoodMapRenderer(this);
@@ -252,21 +252,21 @@ public class EditCanvas extends Canvas {
         obstacleEditor.setEnabled(false);
     }
 
-    public void draw(TerrainMapColoring colorScheme) {
-        double width = getWidth(), height = getHeight();
-        final TerrainLayer terrain = worldMap().terrainLayer();
+    public void draw(TerrainMapColoring colors) {
         final double scaledTileSize = scaling() * WorldMap.TS;
+
+        final TerrainLayer terrain = worldMap().terrainLayer();
 
         ctx.setImageSmoothing(false);
 
-        ctx.setFill(colorScheme.floorColor());
-        ctx.fillRect(0, 0, width, height);
+        ctx.setFill(colors.floorColor());
+        ctx.fillRect(0, 0, getWidth(), getHeight());
 
         if (isFocused()) {
             ctx.setStroke(Color.YELLOW);
             ctx.setLineWidth(2);
             ctx.setLineDashes(2, 10);
-            ctx.strokeRect(0, 0, width, height);
+            ctx.strokeRect(0, 0, getWidth(), getHeight());
             ctx.setLineDashes();
         }
 
@@ -274,8 +274,8 @@ public class EditCanvas extends Canvas {
             ctx.drawImage(templateImageGray.get(),
                 0,
                 terrain.emptyRowsOverMaze() * scaledTileSize,
-                width,
-                height - (terrain.emptyRowsOverMaze() + terrain.emptyRowsBelowMaze()) * scaledTileSize);
+                getWidth(),
+                getHeight() - (terrain.emptyRowsOverMaze() + terrain.emptyRowsBelowMaze()) * scaledTileSize);
         }
 
         if (gridVisibleProperty().get()) {
@@ -287,13 +287,15 @@ public class EditCanvas extends Canvas {
         ctx.setStroke(Color.grayRgb(200, 0.75));
         ctx.setLineWidth(0.75);
         ctx.setLineDashes(5, 5);
-        ctx.strokeLine(0, terrain.emptyRowsOverMaze() * scaledTileSize, width, terrain.emptyRowsOverMaze() * scaledTileSize);
-        ctx.strokeLine(0, height - terrain.emptyRowsBelowMaze() * scaledTileSize, width, height - terrain.emptyRowsBelowMaze() * scaledTileSize);
+        ctx.strokeLine(0, terrain.emptyRowsOverMaze() * scaledTileSize, getWidth(), terrain.emptyRowsOverMaze() * scaledTileSize);
+        ctx.strokeLine(
+            0, getHeight() - terrain.emptyRowsBelowMaze() * scaledTileSize,
+            getWidth(), getHeight() - terrain.emptyRowsBelowMaze() * scaledTileSize);
         ctx.restore();
 
         // Terrain
         if (terrainVisible.get()) {
-            renderer.setMapColoring(colorScheme);
+            renderer.setMapColoring(colors);
             renderer.setSegmentNumbersDisplayed(segmentNumbersVisible.get());
             renderer.setObstacleInnerAreaDisplayed(obstacleInnerAreaDisplayed.get());
             renderer.draw(worldMap());
@@ -313,18 +315,19 @@ public class EditCanvas extends Canvas {
 
         // Vertical separator to indicate symmetric edit mode
         if (editMode.get() == EditMode.EDIT && symmetricEditMode.get()) {
+            final double centerX = 0.5 * getWidth();
             ctx.save();
             ctx.setStroke(Color.YELLOW);
             ctx.setLineWidth(0.75);
             ctx.setLineDashes(5, 5);
-            ctx.strokeLine(width / 2.0, 0, width / 2.0, height);
+            ctx.strokeLine(centerX, 0, centerX, getHeight());
             ctx.restore();
         }
 
         // Food
         if (foodVisible.get()) {
-            FoodLayer foodLayer = worldMap().foodLayer();
-            Color foodColor = getColorFromMapLayer(foodLayer, COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
+            final FoodLayer foodLayer = worldMap().foodLayer();
+            final Color foodColor = getColorFromMapLayer(foodLayer, COLOR_FOOD, ArcadeSprites.MS_PACMAN_COLOR_FOOD);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
             foodLayer.tiles().forEach(tile -> foodRenderer.drawTile(tile, foodLayer.content(tile)));
@@ -332,7 +335,7 @@ public class EditCanvas extends Canvas {
 
         if (actorsVisible.get()) {
             ACTOR_SPRITES.forEach((positionProperty, sprite) -> {
-                Vector2i tile = terrain.getTileProperty(positionProperty);
+                final Vector2i tile = terrain.getTileProperty(positionProperty);
                 if (tile != null) {
                     renderer.drawActorSprite(tile, sprite);
                 }
