@@ -65,7 +65,7 @@ public final class Keyboard {
         target.removeEventFilter(KeyEvent.KEY_PRESSED,  this::onKeyPressed);
         target.addEventFilter(KeyEvent.KEY_PRESSED,  this::onKeyPressed);
 
-        target.removeEventFilter(KeyEvent.KEY_RELEASED, this::onKeyPressed);
+        target.removeEventFilter(KeyEvent.KEY_RELEASED, this::onKeyReleased);
         target.addEventFilter(KeyEvent.KEY_RELEASED, this::onKeyReleased);
     }
 
