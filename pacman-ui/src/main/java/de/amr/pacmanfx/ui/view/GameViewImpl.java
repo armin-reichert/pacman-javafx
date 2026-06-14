@@ -49,6 +49,7 @@ public class GameViewImpl implements GameView {
 
     public GameViewImpl(int width, int height) {
         mainScene = new GameViewMainScene(width, height);
+        mainScene.getStylesheets().add(GameUI_Constants.STYLE_SHEET_PATH);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class GameViewImpl implements GameView {
         subViews.setEditorViewFactory(() -> createEditorSubView(subViews, game));
 
         createStatusIconBox(subViews, game);
-        createKeyboardInfo(game);
+        createKeyboardInfoPopup(game);
         createStageTitleBinding(game.ui(), subViews, gameScenes);
 
         populateMainScene(game.ui());
@@ -178,7 +179,7 @@ public class GameViewImpl implements GameView {
         StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
     }
 
-    private void createKeyboardInfo(Game game) {
+    private void createKeyboardInfoPopup(Game game) {
         keyboardInfoPopup = new KeyboardInfo(game.ui(), game.input().keyboard());
         keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
     }

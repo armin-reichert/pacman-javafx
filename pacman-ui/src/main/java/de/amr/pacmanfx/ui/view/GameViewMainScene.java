@@ -28,7 +28,6 @@ public class GameViewMainScene extends Scene {
 
     public GameViewMainScene(double width, double height) {
         super(new StackPane(), width, height, Color.BLACK);
-        getStylesheets().add(GameUI_Constants.STYLE_SHEET_PATH);
     }
 
     public void init(Game game) {
