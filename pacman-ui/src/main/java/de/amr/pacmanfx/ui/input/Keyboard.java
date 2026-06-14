@@ -31,7 +31,7 @@ public final class Keyboard {
     private final BooleanProperty enabled = new SimpleBooleanProperty(true);
 
     // Current state
-    private final Collection<KeyCode> pressedKeys = new LinkedHashSet<>();
+    private final Set<KeyCode> pressedKeys = new LinkedHashSet<>();
     private boolean shiftDown;
     private boolean controlDown;
     private boolean altDown;
