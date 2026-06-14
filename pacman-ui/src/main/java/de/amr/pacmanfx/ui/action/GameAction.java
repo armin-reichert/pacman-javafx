@@ -52,7 +52,9 @@ public abstract class GameAction {
             Logger.warn("Action {}' not executed (disabled)", id);
         }
 
+        // Clear the input that triggered this action
         game.input().keyboard().clearState();
+
         return success;
     }
 

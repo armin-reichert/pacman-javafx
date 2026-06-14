@@ -4,8 +4,9 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
+import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.input.KeyCode;
@@ -30,13 +31,12 @@ public class Camera3DActions {
             protected void doAction() {
                 final PerspectiveID nextID = game.ui().settings3D().cameraPerspectiveIdProperty().get().next();
                 game.ui().settings3D().cameraPerspectiveIdProperty().set(nextID);
+                game.shortMessage(translatedPerspectiveMessage(game, nextID));
+            }
 
-                final TranslationManager translations = game.ui().translations();
-                final String msgKey = translations.translate(
-                    "camera_perspective",
-                    translations.translate("perspective_id_" + nextID.name())
-                );
-                game.shortMessage(msgKey);
+            @Override
+            public boolean isEnabled() {
+                return is3DPlaySceneActive(game);
             }
         };
 
@@ -45,13 +45,11 @@ public class Camera3DActions {
             protected void doAction() {
                 final PerspectiveID prevID = game.ui().settings3D().cameraPerspectiveIdProperty().get().prev();
                 game.ui().settings3D().cameraPerspectiveIdProperty().set(prevID);
-
-                final TranslationManager translations = game.ui().translations();
-                final String msgKey = translations.translate(
-                    "camera_perspective",
-                    translations.translate("perspective_id_" + prevID.name())
-                );
-                game.shortMessage(msgKey);
+                game.shortMessage(translatedPerspectiveMessage(game, prevID));
+            }
+            @Override
+            public boolean isEnabled() {
+                return is3DPlaySceneActive(game);
             }
         };
 
@@ -59,6 +57,10 @@ public class Camera3DActions {
             @Override
             protected void doAction() {
                 Ufx.toggleProperty(game.ui().settings3D().drawModeProperty(), DrawMode.LINE, DrawMode.FILL);
+            }
+            @Override
+            public boolean isEnabled() {
+                return is3DPlaySceneActive(game);
             }
         };
 
@@ -83,5 +85,17 @@ public class Camera3DActions {
 
     public Set<ActionKeyBinding> bindings() {
         return bindings;
+    }
+
+    private boolean is3DPlaySceneActive(Game game) {
+        return game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D);
+    }
+
+    private String translatedPerspectiveMessage(Game game, PerspectiveID perspectiveID) {
+        final TranslationManager translations = game.ui().translations();
+        return translations.translate(
+            "camera_perspective",
+            translations.translate("perspective_id_" + perspectiveID.name())
+        );
     }
 }
