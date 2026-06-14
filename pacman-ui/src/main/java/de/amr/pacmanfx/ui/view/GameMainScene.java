@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.view;
 
-import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
@@ -19,14 +18,14 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameViewMainScene extends Scene {
+public class GameMainScene extends Scene {
 
     /** Index in the main scene's root pane child list where the active view is embedded. */
     public static final int SUBVIEW_CHILD_INDEX = 0;
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Main Scene Action Bindings");
 
-    public GameViewMainScene(double width, double height) {
+    public GameMainScene(double width, double height) {
         super(new StackPane(), width, height, Color.BLACK);
     }
 

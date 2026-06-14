@@ -17,7 +17,7 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.playview.DecorationPane;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
-import de.amr.pacmanfx.ui.view.GameViewMainScene;
+import de.amr.pacmanfx.ui.view.GameMainScene;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import javafx.beans.property.ObjectProperty;
@@ -212,7 +212,7 @@ public class GameSceneManager implements ChangeListener<AbstractGameScene> {
 
     // 3D scenes or 2D scenes with camera
     private void embedGameSceneWithSubSceneFX(Game game, GamePlayView playView, AbstractGameScene gameScene, SubScene subSceneFX) {
-        final GameViewMainScene mainScene = game.ui().view().mainScene();
+        final GameMainScene mainScene = game.ui().view().mainScene();
 
         // stretch sub scene to available space
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
@@ -228,7 +228,7 @@ public class GameSceneManager implements ChangeListener<AbstractGameScene> {
 
     // 2D scenes without camera which are shown at full size
     private void embedGameScene2D(Game game, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
-        final GameViewMainScene mainScene = game.ui().view().mainScene();
+        final GameMainScene mainScene = game.ui().view().mainScene();
         final GamePlayView playView = game.ui().subViews().gamePlayView();
         final DecorationPane decorationPane = playView.gameSceneFrame();
 

@@ -19,7 +19,7 @@ public interface GameView {
         return stageProperty().get();
     }
 
-    GameViewMainScene mainScene();
+    GameMainScene mainScene();
 
     void replaceSubView(SubView subView);
 

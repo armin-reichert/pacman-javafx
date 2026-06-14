@@ -39,7 +39,7 @@ public class GameViewImpl implements GameView {
 
     private final ObjectProperty<Stage> stage = new SimpleObjectProperty<>();
 
-    private final GameViewMainScene mainScene;
+    private final GameMainScene mainScene;
 
     private Game game;
 
@@ -48,7 +48,7 @@ public class GameViewImpl implements GameView {
     private StringBinding stageTitleBinding;
 
     public GameViewImpl(int width, int height) {
-        mainScene = new GameViewMainScene(width, height);
+        mainScene = new GameMainScene(width, height);
         mainScene.getStylesheets().add(GameUI_Constants.STYLE_SHEET_PATH);
     }
 
@@ -102,7 +102,7 @@ public class GameViewImpl implements GameView {
     }
 
     @Override
-    public GameViewMainScene mainScene() {
+    public GameMainScene mainScene() {
         return mainScene;
     }
 
