@@ -42,7 +42,7 @@ public class EmptyActionBindingsRegistry implements ActionBindingsRegistry {
     public void registerAllBindings(Set<ActionKeyBinding> bindings) {}
 
     @Override
-    public Optional<GameAction> triggeredAction(Keyboard keyboard) {
+    public Optional<GameAction> findActionMatchingPressedKeys(Keyboard keyboard) {
         return Optional.empty();
     }
 }

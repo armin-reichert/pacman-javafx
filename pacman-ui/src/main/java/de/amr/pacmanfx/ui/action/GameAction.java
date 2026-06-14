@@ -26,8 +26,16 @@ public abstract class GameAction {
         return "GameAction{" + "id='" + id + '\'' + '}';
     }
 
+    /**
+     * This method has to be implemented by subclasses.
+     */
     protected abstract void doAction();
 
+    /**
+     * This method may be implemented by subclasses to define when this action is enabled.
+     *
+     * @return {@code true} if this action can be executed
+     */
     public boolean isEnabled() { return true; }
 
     public final boolean execute() {

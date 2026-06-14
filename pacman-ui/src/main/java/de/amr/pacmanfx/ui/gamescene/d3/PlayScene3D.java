@@ -188,7 +188,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onInput() {
         final Keyboard keyboard = game().input().keyboard();
-        final GameAction gameAction = actionBindings().triggeredAction(keyboard).orElse(null);
+        final GameAction gameAction = actionBindings().findActionMatchingPressedKeys(keyboard).orElse(null);
         if (gameAction != null) {
             gameAction.execute();
         } else {

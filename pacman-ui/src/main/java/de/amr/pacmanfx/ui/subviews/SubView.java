@@ -34,7 +34,7 @@ public interface SubView extends QuitHandler {
      * @param input the user input
      */
     default void onInput(Game game, Input input) {
-        actionBindings().triggeredAction(input.keyboard()).ifPresent(GameAction::execute);
+        actionBindings().findActionMatchingPressedKeys(input.keyboard()).ifPresent(GameAction::execute);
     }
 
     /**

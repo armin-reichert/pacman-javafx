@@ -106,7 +106,7 @@ public abstract class AbstractGameScene implements GameFacade, QuitHandler, Disp
      * Executes the first matching action.
      */
     public void onInput() {
-        actionBindings().triggeredAction(game.input().keyboard()).ifPresent(GameAction::execute);
+        actionBindings().findActionMatchingPressedKeys(game.input().keyboard()).ifPresent(GameAction::execute);
     }
 
     /**

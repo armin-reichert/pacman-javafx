@@ -40,7 +40,7 @@ public class GameMainScene extends Scene {
 
         keyboard.addStateListener(_ -> {
             // Check for "global" action first, if no one matches, let current sub view handle the keyboard state change
-            actionBindings.triggeredAction(game.input().keyboard()).ifPresentOrElse(
+            actionBindings.findActionMatchingPressedKeys(game.input().keyboard()).ifPresentOrElse(
                 GameAction::execute,
                 () -> {
                     final SubView currentSubView = game.ui().subViews().currentView();

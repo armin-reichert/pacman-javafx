@@ -19,7 +19,7 @@ public interface ActionBindingsRegistry extends Disposable {
 
     Map<KeyCodeCombination, GameAction> actionBindings();
 
-    Optional<GameAction> triggeredAction(Keyboard keyboard);
+    Optional<GameAction> findActionMatchingPressedKeys(Keyboard keyboard);
 
     default void bindActionToKeyCombinations(GameAction action, KeyCodeCombination... combinations) {
         for (var combination : combinations) {

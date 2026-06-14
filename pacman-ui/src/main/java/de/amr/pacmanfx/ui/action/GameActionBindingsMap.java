@@ -86,14 +86,12 @@ public class GameActionBindingsMap implements ActionBindingsRegistry {
     }
 
     @Override
-    public Optional<GameAction> triggeredAction(Keyboard keyboard) {
+    public Optional<GameAction> findActionMatchingPressedKeys(Keyboard keyboard) {
         for (var entry : actionBindingsMap.entrySet()) {
-            final KeyCodeCombination kcc = entry.getKey();
-            final GameAction action = entry.getValue();
-            if (keyboard.stateMatches(kcc)) {
-                Logger.info("ACTION MATCH FOUND: key='{}' action='{}'", kcc, action.id());
-                keyboard.clearState();
-                Logger.info("Keyboard state cleared!");
+            final KeyCodeCombination actionTrigger = entry.getKey();
+            if (keyboard.stateMatches(actionTrigger)) {
+                final GameAction action = entry.getValue();
+                Logger.info("ACTION MATCH FOUND: key='{}' action='{}'", actionTrigger, action.id());
                 return Optional.of(action);
             }
         }
