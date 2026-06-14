@@ -37,8 +37,6 @@ public final class Keyboard {
     private boolean altDown;
     private boolean metaDown;
 
-    Keyboard() {}
-
     public boolean isEnabled() {
         return enabled.get();
     }
@@ -61,6 +59,8 @@ public final class Keyboard {
     }
 
     public void filterKeyEventsFrom(EventTarget target) {
+        requireNonNull(target);
+
         // As there is no API contract that event filter is never added twice, I remove it first to be safe
         target.removeEventFilter(KeyEvent.KEY_PRESSED,  this::onKeyPressed);
         target.addEventFilter(KeyEvent.KEY_PRESSED,  this::onKeyPressed);
@@ -154,11 +154,12 @@ public final class Keyboard {
     }
 
     public boolean stateMatches(KeyCodeCombination combination) {
-        final KeyCode keyCode = combination.getCode();
-        return isKeyPressed(keyCode) && combination.match(syntheticKeyPressedEvent(keyCode));
+        requireNonNull(combination);
+        final KeyCode code = combination.getCode();
+        return isKeyPressed(code) && combination.match(syntheticEvent(code));
     }
 
-    private KeyEvent syntheticKeyPressedEvent(KeyCode code) {
+    private KeyEvent syntheticEvent(KeyCode code) {
         return new KeyEvent(
             KeyEvent.KEY_PRESSED,
             "",
