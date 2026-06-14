@@ -12,7 +12,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -81,8 +80,8 @@ public final class Keyboard {
         Logger.info("KeyboardStateListener removed: {}", stateListener);
     }
 
-    public Collection<KeyCode> pressedKeys() {
-        return Collections.unmodifiableCollection(pressedKeys);
+    public Set<KeyCode> pressedKeys() {
+        return Collections.unmodifiableSet(pressedKeys);
     }
 
     public boolean shiftDown() {
