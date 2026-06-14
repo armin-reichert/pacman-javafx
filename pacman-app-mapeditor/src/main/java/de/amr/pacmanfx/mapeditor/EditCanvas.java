@@ -30,7 +30,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.tinylog.Logger;
 
 import java.util.function.Predicate;
 
@@ -377,9 +376,9 @@ public class EditCanvas extends Canvas {
 
     // Event handlers
 
-    public void onKeyPressed(KeyEvent keyEvent) {
-        boolean control = keyEvent.isControlDown();
-        switch (keyEvent.getCode()) {
+    public void onKeyPressed(KeyEvent event) {
+        boolean control = event.isControlDown();
+        switch (event.getCode()) {
             case LEFT  -> moveCursor(Direction.LEFT, _ -> true);
             case RIGHT -> moveCursor(Direction.RIGHT, _ -> true);
             case UP    -> moveCursor(Direction.UP, _ -> true);
@@ -390,69 +389,68 @@ public class EditCanvas extends Canvas {
                 }
             }
         }
+        event.consume();
     }
 
-    public void onMouseClicked(MouseEvent mouseEvent) {
-        if (mouseEvent.getButton() != MouseButton.PRIMARY)
+    public void onMouseClicked(MouseEvent event) {
+        if (event.getButton() != MouseButton.PRIMARY)
             return;
 
-        Logger.info("Mouse clicked {}", mouseEvent);
-        requestFocus();
+        event.consume();
+
         contextMenu.hide();
-        mouseEvent.consume();
+        requestFocus();
     }
 
-    private void onDragDetected(MouseEvent mouseEvent) {
+    private void onDragDetected(MouseEvent event) {
         if (editMode.get() != EditMode.EDIT)
             return;
 
-        Logger.info("onDragDetected");
-        Vector2i tileAtMouse = tileAt(mouseEvent.getX(), mouseEvent.getY());
+        event.consume();
+
+        final Vector2i tileAtMouse = tileAt(event.getX(), event.getY());
         setDragging(true);
         obstacleEditor.startEditing(tileAtMouse);
-        Logger.info("Start editing obstacle");
-        mouseEvent.consume();
     }
 
-    private void onMouseDragged(MouseEvent mouseEvent) {
+    private void onMouseDragged(MouseEvent event) {
         if (!dragging()) {
             return;
         }
-        Logger.debug("onMouseDragged");
-        Vector2i tileAtMouse = tileAt(mouseEvent.getX(), mouseEvent.getY());
+
+        event.consume();
+
+        final Vector2i tileAtMouse = tileAt(event.getX(), event.getY());
         obstacleEditor.continueEditing(tileAtMouse);
-        mouseEvent.consume();
     }
 
-    public void onMouseReleased(MouseEvent mouseEvent) {
-        if (mouseEvent.getButton() != MouseButton.PRIMARY)
+    public void onMouseReleased(MouseEvent event) {
+        if (event.getButton() != MouseButton.PRIMARY)
             return;
 
-        Logger.info("onMouseReleased");
         if (dragging()) {
             setDragging(false);
             obstacleEditor.endEditing();
-            mouseEvent.consume();
-            Logger.info("End editing of obstacle");
+            event.consume();
         } else {
-            Vector2i tile = tileAt(mouseEvent.getX(), mouseEvent.getY());
+            final Vector2i tile = tileAt(event.getX(), event.getY());
             if (!ui.editModeIs(EditMode.INSPECT)) {
-                if (mouseEvent.isControlDown()) {
+                if (event.isControlDown()) {
                     ui.selectedPaletteID().ifPresent(paletteID -> {
                         switch (paletteID) {
                             case PaletteID.TERRAIN -> {
-                                mouseEvent.consume();
+                                event.consume();
                                 new Action_ClearTerrainTile(ui.editor(), tile).execute();
                             }
                             case PaletteID.FOOD -> {
-                                mouseEvent.consume();
+                                event.consume();
                                 new Action_ClearFoodTile(ui.editor(), tile).execute();
                             }
                         }
                     });
                 } else {
                     ui.selectedPalette().ifPresent(palette -> {
-                        mouseEvent.consume();
+                        event.consume();
                         new Action_ApplySelectedPaletteTool(ui, palette, tile).execute();
                     });
                 }
@@ -495,5 +493,6 @@ public class EditCanvas extends Canvas {
         }
         contextMenu.updateState(event);
         contextMenu.show(this, event.getScreenX(), event.getScreenY());
+        event.consume();
     }
 }
