@@ -22,9 +22,6 @@ import javafx.beans.property.*;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyEvent;
@@ -37,7 +34,6 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.ACTOR_SPRITES;
-import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.translated;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.COLOR_FOOD;
 import static java.util.Objects.requireNonNull;
@@ -73,7 +69,7 @@ public class EditCanvas extends Canvas {
 
     private final GraphicsContext ctx;
     private final ObstacleEditor obstacleEditor;
-    private final ContextMenu contextMenu = new ContextMenu();
+    private final EditCanvasContextMenu contextMenu;
 
     private final EditRenderer renderer;
     private final FoodMapRenderer foodRenderer;
@@ -82,7 +78,10 @@ public class EditCanvas extends Canvas {
 
     public EditCanvas(TileMapEditorUI ui) {
         this.ui = requireNonNull(ui);
+
         ctx = getGraphicsContext2D();
+
+        contextMenu = new EditCanvasContextMenu(this, ui);
 
         obstacleEditor = new ObstacleEditor(ui);
         obstacleEditor.joiningProperty().bind(obstaclesJoiningProperty());
@@ -477,52 +476,10 @@ public class EditCanvas extends Canvas {
     }
 
     public void onContextMenuRequested(ContextMenuEvent menuEvent) {
-        final TileMapEditor editor = ui.editor();
-
-        if (ui.editModeIs(EditMode.INSPECT)) {
+        if (ui.editModeIs(EditMode.INSPECT) || menuEvent.isKeyboardTrigger()) {
             return;
         }
-        if (menuEvent.isKeyboardTrigger()) {
-            return;
-        }
-
-        Vector2i tile = tileAt(menuEvent.getX(), menuEvent.getY());
-
-        var miCarveTunnel = new MenuItem(translated("menu.edit.carve_tunnel"));
-        miCarveTunnel.setOnAction(_ -> new Action_CarveTunnel(editor, tile).execute());
-
-        var miPlaceHouse = new MenuItem(translated("menu.edit.place_house"));
-        miPlaceHouse.setOnAction(_ -> new Action_MoveArcadeHouse(editor, tile).execute());
-
-        var miClearFoodAroundHouse = new MenuItem(translated("menu.edit.clear_food_around_house"));
-        miClearFoodAroundHouse.setOnAction(_ -> new Action_ClearFoodAroundHouse(editor, worldMap()).execute());
-
-        var miInsertRow = new MenuItem(translated("menu.edit.insert_row"));
-        miInsertRow.setOnAction(_ -> {
-            int rowIndex = tileAt(menuEvent.getX(), menuEvent.getY()).y();
-            editor.setCurrentWorldMap(worldMap().insertRowBeforeIndex(rowIndex));
-        });
-
-        var miDeleteRow = new MenuItem(translated("menu.edit.delete_row"));
-        miDeleteRow.setOnAction(_ -> {
-            int rowIndex = tileAt(menuEvent.getX(), menuEvent.getY()).y();
-            editor.setCurrentWorldMap(worldMap().deleteRowAtIndex(rowIndex));
-        });
-
-        var miFloodWithPellets = new MenuItem(translated("menu.edit.flood_with_pellets"));
-        miFloodWithPellets.setOnAction(_ -> new Action_FloodWithPellets(editor, tile).execute());
-        miFloodWithPellets.setDisable(!UfxMapEditor.canPlaceFoodAtTile(worldMap(), tile));
-
-        contextMenu.getItems().setAll(
-            miInsertRow,
-            miDeleteRow,
-            new SeparatorMenuItem(),
-            miCarveTunnel,
-            miPlaceHouse,
-            miClearFoodAroundHouse,
-            new SeparatorMenuItem(),
-            miFloodWithPellets);
-
+        contextMenu.update(menuEvent);
         contextMenu.show(this, menuEvent.getScreenX(), menuEvent.getScreenY());
     }
 }

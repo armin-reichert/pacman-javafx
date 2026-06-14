@@ -14,6 +14,7 @@ import static de.amr.pacmanfx.model.world.WorldMap.tile;
 public class EditorMenuBar extends MenuBar {
 
     private final Menu menuFile;
+
     private final Menu menuMaps;
 
     public Menu menuFile() {
@@ -25,10 +26,17 @@ public class EditorMenuBar extends MenuBar {
     }
 
     public EditorMenuBar(TileMapEditorUI ui) {
+        menuFile = buildFileMenu(ui);
+        menuMaps = new Menu(translated("menu.load_map"));
+        getMenus().addAll(
+            menuFile,
+            buildEditMenu(ui),
+            buildViewMenu(ui),
+            menuMaps);
+    }
 
+    private Menu buildFileMenu(TileMapEditorUI ui) {
         final TileMapEditor editor = ui.editor();
-
-        // "File" menu
 
         var miNewPreconfiguredMap = new MenuItem(translated("menu.file.new"));
         miNewPreconfiguredMap.setOnAction(_ -> new Action_SetNewMapInteractively(ui, true).execute());
@@ -48,7 +56,7 @@ public class EditorMenuBar extends MenuBar {
         var miCloseTemplateImage = new MenuItem(translated("menu.file.close_template_image"));
         miCloseTemplateImage.setOnAction(_ -> editor.setTemplateImage(null));
 
-        menuFile = new Menu(translated("menu.file"), NO_GRAPHIC,
+        return new Menu(translated("menu.file"), NO_GRAPHIC,
             miNewPreconfiguredMap,
             miNewBlankMap,
             miOpenMapFile,
@@ -56,8 +64,10 @@ public class EditorMenuBar extends MenuBar {
             new SeparatorMenuItem(),
             miOpenTemplateImage,
             miCloseTemplateImage);
+    }
 
-        // "Edit" menu
+    private Menu buildEditMenu(TileMapEditorUI ui) {
+        final TileMapEditor editor = ui.editor();
 
         var miObstacleJoining = new CheckMenuItem(translated("menu.edit.obstacles_joining"));
         miObstacleJoining.selectedProperty().bindBidirectional(ui.obstaclesJoiningProperty());
@@ -88,9 +98,9 @@ public class EditorMenuBar extends MenuBar {
 
         var miIdentifyTiles = new MenuItem(translated("menu.edit.identify_tiles"));
         miIdentifyTiles.disableProperty().bind(Bindings.createBooleanBinding(
-                () -> ui.editMode() == EditMode.INSPECT
-                        || editor.templateImageProperty().get() == null,
-                ui.editModeProperty(), editor.templateImageProperty()));
+            () -> ui.editMode() == EditMode.INSPECT
+                || editor.templateImageProperty().get() == null,
+            ui.editModeProperty(), editor.templateImageProperty()));
 
         miIdentifyTiles.setOnAction(_ -> new Action_FillMapFromTemplate(ui).execute());
 
@@ -98,7 +108,7 @@ public class EditorMenuBar extends MenuBar {
         miAssignDefaultColors.setOnAction(_ -> new Action_SetDefaultMapColors(editor).execute());
         miAssignDefaultColors.disableProperty().bind(ui.editModeProperty().isEqualTo(EditMode.INSPECT));
 
-        Menu menuEdit = new Menu(translated("menu.edit"), NO_GRAPHIC,
+        return new Menu(translated("menu.edit"), NO_GRAPHIC,
             miObstacleJoining,
             new SeparatorMenuItem(),
             miAddBorder,
@@ -109,12 +119,9 @@ public class EditorMenuBar extends MenuBar {
             miIdentifyTiles,
             miAssignDefaultColors);
 
-        // "Maps" menu
+    }
 
-        menuMaps = new Menu(translated("menu.load_map"));
-
-        // "View" menu
-
+    private Menu buildViewMenu(TileMapEditorUI ui) {
         var miPropertiesVisible = new CheckMenuItem(translated("menu.view.properties"));
         miPropertiesVisible.selectedProperty().bindBidirectional(ui.propertyEditorsVisibleProperty());
 
@@ -136,7 +143,7 @@ public class EditorMenuBar extends MenuBar {
         var miObstacleInnerAreaVisible = new CheckMenuItem(translated("inner_obstacle_area"));
         miObstacleInnerAreaVisible.selectedProperty().bindBidirectional(ui.obstacleInnerAreaDisplayedProperty());
 
-        Menu menuView = new Menu(translated("menu.view"), NO_GRAPHIC,
+        return new Menu(translated("menu.view"), NO_GRAPHIC,
             miPropertiesVisible,
             miTerrainVisible,
             miFoodVisible,
@@ -144,7 +151,5 @@ public class EditorMenuBar extends MenuBar {
             miSegmentNumbersVisible,
             miObstacleInnerAreaVisible,
             miGridVisible);
-
-        getMenus().addAll(menuFile, menuEdit, menuView, menuMaps);
     }
 }
