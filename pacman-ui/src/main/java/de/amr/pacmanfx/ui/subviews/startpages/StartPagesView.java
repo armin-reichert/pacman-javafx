@@ -41,33 +41,34 @@ public class StartPagesView extends Carousel implements SubView {
     //TODO start pages should define their preferred duration
     public static final int PAGE_CHANGE_SECONDS = 90;
 
-    private final GameAction actionShowPrevPage;
-    private final GameAction actionShowNextPage;
-
     private final List<StartPage> pages = new ArrayList<>();
-    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for Start View");
+    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Start View Action Bindings");
 
-    private final Game game;
+    private Game game;
+    private GameAction actionShowPrevPage;
+    private GameAction actionShowNextPage;
 
-    public StartPagesView(Game game) {
+    public StartPagesView() {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
 
-        this.game = requireNonNull(game);
+        setBackground(GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER);
 
         selectedIndexProperty().addListener((_, ov, nv) -> {
-            Logger.debug("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
                 pages.get(oldIndex).onExit();
             }
             if (newIndex != -1) {
-                StartPage startPage = pages.get(newIndex);
+                final StartPage startPage = pages.get(newIndex);
                 startPage.connect(game);
                 startPage.onEnter();
                 startPage.rootPane().requestFocus();
             }
         });
-        setBackground(GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER);
+    }
+
+    public void connect(Game game) {
+        this.game = requireNonNull(game);
 
         actionShowPrevPage = new GameAction(game, "show_prev_page") {
             @Override

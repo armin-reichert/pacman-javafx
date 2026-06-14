@@ -63,7 +63,8 @@ public class GamePlayView implements SubView {
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for Play View");
 
-    private final Game game;
+    private Game game;
+
     private final ContextMenu contextMenu = new ContextMenu();
 
     private StackPane rootPane;
@@ -88,12 +89,38 @@ public class GamePlayView implements SubView {
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
 
-    public GamePlayView(Game game, DashboardConfig dashboardConfig) {
-        this.game = requireNonNull(game);
+    public GamePlayView(DashboardConfig dashboardConfig) {
         createLayout(requireNonNull(dashboardConfig));
+    }
+
+    public void connect(Game game) {
+        this.game = requireNonNull(game);
+        final UISettings settings = game.ui().settings();
+
         rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(game, this));
         miniPlaySceneView.setUI(game);
+
+        pausedIcon.visibleProperty().bind(game.clock().updatesDisabledProperty());
+
+        settings.canvasFontSmoothingProperty.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
+
+        settings.debugInfoVisibleProperty.addListener((_, _, debug) -> {
+            gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);
+            gameSceneLayer.setBorder(debug ? DEBUG_BORDER : null);
+        });
+
+        overlayLayer.visibleProperty().bind(dashboard.rootPane().visibleProperty());
+
+        miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
+            () -> settings.miniViewOnProperty.get()
+                && game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D),
+            settings.miniViewOnProperty,
+            game.ui().gameScenes().gameSceneProperty()
+        ));
+
+        dashboard.connect(game);
     }
+
 
     public void resizeToFit(Scene parentSceneFX) {
         gameSceneFrame.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
@@ -248,30 +275,6 @@ public class GamePlayView implements SubView {
         StackPane.setAlignment(pausedIcon.node(), Pos.CENTER);
 
         rootPane = new StackPane(gameSceneLayer, miniPlaySceneView.rootPane(), overlayLayer, helpLayer, pausedIcon.node());
-    }
-
-    public void connect(Game game) {
-        final UISettings settings = game.ui().settings();
-
-        pausedIcon.visibleProperty().bind(game.clock().updatesDisabledProperty());
-
-        settings.canvasFontSmoothingProperty.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
-
-        settings.debugInfoVisibleProperty.addListener((_, _, debug) -> {
-            gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);
-            gameSceneLayer.setBorder(debug ? DEBUG_BORDER : null);
-        });
-
-        overlayLayer.visibleProperty().bind(dashboard.rootPane().visibleProperty());
-
-        miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
-            () -> settings.miniViewOnProperty.get()
-                && game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D),
-            settings.miniViewOnProperty,
-            game.ui().gameScenes().gameSceneProperty()
-        ));
-
-        dashboard.connect(game);
     }
 
     private void setFontSmoothing(boolean smoothing) {

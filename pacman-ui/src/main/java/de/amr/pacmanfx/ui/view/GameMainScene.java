@@ -29,7 +29,7 @@ public class GameMainScene extends Scene {
         super(new StackPane(), width, height, Color.BLACK);
     }
 
-    public void init(Game game) {
+    public void connect(Game game) {
         final SubViewManager subViews = game.ui().subViews();
         final Keyboard keyboard = game.input().keyboard();
 

@@ -47,9 +47,15 @@ public class GameViewImpl implements GameView {
     private KeyboardInfo keyboardInfoPopup;
     private StringBinding stageTitleBinding;
 
+    private final StartPagesView startPagesView;
+    private final GamePlayView gamePlayView;
+
     public GameViewImpl(int width, int height) {
         mainScene = new GameMainScene(width, height);
         mainScene.getStylesheets().add(GameUI_Constants.STYLE_SHEET_PATH);
+
+        startPagesView = new StartPagesView();
+        gamePlayView = createGamePlayView();
     }
 
     @Override
@@ -65,10 +71,12 @@ public class GameViewImpl implements GameView {
         final SubViewManager subViews = game.ui().subViews();
         final GameSceneManager gameScenes = game.ui().gameScenes();
 
-        // Create sub views
-        subViews.setStartView(new StartPagesView(game));
-        subViews.setGamePlayView(createGamePlaySubView(game));
+        // Set sub views
+        subViews.setStartView(startPagesView);
+        subViews.setGamePlayView(gamePlayView);
         subViews.setEditorViewFactory(() -> createEditorSubView(subViews, game));
+
+        startPagesView.connect(game);
 
         createStatusIconBox(subViews, game);
         createKeyboardInfoPopup(game);
@@ -153,7 +161,7 @@ public class GameViewImpl implements GameView {
             gameScenes.gameSceneProperty()
         ));
 
-        mainScene.init(game);
+        mainScene.connect(game);
     }
 
     private void createStageTitleBinding(GameUI ui, SubViewManager subViews, GameSceneManager gameScenes) {
@@ -184,8 +192,8 @@ public class GameViewImpl implements GameView {
         keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
     }
 
-    private GamePlayView createGamePlaySubView(Game game) {
-        final var playView = new GamePlayView(game, GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
+    private GamePlayView createGamePlayView() {
+        final var playView = new GamePlayView(GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
         final ChangeListener<? super Number> resizeHandler = (_,_,_) -> playView.resizeToFit(mainScene);
         mainScene.widthProperty().addListener(resizeHandler);
         mainScene.heightProperty().addListener(resizeHandler);
@@ -193,13 +201,14 @@ public class GameViewImpl implements GameView {
     }
 
     private EditorView createEditorSubView(SubViewManager subViews, Game game) {
-        final var editorView = new EditorView(stage(), game);
+        final var editorView = new EditorView(stage());
         editorView.editor().setOnQuit(_ -> {
             // restore title (editor changed it)
             stage().titleProperty().unbind();
             stage().titleProperty().bind(stageTitleBindingProperty());
             subViews.selectStartView();
         });
+        editorView.connect(game);
         return editorView;
     }
 

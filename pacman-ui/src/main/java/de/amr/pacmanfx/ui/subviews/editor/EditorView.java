@@ -9,6 +9,7 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.subviews.SubView;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.Region;
@@ -16,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -23,21 +25,17 @@ import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 
 public class EditorView implements SubView {
 
-    private final Game game;
     private final TileMapEditor editor;
 
-    public EditorView(Stage stage, Game game) {
-        this.game = game;
+    public EditorView(Stage stage) {
         editor = new TileMapEditor(stage);
-        MenuItem miQuitEditor = createQuitEditorMenuItem();
-        editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
         editor.ui().layoutPane().setBackground(paintBackground(Color.valueOf("#dddddd"))); // JavaFX default grey
     }
 
-    private MenuItem createQuitEditorMenuItem() {
-        var miQuitEditor = new MenuItem(game.ui().translations().translate("back_to_game"));
+    public void connect(Game game) {
+        final MenuItem miQuitEditor = new MenuItem(game.ui().translations().translate("back_to_game"));
         miQuitEditor.setOnAction(_ -> editor.quit());
-        return miQuitEditor;
+        editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
     }
 
     public TileMapEditor editor() {
