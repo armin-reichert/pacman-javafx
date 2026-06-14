@@ -8,13 +8,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static javafx.scene.input.KeyCombination.*;
+import static javafx.scene.input.KeyCombination.Modifier;
 
 public class KeyCodeCombinationBuilder {
-    private final Set<KeyCombination.Modifier> modifiers = new HashSet<>();
+
+    private final Set<KeyCombination.Modifier> modifiers = new LinkedHashSet<>();
 
     public static KeyCodeCombinationBuilder combine() {
         return new KeyCodeCombinationBuilder();
@@ -23,17 +24,17 @@ public class KeyCodeCombinationBuilder {
     public static KeyCodeCombination bareKey(KeyCode code) { return new KeyCodeCombination(code); }
 
     public KeyCodeCombinationBuilder alt() {
-        modifiers.add(ALT_DOWN);
+        modifiers.add(KeyCombination.ALT_DOWN);
         return this;
     }
 
     public KeyCodeCombinationBuilder ctrl() {
-        modifiers.add(CONTROL_DOWN);
+        modifiers.add(KeyCombination.CONTROL_DOWN);
         return this;
     }
 
     public KeyCodeCombinationBuilder shift() {
-        modifiers.add(SHIFT_DOWN);
+        modifiers.add(KeyCombination.SHIFT_DOWN);
         return this;
     }
 
