@@ -5,14 +5,12 @@
 package de.amr.pacmanfx.ui.view;
 
 import de.amr.basics.math.RandomNumberSupport;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
@@ -40,15 +38,16 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 
 public class GameViewImpl implements GameView {
 
-    private final ObjectProperty<Stage> stage = new SimpleObjectProperty<>();
-
-    private final GameMainScene mainScene;
-
     private Game game;
 
+    private final ChangeListener<String> iconUpdateListener = (_, _, _) -> updateStageIcon(game);
+    private StringBinding stageTitleBinding;
+
+    // The view components
+    private final ObjectProperty<Stage> stage = new SimpleObjectProperty<>();
+    private final GameMainScene mainScene;
     private StatusIconBox statusIconBox;
     private KeyboardInfo keyboardInfoPopup;
-    private StringBinding stageTitleBinding;
 
     private final StartPagesView startPagesView;
     private final GamePlayView gamePlayView;
@@ -71,42 +70,35 @@ public class GameViewImpl implements GameView {
         }
         this.game = game;
 
-        final SubViewManager subViews = game.ui().subViews();
-        final GameSceneManager gameScenes = game.ui().gameScenes();
-
         // Set sub views
+        final SubViewManager subViews = game.ui().subViews();
         subViews.setStartView(startPagesView);
         subViews.setGamePlayView(gamePlayView);
-        subViews.setEditorViewFactory(() -> createEditorSubView(subViews, game));
+        subViews.setEditorViewFactory(() -> createEditorSubView(game));
+
+        createStatusIconBox(game);
+        createKeyboardInfoPopup(game);
+        populateMainScene(game);
+
+        createStageTitleBinding(game);
+        initMainScene(game);
+        registerCommonActions(game);
 
         startPagesView.connect(game);
-
-        createStatusIconBox(subViews, game);
-        createKeyboardInfoPopup(game);
-        createStageTitleBinding(game.ui(), subViews, gameScenes);
-
-        populateMainScene(game.ui());
-        initMainScene(game, subViews, gameScenes);
-
-        registerCommonActions(game);
 
         // Some status icons are bound to the game model of the *current* game variant
         game.gameVariantNameProperty().addListener((_,_,variantName) -> {
             statusIconBox.bind(game.gameVariant(variantName).gameModel());
+            //TODO This does not belong here
             subViews.gamePlayView().gameSceneFrame().clearCanvas();
         });
     }
 
     @Override
     public void show() {
-        initStage();
+        initStage(game);
         stage().centerOnScreen();
         stage().show();
-    }
-
-    @Override
-    public void replaceSubView(SubView subView) {
-        mainScene.replaceSubView(subView);
     }
 
     @Override
@@ -119,27 +111,16 @@ public class GameViewImpl implements GameView {
         return mainScene;
     }
 
-    public StringBinding stageTitleBindingProperty() {
-        return stageTitleBinding;
-    }
-
-    private String computeStageTitle(Game game) {
-        final SubView view = game.ui().subViews().currentView();
-        return view == null
-            ? game.ui().translations().translate("view.missing") // Should never happen
-            : view.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(game));
-    }
-
     // Private area
 
-    private void initStage() {
+    private void initStage(Game game) {
         final Stage theStage = stage();
         if (theStage == null) {
             throw new IllegalStateException("No stage assigned to game view");
         }
 
         theStage.setScene(mainScene);
-        theStage.titleProperty().bind(stageTitleBindingProperty());
+        theStage.titleProperty().bind(stageTitleBinding);
 
         updateStageIcon(game);
         registerIconUpdater(game);
@@ -148,24 +129,23 @@ public class GameViewImpl implements GameView {
         theStage.setMinHeight(GameUI_Constants.MIN_STAGE_HEIGHT);
     }
 
-    private void populateMainScene(GameUI ui) {
+    private void populateMainScene(Game game) {
         mainScene.rootPane().getChildren().addAll(
             new Region(), // placeholder, will be replaced by current view (start, play, edit)
             statusIconBox.rootPane(),
-            ui.flashMessages().messageView().rootPane(),
+            game.ui().flashMessages().messageView().rootPane(),
             keyboardInfoPopup.rootPane()
         );
     }
 
-    private void initMainScene(Game game, SubViewManager subViews, GameSceneManager gameScenes) {
+    private void initMainScene(Game game) {
         mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)
+            () -> game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)
                 ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
                 : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
-            subViews.selectedSubViewProperty(),
-            gameScenes.gameSceneProperty()
+            game.ui().subViews().selectedSubViewProperty(),
+            game.ui().gameScenes().gameSceneProperty()
         ));
-
         mainScene.connect(game);
     }
 
@@ -179,19 +159,27 @@ public class GameViewImpl implements GameView {
         Logger.info(mainScene.actionBindings());
     }
 
-    private void createStageTitleBinding(GameUI ui, SubViewManager subViews, GameSceneManager gameScenes) {
+    private void createStageTitleBinding(Game game) {
         stageTitleBinding = createStringBinding(
             () -> computeStageTitle(game),
             game.clock().updatesDisabledProperty(),
             game.gameVariantNameProperty(),
-            subViews.selectedSubViewProperty(),
-            gameScenes.gameSceneProperty(),
-            ui.settings().debugInfoVisibleProperty,
-            ui.settings3D().view3DEnabledProperty()
+            game.ui().subViews().selectedSubViewProperty(),
+            game.ui().gameScenes().gameSceneProperty(),
+            game.ui().settings().debugInfoVisibleProperty,
+            game.ui().settings3D().view3DEnabledProperty()
         );
     }
 
-    private void createStatusIconBox(SubViewManager subViews, Game game) {
+    private String computeStageTitle(Game game) {
+        final SubView currentSubView = game.ui().subViews().currentView();
+        return currentSubView == null
+            ? game.ui().translations().translate("view.missing") // Should never happen
+            : currentSubView.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(game));
+    }
+
+    private void createStatusIconBox(Game game) {
+        final SubViewManager subViews = game.ui().subViews();
         statusIconBox = new StatusIconBox(game);
         statusIconBox.rootPane().visibleProperty().bind(
             Bindings.createBooleanBinding(
@@ -215,13 +203,13 @@ public class GameViewImpl implements GameView {
         return playView;
     }
 
-    private EditorView createEditorSubView(SubViewManager subViews, Game game) {
+    private EditorView createEditorSubView(Game game) {
         final var editorView = new EditorView(stage());
         editorView.editor().setOnQuit(_ -> {
             // restore title (editor changed it)
             stage().titleProperty().unbind();
-            stage().titleProperty().bind(stageTitleBindingProperty());
-            subViews.selectStartView();
+            stage().titleProperty().bind(stageTitleBinding);
+            game.ui().subViews().selectStartView();
         });
         editorView.connect(game);
         return editorView;
@@ -235,8 +223,6 @@ public class GameViewImpl implements GameView {
             Logger.error("Could not access stage icon");
         }
     }
-
-    private final ChangeListener<String> iconUpdateListener = (_, _, _) -> updateStageIcon(game);
 
     private void registerIconUpdater(Game game) {
         game.gameVariantNameProperty().removeListener(iconUpdateListener);

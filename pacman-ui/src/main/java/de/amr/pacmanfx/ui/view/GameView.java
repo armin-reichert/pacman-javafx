@@ -21,7 +21,5 @@ public interface GameView {
 
     GameMainScene mainScene();
 
-    void replaceSubView(SubView subView);
-
     void show();
 }

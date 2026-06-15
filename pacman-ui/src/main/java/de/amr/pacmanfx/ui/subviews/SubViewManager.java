@@ -38,7 +38,7 @@ public final class SubViewManager {
                 oldView.onExit();
                 oldView.actionBindings().dispose();
             }
-            game.ui().view().replaceSubView(newView);
+            game.ui().view().mainScene().replaceSubView(newView);
             game.ui().flashMessages().clearMessage();
             newView.onEnter();
         });
