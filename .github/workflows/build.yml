@@ -5,6 +5,9 @@ on:
     branches: [ "**" ]
   pull_request:
 
+env:
+  _JAVA_OPTIONS: "-Djava.net.preferIPv4Stack=true"
+
 jobs:
   build:
     strategy:
