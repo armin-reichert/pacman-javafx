@@ -52,7 +52,7 @@ public class EditorView implements SubView {
     public void onExit() {}
 
     @Override
-    public void onInput(Game game, Input input) {
+    public void onInput(Input input) {
         Logger.warn("I should never get input from the global keyboard!");
     }
 

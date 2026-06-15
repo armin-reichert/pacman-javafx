@@ -257,7 +257,7 @@ public class GameViewImpl implements GameView {
                 () -> {
                     final SubView currentSubView = subViews.currentView();
                     if (isGlobalKeyboardAvailableFor(subViews, currentSubView)) {
-                        currentSubView.onInput(game, game.input());
+                        currentSubView.onInput(game.input());
                     }
                 });
         });

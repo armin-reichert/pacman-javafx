@@ -111,7 +111,7 @@ public class StartPagesView extends Carousel implements SubView {
     public void handleQuit(Game game) {}
 
     @Override
-    public void onInput(Game game, Input input) {
+    public void onInput(Input input) {
         actionBindings.findActionMatchingPressedKeys(input.keyboard()).ifPresent(GameAction::execute);
     }
 

@@ -30,10 +30,9 @@ public interface SubView extends QuitHandler {
      * This method delegates to the view's {@link ActionBindingsRegistry} and executes
      * the resolved action via {@link de.amr.pacmanfx.ui.action.GameAction#execute()}.
      *
-     * @param game the global game UI façade
      * @param input the user input
      */
-    default void onInput(Game game, Input input) {
+    default void onInput(Input input) {
         actionBindings().findActionMatchingPressedKeys(input.keyboard()).ifPresent(GameAction::execute);
     }
 
