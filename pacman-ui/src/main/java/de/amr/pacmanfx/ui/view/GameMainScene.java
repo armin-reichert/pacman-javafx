@@ -4,17 +4,21 @@
 
 package de.amr.pacmanfx.ui.view;
 
+import de.amr.basics.math.RandomNumberSupport;
+import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.GameAction;
 import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
+import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -54,6 +58,12 @@ public class GameMainScene extends Scene {
 
         // Delegate mouse scroll events to current game scene
         setOnScroll(e -> game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+
+        rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
+            () -> selectMainSceneBackground(game),
+            game.ui().subViews().selectedSubViewProperty(),
+            game.ui().gameScenes().gameSceneProperty()
+        ));
     }
 
     public ActionBindingsRegistry actionBindings() {
@@ -70,6 +80,12 @@ public class GameMainScene extends Scene {
             throw new IllegalStateException("Root pane has no placeholder for embedding view");
         }
         rootPane().getChildren().set(SUBVIEW_CHILD_INDEX, subView.rootPane());
+    }
+
+    private Background selectMainSceneBackground(Game game) {
+        return game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)
+            ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
+            : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER;
     }
 
     private boolean isGlobalKeyboardAvailableFor(SubViewManager subViews, SubView subView) {

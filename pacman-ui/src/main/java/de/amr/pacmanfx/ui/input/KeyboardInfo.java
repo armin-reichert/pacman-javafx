@@ -8,7 +8,6 @@ import de.amr.pacmanfx.ui.game.Game;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -34,13 +33,15 @@ public class KeyboardInfo {
         rootPane.setMaxSize(280, 200);
         rootPane.setSpacing(3);
 
-        rootPane.setStyle("""
+        rootPane.setStyle(
+            """
             -fx-border-color: #ccc;
             -fx-border-width: 2;
             -fx-border-radius: 12;
             -fx-background-color: rgb(100,100,100,0.66);
             -fx-background-radius: 12;
-            """);
+            """
+        );
 
         StackPane.setMargin(rootPane, new Insets(10));
         StackPane.setAlignment(rootPane, Pos.TOP_RIGHT);

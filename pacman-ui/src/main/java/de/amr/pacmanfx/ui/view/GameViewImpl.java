@@ -4,13 +4,11 @@
 
 package de.amr.pacmanfx.ui.view;
 
-import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
@@ -18,7 +16,6 @@ import de.amr.pacmanfx.ui.subviews.editor.EditorView;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
@@ -81,9 +78,9 @@ public class GameViewImpl implements GameView {
         populateMainScene(game);
 
         createStageTitleBinding(game);
-        initMainScene(game);
         registerCommonActions(game);
 
+        mainScene.connect(game);
         keyboardInfoPopup.connect(game);
         startPagesView.connect(game);
 
@@ -130,17 +127,6 @@ public class GameViewImpl implements GameView {
             game.ui().flashMessages().messageView().rootPane(),
             keyboardInfoPopup.rootPane()
         );
-    }
-
-    private void initMainScene(Game game) {
-        mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)
-                ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
-                : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER,
-            game.ui().subViews().selectedSubViewProperty(),
-            game.ui().gameScenes().gameSceneProperty()
-        ));
-        mainScene.connect(game);
     }
 
     private void registerCommonActions(Game game) {
