@@ -50,7 +50,7 @@ import static de.amr.pacmanfx.core.GameVariantID.ARCADE_PACMAN_XXL;
  * </ul>
  * </p>
  */
-public class PacManGames3dApp extends Application {
+public class PacManAllGamesApp extends Application {
 
     private static final float ASPECT_RATIO    = 1.6f; // 16:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height

@@ -7,9 +7,11 @@ package de.amr.pacmanfx.ui.view;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.action.ActionKeyBinding;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.subviews.SubView;
@@ -30,6 +32,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.util.Set;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
@@ -84,6 +87,8 @@ public class GameViewImpl implements GameView {
 
         populateMainScene(game.ui());
         initMainScene(game, subViews, gameScenes);
+
+        registerCommonActions(game);
 
         // Some status icons are bound to the game model of the *current* game variant
         game.gameVariantNameProperty().addListener((_,_,variantName) -> {
@@ -162,6 +167,16 @@ public class GameViewImpl implements GameView {
         ));
 
         mainScene.connect(game);
+    }
+
+    private void registerCommonActions(Game game) {
+        final CommonActions actions = game.actions();
+        final Set<ActionKeyBinding> bindings = actions.bindings();
+        mainScene.actionBindings().selectAnyMatchingBinding(actions.uiSettingsActions().actionToggleKeyboardMonitor(), bindings);
+        mainScene.actionBindings().selectAnyMatchingBinding(actions.uiSettingsActions().actionEnterFullScreen(), bindings);
+        mainScene.actionBindings().selectAnyMatchingBinding(actions.simulationActions().actionToggleMuted(), bindings);
+        mainScene.actionBindings().selectAnyMatchingBinding(actions.editorActions().actionOpenEditor(), bindings);
+        Logger.info(mainScene.actionBindings());
     }
 
     private void createStageTitleBinding(GameUI ui, SubViewManager subViews, GameSceneManager gameScenes) {

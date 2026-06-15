@@ -54,13 +54,10 @@ public class GameMainScene extends Scene {
 
         // Delegate mouse scroll events to current game scene
         setOnScroll(e -> game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+    }
 
-        // Register common action bindings
-        actionBindings.selectAnyMatchingBinding(game.actions().uiSettingsActions().actionToggleKeyboardMonitor(), game.actions().commonBindings());
-        actionBindings.selectAnyMatchingBinding(game.actions().uiSettingsActions().actionEnterFullScreen(), game.actions().commonBindings());
-        actionBindings.selectAnyMatchingBinding(game.actions().simulationActions().actionToggleMuted(), game.actions().commonBindings());
-        actionBindings.selectAnyMatchingBinding(game.actions().editorActions().actionOpenEditor(), game.actions().commonBindings());
-        Logger.info(actionBindings);
+    public ActionBindingsRegistry actionBindings() {
+        return actionBindings;
     }
 
     public StackPane rootPane() {

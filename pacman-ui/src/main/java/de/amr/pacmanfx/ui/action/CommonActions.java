@@ -109,7 +109,7 @@ public final class CommonActions {
         return actionToggleCollisionStrategy;
     }
 
-    public Set<ActionKeyBinding> commonBindings() {
+    public Set<ActionKeyBinding> bindings() {
         return commonBindings;
     }
 }
