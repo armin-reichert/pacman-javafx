@@ -170,13 +170,11 @@ public class GameViewImpl implements GameView {
     }
 
     private void createStatusIconBox(Game game) {
-        final SubViewManager subViews = game.ui().subViews();
         statusIconBox = new StatusIconBox(game);
+        final var subViews = game.ui().subViews();
+        final var selectedSubView = subViews.selectedSubViewProperty();
         statusIconBox.rootPane().visibleProperty().bind(
-            Bindings.createBooleanBinding(
-                () -> subViews.isSelected(subViews.gamePlayView()) || subViews.isSelected(subViews.startView()),
-                subViews.selectedSubViewProperty()
-            )
+            selectedSubView.isEqualTo(subViews.gamePlayView()).or(selectedSubView.isEqualTo(subViews.startView()))
         );
         StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
     }
