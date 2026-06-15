@@ -46,20 +46,16 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     private final PerspectiveManager perspectiveManager;
     private final Set<ActionKeyBinding> actionBindings;
 
-    private SubScene subScene;
-    private final Group subSceneRoot = new Group();
+    private final SubScene subScene;
+    private final Group subSceneRoot;
     private final PerspectiveCamera camera = new PerspectiveCamera(true);
-    private final Group level3DParent = new Group();
+    private final Group level3DEmbedder = new Group();
     private GameLevel3D level3D;
-    protected Scores3D scores3D;
+    private Scores3D scores3D;
     private PlaySceneContextMenu contextMenu;
     private AmbientLight ambientLight;
 
-    private final ChangeListener<DrawMode> drawModeChangeListener = (_, _, drawMode) -> {
-        if (level3D != null) {
-            level3D.setDrawMode(drawMode);
-        }
-    };
+    private final ChangeListener<DrawMode> drawModeChangeListener;
 
     private final ManagedAnimation fadeInAnimation = new PlaySceneFadeInAnimation(Duration.seconds(3), this);
 
@@ -68,12 +64,28 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
      */
     public PlayScene3D(Game game) {
         super(game);
-        perspectiveManager = new PerspectiveManager(camera);
 
-        createContent();
+        perspectiveManager = new PerspectiveManager(camera);
+        final var coordinateSystem = new CoordinateSystem();
+        coordinateSystem.visibleProperty().bind(game().ui().settings3D().axesVisibleProperty());
+
+        ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(game().ui().settings3D().mazeLightColorProperty());
+
+        subSceneRoot = new Group(level3DEmbedder, coordinateSystem, ambientLight);
+
+        subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
+        subScene.setCamera(camera);
+
         actionBindings = game().actions().camera3DActions().bindings();
 
         setGameEventHandler(new PlayScene3DGameEventHandler(this));
+
+        drawModeChangeListener = (_, _, drawMode) -> {
+            if (level3D != null) {
+                level3D.setDrawMode(drawMode);
+            }
+        };
     }
 
     public SubScene subScene() {
@@ -86,6 +98,10 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     public Optional<GameLevel3D> optGameLevel3D() {
         return Optional.ofNullable(level3D);
+    }
+
+    public Optional<Scores3D> optScores3D() {
+        return Optional.ofNullable(scores3D);
     }
 
     public ManagedAnimation fadeInAnimation() {
@@ -144,7 +160,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         }
         level3D = new GameLevel3D(game().ui().settings3D(), gameContext(), level, game().currentUIConfig());
         decorate(level3D);
-        level3DParent.getChildren().setAll(level3D);
+        level3DEmbedder.getChildren().setAll(level3D);
 
         level3D.createAnimations(UISettings3D.DEFAULT_PARTICLE_ANIMATION_CONFIG);
         level3D.entities().selectAll().forEach(entity -> entity.init(gameContext(), level));
@@ -259,19 +275,6 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     // Other stuff
 
-    // Initial subscene size is irrelevant (will be bound to parent scene size)
-    private void createContent() {
-        final var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(game().ui().settings3D().axesVisibleProperty());
-
-        ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(game().ui().settings3D().mazeLightColorProperty());
-
-        subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
-        subScene.setCamera(camera);
-        subSceneRoot.getChildren().addAll(level3DParent, coordinateSystem, ambientLight);
-    }
-
     /**
      * Can be overridden by 3D scenes that e.g. decorate the 3D level with additional stuff as done by the
      * Tengen Ms. Pac-Man game that displays the level number, game difficulty, map category, booster mode etc.
@@ -296,9 +299,9 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
-        scores3D.translateXProperty().bind(level3DParent.translateXProperty().add(WorldMap.TS));
-        scores3D.translateYProperty().bind(level3DParent.translateYProperty().subtract(4.5 * WorldMap.TS));
-        scores3D.translateZProperty().bind(level3DParent.translateZProperty().subtract(4.5 * WorldMap.TS));
+        scores3D.translateXProperty().bind(level3DEmbedder.translateXProperty().add(WorldMap.TS));
+        scores3D.translateYProperty().bind(level3DEmbedder.translateYProperty().subtract(4.5 * WorldMap.TS));
+        scores3D.translateZProperty().bind(level3DEmbedder.translateZProperty().subtract(4.5 * WorldMap.TS));
 
         if (oldScores3D != null) {
             subSceneRoot.getChildren().remove(oldScores3D);
@@ -308,7 +311,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     private void removeAndDisposeGameLevel3D() {
         if (level3D != null) {
-            level3DParent.getChildren().clear();
+            level3DEmbedder.getChildren().clear();
             level3D.dispose();
             level3D = null;
         }
