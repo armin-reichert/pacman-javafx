@@ -19,8 +19,7 @@ import static java.util.Objects.requireNonNull;
 
 public class GameMainScene extends Scene {
 
-    /** Index in the main scene's root pane child list where the active view is embedded. */
-    public static final int SUBVIEW_CHILD_INDEX = 0;
+    private final StackPane subViewHolder = new StackPane();
 
     public GameMainScene(double width, double height) {
         super(new StackPane(), width, height, Color.BLACK);
@@ -41,12 +40,13 @@ public class GameMainScene extends Scene {
         return (StackPane) getRoot();
     }
 
+    public StackPane subViewHolder() {
+        return subViewHolder;
+    }
+
     public void replaceSubView(SubView subView) {
         requireNonNull(subView);
-        if (rootPane().getChildren().isEmpty()) {
-            throw new IllegalStateException("Root pane has no placeholder for embedding view");
-        }
-        rootPane().getChildren().set(SUBVIEW_CHILD_INDEX, subView.rootPane());
+        subViewHolder.getChildren().setAll(subView.rootPane());
     }
 
     private Background selectBackground(Game game) {

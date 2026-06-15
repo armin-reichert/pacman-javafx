@@ -20,7 +20,6 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -126,7 +125,7 @@ public class GameViewImpl implements GameView {
 
     private void populateMainScene(Game game) {
         mainScene.rootPane().getChildren().addAll(
-            new Region(), // placeholder, will be replaced by current view (start, play, edit)
+            mainScene.subViewHolder(),
             statusIconBox.rootPane(),
             game.ui().flashMessages().messageView().rootPane(),
             keyboardInfoPopup.rootPane()
