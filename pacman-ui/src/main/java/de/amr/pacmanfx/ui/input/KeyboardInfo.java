@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.input;
 
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.game.Game;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
@@ -27,21 +27,23 @@ public class KeyboardInfo {
     public static final Font CLOSE_HINT_FONT = Font.font("Sans", FontWeight.NORMAL, 16);
 
     private final VBox rootPane = new VBox();
+    private final VBox keyInfoBox = new VBox();
 
-    public KeyboardInfo(GameUI ui, Keyboard keyboard) {
-        rootPane.setBackground(Background.fill(Color.TRANSPARENT));
+    public KeyboardInfo() {
         rootPane.setPrefSize(280, 50);
         rootPane.setMaxSize(280, 200);
         rootPane.setSpacing(3);
+
         rootPane.setStyle("""
             -fx-border-color: #ccc;
             -fx-border-width: 2;
             -fx-border-radius: 12;
+            -fx-background-color: rgb(100,100,100,0.66);
             -fx-background-radius: 12;
             """);
+
         StackPane.setMargin(rootPane, new Insets(10));
         StackPane.setAlignment(rootPane, Pos.TOP_RIGHT);
-        rootPane.visibleProperty().bind(ui.settings().keyboardMonitorVisibleProperty);
 
         final Text title = new Text("Keyboard State");
         title.setFill(Color.WHITE);
@@ -53,17 +55,20 @@ public class KeyboardInfo {
         closeHint.setFont(CLOSE_HINT_FONT);
         rootPane.getChildren().add(closeHint);
 
-        final VBox vBox = new VBox();
-        vBox.setAlignment(Pos.CENTER);
-        vBox.setPadding(new Insets(10));
-        rootPane.getChildren().add(vBox);
+        keyInfoBox.setAlignment(Pos.CENTER);
+        keyInfoBox.setPadding(new Insets(10));
+        rootPane.getChildren().add(keyInfoBox);
+    }
 
-        keyboard.addStateListener(keyboardState -> {
-            vBox.getChildren().clear();
-            String modifiers = createModifierString(keyboardState);
-            vBox.getChildren().add(createInfoText("[" + modifiers + "]"));
-            for (KeyCode key : keyboardState.pressedKeys()) {
-                vBox.getChildren().add(createInfoText(modifiers + " " + key));
+    public void connect(Game game) {
+        rootPane.visibleProperty().bind(game.ui().settings().keyboardMonitorVisibleProperty);
+
+        game.input().keyboard().addStateListener(state -> {
+            keyInfoBox.getChildren().clear();
+            final String modifiersText = createModifierString(state);
+            keyInfoBox.getChildren().add(createInfoText("[" + modifiersText + "]"));
+            for (KeyCode key : state.pressedKeys()) {
+                keyInfoBox.getChildren().add(createInfoText(modifiersText + " " + key));
             }
         });
     }

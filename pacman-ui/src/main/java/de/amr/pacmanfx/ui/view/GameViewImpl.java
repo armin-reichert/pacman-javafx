@@ -45,7 +45,7 @@ public class GameViewImpl implements GameView {
     private final Stage stage;
     private final GameMainScene mainScene;
     private StatusIconBox statusIconBox;
-    private KeyboardInfo keyboardInfoPopup;
+    private final KeyboardInfo keyboardInfoPopup;
     private final StartPagesView startPagesView;
     private final GamePlayView gamePlayView;
 
@@ -56,6 +56,9 @@ public class GameViewImpl implements GameView {
 
         startPagesView = new StartPagesView();
         gamePlayView = createGamePlayView();
+
+        keyboardInfoPopup = new KeyboardInfo();
+        keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
     }
 
     @Override
@@ -75,13 +78,13 @@ public class GameViewImpl implements GameView {
         subViews.setEditorViewFactory(() -> createEditorSubView(game));
 
         createStatusIconBox(game);
-        createKeyboardInfoPopup(game);
         populateMainScene(game);
 
         createStageTitleBinding(game);
         initMainScene(game);
         registerCommonActions(game);
 
+        keyboardInfoPopup.connect(game);
         startPagesView.connect(game);
 
         // Some status icons are bound to the game model of the *current* game variant
@@ -177,11 +180,6 @@ public class GameViewImpl implements GameView {
             selectedSubView.isEqualTo(subViews.gamePlayView()).or(selectedSubView.isEqualTo(subViews.startView()))
         );
         StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
-    }
-
-    private void createKeyboardInfoPopup(Game game) {
-        keyboardInfoPopup = new KeyboardInfo(game.ui(), game.input().keyboard());
-        keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
     }
 
     private GamePlayView createGamePlayView() {
