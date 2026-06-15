@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.ui.view;
 
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.action.ActionKeyBinding;
-import de.amr.pacmanfx.ui.action.CommonActions;
+import de.amr.pacmanfx.ui.action.*;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
@@ -34,6 +34,8 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 public class GameViewImpl implements GameView {
 
     private Game game;
+
+    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Main Scene Action Bindings");
 
     private final ChangeListener<String> iconUpdateListener = (_, _, _) -> updateStageIcon(game);
     private StringBinding stageTitleBinding;
@@ -84,6 +86,8 @@ public class GameViewImpl implements GameView {
         keyboardInfoPopup.connect(game);
         startPagesView.connect(game);
 
+        connectKeyboard(game);
+
         // Some status icons are bound to the game model of the *current* game variant
         game.gameVariantNameProperty().addListener((_,_,variantName) -> {
             statusIconBox.bind(game.gameVariant(variantName).gameModel());
@@ -132,11 +136,11 @@ public class GameViewImpl implements GameView {
     private void registerCommonActions(Game game) {
         final CommonActions actions = game.actions();
         final Set<ActionKeyBinding> bindings = actions.bindings();
-        mainScene.actionBindings().selectAnyMatchingBinding(actions.uiSettingsActions().actionToggleKeyboardMonitor(), bindings);
-        mainScene.actionBindings().selectAnyMatchingBinding(actions.uiSettingsActions().actionEnterFullScreen(), bindings);
-        mainScene.actionBindings().selectAnyMatchingBinding(actions.simulationActions().actionToggleMuted(), bindings);
-        mainScene.actionBindings().selectAnyMatchingBinding(actions.editorActions().actionOpenEditor(), bindings);
-        Logger.info(mainScene.actionBindings());
+        actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionToggleKeyboardMonitor(), bindings);
+        actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionEnterFullScreen(), bindings);
+        actionBindings.selectAnyMatchingBinding(actions.simulationActions().actionToggleMuted(), bindings);
+        actionBindings.selectAnyMatchingBinding(actions.editorActions().actionOpenEditor(), bindings);
+        Logger.info(actionBindings);
     }
 
     private void createStageTitleBinding(Game game) {
@@ -235,5 +239,33 @@ public class GameViewImpl implements GameView {
         } else {
             return "Unspecified Game";
         }
+    }
+
+    private void connectKeyboard(Game game) {
+        final SubViewManager subViews = game.ui().subViews();
+        final Keyboard keyboard = game.input().keyboard();
+
+        // Keyboard should not be sensitive to any key events triggered inside the map editor
+        keyboard.enabledProperty().bind(subViews.selectedSubViewProperty().map(
+            subView -> isGlobalKeyboardAvailableFor(subViews, subView)
+        ));
+
+        keyboard.addStateListener(_ -> {
+            // Check for "global" action first, if no one matches, let current sub view handle the keyboard state change
+            actionBindings.findActionMatchingPressedKeys(keyboard).ifPresentOrElse(
+                GameAction::execute,
+                () -> {
+                    final SubView currentSubView = subViews.currentView();
+                    if (isGlobalKeyboardAvailableFor(subViews, currentSubView)) {
+                        currentSubView.onInput(game, game.input());
+                    }
+                });
+        });
+
+        keyboard.filterKeyEventsFrom(mainScene);
+    }
+
+    private boolean isGlobalKeyboardAvailableFor(SubViewManager subViews, SubView subView) {
+        return subView == subViews.startView() || subView == subViews.gamePlayView();
     }
 }

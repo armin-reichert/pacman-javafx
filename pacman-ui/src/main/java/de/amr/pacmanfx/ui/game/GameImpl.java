@@ -36,7 +36,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
