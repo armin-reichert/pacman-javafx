@@ -6,10 +6,10 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
-import de.amr.pacmanfx.ui.action.QuitHandler;
+import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.core.GameAction;
+import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
+import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameFacade;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;

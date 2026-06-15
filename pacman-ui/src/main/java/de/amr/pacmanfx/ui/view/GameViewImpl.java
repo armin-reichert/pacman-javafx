@@ -6,6 +6,10 @@ package de.amr.pacmanfx.ui.view;
 
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.*;
+import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
+import de.amr.pacmanfx.ui.action.core.GameAction;
+import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;

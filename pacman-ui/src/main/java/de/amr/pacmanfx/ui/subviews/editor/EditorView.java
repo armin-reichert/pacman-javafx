@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.subviews.editor;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.subviews.SubView;
 import javafx.scene.control.MenuItem;

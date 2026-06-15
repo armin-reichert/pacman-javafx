@@ -7,6 +7,8 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
+import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
+import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;

@@ -6,9 +6,9 @@ package de.amr.pacmanfx.ui.subviews.playview;
 
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
+import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.core.GameAction;
+import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;

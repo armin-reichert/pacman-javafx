@@ -1,51 +1,65 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
+import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import javafx.scene.input.KeyCode;
 
+import java.util.EnumMap;
 import java.util.Set;
 
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
+import static java.util.Objects.requireNonNull;
 
 public class SteeringActions {
 
-    private final GameAction actionSteerUp;
-    private final GameAction actionSteerDown;
-    private final GameAction actionSteerLeft;
-    private final GameAction actionSteerRight;
+    public static class SteeringAction extends GameAction {
 
+        private static String createActionID(Direction dir) {
+            return "steer_pac_%s".formatted(dir.name().toLowerCase());
+        }
+
+        private final Direction dir;
+
+        public SteeringAction(Game game, Direction dir) {
+            super(game, createActionID(requireNonNull(dir)));
+            this.dir = requireNonNull(dir);
+        }
+
+        @Override
+        public void doAction() {
+            game.currentGameContext().optCurrentLevel().ifPresent(level -> level.entities().pac().setWishDir(dir));
+        }
+
+        @Override
+        public boolean isEnabled() {
+            final GameLevel level = game.currentGameContext().optCurrentLevel().orElse(null);
+            return level != null && !level.isDemoLevel() && !level.entities().pac().isUsingAutopilot();
+        }
+    }
+
+    private final EnumMap<Direction, GameAction> actions = new EnumMap<>(Direction.class);
     private final Set<ActionKeyBinding> bindings;
 
     public SteeringActions(Game game) {
-        actionSteerUp = new SteeringAction(game, Direction.UP);
-        actionSteerDown = new SteeringAction(game, Direction.DOWN);
-        actionSteerLeft = new SteeringAction(game, Direction.LEFT);
-        actionSteerRight = new SteeringAction(game, Direction.RIGHT);
+        for (Direction dir : Direction.values()) {
+            actions.put(dir, new SteeringAction(game, dir));
+        }
 
         bindings = Set.of(
-            new ActionKeyBinding(actionSteerUp,    bareKey(KeyCode.UP),    combine().ctrl().key(KeyCode.UP)),
-            new ActionKeyBinding(actionSteerDown,  bareKey(KeyCode.DOWN),  combine().ctrl().key(KeyCode.DOWN)),
-            new ActionKeyBinding(actionSteerLeft,  bareKey(KeyCode.LEFT),  combine().ctrl().key(KeyCode.LEFT)),
-            new ActionKeyBinding(actionSteerRight, bareKey(KeyCode.RIGHT), combine().ctrl().key(KeyCode.RIGHT))
+            new ActionKeyBinding(actions.get(Direction.UP),    bareKey(KeyCode.UP),    combine().ctrl().key(KeyCode.UP)),
+            new ActionKeyBinding(actions.get(Direction.DOWN),  bareKey(KeyCode.DOWN),  combine().ctrl().key(KeyCode.DOWN)),
+            new ActionKeyBinding(actions.get(Direction.LEFT),  bareKey(KeyCode.LEFT),  combine().ctrl().key(KeyCode.LEFT)),
+            new ActionKeyBinding(actions.get(Direction.RIGHT), bareKey(KeyCode.RIGHT), combine().ctrl().key(KeyCode.RIGHT))
         );
     }
 
-    public GameAction actionSteerUp() {
-        return actionSteerUp;
-    }
-
-    public GameAction actionSteerDown() {
-        return actionSteerDown;
-    }
-
-    public GameAction actionSteerLeft() {
-        return actionSteerLeft;
-    }
-
-    public GameAction actionSteerRight() {
-        return actionSteerRight;
+    public GameAction actionSteer(Direction dir) {
+        requireNonNull(dir);
+        return actions.get(dir);
     }
 
     public Set<ActionKeyBinding> bindings() {

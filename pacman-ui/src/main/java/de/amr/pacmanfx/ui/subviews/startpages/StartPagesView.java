@@ -5,9 +5,9 @@ package de.amr.pacmanfx.ui.subviews.startpages;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.GameAction;
-import de.amr.pacmanfx.ui.action.GameActionBindingsMap;
+import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.core.GameAction;
+import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.subviews.SubView;

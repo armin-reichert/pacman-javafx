@@ -11,8 +11,8 @@ import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.ui.action.ActionKeyBinding;
-import de.amr.pacmanfx.ui.action.GameAction;
+import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
+import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import javafx.scene.input.KeyCode;
 

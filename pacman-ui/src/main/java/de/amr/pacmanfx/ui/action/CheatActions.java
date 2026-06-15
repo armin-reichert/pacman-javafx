@@ -14,6 +14,8 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
+import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import javafx.scene.input.KeyCode;
 

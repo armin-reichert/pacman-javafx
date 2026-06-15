@@ -4,13 +4,14 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
+import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplay;
-import de.amr.pacmanfx.ui.action.ActionKeyBinding;
-import de.amr.pacmanfx.ui.action.GameAction;
+import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
+import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.SteeringActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
@@ -120,10 +121,10 @@ public final class TengenMsPacMan_Actions {
 
         final SteeringActions steeringActions = game.actions().steeringActions();
         steeringBindings = Set.of(
-            new ActionKeyBinding(steeringActions.actionSteerUp(),    keyFor(JoypadButton.UP),    combine().ctrl().key(KeyCode.UP)),
-            new ActionKeyBinding(steeringActions.actionSteerDown(),  keyFor(JoypadButton.DOWN),  combine().ctrl().key(KeyCode.DOWN)),
-            new ActionKeyBinding(steeringActions.actionSteerLeft(),  keyFor(JoypadButton.LEFT),  combine().ctrl().key(KeyCode.LEFT)),
-            new ActionKeyBinding(steeringActions.actionSteerRight(), keyFor(JoypadButton.RIGHT), combine().ctrl().key(KeyCode.RIGHT))
+            new ActionKeyBinding(steeringActions.actionSteer(Direction.UP),    keyFor(JoypadButton.UP),    combine().ctrl().key(KeyCode.UP)),
+            new ActionKeyBinding(steeringActions.actionSteer(Direction.DOWN),  keyFor(JoypadButton.DOWN),  combine().ctrl().key(KeyCode.DOWN)),
+            new ActionKeyBinding(steeringActions.actionSteer(Direction.LEFT),  keyFor(JoypadButton.LEFT),  combine().ctrl().key(KeyCode.LEFT)),
+            new ActionKeyBinding(steeringActions.actionSteer(Direction.RIGHT), keyFor(JoypadButton.RIGHT), combine().ctrl().key(KeyCode.RIGHT))
         );
 
         localBindings = Set.of(

@@ -5,6 +5,8 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
+import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
+import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;

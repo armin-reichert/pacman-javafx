@@ -4,6 +4,8 @@
 
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
+import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;

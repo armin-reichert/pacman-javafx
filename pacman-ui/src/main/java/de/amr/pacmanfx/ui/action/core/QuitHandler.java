@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.action;
+package de.amr.pacmanfx.ui.action.core;
 
 import de.amr.pacmanfx.ui.game.Game;
 
