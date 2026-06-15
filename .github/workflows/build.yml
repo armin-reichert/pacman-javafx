@@ -34,7 +34,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Verify Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v4
+        uses: gradle/actions/wrapper-validation@v3
 
       - name: Build project
         run: ./gradlew build --no-daemon
