@@ -13,7 +13,7 @@ jobs:
         #os: [windows-latest, ubuntu-latest, macos-14]
         os: [windows-latest, ubuntu-latest]
         #os: [windows-latest]
-        java: ['25']
+        java: ['22']
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
