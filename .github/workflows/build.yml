@@ -12,11 +12,9 @@ jobs:
   build:
     strategy:
       matrix:
-        # Ubuntu still has issues with Java(FX) 25
         #os: [windows-latest, ubuntu-latest, macos-14]
-        os: [windows-latest, ubuntu-latest]
-        #os: [windows-latest]
-        java: ['22']
+        os: [windows-latest]
+        java: ['25']
       fail-fast: false
 
     runs-on: ${{ matrix.os }}

@@ -2,8 +2,8 @@
 
 # Usage: libs.versions.xyz.get()
 [versions]
-java    = "22"
-javafx  = "24.0.2"
+java    = "25"
+javafx  = "25.0.3"
 junit5  = "5.11.0"
 obj     = "0.0.1"
 tinylog = "2.7.0"
