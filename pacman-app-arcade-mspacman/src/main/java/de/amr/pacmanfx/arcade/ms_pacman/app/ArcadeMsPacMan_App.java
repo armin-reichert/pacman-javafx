@@ -32,12 +32,12 @@ public class ArcadeMsPacMan_App extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage) {
         final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         game = new GameBuilder(machine, screenSize.x(), screenSize.y())
             .startPage(ArcadeMsPacMan_StartPage::new)
-            .build();
+            .build(stage);
 
         game.ui().subViews().gamePlayView().dashboard().addCommonSections(game.ui().translations(), List.of(
             DashboardID.GENERAL,
@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_App extends Application {
 
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
 
-        game.show(GameVariantID.ARCADE_MS_PACMAN, primaryStage);
+        game.show(GameVariantID.ARCADE_MS_PACMAN);
     }
 
     @Override

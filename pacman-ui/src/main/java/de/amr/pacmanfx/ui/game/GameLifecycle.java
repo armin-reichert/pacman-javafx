@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.game;
 
 import de.amr.pacmanfx.core.GameVariantID;
-import javafx.stage.Stage;
 
 public interface GameLifecycle {
 
@@ -12,7 +11,7 @@ public interface GameLifecycle {
 
     void start();
 
-    void show(GameVariantID variantID, Stage stage);
+    void show(GameVariantID variantID);
 
     void terminate();
 }

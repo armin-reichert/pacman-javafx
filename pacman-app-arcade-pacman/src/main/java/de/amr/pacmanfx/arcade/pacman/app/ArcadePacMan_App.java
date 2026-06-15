@@ -50,10 +50,10 @@ public class ArcadePacMan_App extends Application {
         if (useBuilder) {
             game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
                 .startPage(ArcadePacMan_StartPage::new)
-                .build();
+                .build(stage);
         }
         else {
-            game = new GameImpl(machine, new GameViewImpl(sceneSize.x(), sceneSize.y()));
+            game = new GameImpl(machine, new GameViewImpl(stage, sceneSize.x(), sceneSize.y()));
             game.ui().subViews().startView().addStartPage(new ArcadePacMan_StartPage());
         }
 
@@ -61,7 +61,7 @@ public class ArcadePacMan_App extends Application {
 
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
 
-        game.show(GameVariantID.ARCADE_PACMAN, stage);
+        game.show(GameVariantID.ARCADE_PACMAN);
     }
 
     @Override

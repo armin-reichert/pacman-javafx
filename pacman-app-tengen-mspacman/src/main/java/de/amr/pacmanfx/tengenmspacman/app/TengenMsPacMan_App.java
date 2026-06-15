@@ -34,12 +34,12 @@ public class TengenMsPacMan_App extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
             .startPage(TengenMsPacMan_StartPage::new)
-            .build();
+            .build(stage);
 
         final GamePlayView playView = game.ui().subViews().gamePlayView();
         playView.configureDashboard(List.of(
@@ -58,7 +58,7 @@ public class TengenMsPacMan_App extends Application {
         game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS, new TengenMsPacMan_UISettings());
         game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS, new TengenMsPacMan_Actions(game));
 
-        game.show(TENGEN_MS_PACMAN, primaryStage);
+        game.show(TENGEN_MS_PACMAN);
     }
 
     @Override

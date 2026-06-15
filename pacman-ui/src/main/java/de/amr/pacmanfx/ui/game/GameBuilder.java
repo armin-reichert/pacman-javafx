@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPage;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.view.GameViewImpl;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -50,10 +51,11 @@ public class GameBuilder {
         return this;
     }
 
-    public Game build() {
+    public Game build(Stage stage) {
+        requireNonNull(stage);
         validateConfigurationData();
 
-        final var game = new GameImpl(machine, new GameViewImpl(windowConfig.sceneWidth(), windowConfig.sceneHeight()));
+        final var game = new GameImpl(machine, new GameViewImpl(stage, windowConfig.sceneWidth(), windowConfig.sceneHeight()));
 
         final StartPagesView startPagesView = game.ui().subViews().startView();
         for (var factory : startPageFactories) {

@@ -227,9 +227,7 @@ public final class GameImpl implements Game {
     // Lifecycle
 
     @Override
-    public void show(GameVariantID variantID, Stage stage) {
-        view.stageProperty().set(stage);
-
+    public void show(GameVariantID variantID) {
         selectGameVariant(variantID.name());
 
         load3DAssets();

@@ -108,10 +108,10 @@ public class PacManAllGamesApp extends Application {
                     .startPage(ArcadeMsPacMan_StartPage::new)
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
-                    .build();
+                    .build(stage);
             }
             else {
-                game = new GameImpl(machine, new GameViewImpl(sceneSize.x(), sceneSize.y()));
+                game = new GameImpl(machine, new GameViewImpl(stage, sceneSize.x(), sceneSize.y()));
 
                 game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(sharedMapSelector);
                 game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
@@ -140,7 +140,7 @@ public class PacManAllGamesApp extends Application {
 
             Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
 
-            game.show(GameVariantID.ARCADE_PACMAN, stage);
+            game.show(GameVariantID.ARCADE_PACMAN);
         }
         catch (RuntimeException x) {
             Logger.error(x, "An error occurred starting the game.");

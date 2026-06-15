@@ -5,19 +5,13 @@
 package de.amr.pacmanfx.ui.view;
 
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.subviews.SubView;
-import javafx.beans.property.ObjectProperty;
 import javafx.stage.Stage;
 
 public interface GameView {
 
     void connect(Game game);
 
-    ObjectProperty<Stage> stageProperty();
-
-    default Stage stage() {
-        return stageProperty().get();
-    }
+    Stage stage();
 
     GameMainScene mainScene();
 

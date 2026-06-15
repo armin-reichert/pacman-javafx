@@ -35,12 +35,12 @@ public class PacManXXL_App extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage) {
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
             .startPage(PacManXXL_StartPage::new)
-            .build();
+            .build(stage);
 
         final GamePlayView playView = game.ui().subViews().gamePlayView();
         playView.configureDashboard(List.of(
@@ -64,7 +64,7 @@ public class PacManXXL_App extends Application {
 
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
 
-        game.show(GameVariantID.ARCADE_PACMAN_XXL, primaryStage);
+        game.show(GameVariantID.ARCADE_PACMAN_XXL);
     }
 
     @Override

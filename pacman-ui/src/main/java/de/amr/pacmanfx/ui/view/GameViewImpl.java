@@ -20,8 +20,6 @@ import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -44,15 +42,15 @@ public class GameViewImpl implements GameView {
     private StringBinding stageTitleBinding;
 
     // The view components
-    private final ObjectProperty<Stage> stage = new SimpleObjectProperty<>();
+    private final Stage stage;
     private final GameMainScene mainScene;
     private StatusIconBox statusIconBox;
     private KeyboardInfo keyboardInfoPopup;
-
     private final StartPagesView startPagesView;
     private final GamePlayView gamePlayView;
 
-    public GameViewImpl(int width, int height) {
+    public GameViewImpl(Stage stage, int width, int height) {
+        this.stage = requireNonNull(stage);
         mainScene = new GameMainScene(width, height);
         mainScene.getStylesheets().add(GameUI_Constants.STYLE_SHEET_PATH);
 
@@ -96,13 +94,13 @@ public class GameViewImpl implements GameView {
 
     @Override
     public void show() {
-        initStage(game);
+        prepareStageForDisplay(game);
         stage().centerOnScreen();
         stage().show();
     }
 
     @Override
-    public ObjectProperty<Stage> stageProperty() {
+    public Stage stage() {
         return stage;
     }
 
@@ -113,20 +111,13 @@ public class GameViewImpl implements GameView {
 
     // Private area
 
-    private void initStage(Game game) {
-        final Stage theStage = stage();
-        if (theStage == null) {
-            throw new IllegalStateException("No stage assigned to game view");
-        }
-
-        theStage.setScene(mainScene);
-        theStage.titleProperty().bind(stageTitleBinding);
-
+    private void prepareStageForDisplay(Game game) {
+        stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
+        stage.setMinHeight(GameUI_Constants.MIN_STAGE_HEIGHT);
+        stage.setScene(mainScene);
+        stage.titleProperty().bind(stageTitleBinding);
         updateStageIcon(game);
         registerIconUpdater(game);
-
-        theStage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
-        theStage.setMinHeight(GameUI_Constants.MIN_STAGE_HEIGHT);
     }
 
     private void populateMainScene(Game game) {

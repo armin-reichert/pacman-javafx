@@ -65,8 +65,8 @@ public class PacManXXL_StartPage implements StartPage {
             play3DListener = (_, _, enable3D) -> game.ui().settings3D().view3DEnabledProperty().set(enable3D);
             cutScenesEnabledListener = (_, _, enableCutScenes) -> game.currentGameContext().flow().setCutScenesEnabled(enableCutScenes);
 
-            scaling = game.ui().view().stageProperty().map(stage -> {
-                final double menuHeight = Math.clamp(stage.getHeight() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
+            scaling = game.ui().view().stage().heightProperty().map(stageHeight -> {
+                final double menuHeight = Math.clamp(stageHeight.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
                 final double scaling = menuHeight / TS(menu.numTilesY());
                 return Math.round(scaling * 100.0) / 100.0; // rounded to 2 decimal digits to avoid too much resizing
             });
