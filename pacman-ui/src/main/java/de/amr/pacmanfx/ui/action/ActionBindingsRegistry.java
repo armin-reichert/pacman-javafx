@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.Disposable;
@@ -20,12 +21,6 @@ public interface ActionBindingsRegistry extends Disposable {
     Map<KeyCodeCombination, GameAction> actionBindings();
 
     Optional<GameAction> findActionMatchingPressedKeys(Keyboard keyboard);
-
-    default void bindActionToKeyCombinations(GameAction action, KeyCodeCombination... combinations) {
-        for (var combination : combinations) {
-            bindActionToKeyCombination(action, combination);
-        }
-    }
 
     void bindActionToKeyCombination(GameAction action, KeyCodeCombination combination);
 
