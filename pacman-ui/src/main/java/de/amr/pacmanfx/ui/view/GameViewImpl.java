@@ -34,7 +34,7 @@ public class GameViewImpl implements GameView {
 
     private Game game;
 
-    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Main Scene Action Bindings");
+    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
 
     private final ChangeListener<String> iconUpdateListener = (_, _, _) -> updateStageIcon(game);
     private StringBinding stageTitleBinding;
