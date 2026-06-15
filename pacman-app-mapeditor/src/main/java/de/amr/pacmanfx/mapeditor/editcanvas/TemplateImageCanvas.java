@@ -31,7 +31,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.translated;
-import static de.amr.pacmanfx.mapeditor.UfxMapEditor.*;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.*;
 import static java.util.Objects.requireNonNull;
 
 public class TemplateImageCanvas extends Canvas {

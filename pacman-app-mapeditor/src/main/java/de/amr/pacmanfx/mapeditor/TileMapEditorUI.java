@@ -440,9 +440,9 @@ public class TileMapEditorUI {
         WorldMapLayer terrain = worldMap.terrainLayer();
         return new TerrainMapColoring(
             COLOR_CANVAS_BACKGROUND,
-            UfxMapEditor.getColorFromMapLayer(terrain, WorldMapPropertyName.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL),
-            UfxMapEditor.getColorFromMapLayer(terrain, WorldMapPropertyName.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE),
-            UfxMapEditor.getColorFromMapLayer(terrain, WorldMapPropertyName.COLOR_DOOR, MS_PACMAN_COLOR_DOOR)
+            TileMapEditorUtils.getColorFromMapLayer(terrain, WorldMapPropertyName.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL),
+            TileMapEditorUtils.getColorFromMapLayer(terrain, WorldMapPropertyName.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE),
+            TileMapEditorUtils.getColorFromMapLayer(terrain, WorldMapPropertyName.COLOR_DOOR, MS_PACMAN_COLOR_DOOR)
         );
     }
 
@@ -719,11 +719,11 @@ public class TileMapEditorUI {
         createZoomControl();
 
         statusLine = new HBox(
-                statusIndicator, UfxMapEditor.filler(10),
-                lblMapSize, UfxMapEditor.filler(10),
-                lblFocussedTile, UfxMapEditor.spacer(),
-                messageDisplay, UfxMapEditor.spacer(),
-                UfxMapEditor.filler(10), sliderZoom);
+                statusIndicator, TileMapEditorUtils.filler(10),
+                lblMapSize, TileMapEditorUtils.filler(10),
+                lblFocussedTile, TileMapEditorUtils.spacer(),
+                messageDisplay, TileMapEditorUtils.spacer(),
+                TileMapEditorUtils.filler(10), sliderZoom);
 
         statusLine.setPadding(new Insets(10, 2, 2, 2));
     }

@@ -19,9 +19,9 @@ import java.util.Locale;
 
 import static java.util.Objects.requireNonNull;
 
-public final class UfxMapEditor {
+public final class TileMapEditorUtils {
 
-    private UfxMapEditor() {}
+    private TileMapEditorUtils() {}
 
     // Note: String.format is locale-dependent! This may produce illegal color format if locale is not ENGLISH!
     public static String formatRGBA(Color color) {

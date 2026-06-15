@@ -35,7 +35,7 @@ import javafx.scene.text.Font;
 import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.ACTOR_SPRITES;
-import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.getColorFromMapLayer;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.COLOR_FOOD;
 import static java.util.Objects.requireNonNull;
 
@@ -239,7 +239,7 @@ public class EditCanvas extends Canvas {
     }
 
     public Vector2i tileAt(double mouseX, double mouseY) {
-        return new Vector2i(UfxMapEditor.fullTiles(mouseX, gridSize()), UfxMapEditor.fullTiles(mouseY, gridSize()));
+        return new Vector2i(TileMapEditorUtils.fullTiles(mouseX, gridSize()), TileMapEditorUtils.fullTiles(mouseY, gridSize()));
     }
 
     public void enterInspectMode() {

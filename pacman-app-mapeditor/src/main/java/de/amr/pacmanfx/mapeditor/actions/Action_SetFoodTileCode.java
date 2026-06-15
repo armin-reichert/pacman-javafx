@@ -8,7 +8,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.model.world.WorldMap;
 
 import static de.amr.pacmanfx.model.world.WorldMap.tile;
-import static de.amr.pacmanfx.mapeditor.UfxMapEditor.canPlaceFoodAtTile;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.canPlaceFoodAtTile;
 import static java.util.Objects.requireNonNull;
 
 /**

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.mapeditor.editcanvas;
 
-import de.amr.pacmanfx.mapeditor.UfxMapEditor;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
@@ -40,6 +40,6 @@ public class ColorIndicator extends HBox {
 
     public void setColor(Color color) {
         colorBox.setBackground(Background.fill(color));
-        colorText.setText(color.equals(Color.TRANSPARENT) ? "Transparent" : UfxMapEditor.formatRGBHex(color));
+        colorText.setText(color.equals(Color.TRANSPARENT) ? "Transparent" : TileMapEditorUtils.formatRGBHex(color));
     }
 }

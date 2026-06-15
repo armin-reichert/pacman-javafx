@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.EditMode;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
-import de.amr.pacmanfx.mapeditor.UfxMapEditor;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
 import de.amr.pacmanfx.mapeditor.actions.Action_CarveTunnel;
 import de.amr.pacmanfx.mapeditor.actions.Action_ClearFoodAroundHouse;
 import de.amr.pacmanfx.mapeditor.actions.Action_FloodWithPellets;
@@ -65,7 +65,7 @@ public class EditCanvasContextMenu extends ContextMenu {
 
         var miFloodWithPellets = new MenuItem(translated("menu.edit.flood_with_pellets"));
         miFloodWithPellets.setOnAction(_ -> new Action_FloodWithPellets(editor, tile).execute());
-        miFloodWithPellets.setDisable(!UfxMapEditor.canPlaceFoodAtTile(worldMap, tile));
+        miFloodWithPellets.setDisable(!TileMapEditorUtils.canPlaceFoodAtTile(worldMap, tile));
 
         getItems().setAll(
             miInsertRow,

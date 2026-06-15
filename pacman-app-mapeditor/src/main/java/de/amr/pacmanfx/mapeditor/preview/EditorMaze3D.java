@@ -5,7 +5,7 @@ package de.amr.pacmanfx.mapeditor.preview;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.mapeditor.UfxMapEditor;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
@@ -162,9 +162,9 @@ public class EditorMaze3D extends Group {
         floor.setMaterial(Ufx.coloredPhongMaterial(Color.BLACK));
         mazeGroup.getChildren().add(floor);
 
-        final Color wallBaseColor = UfxMapEditor.getColorFromMapLayer(worldMap().terrainLayer(),
+        final Color wallBaseColor = TileMapEditorUtils.getColorFromMapLayer(worldMap().terrainLayer(),
             WorldMapPropertyName.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
-        final Color wallTopColor = UfxMapEditor.getColorFromMapLayer(worldMap().terrainLayer(),
+        final Color wallTopColor = TileMapEditorUtils.getColorFromMapLayer(worldMap().terrainLayer(),
             WorldMapPropertyName.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
 
         PhongMaterial wallBaseMaterial = Ufx.coloredPhongMaterial(wallBaseColor);
@@ -259,7 +259,7 @@ public class EditorMaze3D extends Group {
         r3D.createWallBetweenTileCoordinates(houseLeftLower, houseMaxTile, Wall3D.DEFAULT_WALL_THICKNESS);
         r3D.createWallBetweenTileCoordinates(houseMaxTile, houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS);
 
-        Color doorColor = UfxMapEditor.getColorFromMapLayer(worldMap().terrainLayer(),
+        Color doorColor = TileMapEditorUtils.getColorFromMapLayer(worldMap().terrainLayer(),
             WorldMapPropertyName.COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
         var doorMaterial = Ufx.coloredPhongMaterial(doorColor);
         Stream.of(houseMinTile.plus(3, 0), houseMinTile.plus(4, 0)).forEach(doorTile -> {
@@ -289,7 +289,7 @@ public class EditorMaze3D extends Group {
         if (worldMap() == null) {
             return;
         }
-        Color foodColor = UfxMapEditor.getColorFromMapLayer(worldMap().foodLayer(),
+        Color foodColor = TileMapEditorUtils.getColorFromMapLayer(worldMap().foodLayer(),
             WorldMapPropertyName.COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
         var foodMaterial = Ufx.coloredPhongMaterial(foodColor);
         foodGroup.getChildren().clear();

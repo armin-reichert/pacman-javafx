@@ -11,7 +11,7 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.mapeditor.UfxMapEditor.canPlaceFoodAtTile;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.canPlaceFoodAtTile;
 
 public class Action_FloodWithPellets extends EditorAction<Void> {
 
