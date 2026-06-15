@@ -34,7 +34,7 @@ jobs:
           path: pacman-javafx
 
       # ------------------------------------------------------------
-      # 3. Set up JDK
+      # 3. Set up JDK and Gradle
       # ------------------------------------------------------------
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -43,6 +43,9 @@ jobs:
           distribution: 'temurin'
           server-id: github
           settings-path: ${{ github.workspace }}
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Verify Gradle Wrapper
         uses: gradle/wrapper-validation-action@v2
