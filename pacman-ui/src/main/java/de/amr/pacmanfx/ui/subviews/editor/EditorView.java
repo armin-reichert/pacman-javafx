@@ -9,7 +9,6 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.action.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.subviews.SubView;
-import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.Region;
@@ -17,7 +16,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -35,7 +33,7 @@ public class EditorView implements SubView {
     public void connect(Game game) {
         final MenuItem miQuitEditor = new MenuItem(game.ui().translations().translate("back_to_game"));
         miQuitEditor.setOnAction(_ -> editor.quit());
-        editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
+        editor.ui().menuSystem().fileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
     }
 
     public TileMapEditor editor() {

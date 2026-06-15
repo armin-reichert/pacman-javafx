@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.mapeditor;
+package de.amr.pacmanfx.mapeditor.editcanvas;
 
+import de.amr.pacmanfx.mapeditor.UfxMapEditor;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;

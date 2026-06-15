@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2i;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.translated;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.translated;
 
 public class SizeInputDialog extends Dialog<Vector2i> {
 

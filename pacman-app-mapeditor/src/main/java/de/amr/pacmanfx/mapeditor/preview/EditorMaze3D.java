@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.mapeditor;
+package de.amr.pacmanfx.mapeditor.preview;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.mapeditor.UfxMapEditor;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;

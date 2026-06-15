@@ -10,7 +10,7 @@ import javafx.util.Duration;
 
 import java.time.Instant;
 
-import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.FONT_MESSAGE;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.FONT_MESSAGE;
 
 public class MessageDisplay extends Label {
 

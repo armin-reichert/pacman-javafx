@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.mapeditor;
+package de.amr.pacmanfx.mapeditor.preview;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
@@ -23,7 +23,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.ACTOR_SPRITES;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;
 
 public class Preview2D extends Canvas {

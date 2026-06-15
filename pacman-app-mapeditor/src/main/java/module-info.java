@@ -18,4 +18,6 @@ open module de.amr.pacmanfx.mapeditor {
     exports de.amr.pacmanfx.mapeditor.palette;
     exports de.amr.pacmanfx.mapeditor.properties;
     exports de.amr.pacmanfx.mapeditor.rendering;
+    exports de.amr.pacmanfx.mapeditor.preview;
+    exports de.amr.pacmanfx.mapeditor.editcanvas;
 }

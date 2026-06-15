@@ -4,8 +4,13 @@
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.pacmanfx.mapeditor.actions.*;
+import de.amr.pacmanfx.mapeditor.editcanvas.EditCanvas;
+import de.amr.pacmanfx.mapeditor.editcanvas.TemplateImageCanvas;
+import de.amr.pacmanfx.mapeditor.palette.EditorPaletteTabPane;
 import de.amr.pacmanfx.mapeditor.palette.Palette;
 import de.amr.pacmanfx.mapeditor.palette.PaletteID;
+import de.amr.pacmanfx.mapeditor.preview.Preview2D;
+import de.amr.pacmanfx.mapeditor.preview.Preview3D;
 import de.amr.pacmanfx.mapeditor.properties.MapLayerPropertiesEditor;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapLayer;
@@ -34,12 +39,10 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static de.amr.pacmanfx.mapeditor.EditMode.INSPECT;
-import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.*;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.*;
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
 import static java.util.Objects.requireNonNull;
 
@@ -49,7 +52,8 @@ public class TileMapEditorUI {
 
     private final Stage stage;
 
-    private final EditorMenuBar menuBar;
+    private final TileMapEditorMenus menus;
+
     private final BorderPane layoutPane = new BorderPane();
     private final MessageDisplay messageDisplay = new MessageDisplay();
 
@@ -320,7 +324,7 @@ public class TileMapEditorUI {
         createPropertyEditors();
         createStatusLine();
         editorPaletteTabPane = new EditorPaletteTabPane(this, editCanvas.terrainRenderer(), editCanvas.foodRenderer());
-        menuBar = new EditorMenuBar(this);
+        menus = new TileMapEditorMenus(this);
         arrangeLayout();
 
         contentPane.setOnKeyTyped(keyEvent -> {
@@ -458,8 +462,8 @@ public class TileMapEditorUI {
         return layoutPane;
     }
 
-    public EditorMenuBar menuBar() {
-        return menuBar;
+    public TileMapEditorMenus menuSystem() {
+        return menus;
     }
 
     public void selectTemplateImageTab() {
@@ -765,7 +769,7 @@ public class TileMapEditorUI {
         VBox.setVgrow(statusLine, Priority.NEVER);
         contentPane.setLeft(propertyEditorsPane);
         contentPane.setCenter(centerPane);
-        layoutPane.setTop(menuBar);
+        layoutPane.setTop(menus.menuBar());
         layoutPane.setCenter(contentPane);
     }
 
@@ -797,28 +801,26 @@ public class TileMapEditorUI {
         return menuItem;
     }
 
-    public void replaceSampleMapMenuEntries(TileMapEditor.SampleMaps maps) {
-        Menu menu = menuBar.menuMaps();
-        menu.getItems().clear();
-        if (maps.pacManMap() != null) {
-            menu.getItems().add(createLoadMapMenuItem("Pac-Man", maps.pacManMap()));
-            menu.getItems().add(new SeparatorMenuItem());
+    public void replaceSampleMapMenuEntries(TileMapEditor.SampleMaps sampleMaps) {
+        final List<MenuItem> items = new ArrayList<>();
+
+        if (sampleMaps.pacManMap() != null) {
+            items.add(createLoadMapMenuItem("Pac-Man", sampleMaps.pacManMap()));
+            items.add(new SeparatorMenuItem());
         }
-        for (int i = 0; i < maps.msPacmanMaps().size(); ++i) {
-            if (maps.msPacmanMaps().get(i) != null) {
-                MenuItem item = createLoadMapMenuItem("Ms. Pac-Man %d".formatted(i+1), maps.msPacmanMaps().get(i));
-                menu.getItems().add(item);
+        for (int i = 0; i < sampleMaps.msPacmanMaps().size(); ++i) {
+            final String label = "Ms. Pac-Man %d".formatted(i+1);
+            items.add(createLoadMapMenuItem(label, sampleMaps.msPacmanMaps().get(i)));
+        }
+        for (int i = 0; i < sampleMaps.masonicMaps().size(); ++i) {
+            if (i == 0) {
+                items.add(new SeparatorMenuItem());
             }
+            final String label = "Pac-Man XXL %d".formatted(i+1);
+            items.add(createLoadMapMenuItem(label, sampleMaps.masonicMaps().get(i)));
         }
-        for (int i = 0; i < maps.masonicMaps().size(); ++i) {
-            if (maps.masonicMaps().get(i) != null) {
-                MenuItem item = createLoadMapMenuItem("Pac-Man XXL %d".formatted(i+1), maps.masonicMaps().get(i));
-                if (i == 0) {
-                    menu.getItems().add(new SeparatorMenuItem());
-                }
-                menu.getItems().add(item);
-            }
-        }
+
+        menus.sampleMapsMenu().getItems().setAll(items);
     }
 
     // Event handlers

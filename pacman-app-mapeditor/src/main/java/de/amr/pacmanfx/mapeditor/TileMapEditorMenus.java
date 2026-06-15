@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.basics.math.Vector2i;
@@ -12,32 +13,38 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.scene.control.*;
 
-import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.NO_GRAPHIC;
-import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.translated;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.NO_GRAPHIC;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.translated;
 import static de.amr.pacmanfx.model.world.WorldMap.tile;
 
-public class EditorMenuBar extends MenuBar {
+public class TileMapEditorMenus {
 
-    private final Menu menuFile;
+    private final MenuBar menuBar;
 
-    private final Menu menuMaps;
+    private final Menu fileMenu;
 
-    public Menu menuFile() {
-        return menuFile;
+    private final Menu sampleMapsMenu;
+
+    public MenuBar menuBar() {
+        return menuBar;
     }
 
-    public Menu menuMaps() {
-        return menuMaps;
+    public Menu fileMenu() {
+        return fileMenu;
     }
 
-    public EditorMenuBar(TileMapEditorUI ui) {
-        menuFile = buildFileMenu(ui);
-        menuMaps = new Menu(translated("menu.load_map"));
-        getMenus().addAll(
-            menuFile,
+    public Menu sampleMapsMenu() {
+        return sampleMapsMenu;
+    }
+
+    public TileMapEditorMenus(TileMapEditorUI ui) {
+        fileMenu = buildFileMenu(ui);
+        sampleMapsMenu = new Menu(translated("menu.load_map"));
+        menuBar = new MenuBar(
+            fileMenu,
             buildEditMenu(ui),
             buildViewMenu(ui),
-            menuMaps);
+            sampleMapsMenu);
     }
 
     private Menu buildFileMenu(TileMapEditorUI ui) {

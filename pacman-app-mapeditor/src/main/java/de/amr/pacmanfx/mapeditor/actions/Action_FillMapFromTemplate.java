@@ -6,7 +6,7 @@ package de.amr.pacmanfx.mapeditor.actions;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
-import de.amr.pacmanfx.mapeditor.TileMatcher;
+import de.amr.pacmanfx.mapeditor.editcanvas.TileMatcher;
 import de.amr.pacmanfx.model.world.*;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritablePixelFormat;

@@ -1,9 +1,10 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.mapeditor;
+package de.amr.pacmanfx.mapeditor.editcanvas;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetFoodTileCode;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainTileCode;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;

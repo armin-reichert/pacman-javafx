@@ -1,12 +1,9 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.mapeditor;
+package de.amr.pacmanfx.mapeditor.palette;
 
-import de.amr.pacmanfx.mapeditor.palette.ActorTool;
-import de.amr.pacmanfx.mapeditor.palette.Palette;
-import de.amr.pacmanfx.mapeditor.palette.PaletteID;
-import de.amr.pacmanfx.mapeditor.palette.TileCodeEditorTool;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
 import de.amr.pacmanfx.model.world.FoodTile;
@@ -20,7 +17,7 @@ import javafx.scene.text.Text;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.*;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.*;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 
 public class EditorPaletteTabPane extends TabPane {

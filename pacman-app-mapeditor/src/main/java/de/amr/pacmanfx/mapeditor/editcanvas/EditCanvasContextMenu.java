@@ -2,9 +2,13 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.mapeditor;
+package de.amr.pacmanfx.mapeditor.editcanvas;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.mapeditor.EditMode;
+import de.amr.pacmanfx.mapeditor.TileMapEditor;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
+import de.amr.pacmanfx.mapeditor.UfxMapEditor;
 import de.amr.pacmanfx.mapeditor.actions.Action_CarveTunnel;
 import de.amr.pacmanfx.mapeditor.actions.Action_ClearFoodAroundHouse;
 import de.amr.pacmanfx.mapeditor.actions.Action_FloodWithPellets;
@@ -15,7 +19,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
 
-import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.translated;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.translated;
 
 public class EditCanvasContextMenu extends ContextMenu {
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.mapeditor;
+package de.amr.pacmanfx.mapeditor.editcanvas;
 
 import de.amr.pacmanfx.model.world.FoodTile;
 import de.amr.pacmanfx.model.world.WorldMap;

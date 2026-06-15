@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.mapeditor.palette;
 
-import de.amr.pacmanfx.mapeditor.Globals_MapEditor;
+import de.amr.pacmanfx.mapeditor.TileMapEditorGlobals;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -27,6 +27,6 @@ public abstract class PropertyValueEditorTool implements PaletteTool {
     public void draw(Renderer renderer, int row, int col) {
         GraphicsContext g = renderer.ctx();
         g.setFill(Color.BLACK);
-        g.fillRect(col * Globals_MapEditor.TOOL_SIZE, row * Globals_MapEditor.TOOL_SIZE, Globals_MapEditor.TOOL_SIZE, Globals_MapEditor.TOOL_SIZE);
+        g.fillRect(col * TileMapEditorGlobals.TOOL_SIZE, row * TileMapEditorGlobals.TOOL_SIZE, TileMapEditorGlobals.TOOL_SIZE, TileMapEditorGlobals.TOOL_SIZE);
     }
 }

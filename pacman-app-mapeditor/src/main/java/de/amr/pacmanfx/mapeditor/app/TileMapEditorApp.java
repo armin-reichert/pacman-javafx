@@ -14,7 +14,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 
-import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.translated;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.translated;
 
 /**
  * Standalone tile map editor application.
@@ -29,7 +29,7 @@ public class TileMapEditorApp extends Application  {
             var miQuit = new MenuItem(translated("quit"));
             miQuit.setOnAction(_ -> editor.ui().afterCheckForUnsavedChanges(stage::close));
 
-            editor.ui().menuBar().menuFile().getItems().addAll(new SeparatorMenuItem(), miQuit);
+            editor.ui().menuSystem().fileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
 
             double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
             double height = Math.max(0.8 * screenHeight, 600);

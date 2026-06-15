@@ -2,10 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.mapeditor;
+package de.amr.pacmanfx.mapeditor.editcanvas;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.mapeditor.*;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.mapeditor.palette.PaletteID;
 import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
@@ -33,7 +34,7 @@ import javafx.scene.text.Font;
 
 import java.util.function.Predicate;
 
-import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.ACTOR_SPRITES;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.getColorFromMapLayer;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.COLOR_FOOD;
 import static java.util.Objects.requireNonNull;

@@ -1,8 +1,11 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.mapeditor;
+package de.amr.pacmanfx.mapeditor.editcanvas;
 
+import de.amr.pacmanfx.mapeditor.EditMode;
+import de.amr.pacmanfx.mapeditor.TileMapEditor;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.actions.Action_FillMapFromTemplate;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetFoodProperty;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainProperty;
@@ -27,7 +30,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-import static de.amr.pacmanfx.mapeditor.Globals_MapEditor.translated;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.translated;
 import static de.amr.pacmanfx.mapeditor.UfxMapEditor.*;
 import static java.util.Objects.requireNonNull;
 
