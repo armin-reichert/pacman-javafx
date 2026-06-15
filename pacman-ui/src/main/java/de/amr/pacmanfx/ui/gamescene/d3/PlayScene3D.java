@@ -43,17 +43,17 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     public final DoubleProperty scoreOpacity = new SimpleDoubleProperty(0);
 
-    protected PerspectiveManager perspectiveManager;
-    protected Set<ActionKeyBinding> actionBindings;
+    private final PerspectiveManager perspectiveManager;
+    private final Set<ActionKeyBinding> actionBindings;
 
-    protected SubScene subScene;
-    protected Group subSceneRoot;
-    protected PerspectiveCamera camera;
-    protected Group level3DParent = new Group();
-    protected GameLevel3D level3D;
+    private SubScene subScene;
+    private final Group subSceneRoot = new Group();
+    private final PerspectiveCamera camera = new PerspectiveCamera(true);
+    private final Group level3DParent = new Group();
+    private GameLevel3D level3D;
     protected Scores3D scores3D;
-    protected PlaySceneContextMenu contextMenu;
-    protected AmbientLight ambientLight;
+    private PlaySceneContextMenu contextMenu;
+    private AmbientLight ambientLight;
 
     private final ChangeListener<DrawMode> drawModeChangeListener = (_, _, drawMode) -> {
         if (level3D != null) {
@@ -68,8 +68,9 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
      */
     public PlayScene3D(Game game) {
         super(game);
+        perspectiveManager = new PerspectiveManager(camera);
 
-        createSubScene();
+        createContent();
         actionBindings = game().actions().camera3DActions().bindings();
 
         setGameEventHandler(new PlayScene3DGameEventHandler(this));
@@ -259,20 +260,15 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     // Other stuff
 
     // Initial subscene size is irrelevant (will be bound to parent scene size)
-    private void createSubScene() {
-        subSceneRoot = new Group();
-        subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
-
-        camera = new PerspectiveCamera(true);
-        perspectiveManager = new PerspectiveManager(camera);
-        subScene.setCamera(camera);
-
+    private void createContent() {
         final var coordinateSystem = new CoordinateSystem();
         coordinateSystem.visibleProperty().bind(game().ui().settings3D().axesVisibleProperty());
 
         ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(game().ui().settings3D().mazeLightColorProperty());
 
+        subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
+        subScene.setCamera(camera);
         subSceneRoot.getChildren().addAll(level3DParent, coordinateSystem, ambientLight);
     }
 

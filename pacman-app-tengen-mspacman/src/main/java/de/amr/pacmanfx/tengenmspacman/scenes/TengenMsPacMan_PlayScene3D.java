@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
@@ -35,28 +36,35 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    protected void decorate(GameLevel3D level3D) {
-        if (!(gameModel() instanceof TengenMsPacMan_GameModel tengenGameModel)) {
-            throw new IllegalStateException("Cannot use Tengen play scene 3D in game of class %s"
-                .formatted(gameModel().getClass().getSimpleName()));
+    public TengenMsPacMan_GameModel gameModel() {
+        final GameModel gameModel = super.gameModel();
+        if (!(gameModel instanceof TengenMsPacMan_GameModel tengenModel)) {
+            throw new IllegalStateException("Expected Tengen game model, but found class %s"
+                .formatted(gameModel.getClass().getSimpleName()));
         }
+        return tengenModel;
+    }
+
+    @Override
+    protected void decorate(GameLevel3D level3D) {
         // If any of the default level settings has been changed, display the level info
-        gameContext().optCurrentLevel().ifPresent(level -> {
-            if (!tengenGameModel.allOptionsDefault()) {
-                final ImageView levelInfo = createLevelInfoView(tengenGameModel, level);
+        gameContext().optCurrentLevel().ifPresent(_ -> {
+            if (!gameModel().allOptionsDefault()) {
+                final ImageView levelInfo = createLevelInfoView(level3D);
                 level3D.getChildren().add(levelInfo);
             }
         });
     }
 
-    private ImageView createLevelInfoView(TengenMsPacMan_GameModel gameModel, GameLevel level) {
+    private ImageView createLevelInfoView(GameLevel3D level3D) {
+        final GameLevel level = level3D.level();
         final ImageView levelInfo = new ImageView();
         final double infoWidth = TS(level.worldMap().numCols());
         final double infoHeight = TS(2);
         levelInfo.setFitWidth(infoWidth);
         levelInfo.setFitHeight(infoHeight);
         levelInfo.imageProperty().bind(game().ui().settings3D().mazeFloorColorProperty().map(
-            color -> createLevelInfoImage(gameModel, level.number(), infoWidth, infoHeight, color)));
+            color -> createLevelInfoImage(level.number(), infoWidth, infoHeight, color)));
         // Display the level info at front side of floor just over the surface
         final Maze3D maze3D = level3D.entities().maze3D();
         levelInfo.setTranslateY(maze3D.floor().getHeight() - levelInfo.getFitHeight());
@@ -64,7 +72,9 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         return levelInfo;
     }
 
-    private Image createLevelInfoImage(TengenMsPacMan_GameModel game, int levelNumber, double width, double height, Color backgroundColor) {
+    private Image createLevelInfoImage(int levelNumber, double width, double height, Color backgroundColor) {
+        final TengenMsPacMan_GameModel gameModel = gameModel();
+
         final double quality = 6;
         final var canvas = new Canvas(quality * width, quality * height);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important for crisp image!
@@ -74,7 +84,12 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         hudRenderer.fillCanvas(backgroundColor);
         hudRenderer.drawLevelNumberBox(levelNumber, 0, 0);
         hudRenderer.drawLevelNumberBox(levelNumber, width - 2 * TS, 0);
-        hudRenderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBoosterMode(), 0.5 * width, TS(1.5f));
+        hudRenderer.drawGameOptions(
+            gameModel.mapCategory(),
+            gameModel.difficulty(),
+            gameModel.pacBoosterMode(),
+            0.5 * width, TS(1.5f)
+        );
 
         return canvas.snapshot(null, null);
     }
