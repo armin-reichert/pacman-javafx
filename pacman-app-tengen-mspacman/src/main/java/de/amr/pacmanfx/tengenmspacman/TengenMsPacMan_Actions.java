@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.SteeringActions;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
+import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import javafx.scene.input.KeyCode;
@@ -80,7 +80,7 @@ public final class TengenMsPacMan_Actions {
 
             @Override
             public boolean isEnabled() {
-                return game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D);
+                return game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D);
             }
         };
 

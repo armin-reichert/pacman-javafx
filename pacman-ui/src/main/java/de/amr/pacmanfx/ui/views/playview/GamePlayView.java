@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.UISettings;
-import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
+import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
@@ -113,7 +113,7 @@ public class GamePlayView implements GameView {
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> settings.miniViewOnProperty.get()
-                && game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D),
+                && game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D),
             settings.miniViewOnProperty,
             game.ui().gameScenes().currentGameSceneProperty()
         ));

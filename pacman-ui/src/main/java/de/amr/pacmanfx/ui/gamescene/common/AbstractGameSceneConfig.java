@@ -21,10 +21,10 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     public static Identifier cutSceneID(int n) {
         return switch (n) {
-            case 1 -> CommonSceneID.CUTSCENE_1;
-            case 2 -> CommonSceneID.CUTSCENE_2;
-            case 3 -> CommonSceneID.CUTSCENE_3;
-            case 4 -> CommonSceneID.CUTSCENE_4;
+            case 1 -> CommonGameSceneID.CUTSCENE_1;
+            case 2 -> CommonGameSceneID.CUTSCENE_2;
+            case 3 -> CommonGameSceneID.CUTSCENE_3;
+            case 4 -> CommonGameSceneID.CUTSCENE_4;
             default -> throw new IllegalArgumentException("Illegal cut scene number " + n);
         };
     }

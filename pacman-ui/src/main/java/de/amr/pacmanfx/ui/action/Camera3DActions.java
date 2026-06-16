@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
+import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -90,7 +90,7 @@ public class Camera3DActions {
     }
 
     private boolean is3DPlaySceneActive(Game game) {
-        return game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D);
+        return game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
     }
 
     private String translatedPerspectiveMessage(Game game, PerspectiveID perspectiveID) {

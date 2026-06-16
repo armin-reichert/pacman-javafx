@@ -12,7 +12,7 @@ import de.amr.basics.Identifier;
  * These cover the standard Pac‑Man flow: boot, intro, start menu, 2D/3D play scenes,
  * and the four intermission cutscenes.
  */
-public enum CommonSceneID implements Identifier {
+public enum CommonGameSceneID implements Identifier {
     BOOT_SCENE,
     INTRO_SCENE,
     START_SCENE,

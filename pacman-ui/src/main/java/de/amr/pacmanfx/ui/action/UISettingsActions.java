@@ -10,7 +10,7 @@ import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
+import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import javafx.scene.input.KeyCode;
@@ -54,9 +54,9 @@ public class UISettingsActions {
                 final String variantName = game.currentGameVariantName();
                 final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
                 return isArcadeGame &&
-                    (gameScenes.currentGameSceneHasID(game, CommonSceneID.INTRO_SCENE)
-                        || gameScenes.currentGameSceneHasID(game, CommonSceneID.START_SCENE)
-                        || gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D));
+                    (gameScenes.currentGameSceneHasID(CommonGameSceneID.INTRO_SCENE)
+                        || gameScenes.currentGameSceneHasID(CommonGameSceneID.START_SCENE)
+                        || gameScenes.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D));
             }
         };
 
@@ -91,7 +91,7 @@ public class UISettingsActions {
             @Override
             protected void doAction() {
                 toggleBooleanProperty(game.ui().settings().miniViewOnProperty);
-                if (!game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D)) {
+                if (!game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
                     final String msg = game.ui().translations().translate(
                         game.ui().settings().miniViewOnProperty.get() ? "pip_on" : "pip_off");
                     game.shortMessage(msg);
@@ -108,7 +108,7 @@ public class UISettingsActions {
                     game.shortMessage(game.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
                 }
                 if (isLevelPlaying()) {
-                    game.ui().gameScenes().forceGameSceneUpdate(game);
+                    game.ui().gameScenes().forceGameSceneUpdate();
                 }
             }
 
@@ -120,8 +120,8 @@ public class UISettingsActions {
 
             private boolean inPlayScene() {
                 final GameSceneManager gameScenes = game.ui().gameScenes();
-                return gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_2D)
-                    || gameScenes.currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D);
+                return gameScenes.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)
+                    || gameScenes.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
             }
 
             private boolean isLevelPlaying() {

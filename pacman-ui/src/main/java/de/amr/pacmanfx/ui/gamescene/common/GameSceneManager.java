@@ -31,10 +31,12 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSceneManager {
 
+    private final Game game;
+
     private final ObjectProperty<AbstractGameScene> currentGameScene = new SimpleObjectProperty<>();
 
     public GameSceneManager(Game game) {
-        requireNonNull(game);
+        this.game = requireNonNull(game);
         currentGameScene.addListener((_, _, newGameScene) -> {
             if (newGameScene != null) {
                 embedGameSceneIntoPlayView(game, newGameScene);
@@ -50,11 +52,11 @@ public class GameSceneManager {
         return currentGameScene;
     }
 
-    public void forceGameSceneUpdate(Game game) {
-        updateGameSceneAndForceReload(game, true);
+    public void forceGameSceneUpdate() {
+        updateGameSceneAndForceReload(true);
     }
 
-    public void updateGameSceneAndForceReload(Game game, boolean forceReload) {
+    public void updateGameSceneAndForceReload(boolean forceReload) {
         final UIConfig currentConfig = game.currentUIConfig();
         final GameContext gameContext = game.currentGameContext();
         final GameModel gameModel = gameContext.model();
@@ -88,7 +90,7 @@ public class GameSceneManager {
      * @param sceneID scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean hasGameSceneID(Game game, AbstractGameScene gameScene, Identifier sceneID) {
+    public boolean hasGameSceneID(AbstractGameScene gameScene, Identifier sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         final UIConfig currentConfig = game.currentUIConfig();
@@ -101,9 +103,9 @@ public class GameSceneManager {
      * @param sceneID scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean currentGameSceneHasID(Game game, Identifier sceneID) {
+    public boolean currentGameSceneHasID(Identifier sceneID) {
         final AbstractGameScene current = currentGameSceneProperty().get();
-        return current != null && hasGameSceneID(game, current, sceneID);
+        return current != null && hasGameSceneID(current, sceneID);
     }
 
     // 2D-3D scene switch
