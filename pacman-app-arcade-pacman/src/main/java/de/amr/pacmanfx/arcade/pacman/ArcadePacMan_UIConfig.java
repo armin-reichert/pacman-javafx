@@ -29,6 +29,7 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.UfxImages;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -68,8 +69,8 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public ResourceBundle textBundle() {
-        return textBundle;
+    public TranslationManager translations() {
+        return () -> textBundle;
     }
 
     @Override

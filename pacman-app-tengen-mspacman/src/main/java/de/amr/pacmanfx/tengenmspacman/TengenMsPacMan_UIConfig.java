@@ -28,6 +28,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentColors;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostStateColors;
@@ -184,8 +185,8 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     }
 
     @Override
-    public ResourceBundle textBundle() {
-        return textBundle;
+    public TranslationManager translations() {
+        return () -> textBundle;
     }
 
     @Override

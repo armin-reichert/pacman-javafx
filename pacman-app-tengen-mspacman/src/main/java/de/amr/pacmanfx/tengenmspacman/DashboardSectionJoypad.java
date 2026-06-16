@@ -51,7 +51,7 @@ public class DashboardSectionJoypad extends DashboardSection {
 
         // Take dashboard title from Tengen Ms. Pac-Man text bundle
         final GameVariant tengenGameVariant = game.gameVariant(GameVariantID.TENGEN_MS_PACMAN.name());
-        setText(tengenGameVariant.uiConfig().translate("infobox.joypad.title"));
+        setText(tengenGameVariant.uiConfig().translations().translate("infobox.joypad.title"));
 
         visibleProperty().bind(game.gameVariantNameProperty().isEqualTo(GameVariantID.TENGEN_MS_PACMAN.name()));
     }

@@ -158,7 +158,7 @@ public class GameWindowImpl implements GameWindow {
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager appSpecificTranslator = game.currentUIConfig();
+        final TranslationManager appSpecificTranslator = game.currentUIConfig().translations();
         final String appTitleKey = paused ? "app.title.paused" : "app.title";
         if (appSpecificTranslator.textBundle() != null
             && appSpecificTranslator.textBundle().containsKey(appTitleKey)) {
