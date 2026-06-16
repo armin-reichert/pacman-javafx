@@ -21,8 +21,17 @@ public class Arcade_BootScene2D extends GameScene2D {
 
     public SceneState sceneState;
 
+    public String[] noise = new String[28*36];
+
     public Arcade_BootScene2D(Game game) {
         super(game);
+
+        // Make some noise
+        final var rnd = new java.security.SecureRandom();
+        for (int i = 0; i < noise.length; i++) {
+            final byte hexDigit = (byte) rnd.nextInt(16);;
+            noise[i] = Integer.toHexString(hexDigit);
+        }
     }
 
     @Override

@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
@@ -15,6 +16,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.basics.math.RandomNumberSupport.*;
+import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
 import static de.amr.basics.math.MathAdds.lerp;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
@@ -56,7 +58,7 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
             case HEX_CODES -> {
                 if (tick % 4 == 0) {
                     clearCanvas();
-                    drawRandomHexDigits(scene.unscaledWidth(), scene.unscaledHeight());
+                    drawRandomHexDigits(bootScene, scene.unscaledWidth(), scene.unscaledHeight());
                 }
             }
             case RANDOM_SPRITE_FRAGMENTS -> {
@@ -75,16 +77,17 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
         }
     }
 
-    private void drawRandomHexDigits(int width, int height) {
+    private void drawRandomHexDigits(Arcade_BootScene2D bootScene, int width, int height) {
         final int numRows = height / TS;
         final int numCols = width / TS;
         ctx.setFill(ARCADE_WHITE);
         ctx.setFont(arcadeFont8());
         for (int row = 0; row < numRows; ++row) {
-            final double y = scaled(TS(row + 1));
+            final double y = scaled(TS * (row + 1));
             for (int col = 0; col < numCols; ++col) {
-                final byte hexDigit = randomByte(0, 16);
-                ctx.fillText(Integer.toHexString(hexDigit), scaled(TS(col)), y);
+                final double x = scaled(TS * col);
+                final int i = randomInt(0, bootScene.noise.length- 1);
+                ctx.fillText(bootScene.noise[i], x, y);
             }
         }
     }
