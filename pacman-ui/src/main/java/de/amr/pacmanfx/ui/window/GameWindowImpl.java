@@ -75,7 +75,7 @@ public class GameWindowImpl implements GameWindow {
 
         // Set sub views
         final GameViewManager subViews = game.ui().views();
-        subViews.setStartView(startPagesView);
+        subViews.setStartPagesView(startPagesView);
         subViews.setGamePlayView(gamePlayView);
         subViews.setEditorViewFactory(() -> createEditorSubView(game));
 

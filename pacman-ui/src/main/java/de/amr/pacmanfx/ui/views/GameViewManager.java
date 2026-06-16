@@ -24,7 +24,7 @@ public final class GameViewManager {
     private Supplier<EditorView> editorViewFactory;
     private BooleanSupplier editorCanOpen = () -> false;
 
-    private StartPagesView startView;
+    private StartPagesView startPagesView;
     private GamePlayView gamePlayView;
     private EditorView editorView;
 
@@ -47,7 +47,7 @@ public final class GameViewManager {
             // No editor view exists or editor already selected: cannot open
             if (editorView == null || isSelected(editorView)) return false;
 
-            if (isSelected(startView)) return true;
+            if (isSelected(startPagesView)) return true;
 
             if (isSelected(gamePlayView)) {
                 return !game.currentGameContext().model().isPlaying();
@@ -67,14 +67,14 @@ public final class GameViewManager {
         return currentView.get();
     }
 
-    public void setGamePlayView(GamePlayView newGamePlayView) {
-        requireNonNull(newGamePlayView);
-        gamePlayView = newGamePlayView;
+    public void setGamePlayView(GamePlayView gamePlayView) {
+        requireNonNull(gamePlayView);
+        this.gamePlayView = gamePlayView;
     }
 
-    public void setStartView(StartPagesView newStartView) {
-        requireNonNull(newStartView);
-        startView = newStartView;
+    public void setStartPagesView(StartPagesView startPagesView) {
+        requireNonNull(startPagesView);
+        this.startPagesView = startPagesView;
     }
 
     public void setEditorViewFactory(Supplier<EditorView> factory) {
@@ -89,7 +89,7 @@ public final class GameViewManager {
     }
 
     public StartPagesView startView() {
-        return startView;
+        return startPagesView;
     }
 
     public GamePlayView gamePlayView() {
@@ -101,10 +101,10 @@ public final class GameViewManager {
     }
 
     public void selectStartView() {
-        if (startView == null) {
+        if (startPagesView == null) {
             throw new IllegalStateException("No start view has been set");
         }
-        currentViewProperty().set(startView);
+        currentViewProperty().set(startPagesView);
     }
 
     public void selectGamePlayView() {
@@ -138,8 +138,8 @@ public final class GameViewManager {
         }
     }
 
-    public boolean isSelected(GameView view) {
-        return view != null && currentView() == view;
+    public boolean isSelected(GameView gameView) {
+        requireNonNull(gameView);
+        return currentView() == gameView;
     }
-
  }
