@@ -58,9 +58,9 @@ public final class CommonActions {
                 game.setCollisionStrategy(newStrategy);
 
                 if (newStrategy == CollisionStrategy.SAME_TILE) {
-                    game.shortMessage("Using original Arcade collision strategy (same tile check)");
+                    game.ui().shortMessage("Using original Arcade collision strategy (same tile check)");
                 } else {
-                    game.shortMessage("Using fail-safe collision strategy");
+                    game.ui().shortMessage("Using fail-safe collision strategy");
                 }
             }
         };

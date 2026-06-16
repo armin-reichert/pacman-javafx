@@ -94,7 +94,7 @@ public class UISettingsActions {
                 if (!game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
                     final String msg = game.ui().translations().translate(
                         game.ui().settings().miniViewOnProperty.get() ? "pip_on" : "pip_off");
-                    game.shortMessage(msg);
+                    game.ui().shortMessage(msg);
                 }
             }
         };
@@ -105,7 +105,7 @@ public class UISettingsActions {
                 toggleBooleanProperty(game.ui().settings3D().view3DEnabledProperty());
                 final boolean is3DEnabled = game.ui().settings3D().view3DEnabledProperty().get();
                 if (!inPlayScene()) {
-                    game.shortMessage(game.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
+                    game.ui().shortMessage(game.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
                 }
                 if (isLevelPlaying()) {
                     game.ui().gameScenes().forceGameSceneUpdate();

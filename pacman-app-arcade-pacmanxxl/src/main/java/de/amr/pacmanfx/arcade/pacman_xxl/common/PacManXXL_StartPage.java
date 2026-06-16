@@ -103,7 +103,7 @@ public class PacManXXL_StartPage implements StartPage {
                 game.start();
             }
             else if (keyboard.isKeyPressed(KeyCode.S)) {
-                game.shortMessage("OK, I shut my mouth");
+                game.ui().shortMessage("OK, I shut my mouth");
                 stopTalking(game);
             }
         }

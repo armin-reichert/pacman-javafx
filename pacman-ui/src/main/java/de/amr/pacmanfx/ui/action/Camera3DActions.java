@@ -33,7 +33,7 @@ public class Camera3DActions {
             protected void doAction() {
                 final PerspectiveID nextID = game.ui().settings3D().cameraPerspectiveIdProperty().get().next();
                 game.ui().settings3D().cameraPerspectiveIdProperty().set(nextID);
-                game.shortMessage(translatedPerspectiveMessage(game, nextID));
+                game.ui().shortMessage(translatedPerspectiveMessage(game, nextID));
             }
 
             @Override
@@ -47,7 +47,7 @@ public class Camera3DActions {
             protected void doAction() {
                 final PerspectiveID prevID = game.ui().settings3D().cameraPerspectiveIdProperty().get().prev();
                 game.ui().settings3D().cameraPerspectiveIdProperty().set(prevID);
-                game.shortMessage(translatedPerspectiveMessage(game, prevID));
+                game.ui().shortMessage(translatedPerspectiveMessage(game, prevID));
             }
             @Override
             public boolean isEnabled() {

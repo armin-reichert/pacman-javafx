@@ -334,7 +334,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
     private void onGameOver() {
         GameLevel3D level3D = assertLevel3D();
         if (!level3D.level().isDemoLevel() && RandomNumberSupport.chance(0.25)) {
-            game().shortMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
+            game().ui().shortMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
         }
         level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).stop();
         level3D.cleanupFoodAndParticles();

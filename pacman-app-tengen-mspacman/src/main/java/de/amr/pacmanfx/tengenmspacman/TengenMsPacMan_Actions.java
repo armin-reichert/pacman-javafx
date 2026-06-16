@@ -100,7 +100,7 @@ public final class TengenMsPacMan_Actions {
                     final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game.currentGameContext().model();
                     tengenGame.activatePacBooster(gameLevel.entities().pac(), !tengenGame.isBoosterActive());
                     if (tengenGame.isBoosterActive()) {
-                        game.shortMessage("Booster!"); //TODO localize
+                        game.ui().shortMessage("Booster!"); //TODO localize
                     }
                 });
             }

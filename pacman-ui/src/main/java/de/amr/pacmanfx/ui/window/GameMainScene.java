@@ -40,6 +40,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameMainScene extends Scene {
 
+    private final FlashMessageManager flashMessageManager;
+
     private final StackPane gameViewHolder = new StackPane();
 
     private final StatusIconBox statusIconBox;
@@ -49,6 +51,8 @@ public class GameMainScene extends Scene {
 
     public GameMainScene(double width, double height) {
         super(new StackPane(), width, height, Color.BLACK);
+
+        flashMessageManager = new FlashMessageManager();
 
         statusIconBox = new StatusIconBox();
         StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
@@ -81,12 +85,16 @@ public class GameMainScene extends Scene {
         rootPane().getChildren().addAll(
             gameViewHolder,
             statusIconBox.rootPane(),
-            game.ui().flashMessages().messageView().rootPane(),
+            flashMessageManager.messageView().rootPane(),
             keyboardInfoPopup.rootPane()
         );
 
         connectKeyboard(game);
         registerGlobalActions(game);
+    }
+
+    public FlashMessageManager flashMessageManager() {
+        return flashMessageManager;
     }
 
     public void replaceGameView(GameView gameView) {

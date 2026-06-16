@@ -42,7 +42,7 @@ public final class GameViewManager {
             newView.onEnter();
 
             game.ui().window().mainScene().replaceGameView(newView);
-            game.ui().flashMessages().clearMessage();
+            game.ui().clearMessage();
         });
 
         editorCanOpen = () -> {

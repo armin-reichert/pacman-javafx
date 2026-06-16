@@ -115,6 +115,6 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
 
     @Override
     public void onTestStarted(TestStartedEvent e) {
-        game().shortMessage("Testing level %d".formatted(e.level().number()));
+        game().ui().shortMessage("Testing level %d".formatted(e.level().number()));
     }
 }

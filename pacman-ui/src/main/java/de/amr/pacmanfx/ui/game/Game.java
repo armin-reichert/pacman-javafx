@@ -60,26 +60,4 @@ public interface Game extends GameLifecycle {
 
     void setCollisionStrategy(CollisionStrategy collisionStrategy);
 
-    /**
-     * Displays a flash message.
-     *
-     * @param duration how long the message remains visible before fading
-     * @param message  message text (supports {@link String#format})
-     * @param args     formatting arguments
-     */
-    default void shortMessage(Duration duration, String message, Object... args) {
-        requireNonNull(duration);
-        requireNonNull(message);
-        ui().flashMessages().showMessage(message.formatted(args), duration.toSeconds());
-    }
-
-    /**
-     * Displays a flash message using the default duration.
-     *
-     * @param message message text
-     * @param args    formatting arguments
-     */
-    default void shortMessage(String message, Object... args) {
-        shortMessage(ui().settings().DEFAULT_FLASH_MESSAGE_DURATION, message, args);
-    }
 }

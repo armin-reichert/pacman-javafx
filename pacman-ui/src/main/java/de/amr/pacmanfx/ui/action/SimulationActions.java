@@ -47,7 +47,7 @@ public class SimulationActions {
                 clock.setTargetFrameRate(newRate);
 
                 final String msg = newRate == GameConstants.SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
-                game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+                game.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
             }
         };
 
@@ -56,7 +56,7 @@ public class SimulationActions {
             protected void doAction() {
                 game.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
                 final String msg = "At maximum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MAX);
-                game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
+                game.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
             }
         };
 
@@ -69,7 +69,7 @@ public class SimulationActions {
                 clock.setTargetFrameRate(newRate);
 
                 final String msg = newRate == GameConstants.SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
-                game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+                game.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
             }
         };
 
@@ -78,7 +78,7 @@ public class SimulationActions {
             protected void doAction() {
                 game.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
                 final String msg = "At minimum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MIN);
-                game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
+                game.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
             }
         };
 
@@ -87,7 +87,7 @@ public class SimulationActions {
             protected void doAction() {
                 final boolean failure = !game.clock().makeOneStep(true);
                 if (failure) {
-                    game.shortMessage("Simulation step error!");
+                    game.ui().shortMessage("Simulation step error!");
                 }
             }
 
@@ -100,7 +100,7 @@ public class SimulationActions {
             protected void doAction() {
                 final boolean failure = !game.clock().makeSteps(10, true);
                 if (failure) {
-                    game.shortMessage("Simulation steps error!");
+                    game.ui().shortMessage("Simulation steps error!");
                 }
             }
 
@@ -112,7 +112,7 @@ public class SimulationActions {
             @Override
             protected void doAction() {
                 game.clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-                game.shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), game.clock().targetFrameRate() + "Hz");
+                game.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), game.clock().targetFrameRate() + "Hz");
             }
         };
 

@@ -31,7 +31,6 @@ import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
-import de.amr.pacmanfx.ui.window.FlashMessageManager;
 import de.amr.pacmanfx.ui.window.GameWindowImpl;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
@@ -253,7 +252,7 @@ public final class GameImpl implements Game {
         stop();
         ui.sprites().stopAnimationTimer();
         ui.sprites().animations().clear();
-        ui.flashMessages().stopAnimationTimer();
+        ui.window().mainScene().flashMessageManager().stopAnimationTimer();
         watchdog.dispose();
     }
 
@@ -265,7 +264,7 @@ public final class GameImpl implements Game {
     private void ka_tas_tro_phe(Throwable reason) {
         Platform.runLater(() -> {
             final String errorMessage = ui.translations().translate("error.oh_no_my_program");
-            shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+            ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
             stop();
             Logger.error("*** SOMETHING VERY BAD HAPPENED:");
             Logger.error(reason);
@@ -297,7 +296,6 @@ public final class GameImpl implements Game {
 
     private GameUI createUI() {
         return new GameUI(
-            new FlashMessageManager(),
             new GameSceneManager(this),
             new SoundManager(this),
             new SpriteAnimationManager(60),
@@ -357,7 +355,7 @@ public final class GameImpl implements Game {
     private void startServicesLater() {
         Platform.runLater(() -> {
             watchdog.startWatching();
-            ui.flashMessages().startAnimationTimer();
+            ui.window().mainScene().flashMessageManager().startAnimationTimer();
             ui.sprites().startAnimationTimer();
         });
     }

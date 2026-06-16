@@ -57,7 +57,7 @@ public class EditorActions {
                         try {
                             editor.editFile(mapFile);
                         } catch (Exception x) {
-                            game.shortMessage("Cannot edit map file");
+                            game.ui().shortMessage("Cannot edit map file");
                             Logger.error(x, "Cannot edit map file {}", mapFile);
                         }
                     }
@@ -88,12 +88,12 @@ public class EditorActions {
 
         final TileMapEditor editor = subViews.optEditorView().map(EditorView::editor).orElse(null);
         if (editor == null) {
-            game.shortMessage("Cannot access the map editor.");
+            game.ui().shortMessage("Cannot access the map editor.");
             return Optional.empty();
         }
 
         if (!subViews.trySelectEditorView()) {
-            game.shortMessage("Cannot open the map editor.");
+            game.ui().shortMessage("Cannot open the map editor.");
             return Optional.empty();
         }
 
