@@ -27,7 +27,7 @@ import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.subviews.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
 import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
-import de.amr.pacmanfx.ui.view.GameViewImpl;
+import de.amr.pacmanfx.ui.window.GameWindowImpl;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -111,7 +111,7 @@ public class PacManAllGamesApp extends Application {
                     .build(stage);
             }
             else {
-                game = new GameImpl(machine, new GameViewImpl(stage, sceneSize.x(), sceneSize.y()));
+                game = new GameImpl(machine, new GameWindowImpl(stage, sceneSize.x(), sceneSize.y()));
 
                 game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(sharedMapSelector);
                 game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);

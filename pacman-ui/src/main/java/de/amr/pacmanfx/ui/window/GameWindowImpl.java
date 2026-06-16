@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.view;
+package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.*;
@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
-public class GameViewImpl implements GameView {
+public class GameWindowImpl implements GameWindow {
 
     private Game game;
 
@@ -51,7 +51,7 @@ public class GameViewImpl implements GameView {
     private final StartPagesView startPagesView;
     private final GamePlayView gamePlayView;
 
-    public GameViewImpl(Stage stage, int width, int height) {
+    public GameWindowImpl(Stage stage, int width, int height) {
         this.stage = requireNonNull(stage);
         mainScene = new GameMainScene(width, height);
         mainScene.getStylesheets().add(GameUI_Constants.STYLE_SHEET_PATH);

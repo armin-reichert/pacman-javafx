@@ -17,7 +17,7 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
 import de.amr.pacmanfx.ui.subviews.playview.DecorationPane;
 import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
-import de.amr.pacmanfx.ui.view.GameMainScene;
+import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import javafx.beans.property.ObjectProperty;

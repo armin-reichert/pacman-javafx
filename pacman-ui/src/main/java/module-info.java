@@ -34,7 +34,7 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.subviews.startpages;
     exports de.amr.pacmanfx.ui.subviews.editor;
     exports de.amr.pacmanfx.ui.subviews.help;
-    exports de.amr.pacmanfx.ui.view;
+    exports de.amr.pacmanfx.ui.window;
     exports de.amr.pacmanfx.ui.gamescene.common;
     exports de.amr.pacmanfx.ui.action.core;
 }

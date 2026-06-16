@@ -27,8 +27,8 @@ import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.subviews.SubViewManager;
-import de.amr.pacmanfx.ui.view.FlashMessageManager;
-import de.amr.pacmanfx.ui.view.GameViewImpl;
+import de.amr.pacmanfx.ui.window.FlashMessageManager;
+import de.amr.pacmanfx.ui.window.GameWindowImpl;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
@@ -68,7 +68,7 @@ public final class GameImpl implements Game {
 
     private final GameUI ui;
 
-    private final GameViewImpl view;
+    private final GameWindowImpl view;
 
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
 
@@ -76,7 +76,7 @@ public final class GameImpl implements Game {
 
     private GameContextImpl currentGameContext;
 
-    public GameImpl(PacManGamesMachine machine, GameViewImpl view) {
+    public GameImpl(PacManGamesMachine machine, GameWindowImpl view) {
         this.machine = requireNonNull(machine);
         this.view = requireNonNull(view);
 

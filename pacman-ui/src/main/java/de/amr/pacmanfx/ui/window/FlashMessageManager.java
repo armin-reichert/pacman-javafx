@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.view;
+package de.amr.pacmanfx.ui.window;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.binding.Bindings;
