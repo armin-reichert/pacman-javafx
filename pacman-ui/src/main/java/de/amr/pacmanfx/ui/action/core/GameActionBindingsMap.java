@@ -91,7 +91,7 @@ public class GameActionBindingsMap implements ActionBindingsRegistry {
             final KeyCodeCombination actionTrigger = entry.getKey();
             if (keyboard.stateMatches(actionTrigger)) {
                 final GameAction action = entry.getValue();
-                Logger.info("ACTION MATCH FOUND: key='{}' action='{}'", actionTrigger, action.id());
+                Logger.debug("ACTION MATCH FOUND: key='{}' action='{}'", actionTrigger, action.id());
                 return Optional.of(action);
             }
         }
