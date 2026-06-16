@@ -56,7 +56,6 @@ public final class GameViewManager {
 
             return false;
         };
-
     }
 
     public ObjectProperty<GameView> currentViewProperty() {

@@ -68,6 +68,7 @@ public class StartPagesView extends Carousel implements GameView {
         });
     }
 
+    @Override
     public void connect(Game game) {
         this.game = requireNonNull(game);
 

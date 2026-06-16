@@ -41,7 +41,7 @@ public class GameMainScene extends Scene {
 
     private final StackPane gameViewHolder = new StackPane();
 
-    private StatusIconBox statusIconBox;
+    private final StatusIconBox statusIconBox;
     private final KeyboardInfo keyboardInfoPopup;
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
@@ -49,8 +49,15 @@ public class GameMainScene extends Scene {
     public GameMainScene(double width, double height) {
         super(new StackPane(), width, height, Color.BLACK);
 
+        statusIconBox = new StatusIconBox();
+        StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
+
         keyboardInfoPopup = new KeyboardInfo();
         keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
+    }
+
+    public StackPane rootPane() {
+        return (StackPane) getRoot();
     }
 
     public StatusIconBox statusIconBox() {
@@ -67,7 +74,7 @@ public class GameMainScene extends Scene {
             game.ui().gameScenes().currentGameSceneProperty()
         ));
 
-        createStatusIconBox(game);
+        statusIconBox.connect(game);
         keyboardInfoPopup.connect(game);
 
         rootPane().getChildren().addAll(
@@ -79,10 +86,6 @@ public class GameMainScene extends Scene {
 
         connectKeyboard(game);
         registerGlobalActions(game);
-    }
-
-    public StackPane rootPane() {
-        return (StackPane) getRoot();
     }
 
     public void replaceGameView(GameView gameView) {
@@ -134,13 +137,4 @@ public class GameMainScene extends Scene {
             : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER;
     }
 
-    private void createStatusIconBox(Game game) {
-        statusIconBox = new StatusIconBox(game);
-        final var views = game.ui().views();
-        statusIconBox.rootPane().visibleProperty().bind(
-            views.currentViewProperty().isEqualTo(views.gamePlayView())
-                .or(views.currentViewProperty().isEqualTo(views.startPagesView()))
-        );
-        StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
-    }
 }

@@ -7,9 +7,11 @@ import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -43,6 +45,8 @@ public class StatusIconBox implements Disposable {
         Font.font("Sans", 16)
     );
 
+    private final Config config;
+
     private final HBox rootPane = new HBox();
     private final FontAwesomeIcon iconMuted;
     private final FontAwesomeIcon icon3D;
@@ -50,30 +54,18 @@ public class StatusIconBox implements Disposable {
     private final FontAwesomeIcon iconImmune;
     private final FontAwesomeIcon iconCheated;
 
-    public StatusIconBox(Game game) {
-        this(game, DEFAULT_CONFIG);
+    public StatusIconBox() {
+        this(DEFAULT_CONFIG);
     }
     
-    public StatusIconBox(Game game, Config config) {
-        requireNonNull(game);
-        requireNonNull(config);
+    public StatusIconBox(Config config) {
+        this.config = requireNonNull(config);
 
-        final TranslationManager translations = game.ui().translations();
-
-        iconMuted = createIcon(config, FontAwesomeIcon.Symbol.DEAF, config.defaultIconColor(),
-            translations.translate("status_icon.muted"));
-
-        icon3D = createIcon(config, FontAwesomeIcon.Symbol.CUBES, config.defaultIconColor(),
-            translations.translate("status_icon.3d"));
-
-        iconAutopilot = createIcon(config, FontAwesomeIcon.Symbol.TAXI, config.defaultIconColor(),
-            translations.translate("status_icon.autopilot"));
-
-        iconImmune = createIcon(config, FontAwesomeIcon.Symbol.USER_SECRET, config.defaultIconColor(),
-            translations.translate("status_icon.immune"));
-
-        iconCheated = createIcon(config, FontAwesomeIcon.Symbol.FLAG, Color.RED,
-            translations.translate("status_icon.cheated"));
+        iconMuted = createIcon(FontAwesomeIcon.Symbol.DEAF, config.defaultIconColor());
+        icon3D = createIcon(FontAwesomeIcon.Symbol.CUBES, config.defaultIconColor());
+        iconAutopilot = createIcon(FontAwesomeIcon.Symbol.TAXI, config.defaultIconColor());
+        iconImmune = createIcon(FontAwesomeIcon.Symbol.USER_SECRET, config.defaultIconColor());
+        iconCheated = createIcon(FontAwesomeIcon.Symbol.FLAG, Color.RED);
 
         final int iconCount = (int) iconNodesInOrder().count();
         final int padding = config.iconPadding();
@@ -85,11 +77,6 @@ public class StatusIconBox implements Disposable {
         rootPane.setMaxWidth(size + (iconCount - 1) * spacing + 2 * padding);
         rootPane.setPadding(new Insets(padding));
         rootPane.setSpacing(spacing);
-
-        // "autopilot", "cheated" and "immune" icon visibilities are dynamically bound to current game model's cheat object!
-        iconMuted.visibleProperty().bind(game.ui().settings().mutedProperty);
-
-        icon3D.visibleProperty().bind(game.ui().settings3D().view3DEnabledProperty());
     }
 
     public Pane rootPane() {
@@ -100,19 +87,43 @@ public class StatusIconBox implements Disposable {
         return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated).map(FontAwesomeIcon::node);
     }
 
-    public void bind(GameModel gameModel) {
-        final GameCheats cheats = gameModel.cheats();
+    public void connect(Game game) {
+        final TranslationManager translations = game.ui().translations();
 
-        iconAutopilot.visibleProperty().unbind();
-        iconAutopilot.visibleProperty().bind(cheats.pacUsingAutopilotProperty());
+        setTooltip(iconMuted, translations.translate("status_icon.muted"));
+        setTooltip(icon3D, translations.translate("status_icon.3d"));
+        setTooltip(iconAutopilot, translations.translate("status_icon.autopilot"));
+        setTooltip(iconImmune, translations.translate("status_icon.immune"));
+        setTooltip(iconCheated, translations.translate("status_icon.cheated"));
 
-        iconCheated.visibleProperty().unbind();
-        iconCheated.visibleProperty().bind(cheats.cheatUsedProperty());
+        final GameViewManager views = game.ui().views();
+        // Hide status icon box in editor view
+        rootPane().visibleProperty().bind(
+            views.currentViewProperty().isEqualTo(views.gamePlayView())
+                .or(views.currentViewProperty().isEqualTo(views.startPagesView()))
+        );
 
-        iconImmune.visibleProperty().unbind();
-        iconImmune.visibleProperty().bind(cheats.pacImmuneProperty());
+        // Visibility of "autopilot", "cheated" and "immune" is bound to *current game model*'s cheat object!
+        final ChangeListener<String> variantChangeHandler = (_, _, variantName) -> {
+            final GameModel gameModel = game.gameVariant(variantName).gameModel();
+            final GameCheats cheats = gameModel.cheats();
 
-        Logger.info("Icons autopilot, cheated and immune visibility bound to game model {}", gameModel);
+            iconAutopilot.visibleProperty().unbind();
+            iconAutopilot.visibleProperty().bind(cheats.pacUsingAutopilotProperty());
+
+            iconCheated.visibleProperty().unbind();
+            iconCheated.visibleProperty().bind(cheats.cheatUsedProperty());
+
+            iconImmune.visibleProperty().unbind();
+            iconImmune.visibleProperty().bind(cheats.pacImmuneProperty());
+
+            Logger.info("Icons autopilot, cheated and immune visibility bound to game model {}", gameModel);
+        };
+
+        game.gameVariantNameProperty().addListener(variantChangeHandler);
+
+        iconMuted.visibleProperty().bind(game.ui().settings().mutedProperty);
+        icon3D.visibleProperty().bind(game.ui().settings3D().view3DEnabledProperty());
     }
 
     @Override
@@ -124,17 +135,18 @@ public class StatusIconBox implements Disposable {
         });
     }
 
-    private FontAwesomeIcon createIcon(Config config, FontAwesomeIcon.Symbol symbol, Color color, String tooltipText) {
+    private FontAwesomeIcon createIcon(FontAwesomeIcon.Symbol symbol, Color color) {
         final FontAwesomeIcon icon = new FontAwesomeIcon(symbol, config.iconSize());
         icon.fillProperty().set(color);
         icon.visibleProperty().addListener(this::rearrangeIcons);
+        return icon;
+    }
 
-        final Tooltip tooltip = new Tooltip(tooltipText);
+    private void setTooltip(FontAwesomeIcon icon, String text) {
+        final Tooltip tooltip = new Tooltip(text);
         tooltip.setFont(config.tooltipFont);
         tooltip.setShowDelay(Duration.millis(250));
         Tooltip.install(icon.node(), tooltip);
-
-        return icon;
     }
 
     // keep box compact, show visible items only

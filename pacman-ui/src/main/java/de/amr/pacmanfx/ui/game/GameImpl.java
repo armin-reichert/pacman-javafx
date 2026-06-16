@@ -100,6 +100,10 @@ public final class GameImpl implements Game {
         });
 
         createGameViews();
+
+        ui.views().startPagesView().connect(this);
+        ui.views().gamePlayView().connect(this);
+
         gameWindow.connect(this);
     }
 

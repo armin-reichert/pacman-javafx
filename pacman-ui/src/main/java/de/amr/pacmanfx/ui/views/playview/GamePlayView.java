@@ -93,6 +93,7 @@ public class GamePlayView implements GameView {
         createLayout(requireNonNull(dashboardConfig));
     }
 
+    @Override
     public void connect(Game game) {
         this.game = requireNonNull(game);
         final UISettings settings = game.ui().settings();

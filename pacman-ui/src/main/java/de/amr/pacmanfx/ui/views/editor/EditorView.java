@@ -30,6 +30,7 @@ public class EditorView implements GameView {
         editor.ui().layoutPane().setBackground(paintBackground(Color.valueOf("#dddddd"))); // JavaFX default grey
     }
 
+    @Override
     public void connect(Game game) {
         final MenuItem miQuitEditor = new MenuItem(game.ui().translations().translate("back_to_game"));
         miQuitEditor.setOnAction(_ -> editor.quit());

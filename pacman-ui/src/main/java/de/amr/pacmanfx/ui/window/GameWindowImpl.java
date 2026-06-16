@@ -50,9 +50,8 @@ public class GameWindowImpl implements GameWindow {
         mainScene.connect(game);
 
         // Some status icons are bound to the game model of the *current* game variant
-        game.gameVariantNameProperty().addListener((_,_,variantName) -> {
+        game.gameVariantNameProperty().addListener((_, _, _) -> {
             //TODO This does not belong here
-            mainScene.statusIconBox().bind(game.gameVariant(variantName).gameModel());
             game.ui().views().gamePlayView().gameSceneFrame().clearCanvas();
         });
 
