@@ -14,7 +14,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class SpriteAnimation {
 
-    private SpriteAnimationContainer container;
+    private final SpriteAnimationContainer container;
 
     private RectShort[] sprites;
     private int currentFrameIndex;
@@ -24,17 +24,15 @@ public class SpriteAnimation {
     private int frameDurationTicks;
     private int smallTick;
 
-    public SpriteAnimation() {
+    public SpriteAnimation(SpriteAnimationContainer container) {
+        this.container = Objects.requireNonNull(container);
+
         sprites = new RectShort[0];
         currentFrameIndex = 0;
         loop = false;
         running = false;
         smallTick = 0;
         setFrameDurationTicks(1);
-    }
-
-    public void setContainer(SpriteAnimationContainer container) {
-        this.container = Objects.requireNonNull(container);
     }
 
     public void tick() {
@@ -66,6 +64,7 @@ public class SpriteAnimation {
     public void reset() {
         stop();
         currentFrameIndex = 0;
+        smallTick = 0;
     }
 
     public void advanceFrame() {
@@ -78,6 +77,7 @@ public class SpriteAnimation {
         } else {
             ++currentFrameIndex;
         }
+        smallTick = 0;
     }
 
     public void setSprites(RectShort[] sprites) {
@@ -88,6 +88,8 @@ public class SpriteAnimation {
         if (sprites.length == 0) {
             throw new IllegalArgumentException("Sprites array is empty");
         }
+        currentFrameIndex = 0;
+        smallTick = 0;
     }
 
     public void setFrameDurationTicks(int numTicks) {

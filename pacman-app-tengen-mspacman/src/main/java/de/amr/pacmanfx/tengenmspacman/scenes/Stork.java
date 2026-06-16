@@ -34,13 +34,11 @@ public class Stork extends Actor {
         @Override
         protected SpriteAnimation createAnimation(Identifier animationID) {
             if (animationID.equals(ArcadeMsPacMan_AnimationID.STORK_FLYING)) {
-                final SpriteAnimation animation = new SpriteAnimationBuilder()
+                return new SpriteAnimationBuilder()
                     .sprites(spriteSheet.sprites(STORK))
                     .frameTicks(8)
                     .repeated()
-                    .build();
-                animation.setContainer(container);
-                return animation;
+                    .build(container);
             }
             throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         }
