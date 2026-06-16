@@ -8,10 +8,6 @@ import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.views.GameView;
-import de.amr.pacmanfx.ui.views.GameViewManager;
-import de.amr.pacmanfx.ui.views.editor.EditorView;
-import de.amr.pacmanfx.ui.views.playview.GamePlayView;
-import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
@@ -33,17 +29,11 @@ public class GameWindowImpl implements GameWindow {
 
     private final Stage stage;
     private final GameMainScene mainScene;
-    private final StartPagesView startPagesView;
-    private final GamePlayView gamePlayView;
 
     public GameWindowImpl(Stage stage, int width, int height) {
         this.stage = requireNonNull(stage);
         mainScene = new GameMainScene(width, height);
         mainScene.getStylesheets().add(GameUI_Constants.STYLE_SHEET_PATH);
-
-        startPagesView = new StartPagesView();
-        gamePlayView = createGamePlayView();
-
     }
 
     @Override
@@ -54,24 +44,21 @@ public class GameWindowImpl implements GameWindow {
         }
         this.game = requireNonNull(game);
 
-        // Set game views
-        final GameViewManager views = game.ui().views();
-        views.setStartPagesView(startPagesView);
-        views.setGamePlayView(gamePlayView);
-        views.setEditorViewFactory(() -> createEditorSubView(game));
-
         createStageTitleBinding(game);
+        game.ui().window().stage().titleProperty().bind(stageTitleBinding);
 
         mainScene.connect(game);
-        startPagesView.connect(game);
-        gamePlayView.connect(game);
 
         // Some status icons are bound to the game model of the *current* game variant
         game.gameVariantNameProperty().addListener((_,_,variantName) -> {
-            mainScene.statusIconBox().bind(game.gameVariant(variantName).gameModel());
             //TODO This does not belong here
-            views.gamePlayView().gameSceneFrame().clearCanvas();
+            mainScene.statusIconBox().bind(game.gameVariant(variantName).gameModel());
+            game.ui().views().gamePlayView().gameSceneFrame().clearCanvas();
         });
+
+        // Adapt stage title to current game view
+        game.ui().views().currentViewProperty().addListener(
+            (_,_,currentView) -> updateStageTitle(currentView));
     }
 
     @Override
@@ -93,6 +80,19 @@ public class GameWindowImpl implements GameWindow {
 
     // Private area
 
+    private void updateStageTitle(GameView gameView) {
+        if (gameView == game.ui().views().startPagesView() || gameView == game.ui().views().gamePlayView()) {
+            stage.titleProperty().bind(stageTitleBinding);
+        }
+        else {
+            // Editor view
+            game.ui().views().optEditorView().ifPresent(editorView -> {
+                stage.titleProperty().unbind();
+                editorView.optTitleSupplier().ifPresent(titleSupplier -> stage.setTitle(titleSupplier.get()));
+            });
+        }
+    }
+
     private void prepareStageForDisplay(Game game) {
         stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
         stage.setMinHeight(GameUI_Constants.MIN_STAGE_HEIGHT);
@@ -101,7 +101,6 @@ public class GameWindowImpl implements GameWindow {
         updateStageIcon(game);
         registerIconUpdater(game);
     }
-
 
     private void createStageTitleBinding(Game game) {
         stageTitleBinding = createStringBinding(
@@ -120,26 +119,6 @@ public class GameWindowImpl implements GameWindow {
         return currentGameView == null
             ? game.ui().translations().translate("view.missing") // Should never happen
             : currentGameView.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(game));
-    }
-
-    private GamePlayView createGamePlayView() {
-        final var playView = new GamePlayView(GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
-        final ChangeListener<? super Number> resizeHandler = (_,_,_) -> playView.resizeToFit(mainScene);
-        mainScene.widthProperty().addListener(resizeHandler);
-        mainScene.heightProperty().addListener(resizeHandler);
-        return playView;
-    }
-
-    private EditorView createEditorSubView(Game game) {
-        final var editorView = new EditorView(stage());
-        editorView.editor().setOnQuit(_ -> {
-            // restore title (editor changed it)
-            stage().titleProperty().unbind();
-            stage().titleProperty().bind(stageTitleBinding);
-            game.ui().views().selectStartPagesView();
-        });
-        editorView.connect(game);
-        return editorView;
     }
 
     private void updateStageIcon(Game game) {

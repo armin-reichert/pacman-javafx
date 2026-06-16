@@ -27,6 +27,9 @@ import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewManager;
+import de.amr.pacmanfx.ui.views.editor.EditorView;
+import de.amr.pacmanfx.ui.views.playview.GamePlayView;
+import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.window.FlashMessageManager;
 import de.amr.pacmanfx.ui.window.GameWindowImpl;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
@@ -36,6 +39,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -68,7 +72,7 @@ public final class GameImpl implements Game {
 
     private final GameUI ui;
 
-    private final GameWindowImpl view;
+    private final GameWindowImpl gameWindow;
 
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
 
@@ -76,9 +80,9 @@ public final class GameImpl implements Game {
 
     private GameContextImpl currentGameContext;
 
-    public GameImpl(PacManGamesMachine machine, GameWindowImpl view) {
+    public GameImpl(PacManGamesMachine machine, GameWindowImpl gameWindow) {
         this.machine = requireNonNull(machine);
-        this.view = requireNonNull(view);
+        this.gameWindow = requireNonNull(gameWindow);
 
         this.ui = createUI();
 
@@ -88,14 +92,44 @@ public final class GameImpl implements Game {
         this.prefs = new PreferencesManager(getClass());
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
-        view.connect(this);
-
         gameVariantName.addListener((_, _, newVariantName) -> {
             final GameVariant gameVariant = gameVariant(newVariantName);
             currentGameContext = new GameContextImpl(this, gameVariant);
             currentGameContext.model().hud().creditProperty().bind(coinMechanism().numCoinsProperty());
             updateSettings3D(gameVariant.uiConfig());
         });
+
+        createGameViews();
+        gameWindow.connect(this);
+    }
+
+    private void createGameViews() {
+        final var startPagesView = new StartPagesView();
+        final var gamePlayView = createGamePlayView();
+
+        ui.views().setStartPagesView(startPagesView);
+        ui.views().setGamePlayView(gamePlayView);
+        ui.views().setEditorViewFactory(this::createEditorSubView);
+
+        startPagesView.connect(this);
+        gamePlayView.connect(this);
+    }
+
+    private GamePlayView createGamePlayView() {
+        final var playView = new GamePlayView(GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
+
+        final ChangeListener<? super Number> resizeHandler = (_, _, _) -> playView.resizeToFit(ui.window().mainScene());
+        ui.window().mainScene().widthProperty().addListener(resizeHandler);
+        ui.window().mainScene().heightProperty().addListener(resizeHandler);
+
+        return playView;
+    }
+
+    private EditorView createEditorSubView() {
+        final var editorView = new EditorView(ui.window().stage());
+        editorView.editor().setOnQuit(_ -> ui.views().selectStartPagesView());
+        editorView.connect(this);
+        return editorView;
     }
 
     private GameUI createUI() {
@@ -105,7 +139,7 @@ public final class GameImpl implements Game {
             new SoundManager(this),
             new SpriteAnimationManager(60),
             () -> GameUI_Constants.LOCALIZED_TEXTS,
-            view,
+            gameWindow,
             new GameViewManager(),
             new UISettings(),
             UISettings3D.create()
@@ -238,7 +272,7 @@ public final class GameImpl implements Game {
         ui.views().selectStartPagesView();
         ui.views().startPagesView().setSelectedIndex(0);
 
-        view.show();
+        gameWindow.show();
 
         startServicesLater();
     }
