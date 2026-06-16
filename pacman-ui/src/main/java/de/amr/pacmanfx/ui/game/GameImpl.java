@@ -21,9 +21,9 @@ import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.config.UISettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
-import de.amr.pacmanfx.ui.gamescene.d3.UISettings3D;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -302,8 +302,7 @@ public final class GameImpl implements Game {
             () -> GameUI_Constants.LOCALIZED_TEXTS,
             gameWindow,
             new GameViewManager(),
-            new UISettings(),
-            UISettings3D.create()
+            new UISettings()
         );
     }
 
@@ -346,8 +345,8 @@ public final class GameImpl implements Game {
 
     private void updateSettings3D(UIConfig uiConfig) {
         final MazeConfig3D mazeConfig3D = uiConfig.worldConfig().maze();
-        ui.settings3D().mazeWallHeightProperty().set(mazeConfig3D.obstacleBaseHeight());
-        ui.settings3D().mazeWallOpacityProperty().set(mazeConfig3D.obstacleOpacity());
+        ui.settings().d3().mazeWallHeightProperty().set(mazeConfig3D.obstacleBaseHeight());
+        ui.settings().d3().mazeWallOpacityProperty().set(mazeConfig3D.obstacleOpacity());
         Logger.info("Update maze 3D settings for UI config {}", uiConfig);
         Logger.info("Maze 3D settings: {}", mazeConfig3D);
     }

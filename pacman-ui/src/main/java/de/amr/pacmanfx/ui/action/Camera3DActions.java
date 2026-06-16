@@ -31,8 +31,8 @@ public class Camera3DActions {
         actionNextPerspective = new GameAction(game, "perspective_next") {
             @Override
             protected void doAction() {
-                final PerspectiveID nextID = game.ui().settings3D().cameraPerspectiveIdProperty().get().next();
-                game.ui().settings3D().cameraPerspectiveIdProperty().set(nextID);
+                final PerspectiveID nextID = game.ui().settings().d3().cameraPerspectiveIdProperty().get().next();
+                game.ui().settings().d3().cameraPerspectiveIdProperty().set(nextID);
                 game.ui().shortMessage(translatedPerspectiveMessage(game, nextID));
             }
 
@@ -45,8 +45,8 @@ public class Camera3DActions {
         actionPreviousPerspective = new GameAction(game, "perspective_previous") {
             @Override
             protected void doAction() {
-                final PerspectiveID prevID = game.ui().settings3D().cameraPerspectiveIdProperty().get().prev();
-                game.ui().settings3D().cameraPerspectiveIdProperty().set(prevID);
+                final PerspectiveID prevID = game.ui().settings().d3().cameraPerspectiveIdProperty().get().prev();
+                game.ui().settings().d3().cameraPerspectiveIdProperty().set(prevID);
                 game.ui().shortMessage(translatedPerspectiveMessage(game, prevID));
             }
             @Override
@@ -58,7 +58,7 @@ public class Camera3DActions {
         actionToggleDrawMode = new GameAction(game, "toggle_draw_mode") {
             @Override
             protected void doAction() {
-                Ufx.toggleProperty(game.ui().settings3D().drawModeProperty(), DrawMode.LINE, DrawMode.FILL);
+                Ufx.toggleProperty(game.ui().settings().d3().drawModeProperty(), DrawMode.LINE, DrawMode.FILL);
             }
             @Override
             public boolean isEnabled() {

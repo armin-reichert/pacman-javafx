@@ -12,6 +12,7 @@ import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
+import de.amr.pacmanfx.ui.config.UISettings3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -57,7 +58,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         final var gameState = event.newState();
 
         if (gameState instanceof TestState) {
-            handleTestState(game().ui().settings3D());
+            handleTestState(game().ui().settings().d3());
         }
         else if (GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameState)) {
             onStartingGameOrLevel();
@@ -292,7 +293,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.messageManager().hideMessage();
 
-        playLevelEndAnimation(level3D.animationRegistry(), game().ui().settings3D(), level3D.entities().maze3D(), level3D.level().cutSceneNumber() != 0);
+        playLevelEndAnimation(level3D.animationRegistry(), game().ui().settings().d3(), level3D.entities().maze3D(), level3D.level().cutSceneNumber() != 0);
     }
 
     private void playLevelEndAnimation(AnimationRegistry animationRegistry, UISettings3D globals3D, Maze3D maze3D, boolean cutSceneAfter) {

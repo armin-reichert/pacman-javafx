@@ -60,6 +60,6 @@ class PacManXXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
         if (GameStateID.GAME_PREPARATION.identifies(state)) {
             return CommonGameSceneID.START_SCENE;
         }
-        return game.ui().settings3D().view3DEnabledProperty().get() ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
+        return game.ui().settings().d3().view3DEnabledProperty().get() ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
     }
 }

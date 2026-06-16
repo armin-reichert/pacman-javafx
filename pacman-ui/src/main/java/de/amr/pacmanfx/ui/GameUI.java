@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
-import de.amr.pacmanfx.ui.gamescene.d3.UISettings3D;
-import de.amr.pacmanfx.ui.game.UISettings;
+import de.amr.pacmanfx.ui.config.UISettings3D;
+import de.amr.pacmanfx.ui.config.UISettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewManager;
@@ -23,8 +23,7 @@ public record GameUI(
     TranslationManager translations,
     GameWindow window,
     GameViewManager views,
-    UISettings settings,
-    UISettings3D settings3D)
+    UISettings settings)
 {
 
     /**

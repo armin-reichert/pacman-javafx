@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.gamescene.d3;
+package de.amr.pacmanfx.ui.config;
 
 import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.AttractionConfig;
@@ -35,20 +35,6 @@ public record UISettings3D(
     /* Opacity of 3D walls (0.0–1.0). */
     DoubleProperty mazeWallOpacityProperty)
 {
-
-    public static UISettings3D create() {
-        return new UISettings3D(
-            new SimpleBooleanProperty(false),
-            new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER),
-            new SimpleObjectProperty<>(DrawMode.FILL),
-            new SimpleBooleanProperty(false),
-            new SimpleObjectProperty<>(Color.rgb(20, 20, 20)),
-            new SimpleObjectProperty<>(Color.WHITE),
-            new SimpleDoubleProperty(),
-            new SimpleDoubleProperty(1.0)
-        );
-    }
-
     public static final ParticlesAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticlesAnimationConfig(
         new ExplosionConfig(
             new Vector3f(0, 0, 0.1f), // gravity
