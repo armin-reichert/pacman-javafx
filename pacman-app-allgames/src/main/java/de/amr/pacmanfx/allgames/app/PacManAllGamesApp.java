@@ -23,6 +23,7 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.GameImpl;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
+import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
@@ -116,12 +117,12 @@ public class PacManAllGamesApp extends Application {
                 game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(sharedMapSelector);
                 game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
 
-                final StartPagesView startView = game.ui().views().startPagesView();
-                startView.addStartPage(new ArcadePacMan_StartPage());
-                startView.addStartPage(new ArcadeMsPacMan_StartPage());
-                startView.addStartPage(new TengenMsPacMan_StartPage());
-                startView.addStartPage(new PacManXXL_StartPage());
-                startView.setSelectedIndex(0);
+                final StartPagesView startPagesView = game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class);
+                startPagesView.addStartPage(new ArcadePacMan_StartPage());
+                startPagesView.addStartPage(new ArcadeMsPacMan_StartPage());
+                startPagesView.addStartPage(new TengenMsPacMan_StartPage());
+                startPagesView.addStartPage(new PacManXXL_StartPage());
+                startPagesView.setSelectedIndex(0);
             }
 
             game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));

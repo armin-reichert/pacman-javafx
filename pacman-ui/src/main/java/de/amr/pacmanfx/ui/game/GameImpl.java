@@ -102,8 +102,8 @@ public final class GameImpl implements Game {
 
         createGameViews();
 
-        ui.views().startPagesView().connect(this);
-        ui.views().gamePlayView().connect(this);
+        ui.views().assertView(GameViewID.START_PAGES).connect(this);
+        ui.views().assertView(GameViewID.GAMEPLAY).connect(this);
 
         gameWindow.connect(this);
     }
@@ -215,7 +215,7 @@ public final class GameImpl implements Game {
 
         ui.views().connect(this);
         ui.views().selectStartPagesView();
-        ui.views().startPagesView().setSelectedIndex(0);
+        ui.views().assertView(GameViewID.START_PAGES, StartPagesView.class).setSelectedIndex(0);
 
         gameWindow.show();
 

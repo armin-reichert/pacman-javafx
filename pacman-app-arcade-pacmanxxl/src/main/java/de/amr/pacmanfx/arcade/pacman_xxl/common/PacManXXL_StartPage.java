@@ -9,7 +9,9 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
+import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -174,7 +176,7 @@ public class PacManXXL_StartPage implements StartPage {
 
 
     private void pauseProgressTimer(Game game) {
-        game.ui().views().startPagesView().pauseProgressTimer();
+        game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class).pauseProgressTimer();
     }
 
     private void stopTalking(Game game) {

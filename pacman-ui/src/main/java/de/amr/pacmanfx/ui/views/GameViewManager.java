@@ -65,11 +65,22 @@ public final class GameViewManager {
 
 
     public GameView assertView(GameViewID viewID) {
+        return assertView(viewID, GameView.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends GameView> T assertView(GameViewID viewID, Class<T> viewClass) {
         final GameView view = views.get(viewID);
         if (view == null) {
             throw new IllegalStateException("No view found for ID: " + viewID);
         }
-        return view;
+        if (!viewClass.isInstance(view)) {
+            throw new IllegalStateException(
+                "View for ID " + viewID + " is not of expected type " + viewClass.getName() +
+                    " but was " + view.getClass().getName()
+            );
+        }
+        return (T) view;
     }
 
     public ObjectProperty<GameViewID> currentViewIDProperty() {
@@ -97,10 +108,6 @@ public final class GameViewManager {
     }
 
     // Start pages view
-
-    public StartPagesView startPagesView() {
-        return (StartPagesView) assertView(GameViewID.START_PAGES);
-    }
 
     public void selectStartPagesView() {
         currentViewIDProperty().set(GameViewID.START_PAGES);

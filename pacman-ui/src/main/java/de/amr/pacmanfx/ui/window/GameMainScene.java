@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.views.GameView;
+import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
@@ -98,19 +99,16 @@ public class GameMainScene extends Scene {
         final Keyboard keyboard = game.input().keyboard();
 
         // Keyboard should not be sensitive to any key events triggered inside the map editor
-        keyboard.enabledProperty().bind(views.currentViewIDProperty()
-            .map(views::assertView)
-            .map(view -> isKeyboardAware(views, view)
-        ));
+        keyboard.enabledProperty().bind(views.currentViewIDProperty().map(this::isKeyboardAware));
 
         keyboard.addStateListener(_ -> {
             // Check for "global" action first, if no one matches, let current sub view handle the keyboard state change
             actionBindings.findActionMatchingPressedKeys(keyboard).ifPresentOrElse(
                 GameAction::execute,
                 () -> {
-                    final GameView currentView = views.assertCurrentView();
-                    if (isKeyboardAware(views, currentView)) {
-                        currentView.onInput(game.input());
+                    final GameViewID currentViewID = views.currentViewID();
+                    if (isKeyboardAware(currentViewID)) {
+                        views.assertView(currentViewID).onInput(game.input());
                     }
                 });
         });
@@ -118,8 +116,8 @@ public class GameMainScene extends Scene {
         keyboard.filterKeyEventsFrom(this);
     }
 
-    private boolean isKeyboardAware(GameViewManager views, GameView gameView) {
-        return gameView == views.startPagesView() || gameView == views.gamePlayView();
+    private boolean isKeyboardAware(GameViewID viewID) {
+        return viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY;
     }
 
     private void registerGlobalActions(Game game) {
