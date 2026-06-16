@@ -23,10 +23,10 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.GameImpl;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
-import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
-import de.amr.pacmanfx.ui.subviews.dashboard.DashboardID;
-import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
-import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
+import de.amr.pacmanfx.ui.views.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.views.playview.GamePlayView;
+import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.window.GameWindowImpl;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
@@ -116,7 +116,7 @@ public class PacManAllGamesApp extends Application {
                 game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(sharedMapSelector);
                 game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
 
-                final StartPagesView startView = game.ui().subViews().startView();
+                final StartPagesView startView = game.ui().views().startView();
                 startView.addStartPage(new ArcadePacMan_StartPage());
                 startView.addStartPage(new ArcadeMsPacMan_StartPage());
                 startView.addStartPage(new TengenMsPacMan_StartPage());
@@ -130,7 +130,7 @@ public class PacManAllGamesApp extends Application {
             game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS, new TengenMsPacMan_UISettings());
 
             //TODO add builder methods for dashboard configuration
-            final GamePlayView playView = game.ui().subViews().gamePlayView();
+            final GamePlayView playView = game.ui().views().gamePlayView();
             final Dashboard dashboard = playView.dashboard();
             playView.configureDashboard(DASHBOARD_IDs, game.ui().translations());
             dashboard.addSection(TengenMsPacMan_DashboardID.JOYPAD, new DashboardSectionJoypad(dashboard));

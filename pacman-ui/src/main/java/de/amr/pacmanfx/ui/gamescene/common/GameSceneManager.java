@@ -14,9 +14,9 @@ import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.subviews.SubViewManager;
-import de.amr.pacmanfx.ui.subviews.playview.DecorationPane;
-import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
+import de.amr.pacmanfx.ui.views.GameViewManager;
+import de.amr.pacmanfx.ui.views.playview.DecorationPane;
+import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
@@ -175,14 +175,14 @@ public class GameSceneManager implements ChangeListener<AbstractGameScene> {
         requireNonNull(game);
         requireNonNull(gameScene);
 
-        game.ui().subViews().gamePlayView().contextMenu().hide();
+        game.ui().views().gamePlayView().contextMenu().hide();
 
         gameScene.optSubSceneFX().ifPresent(subSceneFX -> {
             subSceneFX.widthProperty().unbind();
             subSceneFX.heightProperty().unbind();
         });
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final DecorationPane frame = game.ui().subViews().gamePlayView().gameSceneFrame();
+            final DecorationPane frame = game.ui().views().gamePlayView().gameSceneFrame();
             frame.canvas().widthProperty().unbind();
             frame.canvas().heightProperty().unbind();
             frame.unscaledWidthProperty().unbind();
@@ -197,7 +197,7 @@ public class GameSceneManager implements ChangeListener<AbstractGameScene> {
 
     public void embedGameSceneIntoPlayView(Game game, AbstractGameScene gameScene) {
         final UIConfig currentConfig = game.currentUIConfig();
-        final SubViewManager subViews = game.ui().subViews();
+        final GameViewManager subViews = game.ui().views();
 
         subViews.gamePlayView().contextMenu().hide();
 
@@ -212,7 +212,7 @@ public class GameSceneManager implements ChangeListener<AbstractGameScene> {
 
     // 3D scenes or 2D scenes with camera
     private void embedGameSceneWithSubSceneFX(Game game, GamePlayView playView, AbstractGameScene gameScene, SubScene subSceneFX) {
-        final GameMainScene mainScene = game.ui().view().mainScene();
+        final GameMainScene mainScene = game.ui().window().mainScene();
 
         // stretch sub scene to available space
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
@@ -228,8 +228,8 @@ public class GameSceneManager implements ChangeListener<AbstractGameScene> {
 
     // 2D scenes without camera which are shown at full size
     private void embedGameScene2D(Game game, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
-        final GameMainScene mainScene = game.ui().view().mainScene();
-        final GamePlayView playView = game.ui().subViews().gamePlayView();
+        final GameMainScene mainScene = game.ui().window().mainScene();
+        final GamePlayView playView = game.ui().views().gamePlayView();
         final DecorationPane decorationPane = playView.gameSceneFrame();
 
         gameScene2D.backgroundColorProperty().bind(game.ui().settings().canvasBackgroundColorProperty);

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
-import de.amr.pacmanfx.ui.subviews.SubViewManager;
+import de.amr.pacmanfx.ui.views.GameViewManager;
 import javafx.scene.input.KeyCode;
 
 import java.util.Set;
@@ -38,14 +38,14 @@ public class UISettingsActions {
         actionEnterFullScreen = new GameAction(game, "enter_fullscreen") {
             @Override
             protected void doAction() {
-                game.ui().view().stage().setFullScreen(true);
+                game.ui().window().stage().setFullScreen(true);
             }
         };
 
         actionShowHelp = new GameAction(game, "show_help") {
             @Override
             protected void doAction() {
-                game.ui().subViews().gamePlayView().showHelp(game);
+                game.ui().views().gamePlayView().showHelp(game);
             }
 
             @Override
@@ -63,12 +63,12 @@ public class UISettingsActions {
         actionToggleDashboard = new GameAction(game, "toggle_dashboard") {
             @Override
             protected void doAction() {
-                game.ui().subViews().gamePlayView().dashboard().toggleVisibility();
+                game.ui().views().gamePlayView().dashboard().toggleVisibility();
             }
 
             @Override
             public boolean isEnabled() {
-                final SubViewManager subViews = game.ui().subViews();
+                final GameViewManager subViews = game.ui().views();
                 return subViews.isSelected(subViews.gamePlayView());
             }
         };
@@ -114,7 +114,7 @@ public class UISettingsActions {
 
             @Override
             public boolean isEnabled() {
-                final SubViewManager subViews = game.ui().subViews();
+                final GameViewManager subViews = game.ui().views();
                 return subViews.isSelected(subViews.gamePlayView());
             }
 

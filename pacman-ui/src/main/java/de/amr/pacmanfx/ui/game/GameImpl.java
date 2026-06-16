@@ -26,7 +26,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.UISettings3D;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.ui.subviews.SubViewManager;
+import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.window.FlashMessageManager;
 import de.amr.pacmanfx.ui.window.GameWindowImpl;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
@@ -106,7 +106,7 @@ public final class GameImpl implements Game {
             new SpriteAnimationManager(60),
             () -> GameUI_Constants.LOCALIZED_TEXTS,
             view,
-            new SubViewManager(),
+            new GameViewManager(),
             new UISettings(),
             UISettings3D.create()
         );
@@ -234,9 +234,9 @@ public final class GameImpl implements Game {
         initGameVariantAndRegisterChangeHandler();
         initProperties();
 
-        ui.subViews().connect(this);
-        ui.subViews().selectStartView();
-        ui.subViews().startView().setSelectedIndex(0);
+        ui.views().connect(this);
+        ui.views().selectStartView();
+        ui.views().startView().setSelectedIndex(0);
 
         view.show();
 
@@ -247,7 +247,7 @@ public final class GameImpl implements Game {
     public void start() {
         currentGameContext().flow().setGameContext(currentGameContext);
         currentGameContext().flow().restartState(GameStateID.BOOT);
-        ui().subViews().selectGamePlayView();
+        ui().views().selectGamePlayView();
         Platform.runLater(clock()::start);
     }
 
@@ -291,7 +291,7 @@ public final class GameImpl implements Game {
             currentGameContext.flow().makeStep();
             ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock().currentTick()));
         });
-        clock().setPermanentAction(() -> ui.subViews().currentSubView().render());
+        clock().setPermanentAction(() -> ui.views().currentView().render());
         clock().setErrorHandler(this::ka_tas_tro_phe);
     }
 

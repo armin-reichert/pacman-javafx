@@ -9,7 +9,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.UISettings3D;
 import de.amr.pacmanfx.ui.game.UISettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.ui.subviews.SubViewManager;
+import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.window.FlashMessageManager;
 import de.amr.pacmanfx.ui.window.GameWindow;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -20,8 +20,8 @@ public record GameUI(
     SoundManager sounds,
     SpriteAnimationManager sprites,
     TranslationManager translations,
-    GameWindow view,
-    SubViewManager subViews,
+    GameWindow window,
+    GameViewManager views,
     UISettings settings,
     UISettings3D settings3D
 ) {}

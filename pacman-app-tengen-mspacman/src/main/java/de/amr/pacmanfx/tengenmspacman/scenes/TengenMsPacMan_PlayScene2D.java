@@ -45,7 +45,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplay.SCROLLING;
-import static de.amr.pacmanfx.ui.subviews.ContextMenuSupport.*;
+import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 import static java.util.Objects.requireNonNull;
 
 /**

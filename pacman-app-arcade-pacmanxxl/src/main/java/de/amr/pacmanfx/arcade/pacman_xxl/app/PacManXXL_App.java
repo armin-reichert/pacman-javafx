@@ -12,8 +12,8 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
-import de.amr.pacmanfx.ui.subviews.dashboard.DashboardID;
-import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -42,7 +42,7 @@ public class PacManXXL_App extends Application {
             .startPage(PacManXXL_StartPage::new)
             .build(stage);
 
-        final GamePlayView playView = game.ui().subViews().gamePlayView();
+        final GamePlayView playView = game.ui().views().gamePlayView();
         playView.configureDashboard(List.of(
             DashboardID.README,
             DashboardID.GENERAL,

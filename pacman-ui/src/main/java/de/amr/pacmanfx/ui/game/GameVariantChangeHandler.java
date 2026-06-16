@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.game;
 
 import de.amr.pacmanfx.ui.config.UIConfig;
-import de.amr.pacmanfx.ui.subviews.playview.GameEventHandler;
+import de.amr.pacmanfx.ui.views.playview.GameEventHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
@@ -32,7 +32,7 @@ public class GameVariantChangeHandler implements ChangeListener<String> {
     }
 
     private void exitGameVariant(String variantName) {
-        game.ui().view().stage().getIcons().removeAll();
+        game.ui().window().stage().getIcons().removeAll();
         game.ui().sounds().dispose();
         game.gameVariant(variantName).uiConfig().dispose();
         game.currentGameContext().flow().removeGameEventListener(gameEventHandler);

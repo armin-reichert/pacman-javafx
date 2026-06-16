@@ -8,7 +8,7 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.CommonSceneID;
-import de.amr.pacmanfx.ui.subviews.SubView;
+import de.amr.pacmanfx.ui.views.GameView;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
@@ -19,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 
 public class GameMainScene extends Scene {
 
-    private final StackPane subViewHolder = new StackPane();
+    private final StackPane gameViewHolder = new StackPane();
 
     public GameMainScene(double width, double height) {
         super(new StackPane(), width, height, Color.BLACK);
@@ -31,7 +31,7 @@ public class GameMainScene extends Scene {
 
         rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> selectBackground(game),
-            game.ui().subViews().currentSubViewProperty(),
+            game.ui().views().currentViewProperty(),
             game.ui().gameScenes().currentGameSceneProperty()
         ));
     }
@@ -40,13 +40,13 @@ public class GameMainScene extends Scene {
         return (StackPane) getRoot();
     }
 
-    public StackPane subViewHolder() {
-        return subViewHolder;
+    public StackPane gameViewHolder() {
+        return gameViewHolder;
     }
 
-    public void replaceSubView(SubView subView) {
-        requireNonNull(subView);
-        subViewHolder.getChildren().setAll(subView.rootPane());
+    public void replaceSubView(GameView gameView) {
+        requireNonNull(gameView);
+        gameViewHolder.getChildren().setAll(gameView.rootPane());
     }
 
     private Background selectBackground(Game game) {

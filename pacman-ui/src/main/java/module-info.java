@@ -20,7 +20,7 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.action;
     exports de.amr.pacmanfx.ui.game;
     exports de.amr.pacmanfx.ui.config;
-    exports de.amr.pacmanfx.ui.subviews.dashboard;
+    exports de.amr.pacmanfx.ui.views.dashboard;
     exports de.amr.pacmanfx.ui.gamescene.d2;
     exports de.amr.pacmanfx.ui.gamescene.d3;
     exports de.amr.pacmanfx.ui.gamescene.d3.animation;
@@ -28,12 +28,12 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.gamescene.d3.camera;
     exports de.amr.pacmanfx.ui.gamescene.d3.entities;
     exports de.amr.pacmanfx.ui.input;
-    exports de.amr.pacmanfx.ui.subviews;
+    exports de.amr.pacmanfx.ui.views;
     exports de.amr.pacmanfx.ui.sound;
-    exports de.amr.pacmanfx.ui.subviews.playview;
-    exports de.amr.pacmanfx.ui.subviews.startpages;
-    exports de.amr.pacmanfx.ui.subviews.editor;
-    exports de.amr.pacmanfx.ui.subviews.help;
+    exports de.amr.pacmanfx.ui.views.playview;
+    exports de.amr.pacmanfx.ui.views.startpages;
+    exports de.amr.pacmanfx.ui.views.editor;
+    exports de.amr.pacmanfx.ui.views.help;
     exports de.amr.pacmanfx.ui.window;
     exports de.amr.pacmanfx.ui.gamescene.common;
     exports de.amr.pacmanfx.ui.action.core;

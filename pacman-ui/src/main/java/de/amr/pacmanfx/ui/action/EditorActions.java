@@ -9,8 +9,8 @@ import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameConstants;
-import de.amr.pacmanfx.ui.subviews.SubViewManager;
-import de.amr.pacmanfx.ui.subviews.editor.EditorView;
+import de.amr.pacmanfx.ui.views.GameViewManager;
+import de.amr.pacmanfx.ui.views.editor.EditorView;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
@@ -83,7 +83,7 @@ public class EditorActions {
     }
 
     private Optional<TileMapEditor> openMapEditor() {
-        final SubViewManager subViews = game.ui().subViews();
+        final GameViewManager subViews = game.ui().views();
         subViews.ensureEditorViewCreated();
 
         final TileMapEditor editor = subViews.optEditorView().map(EditorView::editor).orElse(null);

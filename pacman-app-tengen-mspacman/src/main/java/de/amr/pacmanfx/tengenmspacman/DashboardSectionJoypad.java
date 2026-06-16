@@ -8,8 +8,8 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameVariant;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
-import de.amr.pacmanfx.ui.subviews.dashboard.Dashboard;
-import de.amr.pacmanfx.ui.subviews.dashboard.DashboardSection;
+import de.amr.pacmanfx.ui.views.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardSection;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.image.ImageView;
 

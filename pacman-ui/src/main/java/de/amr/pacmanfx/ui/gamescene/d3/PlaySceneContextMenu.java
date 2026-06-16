@@ -16,7 +16,7 @@ import javafx.scene.control.ToggleGroup;
 
 import java.util.Objects;
 
-import static de.amr.pacmanfx.ui.subviews.ContextMenuSupport.*;
+import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 import static java.util.Objects.requireNonNull;
 
 /**

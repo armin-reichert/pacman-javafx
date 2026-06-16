@@ -14,11 +14,11 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
-import de.amr.pacmanfx.ui.subviews.SubView;
-import de.amr.pacmanfx.ui.subviews.SubViewManager;
-import de.amr.pacmanfx.ui.subviews.editor.EditorView;
-import de.amr.pacmanfx.ui.subviews.playview.GamePlayView;
-import de.amr.pacmanfx.ui.subviews.startpages.StartPagesView;
+import de.amr.pacmanfx.ui.views.GameView;
+import de.amr.pacmanfx.ui.views.GameViewManager;
+import de.amr.pacmanfx.ui.views.editor.EditorView;
+import de.amr.pacmanfx.ui.views.playview.GamePlayView;
+import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
@@ -74,7 +74,7 @@ public class GameWindowImpl implements GameWindow {
         this.game = game;
 
         // Set sub views
-        final SubViewManager subViews = game.ui().subViews();
+        final GameViewManager subViews = game.ui().views();
         subViews.setStartView(startPagesView);
         subViews.setGamePlayView(gamePlayView);
         subViews.setEditorViewFactory(() -> createEditorSubView(game));
@@ -129,7 +129,7 @@ public class GameWindowImpl implements GameWindow {
 
     private void populateMainScene(Game game) {
         mainScene.rootPane().getChildren().addAll(
-            mainScene.subViewHolder(),
+            mainScene.gameViewHolder(),
             statusIconBox.rootPane(),
             game.ui().flashMessages().messageView().rootPane(),
             keyboardInfoPopup.rootPane()
@@ -151,7 +151,7 @@ public class GameWindowImpl implements GameWindow {
             () -> computeStageTitle(game),
             game.clock().updatesDisabledProperty(),
             game.gameVariantNameProperty(),
-            game.ui().subViews().currentSubViewProperty(),
+            game.ui().views().currentViewProperty(),
             game.ui().gameScenes().currentGameSceneProperty(),
             game.ui().settings().debugInfoVisibleProperty,
             game.ui().settings3D().view3DEnabledProperty()
@@ -159,16 +159,16 @@ public class GameWindowImpl implements GameWindow {
     }
 
     private String computeStageTitle(Game game) {
-        final SubView currentSubView = game.ui().subViews().currentSubView();
-        return currentSubView == null
+        final GameView currentGameView = game.ui().views().currentView();
+        return currentGameView == null
             ? game.ui().translations().translate("view.missing") // Should never happen
-            : currentSubView.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(game));
+            : currentGameView.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(game));
     }
 
     private void createStatusIconBox(Game game) {
         statusIconBox = new StatusIconBox(game);
-        final var subViews = game.ui().subViews();
-        final var selectedSubView = subViews.currentSubViewProperty();
+        final var subViews = game.ui().views();
+        final var selectedSubView = subViews.currentViewProperty();
         statusIconBox.rootPane().visibleProperty().bind(
             selectedSubView.isEqualTo(subViews.gamePlayView()).or(selectedSubView.isEqualTo(subViews.startView()))
         );
@@ -189,7 +189,7 @@ public class GameWindowImpl implements GameWindow {
             // restore title (editor changed it)
             stage().titleProperty().unbind();
             stage().titleProperty().bind(stageTitleBinding);
-            game.ui().subViews().selectStartView();
+            game.ui().views().selectStartView();
         });
         editorView.connect(game);
         return editorView;
@@ -198,7 +198,7 @@ public class GameWindowImpl implements GameWindow {
     private void updateStageIcon(Game game) {
         final Image icon = game.currentUIConfig().assets().image("app_icon");
         if (icon != null) {
-            game.ui().view().stage().getIcons().setAll(icon);
+            game.ui().window().stage().getIcons().setAll(icon);
         } else {
             Logger.error("Could not access stage icon");
         }
@@ -245,11 +245,11 @@ public class GameWindowImpl implements GameWindow {
     }
 
     private void connectKeyboard(Game game) {
-        final SubViewManager subViews = game.ui().subViews();
+        final GameViewManager subViews = game.ui().views();
         final Keyboard keyboard = game.input().keyboard();
 
         // Keyboard should not be sensitive to any key events triggered inside the map editor
-        keyboard.enabledProperty().bind(subViews.currentSubViewProperty().map(
+        keyboard.enabledProperty().bind(subViews.currentViewProperty().map(
             subView -> isGlobalKeyboardAvailableFor(subViews, subView)
         ));
 
@@ -258,9 +258,9 @@ public class GameWindowImpl implements GameWindow {
             actionBindings.findActionMatchingPressedKeys(keyboard).ifPresentOrElse(
                 GameAction::execute,
                 () -> {
-                    final SubView currentSubView = subViews.currentSubView();
-                    if (isGlobalKeyboardAvailableFor(subViews, currentSubView)) {
-                        currentSubView.onInput(game.input());
+                    final GameView currentGameView = subViews.currentView();
+                    if (isGlobalKeyboardAvailableFor(subViews, currentGameView)) {
+                        currentGameView.onInput(game.input());
                     }
                 });
         });
@@ -268,7 +268,7 @@ public class GameWindowImpl implements GameWindow {
         keyboard.filterKeyEventsFrom(mainScene);
     }
 
-    private boolean isGlobalKeyboardAvailableFor(SubViewManager subViews, SubView subView) {
-        return subView == subViews.startView() || subView == subViews.gamePlayView();
+    private boolean isGlobalKeyboardAvailableFor(GameViewManager subViews, GameView gameView) {
+        return gameView == subViews.startView() || gameView == subViews.gamePlayView();
     }
 }

@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.GameImpl;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
-import de.amr.pacmanfx.ui.subviews.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.window.GameWindowImpl;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -53,10 +53,10 @@ public class ArcadePacMan_App extends Application {
         }
         else {
             game = new GameImpl(machine, new GameWindowImpl(stage, sceneSize.x(), sceneSize.y()));
-            game.ui().subViews().startView().addStartPage(new ArcadePacMan_StartPage());
+            game.ui().views().startView().addStartPage(new ArcadePacMan_StartPage());
         }
 
-        game.ui().subViews().gamePlayView().configureDashboard(DASHBOARD_IDs, game.ui().translations());
+        game.ui().views().gamePlayView().configureDashboard(DASHBOARD_IDs, game.ui().translations());
 
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
 

@@ -39,8 +39,8 @@ public class GameFlowActions {
         actionQuit = new GameAction(game, "quit") {
             @Override
             protected void doAction() {
-                Logger.info("Call QUIT handler for {}", game.ui().subViews().currentSubView());
-                game.ui().subViews().currentSubView().handleQuit(game);
+                Logger.info("Call QUIT handler for {}", game.ui().views().currentView());
+                game.ui().views().currentView().handleQuit(game);
             }
         };
 

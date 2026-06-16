@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.ui.subviews.dashboard.DashboardConfig;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardConfig;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import javafx.scene.layout.Background;
