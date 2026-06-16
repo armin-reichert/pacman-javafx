@@ -89,10 +89,10 @@ public class UISettingsActions {
         actionToggleMiniViewVisibility = new GameAction(game, "toggle_mini_view_visibility") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(game.ui().settings().miniViewOnProperty());
+                toggleBooleanProperty(game.ui().settings().miniView().activeProperty());
                 if (!game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
                     final String msg = game.ui().translations().translate(
-                        game.ui().settings().miniViewOnProperty().get() ? "pip_on" : "pip_off");
+                        game.ui().settings().miniView().activeProperty().get() ? "pip_on" : "pip_off");
                     game.ui().shortMessage(msg);
                 }
             }

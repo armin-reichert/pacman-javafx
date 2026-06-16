@@ -83,9 +83,9 @@ public class MiniPlaySceneView {
         this.game = requireNonNull(game);
 
         rootPane.backgroundProperty().bind(game.ui().settings().canvasBackgroundColorProperty().map(Background::fill));
-        rootPane.opacityProperty().bind(game.ui().settings().miniViewOpacityPercentProperty().divide(100.0));
+        rootPane.opacityProperty().bind(game.ui().settings().miniView().opacityPercentageProperty().divide(100.0));
 
-        canvas.heightProperty().bind(game.ui().settings().miniViewHeightProperty());
+        canvas.heightProperty().bind(game.ui().settings().miniView().heightProperty());
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> {
                 final double aspect = (double) worldSize.get().x() / worldSize.get().y();

@@ -113,9 +113,9 @@ public class GamePlayView implements GameView {
         overlayLayer.visibleProperty().bind(dashboard.rootPane().visibleProperty());
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
-            () -> settings.miniViewOnProperty().get()
+            () -> settings.miniView().activeProperty().get()
                 && game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D),
-            settings.miniViewOnProperty(),
+            settings.miniView().activeProperty(),
             game.ui().gameScenes().currentGameSceneProperty()
         ));
 

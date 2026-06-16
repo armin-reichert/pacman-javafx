@@ -12,11 +12,9 @@ public record UISettings(
     BooleanProperty fontSmoothingOnProperty,
     BooleanProperty debugModeOnProperty,
     BooleanProperty keyboardMonitorOnProperty,
-    IntegerProperty miniViewHeightProperty,
-    BooleanProperty miniViewOnProperty,
-    IntegerProperty miniViewOpacityPercentProperty,
     BooleanProperty mutedProperty,
     IntegerProperty numSimulationStepsProperty,
+    MiniViewSettings miniView,
     UISettings3D d3)
 {
     public UISettings() {
@@ -26,11 +24,13 @@ public record UISettings(
             new SimpleBooleanProperty(false),
             new SimpleBooleanProperty(false),
             new SimpleBooleanProperty(false),
-            new SimpleIntegerProperty(400),
-            new SimpleBooleanProperty(false),
-            new SimpleIntegerProperty(69),
             new SimpleBooleanProperty(false),
             new SimpleIntegerProperty(1),
+            new MiniViewSettings(
+                new SimpleIntegerProperty(400),
+                new SimpleBooleanProperty(false),
+                new SimpleIntegerProperty(69)
+            ),
             new UISettings3D(
                 new SimpleBooleanProperty(false),
                 new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER),
