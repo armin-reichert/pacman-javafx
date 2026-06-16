@@ -23,10 +23,10 @@ public final class GameViewManager {
 
     private Supplier<EditorView> editorViewFactory;
     private BooleanSupplier editorCanOpen = () -> false;
+    private EditorView editorView;
 
     private StartPagesView startPagesView;
     private GamePlayView gamePlayView;
-    private EditorView editorView;
 
     public GameViewManager() {}
 
@@ -36,7 +36,6 @@ public final class GameViewManager {
         currentViewProperty().addListener((_, oldView, newView) -> {
             if (oldView != null) {
                 oldView.onExit();
-                oldView.actionBindings().dispose();
             }
             game.ui().window().mainScene().replaceSubView(newView);
             game.ui().flashMessages().clearMessage();
