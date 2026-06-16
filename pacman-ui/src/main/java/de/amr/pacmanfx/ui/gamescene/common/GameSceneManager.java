@@ -9,10 +9,10 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.playview.DecorationPane;
@@ -22,8 +22,6 @@ import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.SubScene;
 import org.tinylog.Logger;
 
@@ -31,21 +29,17 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameSceneManager implements ChangeListener<AbstractGameScene> {
+public class GameSceneManager {
 
-    private final Game game;
     private final ObjectProperty<AbstractGameScene> currentGameScene = new SimpleObjectProperty<>();
 
     public GameSceneManager(Game game) {
-        this.game = requireNonNull(game);
-        currentGameScene.addListener(this);
-    }
-
-    @Override
-    public void changed(ObservableValue<? extends AbstractGameScene> py, AbstractGameScene oldGameScene, AbstractGameScene newGameScene) {
-        if (newGameScene != null) {
-            embedGameSceneIntoPlayView(game, newGameScene);
-        }
+        requireNonNull(game);
+        currentGameScene.addListener((_, _, newGameScene) -> {
+            if (newGameScene != null) {
+                embedGameSceneIntoPlayView(game, newGameScene);
+            }
+        });
     }
 
     public Optional<AbstractGameScene> optCurrentGameScene() {
