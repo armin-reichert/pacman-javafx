@@ -103,9 +103,9 @@ public class GamePlayView implements GameView {
 
         pausedIcon.visibleProperty().bind(game.clock().updatesDisabledProperty());
 
-        settings.canvasFontSmoothingProperty().addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
+        settings.fontSmoothingOnProperty().addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 
-        settings.debugInfoVisibleProperty().addListener((_, _, debug) -> {
+        settings.debugModeOnProperty().addListener((_, _, debug) -> {
             gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);
             gameSceneLayer.setBorder(debug ? DEBUG_BORDER : null);
         });
@@ -231,7 +231,7 @@ public class GamePlayView implements GameView {
         final UIConfig currentConfig = game.currentUIConfig();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = currentConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
-            setFontSmoothing(game.ui().settings().canvasFontSmoothingProperty().get());
+            setFontSmoothing(game.ui().settings().fontSmoothingOnProperty().get());
             hudRenderer = currentConfig.createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");

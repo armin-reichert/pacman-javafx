@@ -62,7 +62,7 @@ public class KeyboardInfo {
     }
 
     public void connect(Game game) {
-        rootPane.visibleProperty().bind(game.ui().settings().keyboardMonitorVisibleProperty());
+        rootPane.visibleProperty().bind(game.ui().settings().keyboardMonitorOnProperty());
 
         game.input().keyboard().addStateListener(state -> {
             keyInfoBox.getChildren().clear();

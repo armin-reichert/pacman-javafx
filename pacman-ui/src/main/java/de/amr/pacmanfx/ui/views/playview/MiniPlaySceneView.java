@@ -158,7 +158,7 @@ public class MiniPlaySceneView {
             game.currentGameContext().optCurrentLevel().ifPresent(this::drawGameLevel);
         }
 
-        if (game.ui().settings().debugInfoVisibleProperty().get()) {
+        if (game.ui().settings().debugModeOnProperty().get()) {
             canvasRenderer.fillTextCentered(
                 "scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
                 Color.WHITE, Font.font(12 * scaling.get()),

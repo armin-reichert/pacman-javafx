@@ -7,9 +7,9 @@ import javafx.util.Duration;
 public record UISettings(
     Duration flashMessageDuration,
     ObjectProperty<Color> canvasBackgroundColorProperty,
-    BooleanProperty canvasFontSmoothingProperty,
-    BooleanProperty debugInfoVisibleProperty,
-    BooleanProperty keyboardMonitorVisibleProperty,
+    BooleanProperty fontSmoothingOnProperty,
+    BooleanProperty debugModeOnProperty,
+    BooleanProperty keyboardMonitorOnProperty,
     IntegerProperty miniViewHeightProperty,
     BooleanProperty miniViewOnProperty,
     IntegerProperty miniViewOpacityPercentProperty,

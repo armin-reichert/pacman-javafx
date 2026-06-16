@@ -13,7 +13,6 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
-import de.amr.pacmanfx.ui.views.GameViewManager;
 import javafx.scene.input.KeyCode;
 
 import java.util.Set;
@@ -76,14 +75,14 @@ public class UISettingsActions {
         actionToggleDebugInfo = new GameAction(game, "toggle_debug_info") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(game.ui().settings().debugInfoVisibleProperty());
+                toggleBooleanProperty(game.ui().settings().debugModeOnProperty());
             }
         };
 
         actionToggleKeyboardMonitor = new GameAction(game, "toggle_keyboard_monitor") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(game.ui().settings().keyboardMonitorVisibleProperty());
+                toggleBooleanProperty(game.ui().settings().keyboardMonitorOnProperty());
             }
         };
 

@@ -71,8 +71,8 @@ public class DashboardSectionGeneral extends DashboardSection {
 
         addColorPicker("Canvas Color", game.ui().settings().canvasBackgroundColorProperty());
 
-        addCheckBox("Font Smoothing", game.ui().settings().canvasFontSmoothingProperty());
-        addCheckBox("Show Debug Info", game.ui().settings().debugInfoVisibleProperty());
+        addCheckBox("Font Smoothing", game.ui().settings().fontSmoothingOnProperty());
+        addCheckBox("Show Debug Info", game.ui().settings().debugModeOnProperty());
         addCheckBox("Time Measured", gameClock.timeMeasuredProperty());
     }
 }
