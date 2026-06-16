@@ -70,7 +70,7 @@ public class GameMainScene extends Scene {
 
         rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> selectBackground(game),
-            game.ui().views().currentViewProperty(),
+            game.ui().views().currentViewIDProperty(),
             game.ui().gameScenes().currentGameSceneProperty()
         ));
 
@@ -98,8 +98,9 @@ public class GameMainScene extends Scene {
         final Keyboard keyboard = game.input().keyboard();
 
         // Keyboard should not be sensitive to any key events triggered inside the map editor
-        keyboard.enabledProperty().bind(views.currentViewProperty().map(
-            view -> isKeyboardAware(views, view)
+        keyboard.enabledProperty().bind(views.currentViewIDProperty()
+            .map(views::assertView)
+            .map(view -> isKeyboardAware(views, view)
         ));
 
         keyboard.addStateListener(_ -> {
@@ -107,7 +108,7 @@ public class GameMainScene extends Scene {
             actionBindings.findActionMatchingPressedKeys(keyboard).ifPresentOrElse(
                 GameAction::execute,
                 () -> {
-                    final GameView currentView = views.currentView();
+                    final GameView currentView = views.assertCurrentView();
                     if (isKeyboardAware(views, currentView)) {
                         currentView.onInput(game.input());
                     }

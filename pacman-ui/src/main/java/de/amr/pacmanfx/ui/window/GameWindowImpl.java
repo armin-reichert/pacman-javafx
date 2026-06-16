@@ -8,6 +8,7 @@ import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.views.GameView;
+import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
@@ -15,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
@@ -56,8 +58,8 @@ public class GameWindowImpl implements GameWindow {
         });
 
         // Adapt stage title to current game view
-        game.ui().views().currentViewProperty().addListener(
-            (_,_,currentView) -> updateStageTitle(currentView));
+        game.ui().views().currentViewIDProperty().addListener(
+            (_, _, viewID) -> updateStageTitle(viewID));
     }
 
     @Override
@@ -79,13 +81,10 @@ public class GameWindowImpl implements GameWindow {
 
     // Private area
 
-    private void updateStageTitle(GameView gameView) {
-        if (gameView == game.ui().views().startPagesView() || gameView == game.ui().views().gamePlayView()) {
-            stage.titleProperty().bind(stageTitleBinding);
-        }
-        else {
-            // Editor view
-            game.ui().views().optEditorView().ifPresent(editorView -> {
+    private void updateStageTitle(GameViewID viewID) {
+        switch (viewID) {
+            case START_PAGES, GAMEPLAY -> stage.titleProperty().bind(stageTitleBinding);
+            case EDITOR -> game.ui().views().optEditorView().ifPresent(editorView -> {
                 stage.titleProperty().unbind();
                 editorView.optTitleSupplier().ifPresent(titleSupplier -> stage.setTitle(titleSupplier.get()));
             });
@@ -106,7 +105,7 @@ public class GameWindowImpl implements GameWindow {
             () -> computeStageTitle(game),
             game.clock().updatesDisabledProperty(),
             game.gameVariantNameProperty(),
-            game.ui().views().currentViewProperty(),
+            game.ui().views().currentViewIDProperty(),
             game.ui().gameScenes().currentGameSceneProperty(),
             game.ui().settings().debugInfoVisibleProperty,
             game.ui().settings3D().view3DEnabledProperty()
@@ -114,10 +113,10 @@ public class GameWindowImpl implements GameWindow {
     }
 
     private String computeStageTitle(Game game) {
-        final GameView currentGameView = game.ui().views().currentView();
-        return currentGameView == null
+        final Optional<GameView> optCurrentGameView = game.ui().views().optCurrentView();
+        return optCurrentGameView.isEmpty()
             ? game.ui().translations().translate("view.missing") // Should never happen
-            : currentGameView.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(game));
+            : optCurrentGameView.get().optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(game));
     }
 
     private void updateStageIcon(Game game) {

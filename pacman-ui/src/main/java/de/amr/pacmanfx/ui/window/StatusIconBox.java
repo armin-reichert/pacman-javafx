@@ -7,6 +7,7 @@ import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
@@ -99,8 +100,8 @@ public class StatusIconBox implements Disposable {
         final GameViewManager views = game.ui().views();
         // Hide status icon box in editor view
         rootPane().visibleProperty().bind(
-            views.currentViewProperty().isEqualTo(views.gamePlayView())
-                .or(views.currentViewProperty().isEqualTo(views.startPagesView()))
+                views.currentViewIDProperty().isEqualTo(GameViewID.GAMEPLAY)
+            .or(views.currentViewIDProperty().isEqualTo(GameViewID.START_PAGES))
         );
 
         // Visibility of "autopilot", "cheated" and "immune" is bound to *current game model*'s cheat object!

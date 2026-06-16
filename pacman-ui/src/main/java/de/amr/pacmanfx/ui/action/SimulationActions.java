@@ -10,6 +10,7 @@ import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
@@ -129,8 +130,7 @@ public class SimulationActions {
 
             @Override
             public boolean isEnabled() {
-                final GameViewManager subViews = game.ui().views();
-                return subViews.isSelected(subViews.gamePlayView());
+                return game.ui().views().isSelected(GameViewID.GAMEPLAY);
             }
         };
 

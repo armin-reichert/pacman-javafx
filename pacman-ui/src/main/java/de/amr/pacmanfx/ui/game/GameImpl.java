@@ -343,7 +343,7 @@ public final class GameImpl implements Game {
             currentGameContext.flow().makeStep();
             ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock().currentTick()));
         });
-        clock().setPermanentAction(() -> ui.views().currentView().render());
+        clock().setPermanentAction(() -> ui.views().assertCurrentView().render());
         clock().setErrorHandler(this::ka_tas_tro_phe);
     }
 

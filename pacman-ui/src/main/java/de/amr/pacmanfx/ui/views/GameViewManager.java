@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 import org.tinylog.Supplier;
 
+import java.util.EnumMap;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
@@ -20,91 +21,101 @@ import static java.util.Objects.requireNonNull;
 
 public final class GameViewManager {
 
-    private final ObjectProperty<GameView> currentView = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameViewID> currentViewID = new SimpleObjectProperty<>();
 
-    private StartPagesView startPagesView;
-
-    private GamePlayView gamePlayView;
+    private final EnumMap<GameViewID, GameView> views = new EnumMap<>(GameViewID.class);
 
     private Supplier<EditorView> editorViewFactory;
-    private EditorView editorView;
     private BooleanSupplier editorCanOpen = () -> false;
 
-    public GameViewManager() {
-    }
+    public GameViewManager() {}
 
     public void connect(Game game) {
         requireNonNull(game);
 
-        currentViewProperty().addListener((_, oldView, newView) -> {
-            if (oldView != null) {
-                oldView.onExit();
+        currentViewIDProperty().addListener((_, oldID, newID) -> {
+            if (oldID != null) {
+                assertView(oldID).onExit();
             }
+
+            final GameView newView = assertView(newID);
+            newView.onEnter();
+
             game.ui().window().mainScene().replaceGameView(newView);
             game.ui().flashMessages().clearMessage();
-            newView.onEnter();
         });
 
         editorCanOpen = () -> {
-            if (isSelected(startPagesView)) return true;
-
-            if (isSelected(gamePlayView)) {
+            if (isSelected(GameViewID.START_PAGES)) {
+                return true;
+            }
+            if (isSelected(GameViewID.GAMEPLAY)) {
                 return !game.currentGameContext().model().isPlaying();
             }
-
-            if (editorView == null || isSelected(editorView)) return false;
-
             return false;
         };
     }
 
-    public ObjectProperty<GameView> currentViewProperty() {
-        return currentView;
+    public GameView assertView(GameViewID viewID) {
+        final GameView view = views.get(viewID);
+        if (view == null) {
+            throw new IllegalStateException("No view found for ID: " + viewID);
+        }
+        return view;
     }
 
-    public GameView currentView() {
-        return currentView.get();
+    public ObjectProperty<GameViewID> currentViewIDProperty() {
+        return currentViewID;
     }
 
-    public boolean isSelected(GameView gameView) {
-        requireNonNull(gameView);
-        return currentView() == gameView;
+    public GameViewID currentViewID() {
+        return currentViewID.get();
+    }
+
+    public GameView assertCurrentView() {
+        return assertView(currentViewID());
+    }
+
+    public Optional<GameView> optCurrentView() {
+        if (currentViewID() == null) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(views.get(currentViewID()));
+    }
+
+    public boolean isSelected(GameViewID viewID) {
+        requireNonNull(viewID);
+        return assertCurrentView() == assertView(viewID);
     }
 
     // Start pages view
 
     public void setStartPagesView(StartPagesView startPagesView) {
         requireNonNull(startPagesView);
-        this.startPagesView = startPagesView;
+        views.put(GameViewID.START_PAGES, startPagesView);
     }
 
     public StartPagesView startPagesView() {
-        return startPagesView;
+        return (StartPagesView) assertView(GameViewID.START_PAGES);
     }
 
     public void selectStartPagesView() {
-        if (startPagesView == null) {
-            throw new IllegalStateException("No start view has been set");
-        }
-        currentViewProperty().set(startPagesView);
+        currentViewIDProperty().set(GameViewID.START_PAGES);
     }
 
     // Game play view
 
     public void setGamePlayView(GamePlayView gamePlayView) {
         requireNonNull(gamePlayView);
-        this.gamePlayView = gamePlayView;
+        views.put(GameViewID.GAMEPLAY, gamePlayView);
     }
 
     public void selectGamePlayView() {
-        if (gamePlayView == null) {
-            throw new IllegalStateException("No Game play view has been set");
-        }
-        currentViewProperty().set(gamePlayView);
+        currentViewIDProperty().set(GameViewID.GAMEPLAY);
     }
 
     public GamePlayView gamePlayView() {
-        return gamePlayView;
+        return (GamePlayView) assertView(GameViewID.GAMEPLAY);
     }
 
     // Editor view
@@ -117,25 +128,26 @@ public final class GameViewManager {
     }
 
     public Optional<EditorView> optEditorView() {
+        final EditorView editorView = (EditorView) views.get(GameViewID.EDITOR);
         return Optional.ofNullable(editorView);
     }
 
     public void ensureEditorViewCreated() {
-        if (editorView == null) {
+        if (views.get(GameViewID.EDITOR) == null) {
             if (editorViewFactory == null) {
                 throw new IllegalStateException("No editor view factory has been set");
             }
-            editorView = editorViewFactory.get();
+            views.put(GameViewID.EDITOR, editorViewFactory.get());
         }
     }
 
     public boolean trySelectEditorView() {
-        if (editorView == null) {
+        if (views.get(GameViewID.EDITOR) == null) {
             Logger.info("Editor view has not been created yet");
             return false;
         }
         if (editorCanOpen.getAsBoolean()) {
-            currentViewProperty().set(editorView);
+            currentViewIDProperty().set(GameViewID.EDITOR);
             return true;
         }
         else {

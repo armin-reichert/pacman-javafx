@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
+import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import javafx.scene.input.KeyCode;
 
@@ -68,8 +69,7 @@ public class UISettingsActions {
 
             @Override
             public boolean isEnabled() {
-                final GameViewManager subViews = game.ui().views();
-                return subViews.isSelected(subViews.gamePlayView());
+                return game.ui().views().isSelected(GameViewID.GAMEPLAY);
             }
         };
 
@@ -114,8 +114,7 @@ public class UISettingsActions {
 
             @Override
             public boolean isEnabled() {
-                final GameViewManager subViews = game.ui().views();
-                return subViews.isSelected(subViews.gamePlayView());
+                return game.ui().views().isSelected(GameViewID.GAMEPLAY);
             }
 
             private boolean inPlayScene() {
