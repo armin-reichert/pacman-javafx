@@ -5,14 +5,8 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.action.*;
-import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
-import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewManager;
@@ -28,7 +22,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.Set;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
@@ -37,8 +30,6 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 public class GameWindowImpl implements GameWindow {
 
     private Game game;
-
-    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
 
     private final ChangeListener<String> iconUpdateListener = (_, _, _) -> updateStageIcon(game);
     private StringBinding stageTitleBinding;
@@ -83,13 +74,10 @@ public class GameWindowImpl implements GameWindow {
         populateMainScene(game);
 
         createStageTitleBinding(game);
-        registerCommonActions(game);
 
         mainScene.connect(game);
         keyboardInfoPopup.connect(game);
         startPagesView.connect(game);
-
-        connectKeyboard(game);
 
         // Some status icons are bound to the game model of the *current* game variant
         game.gameVariantNameProperty().addListener((_,_,variantName) -> {
@@ -134,16 +122,6 @@ public class GameWindowImpl implements GameWindow {
             game.ui().flashMessages().messageView().rootPane(),
             keyboardInfoPopup.rootPane()
         );
-    }
-
-    private void registerCommonActions(Game game) {
-        final CommonActions actions = game.actions();
-        final Set<ActionKeyBinding> bindings = actions.bindings();
-        actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionToggleKeyboardMonitor(), bindings);
-        actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionEnterFullScreen(), bindings);
-        actionBindings.selectAnyMatchingBinding(actions.simulationActions().actionToggleMuted(), bindings);
-        actionBindings.selectAnyMatchingBinding(actions.editorActions().actionOpenEditor(), bindings);
-        Logger.info(actionBindings);
     }
 
     private void createStageTitleBinding(Game game) {
@@ -244,31 +222,4 @@ public class GameWindowImpl implements GameWindow {
         }
     }
 
-    private void connectKeyboard(Game game) {
-        final GameViewManager subViews = game.ui().views();
-        final Keyboard keyboard = game.input().keyboard();
-
-        // Keyboard should not be sensitive to any key events triggered inside the map editor
-        keyboard.enabledProperty().bind(subViews.currentViewProperty().map(
-            subView -> isGlobalKeyboardAvailableFor(subViews, subView)
-        ));
-
-        keyboard.addStateListener(_ -> {
-            // Check for "global" action first, if no one matches, let current sub view handle the keyboard state change
-            actionBindings.findActionMatchingPressedKeys(keyboard).ifPresentOrElse(
-                GameAction::execute,
-                () -> {
-                    final GameView currentGameView = subViews.currentView();
-                    if (isGlobalKeyboardAvailableFor(subViews, currentGameView)) {
-                        currentGameView.onInput(game.input());
-                    }
-                });
-        });
-
-        keyboard.filterKeyEventsFrom(mainScene);
-    }
-
-    private boolean isGlobalKeyboardAvailableFor(GameViewManager subViews, GameView gameView) {
-        return gameView == subViews.startPagesView() || gameView == subViews.gamePlayView();
-    }
 }

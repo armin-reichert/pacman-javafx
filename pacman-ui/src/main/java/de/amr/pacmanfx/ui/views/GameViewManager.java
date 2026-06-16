@@ -40,7 +40,7 @@ public final class GameViewManager {
             if (oldView != null) {
                 oldView.onExit();
             }
-            game.ui().window().mainScene().replaceSubView(newView);
+            game.ui().window().mainScene().replaceGameView(newView);
             game.ui().flashMessages().clearMessage();
             newView.onEnter();
         });
