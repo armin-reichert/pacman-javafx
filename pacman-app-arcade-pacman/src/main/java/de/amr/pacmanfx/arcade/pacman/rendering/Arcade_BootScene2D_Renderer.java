@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
@@ -96,12 +95,12 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
         final int numRows = height / GRID_SIZE;
         final int numCols = width / GRID_SIZE;
         for (int row = 0; row < numRows; ++row) {
-            if (randomInt(0, 100) < 20) continue;
-            final RectShort fragment1 = randomSpriteFragment();
-            final RectShort fragment2 = randomSpriteFragment();
+            if (randomInt(0, 100) < 33) continue;
+            final RectShort f1 = randomSpriteFragment();
+            final RectShort f2 = randomSpriteFragment();
             final int splitCol = numCols / 8 + randomInt(0, numCols / 4);
             for (int col = 0; col < numCols; ++col) {
-                drawSprite(col < splitCol ? fragment1 : fragment2, GRID_SIZE * col, GRID_SIZE * row, true);
+                drawSprite(col < splitCol ? f1 : f2, GRID_SIZE * col, GRID_SIZE * row, true);
             }
         }
     }
