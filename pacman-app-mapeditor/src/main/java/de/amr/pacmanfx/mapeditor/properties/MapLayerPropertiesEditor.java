@@ -108,7 +108,7 @@ public class MapLayerPropertiesEditor extends BorderPane {
                 editorProperty.attributes().add((MapEditorPropertyAttribute.HIDDEN));
             }
             propertyEditors.add(createEditor(editorProperty));
-            Logger.info("Added editor for {}", editorProperty);
+            Logger.debug("Added property editor for {}", editorProperty);
         });
         rebuildGrid();
     }

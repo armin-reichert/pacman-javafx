@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.views;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
-import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -26,9 +25,10 @@ public final class GameViewManager {
     private final EnumMap<GameViewID, GameView> views = new EnumMap<>(GameViewID.class);
 
     private Supplier<EditorView> editorViewFactory;
-    private BooleanSupplier editorCanOpen = () -> false;
+    private BooleanSupplier editorCanOpen;
 
-    public GameViewManager() {}
+    public GameViewManager() {
+    }
 
     public void connect(Game game) {
         requireNonNull(game);
@@ -104,7 +104,7 @@ public final class GameViewManager {
 
     public boolean isSelected(GameViewID viewID) {
         requireNonNull(viewID);
-        return assertCurrentView() == assertView(viewID);
+        return currentViewID() == viewID;
     }
 
     // Start pages view
@@ -138,12 +138,14 @@ public final class GameViewManager {
     }
 
     public void ensureEditorViewCreated() {
-        if (views.get(GameViewID.EDITOR) == null) {
-            if (editorViewFactory == null) {
-                throw new IllegalStateException("No editor view factory has been set");
-            }
-            views.put(GameViewID.EDITOR, editorViewFactory.get());
+        if (editorViewFactory == null) {
+            throw new IllegalStateException("No editor view factory has been set");
         }
+        views.computeIfAbsent(GameViewID.EDITOR, _ -> {
+            final EditorView editorView = editorViewFactory.get();
+            Logger.info("Editor view created: {}", editorView);
+            return editorView;
+        });
     }
 
     public boolean trySelectEditorView() {
