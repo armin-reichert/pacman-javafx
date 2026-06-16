@@ -57,7 +57,6 @@ public final class GameViewManager {
             return false;
         };
 
-        gamePlayView.connect(game);
     }
 
     public ObjectProperty<GameView> currentViewProperty() {

@@ -14,9 +14,11 @@ import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import javafx.beans.binding.Bindings;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
@@ -39,10 +41,20 @@ public class GameMainScene extends Scene {
 
     private final StackPane gameViewHolder = new StackPane();
 
+    private StatusIconBox statusIconBox;
+    private final KeyboardInfo keyboardInfoPopup;
+
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
 
     public GameMainScene(double width, double height) {
         super(new StackPane(), width, height, Color.BLACK);
+
+        keyboardInfoPopup = new KeyboardInfo();
+        keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
+    }
+
+    public StatusIconBox statusIconBox() {
+        return statusIconBox;
     }
 
     public void connect(Game game) {
@@ -55,16 +67,22 @@ public class GameMainScene extends Scene {
             game.ui().gameScenes().currentGameSceneProperty()
         ));
 
+        createStatusIconBox(game);
+        keyboardInfoPopup.connect(game);
+
+        rootPane().getChildren().addAll(
+            gameViewHolder,
+            statusIconBox.rootPane(),
+            game.ui().flashMessages().messageView().rootPane(),
+            keyboardInfoPopup.rootPane()
+        );
+
         connectKeyboard(game);
         registerGlobalActions(game);
     }
 
     public StackPane rootPane() {
         return (StackPane) getRoot();
-    }
-
-    public StackPane gameViewHolder() {
-        return gameViewHolder;
     }
 
     public void replaceGameView(GameView gameView) {
@@ -114,5 +132,15 @@ public class GameMainScene extends Scene {
         return game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)
             ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
             : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER;
+    }
+
+    private void createStatusIconBox(Game game) {
+        statusIconBox = new StatusIconBox(game);
+        final var views = game.ui().views();
+        statusIconBox.rootPane().visibleProperty().bind(
+            views.currentViewProperty().isEqualTo(views.gamePlayView())
+                .or(views.currentViewProperty().isEqualTo(views.startPagesView()))
+        );
+        StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
     }
 }

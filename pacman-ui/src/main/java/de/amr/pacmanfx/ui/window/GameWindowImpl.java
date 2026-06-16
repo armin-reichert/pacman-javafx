@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.window;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.input.KeyboardInfo;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
@@ -16,9 +15,7 @@ import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
-import javafx.geometry.Pos;
 import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -34,11 +31,8 @@ public class GameWindowImpl implements GameWindow {
     private final ChangeListener<String> iconUpdateListener = (_, _, _) -> updateStageIcon(game);
     private StringBinding stageTitleBinding;
 
-    // The view components
     private final Stage stage;
     private final GameMainScene mainScene;
-    private StatusIconBox statusIconBox;
-    private final KeyboardInfo keyboardInfoPopup;
     private final StartPagesView startPagesView;
     private final GamePlayView gamePlayView;
 
@@ -50,40 +44,33 @@ public class GameWindowImpl implements GameWindow {
         startPagesView = new StartPagesView();
         gamePlayView = createGamePlayView();
 
-        keyboardInfoPopup = new KeyboardInfo();
-        keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
     }
 
     @Override
     public void connect(Game game) {
-        requireNonNull(game);
-
         if (this.game != null) {
             Logger.warn("Game view already connect to game!");
             return;
         }
-        this.game = game;
+        this.game = requireNonNull(game);
 
-        // Set sub views
-        final GameViewManager subViews = game.ui().views();
-        subViews.setStartPagesView(startPagesView);
-        subViews.setGamePlayView(gamePlayView);
-        subViews.setEditorViewFactory(() -> createEditorSubView(game));
-
-        createStatusIconBox(game);
-        populateMainScene(game);
+        // Set game views
+        final GameViewManager views = game.ui().views();
+        views.setStartPagesView(startPagesView);
+        views.setGamePlayView(gamePlayView);
+        views.setEditorViewFactory(() -> createEditorSubView(game));
 
         createStageTitleBinding(game);
 
         mainScene.connect(game);
-        keyboardInfoPopup.connect(game);
         startPagesView.connect(game);
+        gamePlayView.connect(game);
 
         // Some status icons are bound to the game model of the *current* game variant
         game.gameVariantNameProperty().addListener((_,_,variantName) -> {
-            statusIconBox.bind(game.gameVariant(variantName).gameModel());
+            mainScene.statusIconBox().bind(game.gameVariant(variantName).gameModel());
             //TODO This does not belong here
-            subViews.gamePlayView().gameSceneFrame().clearCanvas();
+            views.gamePlayView().gameSceneFrame().clearCanvas();
         });
     }
 
@@ -115,14 +102,6 @@ public class GameWindowImpl implements GameWindow {
         registerIconUpdater(game);
     }
 
-    private void populateMainScene(Game game) {
-        mainScene.rootPane().getChildren().addAll(
-            mainScene.gameViewHolder(),
-            statusIconBox.rootPane(),
-            game.ui().flashMessages().messageView().rootPane(),
-            keyboardInfoPopup.rootPane()
-        );
-    }
 
     private void createStageTitleBinding(Game game) {
         stageTitleBinding = createStringBinding(
@@ -141,16 +120,6 @@ public class GameWindowImpl implements GameWindow {
         return currentGameView == null
             ? game.ui().translations().translate("view.missing") // Should never happen
             : currentGameView.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(game));
-    }
-
-    private void createStatusIconBox(Game game) {
-        statusIconBox = new StatusIconBox(game);
-        final var subViews = game.ui().views();
-        final var selectedSubView = subViews.currentViewProperty();
-        statusIconBox.rootPane().visibleProperty().bind(
-            selectedSubView.isEqualTo(subViews.gamePlayView()).or(selectedSubView.isEqualTo(subViews.startPagesView()))
-        );
-        StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
     }
 
     private GamePlayView createGamePlayView() {
@@ -221,5 +190,4 @@ public class GameWindowImpl implements GameWindow {
             return "Unspecified Game";
         }
     }
-
 }
