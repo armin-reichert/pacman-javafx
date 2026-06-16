@@ -19,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 
 public final class SubViewManager {
 
-    private final ObjectProperty<SubView> selectedSubView = new SimpleObjectProperty<>();
+    private final ObjectProperty<SubView> currentSubView = new SimpleObjectProperty<>();
 
     private Supplier<EditorView> editorViewFactory;
     private BooleanSupplier editorCanOpen = () -> false;
@@ -33,7 +33,7 @@ public final class SubViewManager {
     public void connect(Game game) {
         requireNonNull(game);
 
-        selectedSubViewProperty().addListener((_, oldView, newView) -> {
+        currentSubViewProperty().addListener((_, oldView, newView) -> {
             if (oldView != null) {
                 oldView.onExit();
                 oldView.actionBindings().dispose();
@@ -57,6 +57,14 @@ public final class SubViewManager {
         });
 
         gamePlayView.connect(game);
+    }
+
+    public ObjectProperty<SubView> currentSubViewProperty() {
+        return currentSubView;
+    }
+
+    public SubView currentSubView() {
+        return currentSubView.get();
     }
 
     public void setGamePlayView(GamePlayView newGamePlayView) {
@@ -96,14 +104,14 @@ public final class SubViewManager {
         if (startView == null) {
             throw new IllegalStateException("No start view has been set");
         }
-        selectedSubViewProperty().set(startView);
+        currentSubViewProperty().set(startView);
     }
 
     public void selectGamePlayView() {
         if (gamePlayView == null) {
             throw new IllegalStateException("No Game play view has been set");
         }
-        selectedSubViewProperty().set(gamePlayView);
+        currentSubViewProperty().set(gamePlayView);
     }
 
     public void ensureEditorViewCreated() {
@@ -121,7 +129,7 @@ public final class SubViewManager {
             return false;
         }
         if (editorCanOpen.getAsBoolean()) {
-            selectedSubViewProperty().set(editorView);
+            currentSubViewProperty().set(editorView);
             return true;
         }
         else {
@@ -131,14 +139,7 @@ public final class SubViewManager {
     }
 
     public boolean isSelected(SubView view) {
-        return view != null && currentView() == view;
+        return view != null && currentSubView() == view;
     }
 
-    public ObjectProperty<SubView> selectedSubViewProperty() {
-        return selectedSubView;
-    }
-
-    public SubView currentView() {
-        return selectedSubView.get();
-    }
-}
+ }

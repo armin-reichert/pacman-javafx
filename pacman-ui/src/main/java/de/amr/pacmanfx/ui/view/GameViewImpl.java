@@ -151,15 +151,15 @@ public class GameViewImpl implements GameView {
             () -> computeStageTitle(game),
             game.clock().updatesDisabledProperty(),
             game.gameVariantNameProperty(),
-            game.ui().subViews().selectedSubViewProperty(),
-            game.ui().gameScenes().gameSceneProperty(),
+            game.ui().subViews().currentSubViewProperty(),
+            game.ui().gameScenes().currentGameSceneProperty(),
             game.ui().settings().debugInfoVisibleProperty,
             game.ui().settings3D().view3DEnabledProperty()
         );
     }
 
     private String computeStageTitle(Game game) {
-        final SubView currentSubView = game.ui().subViews().currentView();
+        final SubView currentSubView = game.ui().subViews().currentSubView();
         return currentSubView == null
             ? game.ui().translations().translate("view.missing") // Should never happen
             : currentSubView.optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene(game));
@@ -168,7 +168,7 @@ public class GameViewImpl implements GameView {
     private void createStatusIconBox(Game game) {
         statusIconBox = new StatusIconBox(game);
         final var subViews = game.ui().subViews();
-        final var selectedSubView = subViews.selectedSubViewProperty();
+        final var selectedSubView = subViews.currentSubViewProperty();
         statusIconBox.rootPane().visibleProperty().bind(
             selectedSubView.isEqualTo(subViews.gamePlayView()).or(selectedSubView.isEqualTo(subViews.startView()))
         );
@@ -249,7 +249,7 @@ public class GameViewImpl implements GameView {
         final Keyboard keyboard = game.input().keyboard();
 
         // Keyboard should not be sensitive to any key events triggered inside the map editor
-        keyboard.enabledProperty().bind(subViews.selectedSubViewProperty().map(
+        keyboard.enabledProperty().bind(subViews.currentSubViewProperty().map(
             subView -> isGlobalKeyboardAvailableFor(subViews, subView)
         ));
 
@@ -258,7 +258,7 @@ public class GameViewImpl implements GameView {
             actionBindings.findActionMatchingPressedKeys(keyboard).ifPresentOrElse(
                 GameAction::execute,
                 () -> {
-                    final SubView currentSubView = subViews.currentView();
+                    final SubView currentSubView = subViews.currentSubView();
                     if (isGlobalKeyboardAvailableFor(subViews, currentSubView)) {
                         currentSubView.onInput(game.input());
                     }

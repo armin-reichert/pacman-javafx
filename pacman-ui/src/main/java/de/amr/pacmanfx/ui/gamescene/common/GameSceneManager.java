@@ -34,11 +34,11 @@ import static java.util.Objects.requireNonNull;
 public class GameSceneManager implements ChangeListener<AbstractGameScene> {
 
     private final Game game;
-    private final ObjectProperty<AbstractGameScene> gameScene = new SimpleObjectProperty<>();
+    private final ObjectProperty<AbstractGameScene> currentGameScene = new SimpleObjectProperty<>();
 
     public GameSceneManager(Game game) {
         this.game = requireNonNull(game);
-        gameScene.addListener(this);
+        currentGameScene.addListener(this);
     }
 
     @Override
@@ -49,11 +49,11 @@ public class GameSceneManager implements ChangeListener<AbstractGameScene> {
     }
 
     public Optional<AbstractGameScene> optCurrentGameScene() {
-        return Optional.ofNullable(gameScene.get());
+        return Optional.ofNullable(currentGameScene.get());
     }
 
-    public ObjectProperty<AbstractGameScene> gameSceneProperty() {
-        return gameScene;
+    public ObjectProperty<AbstractGameScene> currentGameSceneProperty() {
+        return currentGameScene;
     }
 
     public void forceGameSceneUpdate(Game game) {
@@ -84,7 +84,7 @@ public class GameSceneManager implements ChangeListener<AbstractGameScene> {
 
         gameModel.optGameLevel().ifPresent(level -> handle2D3DSwitch(currentConfig, level, prevGameScene, nextGameScene));
 
-        gameSceneProperty().set(nextGameScene);
+        currentGameSceneProperty().set(nextGameScene);
     }
 
     /**
@@ -108,7 +108,7 @@ public class GameSceneManager implements ChangeListener<AbstractGameScene> {
      * @return {@code true} if the active scene has the given ID
      */
     public boolean currentGameSceneHasID(Game game, Identifier sceneID) {
-        final AbstractGameScene current = gameSceneProperty().get();
+        final AbstractGameScene current = currentGameSceneProperty().get();
         return current != null && hasGameSceneID(game, current, sceneID);
     }
 

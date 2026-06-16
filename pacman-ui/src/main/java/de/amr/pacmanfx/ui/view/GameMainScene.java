@@ -31,8 +31,8 @@ public class GameMainScene extends Scene {
 
         rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> selectBackground(game),
-            game.ui().subViews().selectedSubViewProperty(),
-            game.ui().gameScenes().gameSceneProperty()
+            game.ui().subViews().currentSubViewProperty(),
+            game.ui().gameScenes().currentGameSceneProperty()
         ));
     }
 

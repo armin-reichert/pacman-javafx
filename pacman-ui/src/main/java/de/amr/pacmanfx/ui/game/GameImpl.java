@@ -263,7 +263,7 @@ public final class GameImpl implements Game {
         ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             gameScene.deactivate();
             ui.gameScenes().removeFromPlayView(this, gameScene);
-            ui.gameScenes().gameSceneProperty().set(null);
+            ui.gameScenes().currentGameSceneProperty().set(null);
         });
 
         Logger.info("Game STOPPED!");
@@ -291,7 +291,7 @@ public final class GameImpl implements Game {
             currentGameContext.flow().makeStep();
             ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock().currentTick()));
         });
-        clock().setPermanentAction(() -> ui.subViews().currentView().render());
+        clock().setPermanentAction(() -> ui.subViews().currentSubView().render());
         clock().setErrorHandler(this::ka_tas_tro_phe);
     }
 

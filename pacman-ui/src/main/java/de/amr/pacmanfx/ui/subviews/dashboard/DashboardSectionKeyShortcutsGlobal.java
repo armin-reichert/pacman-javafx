@@ -34,7 +34,7 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
 
     private void updateTableForCurrentSubView(Game game) {
         clearSection();
-        final SubView currentSubView = game.ui().subViews().currentView();
+        final SubView currentSubView = game.ui().subViews().currentSubView();
         if (currentSubView == null) {
             return;
         }

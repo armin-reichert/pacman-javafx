@@ -115,7 +115,7 @@ public class GamePlayView implements SubView {
             () -> settings.miniViewOnProperty.get()
                 && game.ui().gameScenes().currentGameSceneHasID(game, CommonSceneID.PLAY_SCENE_3D),
             settings.miniViewOnProperty,
-            game.ui().gameScenes().gameSceneProperty()
+            game.ui().gameScenes().currentGameSceneProperty()
         ));
 
         dashboard.connect(game);
