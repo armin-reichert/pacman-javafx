@@ -194,7 +194,7 @@ public class GamePlayView implements GameView {
     public void handleQuit(Game game) {
         game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.handleQuit(game));
         onExit();
-        game.ui().views().selectStartView();
+        game.ui().views().selectStartPagesView();
     }
 
     @Override

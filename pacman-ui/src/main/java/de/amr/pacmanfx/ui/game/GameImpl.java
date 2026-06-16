@@ -235,8 +235,8 @@ public final class GameImpl implements Game {
         initProperties();
 
         ui.views().connect(this);
-        ui.views().selectStartView();
-        ui.views().startView().setSelectedIndex(0);
+        ui.views().selectStartPagesView();
+        ui.views().startPagesView().setSelectedIndex(0);
 
         view.show();
 

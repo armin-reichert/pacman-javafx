@@ -53,7 +53,7 @@ public class ArcadePacMan_App extends Application {
         }
         else {
             game = new GameImpl(machine, new GameWindowImpl(stage, sceneSize.x(), sceneSize.y()));
-            game.ui().views().startView().addStartPage(new ArcadePacMan_StartPage());
+            game.ui().views().startPagesView().addStartPage(new ArcadePacMan_StartPage());
         }
 
         game.ui().views().gamePlayView().configureDashboard(DASHBOARD_IDs, game.ui().translations());

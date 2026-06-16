@@ -174,7 +174,7 @@ public class PacManXXL_StartPage implements StartPage {
 
 
     private void pauseProgressTimer(Game game) {
-        game.ui().views().startView().pauseProgressTimer();
+        game.ui().views().startPagesView().pauseProgressTimer();
     }
 
     private void stopTalking(Game game) {

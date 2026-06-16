@@ -57,7 +57,7 @@ public class GameBuilder {
 
         final var game = new GameImpl(machine, new GameWindowImpl(stage, windowConfig.sceneWidth(), windowConfig.sceneHeight()));
 
-        final StartPagesView startPagesView = game.ui().views().startView();
+        final StartPagesView startPagesView = game.ui().views().startPagesView();
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();
             if (page != null) {

@@ -116,7 +116,7 @@ public class PacManAllGamesApp extends Application {
                 game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(sharedMapSelector);
                 game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
 
-                final StartPagesView startView = game.ui().views().startView();
+                final StartPagesView startView = game.ui().views().startPagesView();
                 startView.addStartPage(new ArcadePacMan_StartPage());
                 startView.addStartPage(new ArcadeMsPacMan_StartPage());
                 startView.addStartPage(new TengenMsPacMan_StartPage());

@@ -170,7 +170,7 @@ public class GameWindowImpl implements GameWindow {
         final var subViews = game.ui().views();
         final var selectedSubView = subViews.currentViewProperty();
         statusIconBox.rootPane().visibleProperty().bind(
-            selectedSubView.isEqualTo(subViews.gamePlayView()).or(selectedSubView.isEqualTo(subViews.startView()))
+            selectedSubView.isEqualTo(subViews.gamePlayView()).or(selectedSubView.isEqualTo(subViews.startPagesView()))
         );
         StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
     }
@@ -189,7 +189,7 @@ public class GameWindowImpl implements GameWindow {
             // restore title (editor changed it)
             stage().titleProperty().unbind();
             stage().titleProperty().bind(stageTitleBinding);
-            game.ui().views().selectStartView();
+            game.ui().views().selectStartPagesView();
         });
         editorView.connect(game);
         return editorView;
@@ -269,6 +269,6 @@ public class GameWindowImpl implements GameWindow {
     }
 
     private boolean isGlobalKeyboardAvailableFor(GameViewManager subViews, GameView gameView) {
-        return gameView == subViews.startView() || gameView == subViews.gamePlayView();
+        return gameView == subViews.startPagesView() || gameView == subViews.gamePlayView();
     }
 }

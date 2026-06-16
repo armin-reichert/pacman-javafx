@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.views;
 
 import de.amr.pacmanfx.ui.game.Game;
@@ -21,14 +22,16 @@ public final class GameViewManager {
 
     private final ObjectProperty<GameView> currentView = new SimpleObjectProperty<>();
 
-    private Supplier<EditorView> editorViewFactory;
-    private BooleanSupplier editorCanOpen = () -> false;
-    private EditorView editorView;
-
     private StartPagesView startPagesView;
+
     private GamePlayView gamePlayView;
 
-    public GameViewManager() {}
+    private Supplier<EditorView> editorViewFactory;
+    private EditorView editorView;
+    private BooleanSupplier editorCanOpen = () -> false;
+
+    public GameViewManager() {
+    }
 
     public void connect(Game game) {
         requireNonNull(game);
@@ -42,18 +45,17 @@ public final class GameViewManager {
             newView.onEnter();
         });
 
-        setEditorCanOpen(() -> {
-            // No editor view exists or editor already selected: cannot open
-            if (editorView == null || isSelected(editorView)) return false;
-
+        editorCanOpen = () -> {
             if (isSelected(startPagesView)) return true;
 
             if (isSelected(gamePlayView)) {
                 return !game.currentGameContext().model().isPlaying();
             }
 
+            if (editorView == null || isSelected(editorView)) return false;
+
             return false;
-        });
+        };
 
         gamePlayView.connect(game);
     }
@@ -66,15 +68,48 @@ public final class GameViewManager {
         return currentView.get();
     }
 
-    public void setGamePlayView(GamePlayView gamePlayView) {
-        requireNonNull(gamePlayView);
-        this.gamePlayView = gamePlayView;
+    public boolean isSelected(GameView gameView) {
+        requireNonNull(gameView);
+        return currentView() == gameView;
     }
+
+    // Start pages view
 
     public void setStartPagesView(StartPagesView startPagesView) {
         requireNonNull(startPagesView);
         this.startPagesView = startPagesView;
     }
+
+    public StartPagesView startPagesView() {
+        return startPagesView;
+    }
+
+    public void selectStartPagesView() {
+        if (startPagesView == null) {
+            throw new IllegalStateException("No start view has been set");
+        }
+        currentViewProperty().set(startPagesView);
+    }
+
+    // Game play view
+
+    public void setGamePlayView(GamePlayView gamePlayView) {
+        requireNonNull(gamePlayView);
+        this.gamePlayView = gamePlayView;
+    }
+
+    public void selectGamePlayView() {
+        if (gamePlayView == null) {
+            throw new IllegalStateException("No Game play view has been set");
+        }
+        currentViewProperty().set(gamePlayView);
+    }
+
+    public GamePlayView gamePlayView() {
+        return gamePlayView;
+    }
+
+    // Editor view
 
     public void setEditorViewFactory(Supplier<EditorView> factory) {
         if (editorViewFactory != null) {
@@ -83,34 +118,12 @@ public final class GameViewManager {
         this.editorViewFactory = requireNonNull(factory);
     }
 
-    public void setEditorCanOpen(BooleanSupplier editorCanOpen) {
-        this.editorCanOpen = requireNonNull(editorCanOpen);
-    }
-
-    public StartPagesView startView() {
-        return startPagesView;
-    }
-
-    public GamePlayView gamePlayView() {
-        return gamePlayView;
-    }
-
     public Optional<EditorView> optEditorView() {
         return Optional.ofNullable(editorView);
     }
 
-    public void selectStartView() {
-        if (startPagesView == null) {
-            throw new IllegalStateException("No start view has been set");
-        }
-        currentViewProperty().set(startPagesView);
-    }
-
-    public void selectGamePlayView() {
-        if (gamePlayView == null) {
-            throw new IllegalStateException("No Game play view has been set");
-        }
-        currentViewProperty().set(gamePlayView);
+    public void setEditorCanOpen(BooleanSupplier editorCanOpen) {
+        this.editorCanOpen = requireNonNull(editorCanOpen);
     }
 
     public void ensureEditorViewCreated() {
@@ -136,9 +149,4 @@ public final class GameViewManager {
             return false;
         }
     }
-
-    public boolean isSelected(GameView gameView) {
-        requireNonNull(gameView);
-        return currentView() == gameView;
-    }
- }
+}
