@@ -341,7 +341,7 @@ public final class GameImpl implements Game {
     }
 
     private void initProperties() {
-        ui.sounds().muteProperty().bind(ui.settings().mutedProperty);
+        ui.sounds().muteProperty().bind(ui.settings().mutedProperty());
     }
 
     private void updateSettings3D(UIConfig uiConfig) {

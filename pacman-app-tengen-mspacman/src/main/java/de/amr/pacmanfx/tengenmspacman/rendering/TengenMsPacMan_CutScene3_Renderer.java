@@ -34,7 +34,7 @@ public class TengenMsPacMan_CutScene3_Renderer extends BaseRenderer implements G
                 actorRenderer.drawActor(cutScene.pacMan());
             }
         }
-        if (scene.game().ui().settings().debugInfoVisibleProperty.get()) {
+        if (scene.game().ui().settings().debugInfoVisibleProperty().get()) {
             debugRenderer.draw(scene);
         }
     }

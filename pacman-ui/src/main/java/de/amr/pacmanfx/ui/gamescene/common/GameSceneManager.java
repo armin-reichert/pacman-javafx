@@ -228,7 +228,7 @@ public class GameSceneManager {
         final GamePlayView playView = game.ui().views().gamePlayView();
         final DecorationPane decorationPane = playView.gameSceneFrame();
 
-        gameScene2D.backgroundColorProperty().bind(game.ui().settings().canvasBackgroundColorProperty);
+        gameScene2D.backgroundColorProperty().bind(game.ui().settings().canvasBackgroundColorProperty());
 
         final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
         if (decorated) {

@@ -37,7 +37,7 @@ public class ArcadeMsPacMan_CutScene2_Renderer extends BaseRenderer implements G
                 cutScene.pacMan).forEach(actorRenderer::drawActor);
         }
 
-        if (scene.game().ui().settings().debugInfoVisibleProperty.get()) {
+        if (scene.game().ui().settings().debugInfoVisibleProperty().get()) {
             debugRenderer.draw(scene);
         }
     }

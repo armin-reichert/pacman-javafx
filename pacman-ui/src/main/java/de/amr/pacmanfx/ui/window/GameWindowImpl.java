@@ -107,7 +107,7 @@ public class GameWindowImpl implements GameWindow {
             game.gameVariantNameProperty(),
             game.ui().views().currentViewIDProperty(),
             game.ui().gameScenes().currentGameSceneProperty(),
-            game.ui().settings().debugInfoVisibleProperty,
+            game.ui().settings().debugInfoVisibleProperty(),
             game.ui().settings3D().view3DEnabledProperty()
         );
     }
@@ -136,7 +136,7 @@ public class GameWindowImpl implements GameWindow {
     private String titleForCurrentGameScene(Game game) {
         final AbstractGameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
 
-        final boolean debug = game.ui().settings().debugInfoVisibleProperty.get();
+        final boolean debug = game.ui().settings().debugInfoVisibleProperty().get();
         final boolean is3D = game.ui().settings3D().view3DEnabledProperty().get();
         final boolean paused = game.clock().getUpdatesDisabled();
 

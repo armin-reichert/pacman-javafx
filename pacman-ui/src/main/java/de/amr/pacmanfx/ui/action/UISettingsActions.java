@@ -76,24 +76,24 @@ public class UISettingsActions {
         actionToggleDebugInfo = new GameAction(game, "toggle_debug_info") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(game.ui().settings().debugInfoVisibleProperty);
+                toggleBooleanProperty(game.ui().settings().debugInfoVisibleProperty());
             }
         };
 
         actionToggleKeyboardMonitor = new GameAction(game, "toggle_keyboard_monitor") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(game.ui().settings().keyboardMonitorVisibleProperty);
+                toggleBooleanProperty(game.ui().settings().keyboardMonitorVisibleProperty());
             }
         };
 
         actionToggleMiniViewVisibility = new GameAction(game, "toggle_mini_view_visibility") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(game.ui().settings().miniViewOnProperty);
+                toggleBooleanProperty(game.ui().settings().miniViewOnProperty());
                 if (!game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
                     final String msg = game.ui().translations().translate(
-                        game.ui().settings().miniViewOnProperty.get() ? "pip_on" : "pip_off");
+                        game.ui().settings().miniViewOnProperty().get() ? "pip_on" : "pip_off");
                     game.ui().shortMessage(msg);
                 }
             }

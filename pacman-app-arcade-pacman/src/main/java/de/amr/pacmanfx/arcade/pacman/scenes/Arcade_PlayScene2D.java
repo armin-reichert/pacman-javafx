@@ -80,7 +80,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
             }
         });
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, game().ui().settings().mutedProperty, "muted");
+        addLocalizedCheckBox(contextMenu, translations, game().ui().settings().mutedProperty(), "muted");
         addLocalizedActionItem(contextMenu, translations, game().actions().gameFlowActions().actionQuit(), "quit");
 
         return Optional.of(contextMenu);

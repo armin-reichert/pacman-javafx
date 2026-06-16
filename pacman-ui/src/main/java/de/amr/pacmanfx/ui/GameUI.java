@@ -47,7 +47,7 @@ public record GameUI(
      * @param args    formatting arguments
      */
     public void shortMessage(String message, Object... args) {
-        shortMessage(settings().DEFAULT_FLASH_MESSAGE_DURATION, message, args);
+        shortMessage(settings().flashMessageDuration(), message, args);
     }
 
     public void clearMessage() {
