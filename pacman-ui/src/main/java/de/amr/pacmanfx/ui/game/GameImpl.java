@@ -103,68 +103,6 @@ public final class GameImpl implements Game {
         gameWindow.connect(this);
     }
 
-    private void createGameViews() {
-        final var startPagesView = new StartPagesView();
-        final var gamePlayView = createGamePlayView();
-
-        ui.views().setStartPagesView(startPagesView);
-        ui.views().setGamePlayView(gamePlayView);
-        ui.views().setEditorViewFactory(this::createEditorSubView);
-
-        startPagesView.connect(this);
-        gamePlayView.connect(this);
-    }
-
-    private GamePlayView createGamePlayView() {
-        final var playView = new GamePlayView(GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
-
-        final ChangeListener<? super Number> resizeHandler = (_, _, _) -> playView.resizeToFit(ui.window().mainScene());
-        ui.window().mainScene().widthProperty().addListener(resizeHandler);
-        ui.window().mainScene().heightProperty().addListener(resizeHandler);
-
-        return playView;
-    }
-
-    private EditorView createEditorSubView() {
-        final var editorView = new EditorView(ui.window().stage());
-        editorView.editor().setOnQuit(_ -> ui.views().selectStartPagesView());
-        editorView.connect(this);
-        return editorView;
-    }
-
-    private GameUI createUI() {
-        return new GameUI(
-            new FlashMessageManager(),
-            new GameSceneManager(this),
-            new SoundManager(this),
-            new SpriteAnimationManager(60),
-            () -> GameUI_Constants.LOCALIZED_TEXTS,
-            gameWindow,
-            new GameViewManager(),
-            new UISettings(),
-            UISettings3D.create()
-        );
-    }
-
-    private GameVariant createGameVariant(String variantName) {
-        final Cartridge cartridge = machine.cartridgeByName(variantName);
-        final var gameVariant = new GameVariant(cartridge);
-
-        //TODO make configurable again if tests should be available
-        final GameFlow flow = gameVariant.gameFlow();
-        flow.addState(new LevelShortTestState());
-        flow.addState(new LevelMediumTestState());
-        flow.addState(new CutScenesTestState());
-
-        gameVariant.gameModel().setHighScoreFile(highScoreFile(variantName));
-
-        return gameVariant;
-    }
-
-    private GameVariant currentGameVariant() {
-        return gameVariant(currentGameVariantName());
-    }
-
     public CollisionStrategy collisionStrategy() {
         return collisionStrategy;
     }
@@ -172,6 +110,8 @@ public final class GameImpl implements Game {
     public boolean isCollisionDoubleChecked() {
         return collisionDoubleChecked.get();
     }
+
+    // Game interface
 
     @Override
     public StringProperty gameVariantNameProperty() {
@@ -257,10 +197,10 @@ public final class GameImpl implements Game {
         return watchdog;
     }
 
-    // Lifecycle
+    // GameLifecycle interface
 
     @Override
-    public void show(GameVariantID variantID) {
+    public void showUI(GameVariantID variantID) {
         selectGameVariant(variantID.name());
 
         load3DAssets();
@@ -279,27 +219,26 @@ public final class GameImpl implements Game {
 
     @Override
     public void start() {
-        currentGameContext().flow().setGameContext(currentGameContext);
-        currentGameContext().flow().restartState(GameStateID.BOOT);
-        ui().views().selectGamePlayView();
+        currentGameContext.flow().setGameContext(currentGameContext);
+        currentGameContext.flow().restartState(GameStateID.BOOT);
+        ui.views().selectGamePlayView();
         Platform.runLater(clock()::start);
     }
 
     @Override
     public void stop() {
-        currentGameContext.model().prepareNewGame();
-
-        clock().stop();
-        clock().setTargetFrameRate(GameRules.NUM_TICKS_PER_SEC);
-
-        ui.sounds().stopAll();
-
         ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             gameScene.deactivate();
             ui.gameScenes().removeFromPlayView(this, gameScene);
             ui.gameScenes().currentGameSceneProperty().set(null);
         });
+        //TODO reconsider this
+        currentGameContext.model().prepareNewGame();
 
+        ui.sounds().stopAll();
+
+        clock().stop();
+        clock().setTargetFrameRate(GameRules.NUM_TICKS_PER_SEC);
         Logger.info("Game STOPPED!");
     }
 
@@ -313,7 +252,82 @@ public final class GameImpl implements Game {
         watchdog.dispose();
     }
 
-    // private stuff
+    // Private area, no trespassing!
+
+    /**
+     * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
+     */
+    private void ka_tas_tro_phe(Throwable reason) {
+        Platform.runLater(() -> {
+            final String errorMessage = ui.translations().translate("error.oh_no_my_program");
+            shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+            stop();
+            Logger.error("*** SOMETHING VERY BAD HAPPENED:");
+            Logger.error(reason);
+        });
+    }
+
+    private void createGameViews() {
+        final var startPagesView = new StartPagesView();
+        final var gamePlayView = createGamePlayView();
+
+        ui.views().setStartPagesView(startPagesView);
+        ui.views().setGamePlayView(gamePlayView);
+        ui.views().setEditorViewFactory(this::createEditorSubView);
+
+        startPagesView.connect(this);
+        gamePlayView.connect(this);
+    }
+
+    private GamePlayView createGamePlayView() {
+        final var playView = new GamePlayView(GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
+
+        final ChangeListener<? super Number> resizeHandler = (_, _, _) -> playView.resizeToFit(ui.window().mainScene());
+        ui.window().mainScene().widthProperty().addListener(resizeHandler);
+        ui.window().mainScene().heightProperty().addListener(resizeHandler);
+
+        return playView;
+    }
+
+    private EditorView createEditorSubView() {
+        final var editorView = new EditorView(ui.window().stage());
+        editorView.editor().setOnQuit(_ -> ui.views().selectStartPagesView());
+        editorView.connect(this);
+        return editorView;
+    }
+
+    private GameUI createUI() {
+        return new GameUI(
+            new FlashMessageManager(),
+            new GameSceneManager(this),
+            new SoundManager(this),
+            new SpriteAnimationManager(60),
+            () -> GameUI_Constants.LOCALIZED_TEXTS,
+            gameWindow,
+            new GameViewManager(),
+            new UISettings(),
+            UISettings3D.create()
+        );
+    }
+
+    private GameVariant createGameVariant(String variantName) {
+        final Cartridge cartridge = machine.cartridgeByName(variantName);
+        final var gameVariant = new GameVariant(cartridge);
+
+        //TODO make configurable again if tests should be available
+        final GameFlow flow = gameVariant.gameFlow();
+        flow.addState(new LevelShortTestState());
+        flow.addState(new LevelMediumTestState());
+        flow.addState(new CutScenesTestState());
+
+        gameVariant.gameModel().setHighScoreFile(highScoreFile(variantName));
+
+        return gameVariant;
+    }
+
+    private GameVariant currentGameVariant() {
+        return gameVariant(currentGameVariantName());
+    }
 
     private static void load3DAssets() {
         //noinspection ResultOfMethodCallIgnored
@@ -353,18 +367,5 @@ public final class GameImpl implements Game {
         final var changeHandler = new GameVariantChangeHandler(this);
         gameVariantName.addListener(changeHandler);
         changeHandler.enterGameVariant(currentGameVariantName());
-    }
-
-    /**
-     * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
-     */
-    private void ka_tas_tro_phe(Throwable reason) {
-        Platform.runLater(() -> {
-            final String errorMessage = ui.translations().translate("error.oh_no_my_program");
-            shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
-            stop();
-            Logger.error("*** SOMETHING VERY BAD HAPPENED:");
-            Logger.error(reason);
-        });
     }
 }

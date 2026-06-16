@@ -121,10 +121,6 @@ public final class GameViewManager {
         return Optional.ofNullable(editorView);
     }
 
-    public void setEditorCanOpen(BooleanSupplier editorCanOpen) {
-        this.editorCanOpen = requireNonNull(editorCanOpen);
-    }
-
     public void ensureEditorViewCreated() {
         if (editorView == null) {
             if (editorViewFactory == null) {

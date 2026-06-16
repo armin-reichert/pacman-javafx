@@ -58,7 +58,7 @@ public class TengenMsPacMan_App extends Application {
         game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS, new TengenMsPacMan_UISettings());
         game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS, new TengenMsPacMan_Actions(game));
 
-        game.show(TENGEN_MS_PACMAN);
+        game.showUI(TENGEN_MS_PACMAN);
     }
 
     @Override

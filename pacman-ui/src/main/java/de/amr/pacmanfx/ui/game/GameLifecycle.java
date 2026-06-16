@@ -11,7 +11,7 @@ public interface GameLifecycle {
 
     void start();
 
-    void show(GameVariantID variantID);
+    void showUI(GameVariantID variantID);
 
     void terminate();
 }

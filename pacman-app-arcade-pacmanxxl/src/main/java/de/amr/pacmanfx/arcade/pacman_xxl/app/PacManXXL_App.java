@@ -64,7 +64,7 @@ public class PacManXXL_App extends Application {
 
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
 
-        game.show(GameVariantID.ARCADE_PACMAN_XXL);
+        game.showUI(GameVariantID.ARCADE_PACMAN_XXL);
     }
 
     @Override

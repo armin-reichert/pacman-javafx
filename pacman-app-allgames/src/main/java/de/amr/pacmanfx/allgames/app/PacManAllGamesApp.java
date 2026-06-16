@@ -140,7 +140,7 @@ public class PacManAllGamesApp extends Application {
 
             Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
 
-            game.show(GameVariantID.ARCADE_PACMAN);
+            game.showUI(GameVariantID.ARCADE_PACMAN);
         }
         catch (RuntimeException x) {
             Logger.error(x, "An error occurred starting the game.");
