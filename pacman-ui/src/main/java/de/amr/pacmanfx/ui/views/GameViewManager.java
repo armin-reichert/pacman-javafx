@@ -56,6 +56,14 @@ public final class GameViewManager {
         };
     }
 
+    public void setView(GameViewID viewID, GameView gameView) {
+        requireNonNull(viewID);
+        requireNonNull(gameView);
+        views.put(viewID, gameView);
+        Logger.info("Game view id='{}' set to {}", viewID, gameView);
+    }
+
+
     public GameView assertView(GameViewID viewID) {
         final GameView view = views.get(viewID);
         if (view == null) {
@@ -90,11 +98,6 @@ public final class GameViewManager {
 
     // Start pages view
 
-    public void setStartPagesView(StartPagesView startPagesView) {
-        requireNonNull(startPagesView);
-        views.put(GameViewID.START_PAGES, startPagesView);
-    }
-
     public StartPagesView startPagesView() {
         return (StartPagesView) assertView(GameViewID.START_PAGES);
     }
@@ -104,11 +107,6 @@ public final class GameViewManager {
     }
 
     // Game play view
-
-    public void setGamePlayView(GamePlayView gamePlayView) {
-        requireNonNull(gamePlayView);
-        views.put(GameViewID.GAMEPLAY, gamePlayView);
-    }
 
     public void selectGamePlayView() {
         currentViewIDProperty().set(GameViewID.GAMEPLAY);

@@ -21,11 +21,12 @@ import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d3.UISettings3D;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
@@ -272,15 +273,9 @@ public final class GameImpl implements Game {
     }
 
     private void createGameViews() {
-        final var startPagesView = new StartPagesView();
-        final var gamePlayView = createGamePlayView();
-
-        ui.views().setStartPagesView(startPagesView);
-        ui.views().setGamePlayView(gamePlayView);
+        ui.views().setView(GameViewID.START_PAGES, new StartPagesView());
+        ui.views().setView(GameViewID.GAMEPLAY, createGamePlayView());
         ui.views().setEditorViewFactory(this::createEditorSubView);
-
-        startPagesView.connect(this);
-        gamePlayView.connect(this);
     }
 
     private GamePlayView createGamePlayView() {
