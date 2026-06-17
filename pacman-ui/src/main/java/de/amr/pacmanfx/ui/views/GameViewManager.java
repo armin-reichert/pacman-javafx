@@ -13,7 +13,6 @@ import org.tinylog.Logger;
 
 import java.util.EnumMap;
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 import static java.util.Objects.requireNonNull;
 
@@ -22,8 +21,6 @@ public final class GameViewManager {
     private final ObjectProperty<GameViewID> currentViewID = new SimpleObjectProperty<>();
 
     private final EnumMap<GameViewID, GameView> views = new EnumMap<>(GameViewID.class);
-
-    private BooleanSupplier editorCanOpen;
 
     public GameViewManager() {}
 
@@ -43,16 +40,6 @@ public final class GameViewManager {
             newView.onEnter();
             newView.rootPane().requestFocus();
         });
-
-        editorCanOpen = () -> {
-            if (isSelected(GameViewID.START_PAGES)) {
-                return true;
-            }
-            if (isSelected(GameViewID.GAMEPLAY)) {
-                return !game.currentGameContext().model().isPlaying();
-            }
-            return false;
-        };
 
         views.values().forEach(gameView -> gameView.connect(game));
     }
@@ -130,12 +117,12 @@ public final class GameViewManager {
         return Optional.ofNullable(editorView);
     }
 
-    public boolean trySelectEditorView() {
+    public boolean trySelectEditorView(Game game) {
         if (views.get(GameViewID.EDITOR) == null) {
             Logger.info("Editor view has not been created yet");
             return false;
         }
-        if (editorCanOpen.getAsBoolean()) {
+        if (canOpenEditor(game)) {
             currentViewIDProperty().set(GameViewID.EDITOR);
             return true;
         }
@@ -144,4 +131,15 @@ public final class GameViewManager {
             return false;
         }
     }
+
+    private boolean canOpenEditor(Game game) {
+        if (isSelected(GameViewID.START_PAGES)) {
+            return true;
+        }
+        if (isSelected(GameViewID.GAMEPLAY)) {
+            return !game.currentGameContext().model().isPlaying();
+        }
+        return false;
+    }
+
 }

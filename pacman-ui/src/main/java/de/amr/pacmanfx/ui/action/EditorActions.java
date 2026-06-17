@@ -10,7 +10,6 @@ import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.views.GameViewID;
-import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
@@ -86,7 +85,7 @@ public class EditorActions {
     private Optional<TileMapEditor> openMapEditor() {
         final EditorView editorView = game.ui().views().assertView(GameViewID.EDITOR, EditorView.class);
         editorView.ensureEditorCreated(game);
-        if (!game.ui().views().trySelectEditorView()) {
+        if (!game.ui().views().trySelectEditorView(game)) {
             game.ui().shortMessage("Cannot open the map editor.");
             return Optional.empty();
         }
