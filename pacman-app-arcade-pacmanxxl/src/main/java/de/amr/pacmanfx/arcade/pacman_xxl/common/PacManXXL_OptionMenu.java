@@ -104,8 +104,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         soundEnabledProperty().bind(game.ui().sounds().muteProperty().not());
         chaseAnimation.init(currentConfig, canvas, game.ui().sprites().animations());
-
-        requestFocus();
     }
 
     public void startDrawLoop() {

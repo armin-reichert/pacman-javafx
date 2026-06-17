@@ -109,8 +109,9 @@ public class PacManXXL_StartPage implements StartPage {
             case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> game.selectGameVariant(selectedGameVariant.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);
         }
-        menu.init(game);
         game.ui().sounds().playVoice(VOICE);
+        menu.init(game);
+        menu.requestFocus();
     }
 
     @Override
