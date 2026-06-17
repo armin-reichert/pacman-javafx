@@ -112,13 +112,18 @@ public final class GameImpl implements Game {
         ui.views().setEditorViewFactory(this::createEditorSubView);
 
         ui.window().connect(this);
+
         ui.views().connect(this);
         ui.views().assertView(GameViewID.START_PAGES).connect(this);
         ui.views().assertView(GameViewID.GAMEPLAY).connect(this);
+
         ui.gameScenes().connect(this);
+
+        ui.sounds().muteProperty().bind(ui.settings().mutedProperty());
         ui.sounds().connect(this);
 
         load3DAssets();
+        configureGameClock();
     }
 
     public CollisionStrategy collisionStrategy() {
@@ -219,14 +224,12 @@ public final class GameImpl implements Game {
 
     @Override
     public void showUI(GameVariantID variantID) {
-
-        //TODO this is still a bit messy
+        //TODO this is still messy
 
         selectGameVariant(variantID.name());
 
-        initGameClock();
-        initGameVariantAndRegisterChangeHandler();
-        initProperties();
+        final var changeHandler = new GameVariantChangeHandler(this);
+        changeHandler.enterGameVariant(currentGameVariantName());
 
         ui.views().selectStartPagesView();
         ui.views().assertView(GameViewID.START_PAGES, StartPagesView.class).setSelectedIndex(0);
@@ -326,17 +329,13 @@ public final class GameImpl implements Game {
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing singleton
     }
 
-    private void initGameClock() {
+    private void configureGameClock() {
         clock().setUpdateAction(() -> {
             currentGameContext.flow().makeStep();
             ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock().currentTick()));
         });
         clock().setPermanentAction(() -> ui.views().assertCurrentView().render());
         clock().setErrorHandler(this::ka_tas_tro_phe);
-    }
-
-    private void initProperties() {
-        ui.sounds().muteProperty().bind(ui.settings().mutedProperty());
     }
 
     private void updateSettings3D(UIConfig uiConfig) {
@@ -353,11 +352,5 @@ public final class GameImpl implements Game {
             ui.window().mainScene().flashMessageManager().startAnimationTimer();
             ui.sprites().startAnimationTimer();
         });
-    }
-
-    private void initGameVariantAndRegisterChangeHandler() {
-        final var changeHandler = new GameVariantChangeHandler(this);
-        gameVariantName.addListener(changeHandler);
-        changeHandler.enterGameVariant(currentGameVariantName());
     }
 }
