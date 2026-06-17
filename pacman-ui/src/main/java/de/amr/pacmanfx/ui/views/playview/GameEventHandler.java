@@ -44,7 +44,7 @@ public class GameEventHandler extends DefaultGameEventListener {
 
                 // size of game scene might have changed, so re-embed
                 game.ui().gameScenes().optCurrentGameScene().ifPresent(
-                    gameScene -> game.ui().gameScenes().embedGameSceneIntoPlayView(game, gameScene));
+                    gameScene -> game.ui().gameScenes().embedGameSceneIntoPlayView(gameScene));
             }
 
             case GameStateChangeEvent stateChangeEvent -> {

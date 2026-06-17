@@ -97,15 +97,13 @@ public final class GameImpl implements Game {
 
     @Override
     public void createUI(Stage stage, int width, int height) {
-        final var window = new GameWindowImpl(stage, width, height);
-
-        this.ui = new GameUI(
-            new GameSceneManager(this),
+        ui = new GameUI(
+            new GameWindowImpl(stage, width, height),
+            new GameViewManager(),
+            new GameSceneManager(),
             new SoundManager(this),
             new SpriteAnimationManager(60),
             () -> GameUI_Constants.LOCALIZED_TEXTS,
-            window,
-            new GameViewManager(),
             new UISettings()
         );
 
@@ -116,7 +114,9 @@ public final class GameImpl implements Game {
         ui.views().assertView(GameViewID.START_PAGES).connect(this);
         ui.views().assertView(GameViewID.GAMEPLAY).connect(this);
 
-        window.connect(this);
+        ui.window().connect(this);
+        ui.views().connect(this);
+        ui.gameScenes().connect(this);
     }
 
     public CollisionStrategy collisionStrategy() {
@@ -224,7 +224,6 @@ public final class GameImpl implements Game {
         initGameVariantAndRegisterChangeHandler();
         initProperties();
 
-        ui.views().connect(this);
         ui.views().selectStartPagesView();
         ui.views().assertView(GameViewID.START_PAGES, StartPagesView.class).setSelectedIndex(0);
 
@@ -245,7 +244,7 @@ public final class GameImpl implements Game {
     public void stop() {
         ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             gameScene.deactivate();
-            ui.gameScenes().removeFromPlayView(this, gameScene);
+            ui.gameScenes().removeFromPlayView(gameScene);
             ui.gameScenes().currentGameSceneProperty().set(null);
         });
         //TODO reconsider this

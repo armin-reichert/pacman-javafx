@@ -27,8 +27,7 @@ public final class GameViewManager {
     private Supplier<EditorView> editorViewFactory;
     private BooleanSupplier editorCanOpen;
 
-    public GameViewManager() {
-    }
+    public GameViewManager() {}
 
     public void connect(Game game) {
         requireNonNull(game);

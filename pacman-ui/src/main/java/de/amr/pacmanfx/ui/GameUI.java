@@ -4,10 +4,9 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
-import de.amr.pacmanfx.ui.config.UISettings3D;
 import de.amr.pacmanfx.ui.config.UISettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
+import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.window.GameWindow;
@@ -17,12 +16,12 @@ import javafx.util.Duration;
 import static java.util.Objects.requireNonNull;
 
 public record GameUI(
+    GameWindow window,
+    GameViewManager views,
     GameSceneManager gameScenes,
     SoundManager sounds,
     SpriteAnimationManager sprites,
     TranslationManager translations,
-    GameWindow window,
-    GameViewManager views,
     UISettings settings)
 {
 

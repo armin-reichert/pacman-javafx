@@ -31,17 +31,20 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSceneManager {
 
-    private final Game game;
+    private Game game;
 
     private final ObjectProperty<AbstractGameScene> currentGameScene = new SimpleObjectProperty<>();
 
-    public GameSceneManager(Game game) {
-        this.game = requireNonNull(game);
+    public GameSceneManager() {
         currentGameScene.addListener((_, _, newGameScene) -> {
             if (newGameScene != null) {
-                embedGameSceneIntoPlayView(game, newGameScene);
+                embedGameSceneIntoPlayView(newGameScene);
             }
         });
+    }
+
+    public void connect(Game game) {
+        this.game = requireNonNull(game);
     }
 
     public Optional<AbstractGameScene> optCurrentGameScene() {
@@ -70,11 +73,11 @@ public class GameSceneManager {
 
         if (prevGameScene != null) {
             prevGameScene.deactivate();
-            removeFromPlayView(game, prevGameScene);
+            removeFromPlayView(prevGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
-        embedGameSceneIntoPlayView(game, nextGameScene);
+        embedGameSceneIntoPlayView(nextGameScene);
 
         nextGameScene.activate();
 
@@ -167,7 +170,7 @@ public class GameSceneManager {
 
     // Scene embedding
 
-    public void removeFromPlayView(Game game, AbstractGameScene gameScene) {
+    public void removeFromPlayView(AbstractGameScene gameScene) {
         requireNonNull(game);
         requireNonNull(gameScene);
 
@@ -191,23 +194,23 @@ public class GameSceneManager {
         Logger.info("Game scene {} REMOVED from play view!", gameScene.getClass().getSimpleName());
     }
 
-    public void embedGameSceneIntoPlayView(Game game, AbstractGameScene gameScene) {
+    public void embedGameSceneIntoPlayView(AbstractGameScene gameScene) {
         final UIConfig currentConfig = game.currentUIConfig();
         final GameViewManager subViews = game.ui().views();
 
         subViews.gamePlayView().contextMenu().hide();
 
         if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(game, subViews.gamePlayView(), gameScene, gameScene.optSubSceneFX().get());
+            embedGameSceneWithSubSceneFX(subViews.gamePlayView(), gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(game, currentConfig.gameSceneConfig(), gameScene2D);
+            embedGameScene2D(currentConfig.gameSceneConfig(), gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }
     }
 
     // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(Game game, GamePlayView playView, AbstractGameScene gameScene, SubScene subSceneFX) {
+    private void embedGameSceneWithSubSceneFX(GamePlayView playView, AbstractGameScene gameScene, SubScene subSceneFX) {
         final GameMainScene mainScene = game.ui().window().mainScene();
 
         // stretch sub scene to available space
@@ -223,7 +226,7 @@ public class GameSceneManager {
     }
 
     // 2D scenes without camera which are shown at full size
-    private void embedGameScene2D(Game game, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
+    private void embedGameScene2D(GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
         final GameMainScene mainScene = game.ui().window().mainScene();
         final GamePlayView playView = game.ui().views().gamePlayView();
         final DecorationPane frame = playView.gameSceneFrame();
