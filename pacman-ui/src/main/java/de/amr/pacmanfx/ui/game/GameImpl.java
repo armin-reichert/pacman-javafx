@@ -40,7 +40,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -132,7 +131,7 @@ public final class GameImpl implements Game {
         );
 
         ui.views().setView(GameViewID.START_PAGES, new StartPagesView());
-        ui.views().setView(GameViewID.GAMEPLAY, createGamePlayView());
+        ui.views().setView(GameViewID.GAMEPLAY, new GamePlayView(GameUI_Constants.DEFAULT_DASHBOARD_CONFIG));
         ui.views().setView(GameViewID.EDITOR, new EditorView());
 
         ui.window().connect(this);
@@ -310,16 +309,6 @@ public final class GameImpl implements Game {
             Logger.error("*** SOMETHING VERY BAD HAPPENED:");
             Logger.error(reason);
         });
-    }
-
-    private GamePlayView createGamePlayView() {
-        final var playView = new GamePlayView(GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
-
-        final ChangeListener<? super Number> resizeHandler = (_, _, _) -> playView.resizeToFit(ui.window().mainScene());
-        ui.window().mainScene().widthProperty().addListener(resizeHandler);
-        ui.window().mainScene().heightProperty().addListener(resizeHandler);
-
-        return playView;
     }
 
     private GameVariant createGameVariant(String variantName) {

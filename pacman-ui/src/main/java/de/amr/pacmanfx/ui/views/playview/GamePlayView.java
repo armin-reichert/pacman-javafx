@@ -23,10 +23,12 @@ import de.amr.pacmanfx.ui.views.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.views.help.HelpView;
+import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -118,8 +120,13 @@ public class GamePlayView implements GameView {
             settings.miniView().activeProperty(),
             game.ui().gameScenes().currentGameSceneProperty()
         ));
-    }
 
+        // Keep this view always at the same size as the main scene
+        final GameMainScene mainScene = game.ui().window().mainScene();
+        final ChangeListener<? super Number> resizeHandler = (_, _, _) -> resizeToFit(mainScene);
+        mainScene.widthProperty().addListener(resizeHandler);
+        mainScene.heightProperty().addListener(resizeHandler);
+    }
 
     public void resizeToFit(Scene parentSceneFX) {
         gameSceneFrame.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
