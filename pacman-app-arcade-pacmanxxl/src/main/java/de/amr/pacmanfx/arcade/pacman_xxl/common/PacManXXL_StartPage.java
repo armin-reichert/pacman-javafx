@@ -42,11 +42,6 @@ public class PacManXXL_StartPage implements StartPage, ChangeListener<GameVarian
     static final Image WALLPAPER_IMAGE = RM.loadImage(ROOT_PATH + "graphics/screenshot.png");
     static final Media VOICE = RM.loadMedia(ROOT_PATH + "sound/game-description.mp3");
 
-    // Menu must adapt to selected game variant and global property change and scales with scene resize
-
-    private ChangeListener<Boolean> cutScenesEnabledListener;
-    private ChangeListener<Boolean> play3DListener;
-
     private ObservableValue<Double> scaling;
 
     private final StackPane rootPane;
@@ -83,10 +78,6 @@ public class PacManXXL_StartPage implements StartPage, ChangeListener<GameVarian
     @Override
     public void connect(Game game) {
         this.game = requireNonNull(game);
-
-        play3DListener = (_, _, enable3D) -> game.ui().settings().d3().view3DEnabledProperty().set(enable3D);
-
-        cutScenesEnabledListener = (_, _, enableCutScenes) -> game.currentGameContext().flow().setCutScenesEnabled(enableCutScenes);
 
         scaling = game.ui().window().stage().heightProperty().map(stageHeight -> {
             final double menuHeight = Math.clamp(stageHeight.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
@@ -152,16 +143,24 @@ public class PacManXXL_StartPage implements StartPage, ChangeListener<GameVarian
     private void bindMenu() {
         unbindMenu();
         menu.entryGameVariant().valueProperty().addListener(this);
-        menu.entryPlay3D().valueProperty().addListener(play3DListener);
-        menu.entryCutScenesEnabled().valueProperty().addListener(cutScenesEnabledListener);
+        menu.entryPlay3D().valueProperty().addListener(this::onPlay3DSettingsChange);
+        menu.entryCutScenesEnabled().valueProperty().addListener(this::onCutScenesEnabledSettingsChange);
         menu.scalingProperty().bind(scaling);
     }
 
     private void unbindMenu() {
         menu.entryGameVariant().valueProperty().removeListener(this);
-        menu.entryPlay3D().valueProperty().removeListener(play3DListener);
-        menu.entryCutScenesEnabled().valueProperty().removeListener(cutScenesEnabledListener);
+        menu.entryPlay3D().valueProperty().removeListener(this::onPlay3DSettingsChange);
+        menu.entryCutScenesEnabled().valueProperty().removeListener(this::onCutScenesEnabledSettingsChange);
         menu.scalingProperty().unbind();
+    }
+
+    private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
+        game.ui().settings().d3().view3DEnabledProperty().set(newValue);
+    }
+
+    private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
+        game.currentGameContext().flow().setCutScenesEnabled(newValue);
     }
 
     private void pauseProgressTimer(Game game) {
