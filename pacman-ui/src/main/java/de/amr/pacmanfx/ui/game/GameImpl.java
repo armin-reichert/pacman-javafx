@@ -87,12 +87,35 @@ public final class GameImpl implements Game {
         this.prefs = new PreferencesManager(getClass());
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
-        gameVariantName.addListener((_, _, newVariantName) -> {
-            final GameVariant gameVariant = gameVariant(newVariantName);
-            currentGameContext = new GameContextImpl(this, gameVariant);
-            currentGameContext.model().hud().creditProperty().bind(coinMechanism().numCoinsProperty());
-            updateSettings3D(gameVariant.uiConfig());
-        });
+        gameVariantName.addListener((_, oldName, newName) -> onGameVariantNameChanged(oldName, newName));
+    }
+
+    private final GlobalGameEventHandler globalGameEventHandler = new GlobalGameEventHandler(this);
+
+    private void onGameVariantNameChanged(String oldVariantName, String newVariantName) {
+        if (oldVariantName != null) {
+            exitGameVariant(oldVariantName);
+        }
+        if (newVariantName != null) {
+            enterGameVariant(newVariantName);
+        }
+    }
+
+    private void exitGameVariant(String variantName) {
+        ui().sounds().dispose();
+        gameVariant(variantName).uiConfig().dispose();
+        currentGameContext.flow().removeGameEventListener(globalGameEventHandler);
+    }
+
+    private void enterGameVariant(String variantName) {
+        final GameVariant gameVariant = gameVariant(variantName);
+        gameVariant.uiConfig().init(this);
+        updateSettings3D(gameVariant.uiConfig());
+
+        // create new game context for current game variant
+        currentGameContext = new GameContextImpl(this, gameVariant);
+        currentGameContext.model().hud().creditProperty().bind(coinMechanism().numCoinsProperty());
+        currentGameContext.flow().addGameEventListener(globalGameEventHandler);
     }
 
     @Override
@@ -224,12 +247,7 @@ public final class GameImpl implements Game {
 
     @Override
     public void showUI(GameVariantID variantID) {
-        //TODO this is still messy
-
         selectGameVariant(variantID.name());
-
-        final var changeHandler = new GameVariantChangeHandler(this);
-        changeHandler.enterGameVariant(currentGameVariantName());
 
         ui.views().selectStartPagesView();
         ui.views().assertView(GameViewID.START_PAGES, StartPagesView.class).setSelectedIndex(0);

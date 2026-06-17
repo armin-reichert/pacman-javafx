@@ -15,32 +15,12 @@ import de.amr.pacmanfx.ui.views.playview.MiniPlaySceneView;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameVariantChangeHandler extends DefaultGameEventListener {
+public class GlobalGameEventHandler extends DefaultGameEventListener {
 
     private final Game game;
 
-    public GameVariantChangeHandler(Game game) {
+    public GlobalGameEventHandler(Game game) {
         this.game = requireNonNull(game);
-        game.gameVariantNameProperty().addListener((_, oldGameVariantName, newGameVariantName) -> {
-            if (oldGameVariantName != null) {
-                exitGameVariant(oldGameVariantName);
-            }
-            if (newGameVariantName != null) {
-                enterGameVariant(newGameVariantName);
-            }
-        });
-    }
-
-    private void exitGameVariant(String variantName) {
-        game.ui().sounds().dispose();
-        game.gameVariant(variantName).uiConfig().dispose();
-        game.currentGameContext().flow().removeGameEventListener(this);
-    }
-
-    public void enterGameVariant(String variantName) {
-        final UIConfig uiConfig = game.gameVariant(variantName).uiConfig();
-        uiConfig.init(game);
-        game.currentGameContext().flow().addGameEventListener(this);
     }
 
     @Override
@@ -85,5 +65,4 @@ public class GameVariantChangeHandler extends DefaultGameEventListener {
         // Call game event handler for current game scene
         game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
     }
-
 }
