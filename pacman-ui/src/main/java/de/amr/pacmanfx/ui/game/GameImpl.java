@@ -120,31 +120,28 @@ public final class GameImpl implements Game {
 
     @Override
     public void createUI(Stage stage, int width, int height) {
+
+        final UISettings uiSettings = new UISettings();
+
+        final GameViewManager views = new GameViewManager();
+        views.setView(GameViewID.START_PAGES, new StartPagesView());
+        views.setView(GameViewID.GAMEPLAY, new GamePlayView(GameUI_Constants.DEFAULT_DASHBOARD_CONFIG));
+        views.setView(GameViewID.EDITOR, new EditorView());
+
+        final SoundManager sounds = new SoundManager();
+        sounds.muteProperty().bind(uiSettings.mutedProperty());
+
         ui = new GameUI(
             new GameWindowImpl(stage, width, height),
-            new GameViewManager(),
+            views,
             new GameSceneManager(),
             new GameTranslationManager(),
-            new SoundManager(),
+            sounds,
             new SpriteAnimationManager(60),
-            new UISettings()
+            uiSettings
         );
 
-        ui.views().setView(GameViewID.START_PAGES, new StartPagesView());
-        ui.views().setView(GameViewID.GAMEPLAY, new GamePlayView(GameUI_Constants.DEFAULT_DASHBOARD_CONFIG));
-        ui.views().setView(GameViewID.EDITOR, new EditorView());
-
-        ui.window().connect(this);
-
-        ui.views().connect(this);
-        ui.views().assertView(GameViewID.START_PAGES).connect(this);
-        ui.views().assertView(GameViewID.GAMEPLAY).connect(this);
-        ui.views().assertView(GameViewID.EDITOR).connect(this);
-
-        ui.gameScenes().connect(this);
-
-        ui.sounds().muteProperty().bind(ui.settings().mutedProperty());
-        ui.sounds().connect(this);
+        ui.connect(this);
 
         load3DAssets();
         configureGameClock();

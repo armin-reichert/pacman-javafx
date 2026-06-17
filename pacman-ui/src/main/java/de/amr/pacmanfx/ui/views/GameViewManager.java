@@ -53,6 +53,8 @@ public final class GameViewManager {
             }
             return false;
         };
+
+        views.values().forEach(gameView -> gameView.connect(game));
     }
 
     public void setView(GameViewID viewID, GameView gameView) {
