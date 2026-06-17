@@ -34,7 +34,7 @@ public class PacManXXL_StartPage implements StartPage {
     static final String ROOT_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
     static final ResourceManager RM = () -> PacManXXL_PacMan_UIConfig.class;
     static final Image WALLPAPER_IMAGE = RM.loadImage(ROOT_PATH + "graphics/screenshot.png");
-    static final Media VOICE = RM.loadMedia(ROOT_PATH + "sound/game-description.mp3");
+    static final Media VARIANT_NARRATION = RM.loadMedia(ROOT_PATH + "sound/game-description.mp3");
 
     private final StackPane rootPane;
     private final PacManXXL_OptionMenu menu;
@@ -94,7 +94,7 @@ public class PacManXXL_StartPage implements StartPage {
             case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> game.selectGameVariant(selectedGameVariant.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);
         }
-        game.ui().sounds().playVoice(VOICE);
+        game.ui().sounds().playVoice(VARIANT_NARRATION);
         menu.init(game);
         menu.bind();
         menu.requestFocus();

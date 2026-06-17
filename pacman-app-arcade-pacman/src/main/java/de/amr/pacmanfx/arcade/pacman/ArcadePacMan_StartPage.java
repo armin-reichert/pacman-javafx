@@ -16,7 +16,7 @@ public class ArcadePacMan_StartPage extends FlyerStartPage {
 
     private static final ResourceManager RM = () -> ArcadePacMan_StartPage.class;
 
-    private static final Media VOICE = RM.loadMedia(ROOT_PATH + "sound/flyer-text.mp3");
+    private static final Media VARIANT_NARRATION = RM.loadMedia(ROOT_PATH + "sound/flyer-text.mp3");
 
     private static final Image[] FLYER_IMAGES = {
         RM.loadImage(ROOT_PATH + "graphics/flyer-page-1.jpg"),
@@ -27,7 +27,7 @@ public class ArcadePacMan_StartPage extends FlyerStartPage {
     public ArcadePacMan_StartPage() {
         super("Pac-Man (Arcade)"); // TODO: localize
         flyer.setImages(FLYER_IMAGES);
-        setVoice(VOICE);
+        setVoice(VARIANT_NARRATION);
     }
 
     @Override

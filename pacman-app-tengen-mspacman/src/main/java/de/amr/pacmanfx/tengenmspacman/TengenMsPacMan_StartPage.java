@@ -16,7 +16,7 @@ public class TengenMsPacMan_StartPage extends FlyerStartPage {
 
     private static final ResourceManager RM = () -> TengenMsPacMan_StartPage.class;
 
-    private static final Media VOICE = RM.loadMedia(ROOT_PATH + "sound/flyer-text.mp3");
+    private static final Media VARIANT_NARRATION = RM.loadMedia(ROOT_PATH + "sound/flyer-text.mp3");
 
     private static final Image[] FLYER_IMAGES = {
         RM.loadImage(ROOT_PATH + "graphics/flyer-page-1.png"),
@@ -26,7 +26,7 @@ public class TengenMsPacMan_StartPage extends FlyerStartPage {
     public TengenMsPacMan_StartPage() {
         super("Ms. Pac-Man (Tengen)"); //TODO localize
         flyer.setImages(FLYER_IMAGES);
-        setVoice(VOICE);
+        setVoice(VARIANT_NARRATION);
     }
 
     @Override
