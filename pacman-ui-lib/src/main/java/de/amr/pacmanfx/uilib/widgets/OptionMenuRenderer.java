@@ -37,7 +37,7 @@ public class OptionMenuRenderer extends BaseRenderer {
         final OptionMenuStyle style = menu.style();
         final Font scaledTitleFont = scaleFontBy(style.titleFont(), scaling());
         final Font scaledTextFont = scaleFontBy(style.textFont(), scaling());
-        final double centerX = 0.5 * menu.raster().numTilesX() * TS;
+        final double centerX = 0.5 * menu.layout().numTilesX() * TS;
 
         fillCanvas(style.backgroundFill());
         fillTextCentered(menu.title(), style.titleTextFill(), scaledTitleFont, centerX, 6 * TS);
@@ -48,15 +48,15 @@ public class OptionMenuRenderer extends BaseRenderer {
         for (int i = 0; i < menu.entries().size(); ++i) {
             final OptionMenuEntry<?> entry = menu.entries().get(i);
             if (i == menu.selectedEntryIndex()) {
-                final int col = (menu.raster().textColumn() - 2) * TS;
+                final int col = (menu.layout().textColumn() - 2) * TS;
                 fillText("-", style.entryTextFill(), scaledTextFont, col, y);
                 fillText(">", style.entryTextFill(), scaledTextFont, col + HTS, y);
             }
-            fillText(entry.text(), style.entryTextFill(), scaledTextFont, menu.raster().textColumn() * TS, y);
+            fillText(entry.text(), style.entryTextFill(), scaledTextFont, menu.layout().textColumn() * TS, y);
             fillText(entry.valueFormatted(),
                 entry.enabled() ? style.entryValueFill() : style.entryValueDisabledFill(),
                 scaledTextFont,
-                menu.raster().valueColumn() * TS, y);
+                menu.layout().valueColumn() * TS, y);
             y += lineSkip;
         }
 
@@ -70,8 +70,8 @@ public class OptionMenuRenderer extends BaseRenderer {
 
         float lineSkip = 2f * TS;
 
-        final double centerX = 0.5 * menu.raster().numTilesX() * TS;
-        double y = TS(menu.raster().numTilesY() - 8);
+        final double centerX = 0.5 * menu.layout().numTilesX() * TS;
+        double y = TS(menu.layout().numTilesY() - 8);
 
         fillTextCentered(SELECT_OPTIONS_WITH_UP_AND_DOWN, normalColor, font, centerX, y);
         fillTextCentered(SELECT_OPTIONS_WITH_UP_DOWN_OVERLAY, brightColor, font, centerX, y);

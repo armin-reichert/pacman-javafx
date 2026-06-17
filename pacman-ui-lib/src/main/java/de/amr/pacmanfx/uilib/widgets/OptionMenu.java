@@ -29,9 +29,9 @@ public class OptionMenu {
 
     public static final int NUM_CLIENT_ACTIONS = 2;
 
-    public record Raster(int numTilesX, int numTilesY, int textColumn, int valueColumn) {}
+    public record Layout(int numTilesX, int numTilesY, int textColumn, int valueColumn) {}
 
-    private final Raster raster;
+    private final Layout layout;
 
     private final List<OptionMenuEntry<?>> entries = new ArrayList<>();
 
@@ -49,18 +49,18 @@ public class OptionMenu {
 
     private final AnimationTimer drawLoop;
 
-    private KeyCode keyUp = KeyCode.UP;
-    private KeyCode keyDown = KeyCode.DOWN;
+    private final KeyCode keyUp = KeyCode.UP;
+    private final KeyCode keyDown = KeyCode.DOWN;
     private KeyCode keyNextValue = KeyCode.RIGHT;
 
     private final KeyCode[] actionKeys = new KeyCode[NUM_CLIENT_ACTIONS];
     private final String[]  actionTexts = new String[NUM_CLIENT_ACTIONS];
 
-    public OptionMenu(Raster raster) {
-        this.raster = requireNonNull(raster);
+    public OptionMenu(Layout layout) {
+        this.layout = requireNonNull(layout);
 
-        canvas.widthProperty() .bind(scaling.multiply(raster.numTilesX() * WorldMap.TS));
-        canvas.heightProperty().bind(scaling.multiply(raster.numTilesY() * WorldMap.TS));
+        canvas.widthProperty() .bind(scaling.multiply(layout.numTilesX() * WorldMap.TS));
+        canvas.heightProperty().bind(scaling.multiply(layout.numTilesY() * WorldMap.TS));
 
         canvas.focusedProperty().addListener((_, _, _) -> Logger.debug("Option menu canvas has focus"));
 
@@ -127,8 +127,8 @@ public class OptionMenu {
 
     public Pane rootPane() { return root; }
 
-    public Raster raster() {
-        return raster;
+    public Layout layout() {
+        return layout;
     }
 
     public FloatProperty scalingProperty() { return scaling; }
@@ -145,10 +145,6 @@ public class OptionMenu {
 
     public int selectedEntryIndex() {
         return selectedEntryIndex;
-    }
-
-    public OptionMenuEntry<?> selectedEntry(){
-        return entries.isEmpty() ? null : entries.get(selectedEntryIndex);
     }
 
     public String title() {

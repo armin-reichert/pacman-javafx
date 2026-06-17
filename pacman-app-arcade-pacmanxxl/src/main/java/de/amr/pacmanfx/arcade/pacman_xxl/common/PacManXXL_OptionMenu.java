@@ -31,7 +31,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     static final int   MENU_MAX_HEIGHT = 800;
     static final float MENU_REL_HEIGHT = 0.66f;
 
-    static final Raster RASTER = new Raster(42, 34, 6, 20);
+    static final Layout RASTER = new Layout(42, 34, 6, 20);
 
     public record MenuEntries(
         OptionMenuEntry<GameVariantID> gameVariantID,
@@ -71,8 +71,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         addEntry(menuEntries.cutScenesEnabled());
         addEntry(menuEntries.mapOrder());
 
-        chaseAnimation = new ChaseAnimation(raster().numTilesX());
-        chaseAnimation.setY((raster().numTilesY() - 12) * WorldMap.TS);
+        chaseAnimation = new ChaseAnimation(layout().numTilesX());
+        chaseAnimation.setY((layout().numTilesY() - 12) * WorldMap.TS);
         chaseAnimation.scalingProperty().bind(scalingProperty());
 
         canvas.focusedProperty().addListener((_, _, focused) -> {
@@ -153,7 +153,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         // rounded to 2 decimal digits to avoid too much resizing
         return game.ui().window().stage().heightProperty().map(stageHeight -> {
             final double menuHeight = Math.clamp(stageHeight.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
-            final double relHeight = menuHeight / (TS * raster().numTilesY());
+            final double relHeight = menuHeight / (TS * layout().numTilesY());
             // Round scaling to 2 decimal digits to avoid too much resizing
             return Math.round(relHeight * 100.0) / 100.0;
         });
