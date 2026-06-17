@@ -89,7 +89,7 @@ public class PacManXXL_StartPage implements StartPage {
 
     @Override
     public void onEnter() {
-        final GameVariantID selectedGameVariant = menu.options().gameVariantID().value();
+        final GameVariantID selectedGameVariant = menu.menuEntries().gameVariantID().value();
         switch (selectedGameVariant) {
             case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> game.selectGameVariant(selectedGameVariant.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariant);

@@ -39,14 +39,14 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     static final int CHASE_ANIMATION_Y = (NUM_TILES_Y - 12) * WorldMap.TS;
 
-    public record Options(
+    public record MenuEntries(
         OptionMenuEntry<GameVariantID> gameVariantID,
-        OptionMenuEntry<Boolean> enable3D,
-        OptionMenuEntry<Boolean> enableCutScenes,
+        OptionMenuEntry<Boolean> view3DEnabled,
+        OptionMenuEntry<Boolean> cutScenesEnabled,
         OptionMenuEntry<WorldMapSelectionMode> mapOrder
     ) {}
 
-    private final Options options;
+    private final MenuEntries menuEntries;
 
     private final ChaseAnimation chaseAnimation = new ChaseAnimation(NUM_TILES_X);
 
@@ -65,17 +65,17 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         defineAction(1, KeyCode.E, "OPEN EDITOR");
         defineAction(2, KeyCode.ENTER, "START");
 
-        options = new Options(
+        menuEntries = new MenuEntries(
             createGameVariantEntry(),
             createSceneDisplayEntry(),
             createCutScenesEntry(),
             createCustomMapsEntry()
         );
 
-        addEntry(options.gameVariantID());
-        addEntry(options.enable3D());
-        addEntry(options.enableCutScenes());
-        addEntry(options.mapOrder());
+        addEntry(menuEntries.gameVariantID());
+        addEntry(menuEntries.view3DEnabled());
+        addEntry(menuEntries.cutScenesEnabled());
+        addEntry(menuEntries.mapOrder());
 
         chaseAnimation.setY(CHASE_ANIMATION_Y);
         chaseAnimation.scalingProperty().bind(scalingProperty());
@@ -111,11 +111,11 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         mapSelector.loadMapPrototypes();
 
         // Init entries
-        options.gameVariantID().setValue(gameVariant);
-        options.enable3D().setValue(game.ui().settings().d3().view3DEnabledProperty().get());
-        options.enableCutScenes().setValue(gameContext.flow().cutScenesEnabled());
-        options.mapOrder().setValue(mapSelector.selectionMode());
-        options.mapOrder().setEnabled(!mapSelector.customMaps().isEmpty());
+        menuEntries.gameVariantID().setValue(gameVariant);
+        menuEntries.view3DEnabled().setValue(game.ui().settings().d3().view3DEnabledProperty().get());
+        menuEntries.cutScenesEnabled().setValue(gameContext.flow().cutScenesEnabled());
+        menuEntries.mapOrder().setValue(mapSelector.selectionMode());
+        menuEntries.mapOrder().setEnabled(!mapSelector.customMaps().isEmpty());
 
         logMenuState();
 
@@ -125,16 +125,16 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     public void bind() {
         unbind();
-        options.gameVariantID().valueProperty().addListener(this::onGameVariantNameChanged);
-        options.enable3D().valueProperty().addListener(this::onPlay3DSettingsChange);
-        options.enableCutScenes().valueProperty().addListener(this::onCutScenesEnabledSettingsChange);
+        menuEntries.gameVariantID().valueProperty().addListener(this::onGameVariantNameChanged);
+        menuEntries.view3DEnabled().valueProperty().addListener(this::onPlay3DSettingsChange);
+        menuEntries.cutScenesEnabled().valueProperty().addListener(this::onCutScenesEnabledSettingsChange);
         scalingProperty().bind(scaling);
     }
 
     public void unbind() {
-        options.gameVariantID().valueProperty().removeListener(this::onGameVariantNameChanged);
-        options.enable3D().valueProperty().removeListener(this::onPlay3DSettingsChange);
-        options.enable3D().valueProperty().removeListener(this::onCutScenesEnabledSettingsChange);
+        menuEntries.gameVariantID().valueProperty().removeListener(this::onGameVariantNameChanged);
+        menuEntries.view3DEnabled().valueProperty().removeListener(this::onPlay3DSettingsChange);
+        menuEntries.view3DEnabled().valueProperty().removeListener(this::onCutScenesEnabledSettingsChange);
         scalingProperty().unbind();
     }
 
@@ -148,8 +148,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         chaseAnimation.stop();
     }
 
-    public Options options() {
-        return options;
+    public MenuEntries menuEntries() {
+        return menuEntries;
     }
 
     // Private
@@ -230,9 +230,9 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     @Override
     public void logMenuState() {
         Logger.info("Option Menu: ({}, {}, {}, {})",
-            options.gameVariantID().value(),
-            options.enable3D().value() ? "3D" : "2D",
-            "Cut Scenes " + (options.enableCutScenes().value() ? "ON" : "OFF"),
-            options.mapOrder().value());
+            menuEntries.gameVariantID().value(),
+            menuEntries.view3DEnabled().value() ? "3D" : "2D",
+            "Cut Scenes " + (menuEntries.cutScenesEnabled().value() ? "ON" : "OFF"),
+            menuEntries.mapOrder().value());
     }
 }
