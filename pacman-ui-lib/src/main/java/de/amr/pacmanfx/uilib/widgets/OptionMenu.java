@@ -29,10 +29,9 @@ public class OptionMenu {
 
     public static final int NUM_CLIENT_ACTIONS = 2;
 
-    private final int numTilesX;
-    private final int numTilesY;
-    private final int textColumn;
-    private final int valueColumn;
+    public record Raster(int numTilesX, int numTilesY, int textColumn, int valueColumn) {}
+
+    private final Raster raster;
 
     private final List<OptionMenuEntry<?>> entries = new ArrayList<>();
 
@@ -57,14 +56,11 @@ public class OptionMenu {
     private final KeyCode[] actionKeys = new KeyCode[NUM_CLIENT_ACTIONS];
     private final String[]  actionTexts = new String[NUM_CLIENT_ACTIONS];
 
-    public OptionMenu(int numTilesX, int numTilesY, int textColumn, int valueColumn) {
-        this.numTilesX = numTilesX;
-        this.numTilesY = numTilesY;
-        this.textColumn = textColumn;
-        this.valueColumn = valueColumn;
+    public OptionMenu(Raster raster) {
+        this.raster = requireNonNull(raster);
 
-        canvas.widthProperty() .bind(scaling.multiply(numTilesX * WorldMap.TS));
-        canvas.heightProperty().bind(scaling.multiply(numTilesY * WorldMap.TS));
+        canvas.widthProperty() .bind(scaling.multiply(raster.numTilesX() * WorldMap.TS));
+        canvas.heightProperty().bind(scaling.multiply(raster.numTilesY() * WorldMap.TS));
 
         canvas.focusedProperty().addListener((_, _, _) -> Logger.debug("Option menu canvas has focus"));
 
@@ -125,26 +121,14 @@ public class OptionMenu {
 
     public void logMenuState() {}
 
-    public void setKeyDown(KeyCode keyCode) {
-        this.keyDown = requireNonNull(keyCode);
-    }
-
-    public void setKeyUp(KeyCode keyCode) {
-        this.keyUp = requireNonNull(keyCode);
-    }
-
     public void setKeyNextValue(KeyCode keyCode) {
         this.keyNextValue = requireNonNull(keyCode);
     }
 
     public Pane rootPane() { return root; }
 
-    public int numTilesX() {
-        return numTilesX;
-    }
-
-    public int numTilesY() {
-        return numTilesY;
+    public Raster raster() {
+        return raster;
     }
 
     public FloatProperty scalingProperty() { return scaling; }
@@ -181,14 +165,6 @@ public class OptionMenu {
         this.style = requireNonNull(style);
         root.setBackground(Background.fill(style.backgroundFill()));
         root.setBorder(Border.stroke(style.borderStroke()));
-    }
-
-    public int textColumn() {
-        return textColumn;
-    }
-
-    public int valueColumn() {
-        return valueColumn;
     }
 
     /**

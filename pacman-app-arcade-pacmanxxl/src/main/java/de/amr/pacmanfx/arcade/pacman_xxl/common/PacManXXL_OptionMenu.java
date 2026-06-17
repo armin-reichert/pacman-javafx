@@ -31,13 +31,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     static final int   MENU_MAX_HEIGHT = 800;
     static final float MENU_REL_HEIGHT = 0.66f;
 
-    static final int NUM_TILES_X = 42;
-    static final int NUM_TILES_Y = 34;
-
-    static final int TEXT_COLUMN  = 6;
-    static final int VALUE_COLUMN = 20;
-
-    static final int CHASE_ANIMATION_Y = (NUM_TILES_Y - 12) * WorldMap.TS;
+    static final Raster RASTER = new Raster(42, 34, 6, 20);
 
     public record MenuEntries(
         OptionMenuEntry<GameVariantID> gameVariantID,
@@ -48,14 +42,14 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     private final MenuEntries menuEntries;
 
-    private final ChaseAnimation chaseAnimation = new ChaseAnimation(NUM_TILES_X);
+    private final ChaseAnimation chaseAnimation;
 
     private Game game;
 
     private ObservableValue<Double> scaling;
 
     public PacManXXL_OptionMenu() {
-        super(NUM_TILES_X, NUM_TILES_Y, TEXT_COLUMN, VALUE_COLUMN);
+        super(RASTER);
 
         setTitle("Pac-Man XXL");
 
@@ -77,7 +71,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         addEntry(menuEntries.cutScenesEnabled());
         addEntry(menuEntries.mapOrder());
 
-        chaseAnimation.setY(CHASE_ANIMATION_Y);
+        chaseAnimation = new ChaseAnimation(raster().numTilesX());
+        chaseAnimation.setY((raster().numTilesY() - 12) * WorldMap.TS);
         chaseAnimation.scalingProperty().bind(scalingProperty());
 
         canvas.focusedProperty().addListener((_, _, focused) -> {
@@ -158,7 +153,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         // rounded to 2 decimal digits to avoid too much resizing
         return game.ui().window().stage().heightProperty().map(stageHeight -> {
             final double menuHeight = Math.clamp(stageHeight.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
-            final double relHeight = menuHeight / (TS * numTilesY());
+            final double relHeight = menuHeight / (TS * raster().numTilesY());
             // Round scaling to 2 decimal digits to avoid too much resizing
             return Math.round(relHeight * 100.0) / 100.0;
         });
