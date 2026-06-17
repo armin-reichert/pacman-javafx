@@ -15,7 +15,6 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -31,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
  */
-public class PacManXXL_StartPage implements StartPage, ChangeListener<GameVariantID> {
+public class PacManXXL_StartPage implements StartPage {
 
     static final int   MENU_MIN_HEIGHT = 400;
     static final int   MENU_MAX_HEIGHT = 800;
@@ -131,28 +130,25 @@ public class PacManXXL_StartPage implements StartPage, ChangeListener<GameVarian
         return title;
     }
 
-    // ChangeListener<GameVariantID>
-
-    @Override
-    public void changed(ObservableValue<? extends GameVariantID> observable, GameVariantID oldVariantID, GameVariantID newVariantID) {
-        game.selectGameVariant(newVariantID.name());
-    }
-
     // Private area
 
     private void bindMenu() {
         unbindMenu();
-        menu.entryGameVariant().valueProperty().addListener(this);
+        menu.entryGameVariant().valueProperty().addListener(this::onGameVariantNameChanged);
         menu.entryPlay3D().valueProperty().addListener(this::onPlay3DSettingsChange);
         menu.entryCutScenesEnabled().valueProperty().addListener(this::onCutScenesEnabledSettingsChange);
         menu.scalingProperty().bind(scaling);
     }
 
     private void unbindMenu() {
-        menu.entryGameVariant().valueProperty().removeListener(this);
+        menu.entryGameVariant().valueProperty().removeListener(this::onGameVariantNameChanged);
         menu.entryPlay3D().valueProperty().removeListener(this::onPlay3DSettingsChange);
         menu.entryCutScenesEnabled().valueProperty().removeListener(this::onCutScenesEnabledSettingsChange);
         menu.scalingProperty().unbind();
+    }
+
+    private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldVariantID, GameVariantID newVariantID) {
+        game.selectGameVariant(newVariantID.name());
     }
 
     private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
