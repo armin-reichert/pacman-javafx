@@ -31,6 +31,7 @@ import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
+import de.amr.pacmanfx.ui.window.GameTranslationManager;
 import de.amr.pacmanfx.ui.window.GameWindowImpl;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
@@ -124,9 +125,9 @@ public final class GameImpl implements Game {
             new GameWindowImpl(stage, width, height),
             new GameViewManager(),
             new GameSceneManager(),
+            new GameTranslationManager(),
             new SoundManager(),
             new SpriteAnimationManager(60),
-            () -> GameUI_Constants.LOCALIZED_TEXTS,
             new UISettings()
         );
 

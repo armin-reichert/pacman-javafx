@@ -19,9 +19,9 @@ public record GameUI(
     GameWindow window,
     GameViewManager views,
     GameSceneManager gameScenes,
+    TranslationManager translations,
     SoundManager sounds,
     SpriteAnimationManager sprites,
-    TranslationManager translations,
     UISettings settings)
 {
 
