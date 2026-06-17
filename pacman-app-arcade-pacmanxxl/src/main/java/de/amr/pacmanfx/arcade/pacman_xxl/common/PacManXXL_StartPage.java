@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -70,22 +71,24 @@ public class PacManXXL_StartPage implements StartPage {
     @Override
     public void connect(Game game) {
         this.game = requireNonNull(game);
-
-        game.input().keyboard().addStateListener(keyboard -> {
-            if (keyboard.isKeyPressed(KeyCode.E)) {
-                pauseProgressTimer(game);
-                game.actions().editorActions().actionOpenEditor().execute();
-            }
-            else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
-                pauseProgressTimer(game);
-                game.start();
-            }
-            else if (keyboard.isKeyPressed(KeyCode.S)) {
-                game.ui().shortMessage("OK, I shut my mouth");
-                stopTalking(game);
-            }
-        });
+        game.input().keyboard().removeStateListener(keyboardHandler);
+        game.input().keyboard().addStateListener(keyboardHandler);
     }
+
+    private final Keyboard.StateListener keyboardHandler = (Keyboard keyboard) -> {
+        if (keyboard.isKeyPressed(KeyCode.E)) {
+            pauseProgressTimer(game);
+            game.actions().editorActions().actionOpenEditor().execute();
+        }
+        else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
+            pauseProgressTimer(game);
+            game.start();
+        }
+        else if (keyboard.isKeyPressed(KeyCode.S)) {
+            game.ui().shortMessage("OK, I shut my mouth");
+            stopTalking(game);
+        }
+    };
 
     @Override
     public void onEnter() {

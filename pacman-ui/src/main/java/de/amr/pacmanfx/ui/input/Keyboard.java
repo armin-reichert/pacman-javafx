@@ -70,14 +70,24 @@ public final class Keyboard {
 
     public void addStateListener(StateListener stateListener) {
         requireNonNull(stateListener);
-        listeners.add(stateListener);
-        Logger.info("KeyboardStateListener added: {}", stateListener);
+        if (listeners.contains(stateListener)) {
+            Logger.warn("State listener is already registered: {}", stateListener);
+        }
+        else {
+            listeners.add(stateListener);
+            Logger.info("KeyboardStateListener added: {}", stateListener);
+        }
     }
 
     public void removeStateListener(StateListener stateListener) {
         requireNonNull(stateListener);
-        listeners.remove(stateListener);
-        Logger.info("KeyboardStateListener removed: {}", stateListener);
+        boolean removed = listeners.remove(stateListener);
+        if (removed) {
+            Logger.info("KeyboardStateListener removed: {}", stateListener);
+        }
+        else {
+            Logger.warn("State listener not registered: {}", stateListener);
+        }
     }
 
     public Set<KeyCode> pressedKeys() {
