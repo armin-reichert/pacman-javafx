@@ -46,15 +46,6 @@ public class PacManXXL_StartPage implements StartPage {
     private static final int   MENU_MAX_HEIGHT = 800;
     private static final float MENU_REL_HEIGHT = 0.66f;
 
-    private static final OptionMenuStyle DEFAULT_MENU_STYLE = OptionMenuStyle.builder()
-        .titleFont(Ufx.deriveFont(GameUI_Constants.FONT_PAC_FONT_GOOD, 4 * TS))
-        .titleTextFill(ArcadePalette.ARCADE_RED)
-        .textFont(Ufx.deriveFont(GameUI_Constants.FONT_ARCADE_8, TS))
-        .entryTextFill(ArcadePalette.ARCADE_YELLOW)
-        .entryValueFill(ArcadePalette.ARCADE_WHITE)
-        .usageTextFill(ArcadePalette.ARCADE_YELLOW)
-        .build();
-
     // Menu must adapt to selected game variant and global property change and scales with scene resize
 
     private ChangeListener<GameVariantID> gameVariantNameListener;
@@ -91,7 +82,17 @@ public class PacManXXL_StartPage implements StartPage {
 
     public PacManXXL_StartPage() {
         title = "Pac-Man XXL games"; // TODO localize
-        menu.setStyle(DEFAULT_MENU_STYLE);
+
+        menu.setStyle(OptionMenuStyle.builder()
+            .titleFont(Ufx.deriveFont(GameUI_Constants.FONT_PAC_FONT_GOOD, 4 * TS))
+            .titleTextFill(ArcadePalette.ARCADE_RED)
+            .textFont(Ufx.deriveFont(GameUI_Constants.FONT_ARCADE_8, TS))
+            .entryTextFill(ArcadePalette.ARCADE_YELLOW)
+            .entryValueFill(ArcadePalette.ARCADE_WHITE)
+            .usageTextFill(ArcadePalette.ARCADE_YELLOW)
+            .build()
+        );
+
         rootPane.getChildren().add(menu.rootPane());
         rootPane.setBackground(UfxBackgrounds.createWallpaper(WALLPAPER_IMAGE));
 
