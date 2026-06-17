@@ -9,10 +9,11 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
-import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
@@ -20,18 +21,23 @@ import java.util.List;
 
 import static de.amr.pacmanfx.core.GameVariantID.ARCADE_MS_PACMAN_XXL;
 import static de.amr.pacmanfx.core.GameVariantID.ARCADE_PACMAN_XXL;
+import static de.amr.pacmanfx.model.world.WorldMap.TS;
 import static de.amr.pacmanfx.model.world.WorldMapSelectionMode.*;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
 
-    public static final int NUM_TILES_X = 42;
-    public static final int NUM_TILES_Y = 34;
+    static final int   MENU_MIN_HEIGHT = 400;
+    static final int   MENU_MAX_HEIGHT = 800;
+    static final float MENU_REL_HEIGHT = 0.66f;
 
-    public static final int TEXT_COLUMN  = 6;
-    public static final int VALUE_COLUMN = 20;
+    static final int NUM_TILES_X = 42;
+    static final int NUM_TILES_Y = 34;
 
-    public static final int CHASE_ANIMATION_Y = (NUM_TILES_Y - 12) * WorldMap.TS;
+    static final int TEXT_COLUMN  = 6;
+    static final int VALUE_COLUMN = 20;
+
+    static final int CHASE_ANIMATION_Y = (NUM_TILES_Y - 12) * WorldMap.TS;
 
     private final OptionMenuEntry<GameVariantID>           entryGameVariant;
     private final OptionMenuEntry<Boolean>               entryPlay3D;
@@ -106,6 +112,33 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         chaseAnimation.init(currentConfig, canvas, game.ui().sprites().animations());
     }
 
+    public void bind() {
+        unbind();
+        entryGameVariant().valueProperty().addListener(this::onGameVariantNameChanged);
+        entryPlay3D().valueProperty().addListener(this::onPlay3DSettingsChange);
+        entryCutScenesEnabled().valueProperty().addListener(this::onCutScenesEnabledSettingsChange);
+
+        bindScaling();
+    }
+
+    public void unbind() {
+        entryGameVariant().valueProperty().removeListener(this::onGameVariantNameChanged);
+        entryPlay3D().valueProperty().removeListener(this::onPlay3DSettingsChange);
+        entryCutScenesEnabled().valueProperty().removeListener(this::onCutScenesEnabledSettingsChange);
+        scalingProperty().unbind();
+    }
+
+    public void bindScaling() {
+        // rounded to 2 decimal digits to avoid too much resizing
+        final ObservableValue<Double> scaling = game.ui().window().stage().heightProperty().map(stageHeight -> {
+            final double menuHeight = Math.clamp(stageHeight.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
+            final double relHeight = menuHeight / (TS * numTilesY());
+            // Round scaling to 2 decimal digits to avoid too much resizing
+            return Math.round(relHeight * 100.0) / 100.0;
+        });
+        scalingProperty().bind(scaling);
+    }
+
     public void startDrawLoop() {
         super.startDrawLoop();
         chaseAnimation.start();
@@ -129,6 +162,18 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     // Private
+
+    private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldVariantID, GameVariantID newVariantID) {
+        game.selectGameVariant(newVariantID.name());
+    }
+
+    private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
+        game.ui().settings().d3().view3DEnabledProperty().set(newValue);
+    }
+
+    private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
+        game.currentGameContext().flow().setCutScenesEnabled(newValue);
+    }
 
     private OptionMenuEntry<GameVariantID> createGameVariantEntry() {
         final var entry = new OptionMenuEntry<>(

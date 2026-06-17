@@ -15,7 +15,6 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
@@ -32,16 +31,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManXXL_StartPage implements StartPage {
 
-    static final int   MENU_MIN_HEIGHT = 400;
-    static final int   MENU_MAX_HEIGHT = 800;
-    static final float MENU_REL_HEIGHT = 0.66f;
-
     static final String ROOT_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
     static final ResourceManager RM = () -> PacManXXL_PacMan_UIConfig.class;
     static final Image WALLPAPER_IMAGE = RM.loadImage(ROOT_PATH + "graphics/screenshot.png");
     static final Media VOICE = RM.loadMedia(ROOT_PATH + "sound/game-description.mp3");
-
-    private ObservableValue<Double> scaling;
 
     private final StackPane rootPane;
     private final PacManXXL_OptionMenu menu;
@@ -78,14 +71,6 @@ public class PacManXXL_StartPage implements StartPage {
     public void connect(Game game) {
         this.game = requireNonNull(game);
 
-        scaling = game.ui().window().stage().heightProperty().map(stageHeight -> {
-            final double menuHeight = Math.clamp(stageHeight.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
-            final double scaling = menuHeight / TS(menu.numTilesY());
-            return Math.round(scaling * 100.0) / 100.0; // rounded to 2 decimal digits to avoid too much resizing
-        });
-
-        bindMenu();
-
         game.input().keyboard().addStateListener(keyboard -> {
             if (keyboard.isKeyPressed(KeyCode.E)) {
                 pauseProgressTimer(game);
@@ -111,14 +96,15 @@ public class PacManXXL_StartPage implements StartPage {
         }
         game.ui().sounds().playVoice(VOICE);
         menu.init(game);
+        menu.bind();
         menu.requestFocus();
     }
 
     @Override
     public void onExit() {
         stopTalking(game);
+        menu.unbind();
         menu.stopDrawLoop();
-        unbindMenu();
     }
 
     @Override
@@ -132,33 +118,6 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     // Private area
-
-    private void bindMenu() {
-        unbindMenu();
-        menu.entryGameVariant().valueProperty().addListener(this::onGameVariantNameChanged);
-        menu.entryPlay3D().valueProperty().addListener(this::onPlay3DSettingsChange);
-        menu.entryCutScenesEnabled().valueProperty().addListener(this::onCutScenesEnabledSettingsChange);
-        menu.scalingProperty().bind(scaling);
-    }
-
-    private void unbindMenu() {
-        menu.entryGameVariant().valueProperty().removeListener(this::onGameVariantNameChanged);
-        menu.entryPlay3D().valueProperty().removeListener(this::onPlay3DSettingsChange);
-        menu.entryCutScenesEnabled().valueProperty().removeListener(this::onCutScenesEnabledSettingsChange);
-        menu.scalingProperty().unbind();
-    }
-
-    private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldVariantID, GameVariantID newVariantID) {
-        game.selectGameVariant(newVariantID.name());
-    }
-
-    private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        game.ui().settings().d3().view3DEnabledProperty().set(newValue);
-    }
-
-    private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        game.currentGameContext().flow().setCutScenesEnabled(newValue);
-    }
 
     private void pauseProgressTimer(Game game) {
         game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class).pauseProgressTimer();
