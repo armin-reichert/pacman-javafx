@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.beans.property.StringProperty;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.Optional;
@@ -25,6 +26,8 @@ import static java.util.Objects.requireNonNull;
 public interface Game extends GameLifecycle {
 
     Input input();
+
+    void createUI(Stage stage, int width, int height);
 
     GameUI ui();
 

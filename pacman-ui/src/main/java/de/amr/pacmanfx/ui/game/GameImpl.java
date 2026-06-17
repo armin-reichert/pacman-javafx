@@ -40,6 +40,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -70,9 +71,7 @@ public final class GameImpl implements Game {
 
     private final CommonActions commonActions;
 
-    private final GameUI ui;
-
-    private final GameWindowImpl gameWindow;
+    private GameUI ui;
 
     private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
 
@@ -80,14 +79,10 @@ public final class GameImpl implements Game {
 
     private GameContextImpl currentGameContext;
 
-    public GameImpl(PacManGamesMachine machine, GameWindowImpl gameWindow) {
+    public GameImpl(PacManGamesMachine machine) {
         this.machine = requireNonNull(machine);
-        this.gameWindow = requireNonNull(gameWindow);
-
-        this.ui = createUI();
 
         this.commonActions = new CommonActions(this);
-
         this.extensions = new GameExtensions();
         this.prefs = new PreferencesManager(getClass());
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
@@ -98,13 +93,30 @@ public final class GameImpl implements Game {
             currentGameContext.model().hud().creditProperty().bind(coinMechanism().numCoinsProperty());
             updateSettings3D(gameVariant.uiConfig());
         });
+    }
 
-        createGameViews();
+    @Override
+    public void createUI(Stage stage, int width, int height) {
+        final var window = new GameWindowImpl(stage, width, height);
+
+        this.ui = new GameUI(
+            new GameSceneManager(this),
+            new SoundManager(this),
+            new SpriteAnimationManager(60),
+            () -> GameUI_Constants.LOCALIZED_TEXTS,
+            window,
+            new GameViewManager(),
+            new UISettings()
+        );
+
+        ui.views().setView(GameViewID.START_PAGES, new StartPagesView());
+        ui.views().setView(GameViewID.GAMEPLAY, createGamePlayView());
+        ui.views().setEditorViewFactory(this::createEditorSubView);
 
         ui.views().assertView(GameViewID.START_PAGES).connect(this);
         ui.views().assertView(GameViewID.GAMEPLAY).connect(this);
 
-        gameWindow.connect(this);
+        window.connect(this);
     }
 
     public CollisionStrategy collisionStrategy() {
@@ -216,7 +228,7 @@ public final class GameImpl implements Game {
         ui.views().selectStartPagesView();
         ui.views().assertView(GameViewID.START_PAGES, StartPagesView.class).setSelectedIndex(0);
 
-        gameWindow.show();
+        ui.window().show();
 
         startServicesLater();
     }
@@ -271,12 +283,6 @@ public final class GameImpl implements Game {
         });
     }
 
-    private void createGameViews() {
-        ui.views().setView(GameViewID.START_PAGES, new StartPagesView());
-        ui.views().setView(GameViewID.GAMEPLAY, createGamePlayView());
-        ui.views().setEditorViewFactory(this::createEditorSubView);
-    }
-
     private GamePlayView createGamePlayView() {
         final var playView = new GamePlayView(GameUI_Constants.DEFAULT_DASHBOARD_CONFIG);
 
@@ -292,18 +298,6 @@ public final class GameImpl implements Game {
         editorView.editor().setOnQuit(_ -> ui.views().selectStartPagesView());
         editorView.connect(this);
         return editorView;
-    }
-
-    private GameUI createUI() {
-        return new GameUI(
-            new GameSceneManager(this),
-            new SoundManager(this),
-            new SpriteAnimationManager(60),
-            () -> GameUI_Constants.LOCALIZED_TEXTS,
-            gameWindow,
-            new GameViewManager(),
-            new UISettings()
-        );
     }
 
     private GameVariant createGameVariant(String variantName) {

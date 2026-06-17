@@ -8,7 +8,6 @@ import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
-import de.amr.pacmanfx.ui.window.GameWindowImpl;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -56,7 +55,8 @@ public class GameBuilder {
         requireNonNull(stage);
         validateConfigurationData();
 
-        final var game = new GameImpl(machine, new GameWindowImpl(stage, windowConfig.sceneWidth(), windowConfig.sceneHeight()));
+        final var game = new GameImpl(machine);
+        game.createUI(stage, windowConfig.sceneWidth(), windowConfig.sceneHeight());
 
         final StartPagesView startPagesView = game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class);
         for (var factory : startPageFactories) {
