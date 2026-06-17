@@ -2,9 +2,10 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.input;
+package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
