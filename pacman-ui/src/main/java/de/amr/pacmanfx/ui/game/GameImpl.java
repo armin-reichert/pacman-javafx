@@ -133,13 +133,14 @@ public final class GameImpl implements Game {
 
         ui.views().setView(GameViewID.START_PAGES, new StartPagesView());
         ui.views().setView(GameViewID.GAMEPLAY, createGamePlayView());
-        ui.views().setEditorViewFactory(this::createEditorSubView);
+        ui.views().setView(GameViewID.EDITOR, new EditorView());
 
         ui.window().connect(this);
 
         ui.views().connect(this);
         ui.views().assertView(GameViewID.START_PAGES).connect(this);
         ui.views().assertView(GameViewID.GAMEPLAY).connect(this);
+        ui.views().assertView(GameViewID.EDITOR).connect(this);
 
         ui.gameScenes().connect(this);
 
@@ -315,13 +316,6 @@ public final class GameImpl implements Game {
         ui.window().mainScene().heightProperty().addListener(resizeHandler);
 
         return playView;
-    }
-
-    private EditorView createEditorSubView() {
-        final var editorView = new EditorView(ui.window().stage());
-        editorView.editor().setOnQuit(_ -> ui.views().selectStartPagesView());
-        editorView.connect(this);
-        return editorView;
     }
 
     private GameVariant createGameVariant(String variantName) {

@@ -10,7 +10,6 @@ import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
-import org.tinylog.Supplier;
 
 import java.util.EnumMap;
 import java.util.Optional;
@@ -24,7 +23,6 @@ public final class GameViewManager {
 
     private final EnumMap<GameViewID, GameView> views = new EnumMap<>(GameViewID.class);
 
-    private Supplier<EditorView> editorViewFactory;
     private BooleanSupplier editorCanOpen;
 
     public GameViewManager() {}
@@ -125,27 +123,9 @@ public final class GameViewManager {
 
     // Editor view
 
-    public void setEditorViewFactory(Supplier<EditorView> factory) {
-        if (editorViewFactory != null) {
-            throw new IllegalStateException("EditorViewFactory is already set");
-        }
-        this.editorViewFactory = requireNonNull(factory);
-    }
-
     public Optional<EditorView> optEditorView() {
         final EditorView editorView = (EditorView) views.get(GameViewID.EDITOR);
         return Optional.ofNullable(editorView);
-    }
-
-    public void ensureEditorViewCreated() {
-        if (editorViewFactory == null) {
-            throw new IllegalStateException("No editor view factory has been set");
-        }
-        views.computeIfAbsent(GameViewID.EDITOR, _ -> {
-            final EditorView editorView = editorViewFactory.get();
-            Logger.info("Editor view created: {}", editorView);
-            return editorView;
-        });
     }
 
     public boolean trySelectEditorView() {

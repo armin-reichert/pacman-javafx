@@ -9,6 +9,7 @@ import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import javafx.scene.input.KeyCode;
@@ -83,20 +84,12 @@ public class EditorActions {
     }
 
     private Optional<TileMapEditor> openMapEditor() {
-        final GameViewManager subViews = game.ui().views();
-        subViews.ensureEditorViewCreated();
-
-        final TileMapEditor editor = subViews.optEditorView().map(EditorView::editor).orElse(null);
-        if (editor == null) {
-            game.ui().shortMessage("Cannot access the map editor.");
-            return Optional.empty();
-        }
-
-        if (!subViews.trySelectEditorView()) {
+        final EditorView editorView = game.ui().views().assertView(GameViewID.EDITOR, EditorView.class);
+        editorView.ensureEditorCreated(game);
+        if (!game.ui().views().trySelectEditorView()) {
             game.ui().shortMessage("Cannot open the map editor.");
             return Optional.empty();
         }
-
-        return Optional.of(editor);
+        return Optional.of(editorView.editor());
     }
 }
