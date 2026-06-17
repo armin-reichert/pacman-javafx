@@ -49,9 +49,17 @@ public class GameWindowImpl implements GameWindow {
         }
         this.game = requireNonNull(game);
 
-
         mainScene.connect(game);
 
+        titleBinding = createStringBinding(
+            this::composeTitle,
+            game.gameVariantNameProperty(),
+            game.clock().updatesDisabledProperty(),
+            game.ui().views().currentViewIDProperty(),
+            game.ui().gameScenes().currentGameSceneProperty(),
+            game.ui().settings().debugModeOnProperty(),
+            game.ui().settings().d3().view3DEnabledProperty()
+        );
         game.ui().views().currentViewIDProperty().addListener((_, _, viewID) -> updateStageTitle(viewID));
     }
 
@@ -85,15 +93,6 @@ public class GameWindowImpl implements GameWindow {
     }
 
     private void prepareStageForDisplay() {
-        titleBinding = createStringBinding(
-            this::composeTitle,
-            game.gameVariantNameProperty(),
-            game.clock().updatesDisabledProperty(),
-            game.ui().views().currentViewIDProperty(),
-            game.ui().gameScenes().currentGameSceneProperty(),
-            game.ui().settings().debugModeOnProperty(),
-            game.ui().settings().d3().view3DEnabledProperty()
-        );
         stage.titleProperty().bind(titleBinding);
 
         updateStageIcon();

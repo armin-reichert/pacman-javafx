@@ -101,7 +101,7 @@ public final class GameImpl implements Game {
             new GameWindowImpl(stage, width, height),
             new GameViewManager(),
             new GameSceneManager(),
-            new SoundManager(this),
+            new SoundManager(),
             new SpriteAnimationManager(60),
             () -> GameUI_Constants.LOCALIZED_TEXTS,
             new UISettings()
@@ -111,12 +111,12 @@ public final class GameImpl implements Game {
         ui.views().setView(GameViewID.GAMEPLAY, createGamePlayView());
         ui.views().setEditorViewFactory(this::createEditorSubView);
 
-        ui.views().assertView(GameViewID.START_PAGES).connect(this);
-        ui.views().assertView(GameViewID.GAMEPLAY).connect(this);
-
         ui.window().connect(this);
         ui.views().connect(this);
+        ui.views().assertView(GameViewID.START_PAGES).connect(this);
+        ui.views().assertView(GameViewID.GAMEPLAY).connect(this);
         ui.gameScenes().connect(this);
+        ui.sounds().connect(this);
     }
 
     public CollisionStrategy collisionStrategy() {

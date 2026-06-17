@@ -34,13 +34,15 @@ public class SoundManager implements Disposable {
 
     private final Map<SoundID, SoundResource> soundMap = new HashMap<>();
 
-    private final Game game;
+    private MediaPlayer voicePlayer;
 
-    public SoundManager(Game game) {
+    private Game game;
+
+    public SoundManager() {}
+
+    public void connect(Game game) {
         this.game = requireNonNull(game);
     }
-
-    private MediaPlayer voicePlayer;
 
     public void playVoice(Media voiceMedia) {
         requireNonNull(voiceMedia);
