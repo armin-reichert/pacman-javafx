@@ -56,40 +56,11 @@ public class PacManXXL_StartPage implements StartPage {
         .build();
 
     // Menu must adapt to selected game variant and global property change and scales with scene resize
-    private class MenuUpdater {
 
-        private ChangeListener<GameVariantID> gameVariantNameListener;
-        private ChangeListener<Boolean> cutScenesEnabledListener;
-        private ChangeListener<Boolean> play3DListener;
-        private ObservableValue<Double> scaling;
-
-        public void connect(Game game) {
-            gameVariantNameListener = (_, _, variant) -> game.selectGameVariant(variant.name());
-            play3DListener = (_, _, enable3D) -> game.ui().settings().d3().view3DEnabledProperty().set(enable3D);
-            cutScenesEnabledListener = (_, _, enableCutScenes) -> game.currentGameContext().flow().setCutScenesEnabled(enableCutScenes);
-
-            scaling = game.ui().window().stage().heightProperty().map(stageHeight -> {
-                final double menuHeight = Math.clamp(stageHeight.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
-                final double scaling = menuHeight / TS(menu.numTilesY());
-                return Math.round(scaling * 100.0) / 100.0; // rounded to 2 decimal digits to avoid too much resizing
-            });
-        }
-
-        public void update() {
-            clear();
-            menu.entryGameVariant().valueProperty().addListener(gameVariantNameListener);
-            menu.entryPlay3D().valueProperty().addListener(play3DListener);
-            menu.entryCutScenesEnabled().valueProperty().addListener(cutScenesEnabledListener);
-            menu.scalingProperty().bind(scaling);
-        }
-
-        public void clear() {
-            menu.entryGameVariant().valueProperty().removeListener(gameVariantNameListener);
-            menu.entryPlay3D().valueProperty().removeListener(play3DListener);
-            menu.entryCutScenesEnabled().valueProperty().removeListener(cutScenesEnabledListener);
-            menu.scalingProperty().unbind();
-        }
-    }
+    private ChangeListener<GameVariantID> gameVariantNameListener;
+    private ChangeListener<Boolean> cutScenesEnabledListener;
+    private ChangeListener<Boolean> play3DListener;
+    private ObservableValue<Double> scaling;
 
     private class KeyboardInputHandler implements Keyboard.StateListener{
 
@@ -116,7 +87,6 @@ public class PacManXXL_StartPage implements StartPage {
     private Game game;
     private final String title;
 
-    private final MenuUpdater menuUpdater = new MenuUpdater();
     private final KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler();
 
     public PacManXXL_StartPage() {
@@ -135,8 +105,20 @@ public class PacManXXL_StartPage implements StartPage {
     @Override
     public void connect(Game game) {
         this.game = requireNonNull(game);
-        menuUpdater.connect(game);
-        menuUpdater.update();
+
+        gameVariantNameListener = (_, _, variant) -> game.selectGameVariant(variant.name());
+
+        play3DListener = (_, _, enable3D) -> game.ui().settings().d3().view3DEnabledProperty().set(enable3D);
+
+        cutScenesEnabledListener = (_, _, enableCutScenes) -> game.currentGameContext().flow().setCutScenesEnabled(enableCutScenes);
+
+        scaling = game.ui().window().stage().heightProperty().map(stageHeight -> {
+            final double menuHeight = Math.clamp(stageHeight.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
+            final double scaling = menuHeight / TS(menu.numTilesY());
+            return Math.round(scaling * 100.0) / 100.0; // rounded to 2 decimal digits to avoid too much resizing
+        });
+
+        bindMenu();
         game.input().keyboard().addStateListener(keyboardInputHandler);
     }
 
@@ -155,7 +137,7 @@ public class PacManXXL_StartPage implements StartPage {
     public void onExit() {
         stopTalking(game);
         menu.stopDrawLoop();
-        menuUpdater.clear();
+        unbindMenu();
     }
 
     @Override
@@ -169,6 +151,21 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     // Private area
+
+    private void bindMenu() {
+        unbindMenu();
+        menu.entryGameVariant().valueProperty().addListener(gameVariantNameListener);
+        menu.entryPlay3D().valueProperty().addListener(play3DListener);
+        menu.entryCutScenesEnabled().valueProperty().addListener(cutScenesEnabledListener);
+        menu.scalingProperty().bind(scaling);
+    }
+
+    private void unbindMenu() {
+        menu.entryGameVariant().valueProperty().removeListener(gameVariantNameListener);
+        menu.entryPlay3D().valueProperty().removeListener(play3DListener);
+        menu.entryCutScenesEnabled().valueProperty().removeListener(cutScenesEnabledListener);
+        menu.scalingProperty().unbind();
+    }
 
     private void pauseProgressTimer(Game game) {
         game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class).pauseProgressTimer();
