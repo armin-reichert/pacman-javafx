@@ -141,5 +141,4 @@ public final class GameViewManager {
         }
         return false;
     }
-
 }
