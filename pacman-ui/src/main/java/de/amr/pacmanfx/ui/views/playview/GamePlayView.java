@@ -118,8 +118,6 @@ public class GamePlayView implements GameView {
             settings.miniView().activeProperty(),
             game.ui().gameScenes().currentGameSceneProperty()
         ));
-
-        dashboard.connect(game);
     }
 
 

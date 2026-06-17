@@ -82,6 +82,7 @@ public abstract class DashboardSection extends TitledPane {
     public Game game() {
         return dashboard.game();
     }
+
     public void update() {
         infoTexts.forEach(DynamicInfoText::update);
     }
