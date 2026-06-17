@@ -9,7 +9,6 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.window.GameWindow;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -28,10 +27,10 @@ public record GameUI(
 {
 
     public void connect(Game game) {
-        window().connect(game);
-        views().connect(game);
-        gameScenes().connect(game);
-        sounds().connect(game);
+        window.connect(game);
+        views.connect(game);
+        gameScenes.connect(game);
+        sounds.connect(game);
     }
 
     /**
@@ -44,7 +43,7 @@ public record GameUI(
     public void shortMessage(Duration duration, String message, Object... args) {
         requireNonNull(duration);
         requireNonNull(message);
-        window().mainScene().flashMessageManager().showMessage(message.formatted(args), duration.toSeconds());
+        window.mainScene().flashMessageManager().showMessage(message.formatted(args), duration.toSeconds());
     }
 
     /**
@@ -54,10 +53,10 @@ public record GameUI(
      * @param args    formatting arguments
      */
     public void shortMessage(String message, Object... args) {
-        shortMessage(settings().flashMessageDuration(), message, args);
+        shortMessage(settings.flashMessageDuration(), message, args);
     }
 
     public void clearMessage() {
-        window().mainScene().flashMessageManager().clearMessage();
+        window.mainScene().flashMessageManager().clearMessage();
     }
 }
