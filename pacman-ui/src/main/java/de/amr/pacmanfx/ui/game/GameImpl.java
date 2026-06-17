@@ -254,7 +254,7 @@ public final class GameImpl implements Game {
         ui.views().selectStartPagesView();
         ui.views().assertView(GameViewID.START_PAGES, StartPagesView.class).setSelectedIndex(0);
 
-        // Dashboard sections are created late, so connect them here
+        // TODO: Dashboard expects current game view being already being set when connected
         ui.views().gamePlayView().dashboard().connect(this);
 
         ui.window().show();
