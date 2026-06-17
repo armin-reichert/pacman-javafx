@@ -51,20 +51,13 @@ public class GameWindowImpl implements GameWindow {
 
         mainScene.connect(game);
 
-        // Some status icons are bound to the game model of the *current* game variant
-        game.gameVariantNameProperty().addListener((_, _, _) -> {
-            //TODO This does not belong here
-            game.ui().views().gamePlayView().gameSceneFrame().clearCanvas();
-        });
-
-        // Adapt stage title to current game view
-        game.ui().views().currentViewIDProperty().addListener(
-            (_, _, viewID) -> updateStageTitle(viewID));
+        game.ui().views().currentViewIDProperty().addListener((_, _, viewID) -> updateStageTitle(viewID));
     }
 
     @Override
     public void show() {
         prepareStageForDisplay(game);
+        stage.setScene(mainScene);
         stage().centerOnScreen();
         stage().show();
     }
@@ -94,7 +87,6 @@ public class GameWindowImpl implements GameWindow {
     private void prepareStageForDisplay(Game game) {
         stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
         stage.setMinHeight(GameUI_Constants.MIN_STAGE_HEIGHT);
-        stage.setScene(mainScene);
         stage.titleProperty().bind(stageTitleBinding);
         updateStageIcon(game);
         registerIconUpdater(game);

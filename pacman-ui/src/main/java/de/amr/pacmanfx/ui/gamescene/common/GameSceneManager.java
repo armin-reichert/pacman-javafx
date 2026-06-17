@@ -226,41 +226,42 @@ public class GameSceneManager {
     private void embedGameScene2D(Game game, GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
         final GameMainScene mainScene = game.ui().window().mainScene();
         final GamePlayView playView = game.ui().views().gamePlayView();
-        final DecorationPane decorationPane = playView.gameSceneFrame();
+        final DecorationPane frame = playView.gameSceneFrame();
 
         gameScene2D.backgroundColorProperty().bind(game.ui().settings().canvasBackgroundColorProperty());
 
         final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
         if (decorated) {
-            decorationPane.newCanvas(); //TODO check why creating a new canvas is needed
-
-            decorationPane.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(UfxBackgrounds::paintBackground));
+            frame.newCanvas(); //TODO check why creating a new canvas is needed
+            frame.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(UfxBackgrounds::paintBackground));
 
             // set unscaled decoration pane size to game scene (=world map) size
-            decorationPane.unscaledWidthProperty().bind(gameScene2D.unscaledWidthProperty());
-            decorationPane.unscaledHeightProperty().bind(gameScene2D.unscaledHeightProperty());
+            frame.unscaledWidthProperty().bind(gameScene2D.unscaledWidthProperty());
+            frame.unscaledHeightProperty().bind(gameScene2D.unscaledHeightProperty());
 
             // Limit scaling
-            gameScene2D.scalingProperty().bind(decorationPane.scalingProperty().map(
+            gameScene2D.scalingProperty().bind(frame.scalingProperty().map(
                 scaling -> Math.min(scaling.doubleValue(), GamePlayView.MAX_GAME_SCENE_SCALING)));
 
-            decorationPane.stretchTo(mainScene.getWidth(), mainScene.getHeight());
+            frame.stretchTo(mainScene.getWidth(), mainScene.getHeight());
 
-            playView.setGameSceneContent(decorationPane);
+            playView.setGameSceneContent(frame);
         }
         else {
             // Undecorated game scene taking complete height
-            decorationPane.canvas().heightProperty().bind(mainScene.heightProperty());
+            frame.canvas().heightProperty().bind(mainScene.heightProperty());
 
-            decorationPane.canvas().widthProperty().bind(mainScene.heightProperty()
+            frame.canvas().widthProperty().bind(mainScene.heightProperty()
                 .map(h -> h.doubleValue() * gameScene2D.aspectRatio()));
+
 
             gameScene2D.scalingProperty().bind(mainScene.heightProperty().divide(gameScene2D.unscaledHeight()));
 
-            playView.setGameSceneContent(decorationPane.canvas());
+            playView.setGameSceneContent(frame.canvas());
         }
 
-        gameScene2D.setCanvas(decorationPane.canvas());
+        gameScene2D.setCanvas(frame.canvas());
         playView.updateGameSceneRenderers(gameScene2D);
+        frame.clearCanvas();
     }
 }
