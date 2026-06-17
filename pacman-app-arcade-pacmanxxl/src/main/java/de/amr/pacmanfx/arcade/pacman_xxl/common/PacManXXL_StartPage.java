@@ -17,6 +17,7 @@ import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
@@ -118,7 +119,6 @@ public class PacManXXL_StartPage implements StartPage {
     private final MenuUpdater menuUpdater = new MenuUpdater();
     private final KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler();
 
-
     public PacManXXL_StartPage() {
         title = "Pac-Man XXL games"; // TODO localize
         menu.setStyle(DEFAULT_MENU_STYLE);
@@ -127,10 +127,7 @@ public class PacManXXL_StartPage implements StartPage {
 
         rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
             if (hasFocus) {
-                menu.init(game);
-                menuUpdater.update();
-                game.input().keyboard().removeStateListener(keyboardInputHandler);
-                game.input().keyboard().addStateListener(keyboardInputHandler);
+                Platform.runLater(menu::requestFocus);
             }
         });
     }
@@ -140,6 +137,7 @@ public class PacManXXL_StartPage implements StartPage {
         this.game = requireNonNull(game);
         menuUpdater.connect(game);
         menuUpdater.update();
+        game.input().keyboard().addStateListener(keyboardInputHandler);
     }
 
     @Override
@@ -151,7 +149,6 @@ public class PacManXXL_StartPage implements StartPage {
         }
         menu.init(game);
         game.ui().sounds().playVoice(VOICE);
-        game.input().keyboard().addStateListener(keyboardInputHandler);
     }
 
     @Override
@@ -159,7 +156,6 @@ public class PacManXXL_StartPage implements StartPage {
         stopTalking(game);
         menu.stopDrawLoop();
         menuUpdater.clear();
-        game.input().keyboard().removeStateListener(keyboardInputHandler);
     }
 
     @Override
@@ -173,7 +169,6 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     // Private area
-
 
     private void pauseProgressTimer(Game game) {
         game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class).pauseProgressTimer();

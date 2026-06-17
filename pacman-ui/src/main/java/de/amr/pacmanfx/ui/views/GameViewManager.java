@@ -33,15 +33,17 @@ public final class GameViewManager {
         requireNonNull(game);
 
         currentViewIDProperty().addListener((_, oldID, newID) -> {
+            game.ui().clearMessage();
+
             if (oldID != null) {
                 assertView(oldID).onExit();
             }
 
             final GameView newView = assertView(newID);
-            newView.onEnter();
-
             game.ui().window().mainScene().replaceGameView(newView);
-            game.ui().clearMessage();
+
+            newView.onEnter();
+            newView.rootPane().requestFocus();
         });
 
         editorCanOpen = () -> {
@@ -61,7 +63,6 @@ public final class GameViewManager {
         views.put(viewID, gameView);
         Logger.info("Game view id='{}' set to {}", viewID, gameView);
     }
-
 
     public GameView assertView(GameViewID viewID) {
         return assertView(viewID, GameView.class);
