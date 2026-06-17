@@ -117,6 +117,8 @@ public final class GameImpl implements Game {
         ui.views().assertView(GameViewID.GAMEPLAY).connect(this);
         ui.gameScenes().connect(this);
         ui.sounds().connect(this);
+
+        load3DAssets();
     }
 
     public CollisionStrategy collisionStrategy() {
@@ -217,16 +219,17 @@ public final class GameImpl implements Game {
 
     @Override
     public void showUI(GameVariantID variantID) {
+
+        //TODO this is still a bit messy
+
         selectGameVariant(variantID.name());
 
-        load3DAssets();
         initGameClock();
         initGameVariantAndRegisterChangeHandler();
         initProperties();
 
         ui.views().selectStartPagesView();
         ui.views().assertView(GameViewID.START_PAGES, StartPagesView.class).setSelectedIndex(0);
-
         ui.window().show();
 
         startServicesLater();
