@@ -3,36 +3,32 @@
  */
 package de.amr.pacmanfx.uilib.widgets.startbutton;
 
-import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Cursor;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.uilib.UfxBackgrounds.roundedBackground;
-import static java.util.Objects.requireNonNull;
+import java.net.URL;
 
 /**
- * Rounded, transparent button-like pane. Can certainly also be realized with a standard button but had been
- * created for the WebFX version at the time because WebFX didn't support rounded buttons.
+ * Rounded, semi-transparent button.
  */
 public class GameStartButton extends Control {
+
+    public static final String STYLESHEET = "/de/amr/pacmanfx/uilib/widgets/startbutton/game-start-button.css";
 
     private static final Runnable DEFAULT_ACTION = () -> Logger.info("No action assigned");
 
     private final ObjectProperty<Runnable> onAction = new SimpleObjectProperty<>(DEFAULT_ACTION);
     private final ObjectProperty<String> text = new SimpleObjectProperty<>("");
     private final ObjectProperty<Font> font = new SimpleObjectProperty<>(Font.font(20));
+
+    public GameStartButton() {
+        this("");
+    }
 
     public GameStartButton(String text) {
         this.text.set(text);
@@ -49,11 +45,9 @@ public class GameStartButton extends Control {
 
     @Override
     public String getUserAgentStylesheet() {
-        return GameStartButton.class
-            .getResource("/de/amr/pacmanfx/uilib/widgets/startbutton/game-start-button.css")
-            .toExternalForm();
+        final URL url = GameStartButton.class.getResource(STYLESHEET);
+        return url != null ? url.toExternalForm() : null;
     }
-
 
     @Override
     protected Skin<?> createDefaultSkin() {
@@ -65,7 +59,9 @@ public class GameStartButton extends Control {
 
     public ObjectProperty<String> textProperty() { return text; }
     public String getText() { return text.get(); }
+    public void setText(String s) { text.set(s); }
 
     public ObjectProperty<Font> fontProperty() { return font; }
     public Font getFont() { return font.get(); }
+    public void setFont(Font f) { font.set(f); }
 }

@@ -4,37 +4,35 @@ import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
+import javafx.scene.Node;
 import javafx.scene.control.SkinBase;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 public class GameStartButtonSkin extends SkinBase<GameStartButton> {
 
-    private final StackPane root = new StackPane();
+    private final Pane root = new StackPane();
     private final Animation pulse;
 
     public GameStartButtonSkin(GameStartButton control) {
         super(control);
 
-        Text textNode = new Text();
-        textNode.textProperty().bind(control.textProperty());
-        textNode.fontProperty().bind(control.fontProperty());
-        textNode.setFill(Color.WHITE);
-        textNode.setEffect(new DropShadow(3, Color.color(0.2, 0.2, 0.2)));
+        Text text = new Text();
+        text.textProperty().bind(control.textProperty());
+        text.fontProperty().bind(control.fontProperty());
+        text.setFill(Color.WHITE);
 
-        root.getChildren().add(textNode);
+        root.getChildren().add(text);
+
         root.getStyleClass().add("game-start-button-container");
 
+        // Without this the button fill the complete area
         root.setPrefSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
         root.setMaxSize(StackPane.USE_PREF_SIZE, StackPane.USE_PREF_SIZE);
-
-        Logger.debug(root.getCssMetaData());
-
 
         root.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
@@ -65,7 +63,7 @@ public class GameStartButtonSkin extends SkinBase<GameStartButton> {
         getChildren().add(root);
     }
 
-    private Animation createPulseAnimation(StackPane node) {
+    private Animation createPulseAnimation(Node node) {
         var up = new ScaleTransition(Duration.seconds(0.4), node);
         up.setToX(1.15);
         up.setToY(1.15);
