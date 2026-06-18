@@ -53,11 +53,15 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         final TranslationManager translator = game.ui().translations();
         final UISettings3D settings3D = game.ui().settings().d3();
 
-        addLocalizedTitleItem(this, translator, "scene_display");
-        addLocalizedActionItem(this, translator, game.actions().uiSettingsActions().actionTogglePlayScene2D3D(), "use_2D_scene");
-        addLocalizedCheckBox(this, translator, game.ui().settings().miniView().activeProperty(), "pip");
+        addLocalizedTitleItem(this, translator, "context_menu.scene_display");
 
-        addLocalizedTitleItem(this, translator, "select_perspective");
+        addLocalizedActionItem(this, translator,
+            game.actions().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
+
+        addLocalizedCheckBox(this, translator,
+            game.ui().settings().miniView().activeProperty(), "context_menu.pip");
+
+        addLocalizedTitleItem(this, translator, "context_menu.select_perspective");
         for (PerspectiveID id : PerspectiveID.values()) {
             final RadioMenuItem item = addLocalizedRadioButton(this, translator, "perspective_id_" + id.name());
             item.setUserData(id);
@@ -70,13 +74,13 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
             item.setOnAction(_ -> settings3D.cameraPerspectiveIdProperty().set(id));
         }
 
-        addLocalizedTitleItem(this, translator, "pacman");
-        addLocalizedCheckBox(this, translator, gameModel.cheats().pacUsingAutopilotProperty(), "autopilot");
-        addLocalizedCheckBox(this, translator, gameModel.cheats().pacImmuneProperty(), "immunity");
+        addLocalizedTitleItem(this, translator, "context_menu.pacman");
+        addLocalizedCheckBox(this, translator, gameModel.cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
+        addLocalizedCheckBox(this, translator, gameModel.cheats().pacImmuneProperty(), "context_menu.immunity");
 
         addSeparator(this);
-        addLocalizedCheckBox(this, translator, game.ui().settings().mutedProperty(), "muted");
-        addLocalizedActionItem(this, translator, game.actions().gameFlowActions().actionQuit(), "quit");
+        addLocalizedCheckBox(this, translator, game.ui().settings().mutedProperty(), "context_menu.muted");
+        addLocalizedActionItem(this, translator, game.actions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         settings3D.cameraPerspectiveIdProperty().addListener(perspectiveListener);
     }

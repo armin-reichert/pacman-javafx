@@ -179,11 +179,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
         final var contextMenu = new ContextMenu();
 
-        final RadioMenuItem miScaledToFit = addLocalizedRadioButton(contextMenu, translations, "scaled_to_fit");
+        final RadioMenuItem miScaledToFit = addLocalizedRadioButton(contextMenu, translations, "context_menu.scaled_to_fit");
         miScaledToFit.setSelected(displayMode == SceneDisplay.SCALED_TO_FIT);
         miScaledToFit.setOnAction(_ -> uiSettings.playSceneDisplay.set(SceneDisplay.SCALED_TO_FIT));
 
-        final RadioMenuItem miScrolling = addLocalizedRadioButton(contextMenu, translations, "scrolling");
+        final RadioMenuItem miScrolling = addLocalizedRadioButton(contextMenu, translations, "context_menu.scrolling");
         miScrolling.setSelected(displayMode == SCROLLING);
         miScrolling.setOnAction(_ -> uiSettings.playSceneDisplay.set(SCROLLING));
 
@@ -191,12 +191,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         miScaledToFit.setToggleGroup(toggleGroup);
         miScrolling.setToggleGroup(toggleGroup);
 
-        addLocalizedTitleItem(contextMenu, translations, "pacman");
-        addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacUsingAutopilotProperty(), "autopilot");
-        addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "immunity");
+        addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
+        addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
+        addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "context_menu.immunity");
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, game().ui().settings().mutedProperty(), "muted");
-        addLocalizedActionItem(contextMenu, translations, game().actions().gameFlowActions().actionQuit(), "quit");
+        addLocalizedCheckBox(contextMenu, translations, game().ui().settings().mutedProperty(), "context_menu.muted");
+        addLocalizedActionItem(contextMenu, translations, game().actions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }

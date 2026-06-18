@@ -62,8 +62,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
         final CheatActions cheatActions = game().actions().cheatActions();
 
         final var contextMenu = new ContextMenu();
-        addLocalizedTitleItem(contextMenu, translations, "pacman");
-        addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacUsingAutopilotProperty(), "autopilot").setOnAction(e -> {
+        addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
+        addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
                 cheatActions.actionActivateAutopilot().execute();
@@ -71,7 +71,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
                 cheatActions.actionDeactivateAutopilot().execute();
             }
         });
-        addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "immunity").setOnAction(e -> {
+        addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "context_menu.immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
                 cheatActions.actionActivateImmunity().execute();
@@ -80,8 +80,8 @@ public class Arcade_PlayScene2D extends GameScene2D {
             }
         });
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, game().ui().settings().mutedProperty(), "muted");
-        addLocalizedActionItem(contextMenu, translations, game().actions().gameFlowActions().actionQuit(), "quit");
+        addLocalizedCheckBox(contextMenu, translations, game().ui().settings().mutedProperty(), "context_menu.muted");
+        addLocalizedActionItem(contextMenu, translations, game().actions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }

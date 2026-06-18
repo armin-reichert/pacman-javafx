@@ -92,7 +92,7 @@ public class UISettingsActions {
                 toggleBooleanProperty(game.ui().settings().miniView().activeProperty());
                 if (!game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
                     final String msg = game.ui().translations().translate(
-                        game.ui().settings().miniView().activeProperty().get() ? "pip_on" : "pip_off");
+                        game.ui().settings().miniView().activeProperty().get() ? "flash.pip_on" : "flash.pip_off");
                     game.ui().shortMessage(msg);
                 }
             }
@@ -104,7 +104,8 @@ public class UISettingsActions {
                 toggleBooleanProperty(game.ui().settings().d3().view3DEnabledProperty());
                 final boolean is3DEnabled = game.ui().settings().d3().view3DEnabledProperty().get();
                 if (!inPlayScene()) {
-                    game.ui().shortMessage(game.ui().translations().translate(is3DEnabled ? "use_3D_scene" : "use_2D_scene"));
+                    game.ui().shortMessage(game.ui().translations().translate(is3DEnabled
+                        ? "flash.use_3D_scene" : "flash.use_2D_scene"));
                 }
                 if (isLevelPlaying()) {
                     game.ui().gameScenes().forceGameSceneUpdate();

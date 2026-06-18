@@ -50,7 +50,7 @@ public final class CheatActions {
                 gameModel.lives().add(3);
                 gameModel.cheats().notifyCheatUsed();
 
-                final String msg = game.ui().translations().translate("message.cheat_add_lives", gameModel.lives().count());
+                final String msg = game.ui().translations().translate("flash.cheat_add_lives", gameModel.lives().count());
                 game.ui().shortMessage(msg);
             }
 
@@ -266,7 +266,8 @@ public final class CheatActions {
 
         cheats.pacUsingAutopilotProperty().set(auto);
 
-        game.ui().shortMessage(game.ui().translations().translate(auto ? "autopilot_on" : "autopilot_off"));
+        game.ui().shortMessage(game.ui().translations().translate(auto
+            ? "flash.autopilot_on" : "flash.autopilot_off"));
         game.ui().sounds().playVoice(auto ? GameUI_Constants.VOICE_AUTOPILOT_ON : GameUI_Constants.VOICE_AUTOPILOT_OFF);
     }
 
@@ -275,7 +276,8 @@ public final class CheatActions {
 
         cheats.pacImmuneProperty().set(immune);
 
-        game.ui().shortMessage(game.ui().translations().translate(immune ? "player_immunity_on" : "player_immunity_off"));
+        game.ui().shortMessage(game.ui().translations().translate(immune
+            ? "flash.player_immunity_on" : "flash.player_immunity_off"));
         game.ui().sounds().playVoice(immune ? GameUI_Constants.VOICE_IMMUNITY_ON : GameUI_Constants.VOICE_IMMUNITY_OFF);
     }
 

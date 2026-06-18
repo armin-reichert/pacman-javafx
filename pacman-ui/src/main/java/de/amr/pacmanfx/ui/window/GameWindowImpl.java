@@ -102,7 +102,7 @@ public class GameWindowImpl implements GameWindow {
     private String composeTitle() {
         final Optional<GameView> optCurrentGameView = game.ui().views().optCurrentView();
         return optCurrentGameView.isEmpty()
-            ? game.ui().translations().translate("view.missing") // Should never happen
+            ? game.ui().translations().translate("error.view_missing") // Should never happen
             : optCurrentGameView.get().optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene());
     }
 
