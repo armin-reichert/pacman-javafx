@@ -79,6 +79,8 @@ public final class GameImpl implements Game {
 
     private GameContextImpl currentGameContext;
 
+    private final GlobalGameEventHandler globalGameEventHandler = new GlobalGameEventHandler(this);
+
     public GameImpl(PacManGamesMachine machine) {
         this.machine = requireNonNull(machine);
 
@@ -88,34 +90,6 @@ public final class GameImpl implements Game {
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
         gameVariantName.addListener((_, oldName, newName) -> onGameVariantNameChanged(oldName, newName));
-    }
-
-    private final GlobalGameEventHandler globalGameEventHandler = new GlobalGameEventHandler(this);
-
-    private void onGameVariantNameChanged(String oldVariantName, String newVariantName) {
-        if (oldVariantName != null) {
-            exitGameVariant(oldVariantName);
-        }
-        if (newVariantName != null) {
-            enterGameVariant(newVariantName);
-        }
-    }
-
-    private void exitGameVariant(String variantName) {
-        ui().sounds().dispose();
-        gameVariant(variantName).uiConfig().dispose();
-        currentGameContext.flow().removeGameEventListener(globalGameEventHandler);
-    }
-
-    private void enterGameVariant(String variantName) {
-        final GameVariant gameVariant = gameVariant(variantName);
-        gameVariant.uiConfig().init(this);
-        updateSettings3D(gameVariant.uiConfig());
-
-        // create new game context for current game variant
-        currentGameContext = new GameContextImpl(this, gameVariant);
-        currentGameContext.model().hud().creditProperty().bind(coinMechanism().numCoinsProperty());
-        currentGameContext.flow().addGameEventListener(globalGameEventHandler);
     }
 
     @Override
@@ -274,7 +248,7 @@ public final class GameImpl implements Game {
             ui.gameScenes().currentGameSceneProperty().set(null);
         });
         //TODO reconsider this
-        currentGameContext.model().prepareNewGame();
+//        currentGameContext.model().prepareNewGame();
 
         ui.sounds().stopAll();
 
@@ -306,6 +280,32 @@ public final class GameImpl implements Game {
             Logger.error("*** SOMETHING VERY BAD HAPPENED:");
             Logger.error(reason);
         });
+    }
+
+    private void onGameVariantNameChanged(String oldVariantName, String newVariantName) {
+        if (oldVariantName != null) {
+            exitGameVariant(oldVariantName);
+        }
+        if (newVariantName != null) {
+            enterGameVariant(newVariantName);
+        }
+    }
+
+    private void exitGameVariant(String variantName) {
+        ui.sounds().dispose();
+        gameVariant(variantName).uiConfig().dispose();
+        currentGameContext.flow().removeGameEventListener(globalGameEventHandler);
+    }
+
+    private void enterGameVariant(String variantName) {
+        final GameVariant gameVariant = gameVariant(variantName);
+        gameVariant.uiConfig().init(this);
+        updateSettings3D(gameVariant.uiConfig());
+
+        // create new game context for current game variant
+        currentGameContext = new GameContextImpl(this, gameVariant);
+        currentGameContext.model().hud().creditProperty().bind(coinMechanism().numCoinsProperty());
+        currentGameContext.flow().addGameEventListener(globalGameEventHandler);
     }
 
     private GameVariant createGameVariant(String variantName) {
