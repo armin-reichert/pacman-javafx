@@ -247,24 +247,21 @@ public final class GameImpl implements Game {
             ui.gameScenes().removeFromPlayView(gameScene);
             ui.gameScenes().currentGameSceneProperty().set(null);
         });
-        //TODO reconsider this
-//        currentGameContext.model().prepareNewGame();
 
         ui.sounds().stopAll();
 
         clock().stop();
         clock().setTargetFrameRate(GameRules.NUM_TICKS_PER_SEC);
+
         Logger.info("Game STOPPED!");
     }
 
     @Override
     public void terminate() {
-        Logger.info("Application is terminated now. There is no way back!");
         stop();
-        ui.sprites().stopAnimationTimer();
-        ui.sprites().animations().clear();
-        ui.window().mainScene().flashMessageManager().stopAnimationTimer();
+        ui.terminate();
         watchdog.dispose();
+        Logger.info("Application terminated. There is no way back!");
     }
 
     // Private area, no trespassing!

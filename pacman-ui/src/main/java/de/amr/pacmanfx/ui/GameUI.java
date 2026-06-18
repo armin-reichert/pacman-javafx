@@ -33,6 +33,12 @@ public record GameUI(
         sounds.connect(game);
     }
 
+    public void terminate() {
+        sprites.stopAnimationTimer();
+        sprites.animations().clear();
+        window.mainScene().flashMessageManager().stopAnimationTimer();
+    }
+
     /**
      * Displays a flash message.
      *
