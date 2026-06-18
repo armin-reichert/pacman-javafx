@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.startpages;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.widgets.PrettyButton;
+import de.amr.pacmanfx.uilib.widgets.startbutton.GameStartButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -40,7 +40,7 @@ public class FlyerStartPage implements StartPage {
     protected final StackPane rootPane = new StackPane();
     protected final Flyer flyer = new Flyer();
     protected final String title;
-    protected PrettyButton startButton;
+    protected GameStartButton startButton;
     protected Game game;
     protected Media voice;
 
@@ -123,7 +123,7 @@ public class FlyerStartPage implements StartPage {
 
     private void createAndAddStartButton(Game game) {
         final String text = game.ui().translations().translate("startpage.play_button");
-        startButton = new PrettyButton(text, config.startButtonFont(), config.startButtonBgColor(), config.startButtonTextColor());
+        startButton = new GameStartButton(text);
         startButton.fontProperty().bind(rootPane.heightProperty().map(
             pageHeight -> Font.font(
                 config.startButtonFont().getFamily(),

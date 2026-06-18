@@ -1,0 +1,7 @@
+.game-start-button-container {
+    -fx-background-color: rgba(0, 155, 252, 0.6);
+    -fx-background-radius: 20;
+    -fx-padding: 10 20;
+    -fx-effect: dropshadow(gaussian, rgba(51, 51, 51, 0.8), 10, 0.0, 0, 3);
+}
+

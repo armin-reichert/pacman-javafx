@@ -9,6 +9,7 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import de.amr.pacmanfx.uilib.widgets.startbutton.GameStartButton;
 import javafx.beans.binding.StringBinding;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -33,6 +34,11 @@ public class GameWindowImpl implements GameWindow {
 
         mainScene = new GameMainScene(width, height);
         mainScene.getStylesheets().add(GameUI_Constants.STYLE_SHEET_PATH);
+        mainScene.getStylesheets().add(
+            GameStartButton.class
+                .getResource("/de/amr/pacmanfx/uilib/widgets/startbutton/game-start-button.css")
+                .toExternalForm()
+        );
 
         stage.setScene(mainScene);
         stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);

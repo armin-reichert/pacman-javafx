@@ -22,4 +22,5 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.model3D.world;
     exports de.amr.pacmanfx.uilib.rendering;
     exports de.amr.pacmanfx.uilib.widgets;
+    exports de.amr.pacmanfx.uilib.widgets.startbutton;
 }
