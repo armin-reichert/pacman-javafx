@@ -24,9 +24,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class PrettyButton extends StackPane {
 
-    private Runnable action = () -> Logger.info("No action assigned to button");
+    private static final Runnable DEFAULT_ACTION = () -> Logger.info("No action assigned to button");
 
     private final ObjectProperty<Font> font = new SimpleObjectProperty<>(Font.font(20));
+    private final ObjectProperty<Runnable> action = new SimpleObjectProperty<>(DEFAULT_ACTION);
 
     public PrettyButton(String buttonText, Font initialFont, Color bgColor, Color fillColor) {
         final var shadow = new DropShadow();
@@ -48,8 +49,8 @@ public class PrettyButton extends StackPane {
         setCursor(Cursor.HAND);
 
         setOnMouseClicked(e -> {
-            if (e.getButton() == MouseButton.PRIMARY && action != null) {
-                action.run();
+            if (e.getButton() == MouseButton.PRIMARY) {
+                action.get().run();
                 e.consume();
             }
         });
@@ -61,7 +62,7 @@ public class PrettyButton extends StackPane {
 
         setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
-                action.run();
+                action.get().run();
                 e.consume();
             }
         });
@@ -73,7 +74,11 @@ public class PrettyButton extends StackPane {
         return font;
     }
 
+    public ObjectProperty<Runnable> actionProperty() {
+        return action;
+    }
+
     public void setOnAction(Runnable actionCode) {
-        this.action = requireNonNull(actionCode);
+        action.set(requireNonNull(actionCode));
     }
 }
