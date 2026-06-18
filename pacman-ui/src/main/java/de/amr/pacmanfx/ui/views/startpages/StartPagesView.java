@@ -91,7 +91,6 @@ public class StartPagesView extends Carousel implements GameView {
     public void onEnter() {
         actionBindings.bindActionToKeyCombination(actionShowPrevPage, bareKey(KeyCode.LEFT));
         actionBindings.bindActionToKeyCombination(actionShowNextPage, bareKey(KeyCode.RIGHT));
-        actionBindings.bindActionToKeyCombination(game.actions().gameFlowActions().actionStartGame(), bareKey(KeyCode.ENTER));
         Logger.info(actionBindings);
 
         restartProgressTimer();

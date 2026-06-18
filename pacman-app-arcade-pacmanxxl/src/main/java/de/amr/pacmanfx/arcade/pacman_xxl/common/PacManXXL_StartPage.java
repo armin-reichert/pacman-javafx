@@ -45,16 +45,16 @@ public class PacManXXL_StartPage implements StartPage {
 
     private final Keyboard.StateListener keyboardHandler = (Keyboard keyboard) -> {
         if (keyboard.isKeyPressed(KeyCode.E)) {
-            pauseProgressTimer(game);
+            pauseProgressTimer();
             game.actions().editorActions().actionOpenEditor().execute();
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
-            pauseProgressTimer(game);
+            pauseProgressTimer();
             game.start();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
             game.ui().shortMessage("OK, I shut my mouth");
-            stopTalking(game);
+            stopTalking();
         }
     };
 
@@ -104,7 +104,7 @@ public class PacManXXL_StartPage implements StartPage {
 
     @Override
     public void onExit() {
-        stopTalking(game);
+        stopTalking();
         menu.unbind();
         menu.stopDrawLoop();
     }
@@ -121,11 +121,11 @@ public class PacManXXL_StartPage implements StartPage {
 
     // Private area
 
-    private void pauseProgressTimer(Game game) {
+    private void pauseProgressTimer() {
         game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class).pauseProgressTimer();
     }
 
-    private void stopTalking(Game game) {
+    private void stopTalking() {
         game.ui().sounds().stopAndDisposeVoice();
     }
 }

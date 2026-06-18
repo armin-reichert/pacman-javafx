@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.views.startpages.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 
@@ -35,5 +36,6 @@ public class ArcadePacMan_StartPage extends FlyerStartPage {
         game.selectGameVariant(GameVariantID.ARCADE_PACMAN.name());
         flyer.selectPage(0);
         startTalking();
+        Platform.runLater(startButton::requestFocus);
     }
 }

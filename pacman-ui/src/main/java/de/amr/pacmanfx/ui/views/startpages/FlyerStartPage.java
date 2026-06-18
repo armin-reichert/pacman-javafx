@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.startpages;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.widgets.FancyButton;
+import de.amr.pacmanfx.uilib.widgets.PrettyButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyEvent;
@@ -37,11 +37,11 @@ public class FlyerStartPage implements StartPage {
     protected final StackPane rootPane = new StackPane();
     protected final Flyer flyer = new Flyer();
     protected final String title;
-    protected FancyButton startButton;
+    protected PrettyButton startButton;
     protected Game game;
     protected Media voice;
 
-    protected FlyerStartPage(String title) {
+    public FlyerStartPage(String title) {
         this.title = requireNonNull(title);
 
         rootPane.getChildren().add(flyer);
@@ -99,17 +99,17 @@ public class FlyerStartPage implements StartPage {
         return title;
     }
 
-    protected void setVoice(Media voice) {
-        this.voice = voice;
+    public void setVoice(Media voice) {
+        this.voice = requireNonNull(voice);
     }
 
-    protected void startTalking() {
+    public void startTalking() {
         if (voice != null) {
             game.ui().sounds().playVoice(voice);
         }
     }
 
-    protected void stopTalking() {
+    public void stopTalking() {
         game.ui().sounds().stopAndDisposeVoice();
     }
 
@@ -118,11 +118,11 @@ public class FlyerStartPage implements StartPage {
         startButton = createAndAddStartButton(buttonText);
         StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
         rootPane.getChildren().add(startButton);
-        startButton.setAction(() -> game.actions().gameFlowActions().actionStartGame().execute());
+        startButton.setOnAction(() -> game.actions().gameFlowActions().actionStartGame().execute());
     }
 
-    private FancyButton createAndAddStartButton(String text) {
-        final var button = new FancyButton(text, config.startButtonFont(), config.startButtonBgColor(), config.startButtonTextColor());
+    private PrettyButton createAndAddStartButton(String text) {
+        final var button = new PrettyButton(text, config.startButtonFont(), config.startButtonBgColor(), config.startButtonTextColor());
         button.translateYProperty().bind(rootPane.heightProperty().multiply(-0.1));
         button.fontProperty().bind(rootPane.heightProperty().map(
             pageHeight -> Font.font(
