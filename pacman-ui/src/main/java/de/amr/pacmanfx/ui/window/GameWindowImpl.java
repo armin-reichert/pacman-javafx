@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.window;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
@@ -15,7 +14,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
@@ -52,7 +50,26 @@ public class GameWindowImpl implements GameWindow {
         mainScene.connect(game);
 
         titleBinding = createStringBinding(
-            this::composeTitle,
+            () -> {
+                var views = game.ui().views();
+                var currentView = views.optCurrentView();
+
+                if (currentView.isEmpty()) {
+                    return game.ui().translations().translate("error.view_missing");
+                }
+
+                // Editor has its own title supplier → use it directly
+                if (views.currentViewID() == GameViewID.EDITOR) {
+                    return currentView.get().optTitleSupplier()
+                        .map(Supplier::get)
+                        .orElse("Editor");
+                }
+
+                // All other views use the normal title logic
+                return currentView.get().optTitleSupplier()
+                    .map(Supplier::get)
+                    .orElse(titleForCurrentGameScene());
+            },
             game.gameVariantNameProperty(),
             game.clock().updatesDisabledProperty(),
             game.ui().views().currentViewIDProperty(),
@@ -60,6 +77,7 @@ public class GameWindowImpl implements GameWindow {
             game.ui().settings().debugModeOnProperty(),
             game.ui().settings().d3().view3DEnabledProperty()
         );
+
         game.ui().views().currentViewIDProperty().addListener((_, _, viewID) -> updateStageTitle(viewID));
     }
 
@@ -97,13 +115,6 @@ public class GameWindowImpl implements GameWindow {
 
         updateStageIcon();
         game.gameVariantNameProperty().addListener((_, _, _) -> updateStageIcon());
-    }
-
-    private String composeTitle() {
-        final Optional<GameView> optCurrentGameView = game.ui().views().optCurrentView();
-        return optCurrentGameView.isEmpty()
-            ? game.ui().translations().translate("error.view_missing") // Should never happen
-            : optCurrentGameView.get().optTitleSupplier().map(Supplier::get).orElse(titleForCurrentGameScene());
     }
 
     private void updateStageIcon() {
