@@ -122,22 +122,17 @@ public class FlyerStartPage implements StartPage {
     }
 
     private void createAndAddStartButton(Game game) {
-        final String buttonText = game.ui().translations().translate("startpage.play_button");
-        startButton = createAndAddStartButton(buttonText);
-        StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
-        rootPane.getChildren().add(startButton);
-        startButton.setOnAction(() -> game.actions().gameFlowActions().actionStartGame().execute());
-    }
-
-    private PrettyButton createAndAddStartButton(String text) {
-        final var button = new PrettyButton(text, config.startButtonFont(), config.startButtonBgColor(), config.startButtonTextColor());
-        button.translateYProperty().bind(rootPane.heightProperty().multiply(-0.1));
-        button.fontProperty().bind(rootPane.heightProperty().map(
+        final String text = game.ui().translations().translate("startpage.play_button");
+        startButton = new PrettyButton(text, config.startButtonFont(), config.startButtonBgColor(), config.startButtonTextColor());
+        startButton.fontProperty().bind(rootPane.heightProperty().map(
             pageHeight -> Font.font(
                 config.startButtonFont().getFamily(),
                 computeButtonHeight(pageHeight.doubleValue())))
         );
-        return button;
+        startButton.setOnAction(() -> game.actions().gameFlowActions().actionStartGame().execute());
+        StackPane.setAlignment(startButton, Pos.CENTER);
+        startButton.translateYProperty().bind(rootPane.heightProperty().divide(3));
+        rootPane.getChildren().add(startButton);
     }
 
     private static double computeButtonHeight(double pageHeight) {

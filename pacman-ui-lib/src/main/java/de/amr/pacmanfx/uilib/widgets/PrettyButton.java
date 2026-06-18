@@ -3,8 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.widgets;
 
-import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
+import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Cursor;
@@ -33,6 +32,8 @@ public class PrettyButton extends StackPane {
 
     private final ObjectProperty<Runnable> action = new SimpleObjectProperty<>(DEFAULT_ACTION);
 
+    private final Animation animation;
+
     public PrettyButton(String buttonText, Font initialFont, Color bgColor, Color fillColor) {
         final var shadow = new DropShadow();
         shadow.setOffsetY(3.0f);
@@ -55,7 +56,7 @@ public class PrettyButton extends StackPane {
         setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
                 e.consume();
-                animateAndExecuteAction();
+                action.get().run();
             }
         });
 
@@ -67,11 +68,22 @@ public class PrettyButton extends StackPane {
         setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
                 e.consume();
-                animateAndExecuteAction();
+                action.get().run();
             }
         });
 
         font.set(initialFont);
+
+        animation = createAnimation();
+
+        focusedProperty().addListener((observable, oldValue, hasFocus) -> {
+            if (hasFocus) {
+                animation.play();
+            } else {
+                animation.pause();
+            }
+        });
+
     }
 
     public ObjectProperty<Font> fontProperty() {
@@ -86,22 +98,20 @@ public class PrettyButton extends StackPane {
         action.set(requireNonNull(actionCode));
     }
 
-    private void animateAndExecuteAction() {
-        playPressAnimation(action.get());
-    }
+    private Animation createAnimation() {
+        var scaleUp = new ScaleTransition(Duration.seconds(0.4), this);
+        scaleUp.setToX(1.8);
+        scaleUp.setToY(1.8);
 
-    private void playPressAnimation(Runnable afterAnimation) {
-        var scaleUp = new ScaleTransition(Duration.seconds(0.2), this);
-        scaleUp.setToX(1.5);
-        scaleUp.setToY(1.5);
-
-        var scaleDown = new ScaleTransition(Duration.seconds(0.05), this);
-        scaleDown.setToX(1.0);
-        scaleDown.setToY(1.0);
+        var scaleDown = new ScaleTransition(Duration.seconds(0.6), this);
+        scaleDown.setToX(1);
+        scaleDown.setToY(1);
+        scaleDown.setDelay(Duration.seconds(0.05));
 
         var seq = new SequentialTransition(scaleUp, scaleDown);
-        seq.setOnFinished(_ -> afterAnimation.run());
-        seq.play();
+        seq.setCycleCount(Animation.INDEFINITE);
+
+        return seq;
     }
 
 }
