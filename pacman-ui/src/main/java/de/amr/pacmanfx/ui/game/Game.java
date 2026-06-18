@@ -41,6 +41,8 @@ public interface Game extends GameLifecycle {
 
     String currentGameVariantName();
 
+    GameVariant currentGameVariant();
+
     CommonActions actions();
 
     GameVariant gameVariant(String variantName);

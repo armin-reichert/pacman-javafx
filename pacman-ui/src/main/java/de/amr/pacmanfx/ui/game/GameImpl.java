@@ -146,6 +146,11 @@ public final class GameImpl implements Game {
     }
 
     @Override
+    public GameVariant currentGameVariant() {
+        return gameVariant(currentGameVariantName());
+    }
+
+    @Override
     public String currentGameVariantName() {
         return gameVariantName.get();
     }
@@ -318,10 +323,6 @@ public final class GameImpl implements Game {
         gameVariant.gameModel().setHighScoreFile(highScoreFile(variantName));
 
         return gameVariant;
-    }
-
-    private GameVariant currentGameVariant() {
-        return gameVariant(currentGameVariantName());
     }
 
     private static void load3DAssets() {
