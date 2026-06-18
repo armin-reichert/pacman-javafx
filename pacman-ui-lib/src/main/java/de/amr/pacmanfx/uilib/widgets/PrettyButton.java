@@ -3,8 +3,6 @@
  */
 package de.amr.pacmanfx.uilib.widgets;
 
-import de.amr.pacmanfx.uilib.UfxBackgrounds;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Cursor;
@@ -26,9 +24,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class PrettyButton extends StackPane {
 
-    private Runnable action = () -> {
-        Logger.info("No action assigned to button");
-    };
+    private Runnable action = () -> Logger.info("No action assigned to button");
 
     private final ObjectProperty<Font> font = new SimpleObjectProperty<>(Font.font(20));
 
@@ -45,12 +41,8 @@ public class PrettyButton extends StackPane {
 
         getChildren().add(text);
 
+        maxWidthProperty().bind(text.layoutBoundsProperty().map(b -> b.getWidth() + 20));
         maxHeightProperty().bind(font.map(f -> Math.min(2.5 * f.getSize(), 60)));
-
-        maxWidthProperty().bind(Bindings.createDoubleBinding(
-            () -> 1.25 * text.getText().length() * fontProperty().get().getSize(),
-            text.textProperty(), fontProperty()
-        ));
 
         setBackground(roundedBackground(bgColor, 20));
         setCursor(Cursor.HAND);
@@ -62,18 +54,15 @@ public class PrettyButton extends StackPane {
             }
         });
 
+        setOnMouseEntered(_ -> setOpacity(0.85));
+        setOnMouseExited(_ -> setOpacity(1.0));
+        setOnMousePressed(_ -> setScaleX(0.97));
+        setOnMouseReleased(_ -> setScaleX(1.0));
+
         setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
+            if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
                 action.run();
                 e.consume();
-            }
-        });
-
-        focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                setBackground(roundedBackground(Color.GREEN, 20));
-            } else {
-                setBackground(roundedBackground(bgColor, 20));
             }
         });
 
