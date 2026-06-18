@@ -78,9 +78,13 @@ public class PrettyButton extends StackPane {
 
         focusedProperty().addListener((observable, oldValue, hasFocus) -> {
             if (hasFocus) {
-                animation.play();
+                setScaleX(1.0);
+                setScaleY(1.0);
+                animation.playFromStart();
             } else {
-                animation.pause();
+                animation.stop();
+                setScaleX(1.0);
+                setScaleY(1.0);
             }
         });
 
@@ -100,13 +104,15 @@ public class PrettyButton extends StackPane {
 
     private Animation createAnimation() {
         var scaleUp = new ScaleTransition(Duration.seconds(0.4), this);
-        scaleUp.setToX(1.8);
-        scaleUp.setToY(1.8);
+        scaleUp.setToX(1.5);
+        scaleUp.setToY(1.5);
+        scaleUp.setInterpolator(Interpolator.EASE_OUT);
 
         var scaleDown = new ScaleTransition(Duration.seconds(0.6), this);
         scaleDown.setToX(1);
         scaleDown.setToY(1);
         scaleDown.setDelay(Duration.seconds(0.05));
+        scaleDown.setInterpolator(Interpolator.EASE_IN);
 
         var seq = new SequentialTransition(scaleUp, scaleDown);
         seq.setCycleCount(Animation.INDEFINITE);
