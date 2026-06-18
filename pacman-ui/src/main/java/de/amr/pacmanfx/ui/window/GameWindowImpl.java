@@ -134,19 +134,20 @@ public class GameWindowImpl implements GameWindow {
             return "";
         }
 
-        final String viewMode = game.ui().translations().translate(is3D ? "threeD" : "twoD");
+        final String viewModeKey = game.ui().translations().translate(is3D ?
+            "view_mode.3d" : "view_mode.2d");
 
         // In game-variant specific resource bundles, there should be two entries with placeholder
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager appSpecificTranslator = game.currentUIConfig().translations();
-        final String appTitleKey = paused ? "app.title.paused" : "app.title";
-        if (appSpecificTranslator.textBundle() != null
-            && appSpecificTranslator.textBundle().containsKey(appTitleKey)) {
-            return appSpecificTranslator.translate(appTitleKey, viewMode);
+        final TranslationManager variantTranslations = game.currentUIConfig().translations();
+        final String titleKey = paused ? "app.title.paused" : "app.title";
+        if (variantTranslations.textBundle() != null
+            && variantTranslations.textBundle().containsKey(titleKey)) {
+            return variantTranslations.translate(titleKey, viewModeKey);
         } else {
-            return "Unspecified Game";
+            return "Unspecified Pac-Man Game Variant";
         }
     }
 }
