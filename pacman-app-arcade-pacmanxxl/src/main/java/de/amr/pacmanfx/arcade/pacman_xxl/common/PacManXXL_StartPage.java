@@ -16,11 +16,14 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
+
+import java.util.Optional;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
 import static de.amr.pacmanfx.uilib.Ufx.deriveFont;
@@ -99,7 +102,7 @@ public class PacManXXL_StartPage implements StartPage {
         game.ui().sounds().playVoice(VARIANT_NARRATION);
         menu.init(game);
         menu.bind();
-        menu.requestFocus();
+        Platform.runLater(menu::requestFocus);
     }
 
     @Override
@@ -112,6 +115,11 @@ public class PacManXXL_StartPage implements StartPage {
     @Override
     public Pane rootPane() {
         return rootPane;
+    }
+
+    @Override
+    public Optional<Node> startButton() {
+        return Optional.empty();
     }
 
     @Override

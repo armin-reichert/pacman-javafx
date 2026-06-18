@@ -3,6 +3,8 @@
  */
 package de.amr.pacmanfx.uilib.widgets;
 
+import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Cursor;
@@ -13,6 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.roundedBackground;
@@ -27,6 +30,7 @@ public class PrettyButton extends StackPane {
     private static final Runnable DEFAULT_ACTION = () -> Logger.info("No action assigned to button");
 
     private final ObjectProperty<Font> font = new SimpleObjectProperty<>(Font.font(20));
+
     private final ObjectProperty<Runnable> action = new SimpleObjectProperty<>(DEFAULT_ACTION);
 
     public PrettyButton(String buttonText, Font initialFont, Color bgColor, Color fillColor) {
@@ -50,8 +54,8 @@ public class PrettyButton extends StackPane {
 
         setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
-                action.get().run();
                 e.consume();
+                animateAndExecuteAction();
             }
         });
 
@@ -62,8 +66,8 @@ public class PrettyButton extends StackPane {
 
         setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
-                action.get().run();
                 e.consume();
+                animateAndExecuteAction();
             }
         });
 
@@ -81,4 +85,23 @@ public class PrettyButton extends StackPane {
     public void setOnAction(Runnable actionCode) {
         action.set(requireNonNull(actionCode));
     }
+
+    private void animateAndExecuteAction() {
+        playPressAnimation(action.get());
+    }
+
+    private void playPressAnimation(Runnable afterAnimation) {
+        var scaleUp = new ScaleTransition(Duration.seconds(0.2), this);
+        scaleUp.setToX(1.5);
+        scaleUp.setToY(1.5);
+
+        var scaleDown = new ScaleTransition(Duration.seconds(0.05), this);
+        scaleDown.setToX(1.0);
+        scaleDown.setToY(1.0);
+
+        var seq = new SequentialTransition(scaleUp, scaleDown);
+        seq.setOnFinished(_ -> afterAnimation.run());
+        seq.play();
+    }
+
 }

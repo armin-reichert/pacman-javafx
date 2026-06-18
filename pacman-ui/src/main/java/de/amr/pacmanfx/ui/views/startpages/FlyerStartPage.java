@@ -9,6 +9,7 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.PrettyButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
@@ -16,6 +17,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -92,6 +95,11 @@ public class FlyerStartPage implements StartPage {
     @Override
     public Pane rootPane() {
         return rootPane;
+    }
+
+    @Override
+    public Optional<Node> startButton() {
+        return Optional.of(startButton);
     }
 
     @Override

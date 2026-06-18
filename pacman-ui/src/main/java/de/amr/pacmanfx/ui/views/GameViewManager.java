@@ -38,7 +38,6 @@ public final class GameViewManager {
             game.ui().window().mainScene().replaceGameView(newView);
 
             newView.onEnter();
-            newView.rootPane().requestFocus();
         });
 
         views.values().forEach(gameView -> gameView.connect(game));

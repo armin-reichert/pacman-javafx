@@ -95,7 +95,7 @@ public class StartPagesView extends Carousel implements GameView {
 
         restartProgressTimer();
         currentStartPage().ifPresent(page -> {
-            page.rootPane().requestFocus();
+            page.startButton().ifPresent(Node::requestFocus);
             Logger.info("Request focus for root pane of start page {}", page);
         });
     }
