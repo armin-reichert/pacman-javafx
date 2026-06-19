@@ -9,7 +9,7 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
-import de.amr.pacmanfx.uilib.widgets.startbutton.GameStartButton;
+import de.amr.pacmanfx.uilib.widgets.GameStartButton;
 import javafx.beans.binding.StringBinding;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;

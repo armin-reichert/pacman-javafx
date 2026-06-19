@@ -98,9 +98,9 @@ public final class GameImpl implements Game {
         final UISettings uiSettings = new UISettings();
 
         final GameViewManager views = new GameViewManager();
-        views.setView(GameViewID.START_PAGES, new StartPagesView());
-        views.setView(GameViewID.GAMEPLAY, new GamePlayView(GameUI_Constants.DEFAULT_DASHBOARD_CONFIG));
-        views.setView(GameViewID.EDITOR, new EditorView());
+        views.registerView(GameViewID.START_PAGES, new StartPagesView());
+        views.registerView(GameViewID.GAMEPLAY, new GamePlayView(GameUI_Constants.DEFAULT_DASHBOARD_CONFIG));
+        views.registerView(GameViewID.EDITOR, new EditorView());
 
         final SoundManager sounds = new SoundManager();
         sounds.muteProperty().bind(uiSettings.mutedProperty());

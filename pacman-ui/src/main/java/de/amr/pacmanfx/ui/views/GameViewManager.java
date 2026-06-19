@@ -43,11 +43,11 @@ public final class GameViewManager {
         views.values().forEach(gameView -> gameView.connect(game));
     }
 
-    public void setView(GameViewID viewID, GameView gameView) {
+    public void registerView(GameViewID viewID, GameView gameView) {
         requireNonNull(viewID);
         requireNonNull(gameView);
         views.put(viewID, gameView);
-        Logger.info("Game view id='{}' set to {}", viewID, gameView);
+        Logger.info("Game view registered. ID='{}': {}", viewID, gameView);
     }
 
     public GameView assertView(GameViewID viewID) {

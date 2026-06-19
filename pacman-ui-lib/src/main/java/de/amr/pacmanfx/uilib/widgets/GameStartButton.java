@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.widgets.startbutton;
+package de.amr.pacmanfx.uilib.widgets;
 
+import de.amr.pacmanfx.uilib.widgets.skin.GameStartButtonSkin;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Control;

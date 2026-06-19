@@ -1,5 +1,6 @@
-package de.amr.pacmanfx.uilib.widgets.startbutton;
+package de.amr.pacmanfx.uilib.widgets.skin;
 
+import de.amr.pacmanfx.uilib.widgets.GameStartButton;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
