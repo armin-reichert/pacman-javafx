@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -95,8 +96,16 @@ public class StartPagesView extends Carousel implements GameView {
 
         restartProgressTimer();
         currentStartPage().ifPresent(page -> {
-            page.startButton().ifPresent(Node::requestFocus);
-            Logger.info("Request focus for root pane of start page {}", page);
+            page.startButton().ifPresentOrElse(
+                startButton -> {
+                    Logger.info("Request focus for start button of start page {}", page);
+                    Platform.runLater(startButton::requestFocus);
+                },
+                () -> {
+                    Logger.info("Request focus for root pane of start page {}", page);
+                    Platform.runLater(() -> page.rootPane().requestFocus());
+                }
+            );
         });
     }
 
