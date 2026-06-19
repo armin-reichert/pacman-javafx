@@ -15,12 +15,25 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.net.URL;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
 
 public class GameWindowImpl implements GameWindow {
+
+    private static final String WIDGET_LIB_PATH = "/de/amr/pacmanfx/uilib/widgets/";
+
+    private static String styleSheetURL(Class<?> widgetClass, String styleSheet) {
+        final URL url = widgetClass.getResource(WIDGET_LIB_PATH + styleSheet);
+        return url != null ? url.toExternalForm() : null; //TODO
+    }
+
+    private static final Map<Class<?>, String> WIDGET_STYLESHEETS = Map.of(
+        GameStartButton.class, "game-start-button.css"
+    );
 
     private Game game;
 
@@ -33,12 +46,10 @@ public class GameWindowImpl implements GameWindow {
         this.stage = requireNonNull(stage);
 
         mainScene = new GameMainScene(width, height);
+
         mainScene.getStylesheets().add(GameUI_Constants.STYLE_SHEET_PATH);
-        mainScene.getStylesheets().add(
-            GameStartButton.class
-                .getResource("/de/amr/pacmanfx/uilib/widgets/startbutton/game-start-button.css")
-                .toExternalForm()
-        );
+        WIDGET_STYLESHEETS.forEach(
+            (widgetClass, styleSheet) -> mainScene.getStylesheets().add(styleSheetURL(widgetClass, styleSheet)));
 
         stage.setScene(mainScene);
         stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
