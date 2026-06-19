@@ -118,10 +118,10 @@ public class PacManAllGamesApp extends Application {
                 game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
 
                 final StartPagesView startPagesView = game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class);
-                startPagesView.addStartPage(new ArcadePacMan_StartPage());
-                startPagesView.addStartPage(new ArcadeMsPacMan_StartPage());
-                startPagesView.addStartPage(new TengenMsPacMan_StartPage());
-                startPagesView.addStartPage(new PacManXXL_StartPage());
+                startPagesView.addStartPage(game, new ArcadePacMan_StartPage());
+                startPagesView.addStartPage(game, new ArcadeMsPacMan_StartPage());
+                startPagesView.addStartPage(game, new TengenMsPacMan_StartPage());
+                startPagesView.addStartPage(game, new PacManXXL_StartPage());
                 startPagesView.rootPane().setSelectedIndex(0);
             }
 

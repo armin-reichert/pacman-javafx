@@ -14,7 +14,6 @@ import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Region;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -53,7 +52,6 @@ public class StartPagesView implements GameView {
             }
             if (newIndex != -1) {
                 final StartPage startPage = pages.get(newIndex);
-                startPage.connect(game);
                 startPage.onEnter();
                 startPage.rootPane().requestFocus();
             }
@@ -128,16 +126,21 @@ public class StartPagesView implements GameView {
         return Optional.of(this::composeTitle);
     }
 
-    public Optional<StartPage> currentStartPage() {
-        final int selectedIndex = carousel.selectedIndex();
-        return selectedIndex >= 0 ? Optional.of(pages.get(selectedIndex)) : Optional.empty();
-    }
-
-    public void addStartPage(StartPage startPage) {
+    public void addStartPage(Game game, StartPage startPage) {
         requireNonNull(startPage);
+        if (pages.contains(startPage)) {
+            Logger.warn("Start page already exists in list");
+            return;
+        }
         pages.add(startPage);
         carousel.addItem(startPage.rootPane());
         carousel.setNavigationButtonsVisible(carousel.numItems() >= 2);
+        startPage.connect(game);
+    }
+
+    private Optional<StartPage> currentStartPage() {
+        final int selectedIndex = carousel.selectedIndex();
+        return selectedIndex >= 0 ? Optional.of(pages.get(selectedIndex)) : Optional.empty();
     }
 
     private String composeTitle() {
