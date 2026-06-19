@@ -39,8 +39,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesView extends Carousel implements GameView {
 
-    public static final int NAV_BUTTON_SIZE = 48;
-
     //TODO start pages should define their preferred duration
     public static final int PAGE_CHANGE_SECONDS = 90;
 
@@ -53,6 +51,8 @@ public class StartPagesView extends Carousel implements GameView {
 
     public StartPagesView() {
         super(Duration.seconds(PAGE_CHANGE_SECONDS));
+
+        setId("start-pages-view");
 
         setBackground(GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER);
 
@@ -123,27 +123,6 @@ public class StartPagesView extends Carousel implements GameView {
     @Override
     public void onInput(Input input) {
         actionBindings.findActionMatchingPressedKeys(input.keyboard()).ifPresent(GameAction::execute);
-    }
-
-    @Override
-    protected Node createNavigationButton(Direction dir) {
-        final Color iconColor = Color.gray(0.69);
-        final FontAwesomeIcon icon = switch (dir) {
-            case LEFT  -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_LEFT, NAV_BUTTON_SIZE);
-            case RIGHT -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT, NAV_BUTTON_SIZE);
-            default -> throw new IllegalArgumentException("Illegal navigation direction: %s".formatted(dir));
-        };
-        icon.fillProperty().set(iconColor);
-        icon.setOpacity(0.2);
-        icon.setOnMouseEntered(_ -> icon.setOpacity(0.8));
-        icon.setOnMouseExited(_ -> icon.setOpacity(0.2));
-
-        final var button = new HBox(icon);
-        button.setMaxHeight(NAV_BUTTON_SIZE);
-        button.setMaxWidth(NAV_BUTTON_SIZE);
-        button.setPadding(new Insets(5));
-        StackPane.setAlignment(button, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
-        return button;
     }
 
     @Override

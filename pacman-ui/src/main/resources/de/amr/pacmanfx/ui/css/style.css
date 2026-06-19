@@ -39,6 +39,11 @@
     -fx-pref-height: 80;
 }
 
+#start-pages-view .font-awesome-icon-container {
+    -fx-pref-width:  48;
+    -fx-pref-height: 48;
+}
+
 #status-icon-box .font-awesome-icon {
     -fx-fill: rgb(222, 222, 255);
 }
