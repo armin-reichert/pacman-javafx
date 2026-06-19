@@ -39,6 +39,14 @@
     -fx-pref-height: 80;
 }
 
+#status-icon-box .font-awesome-icon {
+    -fx-fill: rgb(222, 222, 255);
+}
+
+#status-icon-box #icon-cheated {
+    -fx-fill: red;
+}
+
 /* Size of icons inside status icon box. Font size adapts to this size. */
 #status-icon-box .font-awesome-icon-container {
     -fx-pref-width:  32;

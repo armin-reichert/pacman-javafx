@@ -26,8 +26,6 @@ import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
-import static java.util.Objects.requireNonNull;
-
 public class StatusIconBox implements Disposable {
 
     private final StackPane rootPane = new StackPane();
@@ -46,7 +44,7 @@ public class StatusIconBox implements Disposable {
         iconImmune = createIcon(FontAwesomeSymbol.USER_SECRET);
 
         iconCheated = createIcon(FontAwesomeSymbol.FLAG);
-        iconCheated.setFill(Color.RED);
+        iconCheated.setId("icon-cheated");
 
         rootPane.setId("status-icon-box");
         hbox.setId("status-icon-layout");
