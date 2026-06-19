@@ -19,7 +19,7 @@ import java.net.URL;
  */
 public class GameStartButton extends Control {
 
-    public static final String STYLESHEET = "/de/amr/pacmanfx/uilib/widgets/game-start-button.css";
+    public static final String STYLESHEET = "game-start-button.css";
 
     private static final Runnable DEFAULT_ACTION = () -> Logger.info("No action assigned");
 
