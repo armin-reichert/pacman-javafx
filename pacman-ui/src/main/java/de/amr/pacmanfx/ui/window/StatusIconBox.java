@@ -10,15 +10,15 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
-import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
+import de.amr.pacmanfx.uilib.widgets.FontAwesomeSymbol;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -30,25 +30,9 @@ import static java.util.Objects.requireNonNull;
 
 public class StatusIconBox implements Disposable {
 
-    public record Config(
-        Color defaultIconColor,
-        int iconSize,
-        int iconSpacing,
-        int iconPadding,
-        Font tooltipFont
-    ) {}
-    
-    public static final Config DEFAULT_CONFIG = new Config(
-        ArcadePalette.ARCADE_WHITE,
-        24,
-        5,
-        10,
-        Font.font("Sans", 16)
-    );
+    private final StackPane rootPane = new StackPane();
+    private final HBox hbox = new HBox();
 
-    private final Config config;
-
-    private final HBox rootPane = new HBox();
     private final FontAwesomeIcon iconMuted;
     private final FontAwesomeIcon icon3D;
     private final FontAwesomeIcon iconAutopilot;
@@ -56,36 +40,31 @@ public class StatusIconBox implements Disposable {
     private final FontAwesomeIcon iconCheated;
 
     public StatusIconBox() {
-        this(DEFAULT_CONFIG);
-    }
-    
-    public StatusIconBox(Config config) {
-        this.config = requireNonNull(config);
+        iconMuted = createIcon(FontAwesomeSymbol.DEAF);
+        icon3D = createIcon(FontAwesomeSymbol.CUBES);
+        iconAutopilot = createIcon(FontAwesomeSymbol.TAXI);
+        iconImmune = createIcon(FontAwesomeSymbol.USER_SECRET);
 
-        iconMuted = createIcon(FontAwesomeIcon.Symbol.DEAF, config.defaultIconColor());
-        icon3D = createIcon(FontAwesomeIcon.Symbol.CUBES, config.defaultIconColor());
-        iconAutopilot = createIcon(FontAwesomeIcon.Symbol.TAXI, config.defaultIconColor());
-        iconImmune = createIcon(FontAwesomeIcon.Symbol.USER_SECRET, config.defaultIconColor());
-        iconCheated = createIcon(FontAwesomeIcon.Symbol.FLAG, Color.RED);
+        iconCheated = createIcon(FontAwesomeSymbol.FLAG);
+        iconCheated.setFill(Color.RED);
 
-        final int iconCount = (int) iconNodesInOrder().count();
-        final int padding = config.iconPadding();
-        final int spacing = config.iconSpacing();
-        final int size = config.iconSize();
+        rootPane.setId("status-icon-box");
+        hbox.setId("status-icon-layout");
 
-        rootPane.getChildren().setAll(iconNodesInOrder().toList());
-        rootPane.setMaxHeight(size + 2 * padding);
-        rootPane.setMaxWidth(size + (iconCount - 1) * spacing + 2 * padding);
-        rootPane.setPadding(new Insets(padding));
-        rootPane.setSpacing(spacing);
+        hbox.getChildren().setAll(iconsInOrder().toList());
+        rootPane.getChildren().add(hbox);
+
+        // Without this the button fill the complete area
+        rootPane.setPrefSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
+        rootPane.setMaxSize(StackPane.USE_PREF_SIZE, StackPane.USE_PREF_SIZE);
     }
 
     public Pane rootPane() {
         return rootPane;
     }
 
-    public Stream<Node> iconNodesInOrder() {
-        return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated).map(FontAwesomeIcon::node);
+    public Stream<FontAwesomeIcon> iconsInOrder() {
+        return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
     }
 
     public void connect(Game game) {
@@ -130,28 +109,28 @@ public class StatusIconBox implements Disposable {
     @Override
     public void dispose() {
         rootPane.visibleProperty().unbind();
-        iconNodesInOrder().forEach(iconNode -> {
+        iconsInOrder().forEach(iconNode -> {
             iconNode.visibleProperty().unbind();
             iconNode.visibleProperty().removeListener(this::rearrangeIcons);
         });
     }
 
-    private FontAwesomeIcon createIcon(FontAwesomeIcon.Symbol symbol, Color color) {
-        final FontAwesomeIcon icon = new FontAwesomeIcon(symbol, config.iconSize());
-        icon.fillProperty().set(color);
+    private FontAwesomeIcon createIcon(FontAwesomeSymbol symbol) {
+        final FontAwesomeIcon icon = new FontAwesomeIcon(symbol);
+        icon.fillProperty().set(Color.WHITE);
         icon.visibleProperty().addListener(this::rearrangeIcons);
         return icon;
     }
 
     private void setTooltip(FontAwesomeIcon icon, String text) {
         final Tooltip tooltip = new Tooltip(text);
-        tooltip.setFont(config.tooltipFont);
+        tooltip.setFont(Font.font("Sans", 16));
         tooltip.setShowDelay(Duration.millis(250));
-        Tooltip.install(icon.node(), tooltip);
+        Tooltip.install(icon, tooltip);
     }
 
     // keep box compact, show visible items only
     private void rearrangeIcons(ObservableValue<? extends Boolean> property, boolean wasVisible, boolean isVisible) {
-        rootPane.getChildren().setAll(iconNodesInOrder().filter(Node::isVisible).toList());
+        hbox.getChildren().setAll(iconsInOrder().filter(Node::isVisible).toList());
     }
 }

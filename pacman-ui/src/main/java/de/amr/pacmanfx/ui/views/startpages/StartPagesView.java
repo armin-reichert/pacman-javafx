@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
+import de.amr.pacmanfx.uilib.widgets.FontAwesomeSymbol;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -128,16 +129,16 @@ public class StartPagesView extends Carousel implements GameView {
     protected Node createNavigationButton(Direction dir) {
         final Color iconColor = Color.gray(0.69);
         final FontAwesomeIcon icon = switch (dir) {
-            case LEFT  -> new FontAwesomeIcon(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_LEFT, NAV_BUTTON_SIZE);
-            case RIGHT -> new FontAwesomeIcon(FontAwesomeIcon.Symbol.CHEVRON_CIRCLE_RIGHT, NAV_BUTTON_SIZE);
+            case LEFT  -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_LEFT, NAV_BUTTON_SIZE);
+            case RIGHT -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT, NAV_BUTTON_SIZE);
             default -> throw new IllegalArgumentException("Illegal navigation direction: %s".formatted(dir));
         };
         icon.fillProperty().set(iconColor);
-        icon.node().setOpacity(0.2);
-        icon.node().setOnMouseEntered(_ -> icon.node().setOpacity(0.8));
-        icon.node().setOnMouseExited(_ -> icon.node().setOpacity(0.2));
+        icon.setOpacity(0.2);
+        icon.setOnMouseEntered(_ -> icon.setOpacity(0.8));
+        icon.setOnMouseExited(_ -> icon.setOpacity(0.2));
 
-        final var button = new HBox(icon.node());
+        final var button = new HBox(icon);
         button.setMaxHeight(NAV_BUTTON_SIZE);
         button.setMaxWidth(NAV_BUTTON_SIZE);
         button.setPadding(new Insets(5));

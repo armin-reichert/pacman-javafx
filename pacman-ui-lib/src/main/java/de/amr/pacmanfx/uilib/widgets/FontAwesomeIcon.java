@@ -4,91 +4,59 @@
 
 package de.amr.pacmanfx.uilib.widgets;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
+import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.uilib.widgets.skin.FontAwesomeIconSkin;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.Node;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.control.Control;
+import javafx.scene.control.Skin;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import org.tinylog.Logger;
 
-import java.net.URL;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Displays a FontAwesome icon.
  */
-public class FontAwesomeIcon {
+public class FontAwesomeIcon extends Control {
 
-    public static final String FONT_PATH = "/de/amr/pacmanfx/uilib/fonts/fa7/Font Awesome 7 Free-Solid-900.otf";
+    public static final String DEFAULT_STYLE_CLASS = "font-awesome-icon";
+
     public static final int DEFAULT_SIZE = 16;
 
-    //TODO incomplete
-    public enum Symbol {
-        CHEVRON_CIRCLE_LEFT('\uf137'),
-        CHEVRON_CIRCLE_RIGHT('\uf138'),
-        CUBES('\uf1b3'),
-        DEAF('\uf2a4'),
-        FLAG('\uf024'),
-        PAUSE('\uf04c'),
-        TAXI('\uf1ba'),
-        USER_SECRET('\uf21b');
+    private final FontAwesomeSymbol symbol;
 
-        Symbol(char unicode) {
-            this.unicode = unicode;
-        }
+    private final ObjectProperty<Paint> fill = new SimpleObjectProperty<>(Color.WHITE);
 
-        private final char unicode;
-    }
-
-    private static final Font FONT = loadFont();
-
-    private static Font loadFont() {
-        final int size = DEFAULT_SIZE;
-        final URL url = FontAwesomeIcon.class.getResource(FONT_PATH);
-        Font font;
-        if (url != null) {
-            font = Font.loadFont(url.toExternalForm(), size);
-            Logger.info("FontAwesome font loaded successfully: {}", font);
-        } else {
-            font = Font.font(size);
-            Logger.error("Could not load Font Awesome fonts, using default font");
-        }
-        return font;
-    }
-
-    private final DoubleProperty size = new SimpleDoubleProperty(DEFAULT_SIZE);
-
-    private final Text text = new Text();
-
-    public FontAwesomeIcon(Symbol symbol, int size) {
-        text.fontProperty().bind(sizeProperty().map(s -> Font.font(FONT.getFamily(), s.doubleValue())));
-        text.setText(String.valueOf(symbol.unicode));
-        sizeProperty().set(size);
-    }
-
-    public FontAwesomeIcon(Symbol symbol) {
+    public FontAwesomeIcon(FontAwesomeSymbol symbol) {
         this(symbol, DEFAULT_SIZE);
     }
 
+    public FontAwesomeIcon(FontAwesomeSymbol symbol, double prefSize) {
+        this.symbol = requireNonNull(symbol);
+        getStyleClass().setAll(DEFAULT_STYLE_CLASS);
+        setPrefSize(prefSize, prefSize);
+        setMouseTransparent(false);
+    }
+
     public ObjectProperty<Paint> fillProperty() {
-        return text.fillProperty();
+        return fill;
     }
 
-    public DoubleProperty opacityProperty() {
-        return text.opacityProperty();
+    public void setFill(Paint paint) {
+        fillProperty().set(paint);
     }
 
-    public BooleanProperty visibleProperty() {
-        return text.visibleProperty();
+    public Paint fill() {
+        return fill.get();
     }
 
-    public DoubleProperty sizeProperty() {
-        return size;
+    public FontAwesomeSymbol symbol() {
+        return symbol;
     }
 
-    public Node node() {
-        return text;
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return new FontAwesomeIconSkin(this);
     }
 }

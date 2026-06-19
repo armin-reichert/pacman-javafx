@@ -33,3 +33,22 @@
 .link-button:hover {
     -fx-text-fill: #003366;
 }
+
+#paused-icon .font-awesome-icon-container {
+    -fx-pref-width:  80;
+    -fx-pref-height: 80;
+}
+
+/* Size of icons inside status icon box. Font size adapts to this size. */
+#status-icon-box .font-awesome-icon-container {
+    -fx-pref-width:  32;
+    -fx-pref-height: 32;
+}
+
+/* Padding and spacing of icons inside status icon box */
+#status-icon-layout {
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+    -fx-border-color: #fff;
+    -fx-border-width: 0px;
+}

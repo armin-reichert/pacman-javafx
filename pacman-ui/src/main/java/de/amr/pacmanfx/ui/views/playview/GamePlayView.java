@@ -10,13 +10,13 @@ import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.config.UISettings;
+import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.config.UISettings;
-import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.dashboard.Dashboard;
@@ -27,6 +27,7 @@ import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
+import de.amr.pacmanfx.uilib.widgets.FontAwesomeSymbol;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
@@ -274,12 +275,13 @@ public class GamePlayView implements GameView {
         helpLayer = new HelpView(gameSceneLayer);
 
         // Layer 4: "Paused" icon
-        pausedIcon  = new FontAwesomeIcon(FontAwesomeIcon.Symbol.PAUSE, 80);
+        pausedIcon  = new FontAwesomeIcon(FontAwesomeSymbol.PAUSE);
+        pausedIcon.setId("paused-icon");
         pausedIcon.fillProperty().set(ArcadePalette.ARCADE_WHITE);
-        pausedIcon.node().setFocusTraversable(false);
-        StackPane.setAlignment(pausedIcon.node(), Pos.CENTER);
+        pausedIcon.setFocusTraversable(false);
+        StackPane.setAlignment(pausedIcon, Pos.CENTER);
 
-        rootPane = new StackPane(gameSceneLayer, miniPlaySceneView.rootPane(), overlayLayer, helpLayer, pausedIcon.node());
+        rootPane = new StackPane(gameSceneLayer, miniPlaySceneView.rootPane(), overlayLayer, helpLayer, pausedIcon);
     }
 
     private void setFontSmoothing(boolean smoothing) {

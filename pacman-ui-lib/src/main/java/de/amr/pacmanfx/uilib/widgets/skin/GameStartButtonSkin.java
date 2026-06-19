@@ -16,18 +16,15 @@ import javafx.util.Duration;
 
 public class GameStartButtonSkin extends SkinBase<GameStartButton> {
 
-    private final Pane root = new StackPane();
-    private final Animation pulse;
-
     public GameStartButtonSkin(GameStartButton control) {
         super(control);
 
-        Text text = new Text();
+        final Text text = new Text();
         text.textProperty().bind(control.textProperty());
         text.fontProperty().bind(control.fontProperty());
         text.setFill(Color.WHITE);
 
-        root.getChildren().add(text);
+        final Pane root = new StackPane(text);
 
         root.getStyleClass().add("game-start-button-container");
 
@@ -47,7 +44,7 @@ public class GameStartButtonSkin extends SkinBase<GameStartButton> {
         root.setOnMousePressed(_ -> root.setScaleX(0.97));
         root.setOnMouseReleased(_ -> root.setScaleX(1.0));
 
-        pulse = createPulseAnimation(root);
+        final Animation pulse = createPulseAnimation(root);
 
         control.focusedProperty().addListener((_, _, focused) -> {
             if (focused) {
