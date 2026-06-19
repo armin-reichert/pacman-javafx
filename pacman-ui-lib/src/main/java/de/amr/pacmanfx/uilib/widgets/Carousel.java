@@ -15,6 +15,10 @@ public class Carousel extends Control {
 
     public static final String STYLESHEET = "/de/amr/pacmanfx/uilib/widgets/carousel.css";
 
+    public static final PseudoClass RUNNING = PseudoClass.getPseudoClass("running");
+    public static final PseudoClass NAV_NEXT = PseudoClass.getPseudoClass("nav-next");
+    public static final PseudoClass NAV_PREV = PseudoClass.getPseudoClass("nav-prev");
+
     private final ObservableList<Node> items =
         FXCollections.observableArrayList();
 
@@ -47,21 +51,35 @@ public class Carousel extends Control {
     public ObservableList<Node> getItems() { return items; }
 
     // --- Selected Index ---
+
     public IntegerProperty selectedIndexProperty() { return selectedIndex; }
+
     public int getSelectedIndex() { return selectedIndex.get(); }
-    public void setSelectedIndex(int i) { selectedIndex.set(i); }
+
+    public void setSelectedIndex(int i) {
+        if (i < -1 || i >= items.size()) {
+            throw new IndexOutOfBoundsException("Invalid carousel index: " + i);
+        }
+        selectedIndex.set(i);
+    }
 
     // --- Navigation Locked ---
+
     public BooleanProperty navigationLockedProperty() { return navigationLocked; }
+
     public boolean isNavigationLocked() { return navigationLocked.get(); }
+
     public void setNavigationLocked(boolean b) { navigationLocked.set(b); }
 
     // --- Change Duration ---
+
     public DoubleProperty changeDurationProperty() { return changeDuration; }
+
     public double getChangeDuration() { return changeDuration.get(); }
+
     public void setChangeDuration(double d) { changeDuration.set(d); }
 
-    public static final PseudoClass RUNNING = PseudoClass.getPseudoClass("running");
+    // --- Progress timer
 
     public void startProgress() {
         pseudoClassStateChanged(RUNNING, true);
@@ -81,8 +99,7 @@ public class Carousel extends Control {
         pseudoClassStateChanged(RUNNING, true);
     }
 
-    public static final PseudoClass NAV_NEXT = PseudoClass.getPseudoClass("nav-next");
-    public static final PseudoClass NAV_PREV = PseudoClass.getPseudoClass("nav-prev");
+    // --- Navigation API
 
     public void next() {
         pseudoClassStateChanged(NAV_NEXT, true);
