@@ -84,7 +84,6 @@ public class FontAwesomeIcon extends Control {
         this.symbol = requireNonNull(symbol);
         getStyleClass().setAll(DEFAULT_STYLE_CLASS);
         setPrefSize(prefSize, prefSize);
-        setMouseTransparent(true);
     }
 
     public StyleableObjectProperty<Paint> fillProperty() {

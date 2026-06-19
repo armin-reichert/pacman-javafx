@@ -50,7 +50,7 @@ public class StartPagesView extends Carousel implements GameView {
     private GameAction actionShowNextPage;
 
     public StartPagesView() {
-        super(Duration.seconds(PAGE_CHANGE_SECONDS));
+        super(PAGE_CHANGE_SECONDS);
 
         setId("start-pages-view");
 

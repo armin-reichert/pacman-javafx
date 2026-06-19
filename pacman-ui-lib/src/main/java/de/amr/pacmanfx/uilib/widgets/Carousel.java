@@ -27,11 +27,13 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
+//TODO make a JavaFX control from this
 public class Carousel extends StackPane {
 
     public static final int NAV_AREA_SIZE = 48;
 
-    private static final Duration NAVIGATION_LOCK_DURATION = Duration.seconds(1.0);
+    public static final double DEFAULT_CHANGE_SECONDS = 5;
+    public static final double DEFAULT_LOCK_SECONDS = 1.0;
 
     private final IntegerProperty selectedIndex = new SimpleIntegerProperty(-1) {
         @Override
@@ -48,30 +50,15 @@ public class Carousel extends StackPane {
     private final Timeline progressTimer;
 
     private final BooleanProperty navigationLocked = new SimpleBooleanProperty(false);
-    private final PauseTransition navigationLockTimer = new PauseTransition(NAVIGATION_LOCK_DURATION);
+    private final PauseTransition navigationLockTimer = new PauseTransition(Duration.seconds(DEFAULT_LOCK_SECONDS));
 
     public Carousel() {
-        this(Duration.seconds(5));
+        this(DEFAULT_CHANGE_SECONDS);
     }
 
-    public Carousel(Duration itemChangeDuration) {
-        requireNonNull(itemChangeDuration);
-
-        navBackArea = createNavigationArea(Direction.LEFT);
-        navBackArea.setOnMouseClicked(e -> {
-            if (e.getButton() == MouseButton.PRIMARY) {
-                showPreviousItem();
-            }
-        });
-        navBackArea.disableProperty().bind(navigationLocked);
-
-        navForwardArea = createNavigationArea(Direction.RIGHT);
-        navForwardArea.setOnMouseClicked(e -> {
-            if (e.getButton() == MouseButton.PRIMARY) {
-                showNextItem();
-            }
-        });
-        navForwardArea.disableProperty().bind(navigationLocked);
+    public Carousel(double changeDuration) {
+        navBackArea = createNavigationArea(Direction.LEFT, this::showPreviousItem);
+        navForwardArea = createNavigationArea(Direction.RIGHT, this::showNextItem);
 
         navigationLockTimer.setOnFinished(_ -> unlockNavigation());
 
@@ -82,7 +69,7 @@ public class Carousel extends StackPane {
         progressTimer = new Timeline(
             new KeyFrame(Duration.ZERO,
                 new KeyValue(progressBar.progressProperty(), 0)),
-            new KeyFrame(itemChangeDuration,
+            new KeyFrame(Duration.seconds(changeDuration),
                 _ -> showNextItem(),
                 new KeyValue(progressBar.progressProperty(), 1)));
         progressTimer.setCycleCount(Animation.INDEFINITE);
@@ -202,13 +189,15 @@ public class Carousel extends StackPane {
         StackPane.setAlignment(progressBar, Pos.BOTTOM_CENTER);
     }
 
-    protected Node createNavigationArea(Direction dir) {
+    protected Node createNavigationArea(Direction dir, Runnable navAction) {
         final FontAwesomeIcon icon = switch (dir) {
             case LEFT  -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_LEFT, NAV_AREA_SIZE);
             case RIGHT -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT, NAV_AREA_SIZE);
             default -> throw new IllegalArgumentException("Illegal navigation direction: %s".formatted(dir));
         };
         icon.fillProperty().set(Color.gray(0.42));
+        // Mouse clicks are handled by the containing navigation area
+        icon.setMouseTransparent(true);
 
         final var navArea = new HBox(icon);
         navArea.setMaxHeight(NAV_AREA_SIZE);
@@ -220,6 +209,16 @@ public class Carousel extends StackPane {
         navArea.setOnMouseExited(_ -> navArea.setOpacity(0.25));
 
         StackPane.setAlignment(navArea, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
+
+        navArea.disableProperty().bind(navigationLocked);
+
+        navArea.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                e.consume();
+                navAction.run();
+            }
+        });
+
         return navArea;
     }
 }
