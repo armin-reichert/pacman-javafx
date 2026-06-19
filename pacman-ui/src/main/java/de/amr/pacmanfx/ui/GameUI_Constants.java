@@ -105,7 +105,7 @@ public final class GameUI_Constants {
     /**
      * Path to the main UI stylesheet.
      */
-    public static final String STYLE_SHEET_PATH = RESOURCE_ROOT + "css/style.css";
+    public static final String STYLE_SHEET_PATH = RESOURCE_ROOT + "css/game.css";
 
     public static final Color CONTEXT_MENU_DEFAULT_TITLE_COLOR = Color.CORNFLOWERBLUE;
 
