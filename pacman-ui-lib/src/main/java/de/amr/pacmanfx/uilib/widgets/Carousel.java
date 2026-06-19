@@ -13,8 +13,7 @@ import java.net.URL;
 
 public class Carousel extends Control {
 
-    public static final String STYLESHEET =
-        "/de/amr/pacmanfx/uilib/widgets/carousel/carousel.css";
+    public static final String STYLESHEET = "/de/amr/pacmanfx/uilib/widgets/carousel.css";
 
     private final ObservableList<Node> items =
         FXCollections.observableArrayList();
