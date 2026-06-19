@@ -44,6 +44,7 @@ public abstract class GameAction {
             try {
                 doAction();
                 success = true;
+                Logger.info("Action '{}' executed successfully", id);
             }
             catch (Exception x) {
                 Logger.error(x, "An error occurred executing action '{}'", id);
