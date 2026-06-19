@@ -9,6 +9,7 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.GameStartButton;
 import javafx.beans.binding.StringBinding;
 import javafx.scene.image.Image;
@@ -32,6 +33,7 @@ public class GameWindowImpl implements GameWindow {
     }
 
     private static final Map<Class<?>, String> WIDGET_STYLESHEETS = Map.of(
+        Carousel.class, "carousel.css",
         GameStartButton.class, "game-start-button.css"
     );
 

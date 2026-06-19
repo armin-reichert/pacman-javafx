@@ -42,7 +42,8 @@ public class StartPagesView implements GameView {
     private final Carousel carousel;
 
     public StartPagesView() {
-        carousel = new Carousel(PAGE_CHANGE_SECONDS);
+        carousel = new Carousel();
+        carousel.setChangeDuration(PAGE_CHANGE_SECONDS);
         carousel.setId("start-pages-carousel");
         carousel.setBackground(GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER);
         carousel.selectedIndexProperty().addListener((_, ov, nv) -> {
@@ -65,14 +66,14 @@ public class StartPagesView implements GameView {
         actionShowPrevPage = new GameAction(game, "show_prev_page") {
             @Override
             public void doAction() {
-                carousel.showPreviousItem();
+                carousel.previous();
             }
         };
 
         actionShowNextPage = new GameAction(game, "show_next_page") {
             @Override
             public void doAction() {
-                carousel.showNextItem();
+                carousel.next();
             }
         };
     }
@@ -83,24 +84,22 @@ public class StartPagesView implements GameView {
         actionBindings.bindActionToKeyCombination(actionShowNextPage, bareKey(KeyCode.RIGHT));
         Logger.info(actionBindings);
 
-        carousel.restartProgressTimer();
-        currentStartPage().ifPresent(page -> {
-            page.startButton().ifPresentOrElse(
-                startButton -> {
-                    Logger.info("Request focus for start button of start page {}", page);
-                    Platform.runLater(startButton::requestFocus);
-                },
-                () -> {
-                    Logger.info("Request focus for root pane of start page {}", page);
-                    Platform.runLater(() -> page.rootPane().requestFocus());
-                }
-            );
-        });
+        carousel.restartProgress();
+        currentStartPage().ifPresent(page -> page.startButton().ifPresentOrElse(
+            startButton -> {
+                Logger.info("Request focus for start button of start page {}", page);
+                Platform.runLater(startButton::requestFocus);
+            },
+            () -> {
+                Logger.info("Request focus for root pane of start page {}", page);
+                Platform.runLater(() -> page.rootPane().requestFocus());
+            }
+        ));
     }
 
     @Override
     public void onExit() {
-        carousel.pauseProgressTimer();
+        carousel.pauseProgress();
         actionBindings.dispose();
         currentStartPage().ifPresent(StartPage::onExit);
     }
@@ -133,13 +132,13 @@ public class StartPagesView implements GameView {
             return;
         }
         pages.add(startPage);
-        carousel.addItem(startPage.rootPane());
-        carousel.setNavigationButtonsVisible(carousel.numItems() >= 2);
+        carousel.getItems().add(startPage.rootPane());
+        //carousel.setNavigationButtonsVisible(carousel.numItems() >= 2);
         startPage.connect(game);
     }
 
     private Optional<StartPage> currentStartPage() {
-        final int selectedIndex = carousel.selectedIndex();
+        final int selectedIndex = carousel.getSelectedIndex();
         return selectedIndex >= 0 ? Optional.of(pages.get(selectedIndex)) : Optional.empty();
     }
 

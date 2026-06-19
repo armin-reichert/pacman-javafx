@@ -1,0 +1,18 @@
+.carousel {
+    -fx-background-color: transparent;
+}
+
+.carousel-nav {
+    -fx-opacity: 0.25;
+    -fx-cursor: hand;
+    -fx-max-width: 48;
+    -fx-max-height: 48;
+}
+
+.carousel-nav:hover {
+    -fx-opacity: 0.8;
+}
+
+.carousel-progress {
+    -fx-pref-width: 400;
+}
