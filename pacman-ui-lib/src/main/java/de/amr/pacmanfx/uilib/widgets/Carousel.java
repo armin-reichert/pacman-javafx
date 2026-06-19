@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 
 public class Carousel extends StackPane {
 
-    public static final int NAV_BUTTON_SIZE = 48;
+    public static final int NAV_AREA_SIZE = 48;
 
     private static final Duration NAVIGATION_LOCK_DURATION = Duration.seconds(1.0);
 
@@ -41,8 +41,8 @@ public class Carousel extends StackPane {
     };
 
     private final List<Node> items = new ArrayList<>();
-    private final Node btnBack;
-    private final Node btnForward;
+    private final Node navBackArea;
+    private final Node navForwardArea;
 
     private final ProgressBar progressBar;
     private final Timeline progressTimer;
@@ -57,21 +57,21 @@ public class Carousel extends StackPane {
     public Carousel(Duration itemChangeDuration) {
         requireNonNull(itemChangeDuration);
 
-        btnBack = createNavigationButton(Direction.LEFT);
-        btnBack.setOnMousePressed(e -> {
+        navBackArea = createNavigationArea(Direction.LEFT);
+        navBackArea.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
                 showPreviousItem();
             }
         });
-        btnBack.disableProperty().bind(navigationLocked);
+        navBackArea.disableProperty().bind(navigationLocked);
 
-        btnForward = createNavigationButton(Direction.RIGHT);
-        btnForward.setOnMousePressed(e -> {
+        navForwardArea = createNavigationArea(Direction.RIGHT);
+        navForwardArea.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
                 showNextItem();
             }
         });
-        btnForward.disableProperty().bind(navigationLocked);
+        navForwardArea.disableProperty().bind(navigationLocked);
 
         navigationLockTimer.setOnFinished(_ -> unlockNavigation());
 
@@ -153,8 +153,8 @@ public class Carousel extends StackPane {
     }
 
     public void setNavigationButtonsVisible(boolean visible) {
-        btnBack.setVisible(visible);
-        btnForward.setVisible(visible);
+        navBackArea.setVisible(visible);
+        navForwardArea.setVisible(visible);
     }
 
     public void showPreviousItem() {
@@ -195,30 +195,31 @@ public class Carousel extends StackPane {
         getChildren().clear();
         currentItem().ifPresent(item -> getChildren().add(item));
         // Buttons must be added last to stack pane!
-        getChildren().addAll(progressBar, btnBack, btnForward);
+        getChildren().addAll(progressBar, navBackArea, navForwardArea);
 
-        StackPane.setAlignment(btnBack, Pos.CENTER_LEFT);
-        StackPane.setAlignment(btnForward, Pos.CENTER_RIGHT);
+        StackPane.setAlignment(navBackArea, Pos.CENTER_LEFT);
+        StackPane.setAlignment(navForwardArea, Pos.CENTER_RIGHT);
         StackPane.setAlignment(progressBar, Pos.BOTTOM_CENTER);
     }
 
-    protected Node createNavigationButton(Direction dir) {
-        final Color iconColor = Color.gray(0.69);
+    protected Node createNavigationArea(Direction dir) {
         final FontAwesomeIcon icon = switch (dir) {
-            case LEFT  -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_LEFT, NAV_BUTTON_SIZE);
-            case RIGHT -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT, NAV_BUTTON_SIZE);
+            case LEFT  -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_LEFT, NAV_AREA_SIZE);
+            case RIGHT -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT, NAV_AREA_SIZE);
             default -> throw new IllegalArgumentException("Illegal navigation direction: %s".formatted(dir));
         };
-        icon.fillProperty().set(iconColor);
-        icon.setOpacity(0.2);
-        icon.setOnMouseEntered(_ -> icon.setOpacity(0.8));
-        icon.setOnMouseExited(_ -> icon.setOpacity(0.2));
+        icon.fillProperty().set(Color.gray(0.42));
 
-        final var button = new HBox(icon);
-        button.setMaxHeight(NAV_BUTTON_SIZE);
-        button.setMaxWidth(NAV_BUTTON_SIZE);
-        button.setPadding(new Insets(5));
-        StackPane.setAlignment(button, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
-        return button;
+        final var navArea = new HBox(icon);
+        navArea.setMaxHeight(NAV_AREA_SIZE);
+        navArea.setMaxWidth(NAV_AREA_SIZE);
+        navArea.setPadding(new Insets(5));
+        navArea.setPickOnBounds(true);
+        navArea.setOpacity(0.25);
+        navArea.setOnMouseEntered(_ -> navArea.setOpacity(0.8));
+        navArea.setOnMouseExited(_ -> navArea.setOpacity(0.25));
+
+        StackPane.setAlignment(navArea, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
+        return navArea;
     }
 }
