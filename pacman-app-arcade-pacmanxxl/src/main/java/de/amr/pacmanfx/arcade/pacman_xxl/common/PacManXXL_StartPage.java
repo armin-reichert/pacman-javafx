@@ -130,7 +130,7 @@ public class PacManXXL_StartPage implements StartPage {
     // Private area
 
     private void pauseProgressTimer() {
-        game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class).pauseProgressTimer();
+        game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().pauseProgressTimer();
     }
 
     private void stopTalking() {

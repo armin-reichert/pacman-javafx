@@ -122,7 +122,7 @@ public class PacManAllGamesApp extends Application {
                 startPagesView.addStartPage(new ArcadeMsPacMan_StartPage());
                 startPagesView.addStartPage(new TengenMsPacMan_StartPage());
                 startPagesView.addStartPage(new PacManXXL_StartPage());
-                startPagesView.setSelectedIndex(0);
+                startPagesView.rootPane().setSelectedIndex(0);
             }
 
             game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));

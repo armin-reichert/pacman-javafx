@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -12,18 +12,9 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
-import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
-import de.amr.pacmanfx.uilib.widgets.FontAwesomeSymbol;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -37,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
-public class StartPagesView extends Carousel implements GameView {
+public class StartPagesView implements GameView {
 
     //TODO start pages should define their preferred duration
     public static final int PAGE_CHANGE_SECONDS = 90;
@@ -49,14 +40,13 @@ public class StartPagesView extends Carousel implements GameView {
     private GameAction actionShowPrevPage;
     private GameAction actionShowNextPage;
 
+    private final Carousel carousel;
+
     public StartPagesView() {
-        super(PAGE_CHANGE_SECONDS);
-
-        setId("start-pages-carousel");
-
-        setBackground(GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER);
-
-        selectedIndexProperty().addListener((_, ov, nv) -> {
+        carousel = new Carousel(PAGE_CHANGE_SECONDS);
+        carousel.setId("start-pages-carousel");
+        carousel.setBackground(GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER);
+        carousel.selectedIndexProperty().addListener((_, ov, nv) -> {
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
                 pages.get(oldIndex).onExit();
@@ -77,14 +67,14 @@ public class StartPagesView extends Carousel implements GameView {
         actionShowPrevPage = new GameAction(game, "show_prev_page") {
             @Override
             public void doAction() {
-                showPreviousItem();
+                carousel.showPreviousItem();
             }
         };
 
         actionShowNextPage = new GameAction(game, "show_next_page") {
             @Override
             public void doAction() {
-                showNextItem();
+                carousel.showNextItem();
             }
         };
     }
@@ -95,7 +85,7 @@ public class StartPagesView extends Carousel implements GameView {
         actionBindings.bindActionToKeyCombination(actionShowNextPage, bareKey(KeyCode.RIGHT));
         Logger.info(actionBindings);
 
-        restartProgressTimer();
+        carousel.restartProgressTimer();
         currentStartPage().ifPresent(page -> {
             page.startButton().ifPresentOrElse(
                 startButton -> {
@@ -112,7 +102,7 @@ public class StartPagesView extends Carousel implements GameView {
 
     @Override
     public void onExit() {
-        pauseProgressTimer();
+        carousel.pauseProgressTimer();
         actionBindings.dispose();
         currentStartPage().ifPresent(StartPage::onExit);
     }
@@ -131,7 +121,7 @@ public class StartPagesView extends Carousel implements GameView {
     }
 
     @Override
-    public Region rootPane() { return this; }
+    public Carousel rootPane() { return carousel; }
 
     @Override
     public Optional<Supplier<String>> optTitleSupplier() {
@@ -139,16 +129,15 @@ public class StartPagesView extends Carousel implements GameView {
     }
 
     public Optional<StartPage> currentStartPage() {
-        final int selectedIndex = selectedIndex();
+        final int selectedIndex = carousel.selectedIndex();
         return selectedIndex >= 0 ? Optional.of(pages.get(selectedIndex)) : Optional.empty();
     }
 
     public void addStartPage(StartPage startPage) {
         requireNonNull(startPage);
         pages.add(startPage);
-        addItem(startPage.rootPane());
-        setNavigationButtonsVisible(numItems() >= 2);
-        Logger.debug("Start page '{}' added", startPage.getClass().getSimpleName());
+        carousel.addItem(startPage.rootPane());
+        carousel.setNavigationButtonsVisible(carousel.numItems() >= 2);
     }
 
     private String composeTitle() {
