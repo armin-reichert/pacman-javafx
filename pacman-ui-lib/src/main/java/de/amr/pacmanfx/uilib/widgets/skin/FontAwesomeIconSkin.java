@@ -18,7 +18,7 @@ public class FontAwesomeIconSkin extends SkinBase<FontAwesomeIcon> {
         super(control);
 
         final StackPane container = new StackPane();
-        container.getStyleClass().add(FontAwesomeIcon.DEFAULT_STYLE_CLASS + "-container");
+        container.getStyleClass().add(FontAwesomeIcon.DEFAULT_STYLE_CLASS);
 
         final Text text = new Text();
         text.setText(String.valueOf(control.symbol().unicode()));

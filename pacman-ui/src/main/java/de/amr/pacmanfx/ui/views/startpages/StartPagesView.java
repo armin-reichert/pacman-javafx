@@ -52,7 +52,7 @@ public class StartPagesView extends Carousel implements GameView {
     public StartPagesView() {
         super(PAGE_CHANGE_SECONDS);
 
-        setId("start-pages-view");
+        setId("start-pages-carousel");
 
         setBackground(GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER);
 

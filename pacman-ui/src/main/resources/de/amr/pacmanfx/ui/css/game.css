@@ -34,17 +34,22 @@
     -fx-text-fill: #003366;
 }
 
-#paused-icon .font-awesome-icon-container {
+#paused-icon .font-awesome-icon {
     -fx-pref-width:  80;
     -fx-pref-height: 80;
 }
 
-#start-pages-view .font-awesome-icon-container {
+/* Navigation icons in start pages carousel */
+#start-pages-carousel .font-awesome-icon {
     -fx-pref-width:  48;
     -fx-pref-height: 48;
 }
 
+/* Status icon box: "muted", "3D mode", "immunity" etc. */
+
 #status-icon-box .font-awesome-icon {
+    -fx-pref-width:  32;
+    -fx-pref-height: 32;
     -fx-fill: rgb(222, 222, 255);
 }
 
@@ -52,13 +57,7 @@
     -fx-fill: red;
 }
 
-/* Size of icons inside status icon box. Font size adapts to this size. */
-#status-icon-box .font-awesome-icon-container {
-    -fx-pref-width:  32;
-    -fx-pref-height: 32;
-}
-
-/* Padding and spacing of icons inside status icon box */
+/* Padding and spacing of icons inside status icon box. Border only for debugging. */
 #status-icon-layout {
     -fx-padding: 10px;
     -fx-spacing: 10px;
