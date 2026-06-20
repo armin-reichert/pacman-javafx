@@ -15,6 +15,7 @@ import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,9 +23,11 @@ import java.util.List;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Displays a FontAwesome icon.
+ * Displays a <a href="https://fontawesome.com/">Font Awesome icon</a>.
  */
 public class FontAwesomeIcon extends Control {
+
+    public static final String STYLESHEET = "font-awesome-icon.css";
 
     public static final String DEFAULT_STYLE_CLASS = "font-awesome-icon";
 
@@ -111,4 +114,11 @@ public class FontAwesomeIcon extends Control {
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
         return getClassCssMetaData();
     }
+
+    @Override
+    public String getUserAgentStylesheet() {
+        final URL url = getClass().getResource(STYLESHEET);
+        return url != null ? url.toExternalForm() : null;
+    }
+
 }

@@ -34,22 +34,25 @@
     -fx-text-fill: #003366;
 }
 
-#paused-icon .font-awesome-icon {
+#paused-icon .font-awesome-icon-container {
     -fx-pref-width:  80;
     -fx-pref-height: 80;
 }
 
 /* Navigation icons in start pages carousel */
-#start-pages-carousel .font-awesome-icon {
+#start-pages-carousel .font-awesome-icon-container {
     -fx-pref-width:  48;
     -fx-pref-height: 48;
 }
 
 /* Status icon box: "muted", "3D mode", "immunity" etc. */
 
-#status-icon-box .font-awesome-icon {
+#status-icon-box .font-awesome-icon-container {
     -fx-pref-width:  32;
     -fx-pref-height: 32;
+}
+
+#status-icon-box .font-awesome-icon {
     -fx-fill: rgb(222, 222, 255);
 }
 

@@ -13,23 +13,21 @@ import java.net.URL;
 
 public class Carousel extends Control {
 
-    public static final String STYLESHEET = "/de/amr/pacmanfx/uilib/widgets/carousel.css";
+    public static final String STYLESHEET = "carousel.css";
 
     public static final PseudoClass RUNNING = PseudoClass.getPseudoClass("running");
+
     public static final PseudoClass NAV_NEXT = PseudoClass.getPseudoClass("nav-next");
+
     public static final PseudoClass NAV_PREV = PseudoClass.getPseudoClass("nav-prev");
 
-    private final ObservableList<Node> items =
-        FXCollections.observableArrayList();
+    private final ObservableList<Node> items = FXCollections.observableArrayList();
 
-    private final IntegerProperty selectedIndex =
-        new SimpleIntegerProperty(this, "selectedIndex", -1);
+    private final IntegerProperty selectedIndex = new SimpleIntegerProperty(this, "selectedIndex", -1);
 
-    private final BooleanProperty navigationLocked =
-        new SimpleBooleanProperty(this, "navigationLocked", false);
+    private final BooleanProperty navigationLocked = new SimpleBooleanProperty(this, "navigationLocked", false);
 
-    private final DoubleProperty changeDuration =
-        new SimpleDoubleProperty(this, "changeDuration", 5.0);
+    private final DoubleProperty changeDuration = new SimpleDoubleProperty(this, "changeDuration", 5.0);
 
     public Carousel() {
         getStyleClass().add("carousel");
@@ -43,11 +41,12 @@ public class Carousel extends Control {
 
     @Override
     public String getUserAgentStylesheet() {
-        URL url = getClass().getResource(STYLESHEET);
+        final URL url = getClass().getResource(STYLESHEET);
         return url != null ? url.toExternalForm() : null;
     }
 
     // --- Items ---
+
     public ObservableList<Node> getItems() { return items; }
 
     // --- Selected Index ---
@@ -56,11 +55,11 @@ public class Carousel extends Control {
 
     public int getSelectedIndex() { return selectedIndex.get(); }
 
-    public void setSelectedIndex(int i) {
-        if (i < -1 || i >= items.size()) {
-            throw new IndexOutOfBoundsException("Invalid carousel index: " + i);
+    public void setSelectedIndex(int pageIndex) {
+        if (pageIndex < -1 || pageIndex >= items.size()) {
+            throw new IndexOutOfBoundsException("Invalid carousel page index: " + pageIndex);
         }
-        selectedIndex.set(i);
+        selectedIndex.set(pageIndex);
     }
 
     // --- Navigation Locked ---
@@ -77,7 +76,7 @@ public class Carousel extends Control {
 
     public double getChangeDuration() { return changeDuration.get(); }
 
-    public void setChangeDuration(double d) { changeDuration.set(d); }
+    public void setChangeDuration(double seconds) { changeDuration.set(seconds); }
 
     // --- Progress timer
 
