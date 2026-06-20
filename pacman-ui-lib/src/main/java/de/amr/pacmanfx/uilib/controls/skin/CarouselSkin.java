@@ -16,7 +16,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SkinBase;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -65,13 +64,17 @@ public class CarouselSkin extends SkinBase<Carousel> {
 
         // Keyboard: SPACE toggles timer
         control.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.SPACE) {
-                if (progressTimer.getStatus() == Animation.Status.PAUSED) {
-                    progressTimer.play();
-                } else {
-                    progressTimer.pause();
+            switch (e.getCode()) {
+                case SPACE -> {
+                    if (progressTimer.getStatus() == Animation.Status.PAUSED) {
+                        progressTimer.play();
+                    } else {
+                        progressTimer.pause();
+                    }
+                    e.consume();
                 }
-                e.consume();
+                case LEFT -> showPrevious();
+                case RIGHT -> showNext();
             }
         });
 

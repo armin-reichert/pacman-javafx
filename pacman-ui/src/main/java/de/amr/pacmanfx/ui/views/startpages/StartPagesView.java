@@ -13,7 +13,6 @@ import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.controls.Carousel;
 import javafx.application.Platform;
-import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -36,8 +34,6 @@ public class StartPagesView implements GameView {
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Start View Action Bindings");
 
     private Game game;
-    private GameAction actionShowPrevPage;
-    private GameAction actionShowNextPage;
 
     private final Carousel carousel;
 
@@ -62,28 +58,10 @@ public class StartPagesView implements GameView {
     @Override
     public void connect(Game game) {
         this.game = requireNonNull(game);
-
-        actionShowPrevPage = new GameAction(game, "show_prev_page") {
-            @Override
-            public void doAction() {
-                carousel.previous();
-            }
-        };
-
-        actionShowNextPage = new GameAction(game, "show_next_page") {
-            @Override
-            public void doAction() {
-                carousel.next();
-            }
-        };
     }
 
     @Override
     public void onEnter() {
-        actionBindings.bindActionToKeyCombination(actionShowPrevPage, bareKey(KeyCode.LEFT));
-        actionBindings.bindActionToKeyCombination(actionShowNextPage, bareKey(KeyCode.RIGHT));
-        Logger.info(actionBindings);
-
         currentStartPage().ifPresent(page -> page.startButton().ifPresentOrElse(
             startButton -> {
                 Logger.info("Request focus for start button of start page {}", page);

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.uilib.controls.skin.CarouselSkin;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
@@ -20,10 +19,6 @@ public class Carousel extends Control {
     public static final String STYLE_CLASS = "carousel";
 
     public static final String STYLESHEET = "carousel.css";
-
-    public static final PseudoClass NAV_NEXT_PC = PseudoClass.getPseudoClass("nav-next");
-
-    public static final PseudoClass NAV_PREV_PC = PseudoClass.getPseudoClass("nav-prev");
 
     private final ObservableList<Node> items = FXCollections.observableArrayList();
 
@@ -98,15 +93,4 @@ public class Carousel extends Control {
 
     public void setChangeDuration(double seconds) { changeDuration.set(seconds); }
 
-    // --- Navigation API
-
-    public void next() {
-        pseudoClassStateChanged(NAV_NEXT_PC, true);
-        pseudoClassStateChanged(NAV_NEXT_PC, false);
-    }
-
-    public void previous() {
-        pseudoClassStateChanged(NAV_PREV_PC, true);
-        pseudoClassStateChanged(NAV_PREV_PC, false);
-    }
 }
