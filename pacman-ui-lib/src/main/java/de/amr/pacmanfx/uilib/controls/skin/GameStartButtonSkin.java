@@ -23,7 +23,6 @@ public class GameStartButtonSkin extends SkinBase<GameStartButton> {
 
         final Text text = new Text();
         text.textProperty().bind(control.textProperty());
-        text.fontProperty().bind(control.fontProperty());
         text.setFill(Color.WHITE);
 
         final Pane root = new StackPane(text);

@@ -1,3 +1,9 @@
+@font-face {
+    font-family: "Emulogic";
+    src: url("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf");
+}
+
+
 /* Custom context menu style */
 
 .custom-menu-item:focused,
@@ -5,6 +11,18 @@
 .custom-menu-item:armed {
     -fx-background-color: transparent;
     -fx-text-fill: black; /* or your desired text color */
+}
+
+/* Start pages button */
+
+.game-start-button-container {
+    -fx-background-color: rgb(0, 155, 252, 0.6);
+}
+
+.game-start-button {
+    -fx-font-family: "Emulogic";
+    -fx-font-size: 32;
+    -fx-text-fill: green;
 }
 
 /* Start page progress bar */

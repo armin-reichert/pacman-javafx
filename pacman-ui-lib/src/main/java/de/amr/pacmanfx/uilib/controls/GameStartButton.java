@@ -82,9 +82,4 @@ public class GameStartButton extends Control {
 
     public void setText(String s) { text.set(s); }
 
-    public ObjectProperty<Font> fontProperty() { return font; }
-
-    public Font getFont() { return font.get(); }
-
-    public void setFont(Font f) { font.set(f); }
 }

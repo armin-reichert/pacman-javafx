@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.geometry.Pos;
@@ -15,27 +14,12 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
 public class FlyerStartPage implements StartPage {
-
-    public record Config(
-        Font startButtonFont,
-        Color startButtonBgColor,
-        Color startButtonTextColor
-    ) {}
-
-    public static final Config DEFAULT_CONFIG = new Config(
-        Ufx.deriveFont(GameUI_Constants.FONT_ARCADE_8, 32),
-        Color.rgb(0, 155, 252, 0.6),
-        Color.WHITE);
-
-    protected Config config = DEFAULT_CONFIG;
 
     protected final StackPane rootPane = new StackPane();
     protected final Flyer flyer = new Flyer();
@@ -47,22 +31,32 @@ public class FlyerStartPage implements StartPage {
     public FlyerStartPage(String title) {
         this.title = requireNonNull(title);
 
+        rootPane.getStyleClass().add("flyer-start-page");
+
         rootPane.getChildren().add(flyer);
 
         //TODO use global keyboard instead?
         rootPane.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
-                case DOWN -> flyer.nextFlyerPage();
-                case UP -> flyer.prevFlyerPage();
+                case DOWN -> {
+                    e.consume();
+                    flyer.nextFlyerPage();
+                }
+                case UP -> {
+                    e.consume();
+                    flyer.prevFlyerPage();
+                }
                 case S -> {
+                    e.consume();
                     if (game != null) {
                         game.ui().sounds().stopAndDisposeVoice();
-                        game.ui().shortMessage("OK, I shut my mouth");
+                        game.ui().shortMessage(game.ui().translations().translate("flash.shut_up"));
                     }
                 }
             }
         });
 
+        // Let scroll wheel scroll through flyer pages
         rootPane.addEventHandler(ScrollEvent.SCROLL, e-> {
             if (e.getDeltaY() < 0) {
                 flyer.nextFlyerPage();
@@ -124,18 +118,9 @@ public class FlyerStartPage implements StartPage {
     private void createAndAddStartButton(Game game) {
         final String text = game.ui().translations().translate("startpage.play_button");
         startButton = new GameStartButton(text);
-        startButton.fontProperty().bind(rootPane.heightProperty().map(
-            pageHeight -> Font.font(
-                config.startButtonFont().getFamily(),
-                computeButtonHeight(pageHeight.doubleValue())))
-        );
         startButton.setOnAction(_ -> game.actions().gameFlowActions().actionStartGame().execute());
         StackPane.setAlignment(startButton, Pos.CENTER);
         startButton.translateYProperty().bind(rootPane.heightProperty().divide(3));
         rootPane.getChildren().add(startButton);
-    }
-
-    private static double computeButtonHeight(double pageHeight) {
-        return Math.min(pageHeight / 25, 48);
     }
 }
