@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ORANGE;
@@ -20,9 +21,14 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
     private final CopyrightRenderer copyrightRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
+    private final Image copyrightImage;
+
     public ArcadeMsPacMan_StartScene_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
-        copyrightRenderer = scene.configureRenderer(new CopyrightRenderer(canvas, uiConfig.assets().image("logo.midway")));
+
+        copyrightImage = uiConfig.assets().image("logo.midway");
+
+        copyrightRenderer = scene.configureRenderer(new CopyrightRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 
@@ -44,7 +50,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
         ctx.setFont(arcadeFont6());
         ctx.fillText("PTS", STS*25, STS*25);
         drawSprite(spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL), TS(13), TS(23) + 1, true);
-        copyrightRenderer.drawCopyright(TS(6), TS(28));
+        copyrightRenderer.drawCopyright(copyrightImage, TS(6), TS(28));
         if (scene.game().ui().settings().debugModeOnProperty().get()) {
             debugRenderer.draw(scene);
         }

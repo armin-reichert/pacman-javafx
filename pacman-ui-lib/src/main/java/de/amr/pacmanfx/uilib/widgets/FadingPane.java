@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.uilib.widgets;
 
 import javafx.animation.Animation.Status;
@@ -9,9 +10,6 @@ import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 
-/**
- * @author Armin Reichert
- */
 public class FadingPane extends BorderPane {
 
     private final FadeTransition fading;

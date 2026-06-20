@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene.*;
@@ -30,10 +31,15 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
     private final ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
+    private final Image copyrightImage;
+
     public ArcadeMsPacMan_IntroScene_Renderer(UIConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
+
+        copyrightImage = uiConfig.assets().image("logo.midway");
+
         marqueeRenderer = scene.configureRenderer(new MarqueeRenderer(canvas));
-        copyrightRenderer = scene.configureRenderer(new CopyrightRenderer(canvas, uiConfig.assets().image("logo.midway")));
+        copyrightRenderer = scene.configureRenderer(new CopyrightRenderer(canvas));
         actorRenderer = scene.configureRenderer(uiConfig.createActorRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
@@ -68,7 +74,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
             }
             default -> {}
         }
-        copyrightRenderer.drawCopyright(TS(6), TS(28));
+        copyrightRenderer.drawCopyright(copyrightImage, TS(6), TS(28));
 
         if (scene.game().ui().settings().debugModeOnProperty().get()) {
             debugRenderer.draw(scene);

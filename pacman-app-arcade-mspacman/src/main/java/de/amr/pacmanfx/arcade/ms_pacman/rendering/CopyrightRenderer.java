@@ -13,20 +13,16 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
 public class CopyrightRenderer extends BaseRenderer {
 
-    private final Image logo;
-
-    public CopyrightRenderer(Canvas canvas, Image logo) {
+    public CopyrightRenderer(Canvas canvas) {
         super(canvas);
-        this.logo = logo;
     }
 
-    public void drawCopyright(double x, double y) {
+    public void drawCopyright(Image logo, double x, double y) {
         ctx.drawImage(logo, scaled(x), scaled(y + 2), scaled(TS(4) - 2), scaled(TS(4)));
         ctx.setFont(arcadeFont8());
         ctx.setFill(ARCADE_RED);
         ctx.fillText("©", scaled(x + TS(5)), scaled(y + TS(2)) + 2);
         ctx.fillText("MIDWAY MFG CO", scaled(x + TS(7)), scaled(y + TS(2)));
         ctx.fillText("1980/1981", scaled(x + TS(8)), scaled(y + TS(4)));
-
     }
 }
