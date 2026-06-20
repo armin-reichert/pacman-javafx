@@ -210,7 +210,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     private OptionMenuEntry<WorldMapSelectionMode> createCustomMapsEntry() {
         final var entry = new OptionMenuEntry<>("MAP ORDER", List.of(CUSTOM_MAPS_FIRST, ALL_RANDOM, NO_CUSTOM_MAPS), CUSTOM_MAPS_FIRST);
         entry.setValueFormatter(order -> {
-            if (!entry.enabled()) {
+            if (!entry.isEnabled()) {
                 return "NO CUSTOM MAPS!";
             }
             return switch (order) {

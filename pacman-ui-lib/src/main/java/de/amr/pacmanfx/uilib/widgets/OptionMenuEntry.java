@@ -4,7 +4,9 @@
 
 package de.amr.pacmanfx.uilib.widgets;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
@@ -19,7 +21,8 @@ public class OptionMenuEntry<T> {
     protected final String text;
     protected final ObjectProperty<T> value = new SimpleObjectProperty<>();
     protected final List<T> valueList;
-    protected boolean enabled;
+
+    private final BooleanProperty enabled = new SimpleBooleanProperty(true);
 
     private Function<T, String> valueFormatter = value -> (value != null) ? String.valueOf(value) : "No value";
 
@@ -42,8 +45,6 @@ public class OptionMenuEntry<T> {
             Logger.error("Initial value {} is not contained in value list, select first value instead");
             value.set(valueList.getFirst());
         }
-
-        enabled = true;
     }
 
     public ObjectProperty<T> valueProperty() {
@@ -80,12 +81,16 @@ public class OptionMenuEntry<T> {
         return valueList.get(index);
     }
 
-    public boolean enabled() {
+    public BooleanProperty enabledProperty() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public boolean isEnabled() {
+        return enabled.get();
+    }
+
+    public void setEnabled(boolean value) {
+        enabled.set(value);
     }
 
     public String text() {

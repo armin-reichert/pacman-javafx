@@ -213,7 +213,7 @@ public class OptionMenu {
 
     private void goUp() {
         final int i = selectedEntryIndex > 0 ? selectedEntryIndex - 1 : entries.size() - 1;
-        if (entries.get(i).enabled) {
+        if (entries.get(i).isEnabled()) {
             selectedEntryIndex = i;
             playSoundIfPresent(style.entrySelectedSound());
         }
@@ -221,7 +221,7 @@ public class OptionMenu {
 
     private void goDown() {
         final int i = selectedEntryIndex < entries.size() - 1 ? selectedEntryIndex + 1 : 0;
-        if (entries.get(i).enabled) {
+        if (entries.get(i).isEnabled()) {
             selectedEntryIndex = i;
             playSoundIfPresent(style.entrySelectedSound());
         }
