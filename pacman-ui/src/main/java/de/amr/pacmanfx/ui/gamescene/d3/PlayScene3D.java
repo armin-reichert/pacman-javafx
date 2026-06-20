@@ -23,7 +23,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Scores3D;
-import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
+import de.amr.pacmanfx.uilib.widgetwannabes.CoordinateSystem;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;

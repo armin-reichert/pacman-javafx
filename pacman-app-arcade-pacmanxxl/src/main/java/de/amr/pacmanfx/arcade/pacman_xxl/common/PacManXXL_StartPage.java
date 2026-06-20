@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
-import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
+import de.amr.pacmanfx.uilib.widgetwannabes.OptionMenuStyle;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.image.Image;

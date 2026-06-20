@@ -7,7 +7,7 @@ import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.GameStartButton;
-import de.amr.pacmanfx.uilib.widgets.Flyer;
+import de.amr.pacmanfx.uilib.widgetwannabes.Flyer;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;

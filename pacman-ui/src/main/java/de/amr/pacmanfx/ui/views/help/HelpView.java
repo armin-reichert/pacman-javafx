@@ -9,7 +9,7 @@ import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
-import de.amr.pacmanfx.uilib.widgets.FadingPane;
+import de.amr.pacmanfx.uilib.widgetwannabes.FadingPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;

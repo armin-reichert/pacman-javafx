@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.widgets;
+package de.amr.pacmanfx.uilib.widgetwannabes;
 
 import de.amr.pacmanfx.uilib.UfxBackgrounds;
 import javafx.scene.image.Image;
