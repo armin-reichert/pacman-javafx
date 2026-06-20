@@ -129,7 +129,7 @@ public class FlyerStartPage implements StartPage {
                 config.startButtonFont().getFamily(),
                 computeButtonHeight(pageHeight.doubleValue())))
         );
-        startButton.setOnAction(() -> game.actions().gameFlowActions().actionStartGame().execute());
+        startButton.setOnAction(_ -> game.actions().gameFlowActions().actionStartGame().execute());
         StackPane.setAlignment(startButton, Pos.CENTER);
         startButton.translateYProperty().bind(rootPane.heightProperty().divide(3));
         rootPane.getChildren().add(startButton);

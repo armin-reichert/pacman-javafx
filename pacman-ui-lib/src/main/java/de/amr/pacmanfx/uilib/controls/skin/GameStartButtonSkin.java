@@ -8,6 +8,7 @@ import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import javafx.animation.*;
 import javafx.scene.Node;
 import javafx.scene.control.SkinBase;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -36,13 +37,21 @@ public class GameStartButtonSkin extends SkinBase<GameStartButton> {
         root.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
                 e.consume();
-                control.onActionProperty().get().run();
+                control.fire();
+            }
+        });
+
+        root.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
+                e.consume();
+                control.fire();
             }
         });
 
         root.setOnMouseEntered(_ -> root.setOpacity(0.85));
-        root.setOnMouseExited(_ -> root.setOpacity(1.0));
-        root.setOnMousePressed(_ -> root.setScaleX(0.97));
+        root.setOnMouseExited (_ -> root.setOpacity(1.0));
+
+        root.setOnMousePressed (_ -> root.setScaleX(0.97));
         root.setOnMouseReleased(_ -> root.setScaleX(1.0));
 
         final Animation pulse = createPulseAnimation(root);

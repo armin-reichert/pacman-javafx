@@ -6,11 +6,12 @@ package de.amr.pacmanfx.uilib.controls;
 import de.amr.pacmanfx.uilib.controls.skin.GameStartButtonSkin;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
-import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
-import org.tinylog.Logger;
 
 import java.net.URL;
 
@@ -23,9 +24,7 @@ public class GameStartButton extends Control {
 
     private static final String DEFAULT_STYLE_CLASS = "game-start-button";
 
-    private static final Runnable DEFAULT_ACTION = () -> Logger.info("No action assigned");
-
-    private final ObjectProperty<Runnable> onAction = new SimpleObjectProperty<>(DEFAULT_ACTION);
+    private final ObjectProperty<EventHandler<ActionEvent>> onAction = new SimpleObjectProperty<>(this, "onAction");
 
     private final ObjectProperty<String> text = new SimpleObjectProperty<>("");
 
@@ -42,12 +41,6 @@ public class GameStartButton extends Control {
 
         setFocusTraversable(true);
 
-        setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
-                e.consume();
-                onAction.get().run();
-            }
-        });
     }
 
     @Override
@@ -61,9 +54,27 @@ public class GameStartButton extends Control {
         return url != null ? url.toExternalForm() : null;
     }
 
-    public ObjectProperty<Runnable> onActionProperty() { return onAction; }
+    public final ObjectProperty<EventHandler<ActionEvent>> onActionProperty() {
+        return onAction;
+    }
 
-    public void setOnAction(Runnable r) { onAction.set(r); }
+    public final void setOnAction(EventHandler<ActionEvent> handler) {
+        onAction.set(handler);
+    }
+
+    public final EventHandler<ActionEvent> getOnAction() {
+        return onAction.get();
+    }
+
+    public void fire() {
+        ActionEvent event = new ActionEvent();
+        Event.fireEvent(this, event);
+
+        EventHandler<ActionEvent> handler = getOnAction();
+        if (handler != null) {
+            handler.handle(event);
+        }
+    }
 
     public ObjectProperty<String> textProperty() { return text; }
 
