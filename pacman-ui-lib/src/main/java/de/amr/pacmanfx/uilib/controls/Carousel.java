@@ -17,13 +17,13 @@ import java.net.URL;
 
 public class Carousel extends Control {
 
+    public static final String STYLE_CLASS = "carousel";
+
     public static final String STYLESHEET = "carousel.css";
 
-    public static final PseudoClass RUNNING = PseudoClass.getPseudoClass("running");
+    public static final PseudoClass NAV_NEXT_PC = PseudoClass.getPseudoClass("nav-next");
 
-    public static final PseudoClass NAV_NEXT = PseudoClass.getPseudoClass("nav-next");
-
-    public static final PseudoClass NAV_PREV = PseudoClass.getPseudoClass("nav-prev");
+    public static final PseudoClass NAV_PREV_PC = PseudoClass.getPseudoClass("nav-prev");
 
     private final ObservableList<Node> items = FXCollections.observableArrayList();
 
@@ -33,8 +33,10 @@ public class Carousel extends Control {
 
     private final DoubleProperty changeDuration = new SimpleDoubleProperty(this, "changeDuration", 5.0);
 
+    private final BooleanProperty progressRunning = new SimpleBooleanProperty(false);
+
     public Carousel() {
-        getStyleClass().add("carousel");
+        getStyleClass().add(STYLE_CLASS);
         setFocusTraversable(true);
     }
 
@@ -66,6 +68,20 @@ public class Carousel extends Control {
         selectedIndex.set(pageIndex);
     }
 
+    // --- Progress timer control
+
+    public BooleanProperty progressRunningProperty() {
+        return progressRunning;
+    }
+
+    public void startProgress() {
+        progressRunning.set(true);
+    }
+
+    public void pauseProgress() {
+        progressRunning.set(false);
+    }
+
     // --- Navigation Locked ---
 
     public BooleanProperty navigationLockedProperty() { return navigationLocked; }
@@ -82,35 +98,15 @@ public class Carousel extends Control {
 
     public void setChangeDuration(double seconds) { changeDuration.set(seconds); }
 
-    // --- Progress timer
-
-    public void startProgress() {
-        pseudoClassStateChanged(RUNNING, true);
-    }
-
-    public void pauseProgress() {
-        pseudoClassStateChanged(RUNNING, false);
-    }
-
-    public void toggleProgress() {
-        boolean running = getPseudoClassStates().contains(RUNNING);
-        pseudoClassStateChanged(RUNNING, !running);
-    }
-
-    public void restartProgress() {
-        pseudoClassStateChanged(RUNNING, false);
-        pseudoClassStateChanged(RUNNING, true);
-    }
-
     // --- Navigation API
 
     public void next() {
-        pseudoClassStateChanged(NAV_NEXT, true);
-        pseudoClassStateChanged(NAV_NEXT, false);
+        pseudoClassStateChanged(NAV_NEXT_PC, true);
+        pseudoClassStateChanged(NAV_NEXT_PC, false);
     }
 
     public void previous() {
-        pseudoClassStateChanged(NAV_PREV, true);
-        pseudoClassStateChanged(NAV_PREV, false);
+        pseudoClassStateChanged(NAV_PREV_PC, true);
+        pseudoClassStateChanged(NAV_PREV_PC, false);
     }
 }

@@ -84,7 +84,6 @@ public class StartPagesView implements GameView {
         actionBindings.bindActionToKeyCombination(actionShowNextPage, bareKey(KeyCode.RIGHT));
         Logger.info(actionBindings);
 
-        carousel.restartProgress();
         currentStartPage().ifPresent(page -> page.startButton().ifPresentOrElse(
             startButton -> {
                 Logger.info("Request focus for start button of start page {}", page);
@@ -95,6 +94,8 @@ public class StartPagesView implements GameView {
                 Platform.runLater(() -> page.rootPane().requestFocus());
             }
         ));
+
+        carousel.startProgress();
     }
 
     @Override

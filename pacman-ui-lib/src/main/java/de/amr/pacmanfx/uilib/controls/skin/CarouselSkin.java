@@ -11,8 +11,6 @@ import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
 import javafx.animation.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
-import javafx.collections.SetChangeListener;
-import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -24,8 +22,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-
-import static de.amr.pacmanfx.uilib.controls.Carousel.RUNNING;
 
 public class CarouselSkin extends SkinBase<Carousel> {
 
@@ -47,31 +43,10 @@ public class CarouselSkin extends SkinBase<Carousel> {
 
         navForwardArea = createNavArea(Direction.RIGHT, this::showNext);
 
-        control.getPseudoClassStates().addListener((SetChangeListener<PseudoClass>) change -> {
-            if (change.wasAdded()) {
-                if (change.getElementAdded() == Carousel.NAV_NEXT) {
-                    showNext();
-                } else if (change.getElementAdded() == Carousel.NAV_PREV) {
-                    showPrevious();
-                }
-            }
-        });
-
         progressBar.getStyleClass().add("carousel-progress");
         progressBar.setPrefHeight(10);
 
         progressTimer = createProgressTimer();
-
-        control.pseudoClassStateChanged(RUNNING, false);
-
-        control.getPseudoClassStates().addListener((SetChangeListener<PseudoClass>) change -> {
-            boolean running = change.getSet().contains(Carousel.RUNNING);
-            if (running) {
-                progressTimer.play();
-            } else {
-                progressTimer.pause();
-            }
-        });
 
         // Bind progress bar visibility to timer status
         progressBar.visibleProperty().bind(
@@ -91,10 +66,28 @@ public class CarouselSkin extends SkinBase<Carousel> {
         // Keyboard: SPACE toggles timer
         control.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.SPACE) {
-                toggleProgressTimer();
+                if (progressTimer.getStatus() == Animation.Status.PAUSED) {
+                    progressTimer.play();
+                } else {
+                    progressTimer.pause();
+                }
                 e.consume();
             }
         });
+
+        control.progressRunningProperty().addListener((_, _, running) -> {
+            if (running) {
+                progressTimer.play();
+            } else {
+                progressTimer.pause();
+            }
+        });
+
+        if (control.progressRunningProperty().get()) {
+            progressTimer.play();
+        } else {
+            progressTimer.pause();
+        }
 
         updateView();
         getChildren().add(root);
@@ -164,7 +157,8 @@ public class CarouselSkin extends SkinBase<Carousel> {
         int next = (c.getSelectedIndex() + 1) % c.getItems().size();
         c.setSelectedIndex(next);
         lockNavigation();
-        restartProgressTimer();
+
+        progressTimer.playFromStart();
     }
 
     private void showPrevious() {
@@ -177,26 +171,13 @@ public class CarouselSkin extends SkinBase<Carousel> {
 
         c.setSelectedIndex(prev);
         lockNavigation();
-        restartProgressTimer();
+
+        progressTimer.playFromStart();
     }
 
     private void lockNavigation() {
         Carousel c = getSkinnable();
         c.setNavigationLocked(true);
         lockTimer.playFromStart();
-    }
-
-    private void restartProgressTimer() {
-        progressTimer.stop();
-        progressTimer.jumpTo(Duration.ZERO);
-        progressTimer.play();
-    }
-
-    private void toggleProgressTimer() {
-        if (progressTimer.getStatus() == Animation.Status.RUNNING)
-            progressTimer.pause();
-        else {
-            progressTimer.play();
-        }
     }
 }
