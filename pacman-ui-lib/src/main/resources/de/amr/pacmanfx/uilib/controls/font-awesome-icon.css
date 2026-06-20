@@ -1,8 +1,8 @@
-.font-awesome-icon-container {
-    -fx-pref-width:  64;
-    -fx-pref-height: 64;
-}
-
 .font-awesome-icon {
-    -fx-fill: yellow
+    -fx-size: 32;
+    -fx-fill: yellow;
+
+    /* DEBUG */
+    -fx-border-color: green;
+    -fx-border-width: 0;
 }

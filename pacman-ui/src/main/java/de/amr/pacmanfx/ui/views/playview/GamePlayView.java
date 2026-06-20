@@ -275,10 +275,8 @@ public class GamePlayView implements GameView {
         helpLayer = new HelpView(gameSceneLayer);
 
         // Layer 4: "Paused" icon
-        pausedIcon  = new FontAwesomeIcon(FontAwesomeSymbol.PAUSE);
+        pausedIcon = new FontAwesomeIcon(FontAwesomeSymbol.PAUSE);
         pausedIcon.setId("paused-icon");
-        pausedIcon.fillProperty().set(ArcadePalette.ARCADE_WHITE);
-        pausedIcon.setFocusTraversable(false);
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
 
         pausedIcon.setOnMouseClicked(e -> {
@@ -286,7 +284,7 @@ public class GamePlayView implements GameView {
         });
 
         rootPane = new StackPane(gameSceneLayer, miniPlaySceneView.rootPane(), overlayLayer, helpLayer, pausedIcon);
-
+        rootPane.setId("game-play-view");
         rootPane.setOnMouseClicked(e -> Logger.info("Mouse clicked: {}", e));
     }
 

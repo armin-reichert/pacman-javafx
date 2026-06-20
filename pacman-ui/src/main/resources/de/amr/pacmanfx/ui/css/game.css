@@ -52,22 +52,20 @@
     -fx-text-fill: #003366;
 }
 
-#paused-icon .font-awesome-icon-container {
-    -fx-pref-width:  80;
-    -fx-pref-height: 80;
+#paused-icon {
+    -fx-size: 80;
+    -fx-fill: rgb(222, 222, 255);
 }
 
 /* Navigation icons in start pages carousel */
-#start-pages-carousel .font-awesome-icon-container {
-    -fx-pref-width:  48;
-    -fx-pref-height: 48;
+#start-pages-carousel .font-awesome-icon {
+    -fx-size: 48;
 }
 
 /* Status icon box: "muted", "3D mode", "immunity" etc. */
 
-#status-icon-box .font-awesome-icon-container {
-    -fx-pref-width:  32;
-    -fx-pref-height: 32;
+#status-icon-box .font-awesome-icon {
+    -fx-size:  32;
 }
 
 #status-icon-box .font-awesome-icon {

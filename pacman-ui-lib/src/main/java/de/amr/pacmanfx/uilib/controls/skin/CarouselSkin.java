@@ -129,8 +129,8 @@ public class CarouselSkin extends SkinBase<Carousel> {
 
     private Node createNavArea(Direction dir, Runnable action) {
         FontAwesomeIcon icon = switch (dir) {
-            case LEFT  -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_LEFT, 48);
-            case RIGHT -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT, 48);
+            case LEFT  -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_LEFT);
+            case RIGHT -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT);
             default -> throw new IllegalArgumentException();
         };
         icon.setMouseTransparent(true);

@@ -7,11 +7,9 @@ package de.amr.pacmanfx.uilib.controls;
 import de.amr.pacmanfx.uilib.controls.skin.FontAwesomeIconSkin;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.css.CssMetaData;
-import javafx.css.Styleable;
-import javafx.css.StyleableObjectProperty;
-import javafx.css.StyleableProperty;
+import javafx.css.*;
 import javafx.css.converter.PaintConverter;
+import javafx.css.converter.SizeConverter;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
@@ -49,11 +47,28 @@ public class FontAwesomeIcon extends Control {
             }
         };
 
+
+    // To make the "size" property stylable via CSS, add metadata:
+    private static final CssMetaData<FontAwesomeIcon, Number> SIZE_META =
+        new CssMetaData<>("-fx-size", SizeConverter.getInstance(), DEFAULT_ICON_SIZE) {
+
+            @Override
+            public boolean isSettable(FontAwesomeIcon node) {
+                return !node.sizeProperty().isBound();
+            }
+
+            @Override
+            public StyleableDoubleProperty getStyleableProperty(FontAwesomeIcon node) {
+                return node.sizeProperty();
+            }
+        };
+
     private static final List<CssMetaData<? extends Styleable, ?>> MERGED_META_DATA;
 
     static {
         final List<CssMetaData<? extends Styleable, ?>> metaData = new ArrayList<>(Control.getClassCssMetaData());
         metaData.add(FILL_META);
+        metaData.add(SIZE_META);
         MERGED_META_DATA = Collections.unmodifiableList(metaData);
     }
 
@@ -83,27 +98,30 @@ public class FontAwesomeIcon extends Control {
             }
         };
 
-    private final DoubleProperty size = new SimpleDoubleProperty(DEFAULT_ICON_SIZE);
+    private final StyleableDoubleProperty size = new StyleableDoubleProperty(DEFAULT_ICON_SIZE) {
+
+        @Override
+        public Object getBean() {
+            return FontAwesomeIcon.this;
+        }
+
+        @Override
+        public String getName() {
+            return "size";
+        }
+
+        @Override
+        public CssMetaData<? extends Styleable, Number> getCssMetaData() {
+            return SIZE_META;
+        }
+    };
 
     public FontAwesomeIcon(FontAwesomeSymbol symbol) {
-        this(symbol, DEFAULT_ICON_SIZE);
-    }
-
-    public FontAwesomeIcon(FontAwesomeSymbol symbol, double iconSize) {
         this.symbol = requireNonNull(symbol);
-
         getStyleClass().setAll(DEFAULT_STYLE_CLASS);
 
-        size.set(iconSize);
-
-        prefWidthProperty().bind(size);
-        prefHeightProperty().bind(size);
-
-        minWidthProperty().bind(size);
-        minHeightProperty().bind(size);
-
         maxWidthProperty().bind(size);
-        maxWidthProperty().bind(size);
+        maxHeightProperty().bind(size);
     }
 
     @Override
@@ -129,7 +147,7 @@ public class FontAwesomeIcon extends Control {
         return symbol;
     }
 
-    public DoubleProperty sizeProperty() {
+    public StyleableDoubleProperty sizeProperty() {
         return size;
     }
 
