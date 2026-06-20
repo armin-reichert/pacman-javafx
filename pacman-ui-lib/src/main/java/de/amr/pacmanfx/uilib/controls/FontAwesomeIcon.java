@@ -5,6 +5,8 @@
 package de.amr.pacmanfx.uilib.controls;
 
 import de.amr.pacmanfx.uilib.controls.skin.FontAwesomeIconSkin;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleableObjectProperty;
@@ -31,7 +33,7 @@ public class FontAwesomeIcon extends Control {
 
     public static final String DEFAULT_STYLE_CLASS = "font-awesome-icon";
 
-    public static final int DEFAULT_SIZE = 16;
+    public static final int DEFAULT_ICON_SIZE = 32;
 
     // To make the "fill" property stylable via CSS, add metadata:
     private static final CssMetaData<FontAwesomeIcon, Paint> FILL_META =
@@ -59,6 +61,8 @@ public class FontAwesomeIcon extends Control {
         return MERGED_META_DATA;
     }
 
+    // --- end of static area
+
     private final FontAwesomeSymbol symbol;
 
     private final StyleableObjectProperty<Paint> fill = new StyleableObjectProperty<>(Color.WHITE) {
@@ -79,14 +83,34 @@ public class FontAwesomeIcon extends Control {
             }
         };
 
+    private final DoubleProperty size = new SimpleDoubleProperty(DEFAULT_ICON_SIZE);
+
     public FontAwesomeIcon(FontAwesomeSymbol symbol) {
-        this(symbol, DEFAULT_SIZE);
+        this(symbol, DEFAULT_ICON_SIZE);
     }
 
-    public FontAwesomeIcon(FontAwesomeSymbol symbol, double prefSize) {
+    public FontAwesomeIcon(FontAwesomeSymbol symbol, double iconSize) {
         this.symbol = requireNonNull(symbol);
+
         getStyleClass().setAll(DEFAULT_STYLE_CLASS);
-        setPrefSize(prefSize, prefSize);
+
+        size.set(iconSize);
+
+        prefWidthProperty().bind(size);
+        prefHeightProperty().bind(size);
+
+        minWidthProperty().bind(size);
+        minHeightProperty().bind(size);
+
+        maxWidthProperty().bind(size);
+        maxWidthProperty().bind(size);
+    }
+
+    @Override
+    public String toString() {
+        return "FontAwesomeIcon{" + "symbol=" + symbol +
+            ", size=" + size.get() +
+            '}';
     }
 
     public StyleableObjectProperty<Paint> fillProperty() {
@@ -105,6 +129,10 @@ public class FontAwesomeIcon extends Control {
         return symbol;
     }
 
+    public DoubleProperty sizeProperty() {
+        return size;
+    }
+
     @Override
     protected Skin<?> createDefaultSkin() {
         return new FontAwesomeIconSkin(this);
@@ -121,4 +149,13 @@ public class FontAwesomeIcon extends Control {
         return url != null ? url.toExternalForm() : null;
     }
 
+    @Override
+    protected double computePrefWidth(double height) {
+        return sizeProperty().get();
+    }
+
+    @Override
+    protected double computePrefHeight(double width) {
+        return sizeProperty().get();
+    }
 }

@@ -281,7 +281,13 @@ public class GamePlayView implements GameView {
         pausedIcon.setFocusTraversable(false);
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
 
+        pausedIcon.setOnMouseClicked(e -> {
+            Logger.info("Mouse clicked: {}", e);
+        });
+
         rootPane = new StackPane(gameSceneLayer, miniPlaySceneView.rootPane(), overlayLayer, helpLayer, pausedIcon);
+
+        rootPane.setOnMouseClicked(e -> Logger.info("Mouse clicked: {}", e));
     }
 
     private void setFontSmoothing(boolean smoothing) {

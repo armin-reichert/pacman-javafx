@@ -58,6 +58,8 @@ public class GameMainScene extends Scene {
 
         keyboardInfoPopup = new KeyboardInfo();
         keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
+
+        rootPane().setOnMouseClicked(e -> Logger.info("Mouse clicked: {}", e));
     }
 
     public StackPane rootPane() {
