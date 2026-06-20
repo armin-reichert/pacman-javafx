@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.widgetwannabes.MessageView;
+import de.amr.pacmanfx.uilib.widgets.MessageView;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 

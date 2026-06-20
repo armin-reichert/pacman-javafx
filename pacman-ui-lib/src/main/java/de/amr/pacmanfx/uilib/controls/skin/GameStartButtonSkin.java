@@ -2,9 +2,9 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.widgets.skin;
+package de.amr.pacmanfx.uilib.controls.skin;
 
-import de.amr.pacmanfx.uilib.widgets.GameStartButton;
+import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import javafx.animation.*;
 import javafx.scene.Node;
 import javafx.scene.control.SkinBase;

@@ -2,9 +2,9 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.widgets.skin;
+package de.amr.pacmanfx.uilib.controls.skin;
 
-import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
+import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;

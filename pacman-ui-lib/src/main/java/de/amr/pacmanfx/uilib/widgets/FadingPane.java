@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.widgetwannabes;
+package de.amr.pacmanfx.uilib.widgets;
 
 import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransition;

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
-import de.amr.pacmanfx.uilib.widgets.Carousel;
+import de.amr.pacmanfx.uilib.controls.Carousel;
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;

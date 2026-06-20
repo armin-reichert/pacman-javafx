@@ -2,9 +2,9 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.widgets;
+package de.amr.pacmanfx.uilib.controls;
 
-import de.amr.pacmanfx.uilib.widgets.skin.FontAwesomeIconSkin;
+import de.amr.pacmanfx.uilib.controls.skin.FontAwesomeIconSkin;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleableObjectProperty;

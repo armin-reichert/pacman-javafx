@@ -2,9 +2,9 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.widgets;
+package de.amr.pacmanfx.uilib.controls;
 
-import de.amr.pacmanfx.uilib.widgets.skin.CarouselSkin;
+import de.amr.pacmanfx.uilib.controls.skin.CarouselSkin;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

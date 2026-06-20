@@ -21,7 +21,7 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.model3D.pac;
     exports de.amr.pacmanfx.uilib.model3D.world;
     exports de.amr.pacmanfx.uilib.rendering;
+    exports de.amr.pacmanfx.uilib.controls;
+    exports de.amr.pacmanfx.uilib.controls.skin;
     exports de.amr.pacmanfx.uilib.widgets;
-    exports de.amr.pacmanfx.uilib.widgets.skin;
-    exports de.amr.pacmanfx.uilib.widgetwannabes;
 }

@@ -2,12 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.widgets.skin;
+package de.amr.pacmanfx.uilib.controls.skin;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.uilib.widgets.Carousel;
-import de.amr.pacmanfx.uilib.widgets.FontAwesomeIcon;
-import de.amr.pacmanfx.uilib.widgets.FontAwesomeSymbol;
+import de.amr.pacmanfx.uilib.controls.Carousel;
+import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
+import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
 import javafx.animation.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -25,7 +25,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-import static de.amr.pacmanfx.uilib.widgets.Carousel.RUNNING;
+import static de.amr.pacmanfx.uilib.controls.Carousel.RUNNING;
 
 public class CarouselSkin extends SkinBase<Carousel> {
 
