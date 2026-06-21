@@ -11,13 +11,12 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.views.GameViewID;
-import de.amr.pacmanfx.ui.views.GameViewManager;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.model.GameRules.NUM_TICKS_PER_SEC;
+import static de.amr.pacmanfx.core.GameClock.DEFAULT_TICKS_PER_SECOND;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
@@ -111,7 +110,7 @@ public class SimulationActions {
         actionReset = new GameAction(game, "simulation_reset") {
             @Override
             protected void doAction() {
-                game.clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
+                game.clock().setTargetFrameRate(DEFAULT_TICKS_PER_SECOND);
                 game.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), game.clock().targetFrameRate() + "Hz");
             }
         };

@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
@@ -256,7 +255,7 @@ public final class GameImpl implements Game {
         ui.sounds().stopAll();
 
         clock().stop();
-        clock().setTargetFrameRate(GameRules.NUM_TICKS_PER_SEC);
+        clock().setTargetFrameRate(GameClock.DEFAULT_TICKS_PER_SECOND);
 
         Logger.info("Game STOPPED!");
     }

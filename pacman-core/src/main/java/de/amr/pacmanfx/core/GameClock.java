@@ -26,6 +26,8 @@ import java.util.function.Consumer;
  */
 public interface GameClock {
 
+    int DEFAULT_TICKS_PER_SECOND = 60;
+
     /**
      * Installs an error handler that is invoked when either the permanent or
      * pausable action throws an exception during a tick.

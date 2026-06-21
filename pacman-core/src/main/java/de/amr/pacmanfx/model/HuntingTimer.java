@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.model;
 
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.core.GameClock;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
@@ -133,7 +134,7 @@ public class HuntingTimer {
     public void logPhase() {
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds). {}",
             phaseIndex(), currentHuntingPhase().name(),
-            tickTimer.durationTicks(), (float) tickTimer.durationTicks() / GameRules.NUM_TICKS_PER_SEC,
+            tickTimer.durationTicks(), (float) tickTimer.durationTicks() / GameClock.DEFAULT_TICKS_PER_SECOND,
             this);
     }
 

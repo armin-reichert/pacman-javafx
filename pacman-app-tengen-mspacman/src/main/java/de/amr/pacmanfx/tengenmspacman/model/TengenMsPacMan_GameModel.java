@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
@@ -136,7 +137,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         final Vector2f center = level.worldMap().terrainLayer().messageCenterPosition();
         // Non-Arcade maps show a moving "Game Over" message
         final GameLevelMessage message = type == GameLevelMessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
-            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * GameRules.NUM_TICKS_PER_SEC)
+            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * GameClock.DEFAULT_TICKS_PER_SECOND)
             : new GameLevelMessage(type, center);
         level.setMessage(message);
     }

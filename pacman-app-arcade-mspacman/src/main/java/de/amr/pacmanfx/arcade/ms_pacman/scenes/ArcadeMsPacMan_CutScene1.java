@@ -10,8 +10,8 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.game.Game;
@@ -242,7 +242,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         heart.setPosition((pacMan.x() + msPacMan.x()) * 0.5f, pacMan.y() - WorldMap.TS * 2);
         heart.show();
 
-        setState(SceneState.IN_HEAVEN, 3 * GameRules.NUM_TICKS_PER_SEC);
+        setState(SceneState.IN_HEAVEN, 3 * GameClock.DEFAULT_TICKS_PER_SECOND);
     }
 
     private void updateStateInHeaven() {

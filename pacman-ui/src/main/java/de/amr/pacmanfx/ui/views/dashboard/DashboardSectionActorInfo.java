@@ -5,8 +5,8 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
@@ -65,7 +65,7 @@ public class DashboardSectionActorInfo extends DashboardSection {
 
     private String actorMovementInfo(GameLevel level, MovingActor movingActor) {
         if (movingActor == null) return NO_INFO;
-        var speed = movingActor.computeSpeed() * GameRules.NUM_TICKS_PER_SEC;
+        var speed = movingActor.computeSpeed() * GameClock.DEFAULT_TICKS_PER_SECOND;
         var blocked = !movingActor.moveInfo().moved;
         var reverseText = movingActor.turnBackRequested() ? "REV!" : "";
         return blocked

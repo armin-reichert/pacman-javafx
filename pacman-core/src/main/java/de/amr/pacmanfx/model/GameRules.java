@@ -6,8 +6,6 @@ import java.util.OptionalInt;
 
 public interface GameRules {
 
-    byte NUM_TICKS_PER_SEC = 60;
-
     boolean isLevelCompleted(GameLevel level);
 
     int lastLevelNumber();
