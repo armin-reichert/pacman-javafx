@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.ui.GameUI_Constants;
-import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -33,7 +32,6 @@ public class GameWindowImpl implements GameWindow {
         this.stage = requireNonNull(stage);
 
         mainScene = new GameMainScene(width, height);
-        mainScene.getStylesheets().add(GlobalAssets.GAME_STYLESHEET);
 
         stage.setScene(mainScene);
         stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);

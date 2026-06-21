@@ -26,7 +26,6 @@ import org.tinylog.Logger;
 import java.util.Set;
 
 import static de.amr.basics.math.RandomNumberSupport.randomArrayEntry;
-import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -50,6 +49,8 @@ public class GameMainScene extends Scene {
 
     public GameMainScene(double width, double height) {
         super(new StackPane(), width, height, Color.BLACK);
+
+        getStylesheets().add(GlobalAssets.GAME_STYLESHEET);
 
         flashMessageManager = new FlashMessageManager();
 
