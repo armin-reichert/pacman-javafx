@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.game.Game;
@@ -106,7 +105,7 @@ public abstract class AbstractGameScene implements GameFacade, QuitHandler, Disp
      * Executes the first matching action.
      */
     public void onInput() {
-        actionBindings().findActionMatchingPressedKeys(game.input().keyboard()).ifPresent(GameAction::execute);
+        actionBindings().executeMatchingAction(game.input());
     }
 
     /**

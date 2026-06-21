@@ -12,12 +12,12 @@ import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.config.UISettings3D;
+import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
-import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -206,10 +206,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onInput() {
         final Keyboard keyboard = game().input().keyboard();
-        final GameAction gameAction = actionBindings().findActionMatchingPressedKeys(keyboard).orElse(null);
-        if (gameAction != null) {
-            gameAction.execute();
-        } else {
+        final Optional<GameAction> matchingAction = actionBindings().executeMatchingAction(game().input());
+        if (matchingAction.isEmpty()) {
             // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
             perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {
                 if (perspective instanceof DronePerspective dronePerspective) {

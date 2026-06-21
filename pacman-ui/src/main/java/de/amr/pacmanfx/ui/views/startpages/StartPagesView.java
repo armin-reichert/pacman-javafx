@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
@@ -76,7 +75,7 @@ public class StartPagesView implements GameView {
 
     @Override
     public void onInput(Input input) {
-        actionBindings.findActionMatchingPressedKeys(input.keyboard()).ifPresent(GameAction::execute);
+        actionBindings.executeMatchingAction(input);
     }
 
     @Override

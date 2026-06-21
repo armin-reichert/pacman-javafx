@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.views.playview;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.config.UISettings;
@@ -25,9 +24,9 @@ import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.views.help.HelpView;
 import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
-import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
+import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
@@ -173,11 +172,10 @@ public class GamePlayView implements GameView {
 
     @Override
     public void onInput(Input input) {
-        // First lLook for an action binding in my bindings, if nothing found, delegate to the current game scene if any
-        actionBindings.findActionMatchingPressedKeys(input.keyboard()).ifPresentOrElse(
-            GameAction::execute,
-            () -> game.ui().gameScenes().optCurrentGameScene().ifPresent(AbstractGameScene::onInput)
-        );
+        // First look for a matching action of the play view itself; if none found, delegate to the current game scene.
+        if (actionBindings.executeMatchingAction(input).isEmpty()) {
+            game.ui().gameScenes().optCurrentGameScene().ifPresent(AbstractGameScene::onInput);
+        }
     }
 
     @Override

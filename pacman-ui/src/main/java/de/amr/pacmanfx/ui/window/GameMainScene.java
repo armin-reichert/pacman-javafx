@@ -9,7 +9,6 @@ import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
-import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -111,15 +110,13 @@ public class GameMainScene extends Scene {
         keyboard.enabledProperty().bind(views.currentViewIDProperty().map(this::isKeyboardAware));
 
         keyboard.addStateListener(_ -> {
-            // Check for "global" action first, if no one matches, let current sub view handle the keyboard state change
-            actionBindings.findActionMatchingPressedKeys(keyboard).ifPresentOrElse(
-                GameAction::execute,
-                () -> {
-                    final GameViewID currentViewID = views.currentViewID();
-                    if (isKeyboardAware(currentViewID)) {
-                        views.assertView(currentViewID).onInput(game.input());
-                    }
-                });
+            // Check for matching "global" action first, if none, let current view handle it.
+            if (actionBindings.executeMatchingAction(game.input()).isEmpty()) {
+                final GameViewID currentViewID = views.currentViewID();
+                if (isKeyboardAware(currentViewID)) {
+                    views.assertView(currentViewID).onInput(game.input());
+                }
+            }
         });
 
         keyboard.filterKeyEventsFrom(this);

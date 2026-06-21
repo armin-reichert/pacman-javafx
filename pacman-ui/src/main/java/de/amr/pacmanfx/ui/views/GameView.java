@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.views;
 
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
@@ -19,7 +18,7 @@ public interface GameView extends QuitHandler {
     ActionBindingsRegistry actionBindings();
 
     default void onInput(Input input) {
-        actionBindings().findActionMatchingPressedKeys(input.keyboard()).ifPresent(GameAction::execute);
+        actionBindings().executeMatchingAction(input);
     }
 
     Node rootPane();
