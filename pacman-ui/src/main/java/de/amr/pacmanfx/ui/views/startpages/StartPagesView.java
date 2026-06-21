@@ -39,18 +39,19 @@ public class StartPagesView implements GameView {
 
     public StartPagesView() {
         carousel = new Carousel();
-        carousel.setChangeDuration(PAGE_CHANGE_SECONDS);
         carousel.setId("start-pages-carousel");
         carousel.setBackground(GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER);
+        carousel.setChangeDuration(PAGE_CHANGE_SECONDS);
+
         carousel.selectedIndexProperty().addListener((_, ov, nv) -> {
-            int oldIndex = ov.intValue(), newIndex = nv.intValue();
+            final int oldIndex = ov.intValue();
+            final int newIndex = nv.intValue();
             if (oldIndex != -1) {
                 pages.get(oldIndex).onExit();
             }
             if (newIndex != -1) {
                 final StartPage startPage = pages.get(newIndex);
                 startPage.onEnter();
-                startPage.rootPane().requestFocus();
             }
         });
     }
