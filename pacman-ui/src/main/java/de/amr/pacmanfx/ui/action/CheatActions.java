@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
@@ -268,7 +268,7 @@ public final class CheatActions {
 
         game.ui().shortMessage(game.ui().translations().translate(auto
             ? "flash.autopilot_on" : "flash.autopilot_off"));
-        game.ui().sounds().playVoice(auto ? GameUI_Constants.VOICE_AUTOPILOT_ON : GameUI_Constants.VOICE_AUTOPILOT_OFF);
+        game.ui().sounds().playVoice(auto ? GlobalAssets.VOICE_AUTOPILOT_ON : GlobalAssets.VOICE_AUTOPILOT_OFF);
     }
 
     private void setPacImmune(Game game, boolean immune) {
@@ -278,7 +278,7 @@ public final class CheatActions {
 
         game.ui().shortMessage(game.ui().translations().translate(immune
             ? "flash.player_immunity_on" : "flash.player_immunity_off"));
-        game.ui().sounds().playVoice(immune ? GameUI_Constants.VOICE_IMMUNITY_ON : GameUI_Constants.VOICE_IMMUNITY_OFF);
+        game.ui().sounds().playVoice(immune ? GlobalAssets.VOICE_IMMUNITY_ON : GlobalAssets.VOICE_IMMUNITY_OFF);
     }
 
     private Optional<GameLevel> normalLevel(Game game) {

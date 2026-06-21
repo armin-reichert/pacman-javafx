@@ -10,17 +10,17 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.config.UIConfig;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 
 import java.util.Arrays;
 import java.util.List;
@@ -134,7 +134,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         lastGhostEatenTick = 0;
         numGhostsEaten = 0;
 
-        game().ui().sounds().playVoice(GameUI_Constants.VOICE_EXPLAIN_GAME_START);
+        game().ui().sounds().playVoice(GlobalAssets.VOICE_EXPLAIN_GAME_START);
     }
 
     private void startChasingPacMan() {

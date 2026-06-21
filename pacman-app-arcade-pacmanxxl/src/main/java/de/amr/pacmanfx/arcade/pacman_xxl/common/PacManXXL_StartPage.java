@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_UIConfig;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -66,9 +66,9 @@ public class PacManXXL_StartPage implements StartPage {
 
         menu = new PacManXXL_OptionMenu();
         menu.setStyle(OptionMenuStyle.builder()
-            .titleFont        (deriveFont(GameUI_Constants.FONT_PAC_FONT_GOOD, 4 * TS))
+            .titleFont        (deriveFont(GlobalAssets.FONT_PAC_FONT_GOOD, 4 * TS))
             .titleTextFill    (ArcadePalette.ARCADE_RED)
-            .textFont         (deriveFont(GameUI_Constants.FONT_ARCADE_8, TS))
+            .textFont         (deriveFont(GlobalAssets.FONT_ARCADE_8, TS))
             .entryTextFill    (ArcadePalette.ARCADE_YELLOW)
             .entryValueFill   (ArcadePalette.ARCADE_WHITE)
             .usageTextFill    (ArcadePalette.ARCADE_YELLOW)

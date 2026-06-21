@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.score.Score;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.config.UISettings3D;
@@ -290,7 +290,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         scores3D = new Scores3D(
             game().ui().translations().translate("score.score"),
             game().ui().translations().translate("score.high_score"),
-            GameUI_Constants.FONT_ARCADE_8);
+            GlobalAssets.FONT_ARCADE_8);
 
         scores3D.textOpacity.bind(scoreOpacity);
 

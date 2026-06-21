@@ -21,10 +21,10 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.config.UIConfig;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 
 import java.util.List;
 
@@ -123,7 +123,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         presentedGhostPersonality = GameModel.RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        game().ui().sounds().playVoice(GameUI_Constants.VOICE_EXPLAIN_GAME_START);
+        game().ui().sounds().playVoice(GlobalAssets.VOICE_EXPLAIN_GAME_START);
     }
 
     // Scene flow state machine

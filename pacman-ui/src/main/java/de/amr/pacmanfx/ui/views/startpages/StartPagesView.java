@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
@@ -38,7 +38,7 @@ public class StartPagesView implements GameView {
     public StartPagesView() {
         carousel = new Carousel();
         carousel.setId("start-pages-carousel");
-        carousel.setBackground(GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER);
+        carousel.setBackground(GlobalAssets.BACKGROUND_PAC_MAN_WALLPAPER);
         carousel.setChangeDuration(PAGE_CHANGE_SECONDS);
 
         carousel.selectedIndexProperty().addListener((_, ov, nv) -> {

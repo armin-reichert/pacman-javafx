@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.math.RandomNumberSupport;
-import de.amr.pacmanfx.ui.GameUI_Constants;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
@@ -138,8 +138,8 @@ public class GameMainScene extends Scene {
 
     private Background selectBackground(Game game) {
         return game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)
-            ? GameUI_Constants.WALLPAPERS[RandomNumberSupport.randomInt(0, GameUI_Constants.WALLPAPERS.length)]
-            : GameUI_Constants.BACKGROUND_PAC_MAN_WALLPAPER;
+            ? GlobalAssets.WALLPAPERS[RandomNumberSupport.randomInt(0, GlobalAssets.WALLPAPERS.length)]
+            : GlobalAssets.BACKGROUND_PAC_MAN_WALLPAPER;
     }
 
 }
