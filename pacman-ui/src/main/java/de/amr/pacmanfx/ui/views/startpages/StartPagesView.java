@@ -61,6 +61,7 @@ public class StartPagesView implements GameView {
     @Override
     public void onEnter() {
         carousel.startProgress();
+        currentStartPage().ifPresent(StartPage::onEnter);
     }
 
     @Override
