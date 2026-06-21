@@ -27,10 +27,10 @@ public record GameUI(
 {
 
     public void connect(Game game) {
-        window.connect(game);
-        views.connect(game);
-        gameScenes.connect(game);
         sounds.connect(game);
+        gameScenes.connect(game);
+        views.connect(game);
+        window.connect(game);
     }
 
     public void terminate() {
