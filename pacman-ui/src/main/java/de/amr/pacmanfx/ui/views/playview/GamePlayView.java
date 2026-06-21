@@ -29,10 +29,14 @@ import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
@@ -43,6 +47,8 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
+import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedActionItem;
+import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedTitleItem;
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.border;
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 import static java.util.Objects.requireNonNull;
@@ -50,13 +56,14 @@ import static java.util.Objects.requireNonNull;
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class GamePlayView implements GameView {
+public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     public static final float MAX_GAME_SCENE_SCALING = 5;
 
     public static final Background DEBUG_BACKGROUND = paintBackground(Color.TEAL);
     public static final Border DEBUG_BORDER = border(Color.LIGHTGREEN, 1);
 
+    //TODO make decoration pane into a FX control and use stylesheet
     public static final DecorationPane.Config DECORATION_CONFIG = new DecorationPane.Config(
         0.85f, 0.93f, 0.5f, // scaling x,y, min
         20, 20, // padding x,y
@@ -100,7 +107,13 @@ public class GamePlayView implements GameView {
         this.game = requireNonNull(game);
         final UISettings settings = game.ui().settings();
 
-        rootPane.setOnContextMenuRequested(new PlayViewContextMenuHandler(game, this));
+        rootPane.setOnContextMenuRequested(this);
+        game.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            if (e.getButton() != MouseButton.SECONDARY) {
+                contextMenu.hide();
+            }
+        });
+
         miniPlaySceneView.setUI(game);
 
         pausedIcon.visibleProperty().bind(game.clock().updatesDisabledProperty());
@@ -229,6 +242,30 @@ public class GamePlayView implements GameView {
         // Dashboard must always be updated even if simulation is stopped!
         if (overlayLayer.isVisible()) {
             dashboard.update();
+        }
+    }
+
+    // Context menu handler
+
+    @Override
+    public void handle(ContextMenuEvent event) {
+        contextMenu.getItems().clear();
+
+        game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+            final TranslationManager translations = game.ui().translations();
+            // Add 2D play scene-specific entries
+            if (game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
+                addLocalizedTitleItem(contextMenu, translations, "context_menu.scene_display");
+                addLocalizedActionItem(contextMenu, translations, game.actions().uiSettingsActions().actionTogglePlayScene2D3D(),
+                    "context_menu.use_3D_scene");
+            }
+            // Add scene-specific entries
+            gameScene.supplyContextMenu().ifPresent(sceneMenu -> contextMenu.getItems().addAll(sceneMenu.getItems()));
+        });
+
+        if (!contextMenu.getItems().isEmpty()) {
+            contextMenu.show(rootPane, event.getScreenX(), event.getScreenY());
+            contextMenu.requestFocus();
         }
     }
 
