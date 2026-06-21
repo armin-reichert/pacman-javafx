@@ -105,9 +105,8 @@ public final class GlobalAssets {
 
     public static final Font CONTEXT_MENU_DEFAULT_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14.0f);
 
-    public static final Background[] WALLPAPERS = Arrays.stream(Gradients.Samples.values())
+    public static final Background[] GRADIENT_BACKGROUNDS = Arrays.stream(Gradients.Samples.values())
         .map(Gradients.Samples::gradient)
         .map(Background::fill)
         .toArray(Background[]::new);
-
 }

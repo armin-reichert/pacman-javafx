@@ -16,17 +16,19 @@ import static java.util.Objects.requireNonNull;
  * to ensure min ≤ max.
  * </p>
  */
-public interface RandomNumberSupport {
+public final class RandomNumberSupport {
+
+    private RandomNumberSupport() {}
 
     /** Shared thread-safe random generator instance. */
-    RandomGenerator RANDOM_GENERATOR = RandomGenerator.getDefault();
+    public static final RandomGenerator RANDOM_GENERATOR = RandomGenerator.getDefault();
 
     /**
      * Returns a random boolean value (true or false) with equal probability (50%).
      *
      * @return {@code true} or {@code false} with equal likelihood
      */
-    static boolean randomBoolean() {
+    public static boolean randomBoolean() {
         return RANDOM_GENERATOR.nextBoolean();
     }
 
@@ -37,7 +39,7 @@ public interface RandomNumberSupport {
      * @return {@code true} with probability p, {@code false} otherwise
      * @throws IllegalArgumentException if probability is not in [0.0, 1.0]
      */
-    static boolean chance(double probability) {
+    public static boolean chance(double probability) {
         if (probability < 0.0 || probability > 1.0) {
             throw new IllegalArgumentException("probability must be in [0.0, 1.0], got: " + probability);
         }
@@ -54,7 +56,7 @@ public interface RandomNumberSupport {
      * @param maxExclusive exclusive upper bound
      * @return random integer n such that min ≤ n < maxExclusive
      */
-    static int randomInt(int min, int maxExclusive) {
+    public static int randomInt(int min, int maxExclusive) {
         if (min > maxExclusive) {
             int tmp = min;
             min = maxExclusive;
@@ -75,7 +77,7 @@ public interface RandomNumberSupport {
      * @return random byte n such that min ≤ n < maxExclusive
      * @throws IllegalArgumentException if the range cannot be represented as a byte
      */
-    static byte randomByte(int min, int maxExclusive) {
+    public static byte randomByte(int min, int maxExclusive) {
         if (min < Byte.MIN_VALUE) {
             throw new IllegalArgumentException(
                     "min value %d is below allowed range %d..%d".formatted(min, Byte.MIN_VALUE, Byte.MAX_VALUE));
@@ -97,7 +99,7 @@ public interface RandomNumberSupport {
      * @param maxExclusive exclusive upper bound
      * @return random float f such that min ≤ f < maxExclusive
      */
-    static float randomFloat(float min, float maxExclusive) {
+    public static float randomFloat(float min, float maxExclusive) {
         if (min > maxExclusive) {
             float tmp = min;
             min = maxExclusive;
@@ -106,7 +108,12 @@ public interface RandomNumberSupport {
         return min + (maxExclusive - min) * RANDOM_GENERATOR.nextFloat();
     }
 
-    static byte randomByteArrayElement(byte[] array) {
+    public static byte randomByteArrayElement(byte[] array) {
+        requireNonNull(array);
+        return array[randomInt(0, array.length)];
+    }
+
+    public static <T> T randomArrayEntry(T[] array) {
         requireNonNull(array);
         return array[randomInt(0, array.length)];
     }

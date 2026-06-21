@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.window;
 
-import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
@@ -26,6 +25,8 @@ import org.tinylog.Logger;
 
 import java.util.Set;
 
+import static de.amr.basics.math.RandomNumberSupport.randomArrayEntry;
+import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -138,8 +139,7 @@ public class GameMainScene extends Scene {
 
     private Background selectBackground(Game game) {
         return game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)
-            ? GlobalAssets.WALLPAPERS[RandomNumberSupport.randomInt(0, GlobalAssets.WALLPAPERS.length)]
+            ? randomArrayEntry(GlobalAssets.GRADIENT_BACKGROUNDS)
             : GlobalAssets.BACKGROUND_PAC_MAN_WALLPAPER;
     }
-
 }
