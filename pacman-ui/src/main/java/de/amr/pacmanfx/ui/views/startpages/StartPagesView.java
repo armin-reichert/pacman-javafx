@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.controls.Carousel;
-import javafx.application.Platform;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -44,14 +43,13 @@ public class StartPagesView implements GameView {
         carousel.setChangeDuration(PAGE_CHANGE_SECONDS);
 
         carousel.selectedIndexProperty().addListener((_, ov, nv) -> {
-            final int oldIndex = ov.intValue();
-            final int newIndex = nv.intValue();
-            if (oldIndex != -1) {
-                pages.get(oldIndex).onExit();
+            final int oldSelection = ov.intValue();
+            final int newSelection = nv.intValue();
+            if (oldSelection != -1) {
+                pages.get(oldSelection).onExit();
             }
-            if (newIndex != -1) {
-                final StartPage startPage = pages.get(newIndex);
-                startPage.onEnter();
+            if (newSelection != -1) {
+                pages.get(newSelection).onEnter();
             }
         });
     }
@@ -63,17 +61,6 @@ public class StartPagesView implements GameView {
 
     @Override
     public void onEnter() {
-        currentStartPage().ifPresent(page -> page.startButton().ifPresentOrElse(
-            startButton -> {
-                Logger.info("Request focus for start button of start page {}", page);
-                Platform.runLater(startButton::requestFocus);
-            },
-            () -> {
-                Logger.info("Request focus for root pane of start page {}", page);
-                Platform.runLater(() -> page.rootPane().requestFocus());
-            }
-        ));
-
         carousel.startProgress();
     }
 
