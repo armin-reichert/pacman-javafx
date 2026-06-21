@@ -21,8 +21,6 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 
 public class GameWindowImpl implements GameWindow {
 
-    private Game game;
-
     private StringBinding titleBinding;
 
     private final Stage stage;
@@ -40,12 +38,6 @@ public class GameWindowImpl implements GameWindow {
 
     @Override
     public void connect(Game game) {
-        if (this.game != null) {
-            Logger.warn("Game view already connect to game!");
-            return;
-        }
-        this.game = requireNonNull(game);
-
         mainScene.connect(game);
 
         titleBinding = createStringBinding(
@@ -67,7 +59,7 @@ public class GameWindowImpl implements GameWindow {
                 // All other views use the normal title logic
                 return currentView.get().optTitleSupplier()
                     .map(Supplier::get)
-                    .orElse(titleForCurrentGameScene());
+                    .orElse(titleForCurrentGameScene(game));
             },
             game.gameVariantNameProperty(),
             game.clock().updatesDisabledProperty(),
@@ -77,12 +69,12 @@ public class GameWindowImpl implements GameWindow {
             game.ui().settings().d3().view3DEnabledProperty()
         );
 
-        game.ui().views().currentViewIDProperty().addListener((_, _, viewID) -> updateStageTitleBinding(viewID));
+        game.ui().views().currentViewIDProperty().addListener((_, _, viewID) -> updateStageTitleBinding(game, viewID));
     }
 
     @Override
-    public void show() {
-        prepareStageForDisplay();
+    public void show(Game game) {
+        prepareStageForDisplay(game);
         stage().centerOnScreen();
         stage().show();
     }
@@ -99,7 +91,7 @@ public class GameWindowImpl implements GameWindow {
 
     // Private area
 
-    private void updateStageTitleBinding(GameViewID viewID) {
+    private void updateStageTitleBinding(Game game, GameViewID viewID) {
         switch (viewID) {
             case START_PAGES, GAMEPLAY -> stage.titleProperty().bind(titleBinding);
             case EDITOR -> game.ui().views().optEditorView().ifPresent(editorView -> {
@@ -109,36 +101,36 @@ public class GameWindowImpl implements GameWindow {
         }
     }
 
-    private void prepareStageForDisplay() {
+    private void prepareStageForDisplay(Game game) {
         stage.titleProperty().bind(titleBinding);
 
-        updateStageIcon();
-        game.gameVariantNameProperty().addListener((_, _, _) -> updateStageIcon());
+        updateStageIcon(game);
+        game.gameVariantNameProperty().addListener((_, _, _) -> updateStageIcon(game));
     }
 
-    private void updateStageIcon() {
+    private void updateStageIcon(Game game) {
         final Image icon = game.currentUIConfig().assets().image("app_icon");
         if (icon != null) {
-            game.ui().window().stage().getIcons().setAll(icon);
+            stage.getIcons().setAll(icon);
         } else {
             Logger.error("Could not access stage icon");
         }
     }
 
-    private String titleForCurrentGameScene() {
+    private String titleForCurrentGameScene(Game game) {
         final AbstractGameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
 
         final boolean debug = game.ui().settings().debugModeOnProperty().get();
         final boolean is3D = game.ui().settings().d3().view3DEnabledProperty().get();
         final boolean paused = game.clock().getUpdatesDisabled();
 
-        final String normalTitle = stageTitle(paused, is3D);
+        final String normalTitle = stageTitle(game, paused, is3D);
         return (gameScene == null || !debug)
             ? normalTitle
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String stageTitle(boolean paused, boolean is3D) {
+    private String stageTitle(Game game, boolean paused, boolean is3D) {
         final String gameVariantName = game.currentGameVariantName();
         if (gameVariantName == null) {
             return "";

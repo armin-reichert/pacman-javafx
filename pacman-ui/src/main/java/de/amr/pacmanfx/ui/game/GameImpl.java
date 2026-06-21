@@ -231,7 +231,7 @@ public final class GameImpl implements Game {
         // TODO: Dashboard expects current game view being already being set when connected
         ui.views().gamePlayView().dashboard().connect(this);
 
-        ui.window().show();
+        ui.window().show(this);
 
         startServicesLater();
     }

@@ -15,5 +15,5 @@ public interface GameWindow {
 
     GameMainScene mainScene();
 
-    void show();
+    void show(Game game);
 }
