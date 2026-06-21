@@ -2,15 +2,26 @@
     -fx-background-color: transparent;
 }
 
+/*
+.carousel .font-awesome-icon {
+    -fx-size: 48;
+    -fx-fill: #aaa;
+}
+
+ */
+
 .carousel-nav {
     -fx-opacity: 0.25;
     -fx-cursor: hand;
     -fx-max-width: 48;
     -fx-max-height: 48;
+    -fx-padding: 5;
+    -fx-background-color: transparent;
 }
 
 .carousel-nav:hover {
     -fx-opacity: 0.8;
+    -fx-background-color: transparent;
 }
 
 .carousel-progress {

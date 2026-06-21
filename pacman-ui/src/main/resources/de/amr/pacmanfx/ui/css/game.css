@@ -60,6 +60,7 @@
 /* Navigation icons in start pages carousel */
 #start-pages-carousel .font-awesome-icon {
     -fx-size: 48;
+    -fx-fill: rgb(222, 222, 255);
 }
 
 /* Status icon box: "muted", "3D mode", "immunity" etc. */

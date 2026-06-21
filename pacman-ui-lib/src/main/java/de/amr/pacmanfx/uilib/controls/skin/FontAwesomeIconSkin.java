@@ -6,9 +6,6 @@ package de.amr.pacmanfx.uilib.controls.skin;
 
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import javafx.scene.control.SkinBase;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.tinylog.Logger;

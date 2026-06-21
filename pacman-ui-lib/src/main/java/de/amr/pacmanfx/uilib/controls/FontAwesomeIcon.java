@@ -118,7 +118,7 @@ public class FontAwesomeIcon extends Control {
 
     public FontAwesomeIcon(FontAwesomeSymbol symbol) {
         this.symbol = requireNonNull(symbol);
-        getStyleClass().setAll(DEFAULT_STYLE_CLASS);
+        getStyleClass().add(DEFAULT_STYLE_CLASS);
 
         maxWidthProperty().bind(size);
         maxHeightProperty().bind(size);

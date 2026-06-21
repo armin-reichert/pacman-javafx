@@ -13,10 +13,10 @@ import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SkinBase;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -133,24 +133,23 @@ public class CarouselSkin extends SkinBase<Carousel> {
             case BACK  -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_LEFT);
             case FORWARD -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT);
         };
+        icon.setId("nav-icon-" + dir.name().toLowerCase());
         icon.setMouseTransparent(true);
-        icon.setFill(Color.gray(0.42));
 
-        final HBox box = new HBox(icon);
-        box.getStyleClass().add("carousel-nav");
-        box.setPadding(new Insets(5));
-        box.setPickOnBounds(true);
+        Button button = new Button("", icon);
+        button.getStyleClass().add("carousel-nav");
+        button.setPickOnBounds(true);
 
-        box.disableProperty().bind(getSkinnable().navigationLockedProperty());
+        button.disableProperty().bind(getSkinnable().navigationLockedProperty());
 
-        box.setOnMouseClicked(e -> {
+        button.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
                 e.consume();
                 action.run();
             }
         });
 
-        return box;
+        return button;
     }
 
     private void showNext() {
