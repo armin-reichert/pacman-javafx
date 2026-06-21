@@ -266,19 +266,16 @@ public final class CheatActions {
 
         cheats.pacUsingAutopilotProperty().set(auto);
 
-        game.ui().shortMessage(game.ui().translations().translate(auto
-            ? "flash.autopilot_on" : "flash.autopilot_off"));
-        game.ui().sounds().playVoice(auto ? GlobalAssets.VOICE_AUTOPILOT_ON : GlobalAssets.VOICE_AUTOPILOT_OFF);
+        game.ui().shortMessage(game.ui().translations().translate(auto ? "flash.autopilot_on" : "flash.autopilot_off"));
+        game.ui().sounds().playVoice(auto ? GlobalAssets.Voice.AUTOPILOT_ON.media() : GlobalAssets.Voice.AUTOPILOT_OFF.media());
     }
 
     private void setPacImmune(Game game, boolean immune) {
         final GameCheats cheats = game.currentGameContext().model().cheats();
-
         cheats.pacImmuneProperty().set(immune);
 
-        game.ui().shortMessage(game.ui().translations().translate(immune
-            ? "flash.player_immunity_on" : "flash.player_immunity_off"));
-        game.ui().sounds().playVoice(immune ? GlobalAssets.VOICE_IMMUNITY_ON : GlobalAssets.VOICE_IMMUNITY_OFF);
+        game.ui().shortMessage(game.ui().translations().translate(immune ? "flash.player_immunity_on" : "flash.player_immunity_off"));
+        game.ui().sounds().playVoice(immune ? GlobalAssets.Voice.IMMUNITY_ON.media() : GlobalAssets.Voice.IMMUNITY_OFF.media());
     }
 
     private Optional<GameLevel> normalLevel(Game game) {

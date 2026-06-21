@@ -123,7 +123,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         presentedGhostPersonality = GameModel.RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        game().ui().sounds().playVoice(GlobalAssets.VOICE_EXPLAIN_GAME_START);
+        game().ui().sounds().playVoice(GlobalAssets.Voice.EXPLAIN_GAME_START.media());
     }
 
     // Scene flow state machine

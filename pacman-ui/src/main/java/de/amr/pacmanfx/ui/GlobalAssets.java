@@ -76,30 +76,23 @@ public final class GlobalAssets {
      */
     public static final Font FONT_PAC_FONT_GOOD = RES_MGR.loadFont(RESOURCE_ROOT + "fonts/PacfontGood.ttf", 8);
 
-    /**
-     * Voice media for autopilot deactivation.
-     */
-    public static final Media VOICE_AUTOPILOT_OFF = RES_MGR.loadMedia(RESOURCE_ROOT + "sound/voice/autopilot-off.mp3");
+    public enum Voice {
+        AUTOPILOT_ON("sound/voice/autopilot-on.mp3"),
+        AUTOPILOT_OFF("sound/voice/autopilot-off.mp3"),
+        IMMUNITY_ON("sound/voice/immunity-on.mp3"),
+        IMMUNITY_OFF("sound/voice/immunity-off.mp3"),
+        EXPLAIN_GAME_START("sound/voice/press-key.mp3");
 
-    /**
-     * Voice media for autopilot activation.
-     */
-    public static final Media VOICE_AUTOPILOT_ON = RES_MGR.loadMedia(RESOURCE_ROOT + "sound/voice/autopilot-on.mp3");
+        Voice(String path) {
+            media = RES_MGR.loadMedia(path);
+        }
 
-    /**
-     * Voice media for game start explanation.
-     */
-    public static final Media VOICE_EXPLAIN_GAME_START = RES_MGR.loadMedia(RESOURCE_ROOT + "sound/voice/press-key.mp3");
+        public Media media() {
+            return media;
+        }
 
-    /**
-     * Voice media for immunity deactivation.
-     */
-    public static final Media VOICE_IMMUNITY_OFF = RES_MGR.loadMedia(RESOURCE_ROOT + "sound/voice/immunity-off.mp3");
-
-    /**
-     * Voice media for immunity activation.
-     */
-    public static final Media VOICE_IMMUNITY_ON = RES_MGR.loadMedia(RESOURCE_ROOT + "sound/voice/immunity-on.mp3");
+        private final Media media;
+    }
 
     public static final Color CONTEXT_MENU_DEFAULT_TITLE_COLOR = Color.CORNFLOWERBLUE;
 
