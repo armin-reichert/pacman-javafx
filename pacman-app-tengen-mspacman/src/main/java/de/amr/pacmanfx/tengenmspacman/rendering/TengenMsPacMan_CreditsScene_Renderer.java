@@ -40,9 +40,10 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
         switch (creditsScene.displayMode) {
             case ORIGINAL_AUTHORS -> drawOriginalCreditsText();
             case REMAKE_AUTHORS -> {
+                ctx.save();
                 ctx.setGlobalAlpha(creditsScene.fadeProgress);
                 drawJavaFXRemakeCreditsText();
-                ctx.setGlobalAlpha(1);
+                ctx.restore();
             }
         }
         if (scene.game().ui().settings().debugModeOnProperty().get()) {
