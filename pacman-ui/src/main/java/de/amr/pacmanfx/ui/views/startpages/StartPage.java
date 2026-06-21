@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.input.Input;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
@@ -23,6 +24,10 @@ public interface StartPage {
 
     default void onExit() {
         Logger.info("Exit start page {}", this);
+    }
+
+    default void onInput(Input input) {
+        Logger.info("Handle input for start page {}. Keyboard state: {}", this, input.keyboard());
     }
 
     String title();

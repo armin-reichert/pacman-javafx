@@ -181,8 +181,10 @@ public class GamePlayView implements GameView {
     @Override
     public void onEnter() {
         rootPane.requestFocus();
+
         actionBindings.registerAllBindings(game.actions().bindings());
         Logger.info(actionBindings);
+
         gameSceneFrame.installBindings();
     }
 
@@ -277,13 +279,8 @@ public class GamePlayView implements GameView {
         pausedIcon.setId("paused-icon");
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
 
-        pausedIcon.setOnMouseClicked(e -> {
-            Logger.info("Mouse clicked: {}", e);
-        });
-
         rootPane = new StackPane(gameSceneLayer, miniPlaySceneView.rootPane(), overlayLayer, helpLayer, pausedIcon);
         rootPane.setId("game-play-view");
-        rootPane.setOnMouseClicked(e -> Logger.info("Mouse clicked: {}", e));
     }
 
     private void setFontSmoothing(boolean smoothing) {

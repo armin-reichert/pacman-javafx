@@ -36,11 +36,8 @@ public class GameStartButton extends Control {
 
     public GameStartButton(String buttonText) {
         getStyleClass().setAll(DEFAULT_STYLE_CLASS);
-
         text.set(buttonText);
-
         setFocusTraversable(true);
-
     }
 
     @Override

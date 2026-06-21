@@ -5,11 +5,13 @@
 package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -35,27 +37,6 @@ public class FlyerStartPage implements StartPage {
 
         rootPane.getChildren().add(flyer);
 
-        //TODO use global keyboard instead?
-        rootPane.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            switch (e.getCode()) {
-                case DOWN -> {
-                    e.consume();
-                    flyer.nextFlyerPage();
-                }
-                case UP -> {
-                    e.consume();
-                    flyer.prevFlyerPage();
-                }
-                case S -> {
-                    e.consume();
-                    if (game != null) {
-                        game.ui().sounds().stopAndDisposeVoice();
-                        game.ui().shortMessage(game.ui().translations().translate("flash.shut_up"));
-                    }
-                }
-            }
-        });
-
         // Let scroll wheel scroll through flyer pages
         rootPane.addEventHandler(ScrollEvent.SCROLL, e-> {
             if (e.getDeltaY() < 0) {
@@ -64,6 +45,26 @@ public class FlyerStartPage implements StartPage {
                 flyer.prevFlyerPage();
             }
         });
+    }
+
+    @Override
+    public void onInput(Input input) {
+        final Keyboard keyboard = input.keyboard();
+        if (keyboard.isKeyPressed(KeyCode.DOWN)) {
+            flyer.nextFlyerPage();
+        }
+        else if (keyboard.isKeyPressed(KeyCode.UP)) {
+            flyer.prevFlyerPage();
+        }
+        else if (keyboard.isKeyPressed(KeyCode.S)) {
+            if (game != null) {
+                game.ui().sounds().stopAndDisposeVoice();
+                game.ui().shortMessage(game.ui().translations().translate("flash.shut_up"));
+            }
+        }
+        else if (keyboard.isKeyPressed(KeyCode.ENTER) && startButton != null) {
+            startButton.fire();
+        }
     }
 
     @Override

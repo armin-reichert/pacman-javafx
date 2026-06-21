@@ -87,6 +87,7 @@ public abstract class AbstractGameScene implements GameFacade, QuitHandler, Disp
 
     @Override
     public void handleQuit(Game game) {
+        Logger.info("Game scene {} quitted", getClass().getSimpleName());
         onDeactivate();
     }
 

@@ -58,7 +58,7 @@
 }
 
 /* Navigation icons in start pages carousel */
-#start-pages-carousel .font-awesome-icon {
+#start-pages-carousel .carousel-nav .font-awesome-icon {
     -fx-size: 48;
     -fx-fill: rgb(222, 222, 255);
 }

@@ -82,12 +82,12 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void handleQuit(Game game) {}
+    public void onInput(Input input) {
+        currentStartPage().ifPresent(startPage -> startPage.onInput(input));
+    }
 
     @Override
-    public void onInput(Input input) {
-        actionBindings.executeMatchingAction(input);
-    }
+    public void handleQuit(Game game) {}
 
     @Override
     public ActionBindingsRegistry actionBindings() {
