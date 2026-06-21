@@ -30,6 +30,10 @@ public class Carousel extends Control {
 
     private final BooleanProperty progressRunning = new SimpleBooleanProperty(false);
 
+    private final StringProperty backButtonTooltip = new SimpleStringProperty("Previous");
+
+    private final StringProperty forwardButtonTooltip = new SimpleStringProperty("Next");
+
     public Carousel() {
         getStyleClass().add(STYLE_CLASS);
         setFocusTraversable(true);
@@ -93,4 +97,13 @@ public class Carousel extends Control {
 
     public void setChangeDuration(double seconds) { changeDuration.set(seconds); }
 
+    // --- Tooltips
+
+    public StringProperty backButtonTooltipProperty() {
+        return backButtonTooltip;
+    }
+
+    public StringProperty forwardButtonTooltipProperty() {
+        return forwardButtonTooltip;
+    }
 }

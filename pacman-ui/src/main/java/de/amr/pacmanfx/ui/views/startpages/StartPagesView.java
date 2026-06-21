@@ -51,6 +51,16 @@ public class StartPagesView implements GameView {
                 pages.get(newSelection).onEnter();
             }
         });
+
+        carousel.backButtonTooltipProperty().bind(carousel.selectedIndexProperty()
+            .map(Number::intValue)
+            .map(i -> i == -1 ? null : pages.get(prevIndex(i)).title()
+        ));
+
+        carousel.forwardButtonTooltipProperty().bind(carousel.selectedIndexProperty()
+            .map(Number::intValue)
+            .map(i -> i == -1 ? null : pages.get(nextIndex(i)).title()
+        ));
     }
 
     @Override
@@ -100,8 +110,17 @@ public class StartPagesView implements GameView {
         }
         pages.add(startPage);
         carousel.getItems().add(startPage.rootPane());
-        //carousel.setNavigationButtonsVisible(carousel.numItems() >= 2);
         startPage.connect(game);
+    }
+
+    // Private area
+
+    private int nextIndex(int index) {
+        return (index + 1) % pages.size();
+    }
+
+    private int prevIndex(int index){
+        return (index + pages.size() - 1) % pages.size();
     }
 
     private Optional<StartPage> currentStartPage() {

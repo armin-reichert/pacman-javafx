@@ -15,7 +15,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SkinBase;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 public class CarouselSkin extends SkinBase<Carousel> {
@@ -129,18 +131,24 @@ public class CarouselSkin extends SkinBase<Carousel> {
 
         button.disableProperty().bind(getSkinnable().navigationLockedProperty());
 
+        final Tooltip tooltip = new Tooltip();
+        tooltip.setFont(Font.font(16));
+        button.setTooltip(tooltip);
+
         switch (dir) {
             case BACK -> {
                 final var icon = new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_LEFT);
                 icon.setMouseTransparent(true); // important!
                 button.setGraphic(icon);
                 button.setOnAction(_ -> showPrevious());
+                tooltip.textProperty().bind(getSkinnable().backButtonTooltipProperty());
             }
             case FORWARD -> {
                 final var icon = new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT);
                 icon.setMouseTransparent(true); // important!
                 button.setGraphic(icon);
                 button.setOnAction(_ -> showNext());
+                tooltip.textProperty().bind(getSkinnable().forwardButtonTooltipProperty());
             }
         }
 
