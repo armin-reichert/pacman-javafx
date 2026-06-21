@@ -77,7 +77,7 @@ public class GameWindowImpl implements GameWindow {
             game.ui().settings().d3().view3DEnabledProperty()
         );
 
-        game.ui().views().currentViewIDProperty().addListener((_, _, viewID) -> updateStageTitle(viewID));
+        game.ui().views().currentViewIDProperty().addListener((_, _, viewID) -> updateStageTitleBinding(viewID));
     }
 
     @Override
@@ -99,7 +99,7 @@ public class GameWindowImpl implements GameWindow {
 
     // Private area
 
-    private void updateStageTitle(GameViewID viewID) {
+    private void updateStageTitleBinding(GameViewID viewID) {
         switch (viewID) {
             case START_PAGES, GAMEPLAY -> stage.titleProperty().bind(titleBinding);
             case EDITOR -> game.ui().views().optEditorView().ifPresent(editorView -> {
