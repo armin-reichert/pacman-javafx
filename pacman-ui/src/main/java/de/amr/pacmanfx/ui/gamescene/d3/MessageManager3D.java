@@ -120,7 +120,7 @@ public class MessageManager3D implements DisposableGraphicsObject {
             .backgroundColor(Color.BLACK)
             .borderColor(Color.WHITE)
             .displaySeconds(displaySeconds)
-            .font(GlobalAssets.FONT_ARCADE_6)
+            .font(GlobalAssets.PredefinedFont.ARCADE6.font())
             .text(messageText)
             .textColor(Color.YELLOW)
             .build(animations);

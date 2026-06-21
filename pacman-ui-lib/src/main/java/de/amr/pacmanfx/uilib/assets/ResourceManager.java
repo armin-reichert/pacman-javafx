@@ -13,7 +13,6 @@ import org.tinylog.Logger;
 
 import java.net.URL;
 import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import static java.util.Objects.requireNonNull;
 
@@ -56,10 +55,6 @@ public interface ResourceManager {
                 resourceRootClass().getName(), path);
         }
         return url;
-    }
-
-    default ResourceBundle getModuleBundle(String baseName) {
-        return ResourceBundle.getBundle(baseName, resourceRootClass().getModule());
     }
 
     /**

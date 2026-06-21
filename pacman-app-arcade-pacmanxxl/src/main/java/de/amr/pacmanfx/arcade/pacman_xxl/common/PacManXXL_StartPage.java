@@ -26,7 +26,6 @@ import javafx.scene.media.Media;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.uilib.Ufx.deriveFont;
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.createWallpaper;
 import static java.util.Objects.requireNonNull;
 
@@ -66,9 +65,9 @@ public class PacManXXL_StartPage implements StartPage {
 
         menu = new PacManXXL_OptionMenu();
         menu.setStyle(OptionMenuStyle.builder()
-            .titleFont        (deriveFont(GlobalAssets.FONT_PAC_FONT_GOOD, 4 * TS))
+            .titleFont        (GlobalAssets.PredefinedFont.PAC_FONT_GOOD.font(4 * TS))
             .titleTextFill    (ArcadePalette.ARCADE_RED)
-            .textFont         (deriveFont(GlobalAssets.FONT_ARCADE_8, TS))
+            .textFont         (GlobalAssets.PredefinedFont.ARCADE8.font())
             .entryTextFill    (ArcadePalette.ARCADE_YELLOW)
             .entryValueFill   (ArcadePalette.ARCADE_WHITE)
             .usageTextFill    (ArcadePalette.ARCADE_YELLOW)

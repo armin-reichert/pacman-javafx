@@ -290,7 +290,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         scores3D = new Scores3D(
             game().ui().translations().translate("score.score"),
             game().ui().translations().translate("score.high_score"),
-            GlobalAssets.FONT_ARCADE_8);
+            GlobalAssets.PredefinedFont.ARCADE8.font());
 
         scores3D.textOpacity.bind(scoreOpacity);
 

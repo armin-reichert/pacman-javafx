@@ -13,7 +13,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.util.Arrays;
-import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;
 
@@ -30,51 +29,27 @@ public final class GlobalAssets {
      */
     public static final ResourceManager RES_MGR = () -> GameUI_Constants.class;
 
-    /**
-     * Localized text bundle for the UI.
-     */
-    public static final ResourceBundle LOCALIZED_TEXTS = RES_MGR.getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
+    public enum PredefinedFont {
+        ARCADE6("fonts/emulogic.ttf", 6),
+        ARCADE8("fonts/emulogic.ttf", 8),
+        HANDWRITING("fonts/Molle-Italic.ttf", 9),
+        MONOSPACED("fonts/fantasquesansmono-bold.otf", 12),
+        PAC_FONT_GOOD("fonts/PacfontGood.ttf", 8);
 
-    /**
-     * Background image using Pac-Man wallpaper.
-     */
-    public static final Background BACKGROUND_PAC_MAN_WALLPAPER = createImageBackground(
-        RES_MGR.loadImage(RESOURCE_ROOT + "graphics/pacman_wallpaper.png"));
+        PredefinedFont(String path, double size) {
+            font = RES_MGR.loadFont(RESOURCE_ROOT + path, size);
+        }
 
-    /**
-     * Arcade font size 6.
-     */
-    public static final Font FONT_ARCADE_6 = RES_MGR.loadFont(RESOURCE_ROOT + "fonts/emulogic.ttf", 6);
+        public Font font() {
+            return font;
+        }
 
-    /**
-     * Arcade font size 8.
-     */
-    public static final Font FONT_ARCADE_8 = RES_MGR.loadFont(RESOURCE_ROOT + "fonts/emulogic.ttf", 8);
+        public Font font(double size) {
+            return Font.font(font.getFamily(), size);
+        }
 
-    /**
-     * Handwriting-style font for messages.
-     */
-    public static final Font FONT_HANDWRITING = RES_MGR.loadFont(RESOURCE_ROOT + "fonts/Molle-Italic.ttf", 9);
-
-    /**
-     * Monospaced font for debug/info text.
-     */
-    public static final Font FONT_MONOSPACED = RES_MGR.loadFont(RESOURCE_ROOT + "fonts/fantasquesansmono-bold.otf", 12);
-
-    /**
-     * Condensed monospace font for UI elements.
-     */
-    public static final Font FONT_CONDENSED = RES_MGR.loadFont(RESOURCE_ROOT + "fonts/Inconsolata_Condensed-Bold.ttf", 12);
-
-    /**
-     * Standard Pac-Man font.
-     */
-    public static final Font FONT_PAC_FONT = RES_MGR.loadFont(RESOURCE_ROOT + "fonts/Pacfont.ttf", 8);
-
-    /**
-     * Good Pac-Man font (alternative variant).
-     */
-    public static final Font FONT_PAC_FONT_GOOD = RES_MGR.loadFont(RESOURCE_ROOT + "fonts/PacfontGood.ttf", 8);
+        private final Font font;
+    }
 
     public enum Voice {
         AUTOPILOT_ON("sound/voice/autopilot-on.mp3"),
@@ -96,7 +71,10 @@ public final class GlobalAssets {
 
     public static final Color CONTEXT_MENU_DEFAULT_TITLE_COLOR = Color.CORNFLOWERBLUE;
 
-    public static final Font CONTEXT_MENU_DEFAULT_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14.0f);
+    public static final javafx.scene.text.Font CONTEXT_MENU_DEFAULT_TITLE_FONT = javafx.scene.text.Font.font("Dialog", FontWeight.BLACK, 14.0f);
+
+    public static final Background BACKGROUND_PAC_MAN_WALLPAPER = createImageBackground(
+        RES_MGR.loadImage(RESOURCE_ROOT + "graphics/pacman_wallpaper.png"));
 
     public static final Background[] GRADIENT_BACKGROUNDS = Arrays.stream(Gradients.Samples.values())
         .map(Gradients.Samples::gradient)
