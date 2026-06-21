@@ -27,14 +27,13 @@ public class CarouselSkin extends SkinBase<Carousel> {
     private final ProgressBar progressBar = new ProgressBar(0);
     private final Timeline progressTimer;
 
-    private final PauseTransition lockTimer =
-        new PauseTransition(Duration.seconds(1));
+    private final PauseTransition lockTimer = new PauseTransition(Duration.seconds(1));
 
     private final Node navButtonBack;
     private final Node navButtonForward;
 
-    public CarouselSkin(Carousel control) {
-        super(control);
+    public CarouselSkin(Carousel carousel) {
+        super(carousel);
 
         navButtonBack    = createNavButton(NavigationDirection.BACK);
         navButtonForward = createNavButton(NavigationDirection.FORWARD);
@@ -50,17 +49,17 @@ public class CarouselSkin extends SkinBase<Carousel> {
         );
 
         // Unlock navigation after lock timer
-        lockTimer.setOnFinished(_ -> control.setNavigationLocked(false));
+        lockTimer.setOnFinished(_ -> carousel.setNavigationLocked(false));
 
         // React to item list changes
-        control.getItems().addListener((ListChangeListener<Node>) _ -> updateView());
+        carousel.getItems().addListener((ListChangeListener<Node>) _ -> updateLayout());
 
         // React to selected index changes
-        ChangeListener<Number> indexListener = (_, _, _) -> updateView();
-        control.selectedIndexProperty().addListener(indexListener);
+        ChangeListener<Number> indexListener = (_, _, _) -> updateLayout();
+        carousel.selectedIndexProperty().addListener(indexListener);
 
         // Keyboard: SPACE toggles timer
-        control.setOnKeyPressed(e -> {
+        carousel.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case SPACE -> {
                     if (progressTimer.getStatus() == Animation.Status.PAUSED) {
@@ -75,7 +74,7 @@ public class CarouselSkin extends SkinBase<Carousel> {
             }
         });
 
-        control.progressRunningProperty().addListener((_, _, running) -> {
+        carousel.progressRunningProperty().addListener((_, _, running) -> {
             if (running) {
                 progressTimer.play();
             } else {
@@ -83,19 +82,19 @@ public class CarouselSkin extends SkinBase<Carousel> {
             }
         });
 
-        if (control.progressRunningProperty().get()) {
+        if (carousel.progressRunningProperty().get()) {
             progressTimer.play();
         } else {
             progressTimer.pause();
         }
 
-        updateView();
+        updateLayout();
         getChildren().add(root);
     }
 
     private Timeline createProgressTimer() {
-        Carousel c = getSkinnable();
-        double duration = c.getChangeDuration();
+        final Carousel carousel = getSkinnable();
+        final double duration = carousel.getChangeDuration();
 
         final Timeline timeline = new Timeline(
             new KeyFrame(Duration.ZERO,
@@ -108,13 +107,13 @@ public class CarouselSkin extends SkinBase<Carousel> {
         return timeline;
     }
 
-    private void updateView() {
-        Carousel c = getSkinnable();
+    private void updateLayout() {
+        final Carousel carousel = getSkinnable();
         root.getChildren().clear();
 
-        int idx = c.getSelectedIndex();
-        if (idx >= 0 && idx < c.getItems().size()) {
-            root.getChildren().add(c.getItems().get(idx));
+        final int idx = carousel.getSelectedIndex();
+        if (idx >= 0 && idx < carousel.getItems().size()) {
+            root.getChildren().add(carousel.getItems().get(idx));
         }
 
         root.getChildren().addAll(progressBar, navButtonBack, navButtonForward);
@@ -125,24 +124,21 @@ public class CarouselSkin extends SkinBase<Carousel> {
     }
 
     private Button createNavButton(NavigationDirection dir) {
-        Button button = new Button();
+        final Button button = new Button();
         button.getStyleClass().add("carousel-nav");
-        button.setPickOnBounds(true);
 
         button.disableProperty().bind(getSkinnable().navigationLockedProperty());
 
         switch (dir) {
             case BACK -> {
                 final var icon = new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_LEFT);
-                icon.setId("nav-icon-back");
-                icon.setMouseTransparent(true);
+                icon.setMouseTransparent(true); // important!
                 button.setGraphic(icon);
                 button.setOnAction(_ -> showPrevious());
             }
             case FORWARD -> {
                 final var icon = new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT);
-                icon.setId("nav-icon-forward");
-                icon.setMouseTransparent(true);
+                icon.setMouseTransparent(true); // important!
                 button.setGraphic(icon);
                 button.setOnAction(_ -> showNext());
             }
@@ -152,33 +148,32 @@ public class CarouselSkin extends SkinBase<Carousel> {
     }
 
     private void showNext() {
-        Carousel c = getSkinnable();
-        if (c.getItems().isEmpty() || c.isNavigationLocked()) return;
+        final Carousel carousel = getSkinnable();
+        if (carousel.getItems().isEmpty() || carousel.isNavigationLocked()) return;
 
-        int next = (c.getSelectedIndex() + 1) % c.getItems().size();
-        c.setSelectedIndex(next);
+        final int count = carousel.getItems().size();
+        final int current = carousel.getSelectedIndex();
+        carousel.setSelectedIndex((current + 1) % count);
+
         lockNavigation();
-
         progressTimer.playFromStart();
     }
 
     private void showPrevious() {
-        Carousel c = getSkinnable();
-        if (c.getItems().isEmpty() || c.isNavigationLocked()) return;
+        final Carousel carousel = getSkinnable();
+        if (carousel.getItems().isEmpty() || carousel.isNavigationLocked()) return;
 
-        int prev = c.getSelectedIndex() > 0
-            ? c.getSelectedIndex() - 1
-            : c.getItems().size() - 1;
+        final int last = carousel.getItems().size() - 1;
+        final int current = carousel.getSelectedIndex();
+        carousel.setSelectedIndex(current > 0 ? current - 1 : last);
 
-        c.setSelectedIndex(prev);
         lockNavigation();
-
         progressTimer.playFromStart();
     }
 
     private void lockNavigation() {
-        Carousel c = getSkinnable();
-        c.setNavigationLocked(true);
+        final Carousel carousel = getSkinnable();
+        carousel.setNavigationLocked(true);
         lockTimer.playFromStart();
     }
 }
