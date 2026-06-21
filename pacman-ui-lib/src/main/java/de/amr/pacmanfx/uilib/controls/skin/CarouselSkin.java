@@ -10,15 +10,12 @@ import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
 import javafx.animation.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SkinBase;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 public class CarouselSkin extends SkinBase<Carousel> {
@@ -33,15 +30,14 @@ public class CarouselSkin extends SkinBase<Carousel> {
     private final PauseTransition lockTimer =
         new PauseTransition(Duration.seconds(1));
 
-    private final Node navBackArea;
-    private final Node navForwardArea;
+    private final Node navButtonBack;
+    private final Node navButtonForward;
 
     public CarouselSkin(Carousel control) {
         super(control);
 
-        navBackArea = createNavArea(NavigationDirection.BACK, this::showPrevious);
-
-        navForwardArea = createNavArea(NavigationDirection.FORWARD, this::showNext);
+        navButtonBack    = createNavButton(NavigationDirection.BACK);
+        navButtonForward = createNavButton(NavigationDirection.FORWARD);
 
         progressBar.getStyleClass().add("carousel-progress");
         progressBar.setPrefHeight(10);
@@ -121,33 +117,36 @@ public class CarouselSkin extends SkinBase<Carousel> {
             root.getChildren().add(c.getItems().get(idx));
         }
 
-        root.getChildren().addAll(progressBar, navBackArea, navForwardArea);
+        root.getChildren().addAll(progressBar, navButtonBack, navButtonForward);
 
         StackPane.setAlignment(progressBar, Pos.BOTTOM_CENTER);
-        StackPane.setAlignment(navBackArea, Pos.CENTER_LEFT);
-        StackPane.setAlignment(navForwardArea, Pos.CENTER_RIGHT);
+        StackPane.setAlignment(navButtonBack, Pos.CENTER_LEFT);
+        StackPane.setAlignment(navButtonForward, Pos.CENTER_RIGHT);
     }
 
-    private Node createNavArea(NavigationDirection dir, Runnable action) {
-        final FontAwesomeIcon icon = switch (dir) {
-            case BACK  -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_LEFT);
-            case FORWARD -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT);
-        };
-        icon.setId("nav-icon-" + dir.name().toLowerCase());
-        icon.setMouseTransparent(true);
-
-        Button button = new Button("", icon);
+    private Button createNavButton(NavigationDirection dir) {
+        Button button = new Button();
         button.getStyleClass().add("carousel-nav");
         button.setPickOnBounds(true);
 
         button.disableProperty().bind(getSkinnable().navigationLockedProperty());
 
-        button.setOnMouseClicked(e -> {
-            if (e.getButton() == MouseButton.PRIMARY) {
-                e.consume();
-                action.run();
+        switch (dir) {
+            case BACK -> {
+                final var icon = new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_LEFT);
+                icon.setId("nav-icon-back");
+                icon.setMouseTransparent(true);
+                button.setGraphic(icon);
+                button.setOnAction(_ -> showPrevious());
             }
-        });
+            case FORWARD -> {
+                final var icon = new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT);
+                icon.setId("nav-icon-forward");
+                icon.setMouseTransparent(true);
+                button.setGraphic(icon);
+                button.setOnAction(_ -> showNext());
+            }
+        }
 
         return button;
     }

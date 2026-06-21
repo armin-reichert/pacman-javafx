@@ -5,8 +5,6 @@
 package de.amr.pacmanfx.uilib.controls;
 
 import de.amr.pacmanfx.uilib.controls.skin.FontAwesomeIconSkin;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.css.*;
 import javafx.css.converter.PaintConverter;
 import javafx.css.converter.SizeConverter;
