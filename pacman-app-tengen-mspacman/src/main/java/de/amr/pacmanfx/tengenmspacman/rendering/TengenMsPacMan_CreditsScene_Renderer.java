@@ -11,7 +11,6 @@ import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_CreditsScene.DISPLAY_SECONDS;
 
 public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, TengenMsPacMan_SceneRendererMixin {
 
@@ -31,17 +30,20 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
     @Override
     public void draw(GameScene2D scene) {
         clearCanvas();
+        if (!(scene instanceof TengenMsPacMan_CreditsScene creditsScene)) {
+            return;
+        }
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), scene.unscaledWidth(), TS, 20);
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), scene.unscaledWidth(), TS, 212);
         ctx.setFont(arcadeFont8());
         y = 7 * TS; // important: reset on every draw!
-        if (scene.gameState().timer().betweenSeconds(0, 0.5 * DISPLAY_SECONDS)) {
-            drawOriginalCreditsText();
-        } else {
-            final var creditsScene = (TengenMsPacMan_CreditsScene) scene;
-            ctx.setGlobalAlpha(creditsScene.fadeProgress);
-            drawJavaFXRemakeCreditsText();
-            ctx.setGlobalAlpha(1);
+        switch (creditsScene.displayMode) {
+            case ORIGINAL_AUTHORS -> drawOriginalCreditsText();
+            case REMAKE_AUTHORS -> {
+                ctx.setGlobalAlpha(creditsScene.fadeProgress);
+                drawJavaFXRemakeCreditsText();
+                ctx.setGlobalAlpha(1);
+            }
         }
         if (scene.game().ui().settings().debugModeOnProperty().get()) {
             debugRenderer.draw(scene);

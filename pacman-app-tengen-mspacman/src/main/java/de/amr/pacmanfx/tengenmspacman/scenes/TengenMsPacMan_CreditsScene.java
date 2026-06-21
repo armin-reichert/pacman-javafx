@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.scenes;
 
+import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.ui.game.Game;
@@ -16,8 +17,11 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
  */
 public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
-    public static final float DISPLAY_SECONDS = 16;
+    public static final int DISPLAY_TICKS = 16 * 60;
 
+    public enum DisplayMode { ORIGINAL_AUTHORS, REMAKE_AUTHORS }
+
+    public DisplayMode displayMode = DisplayMode.ORIGINAL_AUTHORS;
     public float fadeProgress = 0;
 
     public TengenMsPacMan_CreditsScene(Game game) {
@@ -29,19 +33,25 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     public void onActivate() {
         final var actions = game().extensions().get(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+        actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
+
+        fadeProgress = 0;
+        displayMode = DisplayMode.ORIGINAL_AUTHORS;
 
         gameModel().hud().hide();
-        actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
-        fadeProgress = 0;
     }
 
     @Override
     public void onTick(long tick) {
-        if (gameState().timer().atSecond(DISPLAY_SECONDS)) {
+        final TickTimer stateTimer = gameState().timer();
+        if (stateTimer.tickCount() == DISPLAY_TICKS) {
             gameState().expire();
             return;
         }
-        if (gameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
+        if (stateTimer.tickCount() == DISPLAY_TICKS / 2) {
+            displayMode = DisplayMode.REMAKE_AUTHORS;
+        }
+        if (stateTimer.tickCount() > DISPLAY_TICKS / 2) {
             fadeProgress = Math.min(fadeProgress + 0.005f, 1f); // Clamp to 1.0
         }
     }
