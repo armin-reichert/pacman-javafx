@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.uilib.controls.skin;
 
-import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.uilib.controls.Carousel;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
@@ -24,6 +23,8 @@ import javafx.util.Duration;
 
 public class CarouselSkin extends SkinBase<Carousel> {
 
+    public enum NavigationDirection { BACK, FORWARD }
+
     private final StackPane root = new StackPane();
 
     private final ProgressBar progressBar = new ProgressBar(0);
@@ -38,9 +39,9 @@ public class CarouselSkin extends SkinBase<Carousel> {
     public CarouselSkin(Carousel control) {
         super(control);
 
-        navBackArea = createNavArea(Direction.LEFT, this::showPrevious);
+        navBackArea = createNavArea(NavigationDirection.BACK, this::showPrevious);
 
-        navForwardArea = createNavArea(Direction.RIGHT, this::showNext);
+        navForwardArea = createNavArea(NavigationDirection.FORWARD, this::showNext);
 
         progressBar.getStyleClass().add("carousel-progress");
         progressBar.setPrefHeight(10);
@@ -127,16 +128,15 @@ public class CarouselSkin extends SkinBase<Carousel> {
         StackPane.setAlignment(navForwardArea, Pos.CENTER_RIGHT);
     }
 
-    private Node createNavArea(Direction dir, Runnable action) {
-        FontAwesomeIcon icon = switch (dir) {
-            case LEFT  -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_LEFT);
-            case RIGHT -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT);
-            default -> throw new IllegalArgumentException();
+    private Node createNavArea(NavigationDirection dir, Runnable action) {
+        final FontAwesomeIcon icon = switch (dir) {
+            case BACK  -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_LEFT);
+            case FORWARD -> new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT);
         };
         icon.setMouseTransparent(true);
         icon.setFill(Color.gray(0.42));
 
-        HBox box = new HBox(icon);
+        final HBox box = new HBox(icon);
         box.getStyleClass().add("carousel-nav");
         box.setPadding(new Insets(5));
         box.setPickOnBounds(true);
