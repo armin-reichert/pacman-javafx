@@ -145,10 +145,6 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         gameSceneFrame.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
     }
 
-    public Game game() {
-        return game;
-    }
-
     public ContextMenu contextMenu() {
         return contextMenu;
     }
@@ -227,12 +223,12 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         // Render current 2D game scene
         final AbstractGameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof GameScene2D gameScene2D) {
-            final GameModel game = this.game.currentGameContext().model();
+            final GameModel gameModel = game.currentGameContext().model();
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D);
             }
             if (hudRenderer != null) {
-                hudRenderer.draw(game.hud(), game, gameScene2D);
+                hudRenderer.draw(gameModel.hud(), gameModel, gameScene2D);
             }
         }
 
