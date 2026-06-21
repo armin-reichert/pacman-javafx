@@ -33,7 +33,7 @@ public class GameWindowImpl implements GameWindow {
         this.stage = requireNonNull(stage);
 
         mainScene = new GameMainScene(width, height);
-        mainScene.getStylesheets().add(GlobalAssets.STYLESHEET_PATH);
+        mainScene.getStylesheets().add(GlobalAssets.GAME_STYLESHEET);
 
         stage.setScene(mainScene);
         stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);

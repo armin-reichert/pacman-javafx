@@ -22,19 +22,16 @@ public final class GlobalAssets {
 
     public static final String RESOURCE_ROOT = "/de/amr/pacmanfx/ui/";
 
-    public static final String STYLESHEET_PATH = RESOURCE_ROOT + "css/game.css";
+    public static final String GAME_STYLESHEET = RESOURCE_ROOT + "css/game.css";
 
-    /**
-     * Resource manager for UI assets (fonts, images, sounds).
-     */
     public static final ResourceManager RES_MGR = () -> GameUI_Constants.class;
 
     public enum PredefinedFont {
-        ARCADE6("fonts/emulogic.ttf", 6),
-        ARCADE8("fonts/emulogic.ttf", 8),
-        HANDWRITING("fonts/Molle-Italic.ttf", 9),
-        MONOSPACED("fonts/fantasquesansmono-bold.otf", 12),
-        PAC_FONT_GOOD("fonts/PacfontGood.ttf", 8);
+        ARCADE6       ("fonts/emulogic.ttf", 6),
+        ARCADE8       ("fonts/emulogic.ttf", 8),
+        HANDWRITING   ("fonts/Molle-Italic.ttf", 9),
+        MONOSPACED    ("fonts/fantasquesansmono-bold.otf", 12),
+        PAC_FONT_GOOD ("fonts/PacfontGood.ttf", 8);
 
         PredefinedFont(String path, double size) {
             font = RES_MGR.loadFont(RESOURCE_ROOT + path, size);
@@ -52,11 +49,11 @@ public final class GlobalAssets {
     }
 
     public enum Voice {
-        AUTOPILOT_ON("sound/voice/autopilot-on.mp3"),
-        AUTOPILOT_OFF("sound/voice/autopilot-off.mp3"),
-        IMMUNITY_ON("sound/voice/immunity-on.mp3"),
-        IMMUNITY_OFF("sound/voice/immunity-off.mp3"),
-        EXPLAIN_GAME_START("sound/voice/press-key.mp3");
+        AUTOPILOT_ON       ("sound/voice/autopilot-on.mp3"),
+        AUTOPILOT_OFF      ("sound/voice/autopilot-off.mp3"),
+        IMMUNITY_ON        ("sound/voice/immunity-on.mp3"),
+        IMMUNITY_OFF       ("sound/voice/immunity-off.mp3"),
+        EXPLAIN_GAME_START ("sound/voice/press-key.mp3");
 
         Voice(String path) {
             media = RES_MGR.loadMedia(path);
