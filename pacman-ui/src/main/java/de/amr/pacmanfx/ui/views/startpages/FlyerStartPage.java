@@ -13,9 +13,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
+import javafx.scene.paint.Color;
 
 import java.util.Optional;
 
@@ -71,7 +73,13 @@ public class FlyerStartPage implements StartPage {
     public void connect(Game game) {
         this.game = requireNonNull(game);
         if (startButton == null) {
-            createAndAddStartButton(game);
+            final String text = game.ui().translations().translate("startpage.play_button");
+            startButton = new GameStartButton(text);
+            startButton.setOnAction(_ -> game.actions().gameFlowActions().actionStartGame().execute());
+            rootPane.getChildren().add(startButton);
+
+            StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
+            startButton.translateYProperty().bind(rootPane.heightProperty().divide(10).negate());
         }
     }
 
@@ -114,14 +122,5 @@ public class FlyerStartPage implements StartPage {
 
     public void stopTalking() {
         game.ui().sounds().stopAndDisposeVoice();
-    }
-
-    private void createAndAddStartButton(Game game) {
-        final String text = game.ui().translations().translate("startpage.play_button");
-        startButton = new GameStartButton(text);
-        startButton.setOnAction(_ -> game.actions().gameFlowActions().actionStartGame().execute());
-        StackPane.setAlignment(startButton, Pos.CENTER);
-        startButton.translateYProperty().bind(rootPane.heightProperty().divide(3));
-        rootPane.getChildren().add(startButton);
     }
 }

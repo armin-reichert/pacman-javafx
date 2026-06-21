@@ -10,7 +10,6 @@ import javafx.scene.Node;
 import javafx.scene.control.SkinBase;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -18,56 +17,55 @@ import javafx.util.Duration;
 
 public class GameStartButtonSkin extends SkinBase<GameStartButton> {
 
-    public GameStartButtonSkin(GameStartButton control) {
-        super(control);
+    public GameStartButtonSkin(GameStartButton button) {
+        super(button);
 
         final Text text = new Text();
-        text.textProperty().bind(control.textProperty());
+        text.textProperty().bind(button.textProperty());
         text.setFill(Color.WHITE);
 
-        final Pane root = new StackPane(text);
-
-        root.getStyleClass().add("game-start-button-container");
+        button.getStyleClass().add("game-start-button-container");
 
         // Without this the button fill the complete area
-        root.setPrefSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
-        root.setMaxSize(StackPane.USE_PREF_SIZE, StackPane.USE_PREF_SIZE);
+        button.setPrefSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
+        button.setMaxSize(StackPane.USE_PREF_SIZE, StackPane.USE_PREF_SIZE);
 
-        root.setOnMouseClicked(e -> {
+        button.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
                 e.consume();
-                control.fire();
+                button.fire();
             }
         });
 
-        root.setOnKeyPressed(e -> {
+        button.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
                 e.consume();
-                control.fire();
+                button.fire();
             }
         });
 
-        root.setOnMouseEntered(_ -> root.setOpacity(0.85));
-        root.setOnMouseExited (_ -> root.setOpacity(1.0));
+        button.setOnMouseEntered(_ -> button.setOpacity(0.85));
+        button.setOnMouseExited (_ -> button.setOpacity(1.0));
 
-        root.setOnMousePressed (_ -> root.setScaleX(0.97));
-        root.setOnMouseReleased(_ -> root.setScaleX(1.0));
+        button.setOnMousePressed (_ -> button.setScaleX(0.97));
+        button.setOnMouseReleased(_ -> button.setScaleX(1.0));
 
-        final Animation pulse = createPulseAnimation(root);
+        final Animation pulse = createPulseAnimation(button);
 
-        control.focusedProperty().addListener((_, _, focused) -> {
+        button.focusedProperty().addListener((_, _, focused) -> {
             if (focused) {
-                root.setScaleX(1.0);
-                root.setScaleY(1.0);
+                button.setScaleX(1.0);
+                button.setScaleY(1.0);
                 pulse.playFromStart();
             } else {
                 pulse.stop();
-                root.setScaleX(1.0);
-                root.setScaleY(1.0);
+                button.setScaleX(1.0);
+                button.setScaleY(1.0);
             }
         });
 
-        getChildren().add(root);
+        final StackPane layout = new StackPane(text);
+        getChildren().setAll(layout);
     }
 
     private Animation createPulseAnimation(Node node) {
