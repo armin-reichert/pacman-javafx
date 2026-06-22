@@ -68,32 +68,29 @@ public class FontAwesomeIcon extends Control {
         STYLEABLES = Collections.unmodifiableList(styleables);
     }
 
-
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
         return STYLEABLES;
     }
 
-    // --- end of static area
-
-    private final FontAwesomeSymbol symbol;
+    // --- End of static division
 
     private final StyleableObjectProperty<Paint> fill = new StyleableObjectProperty<>(Color.WHITE) {
 
-            @Override
-            public Object getBean() {
-                return FontAwesomeIcon.this;
-            }
+        @Override
+        public Object getBean() {
+            return FontAwesomeIcon.this;
+        }
 
-            @Override
-            public String getName() {
-                return "fill";
-            }
+        @Override
+        public String getName() {
+            return "fill";
+        }
 
-            @Override
-            public CssMetaData<FontAwesomeIcon, Paint> getCssMetaData() {
-                return FX_FILL;
-            }
-        };
+        @Override
+        public CssMetaData<FontAwesomeIcon, Paint> getCssMetaData() {
+            return FX_FILL;
+        }
+    };
 
     private final StyleableDoubleProperty size = new StyleableDoubleProperty(DEFAULT_ICON_SIZE) {
 
@@ -113,8 +110,10 @@ public class FontAwesomeIcon extends Control {
         }
     };
 
+    private final char unicode;
+
     public FontAwesomeIcon(FontAwesomeSymbol symbol) {
-        this.symbol = requireNonNull(symbol);
+        unicode = requireNonNull(symbol).unicode();
         getStyleClass().add(DEFAULT_STYLE_CLASS);
 
         maxWidthProperty().bind(size);
@@ -123,9 +122,11 @@ public class FontAwesomeIcon extends Control {
 
     @Override
     public String toString() {
-        return "FontAwesomeIcon{" + "symbol=" + symbol +
-            ", size=" + size.get() +
-            '}';
+        return "FontAwesomeIcon{"
+            + "unicode=" + unicode
+            + ", fill=" + fill.get()
+            + ", size=" + size.get()
+            + '}';
     }
 
     public StyleableObjectProperty<Paint> fillProperty() {
@@ -140,8 +141,8 @@ public class FontAwesomeIcon extends Control {
         return fill.get();
     }
 
-    public FontAwesomeSymbol symbol() {
-        return symbol;
+    public char unicode() {
+        return unicode;
     }
 
     public StyleableDoubleProperty sizeProperty() {

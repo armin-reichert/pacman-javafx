@@ -40,7 +40,7 @@ public class FontAwesomeIconSkin extends SkinBase<FontAwesomeIcon> {
         super(control);
 
         final Text text = new Text();
-        text.setText(String.valueOf(control.symbol().unicode()));
+        text.setText(String.valueOf(control.unicode()));
         text.fillProperty().bind(control.fillProperty());
         text.fontProperty().bind(control.sizeProperty().map(FontAwesomeIconSkin::awesomeFontAtSize));
         text.opacityProperty().bind(control.opacityProperty());
