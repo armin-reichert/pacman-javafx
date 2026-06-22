@@ -31,47 +31,46 @@ public class FontAwesomeIcon extends Control {
 
     public static final int DEFAULT_ICON_SIZE = 32;
 
-    // To make the "fill" property stylable via CSS, add metadata:
-    private static final CssMetaData<FontAwesomeIcon, Paint> FILL_META =
+    // To make properties stylable via CSS, add metadata:
+
+    static final CssMetaData<FontAwesomeIcon, Paint> FX_FILL =
         new CssMetaData<>("-fx-fill", PaintConverter.getInstance(), Color.WHITE) {
             @Override
-            public boolean isSettable(FontAwesomeIcon node) {
-                return !node.fill.isBound();
+            public boolean isSettable(FontAwesomeIcon icon) {
+                return !icon.fill.isBound();
             }
 
             @Override
-            public StyleableProperty<Paint> getStyleableProperty(FontAwesomeIcon node) {
-                return node.fillProperty();
+            public StyleableProperty<Paint> getStyleableProperty(FontAwesomeIcon icon) {
+                return icon.fillProperty();
             }
         };
 
-
-    // To make the "size" property stylable via CSS, add metadata:
-    private static final CssMetaData<FontAwesomeIcon, Number> SIZE_META =
+    static final CssMetaData<FontAwesomeIcon, Number> FX_SIZE =
         new CssMetaData<>("-fx-size", SizeConverter.getInstance(), DEFAULT_ICON_SIZE) {
-
             @Override
-            public boolean isSettable(FontAwesomeIcon node) {
-                return !node.sizeProperty().isBound();
+            public boolean isSettable(FontAwesomeIcon icon) {
+                return !icon.sizeProperty().isBound();
             }
 
             @Override
-            public StyleableDoubleProperty getStyleableProperty(FontAwesomeIcon node) {
-                return node.sizeProperty();
+            public StyleableDoubleProperty getStyleableProperty(FontAwesomeIcon icon) {
+                return icon.sizeProperty();
             }
         };
 
-    private static final List<CssMetaData<? extends Styleable, ?>> MERGED_META_DATA;
-
+    // Add new metadata to parent class metadata
+    private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
     static {
-        final List<CssMetaData<? extends Styleable, ?>> metaData = new ArrayList<>(Control.getClassCssMetaData());
-        metaData.add(FILL_META);
-        metaData.add(SIZE_META);
-        MERGED_META_DATA = Collections.unmodifiableList(metaData);
+        final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>(Control.getClassCssMetaData());
+        styleables.add(FX_FILL);
+        styleables.add(FX_SIZE);
+        STYLEABLES = Collections.unmodifiableList(styleables);
     }
 
+
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
-        return MERGED_META_DATA;
+        return STYLEABLES;
     }
 
     // --- end of static area
@@ -92,7 +91,7 @@ public class FontAwesomeIcon extends Control {
 
             @Override
             public CssMetaData<FontAwesomeIcon, Paint> getCssMetaData() {
-                return FILL_META;
+                return FX_FILL;
             }
         };
 
@@ -110,7 +109,7 @@ public class FontAwesomeIcon extends Control {
 
         @Override
         public CssMetaData<? extends Styleable, Number> getCssMetaData() {
-            return SIZE_META;
+            return FX_SIZE;
         }
     };
 
