@@ -27,7 +27,7 @@ public class TengenWorldConfigLoader extends WorldConfigLoader {
             .create();
     }
 
-    private static final Pattern NES_COLOR_PATTERN = Pattern.compile("nes(0x)?([0-9a-f]{2})");
+    private static final Pattern NES_COLOR_PATTERN = Pattern.compile("^nes\\(0x([0-9A-Fa-f]{2})\\)$");
 
     public static class ColorAdapter extends TypeAdapter<Color> {
         @Override
@@ -40,7 +40,7 @@ public class TengenWorldConfigLoader extends WorldConfigLoader {
             final String s = in.nextString();
             final Matcher m = NES_COLOR_PATTERN.matcher(s);
             if (m.matches()) {
-                int index = Integer.parseInt(m.group(1));
+                int index = Integer.parseInt(m.group(1), 16); // parse the two digits as hex digits
                 return NES_Palette.color(index);
             }
             return Color.web(s);

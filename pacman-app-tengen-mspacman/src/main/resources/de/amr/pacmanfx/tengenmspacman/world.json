@@ -1,7 +1,7 @@
 {
   "pac": {
     "colors": {
-      "headColor": "rgb(255, 255, 0)",
+      "headColor": "nes(0x28)",
       "palateColor": "rgb(222, 151, 81)",
       "eyesColor": "#212121"
     },
