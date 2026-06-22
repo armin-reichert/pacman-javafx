@@ -13,6 +13,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.config.UISettings;
 import de.amr.pacmanfx.ui.config.WorldConfigLoader;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -37,13 +38,18 @@ public class TengenWorldConfigLoader extends WorldConfigLoader {
 
         @Override
         public Color read(JsonReader in) throws IOException {
-            final String s = in.nextString();
-            final Matcher m = NES_COLOR_PATTERN.matcher(s);
+            final String text = in.nextString();
+            final Matcher m = NES_COLOR_PATTERN.matcher(text);
             if (m.matches()) {
                 int index = Integer.parseInt(m.group(1), 16); // parse the two digits as hex digits
                 return NES_Palette.color(index);
             }
-            return Color.web(s);
+            try {
+                return Color.web(text);
+            } catch (IllegalArgumentException x) {
+                Logger.error(String.format("Invalid color: %s", text));
+                return Color.WHITE;
+            }
         }
     }
 }

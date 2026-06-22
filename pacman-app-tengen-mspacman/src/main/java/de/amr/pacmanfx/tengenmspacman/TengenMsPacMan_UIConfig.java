@@ -18,7 +18,8 @@ import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
-import de.amr.pacmanfx.ui.config.*;
+import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.config.WorldConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
@@ -29,19 +30,16 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostComponentColors;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostStateColors;
-import de.amr.pacmanfx.uilib.model3D.pac.MsPacManComponentColors;
-import de.amr.pacmanfx.uilib.model3D.pac.PacColors;
-import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class TengenMsPacMan_UIConfig implements UIConfig {
 
@@ -50,66 +48,6 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     private static final WorldConfig WORLD_CONFIG =
         new TengenWorldConfigLoader().loadJSON("/de/amr/pacmanfx/tengenmspacman/world.json");
-
-    public static final WorldConfig TENGEN_WORLD_CONFIG = new WorldConfig(
-
-        new PacConfig(
-            new PacColors(
-                NES_Palette.color(0x28), // headColor
-                NES_Palette.color(0x2d), // palateColor
-                NES_Palette.color(0x02)  // eyesColor
-            ),
-            new MsPacManComponentColors(
-                NES_Palette.color(0x05), // hair bow
-                NES_Palette.color(0x02), // hair bow pearls
-                NES_Palette.color(0x28).deriveColor(0, 1.0, 0.96, 1.0) // boobs
-            ),
-            8.0f,
-            16.0f),
-
-        List.of(
-            new GhostConfig(8.0f, 15.5f,
-                new GhostStateColors(
-                    new GhostComponentColors(NES_Palette.color(0x05), NES_Palette.color(0x20), NES_Palette.color(0x11)),
-                    new GhostComponentColors(NES_Palette.color(0x01), NES_Palette.color(0x20), NES_Palette.color(0x20)),
-                    new GhostComponentColors(NES_Palette.color(0x20), NES_Palette.color(0x20), NES_Palette.color(0x20)))
-            ),
-            new GhostConfig(8.0f, 15.5f,
-                new GhostStateColors(
-                    new GhostComponentColors(NES_Palette.color(0x25), NES_Palette.color(0x20), NES_Palette.color(0x11)),
-                    new GhostComponentColors(NES_Palette.color(0x01), NES_Palette.color(0x20), NES_Palette.color(0x20)),
-                    new GhostComponentColors(NES_Palette.color(0x20), NES_Palette.color(0x20), NES_Palette.color(0x20)))
-            ),
-            new GhostConfig(8.0f, 15.5f,
-                new GhostStateColors(
-                    new GhostComponentColors(NES_Palette.color(0x11), NES_Palette.color(0x20), NES_Palette.color(0x11)),
-                    new GhostComponentColors(NES_Palette.color(0x01), NES_Palette.color(0x20), NES_Palette.color(0x20)),
-                    new GhostComponentColors(NES_Palette.color(0x20), NES_Palette.color(0x20), NES_Palette.color(0x20)))
-            ),
-            new GhostConfig(8.0f, 15.5f,
-                new GhostStateColors(
-                    new GhostComponentColors(NES_Palette.color(0x16), NES_Palette.color(0x20), NES_Palette.color(0x11)),
-                    new GhostComponentColors(NES_Palette.color(0x01), NES_Palette.color(0x20), NES_Palette.color(0x20)),
-                    new GhostComponentColors(NES_Palette.color(0x20), NES_Palette.color(0x20), NES_Palette.color(0x20)))
-            )
-        ),
-
-        new BonusConfig(8.0f, 14.5f),
-
-        new LevelCounterConfig3D(10.0f, 6.0f),
-
-        new LivesCounterConfig3D(5, 12.0f),
-
-        new MazeConfig3D(4.0f, 4.0f, 1.0f, 2.25f, "0x282828"),
-
-        new HouseConfig3D(12.0f, 0.4f, 12.0f, 2.5f),
-
-        new FloorConfig3D(5f, 0.5f),
-
-        new PelletConfig3D(0.8f, 6.0f),
-
-        new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f)
-    );
 
     /** Defines additional Tengen-specific dashboard IDs */
     public enum TengenMsPacMan_DashboardID implements Identifier { JOYPAD }
@@ -239,7 +177,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     @Override
     public WorldConfig worldConfig() {
-        return TENGEN_WORLD_CONFIG;
+        return WORLD_CONFIG;
     }
 
     @Override

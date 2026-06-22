@@ -2,13 +2,13 @@
   "pac": {
     "colors": {
       "headColor": "nes(0x28)",
-      "palateColor": "rgb(222, 151, 81)",
-      "eyesColor": "#212121"
+      "palateColor": "nes(0x2d)",
+      "eyesColor": "nes(0x02)"
     },
     "msColors": {
-      "hairBow": "rgb(255, 0, 0)",
-      "hairBowPearls": "rgb(33, 33, 255)",
-      "boobs": "rgb(255, 255, 0)"
+      "hairBow": "nes(0x05)",
+      "hairBowPearls": "nes(0x02)",
+      "boobs": "nes(0x28)"
     },
     "size2D": 8,
     "size3D": 16
@@ -20,19 +20,19 @@
       "size3D": 15.5,
       "colors": {
         "normalColors": {
-          "dressColor": "rgb(255, 0, 0)",
-          "eyeballsColor": "rgb(222, 222, 255)",
-          "pupilsColor": "rgb(33, 33, 255)"
+          "dressColor": "nes(0x05)",
+          "eyeballsColor": "nes(0x20)",
+          "pupilsColor": "nes(0x11)"
         },
         "frightenedColors": {
-          "dressColor": "rgb(33, 33, 255)",
-          "eyeballsColor": "rgb(255, 183, 174)",
-          "pupilsColor": "rgb(255, 183, 174)"
+          "dressColor": "nes(0x01)",
+          "eyeballsColor": "nes(0x20)",
+          "pupilsColor": "nes(0x20)"
         },
         "flashingColors": {
-          "dressColor": "rgb(222, 222, 255)",
-          "eyeballsColor": "rgb(255, 183, 174)",
-          "pupilsColor": "rgb(255, 0, 0)"
+          "dressColor": "nes(0x20)",
+          "eyeballsColor": "nes(0x20)",
+          "pupilsColor": "nes(0x11)"
         }
       }
     },
@@ -41,19 +41,19 @@
       "size3D": 15.5,
       "colors": {
         "normalColors": {
-          "dressColor": "rgb(255, 183, 255)",
-          "eyeballsColor": "rgb(222, 222, 255)",
-          "pupilsColor": "rgb(33, 33, 255)"
+          "dressColor": "nes(0x25)",
+          "eyeballsColor": "nes(0x20)",
+          "pupilsColor": "nes(0x11)"
         },
         "frightenedColors": {
-          "dressColor": "rgb(33, 33, 255)",
-          "eyeballsColor": "rgb(255, 183, 174)",
-          "pupilsColor": "rgb(255, 183, 174)"
+          "dressColor": "nes(0x01)",
+          "eyeballsColor": "nes(0x20)",
+          "pupilsColor": "nes(0x20)"
         },
         "flashingColors": {
-          "dressColor": "rgb(222, 222, 255)",
-          "eyeballsColor": "rgb(255, 183, 174)",
-          "pupilsColor": "rgb(255, 0, 0)"
+          "dressColor": "nes(0x20)",
+          "eyeballsColor": "nes(0x20)",
+          "pupilsColor": "nes(0x11)"
         }
       }
     },
@@ -62,19 +62,19 @@
       "size3D": 15.5,
       "colors": {
         "normalColors": {
-          "dressColor": "rgb(0, 255, 255)",
-          "eyeballsColor": "rgb(222, 222, 255)",
-          "pupilsColor": "rgb(33, 33, 255)"
+          "dressColor": "nes(0x11)",
+          "eyeballsColor": "nes(0x20)",
+          "pupilsColor": "nes(0x11)"
         },
         "frightenedColors": {
-          "dressColor": "rgb(33, 33, 255)",
-          "eyeballsColor": "rgb(255, 183, 174)",
-          "pupilsColor": "rgb(255, 183, 174)"
+          "dressColor": "nes(0x01)",
+          "eyeballsColor": "nes(0x20)",
+          "pupilsColor": "nes(0x20)"
         },
         "flashingColors": {
-          "dressColor": "rgb(222, 222, 255)",
-          "eyeballsColor": "rgb(255, 183, 174)",
-          "pupilsColor": "rgb(255, 0, 0)"
+          "dressColor": "nes(0x20)",
+          "eyeballsColor": "nes(0x20)",
+          "pupilsColor": "nes(0x11)"
         }
       }
     },
@@ -83,19 +83,19 @@
       "size3D": 15.5,
       "colors": {
         "normalColors": {
-          "dressColor": "rgb(255, 183, 81)",
-          "eyeballsColor": "rgb(222, 222, 255)",
-          "pupilsColor": "rgb(33, 33, 255)"
+          "dressColor": "nes(0x16)",
+          "eyeballsColor": "nes(0x20)",
+          "pupilsColor": "nes(0x11)"
         },
         "frightenedColors": {
-          "dressColor": "rgb(33, 33, 255)",
-          "eyeballsColor": "rgb(255, 183, 174)",
-          "pupilsColor": "rgb(255, 183, 174)"
+          "dressColor": "nes(0x01)",
+          "eyeballsColor": "nes(0x20)",
+          "pupilsColor": "nes(0x20)"
         },
         "flashingColors": {
-          "dressColor": "rgb(222, 222, 255)",
-          "eyeballsColor": "rgb(255, 183, 174)",
-          "pupilsColor": "rgb(255, 0, 0)"
+          "dressColor": "nes(0x20)",
+          "eyeballsColor": "nes(0x20)",
+          "pupilsColor": "nes(0x11)"
         }
       }
     }
