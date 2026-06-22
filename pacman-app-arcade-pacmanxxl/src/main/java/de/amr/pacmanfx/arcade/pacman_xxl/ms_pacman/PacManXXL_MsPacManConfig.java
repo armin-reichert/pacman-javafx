@@ -124,7 +124,7 @@ public final class PacManXXL_MsPacManConfig implements GameVariantConfig, Resour
 
     @Override
     public WorldSettings worldConfig() {
-        return ArcadePacManConfig.DEFAULT_WORLD_CONFIG;
+        return ArcadePacManConfig.WORLD_CONFIG;
     }
 
     @Override

@@ -51,7 +51,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacManConfig implements GameVariantConfig, ResourceManager {
 
-    public static final WorldSettings DEFAULT_WORLD_CONFIG
+    public static final WorldSettings WORLD_CONFIG
         = new SettingsLoader().loadJSON("/de/amr/pacmanfx/ui/world.json", WorldSettings.class);
 
     public static final WorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new WorldMapColorScheme(
@@ -127,7 +127,7 @@ public class ArcadePacManConfig implements GameVariantConfig, ResourceManager {
 
     @Override
     public WorldSettings worldConfig() {
-        return DEFAULT_WORLD_CONFIG;
+        return WORLD_CONFIG;
     }
 
     private void loadAssets() {

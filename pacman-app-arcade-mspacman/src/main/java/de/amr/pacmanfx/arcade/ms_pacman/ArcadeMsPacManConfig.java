@@ -122,7 +122,7 @@ public class ArcadeMsPacManConfig implements GameVariantConfig, ResourceManager 
 
     @Override
     public WorldSettings worldConfig() {
-        return ArcadePacManConfig.DEFAULT_WORLD_CONFIG;
+        return ArcadePacManConfig.WORLD_CONFIG;
     }
 
     @Override
