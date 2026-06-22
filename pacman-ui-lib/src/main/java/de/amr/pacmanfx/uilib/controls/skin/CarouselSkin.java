@@ -64,15 +64,21 @@ public class CarouselSkin extends SkinBase<Carousel> {
         carousel.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case SPACE -> {
+                    e.consume();
                     if (progressTimer.getStatus() == Animation.Status.PAUSED) {
                         progressTimer.play();
                     } else {
                         progressTimer.pause();
                     }
-                    e.consume();
                 }
-                case LEFT -> showPrevious();
-                case RIGHT -> showNext();
+                case LEFT -> {
+                    e.consume();
+                    showPrevious();
+                }
+                case RIGHT -> {
+                    e.consume();
+                    showNext();
+                }
             }
         });
 
@@ -113,9 +119,10 @@ public class CarouselSkin extends SkinBase<Carousel> {
         final Carousel carousel = getSkinnable();
         root.getChildren().clear();
 
-        final int idx = carousel.getSelectedIndex();
-        if (idx >= 0 && idx < carousel.getItems().size()) {
-            root.getChildren().add(carousel.getItems().get(idx));
+        final int i = carousel.getSelectedIndex();
+        if (0 <= i && i < carousel.getItems().size()) {
+            final Node selectedItem = carousel.getItems().get(i);
+            root.getChildren().add(selectedItem);
         }
 
         root.getChildren().addAll(progressBar, navButtonBack, navButtonForward);
@@ -132,7 +139,7 @@ public class CarouselSkin extends SkinBase<Carousel> {
         button.disableProperty().bind(getSkinnable().navigationLockedProperty());
 
         final Tooltip tooltip = new Tooltip();
-        tooltip.setFont(Font.font(16));
+        tooltip.setFont(Font.font(16)); //TODO CSS
         button.setTooltip(tooltip);
 
         switch (dir) {

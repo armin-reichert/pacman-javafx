@@ -4,9 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
@@ -29,7 +27,6 @@ public class StartPagesView implements GameView {
     public static final int PAGE_CHANGE_SECONDS = 90;
 
     private final List<StartPage> pages = new ArrayList<>();
-    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Start View Action Bindings");
 
     private Game game;
 
@@ -76,7 +73,7 @@ public class StartPagesView implements GameView {
     @Override
     public void onExit() {
         carousel.pauseProgress();
-        actionBindings.dispose();
+        actionBindings().dispose();
         currentStartPage().ifPresent(StartPage::onExit);
     }
 
@@ -90,7 +87,7 @@ public class StartPagesView implements GameView {
 
     @Override
     public ActionBindingsRegistry actionBindings() {
-        return actionBindings;
+        return ActionBindingsRegistry.NO_BINDINGS;
     }
 
     @Override
