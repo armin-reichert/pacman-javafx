@@ -20,7 +20,7 @@ public final class GlobalAssets {
 
     public static final String GAME_STYLESHEET = RESOURCE_ROOT + "css/game.css";
 
-    public static final ResourceManager RES_MGR = () -> GameUI_Constants.class;
+    public static final ResourceManager RES_MGR = () -> GlobalAssets.class;
 
     public enum PredefinedFont {
         ARCADE6       ("fonts/emulogic.ttf", 6),

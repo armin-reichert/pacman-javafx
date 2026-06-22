@@ -16,7 +16,6 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
@@ -27,6 +26,7 @@ import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -39,6 +39,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -50,6 +52,15 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 
 public final class GameImpl implements Game {
+
+    public static final DashboardConfig DEFAULT_DASHBOARD_CONFIG = new DashboardConfig(
+        110, // label width
+        320, // width
+        Color.rgb(0, 0, 50, 1.0), // background
+        Color.WHITE, // text
+        Font.font("Sans", 12), // label font
+        Font.font("Sans", 12) // content font
+    );
 
     private static File highScoreFile(String variantName) {
         final String fileName = "highscore-%s.xml".formatted(variantName).toLowerCase();
@@ -98,7 +109,7 @@ public final class GameImpl implements Game {
 
         final GameViewManager views = new GameViewManager();
         views.registerView(GameViewID.START_PAGES, new StartPagesView());
-        views.registerView(GameViewID.GAMEPLAY, new GamePlayView(GameUI_Constants.DEFAULT_DASHBOARD_CONFIG));
+        views.registerView(GameViewID.GAMEPLAY, new GamePlayView(DEFAULT_DASHBOARD_CONFIG));
         views.registerView(GameViewID.EDITOR, new EditorView());
 
         final SoundManager sounds = new SoundManager();

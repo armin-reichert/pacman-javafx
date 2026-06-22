@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.window;
 
-import de.amr.pacmanfx.ui.GameUI_Constants;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -21,6 +20,9 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 
 public class GameWindowImpl implements GameWindow {
 
+    public static final int MIN_STAGE_WIDTH  = 280;
+    public static final int MIN_STAGE_HEIGHT = 360;
+
     private StringBinding titleBinding;
 
     private final Stage stage;
@@ -32,8 +34,8 @@ public class GameWindowImpl implements GameWindow {
         mainScene = new GameMainScene(width, height);
 
         stage.setScene(mainScene);
-        stage.setMinWidth(GameUI_Constants.MIN_STAGE_WIDTH);
-        stage.setMinHeight(GameUI_Constants.MIN_STAGE_HEIGHT);
+        stage.setMinWidth(MIN_STAGE_WIDTH);
+        stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
     @Override
