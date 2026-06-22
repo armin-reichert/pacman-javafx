@@ -25,38 +25,47 @@ public final class ContextMenuSupport {
     }
 
     public static MenuItem addTitleItem(ContextMenu menu, String itemText) {
-        final var text = new Text(itemText);
-        text.setFont(GlobalAssets.CONTEXT_MENU_DEFAULT_TITLE_FONT);
-        text.setFill(GlobalAssets.CONTEXT_MENU_DEFAULT_TITLE_COLOR);
-        text.getStyleClass().add("custom-menu-title");
-        final var item = new CustomMenuItem(text, false);
+        final var item = new CustomMenuItem(new Text(itemText), false);
+        item.getStyleClass().add("custom-menu-title-item");
         menu.getItems().add(item);
         return item;
     }
 
-    public static MenuItem addLocalizedActionItem(ContextMenu menu, TranslationManager translator, Runnable action, String globalAssetsKey, Object... args) {
-        var actionItem = new MenuItem(translator.translate(globalAssetsKey, args));
-        actionItem.setOnAction(_ -> action.run());
-        return add(menu, actionItem);
+    public static MenuItem addLocalizedActionItem(
+        ContextMenu menu, TranslationManager translator,
+        Runnable action, String globalAssetsKey, Object... args)
+    {
+        var item = new MenuItem(translator.translate(globalAssetsKey, args));
+        item.setOnAction(_ -> action.run());
+        return add(menu, item);
     }
 
-    public static MenuItem addLocalizedActionItem(ContextMenu menu, TranslationManager translator, GameAction action, String globalAssetsKey, Object... args) {
-        var actionItem = new MenuItem(translator.translate(globalAssetsKey, args));
-        actionItem.setOnAction(_ -> action.execute());
-        return add(menu, actionItem);
+    public static MenuItem addLocalizedActionItem(
+        ContextMenu menu, TranslationManager translator,
+        GameAction action, String globalAssetsKey, Object... args)
+    {
+        var item = new MenuItem(translator.translate(globalAssetsKey, args));
+        item.setOnAction(_ -> action.execute());
+        return add(menu, item);
     }
 
     public static MenuItem addLocalizedTitleItem(ContextMenu menu, TranslationManager translator, String globalAssetsKey, Object... args) {
         return addTitleItem(menu, translator.translate(globalAssetsKey, args));
     }
 
-    public static CheckMenuItem addLocalizedCheckBox(ContextMenu menu, TranslationManager translator, BooleanProperty selectionProperty, String globalAssetsKey, Object... args) {
-        var checkMenuItem = new CheckMenuItem(translator.translate(globalAssetsKey, args));
-        checkMenuItem.selectedProperty().bindBidirectional(selectionProperty);
-        return add(menu, checkMenuItem);
+    public static CheckMenuItem addLocalizedCheckBox(
+        ContextMenu menu, TranslationManager translator,
+        BooleanProperty selectionProperty, String globalAssetsKey, Object... args)
+    {
+        var item = new CheckMenuItem(translator.translate(globalAssetsKey, args));
+        item.selectedProperty().bindBidirectional(selectionProperty);
+        return add(menu, item);
     }
 
-    public static RadioMenuItem addLocalizedRadioButton(ContextMenu menu, TranslationManager translator, String globalAssetsKey, Object... args) {
+    public static RadioMenuItem addLocalizedRadioButton(
+        ContextMenu menu, TranslationManager translator,
+        String globalAssetsKey, Object... args)
+    {
         return add(menu, new RadioMenuItem(translator.translate(globalAssetsKey, args)));
     }
 

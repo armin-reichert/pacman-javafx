@@ -8,9 +8,7 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import javafx.scene.layout.Background;
 import javafx.scene.media.Media;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 import java.util.Arrays;
 
@@ -65,10 +63,6 @@ public final class GlobalAssets {
 
         private final Media media;
     }
-
-    public static final Color CONTEXT_MENU_DEFAULT_TITLE_COLOR = Color.CORNFLOWERBLUE;
-
-    public static final javafx.scene.text.Font CONTEXT_MENU_DEFAULT_TITLE_FONT = javafx.scene.text.Font.font("Dialog", FontWeight.BLACK, 14.0f);
 
     public static final Background BACKGROUND_PAC_MAN_WALLPAPER = createImageBackground(
         RES_MGR.loadImage(RESOURCE_ROOT + "graphics/pacman_wallpaper.png"));

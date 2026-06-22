@@ -6,12 +6,18 @@
 
 /* Custom context menu style */
 
-.custom-menu-item:focused,
-.custom-menu-item:hover,
-.custom-menu-item:armed {
+.custom-menu-item:hover {
     -fx-background-color: transparent;
-    -fx-text-fill: black; /* or your desired text color */
+    -fx-fill: black;
 }
+
+.custom-menu-title-item,
+.custom-menu-title-item:hover {
+    -fx-font-family: "Dialog";
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-stroke: #333;
+}}
 
 /* Start pages button */
 
