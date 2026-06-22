@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntity;
-import de.amr.pacmanfx.ui.config.WorldConfig;
+import de.amr.pacmanfx.ui.config.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -74,7 +74,7 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
         }
     }
 
-    public LivesCounter3D(Factory3D factory3D, WorldConfig worldConfig) {
+    public LivesCounter3D(Factory3D factory3D, WorldSettings worldConfig) {
         requireNonNull(factory3D);
         requireNonNull(worldConfig);
 

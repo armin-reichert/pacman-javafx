@@ -13,8 +13,8 @@ import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.Obstacle;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.config.FloorConfig3D;
-import de.amr.pacmanfx.ui.config.MazeConfig3D;
+import de.amr.pacmanfx.ui.config.Floor3DSettings;
+import de.amr.pacmanfx.ui.config.Maze3DSettings;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
@@ -78,8 +78,8 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
     public void build(
         ObjectProperty<DrawMode> drawMode,
         Map<String, PhongMaterial> materials,
-        MazeConfig3D mazeConfig,
-        FloorConfig3D floorConfig3D)
+        Maze3DSettings mazeConfig,
+        Floor3DSettings floorConfig3D)
     {
         this.materials = materials;
         buildFloor(drawMode, floorConfig3D);
@@ -158,7 +158,7 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         }
     }
 
-    private void buildFloor(ObjectProperty<DrawMode> drawMode, FloorConfig3D floorConfig) {
+    private void buildFloor(ObjectProperty<DrawMode> drawMode, Floor3DSettings floorConfig) {
         final Vector2i terrainSize = terrain.sizeInPixel();
         final float width = terrainSize.x() + 2 * floorConfig.padding();
         final float height = terrainSize.y();

@@ -19,7 +19,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.config.GameUIConfig;
-import de.amr.pacmanfx.ui.config.WorldConfig;
+import de.amr.pacmanfx.ui.config.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
@@ -46,8 +46,8 @@ public class TengenMsPacMan_UIConfig implements GameUIConfig {
     // Local resources are stored inside main resource folder subdirectories named after package name of this class
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
 
-    private static final WorldConfig WORLD_CONFIG =
-        new TengenWorldConfigLoader().loadJSON("/de/amr/pacmanfx/tengenmspacman/world.json", WorldConfig.class);
+    private static final WorldSettings WORLD_CONFIG =
+        new TengenWorldConfigLoader().loadJSON("/de/amr/pacmanfx/tengenmspacman/world.json", WorldSettings.class);
 
     /** Defines additional Tengen-specific dashboard IDs */
     public enum TengenMsPacMan_DashboardID implements Identifier { JOYPAD }
@@ -176,7 +176,7 @@ public class TengenMsPacMan_UIConfig implements GameUIConfig {
     }
 
     @Override
-    public WorldConfig worldConfig() {
+    public WorldSettings worldConfig() {
         return WORLD_CONFIG;
     }
 

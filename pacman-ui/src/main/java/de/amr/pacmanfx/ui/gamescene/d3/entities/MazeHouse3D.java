@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntity;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.config.HouseConfig3D;
+import de.amr.pacmanfx.ui.config.House3DSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.world.ArcadeHouse3D;
 import javafx.beans.property.DoubleProperty;
@@ -38,7 +38,7 @@ public class MazeHouse3D implements GameLevelEntity, Disposable {
      */
     public MazeHouse3D(
         WorldMapColorScheme colorScheme,
-        HouseConfig3D config3D,
+        House3DSettings config3D,
         AnimationRegistry animations,
         ArcadeHouse house)
     {

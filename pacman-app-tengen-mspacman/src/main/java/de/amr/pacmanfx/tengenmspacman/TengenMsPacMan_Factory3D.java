@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.config.WorldConfig;
+import de.amr.pacmanfx.ui.config.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
@@ -22,7 +22,7 @@ public class TengenMsPacMan_Factory3D extends DefaultFactory3D {
     }
 
     @Override
-    public Group createLivesCounterShape3D(WorldConfig worldConfig) {
+    public Group createLivesCounterShape3D(WorldSettings worldConfig) {
         requireNonNull(worldConfig);
 
         final PacConfig config = worldConfig.pac()

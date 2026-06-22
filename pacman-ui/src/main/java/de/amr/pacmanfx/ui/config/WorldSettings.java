@@ -9,15 +9,15 @@ import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
 
 import java.util.List;
 
-public record WorldConfig(
+public record WorldSettings(
     PacConfig pac,
     List<GhostConfig> ghosts,
-    BonusConfig bonus,
-    LevelCounterConfig3D levelCounter,
-    LivesCounterConfig3D livesCounter,
-    MazeConfig3D maze,
-    HouseConfig3D house,
-    FloorConfig3D floor,
-    PelletConfig3D pellet,
-    EnergizerConfig3D energizer)
+    Bonus3DSettings bonus,
+    LevelCounter3DSettings levelCounter,
+    LivesCounter3DSettings livesCounter,
+    Maze3DSettings maze,
+    House3DSettings house,
+    Floor3DSettings floor,
+    Pellet3DSettings pellet,
+    Energizer3DSettings energizer)
 {}

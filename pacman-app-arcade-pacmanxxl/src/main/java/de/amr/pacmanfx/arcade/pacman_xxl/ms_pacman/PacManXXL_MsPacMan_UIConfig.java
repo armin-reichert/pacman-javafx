@@ -22,7 +22,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.config.GameUIConfig;
-import de.amr.pacmanfx.ui.config.WorldConfig;
+import de.amr.pacmanfx.ui.config.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
@@ -123,7 +123,7 @@ public final class PacManXXL_MsPacMan_UIConfig implements GameUIConfig, Resource
     }
 
     @Override
-    public WorldConfig worldConfig() {
+    public WorldSettings worldConfig() {
         return ArcadePacMan_UIConfig.DEFAULT_WORLD_CONFIG;
     }
 

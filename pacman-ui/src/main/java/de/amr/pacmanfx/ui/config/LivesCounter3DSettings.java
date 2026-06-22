@@ -4,7 +4,4 @@
 
 package de.amr.pacmanfx.ui.config;
 
-public record PelletConfig3D(
-    float radius,
-    float floorElevation
-) {}
+public record LivesCounter3DSettings(int numShapes, float shapeSize) {}

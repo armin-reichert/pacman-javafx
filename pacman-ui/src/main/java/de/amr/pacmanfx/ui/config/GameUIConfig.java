@@ -55,7 +55,7 @@ public interface GameUIConfig extends Disposable {
 
     SpriteSheet<?> spriteSheet();
 
-    WorldConfig worldConfig();
+    WorldSettings worldConfig();
 
     default Rectangle2D spriteRegionForArcadeBootScene() {
         return new Rectangle2D(

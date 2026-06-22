@@ -8,9 +8,9 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
-import de.amr.pacmanfx.ui.config.PelletConfig3D;
-import de.amr.pacmanfx.ui.config.WorldConfig;
+import de.amr.pacmanfx.ui.config.Energizer3DSettings;
+import de.amr.pacmanfx.ui.config.Pellet3DSettings;
+import de.amr.pacmanfx.ui.config.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
@@ -51,7 +51,7 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public Maze3D createMaze3D(
-        ObjectProperty<DrawMode> drawMode, TerrainLayer terrain, WorldConfig config,
+        ObjectProperty<DrawMode> drawMode, TerrainLayer terrain, WorldSettings config,
         WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
 
         return mazeFactory3D.createMaze3D(terrain, config, colorScheme, animationRegistry, drawMode);
@@ -78,7 +78,7 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Group createLivesCounterShape3D(WorldConfig worldConfig) {
+    public Group createLivesCounterShape3D(WorldSettings worldConfig) {
         requireNonNull(worldConfig);
 
         final PacConfig pacConfig = worldConfig.pac().withModifiedSize3D(worldConfig.livesCounter().shapeSize());
@@ -87,7 +87,7 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Pellet3D createPellet3D(PelletConfig3D config, PhongMaterial material) {
+    public Pellet3D createPellet3D(Pellet3DSettings config, PhongMaterial material) {
         requireNonNull(config);
         requireNonNull(material);
 
@@ -98,7 +98,7 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Energizer3D createEnergizer3D(EnergizerConfig3D config, PhongMaterial material, AnimationRegistry animationRegistry) {
+    public Energizer3D createEnergizer3D(Energizer3DSettings config, PhongMaterial material, AnimationRegistry animationRegistry) {
         requireNonNull(config);
         requireNonNull(material);
         requireNonNull(animationRegistry);

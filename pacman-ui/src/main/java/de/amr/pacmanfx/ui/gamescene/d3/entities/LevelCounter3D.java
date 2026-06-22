@@ -7,7 +7,7 @@ import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntity;
-import de.amr.pacmanfx.ui.config.LevelCounterConfig3D;
+import de.amr.pacmanfx.ui.config.LevelCounter3DSettings;
 import de.amr.pacmanfx.ui.config.GameUIConfig;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -46,7 +46,7 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
 
     @Override
     public void init(GameContext gameContext, GameLevel level) {
-        final LevelCounterConfig3D config = uiConfig.worldConfig().levelCounter();
+        final LevelCounter3DSettings config = uiConfig.worldConfig().levelCounter();
         final float cubeSize = config.symbolSize();
         final List<Integer> symbolCodes = level.game().levelCounter().symbolCodes();
         getChildren().clear();

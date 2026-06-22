@@ -9,9 +9,9 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.config.EnergizerConfig3D;
-import de.amr.pacmanfx.ui.config.PelletConfig3D;
-import de.amr.pacmanfx.ui.config.WorldConfig;
+import de.amr.pacmanfx.ui.config.Energizer3DSettings;
+import de.amr.pacmanfx.ui.config.Pellet3DSettings;
+import de.amr.pacmanfx.ui.config.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
@@ -37,7 +37,7 @@ public interface Factory3D extends Disposable {
      * @param animationRegistry the animation registry
      * @return a 3D maze representing the given terrain
      */
-    Maze3D createMaze3D(ObjectProperty<DrawMode> drawMode, TerrainLayer terrain, WorldConfig config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry);
+    Maze3D createMaze3D(ObjectProperty<DrawMode> drawMode, TerrainLayer terrain, WorldSettings config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry);
 
     /**
      * Creates the 3D representation of Pac for this game variant, including model,
@@ -67,14 +67,14 @@ public interface Factory3D extends Disposable {
      * @param worldConfig the configuration object containing parameters for the lives counter's appearance
      * @return the 3D node representing a life icon
      */
-    Node createLivesCounterShape3D(WorldConfig worldConfig);
+    Node createLivesCounterShape3D(WorldSettings worldConfig);
 
     /**
      * @param config pellet configuration
      * @param material pellet material
      * @return 3D pellet representation
      */
-    Pellet3D createPellet3D(PelletConfig3D config, PhongMaterial material);
+    Pellet3D createPellet3D(Pellet3DSettings config, PhongMaterial material);
 
     /**
      * @param config energizer configuration
@@ -82,5 +82,5 @@ public interface Factory3D extends Disposable {
      * @param animationRegistry the animation registry
      * @return 3D energizer representation
      */
-    Energizer3D createEnergizer3D(EnergizerConfig3D config, PhongMaterial material, AnimationRegistry animationRegistry);
+    Energizer3D createEnergizer3D(Energizer3DSettings config, PhongMaterial material, AnimationRegistry animationRegistry);
 }

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.viewmodel.UISettings3DViewModel;
+import de.amr.pacmanfx.ui.viewmodel.UISettings3DVM;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -296,7 +296,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         playLevelEndAnimation(level3D.animationRegistry(), game().ui().settings().d3, level3D.entities().maze3D(), level3D.level().cutSceneNumber() != 0);
     }
 
-    private void playLevelEndAnimation(AnimationRegistry animationRegistry, UISettings3DViewModel globals3D, Maze3D maze3D, boolean cutSceneAfter) {
+    private void playLevelEndAnimation(AnimationRegistry animationRegistry, UISettings3DVM globals3D, Maze3D maze3D, boolean cutSceneAfter) {
         final GameLevel3D.AnimationID animationID = cutSceneAfter
             ? GameLevel3D.AnimationID.LEVEL_COMPLETED_SHORT
             : GameLevel3D.AnimationID.LEVEL_COMPLETED_FULL;
@@ -343,7 +343,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 
-    private void handleTestState(UISettings3DViewModel globals3D) {
+    private void handleTestState(UISettings3DVM globals3D) {
         playScene3D.optGameLevel3D().ifPresent(level3D -> {
             playScene3D.replaceGameLevel3D(level3D.level());
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level3D.level().number());

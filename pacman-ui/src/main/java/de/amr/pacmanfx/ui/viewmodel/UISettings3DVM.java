@@ -12,7 +12,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
-public class UISettings3DViewModel {
+public class UISettings3DVM {
 
     public static final ParticlesAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticlesAnimationConfig(
         new ExplosionConfig(
@@ -50,7 +50,7 @@ public class UISettings3DViewModel {
     /* Opacity of 3D walls (0.0–1.0). */
     public final DoubleProperty mazeWallOpacityProperty;
 
-    public UISettings3DViewModel(
+    public UISettings3DVM(
         BooleanProperty axesVisibleProperty,
         ObjectProperty<PerspectiveID> cameraPerspectiveIdProperty,
         ObjectProperty<DrawMode> drawModeProperty,

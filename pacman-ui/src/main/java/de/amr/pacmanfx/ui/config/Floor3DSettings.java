@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.config;
 
-public record LevelCounterConfig3D(
-    float symbolSize,
-    float elevation
+public record Floor3DSettings(
+    float padding,
+    float thickness
 ) {}

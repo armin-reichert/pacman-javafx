@@ -26,7 +26,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.viewmodel.UISettings3DViewModel;
+import de.amr.pacmanfx.ui.viewmodel.UISettings3DVM;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -149,7 +149,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param level       the game level to visualize
      * @param uiConfig    the global UI configuration (provides 3D settings, colors, models)
      */
-    public GameLevel3D(UISettings3DViewModel globals3D, GameContext gameContext, GameLevel level, GameUIConfig uiConfig) {
+    public GameLevel3D(UISettings3DVM globals3D, GameContext gameContext, GameLevel level, GameUIConfig uiConfig) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
 
@@ -280,7 +280,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Private area, no trespassing!
 
-    private void createMaze3D(UISettings3DViewModel globals3D) {
+    private void createMaze3D(UISettings3DVM globals3D) {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
@@ -304,10 +304,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         final PhongMaterial foodMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
-        final PelletConfig3D pelletConfig3D = uiConfig.worldConfig().pellet();
+        final Pellet3DSettings pelletConfig3D = uiConfig.worldConfig().pellet();
         final double pelletZ = entitySet.maze3D.floorTop() - pelletConfig3D.floorElevation();
 
-        final EnergizerConfig3D energizerConfig3D = uiConfig.worldConfig().energizer();
+        final Energizer3DSettings energizerConfig3D = uiConfig.worldConfig().energizer();
         final double energizerZ = entitySet.maze3D.floorTop() - energizerConfig3D.floorElevation();
 
         foodLayer.tiles()
@@ -335,7 +335,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
-        final BonusConfig config = uiConfig.worldConfig().bonus();
+        final Bonus3DSettings config = uiConfig.worldConfig().bonus();
         final Bonus3D bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbolCode()), config.symbolWidth(),
             uiConfig.bonusValueImage(bonus.symbolCode()),  config.pointsWidth());

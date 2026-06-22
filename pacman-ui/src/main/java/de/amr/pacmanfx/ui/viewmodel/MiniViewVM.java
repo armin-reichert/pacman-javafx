@@ -7,13 +7,13 @@ package de.amr.pacmanfx.ui.viewmodel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 
-public class MiniViewSettingsViewModel {
+public class MiniViewVM {
 
     public final IntegerProperty heightProperty;
     public final BooleanProperty activeProperty;
     public final IntegerProperty opacityPercentageProperty;
 
-    public MiniViewSettingsViewModel(IntegerProperty heightProperty, BooleanProperty activeProperty, IntegerProperty opacityPercentageProperty) {
+    public MiniViewVM(IntegerProperty heightProperty, BooleanProperty activeProperty, IntegerProperty opacityPercentageProperty) {
         this.heightProperty = heightProperty;
         this.activeProperty = activeProperty;
         this.opacityPercentageProperty = opacityPercentageProperty;

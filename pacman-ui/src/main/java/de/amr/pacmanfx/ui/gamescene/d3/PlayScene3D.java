@@ -11,7 +11,7 @@ import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.viewmodel.UISettings3DViewModel;
+import de.amr.pacmanfx.ui.viewmodel.UISettings3DVM;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
@@ -163,7 +163,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         decorate(level3D);
         level3DEmbedder.getChildren().setAll(level3D);
 
-        level3D.createAnimations(UISettings3DViewModel.DEFAULT_PARTICLE_ANIMATION_CONFIG);
+        level3D.createAnimations(UISettings3DVM.DEFAULT_PARTICLE_ANIMATION_CONFIG);
         level3D.entities().selectAll().forEach(entity -> entity.init(gameContext(), level));
         level3D.startLivesCounterTrackingPac();
 
@@ -188,7 +188,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void onActivate() {
-        final UISettings3DViewModel settings3D = game().ui().settings().d3;
+        final UISettings3DVM settings3D = game().ui().settings().d3;
         perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIdProperty);
         settings3D.drawModeProperty.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);

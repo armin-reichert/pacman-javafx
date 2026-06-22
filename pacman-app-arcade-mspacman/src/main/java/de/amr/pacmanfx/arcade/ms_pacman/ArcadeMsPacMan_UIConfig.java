@@ -19,7 +19,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.ui.config.WorldConfig;
+import de.amr.pacmanfx.ui.config.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.GameUIConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
@@ -121,7 +121,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
     }
 
     @Override
-    public WorldConfig worldConfig() {
+    public WorldSettings worldConfig() {
         return ArcadePacMan_UIConfig.DEFAULT_WORLD_CONFIG;
     }
 

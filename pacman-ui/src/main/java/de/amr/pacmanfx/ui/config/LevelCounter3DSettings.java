@@ -4,4 +4,7 @@
 
 package de.amr.pacmanfx.ui.config;
 
-public record LivesCounterConfig3D(int numShapes, float shapeSize) {}
+public record LevelCounter3DSettings(
+    float symbolSize,
+    float elevation
+) {}

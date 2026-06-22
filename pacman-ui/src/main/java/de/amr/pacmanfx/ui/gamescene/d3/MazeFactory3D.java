@@ -3,7 +3,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.config.WorldConfig;
+import de.amr.pacmanfx.ui.config.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.MazeHouse3D;
 import de.amr.pacmanfx.uilib.UfxColors;
@@ -25,7 +25,7 @@ public class MazeFactory3D {
     public static final int WALL_TOP_SPECULAR_POWER = 128;
 
     public Maze3D createMaze3D(
-        TerrainLayer terrain, WorldConfig config, WorldMapColorScheme colorScheme,
+        TerrainLayer terrain, WorldSettings config, WorldMapColorScheme colorScheme,
         AnimationRegistry animationRegistry,
         ObjectProperty<DrawMode> drawMode)
     {

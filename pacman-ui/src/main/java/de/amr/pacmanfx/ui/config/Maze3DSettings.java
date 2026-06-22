@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.config;
 
-public record MazeConfig3D(
+public record Maze3DSettings(
     float obstacleBaseHeight,
     float obstacleCornerRadius,
     float obstacleOpacity,
