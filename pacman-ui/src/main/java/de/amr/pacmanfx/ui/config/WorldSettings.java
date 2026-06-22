@@ -4,14 +4,14 @@
 
 package de.amr.pacmanfx.ui.config;
 
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
-import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
+import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
 
 import java.util.List;
 
 public record WorldSettings(
-    PacConfig pac,
-    List<GhostConfig> ghosts,
+    PacSettings pac,
+    List<GhostSettings> ghosts,
     Bonus3DSettings bonus,
     LevelCounter3DSettings levelCounter,
     LivesCounter3DSettings livesCounter,

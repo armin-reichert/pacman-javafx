@@ -17,7 +17,7 @@ import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.*;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3DFactory;
-import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
+import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
 import javafx.beans.property.ObjectProperty;
@@ -59,12 +59,12 @@ public class DefaultFactory3D implements Factory3D {
 
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacConfig config, AnimationRegistry animationRegistry) {
+    public Pac3D createPac3D(Pac pac, PacSettings config, AnimationRegistry animationRegistry) {
         return Pac3DFactory.createPacMan3D(animationRegistry, pac, config);
     }
 
     @Override
-    public Ghost3D createGhost3D(Ghost ghost, GhostConfig config, AnimationRegistry animationRegistry) {
+    public Ghost3D createGhost3D(Ghost ghost, GhostSettings config, AnimationRegistry animationRegistry) {
         return new Ghost3D(
             animationRegistry,
             ghost,
@@ -81,7 +81,7 @@ public class DefaultFactory3D implements Factory3D {
     public Group createLivesCounterShape3D(WorldSettings worldConfig) {
         requireNonNull(worldConfig);
 
-        final PacConfig pacConfig = worldConfig.pac().withModifiedSize3D(worldConfig.livesCounter().shapeSize());
+        final PacSettings pacConfig = worldConfig.pac().withModifiedSize3D(worldConfig.livesCounter().shapeSize());
 
         return Pac3DFactory.createPacBody(pacConfig, true);
     }

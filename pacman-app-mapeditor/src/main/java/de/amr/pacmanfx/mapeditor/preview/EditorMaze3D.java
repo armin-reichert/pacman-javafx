@@ -12,7 +12,7 @@ import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.pac.MsPacManComponentColors;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3DFactory;
 import de.amr.pacmanfx.uilib.model3D.pac.PacColors;
-import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
+import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
 import javafx.beans.property.BooleanProperty;
@@ -40,8 +40,8 @@ import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
 
 public class EditorMaze3D extends Group {
 
-    private static final PacConfig PAC_CONFIG =
-        new PacConfig(
+    private static final PacSettings PAC_CONFIG =
+        new PacSettings(
             new PacColors(
                 Color.YELLOW, // headColor
                 Color.SADDLEBROWN,  // palateColor

@@ -36,9 +36,9 @@ import de.amr.pacmanfx.uilib.model3D.animation.Pool;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3DAppearanceController;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3DTransformController;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
-import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
+import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
@@ -344,13 +344,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createPac3D() {
-        final PacConfig config = uiConfig.worldConfig().pac();
+        final PacSettings config = uiConfig.worldConfig().pac();
         entitySet.pac3D = uiConfig.factory3D().createPac3D(level.entities().pac(), config, animationRegistry);
         entitySet.add(entitySet.pac3D);
     }
 
     private void createGhosts3D(GameContext gameContext) {
-        final List<GhostConfig> ghostConfigs = uiConfig.worldConfig().ghosts();
+        final List<GhostSettings> ghostConfigs = uiConfig.worldConfig().ghosts();
         entitySet.ghosts3D = Stream.of(GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .map(ghost -> {
@@ -364,7 +364,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
     }
 
-    private Ghost3D createGhost3D(GhostConfig ghostConfig, Ghost ghost) {
+    private Ghost3D createGhost3D(GhostSettings ghostConfig, Ghost ghost) {
         final Ghost3D ghost3D = uiConfig.factory3D().createGhost3D(ghost, ghostConfig, animationRegistry);
         ghost3D.setAppearanceController(new Ghost3DAppearanceController());
         ghost3D.setTransformController(new Ghost3DTransformController());

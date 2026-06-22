@@ -45,7 +45,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     private final AnimationRegistry animations;
     private final Ghost ghost;
-    private final GhostConfig config;
+    private final GhostSettings config;
 
     private GhostMaterialSet materialSet;
 
@@ -63,7 +63,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     public Ghost3D(
         AnimationRegistry animations,
         Ghost ghost,
-        GhostConfig config,
+        GhostSettings config,
         GhostMeshSet meshSet,
         GhostMaterialSet materialSet)
     {
@@ -109,7 +109,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         return ghost;
     }
 
-    public GhostConfig config() {
+    public GhostSettings config() {
         return config;
     }
 

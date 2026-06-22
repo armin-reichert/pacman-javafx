@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 
 public class Pac3DFactory {
 
-    public static Pac3D createPacMan3D(AnimationRegistry animations, Pac pacMan, PacConfig config) {
+    public static Pac3D createPacMan3D(AnimationRegistry animations, Pac pacMan, PacSettings config) {
         final Pac3D pacMan3D = new Pac3D(animations, pacMan, createPacBody(config, true), createPacBody(config, false));
 
         addPowerLight(pacMan3D, config.colors().headColor().desaturate());
@@ -41,7 +41,7 @@ public class Pac3DFactory {
         return pacMan3D;
     }
 
-    public static Pac3D createMsPacMan3D(AnimationRegistry animations, Pac msPacMan, PacConfig config) {
+    public static Pac3D createMsPacMan3D(AnimationRegistry animations, Pac msPacMan, PacSettings config) {
         final Pac3D msPacMan3D = new Pac3D(animations, msPacMan, createPacBody(config, true), createPacBody(config, false));
         msPacMan3D.bodyGroup().getChildren().add(createFemalePacBodyParts(config));
 
@@ -70,7 +70,7 @@ public class Pac3DFactory {
      * @param withEyes if Pac has eyes
      * @return a new Pac body group
      */
-    public static Group createPacBody(PacConfig config, boolean withEyes) {
+    public static Group createPacBody(PacSettings config, boolean withEyes) {
         requireNonNull(config);
 
         final MeshView head = new MeshView(PacManWorld3D.instance().pacHeadMesh());
@@ -95,7 +95,7 @@ public class Pac3DFactory {
         return body;
     }
 
-    public static Group createFemalePacBodyParts(PacConfig config) {
+    public static Group createFemalePacBodyParts(PacSettings config) {
         requireNonNull(config);
 
         final int sphereDivisions = 16; // 64 is default

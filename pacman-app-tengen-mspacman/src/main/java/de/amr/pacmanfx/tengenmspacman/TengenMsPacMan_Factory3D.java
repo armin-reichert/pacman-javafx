@@ -9,7 +9,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3DFactory;
-import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
+import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
 import javafx.scene.Group;
 
 import static java.util.Objects.requireNonNull;
@@ -17,7 +17,7 @@ import static java.util.Objects.requireNonNull;
 public class TengenMsPacMan_Factory3D extends DefaultFactory3D {
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacConfig config, AnimationRegistry animationRegistry) {
+    public Pac3D createPac3D(Pac pac, PacSettings config, AnimationRegistry animationRegistry) {
         return Pac3DFactory.createMsPacMan3D(animationRegistry, pac, config);
     }
 
@@ -25,7 +25,7 @@ public class TengenMsPacMan_Factory3D extends DefaultFactory3D {
     public Group createLivesCounterShape3D(WorldSettings worldConfig) {
         requireNonNull(worldConfig);
 
-        final PacConfig config = worldConfig.pac()
+        final PacSettings config = worldConfig.pac()
             .withModifiedSize3D(worldConfig.livesCounter().shapeSize());
 
         return new Group(

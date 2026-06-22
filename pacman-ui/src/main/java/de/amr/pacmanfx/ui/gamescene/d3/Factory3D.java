@@ -15,9 +15,9 @@ import de.amr.pacmanfx.ui.config.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
-import de.amr.pacmanfx.uilib.model3D.pac.PacConfig;
+import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
 import javafx.beans.property.ObjectProperty;
@@ -48,7 +48,7 @@ public interface Factory3D extends Disposable {
      * @param animations the registry where animations are stored
      * @return the 3D representation of Pac
      */
-    Pac3D createPac3D(Pac pac, PacConfig pacConfig, AnimationRegistry animations);
+    Pac3D createPac3D(Pac pac, PacSettings pacConfig, AnimationRegistry animations);
 
     /**
      * Creates the 3D representation of a ghost for this game variant, including
@@ -59,7 +59,7 @@ public interface Factory3D extends Disposable {
      * @param animations the registry where animations are stored
      * @return the 3D representation of a ghost
      */
-    Ghost3D createGhost3D(Ghost ghost, GhostConfig ghostConfig, AnimationRegistry animations);
+    Ghost3D createGhost3D(Ghost ghost, GhostSettings ghostConfig, AnimationRegistry animations);
 
     /**
      * Creates the 3D representation of the lives counter for this variant.

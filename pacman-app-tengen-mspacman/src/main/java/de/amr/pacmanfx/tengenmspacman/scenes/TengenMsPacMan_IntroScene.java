@@ -21,7 +21,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.config.GameUIConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostConfig;
+import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -74,7 +74,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
         actionBindings().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
 
-        final List<GhostConfig> ghostConfigs = uiConfig.worldConfig().ghosts();
+        final List<GhostSettings> ghostConfigs = uiConfig.worldConfig().ghosts();
         ghostColors = Stream.of(GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
             .map(personality -> ghostConfigs.get(personality).colors().normalColors().dressColor())
             .toArray(Color[]::new);
