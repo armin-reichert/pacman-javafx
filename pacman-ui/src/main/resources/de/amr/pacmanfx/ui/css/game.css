@@ -3,7 +3,6 @@
     src: url("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf");
 }
 
-
 /* Custom context menu style */
 
 .custom-menu-item:hover {
@@ -17,9 +16,18 @@
     -fx-font-size: 14;
     -fx-font-weight: bold;
     -fx-stroke: #333;
-}}
+}
 
-/* Start pages button */
+/* Start pages */
+
+#start-pages-carousel {
+    -fx-background-image: url("/de/amr/pacmanfx/ui/graphics/pacman_wallpaper.png");
+}
+
+#start-pages-carousel .carousel-nav .font-awesome-icon {
+    -fx-size: 48;
+    -fx-fill: rgb(222, 222, 255);
+}
 
 .game-start-button-container {
     -fx-background-color: rgb(0, 155, 252, 0.6);
@@ -63,11 +71,6 @@
     -fx-fill: rgb(222, 222, 255);
 }
 
-/* Navigation icons in start pages carousel */
-#start-pages-carousel .carousel-nav .font-awesome-icon {
-    -fx-size: 48;
-    -fx-fill: rgb(222, 222, 255);
-}
 
 /* Status icon box: "muted", "3D mode", "immunity" etc. */
 

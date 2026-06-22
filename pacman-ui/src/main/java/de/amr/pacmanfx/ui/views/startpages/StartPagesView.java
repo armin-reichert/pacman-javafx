@@ -38,7 +38,6 @@ public class StartPagesView implements GameView {
     public StartPagesView() {
         carousel = new Carousel();
         carousel.setId("start-pages-carousel");
-        carousel.setBackground(GlobalAssets.BACKGROUND_PAC_MAN_WALLPAPER);
         carousel.setChangeDuration(PAGE_CHANGE_SECONDS);
 
         carousel.selectedIndexProperty().addListener((_, ov, nv) -> {
