@@ -5,6 +5,9 @@ import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+/**
+ * UI settings view model.
+ */
 public class UISettingsVM {
 
     public final ObjectProperty<Duration> flashMessageDurationProperty;

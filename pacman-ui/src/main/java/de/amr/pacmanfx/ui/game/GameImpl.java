@@ -95,7 +95,7 @@ public final class GameImpl implements Game {
     public void createUI(Stage stage, int width, int height) {
 
         UISettings initialSettings = new SettingsLoader().loadJSON(UI_SETTINGS_JSON, UISettings.class);
-        final UISettingsVM uiSettingsProperties = new UISettingsVM(initialSettings);
+        final UISettingsVM uiSettingsViewModel = new UISettingsVM(initialSettings);
 
         final GameViewManager views = new GameViewManager();
         views.registerView(GameViewID.START_PAGES, new StartPagesView());
@@ -103,7 +103,7 @@ public final class GameImpl implements Game {
         views.registerView(GameViewID.EDITOR, new EditorView());
 
         final SoundManager sounds = new SoundManager();
-        sounds.muteProperty().bind(uiSettingsProperties.mutedProperty);
+        sounds.muteProperty().bind(uiSettingsViewModel.mutedProperty);
 
         ui = new GameUI(
             new GameWindowImpl(stage, width, height),
@@ -112,7 +112,7 @@ public final class GameImpl implements Game {
             new GameTranslationManager(),
             sounds,
             new SpriteAnimationManager(60),
-            uiSettingsProperties
+            uiSettingsViewModel
         );
 
         ui.connect(this);
