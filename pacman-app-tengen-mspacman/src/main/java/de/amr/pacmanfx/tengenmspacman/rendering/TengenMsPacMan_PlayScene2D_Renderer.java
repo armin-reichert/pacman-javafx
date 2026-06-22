@@ -108,7 +108,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             actorsInZOrder.forEach(actorRenderer::drawActor);
             ctx.restore();
 
-            if (scene.game().ui().settings().debugModeOnProperty().get()) {
+            if (scene.game().ui().settings().debugModeOnProperty.get()) {
                 debugRenderer.draw(playScene2D);
             }
             else {

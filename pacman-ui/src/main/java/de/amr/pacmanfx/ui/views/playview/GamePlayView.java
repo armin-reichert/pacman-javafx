@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.config.UIConfig;
-import de.amr.pacmanfx.ui.config.UISettingsProperties;
+import de.amr.pacmanfx.ui.config.UISettingsViewModel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -116,7 +116,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     @Override
     public void connect(Game game) {
         this.game = requireNonNull(game);
-        final UISettingsProperties settings = game.ui().settings();
+        final UISettingsViewModel settings = game.ui().settings();
 
         rootPane.setOnContextMenuRequested(this);
         game.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
@@ -129,9 +129,9 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         pausedIcon.visibleProperty().bind(game.clock().updatesDisabledProperty());
 
-        settings.fontSmoothingOnProperty().addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
+        settings.fontSmoothingOnProperty.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 
-        settings.debugModeOnProperty().addListener((_, _, debug) -> {
+        settings.debugModeOnProperty.addListener((_, _, debug) -> {
             gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);
             gameSceneLayer.setBorder(debug ? DEBUG_BORDER : null);
         });
@@ -139,9 +139,9 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         overlayLayer.visibleProperty().bind(dashboard.rootPane().visibleProperty());
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
-            () -> settings.miniView().activeProperty().get()
+            () -> settings.miniView.activeProperty.get()
                 && game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D),
-            settings.miniView().activeProperty(),
+            settings.miniView.activeProperty,
             game.ui().gameScenes().currentGameSceneProperty()
         ));
 
@@ -280,7 +280,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         final UIConfig currentConfig = game.currentUIConfig();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = currentConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
-            setFontSmoothing(game.ui().settings().fontSmoothingOnProperty().get());
+            setFontSmoothing(game.ui().settings().fontSmoothingOnProperty.get());
             hudRenderer = currentConfig.createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");

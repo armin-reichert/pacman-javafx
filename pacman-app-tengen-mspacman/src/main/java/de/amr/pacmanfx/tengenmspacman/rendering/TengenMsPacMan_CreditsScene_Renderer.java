@@ -98,7 +98,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
             }
         }
 
-        if (scene.game().ui().settings().debugModeOnProperty().get()) {
+        if (scene.game().ui().settings().debugModeOnProperty.get()) {
             debugRenderer.draw(scene);
         }
     }

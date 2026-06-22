@@ -40,7 +40,7 @@ public class ArcadeMsPacMan_CutScene3_Renderer extends BaseRenderer implements G
                 .forEach(actorRenderer::drawActor);
         }
 
-        if (scene.game().ui().settings().debugModeOnProperty().get()) {
+        if (scene.game().ui().settings().debugModeOnProperty.get()) {
             debugRenderer.draw(scene);
         }
     }

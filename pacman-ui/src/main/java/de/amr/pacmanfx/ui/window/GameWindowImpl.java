@@ -67,8 +67,8 @@ public class GameWindowImpl implements GameWindow {
             game.clock().updatesDisabledProperty(),
             game.ui().views().currentViewIDProperty(),
             game.ui().gameScenes().currentGameSceneProperty(),
-            game.ui().settings().debugModeOnProperty(),
-            game.ui().settings().d3().view3DEnabledProperty()
+            game.ui().settings().debugModeOnProperty,
+            game.ui().settings().d3.view3DEnabledProperty
         );
 
         game.ui().views().currentViewIDProperty().addListener((_, _, viewID) -> updateStageTitleBinding(game, viewID));
@@ -122,8 +122,8 @@ public class GameWindowImpl implements GameWindow {
     private String titleForCurrentGameScene(Game game) {
         final AbstractGameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
 
-        final boolean debug = game.ui().settings().debugModeOnProperty().get();
-        final boolean is3D = game.ui().settings().d3().view3DEnabledProperty().get();
+        final boolean debug = game.ui().settings().debugModeOnProperty.get();
+        final boolean is3D = game.ui().settings().d3.view3DEnabledProperty.get();
         final boolean paused = game.clock().getUpdatesDisabled();
 
         final String normalTitle = stageTitle(game, paused, is3D);

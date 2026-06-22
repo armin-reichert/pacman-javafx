@@ -139,7 +139,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), optionsScene.unscaledWidth(), TS, 212);
 
-        if (scene.game().ui().settings().debugModeOnProperty().get()) {
+        if (scene.game().ui().settings().debugModeOnProperty.get()) {
             debugRenderer.draw(scene);
         }
     }

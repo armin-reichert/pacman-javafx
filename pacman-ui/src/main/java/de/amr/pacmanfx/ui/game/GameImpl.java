@@ -94,7 +94,7 @@ public final class GameImpl implements Game {
     public void createUI(Stage stage, int width, int height) {
 
         UISettings initialSettings = new SettingsLoader().loadJSON(UI_SETTINGS_JSON, UISettings.class);
-        final UISettingsProperties uiSettingsProperties = new UISettingsProperties(initialSettings);
+        final UISettingsViewModel uiSettingsProperties = new UISettingsViewModel(initialSettings);
 
         final GameViewManager views = new GameViewManager();
         views.registerView(GameViewID.START_PAGES, new StartPagesView());
@@ -102,7 +102,7 @@ public final class GameImpl implements Game {
         views.registerView(GameViewID.EDITOR, new EditorView());
 
         final SoundManager sounds = new SoundManager();
-        sounds.muteProperty().bind(uiSettingsProperties.mutedProperty());
+        sounds.muteProperty().bind(uiSettingsProperties.mutedProperty);
 
         ui = new GameUI(
             new GameWindowImpl(stage, width, height),
@@ -340,8 +340,8 @@ public final class GameImpl implements Game {
 
     private void updateSettings3D(UIConfig uiConfig) {
         final MazeConfig3D mazeConfig3D = uiConfig.worldConfig().maze();
-        ui.settings().d3().mazeWallHeightProperty().set(mazeConfig3D.obstacleBaseHeight());
-        ui.settings().d3().mazeWallOpacityProperty().set(mazeConfig3D.obstacleOpacity());
+        ui.settings().d3.mazeWallHeightProperty.set(mazeConfig3D.obstacleBaseHeight());
+        ui.settings().d3.mazeWallOpacityProperty.set(mazeConfig3D.obstacleOpacity());
         Logger.info("Update maze 3D settings for UI config {}", uiConfig);
         Logger.info("Maze 3D settings: {}", mazeConfig3D);
     }
