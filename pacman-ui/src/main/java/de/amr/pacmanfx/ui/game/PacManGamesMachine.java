@@ -24,6 +24,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManGamesMachine {
 
+    public static File highScoreFile(String variantName) {
+        final String fileName = "highscore-%s.xml".formatted(variantName).toLowerCase();
+        return new File(GameConstants.USER_HOME_DIR, fileName);
+    }
+
     private final Set<Cartridge> cartridges = new HashSet<>();
     private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private final GameClock clock = new GameClockFX();

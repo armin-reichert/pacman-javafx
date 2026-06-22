@@ -16,9 +16,9 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.ui.GameVariantConfig;
+import de.amr.pacmanfx.ui.action.CommonActions;
+import de.amr.pacmanfx.ui.config.SettingsLoader;
 import de.amr.pacmanfx.ui.config.ui.UISettings;
 import de.amr.pacmanfx.ui.config.world.Maze3DSettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
@@ -44,7 +44,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,11 +52,6 @@ import static java.util.Objects.requireNonNull;
 public final class GameImpl implements Game {
 
     public static final String UI_SETTINGS_JSON = "/de/amr/pacmanfx/ui/ui.json";
-
-    private static File highScoreFile(String variantName) {
-        final String fileName = "highscore-%s.xml".formatted(variantName).toLowerCase();
-        return new File(GameConstants.USER_HOME_DIR, fileName);
-    }
 
     private final PacManGamesMachine machine;
 
@@ -323,7 +317,7 @@ public final class GameImpl implements Game {
         flow.addState(new LevelMediumTestState());
         flow.addState(new CutScenesTestState());
 
-        gameVariant.gameModel().setHighScoreFile(highScoreFile(variantName));
+        gameVariant.gameModel().setHighScoreFile(PacManGamesMachine.highScoreFile(variantName));
 
         return gameVariant;
     }
