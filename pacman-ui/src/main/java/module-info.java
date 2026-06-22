@@ -40,4 +40,6 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.gamescene.common;
     exports de.amr.pacmanfx.ui.action.core;
     exports de.amr.pacmanfx.ui.viewmodel;
+    exports de.amr.pacmanfx.ui.config.ui;
+    exports de.amr.pacmanfx.ui.config.world;
 }

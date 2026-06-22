@@ -10,8 +10,8 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_MapRepository;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.geometry.Rectangle2D;
@@ -36,9 +36,9 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         return (int) (phase < 3 ? phase : 1);
     }
 
-    private final TengenMsPacMan_UIConfig uiConfig;
+    private final TengenMsPacManConfig uiConfig;
 
-    public TengenMsPacMan_GameLevelRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig) {
+    public TengenMsPacMan_GameLevelRenderer(Canvas canvas, TengenMsPacManConfig uiConfig) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
     }

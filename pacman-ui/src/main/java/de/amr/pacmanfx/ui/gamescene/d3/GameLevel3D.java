@@ -14,7 +14,10 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntitySet;
 import de.amr.pacmanfx.model.world.*;
-import de.amr.pacmanfx.ui.config.*;
+import de.amr.pacmanfx.ui.GameVariantConfig;
+import de.amr.pacmanfx.ui.config.world.Bonus3DSettings;
+import de.amr.pacmanfx.ui.config.world.Energizer3DSettings;
+import de.amr.pacmanfx.ui.config.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.GhostLightRelayAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.LevelCompletedAnimationShort;
@@ -129,7 +132,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Access to game model
     private final GameLevel level;
 
-    private final GameUIConfig uiConfig;
+    private final GameVariantConfig uiConfig;
 
     private final EntitySet entitySet = new EntitySet();
 
@@ -149,7 +152,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param level       the game level to visualize
      * @param uiConfig    the global UI configuration (provides 3D settings, colors, models)
      */
-    public GameLevel3D(UISettings3DVM globals3D, GameContext gameContext, GameLevel level, GameUIConfig uiConfig) {
+    public GameLevel3D(UISettings3DVM globals3D, GameContext gameContext, GameLevel level, GameVariantConfig uiConfig) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
 
@@ -201,7 +204,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Public accessors
 
-    public GameUIConfig uiConfig() {
+    public GameVariantConfig uiConfig() {
         return uiConfig;
     }
 

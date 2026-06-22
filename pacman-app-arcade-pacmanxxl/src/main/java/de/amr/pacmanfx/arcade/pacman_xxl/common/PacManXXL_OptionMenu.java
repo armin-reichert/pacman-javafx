@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
-import de.amr.pacmanfx.ui.config.GameUIConfig;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
@@ -93,7 +93,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         scaling = createScaling(game);
 
-        final GameUIConfig currentConfig = game.currentUIConfig();
+        final GameVariantConfig currentConfig = game.currentUIConfig();
         final GameContext gameContext = game.currentGameContext();
         final GameVariantID gameVariant = GameVariantID.valueOf(game.currentGameVariantName());
         final GameModel gameModel = gameContext.model();
@@ -180,7 +180,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
                 if (game != null) {
-                    final GameUIConfig uiConfig = game.gameVariant(newVariant.name()).uiConfig();
+                    final GameVariantConfig uiConfig = game.gameVariant(newVariant.name()).uiConfig();
                     chaseAnimation.init(uiConfig, canvas, game.ui().sprites().animations());
                 }
             }

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.config.GameUIConfig;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -73,7 +73,7 @@ class ChaseAnimation {
         timeline.stop();
     }
 
-    public void init(GameUIConfig uiConfig, Canvas canvas, SpriteAnimationContainer spriteAnimationContainer) {
+    public void init(GameVariantConfig uiConfig, Canvas canvas, SpriteAnimationContainer spriteAnimationContainer) {
         requireNonNull(uiConfig);
         requireNonNull(canvas);
 

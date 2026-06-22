@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacManConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
@@ -19,9 +19,9 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.ui.config.WorldSettings;
+import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.config.GameUIConfig;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
@@ -50,11 +50,11 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
+public class ArcadeMsPacManConfig implements GameVariantConfig, ResourceManager {
 
     @Override
     public Class<?> resourceRootClass() {
-        return ArcadeMsPacMan_UIConfig.class;
+        return ArcadeMsPacManConfig.class;
     }
 
     private final ResourceBundle textBundle;
@@ -63,7 +63,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
     private GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
-    public ArcadeMsPacMan_UIConfig() {
+    public ArcadeMsPacManConfig() {
         textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts");
     }
 
@@ -122,7 +122,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
 
     @Override
     public WorldSettings worldConfig() {
-        return ArcadePacMan_UIConfig.DEFAULT_WORLD_CONFIG;
+        return ArcadePacManConfig.DEFAULT_WORLD_CONFIG;
     }
 
     @Override

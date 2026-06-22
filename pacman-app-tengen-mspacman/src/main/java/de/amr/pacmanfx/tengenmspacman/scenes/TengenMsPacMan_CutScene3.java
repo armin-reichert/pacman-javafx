@@ -12,14 +12,14 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.config.GameUIConfig;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_HEIGHT;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_WIDTH;
 
 /**
  * Intermission scene 3: "Junior".
@@ -76,7 +76,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void onActivate() {
-        final GameUIConfig uiConfig = game().currentUIConfig();
+        final GameVariantConfig uiConfig = game().currentUIConfig();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         // Quit cut scene when "START" button on "joypad" is pressed

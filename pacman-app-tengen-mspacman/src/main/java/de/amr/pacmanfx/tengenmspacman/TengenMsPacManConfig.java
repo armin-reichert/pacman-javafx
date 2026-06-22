@@ -18,8 +18,8 @@ import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
-import de.amr.pacmanfx.ui.config.GameUIConfig;
-import de.amr.pacmanfx.ui.config.WorldSettings;
+import de.amr.pacmanfx.ui.GameVariantConfig;
+import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
@@ -41,10 +41,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class TengenMsPacMan_UIConfig implements GameUIConfig {
+public class TengenMsPacManConfig implements GameVariantConfig {
 
     // Local resources are stored inside main resource folder subdirectories named after package name of this class
-    private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
+    private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacManConfig.class;
 
     private static final WorldSettings WORLD_CONFIG =
         new TengenWorldConfigLoader().loadJSON("/de/amr/pacmanfx/tengenmspacman/world.json", WorldSettings.class);
@@ -130,7 +130,7 @@ public class TengenMsPacMan_UIConfig implements GameUIConfig {
     private TengenMsPacMan_GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
-    public TengenMsPacMan_UIConfig() {
+    public TengenMsPacManConfig() {
         textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
         Logger.info("Created Tengen UI configuration {}:", getClass().getSimpleName());
     }

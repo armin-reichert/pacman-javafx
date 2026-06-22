@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.arcade.pacman.app;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacManConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
@@ -14,6 +14,6 @@ public class ArcadePacMan_Cartridge {
         Arcade_GameFlow::new,
         ArcadePacMan_GameModel::new,
         ArcadePacMan_GameRules::new,
-        ArcadePacMan_UIConfig::new
+        ArcadePacManConfig::new
     );
 }

@@ -18,6 +18,9 @@ import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.*;
+import de.amr.pacmanfx.ui.GameVariantConfig;
+import de.amr.pacmanfx.ui.config.ui.UISettings;
+import de.amr.pacmanfx.ui.config.world.Maze3DSettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.input.Input;
@@ -166,7 +169,7 @@ public final class GameImpl implements Game {
     }
 
     @Override
-    public GameUIConfig currentUIConfig() {
+    public GameVariantConfig currentUIConfig() {
         return currentGameVariant().uiConfig();
     }
 
@@ -339,7 +342,7 @@ public final class GameImpl implements Game {
         clock().setErrorHandler(this::ka_tas_tro_phe);
     }
 
-    private void updateSettings3D(GameUIConfig uiConfig) {
+    private void updateSettings3D(GameVariantConfig uiConfig) {
         final Maze3DSettings mazeConfig3D = uiConfig.worldConfig().maze();
         ui.settings().d3.mazeWallHeightProperty.set(mazeConfig3D.obstacleBaseHeight());
         ui.settings().d3.mazeWallOpacityProperty.set(mazeConfig3D.obstacleOpacity());

@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.config;
+package de.amr.pacmanfx.ui.config.ui;
 
 public record MiniViewSettings(
     int height,

@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.config;
+package de.amr.pacmanfx.ui.config.world;
 
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
 import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;

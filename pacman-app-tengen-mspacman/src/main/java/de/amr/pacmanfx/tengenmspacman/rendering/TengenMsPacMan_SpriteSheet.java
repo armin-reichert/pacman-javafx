@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -51,8 +51,8 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     private final Image image;
 
     private TengenMsPacMan_SpriteSheet() {
-        final ResourceManager moduleResources = () -> TengenMsPacMan_UIConfig.class;
-        image = moduleResources.loadImage(TengenMsPacMan_UIConfig.REL_PATH_SPRITE_SHEET_IMAGE);
+        final ResourceManager moduleResources = () -> TengenMsPacManConfig.class;
+        image = moduleResources.loadImage(TengenMsPacManConfig.REL_PATH_SPRITE_SHEET_IMAGE);
 
         spriteMap.add(LARGE_MS_PAC_MAN_TEXT, RectShort.of(15, 191, 152, 40));
         spriteMap.add(INFO_FRAME,            RectShort.of(175, 125, 126, 7));

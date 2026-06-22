@@ -8,9 +8,9 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.scenes.TengenMsPacMan_PlayScene2D;
-import de.amr.pacmanfx.ui.config.GameUIConfig;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -25,7 +25,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_WIDTH;
 
 public class TengenMsPacMan_PlayScene2D_Renderer
     extends BaseRenderer
@@ -68,7 +68,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     private final BaseDebugInfoRenderer debugRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    public TengenMsPacMan_PlayScene2D_Renderer(GameUIConfig uiConfig, GameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_PlayScene2D_Renderer(GameVariantConfig uiConfig, GameScene2D scene, Canvas canvas) {
         super(canvas);
         levelRenderer = scene.configureRenderer((TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas));
         actorRenderer = scene.configureRenderer((TengenMsPacMan_ActorRenderer)     uiConfig.createActorRenderer(canvas));

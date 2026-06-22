@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.app;
 
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacManConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
@@ -18,6 +18,6 @@ public class ArcadeMsPacMan_Cartridge {
         Arcade_GameFlow::new,
         ArcadeMsPacMan_GameModel::new,
         ArcadeMsPacMan_GameRules::new,
-        ArcadeMsPacMan_UIConfig::new
+        ArcadeMsPacManConfig::new
     );
 }

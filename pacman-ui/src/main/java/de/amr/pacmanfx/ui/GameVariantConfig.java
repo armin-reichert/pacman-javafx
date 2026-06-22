@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.config;
+
+package de.amr.pacmanfx.ui;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.spriteanim.SpriteAnimationAccessor;
@@ -9,6 +10,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
@@ -29,7 +31,7 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-public interface GameUIConfig extends Disposable {
+public interface GameVariantConfig extends Disposable {
 
     void init(Game game);
 

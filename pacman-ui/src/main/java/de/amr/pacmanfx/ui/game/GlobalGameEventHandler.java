@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.config.GameUIConfig;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.views.playview.MiniPlaySceneView;
 
 import static java.util.Objects.requireNonNull;
@@ -29,7 +29,7 @@ public class GlobalGameEventHandler extends DefaultGameEventListener {
 
             case LevelCreatedEvent levelCreatedEvent -> {
                 final GameLevel level = levelCreatedEvent.level();
-                final GameUIConfig currentConfig = game.currentUIConfig();
+                final GameVariantConfig currentConfig = game.currentUIConfig();
                 final SpriteAnimationContainer spriteAnimationContainer = game.ui().sprites().animations();
 
                 //TODO this should be done elsewhere

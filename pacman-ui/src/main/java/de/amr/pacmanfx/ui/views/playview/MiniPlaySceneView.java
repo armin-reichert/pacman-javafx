@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.config.GameUIConfig;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -104,7 +104,7 @@ public class MiniPlaySceneView {
         worldSize.set(size);
     }
 
-    public void setUIConfig(GameUIConfig uiConfig) {
+    public void setUIConfig(GameVariantConfig uiConfig) {
         canvasRenderer = new BaseRenderer(canvas);
 
         levelRenderer = uiConfig.createGameLevelRenderer(canvas);

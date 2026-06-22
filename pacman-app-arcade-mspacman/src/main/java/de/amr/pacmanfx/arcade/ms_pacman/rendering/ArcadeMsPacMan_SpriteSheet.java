@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacManConfig;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
@@ -35,7 +35,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     private final Image image;
 
     private ArcadeMsPacMan_SpriteSheet() {
-        final ResourceManager moduleResources = () -> ArcadeMsPacMan_UIConfig.class;
+        final ResourceManager moduleResources = () -> ArcadeMsPacManConfig.class;
         image = moduleResources.loadImage(SPRITESHEET_PNG);
 
         spriteMap.add(FULL_MAPS,

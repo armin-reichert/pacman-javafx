@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.Identifier;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -55,8 +55,8 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
     @Override
     public Image sourceImage() {
         if (image == null) {
-            final ResourceManager moduleResources = () -> TengenMsPacMan_UIConfig.class;
-            image = moduleResources.loadImage(TengenMsPacMan_UIConfig.REL_PATH_ARCADE_MAPS_IMAGE);
+            final ResourceManager moduleResources = () -> TengenMsPacManConfig.class;
+            image = moduleResources.loadImage(TengenMsPacManConfig.REL_PATH_ARCADE_MAPS_IMAGE);
         }
         return image;
     }

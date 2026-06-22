@@ -16,8 +16,8 @@ import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.config.SettingsLoader;
-import de.amr.pacmanfx.ui.config.GameUIConfig;
-import de.amr.pacmanfx.ui.config.WorldSettings;
+import de.amr.pacmanfx.ui.GameVariantConfig;
+import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
@@ -49,7 +49,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * UI configuration for the Arcade Pac‑Man game variant.
  */
-public class ArcadePacMan_UIConfig implements GameUIConfig, ResourceManager {
+public class ArcadePacManConfig implements GameVariantConfig, ResourceManager {
 
     public static final WorldSettings DEFAULT_WORLD_CONFIG
         = new SettingsLoader().loadJSON("/de/amr/pacmanfx/ui/world.json", WorldSettings.class);
@@ -69,13 +69,13 @@ public class ArcadePacMan_UIConfig implements GameUIConfig, ResourceManager {
     private GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
-    public ArcadePacMan_UIConfig() {
+    public ArcadePacManConfig() {
         textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts");
     }
 
     @Override
     public Class<?> resourceRootClass() {
-        return ArcadePacMan_UIConfig.class;
+        return ArcadePacManConfig.class;
     }
 
     // UIConfig interface

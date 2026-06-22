@@ -18,7 +18,7 @@ import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.config.GameUIConfig;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
@@ -28,8 +28,8 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_HEIGHT;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_WIDTH;
 
 public class TengenMsPacMan_IntroScene extends GameScene2D {
 
@@ -63,7 +63,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onActivate() {
-        final GameUIConfig uiConfig = game().currentUIConfig();
+        final GameVariantConfig uiConfig = game().currentUIConfig();
 
         gameModel().hud().hide();
 
@@ -118,7 +118,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameUIConfig currentConfig = scene.game().currentUIConfig();
+                final GameVariantConfig currentConfig = scene.game().currentUIConfig();
                 final SpriteAnimationContainer spriteAnimationContainer = scene.game().ui().sprites().animations();
 
                 timer.restartTicks(TickTimer.INDEFINITE);

@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.ui.viewmodel;
 
-import de.amr.pacmanfx.ui.config.UISettings;
+import de.amr.pacmanfx.ui.config.ui.UISettings;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
