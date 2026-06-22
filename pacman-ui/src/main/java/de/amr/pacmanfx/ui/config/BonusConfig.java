@@ -4,5 +4,5 @@
 package de.amr.pacmanfx.ui.config;
 
 public record BonusConfig(
-    float bonusSymbolWidth,
-    float bonusPointsWidth) {}
+    float symbolWidth,
+    float pointsWidth) {}

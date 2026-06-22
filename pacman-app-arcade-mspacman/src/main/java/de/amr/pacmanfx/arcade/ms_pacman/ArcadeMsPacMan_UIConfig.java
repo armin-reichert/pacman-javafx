@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
@@ -18,6 +19,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
+import de.amr.pacmanfx.ui.config.WorldConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
@@ -116,6 +118,11 @@ public class ArcadeMsPacMan_UIConfig implements UIConfig, ResourceManager {
     @Override
     public Rectangle2D spriteRegionForArcadeBootScene() {
         return new Rectangle2D(380, 0, 204, 208);
+    }
+
+    @Override
+    public WorldConfig worldConfig() {
+        return ArcadePacMan_UIConfig.DEFAULT_WORLD_CONFIG;
     }
 
     @Override

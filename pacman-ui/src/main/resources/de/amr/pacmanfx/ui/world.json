@@ -1,0 +1,151 @@
+{
+  "pac": {
+    "colors": {
+      "headColor": "rgb(255, 255, 0)",
+      "palateColor": "rgb(222, 151, 81)",
+      "eyesColor": "#212121"
+    },
+    "msColors": {
+      "hairBow": "rgb(255, 0, 0)",
+      "hairBowPearls": "rgb(33, 33, 255)",
+      "boobs": "rgb(255, 255, 0)"
+    },
+    "size2D": 8,
+    "size3D": 16
+  },
+
+  "ghosts": [
+    {
+      "size2D": 8,
+      "size3D": 15.5,
+      "colors": {
+        "normalColors": {
+          "dressColor": "rgb(255, 0, 0)",
+          "eyeballsColor": "rgb(222, 222, 255)",
+          "pupilsColor": "rgb(33, 33, 255)"
+        },
+        "frightenedColors": {
+          "dressColor": "rgb(33, 33, 255)",
+          "eyeballsColor": "rgb(255, 183, 174)",
+          "pupilsColor": "rgb(255, 183, 174)"
+        },
+        "flashingColors": {
+          "dressColor": "rgb(222, 222, 255)",
+          "eyeballsColor": "rgb(255, 183, 174)",
+          "pupilsColor": "rgb(255, 0, 0)"
+        }
+      }
+    },
+    {
+      "size2D": 8,
+      "size3D": 15.5,
+      "colors": {
+        "normalColors": {
+          "dressColor": "rgb(255, 183, 255)",
+          "eyeballsColor": "rgb(222, 222, 255)",
+          "pupilsColor": "rgb(33, 33, 255)"
+        },
+        "frightenedColors": {
+          "dressColor": "rgb(33, 33, 255)",
+          "eyeballsColor": "rgb(255, 183, 174)",
+          "pupilsColor": "rgb(255, 183, 174)"
+        },
+        "flashingColors": {
+          "dressColor": "rgb(222, 222, 255)",
+          "eyeballsColor": "rgb(255, 183, 174)",
+          "pupilsColor": "rgb(255, 0, 0)"
+        }
+      }
+    },
+    {
+      "size2D": 8,
+      "size3D": 15.5,
+      "colors": {
+        "normalColors": {
+          "dressColor": "rgb(0, 255, 255)",
+          "eyeballsColor": "rgb(222, 222, 255)",
+          "pupilsColor": "rgb(33, 33, 255)"
+        },
+        "frightenedColors": {
+          "dressColor": "rgb(33, 33, 255)",
+          "eyeballsColor": "rgb(255, 183, 174)",
+          "pupilsColor": "rgb(255, 183, 174)"
+        },
+        "flashingColors": {
+          "dressColor": "rgb(222, 222, 255)",
+          "eyeballsColor": "rgb(255, 183, 174)",
+          "pupilsColor": "rgb(255, 0, 0)"
+        }
+      }
+    },
+    {
+      "size2D": 8,
+      "size3D": 15.5,
+      "colors": {
+        "normalColors": {
+          "dressColor": "rgb(255, 183, 81)",
+          "eyeballsColor": "rgb(222, 222, 255)",
+          "pupilsColor": "rgb(33, 33, 255)"
+        },
+        "frightenedColors": {
+          "dressColor": "rgb(33, 33, 255)",
+          "eyeballsColor": "rgb(255, 183, 174)",
+          "pupilsColor": "rgb(255, 183, 174)"
+        },
+        "flashingColors": {
+          "dressColor": "rgb(222, 222, 255)",
+          "eyeballsColor": "rgb(255, 183, 174)",
+          "pupilsColor": "rgb(255, 0, 0)"
+        }
+      }
+    }
+  ],
+
+  "bonus": {
+    "symbolWidth": 8,
+    "pointsWidth": 14.5
+  },
+
+  "levelCounter": {
+    "symbolSize": 10,
+    "elevation": 6
+  },
+
+  "livesCounter": {
+    "numShapes": 5,
+    "shapeSize": 12
+  },
+
+  "maze": {
+    "obstacleBaseHeight":  4,
+    "obstacleCornerRadius":  4,
+    "obstacleOpacity":  1,
+    "obstacleWallThickness":  2.25,
+    "darkWallFillColor": "0x282828"
+  },
+
+  "house": {
+    "baseHeight":  12,
+    "opacity":  0.4,
+    "sensitivity":  12,
+    "wallThickness": 2.5
+  },
+
+  "floor": {
+    "padding": 10,
+    "thickness": 0.5
+  },
+
+  "pellet": {
+    "radius": 0.8,
+    "floorElevation": 6
+  },
+
+  "energizer": {
+    "pumpingFrequency":  3,
+    "radius": 3.5,
+    "floorElevation": 6,
+    "scalingInflated": 0.2,
+    "scalingExpanded": 1
+  }
+}

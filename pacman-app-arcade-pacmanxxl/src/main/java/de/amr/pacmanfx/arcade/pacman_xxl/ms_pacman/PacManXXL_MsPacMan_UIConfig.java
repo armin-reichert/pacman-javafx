@@ -11,6 +11,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
@@ -21,6 +22,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.config.WorldConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
@@ -120,65 +122,9 @@ public final class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceMana
         return factory3D;
     }
 
-    private void loadAssets() {
-        assets.clear();
-
-        assets.register("app_icon", loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
-        assets.register("logo.midway", ARCADE_RES.loadImage("graphics/midway_logo.png"));
-        assets.register("color.game_over_message", ARCADE_RED);
-    }
-
-    private void registerSounds(SoundManager soundManager) {
-        soundManager.setMediaPlayer (PacManGameSoundID.BONUS_ACTIVE,          ARCADE_RES.url("sound/Fruit_Bounce.mp3"));
-        soundManager.setAudioClip   (PacManGameSoundID.BONUS_EATEN,           ARCADE_RES.url("sound/Fruit.mp3"));
-        soundManager.setAudioClip   (PacManGameSoundID.COIN_INSERTED,         ARCADE_RES.url("sound/credit.wav"));
-        soundManager.setAudioClip   (PacManGameSoundID.ENERGIZER_EXPLOSION_1, url(XXL_PATH + "sound/explosion1.mp3"));
-        soundManager.setAudioClip   (PacManGameSoundID.ENERGIZER_EXPLOSION_2, url(XXL_PATH + "sound/explosion2.mp3"));
-        soundManager.setAudioClip   (PacManGameSoundID.EXTRA_LIFE,            ARCADE_RES.url("sound/ExtraLife.mp3"));
-        soundManager.setMediaPlayer (PacManGameSoundID.GAME_OVER,             ARCADE_RES.url("sound/game-over.mp3"));
-        soundManager.setMediaPlayer (PacManGameSoundID.GAME_READY,            ARCADE_RES.url("sound/Start.mp3"));
-        soundManager.setAudioClip   (PacManGameSoundID.GHOST_EATEN,           ARCADE_RES.url("sound/Ghost.mp3"));
-        soundManager.setMediaPlayer (PacManGameSoundID.GHOST_RETURNS,         ARCADE_RES.url("sound/GhostEyes.mp3"));
-        soundManager.setMediaPlayer (PacManGameSoundID.INTERMISSION_1,        ARCADE_RES.url("sound/Act_1_They_Meet.mp3"));
-        soundManager.setMediaPlayer (PacManGameSoundID.INTERMISSION_2,        ARCADE_RES.url("sound/Act_2_The_Chase.mp3"));
-        soundManager.setMediaPlayer (PacManGameSoundID.INTERMISSION_3,        ARCADE_RES.url("sound/Act_3_Junior.mp3"));
-        soundManager.setAudioClip   (PacManGameSoundID.LEVEL_CHANGED,         ARCADE_RES.url("sound/sweep.mp3"));
-        soundManager.setMediaPlayer (PacManGameSoundID.LEVEL_COMPLETE,        ARCADE_RES.url("sound/level-complete.mp3"));
-        soundManager.setMediaPlayer (PacManGameSoundID.PAC_MAN_DEATH,         ARCADE_RES.url("sound/Died.mp3"));
-        soundManager.setAudioClip   (PacManGameSoundID.PAC_MAN_MUNCHING,      ARCADE_RES.url("sound/munch.wav"));
-        soundManager.setMediaPlayer (PacManGameSoundID.PAC_MAN_POWER,         ARCADE_RES.url("sound/ScaredGhost.mp3"));
-    }
-
-    private void unregisterSounds(SoundManager sounds) {
-        sounds.unregisterSound(PacManGameSoundID.BONUS_ACTIVE);
-        sounds.unregisterSound(PacManGameSoundID.BONUS_EATEN);
-        sounds.unregisterSound(PacManGameSoundID.COIN_INSERTED);
-        sounds.unregisterSound(PacManGameSoundID.ENERGIZER_EXPLOSION_1);
-        sounds.unregisterSound(PacManGameSoundID.ENERGIZER_EXPLOSION_2);
-        sounds.unregisterSound(PacManGameSoundID.EXTRA_LIFE);
-        sounds.unregisterSound(PacManGameSoundID.GAME_OVER);
-        sounds.unregisterSound(PacManGameSoundID.GAME_READY);
-        sounds.unregisterSound(PacManGameSoundID.GHOST_EATEN);
-        sounds.unregisterSound(PacManGameSoundID.GHOST_RETURNS);
-        sounds.unregisterSound(PacManGameSoundID.INTERMISSION_1);
-        sounds.unregisterSound(PacManGameSoundID.INTERMISSION_2);
-        sounds.unregisterSound(PacManGameSoundID.INTERMISSION_3);
-        sounds.unregisterSound(PacManGameSoundID.LEVEL_CHANGED);
-        sounds.unregisterSound(PacManGameSoundID.LEVEL_COMPLETE);
-        sounds.unregisterSound(PacManGameSoundID.PAC_MAN_DEATH);
-        sounds.unregisterSound(PacManGameSoundID.PAC_MAN_MUNCHING);
-        sounds.unregisterSound(PacManGameSoundID.PAC_MAN_POWER);
-    }
-
-    private void initSoundEffects() {
-        sfx.setMunchingSoundDelay((byte) 0);
-        sfx.registerSirens(
-            ARCADE_RES.url("sound/GhostNoise1.wav"),
-            ARCADE_RES.url("sound/GhostNoise2.wav"),
-            ARCADE_RES.url("sound/GhostNoise3.wav"),
-            ARCADE_RES.url("sound/GhostNoise4.wav")
-        );
-        sfx.setSirenVolume(0.33f);
+    @Override
+    public WorldConfig worldConfig() {
+        return ArcadePacMan_UIConfig.DEFAULT_WORLD_CONFIG;
     }
 
     @Override
@@ -270,5 +216,68 @@ public final class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceMana
     public Image bonusValueImage(int symbolCode) {
         final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_VALUES);
         return spriteSheet().image(sprites[symbolCode]);
+    }
+
+    // -----
+
+    private void loadAssets() {
+        assets.clear();
+
+        assets.register("app_icon", loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
+        assets.register("logo.midway", ARCADE_RES.loadImage("graphics/midway_logo.png"));
+        assets.register("color.game_over_message", ARCADE_RED);
+    }
+
+    private void registerSounds(SoundManager soundManager) {
+        soundManager.setMediaPlayer (PacManGameSoundID.BONUS_ACTIVE,          ARCADE_RES.url("sound/Fruit_Bounce.mp3"));
+        soundManager.setAudioClip   (PacManGameSoundID.BONUS_EATEN,           ARCADE_RES.url("sound/Fruit.mp3"));
+        soundManager.setAudioClip   (PacManGameSoundID.COIN_INSERTED,         ARCADE_RES.url("sound/credit.wav"));
+        soundManager.setAudioClip   (PacManGameSoundID.ENERGIZER_EXPLOSION_1, url(XXL_PATH + "sound/explosion1.mp3"));
+        soundManager.setAudioClip   (PacManGameSoundID.ENERGIZER_EXPLOSION_2, url(XXL_PATH + "sound/explosion2.mp3"));
+        soundManager.setAudioClip   (PacManGameSoundID.EXTRA_LIFE,            ARCADE_RES.url("sound/ExtraLife.mp3"));
+        soundManager.setMediaPlayer (PacManGameSoundID.GAME_OVER,             ARCADE_RES.url("sound/game-over.mp3"));
+        soundManager.setMediaPlayer (PacManGameSoundID.GAME_READY,            ARCADE_RES.url("sound/Start.mp3"));
+        soundManager.setAudioClip   (PacManGameSoundID.GHOST_EATEN,           ARCADE_RES.url("sound/Ghost.mp3"));
+        soundManager.setMediaPlayer (PacManGameSoundID.GHOST_RETURNS,         ARCADE_RES.url("sound/GhostEyes.mp3"));
+        soundManager.setMediaPlayer (PacManGameSoundID.INTERMISSION_1,        ARCADE_RES.url("sound/Act_1_They_Meet.mp3"));
+        soundManager.setMediaPlayer (PacManGameSoundID.INTERMISSION_2,        ARCADE_RES.url("sound/Act_2_The_Chase.mp3"));
+        soundManager.setMediaPlayer (PacManGameSoundID.INTERMISSION_3,        ARCADE_RES.url("sound/Act_3_Junior.mp3"));
+        soundManager.setAudioClip   (PacManGameSoundID.LEVEL_CHANGED,         ARCADE_RES.url("sound/sweep.mp3"));
+        soundManager.setMediaPlayer (PacManGameSoundID.LEVEL_COMPLETE,        ARCADE_RES.url("sound/level-complete.mp3"));
+        soundManager.setMediaPlayer (PacManGameSoundID.PAC_MAN_DEATH,         ARCADE_RES.url("sound/Died.mp3"));
+        soundManager.setAudioClip   (PacManGameSoundID.PAC_MAN_MUNCHING,      ARCADE_RES.url("sound/munch.wav"));
+        soundManager.setMediaPlayer (PacManGameSoundID.PAC_MAN_POWER,         ARCADE_RES.url("sound/ScaredGhost.mp3"));
+    }
+
+    private void unregisterSounds(SoundManager sounds) {
+        sounds.unregisterSound(PacManGameSoundID.BONUS_ACTIVE);
+        sounds.unregisterSound(PacManGameSoundID.BONUS_EATEN);
+        sounds.unregisterSound(PacManGameSoundID.COIN_INSERTED);
+        sounds.unregisterSound(PacManGameSoundID.ENERGIZER_EXPLOSION_1);
+        sounds.unregisterSound(PacManGameSoundID.ENERGIZER_EXPLOSION_2);
+        sounds.unregisterSound(PacManGameSoundID.EXTRA_LIFE);
+        sounds.unregisterSound(PacManGameSoundID.GAME_OVER);
+        sounds.unregisterSound(PacManGameSoundID.GAME_READY);
+        sounds.unregisterSound(PacManGameSoundID.GHOST_EATEN);
+        sounds.unregisterSound(PacManGameSoundID.GHOST_RETURNS);
+        sounds.unregisterSound(PacManGameSoundID.INTERMISSION_1);
+        sounds.unregisterSound(PacManGameSoundID.INTERMISSION_2);
+        sounds.unregisterSound(PacManGameSoundID.INTERMISSION_3);
+        sounds.unregisterSound(PacManGameSoundID.LEVEL_CHANGED);
+        sounds.unregisterSound(PacManGameSoundID.LEVEL_COMPLETE);
+        sounds.unregisterSound(PacManGameSoundID.PAC_MAN_DEATH);
+        sounds.unregisterSound(PacManGameSoundID.PAC_MAN_MUNCHING);
+        sounds.unregisterSound(PacManGameSoundID.PAC_MAN_POWER);
+    }
+
+    private void initSoundEffects() {
+        sfx.setMunchingSoundDelay((byte) 0);
+        sfx.registerSirens(
+            ARCADE_RES.url("sound/GhostNoise1.wav"),
+            ARCADE_RES.url("sound/GhostNoise2.wav"),
+            ARCADE_RES.url("sound/GhostNoise3.wav"),
+            ARCADE_RES.url("sound/GhostNoise4.wav")
+        );
+        sfx.setSirenVolume(0.33f);
     }
 }

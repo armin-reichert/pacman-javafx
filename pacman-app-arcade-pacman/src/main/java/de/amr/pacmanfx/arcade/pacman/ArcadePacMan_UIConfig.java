@@ -16,6 +16,7 @@ import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.config.WorldConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
@@ -49,6 +50,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
 
+    public static final WorldConfig DEFAULT_WORLD_CONFIG = WorldConfig.fromJSON("/de/amr/pacmanfx/ui/world.json");
+
     public static final WorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new WorldMapColorScheme(
         ARCADE_BLACK.toString(), ARCADE_BLUE.toString(), ARCADE_PINK.toString(), ARCADE_ROSE.toString()
     );
@@ -69,13 +72,15 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     }
 
     @Override
-    public TranslationManager translations() {
-        return () -> textBundle;
-    }
-
-    @Override
     public Class<?> resourceRootClass() {
         return ArcadePacMan_UIConfig.class;
+    }
+
+    // UIConfig interface
+
+    @Override
+    public TranslationManager translations() {
+        return () -> textBundle;
     }
 
     @Override
@@ -116,6 +121,11 @@ public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
     @Override
     public Rectangle2D spriteRegionForArcadeBootScene() {
         return new Rectangle2D(400, 0, 256, 160);
+    }
+
+    @Override
+    public WorldConfig worldConfig() {
+        return DEFAULT_WORLD_CONFIG;
     }
 
     private void loadAssets() {

@@ -25,7 +25,7 @@ public class ArcadeMsPacMan_Factory3D extends DefaultFactory3D {
     public Group createLivesCounterShape3D(WorldConfig worldConfig) {
         requireNonNull(worldConfig);
 
-        final PacConfig config = worldConfig.pacConfig()
+        final PacConfig config = worldConfig.pac()
             .withModifiedSize3D(worldConfig.livesCounter().shapeSize());
 
         return new Group(

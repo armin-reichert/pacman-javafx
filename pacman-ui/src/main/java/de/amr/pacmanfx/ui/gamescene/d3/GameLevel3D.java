@@ -334,22 +334,22 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
-        final BonusConfig config = uiConfig.worldConfig().bonusConfig();
+        final BonusConfig config = uiConfig.worldConfig().bonus();
         final Bonus3D bonus3D = new Bonus3D(animationRegistry, bonus,
-            uiConfig.bonusSymbolImage(bonus.symbolCode()), config.bonusSymbolWidth(),
-            uiConfig.bonusValueImage(bonus.symbolCode()),  config.bonusPointsWidth());
+            uiConfig.bonusSymbolImage(bonus.symbolCode()), config.symbolWidth(),
+            uiConfig.bonusValueImage(bonus.symbolCode()),  config.pointsWidth());
         entitySet.add(bonus3D);
         return bonus3D;
     }
 
     private void createPac3D() {
-        final PacConfig config = uiConfig.worldConfig().pacConfig();
+        final PacConfig config = uiConfig.worldConfig().pac();
         entitySet.pac3D = uiConfig.factory3D().createPac3D(level.entities().pac(), config, animationRegistry);
         entitySet.add(entitySet.pac3D);
     }
 
     private void createGhosts3D(GameContext gameContext) {
-        final List<GhostConfig> ghostConfigs = uiConfig.worldConfig().ghostConfigs();
+        final List<GhostConfig> ghostConfigs = uiConfig.worldConfig().ghosts();
         entitySet.ghosts3D = Stream.of(GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .map(ghost -> {

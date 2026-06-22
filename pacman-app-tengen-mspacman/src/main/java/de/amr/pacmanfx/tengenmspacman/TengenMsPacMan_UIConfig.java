@@ -49,6 +49,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
 
     public static final WorldConfig TENGEN_WORLD_CONFIG = new WorldConfig(
+
         new PacConfig(
             new PacColors(
                 NES_Palette.color(0x28), // headColor
@@ -62,6 +63,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
             ),
             8.0f,
             16.0f),
+
         List.of(
             new GhostConfig(8.0f, 15.5f,
                 new GhostStateColors(
@@ -88,14 +90,22 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
                     new GhostComponentColors(NES_Palette.color(0x20), NES_Palette.color(0x20), NES_Palette.color(0x20)))
             )
         ),
+
         new BonusConfig(8.0f, 14.5f),
-        new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f),
-        new FloorConfig3D(5f, 0.5f),
-        new HouseConfig3D(12.0f, 0.4f, 12.0f, 2.5f),
+
         new LevelCounterConfig3D(10.0f, 6.0f),
+
         new LivesCounterConfig3D(5, 12.0f),
+
         new MazeConfig3D(4.0f, 4.0f, 1.0f, 2.25f, "0x282828"),
-        new PelletConfig3D(0.8f, 6.0f)
+
+        new HouseConfig3D(12.0f, 0.4f, 12.0f, 2.5f),
+
+        new FloorConfig3D(5f, 0.5f),
+
+        new PelletConfig3D(0.8f, 6.0f),
+
+        new EnergizerConfig3D(3, 3.5f, 6.0f, 0.2f, 1.0f)
     );
 
     /** Defines additional Tengen-specific dashboard IDs */
