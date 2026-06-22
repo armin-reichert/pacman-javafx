@@ -4,10 +4,12 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.ui.views.dashboard.DashboardConfig;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import javafx.scene.layout.Background;
 import javafx.scene.media.Media;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;

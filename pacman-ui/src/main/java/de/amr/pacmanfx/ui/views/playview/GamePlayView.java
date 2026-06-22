@@ -42,6 +42,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
 
@@ -63,7 +64,17 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public static final Background DEBUG_BACKGROUND = paintBackground(Color.TEAL);
     public static final Border DEBUG_BORDER = border(Color.LIGHTGREEN, 1);
 
-    //TODO make decoration pane into a FX control and use stylesheet
+    //TODO use FX controls + CSS
+    public static final DashboardConfig DEFAULT_DASHBOARD_CONFIG = new DashboardConfig(
+        110, // label width
+        320, // width
+        Color.rgb(0, 0, 50, 1.0), // background
+        Color.WHITE, // text
+        Font.font("Sans", 12), // label font
+        Font.font("Sans", 12) // content font
+    );
+
+    //TODO use FX controls + CSS
     public static final DecorationPane.Config DECORATION_CONFIG = new DecorationPane.Config(
         0.85f, 0.93f, 0.5f, // scaling x,y, min
         20, 20, // padding x,y
@@ -98,8 +109,8 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     private GameScene2D_Renderer sceneRenderer;
     private HeadsUpDisplay_Renderer hudRenderer;
 
-    public GamePlayView(DashboardConfig dashboardConfig) {
-        createLayout(requireNonNull(dashboardConfig));
+    public GamePlayView() {
+        createLayout();
     }
 
     @Override
@@ -282,7 +293,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     // Private
 
-    private void createLayout(DashboardConfig dashboardConfig) {
+    private void createLayout() {
 
         // Layer 1: Game scene with or without decoration
         gameSceneFrame = new DecorationPane(
@@ -298,7 +309,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         StackPane.setAlignment(miniPlaySceneView.rootPane(), Pos.TOP_RIGHT);
 
         // Layer 3: Overlay layer with dashboard
-        dashboard = new Dashboard(dashboardConfig);
+        dashboard = new Dashboard(DEFAULT_DASHBOARD_CONFIG);
         dashboard.rootPane().setVisible(false);
 
         overlayLayer = new BorderPane();

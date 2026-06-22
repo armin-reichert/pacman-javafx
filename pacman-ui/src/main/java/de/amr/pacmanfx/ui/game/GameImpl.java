@@ -53,14 +53,6 @@ import static java.util.Objects.requireNonNull;
 
 public final class GameImpl implements Game {
 
-    public static final DashboardConfig DEFAULT_DASHBOARD_CONFIG = new DashboardConfig(
-        110, // label width
-        320, // width
-        Color.rgb(0, 0, 50, 1.0), // background
-        Color.WHITE, // text
-        Font.font("Sans", 12), // label font
-        Font.font("Sans", 12) // content font
-    );
 
     private static File highScoreFile(String variantName) {
         final String fileName = "highscore-%s.xml".formatted(variantName).toLowerCase();
@@ -109,7 +101,7 @@ public final class GameImpl implements Game {
 
         final GameViewManager views = new GameViewManager();
         views.registerView(GameViewID.START_PAGES, new StartPagesView());
-        views.registerView(GameViewID.GAMEPLAY, new GamePlayView(DEFAULT_DASHBOARD_CONFIG));
+        views.registerView(GameViewID.GAMEPLAY, new GamePlayView());
         views.registerView(GameViewID.EDITOR, new EditorView());
 
         final SoundManager sounds = new SoundManager();
