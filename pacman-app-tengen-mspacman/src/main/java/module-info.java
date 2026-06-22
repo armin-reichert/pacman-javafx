@@ -9,12 +9,12 @@ open module de.amr.pacmanfx.tengenmspacman {
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.media;
+    requires com.google.gson;
     requires org.tinylog.api;
     requires de.amr.basics;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
-    requires java.desktop;
 
     exports de.amr.pacmanfx.tengenmspacman;
     exports de.amr.pacmanfx.tengenmspacman.app;

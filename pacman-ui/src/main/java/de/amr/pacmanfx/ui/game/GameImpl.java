@@ -51,7 +51,7 @@ import static java.util.Objects.requireNonNull;
 
 public final class GameImpl implements Game {
 
-    public static final String SETTINGS_JSON = "/de/amr/pacmanfx/ui/ui.json";
+    public static final String UI_SETTINGS_JSON = "/de/amr/pacmanfx/ui/ui.json";
 
     private static File highScoreFile(String variantName) {
         final String fileName = "highscore-%s.xml".formatted(variantName).toLowerCase();
@@ -96,7 +96,7 @@ public final class GameImpl implements Game {
     @Override
     public void createUI(Stage stage, int width, int height) {
 
-        UISettings initialSettings = UISettings.fromJSON(SETTINGS_JSON);
+        UISettings initialSettings = UISettings.fromJSON(UI_SETTINGS_JSON);
         final UISettingsProperties uiSettingsProperties = new UISettingsProperties(initialSettings);
 
         final GameViewManager views = new GameViewManager();

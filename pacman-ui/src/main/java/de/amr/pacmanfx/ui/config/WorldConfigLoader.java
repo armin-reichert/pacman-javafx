@@ -1,5 +1,10 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.ui.config;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -11,28 +16,29 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
-public record UISettings(
-    double flashMessageDuration,
-    Color canvasBackgroundColor,
-    boolean fontSmoothingOn,
-    boolean debugModeOn,
-    boolean keyboardMonitorOn,
-    boolean muted,
-    int numSimulationSteps,
-    MiniViewSettings miniView,
-    UISettings3D d3)
-{
-    public static UISettings fromJSON(String jsonFilePath) {
-        try (var in = UISettings.class.getResourceAsStream(jsonFilePath)) {
+public class WorldConfigLoader {
+
+    protected final Gson parser;
+
+    public WorldConfigLoader() {
+        parser = createParser();
+    }
+
+    protected Gson createParser() {
+        return new GsonBuilder()
+            .registerTypeAdapter(Color.class, new ColorAdapter())
+            //.setStrictness(Strictness.LENIENT)
+            .create();
+    }
+
+    public WorldConfig loadJSON(String jsonFilePath) {
+        try (var in = getClass().getResourceAsStream(jsonFilePath)) {
             if (in == null) {
                 Logger.error("Could not access UI settings from path {}", jsonFilePath);
             }
             else {
-                var reader = new InputStreamReader(in, StandardCharsets.UTF_8);
-                var parser = new GsonBuilder()
-                    .registerTypeAdapter(Color.class, new ColorAdapter())
-                    .create();
-                UISettings values = parser.fromJson(reader, UISettings.class);
+                final var reader = new InputStreamReader(in, StandardCharsets.UTF_8);
+                final WorldConfig values = parser.fromJson(reader, WorldConfig.class);
                 Logger.info(values);
                 return values;
             }
@@ -43,8 +49,7 @@ public record UISettings(
         throw new IllegalArgumentException("Could not read UI settings from " + jsonFilePath);
     }
 
-    private static class ColorAdapter extends TypeAdapter<Color> {
-
+    public static class ColorAdapter extends TypeAdapter<Color> {
         @Override
         public void write(JsonWriter out, Color value) throws IOException {
             out.value(value.toString());
@@ -55,5 +60,4 @@ public record UISettings(
             return Color.web(in.nextString());
         }
     }
-
 }

@@ -19,10 +19,10 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.config.*;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -47,6 +47,9 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
 
     // Local resources are stored inside main resource folder subdirectories named after package name of this class
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
+
+    private static final WorldConfig WORLD_CONFIG =
+        new TengenWorldConfigLoader().loadJSON("/de/amr/pacmanfx/tengenmspacman/world.json");
 
     public static final WorldConfig TENGEN_WORLD_CONFIG = new WorldConfig(
 
