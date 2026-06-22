@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.ui.config;
+package de.amr.pacmanfx.ui.viewmodel;
 
 import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.AttractionConfig;

@@ -8,8 +8,8 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
-import de.amr.pacmanfx.ui.config.UIConfig;
-import de.amr.pacmanfx.ui.config.UISettingsViewModel;
+import de.amr.pacmanfx.ui.config.GameUIConfig;
+import de.amr.pacmanfx.ui.viewmodel.UISettingsViewModel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -277,7 +277,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void updateGameSceneRenderers(GameScene2D gameScene2D) {
-        final UIConfig currentConfig = game.currentUIConfig();
+        final GameUIConfig currentConfig = game.currentUIConfig();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = currentConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
             setFontSmoothing(game.ui().settings().fontSmoothingOnProperty.get());

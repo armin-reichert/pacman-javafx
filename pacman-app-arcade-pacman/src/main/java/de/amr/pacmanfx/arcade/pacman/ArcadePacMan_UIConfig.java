@@ -16,7 +16,7 @@ import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.config.SettingsLoader;
-import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.config.GameUIConfig;
 import de.amr.pacmanfx.ui.config.WorldConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -49,7 +49,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * UI configuration for the Arcade Pac‑Man game variant.
  */
-public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
+public class ArcadePacMan_UIConfig implements GameUIConfig, ResourceManager {
 
     public static final WorldConfig DEFAULT_WORLD_CONFIG
         = new SettingsLoader().loadJSON("/de/amr/pacmanfx/ui/world.json", WorldConfig.class);

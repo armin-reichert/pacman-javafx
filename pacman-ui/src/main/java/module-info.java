@@ -39,4 +39,5 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.window;
     exports de.amr.pacmanfx.ui.gamescene.common;
     exports de.amr.pacmanfx.ui.action.core;
+    exports de.amr.pacmanfx.ui.viewmodel;
 }

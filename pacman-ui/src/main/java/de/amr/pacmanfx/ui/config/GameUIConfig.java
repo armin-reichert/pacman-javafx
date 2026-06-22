@@ -29,7 +29,7 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-public interface UIConfig extends Disposable {
+public interface GameUIConfig extends Disposable {
 
     void init(Game game);
 

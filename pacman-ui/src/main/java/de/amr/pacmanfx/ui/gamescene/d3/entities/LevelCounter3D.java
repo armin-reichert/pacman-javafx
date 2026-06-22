@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntity;
 import de.amr.pacmanfx.ui.config.LevelCounterConfig3D;
-import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.config.GameUIConfig;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -37,9 +37,9 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
     }
 
     private final AnimationRegistry animations;
-    private final UIConfig uiConfig;
+    private final GameUIConfig uiConfig;
 
-    public LevelCounter3D(AnimationRegistry animations, UIConfig uiConfig) {
+    public LevelCounter3D(AnimationRegistry animations, GameUIConfig uiConfig) {
         this.animations = requireNonNull(animations);
         this.uiConfig = requireNonNull(uiConfig);
     }

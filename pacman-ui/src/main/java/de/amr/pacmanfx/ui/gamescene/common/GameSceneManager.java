@@ -8,7 +8,7 @@ import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.config.GameUIConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
@@ -60,7 +60,7 @@ public class GameSceneManager {
     }
 
     public void updateGameSceneAndForceReload(boolean forceReload) {
-        final UIConfig currentConfig = game.currentUIConfig();
+        final GameUIConfig currentConfig = game.currentUIConfig();
         final GameContext gameContext = game.currentGameContext();
         final GameModel gameModel = gameContext.model();
 
@@ -96,7 +96,7 @@ public class GameSceneManager {
     public boolean hasGameSceneID(AbstractGameScene gameScene, Identifier sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
-        final UIConfig currentConfig = game.currentUIConfig();
+        final GameUIConfig currentConfig = game.currentUIConfig();
         return currentConfig.gameSceneConfig().gameSceneHasID(gameScene, sceneID);
     }
 
@@ -113,7 +113,7 @@ public class GameSceneManager {
 
     // 2D-3D scene switch
 
-    private void handle2D3DSwitch(UIConfig uiConfig, GameLevel level, AbstractGameScene prevGameScene, AbstractGameScene nextGameScene) {
+    private void handle2D3DSwitch(GameUIConfig uiConfig, GameLevel level, AbstractGameScene prevGameScene, AbstractGameScene nextGameScene) {
         final GameSceneSwitchType sceneSwitchType = identifySceneSwitchType(prevGameScene, nextGameScene);
         switch (sceneSwitchType) {
             case FROM_2D_TO_3D -> switchPlaySceneTo3D(uiConfig, level, prevGameScene, nextGameScene);
@@ -123,7 +123,7 @@ public class GameSceneManager {
         }
     }
 
-    private void switchPlaySceneTo3D(UIConfig uiConfig, GameLevel level, AbstractGameScene currentScene, AbstractGameScene nextScene) {
+    private void switchPlaySceneTo3D(GameUIConfig uiConfig, GameLevel level, AbstractGameScene currentScene, AbstractGameScene nextScene) {
         if (!(nextScene instanceof PlayScene3D playScene3D)) {
             throw new IllegalArgumentException("Expected PlayScene3D, but scene has class %s"
                 .formatted(nextScene.getClass().getSimpleName()));
@@ -195,7 +195,7 @@ public class GameSceneManager {
     }
 
     public void embedGameSceneIntoPlayView(AbstractGameScene gameScene) {
-        final UIConfig currentConfig = game.currentUIConfig();
+        final GameUIConfig currentConfig = game.currentUIConfig();
         final GameViewManager subViews = game.ui().views();
 
         subViews.gamePlayView().contextMenu().hide();

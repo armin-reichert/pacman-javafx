@@ -26,6 +26,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.viewmodel.UISettings3DViewModel;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -128,7 +129,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Access to game model
     private final GameLevel level;
 
-    private final UIConfig uiConfig;
+    private final GameUIConfig uiConfig;
 
     private final EntitySet entitySet = new EntitySet();
 
@@ -148,7 +149,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * @param level       the game level to visualize
      * @param uiConfig    the global UI configuration (provides 3D settings, colors, models)
      */
-    public GameLevel3D(UISettings3DViewModel globals3D, GameContext gameContext, GameLevel level, UIConfig uiConfig) {
+    public GameLevel3D(UISettings3DViewModel globals3D, GameContext gameContext, GameLevel level, GameUIConfig uiConfig) {
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
 
@@ -200,7 +201,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Public accessors
 
-    public UIConfig uiConfig() {
+    public GameUIConfig uiConfig() {
         return uiConfig;
     }
 

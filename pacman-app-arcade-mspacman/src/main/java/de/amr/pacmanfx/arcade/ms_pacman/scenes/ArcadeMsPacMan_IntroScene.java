@@ -22,7 +22,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.config.GameUIConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 
@@ -85,7 +85,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     private void initScene() {
-        final UIConfig uiConfig = game().currentUIConfig();
+        final GameUIConfig uiConfig = game().currentUIConfig();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);

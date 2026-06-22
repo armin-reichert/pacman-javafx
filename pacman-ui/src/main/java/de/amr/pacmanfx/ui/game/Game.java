@@ -11,13 +11,12 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.config.GameUIConfig;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.util.Optional;
 
@@ -49,7 +48,7 @@ public interface Game extends GameLifecycle {
 
     GameContext currentGameContext();
 
-    UIConfig currentUIConfig();
+    GameUIConfig currentUIConfig();
 
     default Optional<GameSoundEffects> currentSoundEffects() {
         return currentUIConfig().optSoundEffects();

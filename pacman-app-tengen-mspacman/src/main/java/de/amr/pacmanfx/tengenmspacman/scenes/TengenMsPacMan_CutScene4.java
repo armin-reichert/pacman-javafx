@@ -13,7 +13,7 @@ import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.config.GameUIConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -67,7 +67,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public void onActivate() {
-        final UIConfig uiConfig = game().currentUIConfig();
+        final GameUIConfig uiConfig = game().currentUIConfig();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         clapperboard = new Clapperboard(4, "THE END");
@@ -94,7 +94,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public void onTick(long tick) {
-        final UIConfig uiConfig = game().currentUIConfig();
+        final GameUIConfig uiConfig = game().currentUIConfig();
         final long gameStateTick = gameState().timer().tickCount();
 
         clapperboard.tick();
@@ -168,7 +168,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         }
     }
 
-    private void spawnJunior(UIConfig uiConfig, long tick) {
+    private void spawnJunior(GameUIConfig uiConfig, long tick) {
         var junior = TengenMsPacMan_ActorFactory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         junior.setPosition((float) randomX, unscaledHeight() - 4 * TS);

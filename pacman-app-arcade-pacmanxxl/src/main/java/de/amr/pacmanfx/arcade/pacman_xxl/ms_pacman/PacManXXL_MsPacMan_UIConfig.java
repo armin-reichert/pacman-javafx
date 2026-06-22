@@ -21,7 +21,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.config.GameUIConfig;
 import de.amr.pacmanfx.ui.config.WorldConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
@@ -46,7 +46,7 @@ import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
-public final class PacManXXL_MsPacMan_UIConfig implements UIConfig, ResourceManager {
+public final class PacManXXL_MsPacMan_UIConfig implements GameUIConfig, ResourceManager {
 
     private static final ResourceManager ARCADE_RES = () -> ArcadeMsPacMan_UIConfig.class;
 
