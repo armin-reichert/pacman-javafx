@@ -17,10 +17,7 @@ import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.config.MazeConfig3D;
-import de.amr.pacmanfx.ui.config.UIConfig;
-import de.amr.pacmanfx.ui.config.UISettings;
-import de.amr.pacmanfx.ui.config.UISettingsProperties;
+import de.amr.pacmanfx.ui.config.*;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.input.Input;
@@ -96,7 +93,7 @@ public final class GameImpl implements Game {
     @Override
     public void createUI(Stage stage, int width, int height) {
 
-        UISettings initialSettings = UISettings.fromJSON(UI_SETTINGS_JSON);
+        UISettings initialSettings = new SettingsLoader().loadJSON(UI_SETTINGS_JSON, UISettings.class);
         final UISettingsProperties uiSettingsProperties = new UISettingsProperties(initialSettings);
 
         final GameViewManager views = new GameViewManager();

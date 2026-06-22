@@ -47,7 +47,7 @@ public class TengenMsPacMan_UIConfig implements UIConfig {
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacMan_UIConfig.class;
 
     private static final WorldConfig WORLD_CONFIG =
-        new TengenWorldConfigLoader().loadJSON("/de/amr/pacmanfx/tengenmspacman/world.json");
+        new TengenWorldConfigLoader().loadJSON("/de/amr/pacmanfx/tengenmspacman/world.json", WorldConfig.class);
 
     /** Defines additional Tengen-specific dashboard IDs */
     public enum TengenMsPacMan_DashboardID implements Identifier { JOYPAD }

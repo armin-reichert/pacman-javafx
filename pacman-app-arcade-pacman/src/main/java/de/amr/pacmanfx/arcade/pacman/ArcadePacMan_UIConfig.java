@@ -15,9 +15,9 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.ui.config.SettingsLoader;
 import de.amr.pacmanfx.ui.config.UIConfig;
 import de.amr.pacmanfx.ui.config.WorldConfig;
-import de.amr.pacmanfx.ui.config.WorldConfigLoader;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
@@ -51,7 +51,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_UIConfig implements UIConfig, ResourceManager {
 
-    public static final WorldConfig DEFAULT_WORLD_CONFIG = new WorldConfigLoader().loadJSON("/de/amr/pacmanfx/ui/world.json");
+    public static final WorldConfig DEFAULT_WORLD_CONFIG
+        = new SettingsLoader().loadJSON("/de/amr/pacmanfx/ui/world.json", WorldConfig.class);
 
     public static final WorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new WorldMapColorScheme(
         ARCADE_BLACK.toString(), ARCADE_BLUE.toString(), ARCADE_PINK.toString(), ARCADE_ROSE.toString()

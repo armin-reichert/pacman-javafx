@@ -16,11 +16,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
-public class WorldConfigLoader {
-
+public class SettingsLoader {
     protected final Gson parser;
 
-    public WorldConfigLoader() {
+    public SettingsLoader() {
         parser = createParser();
     }
 
@@ -31,14 +30,14 @@ public class WorldConfigLoader {
             .create();
     }
 
-    public WorldConfig loadJSON(String jsonFilePath) {
+    public <T> T loadJSON(String jsonFilePath, Class<T> settingsClass) {
         try (var in = getClass().getResourceAsStream(jsonFilePath)) {
             if (in == null) {
                 Logger.error("Could not access UI settings from path {}", jsonFilePath);
             }
             else {
                 final var reader = new InputStreamReader(in, StandardCharsets.UTF_8);
-                final WorldConfig values = parser.fromJson(reader, WorldConfig.class);
+                final var values = parser.fromJson(reader, settingsClass);
                 Logger.info(values);
                 return values;
             }
