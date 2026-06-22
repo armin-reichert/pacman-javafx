@@ -1,0 +1,26 @@
+{
+  "flashMessageDuration":  1.5,
+  "canvasBackgroundColor":  "#000",
+  "fontSmoothingOn": false,
+  "debugModeOn":  false,
+  "keyboardMonitorOn":  false,
+  "muted":  false,
+  "numSimulationSteps": 1,
+
+  "miniView": {
+    "height": 400,
+    "active":  false,
+    "opacityPercentage": 69
+  },
+
+  "d3": {
+    "axesVisible":  false,
+    "cameraPerspectiveId": "TRACK_PLAYER",
+    "drawMode": "FILL",
+    "view3DEnabled":  false,
+    "mazeFloorColor": "rgb(20,20,20)",
+    "mazeLightColor": "#fff",
+    "mazeWallHeight": 3.5,
+    "mazeWallOpacity": 1
+  }
+}

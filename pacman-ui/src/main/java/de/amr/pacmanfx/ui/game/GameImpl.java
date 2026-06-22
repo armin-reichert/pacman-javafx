@@ -19,6 +19,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.MazeConfig3D;
 import de.amr.pacmanfx.ui.config.UIConfig;
+import de.amr.pacmanfx.ui.config.UISettingsProperties;
 import de.amr.pacmanfx.ui.config.UISettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
@@ -26,7 +27,6 @@ import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
-import de.amr.pacmanfx.ui.views.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -39,8 +39,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -97,7 +95,8 @@ public final class GameImpl implements Game {
     @Override
     public void createUI(Stage stage, int width, int height) {
 
-        final UISettings uiSettings = new UISettings();
+        UISettings initialSettings = UISettings.fromJSON("/de/amr/pacmanfx/ui/ui.json");
+        final UISettingsProperties uiSettingsProperties = new UISettingsProperties(initialSettings);
 
         final GameViewManager views = new GameViewManager();
         views.registerView(GameViewID.START_PAGES, new StartPagesView());
@@ -105,7 +104,7 @@ public final class GameImpl implements Game {
         views.registerView(GameViewID.EDITOR, new EditorView());
 
         final SoundManager sounds = new SoundManager();
-        sounds.muteProperty().bind(uiSettings.mutedProperty());
+        sounds.muteProperty().bind(uiSettingsProperties.mutedProperty());
 
         ui = new GameUI(
             new GameWindowImpl(stage, width, height),
@@ -114,7 +113,7 @@ public final class GameImpl implements Game {
             new GameTranslationManager(),
             sounds,
             new SpriteAnimationManager(60),
-            uiSettings
+            uiSettingsProperties
         );
 
         ui.connect(this);

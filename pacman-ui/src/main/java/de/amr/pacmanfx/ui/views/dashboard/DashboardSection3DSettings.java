@@ -6,10 +6,10 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
-import de.amr.pacmanfx.ui.config.UISettings3D;
+import de.amr.pacmanfx.ui.config.UISettings3DProperties;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.config.UISettings;
+import de.amr.pacmanfx.ui.config.UISettingsProperties;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
@@ -41,7 +41,7 @@ public class DashboardSection3DSettings extends DashboardSection {
 
     @Override
     public void connect(Game game) {
-        final UISettings3D settings3D = game.ui().settings().d3();
+        final UISettings3DProperties settings3D = game.ui().settings().d3();
 
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
         comboPerspectives = addChoiceBox("Perspective", PerspectiveID.values());
@@ -100,8 +100,8 @@ public class DashboardSection3DSettings extends DashboardSection {
     public void update() {
         super.update();
 
-        final UISettings settings = game().ui().settings();
-        final UISettings3D settings3D = game().ui().settings().d3();
+        final UISettingsProperties settings = game().ui().settings();
+        final UISettings3DProperties settings3D = game().ui().settings().d3();
 
         comboPerspectives.setValue(settings3D.cameraPerspectiveIdProperty().get());
         sliderMiniViewSceneHeight.setValue(settings.miniView().heightProperty().get());

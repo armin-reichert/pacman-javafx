@@ -11,6 +11,7 @@ open module de.amr.pacmanfx.ui {
     requires javafx.controls;
     requires javafx.media;
     requires org.tinylog.api;
+    requires com.google.gson;
     requires de.amr.basics;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.ui.config.UISettings;
+import de.amr.pacmanfx.ui.config.UISettingsProperties;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
@@ -23,7 +23,7 @@ public record GameUI(
     TranslationManager translations,
     SoundManager sounds,
     SpriteAnimationManager sprites,
-    UISettings settings)
+    UISettingsProperties settings)
 {
 
     public void connect(Game game) {
@@ -59,7 +59,7 @@ public record GameUI(
      * @param args    formatting arguments
      */
     public void shortMessage(String message, Object... args) {
-        shortMessage(settings.flashMessageDuration(), message, args);
+        shortMessage(settings.flashMessageDurationProperty().get(), message, args);
     }
 
     public void clearMessage() {
