@@ -10,8 +10,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.media.Media;
 import javafx.scene.text.Font;
 
-import java.util.Arrays;
-
 import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;
 
 public final class GlobalAssets {
@@ -67,8 +65,5 @@ public final class GlobalAssets {
     public static final Background BACKGROUND_PAC_MAN_WALLPAPER = createImageBackground(
         RES_MGR.loadImage(RESOURCE_ROOT + "graphics/pacman_wallpaper.png"));
 
-    public static final Background[] GRADIENT_BACKGROUNDS = Arrays.stream(Gradients.Samples.values())
-        .map(Gradients.Samples::gradient)
-        .map(Background::fill)
-        .toArray(Background[]::new);
+    public static final Background[] GRADIENT_BACKGROUNDS = Gradients.Samples.backgrounds();
 }

@@ -3,10 +3,13 @@
  */
 package de.amr.pacmanfx.uilib.rendering;
 
+import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+
+import java.util.stream.Stream;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 
@@ -32,6 +35,10 @@ public interface Gradients {
 
         Samples(String startColorCode, String endColorCode, Axis axis) {
             gradient = createGradient(startColorCode, endColorCode, axis);
+        }
+
+        public static Background[] backgrounds() {
+            return Stream.of(values()).map(Samples::gradient).map(Background::fill).toArray(Background[]::new);
         }
 
         public static LinearGradient random() {
