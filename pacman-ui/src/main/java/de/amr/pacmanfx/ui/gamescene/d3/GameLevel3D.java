@@ -296,7 +296,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         maze3D = uiConfig.factory3D().createMaze3D(
             settings3D.drawModeProperty,
             terrain,
-            uiConfig.worldConfig(),
+            uiConfig.worldSettings(),
             colorScheme,
             animationRegistry);
 
@@ -311,10 +311,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         final PhongMaterial foodMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
-        final Pellet3DSettings pelletConfig3D = uiConfig.worldConfig().pellet();
+        final Pellet3DSettings pelletConfig3D = uiConfig.worldSettings().pellet();
         final double pelletZ = maze3D.floorTop() - pelletConfig3D.floorElevation();
 
-        final Energizer3DSettings energizerConfig3D = uiConfig.worldConfig().energizer();
+        final Energizer3DSettings energizerConfig3D = uiConfig.worldSettings().energizer();
         final double energizerZ = maze3D.floorTop() - energizerConfig3D.floorElevation();
 
         foodLayer.tiles()
@@ -329,20 +329,20 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private Pellet3D createPellet3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
-        final Pellet3D pellet3D = uiConfig.factory3D().createPellet3D(uiConfig.worldConfig().pellet(), foodMaterial);
+        final Pellet3D pellet3D = uiConfig.factory3D().createPellet3D(uiConfig.worldSettings().pellet(), foodMaterial);
         pellet3D.setLocation(tile, z);
         return pellet3D;
     }
 
     private Energizer3D createEnergizer3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
         final Energizer3D energizer3D = uiConfig.factory3D().createEnergizer3D(
-            uiConfig.worldConfig().energizer(), foodMaterial, animationRegistry);
+            uiConfig.worldSettings().energizer(), foodMaterial, animationRegistry);
         energizer3D.setLocation(tile, z);
         return energizer3D;
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
-        final Bonus3DSettings config = uiConfig.worldConfig().bonus();
+        final Bonus3DSettings config = uiConfig.worldSettings().bonus();
         final Bonus3D bonus3D = new Bonus3D(animationRegistry, bonus,
             uiConfig.bonusSymbolImage(bonus.symbolCode()), config.symbolWidth(),
             uiConfig.bonusValueImage(bonus.symbolCode()),  config.pointsWidth());
@@ -351,13 +351,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createPac3D() {
-        final PacSettings config = uiConfig.worldConfig().pac();
+        final PacSettings config = uiConfig.worldSettings().pac();
         entitySet.pac3D = uiConfig.factory3D().createPac3D(level.entities().pac(), config, animationRegistry);
         entitySet.add(entitySet.pac3D);
     }
 
     private void createGhosts3D(GameContext gameContext) {
-        final List<GhostSettings> ghostConfigs = uiConfig.worldConfig().ghosts();
+        final List<GhostSettings> ghostConfigs = uiConfig.worldSettings().ghosts();
         entitySet.ghosts3D = Stream.of(GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .map(ghost -> {
@@ -379,7 +379,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createLivesCounter3D() {
-        entitySet.livesCounter3D = new LivesCounter3D(uiConfig.factory3D(), uiConfig.worldConfig());
+        entitySet.livesCounter3D = new LivesCounter3D(uiConfig.factory3D(), uiConfig.worldSettings());
         entitySet.livesCounter3D.setTranslateX(2 * WorldMap.TS);
         entitySet.livesCounter3D.setTranslateY(2 * WorldMap.TS);
         entitySet.add(entitySet.livesCounter3D);
@@ -390,7 +390,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         entitySet.levelCounter3D = new LevelCounter3D(animationRegistry, uiConfig);
         entitySet.levelCounter3D.setTranslateX(WorldMap.TS(terrain.numCols() - 2));
         entitySet.levelCounter3D.setTranslateY(WorldMap.TS(2));
-        entitySet.levelCounter3D.setTranslateZ(-uiConfig.worldConfig().levelCounter().elevation());
+        entitySet.levelCounter3D.setTranslateZ(-uiConfig.worldSettings().levelCounter().elevation());
         entitySet.add(entitySet.levelCounter3D);
     }
 

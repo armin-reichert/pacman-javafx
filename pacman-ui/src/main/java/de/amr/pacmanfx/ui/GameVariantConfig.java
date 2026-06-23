@@ -57,7 +57,7 @@ public interface GameVariantConfig extends Disposable {
 
     SpriteSheet<?> spriteSheet();
 
-    WorldSettings worldConfig();
+    WorldSettings worldSettings();
 
     default Rectangle2D spriteRegionForArcadeBootScene() {
         return new Rectangle2D(
@@ -71,7 +71,7 @@ public interface GameVariantConfig extends Disposable {
         final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
         if (wallFillColor.getBrightness() < 0.1) {
             return new WorldMapColorScheme(
-                worldConfig().maze().darkWallFillColor(),
+                worldSettings().maze().darkWallFillColor(),
                 colorScheme.wallStroke(),
                 colorScheme.door(),
                 colorScheme.pellet());

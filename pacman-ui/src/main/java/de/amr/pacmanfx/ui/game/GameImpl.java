@@ -20,7 +20,6 @@ import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.SettingsLoader;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
-import de.amr.pacmanfx.ui.config.world.Maze3DSettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.input.Input;
@@ -165,7 +164,7 @@ public final class GameImpl implements Game {
 
     @Override
     public GameVariantConfig currentUIConfig() {
-        return currentGameVariant().uiConfig();
+        return currentGameVariant().config();
     }
 
     @Override
@@ -293,14 +292,15 @@ public final class GameImpl implements Game {
 
     private void exitGameVariant(String variantName) {
         ui.sounds().dispose();
-        gameVariant(variantName).uiConfig().dispose();
+        gameVariant(variantName).config().dispose();
         currentGameContext.flow().removeGameEventListener(globalGameEventHandler);
     }
 
     private void enterGameVariant(String variantName) {
         final GameVariant gameVariant = gameVariant(variantName);
-        gameVariant.uiConfig().init(this);
-        updateSettings3D(gameVariant.uiConfig());
+
+        gameVariant.config().init(this);
+        ui.viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
 
         // create new game context for current game variant
         currentGameContext = new GameContextImpl(this, gameVariant);
@@ -335,14 +335,6 @@ public final class GameImpl implements Game {
         });
         clock().setPermanentAction(() -> ui.views().assertCurrentView().render());
         clock().setErrorHandler(this::ka_tas_tro_phe);
-    }
-
-    private void updateSettings3D(GameVariantConfig uiConfig) {
-        final Maze3DSettings mazeConfig3D = uiConfig.worldConfig().maze();
-        ui.viewModel().maze3D.wallHeightProperty.set(mazeConfig3D.obstacleBaseHeight());
-        ui.viewModel().maze3D.wallOpacityProperty.set(mazeConfig3D.obstacleOpacity());
-        Logger.info("Update maze 3D settings for UI config {}", uiConfig);
-        Logger.info("Maze 3D settings: {}", mazeConfig3D);
     }
 
     private void startServicesLater() {

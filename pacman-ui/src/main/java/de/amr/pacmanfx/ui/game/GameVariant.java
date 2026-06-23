@@ -9,7 +9,7 @@ public record GameVariant(
     GameFlow gameFlow,
     AbstractGameModel gameModel,
     GameRules gameRules,
-    GameVariantConfig uiConfig)
+    GameVariantConfig config)
 {
     public GameVariant(Cartridge cartridge) {
         this(

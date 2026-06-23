@@ -176,7 +176,7 @@ public class TengenMsPacManConfig implements GameVariantConfig {
     }
 
     @Override
-    public WorldSettings worldConfig() {
+    public WorldSettings worldSettings() {
         return WORLD_CONFIG;
     }
 
