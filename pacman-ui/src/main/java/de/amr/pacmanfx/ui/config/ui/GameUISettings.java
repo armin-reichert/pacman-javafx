@@ -11,6 +11,6 @@ public record GameUISettings(
     boolean muted,
     int numSimulationSteps,
     MiniViewSettings miniView,
-    Settings2D d2,
-    Settings3D d3)
+    CommonSettings2D common2D,
+    CommonSettings3D common3D)
 {}

@@ -1,10 +1,10 @@
-package de.amr.pacmanfx.ui.viewmodel;
+package de.amr.pacmanfx.ui.model;
 
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import javafx.beans.property.*;
 import javafx.util.Duration;
 
-public class GameUIViewModel {
+public class GameViewModel {
 
     public final ObjectProperty<Duration> flashMessageDurationProperty;
     public final BooleanProperty debugModeOnProperty;
@@ -13,11 +13,11 @@ public class GameUIViewModel {
     public final IntegerProperty numSimulationStepsProperty;
 
     public final MiniViewViewModel miniView;
-    public final Settings2DViewModel d2;
-    public final Settings3DViewModel d3;
-    public final Maze3DSettingsViewModel maze3D;
+    public final CommonSettings2DModel common2D;
+    public final CommonSettings3DModel common3D;
+    public final Maze3DSettingsModel maze3D;
 
-    public GameUIViewModel() {
+    public GameViewModel() {
         flashMessageDurationProperty = new SimpleObjectProperty<>();
         debugModeOnProperty = new SimpleBooleanProperty();
         keyboardMonitorOnProperty = new SimpleBooleanProperty();
@@ -25,9 +25,9 @@ public class GameUIViewModel {
         numSimulationStepsProperty = new SimpleIntegerProperty();
 
         miniView = new MiniViewViewModel();
-        d2 = new Settings2DViewModel();
-        d3 = new Settings3DViewModel();
-        maze3D = new Maze3DSettingsViewModel();
+        common2D = new CommonSettings2DModel();
+        common3D = new CommonSettings3DModel();
+        maze3D = new Maze3DSettingsModel();
     }
 
     public void init(GameUISettings settings) {
@@ -38,8 +38,8 @@ public class GameUIViewModel {
         numSimulationStepsProperty.set(settings.numSimulationSteps());
 
         miniView.init(settings.miniView());
-        d2.init(settings.d2());
-        d3.init(settings.d3());
+        common2D.init(settings.common2D());
+        common3D.init(settings.common3D());
         // maze3D is initialized elsewhere because it can be game-variant specific!
     }
 }

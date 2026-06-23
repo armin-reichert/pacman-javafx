@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.ui.viewmodel.Settings3DViewModel;
+import de.amr.pacmanfx.ui.model.CommonSettings3DModel;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -51,7 +51,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
 
         final GameModel gameModel = game.currentGameContext().model();
         final TranslationManager translations = game.ui().translations();
-        final Settings3DViewModel settings3D = game.ui().viewModel().d3;
+        final CommonSettings3DModel settings3D = game.ui().viewModel().common3D;
 
         addLocalizedTitleItem(this, translations, "context_menu.scene_display");
 
@@ -92,6 +92,6 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
      */
     @Override
     public void dispose() {
-        game.ui().viewModel().d3.cameraPerspectiveIdProperty.removeListener(perspectiveListener);
+        game.ui().viewModel().common3D.cameraPerspectiveIdProperty.removeListener(perspectiveListener);
     }
 }

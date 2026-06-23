@@ -29,8 +29,8 @@ import de.amr.pacmanfx.ui.gamescene.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.viewmodel.Maze3DSettingsViewModel;
-import de.amr.pacmanfx.ui.viewmodel.Settings3DViewModel;
+import de.amr.pacmanfx.ui.model.Maze3DSettingsModel;
+import de.amr.pacmanfx.ui.model.CommonSettings3DModel;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -143,8 +143,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private MessageManager3D messageManager;
 
     public GameLevel3D(
-        Settings3DViewModel settings3D,
-        Maze3DSettingsViewModel maze3DSettings,
+        CommonSettings3DModel settings3D,
+        Maze3DSettingsModel maze3DSettings,
         GameContext gameContext,
         GameLevel level,
         GameVariantConfig uiConfig
@@ -289,7 +289,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Private area, no trespassing!
 
-    private void createMaze3D(Settings3DViewModel settings3D, Maze3DSettingsViewModel maze3DSettings) {
+    private void createMaze3D(CommonSettings3DModel settings3D, Maze3DSettingsModel maze3DSettings) {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 

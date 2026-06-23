@@ -2,13 +2,13 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.viewmodel;
+package de.amr.pacmanfx.ui.model;
 
 import de.amr.pacmanfx.ui.config.world.Maze3DSettings;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 
-public class Maze3DSettingsViewModel {
+public class Maze3DSettingsModel {
 
     public final ObjectProperty<Color> floorColorProperty;
 
@@ -28,7 +28,7 @@ public class Maze3DSettingsViewModel {
 
     public final ObjectProperty<Color> darkWallFillColorProperty;
 
-    public Maze3DSettingsViewModel() {
+    public Maze3DSettingsModel() {
         floorColorProperty = new SimpleObjectProperty<>();
         lightColorProperty = new SimpleObjectProperty<>();
         wallHeightProperty = new SimpleDoubleProperty();

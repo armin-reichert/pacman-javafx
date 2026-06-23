@@ -69,11 +69,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         dynamicCamera = new PlayScene2DCamera();
         dynamicCamera.scalingProperty().bind(scalingProperty());
 
-        rootPane.backgroundProperty().bind(game.ui().viewModel().d2.canvasBackgroundColorProperty.map(Background::fill));
+        rootPane.backgroundProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
 
         // Scene size gets bound to parent scene when embedded in game view, initial size doesn't matter.
         subScene = new SubScene(rootPane, 88, 88);
-        subScene.fillProperty().bind(game.ui().viewModel().d2.canvasBackgroundColorProperty);
+        subScene.fillProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty);
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
 
         final var uiSettings = game().extensions().get(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);

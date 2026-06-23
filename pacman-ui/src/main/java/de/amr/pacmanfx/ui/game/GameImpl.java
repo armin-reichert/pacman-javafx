@@ -24,7 +24,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.ui.viewmodel.GameUIViewModel;
+import de.amr.pacmanfx.ui.model.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
@@ -89,7 +89,7 @@ public final class GameImpl implements Game {
 
     @Override
     public void createUI(Stage stage, int width, int height) {
-        final GameUIViewModel uiSettingsViewModel = new GameUIViewModel();
+        final GameViewModel uiSettingsViewModel = new GameViewModel();
 
         final GameUISettings gameUiSettings = SettingsLoader.load(getClass().getResource(UI_SETTINGS_JSON), GameUISettings.class);
         uiSettingsViewModel.init(gameUiSettings);

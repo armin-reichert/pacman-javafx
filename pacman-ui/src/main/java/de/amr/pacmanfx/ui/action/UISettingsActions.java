@@ -101,8 +101,8 @@ public class UISettingsActions {
         actionTogglePlayScene2D3D = new GameAction(game, "toggle_play_scene_2d_3d") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(game.ui().viewModel().d3.view3DEnabledProperty);
-                final boolean is3DEnabled = game.ui().viewModel().d3.view3DEnabledProperty.get();
+                toggleBooleanProperty(game.ui().viewModel().common3D.view3DEnabledProperty);
+                final boolean is3DEnabled = game.ui().viewModel().common3D.view3DEnabledProperty.get();
                 if (!inPlayScene()) {
                     game.ui().shortMessage(game.ui().translations().translate(is3DEnabled
                         ? "flash.use_3D_scene" : "flash.use_2D_scene"));
