@@ -19,13 +19,13 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.SettingsLoader;
-import de.amr.pacmanfx.ui.config.ui.UISettings;
+import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.config.world.Maze3DSettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.ui.viewmodel.UISettingsVM;
+import de.amr.pacmanfx.ui.viewmodel.GameUIViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
@@ -90,10 +90,10 @@ public final class GameImpl implements Game {
 
     @Override
     public void createUI(Stage stage, int width, int height) {
-        final UISettingsVM uiSettingsViewModel = new UISettingsVM();
+        final GameUIViewModel uiSettingsViewModel = new GameUIViewModel();
 
-        final UISettings uiSettings = SettingsLoader.load(getClass().getResource(UI_SETTINGS_JSON), UISettings.class);
-        uiSettingsViewModel.init(uiSettings);
+        final GameUISettings gameUiSettings = SettingsLoader.load(getClass().getResource(UI_SETTINGS_JSON), GameUISettings.class);
+        uiSettingsViewModel.init(gameUiSettings);
 
         final GameViewManager views = new GameViewManager();
         views.registerView(GameViewID.START_PAGES, new StartPagesView());

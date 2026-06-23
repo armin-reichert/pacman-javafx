@@ -10,13 +10,13 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class MiniViewVM {
+public class MiniViewViewModel {
 
     public final IntegerProperty heightProperty;
     public final BooleanProperty activeProperty;
     public final IntegerProperty opacityPercentageProperty;
 
-    public MiniViewVM() {
+    public MiniViewViewModel() {
         this.heightProperty = new SimpleIntegerProperty();
         this.activeProperty = new SimpleBooleanProperty();
         this.opacityPercentageProperty = new SimpleIntegerProperty();

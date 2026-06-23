@@ -1,13 +1,10 @@
 package de.amr.pacmanfx.ui.viewmodel;
 
-import de.amr.pacmanfx.ui.config.ui.UISettings;
+import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import javafx.beans.property.*;
 import javafx.util.Duration;
 
-/**
- * UI settings view model.
- */
-public class UISettingsVM {
+public class GameUIViewModel {
 
     public final ObjectProperty<Duration> flashMessageDurationProperty;
     public final BooleanProperty debugModeOnProperty;
@@ -15,25 +12,25 @@ public class UISettingsVM {
     public final BooleanProperty mutedProperty;
     public final IntegerProperty numSimulationStepsProperty;
 
-    public final MiniViewVM miniView;
-    public final UISettings2DVM d2;
-    public final UISettings3DVM d3;
-    public final Maze3DSettingsVM maze3D;
+    public final MiniViewViewModel miniView;
+    public final Settings2DViewModel d2;
+    public final Settings3DViewModel d3;
+    public final Maze3DSettingsViewModel maze3D;
 
-    public UISettingsVM() {
+    public GameUIViewModel() {
         flashMessageDurationProperty = new SimpleObjectProperty<>();
         debugModeOnProperty = new SimpleBooleanProperty();
         keyboardMonitorOnProperty = new SimpleBooleanProperty();
         mutedProperty = new SimpleBooleanProperty();
         numSimulationStepsProperty = new SimpleIntegerProperty();
 
-        miniView = new MiniViewVM();
-        d2 = new UISettings2DVM();
-        d3 = new UISettings3DVM();
-        maze3D = new Maze3DSettingsVM();
+        miniView = new MiniViewViewModel();
+        d2 = new Settings2DViewModel();
+        d3 = new Settings3DViewModel();
+        maze3D = new Maze3DSettingsViewModel();
     }
 
-    public void init(UISettings settings) {
+    public void init(GameUISettings settings) {
         flashMessageDurationProperty.set(Duration.seconds(settings.flashMessageDuration()));
         debugModeOnProperty.set(settings.debugModeOn());
         keyboardMonitorOnProperty.set(settings.keyboardMonitorOn());

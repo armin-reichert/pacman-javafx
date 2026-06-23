@@ -11,7 +11,7 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 
-public class Maze3DSettingsVM {
+public class Maze3DSettingsViewModel {
 
     public final FloatProperty obstacleBaseHeightProperty;
 
@@ -23,7 +23,7 @@ public class Maze3DSettingsVM {
 
     public final ObjectProperty<Color> darkWallFillColorProperty;
 
-    public Maze3DSettingsVM() {
+    public Maze3DSettingsViewModel() {
         obstacleBaseHeightProperty = new SimpleFloatProperty();
         obstacleCornerRadiusProperty = new SimpleFloatProperty();
         obstacleOpacityProperty = new SimpleFloatProperty();

@@ -4,13 +4,13 @@
 
 package de.amr.pacmanfx.ui.config.ui;
 
-public record UISettings(
+public record GameUISettings(
     double flashMessageDuration,
     boolean debugModeOn,
     boolean keyboardMonitorOn,
     boolean muted,
     int numSimulationSteps,
     MiniViewSettings miniView,
-    UISettings2D d2,
-    UISettings3D d3)
+    Settings2D d2,
+    Settings3D d3)
 {}

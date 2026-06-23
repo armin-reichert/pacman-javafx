@@ -4,7 +4,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
-public record UISettings3D(
+public record Settings3D(
     Boolean axesVisible,
     PerspectiveID cameraPerspectiveId,
     DrawMode drawMode,
