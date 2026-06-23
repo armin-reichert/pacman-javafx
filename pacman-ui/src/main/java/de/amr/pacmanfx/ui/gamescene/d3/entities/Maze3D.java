@@ -120,7 +120,6 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
 
     private void addObstacles(ObjectProperty<DrawMode> drawMode, Maze3DSettings maze3DSettings) {
         final float wallThickness = maze3DSettings.obstacleWallThickness();
-        final float cornerRadius = maze3DSettings.obstacleCornerRadius();
         final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
         final House house = terrain.optHouse().orElse(null);
         final AtomicInteger wallCount = new AtomicInteger(0);
@@ -140,7 +139,7 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
         for (Obstacle obstacle : terrain.obstacles()) {
             final Vector2f startPoint = obstacle.startPoint().toVector2f();
             if (house == null || !house.contains(WorldMap.computeTileAt(startPoint))) {
-                renderer3D.renderObstacle3D(obstacle, isWorldBorder(obstacle), wallThickness, cornerRadius);
+                renderer3D.renderObstacle3D(obstacle, isWorldBorder(obstacle), wallThickness, 4);
             }
         }
         final var passedTimeMillis = stopWatch.passedTime().toMillis();
