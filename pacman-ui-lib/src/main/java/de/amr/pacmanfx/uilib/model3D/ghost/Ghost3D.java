@@ -16,8 +16,11 @@ import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostBrakeAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostDressAnimation3D;
 import de.amr.pacmanfx.uilib.model3D.animation.GhostFlashingAnimation3D;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -42,6 +45,8 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     }
 
     public record AnimationKey(AnimationID animationID, byte ghostID) {}
+
+    private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 
     private final AnimationRegistry animations;
     private final Ghost ghost;
@@ -103,6 +108,10 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         dressMeshView = null;
         pupilsMeshView = null;
         eyeballsMeshView = null;
+    }
+
+    public ObjectProperty<DrawMode> drawModeProperty() {
+        return drawMode;
     }
 
     public Ghost ghost() {
@@ -212,6 +221,11 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
         // 6. Add the facing group as the only child
         getChildren().setAll(facingGroup);
+
+        // 7. Bind draw mode
+        dressMeshView.drawModeProperty().bind(drawMode);
+        pupilsMeshView.drawModeProperty().bind(drawMode);
+        eyeballsMeshView.drawModeProperty().bind(drawMode);
     }
 
     private void registerAnimations() {

@@ -362,6 +362,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .map(level::ghost)
             .map(ghost -> {
                 final Ghost3D ghost3D = createGhost3D(ghostConfigs.get(ghost.personality()), ghost);
+                ghost3D.drawModeProperty().bind(viewModel.common3D.drawModeProperty);
                 ghost3D.init(gameContext, level);
                 return ghost3D;
             }).toList();
