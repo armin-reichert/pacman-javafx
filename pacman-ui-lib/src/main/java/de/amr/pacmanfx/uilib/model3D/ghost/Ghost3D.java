@@ -50,7 +50,7 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
     private final AnimationRegistry animations;
     private final Ghost ghost;
-    private final GhostSettings config;
+    private final GhostSettings settings;
 
     private GhostMaterialSet materialSet;
 
@@ -68,13 +68,13 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     public Ghost3D(
         AnimationRegistry animations,
         Ghost ghost,
-        GhostSettings config,
+        GhostSettings settings,
         GhostMeshSet meshSet,
         GhostMaterialSet materialSet)
     {
         this.animations = requireNonNull(animations);
         this.ghost = requireNonNull(ghost);
-        this.config = requireNonNull(config);
+        this.settings = requireNonNull(settings);
         this.materialSet = requireNonNull(materialSet);
 
         buildHierarchy(meshSet);
@@ -118,8 +118,8 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
         return ghost;
     }
 
-    public GhostSettings config() {
-        return config;
+    public GhostSettings settings() {
+        return settings;
     }
 
     public GhostMaterialSet materials() {
@@ -214,9 +214,9 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
 
         // 5. Add scaling to the root node
         final Scale scaling = new Scale(
-            config().size3D() / dressBounds.getWidth(),
-            config().size3D() / dressBounds.getHeight(),
-            config().size3D() / dressBounds.getDepth());
+            settings().size3D() / dressBounds.getWidth(),
+            settings().size3D() / dressBounds.getHeight(),
+            settings().size3D() / dressBounds.getDepth());
         getTransforms().add(scaling);
 
         // 6. Add the facing group as the only child

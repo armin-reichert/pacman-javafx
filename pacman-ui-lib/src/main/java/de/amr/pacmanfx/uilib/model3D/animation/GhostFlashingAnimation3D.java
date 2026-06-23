@@ -47,8 +47,8 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
         final Duration cycleDuration = Duration.seconds(TOTAL_DURATION_SEC).divide(numFlashes);
         final Duration brightStart = cycleDuration.divide(3);
 
-        final GhostComponentColors brightColors     = ghost3D.config().colors().flashing();
-        final GhostComponentColors frightenedColors = ghost3D.config().colors().frightened();
+        final GhostComponentColors brightColors     = ghost3D.settings().colors().flashing();
+        final GhostComponentColors frightenedColors = ghost3D.settings().colors().frightened();
 
         // The set of Phong materials that is used by the ghost 3D during the flashing animation
         final GhostComponentMaterialSet materialSet = ghost3D.materials().flashingMaterial();
