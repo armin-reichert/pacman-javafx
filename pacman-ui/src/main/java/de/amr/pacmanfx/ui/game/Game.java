@@ -10,8 +10,8 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.GameVariantConfig;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
@@ -19,8 +19,6 @@ import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
 
 import java.util.Optional;
-
-import static java.util.Objects.requireNonNull;
 
 public interface Game extends GameLifecycle {
 

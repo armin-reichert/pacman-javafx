@@ -22,8 +22,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
 import static de.amr.basics.timer.TickTimer.secToTicks;
-import static de.amr.pacmanfx.model.GameModel.CYAN_GHOST_BASHFUL;
 import static de.amr.pacmanfx.core.GameClock.DEFAULT_TICKS_PER_SECOND;
+import static de.amr.pacmanfx.model.GameModel.CYAN_GHOST_BASHFUL;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
 public class DashboardSectionGameInfo extends DashboardSection {

@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.uilib.model3D.world;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.Identifier;
+import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;

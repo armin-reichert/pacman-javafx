@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.basics.math.Direction;
 import de.amr.basics.Identifier;
+import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;

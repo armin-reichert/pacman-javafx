@@ -35,8 +35,8 @@ import javafx.scene.transform.Translate;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
-import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
+import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
 public class EditorMaze3D extends Group {
 
