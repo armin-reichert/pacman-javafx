@@ -11,12 +11,12 @@
     "opacityPercentage": 69
   },
 
-  "d2": {
+  "common2D": {
     "canvasBackgroundColor":  "#000",
     "fontSmoothingOn": false
   },
 
-  "d3": {
+  "common3D": {
     "axesVisible":  false,
     "cameraPerspectiveId": "TRACK_PLAYER",
     "drawMode": "FILL",
