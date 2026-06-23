@@ -1,25 +1,25 @@
 {
-  "flashMessageDuration":  1.5,
-  "debugModeOn":  false,
-  "keyboardMonitorOn":  false,
-  "muted":  false,
+  "flashMessageDuration": 1.5,
+  "debugModeOn": false,
+  "keyboardMonitorOn": false,
+  "muted": false,
   "numSimulationSteps": 1,
 
   "miniView": {
     "height": 400,
-    "active":  false,
+    "active": false,
     "opacityPercentage": 69
   },
 
   "common2D": {
-    "canvasBackgroundColor":  "#000",
+    "canvasBackgroundColor": "#000",
     "fontSmoothingOn": false
   },
 
   "common3D": {
-    "axesVisible":  false,
+    "axesVisible": false,
     "cameraPerspectiveId": "TRACK_PLAYER",
-    "drawMode": "LINE",
-    "view3DEnabled":  false
+    "drawMode": "FILL",
+    "view3DEnabled": false
   }
 }
