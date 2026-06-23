@@ -161,6 +161,17 @@ public final class Ufx {
         }
     }
 
+    public static void bindDrawMode(Group group, ObjectProperty<DrawMode> drawModeProperty) {
+        for (Node node : group.getChildren()) {
+            if (node instanceof Group subGroup) {
+                bindDrawMode(subGroup, drawModeProperty);
+            }
+            else if (node instanceof Shape3D shape3D) {
+                shape3D.drawModeProperty().bind(drawModeProperty);
+            }
+        }
+    }
+
     /**
      * Creates a {@link PhongMaterial} whose diffuse and specular colors are bound to the given
      * observable color property. The specular color is always the brighter version of the diffuse color.

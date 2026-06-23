@@ -9,13 +9,18 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntity;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -30,6 +35,8 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
         DYING,
         MOVING
     }
+
+    private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 
     private final AnimationRegistry animations;
     private final Pac pac;
@@ -60,11 +67,18 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
         this.jaw = requireNonNull(jaw);
 
         bodyGroup = new Group(body, jaw);
-        final Group facingGroup = new Group(bodyGroup);
 
+        final Group facingGroup = new Group(bodyGroup);
         facingGroup.getTransforms().addAll(facingRotate);
 
         getChildren().setAll(facingGroup);
+
+        Ufx.bindDrawMode(bodyGroup, drawMode);
+        Ufx.bindDrawMode(jaw, drawMode);
+    }
+
+    public ObjectProperty<DrawMode> drawModeProperty() {
+        return drawMode;
     }
 
     public Pac pac() {
