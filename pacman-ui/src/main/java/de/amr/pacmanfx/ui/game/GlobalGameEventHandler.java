@@ -29,7 +29,7 @@ public class GlobalGameEventHandler extends DefaultGameEventListener {
 
             case LevelCreatedEvent levelCreatedEvent -> {
                 final GameLevel level = levelCreatedEvent.level();
-                final GameVariantConfig currentConfig = game.currentUIConfig();
+                final GameVariantConfig currentConfig = game.currentVariantConfig();
                 final SpriteAnimationContainer spriteAnimationContainer = game.ui().sprites().animations();
 
                 //TODO this should be done elsewhere
@@ -38,7 +38,7 @@ public class GlobalGameEventHandler extends DefaultGameEventListener {
                     ghost.setAnimations(currentConfig.createGhostAnimations(spriteAnimationContainer, ghost.personality())));
 
                 final MiniPlaySceneView miniPlayView = game.ui().views().gamePlayView().miniPlaySceneView();
-                miniPlayView.setUIConfig(currentConfig);
+                miniPlayView.setVariantConfig(currentConfig);
                 miniPlayView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
                 miniPlayView.slideIn();
 

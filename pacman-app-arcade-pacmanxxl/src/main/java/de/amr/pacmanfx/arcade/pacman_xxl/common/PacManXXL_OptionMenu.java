@@ -89,7 +89,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         scaling = createScaling(game.ui().window().stage());
 
-        final GameVariantConfig currentConfig = game.currentUIConfig();
+        final GameVariantConfig currentConfig = game.currentVariantConfig();
         final GameContext gameContext = game.currentGameContext();
         final GameVariantID gameVariant = GameVariantID.valueOf(game.currentGameVariantName());
         final GameModel gameModel = gameContext.model();

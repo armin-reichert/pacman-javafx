@@ -85,7 +85,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig uiConfig = game().currentUIConfig();
+        final GameVariantConfig uiConfig = game().currentVariantConfig();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);

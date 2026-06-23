@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.GameVariantConfig;
-import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.assets.PreferencesManager;
@@ -49,10 +48,10 @@ public interface Game extends GameLifecycle {
 
     GameContext currentGameContext();
 
-    GameVariantConfig currentUIConfig();
+    GameVariantConfig currentVariantConfig();
 
     default Optional<GameSoundEffects> currentSoundEffects() {
-        return currentUIConfig().optSoundEffects();
+        return currentVariantConfig().optSoundEffects();
     }
 
     GameExtensions extensions();

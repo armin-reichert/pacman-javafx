@@ -47,7 +47,7 @@ public class MiniPlaySceneView {
     private Game game;
 
     // Note: The level and actor renderers cannot be created in the constructor, because the game controller has not yet
-    //       selected a game variant when the constructor is called, so no UI configuration is available!
+    //       selected a game variant when the constructor is called, so no variant configuration is available yet!
     private BaseRenderer canvasRenderer;
     private GameLevelRenderer levelRenderer;
     private ActorRenderer actorRenderer;
@@ -99,14 +99,14 @@ public class MiniPlaySceneView {
         worldSize.set(size);
     }
 
-    public void setUIConfig(GameVariantConfig uiConfig) {
+    public void setVariantConfig(GameVariantConfig variantConfig) {
         canvasRenderer = new BaseRenderer(canvas);
 
-        levelRenderer = uiConfig.createGameLevelRenderer(canvas);
+        levelRenderer = variantConfig.createGameLevelRenderer(canvas);
         levelRenderer.scalingProperty().bind(scaling);
         levelRenderer.backgroundColorProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty);
 
-        actorRenderer = uiConfig.createActorRenderer(canvas);
+        actorRenderer = variantConfig.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scaling);
         actorRenderer.backgroundColorProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty);
     }

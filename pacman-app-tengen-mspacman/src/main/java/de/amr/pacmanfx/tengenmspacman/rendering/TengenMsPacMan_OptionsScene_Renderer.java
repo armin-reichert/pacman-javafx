@@ -53,7 +53,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     }
 
     public void draw(GameScene2D scene) {
-        final GameVariantConfig currentConfig = scene.game().currentUIConfig();
+        final GameVariantConfig currentConfig = scene.game().currentVariantConfig();
 
         clearCanvas();
 

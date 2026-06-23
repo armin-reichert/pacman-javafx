@@ -67,7 +67,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariantConfig uiConfig = game().currentUIConfig();
+        final GameVariantConfig uiConfig = game().currentVariantConfig();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         clapperboard = new Clapperboard(4, "THE END");
@@ -94,7 +94,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public void onTick(long tick) {
-        final GameVariantConfig uiConfig = game().currentUIConfig();
+        final GameVariantConfig uiConfig = game().currentVariantConfig();
         final long gameStateTick = gameState().timer().tickCount();
 
         clapperboard.tick();

@@ -55,7 +55,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig uiConfig = game().currentUIConfig();
+        final GameVariantConfig uiConfig = game().currentVariantConfig();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));

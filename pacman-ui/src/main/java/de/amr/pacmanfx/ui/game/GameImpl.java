@@ -163,7 +163,7 @@ public final class GameImpl implements Game {
     }
 
     @Override
-    public GameVariantConfig currentUIConfig() {
+    public GameVariantConfig currentVariantConfig() {
         return currentGameVariant().config();
     }
 

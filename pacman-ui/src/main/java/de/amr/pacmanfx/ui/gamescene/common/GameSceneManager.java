@@ -60,7 +60,7 @@ public class GameSceneManager {
     }
 
     public void updateGameSceneAndForceReload(boolean forceReload) {
-        final GameVariantConfig currentConfig = game.currentUIConfig();
+        final GameVariantConfig currentConfig = game.currentVariantConfig();
         final GameContext gameContext = game.currentGameContext();
         final GameModel gameModel = gameContext.model();
 
@@ -96,7 +96,7 @@ public class GameSceneManager {
     public boolean hasGameSceneID(AbstractGameScene gameScene, Identifier sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
-        final GameVariantConfig currentConfig = game.currentUIConfig();
+        final GameVariantConfig currentConfig = game.currentVariantConfig();
         return currentConfig.gameSceneConfig().gameSceneHasID(gameScene, sceneID);
     }
 
@@ -195,7 +195,7 @@ public class GameSceneManager {
     }
 
     public void embedGameSceneIntoPlayView(AbstractGameScene gameScene) {
-        final GameVariantConfig currentConfig = game.currentUIConfig();
+        final GameVariantConfig currentConfig = game.currentVariantConfig();
         final GameViewManager subViews = game.ui().views();
 
         subViews.gamePlayView().contextMenu().hide();

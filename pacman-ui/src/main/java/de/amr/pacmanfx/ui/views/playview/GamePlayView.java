@@ -276,7 +276,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void updateGameSceneRenderers(GameScene2D gameScene2D) {
-        final GameVariantConfig currentConfig = game.currentUIConfig();
+        final GameVariantConfig currentConfig = game.currentVariantConfig();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = currentConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
             setFontSmoothing(game.ui().viewModel().common2D.fontSmoothingOnProperty.get());
