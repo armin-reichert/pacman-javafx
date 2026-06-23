@@ -22,8 +22,6 @@ public class Maze3DSettingsModel {
 
     public final FloatProperty obstacleCornerRadiusProperty;
 
-    public final FloatProperty obstacleOpacityProperty;
-
     public final FloatProperty obstacleWallThicknessProperty;
 
     public final ObjectProperty<Color> darkWallFillColorProperty;
@@ -35,7 +33,6 @@ public class Maze3DSettingsModel {
         wallOpacityProperty = new SimpleDoubleProperty();
         obstacleBaseHeightProperty = new SimpleFloatProperty();
         obstacleCornerRadiusProperty = new SimpleFloatProperty();
-        obstacleOpacityProperty = new SimpleFloatProperty();
         obstacleWallThicknessProperty = new SimpleFloatProperty();
         darkWallFillColorProperty = new SimpleObjectProperty<>();
     }
@@ -47,7 +44,6 @@ public class Maze3DSettingsModel {
         wallOpacityProperty.set(settings.wallOpacity());
         obstacleBaseHeightProperty.set(settings.obstacleBaseHeight());
         obstacleCornerRadiusProperty.set(settings.obstacleCornerRadius());
-        obstacleOpacityProperty.set(settings.obstacleOpacity());
         obstacleWallThicknessProperty.set(settings.obstacleWallThickness());
         darkWallFillColorProperty.set(Color.valueOf(settings.darkWallFillColor()));
     }

@@ -13,7 +13,6 @@ public record Maze3DSettings(
     double wallOpacity,
     float obstacleBaseHeight,
     float obstacleCornerRadius,
-    float obstacleOpacity,
     float obstacleWallThickness,
     String darkWallFillColor
 ) {}

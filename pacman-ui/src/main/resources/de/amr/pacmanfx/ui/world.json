@@ -118,7 +118,6 @@
     "wallOpacity": 1,
     "obstacleBaseHeight":  4,
     "obstacleCornerRadius":  4,
-    "obstacleOpacity":  1,
     "obstacleWallThickness":  2.25,
     "darkWallFillColor": "0x282828"
   },
