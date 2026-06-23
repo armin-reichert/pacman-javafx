@@ -46,8 +46,8 @@ public class TengenMsPacManConfig implements GameVariantConfig {
     // Local resources are stored inside main resource folder subdirectories named after package name of this class
     private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacManConfig.class;
 
-    private static final WorldSettings WORLD_CONFIG =
-        new TengenWorldConfigLoader().loadJSON("/de/amr/pacmanfx/tengenmspacman/world.json", WorldSettings.class);
+    private static final WorldSettings WORLD_CONFIG = TengenSettingsLoader.load(
+        TengenMsPacManConfig.class.getResource("/de/amr/pacmanfx/tengenmspacman/world.json"), WorldSettings.class);
 
     /** Defines additional Tengen-specific dashboard IDs */
     public enum TengenMsPacMan_DashboardID implements Identifier { JOYPAD }

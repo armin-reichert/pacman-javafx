@@ -15,14 +15,29 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Adds support for color specifications of the form <code>nes(0xhh)</code> which references
  * a color from the NES palette.
  */
-public class TengenWorldConfigLoader extends SettingsLoader {
+public class TengenSettingsLoader extends SettingsLoader {
+
+    private static final Pattern NES_COLOR_PATTERN = Pattern.compile("^nes\\(0x([0-9A-Fa-f]{2})\\)$");
+
+    public static <T> T load(URL url, Class<T> settingsClass) {
+        requireNonNull(url);
+        requireNonNull(settingsClass);
+        try {
+            return new TengenSettingsLoader().loadJSON(url, settingsClass);
+        } catch (IOException e) {
+            throw new RuntimeException("Error loading settings file from URL '%s'".formatted(url), e);
+        }
+    }
 
     protected Gson createParser() {
         return new GsonBuilder()
@@ -30,8 +45,6 @@ public class TengenWorldConfigLoader extends SettingsLoader {
             //.setStrictness(Strictness.LENIENT)
             .create();
     }
-
-    private static final Pattern NES_COLOR_PATTERN = Pattern.compile("^nes\\(0x([0-9A-Fa-f]{2})\\)$");
 
     private static class ColorAdapter extends TypeAdapter<Color> {
         @Override

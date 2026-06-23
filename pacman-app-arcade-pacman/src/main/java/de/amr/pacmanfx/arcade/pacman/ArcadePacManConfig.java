@@ -15,16 +15,17 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.config.SettingsLoader;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameVariantConfig;
+import de.amr.pacmanfx.ui.config.SettingsLoader;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
+import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
-import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -51,8 +52,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacManConfig implements GameVariantConfig, ResourceManager {
 
-    public static final WorldSettings WORLD_CONFIG
-        = new SettingsLoader().loadJSON("/de/amr/pacmanfx/ui/world.json", WorldSettings.class);
+    public static final WorldSettings WORLD_CONFIG = SettingsLoader.load(
+        GameUI.class.getResource("/de/amr/pacmanfx/ui/world.json"), WorldSettings.class);
 
     public static final WorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new WorldMapColorScheme(
         ARCADE_BLACK.toString(), ARCADE_BLUE.toString(), ARCADE_PINK.toString(), ARCADE_ROSE.toString()

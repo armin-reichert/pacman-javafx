@@ -14,9 +14,23 @@ import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+import static java.util.Objects.requireNonNull;
+
 public class SettingsLoader {
+
+    public static <T> T load(URL url, Class<T> settingsClass) {
+        requireNonNull(url);
+        requireNonNull(settingsClass);
+        try {
+            return new SettingsLoader().loadJSON(url, settingsClass);
+        } catch (IOException e) {
+            throw new RuntimeException("Error loading settings file from URL '%s'".formatted(url), e);
+        }
+    }
+
     protected final Gson parser;
 
     public SettingsLoader() {
@@ -30,22 +44,15 @@ public class SettingsLoader {
             .create();
     }
 
-    public <T> T loadJSON(String jsonFilePath, Class<T> settingsClass) {
-        try (var in = getClass().getResourceAsStream(jsonFilePath)) {
-            if (in == null) {
-                Logger.error("Could not access UI settings from path {}", jsonFilePath);
-            }
-            else {
-                final var reader = new InputStreamReader(in, StandardCharsets.UTF_8);
-                final var values = parser.fromJson(reader, settingsClass);
-                Logger.info(values);
-                return values;
-            }
+    public <T> T loadJSON(URL settingsFileURL, Class<T> settingsClass) throws IOException {
+        requireNonNull(settingsFileURL);
+        requireNonNull(settingsClass);
+        try (var in = settingsFileURL.openStream()) {
+            final var reader = new InputStreamReader(in, StandardCharsets.UTF_8);
+            final var settingsObject = parser.fromJson(reader, settingsClass);
+            Logger.info(settingsObject);
+            return settingsObject;
         }
-        catch (IOException x) {
-            Logger.error(x, "Could not read UI settings from {}", jsonFilePath);
-        }
-        throw new IllegalArgumentException("Could not read UI settings from " + jsonFilePath);
     }
 
     public static class ColorAdapter extends TypeAdapter<Color> {
