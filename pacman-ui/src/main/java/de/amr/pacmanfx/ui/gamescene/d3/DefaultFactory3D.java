@@ -49,67 +49,65 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public Maze3D createMaze3D(
-        TerrainLayer terrain, WorldSettings config,
+        TerrainLayer terrain, WorldSettings settings,
         WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
 
-        return mazeFactory3D.createMaze3D(terrain, config, colorScheme, animationRegistry);
+        return mazeFactory3D.createMaze3D(terrain, settings, colorScheme, animationRegistry);
     }
 
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacSettings config, AnimationRegistry animationRegistry) {
-        return Pac3DFactory.createPacMan3D(animationRegistry, pac, config);
+    public Pac3D createPac3D(Pac pac, PacSettings settings, AnimationRegistry animationRegistry) {
+        return Pac3DFactory.createPacMan3D(animationRegistry, pac, settings);
     }
 
     @Override
-    public Ghost3D createGhost3D(Ghost ghost, GhostSettings config, AnimationRegistry animationRegistry) {
+    public Ghost3D createGhost3D(Ghost ghost, GhostSettings settings, AnimationRegistry animationRegistry) {
         return new Ghost3D(
             animationRegistry,
             ghost,
-            config,
+            settings,
             new GhostMeshSet(
                 PacManWorld3D.instance().ghostDressMesh(),
                 PacManWorld3D.instance().ghostPupilsMesh(),
                 PacManWorld3D.instance().ghostEyeballsMesh()
             ),
-            ghostMaterialsCache.computeIfAbsent(config.colors(), this::createGhostMaterial));
+            ghostMaterialsCache.computeIfAbsent(settings.colors(), this::createGhostMaterial));
     }
 
     @Override
-    public Group createLivesCounterShape3D(WorldSettings worldConfig) {
-        requireNonNull(worldConfig);
-
-        final PacSettings pacConfig = worldConfig.pac().resized(worldConfig.livesCounter().shapeSize());
-
-        return Pac3DFactory.createPacBody(pacConfig, true);
+    public Group createLivesCounterShape3D(WorldSettings settings) {
+        requireNonNull(settings);
+        final PacSettings livesCounterPacSettings = settings.pac().resized(settings.livesCounter().shapeSize());
+        return Pac3DFactory.createPacBody(livesCounterPacSettings, true);
     }
 
     @Override
-    public Pellet3D createPellet3D(Pellet3DSettings config, PhongMaterial material) {
-        requireNonNull(config);
+    public Pellet3D createPellet3D(Pellet3DSettings settings, PhongMaterial material) {
+        requireNonNull(settings);
         requireNonNull(material);
 
-        final Sphere oval = new Sphere(config.radius());
+        final Sphere oval = new Sphere(settings.radius());
         oval.setMaterial(material);
         oval.setScaleX(1.25);
         return new Pellet3D(oval);
     }
 
     @Override
-    public Energizer3D createEnergizer3D(Energizer3DSettings config, PhongMaterial material, AnimationRegistry animationRegistry) {
-        requireNonNull(config);
+    public Energizer3D createEnergizer3D(Energizer3DSettings settings, PhongMaterial material, AnimationRegistry animationRegistry) {
+        requireNonNull(settings);
         requireNonNull(material);
         requireNonNull(animationRegistry);
 
         final var energizer3D = new Energizer3D(animationRegistry);
         energizer3D.setShapeFactory(() -> {
-            final var shape = new Sphere(config.radius(), 48);
+            final var shape = new Sphere(settings.radius(), 48);
             shape.setMaterial(material);
             return shape;
         });
-        energizer3D.setPumpingFrequency(config.pumpingFrequency());
-        energizer3D.setInflatedSize(config.scalingInflated());
-        energizer3D.setExpandedSize(config.scalingExpanded());
+        energizer3D.setPumpingFrequency(settings.pumpingFrequency());
+        energizer3D.setInflatedSize(settings.scalingInflated());
+        energizer3D.setExpandedSize(settings.scalingExpanded());
 
         return energizer3D;
     }
