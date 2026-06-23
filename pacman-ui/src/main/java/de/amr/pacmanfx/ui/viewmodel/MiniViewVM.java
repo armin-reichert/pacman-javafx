@@ -4,8 +4,11 @@
 
 package de.amr.pacmanfx.ui.viewmodel;
 
+import de.amr.pacmanfx.ui.config.ui.MiniViewSettings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class MiniViewVM {
 
@@ -13,9 +16,15 @@ public class MiniViewVM {
     public final BooleanProperty activeProperty;
     public final IntegerProperty opacityPercentageProperty;
 
-    public MiniViewVM(IntegerProperty heightProperty, BooleanProperty activeProperty, IntegerProperty opacityPercentageProperty) {
-        this.heightProperty = heightProperty;
-        this.activeProperty = activeProperty;
-        this.opacityPercentageProperty = opacityPercentageProperty;
+    public MiniViewVM() {
+        this.heightProperty = new SimpleIntegerProperty();
+        this.activeProperty = new SimpleBooleanProperty();
+        this.opacityPercentageProperty = new SimpleIntegerProperty();
+    }
+
+    public void init(MiniViewSettings settings) {
+        heightProperty.set(settings.height());
+        activeProperty.set(settings.active());
+        opacityPercentageProperty.set(settings.opacityPercentage());
     }
 }

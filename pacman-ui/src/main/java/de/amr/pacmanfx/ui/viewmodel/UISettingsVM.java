@@ -20,33 +20,33 @@ public class UISettingsVM {
 
     public final MiniViewVM miniView;
     public final UISettings3DVM d3;
+    public final Maze3DSettingsVM maze3D;
 
-    public UISettingsVM(UISettings settings) {
+    public UISettingsVM() {
+        flashMessageDurationProperty = new SimpleObjectProperty<>();
+        canvasBackgroundColorProperty = new SimpleObjectProperty<>();
+        fontSmoothingOnProperty = new SimpleBooleanProperty();
+        debugModeOnProperty = new SimpleBooleanProperty();
+        keyboardMonitorOnProperty = new SimpleBooleanProperty();
+        mutedProperty = new SimpleBooleanProperty();
+        numSimulationStepsProperty = new SimpleIntegerProperty();
 
-        flashMessageDurationProperty = new SimpleObjectProperty<>(Duration.seconds(settings.flashMessageDuration()));
-        canvasBackgroundColorProperty = new SimpleObjectProperty<>(settings.canvasBackgroundColor());
-        fontSmoothingOnProperty = new SimpleBooleanProperty(settings.fontSmoothingOn());
-        debugModeOnProperty = new SimpleBooleanProperty(settings.debugModeOn());
-        keyboardMonitorOnProperty = new SimpleBooleanProperty(settings.keyboardMonitorOn());
-        mutedProperty = new SimpleBooleanProperty(settings.muted());
-        numSimulationStepsProperty = new SimpleIntegerProperty(settings.numSimulationSteps());
+        miniView = new MiniViewVM();
+        d3 = new UISettings3DVM();
+        maze3D = new Maze3DSettingsVM();
+    }
 
-        miniView = new MiniViewVM(
-            new SimpleIntegerProperty(settings.miniView().height()),
-            new SimpleBooleanProperty(settings.miniView().active()),
-            new SimpleIntegerProperty(settings.miniView().opacityPercentage())
-        );
+    public void init(UISettings settings) {
+        flashMessageDurationProperty.set(Duration.seconds(settings.flashMessageDuration()));
+        canvasBackgroundColorProperty.set(settings.canvasBackgroundColor());
+        fontSmoothingOnProperty.set(settings.fontSmoothingOn());
+        debugModeOnProperty.set(settings.debugModeOn());
+        keyboardMonitorOnProperty.set(settings.keyboardMonitorOn());
+        mutedProperty.set(settings.muted());
+        numSimulationStepsProperty.set(settings.numSimulationSteps());
 
-        d3 = new UISettings3DVM(
-            new SimpleBooleanProperty(settings.d3().axesVisible()),
-            new SimpleObjectProperty<>(settings.d3().cameraPerspectiveId()),
-            new SimpleObjectProperty<>(settings.d3().drawMode()),
-            new SimpleBooleanProperty(settings.d3().view3DEnabled()),
-            new SimpleObjectProperty<>(settings.d3().mazeFloorColor()),
-            new SimpleObjectProperty<>(settings.d3().mazeLightColor()),
-            new SimpleDoubleProperty(settings.d3().mazeWallHeight()),
-            new SimpleDoubleProperty(settings.d3().mazeWallOpacity())
-        );
+        miniView.init(settings.miniView());
+        d3.init(settings.d3());
+        // maze3D is initialized elsewhere because it can be game-variant specific!
     }
 }
-

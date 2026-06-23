@@ -90,8 +90,10 @@ public final class GameImpl implements Game {
 
     @Override
     public void createUI(Stage stage, int width, int height) {
-        UISettings uiSettings = SettingsLoader.load(getClass().getResource(UI_SETTINGS_JSON), UISettings.class);
-        final UISettingsVM uiSettingsViewModel = new UISettingsVM(uiSettings);
+        final UISettingsVM uiSettingsViewModel = new UISettingsVM();
+
+        final UISettings uiSettings = SettingsLoader.load(getClass().getResource(UI_SETTINGS_JSON), UISettings.class);
+        uiSettingsViewModel.init(uiSettings);
 
         final GameViewManager views = new GameViewManager();
         views.registerView(GameViewID.START_PAGES, new StartPagesView());

@@ -1,14 +1,13 @@
 package de.amr.pacmanfx.ui.viewmodel;
 
 import de.amr.basics.math.Vector3f;
+import de.amr.pacmanfx.ui.config.ui.UISettings3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.AttractionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.SwirlConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
@@ -50,23 +49,25 @@ public class UISettings3DVM {
     /* Opacity of 3D walls (0.0–1.0). */
     public final DoubleProperty mazeWallOpacityProperty;
 
-    public UISettings3DVM(
-        BooleanProperty axesVisibleProperty,
-        ObjectProperty<PerspectiveID> cameraPerspectiveIdProperty,
-        ObjectProperty<DrawMode> drawModeProperty,
-        BooleanProperty view3DEnabledProperty,
-        ObjectProperty<Color> mazeFloorColorProperty,
-        ObjectProperty<Color> mazeLightColorProperty,
-        DoubleProperty mazeWallHeightProperty,
-        DoubleProperty mazeWallOpacityProperty)
-    {
-            this.axesVisibleProperty = axesVisibleProperty;
-            this.cameraPerspectiveIdProperty = cameraPerspectiveIdProperty;
-            this.drawModeProperty = drawModeProperty;
-            this.view3DEnabledProperty = view3DEnabledProperty;
-            this.mazeFloorColorProperty = mazeFloorColorProperty;
-            this.mazeLightColorProperty = mazeLightColorProperty;
-            this.mazeWallHeightProperty = mazeWallHeightProperty;
-            this.mazeWallOpacityProperty = mazeWallOpacityProperty;
-        }
+    public UISettings3DVM() {
+        axesVisibleProperty = new SimpleBooleanProperty();
+        cameraPerspectiveIdProperty = new SimpleObjectProperty<>();
+        drawModeProperty = new SimpleObjectProperty<>();
+        view3DEnabledProperty = new SimpleBooleanProperty();
+        mazeFloorColorProperty = new SimpleObjectProperty<>();
+        mazeLightColorProperty = new SimpleObjectProperty<>();
+        mazeWallHeightProperty = new SimpleDoubleProperty();
+        mazeWallOpacityProperty = new SimpleDoubleProperty();
     }
+
+    public void init(UISettings3D settings3D) {
+        axesVisibleProperty.set(settings3D.axesVisible());
+        cameraPerspectiveIdProperty.set(settings3D.cameraPerspectiveId());
+        drawModeProperty.set(settings3D.drawMode());
+        view3DEnabledProperty.set(settings3D.view3DEnabled());
+        mazeFloorColorProperty.set(settings3D.mazeFloorColor());
+        mazeLightColorProperty.set(settings3D.mazeLightColor());
+        mazeWallHeightProperty.set(settings3D.mazeWallHeight());
+        mazeWallOpacityProperty.set(settings3D.mazeWallOpacity());
+    }
+}
