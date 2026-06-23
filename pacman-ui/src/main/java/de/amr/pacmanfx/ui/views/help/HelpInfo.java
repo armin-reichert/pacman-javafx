@@ -9,7 +9,7 @@ import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.uilib.UfxBackgrounds;
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -80,7 +80,7 @@ public class HelpInfo {
         }
         final var pane = new BorderPane(grid);
         pane.setPadding(new Insets(10));
-        pane.setBackground(UfxBackgrounds.roundedBackground(backgroundColor, 10));
+        pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
         final GameContext gameContext = game.currentGameContext();
         final GameCheats cheats = gameContext.model().cheats();

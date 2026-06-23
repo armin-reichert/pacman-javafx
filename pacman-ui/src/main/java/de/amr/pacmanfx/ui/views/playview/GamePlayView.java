@@ -23,6 +23,7 @@ import de.amr.pacmanfx.ui.views.dashboard.DashboardConfig;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.views.help.HelpView;
 import de.amr.pacmanfx.ui.window.GameMainScene;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
@@ -50,8 +51,6 @@ import java.util.List;
 
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedActionItem;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedTitleItem;
-import static de.amr.pacmanfx.uilib.UfxBackgrounds.border;
-import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -61,8 +60,8 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     public static final float MAX_GAME_SCENE_SCALING = 5;
 
-    public static final Background DEBUG_BACKGROUND = paintBackground(Color.TEAL);
-    public static final Border DEBUG_BORDER = border(Color.LIGHTGREEN, 1);
+    public static final Background DEBUG_BACKGROUND = Ufx.paintBackground(Color.TEAL);
+    public static final Border DEBUG_BORDER = Ufx.border(Color.LIGHTGREEN, 1);
 
     //TODO use FX controls + CSS
     public static final DashboardConfig DEFAULT_DASHBOARD_CONFIG = new DashboardConfig(

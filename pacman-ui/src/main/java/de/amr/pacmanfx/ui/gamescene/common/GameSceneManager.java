@@ -18,7 +18,7 @@ import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.playview.DecorationPane;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.window.GameMainScene;
-import de.amr.pacmanfx.uilib.UfxBackgrounds;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -236,7 +236,7 @@ public class GameSceneManager {
         final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
         if (decorated) {
             frame.newCanvas(); //TODO check why creating a new canvas is needed
-            frame.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(UfxBackgrounds::paintBackground));
+            frame.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(Ufx::paintBackground));
 
             // set unscaled decoration pane size to game scene (=world map) size
             frame.unscaledWidthProperty().bind(gameScene2D.unscaledWidthProperty());

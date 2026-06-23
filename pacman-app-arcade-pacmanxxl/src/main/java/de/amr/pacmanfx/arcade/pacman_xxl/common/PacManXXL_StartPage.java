@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
@@ -27,7 +28,6 @@ import javafx.scene.media.Media;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.uilib.UfxBackgrounds.createWallpaper;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -61,7 +61,7 @@ public class PacManXXL_StartPage implements StartPage {
         );
 
         rootPane = new StackPane(menu.rootPane());
-        rootPane.setBackground(createWallpaper(WALLPAPER_IMAGE));
+        rootPane.setBackground(Ufx.createWallpaper(WALLPAPER_IMAGE));
 
         rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
             if (hasFocus) {

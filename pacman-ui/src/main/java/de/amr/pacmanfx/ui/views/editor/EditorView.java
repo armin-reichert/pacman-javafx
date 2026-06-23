@@ -9,6 +9,7 @@ import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.Region;
@@ -17,8 +18,6 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
-
-import static de.amr.pacmanfx.uilib.UfxBackgrounds.paintBackground;
 
 public class EditorView implements GameView {
 
@@ -33,7 +32,7 @@ public class EditorView implements GameView {
             final MenuItem miQuitEditor = new MenuItem(game.ui().translations().translate("editor.menu.back_to_game"));
             miQuitEditor.setOnAction(_ -> editor.quit());
             editor.ui().menuSystem().fileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
-            editor.ui().layoutPane().setBackground(paintBackground(Color.valueOf("#dddddd"))); // JavaFX default grey
+            editor.ui().layoutPane().setBackground(Ufx.paintBackground(Color.valueOf("#dddddd"))); // JavaFX default grey
         }
     }
 

@@ -4,15 +4,12 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.ui.views.dashboard.DashboardConfig;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.Gradients;
 import javafx.scene.layout.Background;
 import javafx.scene.media.Media;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
-import static de.amr.pacmanfx.uilib.UfxBackgrounds.createImageBackground;
 
 public final class GlobalAssets {
 
@@ -64,7 +61,7 @@ public final class GlobalAssets {
         private final Media media;
     }
 
-    public static final Background BACKGROUND_PAC_MAN_WALLPAPER = createImageBackground(
+    public static final Background BACKGROUND_PAC_MAN_WALLPAPER = Ufx.createImageBackground(
         RES_MGR.loadImage(RESOURCE_ROOT + "graphics/pacman_wallpaper.png"));
 
     public static final Background[] GRADIENT_BACKGROUNDS = Gradients.Samples.backgrounds();

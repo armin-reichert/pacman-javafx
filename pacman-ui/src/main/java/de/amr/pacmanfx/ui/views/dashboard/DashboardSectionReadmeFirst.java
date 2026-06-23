@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.uilib.UfxBackgrounds;
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -30,7 +30,7 @@ public class DashboardSectionReadmeFirst extends DashboardSection {
         readmeText.setFill(Color.WHITE);
 
         final var pane = new BorderPane();
-        pane.setBorder(UfxBackgrounds.border(Color.TRANSPARENT, 5));
+        pane.setBorder(Ufx.border(Color.TRANSPARENT, 5));
 
         final var buttonPane = new HBox();
         buttonPane.setAlignment(Pos.CENTER);
