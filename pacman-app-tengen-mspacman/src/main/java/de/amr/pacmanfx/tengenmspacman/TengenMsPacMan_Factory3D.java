@@ -26,7 +26,7 @@ public class TengenMsPacMan_Factory3D extends DefaultFactory3D {
         requireNonNull(worldConfig);
 
         final PacSettings config = worldConfig.pac()
-            .withModifiedSize3D(worldConfig.livesCounter().shapeSize());
+            .resized(worldConfig.livesCounter().shapeSize());
 
         return new Group(
             Pac3DFactory.createPacBody(config, true),

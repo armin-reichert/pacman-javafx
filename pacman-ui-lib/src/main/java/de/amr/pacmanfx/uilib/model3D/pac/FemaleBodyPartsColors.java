@@ -6,4 +6,4 @@ package de.amr.pacmanfx.uilib.model3D.pac;
 
 import javafx.scene.paint.Color;
 
-public record MsPacManComponentColors(Color hairBow, Color hairBowPearls, Color boobs) {}
+public record FemaleBodyPartsColors(Color hairBow, Color hairBowPearls, Color boobs) {}

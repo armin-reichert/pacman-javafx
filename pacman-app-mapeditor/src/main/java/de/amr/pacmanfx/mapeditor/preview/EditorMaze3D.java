@@ -9,7 +9,7 @@ import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
-import de.amr.pacmanfx.uilib.model3D.pac.MsPacManComponentColors;
+import de.amr.pacmanfx.uilib.model3D.pac.FemaleBodyPartsColors;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3DFactory;
 import de.amr.pacmanfx.uilib.model3D.pac.PacColors;
 import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
@@ -47,7 +47,7 @@ public class EditorMaze3D extends Group {
                 Color.SADDLEBROWN,  // palateColor
                 Color.BLACK // eyesColor
             ),
-            new MsPacManComponentColors(
+            new FemaleBodyPartsColors(
                 Color.RED, // hair bow
                 Color.BLUE, // hair bow pearls
                 Color.YELLOW.deriveColor(0, 1.0, 0.96, 1.0) // boobs

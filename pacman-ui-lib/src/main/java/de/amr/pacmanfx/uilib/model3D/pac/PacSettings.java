@@ -6,10 +6,10 @@ package de.amr.pacmanfx.uilib.model3D.pac;
 
 public record PacSettings(
     PacColors colors,
-    MsPacManComponentColors msColors,
+    FemaleBodyPartsColors msColors,
     float size3D)
 {
-    public PacSettings withModifiedSize3D(float newSize) {
+    public PacSettings resized(float newSize) {
         return new PacSettings(colors, msColors, newSize);
     }
 }
