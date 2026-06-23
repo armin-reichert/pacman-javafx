@@ -82,7 +82,7 @@ public class MiniPlaySceneView {
     public void setUI(Game game) {
         this.game = requireNonNull(game);
 
-        rootPane.backgroundProperty().bind(game.ui().settings().canvasBackgroundColorProperty.map(Background::fill));
+        rootPane.backgroundProperty().bind(game.ui().settings().d2.canvasBackgroundColorProperty.map(Background::fill));
         rootPane.opacityProperty().bind(game.ui().settings().miniView.opacityPercentageProperty.divide(100.0));
 
         canvas.heightProperty().bind(game.ui().settings().miniView.heightProperty);
@@ -109,11 +109,11 @@ public class MiniPlaySceneView {
 
         levelRenderer = uiConfig.createGameLevelRenderer(canvas);
         levelRenderer.scalingProperty().bind(scaling);
-        levelRenderer.backgroundColorProperty().bind(game.ui().settings().canvasBackgroundColorProperty);
+        levelRenderer.backgroundColorProperty().bind(game.ui().settings().d2.canvasBackgroundColorProperty);
 
         actorRenderer = uiConfig.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scaling);
-        actorRenderer.backgroundColorProperty().bind(game.ui().settings().canvasBackgroundColorProperty);
+        actorRenderer.backgroundColorProperty().bind(game.ui().settings().d2.canvasBackgroundColorProperty);
     }
 
     public void slideIn() {

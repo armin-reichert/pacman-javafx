@@ -1,7 +1,5 @@
 {
   "flashMessageDuration":  1.5,
-  "canvasBackgroundColor":  "#000",
-  "fontSmoothingOn": false,
   "debugModeOn":  false,
   "keyboardMonitorOn":  false,
   "muted":  false,
@@ -11,6 +9,11 @@
     "height": 400,
     "active":  false,
     "opacityPercentage": 69
+  },
+
+  "d2": {
+    "canvasBackgroundColor":  "#000",
+    "fontSmoothingOn": false
   },
 
   "d3": {

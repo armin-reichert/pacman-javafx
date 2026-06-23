@@ -4,16 +4,13 @@
 
 package de.amr.pacmanfx.ui.config.ui;
 
-import javafx.scene.paint.Color;
-
 public record UISettings(
     double flashMessageDuration,
-    Color canvasBackgroundColor,
-    boolean fontSmoothingOn,
     boolean debugModeOn,
     boolean keyboardMonitorOn,
     boolean muted,
     int numSimulationSteps,
     MiniViewSettings miniView,
+    UISettings2D d2,
     UISettings3D d3)
 {}

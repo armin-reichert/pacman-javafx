@@ -69,9 +69,9 @@ public class DashboardSectionGeneral extends DashboardSection {
 
         addDynamicLabeledValue("Total Updates",  gameClock::pausableUpdatesCount);
 
-        addColorPicker("Canvas Color", game.ui().settings().canvasBackgroundColorProperty);
+        addColorPicker("Canvas Color", game.ui().settings().d2.canvasBackgroundColorProperty);
 
-        addCheckBox("Font Smoothing", game.ui().settings().fontSmoothingOnProperty);
+        addCheckBox("Font Smoothing", game.ui().settings().d2.fontSmoothingOnProperty);
         addCheckBox("Show Debug Info", game.ui().settings().debugModeOnProperty);
         addCheckBox("Time Measured", gameClock.timeMeasuredProperty());
     }
