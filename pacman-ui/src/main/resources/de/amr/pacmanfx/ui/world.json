@@ -116,7 +116,6 @@
     "lightColor": "#fff",
     "wallHeight": 3.5,
     "wallOpacity": 1,
-    "obstacleBaseHeight":  4,
     "obstacleCornerRadius":  4,
     "obstacleWallThickness":  2.25,
     "darkWallFillColor": "0x282828"
