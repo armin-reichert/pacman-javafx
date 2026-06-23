@@ -38,9 +38,6 @@ public class MiniPlaySceneView {
 
     public static final Insets PADDING = new Insets(0, 10, 0, 10);
 
-    public static final Duration SLIDE_IN_DURATION  = Duration.seconds(1);
-    public static final Duration SLIDE_OUT_DURATION = Duration.seconds(2);
-
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
     private final ObjectProperty<Vector2i> worldSize = new SimpleObjectProperty<>(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS);
 
@@ -68,11 +65,9 @@ public class MiniPlaySceneView {
         rootPane.setBorder(Border.stroke(Color.grayRgb(66)));
         rootPane.setPadding(PADDING);
 
-
         // Canvas size determines mini view size
         rootPane.maxWidthProperty().bind(canvas.widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
         rootPane.maxHeightProperty().bind(canvas.heightProperty());
-
     }
 
     public Pane rootPane() {
@@ -120,7 +115,8 @@ public class MiniPlaySceneView {
         if (slideInAnimation != null) {
             slideInAnimation.stop();
         }
-        slideInAnimation = new TranslateTransition(SLIDE_IN_DURATION, rootPane);
+        slideInAnimation = new TranslateTransition(
+            Duration.seconds(game.ui().viewModel().miniView.slideInSecondsProperty.get()), rootPane);
         slideInAnimation.setToY(0);
         slideInAnimation.setByY(10);
         slideInAnimation.setDelay(Duration.seconds(1));
@@ -132,7 +128,8 @@ public class MiniPlaySceneView {
         if (slideOutAnimation != null) {
             slideOutAnimation.stop();
         }
-        slideOutAnimation = new TranslateTransition(SLIDE_OUT_DURATION, rootPane);
+        slideOutAnimation = new TranslateTransition(
+            Duration.seconds(game.ui().viewModel().miniView.slideOutSecondsProperty.get()), rootPane);
         slideOutAnimation.setToY(-rootPane.getHeight());
         slideOutAnimation.setByY(10);
         slideOutAnimation.setDelay(Duration.seconds(2));
@@ -146,16 +143,19 @@ public class MiniPlaySceneView {
     }
 
     public void draw() {
-        if (canvasRenderer != null) {
-            drawCanvas();
+        if (canvasRenderer == null) {
+            return;
+        }
+        if (game != null) {
+            game.currentGameContext().optCurrentLevel().ifPresent(this::draw);
         }
     }
     
-    private void drawCanvas() {
+    private void draw(GameLevel level) {
         canvasRenderer.clearCanvas();
 
         if (levelRenderer != null && actorRenderer != null) {
-            game.currentGameContext().optCurrentLevel().ifPresent(this::drawGameLevel);
+            drawGameLevel(level);
         }
 
         if (game.ui().viewModel().debugModeOnProperty.get()) {

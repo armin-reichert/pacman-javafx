@@ -3,5 +3,7 @@ package de.amr.pacmanfx.ui.config.ui;
 public record MiniViewSettings(
     int height,
     boolean active,
-    int opacityPercentage
+    int opacityPercentage,
+    float slideInSeconds,
+    float slideOutSeconds
 ) {}

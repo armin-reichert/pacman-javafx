@@ -160,7 +160,9 @@ public final class Ufx {
                 setDrawMode(subGroup, drawMode);
             }
             else if (node instanceof Shape3D shape3D) {
-                shape3D.setDrawMode(drawMode);
+                if (!shape3D.drawModeProperty().isBound()) {
+                    shape3D.setDrawMode(drawMode);
+                }
             }
         }
     }

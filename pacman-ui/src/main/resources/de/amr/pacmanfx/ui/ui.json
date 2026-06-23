@@ -8,7 +8,9 @@
   "miniView": {
     "height": 400,
     "active": false,
-    "opacityPercentage": 69
+    "opacityPercentage": 69,
+    "slideInSeconds": 1,
+    "slideOutSeconds": 2
   },
 
   "common2D": {
