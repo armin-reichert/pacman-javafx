@@ -10,7 +10,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.ui.config.SettingsLoader;
+import de.amr.pacmanfx.uilib.SettingsLoader;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 

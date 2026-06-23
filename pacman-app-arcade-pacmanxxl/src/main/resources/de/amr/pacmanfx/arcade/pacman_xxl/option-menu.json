@@ -1,0 +1,23 @@
+{
+  "titleFont": {
+    "family": "Pacfont Good",
+    "size": 32,
+    "weight": "BLACK",
+    "posture": "REGULAR"
+  },
+
+  "textFont": {
+    "family": "Emulogic",
+    "size": 8,
+    "weight": "BLACK",
+    "posture": "REGULAR"
+  },
+
+  "backgroundFill": "#0c1568",
+  "borderStroke": "#fffeff",
+  "titleTextFill": "rgb(255, 0, 0)",
+  "entryTextFill": "rgb(255, 255, 0)",
+  "entryValueFill": "rgb(222, 222, 255)",
+  "entryValueDisabledFill": "#808080",
+  "usageTextFill": "rgb(255, 255, 0)"
+}

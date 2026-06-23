@@ -10,6 +10,7 @@ import de.amr.pacmanfx.uilib.rendering.Gradients;
 import javafx.scene.layout.Background;
 import javafx.scene.media.Media;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
 
 public final class GlobalAssets {
 
@@ -65,4 +66,11 @@ public final class GlobalAssets {
         RES_MGR.loadImage(RESOURCE_ROOT + "graphics/pacman_wallpaper.png"));
 
     public static final Background[] GRADIENT_BACKGROUNDS = Gradients.Samples.backgrounds();
+
+    static {
+        Logger.info("Loading predefined fonts");
+        for (var f : PredefinedFont.values()) {
+            Logger.info(f.font());
+        }
+    }
 }

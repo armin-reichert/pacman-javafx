@@ -3,7 +3,7 @@
     src: url("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf");
 }
 
-/* Custom context menu style */
+/* Custom context menu posture */
 
 .custom-menu-item:hover {
     -fx-background-color: transparent;
@@ -93,3 +93,6 @@
     -fx-border-color: #fff;
     -fx-border-width: 0px;
 }
+
+/* --- Option menu posture --- */
+

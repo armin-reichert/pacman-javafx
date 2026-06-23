@@ -87,7 +87,7 @@ public class PreferencesManager {
         final String familyKey = key + ".family";
         defaultsMap.put(familyKey, font.getFamily());
 
-        final String styleKey = key + ".style";
+        final String styleKey = key + ".posture";
         defaultsMap.put(styleKey, font.getStyle());
 
         final String sizeKey = key + ".size";
@@ -110,7 +110,7 @@ public class PreferencesManager {
         userPrefs.put(familyKey, font.getFamily());
         defaultsMap.put(familyKey, font.getFamily());
 
-        final String styleKey = key + ".style";
+        final String styleKey = key + ".posture";
         userPrefs.put(styleKey, font.getStyle());
         defaultsMap.put(styleKey, font.getStyle());
 
@@ -123,7 +123,7 @@ public class PreferencesManager {
         final String familyKey = key + ".family";
         final String family = userPrefs.get(familyKey, getDefaultValue(familyKey, String.class));
 
-        final String styleKey = key + ".style";
+        final String styleKey = key + ".posture";
         final String style = userPrefs.get(styleKey, getDefaultValue(styleKey, String.class));
 
         final String sizeKey = key + ".size";

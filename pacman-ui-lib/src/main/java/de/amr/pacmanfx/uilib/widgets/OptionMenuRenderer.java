@@ -34,13 +34,18 @@ public class OptionMenuRenderer extends BaseRenderer {
     }
 
     public void drawOptionMenu(OptionMenu menu) {
-        final OptionMenuStyle style = menu.style();
-        final Font scaledTitleFont = scaleFontBy(style.titleFont(), scaling());
-        final Font scaledTextFont = scaleFontBy(style.textFont(), scaling());
+        final OptionMenuSettings settings = menu.settings();
+
+        final Font titleFont = settings.titleFont().toFont();
+        final Font scaledTitleFont = scaleFontBy(titleFont, scaling());
+
+        final Font textFont = settings.textFont().toFont();
+        final Font scaledTextFont = scaleFontBy(textFont, scaling());
+
         final double centerX = 0.5 * menu.layout().numTilesX() * TS;
 
-        fillCanvas(style.backgroundFill());
-        fillTextCentered(menu.title(), style.titleTextFill(), scaledTitleFont, centerX, 6 * TS);
+        fillCanvas(settings.backgroundFill());
+        fillTextCentered(menu.title(), settings.titleTextFill(), scaledTitleFont, centerX, 6 * TS);
 
         float lineSkip = 2.5f * TS;
 
@@ -49,12 +54,12 @@ public class OptionMenuRenderer extends BaseRenderer {
             final OptionMenuEntry<?> entry = menu.entries().get(i);
             if (i == menu.selectedEntryIndex()) {
                 final int col = (menu.layout().textColumn() - 2) * TS;
-                fillText("-", style.entryTextFill(), scaledTextFont, col, y);
-                fillText(">", style.entryTextFill(), scaledTextFont, col + HTS, y);
+                fillText("-", settings.entryTextFill(), scaledTextFont, col, y);
+                fillText(">", settings.entryTextFill(), scaledTextFont, col + HTS, y);
             }
-            fillText(entry.text(), style.entryTextFill(), scaledTextFont, menu.layout().textColumn() * TS, y);
+            fillText(entry.text(), settings.entryTextFill(), scaledTextFont, menu.layout().textColumn() * TS, y);
             fillText(entry.valueFormatted(),
-                entry.isEnabled() ? style.entryValueFill() : style.entryValueDisabledFill(),
+                entry.isEnabled() ? settings.entryValueFill() : settings.entryValueDisabledFill(),
                 scaledTextFont,
                 menu.layout().valueColumn() * TS, y);
             y += lineSkip;
@@ -64,9 +69,10 @@ public class OptionMenuRenderer extends BaseRenderer {
     }
 
     protected void drawUsageInfo(OptionMenu menu) {
-        final Color normalColor = menu.style().usageTextFill();
-        final Color brightColor = menu.style().entryValueFill();
-        final Font font = Ufx.scaleFontBy(menu.style().textFont(), scaling());
+        final Color normalColor = menu.settings().usageTextFill();
+        final Color brightColor = menu.settings().entryValueFill();
+        //TODO performance
+        final Font font = Ufx.scaleFontBy(menu.settings().textFont().toFont(), scaling());
 
         float lineSkip = 2f * TS;
 

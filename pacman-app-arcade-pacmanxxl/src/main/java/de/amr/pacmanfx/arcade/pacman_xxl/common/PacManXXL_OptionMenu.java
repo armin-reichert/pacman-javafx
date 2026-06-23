@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
+import de.amr.pacmanfx.uilib.widgets.OptionMenuSettings;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
@@ -31,7 +32,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     static final int   MENU_MAX_HEIGHT = 800;
     static final float MENU_REL_HEIGHT = 0.66f;
 
-    static final Layout RASTER = new Layout(42, 34, 6, 20);
+    static final Layout LAYOUT = new Layout(42, 34, 6, 20);
 
     public record MenuEntries(
         OptionMenuEntry<GameVariantID> gameVariantID,
@@ -48,8 +49,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     private ObservableValue<Double> scaling;
 
-    public PacManXXL_OptionMenu() {
-        super(RASTER);
+    public PacManXXL_OptionMenu(OptionMenuSettings settings) {
+        super(LAYOUT, settings);
 
         setTitle("Pac-Man XXL");
 

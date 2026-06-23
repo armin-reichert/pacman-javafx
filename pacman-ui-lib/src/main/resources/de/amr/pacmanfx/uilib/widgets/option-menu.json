@@ -1,0 +1,23 @@
+{
+  "titleFont": {
+    "family": "monospace",
+    "size": 30,
+    "weight": "BLACK",
+    "posture": "REGULAR"
+  },
+
+  "textFont": {
+    "family": "monospace",
+    "size": 12,
+    "weight": "BLACK",
+    "posture": "REGULAR"
+  },
+
+  "backgroundFill": "#0c1568",
+  "borderStroke": "#fffeff",
+  "titleTextFill": "#fffeff",
+  "entryTextFill": "#bcbe00",
+  "entryValueFill": "#fffeff",
+  "entryValueDisabledFill": "#808080",
+  "usageTextFill": "#bcbe00"
+}

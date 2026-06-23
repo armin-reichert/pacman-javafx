@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":objparser"))
     implementation(project(":meshbuilder"))
     implementation(libs.bundles.tinylog)
+    implementation(libs.gson)
 }
 
 javafx {

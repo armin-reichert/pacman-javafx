@@ -371,10 +371,10 @@ public final class Ufx {
     }
 
     /**
-     * Creates a wallpaper-style background: centered, no-repeat, scaled to fill the page.
+     * Creates a wallpaper-posture background: centered, no-repeat, scaled to fill the page.
      *
      * @param image the image to display
-     * @return a wallpaper-style {@link Background}
+     * @return a wallpaper-posture {@link Background}
      */
     public static Background createWallpaper(Image image) {
         return createImageBackground(

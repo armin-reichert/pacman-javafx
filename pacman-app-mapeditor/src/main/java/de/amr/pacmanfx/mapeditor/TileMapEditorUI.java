@@ -531,7 +531,7 @@ public class TileMapEditorUI {
         sourceView.setOnContextMenuRequested(e -> {
             if (sourceViewContextMenu == null) {
                 sourceViewContextMenu = new ContextMenu();
-                // overwrite style of TextArea
+                // overwrite posture of TextArea
                 sourceViewContextMenu.setStyle("""
                         -fx-background-color: white;
                         -fx-text-fill: black;

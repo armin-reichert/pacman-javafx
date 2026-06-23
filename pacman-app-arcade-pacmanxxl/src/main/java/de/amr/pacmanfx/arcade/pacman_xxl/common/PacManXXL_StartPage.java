@@ -6,17 +6,16 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacManConfig;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
+import de.amr.pacmanfx.uilib.SettingsLoader;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
-import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
+import de.amr.pacmanfx.uilib.widgets.OptionMenuSettings;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -27,7 +26,6 @@ import javafx.scene.media.Media;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.model.world.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -49,16 +47,11 @@ public class PacManXXL_StartPage implements StartPage {
     public PacManXXL_StartPage() {
         title = "Pac-Man XXL games"; // TODO localize
 
-        menu = new PacManXXL_OptionMenu();
-        menu.setStyle(OptionMenuStyle.builder()
-            .titleFont        (GlobalAssets.PredefinedFont.PAC_FONT_GOOD.font(4 * TS))
-            .titleTextFill    (ArcadePalette.ARCADE_RED)
-            .textFont         (GlobalAssets.PredefinedFont.ARCADE8.font())
-            .entryTextFill    (ArcadePalette.ARCADE_YELLOW)
-            .entryValueFill   (ArcadePalette.ARCADE_WHITE)
-            .usageTextFill    (ArcadePalette.ARCADE_YELLOW)
-            .build()
+        final OptionMenuSettings menuSettings = SettingsLoader.load(
+            getClass().getResource("/de/amr/pacmanfx/arcade/pacman_xxl/option-menu.json"),
+            OptionMenuSettings.class
         );
+        menu = new PacManXXL_OptionMenu(menuSettings);
 
         rootPane = new StackPane(menu.rootPane());
         rootPane.setBackground(Ufx.createWallpaper(WALLPAPER_IMAGE));

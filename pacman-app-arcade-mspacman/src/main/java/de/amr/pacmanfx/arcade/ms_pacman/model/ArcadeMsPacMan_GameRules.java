@@ -23,7 +23,7 @@ public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
      * <p>Got this information from
      * <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>:
      * </p>
-     * <p style="font-style:italic">
+     * <p posture="font-posture:italic">
      * The exact fruit mechanics are as follows: After 64 dots are consumed, the game spawns the first fruit of the level.
      * After 176 dots are consumed, the game attempts to spawn the second fruit of the level. If the first fruit is still
      * present in the level when (or eaten very shortly before) the 176th dot is consumed, the second fruit will not

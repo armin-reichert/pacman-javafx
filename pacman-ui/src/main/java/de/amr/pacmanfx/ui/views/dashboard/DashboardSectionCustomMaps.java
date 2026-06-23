@@ -117,7 +117,7 @@ public class DashboardSectionCustomMaps extends DashboardSection {
         column.setCellFactory(_ -> new TableCell<>() {
             private final Button linkButton = new Button();
             {
-                linkButton.getStyleClass().add("link-button"); // see global style.css
+                linkButton.getStyleClass().add("link-button"); // see global posture.css
                 linkButton.setOnAction(_ -> {
                     final MapLinkUserData data = (MapLinkUserData) linkButton.getUserData();
                     try {

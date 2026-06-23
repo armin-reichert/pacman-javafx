@@ -4,6 +4,8 @@
 package de.amr.pacmanfx.uilib.widgets;
 
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.uilib.SettingsLoader;
+import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -12,8 +14,6 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
@@ -26,6 +26,19 @@ import java.util.List;
 import static java.util.Objects.requireNonNull;
 
 public class OptionMenu {
+
+    public static final OptionMenuSettings DEFAULT_SETTINGS = SettingsLoader.load(
+        OptionMenu.class.getResource("option-menu.json"),
+        OptionMenuSettings.class);
+
+    private static final AudioClip DEFAULT_ENTRY_SELECTION_SOUND;
+    private static final AudioClip DEFAULT_VALUE_SELECTION_SOUND;
+
+    static {
+        final ResourceManager RM = () -> OptionMenu.class;
+        DEFAULT_ENTRY_SELECTION_SOUND = RM.loadAudioClip("sounds/menu-select1.wav");
+        DEFAULT_VALUE_SELECTION_SOUND = RM.loadAudioClip("sounds/menu-select2.wav");
+    }
 
     public static final int NUM_CLIENT_ACTIONS = 2;
 
@@ -45,9 +58,13 @@ public class OptionMenu {
     protected final BorderPane root = new BorderPane();
     protected final Canvas canvas = new Canvas();
     protected OptionMenuRenderer renderer;
-    protected OptionMenuStyle style;
+
+    protected OptionMenuSettings settings;
 
     private final AnimationTimer drawLoop;
+
+    private AudioClip entrySelectedSound = DEFAULT_ENTRY_SELECTION_SOUND;
+    private AudioClip valueSelectedSound = DEFAULT_VALUE_SELECTION_SOUND;
 
     private final KeyCode keyUp = KeyCode.UP;
     private final KeyCode keyDown = KeyCode.DOWN;
@@ -57,7 +74,12 @@ public class OptionMenu {
     private final String[]  actionTexts = new String[NUM_CLIENT_ACTIONS];
 
     public OptionMenu(Layout layout) {
+        this(layout, DEFAULT_SETTINGS);
+    }
+
+    public OptionMenu(Layout layout, OptionMenuSettings settings) {
         this.layout = requireNonNull(layout);
+        this.settings = requireNonNull(settings);
 
         canvas.widthProperty() .bind(scaling.multiply(layout.numTilesX() * WorldMap.TS));
         canvas.heightProperty().bind(scaling.multiply(layout.numTilesY() * WorldMap.TS));
@@ -67,12 +89,11 @@ public class OptionMenu {
         renderer = new OptionMenuRenderer(canvas);
         renderer.scalingProperty().bind(scalingProperty());
 
+        root.getStyleClass().add("option-menu");
         root.maxWidthProperty().bind(canvas.widthProperty());
         root.maxHeightProperty().bind(canvas.heightProperty());
         root.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPressedEvent);
         root.setCenter(canvas);
-
-        setStyle(OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE);
 
         drawLoop = new AnimationTimer() {
             @Override
@@ -80,6 +101,14 @@ public class OptionMenu {
                 draw();
             }
         };
+    }
+
+    public void setEntrySelectedSound(AudioClip entrySelectedSound) {
+        this.entrySelectedSound = entrySelectedSound;
+    }
+
+    public void setValueSelectedSound(AudioClip valueSelectedSound) {
+        this.valueSelectedSound = valueSelectedSound;
     }
 
     public void startDrawLoop() {
@@ -153,15 +182,17 @@ public class OptionMenu {
 
     public void setTitle(String title) { this.title = requireNonNull(title); }
 
-    public OptionMenuStyle style() {
-        return style;
+    public OptionMenuSettings settings() {
+        return settings;
     }
 
-    public void setStyle(OptionMenuStyle style) {
-        this.style = requireNonNull(style);
-        root.setBackground(Background.fill(style.backgroundFill()));
-        root.setBorder(Border.stroke(style.borderStroke()));
+/*
+    public void setStyle(OptionMenuStyle posture) {
+        this.posture = requireNonNull(posture);
+        root.setBackground(Background.fill(posture.backgroundFill()));
+        root.setBorder(Border.stroke(posture.borderStroke()));
     }
+ */
 
     /**
      * @param n action number (1, 2, ...)
@@ -215,7 +246,7 @@ public class OptionMenu {
         final int i = selectedEntryIndex > 0 ? selectedEntryIndex - 1 : entries.size() - 1;
         if (entries.get(i).isEnabled()) {
             selectedEntryIndex = i;
-            playSoundIfPresent(style.entrySelectedSound());
+            playSoundIfPresent(entrySelectedSound);
         }
     }
 
@@ -223,14 +254,14 @@ public class OptionMenu {
         final int i = selectedEntryIndex < entries.size() - 1 ? selectedEntryIndex + 1 : 0;
         if (entries.get(i).isEnabled()) {
             selectedEntryIndex = i;
-            playSoundIfPresent(style.entrySelectedSound());
+            playSoundIfPresent(entrySelectedSound);
         }
     }
 
     private void nextValue() {
         final OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
         entry.setNextValue();
-        playSoundIfPresent(style.valueSelectedSound());
+        playSoundIfPresent(valueSelectedSound);
         logMenuState();
     }
 }
