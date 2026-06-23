@@ -3,6 +3,9 @@ package de.amr.pacmanfx.uilib.widgets;
 import javafx.scene.paint.Color;
 
 public record OptionMenuSettings(
+    int minHeight,
+    int maxHeight,
+    float relHeight,
     int numTilesX,
     int numTilesY,
     int textColumn,

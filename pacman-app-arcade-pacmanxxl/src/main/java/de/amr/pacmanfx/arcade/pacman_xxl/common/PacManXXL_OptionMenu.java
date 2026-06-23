@@ -16,6 +16,7 @@ import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuSettings;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -28,18 +29,14 @@ import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
 
-    static final int   MENU_MIN_HEIGHT = 400;
-    static final int   MENU_MAX_HEIGHT = 800;
-    static final float MENU_REL_HEIGHT = 0.66f;
-
-    public record MenuEntries(
+    public record MenuEntryList(
         OptionMenuEntry<GameVariantID> gameVariantID,
         OptionMenuEntry<Boolean> view3DEnabled,
         OptionMenuEntry<Boolean> cutScenesEnabled,
         OptionMenuEntry<WorldMapSelectionMode> mapOrder
     ) {}
 
-    private final MenuEntries entries;
+    private final MenuEntryList entryList;
 
     private final ChaseAnimation chaseAnimation;
 
@@ -58,17 +55,17 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         defineAction(1, KeyCode.E, "OPEN EDITOR");
         defineAction(2, KeyCode.ENTER, "START");
 
-        entries = new MenuEntries(
+        entryList = new MenuEntryList(
             createGameVariantEntry(),
             createSceneDisplayEntry(),
             createCutScenesEntry(),
             createCustomMapsEntry()
         );
 
-        addEntry(entries.gameVariantID());
-        addEntry(entries.view3DEnabled());
-        addEntry(entries.cutScenesEnabled());
-        addEntry(entries.mapOrder());
+        addEntry(entryList.gameVariantID());
+        addEntry(entryList.view3DEnabled());
+        addEntry(entryList.cutScenesEnabled());
+        addEntry(entryList.mapOrder());
 
         chaseAnimation = new ChaseAnimation(settings.numTilesX());
         chaseAnimation.setY((settings.numTilesY() - 12) * WorldMap.TS);
@@ -90,7 +87,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public void init(Game game) {
         this.game = requireNonNull(game);
 
-        scaling = createScaling(game);
+        scaling = createScaling(game.ui().window().stage());
 
         final GameVariantConfig currentConfig = game.currentUIConfig();
         final GameContext gameContext = game.currentGameContext();
@@ -105,11 +102,11 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         mapSelector.loadMapPrototypes();
 
         // Init entries
-        entries.gameVariantID().setValue(gameVariant);
-        entries.view3DEnabled().setValue(game.ui().viewModel().common3D.view3DEnabledProperty.get());
-        entries.cutScenesEnabled().setValue(gameContext.flow().cutScenesEnabled());
-        entries.mapOrder().setValue(mapSelector.selectionMode());
-        entries.mapOrder().setEnabled(!mapSelector.customMaps().isEmpty());
+        entryList.gameVariantID().setValue(gameVariant);
+        entryList.view3DEnabled().setValue(game.ui().viewModel().common3D.view3DEnabledProperty.get());
+        entryList.cutScenesEnabled().setValue(gameContext.flow().cutScenesEnabled());
+        entryList.mapOrder().setValue(mapSelector.selectionMode());
+        entryList.mapOrder().setEnabled(!mapSelector.customMaps().isEmpty());
 
         logMenuState();
 
@@ -119,16 +116,16 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     public void bind() {
         unbind();
-        entries.gameVariantID().valueProperty().addListener(this::onGameVariantNameChanged);
-        entries.view3DEnabled().valueProperty().addListener(this::onPlay3DSettingsChange);
-        entries.cutScenesEnabled().valueProperty().addListener(this::onCutScenesEnabledSettingsChange);
+        entryList.gameVariantID().valueProperty().addListener(this::onGameVariantNameChanged);
+        entryList.view3DEnabled().valueProperty().addListener(this::onPlay3DSettingsChange);
+        entryList.cutScenesEnabled().valueProperty().addListener(this::onCutScenesEnabledSettingsChange);
         scalingProperty().bind(scaling);
     }
 
     public void unbind() {
-        entries.gameVariantID().valueProperty().removeListener(this::onGameVariantNameChanged);
-        entries.view3DEnabled().valueProperty().removeListener(this::onPlay3DSettingsChange);
-        entries.view3DEnabled().valueProperty().removeListener(this::onCutScenesEnabledSettingsChange);
+        entryList.gameVariantID().valueProperty().removeListener(this::onGameVariantNameChanged);
+        entryList.view3DEnabled().valueProperty().removeListener(this::onPlay3DSettingsChange);
+        entryList.view3DEnabled().valueProperty().removeListener(this::onCutScenesEnabledSettingsChange);
         scalingProperty().unbind();
     }
 
@@ -142,16 +139,18 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         chaseAnimation.stop();
     }
 
-    public MenuEntries menuEntries() {
-        return entries;
+    public MenuEntryList entryList() {
+        return entryList;
     }
 
     // Private
 
-    private ObservableValue<Double> createScaling(Game game) {
+    private ObservableValue<Double> createScaling(Stage stage) {
         // rounded to 2 decimal digits to avoid too much resizing
-        return game.ui().window().stage().heightProperty().map(stageHeight -> {
-            final double menuHeight = Math.clamp(stageHeight.doubleValue() * MENU_REL_HEIGHT, MENU_MIN_HEIGHT, MENU_MAX_HEIGHT);
+        return stage.heightProperty().map(stageHeight -> {
+            final double menuHeight = Math.clamp(
+                stageHeight.doubleValue() * settings.relHeight(),
+                settings.minHeight(), settings.maxHeight());
             final double relHeight = menuHeight / (TS * settings.numTilesY());
             // Round scaling to 2 decimal digits to avoid too much resizing
             return Math.round(relHeight * 100.0) / 100.0;
@@ -224,9 +223,9 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     @Override
     public void logMenuState() {
         Logger.info("Option Menu: ({}, {}, {}, {})",
-            entries.gameVariantID().value(),
-            entries.view3DEnabled().value() ? "3D" : "2D",
-            "Cut Scenes " + (entries.cutScenesEnabled().value() ? "ON" : "OFF"),
-            entries.mapOrder().value());
+            entryList.gameVariantID().value(),
+            entryList.view3DEnabled().value() ? "3D" : "2D",
+            "Cut Scenes " + (entryList.cutScenesEnabled().value() ? "ON" : "OFF"),
+            entryList.mapOrder().value());
     }
 }

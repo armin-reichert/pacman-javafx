@@ -1,4 +1,7 @@
 {
+  "minHeight": 400,
+  "maxHeight": 800,
+  "relHeight": 0.66,
   "numTilesX": 42,
   "numTilesY": 34,
   "textColumn": 6,
