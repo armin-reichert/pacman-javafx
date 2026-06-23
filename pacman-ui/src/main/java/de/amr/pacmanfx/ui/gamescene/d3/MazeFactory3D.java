@@ -6,7 +6,7 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.MazeHouse3D;
-import de.amr.pacmanfx.uilib.UfxColors;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -73,7 +73,7 @@ public class MazeFactory3D {
 
     private void bindWallBaseMaterialColor(Maze3D maze3D, PhongMaterial wallBaseMaterial, Color wallStrokeColor) {
         wallBaseMaterial.diffuseColorProperty().bind(maze3D.wallOpacityProperty()
-            .map(opacity -> UfxColors.colorWithOpacity(wallStrokeColor, opacity.doubleValue()))
+            .map(opacity -> Ufx.colorWithOpacity(wallStrokeColor, opacity.doubleValue()))
         );
     }
 }

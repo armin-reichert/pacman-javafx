@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.uilib.UfxColors;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -34,7 +34,7 @@ import java.util.Set;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
-import static de.amr.pacmanfx.uilib.UfxColors.colorWithOpacity;
+import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -177,7 +177,7 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
      */
     public void setWallBaseColor(Color color) {
         requireNonNull(color);
-        wallBaseMaterial.setDiffuseColor(UfxColors.colorWithOpacity(color, wallBaseOpacity));
+        wallBaseMaterial.setDiffuseColor(Ufx.colorWithOpacity(color, wallBaseOpacity));
     }
 
     /**

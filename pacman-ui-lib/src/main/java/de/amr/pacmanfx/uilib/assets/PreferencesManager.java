@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import static de.amr.pacmanfx.uilib.UfxColors.formatColorHex;
+import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
 public class PreferencesManager {
 
