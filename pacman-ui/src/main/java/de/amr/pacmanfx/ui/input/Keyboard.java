@@ -94,6 +94,10 @@ public final class Keyboard {
         return Collections.unmodifiableSet(pressedKeys);
     }
 
+    public boolean anyNormalKeyPressed() {
+        return !pressedKeys.isEmpty();
+    }
+
     public boolean shiftDown() {
         return shiftDown;
     }

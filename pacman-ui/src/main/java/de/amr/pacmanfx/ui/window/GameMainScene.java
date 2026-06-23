@@ -47,6 +47,10 @@ public class GameMainScene extends Scene {
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
 
+    private static boolean isUsingGlobalKeyboard(GameViewID viewID) {
+        return viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY;
+    }
+
     public GameMainScene(double width, double height) {
         super(new StackPane(), width, height, Color.BLACK);
 
@@ -65,10 +69,6 @@ public class GameMainScene extends Scene {
 
     public StackPane rootPane() {
         return (StackPane) getRoot();
-    }
-
-    public StatusIconBox statusIconBox() {
-        return statusIconBox;
     }
 
     public void connect(Game game) {
@@ -105,27 +105,22 @@ public class GameMainScene extends Scene {
     }
 
     private void connectKeyboard(Game game) {
-        final GameViewManager views = game.ui().views();
         final Keyboard keyboard = game.input().keyboard();
+        final GameViewManager views = game.ui().views();
 
-        // Keyboard should not be sensitive to any key events triggered inside the map editor
-        keyboard.enabledProperty().bind(views.currentViewIDProperty().map(this::isKeyboardAware));
-
+        keyboard.filterKeyEventsFrom(this);
+        keyboard.enabledProperty().bind(views.currentViewIDProperty().map(GameMainScene::isUsingGlobalKeyboard));
         keyboard.addStateListener(_ -> {
-            // Check for matching "global" action first, if none, let current view handle it.
-            if (actionBindings.executeMatchingAction(game.input()).isEmpty()) {
+            if (keyboard.anyNormalKeyPressed()) { // ignore modifier state change
                 final GameViewID currentViewID = views.currentViewID();
-                if (isKeyboardAware(currentViewID)) {
-                    views.assertView(currentViewID).onInput(game.input());
+                if (isUsingGlobalKeyboard(currentViewID)) {
+                    // Check for matching "global" action first, if none, let current view handle it.
+                    if (actionBindings.executeMatchingAction(game.input()).isEmpty()) {
+                        views.assertView(currentViewID).onInput(game.input());
+                    }
                 }
             }
         });
-
-        keyboard.filterKeyEventsFrom(this);
-    }
-
-    private boolean isKeyboardAware(GameViewID viewID) {
-        return viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY;
     }
 
     private void registerGlobalActions(Game game) {
