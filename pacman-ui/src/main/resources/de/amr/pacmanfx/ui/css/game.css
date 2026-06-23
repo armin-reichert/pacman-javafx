@@ -75,7 +75,7 @@
 /* Status icon box: "muted", "3D mode", "immunity" etc. */
 
 #status-icon-box .font-awesome-icon {
-    -fx-size:  32;
+    -fx-size: 24;
 }
 
 #status-icon-box .font-awesome-icon {
