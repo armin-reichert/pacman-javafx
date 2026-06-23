@@ -78,12 +78,12 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
     public void build(
         ObjectProperty<DrawMode> drawMode,
         Map<String, PhongMaterial> materials,
-        Maze3DSettings mazeConfig,
-        Floor3DSettings floorConfig3D)
+        Maze3DSettings maze3DSettings,
+        Floor3DSettings floor3DSettings)
     {
         this.materials = materials;
-        buildFloor(drawMode, floorConfig3D);
-        addObstacles(drawMode, mazeConfig.obstacleWallThickness(), mazeConfig.obstacleCornerRadius());
+        buildFloor(drawMode, floor3DSettings);
+        addObstacles(drawMode, maze3DSettings);
     }
 
     public Map<String, PhongMaterial> materials() {
@@ -122,10 +122,12 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
         return particlesGroup;
     }
 
-    private void addObstacles(ObjectProperty<DrawMode> drawMode, float wallThickness, float cornerRadius) {
+    private void addObstacles(ObjectProperty<DrawMode> drawMode, Maze3DSettings maze3DSettings) {
+        final float wallThickness = maze3DSettings.obstacleWallThickness();
+        final float cornerRadius = maze3DSettings.obstacleCornerRadius();
         final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
         final House house = terrain.optHouse().orElse(null);
-        final var wallCount = new AtomicInteger(0);
+        final AtomicInteger wallCount = new AtomicInteger(0);
         renderer3D.setOnWallCreated(wall3D -> {
             wallCount.incrementAndGet();
             wall3D.setBaseMaterial(materials.get("wallBaseMaterial"));
