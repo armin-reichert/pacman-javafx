@@ -6,9 +6,6 @@ package de.amr.pacmanfx.ui.gamescene.d3.entities;
 import de.amr.basics.StopWatch;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.GameLevelEntity;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.Obstacle;
 import de.amr.pacmanfx.model.world.TerrainLayer;
@@ -37,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Renders the complete 3D representation of a Pac-Man maze for a single level.
  */
-public class Maze3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
+public class Maze3D extends Group implements DisposableGraphicsObject {
 
     private final DoubleProperty wallBaseHeight = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
     private final DoubleProperty wallOpacity = new SimpleDoubleProperty(1);
@@ -51,14 +48,6 @@ public class Maze3D extends Group implements GameLevelEntity, DisposableGraphics
 
     public Maze3D(TerrainLayer terrain) {
         this.terrain = requireNonNull(terrain);
-    }
-
-    @Override
-    public void init(GameContext gameContext, GameLevel level) {}
-
-    @Override
-    public void update(GameContext gameContext, GameLevel level) {
-        house3D.update(gameContext, level);
     }
 
     @Override

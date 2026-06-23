@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3;
 
+import de.amr.basics.Identifier;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.math.Vector3f;
-import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -79,7 +79,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         // Cached for faster access
         private Pac3D pac3D;
-        private Maze3D maze3D;
         private List<Ghost3D> ghosts3D = new ArrayList<>(4); // order: RED, PINK, CYAN, ORANGE
         private LivesCounter3D livesCounter3D;
         private LevelCounter3D levelCounter3D;
@@ -90,7 +89,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         public void clear() {
             super.clear();
             pac3D = null;
-            maze3D = null;
             if (ghosts3D != null) {
                 ghosts3D = null;
             }
@@ -102,10 +100,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         public Pac3D pac3D() {
             return pac3D;
-        }
-
-        public Maze3D maze3D() {
-            return maze3D;
         }
 
         public List<Ghost3D> ghosts3D() {
@@ -140,6 +134,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final PointLight ghostHunterLight = new PointLight();
 
+    private Maze3D maze3D;
+
     // The particle pool is only created when the animations are created
     private Pool<EnergizerParticle3D> particlePool;
 
@@ -172,7 +168,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void createAnimations(ParticlesAnimationConfig particlesConfig) {
         final WorldMapColorScheme mapColorScheme = uiConfig.colorScheme(level.worldMap());
         animationRegistry.register(AnimationID.WALL_COLOR_FLASHING,
-            new WallColorFlashingAnimation(mapColorScheme, entities().maze3D.materials().get("wallTopMaterial")));
+            new WallColorFlashingAnimation(mapColorScheme, maze3D.materials().get("wallTopMaterial")));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
         createEnergizerParticlesAnimation(particlesConfig);
@@ -192,6 +188,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         entitySet.dispose();
 
+        if (maze3D != null) {
+            maze3D.dispose();
+        }
         if (particlePool != null) {
             particlePool.dispose();
         }
@@ -203,6 +202,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     // Public accessors
+
+    public Maze3D maze3D() {
+        return maze3D;
+    }
 
     public GameVariantConfig uiConfig() {
         return uiConfig;
@@ -257,7 +260,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         });
         // Hide 3D food explicitly (handles cheat-eat-all case)
         entitySet.pellet3DByTile.values().forEach(pellet3D -> pellet3D.shape().setVisible(false));
-        entitySet.maze3D.particlesGroup().getChildren().clear();
+        maze3D.particlesGroup().getChildren().clear();
     }
 
     public void setDrawMode(DrawMode drawMode) {
@@ -266,7 +269,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         for (Ghost3D ghost3D : entitySet.ghosts3D) {
             Ufx.setDrawMode(ghost3D, drawMode);
         }
-        Ufx.setDrawMode(entitySet.maze3D, drawMode);
+        Ufx.setDrawMode(maze3D, drawMode);
     }
 
     public void addOrReplaceBonus3D(Bonus bonus) {
@@ -287,18 +290,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
-        entitySet.maze3D = uiConfig.factory3D().createMaze3D(
+        maze3D = uiConfig.factory3D().createMaze3D(
             globals3D.drawModeProperty,
             terrain,
             uiConfig.worldConfig(),
             colorScheme,
             animationRegistry);
 
-        entitySet.maze3D.wallOpacityProperty()   .bind(globals3D.mazeWallOpacityProperty);
-        entitySet.maze3D.wallBaseHeightProperty().bind(globals3D.mazeWallHeightProperty);
-        entitySet.maze3D.floorColorProperty()    .bind(globals3D.mazeFloorColorProperty);
-
-        entitySet.add(entitySet.maze3D);
+        maze3D.wallOpacityProperty()   .bind(globals3D.mazeWallOpacityProperty);
+        maze3D.wallBaseHeightProperty().bind(globals3D.mazeWallHeightProperty);
+        maze3D.floorColorProperty()    .bind(globals3D.mazeFloorColorProperty);
     }
 
     private void createFood3D() {
@@ -308,10 +309,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final PhongMaterial foodMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
         final Pellet3DSettings pelletConfig3D = uiConfig.worldConfig().pellet();
-        final double pelletZ = entitySet.maze3D.floorTop() - pelletConfig3D.floorElevation();
+        final double pelletZ = maze3D.floorTop() - pelletConfig3D.floorElevation();
 
         final Energizer3DSettings energizerConfig3D = uiConfig.worldConfig().energizer();
-        final double energizerZ = entitySet.maze3D.floorTop() - energizerConfig3D.floorElevation();
+        final double energizerZ = maze3D.floorTop() - energizerConfig3D.floorElevation();
 
         foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
@@ -413,10 +414,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         for (var ghost3D : entitySet.ghosts3D) { getChildren().add(ghost3D); }
         entitySet.energizer3DByTile.values().stream().map(Energizer3D::shape).forEach(getChildren()::add);
         entitySet.pellet3DByTile.values().stream().map(Pellet3D::shape).forEach(getChildren()::add);
-        getChildren().add(entitySet.maze3D.particlesGroup());
-        getChildren().add(entitySet.maze3D);
-        getChildren().add(entitySet.maze3D.house().root());
-        getChildren().add(entitySet.maze3D.house().doors());
+        getChildren().add(maze3D.particlesGroup());
+        getChildren().add(maze3D);
+        getChildren().add(maze3D.house().root());
+        getChildren().add(maze3D.house().doors());
         getChildren().add(ghostHunterLight);
     }
 
@@ -449,8 +450,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             ghostDressMaterials,
             particlePool,
             particlesAnimationConfig,
-            entitySet.maze3D.particlesGroup(),
-            particle -> particle.collidesWith(entitySet.maze3D.floor()),
+            maze3D.particlesGroup(),
+            particle -> particle.collidesWith(maze3D.floor()),
             particle -> particle.pos().z() > 50 // positive z is below maze floor
         ));
     }
