@@ -339,8 +339,8 @@ public final class GameImpl implements Game {
 
     private void updateSettings3D(GameVariantConfig uiConfig) {
         final Maze3DSettings mazeConfig3D = uiConfig.worldConfig().maze();
-        ui.settings().d3.mazeWallHeightProperty.set(mazeConfig3D.obstacleBaseHeight());
-        ui.settings().d3.mazeWallOpacityProperty.set(mazeConfig3D.obstacleOpacity());
+        ui.viewModel().maze3D.wallHeightProperty.set(mazeConfig3D.obstacleBaseHeight());
+        ui.viewModel().maze3D.wallOpacityProperty.set(mazeConfig3D.obstacleOpacity());
         Logger.info("Update maze 3D settings for UI config {}", uiConfig);
         Logger.info("Maze 3D settings: {}", mazeConfig3D);
     }

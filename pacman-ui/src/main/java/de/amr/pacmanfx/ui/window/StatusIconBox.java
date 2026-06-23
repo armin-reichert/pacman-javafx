@@ -100,8 +100,8 @@ public class StatusIconBox implements Disposable {
 
         game.gameVariantNameProperty().addListener(variantChangeHandler);
 
-        iconMuted.visibleProperty().bind(game.ui().settings().mutedProperty);
-        icon3D.visibleProperty().bind(game.ui().settings().d3.view3DEnabledProperty);
+        iconMuted.visibleProperty().bind(game.ui().viewModel().mutedProperty);
+        icon3D.visibleProperty().bind(game.ui().viewModel().d3.view3DEnabledProperty);
     }
 
     @Override

@@ -116,7 +116,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     @Override
     public void connect(Game game) {
         this.game = requireNonNull(game);
-        final GameUIViewModel settings = game.ui().settings();
+        final GameUIViewModel settings = game.ui().viewModel();
 
         rootPane.setOnContextMenuRequested(this);
         game.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
@@ -280,7 +280,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         final GameVariantConfig currentConfig = game.currentUIConfig();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = currentConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
-            setFontSmoothing(game.ui().settings().d2.fontSmoothingOnProperty.get());
+            setFontSmoothing(game.ui().viewModel().d2.fontSmoothingOnProperty.get());
             hudRenderer = currentConfig.createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");

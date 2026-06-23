@@ -136,7 +136,7 @@ public class SimulationActions {
         actionToggleMuted = new GameAction(game, "toggle_muted") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(game.ui().settings().mutedProperty);
+                toggleBooleanProperty(game.ui().viewModel().mutedProperty);
             }
         };
 

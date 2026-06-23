@@ -117,6 +117,10 @@
   },
 
   "maze": {
+    "floorColor": "rgb(20,20,20)",
+    "lightColor": "#fff",
+    "wallHeight": 3.5,
+    "wallOpacity": 1,
     "obstacleBaseHeight":  4,
     "obstacleCornerRadius":  4,
     "obstacleOpacity":  1,

@@ -7,8 +7,10 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.SwirlConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
-import javafx.beans.property.*;
-import javafx.scene.paint.Color;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.shape.DrawMode;
 
 public class Settings3DViewModel {
@@ -37,27 +39,11 @@ public class Settings3DViewModel {
     /* Whether 3D rendering is enabled at all. */
     public final BooleanProperty view3DEnabledProperty;
 
-    /* Floor color used in 3D mode. */
-    public final ObjectProperty<Color> mazeFloorColorProperty;
-
-    /* Light color used in 3D mode. */
-    public final ObjectProperty<Color> mazeLightColorProperty;
-
-    /* Height of 3D walls (in world units). */
-    public final DoubleProperty mazeWallHeightProperty;
-
-    /* Opacity of 3D walls (0.0–1.0). */
-    public final DoubleProperty mazeWallOpacityProperty;
-
     public Settings3DViewModel() {
         axesVisibleProperty = new SimpleBooleanProperty();
         cameraPerspectiveIdProperty = new SimpleObjectProperty<>();
         drawModeProperty = new SimpleObjectProperty<>();
         view3DEnabledProperty = new SimpleBooleanProperty();
-        mazeFloorColorProperty = new SimpleObjectProperty<>();
-        mazeLightColorProperty = new SimpleObjectProperty<>();
-        mazeWallHeightProperty = new SimpleDoubleProperty();
-        mazeWallOpacityProperty = new SimpleDoubleProperty();
     }
 
     public void init(Settings3D settings) {
@@ -65,9 +51,5 @@ public class Settings3DViewModel {
         cameraPerspectiveIdProperty.set(settings.cameraPerspectiveId());
         drawModeProperty.set(settings.drawMode());
         view3DEnabledProperty.set(settings.view3DEnabled());
-        mazeFloorColorProperty.set(settings.mazeFloorColor());
-        mazeLightColorProperty.set(settings.mazeLightColor());
-        mazeWallHeightProperty.set(settings.mazeWallHeight());
-        mazeWallOpacityProperty.set(settings.mazeWallOpacity());
     }
 }

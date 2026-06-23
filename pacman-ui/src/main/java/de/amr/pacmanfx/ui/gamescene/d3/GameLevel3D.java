@@ -29,6 +29,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.viewmodel.Maze3DSettingsViewModel;
 import de.amr.pacmanfx.ui.viewmodel.Settings3DViewModel;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -141,18 +142,20 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private MessageManager3D messageManager;
 
-    /**
-     * Creates a new 3D level representation for the given game level.
-     *
-     * @param gameContext the current game context
-     * @param level       the game level to visualize
-     * @param uiConfig    the global UI configuration (provides 3D settings, colors, models)
-     */
-    public GameLevel3D(Settings3DViewModel globals3D, GameContext gameContext, GameLevel level, GameVariantConfig uiConfig) {
+    public GameLevel3D(
+        Settings3DViewModel settings3D,
+        Maze3DSettingsViewModel maze3DSettings,
+        GameContext gameContext,
+        GameLevel level,
+        GameVariantConfig uiConfig
+    ) {
+        requireNonNull(settings3D);
+        requireNonNull(maze3DSettings);
+        requireNonNull(gameContext);
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
 
-        createMaze3D(globals3D);
+        createMaze3D(settings3D, maze3DSettings);
         createFood3D();
         createPac3D();
         createGhosts3D(gameContext);
@@ -286,20 +289,20 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Private area, no trespassing!
 
-    private void createMaze3D(Settings3DViewModel globals3D) {
+    private void createMaze3D(Settings3DViewModel settings3D, Maze3DSettingsViewModel maze3DSettings) {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         maze3D = uiConfig.factory3D().createMaze3D(
-            globals3D.drawModeProperty,
+            settings3D.drawModeProperty,
             terrain,
             uiConfig.worldConfig(),
             colorScheme,
             animationRegistry);
 
-        maze3D.wallOpacityProperty()   .bind(globals3D.mazeWallOpacityProperty);
-        maze3D.wallBaseHeightProperty().bind(globals3D.mazeWallHeightProperty);
-        maze3D.floorColorProperty()    .bind(globals3D.mazeFloorColorProperty);
+        maze3D.wallOpacityProperty()   .bind(maze3DSettings.wallOpacityProperty);
+        maze3D.wallBaseHeightProperty().bind(maze3DSettings.wallHeightProperty);
+        maze3D.floorColorProperty()    .bind(maze3DSettings.floorColorProperty);
     }
 
     private void createFood3D() {

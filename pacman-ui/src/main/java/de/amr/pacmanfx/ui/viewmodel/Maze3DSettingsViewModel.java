@@ -5,13 +5,18 @@
 package de.amr.pacmanfx.ui.viewmodel;
 
 import de.amr.pacmanfx.ui.config.world.Maze3DSettings;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 
 public class Maze3DSettingsViewModel {
+
+    public final ObjectProperty<Color> floorColorProperty;
+
+    public final ObjectProperty<Color> lightColorProperty;
+
+    public final DoubleProperty wallHeightProperty;
+
+    public final DoubleProperty wallOpacityProperty;
 
     public final FloatProperty obstacleBaseHeightProperty;
 
@@ -24,6 +29,10 @@ public class Maze3DSettingsViewModel {
     public final ObjectProperty<Color> darkWallFillColorProperty;
 
     public Maze3DSettingsViewModel() {
+        floorColorProperty = new SimpleObjectProperty<>();
+        lightColorProperty = new SimpleObjectProperty<>();
+        wallHeightProperty = new SimpleDoubleProperty();
+        wallOpacityProperty = new SimpleDoubleProperty();
         obstacleBaseHeightProperty = new SimpleFloatProperty();
         obstacleCornerRadiusProperty = new SimpleFloatProperty();
         obstacleOpacityProperty = new SimpleFloatProperty();
@@ -32,6 +41,10 @@ public class Maze3DSettingsViewModel {
     }
 
     public void init(Maze3DSettings settings) {
+        floorColorProperty.set(settings.floorColor());
+        lightColorProperty.set(settings.lightColor());
+        wallHeightProperty.set(settings.wallHeight());
+        wallOpacityProperty.set(settings.wallOpacity());
         obstacleBaseHeightProperty.set(settings.obstacleBaseHeight());
         obstacleCornerRadiusProperty.set(settings.obstacleCornerRadius());
         obstacleOpacityProperty.set(settings.obstacleOpacity());

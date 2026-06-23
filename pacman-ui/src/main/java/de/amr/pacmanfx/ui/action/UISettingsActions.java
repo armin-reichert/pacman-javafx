@@ -75,24 +75,24 @@ public class UISettingsActions {
         actionToggleDebugInfo = new GameAction(game, "toggle_debug_info") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(game.ui().settings().debugModeOnProperty);
+                toggleBooleanProperty(game.ui().viewModel().debugModeOnProperty);
             }
         };
 
         actionToggleKeyboardMonitor = new GameAction(game, "toggle_keyboard_monitor") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(game.ui().settings().keyboardMonitorOnProperty);
+                toggleBooleanProperty(game.ui().viewModel().keyboardMonitorOnProperty);
             }
         };
 
         actionToggleMiniViewVisibility = new GameAction(game, "toggle_mini_view_visibility") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(game.ui().settings().miniView.activeProperty);
+                toggleBooleanProperty(game.ui().viewModel().miniView.activeProperty);
                 if (!game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
                     final String msg = game.ui().translations().translate(
-                        game.ui().settings().miniView.activeProperty.get() ? "flash.pip_on" : "flash.pip_off");
+                        game.ui().viewModel().miniView.activeProperty.get() ? "flash.pip_on" : "flash.pip_off");
                     game.ui().shortMessage(msg);
                 }
             }
@@ -101,8 +101,8 @@ public class UISettingsActions {
         actionTogglePlayScene2D3D = new GameAction(game, "toggle_play_scene_2d_3d") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(game.ui().settings().d3.view3DEnabledProperty);
-                final boolean is3DEnabled = game.ui().settings().d3.view3DEnabledProperty.get();
+                toggleBooleanProperty(game.ui().viewModel().d3.view3DEnabledProperty);
+                final boolean is3DEnabled = game.ui().viewModel().d3.view3DEnabledProperty.get();
                 if (!inPlayScene()) {
                     game.ui().shortMessage(game.ui().translations().translate(is3DEnabled
                         ? "flash.use_3D_scene" : "flash.use_2D_scene"));

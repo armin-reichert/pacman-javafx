@@ -4,7 +4,13 @@
 
 package de.amr.pacmanfx.ui.config.world;
 
+import javafx.scene.paint.Color;
+
 public record Maze3DSettings(
+    Color floorColor,
+    Color lightColor,
+    double wallHeight,
+    double wallOpacity,
     float obstacleBaseHeight,
     float obstacleCornerRadius,
     float obstacleOpacity,

@@ -107,7 +107,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         // Init entries
         menuEntries.gameVariantID().setValue(gameVariant);
-        menuEntries.view3DEnabled().setValue(game.ui().settings().d3.view3DEnabledProperty.get());
+        menuEntries.view3DEnabled().setValue(game.ui().viewModel().d3.view3DEnabledProperty.get());
         menuEntries.cutScenesEnabled().setValue(gameContext.flow().cutScenesEnabled());
         menuEntries.mapOrder().setValue(mapSelector.selectionMode());
         menuEntries.mapOrder().setEnabled(!mapSelector.customMaps().isEmpty());
@@ -164,7 +164,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        game.ui().settings().d3.view3DEnabledProperty.set(newValue);
+        game.ui().viewModel().d3.view3DEnabledProperty.set(newValue);
     }
 
     private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {

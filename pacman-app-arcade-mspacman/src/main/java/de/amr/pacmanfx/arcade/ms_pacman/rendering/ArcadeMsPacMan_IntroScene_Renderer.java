@@ -76,7 +76,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
         }
         copyrightRenderer.drawCopyright(copyrightImage, TS(6), TS(28));
 
-        if (scene.game().ui().settings().debugModeOnProperty.get()) {
+        if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(scene);
         }
     }

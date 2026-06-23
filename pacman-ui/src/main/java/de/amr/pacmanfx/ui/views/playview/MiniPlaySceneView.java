@@ -82,10 +82,10 @@ public class MiniPlaySceneView {
     public void setUI(Game game) {
         this.game = requireNonNull(game);
 
-        rootPane.backgroundProperty().bind(game.ui().settings().d2.canvasBackgroundColorProperty.map(Background::fill));
-        rootPane.opacityProperty().bind(game.ui().settings().miniView.opacityPercentageProperty.divide(100.0));
+        rootPane.backgroundProperty().bind(game.ui().viewModel().d2.canvasBackgroundColorProperty.map(Background::fill));
+        rootPane.opacityProperty().bind(game.ui().viewModel().miniView.opacityPercentageProperty.divide(100.0));
 
-        canvas.heightProperty().bind(game.ui().settings().miniView.heightProperty);
+        canvas.heightProperty().bind(game.ui().viewModel().miniView.heightProperty);
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> {
                 final double aspect = (double) worldSize.get().x() / worldSize.get().y();
@@ -109,11 +109,11 @@ public class MiniPlaySceneView {
 
         levelRenderer = uiConfig.createGameLevelRenderer(canvas);
         levelRenderer.scalingProperty().bind(scaling);
-        levelRenderer.backgroundColorProperty().bind(game.ui().settings().d2.canvasBackgroundColorProperty);
+        levelRenderer.backgroundColorProperty().bind(game.ui().viewModel().d2.canvasBackgroundColorProperty);
 
         actorRenderer = uiConfig.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scaling);
-        actorRenderer.backgroundColorProperty().bind(game.ui().settings().d2.canvasBackgroundColorProperty);
+        actorRenderer.backgroundColorProperty().bind(game.ui().viewModel().d2.canvasBackgroundColorProperty);
     }
 
     public void slideIn() {
@@ -158,7 +158,7 @@ public class MiniPlaySceneView {
             game.currentGameContext().optCurrentLevel().ifPresent(this::drawGameLevel);
         }
 
-        if (game.ui().settings().debugModeOnProperty.get()) {
+        if (game.ui().viewModel().debugModeOnProperty.get()) {
             canvasRenderer.fillTextCentered(
                 "scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
                 Color.WHITE, Font.font(12 * scaling.get()),

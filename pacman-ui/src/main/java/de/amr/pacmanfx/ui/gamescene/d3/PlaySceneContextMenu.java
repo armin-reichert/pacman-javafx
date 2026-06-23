@@ -51,7 +51,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
 
         final GameModel gameModel = game.currentGameContext().model();
         final TranslationManager translations = game.ui().translations();
-        final Settings3DViewModel settings3D = game.ui().settings().d3;
+        final Settings3DViewModel settings3D = game.ui().viewModel().d3;
 
         addLocalizedTitleItem(this, translations, "context_menu.scene_display");
 
@@ -59,7 +59,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
             game.actions().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
 
         addLocalizedCheckBox(this, translations,
-            game.ui().settings().miniView.activeProperty, "context_menu.pip");
+            game.ui().viewModel().miniView.activeProperty, "context_menu.pip");
 
         addLocalizedTitleItem(this, translations, "context_menu.select_perspective");
         for (PerspectiveID id : PerspectiveID.values()) {
@@ -79,7 +79,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         addLocalizedCheckBox(this, translations, gameModel.cheats().pacImmuneProperty(), "context_menu.immunity");
 
         addSeparator(this);
-        addLocalizedCheckBox(this, translations, game.ui().settings().mutedProperty, "context_menu.muted");
+        addLocalizedCheckBox(this, translations, game.ui().viewModel().mutedProperty, "context_menu.muted");
         addLocalizedActionItem(this, translations, game.actions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         settings3D.cameraPerspectiveIdProperty.addListener(perspectiveListener);
@@ -92,6 +92,6 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
      */
     @Override
     public void dispose() {
-        game.ui().settings().d3.cameraPerspectiveIdProperty.removeListener(perspectiveListener);
+        game.ui().viewModel().d3.cameraPerspectiveIdProperty.removeListener(perspectiveListener);
     }
 }

@@ -55,9 +55,9 @@ public class DashboardSectionGeneral extends DashboardSection {
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
         btnStep.disableProperty().bind(game.clock().updatesDisabledProperty().not());
-        setAction(btnStep, () -> game.clock().makeSteps(game.ui().settings().numSimulationStepsProperty.get(), true));
+        setAction(btnStep, () -> game.clock().makeSteps(game.ui().viewModel().numSimulationStepsProperty.get(), true));
 
-        addIntSpinner("Num Steps", 1, 50, game.ui().settings().numSimulationStepsProperty);
+        addIntSpinner("Num Steps", 1, 50, game.ui().viewModel().numSimulationStepsProperty);
 
         final var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
         setEditor(sliderTargetFPS, game.clock().targetFrameRateProperty());
@@ -69,10 +69,10 @@ public class DashboardSectionGeneral extends DashboardSection {
 
         addDynamicLabeledValue("Total Updates",  gameClock::pausableUpdatesCount);
 
-        addColorPicker("Canvas Color", game.ui().settings().d2.canvasBackgroundColorProperty);
+        addColorPicker("Canvas Color", game.ui().viewModel().d2.canvasBackgroundColorProperty);
 
-        addCheckBox("Font Smoothing", game.ui().settings().d2.fontSmoothingOnProperty);
-        addCheckBox("Show Debug Info", game.ui().settings().debugModeOnProperty);
+        addCheckBox("Font Smoothing", game.ui().viewModel().d2.fontSmoothingOnProperty);
+        addCheckBox("Show Debug Info", game.ui().viewModel().debugModeOnProperty);
         addCheckBox("Time Measured", gameClock.timeMeasuredProperty());
     }
 }

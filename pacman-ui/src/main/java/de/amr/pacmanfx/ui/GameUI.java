@@ -23,7 +23,7 @@ public record GameUI(
     TranslationManager translations,
     SoundManager sounds,
     SpriteAnimationManager sprites,
-    GameUIViewModel settings)
+    GameUIViewModel viewModel)
 {
 
     public void connect(Game game) {
@@ -59,7 +59,7 @@ public record GameUI(
      * @param args    formatting arguments
      */
     public void shortMessage(String message, Object... args) {
-        shortMessage(settings.flashMessageDurationProperty.get(), message, args);
+        shortMessage(viewModel.flashMessageDurationProperty.get(), message, args);
     }
 
     public void clearMessage() {

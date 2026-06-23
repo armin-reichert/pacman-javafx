@@ -20,10 +20,6 @@
     "axesVisible":  false,
     "cameraPerspectiveId": "TRACK_PLAYER",
     "drawMode": "FILL",
-    "view3DEnabled":  false,
-    "mazeFloorColor": "rgb(20,20,20)",
-    "mazeLightColor": "#fff",
-    "mazeWallHeight": 3.5,
-    "mazeWallOpacity": 1
+    "view3DEnabled":  false
   }
 }

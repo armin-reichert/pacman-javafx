@@ -66,7 +66,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
             levelRenderer.drawLevel(level, info);
             updateActorZOrder(level);
             actorsInZOrder.forEach(actorRenderer::drawActor);
-            if (scene.game().ui().settings().debugModeOnProperty.get()) {
+            if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
                 debugRenderer.draw(scene);
             }
         });

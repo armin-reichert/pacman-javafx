@@ -12,6 +12,8 @@ import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
+import de.amr.pacmanfx.ui.viewmodel.GameUIViewModel;
+import de.amr.pacmanfx.ui.viewmodel.Maze3DSettingsViewModel;
 import de.amr.pacmanfx.ui.viewmodel.Settings3DViewModel;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
@@ -58,7 +60,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         final var gameState = event.newState();
 
         if (gameState instanceof TestState) {
-            handleTestState(game().ui().settings().d3);
+            handleTestState(game().ui().viewModel().d3);
         }
         else if (GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameState)) {
             onStartingGameOrLevel();
@@ -293,10 +295,20 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.messageManager().hideMessage();
 
-        playLevelEndAnimation(level3D.animationRegistry(), game().ui().settings().d3, level3D.maze3D(), level3D.level().cutSceneNumber() != 0);
+        final GameUIViewModel viewModel = game().ui().viewModel();
+        playLevelEndAnimation(level3D.animationRegistry(),
+            viewModel.d3, viewModel.maze3D,
+            level3D.maze3D(),
+            level3D.level().cutSceneNumber() != 0);
     }
 
-    private void playLevelEndAnimation(AnimationRegistry animationRegistry, Settings3DViewModel globals3D, Maze3D maze3D, boolean cutSceneAfter) {
+    private void playLevelEndAnimation(
+        AnimationRegistry animationRegistry,
+        Settings3DViewModel settings3D,
+        Maze3DSettingsViewModel maze3DSettings,
+        Maze3D maze3D,
+        boolean cutSceneAfter)
+    {
         final GameLevel3D.AnimationID animationID = cutSceneAfter
             ? GameLevel3D.AnimationID.LEVEL_COMPLETED_SHORT
             : GameLevel3D.AnimationID.LEVEL_COMPLETED_FULL;
@@ -310,16 +322,16 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
 
         gameContext().state().lock();
 
-        final PerspectiveID perspectiveBeforeAnimation = globals3D.cameraPerspectiveIdProperty.get();
+        final PerspectiveID perspectiveBeforeAnimation = settings3D.cameraPerspectiveIdProperty.get();
 
         final Animation resetCameraPerspective = pauseSecThen(2, () -> {
-            globals3D.cameraPerspectiveIdProperty.set(PerspectiveID.TOTAL);
+            settings3D.cameraPerspectiveIdProperty.set(PerspectiveID.TOTAL);
             maze3D.wallBaseHeightProperty().unbind();
         });
 
         final Animation restoreCameraPerspective = Ufx.pauseSecThen(0.25, () -> {
-            globals3D.cameraPerspectiveIdProperty.set(perspectiveBeforeAnimation);
-            maze3D.wallBaseHeightProperty().bind(globals3D.mazeWallHeightProperty);
+            settings3D.cameraPerspectiveIdProperty.set(perspectiveBeforeAnimation);
+            maze3D.wallBaseHeightProperty().bind(maze3DSettings.wallHeightProperty);
         });
 
         final var seq = new SequentialTransition(

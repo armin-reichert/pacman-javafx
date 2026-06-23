@@ -11,6 +11,7 @@ import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
+import de.amr.pacmanfx.ui.viewmodel.GameUIViewModel;
 import de.amr.pacmanfx.ui.viewmodel.Settings3DViewModel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -66,12 +67,14 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     public PlayScene3D(Game game) {
         super(game);
 
+        final GameUIViewModel viewModel = game.ui().viewModel();
+
         perspectiveManager = new PerspectiveManager(camera);
         final var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(game().ui().settings().d3.axesVisibleProperty);
+        coordinateSystem.visibleProperty().bind(viewModel.d3.axesVisibleProperty);
 
         ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(game().ui().settings().d3.mazeLightColorProperty);
+        ambientLight.colorProperty().bind(viewModel.maze3D.lightColorProperty);
 
         subSceneRoot = new Group(level3DEmbedder, coordinateSystem, ambientLight);
 
@@ -159,7 +162,9 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             Logger.info("Old 3D game level is disposed...");
             level3D.dispose();
         }
-        level3D = new GameLevel3D(game().ui().settings().d3, gameContext(), level, game().currentUIConfig());
+        final GameUIViewModel viewModel = game().ui().viewModel();
+
+        level3D = new GameLevel3D(viewModel.d3, viewModel.maze3D, gameContext(), level, game().currentUIConfig());
         decorate(level3D);
         level3DEmbedder.getChildren().setAll(level3D);
 
@@ -188,7 +193,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void onActivate() {
-        final Settings3DViewModel settings3D = game().ui().settings().d3;
+        final Settings3DViewModel settings3D = game().ui().viewModel().d3;
         perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIdProperty);
         settings3D.drawModeProperty.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
@@ -198,7 +203,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onDeactivate() {
         perspectiveManager.activeIDProperty().unbind();
-        game().ui().settings().d3.drawModeProperty.removeListener(drawModeChangeListener);
+        game().ui().viewModel().d3.drawModeProperty.removeListener(drawModeChangeListener);
         disposeContextMenu();
         actionBindings().dispose();
     }
