@@ -1,4 +1,8 @@
 {
+  "numTilesX": 42,
+  "numTilesY": 34,
+  "textColumn": 6,
+  "valueColumn": 20,
   "titleFont": {
     "family": "monospace",
     "size": 30,

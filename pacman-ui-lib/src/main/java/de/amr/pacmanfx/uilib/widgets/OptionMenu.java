@@ -42,10 +42,6 @@ public class OptionMenu {
 
     public static final int NUM_CLIENT_ACTIONS = 2;
 
-    public record Layout(int numTilesX, int numTilesY, int textColumn, int valueColumn) {}
-
-    private final Layout layout;
-
     private final List<OptionMenuEntry<?>> entries = new ArrayList<>();
 
     private final BooleanProperty soundEnabled = new SimpleBooleanProperty(true);
@@ -73,16 +69,15 @@ public class OptionMenu {
     private final KeyCode[] actionKeys = new KeyCode[NUM_CLIENT_ACTIONS];
     private final String[]  actionTexts = new String[NUM_CLIENT_ACTIONS];
 
-    public OptionMenu(Layout layout) {
-        this(layout, DEFAULT_SETTINGS);
+    public OptionMenu() {
+        this(DEFAULT_SETTINGS);
     }
 
-    public OptionMenu(Layout layout, OptionMenuSettings settings) {
-        this.layout = requireNonNull(layout);
+    public OptionMenu(OptionMenuSettings settings) {
         this.settings = requireNonNull(settings);
 
-        canvas.widthProperty() .bind(scaling.multiply(layout.numTilesX() * WorldMap.TS));
-        canvas.heightProperty().bind(scaling.multiply(layout.numTilesY() * WorldMap.TS));
+        canvas.widthProperty() .bind(scaling.multiply(settings.numTilesX() * WorldMap.TS));
+        canvas.heightProperty().bind(scaling.multiply(settings.numTilesY() * WorldMap.TS));
 
         canvas.focusedProperty().addListener((_, _, _) -> Logger.debug("Option menu canvas has focus"));
 
@@ -156,10 +151,6 @@ public class OptionMenu {
 
     public Pane rootPane() { return root; }
 
-    public Layout layout() {
-        return layout;
-    }
-
     public FloatProperty scalingProperty() { return scaling; }
 
     public float scaling() {
@@ -185,14 +176,6 @@ public class OptionMenu {
     public OptionMenuSettings settings() {
         return settings;
     }
-
-/*
-    public void setStyle(OptionMenuStyle posture) {
-        this.posture = requireNonNull(posture);
-        root.setBackground(Background.fill(posture.backgroundFill()));
-        root.setBorder(Border.stroke(posture.borderStroke()));
-    }
- */
 
     /**
      * @param n action number (1, 2, ...)
