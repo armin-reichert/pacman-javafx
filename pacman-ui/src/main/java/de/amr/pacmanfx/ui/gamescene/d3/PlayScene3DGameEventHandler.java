@@ -12,7 +12,7 @@ import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.model.ViewModel;
+import de.amr.pacmanfx.ui.model.GameUIViewModel;
 import de.amr.pacmanfx.ui.model.Maze3DSettingsModel;
 import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
@@ -295,7 +295,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.messageManager().hideMessage();
 
-        final ViewModel viewModel = game().ui().viewModel();
+        final GameUIViewModel viewModel = game().ui().viewModel();
         playLevelEndAnimation(level3D.animationRegistry(),
             viewModel.common3D, viewModel.maze3D,
             level3D.maze3D(),

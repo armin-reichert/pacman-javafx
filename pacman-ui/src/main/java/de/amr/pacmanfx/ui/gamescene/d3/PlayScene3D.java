@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
-import de.amr.pacmanfx.ui.model.ViewModel;
+import de.amr.pacmanfx.ui.model.GameUIViewModel;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
@@ -67,7 +67,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     public PlayScene3D(Game game) {
         super(game);
 
-        final ViewModel viewModel = game.ui().viewModel();
+        final GameUIViewModel viewModel = game.ui().viewModel();
 
         perspectiveManager = new PerspectiveManager(camera);
         final var coordinateSystem = new CoordinateSystem();
@@ -162,7 +162,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             Logger.info("Old 3D game level is disposed...");
             level3D.dispose();
         }
-        final ViewModel viewModel = game().ui().viewModel();
+        final GameUIViewModel viewModel = game().ui().viewModel();
 
         level3D = new GameLevel3D(viewModel, gameContext(), level, game().currentUIConfig());
         decorate(level3D);

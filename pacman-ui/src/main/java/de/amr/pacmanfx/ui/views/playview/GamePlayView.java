@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.GameVariantConfig;
-import de.amr.pacmanfx.ui.model.ViewModel;
+import de.amr.pacmanfx.ui.model.GameUIViewModel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -115,7 +115,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     @Override
     public void connect(Game game) {
         this.game = requireNonNull(game);
-        final ViewModel settings = game.ui().viewModel();
+        final GameUIViewModel settings = game.ui().viewModel();
 
         rootPane.setOnContextMenuRequested(this);
         game.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
