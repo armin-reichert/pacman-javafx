@@ -8,10 +8,8 @@ import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.MazeHouse3D;
 import de.amr.pacmanfx.uilib.UfxColors;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import javafx.beans.property.ObjectProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.DrawMode;
 
 import java.util.Map;
 
@@ -26,19 +24,17 @@ public class MazeFactory3D {
 
     public Maze3D createMaze3D(
         TerrainLayer terrain, WorldSettings config, WorldMapColorScheme colorScheme,
-        AnimationRegistry animationRegistry,
-        ObjectProperty<DrawMode> drawMode)
+        AnimationRegistry animationRegistry)
     {
         requireNonNull(terrain);
         requireNonNull(config);
         requireNonNull(colorScheme);
         requireNonNull(animationRegistry);
-        requireNonNull(drawMode);
 
         final Map<String, PhongMaterial> materials = createMazeMaterialMap(colorScheme);
 
         final var maze3D = new Maze3D(terrain);
-        maze3D.build(drawMode, materials, config.maze(), config.floor());
+        maze3D.build(materials, config.maze(), config.floor());
 
         bindFloorMaterialColor(maze3D, materials.get("floorMaterial"));
         bindWallBaseMaterialColor(maze3D, materials.get("wallBaseMaterial"), Color.valueOf(colorScheme.wallStroke()));

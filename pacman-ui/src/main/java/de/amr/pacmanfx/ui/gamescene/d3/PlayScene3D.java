@@ -11,8 +11,6 @@ import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.model.ViewModel;
-import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
@@ -20,6 +18,8 @@ import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
+import de.amr.pacmanfx.ui.model.ViewModel;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
@@ -164,7 +164,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         }
         final ViewModel viewModel = game().ui().viewModel();
 
-        level3D = new GameLevel3D(viewModel.common3D, viewModel.maze3D, gameContext(), level, game().currentUIConfig());
+        level3D = new GameLevel3D(viewModel, gameContext(), level, game().currentUIConfig());
         decorate(level3D);
         level3DEmbedder.getChildren().setAll(level3D);
 

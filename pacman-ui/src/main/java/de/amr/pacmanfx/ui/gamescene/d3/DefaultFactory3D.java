@@ -20,10 +20,8 @@ import de.amr.pacmanfx.uilib.model3D.pac.Pac3DFactory;
 import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
-import javafx.beans.property.ObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Sphere;
 import javafx.scene.shape.TriangleMesh;
 
@@ -51,10 +49,10 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public Maze3D createMaze3D(
-        ObjectProperty<DrawMode> drawMode, TerrainLayer terrain, WorldSettings config,
+        TerrainLayer terrain, WorldSettings config,
         WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
 
-        return mazeFactory3D.createMaze3D(terrain, config, colorScheme, animationRegistry, drawMode);
+        return mazeFactory3D.createMaze3D(terrain, config, colorScheme, animationRegistry);
     }
 
 

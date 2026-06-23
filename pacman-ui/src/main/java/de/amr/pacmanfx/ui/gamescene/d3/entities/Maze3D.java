@@ -36,8 +36,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class Maze3D extends Group implements DisposableGraphicsObject {
 
+    private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
+
     private final DoubleProperty wallBaseHeight = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
+
     private final DoubleProperty wallOpacity = new SimpleDoubleProperty(1);
+
     private final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>(Color.valueOf("#1a1a1a"));
 
     private final TerrainLayer terrain;
@@ -65,7 +69,6 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     }
 
     public void build(
-        ObjectProperty<DrawMode> drawMode,
         Map<String, PhongMaterial> materials,
         Maze3DSettings maze3DSettings,
         Floor3DSettings floor3DSettings)
@@ -81,6 +84,10 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
 
     public void setHouse3D(MazeHouse3D house3D) {
         this.house3D = requireNonNull(house3D);
+    }
+
+    public ObjectProperty<DrawMode> drawModeProperty() {
+        return drawMode;
     }
 
     public DoubleProperty wallBaseHeightProperty() {

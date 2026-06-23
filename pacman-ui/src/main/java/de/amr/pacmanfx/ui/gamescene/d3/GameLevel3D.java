@@ -28,9 +28,8 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationCon
 import de.amr.pacmanfx.ui.gamescene.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
+import de.amr.pacmanfx.ui.model.ViewModel;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.model.Maze3DSettingsModel;
-import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -143,19 +142,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private MessageManager3D messageManager;
 
     public GameLevel3D(
-        Common3DSettingsModel settings3D,
-        Maze3DSettingsModel maze3DSettings,
+        ViewModel viewModel,
         GameContext gameContext,
         GameLevel level,
         GameVariantConfig uiConfig
     ) {
-        requireNonNull(settings3D);
-        requireNonNull(maze3DSettings);
+        requireNonNull(viewModel);
         requireNonNull(gameContext);
         this.level = requireNonNull(level);
         this.uiConfig = requireNonNull(uiConfig);
 
-        createMaze3D(settings3D, maze3DSettings);
+        createMaze3D(viewModel);
         createFood3D();
         createPac3D();
         createGhosts3D(gameContext);
@@ -289,20 +286,20 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Private area, no trespassing!
 
-    private void createMaze3D(Common3DSettingsModel settings3D, Maze3DSettingsModel maze3DSettings) {
+    private void createMaze3D(ViewModel viewModel) {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         maze3D = uiConfig.factory3D().createMaze3D(
-            settings3D.drawModeProperty,
             terrain,
             uiConfig.worldSettings(),
             colorScheme,
             animationRegistry);
 
-        maze3D.wallOpacityProperty()   .bind(maze3DSettings.wallOpacityProperty);
-        maze3D.wallBaseHeightProperty().bind(maze3DSettings.wallHeightProperty);
-        maze3D.floorColorProperty()    .bind(maze3DSettings.floorColorProperty);
+        maze3D.drawModeProperty()      .bind(viewModel.common3D.drawModeProperty);
+        maze3D.wallOpacityProperty()   .bind(viewModel.maze3D.wallOpacityProperty);
+        maze3D.wallBaseHeightProperty().bind(viewModel.maze3D.wallHeightProperty);
+        maze3D.floorColorProperty()    .bind(viewModel.maze3D.floorColorProperty);
     }
 
     private void createFood3D() {

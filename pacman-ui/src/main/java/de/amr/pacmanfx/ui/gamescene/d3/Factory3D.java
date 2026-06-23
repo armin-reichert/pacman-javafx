@@ -20,24 +20,21 @@ import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
-import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.DrawMode;
 
 public interface Factory3D extends Disposable {
 
     /**
      * Creates a 3D maze.
      *
-     * @param drawMode draw mode property (wireframe or normal mode)
      * @param terrain the terrain layer
      * @param config world configuration
      * @param colorScheme the map color scheme
      * @param animationRegistry the animation registry
      * @return a 3D maze representing the given terrain
      */
-    Maze3D createMaze3D(ObjectProperty<DrawMode> drawMode, TerrainLayer terrain, WorldSettings config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry);
+    Maze3D createMaze3D(TerrainLayer terrain, WorldSettings config, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry);
 
     /**
      * Creates the 3D representation of Pac for this game variant, including model,
