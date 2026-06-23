@@ -1,10 +1,14 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.ui.model;
 
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import javafx.beans.property.*;
 import javafx.util.Duration;
 
-public class GameViewModel {
+public class ViewModel {
 
     public final ObjectProperty<Duration> flashMessageDurationProperty;
     public final BooleanProperty debugModeOnProperty;
@@ -12,21 +16,21 @@ public class GameViewModel {
     public final BooleanProperty mutedProperty;
     public final IntegerProperty numSimulationStepsProperty;
 
-    public final MiniViewViewModel miniView;
-    public final CommonSettings2DModel common2D;
-    public final CommonSettings3DModel common3D;
+    public final MiniViewModel miniView;
+    public final Common2DSettingsModel common2D;
+    public final Common3DSettingsModel common3D;
     public final Maze3DSettingsModel maze3D;
 
-    public GameViewModel() {
+    public ViewModel() {
         flashMessageDurationProperty = new SimpleObjectProperty<>();
         debugModeOnProperty = new SimpleBooleanProperty();
         keyboardMonitorOnProperty = new SimpleBooleanProperty();
         mutedProperty = new SimpleBooleanProperty();
         numSimulationStepsProperty = new SimpleIntegerProperty();
 
-        miniView = new MiniViewViewModel();
-        common2D = new CommonSettings2DModel();
-        common3D = new CommonSettings3DModel();
+        miniView = new MiniViewModel();
+        common2D = new Common2DSettingsModel();
+        common3D = new Common3DSettingsModel();
         maze3D = new Maze3DSettingsModel();
     }
 

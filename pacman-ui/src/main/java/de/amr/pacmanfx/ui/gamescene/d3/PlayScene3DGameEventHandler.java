@@ -12,9 +12,9 @@ import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.test.TestState;
-import de.amr.pacmanfx.ui.model.GameViewModel;
+import de.amr.pacmanfx.ui.model.ViewModel;
 import de.amr.pacmanfx.ui.model.Maze3DSettingsModel;
-import de.amr.pacmanfx.ui.model.CommonSettings3DModel;
+import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -295,7 +295,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.messageManager().hideMessage();
 
-        final GameViewModel viewModel = game().ui().viewModel();
+        final ViewModel viewModel = game().ui().viewModel();
         playLevelEndAnimation(level3D.animationRegistry(),
             viewModel.common3D, viewModel.maze3D,
             level3D.maze3D(),
@@ -304,7 +304,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
 
     private void playLevelEndAnimation(
         AnimationRegistry animationRegistry,
-        CommonSettings3DModel settings3D,
+        Common3DSettingsModel settings3D,
         Maze3DSettingsModel maze3DSettings,
         Maze3D maze3D,
         boolean cutSceneAfter)
@@ -355,7 +355,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 
-    private void handleTestState(CommonSettings3DModel globals3D) {
+    private void handleTestState(Common3DSettingsModel globals3D) {
         playScene3D.optGameLevel3D().ifPresent(level3D -> {
             playScene3D.replaceGameLevel3D(level3D.level());
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level3D.level().number());

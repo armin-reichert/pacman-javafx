@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.ui.model.GameViewModel;
+import de.amr.pacmanfx.ui.model.ViewModel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
@@ -23,7 +23,7 @@ public record GameUI(
     TranslationManager translations,
     SoundManager sounds,
     SpriteAnimationManager sprites,
-    GameViewModel viewModel)
+    ViewModel viewModel)
 {
 
     public void connect(Game game) {

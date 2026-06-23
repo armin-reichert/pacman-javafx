@@ -30,7 +30,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.model.Maze3DSettingsModel;
-import de.amr.pacmanfx.ui.model.CommonSettings3DModel;
+import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -143,7 +143,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private MessageManager3D messageManager;
 
     public GameLevel3D(
-        CommonSettings3DModel settings3D,
+        Common3DSettingsModel settings3D,
         Maze3DSettingsModel maze3DSettings,
         GameContext gameContext,
         GameLevel level,
@@ -289,7 +289,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Private area, no trespassing!
 
-    private void createMaze3D(CommonSettings3DModel settings3D, Maze3DSettingsModel maze3DSettings) {
+    private void createMaze3D(Common3DSettingsModel settings3D, Maze3DSettingsModel maze3DSettings) {
         final WorldMapColorScheme colorScheme = uiConfig.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 

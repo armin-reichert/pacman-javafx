@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.model.GameViewModel;
+import de.amr.pacmanfx.ui.model.ViewModel;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
@@ -40,7 +40,7 @@ public class DashboardSection3DSettings extends DashboardSection {
 
     @Override
     public void connect(Game game) {
-        final GameViewModel viewModel = game.ui().viewModel();
+        final ViewModel viewModel = game.ui().viewModel();
 
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
         comboPerspectives = addChoiceBox("Perspective", PerspectiveID.values());
@@ -99,7 +99,7 @@ public class DashboardSection3DSettings extends DashboardSection {
     public void update() {
         super.update();
 
-        final GameViewModel viewModel = game().ui().viewModel();
+        final ViewModel viewModel = game().ui().viewModel();
 
         comboPerspectives.setValue(viewModel.common3D.cameraPerspectiveIdProperty.get());
         sliderMiniViewSceneHeight.setValue(viewModel.miniView.heightProperty.get());
