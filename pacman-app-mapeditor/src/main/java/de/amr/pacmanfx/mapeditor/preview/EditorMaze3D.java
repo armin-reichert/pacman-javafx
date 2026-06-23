@@ -52,7 +52,7 @@ public class EditorMaze3D extends Group {
                 Color.BLUE, // hair bow pearls
                 Color.YELLOW.deriveColor(0, 1.0, 0.96, 1.0) // boobs
             ),
-            12.0f, 14.0f
+            14.0f
         );
 
     public static final float GHOST_SIZE = 14.0f;

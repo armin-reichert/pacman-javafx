@@ -7,10 +7,9 @@ package de.amr.pacmanfx.uilib.model3D.pac;
 public record PacSettings(
     PacColors colors,
     MsPacManComponentColors msColors,
-    float size2D,
     float size3D)
 {
     public PacSettings withModifiedSize3D(float newSize) {
-        return new PacSettings(colors, msColors, size2D, newSize);
+        return new PacSettings(colors, msColors, newSize);
     }
 }

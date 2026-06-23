@@ -10,13 +10,11 @@
       "hairBowPearls": "nes(0x02)",
       "boobs": "nes(0x28)"
     },
-    "size2D": 8,
     "size3D": 16
   },
 
   "ghosts": [
     {
-      "size2D": 8,
       "size3D": 15.5,
       "colors": {
         "normal": {
@@ -37,7 +35,6 @@
       }
     },
     {
-      "size2D": 8,
       "size3D": 15.5,
       "colors": {
         "normal": {
@@ -58,7 +55,6 @@
       }
     },
     {
-      "size2D": 8,
       "size3D": 15.5,
       "colors": {
         "normal": {
@@ -79,7 +75,6 @@
       }
     },
     {
-      "size2D": 8,
       "size3D": 15.5,
       "colors": {
         "normal": {
