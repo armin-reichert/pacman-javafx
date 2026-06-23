@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.uilib.model3D.ghost;
 
 public record GhostStateColors(
-    GhostComponentColors normalColors,
-    GhostComponentColors frightenedColors,
-    GhostComponentColors flashingColors)
+    GhostComponentColors normal,
+    GhostComponentColors frightened,
+    GhostComponentColors flashing)
 {}

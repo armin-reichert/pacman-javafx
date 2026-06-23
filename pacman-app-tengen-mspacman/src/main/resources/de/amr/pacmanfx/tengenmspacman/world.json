@@ -19,17 +19,17 @@
       "size2D": 8,
       "size3D": 15.5,
       "colors": {
-        "normalColors": {
+        "normal": {
           "dressColor": "nes(0x05)",
           "eyeballsColor": "nes(0x20)",
           "pupilsColor": "nes(0x11)"
         },
-        "frightenedColors": {
+        "frightened": {
           "dressColor": "nes(0x01)",
           "eyeballsColor": "nes(0x20)",
           "pupilsColor": "nes(0x20)"
         },
-        "flashingColors": {
+        "flashing": {
           "dressColor": "nes(0x20)",
           "eyeballsColor": "nes(0x20)",
           "pupilsColor": "nes(0x11)"
@@ -40,17 +40,17 @@
       "size2D": 8,
       "size3D": 15.5,
       "colors": {
-        "normalColors": {
+        "normal": {
           "dressColor": "nes(0x25)",
           "eyeballsColor": "nes(0x20)",
           "pupilsColor": "nes(0x11)"
         },
-        "frightenedColors": {
+        "frightened": {
           "dressColor": "nes(0x01)",
           "eyeballsColor": "nes(0x20)",
           "pupilsColor": "nes(0x20)"
         },
-        "flashingColors": {
+        "flashing": {
           "dressColor": "nes(0x20)",
           "eyeballsColor": "nes(0x20)",
           "pupilsColor": "nes(0x11)"
@@ -61,17 +61,17 @@
       "size2D": 8,
       "size3D": 15.5,
       "colors": {
-        "normalColors": {
+        "normal": {
           "dressColor": "nes(0x11)",
           "eyeballsColor": "nes(0x20)",
           "pupilsColor": "nes(0x11)"
         },
-        "frightenedColors": {
+        "frightened": {
           "dressColor": "nes(0x01)",
           "eyeballsColor": "nes(0x20)",
           "pupilsColor": "nes(0x20)"
         },
-        "flashingColors": {
+        "flashing": {
           "dressColor": "nes(0x20)",
           "eyeballsColor": "nes(0x20)",
           "pupilsColor": "nes(0x11)"
@@ -82,17 +82,17 @@
       "size2D": 8,
       "size3D": 15.5,
       "colors": {
-        "normalColors": {
+        "normal": {
           "dressColor": "nes(0x16)",
           "eyeballsColor": "nes(0x20)",
           "pupilsColor": "nes(0x11)"
         },
-        "frightenedColors": {
+        "frightened": {
           "dressColor": "nes(0x01)",
           "eyeballsColor": "nes(0x20)",
           "pupilsColor": "nes(0x20)"
         },
-        "flashingColors": {
+        "flashing": {
           "dressColor": "nes(0x20)",
           "eyeballsColor": "nes(0x20)",
           "pupilsColor": "nes(0x11)"

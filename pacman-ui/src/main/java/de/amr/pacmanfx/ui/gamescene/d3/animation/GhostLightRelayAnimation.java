@@ -65,7 +65,7 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
 
     private void illuminateGhost(byte personality) {
         final Ghost3D ghost3D = ghosts3D.get(personality);
-        final Color lightColor = ghosts3D.get(personality).config().colors().normalColors().dressColor();
+        final Color lightColor = ghosts3D.get(personality).config().colors().normal().dressColor();
         light.setColor(lightColor);
         light.translateXProperty().bind(ghost3D.translateXProperty());
         light.translateYProperty().bind(ghost3D.translateYProperty());

@@ -118,21 +118,21 @@ public class DefaultFactory3D implements Factory3D {
         requireNonNull(colors);
 
         final var normalMaterials = new GhostComponentMaterialSet(
-            coloredPhongMaterial(colors.normalColors().dressColor()),
-            coloredPhongMaterial(colors.normalColors().eyeballsColor()),
-            coloredPhongMaterial(colors.normalColors().pupilsColor())
+            coloredPhongMaterial(colors.normal().dressColor()),
+            coloredPhongMaterial(colors.normal().eyeballsColor()),
+            coloredPhongMaterial(colors.normal().pupilsColor())
         );
 
         final var frightenedMaterials = new GhostComponentMaterialSet(
-            coloredPhongMaterial(colors.frightenedColors().dressColor()),
-            coloredPhongMaterial(colors.frightenedColors().eyeballsColor()),
-            coloredPhongMaterial(colors.frightenedColors().pupilsColor())
+            coloredPhongMaterial(colors.frightened().dressColor()),
+            coloredPhongMaterial(colors.frightened().eyeballsColor()),
+            coloredPhongMaterial(colors.frightened().pupilsColor())
         );
 
         final var flashingMaterials = new GhostComponentMaterialSet(
-            coloredPhongMaterial(colors.flashingColors().dressColor()),
-            coloredPhongMaterial(colors.flashingColors().eyeballsColor()),
-            coloredPhongMaterial(colors.flashingColors().pupilsColor())
+            coloredPhongMaterial(colors.flashing().dressColor()),
+            coloredPhongMaterial(colors.flashing().eyeballsColor()),
+            coloredPhongMaterial(colors.flashing().pupilsColor())
         );
 
         return new GhostMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
