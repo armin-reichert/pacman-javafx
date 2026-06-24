@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.uilib.widgets;
 
 import de.amr.pacmanfx.model.world.WorldMap;
@@ -25,7 +26,14 @@ import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Typical Arcade-style option menu.
+ */
 public class OptionMenu {
+
+    //TODO: make a JavaFX control from this widget and use CSS.
+
+    public static final String CSS_STYLE_CLASS = "option-menu";
 
     public static final OptionMenuSettings DEFAULT_SETTINGS = SettingsLoader.load(
         OptionMenu.class.getResource("option-menu.json"),
@@ -49,12 +57,13 @@ public class OptionMenu {
     private final FloatProperty scaling = new SimpleFloatProperty(2);
 
     private int selectedEntryIndex = 0;
+
     private String title = "OPTIONS";
 
     protected final BorderPane root = new BorderPane();
     protected final Canvas canvas = new Canvas();
-    protected OptionMenuRenderer renderer;
 
+    protected OptionMenuRenderer renderer;
     protected OptionMenuSettings settings;
 
     private final AnimationTimer drawLoop;
@@ -79,12 +88,13 @@ public class OptionMenu {
         canvas.widthProperty() .bind(scaling.multiply(settings.numTilesX() * WorldMap.TS));
         canvas.heightProperty().bind(scaling.multiply(settings.numTilesY() * WorldMap.TS));
 
-        canvas.focusedProperty().addListener((_, _, _) -> Logger.debug("Option menu canvas has focus"));
+        canvas.focusedProperty().addListener((_, _, focus) ->
+            Logger.debug("Option menu canvas focus: {}", focus));
 
         renderer = new OptionMenuRenderer(canvas);
         renderer.scalingProperty().bind(scalingProperty());
 
-        root.getStyleClass().add("option-menu");
+        root.getStyleClass().add(CSS_STYLE_CLASS);
         root.maxWidthProperty().bind(canvas.widthProperty());
         root.maxHeightProperty().bind(canvas.heightProperty());
         root.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKeyPressedEvent);
@@ -119,15 +129,21 @@ public class OptionMenu {
     }
 
     public void setRenderer(OptionMenuRenderer renderer) {
-        this.renderer = renderer;
+        this.renderer = requireNonNull(renderer);
         renderer.scalingProperty().bind(scalingProperty());
     }
 
     public void requestFocus() {
-        final Canvas canvas = renderer.ctx().getCanvas();
-        if (!canvas.isFocused()) {
-            canvas.requestFocus();
-            Logger.debug("Focus now on {}", canvas);
+        if (renderer == null) {
+            root.requestFocus();
+            Logger.info("Focus now on {}", root);
+        }
+        else {
+            final Canvas canvas = renderer.ctx().getCanvas();
+            if (!canvas.isFocused()) {
+                canvas.requestFocus();
+            }
+            Logger.info("Focus now on {}", canvas);
         }
     }
 
