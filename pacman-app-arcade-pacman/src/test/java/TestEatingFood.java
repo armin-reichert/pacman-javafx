@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameRules;
-import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.actors.Elroy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -54,16 +53,6 @@ public class TestEatingFood {
         @Override
         public GameModel model() {
             return gameModel;
-        }
-
-        @Override
-        public boolean isCollisionDoubleChecked() {
-            return false;
-        }
-
-        @Override
-        public CollisionStrategy collisionStrategy() {
-            return CollisionStrategy.SAME_TILE;
         }
 
         @Override

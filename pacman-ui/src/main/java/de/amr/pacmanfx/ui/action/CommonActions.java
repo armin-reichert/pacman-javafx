@@ -54,11 +54,11 @@ public final class CommonActions {
             protected void doAction() {
                 final GameRules rules = game.currentGameContext().rules();
                 Ufx.toggleProperty(rules.collisionStrategyProperty(), CollisionStrategy.SAME_TILE, CollisionStrategy.CENTER_DISTANCE);
-                final CollisionStrategy newStrategy = rules.collisionStrategyProperty().get();
-                if (newStrategy == CollisionStrategy.SAME_TILE) {
-                    game.ui().shortMessage("Using original Arcade collision strategy (same tile check)");
+                final CollisionStrategy strategy = rules.collisionStrategyProperty().get();
+                if (strategy == CollisionStrategy.SAME_TILE) {
+                    game.ui().shortMessage("Using original Arcade collision strategy (same tile)");
                 } else {
-                    game.ui().shortMessage("Using fail-safe collision strategy");
+                    game.ui().shortMessage("Using safe collision strategy");
                 }
             }
         };
@@ -68,7 +68,7 @@ public final class CommonActions {
         bindings.addAll(gameFlowActions.bindings());
         bindings.addAll(editorActions.bindings());
         bindings.addAll(uiSettingsActions.bindings());
-        bindings.add(new ActionKeyBinding(actionToggleCollisionStrategy, combine().alt().key(KeyCode.S)));
+        bindings.add(new ActionKeyBinding(actionToggleCollisionStrategy(), combine().alt().key(KeyCode.S)));
 
         commonBindings = Collections.unmodifiableSet(bindings);
     }
