@@ -69,8 +69,8 @@ public final class GlobalAssets {
 
     static {
         Logger.info("Loading predefined fonts");
-        for (var f : PredefinedFont.values()) {
-            Logger.info(f.font());
+        for (var predefinedFont : PredefinedFont.values()) {
+            Logger.info(predefinedFont.font());
         }
     }
 }

@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.uilib.assets;
 
-import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
@@ -44,7 +43,7 @@ public interface ResourceManager {
      * Creates a URL from a resource path.
      *
      * @param path path of resource
-     * @return URL of resource addressed by this path
+     * @return URL of resource addressed by this path (never returns null)
      */
     default URL url(String path) {
         requireNonNull(path);
@@ -70,19 +69,22 @@ public interface ResourceManager {
     }
 
     /**
+     * Loads and registers a font such that it can later be uses like JavaFX standard fonts.
+     *
      * @param path path to font file
-     * @param size    font size (must be a positive number)
-     * @return font loaded from resource addressed by this path. If no such font can be loaded, a default font is returned
+     * @param size font size (must be a positive number)
+     * @return font loaded from resource addressed by this path.
+     *         If no such font can be loaded, the JavaFX default font is returned.
      */
     default Font loadFont(String path, double size) {
         if (size <= 0) {
             throw new IllegalArgumentException(String.format("Font size must be positive but is %.2f", size));
         }
-        var url = url(path);
-        var font = Font.loadFont(url.toExternalForm(), size);
+        final URL url = url(path);
+        final Font font = Font.loadFont(url.toExternalForm(), size);
         if (font == null) {
             Logger.error("Font could not be loaded from URL '{}' ", url);
-            return Ufx.deriveFont(Font.getDefault(), size);
+            return Font.font(Font.getDefault().getFamily(), size);
         }
         return font;
     }
