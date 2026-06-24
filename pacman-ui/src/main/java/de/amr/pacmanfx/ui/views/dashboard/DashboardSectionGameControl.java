@@ -43,7 +43,7 @@ public class DashboardSectionGameControl extends DashboardSection {
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
-        addDynamicLabeledValue("Collision Mode", game.currentGameContext()::collisionStrategy);
+        addDynamicLabeledValue("Collision Mode", () -> game.currentGameContext().rules().collisionStrategyProperty().get());
         cbCollisionCheckedTwice  = addCheckBox("Collision Check 2x");
 
         setAction(choiceBoxInitialLives, () -> game.currentGameContext().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
@@ -59,7 +59,8 @@ public class DashboardSectionGameControl extends DashboardSection {
 
         setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], game.actions().gameFlowActions().actionRestartIntro());
 
-        cbCollisionCheckedTwice.setOnAction(_ -> game.setCollisionDoubleChecked(cbCollisionCheckedTwice.isSelected()));
+        cbCollisionCheckedTwice.setOnAction(_ ->
+            game.currentGameContext().rules().collisionDoubleCheckedProperty().set(cbCollisionCheckedTwice.isSelected()));
     }
 
     @Override
@@ -85,7 +86,7 @@ public class DashboardSectionGameControl extends DashboardSection {
             buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !GameStateID.GAME_INTRO.identifies(gameState));
             buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(gameState instanceof CutScenesTestState));
 
-            cbCollisionCheckedTwice.setSelected(gameContext.isCollisionDoubleChecked());
+            cbCollisionCheckedTwice.setSelected(gameContext.rules().collisionDoubleCheckedProperty().get());
         }
     }
 

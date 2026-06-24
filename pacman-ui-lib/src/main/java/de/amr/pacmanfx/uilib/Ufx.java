@@ -89,6 +89,14 @@ public final class Ufx {
         booleanProperty.set(!booleanProperty.get());
     }
 
+    /**
+     * Toggles property value between two given (non-null) values.
+     *
+     * @param property a property
+     * @param either either value
+     * @param other other value
+     * @param <T> value type
+     */
     public static <T> void toggleProperty(ObjectProperty<T> property, T either, T other) {
         requireNonNull(property);
         requireNonNull(either);
@@ -98,6 +106,8 @@ public final class Ufx {
             property.set(other);
         } else if (other.equals(value)) {
             property.set(either);
+        } else {
+            throw new IllegalArgumentException("Property has none of given values but %s".formatted(value));
         }
     }
 

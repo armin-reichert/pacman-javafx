@@ -6,7 +6,12 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.model.GameRules;
+import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.level.GameLevel;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.Map;
 import java.util.OptionalInt;
@@ -53,6 +58,18 @@ public class ArcadePacMan_GameRules implements GameRules {
         13, 3,
         17, 3
     );
+
+    private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
+
+    private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(CollisionStrategy.SAME_TILE);
+
+    public BooleanProperty collisionDoubleCheckedProperty() {
+        return collisionDoubleChecked;
+    }
+
+    public ObjectProperty<CollisionStrategy> collisionStrategyProperty() {
+        return collisionStrategy;
+    }
 
     @Override
     public boolean isLevelCompleted(GameLevel level) {

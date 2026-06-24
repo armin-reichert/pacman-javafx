@@ -7,7 +7,12 @@ package de.amr.pacmanfx.tengenmspacman.model;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.model.GameRules;
+import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.level.GameLevel;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -65,6 +70,18 @@ public class TengenMsPacMan_GameRules implements GameRules {
         17, 3,
         LAST_LEVEL_NUMBER, 4
     );
+
+    private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
+
+    private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(CollisionStrategy.CENTER_DISTANCE);
+
+    public BooleanProperty collisionDoubleCheckedProperty() {
+        return collisionDoubleChecked;
+    }
+
+    public ObjectProperty<CollisionStrategy> collisionStrategyProperty() {
+        return collisionStrategy;
+    }
 
     private MapCategory currentMapCategory = MapCategory.ARCADE;
 

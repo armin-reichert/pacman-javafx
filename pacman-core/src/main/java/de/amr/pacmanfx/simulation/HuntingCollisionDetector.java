@@ -24,7 +24,7 @@ public final class HuntingCollisionDetector {
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
         final Bonus bonus = level.entities().optBonus().orElse(null);
-        final CollisionStrategy collisionStrategy = context.collisionStrategy();
+        final CollisionStrategy collisionStrategy = context.rules().collisionStrategyProperty().get();
 
         detectFood(result, level, pac);
         detectEdibleBonus(result, collisionStrategy, pac, bonus);

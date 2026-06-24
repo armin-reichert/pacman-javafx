@@ -15,6 +15,8 @@ import de.amr.pacmanfx.simulation.HuntingResolver;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 
+import static de.amr.pacmanfx.simulation.HuntingCollisionDetector.detectCollisions;
+
 public class GameLevelPlayingState extends GameState {
 
     public GameLevelPlayingState() {
@@ -45,11 +47,11 @@ public class GameLevelPlayingState extends GameState {
         gameModel.updatePacPowerMode(gameContext, level, pac);
 
         gameContext.startNewHuntingStep();
-        if (gameContext.isCollisionDoubleChecked()) {
-            HuntingCollisionDetector.detectCollisions(gameContext);
+        if (gameContext.rules().collisionDoubleCheckedProperty().get()) {
+            detectCollisions(gameContext);
         }
         level.entities().forEach(entity -> entity.update(gameContext, level));
-        HuntingCollisionDetector.detectCollisions(gameContext);
+        detectCollisions(gameContext);
 
         // Resolving
         HuntingResolver.evaluate(gameContext);

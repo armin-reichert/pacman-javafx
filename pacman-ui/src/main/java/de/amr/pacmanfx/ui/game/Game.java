@@ -8,7 +8,6 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.CommonActions;
@@ -54,9 +53,4 @@ public interface Game extends GameLifecycle {
     GameExtensions extensions();
 
     DirectoryWatchdog watchdog();
-
-    void setCollisionDoubleChecked(boolean value);
-
-    void setCollisionStrategy(CollisionStrategy collisionStrategy);
-
 }

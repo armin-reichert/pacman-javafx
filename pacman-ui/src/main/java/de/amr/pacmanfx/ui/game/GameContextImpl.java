@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameRules;
-import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 
 import static java.util.Objects.requireNonNull;
@@ -48,16 +47,6 @@ public class GameContextImpl implements GameContext {
     @Override
     public GameFlow flow() {
         return gameVariant.gameFlow();
-    }
-
-    @Override
-    public CollisionStrategy collisionStrategy() {
-        return game.collisionStrategy();
-    }
-
-    @Override
-    public boolean isCollisionDoubleChecked() {
-        return game.isCollisionDoubleChecked();
     }
 
     @Override

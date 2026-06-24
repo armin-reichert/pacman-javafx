@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
@@ -34,8 +33,6 @@ import de.amr.pacmanfx.ui.window.GameWindowImpl;
 import de.amr.pacmanfx.uilib.SettingsLoader;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
@@ -64,10 +61,6 @@ public final class GameImpl implements Game {
     private final CommonActions commonActions;
 
     private GameUI ui;
-
-    private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
-
-    private CollisionStrategy collisionStrategy = CollisionStrategy.SAME_TILE;
 
     private GameContextImpl currentGameContext;
 
@@ -112,14 +105,6 @@ public final class GameImpl implements Game {
 
         load3DAssets();
         configureGameClock();
-    }
-
-    public CollisionStrategy collisionStrategy() {
-        return collisionStrategy;
-    }
-
-    public boolean isCollisionDoubleChecked() {
-        return collisionDoubleChecked.get();
     }
 
     // Game interface
@@ -186,16 +171,6 @@ public final class GameImpl implements Game {
     @Override
     public GameExtensions extensions() {
         return extensions;
-    }
-
-    @Override
-    public void setCollisionDoubleChecked(boolean value) {
-        collisionDoubleChecked.set(value);
-    }
-
-    @Override
-    public void setCollisionStrategy(CollisionStrategy collisionStrategy) {
-        this.collisionStrategy = collisionStrategy;
     }
 
     @Override
