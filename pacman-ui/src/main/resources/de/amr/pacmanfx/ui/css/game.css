@@ -94,5 +94,10 @@
     -fx-border-width: 0px;
 }
 
-/* --- Option menu posture --- */
 
+/* Option Menu (Pac-Man XXL) */
+
+.option-menu {
+    -fx-border-color: #999;
+    -fx-border-width: 1px;
+}
