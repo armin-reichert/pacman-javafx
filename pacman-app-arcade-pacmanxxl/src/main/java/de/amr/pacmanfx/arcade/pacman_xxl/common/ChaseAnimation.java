@@ -7,6 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -23,6 +24,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -49,6 +52,9 @@ class ChaseAnimation {
     private List<Ghost> ghosts;
     private ActorRenderer actorRenderer;
     private ChasingState state;
+
+    record Collision(Ghost ghost, long time) {}
+    private final List<Collision> collisions = new ArrayList<>();
 
     public ChaseAnimation(int numTilesX) {
         this.numTilesX = numTilesX;
@@ -106,6 +112,8 @@ class ChaseAnimation {
             ghost.animations().playSelected();
         }
 
+        collisions.clear();
+
         state = ChasingState.GHOSTS_CHASING_PAC;
     }
 
@@ -141,24 +149,31 @@ class ChaseAnimation {
             }
             state = ChasingState.GHOSTS_CHASING_PAC;
         }
-        else { // continue chasing ghosts moving right
-            // ghost eaten?
-            int eatenGhostIndex = -1;
+        else {
+            final long now = System.currentTimeMillis();
+            for (int i = collisions.size() -1; i >= 0; --i) { // backwards to avoid CCME
+                final Collision collision = collisions.get(i);
+                if (now - collision.time() >= 1000) {
+                    collisions.remove(collision);
+                    collision.ghost.hide();
+                }
+            }
+            // Collision check
             for (int i = 0; i < 4; ++i) {
                 final Ghost ghost = ghosts.get(i);
-                if (Math.abs(pac.x() - ghost.x()) < 4) {
-                    eatenGhostIndex = i;
+                if (colliding(pac, ghost) && collisions.stream().noneMatch(collision -> collision.ghost() == ghost)) {
+                    final var collision = new Collision(ghost, System.currentTimeMillis());
+                    collisions.add(collision);
+                    ghost.animations().selectAndSetFrame(ArcadePacMan_AnimationID.GHOST_POINTS, i);
+                    Logger.info("Collision: {}", collision);
                     break;
                 }
             }
-            if (eatenGhostIndex != -1) {
-                ghosts.get(eatenGhostIndex).animations().selectAndSetFrame(ArcadePacMan_AnimationID.GHOST_POINTS, eatenGhostIndex);
-                if (eatenGhostIndex > 0) {
-                    ghosts.get(eatenGhostIndex - 1).setVisible(false);
-                }
-            }
-
         }
+    }
+
+    private static boolean colliding(Actor either, Actor other) {
+        return Math.abs(either.x() - other.x()) < 1;
     }
 
     private void ghostsChasePacMan() {
