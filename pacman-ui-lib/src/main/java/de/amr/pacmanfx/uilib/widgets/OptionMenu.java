@@ -265,7 +265,7 @@ public class OptionMenu {
 
     private void nextValue() {
         final OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
-        entry.setNextValue();
+        entry.selectNextValue();
         playSoundIfPresent(valueSelectedSound);
         logMenuState();
     }

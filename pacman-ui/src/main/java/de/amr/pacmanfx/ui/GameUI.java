@@ -25,7 +25,6 @@ public record GameUI(
     SpriteAnimationManager sprites,
     GameUIViewModel viewModel)
 {
-
     public void connect(Game game) {
         sounds.connect(game);
         gameScenes.connect(game);

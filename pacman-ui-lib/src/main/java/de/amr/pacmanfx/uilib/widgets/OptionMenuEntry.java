@@ -10,9 +10,12 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -35,6 +38,13 @@ public class OptionMenuEntry<T> {
         }
         if (valueList.stream().anyMatch(Objects::isNull)) {
             throw new IllegalArgumentException("Menu entry values list contains NULL value");
+        }
+        final LinkedHashSet<T> valueSet = new LinkedHashSet<>(valueList);
+        if (valueSet.size() != valueList.size()) {
+            Logger.error("Menu entry values list contains duplicates. Use unique values only:");
+            Logger.error("Original list: {}", valueList);
+            valueList = valueSet.stream().toList();
+            Logger.error("Corrected list: {}", valueList);
         }
 
         value.set(requireNonNull(initialValue));
@@ -59,7 +69,7 @@ public class OptionMenuEntry<T> {
         value.set(requireNonNull(newValue));
     }
 
-    public void setNextValue() {
+    public void selectNextValue() {
         final int index = valueList.indexOf(value());
         final int nextIndex = index < valueList.size() - 1 ? index + 1 : 0;
         setValue(valueAt(nextIndex));
