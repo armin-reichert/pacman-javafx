@@ -64,18 +64,21 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         chaseAnimation = new ChaseAnimation(settings.numTilesX());
         chaseAnimation.setY((settings.numTilesY() - 12) * WorldMap.TS);
         chaseAnimation.scalingProperty().bind(scalingProperty());
-
-        canvas.focusedProperty().addListener((_, _, focused) -> {
-            if (focused) {
-                startDrawLoop();
-            }
-        });
     }
 
     @Override
     public void draw() {
         super.draw();
         chaseAnimation.draw();
+    }
+
+    @Override
+    public void logMenuState() {
+        Logger.info("Option Menu: ({}, {}, {}, {})",
+            meGameVariantID.value(),
+            meView3DEnabled.value() ? "3D" : "2D",
+            "Cut Scenes " + (meCutScenesEnabled.value() ? "ON" : "OFF"),
+            meMapOrder.value());
     }
 
     public void init(Game game) {
@@ -123,13 +126,11 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         scalingProperty().unbind();
     }
 
-    public void startDrawLoop() {
-        super.startDrawLoop();
+    public void startAnimation() {
         chaseAnimation.start();
     }
 
-    public void stopDrawLoop() {
-        super.stopDrawLoop();
+    public void stopAnimation() {
         chaseAnimation.stop();
     }
 
@@ -214,12 +215,4 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         return entry;
     }
 
-    @Override
-    public void logMenuState() {
-        Logger.info("Option Menu: ({}, {}, {}, {})",
-            meGameVariantID.value(),
-            meView3DEnabled.value() ? "3D" : "2D",
-            "Cut Scenes " + (meCutScenesEnabled.value() ? "ON" : "OFF"),
-            meMapOrder.value());
-    }
 }

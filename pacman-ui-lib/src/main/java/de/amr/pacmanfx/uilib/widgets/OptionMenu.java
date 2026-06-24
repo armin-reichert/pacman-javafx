@@ -106,6 +106,12 @@ public class OptionMenu {
                 draw();
             }
         };
+
+        canvas.focusedProperty().addListener((_, _, focused) -> {
+            if (focused) {
+                startDrawLoop();
+            }
+        });
     }
 
     public void setEntrySelectedSound(AudioClip entrySelectedSound) {

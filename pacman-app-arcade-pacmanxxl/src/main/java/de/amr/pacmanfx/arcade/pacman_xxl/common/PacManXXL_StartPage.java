@@ -96,6 +96,7 @@ public class PacManXXL_StartPage implements StartPage {
         game.ui().sounds().playVoice(VARIANT_NARRATION);
         menu.init(game);
         menu.bind();
+        menu.startAnimation();
         Platform.runLater(menu::requestFocus);
     }
 
@@ -104,6 +105,7 @@ public class PacManXXL_StartPage implements StartPage {
         stopTalking();
         menu.unbind();
         menu.stopDrawLoop();
+        menu.stopAnimation();
     }
 
     @Override
