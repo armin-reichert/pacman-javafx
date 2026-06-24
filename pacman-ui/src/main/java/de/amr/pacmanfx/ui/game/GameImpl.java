@@ -32,7 +32,6 @@ import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.window.GameTranslationManager;
 import de.amr.pacmanfx.ui.window.GameWindowImpl;
 import de.amr.pacmanfx.uilib.SettingsLoader;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -58,8 +57,6 @@ public final class GameImpl implements Game {
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
-    private final PreferencesManager prefs;
-
     private final DirectoryWatchdog watchdog;
 
     private final GameExtensions extensions;
@@ -81,7 +78,6 @@ public final class GameImpl implements Game {
 
         this.commonActions = new CommonActions(this);
         this.extensions = new GameExtensions();
-        this.prefs = new PreferencesManager(getClass());
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
         gameVariantName.addListener((_, oldName, newName) -> onGameVariantNameChanged(oldName, newName));
@@ -89,10 +85,10 @@ public final class GameImpl implements Game {
 
     @Override
     public void createUI(Stage stage, int width, int height) {
-        final GameUIViewModel uiSettingsViewModel = new GameUIViewModel();
+        final GameUIViewModel viewModel = new GameUIViewModel();
 
-        final GameUISettings gameUiSettings = SettingsLoader.load(getClass().getResource(UI_SETTINGS_JSON), GameUISettings.class);
-        uiSettingsViewModel.init(gameUiSettings);
+        final GameUISettings uiSettings = SettingsLoader.load(getClass().getResource(UI_SETTINGS_JSON), GameUISettings.class);
+        viewModel.init(uiSettings);
 
         final GameViewManager views = new GameViewManager();
         views.registerView(GameViewID.START_PAGES, new StartPagesView());
@@ -100,7 +96,7 @@ public final class GameImpl implements Game {
         views.registerView(GameViewID.EDITOR, new EditorView());
 
         final SoundManager sounds = new SoundManager();
-        sounds.muteProperty().bind(uiSettingsViewModel.mutedProperty);
+        sounds.muteProperty().bind(viewModel.mutedProperty);
 
         ui = new GameUI(
             new GameWindowImpl(stage, width, height),
@@ -109,7 +105,7 @@ public final class GameImpl implements Game {
             new GameTranslationManager(),
             sounds,
             new SpriteAnimationManager(60),
-            uiSettingsViewModel
+            viewModel
         );
 
         ui.connect(this);
@@ -190,11 +186,6 @@ public final class GameImpl implements Game {
     @Override
     public GameExtensions extensions() {
         return extensions;
-    }
-
-    @Override
-    public PreferencesManager prefs() {
-        return prefs;
     }
 
     @Override

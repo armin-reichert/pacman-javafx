@@ -14,7 +14,6 @@ import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.uilib.assets.PreferencesManager;
 import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
 
@@ -55,8 +54,6 @@ public interface Game extends GameLifecycle {
     GameExtensions extensions();
 
     DirectoryWatchdog watchdog();
-
-    PreferencesManager prefs();
 
     void setCollisionDoubleChecked(boolean value);
 
