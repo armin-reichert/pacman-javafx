@@ -31,6 +31,8 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.util.List;
+
 import static de.amr.pacmanfx.core.GameVariantID.ARCADE_MS_PACMAN_XXL;
 import static de.amr.pacmanfx.core.GameVariantID.ARCADE_PACMAN_XXL;
 
@@ -58,7 +60,7 @@ public class PacManAllGamesApp extends Application {
         return b ? "using" : "without using";
     }
 
-    private final PacManGamesMachine machine = new PacManGamesMachine();
+    private PacManGamesMachine machine;
     private Game game;
 
     private boolean useBuilder;
@@ -66,11 +68,13 @@ public class PacManAllGamesApp extends Application {
 
     @Override
     public void init() {
-        machine.loadCartridge(ArcadePacMan_Cartridge.CARTRIDGE);
-        machine.loadCartridge(ArcadeMsPacMan_Cartridge.CARTRIDGE);
-        machine.loadCartridge(TengenMsPacMan_Cartridge.CARTRIDGE);
-        machine.loadCartridge(PacManXXL_PacMan_Cartridge.CARTRIDGE);
-        machine.loadCartridge(PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
+        machine = new PacManGamesMachine(List.of(
+            ArcadePacMan_Cartridge.CARTRIDGE,
+            ArcadeMsPacMan_Cartridge.CARTRIDGE,
+            TengenMsPacMan_Cartridge.CARTRIDGE,
+            PacManXXL_PacMan_Cartridge.CARTRIDGE,
+            PacManXXL_MsPacMan_Cartridge.CARTRIDGE
+        ));
 
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));

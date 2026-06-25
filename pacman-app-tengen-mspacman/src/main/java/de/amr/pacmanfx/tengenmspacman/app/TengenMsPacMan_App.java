@@ -21,12 +21,12 @@ public class TengenMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = NES_SCREEN_ASPECT_RATIO; // 32:30
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
-    private final PacManGamesMachine machine = new PacManGamesMachine();
+    private PacManGamesMachine machine;
     private Game game;
 
     @Override
     public void init() {
-        machine.loadCartridge(TengenMsPacMan_Cartridge.CARTRIDGE);
+        machine = new PacManGamesMachine(TengenMsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override

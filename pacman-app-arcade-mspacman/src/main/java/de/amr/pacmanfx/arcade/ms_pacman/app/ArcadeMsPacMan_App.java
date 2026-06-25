@@ -23,12 +23,12 @@ public class ArcadeMsPacMan_App extends Application {
     private static final float ASPECT_RATIO    = 1.2f; // 12:10
     private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    private final PacManGamesMachine machine = new PacManGamesMachine();
+    private PacManGamesMachine machine;
     private Game game;
 
     @Override
     public void init() {
-        machine.loadCartridge(ArcadeMsPacMan_Cartridge.CARTRIDGE);
+        machine = new PacManGamesMachine(ArcadeMsPacMan_Cartridge.CARTRIDGE);
     }
 
     @Override

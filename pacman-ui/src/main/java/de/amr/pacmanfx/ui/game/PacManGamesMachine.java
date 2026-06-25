@@ -11,6 +11,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -37,6 +38,24 @@ public class PacManGamesMachine {
         final boolean ok = validateUserDirs();
         if (!ok) {
             throw new IllegalStateException("GameBox: User directory validation failed");
+        }
+    }
+
+    public PacManGamesMachine(Cartridge cartridge) {
+        this(List.of(cartridge));
+    }
+
+    public PacManGamesMachine(List<Cartridge> cartridges) {
+        requireNonNull(cartridges);
+        final boolean ok = validateUserDirs();
+        if (!ok) {
+            throw new IllegalStateException("GameBox: User directory validation failed");
+        }
+        for (var c : cartridges) {
+            if (c == null) {
+                throw new IllegalArgumentException("NULL cartridge detected");
+            }
+            loadCartridge(c);
         }
     }
 

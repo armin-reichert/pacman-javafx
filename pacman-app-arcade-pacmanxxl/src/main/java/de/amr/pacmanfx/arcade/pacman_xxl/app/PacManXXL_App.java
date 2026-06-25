@@ -18,18 +18,22 @@ import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 public class PacManXXL_App extends Application {
 
     private static final double ASPECT_RATIO    = 1.6;
     private static final double HEIGHT_FRACTION = 0.8;
 
-    private final PacManGamesMachine machine = new PacManGamesMachine();
+    private PacManGamesMachine machine;
     private Game game;
 
     @Override
     public void init() {
-        machine.loadCartridge(PacManXXL_PacMan_Cartridge.CARTRIDGE);
-        machine.loadCartridge(PacManXXL_MsPacMan_Cartridge.CARTRIDGE);
+        machine = new PacManGamesMachine(List.of(
+            PacManXXL_PacMan_Cartridge.CARTRIDGE,
+            PacManXXL_MsPacMan_Cartridge.CARTRIDGE
+        ));
     }
 
     @Override
