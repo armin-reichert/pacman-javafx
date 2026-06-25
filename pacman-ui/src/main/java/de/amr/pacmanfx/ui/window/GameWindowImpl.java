@@ -9,6 +9,8 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -22,6 +24,8 @@ public class GameWindowImpl implements GameWindow {
 
     public static final int MIN_STAGE_WIDTH  = 280;
     public static final int MIN_STAGE_HEIGHT = 360;
+
+    private final BooleanProperty initialized = new SimpleBooleanProperty(false);
 
     private StringBinding titleBinding;
 
@@ -63,6 +67,7 @@ public class GameWindowImpl implements GameWindow {
                     .map(Supplier::get)
                     .orElse(titleForCurrentGameScene(game));
             },
+            initialized,
             game.gameVariantNameProperty(),
             game.clock().updatesDisabledProperty(),
             game.ui().views().currentViewIDProperty(),
@@ -70,13 +75,11 @@ public class GameWindowImpl implements GameWindow {
             game.ui().viewModel().debugModeOnProperty,
             game.ui().viewModel().common3D.view3DEnabledProperty
         );
-
-        game.ui().views().currentViewIDProperty().addListener((_, _, viewID) -> updateStageTitleBinding(game, viewID));
     }
 
     @Override
     public void show(Game game) {
-        prepareStageForDisplay(game);
+        initStageBindings(game);
         stage().centerOnScreen();
         stage().show();
     }
@@ -93,6 +96,17 @@ public class GameWindowImpl implements GameWindow {
 
     // Private area
 
+    private void initStageBindings(Game game) {
+        stage.titleProperty().bind(titleBinding);
+        game.ui().views().currentViewIDProperty().addListener((_, _, viewID) -> updateStageTitleBinding(game, viewID));
+
+        updateStageIcon(game);
+        game.gameVariantNameProperty().addListener((_, _, _) -> updateStageIcon(game));
+
+        // Trigger title update
+        initialized.set(true);
+    }
+
     private void updateStageTitleBinding(Game game, GameViewID viewID) {
         switch (viewID) {
             case START_PAGES, GAMEPLAY -> stage.titleProperty().bind(titleBinding);
@@ -101,13 +115,6 @@ public class GameWindowImpl implements GameWindow {
                 editorView.optTitleSupplier().ifPresent(titleSupplier -> stage.setTitle(titleSupplier.get()));
             });
         }
-    }
-
-    private void prepareStageForDisplay(Game game) {
-        stage.titleProperty().bind(titleBinding);
-
-        updateStageIcon(game);
-        game.gameVariantNameProperty().addListener((_, _, _) -> updateStageIcon(game));
     }
 
     private void updateStageIcon(Game game) {
