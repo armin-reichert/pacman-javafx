@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
@@ -11,6 +12,7 @@ import de.amr.pacmanfx.ui.model.GameUIViewModel;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.window.GameWindow;
+import de.amr.pacmanfx.uilib.SettingsLoader;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.util.Duration;
 
@@ -25,6 +27,9 @@ public record GameUI(
     SpriteAnimationManager sprites,
     GameUIViewModel viewModel)
 {
+    public static final GameUISettings DEFAULT_SETTINGS =
+        SettingsLoader.load(GameUI.class.getResource("/de/amr/pacmanfx/ui/ui.json"), GameUISettings.class);
+
     public void connect(Game game) {
         sounds.connect(game);
         gameScenes.connect(game);

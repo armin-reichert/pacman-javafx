@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
@@ -36,7 +37,7 @@ public class PacManXXL_App extends Application {
 
         game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
             .startPage(PacManXXL_StartPage::new)
-            .build(stage);
+            .build(GameUI.DEFAULT_SETTINGS, stage);
 
         final PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
         game.watchdog().addEventListener(sharedMapSelector);

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
@@ -35,7 +36,7 @@ public class ArcadeMsPacMan_App extends Application {
 
         game = new GameBuilder(machine, screenSize.x(), screenSize.y())
             .startPage(ArcadeMsPacMan_StartPage::new)
-            .build(stage);
+            .build(GameUI.DEFAULT_SETTINGS, stage);
 
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
         game.showUI(GameVariantID.ARCADE_MS_PACMAN);

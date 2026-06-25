@@ -4,18 +4,17 @@
 package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.tengenmspacman.*;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.TengenMsPacMan_DashboardID;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
-import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
-import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
-import java.util.List;
 
 import static de.amr.pacmanfx.core.GameVariantID.TENGEN_MS_PACMAN;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_ASPECT_RATIO;
@@ -39,7 +38,7 @@ public class TengenMsPacMan_App extends Application {
 
         game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
             .startPage(TengenMsPacMan_StartPage::new)
-            .build(stage);
+            .build(GameUI.DEFAULT_SETTINGS, stage);
 
         //TODO
         //playView.dashboard().addSection(TengenMsPacMan_DashboardID.JOYPAD, new DashboardSectionJoypad(playView.dashboard()));

@@ -35,7 +35,6 @@ import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.window.GameTranslationManager;
 import de.amr.pacmanfx.ui.window.GameWindowImpl;
-import de.amr.pacmanfx.uilib.SettingsLoader;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
@@ -52,8 +51,6 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 
 public final class GameImpl implements Game {
-
-    public static final String UI_SETTINGS_JSON = "/de/amr/pacmanfx/ui/ui.json";
 
     private final PacManGamesMachine machine;
 
@@ -84,11 +81,10 @@ public final class GameImpl implements Game {
     }
 
     @Override
-    public void createUI(Stage stage, int width, int height) {
+    public void createUI(GameUISettings settings, Stage stage, int width, int height) {
         final GameUIViewModel viewModel = new GameUIViewModel();
 
-        final GameUISettings uiSettings = SettingsLoader.load(getClass().getResource(UI_SETTINGS_JSON), GameUISettings.class);
-        viewModel.init(uiSettings);
+        viewModel.init(settings);
 
         final GamePlayView playView = new GamePlayView();
 
@@ -111,7 +107,7 @@ public final class GameImpl implements Game {
         );
 
         //TODO where should the be called really?
-        populateDashboard(uiSettings.dashboard(), playView.dashboard(), ui.translations());
+        populateDashboard(settings.dashboard(), playView.dashboard(), ui.translations());
 
         ui.connect(this);
 
