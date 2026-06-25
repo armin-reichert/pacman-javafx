@@ -28,6 +28,7 @@ import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardSection;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -252,7 +253,9 @@ public final class GameImpl implements Game {
         for (var dss : settings) {
             final String id = dss.id();
             try {
-                dashboard.addCommonSection(translations, DashboardID.valueOf(id));
+                final DashboardSection section = dashboard.addCommonSection(translations, DashboardID.valueOf(id));
+                section.setDisplayedMaximized(dss.maximized());
+                section.setExpanded(dss.expanded());
             } catch (IllegalArgumentException x) {
                 Logger.error("Found unknown dashboard ID: {}", id);
             }

@@ -8,43 +8,53 @@
   "dashboard": [
     {
       "id": "GENERAL",
-      "expanded": false
+      "expanded": false,
+      "maximized": false
     },
     {
       "id": "GAME_CONTROL",
-      "expanded": true
+      "expanded": false,
+      "maximized": false
     },
     {
       "id": "SETTINGS_3D",
-      "expanded": false
+      "expanded": false,
+      "maximized": false
     },
     {
       "id": "ANIMATION_INFO",
-      "expanded": false
+      "expanded": false,
+      "maximized": true
     },
     {
       "id": "GAME_INFO",
-      "expanded": false
+      "expanded": false,
+      "maximized": true
     },
     {
       "id": "ACTOR_INFO",
-      "expanded": false
+      "expanded": false,
+      "maximized": true
     },
     {
       "id": "CUSTOM_MAPS",
-      "expanded": false
+      "expanded": false,
+      "maximized": true
     },
     {
       "id": "KEYS_GLOBAL",
-      "expanded": false
+      "expanded": false,
+      "maximized": true
     },
     {
       "id": "KEYS_LOCAL",
-      "expanded": false
+      "expanded": false,
+      "maximized": true
     },
     {
       "id": "ABOUT",
-      "expanded": false
+      "expanded": false,
+      "maximized": true
     }
   ],
 

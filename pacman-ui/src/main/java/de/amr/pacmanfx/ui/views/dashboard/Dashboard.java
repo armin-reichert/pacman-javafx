@@ -19,21 +19,6 @@ import static java.util.Objects.requireNonNull;
 
 public class Dashboard {
 
-    private static final EnumMap<DashboardID, Boolean> MAXIMIZED = new EnumMap<>(DashboardID.class);
-    static {
-        MAXIMIZED.put(DashboardID.ABOUT, true);
-        MAXIMIZED.put(DashboardID.ACTOR_INFO, true);
-        MAXIMIZED.put(DashboardID.ANIMATION_INFO, true);
-        MAXIMIZED.put(DashboardID.CUSTOM_MAPS, true);
-        MAXIMIZED.put(DashboardID.GENERAL, false);
-        MAXIMIZED.put(DashboardID.GAME_CONTROL, false);
-        MAXIMIZED.put(DashboardID.GAME_INFO, true);
-        MAXIMIZED.put(DashboardID.KEYS_GLOBAL, true);
-        MAXIMIZED.put(DashboardID.KEYS_LOCAL, false);
-        MAXIMIZED.put(DashboardID.README, false);
-        MAXIMIZED.put(DashboardID.SETTINGS_3D, true);
-    }
-
     private static DashboardSection createCommonSection(Dashboard dashboard, Identifier id) {
         requireNonNull(dashboard);
         requireNonNull(id);
@@ -70,14 +55,6 @@ public class Dashboard {
             case DashboardID.SETTINGS_3D    -> "infobox.3D_settings.title";
             default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);
         };
-    }
-
-    private static boolean isSectionMaximizedByDefault(Identifier id) {
-        requireNonNull(id);
-        if (id instanceof DashboardID commonID) {
-            return MAXIMIZED.getOrDefault(commonID, false);
-        }
-        return false;
     }
 
     private final VBox rootPane = new VBox();
@@ -150,14 +127,14 @@ public class Dashboard {
      * @param translator translator for localized text keys
      * @param id common dashboard section ID
      */
-    public void addCommonSection(TranslationManager translator, DashboardID id) {
+    public DashboardSection addCommonSection(TranslationManager translator, DashboardID id) {
         requireNonNull(translator);
         requireNonNull(id);
 
         final DashboardSection section = createCommonSection(this, id);
         section.setText(translator.translate(titleKey(id)));
-        section.setDisplayedMaximized(isSectionMaximizedByDefault(id));
         addSection(id, section);
+        return section;
     }
 
     /**
