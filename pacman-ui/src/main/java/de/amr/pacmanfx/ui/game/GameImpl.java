@@ -26,6 +26,7 @@ import de.amr.pacmanfx.ui.model.GameUIViewModel;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
+import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardSectionsFactory;
 import de.amr.pacmanfx.ui.views.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardSection;
@@ -251,13 +252,15 @@ public final class GameImpl implements Game {
         TranslationManager translations)
     {
         for (var dss : settings) {
-            final String id = dss.id();
             try {
-                final DashboardSection section = dashboard.addCommonSection(translations, DashboardID.valueOf(id));
+                final DashboardID id = DashboardID.valueOf(dss.id());
+                final DashboardSection section = CommonDashboardSectionsFactory
+                    .create(dashboard, id, translations);
+                dashboard.addSection(id, section);
                 section.setDisplayedMaximized(dss.maximized());
                 section.setExpanded(dss.expanded());
             } catch (IllegalArgumentException x) {
-                Logger.error("Found unknown dashboard ID: {}", id);
+                Logger.error("Found unknown dashboard ID: {}", dss.id());
             }
         }
     }

@@ -12,12 +12,9 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
-import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
-import java.util.List;
 
 public class ArcadeMsPacMan_App extends Application {
 
@@ -40,19 +37,7 @@ public class ArcadeMsPacMan_App extends Application {
             .startPage(ArcadeMsPacMan_StartPage::new)
             .build(stage);
 
-        game.ui().views().gamePlayView().dashboard().addCommonSections(game.ui().translations(), List.of(
-            DashboardID.GENERAL,
-            DashboardID.GAME_CONTROL,
-            DashboardID.SETTINGS_3D,
-            DashboardID.GAME_INFO,
-            DashboardID.ACTOR_INFO,
-            DashboardID.KEYS_GLOBAL,
-            DashboardID.KEYS_LOCAL,
-            DashboardID.ABOUT)
-        );
-
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
-
         game.showUI(GameVariantID.ARCADE_MS_PACMAN);
     }
 
