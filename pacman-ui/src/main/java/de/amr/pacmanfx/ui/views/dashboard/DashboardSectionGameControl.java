@@ -64,30 +64,28 @@ public class DashboardSectionGameControl extends DashboardSection {
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void update(Game game) {
+        super.update(game);
 
-        if (dashboard.game() != null) {
-            final GameContext gameContext = dashboard.game().currentGameContext();
-            final GameModel gameModel = gameContext.model();
-            final GameState gameState = gameContext.state();
+        final GameContext gameContext = game.currentGameContext();
+        final GameModel gameModel = gameContext.model();
+        final GameState gameState = gameContext.state();
 
-            choiceBoxInitialLives.setValue(gameModel.lives().initialCount());
-            choiceBoxInitialLives.setDisable(!GameStateID.GAME_INTRO.identifies(gameState));
+        choiceBoxInitialLives.setValue(gameModel.lives().initialCount());
+        choiceBoxInitialLives.setDisable(!GameStateID.GAME_INTRO.identifies(gameState));
 
-            final boolean creditDisabled = !gameState.isOneOf(GameStateID.GAME_INTRO, GameStateID.GAME_PREPARATION);
-            spinnerCredit.setDisable(creditDisabled);
+        final boolean creditDisabled = !gameState.isOneOf(GameStateID.GAME_INTRO, GameStateID.GAME_PREPARATION);
+        spinnerCredit.setDisable(creditDisabled);
 
-            final boolean booting = GameStateID.BOOT.identifies(gameState);
-            buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(gameContext, gameModel, gameState));
-            buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(gameModel, gameState));
-            buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || gameModel.optGameLevel().isEmpty());
+        final boolean booting = GameStateID.BOOT.identifies(gameState);
+        buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(gameContext, gameModel, gameState));
+        buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(gameModel, gameState));
+        buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || gameModel.optGameLevel().isEmpty());
 
-            buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !GameStateID.GAME_INTRO.identifies(gameState));
-            buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(gameState instanceof CutScenesTestState));
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !GameStateID.GAME_INTRO.identifies(gameState));
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(gameState instanceof CutScenesTestState));
 
-            cbCollisionCheckedTwice.setSelected(gameContext.rules().collisionDoubleCheckedProperty().get());
-        }
+        cbCollisionCheckedTwice.setSelected(gameContext.rules().collisionDoubleCheckedProperty().get());
     }
 
     private boolean canStartLevel(GameContext gameContext, GameModel game, GameState gameState) {

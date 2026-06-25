@@ -23,11 +23,9 @@ public class DashboardSectionKeyboardShortcutsCurrentGameScene extends Dashboard
     }
 
     @Override
-    public void update() {
-        super.update();
-        if (dashboard.game() != null) {
-            updateTableForCurrentGameScene(dashboard.game());
-        }
+    public void update(Game game) {
+        super.update(game);
+        updateTableForCurrentGameScene(game);
     }
 
     private void updateTableForCurrentGameScene(Game game) {

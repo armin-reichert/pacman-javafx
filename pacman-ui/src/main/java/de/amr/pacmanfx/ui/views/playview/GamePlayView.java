@@ -244,7 +244,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         // Dashboard must always be updated even if simulation is stopped!
         if (overlayLayer.isVisible()) {
-            dashboard.update();
+            dashboard.update(game);
         }
     }
 

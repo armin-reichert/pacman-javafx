@@ -96,16 +96,14 @@ public class DashboardSection3DSettings extends DashboardSection {
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void update(Game game) {
+        super.update(game);
 
-        final GameUIViewModel viewModel = game().ui().viewModel();
+        final GameUIViewModel viewModel = game.ui().viewModel();
 
         comboPerspectives.setValue(viewModel.common3D.cameraPerspectiveIdProperty.get());
         sliderMiniViewSceneHeight.setValue(viewModel.miniView.heightProperty.get());
-        if (dashboard.game() != null) {
-            sliderMiniViewSceneHeight.setDisable(dashboard.game().ui().views().gamePlayView().miniPlaySceneView().isMoving());
-        }
+        sliderMiniViewSceneHeight.setDisable(game.ui().views().gamePlayView().miniPlaySceneView().isMoving());
         sliderMiniViewOpacityPercentage.setValue(viewModel.miniView.opacityPercentageProperty.get());
         sliderWallHeight.setValue(viewModel.maze3D.wallHeightProperty.get());
         sliderWallOpacity.setValue(viewModel.maze3D.wallOpacityProperty.get());

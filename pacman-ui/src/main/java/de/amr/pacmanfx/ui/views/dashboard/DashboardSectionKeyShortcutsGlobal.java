@@ -25,19 +25,14 @@ public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
     }
 
     @Override
-    public void update() {
-        super.update();
-        if (dashboard.game() != null) {
-            updateTableForCurrentSubView(dashboard.game());
-        }
+    public void update(Game game) {
+        super.update(game);
+        updateTableForCurrentSubView(game);
     }
 
     private void updateTableForCurrentSubView(Game game) {
         clearSection();
         final GameView currentGameView = game.ui().views().assertCurrentView();
-        if (currentGameView == null) {
-            return;
-        }
 
         final Map<KeyCodeCombination, GameAction> currentBindingMap = currentGameView.actionBindings().actionBindings();
         if (currentBindingMap.isEmpty()) {

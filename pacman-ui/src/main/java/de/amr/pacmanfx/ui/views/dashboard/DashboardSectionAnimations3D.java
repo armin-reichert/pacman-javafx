@@ -106,20 +106,18 @@ public class DashboardSectionAnimations3D extends DashboardSection {
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void update(Game game) {
+        super.update(game);
 
-        if (dashboard.game() != null) {
-            final AnimationRegistry animationSet =
-                dashboard.game().ui().gameScenes().optCurrentGameScene()
-                    .filter(PlayScene3D.class::isInstance)
-                    .map(PlayScene3D.class::cast)
-                    .flatMap(PlayScene3D::optGameLevel3D)
-                    .map(GameLevel3D::animationRegistry)
-                    .orElse(null);
+        final AnimationRegistry animationSet =
+            game.ui().gameScenes().optCurrentGameScene()
+                .filter(PlayScene3D.class::isInstance)
+                .map(PlayScene3D.class::cast)
+                .flatMap(PlayScene3D::optGameLevel3D)
+                .map(GameLevel3D::animationRegistry)
+                .orElse(null);
 
-            currentAnimationSet.set(animationSet);
-        }
+        currentAnimationSet.set(animationSet);
     }
 
     private void updateTableData() {

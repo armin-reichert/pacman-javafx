@@ -26,8 +26,6 @@ public class Dashboard {
     private final Map<Identifier, DashboardSection> sections = new LinkedHashMap<>();
     private final DashboardConfig config;
 
-    private Game game;
-
     private final ChangeListener<Boolean> visibilityChangeHandler = (_, _, _) -> updateLayout();
 
     public Dashboard(DashboardConfig config) {
@@ -44,17 +42,12 @@ public class Dashboard {
         return config;
     }
 
-    public Game game() {
-        return game;
-    }
-
     public void connect(Game game) {
-        this.game = requireNonNull(game);
         sections.values().forEach(section -> section.connect(game));
     }
 
-    public void update() {
-        sections().filter(DashboardSection::isExpanded).forEach(DashboardSection::update);
+    public void update(Game game) {
+        sections().filter(DashboardSection::isExpanded).forEach(section -> section.update(game));
     }
 
     public void toggleVisibility() {
