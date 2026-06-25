@@ -10,6 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.GameImpl;
@@ -17,6 +18,7 @@ import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
+import de.amr.pacmanfx.uilib.SettingsLoader;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -29,6 +31,7 @@ public class ArcadePacMan_App extends Application {
 
     private PacManGamesMachine machine;
     private Game game;
+    private GameUISettings settings;
     private boolean useBuilder;
 
     @Override
@@ -36,6 +39,8 @@ public class ArcadePacMan_App extends Application {
         machine = new PacManGamesMachine();
         machine.loadCartridge(ArcadePacMan_Cartridge.CARTRIDGE);
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
+        settings = SettingsLoader.load(
+            getClass().getResource("/de/amr/pacmanfx/arcade/pacman/ui.json"), GameUISettings.class);
     }
 
     @Override
@@ -45,11 +50,11 @@ public class ArcadePacMan_App extends Application {
         if (useBuilder) {
             game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
                 .startPage(ArcadePacMan_StartPage::new)
-                .build(GameUI.DEFAULT_SETTINGS, CommonDashboardFactory.instance(), stage);
+                .build(settings, CommonDashboardFactory.instance(), stage);
         }
         else {
             game = new GameImpl(machine);
-            game.createUI(GameUI.DEFAULT_SETTINGS, CommonDashboardFactory.instance(), stage, sceneSize.x(), sceneSize.y());
+            game.createUI(settings, CommonDashboardFactory.instance(), stage, sceneSize.x(), sceneSize.y());
             game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class)
                 .addStartPage(game, new ArcadePacMan_StartPage());
         }
