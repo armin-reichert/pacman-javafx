@@ -4,10 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
+import de.amr.pacmanfx.tengenmspacman.*;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
@@ -38,10 +35,7 @@ public class TengenMsPacMan_App extends Application {
 
         game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
             .startPage(TengenMsPacMan_StartPage::new)
-            .build(GameUI.DEFAULT_SETTINGS, stage);
-
-        //TODO
-        //playView.dashboard().addSection(TengenMsPacMan_DashboardID.JOYPAD, new DashboardSectionJoypad(playView.dashboard()));
+            .build(GameUI.DEFAULT_SETTINGS, TengenDashboardFactory.instance(), stage);
 
         game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS, new TengenMsPacMan_UISettings());
         game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS, new TengenMsPacMan_Actions(game));

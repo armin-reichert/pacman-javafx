@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.basics.Identifier;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
@@ -48,9 +47,6 @@ public class TengenMsPacManConfig implements GameVariantConfig {
 
     private static final WorldSettings WORLD_CONFIG = TengenSettingsLoader.load(
         TengenMsPacManConfig.class.getResource("/de/amr/pacmanfx/tengenmspacman/world.json"), WorldSettings.class);
-
-    /** Defines additional Tengen-specific dashboard IDs */
-    public enum TengenMsPacMan_DashboardID implements Identifier { JOYPAD }
 
     // Note: Order of bonus symbols in spritesheet is not 1:1 with order of bonus values!
     // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000

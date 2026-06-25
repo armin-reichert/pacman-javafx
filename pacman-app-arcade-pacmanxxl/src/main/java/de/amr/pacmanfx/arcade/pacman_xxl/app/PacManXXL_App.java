@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
+import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -37,7 +38,7 @@ public class PacManXXL_App extends Application {
 
         game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
             .startPage(PacManXXL_StartPage::new)
-            .build(GameUI.DEFAULT_SETTINGS, stage);
+            .build(GameUI.DEFAULT_SETTINGS, CommonDashboardFactory.instance(), stage);
 
         final PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
         game.watchdog().addEventListener(sharedMapSelector);

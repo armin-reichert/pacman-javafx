@@ -26,9 +26,8 @@ import de.amr.pacmanfx.ui.model.GameUIViewModel;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
-import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardSectionsFactory;
 import de.amr.pacmanfx.ui.views.dashboard.Dashboard;
-import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardSection;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
@@ -81,7 +80,7 @@ public final class GameImpl implements Game {
     }
 
     @Override
-    public void createUI(GameUISettings settings, Stage stage, int width, int height) {
+    public void createUI(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage, int width, int height) {
         final GameUIViewModel viewModel = new GameUIViewModel();
 
         viewModel.init(settings);
@@ -106,8 +105,7 @@ public final class GameImpl implements Game {
             viewModel
         );
 
-        //TODO where should the be called really?
-        populateDashboard(settings.dashboard(), playView.dashboard(), ui.translations());
+        populateDashboard(dashboardFactory, settings.dashboard(), playView.dashboard(), ui.translations());
 
         ui.connect(this);
 
@@ -243,21 +241,18 @@ public final class GameImpl implements Game {
     // Private area, no trespassing!
 
     private void populateDashboard(
+        DashboardFactory factory,
         List<DashboardSectionSettings> settings,
         Dashboard dashboard,
         TranslationManager translations)
     {
         for (var dss : settings) {
-            try {
-                final DashboardID id = DashboardID.valueOf(dss.id());
-                final DashboardSection section = CommonDashboardSectionsFactory
-                    .create(dashboard, id, translations);
-                dashboard.addSection(id, section);
+            factory.identify(dss.id()).ifPresentOrElse(dashboardID -> {
+                final DashboardSection section = factory.createSection(dashboard, dashboardID, translations);
+                dashboard.addSection(dashboardID, section);
                 section.setDisplayedMaximized(dss.maximized());
                 section.setExpanded(dss.expanded());
-            } catch (IllegalArgumentException x) {
-                Logger.error("Found unknown dashboard ID: {}", dss.id());
-            }
+            }, () -> Logger.error("Unknown dashboard ID: {}", dss.id()));
         }
     }
 

@@ -16,10 +16,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.app.PacManXXL_PacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
+import de.amr.pacmanfx.tengenmspacman.*;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.game.Game;
@@ -93,11 +90,11 @@ public class PacManAllGamesApp extends Application {
                     .startPage(ArcadeMsPacMan_StartPage::new)
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
-                    .build(GameUI.DEFAULT_SETTINGS, stage);
+                    .build(GameUI.DEFAULT_SETTINGS, TengenDashboardFactory.instance(), stage);
             }
             else {
                 game = new GameImpl(machine);
-                game.createUI(GameUI.DEFAULT_SETTINGS, stage, sceneSize.x(), sceneSize.y());
+                game.createUI(GameUI.DEFAULT_SETTINGS, TengenDashboardFactory.instance(), stage, sceneSize.x(), sceneSize.y());
 
                 game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(sharedMapSelector);
                 game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);

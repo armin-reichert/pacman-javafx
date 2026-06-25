@@ -8,13 +8,34 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 
+import java.util.Optional;
+
 import static java.util.Objects.requireNonNull;
 
-public final class CommonDashboardSectionsFactory {
+public final class CommonDashboardFactory implements DashboardFactory {
 
-    private CommonDashboardSectionsFactory() {}
+    private CommonDashboardFactory() {}
 
-    public static DashboardSection create(Dashboard dashboard, Identifier id, TranslationManager translations) {
+    private static class LazyThreadSafeSingletonHolder {
+        static final CommonDashboardFactory SINGLETON = new CommonDashboardFactory();
+    }
+
+    public static CommonDashboardFactory instance() {
+        return LazyThreadSafeSingletonHolder.SINGLETON;
+    }
+
+    @Override
+    public Optional<Identifier> identify(String id) {
+        try {
+            return Optional.of(DashboardID.valueOf(id));
+        }
+        catch (IllegalArgumentException x) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public DashboardSection createSection(Dashboard dashboard, Identifier id, TranslationManager translations) {
         requireNonNull(dashboard);
         requireNonNull(id);
         requireNonNull(translations);

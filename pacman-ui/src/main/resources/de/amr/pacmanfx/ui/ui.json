@@ -52,6 +52,11 @@
       "maximized": true
     },
     {
+      "id": "JOYPAD",
+      "expanded": false,
+      "maximized": false
+    },
+    {
       "id": "ABOUT",
       "expanded": false,
       "maximized": true

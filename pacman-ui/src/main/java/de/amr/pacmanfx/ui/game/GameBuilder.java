@@ -7,6 +7,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.GameViewID;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import javafx.stage.Stage;
@@ -52,13 +53,13 @@ public class GameBuilder {
         return this;
     }
 
-    public Game build(GameUISettings settings, Stage stage) {
+    public Game build(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage) {
         requireNonNull(settings);
         requireNonNull(stage);
         validateConfigurationData();
 
         final var game = new GameImpl(machine);
-        game.createUI(settings, stage, windowConfig.sceneWidth(), windowConfig.sceneHeight());
+        game.createUI(settings, dashboardFactory, stage, windowConfig.sceneWidth(), windowConfig.sceneHeight());
 
         final StartPagesView startPagesView = game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class);
         for (var factory : startPageFactories) {

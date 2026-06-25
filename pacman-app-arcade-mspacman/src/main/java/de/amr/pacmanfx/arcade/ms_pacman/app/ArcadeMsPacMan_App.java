@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
+import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -36,7 +37,7 @@ public class ArcadeMsPacMan_App extends Application {
 
         game = new GameBuilder(machine, screenSize.x(), screenSize.y())
             .startPage(ArcadeMsPacMan_StartPage::new)
-            .build(GameUI.DEFAULT_SETTINGS, stage);
+            .build(GameUI.DEFAULT_SETTINGS, CommonDashboardFactory.instance(), stage);
 
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
         game.showUI(GameVariantID.ARCADE_MS_PACMAN);

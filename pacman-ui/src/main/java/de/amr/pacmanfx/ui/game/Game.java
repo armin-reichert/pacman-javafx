@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
 
@@ -23,7 +24,7 @@ public interface Game extends GameLifecycle {
 
     Input input();
 
-    void createUI(GameUISettings settings, Stage stage, int width, int height);
+    void createUI(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage, int width, int height);
 
     GameUI ui();
 

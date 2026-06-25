@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.GameImpl;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.views.GameViewID;
+import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -44,11 +45,11 @@ public class ArcadePacMan_App extends Application {
         if (useBuilder) {
             game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
                 .startPage(ArcadePacMan_StartPage::new)
-                .build(GameUI.DEFAULT_SETTINGS, stage);
+                .build(GameUI.DEFAULT_SETTINGS, CommonDashboardFactory.instance(), stage);
         }
         else {
             game = new GameImpl(machine);
-            game.createUI(GameUI.DEFAULT_SETTINGS, stage, sceneSize.x(), sceneSize.y());
+            game.createUI(GameUI.DEFAULT_SETTINGS, CommonDashboardFactory.instance(), stage, sceneSize.x(), sceneSize.y());
             game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class)
                 .addStartPage(game, new ArcadePacMan_StartPage());
         }
