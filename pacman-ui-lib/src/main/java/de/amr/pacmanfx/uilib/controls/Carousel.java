@@ -7,10 +7,12 @@ package de.amr.pacmanfx.uilib.controls;
 import de.amr.pacmanfx.uilib.controls.skin.CarouselSkin;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
+import org.tinylog.Logger;
 
 import java.net.URL;
 
@@ -32,11 +34,19 @@ public class Carousel extends Control {
 
     private final StringProperty backButtonTooltip = new SimpleStringProperty("Previous");
 
+    private final BooleanProperty backButtonVisible = new SimpleBooleanProperty(true);
+
     private final StringProperty forwardButtonTooltip = new SimpleStringProperty("Next");
+
+    private final BooleanProperty forwardButtonVisible = new SimpleBooleanProperty(true);
 
     public Carousel() {
         getStyleClass().add(STYLE_CLASS);
         setFocusTraversable(true);
+        items.addListener((ListChangeListener<? super Node>) change -> {
+            backButtonVisible.set(items.size() >= 2);
+            forwardButtonVisible.set(items.size() >= 2);
+        });
     }
 
     @Override
@@ -96,6 +106,16 @@ public class Carousel extends Control {
     public double getChangeDuration() { return changeDuration.get(); }
 
     public void setChangeDuration(double seconds) { changeDuration.set(seconds); }
+
+    // --- Navigation button visibility
+
+    public BooleanProperty backButtonVisibleProperty() {
+        return backButtonVisible;
+    }
+
+    public BooleanProperty forwardButtonVisibleProperty() {
+        return forwardButtonVisible;
+    }
 
     // --- Tooltips
 

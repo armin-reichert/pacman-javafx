@@ -133,10 +133,12 @@ public class CarouselSkin extends SkinBase<Carousel> {
     }
 
     private Button createNavButton(NavigationDirection dir) {
+        final Carousel carousel = getSkinnable();
+
         final Button button = new Button();
         button.getStyleClass().add("carousel-nav");
 
-        button.disableProperty().bind(getSkinnable().navigationLockedProperty());
+        button.disableProperty().bind(carousel.navigationLockedProperty());
 
         final Tooltip tooltip = new Tooltip();
         tooltip.setFont(Font.font(16)); //TODO CSS
@@ -148,14 +150,16 @@ public class CarouselSkin extends SkinBase<Carousel> {
                 icon.setMouseTransparent(true); // important!
                 button.setGraphic(icon);
                 button.setOnAction(_ -> showPrevious());
-                tooltip.textProperty().bind(getSkinnable().backButtonTooltipProperty());
+                button.visibleProperty().bind(carousel.backButtonVisibleProperty());
+                tooltip.textProperty().bind(carousel.backButtonTooltipProperty());
             }
             case FORWARD -> {
                 final var icon = new FontAwesomeIcon(FontAwesomeSymbol.CHEVRON_CIRCLE_RIGHT);
                 icon.setMouseTransparent(true); // important!
                 button.setGraphic(icon);
                 button.setOnAction(_ -> showNext());
-                tooltip.textProperty().bind(getSkinnable().forwardButtonTooltipProperty());
+                button.visibleProperty().bind(carousel.forwardButtonVisibleProperty());
+                tooltip.textProperty().bind(carousel.forwardButtonTooltipProperty());
             }
         }
 
