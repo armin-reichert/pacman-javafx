@@ -12,6 +12,10 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_DashboardID.JOYPAD;
 
+/**
+ * A Tengen Ms. Pac-Man game specific dashboard factory. Demonstrates how game variants could define their own
+ * dashboard entries which are still stored in the global game configuration JSON file.
+ */
 public class TengenDashboardFactory implements DashboardFactory {
 
     private static class LazyThreadSafeSingletonHolder {
