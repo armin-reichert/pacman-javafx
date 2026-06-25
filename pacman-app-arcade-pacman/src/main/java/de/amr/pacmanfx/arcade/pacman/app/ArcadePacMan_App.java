@@ -14,12 +14,9 @@ import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.GameImpl;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.views.GameViewID;
-import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
-import java.util.List;
 
 import static de.amr.pacmanfx.uilib.Ufx.computeScreenSectionSize;
 
@@ -27,11 +24,6 @@ public class ArcadePacMan_App extends Application {
 
     private static final float ASPECT_RATIO    = 1.2f; // 12:10 aspect ratio
     private static final float HEIGHT_FRACTION = 0.8f; // 80% of available height
-
-    private static final List<DashboardID> DASHBOARD_IDs = List.of(
-        DashboardID.GENERAL, DashboardID.GAME_CONTROL, DashboardID.SETTINGS_3D,
-        DashboardID.ANIMATION_INFO, DashboardID.GAME_INFO, DashboardID.ACTOR_INFO,
-        DashboardID.KEYS_GLOBAL, DashboardID.KEYS_LOCAL, DashboardID.ABOUT);
 
     private final PacManGamesMachine machine = new PacManGamesMachine();
     private Game game;
@@ -59,10 +51,7 @@ public class ArcadePacMan_App extends Application {
                 .addStartPage(game, new ArcadePacMan_StartPage());
         }
 
-        game.ui().views().gamePlayView().configureDashboard(DASHBOARD_IDs, game.ui().translations());
-
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
-
         game.showUI(GameVariantID.ARCADE_PACMAN);
     }
 

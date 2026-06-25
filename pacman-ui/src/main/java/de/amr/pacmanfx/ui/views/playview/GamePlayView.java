@@ -20,7 +20,6 @@ import de.amr.pacmanfx.ui.model.GameUIViewModel;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardConfig;
-import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.views.help.HelpView;
 import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -46,8 +45,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
-
-import java.util.List;
 
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedActionItem;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedTitleItem;
@@ -284,10 +281,6 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
         }
-    }
-
-    public void configureDashboard(List<DashboardID> dashboardIDList, TranslationManager translations) {
-        dashboard.addCommonSections(translations, dashboardIDList);
     }
 
     // Private

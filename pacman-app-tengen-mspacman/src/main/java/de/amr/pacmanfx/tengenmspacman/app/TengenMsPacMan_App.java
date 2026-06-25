@@ -41,19 +41,8 @@ public class TengenMsPacMan_App extends Application {
             .startPage(TengenMsPacMan_StartPage::new)
             .build(stage);
 
-        final GamePlayView playView = game.ui().views().gamePlayView();
-        playView.configureDashboard(List.of(
-            DashboardID.GENERAL,
-            DashboardID.GAME_CONTROL,
-            DashboardID.SETTINGS_3D,
-            DashboardID.GAME_INFO,
-            DashboardID.ACTOR_INFO,
-            DashboardID.KEYS_GLOBAL,
-            DashboardID.KEYS_LOCAL,
-            DashboardID.ABOUT
-        ), game.ui().translations());
-
-        playView.dashboard().addSection(TengenMsPacMan_DashboardID.JOYPAD, new DashboardSectionJoypad(playView.dashboard()));
+        //TODO
+        //playView.dashboard().addSection(TengenMsPacMan_DashboardID.JOYPAD, new DashboardSectionJoypad(playView.dashboard()));
 
         game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS, new TengenMsPacMan_UISettings());
         game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS, new TengenMsPacMan_Actions(game));

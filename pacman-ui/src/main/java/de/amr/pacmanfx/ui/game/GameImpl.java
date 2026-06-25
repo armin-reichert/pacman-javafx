@@ -17,6 +17,7 @@ import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.CommonActions;
+import de.amr.pacmanfx.ui.config.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
@@ -25,12 +26,15 @@ import de.amr.pacmanfx.ui.model.GameUIViewModel;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
+import de.amr.pacmanfx.ui.views.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.window.GameTranslationManager;
 import de.amr.pacmanfx.ui.window.GameWindowImpl;
 import de.amr.pacmanfx.uilib.SettingsLoader;
+import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -40,6 +44,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
@@ -83,9 +88,11 @@ public final class GameImpl implements Game {
         final GameUISettings uiSettings = SettingsLoader.load(getClass().getResource(UI_SETTINGS_JSON), GameUISettings.class);
         viewModel.init(uiSettings);
 
+        final GamePlayView playView = new GamePlayView();
+
         final GameViewManager views = new GameViewManager();
         views.registerView(GameViewID.START_PAGES, new StartPagesView());
-        views.registerView(GameViewID.GAMEPLAY, new GamePlayView());
+        views.registerView(GameViewID.GAMEPLAY, playView);
         views.registerView(GameViewID.EDITOR, new EditorView());
 
         final SoundManager sounds = new SoundManager();
@@ -100,6 +107,9 @@ public final class GameImpl implements Game {
             new SpriteAnimationManager(60),
             viewModel
         );
+
+        //TODO where should the be called really?
+        populateDashboard(uiSettings.dashboard(), playView.dashboard(), ui.translations());
 
         ui.connect(this);
 
@@ -233,6 +243,21 @@ public final class GameImpl implements Game {
     }
 
     // Private area, no trespassing!
+
+    private void populateDashboard(
+        List<DashboardSectionSettings> settings,
+        Dashboard dashboard,
+        TranslationManager translations)
+    {
+        for (var dss : settings) {
+            final String id = dss.id();
+            try {
+                dashboard.addCommonSection(translations, DashboardID.valueOf(id));
+            } catch (IllegalArgumentException x) {
+                Logger.error("Found unknown dashboard ID: {}", id);
+            }
+        }
+    }
 
     /**
      * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>

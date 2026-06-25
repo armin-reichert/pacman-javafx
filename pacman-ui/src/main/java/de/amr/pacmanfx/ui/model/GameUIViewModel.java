@@ -44,6 +44,7 @@ public class GameUIViewModel {
         miniView.init(settings.miniView());
         common2D.init(settings.common2D());
         common3D.init(settings.common3D());
+
         // maze3D is initialized elsewhere because it can be game-variant specific!
     }
 }

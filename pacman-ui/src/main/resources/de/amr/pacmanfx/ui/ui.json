@@ -5,6 +5,49 @@
   "muted": false,
   "numSimulationSteps": 1,
 
+  "dashboard": [
+    {
+      "id": "GENERAL",
+      "expanded": false
+    },
+    {
+      "id": "GAME_CONTROL",
+      "expanded": true
+    },
+    {
+      "id": "SETTINGS_3D",
+      "expanded": false
+    },
+    {
+      "id": "ANIMATION_INFO",
+      "expanded": false
+    },
+    {
+      "id": "GAME_INFO",
+      "expanded": false
+    },
+    {
+      "id": "ACTOR_INFO",
+      "expanded": false
+    },
+    {
+      "id": "CUSTOM_MAPS",
+      "expanded": false
+    },
+    {
+      "id": "KEYS_GLOBAL",
+      "expanded": false
+    },
+    {
+      "id": "KEYS_LOCAL",
+      "expanded": false
+    },
+    {
+      "id": "ABOUT",
+      "expanded": false
+    }
+  ],
+
   "miniView": {
     "height": 400,
     "active": false,

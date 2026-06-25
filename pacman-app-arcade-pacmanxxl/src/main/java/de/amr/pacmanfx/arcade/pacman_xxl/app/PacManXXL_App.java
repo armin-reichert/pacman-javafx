@@ -12,13 +12,9 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
-import de.amr.pacmanfx.ui.views.dashboard.DashboardID;
-import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
-import java.util.List;
 
 public class PacManXXL_App extends Application {
 
@@ -41,20 +37,6 @@ public class PacManXXL_App extends Application {
         game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
             .startPage(PacManXXL_StartPage::new)
             .build(stage);
-
-        final GamePlayView playView = game.ui().views().gamePlayView();
-        playView.configureDashboard(List.of(
-            DashboardID.README,
-            DashboardID.GENERAL,
-            DashboardID.GAME_CONTROL,
-            DashboardID.SETTINGS_3D,
-            DashboardID.GAME_INFO,
-            DashboardID.ACTOR_INFO,
-            DashboardID.CUSTOM_MAPS,
-            DashboardID.KEYS_GLOBAL,
-            DashboardID.KEYS_LOCAL,
-            DashboardID.ABOUT
-        ), game.ui().translations());
 
         final PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
         game.watchdog().addEventListener(sharedMapSelector);
