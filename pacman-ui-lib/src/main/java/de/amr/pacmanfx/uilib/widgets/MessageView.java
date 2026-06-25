@@ -12,6 +12,7 @@ import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
+import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,7 +25,7 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public class MessageView extends ImageView implements Disposable {
+public class MessageView extends Group implements Disposable {
 
     public enum AnimationID implements Identifier {
         MESSAGE_MOVING
@@ -121,6 +122,7 @@ public class MessageView extends ImageView implements Disposable {
         }
     }
 
+    private final ImageView imageView;
     private final AnimationRegistry animations;
     private final float displaySeconds;
 
@@ -135,11 +137,15 @@ public class MessageView extends ImageView implements Disposable {
 
         final Image image = createImage(width, height, builder.text, builder.font,
             builder.backgroundColor, builder.textColor, builder.borderColor);
-        setImage(image);
-        setFitWidth(width);
-        setFitHeight(height);
+
+        imageView = new ImageView(image);
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(height);
+
         setRotationAxis(Rotate.X_AXIS);
         setRotate(90);
+
+        getChildren().add(imageView);
 
         animations.register(AnimationID.MESSAGE_MOVING, new MoveInOutAnimation());
     }
@@ -154,7 +160,7 @@ public class MessageView extends ImageView implements Disposable {
     }
 
     public void showCenteredAt(double centerX, double centerY) {
-        setTranslateX(centerX - 0.5 * getFitWidth());
+        setTranslateX(centerX - 0.5 * imageView.getFitWidth());
         setTranslateY(centerY);
         setTranslateZ(hiddenZPosition());
         animations.optAnimation(AnimationID.MESSAGE_MOVING).ifPresent(ManagedAnimation::playFromStart);
