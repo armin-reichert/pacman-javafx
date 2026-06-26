@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.game;
 
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
@@ -12,6 +13,7 @@ import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.SettingsLoader;
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -61,6 +63,13 @@ public class GameBuilder {
     public GameBuilder size(int width, int height) {
         this.width = width;
         this.height = height;
+        return this;
+    }
+
+    public GameBuilder screenArea(double aspectRatio, double heightFraction) {
+        Vector2i sectionSize = Ufx.computeScreenSectionSize(aspectRatio, heightFraction);
+        width = sectionSize.x();
+        height = sectionSize.y();
         return this;
     }
 

@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
@@ -11,7 +10,6 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -24,14 +22,13 @@ public class PacManXXL_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         game = new GameBuilder()
             .cartridges(
                 PacManXXL_PacMan_Cartridge.CARTRIDGE,
                 PacManXXL_MsPacMan_Cartridge.CARTRIDGE)
             .startPage(PacManXXL_StartPage::new)
             .window(stage)
-            .size(sceneSize.x(), sceneSize.y())
+            .screenArea(ASPECT_RATIO, HEIGHT_FRACTION)
             .build();
 
         PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();

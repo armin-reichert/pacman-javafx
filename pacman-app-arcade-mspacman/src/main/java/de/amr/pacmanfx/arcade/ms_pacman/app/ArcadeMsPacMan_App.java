@@ -4,14 +4,12 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.app;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -24,13 +22,11 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-
         game = new GameBuilder()
             .cartridges(ArcadeMsPacMan_Cartridge.CARTRIDGE)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .window(stage)
-            .size(screenSize.x(), screenSize.y())
+            .screenArea(ASPECT_RATIO, HEIGHT_FRACTION)
             .build();
 
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));

@@ -3,11 +3,9 @@
  */
 package de.amr.pacmanfx.tengenmspacman.app;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.tengenmspacman.*;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -23,13 +21,12 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         game = new GameBuilder()
             .cartridges(TengenMsPacMan_Cartridge.CARTRIDGE)
             .dashboardFactory(TengenDashboardFactory.instance())
             .startPage(TengenMsPacMan_StartPage::new)
             .window(stage)
-            .size(sceneSize.x(), sceneSize.y())
+            .screenArea(ASPECT_RATIO, HEIGHT_FRACTION)
             .build();
 
         game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS,

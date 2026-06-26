@@ -79,9 +79,7 @@ public class PacManAllGamesApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
-
         try {
             if (useBuilder) {
                 game = new GameBuilder()
@@ -94,11 +92,12 @@ public class PacManAllGamesApp extends Application {
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
                     .window(stage)
-                    .size(sceneSize.x(), sceneSize.y())
+                    .screenArea(ASPECT_RATIO, HEIGHT_FRACTION)
                     .build();
             }
             else {
                 var machine = new PacManGamesMachine(List.of(CARTRIDGES));
+                Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
                 game = new GameImpl(machine);
                 game.createUI(
                     GameUI.DEFAULT_SETTINGS,
