@@ -29,10 +29,6 @@ public class GameExtensions {
         functionMap.remove(id);
     }
 
-    public Map<Identifier, Function<Game, Object>> getFunctionMap() {
-        return functionMap;
-    }
-
     @SuppressWarnings("unchecked")
     public <T> T apply(Identifier id, Class<T> expectedResultType) {
         final Function<Game, Object> function = functionMap.get(id);
