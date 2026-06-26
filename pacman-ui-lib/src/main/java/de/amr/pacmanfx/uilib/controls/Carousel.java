@@ -12,7 +12,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
-import org.tinylog.Logger;
 
 import java.net.URL;
 
