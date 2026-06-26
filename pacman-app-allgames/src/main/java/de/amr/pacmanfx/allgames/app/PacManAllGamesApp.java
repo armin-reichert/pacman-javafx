@@ -65,7 +65,8 @@ public class PacManAllGamesApp extends Application {
 
     @Override
     public void init() {
-        useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
+        useBuilder = true;
+        //Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
     }
 
@@ -88,14 +89,6 @@ public class PacManAllGamesApp extends Application {
                     .build()
                     .ifPresent(game -> {
                         this.game = game;
-
-                        game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
-
-                        game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS,
-                            new TengenMsPacMan_Actions(game));
-                        game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS,
-                            new TengenMsPacMan_UISettings());
-
                         //TODO find more elegant solution
                         game.watchdog().addEventListener(sharedMapSelector);
                         game.showUI(GameVariantID.ARCADE_PACMAN);
@@ -126,12 +119,9 @@ public class PacManAllGamesApp extends Application {
                 startPagesView.rootPane().setSelectedIndex(0);
             }
 
-            game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
-
-            game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS,
-                new TengenMsPacMan_Actions(game));
-            game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS,
-                new TengenMsPacMan_UISettings());
+            game.extensions().add(Arcade_GameExtensions.ACTIONS, Arcade_Actions::new);
+            game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions::new);
+            game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings::new);
 
             //TODO find more elegant solution
             game.watchdog().addEventListener(sharedMapSelector);

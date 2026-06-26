@@ -8,28 +8,45 @@ import de.amr.basics.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
 public class GameExtensions {
 
-    private final Map<Identifier, Object> extensionMap = new HashMap<>();
+    private final Game game;
+    private final Map<Identifier, Function<Game, Object>> functionMap = new HashMap<>();
+    private final Map<Identifier, Object> resultMap = new HashMap<>();
 
-    public void add(Identifier identifier, Object value) {
-        extensionMap.put(identifier, value);
+    public GameExtensions(Game game) {
+        this.game = Objects.requireNonNull(game);
     }
 
-    public void remove(Identifier identifier) {
-        extensionMap.remove(identifier);
+    public void add(Identifier id, Function<Game, Object> value) {
+        functionMap.put(id, value);
     }
 
-    public Map<Identifier, Object> getExtensionMap() {
-        return extensionMap;
+    public void remove(Identifier id) {
+        functionMap.remove(id);
+    }
+
+    public Map<Identifier, Function<Game, Object>> getFunctionMap() {
+        return functionMap;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T get(Identifier identifier, Class<T> type) {
-        if (type.isInstance(extensionMap.get(identifier))) {
-            return (T) extensionMap.get(identifier);
+    public <T> T apply(Identifier id, Class<T> expectedResultType) {
+        final Function<Game, Object> function = functionMap.get(id);
+        if (function == null) {
+            throw new IllegalArgumentException("No extension function registered with id='%s'".formatted(id));
         }
-        return null;
+        final Object result = resultMap.computeIfAbsent(id, _ -> function.apply(game));
+        if (result == null) {
+            throw new IllegalStateException("Extension function (id='%s') produced no result".formatted(id));
+        }
+        if (!expectedResultType.isInstance(result)) {
+            throw new IllegalStateException("Extension function (id='%s') produced result of type '%s', expected type: '%s"
+                .formatted(id, result.getClass(), expectedResultType));
+        }
+        return (T) result;
     }
 }

@@ -73,7 +73,7 @@ public final class GameImpl implements Game {
         this.machine = requireNonNull(machine);
 
         this.commonActions = new CommonActions(this);
-        this.extensions = new GameExtensions();
+        this.extensions = new GameExtensions(this);
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
         gameVariantName.addListener((_, oldName, newName) -> onGameVariantNameChanged(oldName, newName));

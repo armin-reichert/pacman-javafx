@@ -1,11 +1,15 @@
 package de.amr.pacmanfx.arcade.pacman.app;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacManConfig;
+import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
+import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Cartridge;
+
+import java.util.Map;
 
 public class ArcadePacMan_Cartridge {
 
@@ -14,6 +18,10 @@ public class ArcadePacMan_Cartridge {
         Arcade_GameFlow::new,
         ArcadePacMan_GameModel::new,
         ArcadePacMan_GameRules::new,
-        ArcadePacManConfig::new
+        ArcadePacManConfig::new,
+        Map.of(
+            Arcade_GameExtensions.ACTIONS,
+            Arcade_Actions::new
+        )
     );
 }

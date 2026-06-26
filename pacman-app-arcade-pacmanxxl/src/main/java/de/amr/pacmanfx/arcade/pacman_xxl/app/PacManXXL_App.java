@@ -3,8 +3,6 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
-import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
-import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
@@ -34,13 +32,15 @@ public class PacManXXL_App extends Application {
                 this.game = game;
 
                 PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
+
                 game.watchdog().addEventListener(sharedMapSelector);
+
                 game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())
                     .gameModel().setMapSelector(sharedMapSelector);
+
                 game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name())
                     .gameModel().setMapSelector(sharedMapSelector);
 
-                game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
                 game.showUI(GameVariantID.ARCADE_PACMAN_XXL);
             });
     }

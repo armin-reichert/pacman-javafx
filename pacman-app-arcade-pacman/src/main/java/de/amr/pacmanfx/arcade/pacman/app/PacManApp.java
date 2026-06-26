@@ -6,8 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.app;
 
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
-import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
-import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import javafx.application.Application;
@@ -23,8 +21,6 @@ public class PacManApp extends Application {
             .startPage(ArcadePacMan_StartPage::new)
             .build()
             .ifPresent(game -> {
-                //TODO add extensions automatically
-                game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
                 game.showUI(GameVariantID.ARCADE_PACMAN);
             });
     }

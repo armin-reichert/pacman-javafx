@@ -69,11 +69,11 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void onActivate() {
-        final TengenMsPacMan_GameModel game = tengenGame();
+        final TengenMsPacMan_GameModel gameModel = tengenGameModel();
+        gameModel.hud().hide();
 
-        game.hud().hide();
-
-        final var actions = game().extensions().get(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = game().extensions()
+            .apply(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindings().selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());
         actionBindings().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
@@ -81,7 +81,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         actionBindings().registerAllBindings(game().actions().sceneTestActions().bindings());
 
         selectedOption.set(OPTION_PAC_BOOSTER);
-        game.setCanStartNewGame(true);
+        gameModel.setCanStartNewGame(true);
 
         idleTicks = 0;
         initialDelay = INITIAL_DELAY;
@@ -100,7 +100,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
     }
 
-    private TengenMsPacMan_GameModel tengenGame() { return (TengenMsPacMan_GameModel) gameModel(); }
+    private TengenMsPacMan_GameModel tengenGameModel() { return (TengenMsPacMan_GameModel) gameModel(); }
     
     private void optionValueChanged() {
         game().ui().sounds().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
@@ -145,74 +145,74 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     private void setPrevStartLevelValue() {
-        int current = tengenGame().startLevelNumber();
+        int current = tengenGameModel().startLevelNumber();
         int prev = (current == MIN_START_LEVEL) ? MAX_START_LEVEL : current - 1;
-        tengenGame().setStartLevelNumber(prev);
+        tengenGameModel().setStartLevelNumber(prev);
         optionValueChanged();
     }
 
     private void setNextStartLevelValue() {
-        int current = tengenGame().startLevelNumber();
+        int current = tengenGameModel().startLevelNumber();
         int next = (current < MAX_START_LEVEL) ? current + 1 : MIN_START_LEVEL;
-        tengenGame().setStartLevelNumber(next);
+        tengenGameModel().setStartLevelNumber(next);
         optionValueChanged();
     }
 
     private void setPrevMapCategoryValue() {
-        MapCategory category = tengenGame().mapCategory();
+        MapCategory category = tengenGameModel().mapCategory();
         var values = MapCategory.values();
         int current = category.ordinal(), prev = (current == 0) ? values.length - 1 :  current - 1;
-        tengenGame().setMapCategory(values[prev]);
+        tengenGameModel().setMapCategory(values[prev]);
         saveHighScore();
         optionValueChanged();
     }
 
     private void setNextMapCategoryValue() {
-        MapCategory category = tengenGame().mapCategory();
+        MapCategory category = tengenGameModel().mapCategory();
         var values = MapCategory.values();
         int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        tengenGame().setMapCategory(values[next]);
+        tengenGameModel().setMapCategory(values[next]);
         saveHighScore();
         optionValueChanged();
     }
 
     private void setPrevDifficultyValue() {
-        Difficulty difficulty = tengenGame().difficulty();
+        Difficulty difficulty = tengenGameModel().difficulty();
         var values = Difficulty.values();
         int current = difficulty.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
-        tengenGame().setDifficulty(values[prev]);
+        tengenGameModel().setDifficulty(values[prev]);
         saveHighScore();
         optionValueChanged();
     }
 
     private void setNextDifficultyValue() {
-        Difficulty difficulty = tengenGame().difficulty();
+        Difficulty difficulty = tengenGameModel().difficulty();
         var values = Difficulty.values();
         int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        tengenGame().setDifficulty(values[next]);
+        tengenGameModel().setDifficulty(values[next]);
         saveHighScore();
         optionValueChanged();
     }
 
     private void setPrevPacBoosterValue() {
-        PacBooster pacBooster = tengenGame().pacBoosterMode();
+        PacBooster pacBooster = tengenGameModel().pacBoosterMode();
         var values = PacBooster.values();
         int current = pacBooster.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
-        tengenGame().setPacBoosterMode(values[prev]);
+        tengenGameModel().setPacBoosterMode(values[prev]);
         optionValueChanged();
     }
 
     private void setNextPacBoosterValue() {
-        PacBooster pacBooster = tengenGame().pacBoosterMode();
+        PacBooster pacBooster = tengenGameModel().pacBoosterMode();
         var values = PacBooster.values();
         int current = pacBooster.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        tengenGame().setPacBoosterMode(values[next]);
+        tengenGameModel().setPacBoosterMode(values[next]);
         optionValueChanged();
     }
 
     private void saveHighScore() {
         try {
-            tengenGame().highScore().save();
+            tengenGameModel().highScore().save();
         } catch (IOException x) {
             Logger.error(x, "Could not save Tengen Ms. Pac-Man high score");
             //TODO Show message in UI

@@ -33,7 +33,9 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void onActivate() {
-        final var actions = game().extensions().get(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = game().extensions()
+            .apply(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+
         actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
 
         fadeProgress = 0;

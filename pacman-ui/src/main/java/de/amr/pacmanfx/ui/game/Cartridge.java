@@ -10,6 +10,8 @@ import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 
+import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public record Cartridge(
@@ -17,7 +19,9 @@ public record Cartridge(
     Supplier<? extends GameFlow> gameFlowFactory,
     Supplier<? extends AbstractGameModel> gameModelFactory,
     Supplier<? extends GameRules> gameRulesFactory,
-    Supplier<? extends GameVariantConfig> uiConfigFactory) implements Identifier
+    Supplier<? extends GameVariantConfig> uiConfigFactory,
+    Map<Identifier, Function<Game, Object>> gameExtensionSuppliers)
+    implements Identifier
 {
     @Override
     public String name() {

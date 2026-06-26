@@ -5,12 +5,15 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.tengenmspacman.scenes.SceneDisplay;
+import de.amr.pacmanfx.ui.game.Game;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 public class TengenMsPacMan_UISettings {
+
+    public TengenMsPacMan_UISettings(Game game) {}
 
     public final BooleanProperty joypadBindingsDisplayed = new SimpleBooleanProperty(false);
 

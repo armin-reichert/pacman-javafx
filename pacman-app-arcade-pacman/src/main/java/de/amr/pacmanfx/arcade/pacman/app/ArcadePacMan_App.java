@@ -5,8 +5,6 @@
 package de.amr.pacmanfx.arcade.pacman.app;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
-import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
-import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
@@ -30,7 +28,6 @@ public class ArcadePacMan_App extends Application {
             .screenArea(ASPECT_RATIO, HEIGHT_FRACTION)
             .build()
             .ifPresent(game -> {
-                game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
                 game.showUI(GameVariantID.ARCADE_PACMAN);
                 this.game = game;
             });

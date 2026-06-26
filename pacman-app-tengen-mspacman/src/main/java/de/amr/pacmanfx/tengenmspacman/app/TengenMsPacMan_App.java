@@ -3,7 +3,8 @@
  */
 package de.amr.pacmanfx.tengenmspacman.app;
 
-import de.amr.pacmanfx.tengenmspacman.*;
+import de.amr.pacmanfx.tengenmspacman.TengenDashboardFactory;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import javafx.application.Application;
@@ -30,13 +31,6 @@ public class TengenMsPacMan_App extends Application {
             .build()
             .ifPresent(game -> {
                 this.game = game;
-
-                game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS,
-                    new TengenMsPacMan_UISettings());
-
-                game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS,
-                    new TengenMsPacMan_Actions(game));
-
                 game.showUI(TENGEN_MS_PACMAN);
             });
     }

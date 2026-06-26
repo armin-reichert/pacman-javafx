@@ -29,7 +29,7 @@ public class ArcadeMsPacMan_App extends Application {
             .screenArea(ASPECT_RATIO, HEIGHT_FRACTION)
             .build()
             .ifPresent(game -> {
-                game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
+//                game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
                 game.showUI(GameVariantID.ARCADE_MS_PACMAN);
                 this.game = game;
             });
