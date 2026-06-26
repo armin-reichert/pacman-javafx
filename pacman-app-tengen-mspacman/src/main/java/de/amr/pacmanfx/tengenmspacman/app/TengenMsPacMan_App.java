@@ -28,7 +28,8 @@ public class TengenMsPacMan_App extends Application {
             .cartridges(TengenMsPacMan_Cartridge.CARTRIDGE)
             .dashboardFactory(TengenDashboardFactory.instance())
             .startPage(TengenMsPacMan_StartPage::new)
-            .window(stage, sceneSize.x(), sceneSize.y())
+            .window(stage)
+            .size(sceneSize.x(), sceneSize.y())
             .build();
 
         game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS,

@@ -93,7 +93,8 @@ public class PacManAllGamesApp extends Application {
                     .startPage(ArcadeMsPacMan_StartPage::new)
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
-                    .window(stage, sceneSize.x(), sceneSize.y())
+                    .window(stage)
+                    .size(sceneSize.x(), sceneSize.y())
                     .build();
             }
             else {

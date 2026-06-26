@@ -30,7 +30,8 @@ public class PacManXXL_App extends Application {
                 PacManXXL_PacMan_Cartridge.CARTRIDGE,
                 PacManXXL_MsPacMan_Cartridge.CARTRIDGE)
             .startPage(PacManXXL_StartPage::new)
-            .window(stage, sceneSize.x(), sceneSize.y())
+            .window(stage)
+            .size(sceneSize.x(), sceneSize.y())
             .build();
 
         PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();

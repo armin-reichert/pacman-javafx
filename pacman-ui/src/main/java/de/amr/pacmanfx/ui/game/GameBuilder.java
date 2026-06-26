@@ -25,33 +25,47 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameBuilder {
 
-    record WindowConfig(Stage stage, int sceneWidth, int sceneHeight) {}
-
     record GameVariantConfig(WorldMapSelector mapSelector) {}
 
     private final PacManGamesMachine machine;
+
     private final Set<Cartridge> cartridgeSet = new HashSet<>();
+
     private GameUISettings uiSettings;
-    private WindowConfig windowConfig;
+
     private DashboardFactory dashboardFactory;
+
     private final Map<String, GameVariantConfig> gameVariantConfigMap = new LinkedHashMap<>();
+
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
+
+    private Stage stage;
+    private int width;
+    private int height;
 
     public GameBuilder() {
         machine = new PacManGamesMachine();
         dashboardFactory = CommonDashboardFactory.instance();
+        uiSettings = SettingsLoader.load(
+            getClass().getResource("/de/amr/pacmanfx/ui/ui.json"),
+            GameUISettings.class);
+        width = 800;
+        height = 800;
     }
 
     public GameBuilder cartridges(Cartridge... cartridges) {
         cartridgeSet.addAll(List.of(cartridges));
         return this;
     }
-    public GameBuilder window(Stage stage, int width, int height) {
-        requireNonNull(stage);
-        windowConfig = new WindowConfig(stage, width, height);
-        uiSettings = SettingsLoader.load(
-            getClass().getResource("/de/amr/pacmanfx/ui/ui.json"),
-            GameUISettings.class);
+
+    public GameBuilder size(int width, int height) {
+        this.width = width;
+        this.height = height;
+        return this;
+    }
+
+    public GameBuilder window(Stage stage) {
+        this.stage = requireNonNull(stage);
         return this;
     }
 
@@ -90,9 +104,9 @@ public class GameBuilder {
         game.createUI(
             uiSettings,
             dashboardFactory,
-            windowConfig.stage(),
-            windowConfig.sceneWidth(),
-            windowConfig.sceneHeight());
+            stage,
+            width,
+            height);
 
         final StartPagesView startPagesView = game.ui().views()
             .assertView(GameViewID.START_PAGES, StartPagesView.class);
@@ -121,13 +135,13 @@ public class GameBuilder {
         if (cartridgeSet.isEmpty()) {
             error("No cartridges have been inserted into game machine");
         }
-        if (windowConfig.stage == null) {
+        if (stage == null) {
             error("No stage has been specified");
         }
-        if (windowConfig.sceneWidth() <= 0) {
+        if (width <= 0) {
             error("Main scene width must be a positive number");
         }
-        if (windowConfig.sceneHeight() <= 0) {
+        if (height <= 0) {
             error("Main scene height must be a positive number");
         }
         if (uiSettings == null) {

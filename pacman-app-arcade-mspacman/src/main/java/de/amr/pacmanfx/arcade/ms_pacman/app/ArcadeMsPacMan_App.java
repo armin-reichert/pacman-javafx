@@ -29,7 +29,8 @@ public class ArcadeMsPacMan_App extends Application {
         game = new GameBuilder()
             .cartridges(ArcadeMsPacMan_Cartridge.CARTRIDGE)
             .startPage(ArcadeMsPacMan_StartPage::new)
-            .window(stage, screenSize.x(), screenSize.y())
+            .window(stage)
+            .size(screenSize.x(), screenSize.y())
             .build();
 
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));

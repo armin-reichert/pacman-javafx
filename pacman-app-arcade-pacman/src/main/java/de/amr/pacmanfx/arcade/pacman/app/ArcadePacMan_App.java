@@ -29,8 +29,9 @@ public class ArcadePacMan_App extends Application {
         game = new GameBuilder()
             .cartridges(ArcadePacMan_Cartridge.CARTRIDGE)
             .uiSettings(getClass().getResource("/de/amr/pacmanfx/arcade/pacman/ui.json"))
-            .window(stage, sceneSize.x(), sceneSize.y())
             .startPage(ArcadePacMan_StartPage::new)
+            .window(stage)
+            .size(sceneSize.x(), sceneSize.y())
             .build();
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
         game.showUI(GameVariantID.ARCADE_PACMAN);
