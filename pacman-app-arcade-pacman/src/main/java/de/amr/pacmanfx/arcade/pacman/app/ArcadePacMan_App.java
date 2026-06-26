@@ -22,26 +22,20 @@ import static de.amr.pacmanfx.uilib.Ufx.computeScreenSectionSize;
 
 public class ArcadePacMan_App extends Application {
 
-    private static final float ASPECT_RATIO    = 1.2f; // 12:10 aspect ratio
-    private static final float HEIGHT_FRACTION = 0.8f; // 80% of available height
+    static final float ASPECT_RATIO    = 1.2f; // 12:10 aspect ratio
+    static final float HEIGHT_FRACTION = 0.8f; // 80% of available height
 
-    private PacManGamesMachine machine;
-    private Game game;
-    private GameUISettings settings;
-
-    @Override
-    public void init() {
-        machine = new PacManGamesMachine(ArcadePacMan_Cartridge.CARTRIDGE);
-        settings = SettingsLoader.load(getClass().getResource("/de/amr/pacmanfx/arcade/pacman/ui.json"),
-            GameUISettings.class);
-    }
+    Game game;
 
     @Override
     public void start(Stage stage) {
-        final Vector2i sceneSize = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
+        Vector2i sceneSize = computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        game = new GameBuilder()
+            .cartridges(ArcadePacMan_Cartridge.CARTRIDGE)
+            .uiSettings(getClass().getResource("/de/amr/pacmanfx/arcade/pacman/ui.json"))
+            .window(stage, sceneSize.x(), sceneSize.y())
             .startPage(ArcadePacMan_StartPage::new)
-            .build(settings, CommonDashboardFactory.instance(), stage);
+            .build();
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
         game.showUI(GameVariantID.ARCADE_PACMAN);
     }

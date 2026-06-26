@@ -5,10 +5,8 @@ package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.tengenmspacman.*;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -18,27 +16,26 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_ASP
 
 public class TengenMsPacMan_App extends Application {
 
-    private static final float ASPECT_RATIO    = NES_SCREEN_ASPECT_RATIO; // 32:30
-    private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
+    static final float ASPECT_RATIO    = NES_SCREEN_ASPECT_RATIO; // 32:30
+    static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
 
-    private PacManGamesMachine machine;
-    private Game game;
-
-    @Override
-    public void init() {
-        machine = new PacManGamesMachine(TengenMsPacMan_Cartridge.CARTRIDGE);
-    }
+    Game game;
 
     @Override
     public void start(Stage stage) {
-        final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-
-        game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
+        Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        game = new GameBuilder()
+            .cartridges(TengenMsPacMan_Cartridge.CARTRIDGE)
+            .dashboardFactory(TengenDashboardFactory.instance())
             .startPage(TengenMsPacMan_StartPage::new)
-            .build(GameUI.DEFAULT_SETTINGS, TengenDashboardFactory.instance(), stage);
+            .window(stage, sceneSize.x(), sceneSize.y())
+            .build();
 
-        game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS, new TengenMsPacMan_UISettings());
-        game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS, new TengenMsPacMan_Actions(game));
+        game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS,
+            new TengenMsPacMan_UISettings());
+
+        game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS,
+            new TengenMsPacMan_Actions(game));
 
         game.showUI(TENGEN_MS_PACMAN);
     }

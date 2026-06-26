@@ -7,15 +7,15 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.GameViewID;
+import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
+import de.amr.pacmanfx.uilib.SettingsLoader;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.URL;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
@@ -25,18 +25,39 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameBuilder {
 
-    record WindowConfig(int sceneWidth, int sceneHeight) {}
+    record WindowConfig(Stage stage, int sceneWidth, int sceneHeight) {}
 
     record GameVariantConfig(WorldMapSelector mapSelector) {}
 
     private final PacManGamesMachine machine;
-    private final WindowConfig windowConfig;
+    private final Set<Cartridge> cartridgeSet = new HashSet<>();
+    private GameUISettings uiSettings;
+    private WindowConfig windowConfig;
+    private DashboardFactory dashboardFactory;
     private final Map<String, GameVariantConfig> gameVariantConfigMap = new LinkedHashMap<>();
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
 
-    public GameBuilder(PacManGamesMachine machine, int mainSceneWidth, int mainSceneHeight) {
-        this.machine = requireNonNull(machine);
-        windowConfig = new WindowConfig(mainSceneWidth, mainSceneHeight);
+    public GameBuilder() {
+        machine = new PacManGamesMachine();
+        dashboardFactory = CommonDashboardFactory.instance();
+    }
+
+    public GameBuilder cartridges(Cartridge... cartridges) {
+        cartridgeSet.addAll(List.of(cartridges));
+        return this;
+    }
+    public GameBuilder window(Stage stage, int width, int height) {
+        requireNonNull(stage);
+        windowConfig = new WindowConfig(stage, width, height);
+        uiSettings = SettingsLoader.load(
+            getClass().getResource("/de/amr/pacmanfx/ui/ui.json"),
+            GameUISettings.class);
+        return this;
+    }
+
+    public GameBuilder dashboardFactory(DashboardFactory dashboardFactory) {
+        this.dashboardFactory = requireNonNull(dashboardFactory);
+        return this;
     }
 
     public GameBuilder worldMapSelector(GameVariantID gameVariantID, WorldMapSelector mapSelector) {
@@ -53,15 +74,29 @@ public class GameBuilder {
         return this;
     }
 
-    public Game build(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage) {
-        requireNonNull(settings);
-        requireNonNull(stage);
+    public GameBuilder uiSettings(URL url) {
+        requireNonNull(url);
+        uiSettings = SettingsLoader.load(url, GameUISettings.class);
+        return this;
+    }
+
+    public Game build() {
         validateConfigurationData();
 
+        for (var c : cartridgeSet) {
+            machine.loadCartridge(c);
+        }
         final var game = new GameImpl(machine);
-        game.createUI(settings, dashboardFactory, stage, windowConfig.sceneWidth(), windowConfig.sceneHeight());
+        game.createUI(
+            uiSettings,
+            dashboardFactory,
+            windowConfig.stage(),
+            windowConfig.sceneWidth(),
+            windowConfig.sceneHeight());
 
-        final StartPagesView startPagesView = game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class);
+        final StartPagesView startPagesView = game.ui().views()
+            .assertView(GameViewID.START_PAGES, StartPagesView.class);
+
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();
             if (page != null) {
@@ -83,11 +118,20 @@ public class GameBuilder {
     }
 
     private void validateConfigurationData() {
+        if (cartridgeSet.isEmpty()) {
+            error("No cartridges have been inserted into game machine");
+        }
+        if (windowConfig.stage == null) {
+            error("No stage has been specified");
+        }
         if (windowConfig.sceneWidth() <= 0) {
             error("Main scene width must be a positive number");
         }
         if (windowConfig.sceneHeight() <= 0) {
             error("Main scene height must be a positive number");
+        }
+        if (uiSettings == null) {
+            error("No UI settings have been specified");
         }
     }
 

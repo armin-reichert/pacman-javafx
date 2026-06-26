@@ -9,35 +9,28 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.ui.game.PacManGamesMachine;
-import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class ArcadeMsPacMan_App extends Application {
 
-    private static final float ASPECT_RATIO    = 1.2f; // 12:10
-    private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
+    static final float ASPECT_RATIO    = 1.2f; // 12:10
+    static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    private PacManGamesMachine machine;
-    private Game game;
-
-    @Override
-    public void init() {
-        machine = new PacManGamesMachine(ArcadeMsPacMan_Cartridge.CARTRIDGE);
-    }
+    Game game;
 
     @Override
     public void start(Stage stage) {
-        final Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        Vector2i screenSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
-        game = new GameBuilder(machine, screenSize.x(), screenSize.y())
+        game = new GameBuilder()
+            .cartridges(ArcadeMsPacMan_Cartridge.CARTRIDGE)
             .startPage(ArcadeMsPacMan_StartPage::new)
-            .build(GameUI.DEFAULT_SETTINGS, CommonDashboardFactory.instance(), stage);
+            .window(stage, screenSize.x(), screenSize.y())
+            .build();
 
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
         game.showUI(GameVariantID.ARCADE_MS_PACMAN);

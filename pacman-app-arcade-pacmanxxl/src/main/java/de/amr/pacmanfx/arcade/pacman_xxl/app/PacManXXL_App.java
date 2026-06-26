@@ -9,49 +9,38 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.ui.game.PacManGamesMachine;
-import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.util.List;
-
 public class PacManXXL_App extends Application {
 
-    private static final double ASPECT_RATIO    = 1.6;
-    private static final double HEIGHT_FRACTION = 0.8;
+    static final double ASPECT_RATIO    = 1.6;
+    static final double HEIGHT_FRACTION = 0.8;
 
-    private PacManGamesMachine machine;
-    private Game game;
-
-    @Override
-    public void init() {
-        machine = new PacManGamesMachine(List.of(
-            PacManXXL_PacMan_Cartridge.CARTRIDGE,
-            PacManXXL_MsPacMan_Cartridge.CARTRIDGE
-        ));
-    }
+    Game game;
 
     @Override
     public void start(Stage stage) {
-        final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-
-        game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
+        Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        game = new GameBuilder()
+            .cartridges(
+                PacManXXL_PacMan_Cartridge.CARTRIDGE,
+                PacManXXL_MsPacMan_Cartridge.CARTRIDGE)
             .startPage(PacManXXL_StartPage::new)
-            .build(GameUI.DEFAULT_SETTINGS, CommonDashboardFactory.instance(), stage);
+            .window(stage, sceneSize.x(), sceneSize.y())
+            .build();
 
-        final PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
+        PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
         game.watchdog().addEventListener(sharedMapSelector);
-
-        game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(sharedMapSelector);
-        game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
+        game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())
+            .gameModel().setMapSelector(sharedMapSelector);
+        game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name())
+            .gameModel().setMapSelector(sharedMapSelector);
 
         game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
-
         game.showUI(GameVariantID.ARCADE_PACMAN_XXL);
     }
 

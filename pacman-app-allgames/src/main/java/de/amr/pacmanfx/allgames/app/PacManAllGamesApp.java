@@ -19,10 +19,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.tengenmspacman.*;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GameBuilder;
-import de.amr.pacmanfx.ui.game.GameImpl;
-import de.amr.pacmanfx.ui.game.PacManGamesMachine;
+import de.amr.pacmanfx.ui.game.*;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -49,77 +46,92 @@ import static de.amr.pacmanfx.core.GameVariantID.ARCADE_PACMAN_XXL;
  */
 public class PacManAllGamesApp extends Application {
 
-    private static final float ASPECT_RATIO    = 1.6f; // 16:10
-    private static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
+    static final float ASPECT_RATIO    = 1.6f; // 16:10
+    static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    private static String including(boolean b) {
+    private static final Cartridge[] CARTRIDGES = {
+        ArcadePacMan_Cartridge.CARTRIDGE,
+        ArcadeMsPacMan_Cartridge.CARTRIDGE,
+        TengenMsPacMan_Cartridge.CARTRIDGE,
+        PacManXXL_PacMan_Cartridge.CARTRIDGE,
+        PacManXXL_MsPacMan_Cartridge.CARTRIDGE
+    };
+
+    static String including(boolean b) {
         return b ? "including" : "not including";
     }
 
-    private static String using(boolean b) {
+    static String using(boolean b) {
         return b ? "using" : "without using";
     }
 
-    private PacManGamesMachine machine;
-    private Game game;
+    Game game;
 
-    private boolean useBuilder;
-    private boolean includeTests;
+    // Only for testing API vs builder
+    boolean useBuilder;
+    boolean includeTests;
 
     @Override
     public void init() {
-        machine = new PacManGamesMachine(List.of(
-            ArcadePacMan_Cartridge.CARTRIDGE,
-            ArcadeMsPacMan_Cartridge.CARTRIDGE,
-            TengenMsPacMan_Cartridge.CARTRIDGE,
-            PacManXXL_PacMan_Cartridge.CARTRIDGE,
-            PacManXXL_MsPacMan_Cartridge.CARTRIDGE
-        ));
-
         useBuilder = Boolean.parseBoolean(getParameters().getNamed().get("use_builder"));
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
     }
 
     @Override
     public void start(Stage stage) {
-        final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-        final PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
+        Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
 
         try {
             if (useBuilder) {
-                game = new GameBuilder(machine, sceneSize.x(), sceneSize.y())
+                game = new GameBuilder()
+                    .cartridges(CARTRIDGES)
+                    .dashboardFactory(TengenDashboardFactory.instance())
                     .worldMapSelector(ARCADE_PACMAN_XXL, sharedMapSelector)
                     .worldMapSelector(ARCADE_MS_PACMAN_XXL, sharedMapSelector)
                     .startPage(ArcadePacMan_StartPage::new)
                     .startPage(ArcadeMsPacMan_StartPage::new)
                     .startPage(TengenMsPacMan_StartPage::new)
                     .startPage(PacManXXL_StartPage::new)
-                    .build(GameUI.DEFAULT_SETTINGS, TengenDashboardFactory.instance(), stage);
+                    .window(stage, sceneSize.x(), sceneSize.y())
+                    .build();
             }
             else {
+                var machine = new PacManGamesMachine(List.of(CARTRIDGES));
                 game = new GameImpl(machine);
-                game.createUI(GameUI.DEFAULT_SETTINGS, TengenDashboardFactory.instance(), stage, sceneSize.x(), sceneSize.y());
+                game.createUI(
+                    GameUI.DEFAULT_SETTINGS,
+                    TengenDashboardFactory.instance(),
+                    stage, sceneSize.x(), sceneSize.y());
 
-                game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())   .gameModel().setMapSelector(sharedMapSelector);
-                game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
+                game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())
+                    .gameModel().setMapSelector(sharedMapSelector);
+                game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name())
+                    .gameModel().setMapSelector(sharedMapSelector);
 
-                final StartPagesView startPagesView = game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class);
+                StartPagesView startPagesView = game.ui().views().assertView(
+                    GameViewID.START_PAGES, StartPagesView.class);
+
                 startPagesView.addStartPage(game, new ArcadePacMan_StartPage());
                 startPagesView.addStartPage(game, new ArcadeMsPacMan_StartPage());
                 startPagesView.addStartPage(game, new TengenMsPacMan_StartPage());
                 startPagesView.addStartPage(game, new PacManXXL_StartPage());
+
                 startPagesView.rootPane().setSelectedIndex(0);
             }
 
             game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
 
-            game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS, new TengenMsPacMan_Actions(game));
-            game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS, new TengenMsPacMan_UISettings());
+            game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS,
+                new TengenMsPacMan_Actions(game));
+            game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS,
+                new TengenMsPacMan_UISettings());
 
             //TODO find more elegant solution
             game.watchdog().addEventListener(sharedMapSelector);
 
-            Logger.info("UI created {} builder {} tests", using(useBuilder), including(includeTests));
+            Logger.info("UI created {} builder {} tests",
+                using(useBuilder), including(includeTests));
 
             game.showUI(GameVariantID.ARCADE_PACMAN);
         }
