@@ -21,7 +21,7 @@ public class Arcade_PlayScene3D extends PlayScene3D {
         actionBindings().dispose();
 
         final Arcade_Actions actions = game().extensions().
-            apply(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+            value(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         if (level.isDemoLevel()) {
             actionBindings().registerAllBindings(actions.gameStartActionBindings());

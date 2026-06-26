@@ -34,7 +34,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     public void onActivate() {
         final var actions = game().extensions()
-            .apply(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+            .value(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
 

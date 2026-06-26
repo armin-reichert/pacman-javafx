@@ -137,7 +137,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
 
     private void acceptDemoLevel() {
         final Arcade_Actions actions = game().extensions()
-            .apply(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+            .value(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings());
         Logger.info(actionBindings());

@@ -71,7 +71,7 @@ public final class TengenMsPacMan_Actions {
             @Override
             public void doAction() {
                 final var uiSettings = game.extensions()
-                    .apply(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
+                    .value(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
                 final SceneDisplay mode = uiSettings.playSceneDisplay.get();
                 uiSettings.playSceneDisplay.set(mode == SceneDisplay.SCROLLING
@@ -89,7 +89,7 @@ public final class TengenMsPacMan_Actions {
             @Override
             public void doAction() {
                 final var uiSettings = game.extensions()
-                    .apply(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
+                    .value(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
                 toggleBooleanProperty(uiSettings.joypadBindingsDisplayed);
             }

@@ -66,7 +66,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void onActivate() {
         final Arcade_Actions actions = game().extensions()
-            .apply(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+            .value(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings());
         actionBindings().registerAllBindings(game().actions().sceneTestActions().bindings());
