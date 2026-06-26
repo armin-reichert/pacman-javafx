@@ -13,30 +13,24 @@ import javafx.stage.Stage;
 
 public class ArcadePacMan_App extends Application {
 
-    static final float ASPECT_RATIO    = 1.2f; // 12:10 aspect ratio
-    static final float HEIGHT_FRACTION = 0.8f; // 80% of available height
-
     Game game;
 
     @Override
     public void start(Stage stage) {
-        new GameBuilder()
+        game = new GameBuilder()
             .cartridges(ArcadePacMan_Cartridge.CARTRIDGE)
             .uiSettings(getClass().getResource("/de/amr/pacmanfx/arcade/pacman/ui.json"))
             .startPage(ArcadePacMan_StartPage::new)
             .window(stage)
-            .screenArea(ASPECT_RATIO, HEIGHT_FRACTION)
+            .screenArea(1.2, 0.8)
             .build()
-            .ifPresent(game -> {
-                game.showUI(GameVariantID.ARCADE_PACMAN);
-                this.game = game;
-            });
+            .orElse(null);
+
+        if (game != null) game.showUI(GameVariantID.ARCADE_PACMAN);
     }
 
     @Override
     public void stop() {
-        if (game != null) {
-            game.terminate();
-        }
+        if (game != null) game.terminate();
     }
 }
