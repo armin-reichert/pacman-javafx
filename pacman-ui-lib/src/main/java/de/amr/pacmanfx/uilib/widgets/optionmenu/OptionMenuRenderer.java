@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.widgets;
+package de.amr.pacmanfx.uilib.widgets.optionmenu;
 
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;

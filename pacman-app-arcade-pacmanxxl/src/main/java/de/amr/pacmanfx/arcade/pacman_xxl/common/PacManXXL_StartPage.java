@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.SettingsLoader;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.widgets.OptionMenuSettings;
+import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuSettings;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.image.Image;

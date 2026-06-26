@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.widgets;
+package de.amr.pacmanfx.uilib.widgets.optionmenu;
 
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.SettingsLoader;
@@ -44,8 +44,8 @@ public class OptionMenu {
 
     static {
         final ResourceManager RM = () -> OptionMenu.class;
-        DEFAULT_ENTRY_SELECTION_SOUND = RM.loadAudioClip("sounds/menu-select1.wav");
-        DEFAULT_VALUE_SELECTION_SOUND = RM.loadAudioClip("sounds/menu-select2.wav");
+        DEFAULT_ENTRY_SELECTION_SOUND = RM.loadAudioClip("menu-select1.wav");
+        DEFAULT_VALUE_SELECTION_SOUND = RM.loadAudioClip("menu-select2.wav");
     }
 
     public static final int NUM_CLIENT_ACTIONS = 2;

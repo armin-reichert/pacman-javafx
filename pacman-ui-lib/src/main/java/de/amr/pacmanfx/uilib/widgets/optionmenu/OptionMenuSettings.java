@@ -1,5 +1,6 @@
-package de.amr.pacmanfx.uilib.widgets;
+package de.amr.pacmanfx.uilib.widgets.optionmenu;
 
+import de.amr.pacmanfx.uilib.widgets.FontSettings;
 import javafx.scene.paint.Color;
 
 public record OptionMenuSettings(
