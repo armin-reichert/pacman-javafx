@@ -116,9 +116,10 @@ public class GameBuilder {
             final var game = new GameImpl(machine);
 
             // Add game extensions
-            for (var c : cartridgeSet) {
-                c.gameExtensionSuppliers().forEach(
-                    (id, function) -> game.extensions().add(new GameExtension(id, function)));
+            for (var cartridge : cartridgeSet) {
+                for (GameExtension extension : cartridge.gameExtensions()) {
+                    game.extensions().add(extension);
+                }
             }
 
             game.createUI(

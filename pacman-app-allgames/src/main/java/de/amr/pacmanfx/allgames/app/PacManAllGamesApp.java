@@ -119,9 +119,12 @@ public class PacManAllGamesApp extends Application {
                 startPagesView.rootPane().setSelectedIndex(0);
             }
 
-            game.extensions().add(Arcade_GameExtensions.ACTIONS, Arcade_Actions::new);
-            game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions::new);
-            game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings::new);
+            game.extensions().add(
+                new GameExtension(Arcade_GameExtensions.ACTIONS, Arcade_Actions::new));
+            game.extensions().add(
+                new GameExtension(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions::new));
+            game.extensions().add(
+                new GameExtension(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings::new));
 
             //TODO find more elegant solution
             game.watchdog().addEventListener(sharedMapSelector);
