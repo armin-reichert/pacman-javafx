@@ -96,20 +96,18 @@ public class PacManAllGamesApp extends Application {
             }
             else {
                 var machine = new PacManGamesMachine(List.of(CARTRIDGES));
-                Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
                 game = new GameImpl(machine);
+
+                Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
                 game.createUI(
                     GameUI.DEFAULT_SETTINGS,
                     TengenDashboardFactory.instance(),
                     stage, sceneSize.x(), sceneSize.y());
 
-                game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())
-                    .gameModel().setMapSelector(sharedMapSelector);
-                game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name())
-                    .gameModel().setMapSelector(sharedMapSelector);
+                game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
+                game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
 
-                StartPagesView startPagesView = game.ui().views().assertView(
-                    GameViewID.START_PAGES, StartPagesView.class);
+                StartPagesView startPagesView = game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class);
 
                 startPagesView.addStartPage(game, new ArcadePacMan_StartPage());
                 startPagesView.addStartPage(game, new ArcadeMsPacMan_StartPage());
@@ -121,13 +119,16 @@ public class PacManAllGamesApp extends Application {
 
             game.extensions().add(
                 new GameExtension(Arcade_GameExtensions.ACTIONS, Arcade_Actions::new));
+
             game.extensions().add(
                 new GameExtension(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions::new));
+
             game.extensions().add(
                 new GameExtension(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings::new));
 
             //TODO find more elegant solution
             game.watchdog().addEventListener(sharedMapSelector);
+
             game.showUI(GameVariantID.ARCADE_PACMAN);
         }
         catch (RuntimeException x) {
@@ -138,6 +139,8 @@ public class PacManAllGamesApp extends Application {
 
     @Override
     public void stop() {
-        game.terminate();
+        if (game != null) {
+            game.terminate();
+        }
     }
 }
