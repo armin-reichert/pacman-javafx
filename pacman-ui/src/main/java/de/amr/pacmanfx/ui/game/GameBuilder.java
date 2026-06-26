@@ -118,9 +118,7 @@ public class GameBuilder {
             // Add game extensions
             for (var c : cartridgeSet) {
                 c.gameExtensionSuppliers().forEach(
-                    (id, extension) -> {
-                        game.extensions().add(id, extension);
-                    });
+                    (id, extension) -> game.extensions().add(id, extension));
             }
 
             game.createUI(
