@@ -24,7 +24,15 @@
     -fx-background-image: url("/de/amr/pacmanfx/ui/graphics/pacman_wallpaper.png");
 }
 
-#start-pages-carousel .carousel-nav .font-awesome-icon {
+.carousel-nav {
+    -fx-opacity: 0.1;
+}
+
+.carousel-nav:hover {
+    -fx-opacity: 0.6;
+}
+
+.carousel-nav .font-awesome-icon {
     -fx-size: 48;
     -fx-fill: rgb(222, 222, 255);
 }

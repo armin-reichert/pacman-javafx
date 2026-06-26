@@ -1,8 +1,4 @@
 .font-awesome-icon {
     -fx-size: 32;
-    -fx-fill: yellow;
-
-    /* DEBUG */
-    -fx-border-color: green;
-    -fx-border-width: 0;
+    -fx-fill: white;
 }
