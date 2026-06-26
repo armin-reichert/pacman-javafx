@@ -22,19 +22,23 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        game = new GameBuilder()
+        new GameBuilder()
             .cartridges(ArcadeMsPacMan_Cartridge.CARTRIDGE)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .window(stage)
             .screenArea(ASPECT_RATIO, HEIGHT_FRACTION)
-            .build();
-
-        game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
-        game.showUI(GameVariantID.ARCADE_MS_PACMAN);
+            .build()
+            .ifPresent(game -> {
+                game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
+                game.showUI(GameVariantID.ARCADE_MS_PACMAN);
+                this.game = game;
+            });
     }
 
     @Override
     public void stop() {
-        game.terminate();
+        if (game != null) {
+            game.terminate();
+        }
     }
 }

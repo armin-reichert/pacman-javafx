@@ -14,7 +14,10 @@ import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.SettingsLoader;
 import de.amr.pacmanfx.uilib.Ufx;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
 
 import java.net.URL;
 import java.util.*;
@@ -28,8 +31,6 @@ import static java.util.Objects.requireNonNull;
 public class GameBuilder {
 
     record GameVariantConfig(WorldMapSelector mapSelector) {}
-
-    private final PacManGamesMachine machine;
 
     private final Set<Cartridge> cartridgeSet = new HashSet<>();
 
@@ -46,13 +47,13 @@ public class GameBuilder {
     private int height;
 
     public GameBuilder() {
-        machine = new PacManGamesMachine();
         dashboardFactory = CommonDashboardFactory.instance();
         uiSettings = SettingsLoader.load(
             getClass().getResource("/de/amr/pacmanfx/ui/ui.json"),
             GameUISettings.class);
-        width = 800;
-        height = 800;
+        Rectangle2D bounds = Screen.getPrimary().getBounds();
+        height = Math.min(600, (int) bounds.getHeight() * 2 / 3);
+        width = height * 28 / 32;
     }
 
     public GameBuilder cartridges(Cartridge... cartridges) {
@@ -103,41 +104,47 @@ public class GameBuilder {
         return this;
     }
 
-    public Game build() {
-        validateConfigurationData();
+    public Optional<Game> build() {
+        try {
+            validateConfigurationData();
 
-        for (var c : cartridgeSet) {
-            machine.loadCartridge(c);
+            var machine = new PacManGamesMachine();
+            for (var c : cartridgeSet) {
+                machine.loadCartridge(c);
+            }
+            final var game = new GameImpl(machine);
+            game.createUI(
+                uiSettings,
+                dashboardFactory,
+                stage,
+                width,
+                height);
+
+            final StartPagesView startPagesView = game.ui().views()
+                .assertView(GameViewID.START_PAGES, StartPagesView.class);
+
+            for (var factory : startPageFactories) {
+                final StartPage page = factory.get();
+                if (page != null) {
+                    startPagesView.addStartPage(game, page);
+                } else {
+                    error("Start page could not be created using factory: " + factory);
+                }
+            }
+
+            //TODO Find better solution for shared world map selector
+            gameVariantConfigMap.forEach((variantName, config) -> {
+                if (config.mapSelector() != null) {
+                    game.gameVariant(variantName).gameModel().setMapSelector(config.mapSelector());
+                }
+            });
+
+            return Optional.of(game);
         }
-        final var game = new GameImpl(machine);
-        game.createUI(
-            uiSettings,
-            dashboardFactory,
-            stage,
-            width,
-            height);
-
-        final StartPagesView startPagesView = game.ui().views()
-            .assertView(GameViewID.START_PAGES, StartPagesView.class);
-
-        for (var factory : startPageFactories) {
-            final StartPage page = factory.get();
-            if (page != null) {
-                startPagesView.addStartPage(game, page);
-            }
-            else {
-                error("Start page could not be created using factory: " + factory);
-            }
+        catch (Exception x) {
+            Logger.error("Game building failed: {}", x.getMessage());
+            return Optional.empty();
         }
-
-        //TODO Find better solution for shared world map selector
-        gameVariantConfigMap.forEach((variantName, config) -> {
-            if (config.mapSelector() != null) {
-                game.gameVariant(variantName).gameModel().setMapSelector(config.mapSelector());
-            }
-        });
-
-        return game;
     }
 
     private void validateConfigurationData() {
@@ -156,6 +163,9 @@ public class GameBuilder {
         if (uiSettings == null) {
             error("No UI settings have been specified");
         }
+        if (startPageFactories.isEmpty()) {
+            error("No start page specified, don't know how to start your game");
+        }
     }
 
     private void validateGameVariantName(String name) {
@@ -171,6 +181,6 @@ public class GameBuilder {
     }
 
     private void error(String message) {
-        throw new RuntimeException("UI building failed: %s".formatted(message));
+        throw new RuntimeException(message);
     }
 }

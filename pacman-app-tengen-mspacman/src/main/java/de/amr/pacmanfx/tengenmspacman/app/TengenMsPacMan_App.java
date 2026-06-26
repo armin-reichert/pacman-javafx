@@ -21,25 +21,30 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        game = new GameBuilder()
+        new GameBuilder()
             .cartridges(TengenMsPacMan_Cartridge.CARTRIDGE)
             .dashboardFactory(TengenDashboardFactory.instance())
             .startPage(TengenMsPacMan_StartPage::new)
             .window(stage)
             .screenArea(ASPECT_RATIO, HEIGHT_FRACTION)
-            .build();
+            .build()
+            .ifPresent(game -> {
+                this.game = game;
 
-        game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS,
-            new TengenMsPacMan_UISettings());
+                game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS,
+                    new TengenMsPacMan_UISettings());
 
-        game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS,
-            new TengenMsPacMan_Actions(game));
+                game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS,
+                    new TengenMsPacMan_Actions(game));
 
-        game.showUI(TENGEN_MS_PACMAN);
+                game.showUI(TENGEN_MS_PACMAN);
+            });
     }
 
     @Override
     public void stop() {
-        game.terminate();
+        if (game != null) {
+            game.terminate();
+        }
     }
 }

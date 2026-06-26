@@ -22,28 +22,33 @@ public class PacManXXL_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        game = new GameBuilder()
+        new GameBuilder()
             .cartridges(
                 PacManXXL_PacMan_Cartridge.CARTRIDGE,
                 PacManXXL_MsPacMan_Cartridge.CARTRIDGE)
             .startPage(PacManXXL_StartPage::new)
             .window(stage)
             .screenArea(ASPECT_RATIO, HEIGHT_FRACTION)
-            .build();
+            .build()
+            .ifPresent(game -> {
+                this.game = game;
 
-        PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
-        game.watchdog().addEventListener(sharedMapSelector);
-        game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())
-            .gameModel().setMapSelector(sharedMapSelector);
-        game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name())
-            .gameModel().setMapSelector(sharedMapSelector);
+                PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
+                game.watchdog().addEventListener(sharedMapSelector);
+                game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())
+                    .gameModel().setMapSelector(sharedMapSelector);
+                game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name())
+                    .gameModel().setMapSelector(sharedMapSelector);
 
-        game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
-        game.showUI(GameVariantID.ARCADE_PACMAN_XXL);
+                game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
+                game.showUI(GameVariantID.ARCADE_PACMAN_XXL);
+            });
     }
 
     @Override
     public void stop() {
-        game.terminate();
+        if (game != null) {
+            game.terminate();
+        }
     }
 }

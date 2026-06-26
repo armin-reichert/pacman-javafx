@@ -57,14 +57,6 @@ public class PacManAllGamesApp extends Application {
         PacManXXL_MsPacMan_Cartridge.CARTRIDGE
     };
 
-    static String including(boolean b) {
-        return b ? "including" : "not including";
-    }
-
-    static String using(boolean b) {
-        return b ? "using" : "without using";
-    }
-
     Game game;
 
     // Only for testing API vs builder
@@ -82,7 +74,7 @@ public class PacManAllGamesApp extends Application {
         PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
         try {
             if (useBuilder) {
-                game = new GameBuilder()
+                new GameBuilder()
                     .cartridges(CARTRIDGES)
                     .dashboardFactory(TengenDashboardFactory.instance())
                     .worldMapSelector(ARCADE_PACMAN_XXL, sharedMapSelector)
@@ -93,7 +85,21 @@ public class PacManAllGamesApp extends Application {
                     .startPage(PacManXXL_StartPage::new)
                     .window(stage)
                     .screenArea(ASPECT_RATIO, HEIGHT_FRACTION)
-                    .build();
+                    .build()
+                    .ifPresent(game -> {
+                        this.game = game;
+
+                        game.extensions().add(Arcade_GameExtensions.ACTIONS, new Arcade_Actions(game));
+
+                        game.extensions().add(TengenMsPacMan_GameExtension.ACTIONS,
+                            new TengenMsPacMan_Actions(game));
+                        game.extensions().add(TengenMsPacMan_GameExtension.UI_SETTINGS,
+                            new TengenMsPacMan_UISettings());
+
+                        //TODO find more elegant solution
+                        game.watchdog().addEventListener(sharedMapSelector);
+                        game.showUI(GameVariantID.ARCADE_PACMAN);
+                    });
             }
             else {
                 var machine = new PacManGamesMachine(List.of(CARTRIDGES));
@@ -129,10 +135,6 @@ public class PacManAllGamesApp extends Application {
 
             //TODO find more elegant solution
             game.watchdog().addEventListener(sharedMapSelector);
-
-            Logger.info("UI created {} builder {} tests",
-                using(useBuilder), including(includeTests));
-
             game.showUI(GameVariantID.ARCADE_PACMAN);
         }
         catch (RuntimeException x) {
