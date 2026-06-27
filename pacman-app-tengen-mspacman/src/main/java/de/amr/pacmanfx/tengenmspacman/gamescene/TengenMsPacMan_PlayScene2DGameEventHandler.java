@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.tengenmspacman.scenes;
+package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.GameModel;

@@ -20,6 +20,6 @@ open module de.amr.pacmanfx.tengenmspacman {
     exports de.amr.pacmanfx.tengenmspacman.app;
     exports de.amr.pacmanfx.tengenmspacman.model;
     exports de.amr.pacmanfx.tengenmspacman.rendering;
-    exports de.amr.pacmanfx.tengenmspacman.scenes;
+    exports de.amr.pacmanfx.tengenmspacman.gamescene;
     exports de.amr.pacmanfx.tengenmspacman.flow;
 }
