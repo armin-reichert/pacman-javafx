@@ -10,6 +10,9 @@ on:
   release:
     types: [created, edited]
 
+env:
+  _JAVA_OPTIONS: "-Djava.net.preferIPv4Stack=true"
+
 jobs:
 
   build-and-upload-artifacts:
@@ -101,12 +104,11 @@ jobs:
           name: windows-installer
           path: installers/windows
 
-
-#      - name: Download Linux installer
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: linux-installer
-#          path: installers/linux
+      - name: Download Linux installer
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-installer
+          path: installers/linux
 
       - name: Download macOS installer
         uses: actions/download-artifact@v4
