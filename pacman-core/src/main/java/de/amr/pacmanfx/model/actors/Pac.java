@@ -168,8 +168,8 @@ public class Pac extends MovingActor {
         }
 
         setSpeed(powerTimer.isRunning()
-            ? level.game().actorSpeedControl().pacSpeedWhenHasPower(level)
-            : level.game().actorSpeedControl().pacSpeed(level));
+            ? level.gameModel().actorSpeedControl().pacSpeedWhenHasPower(level)
+            : level.gameModel().actorSpeedControl().pacSpeed(level));
         tryMovingOrTeleporting(level);
 
         if (moveInfo.moved) {

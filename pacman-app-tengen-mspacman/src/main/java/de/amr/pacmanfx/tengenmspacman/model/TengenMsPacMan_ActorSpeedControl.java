@@ -40,7 +40,7 @@ public class TengenMsPacMan_ActorSpeedControl implements ActorSpeedControl {
         if (level == null) {
             return 0;
         }
-        final TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) level.game();
+        final TengenMsPacMan_GameModel game = (TengenMsPacMan_GameModel) level.gameModel();
         float speed = pacBaseSpeedInLevel(level.number());
         speed += pacDifficultySpeedDelta(difficulty);
         if (game.pacBoosterMode() == PacBooster.ALWAYS_ON

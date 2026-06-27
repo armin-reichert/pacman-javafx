@@ -128,7 +128,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         final RectShort[] symbolSprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
         float x = LEVEL_COUNTER_POS_RIGHT - TS(2);
         // symbols are drawn from right to left!
-        for (int symbolCode : level.game().levelCounter().symbolCodes()) {
+        for (int symbolCode : level.gameModel().levelCounter().symbolCodes()) {
             if (0 <= symbolCode && symbolCode < symbolSprites.length) {
                 drawSprite(symbolSprites[symbolCode], x, y, true);
             }

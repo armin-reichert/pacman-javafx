@@ -120,7 +120,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         requireNonNull(level);
 
         // If score is disabled, show "GAME OVER" text instead
-        final Score score = level.game().score();
+        final Score score = level.gameModel().score();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
@@ -130,7 +130,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         }
 
         // High score is always visible
-        final Score highScore = level.game().highScore();
+        final Score highScore = level.gameModel().highScore();
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
     }
 

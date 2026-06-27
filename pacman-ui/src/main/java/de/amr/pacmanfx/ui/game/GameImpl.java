@@ -250,7 +250,7 @@ public final class GameImpl implements Game {
             factory.identify(dss.id()).ifPresentOrElse(dashboardID -> {
                 final DashboardSection section = factory.createSection(dashboard, dashboardID, translations);
                 dashboard.addSection(dashboardID, section);
-                section.setDisplayedMaximized(dss.maximized());
+                section.setDisplayedStandalone(dss.maximized());
                 section.setExpanded(dss.expanded());
             }, () -> Logger.error("Unknown dashboard ID: {}", dss.id()));
         }

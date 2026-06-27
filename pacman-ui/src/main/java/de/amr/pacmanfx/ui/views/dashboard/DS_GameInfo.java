@@ -5,7 +5,6 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.CollisionStrategy;
@@ -19,7 +18,6 @@ import javafx.scene.paint.Color;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.function.Supplier;
 
 import static de.amr.basics.timer.TickTimer.secToTicks;
 import static de.amr.pacmanfx.core.GameClock.DEFAULT_TICKS_PER_SECOND;
@@ -34,23 +32,21 @@ public class DS_GameInfo extends DashboardSection {
 
     @Override
     public void connect(Game game) {
-        final Supplier<GameModel> gameSupplier = game.currentGameContext()::model;
-
-        addDynamicLabeledValue("Game State",  () -> "%s".formatted(game.currentGameContext().state().name()));
+        addDynamicLabeledValue("Game State",  () -> game.currentGameContext().state().name());
         addDynamicLabeledValue("State Timer", () -> stateTimerInfo(game.currentGameContext().state()));
-        addDynamicLabeledValue("Game Scene", ifGameScenePresent(game, gameScene -> gameScene.getClass().getSimpleName()));
+        addDynamicLabeledValue("Game Scene", gameSceneInfo(game, gameScene -> gameScene.getClass().getSimpleName()));
 
-        addDynamicLabeledValue("Level Number", ifGameLevel(gameSupplier, level ->
+        addDynamicLabeledValue("Level Number", gameLevelInfo(game, level ->
             (level.isDemoLevel() ? "%d (Demo Level)" : "%d").formatted(level.number())));
 
-        addDynamicLabeledValue("World Map", ifGameLevel(gameSupplier, level -> {
+        addDynamicLabeledValue("World Map", gameLevelInfo(game, level -> {
             final String url = level.worldMap().url();
             return url == null
                 ? NO_INFO
                 : URLDecoder.decode(url.substring(url.lastIndexOf("/") + 1), StandardCharsets.UTF_8);
         }));
 
-        addDynamicLabeledValue("Fill/Stroke/Pellet", ifGameLevel(gameSupplier, level -> {
+        addDynamicLabeledValue("Fill/Stroke/Pellet", gameLevelInfo(game, level -> {
             final WorldMap worldMap = level.worldMap();
             MapColorScheme colorScheme = null;
             if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_SCHEME)) {
@@ -68,19 +64,19 @@ public class DS_GameInfo extends DashboardSection {
             return NO_INFO;
         }));
 
-        addDynamicLabeledValue("Hunting Phase",   ifGameLevel(gameSupplier, this::fmtHuntingPhase));
-        addDynamicLabeledValue("-Running",        ifGameLevel(gameSupplier, level -> fmtHuntingTicksRunning(level.huntingTimer())));
-        addDynamicLabeledValue("-Remaining",      ifGameLevel(gameSupplier, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
+        addDynamicLabeledValue("Hunting Phase",   gameLevelInfo(game, this::fmtHuntingPhase));
+        addDynamicLabeledValue("-Running",        gameLevelInfo(game, level -> fmtHuntingTicksRunning(level.huntingTimer())));
+        addDynamicLabeledValue("-Remaining",      gameLevelInfo(game, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
 
         addDynamicLabeledValue("Collision mode",  () -> fmtCollisionMode(game.currentGameContext().rules().collisionStrategyProperty().get()));
-        addDynamicLabeledValue("Pac-Man speed",   ifGameLevel(gameSupplier, this::fmtPacNormalSpeed));
-        addDynamicLabeledValue("- empowered",     ifGameLevel(gameSupplier, this::fmtPacSpeedPowered));
-        addDynamicLabeledValue("Power Duration",  ifGameLevel(gameSupplier, this::fmtPacPowerTime));
-        addDynamicLabeledValue("Pellets",         ifGameLevel(gameSupplier, this::fmtPelletCount));
-        addDynamicLabeledValue("Ghost speed",     ifGameLevel(gameSupplier, this::fmtGhostAttackSpeed));
-        addDynamicLabeledValue("- frightened",    ifGameLevel(gameSupplier, this::fmtGhostSpeedFrightened));
-        addDynamicLabeledValue("- in tunnel",     ifGameLevel(gameSupplier, this::fmtGhostSpeedTunnel));
-        addDynamicLabeledValue("Maze flashings",  ifGameLevel(gameSupplier, this::fmtNumFlashes));
+        addDynamicLabeledValue("Pac-Man speed",   gameLevelInfo(game, this::fmtPacNormalSpeed));
+        addDynamicLabeledValue("- empowered",     gameLevelInfo(game, this::fmtPacSpeedPowered));
+        addDynamicLabeledValue("Power Duration",  gameLevelInfo(game, this::fmtPacPowerTime));
+        addDynamicLabeledValue("Pellets",         gameLevelInfo(game, this::fmtPelletCount));
+        addDynamicLabeledValue("Ghost speed",     gameLevelInfo(game, this::fmtGhostAttackSpeed));
+        addDynamicLabeledValue("- frightened",    gameLevelInfo(game, this::fmtGhostSpeedFrightened));
+        addDynamicLabeledValue("- in tunnel",     gameLevelInfo(game, this::fmtGhostSpeedTunnel));
+        addDynamicLabeledValue("Maze flashings",  gameLevelInfo(game, this::fmtNumFlashes));
     }
 
     private String stateTimerInfo(State<?> gameState) {
@@ -140,27 +136,27 @@ public class DS_GameInfo extends DashboardSection {
 
     private String fmtGhostAttackSpeed(GameLevel level) {
         // do not use Blinky because he has varying attack speed (Cruise Elroy mode)
-        final float speed = level.game().actorSpeedControl().ghostSpeedAttacking(level, level.ghost(CYAN_GHOST_BASHFUL));
+        final float speed = level.gameModel().actorSpeedControl().ghostSpeedAttacking(level, level.ghost(CYAN_GHOST_BASHFUL));
         return "%.4f px/s".formatted(speed * DEFAULT_TICKS_PER_SECOND);
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
-        final float speed = level.game().actorSpeedControl().ghostSpeedFrightened(level);
+        final float speed = level.gameModel().actorSpeedControl().ghostSpeedFrightened(level);
         return "%.4f px/s".formatted(speed * DEFAULT_TICKS_PER_SECOND);
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
-        final float speed = level.game().actorSpeedControl().ghostSpeedTunnel(level.number());
+        final float speed = level.gameModel().actorSpeedControl().ghostSpeedTunnel(level.number());
         return "%.4f px/s".formatted(speed * DEFAULT_TICKS_PER_SECOND);
     }
 
     private String fmtPacNormalSpeed(GameLevel level) {
-        final float speed = level.game().actorSpeedControl().pacSpeed(level);
+        final float speed = level.gameModel().actorSpeedControl().pacSpeed(level);
         return "%.4f px/s".formatted(speed * DEFAULT_TICKS_PER_SECOND);
     }
 
     private String fmtPacSpeedPowered(GameLevel level) {
-        final float speed = level.game().actorSpeedControl().pacSpeedWhenHasPower(level);
+        final float speed = level.gameModel().actorSpeedControl().pacSpeedWhenHasPower(level);
         return "%.4f px/s".formatted(speed * DEFAULT_TICKS_PER_SECOND);
     }
 

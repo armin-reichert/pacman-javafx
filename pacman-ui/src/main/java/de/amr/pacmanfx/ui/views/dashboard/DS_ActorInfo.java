@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.math.Vector2i;
@@ -28,26 +29,24 @@ public class DS_ActorInfo extends DashboardSection {
 
     @Override
     public void connect(Game game) {
-        final Supplier<GameModel> gameSupplier = game.currentGameContext()::model;
-
-        addDynamicLabeledValue("Pac Name", supplyPacInfo(gameSupplier, (_, pac) -> pac.name()));
-        addDynamicLabeledValue("Lives",    ifGameLevel(gameSupplier, _ -> "%d".formatted(gameSupplier.get().lives().count())));
-        addDynamicLabeledValue("Movement", supplyPacInfo(gameSupplier, this::actorMovementInfo));
-        addDynamicLabeledValue("Tile",     supplyPacInfo(gameSupplier, this::actorLocationInfo));
-        addDynamicLabeledValue("Power",    ifGameLevel(gameSupplier, gameLevel -> {
+        addDynamicLabeledValue("Pac Name", pacInfo(game, (_, pac) -> pac.name()));
+        addDynamicLabeledValue("Lives",    gameLevelInfo(game, level -> "%d".formatted(level.gameModel().lives().count())));
+        addDynamicLabeledValue("Movement", pacInfo(game, this::actorMovementInfo));
+        addDynamicLabeledValue("Tile",     pacInfo(game, this::actorLocationInfo));
+        addDynamicLabeledValue("Power",    gameLevelInfo(game, gameLevel -> {
             TickTimer powerTimer = gameLevel.entities().pac().powerTimer();
             return powerTimer.isRunning()
                 ? "Remaining: %s".formatted(ticksToString(powerTimer.remainingTicks()))
                 : "No Power";
         }));
         addEmptyRow();
-        addGhostInfo(gameSupplier, GameModel.RED_GHOST_SHADOW);
+        addGhostInfo(game, GameModel.RED_GHOST_SHADOW);
         addEmptyRow();
-        addGhostInfo(gameSupplier, GameModel.PINK_GHOST_SPEEDY);
+        addGhostInfo(game, GameModel.PINK_GHOST_SPEEDY);
         addEmptyRow();
-        addGhostInfo(gameSupplier, GameModel.CYAN_GHOST_BASHFUL);
+        addGhostInfo(game, GameModel.CYAN_GHOST_BASHFUL);
         addEmptyRow();
-        addGhostInfo(gameSupplier, GameModel.ORANGE_GHOST_POKEY);
+        addGhostInfo(game, GameModel.ORANGE_GHOST_POKEY);
     }
 
     private String actorLocationInfo(GameLevel level, MovingActor actor) {
@@ -73,14 +72,11 @@ public class DS_ActorInfo extends DashboardSection {
             : "%.2fpx/s %s (%s)%s".formatted(speed, movingActor.moveDir(), movingActor.wishDir(), reverseText);
     }
 
-    private Supplier<String> supplyPacInfo(
-        Supplier<GameModel> gameSupplier,
-        BiFunction<GameLevel, Pac, String> detailInfoSupplier)
-    {
-        return ifGameLevel(gameSupplier, level -> detailInfoSupplier.apply(level, level.entities().pac()));
+    private Supplier<String> pacInfo(Game game, BiFunction<GameLevel, Pac, String> detailInfoSupplier) {
+        return gameLevelInfo(game, level -> detailInfoSupplier.apply(level, level.entities().pac()));
     }
 
-    private void addGhostInfo(Supplier<GameModel> gameSupplier, byte personality) {
+    private void addGhostInfo(Game game, byte personality) {
         String name = switch (personality) {
             case GameModel.RED_GHOST_SHADOW   -> "Red Ghost";
             case GameModel.PINK_GHOST_SPEEDY  -> "Pink Ghost";
@@ -88,20 +84,16 @@ public class DS_ActorInfo extends DashboardSection {
             case GameModel.ORANGE_GHOST_POKEY -> "Orange Ghost";
             default -> "Unknown Ghost";
         };
-        addDynamicLabeledValue(name,        supplyGhostInfo(gameSupplier, this::ghostNameAndState, personality));
-        addDynamicLabeledValue("Movement",  supplyGhostInfo(gameSupplier, this::actorMovementInfo, personality));
-        addDynamicLabeledValue("Tile",      supplyGhostInfo(gameSupplier, this::actorLocationInfo, personality));
-        addDynamicLabeledValue("Animation", supplyGhostInfo(gameSupplier, this::ghostAnimationInfo, personality));
+        addDynamicLabeledValue(name,        supplyGhostInfo(game, this::ghostNameAndState, personality));
+        addDynamicLabeledValue("Movement",  supplyGhostInfo(game, this::actorMovementInfo, personality));
+        addDynamicLabeledValue("Tile",      supplyGhostInfo(game, this::actorLocationInfo, personality));
+        addDynamicLabeledValue("Animation", supplyGhostInfo(game, this::ghostAnimationInfo, personality));
     }
 
-    private Supplier<String> supplyGhostInfo(
-        Supplier<GameModel> gameSupplier,
-        BiFunction<GameLevel, Ghost, String> detailInfoSupplier,
-        byte personality)
-    {
-        return ifGameLevel(gameSupplier, level -> {
+    private Supplier<String> supplyGhostInfo(Game game, BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
+        return gameLevelInfo(game, level -> {
             if (!level.entities().ghosts().isEmpty()) {
-                return detailInfoSupplier.apply(level, level.ghost(personality));
+                return infoSupplier.apply(level, level.ghost(personality));
             }
             return NO_INFO;
         });

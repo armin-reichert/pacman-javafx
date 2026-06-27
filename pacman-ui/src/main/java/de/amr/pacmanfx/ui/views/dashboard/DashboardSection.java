@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
@@ -17,7 +16,6 @@ import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -39,7 +37,7 @@ public class DashboardSection extends TitledPane {
     protected final List<DynamicInfoText> infoTexts = new ArrayList<>();
     protected final GridPane grid = new GridPane();
     protected int rowIndex;
-    protected boolean displayedMaximized;
+    protected boolean displayedStandalone;
 
     public DashboardSection(Dashboard dashboard) {
         this.dashboard = requireNonNull(dashboard);
@@ -50,10 +48,10 @@ public class DashboardSection extends TitledPane {
         setContent(grid);
         setExpanded(false);
         setFocusTraversable(false);
-        setDisplayedMaximized(false);
+        setDisplayedStandalone(false);
 
         expandedProperty().addListener((_, _, expanded) -> {
-            if (displayedMaximized) {
+            if (displayedStandalone) {
                 if (expanded) {
                     dashboard.sections().filter(infoBox -> infoBox != this).forEach(otherInfoBox -> otherInfoBox.setVisible(false));
                     dashboard.setCompactMode(true);
@@ -71,20 +69,16 @@ public class DashboardSection extends TitledPane {
         infoTexts.forEach(DynamicInfoText::update);
     }
 
-    public void setDisplayedMaximized(boolean maximized) {
-        displayedMaximized = maximized;
+    public void setDisplayedStandalone(boolean alone) {
+        displayedStandalone = alone;
     }
 
-    public void setContentBackground(Background background) {
-        grid.setBackground(background);
+    protected Supplier<String> gameSceneInfo(Game game, Function<AbstractGameScene, String> fnInfo) {
+        return () -> game.ui().gameScenes().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> ifGameScenePresent(Game context, Function<AbstractGameScene, String> fnInfo) {
-        return () -> context.ui().gameScenes().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
-    }
-
-    protected Supplier<String> ifGameLevel(Supplier<GameModel> gameSupplier, Function<GameLevel, String> fnInfo) {
-        return () -> gameSupplier.get().optGameLevel().map(fnInfo).orElse(NO_INFO);
+    protected Supplier<String> gameLevelInfo(Game game, Function<GameLevel, String> fnInfo) {
+        return () -> game.currentGameContext().optCurrentLevel().map(fnInfo).orElse(NO_INFO);
     }
 
     protected void clearSection() {

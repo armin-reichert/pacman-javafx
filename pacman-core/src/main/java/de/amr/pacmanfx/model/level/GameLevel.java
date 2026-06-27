@@ -77,7 +77,7 @@ public class GameLevel {
         }
     }
 
-    private final GameModel game;
+    private final GameModel gameModel;
     private final int number; // 1=first level
     private final WorldMap worldMap;
     private final EntitySetWithCache entities = new EntitySetWithCache();
@@ -98,8 +98,8 @@ public class GameLevel {
 
     private int cutSceneNumber;
 
-    public GameLevel(GameModel game, int number, WorldMap worldMap, HuntingTimer huntingTimer, int numFlashes) {
-        this.game = requireNonNull(game);
+    public GameLevel(GameModel gameModel, int number, WorldMap worldMap, HuntingTimer huntingTimer, int numFlashes) {
+        this.gameModel = requireNonNull(gameModel);
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
         this.huntingTimer = requireNonNull(huntingTimer);
@@ -113,8 +113,8 @@ public class GameLevel {
     /**
      * @return the game (model) this level belongs to.
      */
-    public GameModel game() {
-        return game;
+    public GameModel gameModel() {
+        return gameModel;
     }
 
     /**

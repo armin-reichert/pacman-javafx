@@ -399,7 +399,7 @@ public abstract class AbstractGameModel implements GameModel {
 
         @Override
         public void update(GameLevel level) {
-            if (level.isDemoLevel() || !level.game().isPlaying()) {
+            if (level.isDemoLevel() || !level.gameModel().isPlaying()) {
                 return;
             }
             final Pac pac = level.entities().pac();
