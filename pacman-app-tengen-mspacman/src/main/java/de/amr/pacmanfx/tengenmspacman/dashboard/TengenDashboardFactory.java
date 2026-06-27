@@ -41,7 +41,7 @@ public class TengenDashboardFactory implements DashboardFactory {
             case DashboardID _ -> CommonDashboardFactory.instance().createSection(dashboard, id, translations);
             case TengenMsPacMan_DashboardID tengenID -> {
                 if (tengenID == JOYPAD) {
-                    yield new DashboardSectionJoypad(dashboard);
+                    yield new DS_JoypadKeyBindings(dashboard);
                 }
                 throw new IllegalArgumentException("Illegal Tengen dashboard ID: %s".formatted(tengenID));
             }

@@ -13,9 +13,9 @@ import de.amr.pacmanfx.ui.views.dashboard.DashboardSection;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.image.ImageView;
 
-public class DashboardSectionJoypad extends DashboardSection {
+public class DS_JoypadKeyBindings extends DashboardSection {
 
-    public DashboardSectionJoypad(Dashboard dashboard) {
+    public DS_JoypadKeyBindings(Dashboard dashboard) {
         super(dashboard);
     }
 
