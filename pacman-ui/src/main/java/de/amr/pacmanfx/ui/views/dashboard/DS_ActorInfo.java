@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -29,27 +28,36 @@ public class DS_ActorInfo extends DashboardSection {
 
     @Override
     public void connect(Game game) {
-        dynamicInfo("Pac Name", pacInfo(game, (_, pac) -> pac.name()));
+        dynamicInfo("Pac Name", pacText(game, (_, pac) -> pac.name()));
         dynamicInfo("Lives",    gameLevelInfo(game, level -> "%d".formatted(level.gameModel().lives().count())));
-        dynamicInfo("Movement", pacInfo(game, this::actorMovementInfo));
-        dynamicInfo("Tile",     pacInfo(game, this::actorLocationInfo));
-        dynamicInfo("Power",    gameLevelInfo(game, gameLevel -> {
-            TickTimer powerTimer = gameLevel.entities().pac().powerTimer();
-            return powerTimer.isRunning()
-                ? "Remaining: %s".formatted(ticksToString(powerTimer.remainingTicks()))
-                : "No Power";
-        }));
+        dynamicInfo("Movement", pacText(game, this::actorMovementText));
+        dynamicInfo("Tile",     pacText(game, this::actorLocationText));
+        dynamicInfo("Power",    pacPowerText(game));
         emptyRow();
-        addGhostInfo(game, GameModel.RED_GHOST_SHADOW);
+        ghostInfo(game, GameModel.RED_GHOST_SHADOW);
         emptyRow();
-        addGhostInfo(game, GameModel.PINK_GHOST_SPEEDY);
+        ghostInfo(game, GameModel.PINK_GHOST_SPEEDY);
         emptyRow();
-        addGhostInfo(game, GameModel.CYAN_GHOST_BASHFUL);
+        ghostInfo(game, GameModel.CYAN_GHOST_BASHFUL);
         emptyRow();
-        addGhostInfo(game, GameModel.ORANGE_GHOST_POKEY);
+        ghostInfo(game, GameModel.ORANGE_GHOST_POKEY);
     }
 
-    private String actorLocationInfo(GameLevel level, MovingActor actor) {
+    private void ghostInfo(Game game, byte personality) {
+        String name = switch (personality) {
+            case GameModel.RED_GHOST_SHADOW   -> "Red Ghost";
+            case GameModel.PINK_GHOST_SPEEDY  -> "Pink Ghost";
+            case GameModel.CYAN_GHOST_BASHFUL -> "Cyan Ghost";
+            case GameModel.ORANGE_GHOST_POKEY -> "Orange Ghost";
+            default -> "Unknown Ghost";
+        };
+        dynamicInfo(name,        ghostText(game, this::ghostNameAndState, personality));
+        dynamicInfo("Movement",  ghostText(game, this::actorMovementText, personality));
+        dynamicInfo("Tile",      ghostText(game, this::actorLocationText, personality));
+        dynamicInfo("Animation", ghostText(game, this::ghostAnimationText, personality));
+    }
+
+    private String actorLocationText(GameLevel level, MovingActor actor) {
         if (actor == null) return NO_INFO;
 
         final Vector2i tile = actor.computeTile();
@@ -62,7 +70,7 @@ public class DS_ActorInfo extends DashboardSection {
             actor.isNewTileEntered() ? " NEW" : "");
     }
 
-    private String actorMovementInfo(GameLevel level, MovingActor movingActor) {
+    private String actorMovementText(GameLevel level, MovingActor movingActor) {
         if (movingActor == null) return NO_INFO;
         var speed = movingActor.computeSpeed() * GameClock.DEFAULT_TICKS_PER_SECOND;
         var blocked = !movingActor.moveInfo().moved;
@@ -72,25 +80,24 @@ public class DS_ActorInfo extends DashboardSection {
             : "%.2fpx/s %s (%s)%s".formatted(speed, movingActor.moveDir(), movingActor.wishDir(), reverseText);
     }
 
-    private Supplier<String> pacInfo(Game game, BiFunction<GameLevel, Pac, String> detailInfoSupplier) {
+    private Supplier<String> pacPowerText(Game game) {
+        return () -> game.currentGameContext().optCurrentLevel()
+            .map(level -> level.entities().pac())
+            .map(this::pacPowerText)
+            .orElse(NO_INFO);
+    }
+
+    private String pacPowerText(Pac pac) {
+        return pac.powerTimer().isRunning()
+            ? "Remaining: %s".formatted(ticksToString(pac.powerTimer().remainingTicks()))
+            : "No Power";
+    }
+
+    private Supplier<String> pacText(Game game, BiFunction<GameLevel, Pac, String> detailInfoSupplier) {
         return gameLevelInfo(game, level -> detailInfoSupplier.apply(level, level.entities().pac()));
     }
 
-    private void addGhostInfo(Game game, byte personality) {
-        String name = switch (personality) {
-            case GameModel.RED_GHOST_SHADOW   -> "Red Ghost";
-            case GameModel.PINK_GHOST_SPEEDY  -> "Pink Ghost";
-            case GameModel.CYAN_GHOST_BASHFUL -> "Cyan Ghost";
-            case GameModel.ORANGE_GHOST_POKEY -> "Orange Ghost";
-            default -> "Unknown Ghost";
-        };
-        dynamicInfo(name,        ghostInfo(game, this::ghostNameAndState, personality));
-        dynamicInfo("Movement",  ghostInfo(game, this::actorMovementInfo, personality));
-        dynamicInfo("Tile",      ghostInfo(game, this::actorLocationInfo, personality));
-        dynamicInfo("Animation", ghostInfo(game, this::ghostAnimationInfo, personality));
-    }
-
-    private Supplier<String> ghostInfo(Game game, BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
+    private Supplier<String> ghostText(Game game, BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
         return gameLevelInfo(game, level -> {
             if (!level.entities().ghosts().isEmpty()) {
                 return infoSupplier.apply(level, level.ghost(personality));
@@ -103,7 +110,7 @@ public class DS_ActorInfo extends DashboardSection {
         return String.format("%s (%s)", ghost.name(), ghostState(level, ghost));
     }
 
-    private String ghostAnimationInfo(GameLevel level, Ghost ghost) {
+    private String ghostAnimationText(GameLevel level, Ghost ghost) {
         if (ghost.animations() instanceof SpriteAnimationMap<?> spriteAnimations) {
             return spriteAnimations.selectedAnimationID() != null
                 ? String.valueOf(spriteAnimations.selectedAnimationID())
