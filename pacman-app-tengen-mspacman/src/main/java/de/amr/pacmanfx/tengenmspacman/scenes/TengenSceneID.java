@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.tengenmspacman;
+package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.Identifier;
 

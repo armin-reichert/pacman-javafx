@@ -20,7 +20,6 @@ import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -123,7 +122,7 @@ public class TengenMsPacManConfig implements GameVariantConfig {
     private final ResourceBundle textBundle;
     private final AssetMap assets = new AssetMap();
     private final TengenMsPacMan_Factory3D factory3D = new TengenMsPacMan_Factory3D();
-    private TengenMsPacMan_GameSceneConfig gameSceneConfig;
+    private GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
     public TengenMsPacManConfig() {
@@ -140,7 +139,7 @@ public class TengenMsPacManConfig implements GameVariantConfig {
     public void init(Game game) {
         loadAssets();
         registerSoundObjects(game.ui().sounds());
-        gameSceneConfig = new TengenMsPacMan_GameSceneConfig(game);
+        gameSceneConfig = new GameSceneConfig(game);
         Logger.info("Initialized Tengen UI configuration {} (loaded assets and sounds)", getClass().getSimpleName());
     }
 
@@ -152,7 +151,7 @@ public class TengenMsPacManConfig implements GameVariantConfig {
     }
 
     @Override
-    public GameSceneConfig gameSceneConfig() {
+    public de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig gameSceneConfig() {
         return gameSceneConfig;
     }
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.tengenmspacman;
+package de.amr.pacmanfx.tengenmspacman.scenes;
 
 import de.amr.basics.Identifier;
 import de.amr.basics.fsm.State;
@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameStateID;
-import de.amr.pacmanfx.tengenmspacman.scenes.*;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
@@ -17,9 +16,9 @@ import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
+public class GameSceneConfig extends AbstractGameSceneConfig {
 
-    public TengenMsPacMan_GameSceneConfig(Game game) {
+    public GameSceneConfig(Game game) {
         this.game = requireNonNull(game);
     }
 
