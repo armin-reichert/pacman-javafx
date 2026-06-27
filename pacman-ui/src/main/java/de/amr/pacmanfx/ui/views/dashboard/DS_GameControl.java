@@ -9,6 +9,7 @@ import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
+import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.game.Game;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -39,6 +40,8 @@ public class DS_GameControl extends DashboardSection {
     @Override
     public void connect(Game game) {
         final CoinMechanism coinMechanism = game.coinMechanism();
+        final CommonActions actions = game.actions();
+
         spinnerCredit            = addIntSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
@@ -48,16 +51,10 @@ public class DS_GameControl extends DashboardSection {
 
         setAction(choiceBoxInitialLives, () -> game.currentGameContext().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
 
-        setAction(game, buttonGroupLevelActions[GAME_LEVEL_QUIT],
-            game.actions().gameFlowActions().actionRestartIntro());
-
-        setAction(game, buttonGroupLevelActions[GAME_LEVEL_NEXT],
-            game.actions().cheatActions().actionEnterNextLevel());
-
-        setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_START],
-            game.actions().sceneTestActions().actionTestCutScenes());
-
-        setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], game.actions().gameFlowActions().actionRestartIntro());
+        setAction(game, buttonGroupLevelActions[GAME_LEVEL_QUIT],        actions.gameFlowActions().actionRestartIntro());
+        setAction(game, buttonGroupLevelActions[GAME_LEVEL_NEXT],        actions.cheatActions().actionEnterNextLevel());
+        setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], actions.sceneTestActions().actionTestCutScenes());
+        setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
             game.currentGameContext().rules().collisionDoubleCheckedProperty().set(cbCollisionCheckedTwice.isSelected()));
