@@ -18,22 +18,30 @@ public class BonusRollingAnimation3D {
     public void update() {
         switch (bonus3D.bonus().moveDir()) {
             case UP -> {
-                bonus3D.rotateX().setAngle(normalize(bonus3D.rotateX().getAngle() - ANGLE_DELTA));
+                addRotX(-ANGLE_DELTA);
                 bonus3D.rotateY().setAngle(0);
             }
             case DOWN  -> {
-                bonus3D.rotateX().setAngle(normalize(bonus3D.rotateX().getAngle() + ANGLE_DELTA));
+                addRotX(ANGLE_DELTA);
                 bonus3D.rotateY().setAngle(0);
             }
             case LEFT  -> {
                 bonus3D.rotateX().setAngle(0);
-                bonus3D.rotateY().setAngle(normalize(bonus3D.rotateY().getAngle() + ANGLE_DELTA));
+                addRotY(ANGLE_DELTA);
             }
             case RIGHT -> {
                 bonus3D.rotateX().setAngle(0);
-                bonus3D.rotateY().setAngle(normalize(bonus3D.rotateY().getAngle() - ANGLE_DELTA));
+                addRotY(-ANGLE_DELTA);
             }
         }
+    }
+
+    private void addRotX(double delta) {
+        bonus3D.rotateX().setAngle(normalize(bonus3D.rotateX().getAngle() + delta));
+    }
+
+    private void addRotY(double delta) {
+        bonus3D.rotateY().setAngle(normalize(bonus3D.rotateY().getAngle() + delta));
     }
 
     private double normalize(double angle) {
