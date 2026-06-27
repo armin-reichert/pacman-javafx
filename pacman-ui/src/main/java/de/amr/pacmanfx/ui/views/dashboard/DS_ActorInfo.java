@@ -28,11 +28,12 @@ public class DS_ActorInfo extends DashboardSection {
 
     @Override
     public void connect(Game game) {
-        dynamicInfo("Pac Name", pacText(game, (_, pac) -> pac.name()));
-        dynamicInfo("Lives",    gameLevelInfo(game, level -> "%d".formatted(level.gameModel().lives().count())));
-        dynamicInfo("Movement", pacText(game, this::actorMovementText));
-        dynamicInfo("Tile",     pacText(game, this::actorLocationText));
-        dynamicInfo("Power",    pacPowerText(game));
+        dynamicInfo("Pac Name",  pacText(game, (_, pac) -> pac.name()));
+        dynamicInfo("Lives",     gameLevelInfo(game, level -> "%d".formatted(level.gameModel().lives().count())));
+        dynamicInfo("Movement",  pacText(game, this::actorMovementText));
+        dynamicInfo("Tile",      pacText(game, this::actorLocationText));
+        dynamicInfo("Power",     pacPowerText(game));
+        dynamicInfo("Animation", pacAnimationText(game));
         emptyRow();
         ghostInfo(game, GameModel.RED_GHOST_SHADOW);
         emptyRow();
@@ -97,6 +98,18 @@ public class DS_ActorInfo extends DashboardSection {
         return gameLevelInfo(game, level -> detailInfoSupplier.apply(level, level.entities().pac()));
     }
 
+    private Supplier<String> pacAnimationText(Game game) {
+        return () -> game.currentGameContext().optCurrentLevel().map(level -> {
+            final Pac pac = level.entities().pac();
+            if (pac.animations() instanceof SpriteAnimationMap<?> spriteAnimations) {
+                return spriteAnimations.selectedAnimationID() != null
+                    ? "%s:%d".formatted(spriteAnimations.selectedAnimationID(), pac.animations().currentFrame())
+                    : NO_INFO;
+            }
+            return NO_INFO;
+        }).orElse(NO_INFO);
+    }
+
     private Supplier<String> ghostText(Game game, BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
         return gameLevelInfo(game, level -> {
             if (!level.entities().ghosts().isEmpty()) {
@@ -113,7 +126,7 @@ public class DS_ActorInfo extends DashboardSection {
     private String ghostAnimationText(GameLevel level, Ghost ghost) {
         if (ghost.animations() instanceof SpriteAnimationMap<?> spriteAnimations) {
             return spriteAnimations.selectedAnimationID() != null
-                ? String.valueOf(spriteAnimations.selectedAnimationID())
+                ? "%s:%d".formatted(spriteAnimations.selectedAnimationID(), ghost.animations().currentFrame())
                 : NO_INFO;
         }
         return NO_INFO;
