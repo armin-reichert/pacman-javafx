@@ -32,21 +32,21 @@ public class DS_GameInfo extends DashboardSection {
 
     @Override
     public void connect(Game game) {
-        addDynamicLabeledValue("Game State",  () -> game.currentGameContext().state().name());
-        addDynamicLabeledValue("State Timer", () -> stateTimerInfo(game.currentGameContext().state()));
-        addDynamicLabeledValue("Game Scene", gameSceneInfo(game, gameScene -> gameScene.getClass().getSimpleName()));
+        addDynamicInfo("Game State",  () -> game.currentGameContext().state().name());
+        addDynamicInfo("State Timer", () -> stateTimerInfo(game.currentGameContext().state()));
+        addDynamicInfo("Game Scene", gameSceneInfo(game, gameScene -> gameScene.getClass().getSimpleName()));
 
-        addDynamicLabeledValue("Level Number", gameLevelInfo(game, level ->
+        addDynamicInfo("Level Number", gameLevelInfo(game, level ->
             (level.isDemoLevel() ? "%d (Demo Level)" : "%d").formatted(level.number())));
 
-        addDynamicLabeledValue("World Map", gameLevelInfo(game, level -> {
+        addDynamicInfo("World Map", gameLevelInfo(game, level -> {
             final String url = level.worldMap().url();
             return url == null
                 ? NO_INFO
                 : URLDecoder.decode(url.substring(url.lastIndexOf("/") + 1), StandardCharsets.UTF_8);
         }));
 
-        addDynamicLabeledValue("Fill/Stroke/Pellet", gameLevelInfo(game, level -> {
+        addDynamicInfo("Fill/Stroke/Pellet", gameLevelInfo(game, level -> {
             final WorldMap worldMap = level.worldMap();
             MapColorScheme colorScheme = null;
             if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_SCHEME)) {
@@ -64,19 +64,18 @@ public class DS_GameInfo extends DashboardSection {
             return NO_INFO;
         }));
 
-        addDynamicLabeledValue("Hunting Phase",   gameLevelInfo(game, this::fmtHuntingPhase));
-        addDynamicLabeledValue("-Running",        gameLevelInfo(game, level -> fmtHuntingTicksRunning(level.huntingTimer())));
-        addDynamicLabeledValue("-Remaining",      gameLevelInfo(game, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
-
-        addDynamicLabeledValue("Collision mode",  () -> fmtCollisionMode(game.currentGameContext().rules().collisionStrategyProperty().get()));
-        addDynamicLabeledValue("Pac-Man speed",   gameLevelInfo(game, this::fmtPacNormalSpeed));
-        addDynamicLabeledValue("- empowered",     gameLevelInfo(game, this::fmtPacSpeedPowered));
-        addDynamicLabeledValue("Power Duration",  gameLevelInfo(game, this::fmtPacPowerTime));
-        addDynamicLabeledValue("Pellets",         gameLevelInfo(game, this::fmtPelletCount));
-        addDynamicLabeledValue("Ghost speed",     gameLevelInfo(game, this::fmtGhostAttackSpeed));
-        addDynamicLabeledValue("- frightened",    gameLevelInfo(game, this::fmtGhostSpeedFrightened));
-        addDynamicLabeledValue("- in tunnel",     gameLevelInfo(game, this::fmtGhostSpeedTunnel));
-        addDynamicLabeledValue("Maze flashings",  gameLevelInfo(game, this::fmtNumFlashes));
+        addDynamicInfo("Hunting Phase",   gameLevelInfo(game, this::fmtHuntingPhase));
+        addDynamicInfo("-Running",        gameLevelInfo(game, level -> fmtHuntingTicksRunning(level.huntingTimer())));
+        addDynamicInfo("-Remaining",      gameLevelInfo(game, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
+        addDynamicInfo("Collision mode",  () -> fmtCollisionMode(game.currentGameContext().rules().collisionStrategyProperty().get()));
+        addDynamicInfo("Pac-Man speed",   gameLevelInfo(game, this::fmtPacNormalSpeed));
+        addDynamicInfo("- empowered",     gameLevelInfo(game, this::fmtPacSpeedPowered));
+        addDynamicInfo("Power Duration",  gameLevelInfo(game, this::fmtPacPowerTime));
+        addDynamicInfo("Pellets",         gameLevelInfo(game, this::fmtPelletCount));
+        addDynamicInfo("Ghost speed",     gameLevelInfo(game, this::fmtGhostAttackSpeed));
+        addDynamicInfo("- frightened",    gameLevelInfo(game, this::fmtGhostSpeedFrightened));
+        addDynamicInfo("- in tunnel",     gameLevelInfo(game, this::fmtGhostSpeedTunnel));
+        addDynamicInfo("Maze flashings",  gameLevelInfo(game, this::fmtNumFlashes));
     }
 
     private String stateTimerInfo(State<?> gameState) {

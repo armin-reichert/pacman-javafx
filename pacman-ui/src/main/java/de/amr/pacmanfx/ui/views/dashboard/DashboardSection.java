@@ -34,7 +34,7 @@ public class DashboardSection extends TitledPane {
     public static final String NO_INFO = "n/a";
 
     protected final Dashboard dashboard;
-    protected final List<DynamicInfoText> infoTexts = new ArrayList<>();
+    protected final List<DynamicInfoText> dynamicInfoTexts = new ArrayList<>();
     protected final GridPane grid = new GridPane();
     protected int rowIndex;
     protected boolean displayedStandalone;
@@ -66,7 +66,7 @@ public class DashboardSection extends TitledPane {
     public void connect(Game game) {}
 
     public void update(Game game) {
-        infoTexts.forEach(DynamicInfoText::update);
+        dynamicInfoTexts.forEach(DynamicInfoText::update);
     }
 
     public void setDisplayedStandalone(boolean alone) {
@@ -107,15 +107,14 @@ public class DashboardSection extends TitledPane {
         addRow(createLabel(labelText, true), right);
     }
 
-    protected void addDynamicLabeledValue(String label, Supplier<?> infoSupplier) {
+    protected void addDynamicInfo(String label, Supplier<?> infoSupplier) {
         var dynamicInfoText = new DynamicInfoText(infoSupplier);
-        infoTexts.add(dynamicInfoText);
+        dynamicInfoTexts.add(dynamicInfoText);
         addRow(label, dynamicInfoText);
     }
 
-    protected void addStaticLabeledValue(String label, String value) {
-        var staticText = new Text(value);
-        addRow(label, staticText);
+    protected void addInfo(String label, String value) {
+        addRow(label, new Text(value));
     }
 
     protected Label createLabel(String text, boolean enabled) {
@@ -126,7 +125,7 @@ public class DashboardSection extends TitledPane {
     }
 
     protected void addEmptyRow() {
-        addStaticLabeledValue("", "");
+        addInfo("", "");
     }
 
     protected Button[] addButtonList(String labelText, List<String> buttonTexts) {

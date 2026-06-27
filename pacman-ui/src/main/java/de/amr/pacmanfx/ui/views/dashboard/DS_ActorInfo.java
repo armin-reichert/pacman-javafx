@@ -29,11 +29,11 @@ public class DS_ActorInfo extends DashboardSection {
 
     @Override
     public void connect(Game game) {
-        addDynamicLabeledValue("Pac Name", pacInfo(game, (_, pac) -> pac.name()));
-        addDynamicLabeledValue("Lives",    gameLevelInfo(game, level -> "%d".formatted(level.gameModel().lives().count())));
-        addDynamicLabeledValue("Movement", pacInfo(game, this::actorMovementInfo));
-        addDynamicLabeledValue("Tile",     pacInfo(game, this::actorLocationInfo));
-        addDynamicLabeledValue("Power",    gameLevelInfo(game, gameLevel -> {
+        addDynamicInfo("Pac Name", pacInfo(game, (_, pac) -> pac.name()));
+        addDynamicInfo("Lives",    gameLevelInfo(game, level -> "%d".formatted(level.gameModel().lives().count())));
+        addDynamicInfo("Movement", pacInfo(game, this::actorMovementInfo));
+        addDynamicInfo("Tile",     pacInfo(game, this::actorLocationInfo));
+        addDynamicInfo("Power",    gameLevelInfo(game, gameLevel -> {
             TickTimer powerTimer = gameLevel.entities().pac().powerTimer();
             return powerTimer.isRunning()
                 ? "Remaining: %s".formatted(ticksToString(powerTimer.remainingTicks()))
@@ -84,10 +84,10 @@ public class DS_ActorInfo extends DashboardSection {
             case GameModel.ORANGE_GHOST_POKEY -> "Orange Ghost";
             default -> "Unknown Ghost";
         };
-        addDynamicLabeledValue(name,        supplyGhostInfo(game, this::ghostNameAndState, personality));
-        addDynamicLabeledValue("Movement",  supplyGhostInfo(game, this::actorMovementInfo, personality));
-        addDynamicLabeledValue("Tile",      supplyGhostInfo(game, this::actorLocationInfo, personality));
-        addDynamicLabeledValue("Animation", supplyGhostInfo(game, this::ghostAnimationInfo, personality));
+        addDynamicInfo(name,        supplyGhostInfo(game, this::ghostNameAndState, personality));
+        addDynamicInfo("Movement",  supplyGhostInfo(game, this::actorMovementInfo, personality));
+        addDynamicInfo("Tile",      supplyGhostInfo(game, this::actorLocationInfo, personality));
+        addDynamicInfo("Animation", supplyGhostInfo(game, this::ghostAnimationInfo, personality));
     }
 
     private Supplier<String> supplyGhostInfo(Game game, BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {

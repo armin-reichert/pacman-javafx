@@ -26,8 +26,8 @@ public class DS_General extends DashboardSection {
 
     @Override
     public void connect(Game game) {
-        addStaticLabeledValue("Java Version",   Runtime.version().toString());
-        addStaticLabeledValue("JavaFX Version", System.getProperty("javafx.runtime.version"));
+        addInfo("Java Version",   Runtime.version().toString());
+        addInfo("JavaFX Version", System.getProperty("javafx.runtime.version"));
 
         // Simulation control
 
@@ -63,11 +63,11 @@ public class DS_General extends DashboardSection {
         setEditor(sliderTargetFPS, game.clock().targetFrameRateProperty());
 
         final GameClock gameClock = game.clock();
-        addDynamicLabeledValue("", () -> "FPS: %.1f (Target: %d)".formatted(
+        addDynamicInfo("", () -> "FPS: %.1f (Target: %d)".formatted(
             gameClock.fps(),
             gameClock.targetFrameRate()));
 
-        addDynamicLabeledValue("Total Updates",  gameClock::pausableUpdatesCount);
+        addDynamicInfo("Total Updates",  gameClock::pausableUpdatesCount);
 
         addColorPicker("Canvas Color", game.ui().viewModel().common2D.canvasBackgroundColorProperty);
 

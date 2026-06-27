@@ -31,17 +31,17 @@ public class DS_JoypadKeyBindings extends DashboardSection {
 
         addRow(nesControllerImage);
 
-        addDynamicLabeledValue("[SELECT]",
+        addDynamicInfo("[SELECT]",
             () -> buttonKey(joypad, JoypadButton.SELECT));
 
-        addDynamicLabeledValue("[START]",
+        addDynamicInfo("[START]",
             () -> buttonKey(joypad, JoypadButton.START));
 
-        addDynamicLabeledValue("[B]  [A]",
+        addDynamicInfo("[B]  [A]",
             () -> "%s   %s".formatted(
                 buttonKey(joypad, JoypadButton.B), buttonKey(joypad, JoypadButton.A)));
 
-        addDynamicLabeledValue("UP/DOWN/LEFT/RIGHT",
+        addDynamicInfo("UP/DOWN/LEFT/RIGHT",
             () -> "%s  %s  %s  %s".formatted(
                 buttonKey(joypad, JoypadButton.UP),
                 buttonKey(joypad, JoypadButton.DOWN),
