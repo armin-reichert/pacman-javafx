@@ -44,32 +44,29 @@ public class TengenMsPacMan_MapRepository {
 
         final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacManConfig.MapConfigKey.MAP_CATEGORY);
         final int mapNumber           = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
-        final NES_MapColorScheme requestedColorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+        final NES_MapColorScheme reqColorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
         // for randomly colored maps (levels 28-31, non-ARCADE maps), multiple random flash colors appear
         final boolean randomFlashColors = worldMap.getConfigValue(TengenMsPacManConfig.MapConfigKey.MULTIPLE_FLASH_COLORS);
 
         return switch (mapCategory) {
 
-            case ARCADE  -> arcadeMapImageSet(mapNumber, requestedColorScheme, flashCount);
+            case ARCADE  -> arcadeMapImageSet(mapNumber, reqColorScheme, flashCount);
 
-            case MINI    -> miniMapImageSet(mapNumber, requestedColorScheme, flashCount, randomFlashColors);
+            case MINI    -> miniMapImageSet(mapNumber, reqColorScheme, flashCount, randomFlashColors);
 
-            case BIG     -> bigMapImageSet(mapNumber, requestedColorScheme, flashCount, randomFlashColors);
+            case BIG     -> bigMapImageSet(mapNumber, reqColorScheme, flashCount, randomFlashColors);
 
-            case STRANGE -> {
-                final NonArcadeMapsSpriteSheet.MapID mapID = worldMap.getConfigValue(TengenMsPacManConfig.MapConfigKey.MAP_ID); // set by map selector!
-                yield strangeMapImageSet(
-                        mapID,
-                        randomFlashColors ? requestedColorScheme : null,
-                        flashCount,
-                        randomFlashColors);
-            }
+            case STRANGE -> strangeMapImageSet(
+                worldMap.getConfigValue(TengenMsPacManConfig.MapConfigKey.MAP_ID), // set by map selector!
+                randomFlashColors ? reqColorScheme : null,
+                flashCount,
+                randomFlashColors);
         };
     }
 
+    // All requested maze color schemes exist in the sprite sheet, we only have to select the right sprite for the
+    // requested (map number, color scheme) combination:
     private MapImageSet arcadeMapImageSet(int mapNumber, NES_MapColorScheme colorScheme, int flashCount) {
-        // All requested maze color schemes exist in the sprite sheet, we only have to select the right sprite for the
-        // requested (map number, color scheme) combination:
 
         final ArcadeMapsSpriteSheet.MapID mapID = switch (mapNumber) {
             case 1 -> ArcadeMapsSpriteSheet.MapID.MAP1;
@@ -90,15 +87,15 @@ public class TengenMsPacMan_MapRepository {
             default -> throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
         };
 
-        final RectShort mazeSprite = ArcadeMapsSpriteSheet.instance().sprite(mapID);
-        final var coloredMaze = new ColorSchemedImage(ArcadeMapsSpriteSheet.instance().sourceImage(), mazeSprite, colorScheme);
+        final RectShort sprite = ArcadeMapsSpriteSheet.instance().sprite(mapID);
+        final var coloredMaze = new ColorSchemedImage(ArcadeMapsSpriteSheet.instance().sourceImage(), sprite, colorScheme);
 
         //TODO: Handle case when color scheme is already black & white
         final List<ColorSchemedImage> flashingMazes = MapColoringService.instance().createFlashingMapImages(
-                MapCategory.ARCADE, mapID,
-                ArcadeMapsSpriteSheet.instance(), mazeSprite,
-                colorScheme, NES_MapColorScheme._0F_20_0F_BLACK_WHITE_BLACK,
-                false, flashCount);
+            MapCategory.ARCADE, mapID,
+            ArcadeMapsSpriteSheet.instance(), sprite,
+            colorScheme, NES_MapColorScheme._0F_20_0F_BLACK_WHITE_BLACK,
+            false, flashCount);
 
         return new MapImageSet(coloredMaze, flashingMazes);
     }
