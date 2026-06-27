@@ -17,8 +17,7 @@ public class Flyer extends StackPane {
     private Image[] images;
     private int index;
 
-    public Flyer() {
-    }
+    public Flyer() {}
 
     public void setImages(Image... images) {
         if (images.length == 0) {

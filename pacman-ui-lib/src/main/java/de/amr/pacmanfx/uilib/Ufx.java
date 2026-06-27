@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.Validations;
+import de.amr.pacmanfx.uilib.rendering.GradientAxis;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
@@ -18,9 +19,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.paint.PhongMaterial;
+import javafx.scene.paint.*;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.TriangleMesh;
@@ -449,6 +448,15 @@ public final class Ufx {
     public static Color colorWithOpacity(Color color, double opacity) {
         requireNonNull(color);
         return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+    }
+
+    public static LinearGradient createGradient(String startColorCode, String stopColorCode, GradientAxis axis) {
+        return new LinearGradient(
+            0, 0, axis.endX(), axis.endY(),
+            true, // proportional coordinates
+            CycleMethod.NO_CYCLE,
+            new Stop(0, Color.valueOf(startColorCode)), new Stop(1, Color.valueOf(stopColorCode))
+        );
     }
 
     /**

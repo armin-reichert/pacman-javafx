@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.rendering.Gradients;
+import de.amr.pacmanfx.uilib.rendering.SampleGradients;
 import javafx.scene.layout.Background;
 import javafx.scene.media.Media;
 import javafx.scene.text.Font;
@@ -65,7 +65,7 @@ public final class GlobalAssets {
     public static final Background BACKGROUND_PAC_MAN_WALLPAPER = Ufx.createImageBackground(
         RES_MGR.loadImage(RESOURCE_ROOT + "graphics/pacman_wallpaper.png"));
 
-    public static final Background[] GRADIENT_BACKGROUNDS = Gradients.Samples.backgrounds();
+    public static final Background[] GRADIENT_BACKGROUNDS = SampleGradients.backgrounds();
 
     static {
         Logger.info("Loading predefined fonts");
