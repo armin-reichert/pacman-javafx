@@ -112,28 +112,27 @@ public class DashboardSection extends TitledPane {
         addRow(createLabel(labelText, true), right);
     }
 
-    protected void addDynamicInfo(String label, Supplier<?> infoSupplier) {
+    protected void dynamicInfo(String label, Supplier<?> infoSupplier) {
         var dynamicInfoText = new DynamicInfoText(infoSupplier);
         dynamicInfoTexts.add(dynamicInfoText);
         addRow(label, dynamicInfoText);
     }
 
-    protected void addInfo(String label, String value) {
+    protected void info(String label, String value) {
         addRow(label, new Text(value));
     }
 
     protected Label createLabel(String text, boolean enabled) {
         Label label = new Label(text);
-        //label.setMinWidth(dashboard.config().labelWidth());
         label.setDisable(!enabled);
         return label;
     }
 
-    protected void addEmptyRow() {
-        addInfo("", "");
+    protected void emptyRow() {
+        info("", "");
     }
 
-    protected Button[] addButtonList(String labelText, List<String> buttonTexts) {
+    protected Button[] buttonList(String labelText, List<String> buttonTexts) {
         var hbox = new HBox();
         var buttons = new Button[buttonTexts.size()];
         for (int i = 0; i < buttonTexts.size(); ++i) {
@@ -144,44 +143,40 @@ public class DashboardSection extends TitledPane {
         return buttons;
     }
 
-    protected CheckBox createCheckBox(String text) {
-        return new CheckBox(text);
-    }
-
-    protected CheckBox addCheckBox(String labelText) {
-        var cb = createCheckBox("");
+    protected CheckBox checkBox(String labelText) {
+        var cb = new CheckBox("");
         addRow(labelText, cb);
         return cb;
     }
 
-    protected CheckBox addCheckBox(String labelText, BooleanProperty property) {
-        CheckBox checkBox = addCheckBox(labelText);
+    protected CheckBox checkBox(String labelText, BooleanProperty property) {
+        CheckBox checkBox = checkBox(labelText);
         checkBox.selectedProperty().bindBidirectional(property);
         return checkBox;
     }
 
-    protected <T> ChoiceBox<T> addChoiceBox(String labelText, T[] items) {
+    protected <T> ChoiceBox<T> choiceBox(String labelText, T[] items) {
         var selector = new ChoiceBox<>(FXCollections.observableArrayList(items));
         addRow(labelText, selector);
         return selector;
     }
 
-    protected ColorPicker addColorPicker(String labelText, ObjectProperty<Color> colorProperty) {
+    protected ColorPicker colorPicker(String labelText, ObjectProperty<Color> colorProperty) {
         var picker = new ColorPicker(colorProperty.get());
         addRow(labelText, picker);
         picker.setOnAction(_ -> colorProperty.set(picker.getValue()));
         return picker;
     }
 
-    protected <T> void setEditor(ChoiceBox<T> selector, ObjectProperty<T> property) {
+    protected <T> void editProperty(ChoiceBox<T> selector, ObjectProperty<T> property) {
         selector.setOnAction(_ -> property.set(selector.getValue()));
     }
 
-    protected void setEditor(Slider slider, Property<Number> property) {
+    protected void editProperty(Slider slider, Property<Number> property) {
         slider.valueProperty().bindBidirectional(property);
     }
 
-    protected Slider addSlider(String labelText, double min, double max, double initialValue, boolean tickMarks, boolean tickLabels) {
+    protected Slider slider(String labelText, double min, double max, double initialValue, boolean tickMarks, boolean tickLabels) {
         var slider = new Slider(min, max, initialValue);
         slider.setShowTickMarks(tickMarks);
         slider.setShowTickLabels(tickLabels);
@@ -195,7 +190,7 @@ public class DashboardSection extends TitledPane {
         return slider;
     }
 
-    protected Spinner<Integer> addIntSpinner(String labelText, int min, int max, IntegerProperty valuePy) {
+    protected Spinner<Integer> intSpinner(String labelText, int min, int max, IntegerProperty valuePy) {
         var spinner = new Spinner<Integer>(min, max, valuePy.getValue());
         //TODO bidirectional binding does not work for me. Why? Is it me or is it a bug?
         spinner.getValueFactory().valueProperty().addListener((_, _, nv) -> valuePy.set(nv));
@@ -208,7 +203,7 @@ public class DashboardSection extends TitledPane {
         button.setOnAction(_ -> action.run());
     }
 
-    protected void setAction(Game game, Button button, GameAction gameAction) {
+    protected void setGameAction(Button button, GameAction gameAction) {
         button.setOnAction(_ -> gameAction.execute());
         //TODO add boolean property for enabled-state to game action and bind against it
     }

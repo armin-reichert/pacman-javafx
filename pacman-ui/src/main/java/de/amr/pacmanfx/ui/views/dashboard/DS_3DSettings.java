@@ -42,42 +42,42 @@ public class DS_3DSettings extends DashboardSection {
     public void connect(Game game) {
         final GameUIViewModel viewModel = game.ui().viewModel();
 
-        cbUsePlayScene3D = addCheckBox("3D Play Scene");
-        comboPerspectives = addChoiceBox("Perspective", PerspectiveID.values());
-        addColorPicker("Light Color", viewModel.maze3D.lightColorProperty);
-        addColorPicker("Floor Color", viewModel.maze3D.floorColorProperty);
-        addDynamicInfo("Camera",         () -> subSceneCameraInfo(game));
-        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(game));
-        addDynamicInfo("Scene Size",     () -> sceneSizeInfo(game));
+        cbUsePlayScene3D = checkBox("3D Play Scene");
+        comboPerspectives = choiceBox("Perspective", PerspectiveID.values());
+        colorPicker("Light Color", viewModel.maze3D.lightColorProperty);
+        colorPicker("Floor Color", viewModel.maze3D.floorColorProperty);
+        dynamicInfo("Camera",         () -> subSceneCameraInfo(game));
+        dynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(game));
+        dynamicInfo("Scene Size",     () -> sceneSizeInfo(game));
 
-        cbMiniViewVisible = addCheckBox("Mini View", game.ui().viewModel().miniView.activeProperty);
+        cbMiniViewVisible = checkBox("Mini View", game.ui().viewModel().miniView.activeProperty);
 
-        sliderMiniViewSceneHeight = addSlider(
+        sliderMiniViewSceneHeight = slider(
             " - Height",
             MINI_VIEW_MIN_HEIGHT, MINI_VIEW_MAX_HEIGHT,
             game.ui().viewModel().miniView.heightProperty.get(),
             false, false);
 
-        sliderMiniViewOpacityPercentage = addSlider(
+        sliderMiniViewOpacityPercentage = slider(
             " - Opacity",
             0, 100,
             game.ui().viewModel().miniView.opacityPercentageProperty.get(),
             false, false);
 
-        sliderWallHeight = addSlider(
+        sliderWallHeight = slider(
             "Wall Height",
             0, 16,
             viewModel.maze3D.wallHeightProperty.get(),
             false, false);
 
-        sliderWallOpacity = addSlider(
+        sliderWallOpacity = slider(
             "Wall Opacity",
             0, 1,
             viewModel.maze3D.wallOpacityProperty.get(),
             false, false);
 
-        cbAxesVisible = addCheckBox("Show Axes", viewModel.common3D.axesVisibleProperty);
-        cbWireframeMode = addCheckBox("Wireframe Mode");
+        cbAxesVisible = checkBox("Show Axes", viewModel.common3D.axesVisibleProperty);
+        cbWireframeMode = checkBox("Wireframe Mode");
 
         setTooltip(sliderMiniViewSceneHeight, sliderMiniViewSceneHeight.valueProperty(), "%.0f px");
         setTooltip(sliderMiniViewOpacityPercentage, sliderMiniViewOpacityPercentage.valueProperty(), "%.0f %%");
@@ -85,11 +85,11 @@ public class DS_3DSettings extends DashboardSection {
         setTooltip(sliderWallHeight, sliderWallHeight.valueProperty(), "%.0f px");
         setTooltip(sliderWallOpacity, sliderWallOpacity.valueProperty().multiply(100), "%.0f %%");
 
-        setEditor(sliderMiniViewSceneHeight, viewModel.miniView.heightProperty);
-        setEditor(sliderMiniViewOpacityPercentage, viewModel.miniView.opacityPercentageProperty);
-        setEditor(sliderWallHeight,  viewModel.maze3D.wallHeightProperty);
-        setEditor(sliderWallOpacity, viewModel.maze3D.wallOpacityProperty);
-        setEditor(comboPerspectives, viewModel.common3D.cameraPerspectiveIdProperty);
+        editProperty(sliderMiniViewSceneHeight, viewModel.miniView.heightProperty);
+        editProperty(sliderMiniViewOpacityPercentage, viewModel.miniView.opacityPercentageProperty);
+        editProperty(sliderWallHeight,  viewModel.maze3D.wallHeightProperty);
+        editProperty(sliderWallOpacity, viewModel.maze3D.wallOpacityProperty);
+        editProperty(comboPerspectives, viewModel.common3D.cameraPerspectiveIdProperty);
 
         cbUsePlayScene3D.setOnAction(_ -> game.actions().uiSettingsActions().actionTogglePlayScene2D3D().execute());
         cbWireframeMode.setOnAction(_ -> game.actions().camera3DActions().actionToggleDrawMode().execute());

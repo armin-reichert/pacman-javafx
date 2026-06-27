@@ -32,21 +32,21 @@ public class DS_GameInfo extends DashboardSection {
 
     @Override
     public void connect(Game game) {
-        addDynamicInfo("Game State",  () -> game.currentGameContext().state().name());
-        addDynamicInfo("State Timer", () -> stateTimerInfo(game.currentGameContext().state()));
-        addDynamicInfo("Game Scene", gameSceneInfo(game, gameScene -> gameScene.getClass().getSimpleName()));
+        dynamicInfo("Game State",  () -> game.currentGameContext().state().name());
+        dynamicInfo("State Timer", () -> stateTimerInfo(game.currentGameContext().state()));
+        dynamicInfo("Game Scene", gameSceneInfo(game, gameScene -> gameScene.getClass().getSimpleName()));
 
-        addDynamicInfo("Level Number", gameLevelInfo(game, level ->
+        dynamicInfo("Level Number", gameLevelInfo(game, level ->
             (level.isDemoLevel() ? "%d (Demo Level)" : "%d").formatted(level.number())));
 
-        addDynamicInfo("World Map", gameLevelInfo(game, level -> {
+        dynamicInfo("World Map", gameLevelInfo(game, level -> {
             final String url = level.worldMap().url();
             return url == null
                 ? NO_INFO
                 : URLDecoder.decode(url.substring(url.lastIndexOf("/") + 1), StandardCharsets.UTF_8);
         }));
 
-        addDynamicInfo("Fill/Stroke/Pellet", gameLevelInfo(game, level -> {
+        dynamicInfo("Fill/Stroke/Pellet", gameLevelInfo(game, level -> {
             final WorldMap worldMap = level.worldMap();
             MapColorScheme colorScheme = null;
             if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_SCHEME)) {
@@ -64,18 +64,18 @@ public class DS_GameInfo extends DashboardSection {
             return NO_INFO;
         }));
 
-        addDynamicInfo("Hunting Phase",   gameLevelInfo(game, this::fmtHuntingPhase));
-        addDynamicInfo("-Running",        gameLevelInfo(game, level -> fmtHuntingTicksRunning(level.huntingTimer())));
-        addDynamicInfo("-Remaining",      gameLevelInfo(game, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
-        addDynamicInfo("Collision mode",  gameRulesInfo(game, rules -> fmtCollisionMode(rules.getCollisionStrategy())));
-        addDynamicInfo("Pac-Man speed",   gameLevelInfo(game, this::fmtPacNormalSpeed));
-        addDynamicInfo("- empowered",     gameLevelInfo(game, this::fmtPacSpeedPowered));
-        addDynamicInfo("Power Duration",  gameLevelInfo(game, this::fmtPacPowerTime));
-        addDynamicInfo("Pellets",         gameLevelInfo(game, this::fmtPelletCount));
-        addDynamicInfo("Ghost speed",     gameLevelInfo(game, this::fmtGhostAttackSpeed));
-        addDynamicInfo("- frightened",    gameLevelInfo(game, this::fmtGhostSpeedFrightened));
-        addDynamicInfo("- in tunnel",     gameLevelInfo(game, this::fmtGhostSpeedTunnel));
-        addDynamicInfo("Maze flashings",  gameLevelInfo(game, this::fmtNumFlashes));
+        dynamicInfo("Hunting Phase",   gameLevelInfo(game, this::fmtHuntingPhase));
+        dynamicInfo("-Running",        gameLevelInfo(game, level -> fmtHuntingTicksRunning(level.huntingTimer())));
+        dynamicInfo("-Remaining",      gameLevelInfo(game, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
+        dynamicInfo("Collision mode",  gameRulesInfo(game, rules -> fmtCollisionMode(rules.getCollisionStrategy())));
+        dynamicInfo("Pac-Man speed",   gameLevelInfo(game, this::fmtPacNormalSpeed));
+        dynamicInfo("- empowered",     gameLevelInfo(game, this::fmtPacSpeedPowered));
+        dynamicInfo("Power Duration",  gameLevelInfo(game, this::fmtPacPowerTime));
+        dynamicInfo("Pellets",         gameLevelInfo(game, this::fmtPelletCount));
+        dynamicInfo("Ghost speed",     gameLevelInfo(game, this::fmtGhostAttackSpeed));
+        dynamicInfo("- frightened",    gameLevelInfo(game, this::fmtGhostSpeedFrightened));
+        dynamicInfo("- in tunnel",     gameLevelInfo(game, this::fmtGhostSpeedTunnel));
+        dynamicInfo("Maze flashings",  gameLevelInfo(game, this::fmtNumFlashes));
     }
 
     private String stateTimerInfo(State<?> gameState) {

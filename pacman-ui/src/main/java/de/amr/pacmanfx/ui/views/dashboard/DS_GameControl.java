@@ -42,19 +42,19 @@ public class DS_GameControl extends DashboardSection {
         final CoinMechanism coinMechanism = game.coinMechanism();
         final CommonActions actions = game.actions();
 
-        spinnerCredit            = addIntSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
-        choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
-        buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
-        buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
-        addDynamicInfo("Collision Mode", gameRulesInfo(game, rules -> rules.getCollisionStrategy().name()));
-        cbCollisionCheckedTwice  = addCheckBox("Collision Check 2x");
+        spinnerCredit            = intSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
+        choiceBoxInitialLives    = choiceBox("Initial Lives", new Integer[] {3, 5});
+        buttonGroupLevelActions  = buttonList("Game Level", List.of("Start", "Quit", "Next"));
+        buttonGroupCutScenesTest = buttonList("Cut Scenes Test", List.of("Start", "Quit"));
+        dynamicInfo("Collision Mode", gameRulesInfo(game, rules -> rules.getCollisionStrategy().name()));
+        cbCollisionCheckedTwice  = checkBox("Collision Check 2x");
 
         setAction(choiceBoxInitialLives, () -> game.currentGameContext().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
 
-        setAction(game, buttonGroupLevelActions[GAME_LEVEL_QUIT],        actions.gameFlowActions().actionRestartIntro());
-        setAction(game, buttonGroupLevelActions[GAME_LEVEL_NEXT],        actions.cheatActions().actionEnterNextLevel());
-        setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], actions.sceneTestActions().actionTestCutScenes());
-        setAction(game, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
+        setGameAction(buttonGroupLevelActions[GAME_LEVEL_QUIT],        actions.gameFlowActions().actionRestartIntro());
+        setGameAction(buttonGroupLevelActions[GAME_LEVEL_NEXT],        actions.cheatActions().actionEnterNextLevel());
+        setGameAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], actions.sceneTestActions().actionTestCutScenes());
+        setGameAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
             game.currentGameContext().rules().collisionDoubleCheckedProperty().set(cbCollisionCheckedTwice.isSelected()));

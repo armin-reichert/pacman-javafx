@@ -26,8 +26,8 @@ public class DS_General extends DashboardSection {
 
     @Override
     public void connect(Game game) {
-        addInfo("Java Version",   Runtime.version().toString());
-        addInfo("JavaFX Version", System.getProperty("javafx.runtime.version"));
+        info("Java Version",   Runtime.version().toString());
+        info("JavaFX Version", System.getProperty("javafx.runtime.version"));
 
         // Simulation control
 
@@ -40,14 +40,14 @@ public class DS_General extends DashboardSection {
         final var tooltipPlay = new Tooltip("Play");
         final var tooltipStop = new Tooltip("Stop");
 
-        final Button[] buttonsSimulationControl = addButtonList("Simulation", List.of("Play/Pause", "Step"));
+        final Button[] buttonsSimulationControl = buttonList("Simulation", List.of("Play/Pause", "Step"));
 
         final Button btnPlayPause = buttonsSimulationControl[0];
         btnPlayPause.setText(null);
         btnPlayPause.setStyle("-fx-background-color: transparent");
         btnPlayPause.graphicProperty().bind(game.clock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
         btnPlayPause.tooltipProperty().bind(game.clock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
-        setAction(game, btnPlayPause, game.actions().simulationActions().actionTogglePaused());
+        setGameAction(btnPlayPause, game.actions().simulationActions().actionTogglePaused());
 
         final Button btnStep = buttonsSimulationControl[1];
         btnStep.setGraphic(iconStep);
@@ -57,22 +57,22 @@ public class DS_General extends DashboardSection {
         btnStep.disableProperty().bind(game.clock().updatesDisabledProperty().not());
         setAction(btnStep, () -> game.clock().makeSteps(game.ui().viewModel().numSimulationStepsProperty.get(), true));
 
-        addIntSpinner("Num Steps", 1, 50, game.ui().viewModel().numSimulationStepsProperty);
+        intSpinner("Num Steps", 1, 50, game.ui().viewModel().numSimulationStepsProperty);
 
-        final var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
-        setEditor(sliderTargetFPS, game.clock().targetFrameRateProperty());
+        final var sliderTargetFPS = slider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
+        editProperty(sliderTargetFPS, game.clock().targetFrameRateProperty());
 
         final GameClock gameClock = game.clock();
-        addDynamicInfo("", () -> "FPS: %.1f (Target: %d)".formatted(
+        dynamicInfo("", () -> "FPS: %.1f (Target: %d)".formatted(
             gameClock.fps(),
             gameClock.targetFrameRate()));
 
-        addDynamicInfo("Total Updates",  gameClock::pausableUpdatesCount);
+        dynamicInfo("Total Updates",  gameClock::pausableUpdatesCount);
 
-        addColorPicker("Canvas Color", game.ui().viewModel().common2D.canvasBackgroundColorProperty);
+        colorPicker("Canvas Color", game.ui().viewModel().common2D.canvasBackgroundColorProperty);
 
-        addCheckBox("Font Smoothing", game.ui().viewModel().common2D.fontSmoothingOnProperty);
-        addCheckBox("Show Debug Info", game.ui().viewModel().debugModeOnProperty);
-        addCheckBox("Time Measured", gameClock.timeMeasuredProperty());
+        checkBox("Font Smoothing", game.ui().viewModel().common2D.fontSmoothingOnProperty);
+        checkBox("Show Debug Info", game.ui().viewModel().debugModeOnProperty);
+        checkBox("Time Measured", gameClock.timeMeasuredProperty());
     }
 }
