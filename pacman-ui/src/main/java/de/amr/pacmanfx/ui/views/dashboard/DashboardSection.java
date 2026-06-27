@@ -131,8 +131,7 @@ public class DashboardSection extends TitledPane {
     protected Label createLabel(String text, boolean enabled) {
         Label label = new Label(text);
         label.setMinWidth(dashboard.config().labelWidth());
-        //TODO
-        //label.setTextFill(enabled ? dashboard.config().textColor() : Color.DIMGRAY);
+        label.setDisable(!enabled);
         return label;
     }
 
