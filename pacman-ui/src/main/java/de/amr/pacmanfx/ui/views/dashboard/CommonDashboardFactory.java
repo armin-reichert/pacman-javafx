@@ -49,8 +49,8 @@ public final class CommonDashboardFactory implements DashboardFactory {
             case DashboardID.GENERAL        -> new DS_General(dashboard);
             case DashboardID.GAME_CONTROL   -> new DS_GameControl(dashboard);
             case DashboardID.GAME_INFO      -> new DS_GameInfo(dashboard);
-            case DashboardID.KEYS_GLOBAL    -> new DS_GlobaKeysl(dashboard);
-            case DashboardID.KEYS_LOCAL     -> new DS_CurrentGameSceneKeys(dashboard);
+            case DashboardID.KEYS_GLOBAL    -> new DS_GameViewKeys(dashboard);
+            case DashboardID.KEYS_LOCAL     -> new DS_GameSceneKeys(dashboard);
             case DashboardID.README         -> new DS_ReadmeFirst(dashboard);
             case DashboardID.SETTINGS_3D    -> new DS_3DSettings(dashboard);
             default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);

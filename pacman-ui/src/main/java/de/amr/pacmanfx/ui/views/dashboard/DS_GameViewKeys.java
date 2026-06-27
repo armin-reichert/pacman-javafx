@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -13,28 +14,25 @@ import javafx.scene.input.KeyCombination;
 import java.util.Comparator;
 import java.util.Map;
 
-public class DS_GlobaKeysl extends DashboardSection {
+public class DS_GameViewKeys extends DashboardSection {
 
-    public DS_GlobaKeysl(Dashboard dashboard) {
+    public DS_GameViewKeys(Dashboard dashboard) {
         super(dashboard);
     }
 
     @Override
-    public void connect(Game game) {
-        updateTableForCurrentSubView(game);
-    }
+    public void connect(Game game) {}
 
     @Override
     public void update(Game game) {
         super.update(game);
-        updateTableForCurrentSubView(game);
+        game.ui().views().optCurrentView().ifPresent(view -> updateInfo(game, view));
     }
 
-    private void updateTableForCurrentSubView(Game game) {
+    private void updateInfo(Game game, GameView view) {
         clearSection();
-        final GameView currentGameView = game.ui().views().assertCurrentView();
 
-        final Map<KeyCodeCombination, GameAction> currentBindingMap = currentGameView.actionBindings().actionBindings();
+        final Map<KeyCodeCombination, GameAction> currentBindingMap = view.actionBindings().actionBindings();
         if (currentBindingMap.isEmpty()) {
             addRow(createLabel(NO_INFO, false));
         }
