@@ -18,33 +18,28 @@ public class DS_CurrentGameSceneKeys extends DashboardSection {
     }
 
     @Override
-    public void connect(Game game) {
-        updateTableForCurrentGameScene(game);
-    }
+    public void connect(Game game) {}
 
     @Override
     public void update(Game game) {
         super.update(game);
-        updateTableForCurrentGameScene(game);
+        game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> updateInfo(game, gameScene));
     }
 
-    private void updateTableForCurrentGameScene(Game game) {
+    private void updateInfo(Game game, AbstractGameScene gameScene) {
         clearSection();
-        final AbstractGameScene currentGameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
-        if (currentGameScene != null) {
-            final var currentBindingsMap = currentGameScene.actionBindings().actionBindings();
-            if (currentBindingsMap.isEmpty()) {
-                addRow(createLabel(NO_INFO, false));
-            } else {
-                currentBindingsMap.entrySet().stream()
-                    .sorted(Comparator.comparing(e -> e.getKey().getDisplayText()))
-                    .forEach(entry -> {
-                        final KeyCombination keyCombination = entry.getKey();
-                        final GameAction action = entry.getValue();
-                        final String localizedActionText = game.ui().translations().translate(action.resourceBundleKey());
-                        addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled()));
-                    });
-            }
+        final var currentBindingsMap = gameScene.actionBindings().actionBindings();
+        if (currentBindingsMap.isEmpty()) {
+            addRow(createLabel(NO_INFO, false));
+        } else {
+            currentBindingsMap.entrySet().stream()
+                .sorted(Comparator.comparing(e -> e.getKey().getDisplayText()))
+                .forEach(entry -> {
+                    final KeyCombination keyCombination = entry.getKey();
+                    final GameAction action = entry.getValue();
+                    final String localizedActionText = game.ui().translations().translate(action.resourceBundleKey());
+                    addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled()));
+                });
         }
     }
 }
