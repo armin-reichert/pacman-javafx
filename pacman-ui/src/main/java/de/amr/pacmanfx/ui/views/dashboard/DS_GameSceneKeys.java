@@ -18,9 +18,6 @@ public class DS_GameSceneKeys extends DashboardSection {
     }
 
     @Override
-    public void connect(Game game) {}
-
-    @Override
     public void update(Game game) {
         super.update(game);
         game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> updateInfo(game, gameScene));

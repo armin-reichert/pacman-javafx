@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class DashboardSection extends TitledPane {
+public class DashboardSection extends TitledPane {
 
     private static final int GRID_HGAP = 0;
     private static final int GRID_VGAP = 2;
@@ -77,7 +77,7 @@ public abstract class DashboardSection extends TitledPane {
         });
     }
 
-    public abstract void connect(Game game);
+    public void connect(Game game) {}
 
     public void update(Game game) {
         infoTexts.forEach(DynamicInfoText::update);

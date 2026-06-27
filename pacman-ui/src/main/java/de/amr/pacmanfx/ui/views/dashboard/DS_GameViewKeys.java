@@ -21,9 +21,6 @@ public class DS_GameViewKeys extends DashboardSection {
     }
 
     @Override
-    public void connect(Game game) {}
-
-    @Override
     public void update(Game game) {
         super.update(game);
         game.ui().views().optCurrentView().ifPresent(view -> updateInfo(game, view));
