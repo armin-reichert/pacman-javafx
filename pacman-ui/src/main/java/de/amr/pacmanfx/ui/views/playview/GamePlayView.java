@@ -42,7 +42,6 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
 
@@ -63,12 +62,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     //TODO use FX controls + CSS
     public static final DashboardConfig DEFAULT_DASHBOARD_CONFIG = new DashboardConfig(
         110, // label width
-        320, // width
-        Color.rgb(0, 0, 50, 1.0), // background
-        Color.WHITE, // text
-        Font.font("Sans", 12), // label font
-        Font.font("Sans", 12) // content font
-    );
+        320); // width
 
     //TODO use FX controls + CSS
     public static final DecorationPane.Config DECORATION_CONFIG = new DecorationPane.Config(
@@ -303,6 +297,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         // Layer 3: Overlay layer with dashboard
         dashboard = new Dashboard(DEFAULT_DASHBOARD_CONFIG);
         dashboard.rootPane().setVisible(false);
+        dashboard.rootPane().setId("dashboard");
 
         overlayLayer = new BorderPane();
         overlayLayer.setLeft(dashboard.rootPane());

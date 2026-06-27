@@ -21,7 +21,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -34,24 +33,19 @@ import static java.util.Objects.requireNonNull;
 
 public class DashboardSection extends TitledPane {
 
-    private static final int GRID_HGAP = 0;
-    private static final int GRID_VGAP = 2;
-    private static final double OPACITY = 0.8;
-
     public static final String NO_INFO = "n/a";
-
-    protected static String fontCSS(Font font) {
-        return "-fx-font: %.0fpx \"%s\";".formatted(font.getSize(), font.getFamily());
-    }
 
     protected final Dashboard dashboard;
     protected final List<DynamicInfoText> infoTexts = new ArrayList<>();
-    protected final GridPane grid = new GridPane(GRID_HGAP, GRID_VGAP);
+    protected final GridPane grid = new GridPane();
     protected int rowIndex;
     protected boolean displayedMaximized;
 
     public DashboardSection(Dashboard dashboard) {
         this.dashboard = requireNonNull(dashboard);
+
+        getStyleClass().add("dashboard-section");
+        grid.getStyleClass().add("dashboard-section-grid");
 
         setContent(grid);
         setExpanded(false);
@@ -59,9 +53,7 @@ public class DashboardSection extends TitledPane {
         setPrefWidth(dashboard.config().width());
         setMinWidth(dashboard.config().width());
         setMaxWidth(dashboard.config().width());
-        setOpacity(OPACITY);
 
-        setContentBackground(Background.fill(dashboard.config().contentBackground()));
         setDisplayedMaximized(false);
 
         expandedProperty().addListener((_, _, expanded) -> {
@@ -127,24 +119,20 @@ public class DashboardSection extends TitledPane {
 
     protected void addDynamicLabeledValue(String label, Supplier<?> infoSupplier) {
         var dynamicInfoText = new DynamicInfoText(infoSupplier);
-        dynamicInfoText.setFill(dashboard.config().textColor());
-        dynamicInfoText.setFont(dashboard.config().contentFont());
         infoTexts.add(dynamicInfoText);
         addRow(label, dynamicInfoText);
     }
 
     protected void addStaticLabeledValue(String label, String value) {
         var staticText = new Text(value);
-        staticText.setFill(dashboard.config().textColor());
-        staticText.setFont(dashboard.config().contentFont());
         addRow(label, staticText);
     }
 
     protected Label createLabel(String text, boolean enabled) {
         Label label = new Label(text);
         label.setMinWidth(dashboard.config().labelWidth());
-        label.setTextFill(enabled ? dashboard.config().textColor() : Color.DIMGRAY);
-        label.setFont(dashboard.config().labelFont());
+        //TODO
+        //label.setTextFill(enabled ? dashboard.config().textColor() : Color.DIMGRAY);
         return label;
     }
 
@@ -157,7 +145,6 @@ public class DashboardSection extends TitledPane {
         var buttons = new Button[buttonTexts.size()];
         for (int i = 0; i < buttonTexts.size(); ++i) {
             buttons[i] = new Button(buttonTexts.get(i));
-            buttons[i].setFont(dashboard.config().contentFont());
             hbox.getChildren().add(buttons[i]);
         }
         addRow(labelText, hbox);
@@ -165,10 +152,7 @@ public class DashboardSection extends TitledPane {
     }
 
     protected CheckBox createCheckBox(String text) {
-        var cb = new CheckBox(text);
-        cb.setTextFill(dashboard.config().textColor());
-        cb.setFont(dashboard.config().contentFont());
-        return cb;
+        return new CheckBox(text);
     }
 
     protected CheckBox addCheckBox(String labelText) {
@@ -185,7 +169,6 @@ public class DashboardSection extends TitledPane {
 
     protected <T> ChoiceBox<T> addChoiceBox(String labelText, T[] items) {
         var selector = new ChoiceBox<>(FXCollections.observableArrayList(items));
-        selector.setStyle(fontCSS(dashboard.config().contentFont()));
         addRow(labelText, selector);
         return selector;
     }
@@ -221,7 +204,6 @@ public class DashboardSection extends TitledPane {
 
     protected Spinner<Integer> addIntSpinner(String labelText, int min, int max, IntegerProperty valuePy) {
         var spinner = new Spinner<Integer>(min, max, valuePy.getValue());
-        spinner.setStyle(fontCSS(dashboard.config().contentFont()));
         //TODO bidirectional binding does not work for me. Why? Is it me or is it a bug?
         spinner.getValueFactory().valueProperty().addListener((_, _, nv) -> valuePy.set(nv));
         valuePy.addListener((_, _, nv) -> spinner.getValueFactory().setValue(nv.intValue()));

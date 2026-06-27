@@ -18,6 +18,7 @@ public class DynamicInfoText extends Text {
 
     public DynamicInfoText(Supplier<?> infoSupplier) {
         this.infoSupplier = requireNonNull(infoSupplier);
+        getStyleClass().add("dynamic-info-text");
     }
 
     public void update() {

@@ -109,3 +109,30 @@
     -fx-border-color: #999;
     -fx-border-width: 1px;
 }
+
+
+/* --- Dashboard --- */
+
+.dashboard-section {
+    -fx-opacity: 0.8;
+    -fx-font-family: "Sans";
+    -fx-font-size: 12;
+}
+
+.dashboard-section-grid {
+    -fx-vgap: 4;
+    -fx-hgap: 0;
+}
+
+.dashboard-section .label {
+    -fx-text-stroke: #fff;
+}
+
+.dashboard-section .dynamic-info-text {
+    -fx-text-stroke: #fff;
+}
+
+.dashboard-section  {
+    -fx-text-fill: #000;
+    -fx-text-stroke: #000;
+}

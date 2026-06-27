@@ -4,14 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-
 public record DashboardConfig(
     int labelWidth,
-    int width,
-    Color contentBackground,
-    Color textColor,
-    Font labelFont,
-    Font contentFont) {
-}
+    int width)
+{}
