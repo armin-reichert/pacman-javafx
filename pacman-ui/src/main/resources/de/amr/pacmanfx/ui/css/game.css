@@ -114,18 +114,31 @@
 /* --- Dashboard --- */
 
 .dashboard-section {
+    -fx-pref-width: 320;
+    -fx-min-width: 320;
+    -fx-max-width: 320;
     -fx-opacity: 0.8;
     -fx-font-family: "Sans";
     -fx-font-size: 12;
 }
 
 .dashboard-section-grid {
+    -fx-background-color: #fff;
     -fx-vgap: 4;
-    -fx-hgap: 0;
+    -fx-hgap: 2;
 }
 
 .dashboard-section .label {
+    -fx-min-width: 120px;
     -fx-text-stroke: #fff;
+}
+
+.dashboard-section .slider {
+    -fx-pref-width: 160px;
+}
+
+.dashboard-section .table-view {
+    -fx-pref-width: 320px;
 }
 
 .dashboard-section .dynamic-info-text {

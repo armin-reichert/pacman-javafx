@@ -20,6 +20,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.Background;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -60,17 +62,17 @@ public class DS_3DAnimationMonitor extends DashboardSection {
     public DS_3DAnimationMonitor(Dashboard dashboard) {
         super(dashboard);
 
-
         tableView.setItems(tableRows);
         tableView.setPlaceholder(new Text(NO_ANIMATIONS));
         tableView.setFocusTraversable(false);
-        tableView.setPrefWidth(dashboard.config().width());
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        //tableView.setPrefWidth(dashboard.config().width());
 
         final var labelColumn = new TableColumn<TableRow, String>(COLUMN_ANIMATION_NAME);
         labelColumn.setCellValueFactory(data -> data.getValue().labelProperty());
         labelColumn.setSortable(false);
-        labelColumn.setMinWidth(0.66 * dashboard.config().width());
+        //TODO
+        labelColumn.setMinWidth(210);
         tableView.getColumns().add(labelColumn);
 
         final var statusColumn = new TableColumn<TableRow, String>(COLUMN_STATUS);

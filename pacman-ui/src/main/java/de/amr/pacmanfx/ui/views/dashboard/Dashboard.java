@@ -24,22 +24,16 @@ public class Dashboard {
 
     private final VBox rootPane = new VBox();
     private final Map<Identifier, DashboardSection> sections = new LinkedHashMap<>();
-    private final DashboardConfig config;
 
     private final ChangeListener<Boolean> visibilityChangeHandler = (_, _, _) -> updateLayout();
 
-    public Dashboard(DashboardConfig config) {
-        this.config = requireNonNull(config);
+    public Dashboard() {
         rootPane.visibleProperty().addListener(visibilityChangeHandler);
         rootPane.setPadding(new Insets(10));
     }
 
     public Pane rootPane() {
         return rootPane;
-    }
-
-    public DashboardConfig config() {
-        return config;
     }
 
     public void connect(Game game) {

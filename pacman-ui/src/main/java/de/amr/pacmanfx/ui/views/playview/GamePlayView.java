@@ -60,11 +60,6 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public static final Border DEBUG_BORDER = Ufx.border(Color.LIGHTGREEN, 1);
 
     //TODO use FX controls + CSS
-    public static final DashboardConfig DEFAULT_DASHBOARD_CONFIG = new DashboardConfig(
-        110, // label width
-        320); // width
-
-    //TODO use FX controls + CSS
     public static final DecorationPane.Config DECORATION_CONFIG = new DecorationPane.Config(
         0.85f, 0.93f, 0.5f, // scaling x,y, min
         20, 20, // padding x,y
@@ -295,7 +290,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         StackPane.setAlignment(miniPlaySceneView.rootPane(), Pos.TOP_RIGHT);
 
         // Layer 3: Overlay layer with dashboard
-        dashboard = new Dashboard(DEFAULT_DASHBOARD_CONFIG);
+        dashboard = new Dashboard();
         dashboard.rootPane().setVisible(false);
         dashboard.rootPane().setId("dashboard");
 

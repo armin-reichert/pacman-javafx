@@ -50,10 +50,6 @@ public class DashboardSection extends TitledPane {
         setContent(grid);
         setExpanded(false);
         setFocusTraversable(false);
-        setPrefWidth(dashboard.config().width());
-        setMinWidth(dashboard.config().width());
-        setMaxWidth(dashboard.config().width());
-
         setDisplayedMaximized(false);
 
         expandedProperty().addListener((_, _, expanded) -> {
@@ -130,7 +126,7 @@ public class DashboardSection extends TitledPane {
 
     protected Label createLabel(String text, boolean enabled) {
         Label label = new Label(text);
-        label.setMinWidth(dashboard.config().labelWidth());
+        //label.setMinWidth(dashboard.config().labelWidth());
         label.setDisable(!enabled);
         return label;
     }
@@ -191,7 +187,7 @@ public class DashboardSection extends TitledPane {
         var slider = new Slider(min, max, initialValue);
         slider.setShowTickMarks(tickMarks);
         slider.setShowTickLabels(tickLabels);
-        slider.setPrefWidth(0.5 * dashboard.config().width());
+        //slider.setPrefWidth(0.5 * dashboard.config().width());
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {
                 slider.setValue(initialValue);
