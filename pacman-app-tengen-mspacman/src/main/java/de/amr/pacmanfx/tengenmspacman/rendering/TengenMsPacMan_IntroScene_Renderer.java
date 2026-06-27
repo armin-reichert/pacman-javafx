@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
+import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.SceneState;
 import de.amr.pacmanfx.ui.GameVariantConfig;
@@ -19,7 +19,7 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.shadeOfBlue;
+import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.shadeOfBlue;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.MARQUEE_X;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.MARQUEE_Y;
 import static java.util.Objects.requireNonNull;

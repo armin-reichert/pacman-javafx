@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.tengenmspacman;
+package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
+import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.rendering.*;
 
 import java.util.List;
 

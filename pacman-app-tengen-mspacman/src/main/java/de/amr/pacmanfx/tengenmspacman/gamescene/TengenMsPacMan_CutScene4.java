@@ -26,7 +26,7 @@ import java.util.List;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.*;
+import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.*;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 

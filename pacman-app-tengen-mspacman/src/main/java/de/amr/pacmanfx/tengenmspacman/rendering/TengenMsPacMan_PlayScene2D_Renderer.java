@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.MapConfigKey;
+import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
@@ -25,7 +25,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCREEN_WIDTH;
 
 public class TengenMsPacMan_PlayScene2D_Renderer
     extends BaseRenderer

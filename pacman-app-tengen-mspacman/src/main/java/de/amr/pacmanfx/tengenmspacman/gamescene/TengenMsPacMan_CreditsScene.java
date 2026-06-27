@@ -10,8 +10,8 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_HEIGHT;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCREEN_HEIGHT;
+import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCREEN_WIDTH;
 
 /**
  * Gives credit to the people that helped in making the game, original and remake authors.

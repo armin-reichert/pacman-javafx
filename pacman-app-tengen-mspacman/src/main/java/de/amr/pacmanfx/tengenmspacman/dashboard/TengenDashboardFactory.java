@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.tengenmspacman;
+package de.amr.pacmanfx.tengenmspacman.dashboard;
 
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.ui.views.dashboard.*;
@@ -10,7 +10,7 @@ import de.amr.pacmanfx.uilib.assets.TranslationManager;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_DashboardID.JOYPAD;
+import static de.amr.pacmanfx.tengenmspacman.dashboard.TengenMsPacMan_DashboardID.JOYPAD;
 
 /**
  * A Tengen Ms. Pac-Man game specific dashboard factory. Demonstrates how game variants could define their own

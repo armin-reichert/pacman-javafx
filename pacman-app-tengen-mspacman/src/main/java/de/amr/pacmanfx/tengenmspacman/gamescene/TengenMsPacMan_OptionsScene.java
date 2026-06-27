@@ -22,8 +22,8 @@ import org.tinylog.Logger;
 
 import java.io.IOException;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_HEIGHT;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCREEN_HEIGHT;
+import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
 /**

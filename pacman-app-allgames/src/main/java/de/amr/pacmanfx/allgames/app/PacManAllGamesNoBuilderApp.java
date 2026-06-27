@@ -18,6 +18,8 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.tengenmspacman.*;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
+import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
+import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameExtension;

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig;
+import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;

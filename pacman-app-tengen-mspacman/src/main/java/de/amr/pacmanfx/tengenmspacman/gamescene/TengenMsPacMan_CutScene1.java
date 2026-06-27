@@ -23,8 +23,8 @@ import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.basics.spriteanim.SpriteAnimationAccessor.singleSpriteAnimation;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_HEIGHT;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCREEN_HEIGHT;
+import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCREEN_WIDTH;
 
 /**
  * Intermission scene 1: "They meet".

@@ -1,10 +1,10 @@
 package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig;
+import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UISettings;
+import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameFlow;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.app;
 
-import de.amr.pacmanfx.tengenmspacman.TengenDashboardFactory;
+import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameBuilder;
@@ -12,7 +12,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.core.GameVariantID.TENGEN_MS_PACMAN;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_ASPECT_RATIO;
+import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCREEN_ASPECT_RATIO;
 
 public class TengenMsPacMan_App extends Application {
 

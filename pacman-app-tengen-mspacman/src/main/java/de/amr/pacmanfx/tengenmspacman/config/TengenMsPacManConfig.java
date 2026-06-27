@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.tengenmspacman;
+package de.amr.pacmanfx.tengenmspacman.config;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
@@ -13,6 +13,8 @@ import de.amr.pacmanfx.model.world.MapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Factory3D;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
