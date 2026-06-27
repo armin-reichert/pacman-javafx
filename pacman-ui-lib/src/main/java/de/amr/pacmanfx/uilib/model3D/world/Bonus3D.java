@@ -15,7 +15,7 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.animation.BonusEatenAnimation3D;
-import de.amr.pacmanfx.uilib.model3D.animation.BonusRollingThroughWorldAnimation3D;
+import de.amr.pacmanfx.uilib.model3D.animation.BonusRollingAnimation3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -61,7 +61,7 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
     private final Group root;
     private final Shape3D shape3D;
 
-    private final BonusRollingThroughWorldAnimation3D rollingAnimation;
+    private final BonusRollingAnimation3D rollingAnimation;
 
     public Bonus3D(AnimationRegistry animations, Bonus bonus, Image symbolImage, double symbolWidth, Image pointsImage, double pointsWidth) {
         this.animations = requireNonNull(animations);
@@ -89,7 +89,7 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
         pointsImageView.setFitWidth(pointsWidth);
         pointsTexture = new PhongMaterial(Color.GHOSTWHITE, pointsImageView.getImage(), null, null, null);
 
-        rollingAnimation = new BonusRollingThroughWorldAnimation3D(this);
+        rollingAnimation = new BonusRollingAnimation3D(this);
         animations.register(AnimationID.BONUS_EATEN, new BonusEatenAnimation3D(this));
     }
 

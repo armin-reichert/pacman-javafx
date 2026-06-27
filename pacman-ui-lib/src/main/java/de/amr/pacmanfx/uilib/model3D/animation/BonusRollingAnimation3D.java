@@ -6,12 +6,12 @@ package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 
-public class BonusRollingThroughWorldAnimation3D {
+public class BonusRollingAnimation3D {
 
     public static final int ANGLE_DELTA = 5;
     private final Bonus3D bonus3D;
 
-    public BonusRollingThroughWorldAnimation3D(Bonus3D bonus3D) {
+    public BonusRollingAnimation3D(Bonus3D bonus3D) {
         this.bonus3D = bonus3D;
     }
 
