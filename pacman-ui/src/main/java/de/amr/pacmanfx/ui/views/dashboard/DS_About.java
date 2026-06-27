@@ -14,15 +14,15 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class DashboardSectionAbout extends DashboardSection {
+public class DS_About extends DashboardSection {
 
-    public DashboardSectionAbout(Dashboard dashboard) {
+    public DS_About(Dashboard dashboard) {
         super(dashboard);
     }
 
     @Override
     public void connect(Game game) {
-        final ResourceManager rm = () -> DashboardSectionAbout.class;
+        final ResourceManager rm = () -> DS_About.class;
         final Image armin1970 = rm.loadImage("/de/amr/pacmanfx/ui/graphics/armin1970.jpg");
         final Font handwriting = rm.loadFont("/de/amr/pacmanfx/ui/fonts/Molle-Italic.ttf", 20);
 

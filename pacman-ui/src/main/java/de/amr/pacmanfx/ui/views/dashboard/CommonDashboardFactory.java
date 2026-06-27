@@ -41,18 +41,18 @@ public final class CommonDashboardFactory implements DashboardFactory {
         requireNonNull(translations);
 
         final DashboardSection section = switch (id) {
-            case DashboardID.ABOUT          -> new DashboardSectionAbout(dashboard);
-            case DashboardID.ACTOR_INFO     -> new DashboardSectionActorInfo(dashboard);
-            case DashboardID.ANIMATION_INFO -> new DashboardSectionAnimations3D(dashboard);
+            case DashboardID.ABOUT          -> new DS_About(dashboard);
+            case DashboardID.ACTOR_INFO     -> new DS_ActorInfo(dashboard);
+            case DashboardID.ANIMATION_INFO -> new DS_3DAnimationMonitor(dashboard);
             // this dashboard section needs additional configuration to work!
-            case DashboardID.CUSTOM_MAPS    -> new DashboardSectionCustomMaps(dashboard);
-            case DashboardID.GENERAL        -> new DashboardSectionGeneral(dashboard);
-            case DashboardID.GAME_CONTROL   -> new DashboardSectionGameControl(dashboard);
-            case DashboardID.GAME_INFO      -> new DashboardSectionGameInfo(dashboard);
-            case DashboardID.KEYS_GLOBAL    -> new DashboardSectionKeyShortcutsGlobal(dashboard);
-            case DashboardID.KEYS_LOCAL     -> new DashboardSectionKeyboardShortcutsCurrentGameScene(dashboard);
-            case DashboardID.README         -> new DashboardSectionReadmeFirst(dashboard);
-            case DashboardID.SETTINGS_3D    -> new DashboardSection3DSettings(dashboard);
+            case DashboardID.CUSTOM_MAPS    -> new DS_CustomMapMonitor(dashboard);
+            case DashboardID.GENERAL        -> new DS_General(dashboard);
+            case DashboardID.GAME_CONTROL   -> new DS_GameControl(dashboard);
+            case DashboardID.GAME_INFO      -> new DS_GameInfo(dashboard);
+            case DashboardID.KEYS_GLOBAL    -> new DS_GlobaKeysl(dashboard);
+            case DashboardID.KEYS_LOCAL     -> new DS_CurrentGameSceneKeys(dashboard);
+            case DashboardID.README         -> new DS_ReadmeFirst(dashboard);
+            case DashboardID.SETTINGS_3D    -> new DS_3DSettings(dashboard);
             default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);
         };
         section.setText(translations.translate(titleKey(id)));

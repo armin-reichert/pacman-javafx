@@ -13,9 +13,9 @@ import javafx.scene.input.KeyCombination;
 import java.util.Comparator;
 import java.util.Map;
 
-public class DashboardSectionKeyShortcutsGlobal extends DashboardSection {
+public class DS_GlobaKeysl extends DashboardSection {
 
-    public DashboardSectionKeyShortcutsGlobal(Dashboard dashboard) {
+    public DS_GlobaKeysl(Dashboard dashboard) {
         super(dashboard);
     }
 

@@ -14,11 +14,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class DashboardSectionReadmeFirst extends DashboardSection {
+public class DS_ReadmeFirst extends DashboardSection {
 
     private static final Font TEXT_FONT = Font.font("Sans", 14);
 
-    public DashboardSectionReadmeFirst(Dashboard dashboard) {
+    public DS_ReadmeFirst(Dashboard dashboard) {
         super(dashboard);
     }
 

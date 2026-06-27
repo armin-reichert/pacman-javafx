@@ -15,12 +15,12 @@ import java.util.List;
 /**
  * General settings and simulation control.
  */
-public class DashboardSectionGeneral extends DashboardSection {
+public class DS_General extends DashboardSection {
 
     private static final int MIN_FRAME_RATE = 5;
     private static final int MAX_FRAME_RATE = 120;
 
-    public DashboardSectionGeneral(Dashboard dashboard) {
+    public DS_General(Dashboard dashboard) {
         super(dashboard);
     }
 
@@ -31,7 +31,7 @@ public class DashboardSectionGeneral extends DashboardSection {
 
         // Simulation control
 
-        final ResourceManager rm = () -> DashboardSectionGeneral.class;
+        final ResourceManager rm = () -> DS_General.class;
 
         final var iconPlay = new ImageView(rm.loadImage("/de/amr/pacmanfx/ui/graphics/icons/play.png"));
         final var iconStop = new ImageView(rm.loadImage("/de/amr/pacmanfx/ui/graphics/icons/stop.png"));

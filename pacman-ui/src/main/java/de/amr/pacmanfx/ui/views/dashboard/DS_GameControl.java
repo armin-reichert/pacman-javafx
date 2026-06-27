@@ -17,7 +17,7 @@ import javafx.scene.control.Spinner;
 
 import java.util.List;
 
-public class DashboardSectionGameControl extends DashboardSection {
+public class DS_GameControl extends DashboardSection {
 
     private static final int GAME_LEVEL_START = 0;
     private static final int GAME_LEVEL_QUIT = 1;
@@ -32,7 +32,7 @@ public class DashboardSectionGameControl extends DashboardSection {
     private Button[] buttonGroupCutScenesTest;
     private CheckBox cbCollisionCheckedTwice;
 
-    public DashboardSectionGameControl(Dashboard dashboard) {
+    public DS_GameControl(Dashboard dashboard) {
         super(dashboard);
     }
 

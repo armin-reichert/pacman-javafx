@@ -11,9 +11,9 @@ import javafx.scene.input.KeyCombination;
 
 import java.util.Comparator;
 
-public class DashboardSectionKeyboardShortcutsCurrentGameScene extends DashboardSection {
+public class DS_CurrentGameSceneKeys extends DashboardSection {
 
-    public DashboardSectionKeyboardShortcutsCurrentGameScene(Dashboard dashboard) {
+    public DS_CurrentGameSceneKeys(Dashboard dashboard) {
         super(dashboard);
     }
 

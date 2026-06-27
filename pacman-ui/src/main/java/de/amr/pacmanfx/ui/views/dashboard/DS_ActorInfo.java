@@ -20,9 +20,9 @@ import java.util.function.Supplier;
 
 import static de.amr.basics.timer.TickTimer.ticksToString;
 
-public class DashboardSectionActorInfo extends DashboardSection {
+public class DS_ActorInfo extends DashboardSection {
 
-    public DashboardSectionActorInfo(Dashboard dashboard) {
+    public DS_ActorInfo(Dashboard dashboard) {
         super(dashboard);
     }
 

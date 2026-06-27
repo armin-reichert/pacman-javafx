@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
 
-public class DashboardSectionCustomMaps extends DashboardSection {
+public class DS_CustomMapMonitor extends DashboardSection {
 
     private static class MapLinkUserData {
         WorldMap worldMap;
@@ -44,7 +44,7 @@ public class DashboardSectionCustomMaps extends DashboardSection {
     private Consumer<File> mapEditFunction = file -> Logger.info("Open map file {}", file);
     private final ObservableList<WorldMap> customMaps = FXCollections.observableArrayList();
 
-    public DashboardSectionCustomMaps(Dashboard dashboard) {
+    public DS_CustomMapMonitor(Dashboard dashboard) {
         super(dashboard);
 
         final var tableView = new TableView<WorldMap>();
