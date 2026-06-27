@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
@@ -11,9 +12,13 @@ import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
 import java.util.List;
 
+import static de.amr.pacmanfx.tengenmspacman.rendering.NES_MapColorScheme.*;
+import static java.util.Objects.requireNonNull;
+
 /**
- * Provides correctly colored and flashing maze sprite sets for the Tengen NES Ms. Pac-Man port.
- * Handles the four map categories (ARCADE, MINI, BIG, STRANGE) and their unique color schemes,
+ * Provides correctly colored and flashing maze sprite sets for the Tengen Ms. Pac-Man port.
+ * <br>
+ * Handles the four map categories ARCADE, MINI, BIG, STRANGE and their unique color schemes,
  * including random recoloring in levels 28–31 and the animated "psychedelic" maze #32.
  */
 public class TengenMsPacMan_MapRepository {
@@ -34,20 +39,26 @@ public class TengenMsPacMan_MapRepository {
      * <p>Because the map images do not cover all required map/color-scheme combinations, an image cache is provided where
      * the recolored maze images are stored.
      */
-    public MapImageSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
+    public MapImageSet createMapImageSet(WorldMap worldMap, int flashCount) {
+        requireNonNull(worldMap);
+
         final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacManConfig.MapConfigKey.MAP_CATEGORY);
-        final int mapNumber = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
+        final int mapNumber           = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
         final NES_MapColorScheme requestedColorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
         // for randomly colored maps (levels 28-31, non-ARCADE maps), multiple random flash colors appear
         final boolean randomFlashColors = worldMap.getConfigValue(TengenMsPacManConfig.MapConfigKey.MULTIPLE_FLASH_COLORS);
 
         return switch (mapCategory) {
-            case ARCADE  -> arcadeMazeSpriteSet(mapNumber, requestedColorScheme, flashCount);
-            case MINI    -> miniMazeSpriteSet(mapNumber, requestedColorScheme, flashCount, randomFlashColors);
-            case BIG     -> bigMazeSpriteSet(mapNumber, requestedColorScheme, flashCount, randomFlashColors);
+
+            case ARCADE  -> arcadeMapImageSet(mapNumber, requestedColorScheme, flashCount);
+
+            case MINI    -> miniMapImageSet(mapNumber, requestedColorScheme, flashCount, randomFlashColors);
+
+            case BIG     -> bigMapImageSet(mapNumber, requestedColorScheme, flashCount, randomFlashColors);
+
             case STRANGE -> {
                 final NonArcadeMapsSpriteSheet.MapID mapID = worldMap.getConfigValue(TengenMsPacManConfig.MapConfigKey.MAP_ID); // set by map selector!
-                yield strangeMazeSpriteSet(
+                yield strangeMapImageSet(
                         mapID,
                         randomFlashColors ? requestedColorScheme : null,
                         flashCount,
@@ -56,7 +67,7 @@ public class TengenMsPacMan_MapRepository {
         };
     }
 
-    private MapImageSet arcadeMazeSpriteSet(int mapNumber, NES_MapColorScheme colorScheme, int flashCount) {
+    private MapImageSet arcadeMapImageSet(int mapNumber, NES_MapColorScheme colorScheme, int flashCount) {
         // All requested maze color schemes exist in the sprite sheet, we only have to select the right sprite for the
         // requested (map number, color scheme) combination:
 
@@ -92,7 +103,7 @@ public class TengenMsPacMan_MapRepository {
         return new MapImageSet(coloredMaze, flashingMazes);
     }
 
-    private MapImageSet miniMazeSpriteSet(
+    private MapImageSet miniMapImageSet(
         int mapNumber, NES_MapColorScheme requestedColorScheme, int flashCount, boolean randomFlashColors) {
 
         final NonArcadeMapsSpriteSheet.MapID mapID = switch (mapNumber) {
@@ -106,24 +117,24 @@ public class TengenMsPacMan_MapRepository {
         };
 
         final NES_MapColorScheme originalColorScheme = switch (mapNumber) {
-            case 1 -> NES_MapColorScheme._36_15_20_PINK_RED_WHITE;
-            case 2 -> NES_MapColorScheme._21_20_28_BLUE_WHITE_YELLOW;
-            case 3 -> NES_MapColorScheme._35_28_20_PINK_YELLOW_WHITE;
-            case 4 -> NES_MapColorScheme._28_16_20_YELLOW_RED_WHITE;
-            case 5 -> NES_MapColorScheme._00_2A_24_GRAY_GREEN_PINK;
-            case 6 -> NES_MapColorScheme._23_20_2B_VIOLET_WHITE_GREEN;
+            case 1 -> _36_15_20_PINK_RED_WHITE;
+            case 2 -> _21_20_28_BLUE_WHITE_YELLOW;
+            case 3 -> _35_28_20_PINK_YELLOW_WHITE;
+            case 4 -> _28_16_20_YELLOW_RED_WHITE;
+            case 5 -> _00_2A_24_GRAY_GREEN_PINK;
+            case 6 -> _23_20_2B_VIOLET_WHITE_GREEN;
             default -> throw new IllegalArgumentException("Illegal MINI map number: " + mapNumber);
         };
 
-        return MapColoringService.instance().createMazeSet(
-                MapCategory.MINI, mapID,
-                NonArcadeMapsSpriteSheet.instance(), NonArcadeMapsSpriteSheet.instance().sprite(mapID),
-                originalColorScheme, requestedColorScheme,
-                randomFlashColors, flashCount
+        return MapColoringService.instance().createMapImageSet(
+            MapCategory.MINI, mapID,
+            NonArcadeMapsSpriteSheet.instance(), NonArcadeMapsSpriteSheet.instance().sprite(mapID),
+            originalColorScheme, requestedColorScheme,
+            randomFlashColors, flashCount
         );
     }
 
-    private MapImageSet bigMazeSpriteSet(
+    private MapImageSet bigMapImageSet(
         int mapNumber, NES_MapColorScheme requestedColorScheme, int flashCount, boolean randomFlashColors) {
 
         final NonArcadeMapsSpriteSheet.MapID mapID = switch (mapNumber) {
@@ -142,83 +153,83 @@ public class TengenMsPacMan_MapRepository {
         };
 
         final NES_MapColorScheme originalColorScheme = switch (mapNumber) {
-            case  1 -> NES_MapColorScheme._07_20_20_BROWN_WHITE_WHITE;
-            case  2 -> NES_MapColorScheme._15_25_20_RED_ROSE_WHITE;
-            case  3 -> NES_MapColorScheme._0F_20_1C_BLACK_WHITE_GREEN;
-            case  4 -> NES_MapColorScheme._19_20_20_GREEN_WHITE_WHITE;
-            case  5 -> NES_MapColorScheme._0C_20_14_GREEN_WHITE_VIOLET;
-            case  6 -> NES_MapColorScheme._25_20_20_ROSE_WHITE_WHITE;
-            case  7 -> NES_MapColorScheme._0F_01_20_BLACK_BLUE_WHITE;
-            case  8 -> NES_MapColorScheme._28_20_2A_YELLOW_WHITE_GREEN;
-            case  9 -> NES_MapColorScheme._03_20_20_BLUE_WHITE_WHITE;
-            case 10 -> NES_MapColorScheme._10_20_28_GRAY_WHITE_YELLOW;
-            case 11 -> NES_MapColorScheme._15_25_20_RED_ROSE_WHITE;
+            case  1 -> _07_20_20_BROWN_WHITE_WHITE;
+            case  2 -> _15_25_20_RED_ROSE_WHITE;
+            case  3 -> _0F_20_1C_BLACK_WHITE_GREEN;
+            case  4 -> _19_20_20_GREEN_WHITE_WHITE;
+            case  5 -> _0C_20_14_GREEN_WHITE_VIOLET;
+            case  6 -> _25_20_20_ROSE_WHITE_WHITE;
+            case  7 -> _0F_01_20_BLACK_BLUE_WHITE;
+            case  8 -> _28_20_2A_YELLOW_WHITE_GREEN;
+            case  9 -> _03_20_20_BLUE_WHITE_WHITE;
+            case 10 -> _10_20_28_GRAY_WHITE_YELLOW;
+            case 11 -> _15_25_20_RED_ROSE_WHITE;
             default -> null;
         };
 
-        return MapColoringService.instance().createMazeSet(
-                MapCategory.BIG, mapID,
-                NonArcadeMapsSpriteSheet.instance(), NonArcadeMapsSpriteSheet.instance().sprite(mapID),
-                originalColorScheme, requestedColorScheme,
-                randomFlashColors, flashCount
+        return MapColoringService.instance().createMapImageSet(
+            MapCategory.BIG, mapID,
+            NonArcadeMapsSpriteSheet.instance(), NonArcadeMapsSpriteSheet.instance().sprite(mapID),
+            originalColorScheme, requestedColorScheme,
+            randomFlashColors, flashCount
         );
     }
 
-    private MapImageSet strangeMazeSpriteSet(
-            NonArcadeMapsSpriteSheet.MapID mapID,
-            NES_MapColorScheme optionalRandomColorScheme,
-            int flashCount,
-            boolean randomFlashColors) {
+    private MapImageSet strangeMapImageSet(
+        NonArcadeMapsSpriteSheet.MapID mapID,
+        NES_MapColorScheme optionalRandomColorScheme,
+        int flashCount,
+        boolean randomFlashColors) {
 
         final RectShort mazeSprite = mapID == NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED
-                ? NonArcadeMapsSpriteSheet.instance().sprites(mapID)[0]
-                : NonArcadeMapsSpriteSheet.instance().sprite(mapID);
+            ? NonArcadeMapsSpriteSheet.instance().sprites(mapID)[0]
+            : NonArcadeMapsSpriteSheet.instance().sprite(mapID);
 
         final NES_MapColorScheme original = colorSchemeOfNonArcadeMap(mapID);
         final NES_MapColorScheme requested = optionalRandomColorScheme == null ? original : optionalRandomColorScheme;
 
-        return MapColoringService.instance().createMazeSet(
-                MapCategory.STRANGE, mapID,
-                NonArcadeMapsSpriteSheet.instance(), mazeSprite,
-                original, requested,
-                randomFlashColors, flashCount
+        return MapColoringService.instance().createMapImageSet(
+            MapCategory.STRANGE, mapID,
+            NonArcadeMapsSpriteSheet.instance(), mazeSprite,
+            original, requested,
+            randomFlashColors, flashCount
         );
     }
 
     private NES_MapColorScheme colorSchemeOfNonArcadeMap(NonArcadeMapsSpriteSheet.MapID mapID){
         return switch (mapID) {
-            case MAP1           -> NES_MapColorScheme._36_15_20_PINK_RED_WHITE;
-            case MAP2           -> NES_MapColorScheme._21_20_28_BLUE_WHITE_YELLOW;
-            case MAP3           -> NES_MapColorScheme._16_20_15_ORANGE_WHITE_RED;
-            case MAP4           -> NES_MapColorScheme._01_38_20_BLUE_YELLOW_WHITE;
-            case MAP5           -> NES_MapColorScheme._35_28_20_PINK_YELLOW_WHITE;
-            case MAP6           -> NES_MapColorScheme._36_15_20_PINK_RED_WHITE;
-            case MAP7           -> NES_MapColorScheme._17_20_20_BROWN_WHITE_WHITE;
-            case MAP8           -> NES_MapColorScheme._13_20_28_VIOLET_WHITE_YELLOW;
-            case MAP9           -> NES_MapColorScheme._0F_20_28_BLACK_WHITE_YELLOW;
-            case MAP10_BIG      -> NES_MapColorScheme._0F_01_20_BLACK_BLUE_WHITE;
-            case MAP11          -> NES_MapColorScheme._14_25_20_VIOLET_ROSE_WHITE;
-            case MAP12          -> NES_MapColorScheme._15_20_20_RED_WHITE_WHITE;
-            case MAP13          -> NES_MapColorScheme._1B_20_20_GREEN_WHITE_WHITE;
-            case MAP14_BIG      -> NES_MapColorScheme._28_20_2A_YELLOW_WHITE_GREEN;
-            case MAP15          -> NES_MapColorScheme._1A_20_28_GREEN_WHITE_YELLOW;
-            case MAP16_MINI     -> NES_MapColorScheme._18_20_20_KHAKI_WHITE_WHITE;
-            case MAP17_BIG      -> NES_MapColorScheme._25_20_20_ROSE_WHITE_WHITE;
-            case MAP18          -> NES_MapColorScheme._12_20_28_BLUE_WHITE_YELLOW;
-            case MAP19_BIG      -> NES_MapColorScheme._07_20_20_BROWN_WHITE_WHITE;
-            case MAP20_BIG      -> NES_MapColorScheme._15_25_20_RED_ROSE_WHITE;
-            case MAP21_BIG      -> NES_MapColorScheme._0F_20_1C_BLACK_WHITE_GREEN;
-            case MAP22_BIG      -> NES_MapColorScheme._19_20_20_GREEN_WHITE_WHITE;
-            case MAP23_BIG      -> NES_MapColorScheme._0C_20_14_GREEN_WHITE_VIOLET;
-            case MAP24          -> NES_MapColorScheme._23_20_2B_VIOLET_WHITE_GREEN;
-            case MAP25_BIG      -> NES_MapColorScheme._10_20_28_GRAY_WHITE_YELLOW;
-            case MAP26_BIG      -> NES_MapColorScheme._03_20_20_BLUE_WHITE_WHITE;
-            case MAP27          -> NES_MapColorScheme._04_20_20_VIOLET_WHITE_WHITE;
-            case MAP28_MINI     -> NES_MapColorScheme._00_2A_24_GRAY_GREEN_PINK;
-            case MAP29          -> NES_MapColorScheme._21_35_20_BLUE_PINK_WHITE;
-            case MAP30_MINI     -> NES_MapColorScheme._28_16_20_YELLOW_RED_WHITE;
-            case MAP31          -> NES_MapColorScheme._12_16_20_BLUE_RED_WHITE;
-            case MAP32_ANIMATED -> NES_MapColorScheme._15_25_20_RED_ROSE_WHITE;
+            case MAP1           -> _36_15_20_PINK_RED_WHITE;
+            case MAP2           -> _21_20_28_BLUE_WHITE_YELLOW;
+            case MAP3           -> _16_20_15_ORANGE_WHITE_RED;
+            case MAP4           -> _01_38_20_BLUE_YELLOW_WHITE;
+            case MAP5           -> _35_28_20_PINK_YELLOW_WHITE;
+            case MAP6           -> _36_15_20_PINK_RED_WHITE;
+            case MAP7           -> _17_20_20_BROWN_WHITE_WHITE;
+            case MAP8           -> _13_20_28_VIOLET_WHITE_YELLOW;
+            case MAP9           -> _0F_20_28_BLACK_WHITE_YELLOW;
+            case MAP10_BIG      -> _0F_01_20_BLACK_BLUE_WHITE;
+            case MAP11          -> _14_25_20_VIOLET_ROSE_WHITE;
+            case MAP12          -> _15_20_20_RED_WHITE_WHITE;
+            case MAP13          -> _1B_20_20_GREEN_WHITE_WHITE;
+            case MAP14_BIG      -> _28_20_2A_YELLOW_WHITE_GREEN;
+            case MAP15          -> _1A_20_28_GREEN_WHITE_YELLOW;
+            case MAP16_MINI     -> _18_20_20_KHAKI_WHITE_WHITE;
+            case MAP17_BIG      -> _25_20_20_ROSE_WHITE_WHITE;
+            case MAP18          -> _12_20_28_BLUE_WHITE_YELLOW;
+            case MAP19_BIG      -> _07_20_20_BROWN_WHITE_WHITE;
+            case MAP20_BIG      -> _15_25_20_RED_ROSE_WHITE;
+            case MAP21_BIG      -> _0F_20_1C_BLACK_WHITE_GREEN;
+            case MAP22_BIG      -> _19_20_20_GREEN_WHITE_WHITE;
+            case MAP23_BIG      -> _0C_20_14_GREEN_WHITE_VIOLET;
+            case MAP24          -> _23_20_2B_VIOLET_WHITE_GREEN;
+            case MAP25_BIG      -> _10_20_28_GRAY_WHITE_YELLOW;
+            case MAP26_BIG      -> _03_20_20_BLUE_WHITE_WHITE;
+            case MAP27          -> _04_20_20_VIOLET_WHITE_WHITE;
+            case MAP28_MINI     -> _00_2A_24_GRAY_GREEN_PINK;
+            case MAP29          -> _21_35_20_BLUE_PINK_WHITE;
+            case MAP30_MINI     -> _28_16_20_YELLOW_RED_WHITE;
+            case MAP31          -> _12_16_20_BLUE_RED_WHITE;
+            case MAP32_ANIMATED -> _15_25_20_RED_ROSE_WHITE;
 
             default -> throw new IllegalArgumentException("Illegal non-Arcade maze ID: " + mapID);
         };

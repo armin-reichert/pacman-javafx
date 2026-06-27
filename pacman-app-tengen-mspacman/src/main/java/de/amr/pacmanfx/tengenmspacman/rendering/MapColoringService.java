@@ -79,7 +79,7 @@ public class MapColoringService {
         return flashingMapImages;
     }
 
-    public MapImageSet createMazeSet(
+    public MapImageSet createMapImageSet(
         MapCategory mapCategory,
         Object mapID,
         SpriteSheet<?> spriteSheet,
