@@ -67,7 +67,7 @@ public class DS_GameInfo extends DashboardSection {
         addDynamicInfo("Hunting Phase",   gameLevelInfo(game, this::fmtHuntingPhase));
         addDynamicInfo("-Running",        gameLevelInfo(game, level -> fmtHuntingTicksRunning(level.huntingTimer())));
         addDynamicInfo("-Remaining",      gameLevelInfo(game, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
-        addDynamicInfo("Collision mode",  () -> fmtCollisionMode(game.currentGameContext().rules().collisionStrategyProperty().get()));
+        addDynamicInfo("Collision mode",  gameRulesInfo(game, rules -> fmtCollisionMode(rules.getCollisionStrategy())));
         addDynamicInfo("Pac-Man speed",   gameLevelInfo(game, this::fmtPacNormalSpeed));
         addDynamicInfo("- empowered",     gameLevelInfo(game, this::fmtPacSpeedPowered));
         addDynamicInfo("Power Duration",  gameLevelInfo(game, this::fmtPacPowerTime));

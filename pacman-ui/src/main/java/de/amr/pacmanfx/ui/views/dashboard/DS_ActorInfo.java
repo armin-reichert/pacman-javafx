@@ -84,13 +84,13 @@ public class DS_ActorInfo extends DashboardSection {
             case GameModel.ORANGE_GHOST_POKEY -> "Orange Ghost";
             default -> "Unknown Ghost";
         };
-        addDynamicInfo(name,        supplyGhostInfo(game, this::ghostNameAndState, personality));
-        addDynamicInfo("Movement",  supplyGhostInfo(game, this::actorMovementInfo, personality));
-        addDynamicInfo("Tile",      supplyGhostInfo(game, this::actorLocationInfo, personality));
-        addDynamicInfo("Animation", supplyGhostInfo(game, this::ghostAnimationInfo, personality));
+        addDynamicInfo(name,        ghostInfo(game, this::ghostNameAndState, personality));
+        addDynamicInfo("Movement",  ghostInfo(game, this::actorMovementInfo, personality));
+        addDynamicInfo("Tile",      ghostInfo(game, this::actorLocationInfo, personality));
+        addDynamicInfo("Animation", ghostInfo(game, this::ghostAnimationInfo, personality));
     }
 
-    private Supplier<String> supplyGhostInfo(Game game, BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
+    private Supplier<String> ghostInfo(Game game, BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
         return gameLevelInfo(game, level -> {
             if (!level.entities().ghosts().isEmpty()) {
                 return infoSupplier.apply(level, level.ghost(personality));

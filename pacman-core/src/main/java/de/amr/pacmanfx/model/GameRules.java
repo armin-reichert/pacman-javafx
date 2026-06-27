@@ -15,6 +15,10 @@ public interface GameRules {
 
     ObjectProperty<CollisionStrategy> collisionStrategyProperty();
 
+    default CollisionStrategy getCollisionStrategy() {
+        return collisionStrategyProperty().get();
+    }
+
     BooleanProperty collisionDoubleCheckedProperty();
 
     boolean isLevelCompleted(GameLevel level);
