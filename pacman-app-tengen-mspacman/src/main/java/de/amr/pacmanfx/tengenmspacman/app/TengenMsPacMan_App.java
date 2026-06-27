@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.pacmanfx.tengenmspacman.TengenDashboardFactory;
@@ -15,24 +16,22 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManConfig.NES_SCREEN_ASP
 
 public class TengenMsPacMan_App extends Application {
 
-    static final float ASPECT_RATIO    = NES_SCREEN_ASPECT_RATIO; // 32:30
-    static final float HEIGHT_FRACTION = 0.8f; // Use 80% of available height
-
     Game game;
 
     @Override
     public void start(Stage stage) {
-        new GameBuilder()
+        game = new GameBuilder()
             .cartridges(TengenMsPacMan_Cartridge.CARTRIDGE)
             .dashboardFactory(TengenDashboardFactory.instance())
             .startPage(TengenMsPacMan_StartPage::new)
             .window(stage)
-            .screenArea(ASPECT_RATIO, HEIGHT_FRACTION)
+            .screenArea(NES_SCREEN_ASPECT_RATIO, 0.8)
             .build()
-            .ifPresent(game -> {
-                this.game = game;
+            .orElse(null);
+
+        if (game != null) {
                 game.showUI(TENGEN_MS_PACMAN);
-            });
+        }
     }
 
     @Override

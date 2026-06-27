@@ -13,36 +13,28 @@ import javafx.stage.Stage;
 
 public class PacManXXL_App extends Application {
 
-    static final double ASPECT_RATIO    = 1.6;
-    static final double HEIGHT_FRACTION = 0.8;
-
     Game game;
 
     @Override
     public void start(Stage stage) {
-        new GameBuilder()
+        game = new GameBuilder()
             .cartridges(
                 PacManXXL_PacMan_Cartridge.CARTRIDGE,
                 PacManXXL_MsPacMan_Cartridge.CARTRIDGE)
             .startPage(PacManXXL_StartPage::new)
             .window(stage)
-            .screenArea(ASPECT_RATIO, HEIGHT_FRACTION)
+            .screenArea(1.6, 0.8)
             .build()
-            .ifPresent(game -> {
-                this.game = game;
+            .orElse(null);
 
-                PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
+        if (game != null) {
+            PacManXXL_MapSelector mapSelector = new PacManXXL_MapSelector();
+            game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name()).gameModel().setMapSelector(mapSelector);
+            game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(mapSelector);
+            game.watchdog().addEventListener(mapSelector);
 
-                game.watchdog().addEventListener(sharedMapSelector);
-
-                game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name())
-                    .gameModel().setMapSelector(sharedMapSelector);
-
-                game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name())
-                    .gameModel().setMapSelector(sharedMapSelector);
-
-                game.showUI(GameVariantID.ARCADE_PACMAN_XXL);
-            });
+            game.showUI(GameVariantID.ARCADE_PACMAN_XXL);
+        }
     }
 
     @Override
