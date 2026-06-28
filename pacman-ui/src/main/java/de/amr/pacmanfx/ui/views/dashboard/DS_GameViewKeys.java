@@ -14,7 +14,7 @@ import javafx.scene.input.KeyCombination;
 import java.util.Comparator;
 import java.util.Map;
 
-public class DS_GameViewKeys extends DashboardSection {
+public class DS_GameViewKeys extends GameDashboardSection {
 
     public DS_GameViewKeys() {}
 

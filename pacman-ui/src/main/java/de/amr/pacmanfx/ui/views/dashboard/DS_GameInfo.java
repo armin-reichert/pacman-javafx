@@ -24,7 +24,7 @@ import static de.amr.pacmanfx.core.GameClock.DEFAULT_TICKS_PER_SECOND;
 import static de.amr.pacmanfx.model.GameModel.CYAN_GHOST_BASHFUL;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
-public class DS_GameInfo extends DashboardSection {
+public class DS_GameInfo extends GameDashboardSection {
 
     public DS_GameInfo() {}
 

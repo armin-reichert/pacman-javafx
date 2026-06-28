@@ -14,5 +14,5 @@ public interface DashboardFactory {
 
     Optional<Identifier> identify(String id);
 
-    DashboardSection createSection(Dashboard dashboard, Identifier id, TranslationManager translations);
+    GameDashboardSection createSection(GameDashboard dashboard, Identifier id, TranslationManager translations);
 }

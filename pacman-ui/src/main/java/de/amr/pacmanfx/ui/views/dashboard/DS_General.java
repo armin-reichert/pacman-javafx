@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * General settings and simulation control.
  */
-public class DS_General extends DashboardSection {
+public class DS_General extends GameDashboardSection {
 
     private static final int MIN_FRAME_RATE = 5;
     private static final int MAX_FRAME_RATE = 120;

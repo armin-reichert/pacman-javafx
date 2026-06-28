@@ -36,7 +36,7 @@ public class TengenDashboardFactory implements DashboardFactory {
     }
 
     @Override
-    public DashboardSection createSection(Dashboard dashboard, Identifier id, TranslationManager translations) {
+    public GameDashboardSection createSection(GameDashboard dashboard, Identifier id, TranslationManager translations) {
         return switch (id) {
             case DashboardID _ -> CommonDashboardFactory.instance().createSection(dashboard, id, translations);
             case TengenMsPacMan_DashboardID tengenID -> {

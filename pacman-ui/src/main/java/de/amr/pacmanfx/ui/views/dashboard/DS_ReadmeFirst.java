@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class DS_ReadmeFirst extends DashboardSection {
+public class DS_ReadmeFirst extends GameDashboardSection {
 
     private static final Font TEXT_FONT = Font.font("Sans", 14);
 

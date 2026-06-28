@@ -15,7 +15,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class DS_About extends DashboardSection {
+public class DS_About extends GameDashboardSection {
 
     static final ResourceManager RM = () -> DS_About.class;
     static final Image ARMIN_1970 = RM.loadImage("/de/amr/pacmanfx/ui/graphics/armin1970.jpg");

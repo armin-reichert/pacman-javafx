@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 
 import static de.amr.basics.timer.TickTimer.ticksToString;
 
-public class DS_ActorInfo extends DashboardSection {
+public class DS_ActorInfo extends GameDashboardSection {
 
     public DS_ActorInfo() {}
 

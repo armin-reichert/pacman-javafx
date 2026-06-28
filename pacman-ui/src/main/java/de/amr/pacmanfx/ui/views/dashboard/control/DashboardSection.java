@@ -1,13 +1,8 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.views.dashboard;
+package de.amr.pacmanfx.ui.views.dashboard.control;
 
-import de.amr.pacmanfx.model.GameRules;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -23,18 +18,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import static java.util.Objects.requireNonNull;
 
 public class DashboardSection extends TitledPane {
 
     public static final String NO_INFO = "n/a";
 
-    protected final List<DynamicInfoText> dynamicInfoTexts = new ArrayList<>();
     protected final GridPane grid = new GridPane();
     protected int rowIndex;
     protected boolean displayedStandalone;
@@ -50,30 +39,12 @@ public class DashboardSection extends TitledPane {
 
     }
 
-    public void connect(Game game) {}
-
-    public void update(Game game) {
-        dynamicInfoTexts.forEach(DynamicInfoText::update);
-    }
-
     public boolean isDisplayedStandalone() {
         return displayedStandalone;
     }
 
     public void setDisplayedStandalone(boolean alone) {
         displayedStandalone = alone;
-    }
-
-    protected Supplier<String> gameSceneInfo(Game game, Function<AbstractGameScene, String> fnInfo) {
-        return () -> game.ui().gameScenes().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
-    }
-
-    protected Supplier<String> gameLevelInfo(Game game, Function<GameLevel, String> fnInfo) {
-        return () -> game.currentGameContext().optCurrentLevel().map(fnInfo).orElse(NO_INFO);
-    }
-
-    protected Supplier<String> gameRulesInfo(Game game, Function<GameRules, String> fnInfo) {
-        return () -> fnInfo.apply(game.currentGameContext().rules());
     }
 
     protected void clearSection() {
@@ -100,12 +71,6 @@ public class DashboardSection extends TitledPane {
 
     protected void addRow(String labelText, Node right) {
         addRow(createLabel(labelText, true), right);
-    }
-
-    protected void dynamicInfo(String label, Supplier<?> infoSupplier) {
-        var dynamicInfoText = new DynamicInfoText(infoSupplier);
-        dynamicInfoTexts.add(dynamicInfoText);
-        addRow(label, dynamicInfoText);
     }
 
     protected void info(String label, String value) {
@@ -170,7 +135,6 @@ public class DashboardSection extends TitledPane {
         var slider = new Slider(min, max, initialValue);
         slider.setShowTickMarks(tickMarks);
         slider.setShowTickLabels(tickLabels);
-        //slider.setPrefWidth(0.5 * dashboard.config().width());
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {
                 slider.setValue(initialValue);
@@ -191,11 +155,6 @@ public class DashboardSection extends TitledPane {
 
     protected void setAction(Button button, Runnable action) {
         button.setOnAction(_ -> action.run());
-    }
-
-    protected void setGameAction(Button button, GameAction gameAction) {
-        button.setOnAction(_ -> gameAction.execute());
-        //TODO add boolean property for enabled-state to game action and bind against it
     }
 
     protected void setAction(ChoiceBox<?> selector, Runnable action) {

@@ -18,7 +18,7 @@ import javafx.scene.control.Spinner;
 
 import java.util.List;
 
-public class DS_GameControl extends DashboardSection {
+public class DS_GameControl extends GameDashboardSection {
 
     private static final int GAME_LEVEL_START = 0;
     private static final int GAME_LEVEL_QUIT = 1;

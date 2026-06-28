@@ -27,7 +27,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
-public class DS_3DAnimationMonitor extends DashboardSection {
+public class DS_3DAnimationMonitor extends GameDashboardSection {
 
     private static final float RELATIVE_TABLE_HEIGHT = 0.80f;
     private static final float REFRESH_PERIOD_SECONDS = 0.5f;

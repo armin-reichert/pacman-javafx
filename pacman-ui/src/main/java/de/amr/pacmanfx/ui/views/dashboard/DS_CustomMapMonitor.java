@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
 
-public class DS_CustomMapMonitor extends DashboardSection {
+public class DS_CustomMapMonitor extends GameDashboardSection {
 
     private static class MapLinkUserData {
         WorldMap worldMap;

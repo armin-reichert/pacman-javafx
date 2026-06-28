@@ -18,7 +18,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.model.GameUIViewModel;
 import de.amr.pacmanfx.ui.views.GameView;
-import de.amr.pacmanfx.ui.views.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
 import de.amr.pacmanfx.ui.views.help.HelpView;
 import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -82,7 +82,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     // Overlay layer
     private BorderPane overlayLayer;
-    private Dashboard dashboard;
+    private GameDashboard dashboard;
 
     // Help layer
     private HelpView helpLayer;
@@ -148,7 +148,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         return gameSceneFrame;
     }
 
-    public Dashboard dashboard() {
+    public GameDashboard dashboard() {
         return dashboard;
     }
 
@@ -289,7 +289,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         StackPane.setAlignment(miniPlaySceneView.rootPane(), Pos.TOP_RIGHT);
 
         // Layer 3: Overlay layer with dashboard
-        dashboard = new Dashboard();
+        dashboard = new GameDashboard();
         dashboard.rootPane().setVisible(false);
         dashboard.rootPane().setId("dashboard");
 

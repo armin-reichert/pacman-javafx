@@ -35,12 +35,12 @@ public final class CommonDashboardFactory implements DashboardFactory {
     }
 
     @Override
-    public DashboardSection createSection(Dashboard dashboard, Identifier id, TranslationManager translations) {
+    public GameDashboardSection createSection(GameDashboard dashboard, Identifier id, TranslationManager translations) {
         requireNonNull(dashboard);
         requireNonNull(id);
         requireNonNull(translations);
 
-        final DashboardSection section = switch (id) {
+        final GameDashboardSection section = switch (id) {
             case DashboardID.ABOUT          -> new DS_About();
             case DashboardID.ACTOR_INFO     -> new DS_ActorInfo();
             case DashboardID.ANIMATION_INFO -> new DS_3DAnimationMonitor();

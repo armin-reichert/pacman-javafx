@@ -19,7 +19,7 @@ import javafx.scene.shape.DrawMode;
 /**
  * Infobox with 3D related settings.
  */
-public class DS_3DSettings extends DashboardSection {
+public class DS_3DSettings extends GameDashboardSection {
 
     private static final int MINI_VIEW_MIN_HEIGHT = 280;
     private static final int MINI_VIEW_MAX_HEIGHT = 600;

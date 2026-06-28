@@ -26,9 +26,9 @@ import de.amr.pacmanfx.ui.model.GameUIViewModel;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
-import de.amr.pacmanfx.ui.views.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
-import de.amr.pacmanfx.ui.views.dashboard.DashboardSection;
+import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -243,12 +243,12 @@ public final class GameImpl implements Game {
     private void populateDashboard(
         DashboardFactory factory,
         List<DashboardSectionSettings> settings,
-        Dashboard dashboard,
+        GameDashboard dashboard,
         TranslationManager translations)
     {
         for (var dss : settings) {
             factory.identify(dss.id()).ifPresentOrElse(dashboardID -> {
-                final DashboardSection section = factory.createSection(dashboard, dashboardID, translations);
+                final GameDashboardSection section = factory.createSection(dashboard, dashboardID, translations);
                 dashboard.addSection(dashboardID, section);
                 section.setDisplayedStandalone(dss.standalone());
                 section.setExpanded(dss.expanded());
