@@ -4,17 +4,15 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.basics.Identifier;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.views.dashboard.control.Dashboard;
+import de.amr.pacmanfx.uilib.widgets.Dashboard;
+import de.amr.pacmanfx.uilib.widgets.DashboardSection;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Objects.requireNonNull;
-
-public class GameDashboard extends Dashboard {
+public class GameDashboard extends Dashboard<GameDashboardSection> {
 
     public GameDashboard() {}
 
@@ -28,26 +26,21 @@ public class GameDashboard extends Dashboard {
             .forEach(section -> section.update(game));
     }
 
-
-
     public void updateLayout() {
-        final Map<Identifier, GameDashboardSection> sectionMap = sectionMap();
-        final List<GameDashboardSection> reorderedSections = new ArrayList<>(sectionMap.entrySet().stream()
+        final List<DashboardSection> reorderedSections = new ArrayList<>(sectionMap().entrySet().stream()
             .filter(e -> e.getValue().isVisible())
             .filter(e -> e.getKey() != DashboardID.README)
             .filter(e -> e.getKey() != DashboardID.ABOUT)
             .map(Map.Entry::getValue)
             .toList());
 
-        if (sectionMap.containsKey(DashboardID.README)) {
-            reorderedSections.addFirst(sectionMap.get(DashboardID.README));
+        if (sectionMap().containsKey(DashboardID.README)) {
+            reorderedSections.addFirst(sectionMap().get(DashboardID.README));
         }
-        if (sectionMap.containsKey(DashboardID.ABOUT)) {
-            reorderedSections.addLast(sectionMap.get(DashboardID.ABOUT));
+        if (sectionMap().containsKey(DashboardID.ABOUT)) {
+            reorderedSections.addLast(sectionMap().get(DashboardID.ABOUT));
         }
-
         rootPane().getChildren().clear();
         rootPane().getChildren().addAll(reorderedSections);
     }
-
 }

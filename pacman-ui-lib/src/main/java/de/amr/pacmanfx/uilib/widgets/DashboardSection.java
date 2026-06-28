@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.views.dashboard.control;
+package de.amr.pacmanfx.uilib.widgets;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;

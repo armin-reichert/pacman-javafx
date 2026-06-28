@@ -2,16 +2,16 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.views.dashboard.control;
+package de.amr.pacmanfx.uilib.widgets;
 
 import de.amr.basics.Identifier;
-import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -19,14 +19,14 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 
 //TODO make a control+skin+CSS of this
-public class Dashboard {
+public class Dashboard<S extends DashboardSection> {
 
-    private final Map<Identifier, GameDashboardSection> sectionMap = new LinkedHashMap<>();
+    private final Map<Identifier, S> sectionMap = new LinkedHashMap<>();
     private final VBox rootPane = new VBox();
 
     private final ChangeListener<Boolean> visibilityChangeHandler = (_, _, _) -> updateLayout();
 
-    private void onSectionExpandedStateChanged(GameDashboardSection section) {
+    private void onSectionExpandedStateChanged(S section) {
         if (section.isDisplayedStandalone()) {
             if (section.isExpanded()) {
                 sections().filter(s -> s != section).forEach(s -> s.setVisible(false));
@@ -48,9 +48,9 @@ public class Dashboard {
     }
 
     //TODO return read-only copy?
-    public Map<Identifier, GameDashboardSection> sectionMap() { return sectionMap; }
+    public Map<Identifier, S> sectionMap() { return Collections.unmodifiableMap(sectionMap); }
 
-    public Stream<GameDashboardSection> sections() { return sectionMap.values().stream(); }
+    public Stream<S> sections() { return sectionMap.values().stream(); }
 
     public void toggleVisibility() {
         rootPane.setVisible(!rootPane.isVisible());
@@ -59,7 +59,7 @@ public class Dashboard {
     public void updateLayout() {
     }
 
-    public void addSection(Identifier id, GameDashboardSection section) {
+    public void addSection(Identifier id, S section) {
         requireNonNull(id);
         requireNonNull(section);
         sectionMap.put(id, section);
@@ -69,7 +69,7 @@ public class Dashboard {
 
     public void removeSection(Identifier id) {
         requireNonNull(id);
-        final GameDashboardSection section = sectionMap.get(id);
+        final S section = sectionMap.get(id);
         if (section != null) {
             section.visibleProperty().removeListener(visibilityChangeHandler);
             sectionMap.remove(id);

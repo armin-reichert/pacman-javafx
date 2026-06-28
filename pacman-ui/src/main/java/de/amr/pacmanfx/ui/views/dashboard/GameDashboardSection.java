@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.views.dashboard.control.DashboardSection;
+import de.amr.pacmanfx.uilib.widgets.DashboardSection;
 import javafx.scene.control.Button;
 
 import java.util.ArrayList;
