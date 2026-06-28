@@ -9,17 +9,17 @@
     {
       "id": "KEYS_GLOBAL",
       "expanded": false,
-      "maximized": true
+      "standalone": true
     },
     {
       "id": "KEYS_LOCAL",
       "expanded": false,
-      "maximized": true
+      "standalone": true
     },
     {
       "id": "ABOUT",
       "expanded": false,
-      "maximized": true
+      "standalone": true
     }
   ],
 

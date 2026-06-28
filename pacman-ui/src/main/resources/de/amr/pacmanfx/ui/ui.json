@@ -9,62 +9,62 @@
     {
       "id": "README",
       "expanded": true,
-      "maximized": false
+      "standalone": false
     },
     {
       "id": "GENERAL",
       "expanded": false,
-      "maximized": false
+      "standalone": false
     },
     {
       "id": "GAME_CONTROL",
       "expanded": false,
-      "maximized": false
+      "standalone": false
     },
     {
       "id": "SETTINGS_3D",
       "expanded": false,
-      "maximized": false
+      "standalone": false
     },
     {
       "id": "ANIMATION_INFO",
       "expanded": false,
-      "maximized": true
+      "standalone": true
     },
     {
       "id": "GAME_INFO",
       "expanded": false,
-      "maximized": true
+      "standalone": true
     },
     {
       "id": "ACTOR_INFO",
       "expanded": false,
-      "maximized": true
+      "standalone": true
     },
     {
       "id": "CUSTOM_MAPS",
       "expanded": false,
-      "maximized": true
+      "standalone": true
     },
     {
       "id": "KEYS_GLOBAL",
       "expanded": false,
-      "maximized": true
+      "standalone": true
     },
     {
       "id": "KEYS_LOCAL",
       "expanded": false,
-      "maximized": true
+      "standalone": true
     },
     {
       "id": "JOYPAD",
       "expanded": false,
-      "maximized": false
+      "standalone": false
     },
     {
       "id": "ABOUT",
       "expanded": false,
-      "maximized": true
+      "standalone": true
     }
   ],
 
