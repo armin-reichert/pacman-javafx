@@ -15,10 +15,11 @@ import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Factory3D;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ResourceManager;
+import de.amr.pacmanfx.tengenmspacman.gamescene.*;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
-import de.amr.pacmanfx.tengenmspacman.gamescene.*;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
@@ -44,7 +45,7 @@ import java.util.ResourceBundle;
 public class TengenMsPacManConfig implements GameVariantConfig {
 
     // Local resources are stored inside main resource folder subdirectories named after package name of this class
-    private static final ResourceManager LOCAL_RESOURCES = () -> TengenMsPacManConfig.class;
+    private static final ResourceManager LOCAL_RESOURCES = TengenMsPacMan_ResourceManager.instance();
 
     private static final WorldSettings WORLD_CONFIG = TengenSettingsLoader.load(
         TengenMsPacManConfig.class.getResource("/de/amr/pacmanfx/tengenmspacman/world.json"), WorldSettings.class);
