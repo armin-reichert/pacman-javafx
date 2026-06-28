@@ -60,6 +60,14 @@ public class Dashboard {
         }
     }
 
+    public void removeSection(DashboardSection section) {
+        requireNonNull(section);
+        sections.entrySet().stream()
+            .filter(entry -> entry.getValue() == section)
+            .findFirst()
+            .ifPresent(entry -> removeSection(entry.getKey()));
+    }
+
     public void addSection(Identifier id, DashboardSection section) {
         requireNonNull(id);
         requireNonNull(section);

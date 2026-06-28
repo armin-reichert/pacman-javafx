@@ -7,6 +7,11 @@
 
   "dashboard": [
     {
+      "id": "README",
+      "expanded": true,
+      "maximized": false
+    },
+    {
       "id": "GENERAL",
       "expanded": false,
       "maximized": false

@@ -34,15 +34,12 @@ public class DashboardSection extends TitledPane {
 
     public static final String NO_INFO = "n/a";
 
-    protected final Dashboard dashboard;
     protected final List<DynamicInfoText> dynamicInfoTexts = new ArrayList<>();
     protected final GridPane grid = new GridPane();
     protected int rowIndex;
     protected boolean displayedStandalone;
 
     public DashboardSection(Dashboard dashboard) {
-        this.dashboard = requireNonNull(dashboard);
-
         getStyleClass().add("dashboard-section");
         grid.getStyleClass().add("dashboard-section-grid");
 

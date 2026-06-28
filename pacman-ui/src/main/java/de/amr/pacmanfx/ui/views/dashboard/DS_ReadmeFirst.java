@@ -18,8 +18,11 @@ public class DS_ReadmeFirst extends DashboardSection {
 
     private static final Font TEXT_FONT = Font.font("Sans", 14);
 
+    private final Runnable removeMyself;
+
     public DS_ReadmeFirst(Dashboard dashboard) {
         super(dashboard);
+        removeMyself = () -> dashboard.removeSection(this);
     }
 
     @Override
@@ -27,7 +30,6 @@ public class DS_ReadmeFirst extends DashboardSection {
         final var readmeText = new Text();
         readmeText.setText(game.ui().translations().translate("infobox.readme.content"));
         readmeText.setFont(TEXT_FONT);
-        readmeText.setFill(Color.WHITE);
 
         final var pane = new BorderPane();
         pane.setBorder(Ufx.border(Color.TRANSPARENT, 5));
@@ -38,7 +40,7 @@ public class DS_ReadmeFirst extends DashboardSection {
 
         final var btnGotIt = new Button(game.ui().translations().translate("infobox.readme.got_it"));
         buttonPane.getChildren().add(btnGotIt);
-        btnGotIt.setOnAction(_ -> dashboard.removeSection(DashboardID.README));
+        btnGotIt.setOnAction(_ -> removeMyself.run());
 
         pane.setCenter(readmeText);
         pane.setBottom(buttonPane);
