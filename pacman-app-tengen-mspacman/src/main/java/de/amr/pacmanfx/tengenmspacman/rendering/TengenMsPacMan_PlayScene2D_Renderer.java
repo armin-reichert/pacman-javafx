@@ -139,8 +139,8 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
     private void configureActorZOrder(GameLevel level) {
         actorsInZOrder.clear();
-        level.optBonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(level.entities().pac());
         GHOSTS_Z_ORDER.stream().map(level::ghost).forEach(actorsInZOrder::add);
+        level.optBonus().ifPresent(actorsInZOrder::add);
     }
 }
