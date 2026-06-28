@@ -17,9 +17,9 @@ public class GameBootState extends GameState {
 
     @Override
     public void onEnter(GameContext context) {
-        final GameModel game = context.model();
+        final GameModel gameModel = context.model();
         lock();
-        game.init();
+        gameModel.init();
     }
 
     @Override

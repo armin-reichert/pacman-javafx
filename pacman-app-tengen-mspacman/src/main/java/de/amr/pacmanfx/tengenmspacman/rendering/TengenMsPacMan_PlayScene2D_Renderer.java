@@ -42,7 +42,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
         @Override
         public void draw(GameScene2D scene) {
-            final GameModel game = scene.gameModel();
+            final GameModel gameModel = scene.gameModel();
             final GameState gameState = scene.gameState();
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
 
@@ -53,7 +53,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             ctx.setFill(debugTextFill);
             ctx.setFont(debugTextFont);
             ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * WorldMap.TS));
-            game.optGameLevel().ifPresent(level -> {
+            gameModel.optGameLevel().ifPresent(level -> {
                 drawMovingActorInfo(level.entities().pac());
                 level.entities().ghosts().forEach(this::drawMovingActorInfo);
             });

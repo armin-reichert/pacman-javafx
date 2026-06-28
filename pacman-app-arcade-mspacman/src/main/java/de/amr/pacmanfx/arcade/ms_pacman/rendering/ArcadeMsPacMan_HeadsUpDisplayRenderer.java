@@ -39,18 +39,18 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
     }
 
     @Override
-    public void draw(HUDState hud, GameModel game, GameScene2D scene) {
-        requireNonNull(game);
+    public void draw(HUDState hud, GameModel gameModel, GameScene2D scene) {
+        requireNonNull(gameModel);
         requireNonNull(scene);
 
         if (!hud.isVisible()) return;
 
         if (hud.isScoreOn()) {
-            drawScore(game.score(), SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, TS(1), TS(1));
+            drawScore(gameModel.score(), SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, TS(1), TS(1));
 
-            final Score highScore = game.highScore();
+            final Score highScore = gameModel.highScore();
             Color color = SCORE_TEXT_COLOR;
-            if (!game.isDemoLevelRunning() && !highScore.isEnabled()) {
+            if (!gameModel.isDemoLevelRunning() && !highScore.isEnabled()) {
                 color = SCORE_TEXT_COLOR_DISABLED;
             }
             drawScore(highScore, HIGH_SCORE_TEXT, arcadeFont8(), color, TS(14), TS(1));
@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
             final RectShort[] bonusSymbols = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
             float x = scene.unscaledWidth() - TS(4);
             final float y = scene.unscaledHeight() - TS(2) + 2;
-            for (int symbolCode : game.levelCounter().symbolCodes()) {
+            for (int symbolCode : gameModel.levelCounter().symbolCodes()) {
                 drawSprite(bonusSymbols[symbolCode], x, y, true);
                 x -= TS(2); // symbols are drawn from right to left
             }
@@ -73,7 +73,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(sprite, x + i * TS(2), y, true);
             }
-            final int lifeCount = game.lives().count();
+            final int lifeCount = gameModel.lives().count();
             if (lifeCount > hud.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));

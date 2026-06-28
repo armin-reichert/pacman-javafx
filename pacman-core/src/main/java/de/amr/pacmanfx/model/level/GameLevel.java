@@ -98,8 +98,8 @@ public class GameLevel {
 
     private int cutSceneNumber;
 
-    public GameLevel(GameModel game, int number, WorldMap worldMap, HuntingTimer huntingTimer, int numFlashes) {
-        this.gameModel = requireNonNull(game);
+    public GameLevel(GameModel gameModel, int number, WorldMap worldMap, HuntingTimer huntingTimer, int numFlashes) {
+        this.gameModel = requireNonNull(gameModel);
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
         this.huntingTimer = requireNonNull(huntingTimer);

@@ -98,8 +98,8 @@ public class LevelShortTestState extends GameState implements TestState {
 
     @Override
     public void onExit(GameContext context) {
-        final GameModel game = context.model();
-        game.init();
-        game.levelCounter().clear();
+        final GameModel gameModel = context.model();
+        gameModel.init();
+        gameModel.levelCounter().clear();
     }
 }

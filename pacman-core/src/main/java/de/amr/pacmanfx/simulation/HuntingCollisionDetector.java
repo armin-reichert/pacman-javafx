@@ -19,8 +19,8 @@ public final class HuntingCollisionDetector {
 
     public static void detectCollisions(GameContext context) {
         final HuntingStepResult result = context.huntingResult();
-        final GameModel game = context.model();
-        final GameLevel level = game.optGameLevel().orElseThrow();
+        final GameModel gameModel = context.model();
+        final GameLevel level = gameModel.optGameLevel().orElseThrow();
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
         final Bonus bonus = level.entities().optBonus().orElse(null);

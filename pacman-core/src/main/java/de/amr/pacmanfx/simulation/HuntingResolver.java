@@ -18,8 +18,8 @@ public final class HuntingResolver {
 
     public static void evaluate(GameContext gameContext) {
         final HuntingStepResult result = gameContext.huntingResult();
-        final GameModel game = gameContext.model();
-        final GameLevel level = game.optGameLevel().orElseThrow();
+        final GameModel gameModel = gameContext.model();
+        final GameLevel level = gameModel.optGameLevel().orElseThrow();
         final Pac pac = level.entities().pac();
 
         evalFoodFound(result, gameContext, level, pac);
@@ -28,14 +28,14 @@ public final class HuntingResolver {
                 new PacEatsFoodEvent(gameContext, pac, gameContext.huntingResult().energizerFound(), false));
         }
 
-        evalBonusFound(result, gameContext, game, level);
+        evalBonusFound(result, gameContext, gameModel, level);
 
-        evalPacKilled(result, game, level, pac);
+        evalPacKilled(result, gameModel, level, pac);
         if (result.pacKilled()) {
             HuntingResolver.fixPacPositionIfKilledInsidePortal(level, pac);
         }
         else {
-            evalGhostsKilled(result, gameContext, game, level);
+            evalGhostsKilled(result, gameContext, gameModel, level);
         }
     }
 
