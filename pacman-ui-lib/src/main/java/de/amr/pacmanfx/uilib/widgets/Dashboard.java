@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.widgets;
 
 import de.amr.basics.Identifier;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
@@ -20,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 //TODO make a control+skin+CSS of this
 public class Dashboard<S extends DashboardSection> extends VBox {
 
-    private final Map<Identifier, S> sectionMap = new LinkedHashMap<>();
+    private final Map<Identifier, S> sectionMap = FXCollections.observableMap(new LinkedHashMap<>());
 
     private final ChangeListener<Boolean> visibilityChangeHandler = (_, _, _) -> updateLayout();
 
