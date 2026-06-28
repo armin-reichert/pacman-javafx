@@ -112,15 +112,14 @@
 
 /* --- Dashboard --- */
 
-#dashboard .titled-pane .content {
+.dashboard .titled-pane .content {
     -fx-background-color: #ffffff;
 }
 
-.titled-pane > .title > .text {
+.dashboard-section > .title > .text {
     -fx-font-family: "Cambria";
     -fx-font-size: 14;
     -fx-font-weight: bold;
-
 }
 
 .dashboard-section {

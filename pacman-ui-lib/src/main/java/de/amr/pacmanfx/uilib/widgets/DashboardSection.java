@@ -22,8 +22,6 @@ import java.util.List;
 
 public class DashboardSection extends TitledPane {
 
-    public static final String NO_INFO = "n/a";
-
     protected final GridPane grid = new GridPane();
     protected int rowIndex;
     protected boolean displayedStandalone;

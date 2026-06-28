@@ -8,7 +8,6 @@ import de.amr.basics.Identifier;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.util.Collections;
@@ -19,10 +18,9 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 
 //TODO make a control+skin+CSS of this
-public class Dashboard<S extends DashboardSection> {
+public class Dashboard<S extends DashboardSection> extends VBox {
 
     private final Map<Identifier, S> sectionMap = new LinkedHashMap<>();
-    private final VBox rootPane = new VBox();
 
     private final ChangeListener<Boolean> visibilityChangeHandler = (_, _, _) -> updateLayout();
 
@@ -39,12 +37,9 @@ public class Dashboard<S extends DashboardSection> {
     }
 
     public Dashboard() {
-        rootPane.visibleProperty().addListener(visibilityChangeHandler);
-        rootPane.setPadding(new Insets(10));
-    }
-
-    public Pane rootPane() {
-        return rootPane;
+        getStyleClass().add("dashboard");
+        visibleProperty().addListener(visibilityChangeHandler);
+        setPadding(new Insets(10));
     }
 
     //TODO return read-only copy?
@@ -53,7 +48,7 @@ public class Dashboard<S extends DashboardSection> {
     public Stream<S> sections() { return sectionMap.values().stream(); }
 
     public void toggleVisibility() {
-        rootPane.setVisible(!rootPane.isVisible());
+        setVisible(!isVisible());
     }
 
     public void updateLayout() {
@@ -78,11 +73,11 @@ public class Dashboard<S extends DashboardSection> {
     }
 
     public void setCompactMode(boolean compactMode) {
-        rootPane.getChildren().clear();
+        getChildren().clear();
         if (compactMode) {
-            sections().filter(Node::isVisible).forEach(rootPane.getChildren()::add);
+            sections().filter(Node::isVisible).forEach(getChildren()::add);
         } else {
-            sections().forEach(rootPane.getChildren()::add);
+            sections().forEach(getChildren()::add);
         }
     }
 }

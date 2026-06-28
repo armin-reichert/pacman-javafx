@@ -49,7 +49,6 @@ public class GameDashboardSection extends DashboardSection {
         addRow(label, dynamicInfoText);
     }
 
-
     protected void setGameAction(Button button, GameAction gameAction) {
         button.setOnAction(_ -> gameAction.execute());
         //TODO add boolean property for enabled-state to game action and bind against it

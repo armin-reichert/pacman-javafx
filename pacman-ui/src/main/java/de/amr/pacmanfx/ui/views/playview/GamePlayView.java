@@ -120,7 +120,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
             gameSceneLayer.setBorder(debug ? DEBUG_BORDER : null);
         });
 
-        overlayLayer.visibleProperty().bind(dashboard.rootPane().visibleProperty());
+        overlayLayer.visibleProperty().bind(dashboard.visibleProperty());
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> settings.miniView.activeProperty.get()
@@ -290,11 +290,10 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         // Layer 3: Overlay layer with dashboard
         dashboard = new GameDashboard();
-        dashboard.rootPane().setVisible(false);
-        dashboard.rootPane().setId("dashboard");
+        dashboard.setVisible(false);
 
         overlayLayer = new BorderPane();
-        overlayLayer.setLeft(dashboard.rootPane());
+        overlayLayer.setLeft(dashboard);
 
         // Layer 4: Help info
         helpLayer = new HelpView(gameSceneLayer);

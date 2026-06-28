@@ -14,7 +14,9 @@ import java.util.Map;
 
 public class GameDashboard extends Dashboard<GameDashboardSection> {
 
-    public GameDashboard() {}
+    public GameDashboard() {
+        setId("game-dashboard");
+    }
 
     public void connect(Game game) {
         sectionMap().values().forEach(section -> section.connect(game));
@@ -40,7 +42,6 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
         if (sectionMap().containsKey(DashboardID.ABOUT)) {
             reorderedSections.addLast(sectionMap().get(DashboardID.ABOUT));
         }
-        rootPane().getChildren().clear();
-        rootPane().getChildren().addAll(reorderedSections);
+        getChildren().setAll(reorderedSections);
     }
 }
