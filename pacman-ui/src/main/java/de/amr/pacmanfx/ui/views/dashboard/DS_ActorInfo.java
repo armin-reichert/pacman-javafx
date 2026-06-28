@@ -22,9 +22,7 @@ import static de.amr.basics.timer.TickTimer.ticksToString;
 
 public class DS_ActorInfo extends DashboardSection {
 
-    public DS_ActorInfo(Dashboard dashboard) {
-        super(dashboard);
-    }
+    public DS_ActorInfo() {}
 
     @Override
     public void connect(Game game) {

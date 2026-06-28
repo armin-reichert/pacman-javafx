@@ -20,9 +20,7 @@ public class DS_General extends DashboardSection {
     private static final int MIN_FRAME_RATE = 5;
     private static final int MAX_FRAME_RATE = 120;
 
-    public DS_General(Dashboard dashboard) {
-        super(dashboard);
-    }
+    public DS_General() {}
 
     @Override
     public void connect(Game game) {

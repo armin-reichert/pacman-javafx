@@ -33,9 +33,7 @@ public class DS_GameControl extends DashboardSection {
     private Button[] buttonGroupCutScenesTest;
     private CheckBox cbCollisionCheckedTwice;
 
-    public DS_GameControl(Dashboard dashboard) {
-        super(dashboard);
-    }
+    public DS_GameControl() {}
 
     @Override
     public void connect(Game game) {

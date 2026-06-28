@@ -15,9 +15,7 @@ import javafx.scene.image.ImageView;
 
 public class DS_JoypadKeyBindings extends DashboardSection {
 
-    public DS_JoypadKeyBindings(Dashboard dashboard) {
-        super(dashboard);
-    }
+    public DS_JoypadKeyBindings() {}
 
     @Override
     public void connect(Game game) {

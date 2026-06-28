@@ -44,9 +44,7 @@ public class DS_CustomMapMonitor extends DashboardSection {
     private Consumer<File> mapEditFunction = file -> Logger.info("Open map file {}", file);
     private final ObservableList<WorldMap> customMaps = FXCollections.observableArrayList();
 
-    public DS_CustomMapMonitor(Dashboard dashboard) {
-        super(dashboard);
-
+    public DS_CustomMapMonitor() {
         final var tableView = new TableView<WorldMap>();
         tableView.getColumns().add(createMapRowCountTableColumn());
         tableView.getColumns().add(createMapColCountTableColumn());

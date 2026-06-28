@@ -39,7 +39,7 @@ public class DashboardSection extends TitledPane {
     protected int rowIndex;
     protected boolean displayedStandalone;
 
-    public DashboardSection(Dashboard dashboard) {
+    public DashboardSection() {
         getStyleClass().add("dashboard-section");
         grid.getStyleClass().add("dashboard-section-grid");
 
@@ -48,23 +48,16 @@ public class DashboardSection extends TitledPane {
         setFocusTraversable(false);
         setDisplayedStandalone(false);
 
-        expandedProperty().addListener((_, _, expanded) -> {
-            if (displayedStandalone) {
-                if (expanded) {
-                    dashboard.sections().filter(infoBox -> infoBox != this).forEach(otherInfoBox -> otherInfoBox.setVisible(false));
-                    dashboard.setCompactMode(true);
-                } else {
-                    dashboard.sections().forEach(infoBox -> infoBox.setVisible(true));
-                    dashboard.setCompactMode(false);
-                }
-            }
-        });
     }
 
     public void connect(Game game) {}
 
     public void update(Game game) {
         dynamicInfoTexts.forEach(DynamicInfoText::update);
+    }
+
+    public boolean isDisplayedStandalone() {
+        return displayedStandalone;
     }
 
     public void setDisplayedStandalone(boolean alone) {

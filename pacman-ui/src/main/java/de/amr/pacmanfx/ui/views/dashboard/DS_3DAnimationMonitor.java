@@ -20,8 +20,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.Background;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -59,9 +57,7 @@ public class DS_3DAnimationMonitor extends DashboardSection {
 
     private final ObjectProperty<AnimationRegistry> currentAnimationSet = new SimpleObjectProperty<>();
 
-    public DS_3DAnimationMonitor(Dashboard dashboard) {
-        super(dashboard);
-
+    public DS_3DAnimationMonitor() {
         tableView.setItems(tableRows);
         tableView.setPlaceholder(new Text(NO_ANIMATIONS));
         tableView.setFocusTraversable(false);

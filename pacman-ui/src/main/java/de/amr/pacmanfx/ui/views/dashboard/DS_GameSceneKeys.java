@@ -13,9 +13,7 @@ import java.util.Comparator;
 
 public class DS_GameSceneKeys extends DashboardSection {
 
-    public DS_GameSceneKeys(Dashboard dashboard) {
-        super(dashboard);
-    }
+    public DS_GameSceneKeys() {}
 
     @Override
     public void update(Game game) {

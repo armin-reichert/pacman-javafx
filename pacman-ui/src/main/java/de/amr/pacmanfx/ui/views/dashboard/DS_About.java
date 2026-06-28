@@ -16,9 +16,7 @@ import javafx.scene.text.TextFlow;
 
 public class DS_About extends DashboardSection {
 
-    public DS_About(Dashboard dashboard) {
-        super(dashboard);
-    }
+    public DS_About() {}
 
     @Override
     public void connect(Game game) {

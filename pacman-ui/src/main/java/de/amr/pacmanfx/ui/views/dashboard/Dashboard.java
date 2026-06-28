@@ -27,6 +27,18 @@ public class Dashboard {
 
     private final ChangeListener<Boolean> visibilityChangeHandler = (_, _, _) -> updateLayout();
 
+    private void onSectionExpandedStateChanged(DashboardSection section) {
+        if (section.isDisplayedStandalone()) {
+            if (section.isExpanded()) {
+                sections().filter(s -> s != section).forEach(s -> s.setVisible(false));
+                setCompactMode(true);
+            } else {
+                sections().forEach(s -> s.setVisible(true));
+                setCompactMode(false);
+            }
+        }
+    }
+
     public Dashboard() {
         rootPane.visibleProperty().addListener(visibilityChangeHandler);
         rootPane.setPadding(new Insets(10));
@@ -60,19 +72,12 @@ public class Dashboard {
         }
     }
 
-    public void removeSection(DashboardSection section) {
-        requireNonNull(section);
-        sections.entrySet().stream()
-            .filter(entry -> entry.getValue() == section)
-            .findFirst()
-            .ifPresent(entry -> removeSection(entry.getKey()));
-    }
-
     public void addSection(Identifier id, DashboardSection section) {
         requireNonNull(id);
         requireNonNull(section);
         sections.put(id, section);
         section.visibleProperty().addListener(visibilityChangeHandler);
+        section.expandedProperty().addListener((_,_,_) -> onSectionExpandedStateChanged(section));
     }
 
     public void updateLayout() {

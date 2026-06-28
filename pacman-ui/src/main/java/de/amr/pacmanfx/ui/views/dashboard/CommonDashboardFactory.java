@@ -41,18 +41,18 @@ public final class CommonDashboardFactory implements DashboardFactory {
         requireNonNull(translations);
 
         final DashboardSection section = switch (id) {
-            case DashboardID.ABOUT          -> new DS_About(dashboard);
-            case DashboardID.ACTOR_INFO     -> new DS_ActorInfo(dashboard);
-            case DashboardID.ANIMATION_INFO -> new DS_3DAnimationMonitor(dashboard);
-            // this dashboard section needs additional configuration to work!
-            case DashboardID.CUSTOM_MAPS    -> new DS_CustomMapMonitor(dashboard);
-            case DashboardID.GENERAL        -> new DS_General(dashboard);
-            case DashboardID.GAME_CONTROL   -> new DS_GameControl(dashboard);
-            case DashboardID.GAME_INFO      -> new DS_GameInfo(dashboard);
-            case DashboardID.KEYS_GLOBAL    -> new DS_GameViewKeys(dashboard);
-            case DashboardID.KEYS_LOCAL     -> new DS_GameSceneKeys(dashboard);
-            case DashboardID.README         -> new DS_ReadmeFirst(dashboard);
-            case DashboardID.SETTINGS_3D    -> new DS_3DSettings(dashboard);
+            case DashboardID.ABOUT          -> new DS_About();
+            case DashboardID.ACTOR_INFO     -> new DS_ActorInfo();
+            case DashboardID.ANIMATION_INFO -> new DS_3DAnimationMonitor();
+            // this  section needs additional configuration to work!
+            case DashboardID.CUSTOM_MAPS    -> new DS_CustomMapMonitor();
+            case DashboardID.GENERAL        -> new DS_General();
+            case DashboardID.GAME_CONTROL   -> new DS_GameControl();
+            case DashboardID.GAME_INFO      -> new DS_GameInfo();
+            case DashboardID.KEYS_GLOBAL    -> new DS_GameViewKeys();
+            case DashboardID.KEYS_LOCAL     -> new DS_GameSceneKeys();
+            case DashboardID.README         -> new DS_ReadmeFirst(() -> dashboard.removeSection(DashboardID.README));
+            case DashboardID.SETTINGS_3D    -> new DS_3DSettings();
             default -> throw new IllegalArgumentException("Illegal dashboard ID: " + id);
         };
         section.setText(translations.translate(titleKey(id)));

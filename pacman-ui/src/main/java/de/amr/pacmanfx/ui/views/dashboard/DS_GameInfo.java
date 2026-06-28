@@ -26,9 +26,7 @@ import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
 public class DS_GameInfo extends DashboardSection {
 
-    public DS_GameInfo(Dashboard dashboard) {
-        super(dashboard);
-    }
+    public DS_GameInfo() {}
 
     @Override
     public void connect(Game game) {
