@@ -160,7 +160,6 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
     public void update(GameContext gameContext, GameLevel level) {
         final GameModel gameModel = gameContext.model();
         final GameState gameState = gameContext.state();
-        final boolean visible = gameModel.canStartNewGame(gameContext);
         final Pac pac = level.entities().pac();
 
         // Show remaining lives in counter
@@ -171,6 +170,6 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
         }
 
         livesCountProperty().set(lifeCount);
-        setVisible(visible);
+        setVisible(true);
     }
 }
