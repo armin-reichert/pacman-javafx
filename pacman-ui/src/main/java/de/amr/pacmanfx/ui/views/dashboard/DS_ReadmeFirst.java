@@ -19,6 +19,7 @@ public class DS_ReadmeFirst extends GameDashboardSection {
 
     public DS_ReadmeFirst() {
         super(DashboardID.README);
+        setId("ds-readme-first");
     }
 
     public void setRemoveFromDashboardAction(Runnable action) {

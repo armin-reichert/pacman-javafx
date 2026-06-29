@@ -151,6 +151,6 @@
     -fx-pref-width: 320px;
 }
 
-#DS_ReadmeFirst {
-    -fx-font-size: 14;
+#ds-readme-first {
+    -fx-font-size: 16;
 }
