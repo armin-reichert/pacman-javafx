@@ -54,9 +54,9 @@ public class DS_ActorInfo extends GameDashboardSection {
             case GameModel.ORANGE_GHOST_POKEY -> "Orange Ghost";
             default -> "Unknown Ghost";
         };
-        dynamicInfo(name,        ghostText(game, this::ghostNameAndState, personality));
-        dynamicInfo("Movement",  ghostText(game, this::actorMovementText, personality));
-        dynamicInfo("Tile",      ghostText(game, this::actorLocationText, personality));
+        dynamicInfo(name,        ghostText(game, this::ghostNameAndState,  personality));
+        dynamicInfo("Movement",  ghostText(game, this::actorMovementText,  personality));
+        dynamicInfo("Tile",      ghostText(game, this::actorLocationText,  personality));
         dynamicInfo("Animation", ghostText(game, this::ghostAnimationText, personality));
     }
 

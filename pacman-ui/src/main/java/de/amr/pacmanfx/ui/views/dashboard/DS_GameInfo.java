@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.fsm.State;
@@ -54,7 +55,7 @@ public class DS_GameInfo extends GameDashboardSection {
                 colorScheme = game.currentVariantConfig().colorScheme(worldMap);
             }
             if (colorScheme != null) {
-                return "%s / %s / %s".formatted(
+                return "%s/%s/%s".formatted(
                     formatColorHex(Color.valueOf(colorScheme.wallFill())),
                     formatColorHex(Color.valueOf(colorScheme.wallStroke())),
                     formatColorHex(Color.valueOf(colorScheme.pellet())));
@@ -62,18 +63,18 @@ public class DS_GameInfo extends GameDashboardSection {
             return NO_INFO;
         }));
 
-        dynamicInfo("Hunting Phase",   gameLevelInfo(game, this::fmtHuntingPhase));
-        dynamicInfo("-Running",        gameLevelInfo(game, level -> fmtHuntingTicksRunning(level.huntingTimer())));
-        dynamicInfo("-Remaining",      gameLevelInfo(game, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
-        dynamicInfo("Collision mode",  gameRulesInfo(game, rules -> fmtCollisionMode(rules.getCollisionStrategy())));
-        dynamicInfo("Pac-Man speed",   gameLevelInfo(game, this::fmtPacNormalSpeed));
-        dynamicInfo("- empowered",     gameLevelInfo(game, this::fmtPacSpeedPowered));
-        dynamicInfo("Power Duration",  gameLevelInfo(game, this::fmtPacPowerTime));
-        dynamicInfo("Pellets",         gameLevelInfo(game, this::fmtPelletCount));
-        dynamicInfo("Ghost speed",     gameLevelInfo(game, this::fmtGhostAttackSpeed));
-        dynamicInfo("- frightened",    gameLevelInfo(game, this::fmtGhostSpeedFrightened));
-        dynamicInfo("- in tunnel",     gameLevelInfo(game, this::fmtGhostSpeedTunnel));
-        dynamicInfo("Maze flashings",  gameLevelInfo(game, this::fmtNumFlashes));
+        dynamicInfo("Hunting Phase",  gameLevelInfo(game, this::fmtHuntingPhase));
+        dynamicInfo("-Running",       gameLevelInfo(game, level -> fmtHuntingTicksRunning(level.huntingTimer())));
+        dynamicInfo("-Remaining",     gameLevelInfo(game, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
+        dynamicInfo("Collision mode", gameRulesInfo(game, rules -> fmtCollisionMode(rules.getCollisionStrategy())));
+        dynamicInfo("Pac-Man speed",  gameLevelInfo(game, this::fmtPacNormalSpeed));
+        dynamicInfo("- empowered",    gameLevelInfo(game, this::fmtPacSpeedPowered));
+        dynamicInfo("Power Duration", gameLevelInfo(game, this::fmtPacPowerTime));
+        dynamicInfo("Pellets",        gameLevelInfo(game, this::fmtPelletCount));
+        dynamicInfo("Ghost speed",    gameLevelInfo(game, this::fmtGhostAttackSpeed));
+        dynamicInfo("- frightened",   gameLevelInfo(game, this::fmtGhostSpeedFrightened));
+        dynamicInfo("- in tunnel",    gameLevelInfo(game, this::fmtGhostSpeedTunnel));
+        dynamicInfo("Maze flashes",   gameLevelInfo(game, this::fmtNumFlashes));
     }
 
     private String stateTimerInfo(State<?> gameState) {
