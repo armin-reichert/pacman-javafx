@@ -27,7 +27,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     @Override
     public void connect(Game game) {
         dynamicInfo("Pac Name",  pacText(game, (_, pac) -> pac.name()));
-        dynamicInfo("Lives",     gameLevelInfo(game, level -> "%d".formatted(level.gameModel().lives().count())));
+        dynamicInfo("Lives",     livesCount(game));
         dynamicInfo("Movement",  pacText(game, this::actorMovementText));
         dynamicInfo("Tile",      pacText(game, this::actorLocationText));
         dynamicInfo("Power",     pacPowerText(game));
@@ -40,6 +40,10 @@ public class DS_ActorInfo extends GameDashboardSection {
         ghostInfo(game, GameModel.CYAN_GHOST_BASHFUL);
         emptyRow();
         ghostInfo(game, GameModel.ORANGE_GHOST_POKEY);
+    }
+
+    private Supplier<String> livesCount(Game game) {
+        return gameLevelInfo(game, level -> "%d".formatted(level.gameModel().lives().count()));
     }
 
     private void ghostInfo(Game game, byte personality) {
@@ -92,17 +96,15 @@ public class DS_ActorInfo extends GameDashboardSection {
             : "No Power";
     }
 
-    private Supplier<String> pacText(Game game, BiFunction<GameLevel, Pac, String> detailInfoSupplier) {
-        return gameLevelInfo(game, level -> detailInfoSupplier.apply(level, level.entities().pac()));
+    private Supplier<String> pacText(Game game, BiFunction<GameLevel, Pac, String> infoSupplier) {
+        return gameLevelInfo(game, level -> infoSupplier.apply(level, level.entities().pac()));
     }
 
     private Supplier<String> pacAnimationText(Game game) {
         return () -> game.currentGameContext().optCurrentLevel().map(level -> {
             final Pac pac = level.entities().pac();
-            if (pac.animations() instanceof SpriteAnimationMap<?> spriteAnimations) {
-                return spriteAnimations.selectedAnimationID() != null
-                    ? "%s:%d".formatted(spriteAnimations.selectedAnimationID(), pac.animations().currentFrame())
-                    : NO_INFO;
+            if (pac.animations() instanceof SpriteAnimationMap<?> sam && sam.selectedAnimationID() != null) {
+                return "%s:%d".formatted(sam.selectedAnimationID(), pac.animations().currentFrame());
             }
             return NO_INFO;
         }).orElse(NO_INFO);
