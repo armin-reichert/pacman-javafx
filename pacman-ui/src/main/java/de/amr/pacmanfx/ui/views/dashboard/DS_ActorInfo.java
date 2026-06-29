@@ -26,12 +26,12 @@ public class DS_ActorInfo extends GameDashboardSection {
 
     @Override
     public void connect(Game game) {
-        dynamicInfo("Pac Name",  pacText(game, (_, pac) -> pac.name()));
-        dynamicInfo("Lives",     livesCount(game));
-        dynamicInfo("Movement",  pacText(game, this::actorMovementText));
-        dynamicInfo("Tile",      pacText(game, this::actorLocationText));
-        dynamicInfo("Power",     pacPowerText(game));
-        dynamicInfo("Animation", pacAnimationText(game));
+        addDynamicInfo("Pac Name",  pacText(game, (_, pac) -> pac.name()));
+        addDynamicInfo("Lives",     livesCount(game));
+        addDynamicInfo("Movement",  pacText(game, this::actorMovementText));
+        addDynamicInfo("Tile",      pacText(game, this::actorLocationText));
+        addDynamicInfo("Power",     pacPowerText(game));
+        addDynamicInfo("Animation", pacAnimationText(game));
         emptyRow();
         ghostInfo(game, GameModel.RED_GHOST_SHADOW);
         emptyRow();
@@ -43,7 +43,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> livesCount(Game game) {
-        return gameLevelInfo(game, level -> "%d".formatted(level.gameModel().lives().count()));
+        return supplyGameLevelInfo(game, level -> "%d".formatted(level.gameModel().lives().count()));
     }
 
     private void ghostInfo(Game game, byte personality) {
@@ -54,10 +54,10 @@ public class DS_ActorInfo extends GameDashboardSection {
             case GameModel.ORANGE_GHOST_POKEY -> "Orange Ghost";
             default -> "Unknown Ghost";
         };
-        dynamicInfo(name,        ghostText(game, this::ghostNameAndState,  personality));
-        dynamicInfo("Movement",  ghostText(game, this::actorMovementText,  personality));
-        dynamicInfo("Tile",      ghostText(game, this::actorLocationText,  personality));
-        dynamicInfo("Animation", ghostText(game, this::ghostAnimationText, personality));
+        addDynamicInfo(name,        ghostText(game, this::ghostNameAndState,  personality));
+        addDynamicInfo("Movement",  ghostText(game, this::actorMovementText,  personality));
+        addDynamicInfo("Tile",      ghostText(game, this::actorLocationText,  personality));
+        addDynamicInfo("Animation", ghostText(game, this::ghostAnimationText, personality));
     }
 
     private String actorLocationText(GameLevel level, MovingActor actor) {
@@ -97,7 +97,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> pacText(Game game, BiFunction<GameLevel, Pac, String> infoSupplier) {
-        return gameLevelInfo(game, level -> infoSupplier.apply(level, level.entities().pac()));
+        return supplyGameLevelInfo(game, level -> infoSupplier.apply(level, level.entities().pac()));
     }
 
     private Supplier<String> pacAnimationText(Game game) {
@@ -111,7 +111,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> ghostText(Game game, BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
-        return gameLevelInfo(game, level -> {
+        return supplyGameLevelInfo(game, level -> {
             if (!level.entities().ghosts().isEmpty()) {
                 return infoSupplier.apply(level, level.ghost(personality));
             }

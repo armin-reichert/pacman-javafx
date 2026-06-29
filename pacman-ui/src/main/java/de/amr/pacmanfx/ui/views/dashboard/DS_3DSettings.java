@@ -44,9 +44,9 @@ public class DS_3DSettings extends GameDashboardSection {
         comboPerspectives = choiceBox("Perspective", PerspectiveID.values());
         colorPicker("Light Color", viewModel.maze3D.lightColorProperty);
         colorPicker("Floor Color", viewModel.maze3D.floorColorProperty);
-        dynamicInfo("Camera",         () -> subSceneCameraInfo(game));
-        dynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(game));
-        dynamicInfo("Scene Size",     () -> sceneSizeInfo(game));
+        addDynamicInfo("Camera",         () -> subSceneCameraInfo(game));
+        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(game));
+        addDynamicInfo("Scene Size",     () -> sceneSizeInfo(game));
 
         cbMiniViewVisible = checkBox("Mini View", viewModel.miniView.activeProperty);
 

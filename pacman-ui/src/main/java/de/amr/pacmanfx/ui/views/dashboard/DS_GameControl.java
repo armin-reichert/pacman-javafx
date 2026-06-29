@@ -44,7 +44,7 @@ public class DS_GameControl extends GameDashboardSection {
         choiceBoxInitialLives    = choiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = buttonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = buttonList("Cut Scenes Test", List.of("Start", "Quit"));
-        dynamicInfo("Collision Mode", gameRulesInfo(game, rules -> rules.getCollisionStrategy().name()));
+        addDynamicInfo("Collision Mode", supplyGameRulesInfo(game, rules -> rules.getCollisionStrategy().name()));
         cbCollisionCheckedTwice  = checkBox("Collision Check 2x");
 
         setAction(choiceBoxInitialLives, () -> game.currentGameContext().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));

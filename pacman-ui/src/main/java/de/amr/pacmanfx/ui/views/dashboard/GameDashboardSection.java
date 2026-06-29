@@ -37,19 +37,19 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         dynamicInfoTexts.forEach(DynamicInfoText::update);
     }
 
-    protected Supplier<String> gameSceneInfo(Game game, Function<AbstractGameScene, String> fnInfo) {
+    protected Supplier<String> supplyGameSceneInfo(Game game, Function<AbstractGameScene, String> fnInfo) {
         return () -> game.ui().gameScenes().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> gameLevelInfo(Game game, Function<GameLevel, String> fnInfo) {
+    protected Supplier<String> supplyGameLevelInfo(Game game, Function<GameLevel, String> fnInfo) {
         return () -> game.currentGameContext().optCurrentLevel().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> gameRulesInfo(Game game, Function<GameRules, String> fnInfo) {
+    protected Supplier<String> supplyGameRulesInfo(Game game, Function<GameRules, String> fnInfo) {
         return () -> fnInfo.apply(game.currentGameContext().rules());
     }
 
-    protected void dynamicInfo(String label, Supplier<?> infoSupplier) {
+    protected void addDynamicInfo(String label, Supplier<?> infoSupplier) {
         var dynamicInfoText = new DynamicInfoText(infoSupplier);
         dynamicInfoTexts.add(dynamicInfoText);
         addRow(label, dynamicInfoText);
@@ -57,6 +57,5 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
 
     protected void setGameAction(Button button, GameAction gameAction) {
         button.setOnAction(_ -> gameAction.execute());
-        //TODO add boolean property for enabled-state to game action and bind against it
     }
 }

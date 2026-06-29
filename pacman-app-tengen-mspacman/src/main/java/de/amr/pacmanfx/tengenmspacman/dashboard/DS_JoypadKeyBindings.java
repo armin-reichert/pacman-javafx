@@ -20,25 +20,23 @@ public class DS_JoypadKeyBindings extends GameDashboardSection {
     public void connect(Game game) {
         final Joypad joypad = game.input().joypad();
 
-        // NES controller image is located in "pacman-ui" module, use a class from that module to load it
-        final ResourceManager resourceManager = () -> Game.class;
+        final ResourceManager resourceManager = this::getClass;
 
         final ImageView nesControllerImage = new ImageView(
-            resourceManager.loadImage("/de/amr/pacmanfx/ui/graphics/nes-controller.jpg"));
+            resourceManager.loadImage("/de/amr/pacmanfx/tengenmspacman/graphics/nes-controller.jpg"));
 
         addRow(nesControllerImage);
 
-        dynamicInfo("[SELECT]",
-            () -> buttonKey(joypad, JoypadButton.SELECT));
+        addDynamicInfo("[SELECT]", () -> buttonKey(joypad, JoypadButton.SELECT));
 
-        dynamicInfo("[START]",
-            () -> buttonKey(joypad, JoypadButton.START));
+        addDynamicInfo("[START]", () -> buttonKey(joypad, JoypadButton.START));
 
-        dynamicInfo("[B]  [A]",
+        addDynamicInfo("[B]  [A]",
             () -> "%s   %s".formatted(
-                buttonKey(joypad, JoypadButton.B), buttonKey(joypad, JoypadButton.A)));
+                buttonKey(joypad, JoypadButton.B),
+                buttonKey(joypad, JoypadButton.A)));
 
-        dynamicInfo("UP/DOWN/LEFT/RIGHT",
+        addDynamicInfo("UP/DOWN/LEFT/RIGHT",
             () -> "%s  %s  %s  %s".formatted(
                 buttonKey(joypad, JoypadButton.UP),
                 buttonKey(joypad, JoypadButton.DOWN),

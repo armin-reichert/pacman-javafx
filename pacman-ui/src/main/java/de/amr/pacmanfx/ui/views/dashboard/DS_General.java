@@ -64,8 +64,8 @@ public class DS_General extends GameDashboardSection {
         final var sliderTargetFPS = slider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
         editPropertyWithSlider(sliderTargetFPS, gameClock.targetFrameRateProperty());
 
-        dynamicInfo("", () -> "FPS: %.1f (Target: %d)".formatted(gameClock.fps(), gameClock.targetFrameRate()));
-        dynamicInfo("Total Updates",  gameClock::pausableUpdatesCount);
+        addDynamicInfo("", () -> "FPS: %.1f (Target: %d)".formatted(gameClock.fps(), gameClock.targetFrameRate()));
+        addDynamicInfo("Total Updates",  gameClock::pausableUpdatesCount);
 
         colorPicker("Canvas Color", viewModel.common2D.canvasBackgroundColorProperty);
         checkBox("Font Smoothing",  viewModel.common2D.fontSmoothingOnProperty);
