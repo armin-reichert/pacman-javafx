@@ -26,12 +26,12 @@ public class DS_ActorInfo extends GameDashboardSection {
 
     @Override
     public void connect(Game game) {
-        addDynamicInfo("Pac Name",  pacText(game, (_, pac) -> pac.name()));
-        addDynamicInfo("Lives",     livesCount(game));
-        addDynamicInfo("Movement",  pacText(game, this::actorMovementText));
-        addDynamicInfo("Tile",      pacText(game, this::actorLocationText));
-        addDynamicInfo("Power",     pacPowerText(game));
-        addDynamicInfo("Animation", pacAnimationText(game));
+        addDynamicInfo("Pac Name",  supplyPacText(game, (_, pac) -> pac.name()));
+        addDynamicInfo("Lives",     supplyLivesCount(game));
+        addDynamicInfo("Movement",  supplyPacText(game, this::actorMovementText));
+        addDynamicInfo("Tile",      supplyPacText(game, this::actorLocationText));
+        addDynamicInfo("Power",     supplyPacPowerText(game));
+        addDynamicInfo("Animation", supplyPacAnimationText(game));
         emptyRow();
         addGhostInfo(game, GameModel.RED_GHOST_SHADOW);
         emptyRow();
@@ -42,7 +42,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         addGhostInfo(game, GameModel.ORANGE_GHOST_POKEY);
     }
 
-    private Supplier<String> livesCount(Game game) {
+    private Supplier<String> supplyLivesCount(Game game) {
         return supplyGameLevelInfo(game, level -> "%d".formatted(level.gameModel().lives().count()));
     }
 
@@ -54,10 +54,10 @@ public class DS_ActorInfo extends GameDashboardSection {
             case GameModel.ORANGE_GHOST_POKEY -> "Orange Ghost";
             default -> "Unknown Ghost";
         };
-        addDynamicInfo(name,        ghostText(game, this::ghostNameAndState,  personality));
-        addDynamicInfo("Movement",  ghostText(game, this::actorMovementText,  personality));
-        addDynamicInfo("Tile",      ghostText(game, this::actorLocationText,  personality));
-        addDynamicInfo("Animation", ghostText(game, this::ghostAnimationText, personality));
+        addDynamicInfo(name,        supplyGhostText(game, this::ghostNameAndStateText,  personality));
+        addDynamicInfo("Movement",  supplyGhostText(game, this::actorMovementText,  personality));
+        addDynamicInfo("Tile",      supplyGhostText(game, this::actorLocationText,  personality));
+        addDynamicInfo("Animation", supplyGhostText(game, this::ghostAnimationText, personality));
     }
 
     private String actorLocationText(GameLevel level, MovingActor actor) {
@@ -83,7 +83,7 @@ public class DS_ActorInfo extends GameDashboardSection {
             : "%.2fpx/s %s (%s)%s".formatted(speed, movingActor.moveDir(), movingActor.wishDir(), reverseText);
     }
 
-    private Supplier<String> pacPowerText(Game game) {
+    private Supplier<String> supplyPacPowerText(Game game) {
         return () -> game.currentGameContext().optCurrentLevel()
             .map(level -> level.entities().pac())
             .map(this::pacPowerText)
@@ -96,11 +96,11 @@ public class DS_ActorInfo extends GameDashboardSection {
             : "No Power";
     }
 
-    private Supplier<String> pacText(Game game, BiFunction<GameLevel, Pac, String> infoSupplier) {
+    private Supplier<String> supplyPacText(Game game, BiFunction<GameLevel, Pac, String> infoSupplier) {
         return supplyGameLevelInfo(game, level -> infoSupplier.apply(level, level.entities().pac()));
     }
 
-    private Supplier<String> pacAnimationText(Game game) {
+    private Supplier<String> supplyPacAnimationText(Game game) {
         return () -> game.currentGameContext().optCurrentLevel().map(level -> {
             final Pac pac = level.entities().pac();
             if (pac.animations() instanceof SpriteAnimationMap<?> sam && sam.selectedAnimationID() != null) {
@@ -110,7 +110,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         }).orElse(NO_INFO);
     }
 
-    private Supplier<String> ghostText(Game game, BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
+    private Supplier<String> supplyGhostText(Game game, BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
         return supplyGameLevelInfo(game, level -> {
             if (!level.entities().ghosts().isEmpty()) {
                 return infoSupplier.apply(level, level.ghost(personality));
@@ -119,8 +119,8 @@ public class DS_ActorInfo extends GameDashboardSection {
         });
     }
 
-    private String ghostNameAndState(GameLevel level, Ghost ghost) {
-        return String.format("%s (%s)", ghost.name(), ghostState(level, ghost));
+    private String ghostNameAndStateText(GameLevel level, Ghost ghost) {
+        return String.format("%s (%s)", ghost.name(), ghostStateText(level, ghost));
     }
 
     private String ghostAnimationText(GameLevel level, Ghost ghost) {
@@ -132,7 +132,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         return NO_INFO;
     }
 
-    private String ghostState(GameLevel level, Ghost ghost) {
+    private String ghostStateText(GameLevel level, Ghost ghost) {
         var stateText = ghost.state() != null ? ghost.state().name() : "undefined";
         if (ghost.state() == GhostState.HUNTING_PAC) {
             stateText = level.huntingTimer().currentHuntingPhase().name();
