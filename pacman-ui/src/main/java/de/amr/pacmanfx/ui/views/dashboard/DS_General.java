@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.model.GameUIViewModel;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -24,6 +25,9 @@ public class DS_General extends GameDashboardSection {
 
     @Override
     public void connect(Game game) {
+        final GameUIViewModel viewModel = game.ui().viewModel();
+        final GameClock gameClock = game.clock();
+
         info("Java Version",   Runtime.version().toString());
         info("JavaFX Version", System.getProperty("javafx.runtime.version"));
 
@@ -43,8 +47,8 @@ public class DS_General extends GameDashboardSection {
         final Button btnPlayPause = buttonsSimulationControl[0];
         btnPlayPause.setText(null);
         btnPlayPause.setStyle("-fx-background-color: transparent");
-        btnPlayPause.graphicProperty().bind(game.clock().updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
-        btnPlayPause.tooltipProperty().bind(game.clock().updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
+        btnPlayPause.graphicProperty().bind(gameClock.updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
+        btnPlayPause.tooltipProperty().bind(gameClock.updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
         setGameAction(btnPlayPause, game.actions().simulationActions().actionTogglePaused());
 
         final Button btnStep = buttonsSimulationControl[1];
@@ -52,25 +56,20 @@ public class DS_General extends GameDashboardSection {
         btnStep.setStyle("-fx-background-color: transparent");
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
-        btnStep.disableProperty().bind(game.clock().updatesDisabledProperty().not());
-        setAction(btnStep, () -> game.clock().makeSteps(game.ui().viewModel().numSimulationStepsProperty.get(), true));
+        btnStep.disableProperty().bind(gameClock.updatesDisabledProperty().not());
+        setAction(btnStep, () -> gameClock.makeSteps(viewModel.numSimulationStepsProperty.get(), true));
 
-        intSpinner("Num Steps", 1, 50, game.ui().viewModel().numSimulationStepsProperty);
+        intSpinner("Num Steps", 1, 50, viewModel.numSimulationStepsProperty);
 
         final var sliderTargetFPS = slider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
-        editPropertyWithSlider(sliderTargetFPS, game.clock().targetFrameRateProperty());
+        editPropertyWithSlider(sliderTargetFPS, gameClock.targetFrameRateProperty());
 
-        final GameClock gameClock = game.clock();
-        dynamicInfo("", () -> "FPS: %.1f (Target: %d)".formatted(
-            gameClock.fps(),
-            gameClock.targetFrameRate()));
-
+        dynamicInfo("", () -> "FPS: %.1f (Target: %d)".formatted(gameClock.fps(), gameClock.targetFrameRate()));
         dynamicInfo("Total Updates",  gameClock::pausableUpdatesCount);
 
-        colorPicker("Canvas Color", game.ui().viewModel().common2D.canvasBackgroundColorProperty);
-
-        checkBox("Font Smoothing", game.ui().viewModel().common2D.fontSmoothingOnProperty);
-        checkBox("Show Debug Info", game.ui().viewModel().debugModeOnProperty);
-        checkBox("Time Measured", gameClock.timeMeasuredProperty());
+        colorPicker("Canvas Color", viewModel.common2D.canvasBackgroundColorProperty);
+        checkBox("Font Smoothing",  viewModel.common2D.fontSmoothingOnProperty);
+        checkBox("Show Debug Info", viewModel.debugModeOnProperty);
+        checkBox("Time Measured",   gameClock.timeMeasuredProperty());
     }
 }
