@@ -11,7 +11,7 @@ import de.amr.pacmanfx.uilib.widgets.DashboardSection;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -34,20 +34,18 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
     }
 
     public void updateSectionOrder() {
-        final Map<Identifier, GameDashboardSection> sectionMap = sectionMap();
-        final List<DashboardSection> reorderedSections = new ArrayList<>(sectionMap.entrySet().stream()
-            .filter(e -> e.getValue().isVisible())
-            .filter(e -> e.getKey() != DashboardID.README)
-            .filter(e -> e.getKey() != DashboardID.ABOUT)
-            .map(Map.Entry::getValue)
+        final List<GameDashboardSection> reorderedSections = new ArrayList<>(sections()
+            .filter(DashboardSection::isVisible)
+            .filter(section -> section.id() != DashboardID.README)
+            .filter(section -> section.id() != DashboardID.ABOUT)
             .toList());
 
-        if (sectionMap.containsKey(DashboardID.README)) {
-            reorderedSections.addFirst(sectionMap.get(DashboardID.README));
-        }
-        if (sectionMap.containsKey(DashboardID.ABOUT)) {
-            reorderedSections.addLast(sectionMap.get(DashboardID.ABOUT));
-        }
+        findById(DashboardID.README).ifPresent(reorderedSections::addFirst);
+        findById(DashboardID.ABOUT).ifPresent(reorderedSections::addLast);
         getChildren().setAll(reorderedSections);
+    }
+
+    private Optional<GameDashboardSection> findById(Identifier id) {
+        return sections().filter(section -> id.equals(section.id())).findFirst();
     }
 }

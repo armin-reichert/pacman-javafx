@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
+import de.amr.basics.Identifier;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -24,7 +25,9 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
 
     protected final List<DynamicInfoText> dynamicInfoTexts = new ArrayList<>();
 
-    public GameDashboardSection() {}
+    public GameDashboardSection(Identifier id) {
+        super(id);
+    }
 
     @Override
     public GameDashboardSection section() {

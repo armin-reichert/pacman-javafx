@@ -16,7 +16,9 @@ import java.util.Map;
 
 public class DS_GameViewKeys extends GameDashboardSection {
 
-    public DS_GameViewKeys() {}
+    public DS_GameViewKeys() {
+        super(DashboardID.KEYS_GLOBAL);
+    }
 
     @Override
     public void update(Game game) {

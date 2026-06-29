@@ -58,6 +58,8 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
     private final ObjectProperty<AnimationRegistry> currentAnimationSet = new SimpleObjectProperty<>();
 
     public DS_3DAnimationMonitor() {
+        super(DashboardID.ANIMATION_INFO);
+
         tableView.setItems(tableRows);
         tableView.setPlaceholder(new Text(NO_ANIMATIONS));
         tableView.setFocusTraversable(false);

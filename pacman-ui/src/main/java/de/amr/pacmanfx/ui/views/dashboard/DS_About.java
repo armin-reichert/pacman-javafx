@@ -20,7 +20,9 @@ public class DS_About extends GameDashboardSection {
     static final ResourceManager RM = () -> DS_About.class;
     static final Image ARMIN_1970 = RM.loadImage("/de/amr/pacmanfx/ui/graphics/armin1970.jpg");
 
-    public DS_About() {}
+    public DS_About() {
+        super(DashboardID.ABOUT);
+    }
 
     @Override
     public void connect(Game game) {

@@ -45,6 +45,8 @@ public class DS_CustomMapMonitor extends GameDashboardSection {
     private final ObservableList<WorldMap> customMaps = FXCollections.observableArrayList();
 
     public DS_CustomMapMonitor() {
+        super(DashboardID.CUSTOM_MAPS);
+
         final var tableView = new TableView<WorldMap>();
         tableView.getColumns().add(createMapRowCountTableColumn());
         tableView.getColumns().add(createMapColCountTableColumn());

@@ -14,7 +14,9 @@ import javafx.scene.image.ImageView;
 
 public class DS_JoypadKeyBindings extends GameDashboardSection {
 
-    public DS_JoypadKeyBindings() {}
+    public DS_JoypadKeyBindings() {
+        super(TengenMsPacMan_DashboardID.JOYPAD);
+    }
 
     @Override
     public void connect(Game game) {

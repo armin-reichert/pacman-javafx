@@ -13,7 +13,9 @@ import java.util.Comparator;
 
 public class DS_GameSceneKeys extends GameDashboardSection {
 
-    public DS_GameSceneKeys() {}
+    public DS_GameSceneKeys() {
+        super(DashboardID.KEYS_LOCAL);
+    }
 
     @Override
     public void update(Game game) {

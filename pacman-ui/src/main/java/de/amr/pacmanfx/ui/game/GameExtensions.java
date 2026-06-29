@@ -6,7 +6,8 @@ package de.amr.pacmanfx.ui.game;
 
 import de.amr.basics.Identifier;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 

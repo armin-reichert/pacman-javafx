@@ -34,7 +34,9 @@ public class DS_3DSettings extends GameDashboardSection {
     private CheckBox cbAxesVisible;
     private CheckBox cbWireframeMode;
 
-    public DS_3DSettings() {}
+    public DS_3DSettings() {
+        super(DashboardID.SETTINGS_3D);
+    }
 
     @Override
     public void connect(Game game) {

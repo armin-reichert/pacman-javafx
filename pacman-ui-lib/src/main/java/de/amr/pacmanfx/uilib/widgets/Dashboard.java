@@ -4,16 +4,14 @@
 
 package de.amr.pacmanfx.uilib.widgets;
 
-import de.amr.basics.Identifier;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
+import org.tinylog.Logger;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -21,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 //TODO make a control+skin+CSS of this
 public class Dashboard<S extends DashboardSection> extends VBox {
 
-    private final Map<Identifier, S> sectionMap = FXCollections.observableMap(new LinkedHashMap<>());
+    private final List<S> sectionList = FXCollections.observableArrayList();
 
     private final ChangeListener<Boolean> visibilityChangeHandler = (_, _, _) -> updateSectionOrder();
 
@@ -43,10 +41,9 @@ public class Dashboard<S extends DashboardSection> extends VBox {
         setPadding(new Insets(10));
     }
 
-    //TODO return read-only copy?
-    public Map<Identifier, S> sectionMap() { return Collections.unmodifiableMap(sectionMap); }
-
-    public Stream<S> sections() { return sectionMap.values().stream(); }
+    public Stream<S> sections() {
+        return sectionList.stream();
+    }
 
     public void toggleVisibility() {
         setVisible(!isVisible());
@@ -55,22 +52,21 @@ public class Dashboard<S extends DashboardSection> extends VBox {
     public void updateSectionOrder() {
     }
 
-    public void addSection(Identifier id, S section) {
-        requireNonNull(id);
+    public void addSection(S section) {
         requireNonNull(section);
-        sectionMap.put(id, section);
+        checkExists(section);
+        sectionList.add(section);
         section.visibleProperty().addListener(visibilityChangeHandler);
         section.expandedProperty().addListener((_,_,_) -> onSectionExpandedStateChanged(section));
     }
 
-    public void removeSection(Identifier id) {
-        requireNonNull(id);
-        final S section = sectionMap.get(id);
-        if (section != null) {
+    public void removeSection(S section) {
+        requireNonNull(section);
+        if (sectionList.remove(section)) {
             section.visibleProperty().removeListener(visibilityChangeHandler);
-            sectionMap.remove(id);
             updateSectionOrder();
         }
+        else Logger.error("Section {} not found", section.id());
     }
 
     public void setCompactMode(boolean compactMode) {
@@ -79,6 +75,12 @@ public class Dashboard<S extends DashboardSection> extends VBox {
             sections().filter(Node::isVisible).forEach(getChildren()::add);
         } else {
             sections().forEach(getChildren()::add);
+        }
+    }
+
+    private void checkExists(S section) {
+        if (sectionList.contains(section)) {
+            throw new IllegalArgumentException("Section already exists: " + section.id());
         }
     }
 }

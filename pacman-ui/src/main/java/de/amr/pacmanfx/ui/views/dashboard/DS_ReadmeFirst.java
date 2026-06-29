@@ -15,11 +15,14 @@ import javafx.scene.text.Text;
 
 public class DS_ReadmeFirst extends GameDashboardSection {
 
-    private final Runnable removeFromDashboardAction;
+    private Runnable removeFromDashboardAction;
 
-    public DS_ReadmeFirst(Runnable removeFromDashboardAction) {
-        setId("DS_ReadmeFirst");
-        this.removeFromDashboardAction = removeFromDashboardAction;
+    public DS_ReadmeFirst() {
+        super(DashboardID.README);
+    }
+
+    public void setRemoveFromDashboardAction(Runnable action) {
+        this.removeFromDashboardAction = action;
     }
 
     @Override
@@ -36,7 +39,9 @@ public class DS_ReadmeFirst extends GameDashboardSection {
 
         final var btnGotIt = new Button(game.ui().translations().translate("infobox.readme.got_it"));
         buttonPane.getChildren().add(btnGotIt);
-        btnGotIt.setOnAction(_ -> removeFromDashboardAction.run());
+        btnGotIt.setOnAction(_ -> {
+            if (removeFromDashboardAction != null) removeFromDashboardAction.run();
+        });
 
         pane.setCenter(readmeText);
         pane.setBottom(buttonPane);
