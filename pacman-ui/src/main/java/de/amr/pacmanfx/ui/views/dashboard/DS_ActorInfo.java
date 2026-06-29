@@ -33,20 +33,20 @@ public class DS_ActorInfo extends GameDashboardSection {
         addDynamicInfo("Power",     pacPowerText(game));
         addDynamicInfo("Animation", pacAnimationText(game));
         emptyRow();
-        ghostInfo(game, GameModel.RED_GHOST_SHADOW);
+        addGhostInfo(game, GameModel.RED_GHOST_SHADOW);
         emptyRow();
-        ghostInfo(game, GameModel.PINK_GHOST_SPEEDY);
+        addGhostInfo(game, GameModel.PINK_GHOST_SPEEDY);
         emptyRow();
-        ghostInfo(game, GameModel.CYAN_GHOST_BASHFUL);
+        addGhostInfo(game, GameModel.CYAN_GHOST_BASHFUL);
         emptyRow();
-        ghostInfo(game, GameModel.ORANGE_GHOST_POKEY);
+        addGhostInfo(game, GameModel.ORANGE_GHOST_POKEY);
     }
 
     private Supplier<String> livesCount(Game game) {
         return supplyGameLevelInfo(game, level -> "%d".formatted(level.gameModel().lives().count()));
     }
 
-    private void ghostInfo(Game game, byte personality) {
+    private void addGhostInfo(Game game, byte personality) {
         String name = switch (personality) {
             case GameModel.RED_GHOST_SHADOW   -> "Red Ghost";
             case GameModel.PINK_GHOST_SPEEDY  -> "Pink Ghost";
