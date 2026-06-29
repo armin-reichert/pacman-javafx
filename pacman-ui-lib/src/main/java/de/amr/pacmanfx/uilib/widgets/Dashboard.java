@@ -23,7 +23,7 @@ public class Dashboard<S extends DashboardSection> extends VBox {
 
     private final Map<Identifier, S> sectionMap = FXCollections.observableMap(new LinkedHashMap<>());
 
-    private final ChangeListener<Boolean> visibilityChangeHandler = (_, _, _) -> updateLayout();
+    private final ChangeListener<Boolean> visibilityChangeHandler = (_, _, _) -> updateSectionOrder();
 
     private void onSectionExpandedStateChanged(S section) {
         if (section.isDisplayedStandalone()) {
@@ -52,7 +52,7 @@ public class Dashboard<S extends DashboardSection> extends VBox {
         setVisible(!isVisible());
     }
 
-    public void updateLayout() {
+    public void updateSectionOrder() {
     }
 
     public void addSection(Identifier id, S section) {
@@ -69,7 +69,7 @@ public class Dashboard<S extends DashboardSection> extends VBox {
         if (section != null) {
             section.visibleProperty().removeListener(visibilityChangeHandler);
             sectionMap.remove(id);
-            updateLayout();
+            updateSectionOrder();
         }
     }
 

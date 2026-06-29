@@ -12,7 +12,6 @@ import de.amr.pacmanfx.uilib.widgets.DashboardSection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
@@ -34,7 +33,7 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
             .forEach(section -> section.update(game));
     }
 
-    public void updateLayout() {
+    public void updateSectionOrder() {
         final Map<Identifier, GameDashboardSection> sectionMap = sectionMap();
         final List<DashboardSection> reorderedSections = new ArrayList<>(sectionMap.entrySet().stream()
             .filter(e -> e.getValue().isVisible())
