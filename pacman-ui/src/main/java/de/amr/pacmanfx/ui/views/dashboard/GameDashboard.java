@@ -12,6 +12,9 @@ import de.amr.pacmanfx.uilib.widgets.DashboardSection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
 
 public class GameDashboard extends Dashboard<GameDashboardSection> {
 
@@ -20,10 +23,12 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
     }
 
     public void connect(Game game) {
+        requireNonNull(game);
         sections().forEach(section -> section.connect(game));
     }
 
     public void update(Game game) {
+        requireNonNull(game);
         sections()
             .filter(GameDashboardSection::isExpanded)
             .forEach(section -> section.update(game));
