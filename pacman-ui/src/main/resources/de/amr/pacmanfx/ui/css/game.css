@@ -117,19 +117,18 @@
 }
 
 .dashboard-section > .title > .text {
-    -fx-font-family: "Cambria";
+    -fx-font-family: "Sans";
     -fx-font-size: 14;
-    -fx-font-weight: bold;
+    -fx-font-weight: 700;
 }
 
 .dashboard-section {
-    -fx-pref-width: 330;
-    -fx-min-width:  330;
-    -fx-max-width:  450;
+    -fx-pref-width: 380;
+    -fx-min-width:  380;
+    -fx-max-width:  480;
     -fx-opacity: 0.8;
-    -fx-font-family: "Tahoma";
-    -fx-font-size: 13;
-    -fx-font-weight: 700;
+    -fx-font-family: "Arial";
+    -fx-font-size: 12;
     -fx-text-fill: #000;
     -fx-text-stroke: #000;
 }
@@ -140,7 +139,7 @@
 }
 
 .dashboard-section .label {
-    -fx-min-width:  110px;
+    -fx-min-width:  150px;
     -fx-min-height: 18px;
 }
 
@@ -150,4 +149,8 @@
 
 .dashboard-section .table-view {
     -fx-pref-width: 320px;
+}
+
+#DS_ReadmeFirst {
+    -fx-font-size: 14;
 }

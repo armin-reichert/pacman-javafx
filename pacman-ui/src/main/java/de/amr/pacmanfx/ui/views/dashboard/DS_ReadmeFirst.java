@@ -11,16 +11,14 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class DS_ReadmeFirst extends GameDashboardSection {
 
-    private static final Font TEXT_FONT = Font.font("Sans", 14);
-
     private final Runnable removeFromDashboardAction;
 
     public DS_ReadmeFirst(Runnable removeFromDashboardAction) {
+        setId("DS_ReadmeFirst");
         this.removeFromDashboardAction = removeFromDashboardAction;
     }
 
@@ -28,7 +26,6 @@ public class DS_ReadmeFirst extends GameDashboardSection {
     public void connect(Game game) {
         final var readmeText = new Text();
         readmeText.setText(game.ui().translations().translate("infobox.readme.content"));
-        readmeText.setFont(TEXT_FONT);
 
         final var pane = new BorderPane();
         pane.setBorder(Ufx.border(Color.TRANSPARENT, 5));
