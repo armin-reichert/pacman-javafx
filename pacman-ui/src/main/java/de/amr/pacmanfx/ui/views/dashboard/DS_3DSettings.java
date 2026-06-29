@@ -73,7 +73,6 @@ public class DS_3DSettings extends GameDashboardSection {
             0, 1,
             viewModel.maze3D.wallOpacityProperty.get(),
             false, false);
-        sliderWallOpacity.valueProperty().bindBidirectional(viewModel.maze3D.wallOpacityProperty);
 
         cbAxesVisible = checkBox("Show Axes", viewModel.common3D.axesVisibleProperty);
         cbWireframeMode = checkBox("Wireframe Mode");
@@ -84,11 +83,11 @@ public class DS_3DSettings extends GameDashboardSection {
         setTooltip(sliderWallHeight, sliderWallHeight.valueProperty(), "%.0f px");
         setTooltip(sliderWallOpacity, sliderWallOpacity.valueProperty().multiply(100), "%.0f %%");
 
-        editProperty(sliderMiniViewSceneHeight, viewModel.miniView.heightProperty);
-        editProperty(sliderMiniViewOpacityPercentage, viewModel.miniView.opacityPercentageProperty);
-        editProperty(sliderWallHeight,  viewModel.maze3D.wallHeightProperty);
-        editProperty(sliderWallOpacity, viewModel.maze3D.wallOpacityProperty);
-        editProperty(comboPerspectives, viewModel.common3D.cameraPerspectiveIdProperty);
+        editPropertyWithSlider(sliderMiniViewSceneHeight,       viewModel.miniView.heightProperty);
+        editPropertyWithSlider(sliderMiniViewOpacityPercentage, viewModel.miniView.opacityPercentageProperty);
+        editPropertyWithSlider(sliderWallHeight,                viewModel.maze3D.wallHeightProperty);
+        editPropertyWithSlider(sliderWallOpacity,               viewModel.maze3D.wallOpacityProperty);
+        editPropertyWithChoiceBox(comboPerspectives,               viewModel.common3D.cameraPerspectiveIdProperty);
 
         cbUsePlayScene3D.setOnAction(_ -> game.actions().uiSettingsActions().actionTogglePlayScene2D3D().execute());
         cbWireframeMode.setOnAction(_ -> game.actions().camera3DActions().actionToggleDrawMode().execute());

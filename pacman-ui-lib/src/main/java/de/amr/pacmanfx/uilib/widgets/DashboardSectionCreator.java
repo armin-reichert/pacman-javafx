@@ -71,24 +71,20 @@ public interface DashboardSectionCreator<S extends DashboardSection> {
     }
 
     default <T> ChoiceBox<T> choiceBox(String labelText, T[] items) {
-        var selector = new ChoiceBox<>(FXCollections.observableArrayList(items));
-        addRow(labelText, selector);
-        return selector;
+        var choiceBox = new ChoiceBox<>(FXCollections.observableArrayList(items));
+        addRow(labelText, choiceBox);
+        return choiceBox;
     }
 
-    default ColorPicker colorPicker(String labelText, ObjectProperty<Color> colorProperty) {
-        var picker = new ColorPicker(colorProperty.get());
-        addRow(labelText, picker);
-        picker.setOnAction(_ -> colorProperty.set(picker.getValue()));
-        return picker;
+    default <T> void editPropertyWithChoiceBox(ChoiceBox<T> choiceBox, ObjectProperty<T> property) {
+        choiceBox.setOnAction(_ -> property.set(choiceBox.getValue()));
     }
 
-    default <T> void editProperty(ChoiceBox<T> selector, ObjectProperty<T> property) {
-        selector.setOnAction(_ -> property.set(selector.getValue()));
-    }
-
-    default void editProperty(Slider slider, Property<Number> property) {
-        slider.valueProperty().bindBidirectional(property);
+    default ColorPicker colorPicker(String labelText, ObjectProperty<Color> property) {
+        var colorPicker = new ColorPicker(property.get());
+        colorPicker.setOnAction(_ -> property.set(colorPicker.getValue()));
+        addRow(labelText, colorPicker);
+        return colorPicker;
     }
 
     default Slider slider(String labelText, double min, double max, double initialValue, boolean tickMarks, boolean tickLabels) {
@@ -102,6 +98,10 @@ public interface DashboardSectionCreator<S extends DashboardSection> {
         });
         addRow(labelText, slider);
         return slider;
+    }
+
+    default void editPropertyWithSlider(Slider slider, Property<Number> property) {
+        slider.valueProperty().bindBidirectional(property);
     }
 
     default Spinner<Integer> intSpinner(String labelText, int min, int max, IntegerProperty valuePy) {

@@ -58,7 +58,7 @@ public class DS_General extends GameDashboardSection {
         intSpinner("Num Steps", 1, 50, game.ui().viewModel().numSimulationStepsProperty);
 
         final var sliderTargetFPS = slider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
-        editProperty(sliderTargetFPS, game.clock().targetFrameRateProperty());
+        editPropertyWithSlider(sliderTargetFPS, game.clock().targetFrameRateProperty());
 
         final GameClock gameClock = game.clock();
         dynamicInfo("", () -> "FPS: %.1f (Target: %d)".formatted(
