@@ -47,17 +47,20 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private void addGhostInfo(Game game, byte personality) {
-        String name = switch (personality) {
+        addDynamicInfo(ghostName(personality), supplyGhostText(game, this::ghostNameAndStateText, personality));
+        addDynamicInfo("Movement",  supplyGhostText(game, this::actorMovementText,  personality));
+        addDynamicInfo("Tile",      supplyGhostText(game, this::actorLocationText,  personality));
+        addDynamicInfo("Animation", supplyGhostText(game, this::ghostAnimationText, personality));
+    }
+
+    private static String ghostName(byte personality) {
+        return switch (personality) {
             case GameModel.RED_GHOST_SHADOW   -> "Red Ghost";
             case GameModel.PINK_GHOST_SPEEDY  -> "Pink Ghost";
             case GameModel.CYAN_GHOST_BASHFUL -> "Cyan Ghost";
             case GameModel.ORANGE_GHOST_POKEY -> "Orange Ghost";
             default -> "Unknown Ghost";
         };
-        addDynamicInfo(name,        supplyGhostText(game, this::ghostNameAndStateText,  personality));
-        addDynamicInfo("Movement",  supplyGhostText(game, this::actorMovementText,  personality));
-        addDynamicInfo("Tile",      supplyGhostText(game, this::actorLocationText,  personality));
-        addDynamicInfo("Animation", supplyGhostText(game, this::ghostAnimationText, personality));
     }
 
     private String actorLocationText(GameLevel level, MovingActor actor) {
