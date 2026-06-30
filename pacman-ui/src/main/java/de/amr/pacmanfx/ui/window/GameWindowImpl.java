@@ -118,7 +118,7 @@ public class GameWindowImpl implements GameWindow {
     }
 
     private void updateStageIcon(Game game) {
-        final Image icon = game.currentVariantConfig().assets().image("app_icon");
+        final Image icon = game.currentGameVariant().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         } else {
@@ -152,7 +152,7 @@ public class GameWindowImpl implements GameWindow {
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager variantTranslations = game.currentVariantConfig().translations();
+        final TranslationManager variantTranslations = game.currentGameVariant().translations();
         final String titleKey = paused ? "app.title.paused" : "app.title";
         if (variantTranslations.textBundle() != null
             && variantTranslations.textBundle().containsKey(titleKey)) {

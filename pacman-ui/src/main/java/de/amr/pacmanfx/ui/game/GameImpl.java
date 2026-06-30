@@ -53,7 +53,7 @@ public final class GameImpl implements Game {
 
     private final PacManGamesMachine machine;
 
-    private final Map<String, GameVariantRuntime> gameVariantsMap = new HashMap<>();
+    private final Map<String, GameVariantRuntime> gameVariantRuntimesMap = new HashMap<>();
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
@@ -130,8 +130,8 @@ public final class GameImpl implements Game {
     }
 
     @Override
-    public GameVariantRuntime currentGameVariant() {
-        return gameVariant(currentGameVariantName());
+    public GameVariantRuntime currentGameVariantRuntime() {
+        return gameVariantRuntime(currentGameVariantName());
     }
 
     @Override
@@ -140,8 +140,8 @@ public final class GameImpl implements Game {
     }
 
     @Override
-    public GameVariantRuntime gameVariant(String variantName) {
-        return gameVariantsMap.computeIfAbsent(variantName, this::createGameVariant);
+    public GameVariantRuntime gameVariantRuntime(String variantName) {
+        return gameVariantRuntimesMap.computeIfAbsent(variantName, this::createGameVariant);
     }
 
     @Override
@@ -150,8 +150,8 @@ public final class GameImpl implements Game {
     }
 
     @Override
-    public GameVariant currentVariantConfig() {
-        return currentGameVariant().config();
+    public GameVariant currentGameVariant() {
+        return currentGameVariantRuntime().gameVariant();
     }
 
     @Override
@@ -280,15 +280,15 @@ public final class GameImpl implements Game {
 
     private void exitGameVariant(String variantName) {
         ui.sounds().dispose();
-        gameVariant(variantName).config().dispose();
+        gameVariantRuntime(variantName).gameVariant().dispose();
         currentGameContext.flow().removeGameEventListener(globalGameEventHandler);
     }
 
     private void enterGameVariant(String variantName) {
-        final GameVariantRuntime gameVariantRuntime = gameVariant(variantName);
+        final GameVariantRuntime gameVariantRuntime = gameVariantRuntime(variantName);
 
-        gameVariantRuntime.config().init(this);
-        ui.viewModel().maze3D.init(gameVariantRuntime.config().worldSettings().maze());
+        gameVariantRuntime.gameVariant().init(this);
+        ui.viewModel().maze3D.init(gameVariantRuntime.gameVariant().worldSettings().maze());
 
         // create new game context for current game variant
         currentGameContext = new GameContextImpl(this, gameVariantRuntime);
@@ -298,17 +298,17 @@ public final class GameImpl implements Game {
 
     private GameVariantRuntime createGameVariant(String variantName) {
         final Cartridge cartridge = machine.cartridgeByName(variantName);
-        final var gameVariant = new GameVariantRuntime(cartridge);
+        final var gameVariantRuntime = new GameVariantRuntime(cartridge);
 
         //TODO make configurable again if tests should be available
-        final GameFlow flow = gameVariant.gameFlow();
+        final GameFlow flow = gameVariantRuntime.gameFlow();
         flow.addState(new LevelShortTestState());
         flow.addState(new LevelMediumTestState());
         flow.addState(new CutScenesTestState());
 
-        gameVariant.gameModel().setHighScoreFile(PacManGamesMachine.highScoreFile(variantName));
+        gameVariantRuntime.gameModel().setHighScoreFile(PacManGamesMachine.highScoreFile(variantName));
 
-        return gameVariant;
+        return gameVariantRuntime;
     }
 
     private static void load3DAssets() {

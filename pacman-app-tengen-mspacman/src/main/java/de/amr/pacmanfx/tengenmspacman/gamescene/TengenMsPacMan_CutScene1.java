@@ -88,7 +88,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariant uiConfig = game().currentVariantConfig();
+        final GameVariant uiConfig = game().currentGameVariant();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 

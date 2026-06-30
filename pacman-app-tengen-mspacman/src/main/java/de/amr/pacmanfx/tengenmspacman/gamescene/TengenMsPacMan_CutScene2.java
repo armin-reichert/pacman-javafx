@@ -60,7 +60,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariant uiConfig = game().currentVariantConfig();
+        final GameVariant uiConfig = game().currentGameVariant();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         // Quit cut scene when "START" button on "joypad" is pressed

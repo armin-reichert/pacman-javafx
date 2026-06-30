@@ -29,7 +29,7 @@ public class GlobalGameEventHandler extends DefaultGameEventListener {
 
             case LevelCreatedEvent levelCreatedEvent -> {
                 final GameLevel level = levelCreatedEvent.level();
-                final GameVariant currentConfig = game.currentVariantConfig();
+                final GameVariant currentConfig = game.currentGameVariant();
                 final SpriteAnimationContainer spriteAnimationContainer = game.ui().sprites().animations();
 
                 //TODO this should be done elsewhere

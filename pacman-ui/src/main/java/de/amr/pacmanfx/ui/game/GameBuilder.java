@@ -144,7 +144,7 @@ public class GameBuilder {
             //TODO Find better solution for shared world map selector
             gameVariantConfigMap.forEach((variantName, config) -> {
                 if (config.mapSelector() != null) {
-                    game.gameVariant(variantName).gameModel().setMapSelector(config.mapSelector());
+                    game.gameVariantRuntime(variantName).gameModel().setMapSelector(config.mapSelector());
                 }
             });
 

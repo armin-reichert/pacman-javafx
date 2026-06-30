@@ -63,7 +63,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariant uiConfig = game().currentVariantConfig();
+        final GameVariant uiConfig = game().currentGameVariant();
 
         gameModel().hud().hide();
 
@@ -119,7 +119,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameVariant currentConfig = scene.game().currentVariantConfig();
+                final GameVariant currentConfig = scene.game().currentGameVariant();
                 final SpriteAnimationContainer spriteAnimationContainer = scene.game().ui().sprites().animations();
 
                 timer.restartTicks(TickTimer.INDEFINITE);

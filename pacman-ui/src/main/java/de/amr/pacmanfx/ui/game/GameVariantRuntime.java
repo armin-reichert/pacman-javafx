@@ -9,7 +9,7 @@ public record GameVariantRuntime(
     GameFlow gameFlow,
     AbstractGameModel gameModel,
     GameRules gameRules,
-    GameVariant config)
+    GameVariant gameVariant)
 {
     public GameVariantRuntime(Cartridge cartridge) {
         this(

@@ -38,18 +38,18 @@ public interface Game extends GameLifecycle {
 
     String currentGameVariantName();
 
-    GameVariantRuntime currentGameVariant();
+    GameVariant currentGameVariant();
+
+    GameVariantRuntime currentGameVariantRuntime();
+
+    GameVariantRuntime gameVariantRuntime(String variantName);
 
     CommonActions actions();
 
-    GameVariantRuntime gameVariant(String variantName);
-
     GameContext currentGameContext();
 
-    GameVariant currentVariantConfig();
-
     default Optional<GameSoundEffects> currentSoundEffects() {
-        return currentVariantConfig().optSoundEffects();
+        return currentGameVariant().optSoundEffects();
     }
 
     GameExtensions extensions();

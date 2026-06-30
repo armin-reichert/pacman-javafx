@@ -53,7 +53,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     }
 
     public void draw(AbstractGameScene2D gameScene2D) {
-        final GameVariant variantConfig = gameScene2D.game().currentVariantConfig();
+        final GameVariant variantConfig = gameScene2D.game().currentGameVariant();
         final var gameScene = (TengenMsPacMan_OptionsScene) gameScene2D;
         final var gameModel = (TengenMsPacMan_GameModel) gameScene.gameModel();
         final var uiSettings = gameScene2D.game().extensions()

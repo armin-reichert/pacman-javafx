@@ -264,8 +264,8 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
             final Ghost3D ghost3D = level3D.ghost3D(ghost.personality());
             final int killIndex = level3D.level().indexInGhostKilledChain(ghost);
 
-            final Factory3D factory3D = game().currentVariantConfig().factory3D();
-            final Node numberBox3D = factory3D.createNumberBox3D(game().currentVariantConfig(), killIndex);
+            final Factory3D factory3D = game().currentGameVariant().factory3D();
+            final Node numberBox3D = factory3D.createNumberBox3D(game().currentGameVariant(), killIndex);
             numberBox3D.setTranslateX(ghost3D.getTranslateX());
             numberBox3D.setTranslateY(ghost3D.getTranslateY());
             numberBox3D.setTranslateZ(ghost3D.getTranslateZ());

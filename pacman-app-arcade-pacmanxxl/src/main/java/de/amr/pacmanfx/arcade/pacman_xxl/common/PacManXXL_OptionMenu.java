@@ -86,7 +86,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         scaling = createScaling(game.ui().window().stage());
 
-        final GameVariant currentConfig = game.currentVariantConfig();
+        final GameVariant currentConfig = game.currentGameVariant();
         final GameContext gameContext = game.currentGameContext();
         final GameVariantID gameVariant = GameVariantID.valueOf(game.currentGameVariantName());
         final GameModel gameModel = gameContext.model();
@@ -173,7 +173,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
                 if (game != null) {
-                    final GameVariant uiConfig = game.gameVariant(newVariant.name()).config();
+                    final GameVariant uiConfig = game.gameVariantRuntime(newVariant.name()).gameVariant();
                     chaseAnimation.init(uiConfig, canvas, game.ui().sprites().animations());
                 }
             }
