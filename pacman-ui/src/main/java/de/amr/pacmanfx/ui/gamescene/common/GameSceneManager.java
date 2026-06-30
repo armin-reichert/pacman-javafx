@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;

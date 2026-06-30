@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.game;
+package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
@@ -11,6 +11,7 @@ import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;

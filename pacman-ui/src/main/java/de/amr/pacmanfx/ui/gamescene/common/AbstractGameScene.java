@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GameScene;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
 import org.tinylog.Logger;

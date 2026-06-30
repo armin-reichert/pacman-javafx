@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.widgets.DashboardSection;
 import de.amr.pacmanfx.uilib.widgets.DashboardSectionCreator;
 import javafx.scene.control.Button;

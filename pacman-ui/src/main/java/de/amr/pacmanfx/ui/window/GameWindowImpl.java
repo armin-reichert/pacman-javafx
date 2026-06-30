@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
