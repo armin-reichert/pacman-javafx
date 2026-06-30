@@ -53,7 +53,7 @@ public final class PacManXXL_PacManConfig implements GameVariantConfig, Resource
     private final Factory3D factory3D = new DefaultFactory3D();
 
     private GameSceneConfig gameSceneConfig;
-    private GameSoundEffects sfx;
+    private GameSoundEffects soundEffects;
 
     private Game game;
 
@@ -82,7 +82,7 @@ public final class PacManXXL_PacManConfig implements GameVariantConfig, Resource
 
         Logger.info("Register sounds and effects of UI configuration {}", getClass().getSimpleName());
         registerSounds(game.ui().sounds());
-        sfx = new GameSoundEffects(game.ui().sounds());
+        soundEffects = new GameSoundEffects(game.ui().sounds());
         initSoundEffects();
     }
 
@@ -98,7 +98,7 @@ public final class PacManXXL_PacManConfig implements GameVariantConfig, Resource
         if (game != null) {
             Logger.info("Unregister sounds and effects of UI configuration {}", getClass().getSimpleName());
             unregisterSounds(game.ui().sounds());
-            sfx.dispose();
+            soundEffects.dispose();
         }
     }
 
@@ -216,7 +216,7 @@ public final class PacManXXL_PacManConfig implements GameVariantConfig, Resource
 
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
-        return Optional.ofNullable(sfx);
+        return Optional.ofNullable(soundEffects);
     }
 
     // -----
@@ -268,15 +268,15 @@ public final class PacManXXL_PacManConfig implements GameVariantConfig, Resource
     }
 
     private void initSoundEffects() {
-        sfx.setMunchingSoundDelay((byte) 9);
+        soundEffects.setMunchingSoundDelay((byte) 9);
 
-        sfx.registerSirens(
+        soundEffects.registerSirens(
             ARCADE_PACMAN_RES.url("sound/siren_1.mp3"),
             ARCADE_PACMAN_RES.url("sound/siren_2.mp3"),
             ARCADE_PACMAN_RES.url("sound/siren_3.mp3"),
             ARCADE_PACMAN_RES.url("sound/siren_4.mp3")
         );
-        sfx.setSirenVolume(0.33f);
+        soundEffects.setSirenVolume(0.33f);
     }
 
 }

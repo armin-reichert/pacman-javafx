@@ -58,7 +58,7 @@ public final class PacManXXL_MsPacManConfig implements GameVariantConfig, Resour
     private final ArcadeMsPacMan_Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
 
     private GameSceneConfig gameSceneConfig;
-    private GameSoundEffects sfx;
+    private GameSoundEffects soundEffects;
 
     private Game game;
 
@@ -87,7 +87,7 @@ public final class PacManXXL_MsPacManConfig implements GameVariantConfig, Resour
 
         Logger.info("Register sounds and effects of UI configuration {}", getClass().getSimpleName());
         registerSounds(game.ui().sounds());
-        sfx = new GameSoundEffects(game.ui().sounds());
+        soundEffects = new GameSoundEffects(game.ui().sounds());
         initSoundEffects();
     }
 
@@ -103,7 +103,7 @@ public final class PacManXXL_MsPacManConfig implements GameVariantConfig, Resour
         if (game != null) {
             Logger.info("Unregister sounds and effects of UI configuration {}", getClass().getSimpleName());
             unregisterSounds(game.ui().sounds());
-            sfx.dispose();
+            soundEffects.dispose();
         }
     }
 
@@ -139,7 +139,7 @@ public final class PacManXXL_MsPacManConfig implements GameVariantConfig, Resour
 
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
-        return Optional.ofNullable(sfx);
+        return Optional.ofNullable(soundEffects);
     }
 
     @Override
@@ -271,13 +271,13 @@ public final class PacManXXL_MsPacManConfig implements GameVariantConfig, Resour
     }
 
     private void initSoundEffects() {
-        sfx.setMunchingSoundDelay((byte) 0);
-        sfx.registerSirens(
+        soundEffects.setMunchingSoundDelay((byte) 0);
+        soundEffects.registerSirens(
             ARCADE_RES.url("sound/GhostNoise1.wav"),
             ARCADE_RES.url("sound/GhostNoise2.wav"),
             ARCADE_RES.url("sound/GhostNoise3.wav"),
             ARCADE_RES.url("sound/GhostNoise4.wav")
         );
-        sfx.setSirenVolume(0.33f);
+        soundEffects.setSirenVolume(0.33f);
     }
 }
