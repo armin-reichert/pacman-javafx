@@ -78,15 +78,15 @@ class ChaseAnimation {
         timeline.stop();
     }
 
-    public void init(GameVariant uiConfig, Canvas canvas, SpriteAnimationContainer spriteAnimationContainer) {
-        requireNonNull(uiConfig);
+    public void init(GameVariant gameVariant, Canvas canvas, SpriteAnimationContainer spriteAnimationContainer) {
+        requireNonNull(gameVariant);
         requireNonNull(canvas);
 
-        actorRenderer = uiConfig.createActorRenderer(canvas);
+        actorRenderer = gameVariant.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         pac = ArcadePacMan_ActorFactory.createPacMan();
-        pac.setAnimations(uiConfig.createPacAnimations(spriteAnimationContainer));
+        pac.setAnimations(gameVariant.createPacAnimations(spriteAnimationContainer));
         pac.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
         pac.animations().playSelected();
         pac.setX(numTilesX * WorldMap.TS);
@@ -96,10 +96,10 @@ class ChaseAnimation {
         pac.setVisible(true);
 
         ghosts = List.of(
-            uiConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.RED_GHOST_SHADOW),
-            uiConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.PINK_GHOST_SPEEDY),
-            uiConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.CYAN_GHOST_BASHFUL),
-            uiConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.ORANGE_GHOST_POKEY)
+            gameVariant.createAnimatedGhost(spriteAnimationContainer, GameModel.RED_GHOST_SHADOW),
+            gameVariant.createAnimatedGhost(spriteAnimationContainer, GameModel.PINK_GHOST_SPEEDY),
+            gameVariant.createAnimatedGhost(spriteAnimationContainer, GameModel.CYAN_GHOST_BASHFUL),
+            gameVariant.createAnimatedGhost(spriteAnimationContainer, GameModel.ORANGE_GHOST_POKEY)
         );
         for (Ghost ghost : ghosts) {
             ghost.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);

@@ -99,14 +99,14 @@ public class MiniPlaySceneView {
         worldSize.set(size);
     }
 
-    public void setVariantConfig(GameVariant variantConfig) {
+    public void setVariantConfig(GameVariant gameVariant) {
         canvasRenderer = new BaseRenderer(canvas);
 
-        levelRenderer = variantConfig.createGameLevelRenderer(canvas);
+        levelRenderer = gameVariant.createGameLevelRenderer(canvas);
         levelRenderer.scalingProperty().bind(scaling);
         levelRenderer.backgroundColorProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty);
 
-        actorRenderer = variantConfig.createActorRenderer(canvas);
+        actorRenderer = gameVariant.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scaling);
         actorRenderer.backgroundColorProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty);
     }

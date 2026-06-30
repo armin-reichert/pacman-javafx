@@ -30,11 +30,11 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     private final ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public TengenMsPacMan_IntroScene_Renderer(GameVariant uiConfig, AbstractGameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_IntroScene_Renderer(GameVariant gameVariant, AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
-        requireNonNull(uiConfig);
+        requireNonNull(gameVariant);
         requireNonNull(scene);
-        actorRenderer = scene.configureRenderer(uiConfig.createActorRenderer(canvas));
+        actorRenderer = scene.configureRenderer(gameVariant.createActorRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 

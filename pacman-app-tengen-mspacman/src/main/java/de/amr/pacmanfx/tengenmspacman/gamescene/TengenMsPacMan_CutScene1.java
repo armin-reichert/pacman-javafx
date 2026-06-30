@@ -88,7 +88,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariant uiConfig = game().currentGameVariant();
+        final GameVariant gameVariant = game().currentGameVariant();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
@@ -103,24 +103,24 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
+        msPacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
         msPacMan.setSpeed(0);
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
+        pacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
         pacMan.setSpeed(0);
 
-        inky = uiConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
+        inky = gameVariant.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
         inky.setPosition(LEFT_BORDER, UPPER_LANE);
         inky.setSpeed(0);
 
-        pinky = uiConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
+        pinky = gameVariant.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(RIGHT_BORDER, LOWER_LANE);

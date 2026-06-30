@@ -37,9 +37,9 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     private final BaseDebugInfoRenderer debugRenderer;
     private final RectShort energizerSprite;
 
-    public ArcadePacMan_IntroScene_Renderer(GameVariant uiConfig, AbstractGameScene2D scene, Canvas canvas) {
+    public ArcadePacMan_IntroScene_Renderer(GameVariant gameVariant, AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
-        actorRenderer = scene.configureRenderer((ArcadePacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
+        actorRenderer = scene.configureRenderer((ArcadePacMan_ActorRenderer) gameVariant.createActorRenderer(canvas));
         debugRenderer = scene.configureRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override
             public void draw(AbstractGameScene2D scene) {

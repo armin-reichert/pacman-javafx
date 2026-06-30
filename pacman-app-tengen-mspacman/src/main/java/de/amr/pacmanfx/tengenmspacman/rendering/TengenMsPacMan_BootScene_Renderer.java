@@ -19,9 +19,9 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer implements G
     private final TengenMsPacMan_ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public TengenMsPacMan_BootScene_Renderer(GameVariant uiConfig, AbstractGameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_BootScene_Renderer(GameVariant gameVariant, AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
-        actorRenderer = scene.configureRenderer((TengenMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
+        actorRenderer = scene.configureRenderer((TengenMsPacMan_ActorRenderer) gameVariant.createActorRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 

@@ -36,11 +36,11 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         return (int) (phase < 3 ? phase : 1);
     }
 
-    private final TengenMsPacManGameVariant uiConfig;
+    private final TengenMsPacManGameVariant gameVariant;
 
-    public TengenMsPacMan_GameLevelRenderer(Canvas canvas, TengenMsPacManGameVariant uiConfig) {
+    public TengenMsPacMan_GameLevelRenderer(Canvas canvas, TengenMsPacManGameVariant gameVariant) {
         super(canvas);
-        this.uiConfig = requireNonNull(uiConfig);
+        this.gameVariant = requireNonNull(gameVariant);
     }
 
     @Override
@@ -145,12 +145,12 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         final NES_MapColorScheme colorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
         final Color color = level.isDemoLevel()
             ? Color.valueOf(colorScheme.wallStroke())
-            : uiConfig.assets().color("color.game_over_message");
+            : gameVariant.assets().color("color.game_over_message");
         fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), message.x(), message.y());
     }
 
     private void drawReadyMessage(GameLevelMessage message) {
-        fillTextCentered(READY_MESSAGE_TEXT, uiConfig.assets().color("color.ready_message"), arcadeFont8(), message.x(), message.y());
+        fillTextCentered(READY_MESSAGE_TEXT, gameVariant.assets().color("color.ready_message"), arcadeFont8(), message.x(), message.y());
     }
 
     public void drawDoor(WorldMap worldMap) {

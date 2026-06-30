@@ -86,9 +86,9 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         scaling = createScaling(game.ui().window().stage());
 
-        final GameVariant currentConfig = game.currentGameVariant();
+        final GameVariant gameVariant = game.currentGameVariant();
         final GameContext gameContext = game.currentGameContext();
-        final GameVariantID gameVariant = GameVariantID.valueOf(game.currentGameVariantName());
+        final GameVariantID gameVariantID = GameVariantID.valueOf(game.currentGameVariantName());
         final GameModel gameModel = gameContext.model();
 
         if (!(gameModel.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
@@ -99,7 +99,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         mapSelector.loadMapPrototypes();
 
         // Init entries
-        meGameVariantID.setValue(gameVariant);
+        meGameVariantID.setValue(gameVariantID);
         meView3DEnabled.setValue(game.ui().viewModel().common3D.view3DEnabledProperty.get());
         meCutScenesEnabled.setValue(gameContext.flow().cutScenesEnabled());
         meMapOrder.setValue(mapSelector.selectionMode());
@@ -108,7 +108,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         logMenuState();
 
         soundEnabledProperty().bind(game.ui().sounds().muteProperty().not());
-        chaseAnimation.init(currentConfig, canvas, game.ui().sprites().animations());
+        chaseAnimation.init(gameVariant, canvas, game.ui().sprites().animations());
     }
 
     public void bind() {
@@ -173,8 +173,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
                 if (game != null) {
-                    final GameVariant uiConfig = game.gameVariantRuntime(newVariant.name()).gameVariant();
-                    chaseAnimation.init(uiConfig, canvas, game.ui().sprites().animations());
+                    final GameVariant gameVariant = game.gameVariantRuntime(newVariant.name()).gameVariant();
+                    chaseAnimation.init(gameVariant, canvas, game.ui().sprites().animations());
                 }
             }
         };

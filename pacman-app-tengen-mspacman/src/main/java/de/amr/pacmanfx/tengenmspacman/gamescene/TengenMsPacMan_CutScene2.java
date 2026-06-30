@@ -60,7 +60,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariant uiConfig = game().currentGameVariant();
+        final GameVariant gameVariant = game().currentGameVariant();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         // Quit cut scene when "START" button on "joypad" is pressed
@@ -74,10 +74,10 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
+        msPacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
+        pacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
 
         game().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
     }

@@ -68,14 +68,14 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariant uiConfig = game().currentGameVariant();
+        final GameVariant gameVariant = game().currentGameVariant();
         final SpriteAnimationContainer spriteAnimationContainer = game().ui().sprites().animations();
         final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimationContainer));
+        pacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimationContainer));
 
-        blinky = uiConfig.createAnimatedGhost(spriteAnimationContainer, RED_GHOST_SHADOW);
+        blinky = gameVariant.createAnimatedGhost(spriteAnimationContainer, RED_GHOST_SHADOW);
 
         nailDressAnimation = new SpriteAnimationBuilder()
             .sprites(spriteSheet.sprites(SpriteID.RED_GHOST_STRETCHED))

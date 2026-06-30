@@ -29,16 +29,16 @@ public class GlobalGameEventHandler extends DefaultGameEventListener {
 
             case LevelCreatedEvent levelCreatedEvent -> {
                 final GameLevel level = levelCreatedEvent.level();
-                final GameVariant currentConfig = game.currentGameVariant();
+                final GameVariant gameVariant = game.currentGameVariant();
                 final SpriteAnimationContainer spriteAnimationContainer = game.ui().sprites().animations();
 
                 //TODO this should be done elsewhere
-                level.entities().pac().setAnimations(currentConfig.createPacAnimations(spriteAnimationContainer));
+                level.entities().pac().setAnimations(gameVariant.createPacAnimations(spriteAnimationContainer));
                 level.entities().ghosts().forEach(ghost ->
-                    ghost.setAnimations(currentConfig.createGhostAnimations(spriteAnimationContainer, ghost.personality())));
+                    ghost.setAnimations(gameVariant.createGhostAnimations(spriteAnimationContainer, ghost.personality())));
 
                 final MiniPlaySceneView miniPlayView = game.ui().views().gamePlayView().miniPlaySceneView();
-                miniPlayView.setVariantConfig(currentConfig);
+                miniPlayView.setVariantConfig(gameVariant);
                 miniPlayView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
                 miniPlayView.slideIn();
 

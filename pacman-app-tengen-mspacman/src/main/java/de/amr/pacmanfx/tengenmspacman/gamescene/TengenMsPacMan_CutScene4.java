@@ -67,7 +67,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariant uiConfig = game().currentGameVariant();
+        final GameVariant gameVariant = game().currentGameVariant();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         clapperboard = new Clapperboard(4, "THE END");
@@ -76,10 +76,10 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
+        msPacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
+        pacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
 
         juniors = new ArrayList<>();
         juniorCreationTimes = new ArrayList<>();
@@ -94,7 +94,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
     @Override
     public void onTick(long tick) {
-        final GameVariant uiConfig = game().currentGameVariant();
+        final GameVariant gameVariant = game().currentGameVariant();
         final long gameStateTick = gameState().timer().tickCount();
 
         clapperboard.tick();
@@ -161,20 +161,20 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     pacMan.hide();
                     msPacMan.hide();
                 }
-                case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(uiConfig, gameStateTick);
+                case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(gameVariant, gameStateTick);
                 case 1500 -> optSoundEffects().ifPresent(GameSoundEffects::stopAll);
                 case TICK_EXPIRES -> gameContext().flow().enterState(TengenMsPacMan_GameState.GAME_PREPARATION.state());
             }
         }
     }
 
-    private void spawnJunior(GameVariant uiConfig, long tick) {
+    private void spawnJunior(GameVariant gameVariant, long tick) {
         var junior = TengenMsPacMan_ActorFactory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         junior.setPosition((float) randomX, unscaledHeight() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(uiConfig.createPacAnimations(game().ui().sprites().animations()));
+        junior.setAnimations(gameVariant.createPacAnimations(game().ui().sprites().animations()));
         junior.animations().select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);

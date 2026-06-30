@@ -23,10 +23,10 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
 
     private final Image copyrightImage;
 
-    public ArcadeMsPacMan_StartScene_Renderer(GameVariant uiConfig, AbstractGameScene2D scene, Canvas canvas) {
+    public ArcadeMsPacMan_StartScene_Renderer(GameVariant gameVariant, AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
 
-        copyrightImage = uiConfig.assets().image("logo.midway");
+        copyrightImage = gameVariant.assets().image("logo.midway");
 
         copyrightRenderer = scene.configureRenderer(new CopyrightRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);

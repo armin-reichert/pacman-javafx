@@ -86,7 +86,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariant uiConfig = game().currentGameVariant();
+        final GameVariant gameVariant = game().currentGameVariant();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
@@ -99,15 +99,15 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setSpeed(ACTOR_SPEED);
         msPacMan.setVisible(true);
-        msPacMan.setAnimations(uiConfig.createPacAnimations(spriteAnimations));
+        msPacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
         msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
         msPacMan.animations().playSelected();
 
         ghosts = List.of(
-            uiConfig.createAnimatedGhost(spriteAnimations, GameModel.RED_GHOST_SHADOW),
-            uiConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY),
-            uiConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL),
-            uiConfig.createAnimatedGhost(spriteAnimations, GameModel.ORANGE_GHOST_POKEY)
+            gameVariant.createAnimatedGhost(spriteAnimations, GameModel.RED_GHOST_SHADOW),
+            gameVariant.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY),
+            gameVariant.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL),
+            gameVariant.createAnimatedGhost(spriteAnimations, GameModel.ORANGE_GHOST_POKEY)
         );
 
         for (Ghost ghost : ghosts) {

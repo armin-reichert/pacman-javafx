@@ -25,10 +25,6 @@ public class GameContextImpl implements GameContext {
         this.gameVariantRuntime = requireNonNull(gameVariantRuntime);
     }
 
-    private GameVariantRuntime currentGameVariant() {
-        return gameVariantRuntime;
-    }
-
     @Override
     public CoinMechanism coinMechanism() {
         return game.coinMechanism();

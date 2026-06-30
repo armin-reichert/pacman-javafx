@@ -68,10 +68,10 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     private final BaseDebugInfoRenderer debugRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    public TengenMsPacMan_PlayScene2D_Renderer(GameVariant uiConfig, AbstractGameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_PlayScene2D_Renderer(GameVariant gameVariant, AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
-        levelRenderer = scene.configureRenderer((TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas));
-        actorRenderer = scene.configureRenderer((TengenMsPacMan_ActorRenderer)     uiConfig.createActorRenderer(canvas));
+        levelRenderer = scene.configureRenderer((TengenMsPacMan_GameLevelRenderer) gameVariant.createGameLevelRenderer(canvas));
+        actorRenderer = scene.configureRenderer((TengenMsPacMan_ActorRenderer)     gameVariant.createActorRenderer(canvas));
         debugRenderer = scene.configureRenderer(new PlaySceneDebugInfoRenderer(canvas));
     }
 

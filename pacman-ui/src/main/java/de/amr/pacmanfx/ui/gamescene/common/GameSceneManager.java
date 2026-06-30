@@ -60,12 +60,12 @@ public class GameSceneManager {
     }
 
     public void updateGameSceneAndForceReload(boolean forceReload) {
-        final GameVariant currentConfig = game.currentGameVariant();
+        final GameVariant gameVariant = game.currentGameVariant();
         final GameContext gameContext = game.currentGameContext();
         final GameModel gameModel = gameContext.model();
 
         final GameScene prevGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(game, gameModel).orElseThrow();
+        final GameScene nextGameScene = gameVariant.gameSceneConfig().selectGameScene(game, gameModel).orElseThrow();
 
         if (nextGameScene == prevGameScene && !forceReload) {
             return;
@@ -81,7 +81,7 @@ public class GameSceneManager {
 
         nextGameScene.activate();
 
-        gameModel.optGameLevel().ifPresent(level -> handle2D3DSwitch(currentConfig, level, prevGameScene, nextGameScene));
+        gameModel.optGameLevel().ifPresent(level -> handle2D3DSwitch(gameVariant, level, prevGameScene, nextGameScene));
 
         currentGameSceneProperty().set(nextGameScene);
     }
@@ -96,8 +96,8 @@ public class GameSceneManager {
     public boolean hasGameSceneID(GameScene gameScene, Identifier sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
-        final GameVariant currentConfig = game.currentGameVariant();
-        return currentConfig.gameSceneConfig().gameSceneHasID(gameScene, sceneID);
+        final GameVariant gameVariant = game.currentGameVariant();
+        return gameVariant.gameSceneConfig().gameSceneHasID(gameScene, sceneID);
     }
 
     /**
@@ -113,17 +113,17 @@ public class GameSceneManager {
 
     // 2D-3D scene switch
 
-    private void handle2D3DSwitch(GameVariant uiConfig, GameLevel level, GameScene prevGameScene, GameScene nextGameScene) {
+    private void handle2D3DSwitch(GameVariant gameVariant, GameLevel level, GameScene prevGameScene, GameScene nextGameScene) {
         final GameSceneSwitchType sceneSwitchType = identifySceneSwitchType(prevGameScene, nextGameScene);
         switch (sceneSwitchType) {
-            case FROM_2D_TO_3D -> switchPlaySceneTo3D(uiConfig, level, prevGameScene, nextGameScene);
+            case FROM_2D_TO_3D -> switchPlaySceneTo3D(gameVariant, level, prevGameScene, nextGameScene);
             case FROM_3D_TO_2D -> switchPlaySceneTo2D(prevGameScene, nextGameScene);
             case NONE -> {}
             default -> throw new IllegalArgumentException("Illegal scene switch type: " + sceneSwitchType);
         }
     }
 
-    private void switchPlaySceneTo3D(GameVariant uiConfig, GameLevel level, GameScene currentScene, GameScene nextScene) {
+    private void switchPlaySceneTo3D(GameVariant gameVariant, GameLevel level, GameScene currentScene, GameScene nextScene) {
         if (!(nextScene instanceof PlayScene3D playScene3D)) {
             throw new IllegalArgumentException("Expected PlayScene3D, but scene has class %s"
                 .formatted(nextScene.getClass().getSimpleName()));
@@ -140,7 +140,7 @@ public class GameSceneManager {
         level3D.startLivesCounterTrackingPac();
 
         if (level.entities().pac().powerTimer().isRunning()) {
-            uiConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+            gameVariant.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
 
         Logger.info("3D scene {} entered from 2D game scene {}", playScene3D.getClass().getSimpleName(), currentScene.getClass().getSimpleName());
@@ -195,7 +195,7 @@ public class GameSceneManager {
     }
 
     public void embedGameSceneIntoPlayView(GameScene gameScene) {
-        final GameVariant currentConfig = game.currentGameVariant();
+        final GameVariant gameVariant = game.currentGameVariant();
         final GameViewManager subViews = game.ui().views();
 
         subViews.gamePlayView().contextMenu().hide();
@@ -203,7 +203,7 @@ public class GameSceneManager {
         if (gameScene.optSubSceneFX().isPresent()) {
             embedGameSceneWithSubSceneFX(subViews.gamePlayView(), gameScene, gameScene.optSubSceneFX().get());
         } else if (gameScene instanceof AbstractGameScene2D gameScene2D) {
-            embedGameScene2D(currentConfig.gameSceneConfig(), gameScene2D);
+            embedGameScene2D(gameVariant.gameSceneConfig(), gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }
