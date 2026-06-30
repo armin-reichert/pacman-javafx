@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.config.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.config.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
@@ -80,4 +81,6 @@ public interface Factory3D extends Disposable {
      * @return 3D energizer representation
      */
     Energizer3D createEnergizer3D(Energizer3DSettings config, PhongMaterial material, AnimationRegistry animationRegistry);
+
+    Node createNumberBox3D(GameVariant gameVariant, int index);
 }

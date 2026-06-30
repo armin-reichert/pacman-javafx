@@ -126,7 +126,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Access to game model
     private final GameLevel level;
 
-    private final GameVariant variantConfig;
+    private final GameVariant gameVariant;
 
     private final GameUIViewModel viewModel;
 
@@ -147,12 +147,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         GameUIViewModel viewModel,
         GameContext gameContext,
         GameLevel level,
-        GameVariant variantConfig
+        GameVariant gameVariant
     ) {
         this.viewModel = requireNonNull(viewModel);
         requireNonNull(gameContext);
         this.level = requireNonNull(level);
-        this.variantConfig = requireNonNull(variantConfig);
+        this.gameVariant = requireNonNull(gameVariant);
 
         createMaze3D();
         createFood3D();
@@ -168,7 +168,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public void createAnimations(ParticlesAnimationConfig particlesConfig) {
-        final WorldMapColorScheme mapColorScheme = variantConfig.colorScheme(level.worldMap());
+        final WorldMapColorScheme mapColorScheme = gameVariant.colorScheme(level.worldMap());
         animationRegistry.register(AnimationID.WALL_COLOR_FLASHING,
             new WallColorFlashingAnimation(mapColorScheme, maze3D.materials().get("wallTopMaterial")));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
@@ -209,8 +209,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return maze3D;
     }
 
-    public GameVariant uiConfig() {
-        return variantConfig;
+    public GameVariant gameVariant() {
+        return gameVariant;
     }
 
     public AnimationRegistry animationRegistry() {
@@ -218,7 +218,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public Optional<GameSoundEffects> optSoundEffects() {
-        return variantConfig.optSoundEffects();
+        return gameVariant.optSoundEffects();
     }
 
     public GameLevel level() {
@@ -289,12 +289,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Private area, no trespassing!
 
     private void createMaze3D() {
-        final WorldMapColorScheme colorScheme = variantConfig.colorScheme(level.worldMap());
+        final WorldMapColorScheme colorScheme = gameVariant.colorScheme(level.worldMap());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
-        maze3D = variantConfig.factory3D().createMaze3D(
+        maze3D = gameVariant.factory3D().createMaze3D(
             terrain,
-            variantConfig.worldSettings(),
+            gameVariant.worldSettings(),
             colorScheme,
             animationRegistry);
 
@@ -305,15 +305,15 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createFood3D() {
-        final WorldMapColorScheme colorScheme = variantConfig.colorScheme(level.worldMap());
+        final WorldMapColorScheme colorScheme = gameVariant.colorScheme(level.worldMap());
         final FoodLayer foodLayer = level.worldMap().foodLayer();
 
         final PhongMaterial foodMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
-        final Pellet3DSettings pelletConfig3D = variantConfig.worldSettings().pellet();
+        final Pellet3DSettings pelletConfig3D = gameVariant.worldSettings().pellet();
         final double pelletZ = maze3D.floorTop() - pelletConfig3D.floorElevation();
 
-        final Energizer3DSettings energizerConfig3D = variantConfig.worldSettings().energizer();
+        final Energizer3DSettings energizerConfig3D = gameVariant.worldSettings().energizer();
         final double energizerZ = maze3D.floorTop() - energizerConfig3D.floorElevation();
 
         foodLayer.tiles()
@@ -328,36 +328,36 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private Pellet3D createPellet3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
-        final Pellet3D pellet3D = variantConfig.factory3D().createPellet3D(variantConfig.worldSettings().pellet(), foodMaterial);
+        final Pellet3D pellet3D = gameVariant.factory3D().createPellet3D(gameVariant.worldSettings().pellet(), foodMaterial);
         pellet3D.setLocation(tile, z);
         return pellet3D;
     }
 
     private Energizer3D createEnergizer3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
-        final Energizer3D energizer3D = variantConfig.factory3D().createEnergizer3D(
-            variantConfig.worldSettings().energizer(), foodMaterial, animationRegistry);
+        final Energizer3D energizer3D = gameVariant.factory3D().createEnergizer3D(
+            gameVariant.worldSettings().energizer(), foodMaterial, animationRegistry);
         energizer3D.setLocation(tile, z);
         return energizer3D;
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
-        final Bonus3DSettings config = variantConfig.worldSettings().bonus();
+        final Bonus3DSettings config = gameVariant.worldSettings().bonus();
         final Bonus3D bonus3D = new Bonus3D(animationRegistry, bonus,
-            variantConfig.bonusSymbolImage(bonus.symbolCode()), config.symbolWidth(),
-            variantConfig.bonusValueImage(bonus.symbolCode()),  config.pointsWidth());
+            gameVariant.bonusSymbolImage(bonus.symbolCode()), config.symbolWidth(),
+            gameVariant.bonusValueImage(bonus.symbolCode()),  config.pointsWidth());
         entitySet.add(bonus3D);
         return bonus3D;
     }
 
     private void createPac3D() {
-        final PacSettings config = variantConfig.worldSettings().pac();
-        entitySet.pac3D = variantConfig.factory3D().createPac3D(level.entities().pac(), config, animationRegistry);
+        final PacSettings config = gameVariant.worldSettings().pac();
+        entitySet.pac3D = gameVariant.factory3D().createPac3D(level.entities().pac(), config, animationRegistry);
         entitySet.pac3D.drawModeProperty().bind(viewModel.common3D.drawModeProperty);
         entitySet.add(entitySet.pac3D);
     }
 
     private void createGhosts3D(GameContext gameContext) {
-        final List<GhostSettings> ghostConfigs = variantConfig.worldSettings().ghosts();
+        final List<GhostSettings> ghostConfigs = gameVariant.worldSettings().ghosts();
         entitySet.ghosts3D = Stream.of(GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .map(ghost -> {
@@ -373,14 +373,14 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private Ghost3D createGhost3D(GhostSettings ghostConfig, Ghost ghost) {
-        final Ghost3D ghost3D = variantConfig.factory3D().createGhost3D(ghost, ghostConfig, animationRegistry);
+        final Ghost3D ghost3D = gameVariant.factory3D().createGhost3D(ghost, ghostConfig, animationRegistry);
         ghost3D.setAppearanceController(new Ghost3DAppearanceController());
         ghost3D.setTransformController(new Ghost3DTransformController());
         return ghost3D;
     }
 
     private void createLivesCounter3D() {
-        entitySet.livesCounter3D = new LivesCounter3D(variantConfig.factory3D(), variantConfig.worldSettings());
+        entitySet.livesCounter3D = new LivesCounter3D(gameVariant.factory3D(), gameVariant.worldSettings());
         entitySet.livesCounter3D.setTranslateX(2 * WorldMap.TS);
         entitySet.livesCounter3D.setTranslateY(2 * WorldMap.TS);
         entitySet.add(entitySet.livesCounter3D);
@@ -388,10 +388,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createLevelCounter3D() {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        entitySet.levelCounter3D = new LevelCounter3D(animationRegistry, variantConfig);
+        entitySet.levelCounter3D = new LevelCounter3D(animationRegistry, gameVariant);
         entitySet.levelCounter3D.setTranslateX(WorldMap.TS(terrain.numCols() - 2));
         entitySet.levelCounter3D.setTranslateY(WorldMap.TS(2));
-        entitySet.levelCounter3D.setTranslateZ(-variantConfig.worldSettings().levelCounter().elevation());
+        entitySet.levelCounter3D.setTranslateZ(-gameVariant.worldSettings().levelCounter().elevation());
         entitySet.add(entitySet.levelCounter3D);
     }
 

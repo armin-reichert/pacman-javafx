@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.config.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.config.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
@@ -19,8 +20,11 @@ import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3DFactory;
 import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
+import de.amr.pacmanfx.uilib.model3D.world.NumberBox3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import javafx.scene.shape.TriangleMesh;
@@ -134,5 +138,15 @@ public class DefaultFactory3D implements Factory3D {
         );
 
         return new GhostMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
+    }
+
+    @Override
+    public Node createNumberBox3D(GameVariant gameVariant, int index) {
+        final Image numberImage = createNumberImage(gameVariant, index);
+        return new NumberBox3D(numberImage);
+    }
+
+    protected Image createNumberImage(GameVariant gameVariant, int index) {
+        return gameVariant.killedGhostPointsImage(index);
     }
 }

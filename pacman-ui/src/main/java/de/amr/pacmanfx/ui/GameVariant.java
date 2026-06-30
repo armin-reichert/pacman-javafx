@@ -48,18 +48,6 @@ public interface GameVariant extends Disposable {
 
     WorldSettings worldSettings();
 
-    default WorldMapColorScheme enhanceContrast(WorldMapColorScheme colorScheme) {
-        final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
-        if (wallFillColor.getBrightness() < 0.1) {
-            return new WorldMapColorScheme(
-                worldSettings().maze().darkWallFillColor(),
-                colorScheme.wallStroke(),
-                colorScheme.door(),
-                colorScheme.pellet());
-        }
-        return colorScheme;
-    }
-
     Image bonusSymbolImage(int symbolCode);
 
     Image bonusValueImage(int symbolCode);
@@ -81,4 +69,18 @@ public interface GameVariant extends Disposable {
     SpriteAnimationAccessor createPacAnimations(SpriteAnimationContainer animationSet);
 
     Image killedGhostPointsImage(int killedIndex);
+
+
+    //TODO move elsewhere
+    default WorldMapColorScheme enhanceContrast(WorldMapColorScheme colorScheme) {
+        final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
+        if (wallFillColor.getBrightness() < 0.1) {
+            return new WorldMapColorScheme(
+                worldSettings().maze().darkWallFillColor(),
+                colorScheme.wallStroke(),
+                colorScheme.door(),
+                colorScheme.pellet());
+        }
+        return colorScheme;
+    }
 }
