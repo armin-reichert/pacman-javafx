@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.game.GameScene;
 import javafx.scene.input.KeyCombination;
 
 import java.util.Comparator;
@@ -23,7 +23,7 @@ public class DS_GameSceneKeys extends GameDashboardSection {
         game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> updateInfo(game, gameScene));
     }
 
-    private void updateInfo(Game game, AbstractGameScene gameScene) {
+    private void updateInfo(Game game, GameScene gameScene) {
         clearSection();
         final var currentBindingsMap = gameScene.actionBindings().actionBindings();
         if (currentBindingsMap.isEmpty()) {

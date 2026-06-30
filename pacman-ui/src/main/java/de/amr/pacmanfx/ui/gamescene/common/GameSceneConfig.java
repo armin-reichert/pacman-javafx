@@ -9,6 +9,7 @@ import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameScene;
 
 import java.util.Optional;
 
@@ -18,11 +19,11 @@ import java.util.Optional;
  */
 public interface GameSceneConfig extends Disposable {
 
-    boolean gameSceneHasID(AbstractGameScene gameScene, Identifier sceneID);
+    boolean gameSceneHasID(GameScene gameScene, Identifier sceneID);
 
-    Optional<AbstractGameScene> selectGameScene(Game game, GameModel gameModel);
+    Optional<GameScene> selectGameScene(Game game, GameModel gameModel);
 
     Identifier resolveCutSceneID(GameContext gameContext);
 
-    boolean sceneDecorationRequested(AbstractGameScene gameScene);
+    boolean sceneDecorationRequested(GameScene gameScene);
 }

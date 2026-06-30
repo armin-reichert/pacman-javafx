@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.game.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.model.GameUIViewModel;
@@ -118,13 +118,13 @@ public class DS_3DSettings extends GameDashboardSection {
 
     private String subSceneSizeInfo(Game game) {
         return game.ui().gameScenes().optCurrentGameScene()
-            .flatMap(AbstractGameScene::optSubSceneFX)
+            .flatMap(GameScene::optSubSceneFX)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
     private String subSceneCameraInfo(Game game) {
-        final AbstractGameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
         return gameScene.optSubSceneFX().map(SubScene::getCamera)
             .map(camera -> "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
@@ -137,7 +137,7 @@ public class DS_3DSettings extends GameDashboardSection {
 
     private String sceneSizeInfo(Game game) {
         final GameModel gameModel = game.currentGameContext().model();
-        final AbstractGameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
 
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {

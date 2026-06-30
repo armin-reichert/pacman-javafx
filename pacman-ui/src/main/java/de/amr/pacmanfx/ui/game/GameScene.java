@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.game;
 
+import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.gamestate.GameState;
@@ -17,7 +18,7 @@ import javafx.scene.input.ScrollEvent;
 
 import java.util.Optional;
 
-public interface GameScene extends QuitHandler {
+public interface GameScene extends QuitHandler, Disposable {
 
     Game game();
 

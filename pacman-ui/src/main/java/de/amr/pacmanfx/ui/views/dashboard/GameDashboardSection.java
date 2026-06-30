@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.game.GameScene;
 import de.amr.pacmanfx.uilib.widgets.DashboardSection;
 import de.amr.pacmanfx.uilib.widgets.DashboardSectionCreator;
 import javafx.scene.control.Button;
@@ -40,7 +40,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         dynamicInfoTexts.forEach(DynamicInfoText::update);
     }
 
-    protected Supplier<String> supplyGameSceneInfo(Game game, Function<AbstractGameScene, String> fnInfo) {
+    protected Supplier<String> supplyGameSceneInfo(Game game, Function<GameScene, String> fnInfo) {
         return () -> game.ui().gameScenes().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 

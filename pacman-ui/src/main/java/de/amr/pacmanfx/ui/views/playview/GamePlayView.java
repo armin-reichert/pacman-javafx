@@ -10,7 +10,7 @@ import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.game.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -178,7 +178,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void onInput(Input input) {
         // First look for a matching action of the play view itself; if none found, delegate to the current game scene.
         if (actionBindings.executeMatchingAction(input).isEmpty()) {
-            game.ui().gameScenes().optCurrentGameScene().ifPresent(AbstractGameScene::onInput);
+            game.ui().gameScenes().optCurrentGameScene().ifPresent(GameScene::onInput);
         }
     }
 
@@ -216,7 +216,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void render() {
 
         // Render current 2D game scene
-        final AbstractGameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
             final GameModel gameModel = game.currentGameContext().model();
             if (sceneRenderer != null) {

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameScene;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -30,12 +31,12 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     protected Game game;
-    protected final Map<Identifier, AbstractGameScene> scenesByID = new HashMap<>();
+    protected final Map<Identifier, GameScene> scenesByID = new HashMap<>();
 
     @Override
     public void dispose() {
         Logger.info("Dispose {} game scenes", scenesByID.size());
-        scenesByID.values().forEach(AbstractGameScene::dispose);
+        scenesByID.values().forEach(GameScene::dispose);
         scenesByID.clear();
     }
 
@@ -53,27 +54,27 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public boolean sceneDecorationRequested(AbstractGameScene gameScene) {
+    public boolean sceneDecorationRequested(GameScene gameScene) {
         requireNonNull(gameScene);
         return true;
     }
 
     @Override
-    public final Optional<AbstractGameScene> selectGameScene(Game game, GameModel gameModel) {
+    public final Optional<GameScene> selectGameScene(Game game, GameModel gameModel) {
         requireNonNull(game);
         final Identifier Identifier = determineSceneID(game.currentGameContext());
-        final AbstractGameScene gameScene = scenesByID.computeIfAbsent(Identifier, this::createGameScene);
+        final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, this::createGameScene);
         return Optional.of(gameScene);
     }
 
     @Override
-    public final boolean gameSceneHasID(AbstractGameScene gameScene, Identifier Identifier) {
+    public final boolean gameSceneHasID(GameScene gameScene, Identifier Identifier) {
         requireNonNull(gameScene);
         requireNonNull(Identifier);
         return scenesByID.get(Identifier) == gameScene;
     }
 
-    protected abstract AbstractGameScene createGameScene(Identifier Identifier);
+    protected abstract GameScene createGameScene(Identifier Identifier);
 
     protected abstract Identifier determineSceneID(GameContext gameContext);
 }

@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
@@ -33,7 +34,7 @@ public class GameSceneManager {
 
     private Game game;
 
-    private final ObjectProperty<AbstractGameScene> currentGameScene = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
     public GameSceneManager() {
         currentGameScene.addListener((_, _, newGameScene) -> {
@@ -47,11 +48,11 @@ public class GameSceneManager {
         this.game = requireNonNull(game);
     }
 
-    public Optional<AbstractGameScene> optCurrentGameScene() {
+    public Optional<GameScene> optCurrentGameScene() {
         return Optional.ofNullable(currentGameScene.get());
     }
 
-    public ObjectProperty<AbstractGameScene> currentGameSceneProperty() {
+    public ObjectProperty<GameScene> currentGameSceneProperty() {
         return currentGameScene;
     }
 
@@ -64,8 +65,8 @@ public class GameSceneManager {
         final GameContext gameContext = game.currentGameContext();
         final GameModel gameModel = gameContext.model();
 
-        final AbstractGameScene prevGameScene = optCurrentGameScene().orElse(null);
-        final AbstractGameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(game, gameModel).orElseThrow();
+        final GameScene prevGameScene = optCurrentGameScene().orElse(null);
+        final GameScene nextGameScene = currentConfig.gameSceneConfig().selectGameScene(game, gameModel).orElseThrow();
 
         if (nextGameScene == prevGameScene && !forceReload) {
             return;
@@ -93,7 +94,7 @@ public class GameSceneManager {
      * @param sceneID scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean hasGameSceneID(AbstractGameScene gameScene, Identifier sceneID) {
+    public boolean hasGameSceneID(GameScene gameScene, Identifier sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         final GameVariantConfig currentConfig = game.currentVariantConfig();
@@ -107,13 +108,13 @@ public class GameSceneManager {
      * @return {@code true} if the active scene has the given ID
      */
     public boolean currentGameSceneHasID(Identifier sceneID) {
-        final AbstractGameScene current = currentGameSceneProperty().get();
+        final GameScene current = currentGameSceneProperty().get();
         return current != null && hasGameSceneID(current, sceneID);
     }
 
     // 2D-3D scene switch
 
-    private void handle2D3DSwitch(GameVariantConfig uiConfig, GameLevel level, AbstractGameScene prevGameScene, AbstractGameScene nextGameScene) {
+    private void handle2D3DSwitch(GameVariantConfig uiConfig, GameLevel level, GameScene prevGameScene, GameScene nextGameScene) {
         final GameSceneSwitchType sceneSwitchType = identifySceneSwitchType(prevGameScene, nextGameScene);
         switch (sceneSwitchType) {
             case FROM_2D_TO_3D -> switchPlaySceneTo3D(uiConfig, level, prevGameScene, nextGameScene);
@@ -123,7 +124,7 @@ public class GameSceneManager {
         }
     }
 
-    private void switchPlaySceneTo3D(GameVariantConfig uiConfig, GameLevel level, AbstractGameScene currentScene, AbstractGameScene nextScene) {
+    private void switchPlaySceneTo3D(GameVariantConfig uiConfig, GameLevel level, GameScene currentScene, GameScene nextScene) {
         if (!(nextScene instanceof PlayScene3D playScene3D)) {
             throw new IllegalArgumentException("Expected PlayScene3D, but scene has class %s"
                 .formatted(nextScene.getClass().getSimpleName()));
@@ -148,7 +149,7 @@ public class GameSceneManager {
         playScene3D.fadeInAnimation().playFromStart();
     }
 
-    private void switchPlaySceneTo2D(AbstractGameScene currentScene, AbstractGameScene nextScene) {
+    private void switchPlaySceneTo2D(GameScene currentScene, GameScene nextScene) {
         if (!(nextScene instanceof AbstractGameScene2D playScene2D)) {
             throw new IllegalArgumentException("Expected GameScene2D, but scene has class %s"
                 .formatted(nextScene.getClass().getSimpleName()));
@@ -157,7 +158,7 @@ public class GameSceneManager {
         Logger.info("2D scene {} entered from 3D scene {}", playScene2D.getClass().getSimpleName(), currentScene.getClass().getSimpleName());
     }
 
-    private GameSceneSwitchType identifySceneSwitchType(AbstractGameScene sceneBefore, AbstractGameScene sceneAfter) {
+    private GameSceneSwitchType identifySceneSwitchType(GameScene sceneBefore, GameScene sceneAfter) {
         if (sceneBefore == null && sceneAfter == null) {
             throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
         }
@@ -170,7 +171,7 @@ public class GameSceneManager {
 
     // Scene embedding
 
-    public void removeFromPlayView(AbstractGameScene gameScene) {
+    public void removeFromPlayView(GameScene gameScene) {
         requireNonNull(game);
         requireNonNull(gameScene);
 
@@ -194,7 +195,7 @@ public class GameSceneManager {
         Logger.info("Game scene {} REMOVED from play view!", gameScene.getClass().getSimpleName());
     }
 
-    public void embedGameSceneIntoPlayView(AbstractGameScene gameScene) {
+    public void embedGameSceneIntoPlayView(GameScene gameScene) {
         final GameVariantConfig currentConfig = game.currentVariantConfig();
         final GameViewManager subViews = game.ui().views();
 
@@ -210,7 +211,7 @@ public class GameSceneManager {
     }
 
     // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(GamePlayView playView, AbstractGameScene gameScene, SubScene subSceneFX) {
+    private void embedGameSceneWithSubSceneFX(GamePlayView playView, GameScene gameScene, SubScene subSceneFX) {
         final GameMainScene mainScene = game.ui().window().mainScene();
 
         // stretch sub scene to available space

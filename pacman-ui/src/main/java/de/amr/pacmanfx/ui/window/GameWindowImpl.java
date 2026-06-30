@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.game.GameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
@@ -127,7 +127,7 @@ public class GameWindowImpl implements GameWindow {
     }
 
     private String titleForCurrentGameScene(Game game) {
-        final AbstractGameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
 
         final boolean debug = game.ui().viewModel().debugModeOnProperty.get();
         final boolean is3D = game.ui().viewModel().common3D.view3DEnabledProperty.get();
