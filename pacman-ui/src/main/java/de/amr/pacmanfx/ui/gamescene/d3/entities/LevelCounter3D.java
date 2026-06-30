@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
 import de.amr.basics.Identifier;
@@ -37,22 +38,22 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
     }
 
     private final AnimationRegistry animations;
-    private final GameVariant uiConfig;
+    private final GameVariant gameVariant;
 
-    public LevelCounter3D(AnimationRegistry animations, GameVariant uiConfig) {
+    public LevelCounter3D(AnimationRegistry animations, GameVariant gameVariant) {
         this.animations = requireNonNull(animations);
-        this.uiConfig = requireNonNull(uiConfig);
+        this.gameVariant = requireNonNull(gameVariant);
     }
 
     @Override
     public void init(GameContext gameContext, GameLevel level) {
-        final LevelCounter3DSettings config = uiConfig.worldSettings().levelCounter();
+        final LevelCounter3DSettings config = gameVariant.worldSettings().levelCounter();
         final float cubeSize = config.symbolSize();
         final List<Integer> symbolCodes = level.gameModel().levelCounter().symbolCodes();
         getChildren().clear();
         for (int i = 0; i < symbolCodes.size(); ++i) {
             final Integer symbolCode = symbolCodes.get(i);
-            final Image symbolImage = uiConfig.bonusSymbolImage(symbolCode);
+            final Image symbolImage = gameVariant.bonusSymbolImage(symbolCode);
             final var texture = new PhongMaterial(Color.WHITE);
             texture.setDiffuseMap(symbolImage);
             final var cube = new Box(cubeSize, cubeSize, cubeSize);
@@ -64,7 +65,15 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
         }
 
         animations.optAnimation(AnimationID.LEVEL_COUNTER_SPINNING).ifPresent(ManagedAnimation::dispose);
+
+        final ManagedAnimation spinningAnimation = createSpinningAnimation();
+        animations.register(AnimationID.LEVEL_COUNTER_SPINNING, spinningAnimation);
+        spinningAnimation.playFromStart();
+    }
+
+    private ManagedAnimation createSpinningAnimation() {
         final var spinningAnimation = new ManagedAnimation("Level Counter Spinning");
+
         spinningAnimation.setFactory(() -> {
             final var cubesAnimation = new ParallelTransition();
             for (int i = 0; i < getChildren().size(); ++i) {
@@ -78,8 +87,8 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
             }
             return cubesAnimation;
         });
-        animations.register(AnimationID.LEVEL_COUNTER_SPINNING, spinningAnimation);
-        spinningAnimation.playFromStart();
+
+        return spinningAnimation;
     }
 
     @Override
