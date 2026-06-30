@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacManConfig;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacManGameVariant;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
@@ -19,7 +19,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.ui.GameVariantConfig;
+import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
@@ -50,11 +50,11 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacManConfig implements GameVariantConfig, ResourceManager {
+public class ArcadeMsPacManGameVariant implements GameVariant, ResourceManager {
 
     @Override
     public Class<?> resourceRootClass() {
-        return ArcadeMsPacManConfig.class;
+        return ArcadeMsPacManGameVariant.class;
     }
 
     private final ResourceBundle textBundle;
@@ -63,7 +63,7 @@ public class ArcadeMsPacManConfig implements GameVariantConfig, ResourceManager 
     private GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
-    public ArcadeMsPacManConfig() {
+    public ArcadeMsPacManGameVariant() {
         textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts");
     }
 
@@ -122,7 +122,7 @@ public class ArcadeMsPacManConfig implements GameVariantConfig, ResourceManager 
 
     @Override
     public WorldSettings worldSettings() {
-        return ArcadePacManConfig.WORLD_CONFIG;
+        return ArcadePacManGameVariant.WORLD_CONFIG;
     }
 
     @Override

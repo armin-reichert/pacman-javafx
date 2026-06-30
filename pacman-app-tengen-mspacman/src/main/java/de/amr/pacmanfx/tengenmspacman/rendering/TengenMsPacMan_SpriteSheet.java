@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ResourceManager;
-import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig;
+import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
@@ -51,7 +51,7 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     private final Image image;
 
     private TengenMsPacMan_SpriteSheet() {
-        image = TengenMsPacMan_ResourceManager.instance().loadImage(TengenMsPacManConfig.REL_PATH_SPRITE_SHEET_IMAGE);
+        image = TengenMsPacMan_ResourceManager.instance().loadImage(TengenMsPacManGameVariant.REL_PATH_SPRITE_SHEET_IMAGE);
 
         spriteMap.add(LARGE_MS_PAC_MAN_TEXT, RectShort.of(15, 191, 152, 40));
         spriteMap.add(INFO_FRAME,            RectShort.of(175, 125, 126, 7));

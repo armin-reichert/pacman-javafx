@@ -20,7 +20,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.*;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
-import de.amr.pacmanfx.ui.GameVariantConfig;
+import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -42,13 +42,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class TengenMsPacManConfig implements GameVariantConfig {
+public class TengenMsPacManGameVariant implements GameVariant {
 
     // Local resources are stored inside main resource folder subdirectories named after package name of this class
     private static final ResourceManager LOCAL_RESOURCES = TengenMsPacMan_ResourceManager.instance();
 
     private static final WorldSettings WORLD_CONFIG = TengenSettingsLoader.load(
-        TengenMsPacManConfig.class.getResource("/de/amr/pacmanfx/tengenmspacman/world.json"), WorldSettings.class);
+        TengenMsPacManGameVariant.class.getResource("/de/amr/pacmanfx/tengenmspacman/world.json"), WorldSettings.class);
 
     // Note: Order of bonus symbols in spritesheet is not 1:1 with order of bonus values!
     // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
@@ -128,7 +128,7 @@ public class TengenMsPacManConfig implements GameVariantConfig {
     private GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
-    public TengenMsPacManConfig() {
+    public TengenMsPacManGameVariant() {
         textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
         Logger.info("Created Tengen UI configuration {}:", getClass().getSimpleName());
     }

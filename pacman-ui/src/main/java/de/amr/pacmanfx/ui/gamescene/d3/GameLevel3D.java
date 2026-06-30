@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntitySet;
 import de.amr.pacmanfx.model.world.*;
-import de.amr.pacmanfx.ui.GameVariantConfig;
+import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.config.world.Bonus3DSettings;
 import de.amr.pacmanfx.ui.config.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.config.world.Pellet3DSettings;
@@ -126,7 +126,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Access to game model
     private final GameLevel level;
 
-    private final GameVariantConfig variantConfig;
+    private final GameVariant variantConfig;
 
     private final GameUIViewModel viewModel;
 
@@ -147,7 +147,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         GameUIViewModel viewModel,
         GameContext gameContext,
         GameLevel level,
-        GameVariantConfig variantConfig
+        GameVariant variantConfig
     ) {
         this.viewModel = requireNonNull(viewModel);
         requireNonNull(gameContext);
@@ -209,7 +209,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return maze3D;
     }
 
-    public GameVariantConfig uiConfig() {
+    public GameVariant uiConfig() {
         return variantConfig;
     }
 

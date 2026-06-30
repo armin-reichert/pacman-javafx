@@ -16,7 +16,7 @@ import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameVariantConfig;
+import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
@@ -50,7 +50,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * UI configuration for the Arcade Pac‑Man game variant.
  */
-public class ArcadePacManConfig implements GameVariantConfig, ResourceManager {
+public class ArcadePacManGameVariant implements GameVariant, ResourceManager {
 
     public static final WorldSettings WORLD_CONFIG = SettingsLoader.load(
         GameUI.class.getResource("/de/amr/pacmanfx/ui/world.json"), WorldSettings.class);
@@ -70,13 +70,13 @@ public class ArcadePacManConfig implements GameVariantConfig, ResourceManager {
     private GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
-    public ArcadePacManConfig() {
+    public ArcadePacManGameVariant() {
         textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts");
     }
 
     @Override
     public Class<?> resourceRootClass() {
-        return ArcadePacManConfig.class;
+        return ArcadePacManGameVariant.class;
     }
 
     // UIConfig interface

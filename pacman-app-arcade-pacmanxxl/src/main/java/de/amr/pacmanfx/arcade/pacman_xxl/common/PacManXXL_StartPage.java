@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
-import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacManConfig;
+import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXLGameVariant;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 public class PacManXXL_StartPage implements StartPage {
 
     static final String ROOT_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
-    static final ResourceManager RM = () -> PacManXXL_PacManConfig.class;
+    static final ResourceManager RM = () -> PacManXXLGameVariant.class;
     static final Image WALLPAPER_IMAGE = RM.loadImage(ROOT_PATH + "graphics/screenshot.png");
     static final Media VARIANT_NARRATION = RM.loadMedia(ROOT_PATH + "sound/game-description.mp3");
 

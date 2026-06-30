@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameVariantConfig;
+import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
@@ -150,7 +150,7 @@ public final class GameImpl implements Game {
     }
 
     @Override
-    public GameVariantConfig currentVariantConfig() {
+    public GameVariant currentVariantConfig() {
         return currentGameVariant().config();
     }
 
