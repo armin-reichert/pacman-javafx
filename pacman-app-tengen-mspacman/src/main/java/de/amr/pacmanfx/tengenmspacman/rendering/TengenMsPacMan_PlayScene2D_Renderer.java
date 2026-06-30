@@ -12,7 +12,7 @@ import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -41,7 +41,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         }
 
         @Override
-        public void draw(GameScene2D scene) {
+        public void draw(AbstractGameScene2D scene) {
             final GameModel gameModel = scene.gameModel();
             final GameState gameState = scene.gameState();
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
@@ -68,7 +68,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     private final BaseDebugInfoRenderer debugRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    public TengenMsPacMan_PlayScene2D_Renderer(GameVariantConfig uiConfig, GameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_PlayScene2D_Renderer(GameVariantConfig uiConfig, AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
         levelRenderer = scene.configureRenderer((TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas));
         actorRenderer = scene.configureRenderer((TengenMsPacMan_ActorRenderer)     uiConfig.createActorRenderer(canvas));
@@ -86,7 +86,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     }
 
     @Override
-    public void draw(GameScene2D scene) {
+    public void draw(AbstractGameScene2D scene) {
         clearCanvas();
         if (!(scene instanceof TengenMsPacMan_PlayScene2D playScene2D)) {
             return;

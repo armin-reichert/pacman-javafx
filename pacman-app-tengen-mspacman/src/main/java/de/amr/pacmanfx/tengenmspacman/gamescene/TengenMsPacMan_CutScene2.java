@@ -12,7 +12,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -26,7 +26,7 @@ import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCR
  * Pac-Man and Ms. Pac-Man chase each other across the screen over and over. After three turns, they both rapidly run
  * from left to right and right to left. (Played after round 5)
  */
-public class TengenMsPacMan_CutScene2 extends GameScene2D {
+public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
 
     public static final int TICK_EXPIRES = 1380;
 

@@ -7,7 +7,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.HUDState;
 import de.amr.pacmanfx.score.Score;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
@@ -40,7 +40,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
     }
 
     @Override
-    public void draw(HUDState hud, GameModel gameModel, GameScene2D scene) {
+    public void draw(HUDState hud, GameModel gameModel, AbstractGameScene2D scene) {
         requireNonNull(gameModel);
         requireNonNull(scene);
 

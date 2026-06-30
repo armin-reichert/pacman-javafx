@@ -5,18 +5,18 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene1;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
 
 public class ArcadePacMan_CutScene1_Renderer extends ArcadePacMan_CutScene_Renderer {
 
-    public ArcadePacMan_CutScene1_Renderer(GameScene2D scene, Canvas canvas) {
+    public ArcadePacMan_CutScene1_Renderer(AbstractGameScene2D scene, Canvas canvas) {
         super(scene, canvas);
         debugRenderer = scene.configureRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override
-            public void draw(GameScene2D scene) {
+            public void draw(AbstractGameScene2D scene) {
                 super.draw(scene);
                 if (scene instanceof ArcadePacMan_CutScene1 cutScene1) {
                     final String text = cutScene1.sceneTick < ArcadePacMan_CutScene1.ANIMATION_START_TICK
@@ -29,7 +29,7 @@ public class ArcadePacMan_CutScene1_Renderer extends ArcadePacMan_CutScene_Rende
     }
 
     @Override
-    protected void drawSceneContent(GameScene2D scene) {
+    protected void drawSceneContent(AbstractGameScene2D scene) {
         if (scene instanceof ArcadePacMan_CutScene1 cutScene) {
             actorRenderer.drawActor(cutScene.blinky);
             actorRenderer.drawActor(cutScene.pacMan);

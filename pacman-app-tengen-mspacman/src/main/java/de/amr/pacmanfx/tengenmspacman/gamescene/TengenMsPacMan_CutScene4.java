@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -28,7 +28,7 @@ import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
 import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.*;
 
-public class TengenMsPacMan_CutScene4 extends GameScene2D {
+public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
     public static final int TICK_EXPIRES = 1512;
 

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
@@ -36,7 +36,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public TengenMsPacMan_OptionsScene_Renderer(GameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_OptionsScene_Renderer(AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
         requireNonNull(scene);
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
@@ -52,7 +52,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         return this;
     }
 
-    public void draw(GameScene2D gameScene2D) {
+    public void draw(AbstractGameScene2D gameScene2D) {
         final GameVariantConfig variantConfig = gameScene2D.game().currentVariantConfig();
         final var gameScene = (TengenMsPacMan_OptionsScene) gameScene2D;
         final var gameModel = (TengenMsPacMan_GameModel) gameScene.gameModel();

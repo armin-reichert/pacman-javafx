@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_CutScene3;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
@@ -19,14 +19,14 @@ public class ArcadeMsPacMan_CutScene3_Renderer extends BaseRenderer implements G
     private final ArcadeMsPacMan_ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public ArcadeMsPacMan_CutScene3_Renderer(GameVariantConfig uiConfig, GameScene2D scene, Canvas canvas) {
+    public ArcadeMsPacMan_CutScene3_Renderer(GameVariantConfig uiConfig, AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
         actorRenderer = scene.configureRenderer((ArcadeMsPacMan_ActorRenderer) uiConfig.createActorRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 
     @Override
-    public void draw(GameScene2D scene) {
+    public void draw(AbstractGameScene2D scene) {
         clearCanvas();
 
         if (scene instanceof ArcadeMsPacMan_CutScene3 cutScene) {

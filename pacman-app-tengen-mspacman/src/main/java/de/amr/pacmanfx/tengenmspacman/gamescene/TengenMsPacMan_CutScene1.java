@@ -17,7 +17,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -33,7 +33,7 @@ import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCR
  * upwards, causing Inky and Pinky to collide and vanish. Finally, Pac-Man and Ms. Pac-Man face each other at the top of
  * the screen and a big pink heart appears above them.
  */
-public class TengenMsPacMan_CutScene1 extends GameScene2D {
+public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     public static final int TICK_EXPIRES = 775;
 

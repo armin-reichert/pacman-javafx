@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import org.tinylog.Logger;
 
@@ -29,7 +29,7 @@ import static de.amr.pacmanfx.model.world.WorldMap.TS;
  * bundle, which falls to the ground in front of Pac-Man and Ms. Pac-Man, and finally opens up to reveal a tiny Pac-Man.
  * (Played after rounds 9, 13, and 17)
  */
-public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
+public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
     private static final int GROUND_Y = TS * 24;
 

@@ -5,15 +5,16 @@
 package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEventListener;
+import de.amr.pacmanfx.gamestate.GameState;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
-import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GameFacade;
+import de.amr.pacmanfx.ui.game.GameScene;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.input.ScrollEvent;
+import javafx.scene.SubScene;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -23,11 +24,11 @@ import static java.util.Objects.requireNonNull;
 /**
  * Abstract base class for all game scenes (2D and 3D).
  */
-public abstract class AbstractGameScene implements GameFacade, QuitHandler, Disposable {
-
-    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for " + getClass().getSimpleName());
+public abstract class AbstractGameScene implements GameScene, Disposable {
 
     private final Game game;
+
+    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for " + getClass().getSimpleName());
 
     private GameEventListener gameEventHandler;
 
@@ -36,42 +37,30 @@ public abstract class AbstractGameScene implements GameFacade, QuitHandler, Disp
         gameEventHandler = new BaseGameEventHandler(game);
     }
 
-    public Game game() {
-        return game;
-    }
-
     public void setGameEventHandler(GameEventListener delegate) {
         gameEventHandler = requireNonNull(delegate);
     }
 
-    public GameEventListener gameEventHandler() {
-        return gameEventHandler;
-    }
+    /**
+     * Hook method called when the game scene becomes active.
+     */
+    protected void onActivate() {}
 
     /**
-     * @return action bindings for this scene
+     * Hook method called when the game scene becomes inactive.
      */
-    public ActionBindingsRegistry actionBindings() {
-        return actionBindings;
-    }
+    protected void onDeactivate() {}
 
-    /**
-     * Activates the scene and assigns keyboard bindings.
-     */
+    // --- Interface "GameScene"
+
+    @Override
     public final void activate() {
         onActivate();
         Logger.trace("Game scene {} activated", getClass().getSimpleName());
         Logger.info(actionBindings);
     }
 
-    /**
-     * Called when the scene is deactivated.
-     * Subclasses must:<br/>
-     * - unbind all properties<br/>
-     * - remove all listeners<br/>
-     * - stop all timers<br/>
-     * - release all UI references (canvas, subscene, etc.)
-     */
+    @Override
     public final void deactivate() {
         onDeactivate();
         actionBindings.dispose();
@@ -79,45 +68,56 @@ public abstract class AbstractGameScene implements GameFacade, QuitHandler, Disp
         Logger.trace("Game scene {} deactivated", getClass().getSimpleName());
     }
 
-    /** Called when the scene becomes active. */
-    public void onActivate() {}
+    @Override
+    public ActionBindingsRegistry actionBindings() {
+        return actionBindings;
+    }
 
-    /** Called when the scene is deactivated. */
-    public void onDeactivate() {}
+    @Override
+    public Game game() {
+        return game;
+    }
+
+    @Override
+    public GameContext gameContext() {
+        return game().currentGameContext();
+    }
+
+    @Override
+    public GameModel gameModel() {
+        return gameContext().model();
+    }
+
+    @Override
+    public GameState gameState() {
+        return gameContext().state();
+    }
+
+    @Override
+    public Optional<SubScene> optSubSceneFX() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<GameSoundEffects> optSoundEffects() {
+        return game().currentSoundEffects();
+    }
+
+    @Override
+    public GameEventListener gameEventHandler() {
+        return gameEventHandler;
+    }
+
+    @Override
+    public void onInput() {
+        actionBindings().executeMatchingAction(game.input());
+    }
+
+    // --- Interface "QuitHandler"
 
     @Override
     public void handleQuit(Game game) {
         Logger.info("Game scene {} quitted", getClass().getSimpleName());
         onDeactivate();
-    }
-
-    /**
-     * Called every game tick.
-     *
-     * @param tick the tick count of the global game clock. Note that each game state has its own timer!
-     */
-    public void onTick(long tick) {}
-
-    /** Called when the scene is embedded into the UI. */
-    public void onEmbedded() {}
-
-    /**
-     * Called when a key combination is pressed inside this scene.
-     * Executes the first matching action.
-     */
-    public void onInput() {
-        actionBindings().executeMatchingAction(game.input());
-    }
-
-    /**
-     * Called when a scroll event occurs inside this scene.
-     */
-    public void onScroll(ScrollEvent scrollEvent) {}
-
-    /**
-     * @return optional context menu contributed by this scene
-     */
-    public Optional<ContextMenu> supplyContextMenu() {
-        return Optional.empty();
     }
 }

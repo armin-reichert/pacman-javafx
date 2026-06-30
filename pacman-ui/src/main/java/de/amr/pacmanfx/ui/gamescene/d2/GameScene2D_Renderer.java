@@ -8,9 +8,9 @@ import javafx.scene.canvas.Canvas;
 
 public interface GameScene2D_Renderer extends Renderer {
 
-    void draw(GameScene2D scene);
+    void draw(AbstractGameScene2D scene);
 
-    static BaseDebugInfoRenderer createDefaultSceneDebugRenderer(GameScene2D scene, Canvas canvas) {
+    static BaseDebugInfoRenderer createDefaultSceneDebugRenderer(AbstractGameScene2D scene, Canvas canvas) {
         return scene.configureRenderer(new BaseDebugInfoRenderer(canvas));
     }
 }

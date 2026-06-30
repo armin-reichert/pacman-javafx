@@ -6,12 +6,12 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 
 /**
  * Scene shown after credit has been added and where game can be started.
  */
-public class ArcadePacMan_StartScene extends GameScene2D {
+public class ArcadePacMan_StartScene extends AbstractGameScene2D {
 
     public ArcadePacMan_StartScene(Game game) {
         super(game);
@@ -28,5 +28,9 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     public void onDeactivate() {
         game().ui().sounds().stopAndDisposeVoice();
         actionBindings().dispose();
+    }
+
+    @Override
+    public void onTick(long tick) {
     }
 }

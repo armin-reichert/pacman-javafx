@@ -7,7 +7,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.model.GameUIViewModel;
 import javafx.scene.SubScene;
@@ -140,7 +140,7 @@ public class DS_3DSettings extends GameDashboardSection {
         final AbstractGameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
 
-        if (gameScene instanceof GameScene2D gameScene2D) {
+        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
             return "%dx%d (scaled: %.0fx%.0f)".formatted(
                 gameScene2D.unscaledWidth(), gameScene2D.unscaledHeight(),
                 gameScene2D.width(), gameScene2D.height());

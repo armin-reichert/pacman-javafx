@@ -13,7 +13,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene4;
 import de.amr.pacmanfx.tengenmspacman.model.*;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
@@ -48,7 +48,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     @Override
-    public void draw(HUDState hud, GameModel game, GameScene2D scene) {
+    public void draw(HUDState hud, GameModel game, AbstractGameScene2D scene) {
         requireNonNull(hud);
         requireNonNull(game);
         requireNonNull(scene);
@@ -92,7 +92,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         ctx.restore();
     }
 
-    private double computeOffsetY(GameScene2D scene) {
+    private double computeOffsetY(AbstractGameScene2D scene) {
         return switch (scene) {
             case TengenMsPacMan_CutScene1 ignored -> -2 * TS;
             case TengenMsPacMan_CutScene2 ignored -> -2 * TS;

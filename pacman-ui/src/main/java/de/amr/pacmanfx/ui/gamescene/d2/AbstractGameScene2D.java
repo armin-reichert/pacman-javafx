@@ -12,7 +12,11 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -27,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  * must establish and release all bindings, listeners, and resources created
  * by the subclass.
  */
-public class GameScene2D extends AbstractGameScene {
+public abstract class AbstractGameScene2D extends AbstractGameScene {
 
     private final IntegerProperty unscaledWidth = new SimpleIntegerProperty(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
 
@@ -39,8 +43,23 @@ public class GameScene2D extends AbstractGameScene {
 
     protected Canvas canvas;
 
-    public GameScene2D(Game game) {
+    public AbstractGameScene2D(Game game) {
         super(game);
+    }
+
+    @Override
+    public void onEmbedded() {
+        //TODO remove this hook method
+    }
+
+    @Override
+    public void onScroll(ScrollEvent scrollEvent) {
+        // Used only by very few subclasses
+    }
+
+    @Override
+    public Optional<ContextMenu> optContextMenu() {
+        return Optional.empty();
     }
 
     @Override

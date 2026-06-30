@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.control.CheckMenuItem;
@@ -29,7 +29,7 @@ import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 /**
  * 2D play scene for Arcade game variants.
  */
-public class Arcade_PlayScene2D extends GameScene2D {
+public class Arcade_PlayScene2D extends AbstractGameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
@@ -57,7 +57,7 @@ public class Arcade_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public Optional<ContextMenu> supplyContextMenu() {
+    public Optional<ContextMenu> optContextMenu() {
         final TranslationManager translations = game().ui().translations();
         final CheatActions cheatActions = game().actions().cheatActions();
 

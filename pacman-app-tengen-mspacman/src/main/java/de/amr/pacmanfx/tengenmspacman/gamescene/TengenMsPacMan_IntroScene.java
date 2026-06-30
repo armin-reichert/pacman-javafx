@@ -20,7 +20,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCREEN_WIDTH;
 
-public class TengenMsPacMan_IntroScene extends GameScene2D {
+public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
     // Anchor point for everything
     public static final int MARQUEE_X = 60, MARQUEE_Y = 64;

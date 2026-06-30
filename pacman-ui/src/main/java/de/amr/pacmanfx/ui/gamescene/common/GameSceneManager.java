@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -149,7 +149,7 @@ public class GameSceneManager {
     }
 
     private void switchPlaySceneTo2D(AbstractGameScene currentScene, AbstractGameScene nextScene) {
-        if (!(nextScene instanceof GameScene2D playScene2D)) {
+        if (!(nextScene instanceof AbstractGameScene2D playScene2D)) {
             throw new IllegalArgumentException("Expected GameScene2D, but scene has class %s"
                 .formatted(nextScene.getClass().getSimpleName()));
         }
@@ -162,8 +162,8 @@ public class GameSceneManager {
             throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
         }
         return switch (sceneBefore) {
-            case GameScene2D ignored when sceneAfter instanceof PlayScene3D -> GameSceneSwitchType.FROM_2D_TO_3D;
-            case PlayScene3D ignored when sceneAfter instanceof GameScene2D -> GameSceneSwitchType.FROM_3D_TO_2D;
+            case AbstractGameScene2D ignored when sceneAfter instanceof PlayScene3D -> GameSceneSwitchType.FROM_2D_TO_3D;
+            case PlayScene3D ignored when sceneAfter instanceof AbstractGameScene2D -> GameSceneSwitchType.FROM_3D_TO_2D;
             case null, default -> GameSceneSwitchType.NONE; // may happen, it's ok
         };
     }
@@ -180,7 +180,7 @@ public class GameSceneManager {
             subSceneFX.widthProperty().unbind();
             subSceneFX.heightProperty().unbind();
         });
-        if (gameScene instanceof GameScene2D gameScene2D) {
+        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
             final DecorationPane frame = game.ui().views().gamePlayView().gameSceneFrame();
             frame.canvas().widthProperty().unbind();
             frame.canvas().heightProperty().unbind();
@@ -202,7 +202,7 @@ public class GameSceneManager {
 
         if (gameScene.optSubSceneFX().isPresent()) {
             embedGameSceneWithSubSceneFX(subViews.gamePlayView(), gameScene, gameScene.optSubSceneFX().get());
-        } else if (gameScene instanceof GameScene2D gameScene2D) {
+        } else if (gameScene instanceof AbstractGameScene2D gameScene2D) {
             embedGameScene2D(currentConfig.gameSceneConfig(), gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
@@ -217,7 +217,7 @@ public class GameSceneManager {
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
         subSceneFX.heightProperty().bind(mainScene.heightProperty());
 
-        if (gameScene instanceof GameScene2D gameScene2D) {
+        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
             gameScene2D.setCanvas(playView.gameSceneFrame().canvas());
             playView.updateGameSceneRenderers(gameScene2D);
@@ -226,7 +226,7 @@ public class GameSceneManager {
     }
 
     // 2D scenes without camera which are shown at full size
-    private void embedGameScene2D(GameSceneConfig gameSceneConfig, GameScene2D gameScene2D) {
+    private void embedGameScene2D(GameSceneConfig gameSceneConfig, AbstractGameScene2D gameScene2D) {
         final GameMainScene mainScene = game.ui().window().mainScene();
         final GamePlayView playView = game.ui().views().gamePlayView();
         final DecorationPane frame = playView.gameSceneFrame();

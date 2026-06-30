@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.pacmanfx.model.GameModel.RED_GHOST_SHADOW;
@@ -20,7 +20,7 @@ import static de.amr.pacmanfx.model.GameModel.RED_GHOST_SHADOW;
  * Red ghost in damaged dress chases Pac-Man from right to left over the screen.
  * After they have disappeared, a naked, shaking ghost runs from left over the screen.
  */
-public class ArcadePacMan_CutScene3 extends GameScene2D {
+public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
 
     public static final int TICK_ANIMATION_START      = 120;
     public static final int TICK_BLINKY_RUNNING_NAKED = TICK_ANIMATION_START + 400;

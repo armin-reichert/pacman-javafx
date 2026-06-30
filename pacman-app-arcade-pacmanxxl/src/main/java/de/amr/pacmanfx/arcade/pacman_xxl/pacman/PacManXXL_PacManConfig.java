@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
@@ -128,7 +128,7 @@ public final class PacManXXL_PacManConfig implements GameVariantConfig, Resource
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(GameScene2D gameScene2D, Canvas canvas) {
+    public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene2D gameScene2D, Canvas canvas) {
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
             case Arcade_BootScene2D      ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), spriteRegionForArcadeBootScene());
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, gameScene2D, canvas);
@@ -143,7 +143,7 @@ public final class PacManXXL_PacManConfig implements GameVariantConfig, Resource
     }
 
     @Override
-    public HeadsUpDisplay_Renderer createHUDRenderer(GameScene2D gameScene2D, Canvas canvas) {
+    public HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene2D gameScene2D, Canvas canvas) {
         final var hudRenderer = new ArcadePacMan_HeadsUpDisplay_Renderer(canvas);
         hudRenderer.setImageSmoothing(true);
         gameScene2D.configureRenderer(hudRenderer);

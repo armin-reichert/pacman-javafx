@@ -262,7 +262,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     }
 
     @Override
-    public Optional<ContextMenu> supplyContextMenu() {
+    public Optional<ContextMenu> optContextMenu() {
         contextMenu = new PlaySceneContextMenu(game());
         return Optional.of(contextMenu);
     }

@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
@@ -24,7 +24,7 @@ import static de.amr.pacmanfx.model.world.WorldMap.TS;
  * Pac-Man and Ms. Pac-Man chase each other across the screen over and over. After three turns, they both rapidly run
  * from left to right and right to left. (Played after round 5)
  */
-public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
+public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
 
     static final int UPPER_Y  = TS * 12;
     static final int MIDDLE_Y = TS * 18;

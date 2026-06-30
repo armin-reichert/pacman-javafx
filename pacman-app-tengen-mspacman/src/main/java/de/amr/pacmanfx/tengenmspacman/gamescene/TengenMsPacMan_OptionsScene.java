@@ -12,7 +12,7 @@ import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import javafx.beans.property.IntegerProperty;
@@ -34,7 +34,7 @@ import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
  *
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/MsPacManTENGENDis.asm:9545">Disassembly</a>.
  */
-public class TengenMsPacMan_OptionsScene extends GameScene2D {
+public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
 
     public static final byte OPTION_PLAYERS = 0;
     public static final byte OPTION_PAC_BOOSTER = 1;

@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
@@ -16,12 +16,12 @@ public class ArcadePacMan_StartScene_Renderer extends BaseRenderer implements Ga
 
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public ArcadePacMan_StartScene_Renderer(GameScene2D scene, Canvas canvas) {
+    public ArcadePacMan_StartScene_Renderer(AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 
-    public void draw(GameScene2D scene) {
+    public void draw(AbstractGameScene2D scene) {
         clearCanvas();
 
         fillText("PUSH START BUTTON",       ARCADE_ORANGE, arcadeFont8(), TS(6),  TS(17));

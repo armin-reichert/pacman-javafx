@@ -20,7 +20,7 @@ import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
@@ -173,7 +173,7 @@ public class ArcadePacManConfig implements GameVariantConfig, ResourceManager {
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(GameScene2D gameScene2D, Canvas canvas) {
+    public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene2D gameScene2D, Canvas canvas) {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
@@ -196,7 +196,7 @@ public class ArcadePacManConfig implements GameVariantConfig, ResourceManager {
     }
 
     @Override
-    public HeadsUpDisplay_Renderer createHUDRenderer(GameScene2D gameScene2D, Canvas canvas) {
+    public HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene2D gameScene2D, Canvas canvas) {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
         final var hudRenderer = new ArcadePacMan_HeadsUpDisplay_Renderer(canvas);

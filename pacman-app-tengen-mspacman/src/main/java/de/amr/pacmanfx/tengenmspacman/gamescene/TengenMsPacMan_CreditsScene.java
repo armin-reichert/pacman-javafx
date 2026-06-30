@@ -8,7 +8,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 
 import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCREEN_WIDTH;
@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManConfig.NES_SCR
 /**
  * Gives credit to the people that helped in making the game, original and remake authors.
  */
-public class TengenMsPacMan_CreditsScene extends GameScene2D {
+public class TengenMsPacMan_CreditsScene extends AbstractGameScene2D {
 
     public static final int DISPLAY_TICKS = 16 * 60;
 

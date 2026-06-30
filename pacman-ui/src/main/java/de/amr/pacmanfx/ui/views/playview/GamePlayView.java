@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.input.Input;
@@ -217,7 +217,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         // Render current 2D game scene
         final AbstractGameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
-        if (gameScene instanceof GameScene2D gameScene2D) {
+        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
             final GameModel gameModel = game.currentGameContext().model();
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D);
@@ -251,7 +251,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
                     "context_menu.use_3D_scene");
             }
             // Add scene-specific entries
-            gameScene.supplyContextMenu().ifPresent(sceneMenu -> contextMenu.getItems().addAll(sceneMenu.getItems()));
+            gameScene.optContextMenu().ifPresent(sceneMenu -> contextMenu.getItems().addAll(sceneMenu.getItems()));
         });
 
         if (!contextMenu.getItems().isEmpty()) {
@@ -260,7 +260,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         }
     }
 
-    public void updateGameSceneRenderers(GameScene2D gameScene2D) {
+    public void updateGameSceneRenderers(AbstractGameScene2D gameScene2D) {
         final GameVariantConfig currentConfig = game.currentVariantConfig();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = currentConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());

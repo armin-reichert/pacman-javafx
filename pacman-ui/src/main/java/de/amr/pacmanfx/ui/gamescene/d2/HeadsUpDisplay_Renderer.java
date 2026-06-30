@@ -16,5 +16,5 @@ public interface HeadsUpDisplay_Renderer extends Renderer {
      * @param game the game model
      * @param scene 2D scene
      */
-    void draw(HUDState hud, GameModel game, GameScene2D scene);
+    void draw(HUDState hud, GameModel game, AbstractGameScene2D scene);
 }

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -36,7 +36,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     private final BaseDebugInfoRenderer debugRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    public Arcade_PlayScene2D_Renderer(GameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_PlayScene2D_Renderer(AbstractGameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
@@ -53,7 +53,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     }
 
     @Override
-    public void draw(GameScene2D scene) {
+    public void draw(AbstractGameScene2D scene) {
         clearCanvas();
         if (!(scene instanceof Arcade_PlayScene2D playScene)) {
             return;
