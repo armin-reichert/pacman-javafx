@@ -148,7 +148,7 @@ public class TengenMsPacManConfig implements GameVariantConfig {
 
     @Override
     public void dispose() {
-        disposeAssets();
+        assets().dispose();
         gameSceneConfig.dispose();
         Logger.info("Disposed Tengen UI configuration {}:", getClass().getSimpleName());
     }

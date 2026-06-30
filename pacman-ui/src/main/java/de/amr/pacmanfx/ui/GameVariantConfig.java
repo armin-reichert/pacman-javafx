@@ -27,23 +27,13 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import org.tinylog.Logger;
 
 import java.util.Optional;
 
+//TODO: Clean-up this mess!
 public interface GameVariantConfig extends Disposable {
 
     void init(Game game);
-
-    @Override
-    default void dispose() {
-        disposeAssets();
-    }
-
-    default void disposeAssets() {
-        Logger.info("Disposing {} assets in {}", assets().numAssets(), getClass().getSimpleName());
-        assets().dispose();
-    }
 
     AssetMap assets();
 

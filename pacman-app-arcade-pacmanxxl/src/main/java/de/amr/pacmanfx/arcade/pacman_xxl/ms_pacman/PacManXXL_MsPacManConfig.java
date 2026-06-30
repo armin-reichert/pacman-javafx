@@ -98,7 +98,7 @@ public final class PacManXXL_MsPacManConfig implements GameVariantConfig, Resour
         gameSceneConfig.dispose();
 
         Logger.info("Dispose assets of UI configuration {}", getClass().getSimpleName());
-        disposeAssets();
+        assets().dispose();
 
         if (game != null) {
             Logger.info("Unregister sounds and effects of UI configuration {}", getClass().getSimpleName());

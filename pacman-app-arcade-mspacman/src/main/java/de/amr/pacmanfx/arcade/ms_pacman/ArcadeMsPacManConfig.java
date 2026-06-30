@@ -83,7 +83,7 @@ public class ArcadeMsPacManConfig implements GameVariantConfig, ResourceManager 
     @Override
     public void dispose() {
         Logger.info("Dispose UI configuration {}:", getClass().getSimpleName());
-        disposeAssets();
+        assets().dispose();
         gameSceneConfig.dispose();
     }
 
