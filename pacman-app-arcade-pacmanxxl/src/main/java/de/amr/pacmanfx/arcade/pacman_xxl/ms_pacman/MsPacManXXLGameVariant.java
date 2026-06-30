@@ -53,6 +53,8 @@ public final class MsPacManXXLGameVariant implements GameVariant, ResourceManage
     private static final String XXL_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
     private static final String XXL_PKG = "de.amr.pacmanfx.arcade.pacman_xxl.";
 
+    private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(380, 0, 204, 208);
+
     private final ResourceBundle textBundle;
     private final AssetMap assets = new AssetMap();
     private final ArcadeMsPacMan_Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
@@ -133,11 +135,6 @@ public final class MsPacManXXLGameVariant implements GameVariant, ResourceManage
     }
 
     @Override
-    public Rectangle2D spriteRegionForArcadeBootScene() {
-        return new Rectangle2D(380, 0, 204, 208);
-    }
-
-    @Override
     public Optional<GameSoundEffects> optSoundEffects() {
         return Optional.ofNullable(soundEffects);
     }
@@ -150,7 +147,7 @@ public final class MsPacManXXLGameVariant implements GameVariant, ResourceManage
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene2D gameScene2D, Canvas canvas) {
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D        ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), spriteRegionForArcadeBootScene());
+            case Arcade_BootScene2D        ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
             case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(this, gameScene2D, canvas);
             case ArcadeMsPacMan_StartScene ignored -> new ArcadeMsPacMan_StartScene_Renderer(this, gameScene2D, canvas);
             case Arcade_PlayScene2D        ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet());

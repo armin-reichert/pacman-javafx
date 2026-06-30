@@ -52,6 +52,8 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacManGameVariant implements GameVariant, ResourceManager {
 
+    private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(380, 0, 204, 208);
+
     @Override
     public Class<?> resourceRootClass() {
         return ArcadeMsPacManGameVariant.class;
@@ -116,11 +118,6 @@ public class ArcadeMsPacManGameVariant implements GameVariant, ResourceManager {
     }
 
     @Override
-    public Rectangle2D spriteRegionForArcadeBootScene() {
-        return new Rectangle2D(380, 0, 204, 208);
-    }
-
-    @Override
     public WorldSettings worldSettings() {
         return ArcadePacManGameVariant.WORLD_CONFIG;
     }
@@ -142,7 +139,7 @@ public class ArcadeMsPacManGameVariant implements GameVariant, ResourceManager {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D        ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), spriteRegionForArcadeBootScene());
+            case Arcade_BootScene2D        ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
             case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(this, gameScene2D, canvas);
             case ArcadeMsPacMan_StartScene ignored -> new ArcadeMsPacMan_StartScene_Renderer(this, gameScene2D, canvas);
             case Arcade_PlayScene2D        ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet());

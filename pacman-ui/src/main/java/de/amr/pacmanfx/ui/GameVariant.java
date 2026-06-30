@@ -23,7 +23,6 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -48,14 +47,6 @@ public interface GameVariant extends Disposable {
     SpriteSheet<?> spriteSheet();
 
     WorldSettings worldSettings();
-
-    default Rectangle2D spriteRegionForArcadeBootScene() {
-        return new Rectangle2D(
-            0, 0,
-            spriteSheet().sourceImage().getWidth(),
-            spriteSheet().sourceImage().getHeight()
-        );
-    }
 
     default WorldMapColorScheme enhanceContrast(WorldMapColorScheme colorScheme) {
         final Color wallFillColor = Color.valueOf(colorScheme.wallFill());

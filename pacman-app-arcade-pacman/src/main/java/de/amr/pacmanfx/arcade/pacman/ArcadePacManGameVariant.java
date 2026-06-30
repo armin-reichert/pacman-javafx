@@ -64,6 +64,8 @@ public class ArcadePacManGameVariant implements GameVariant, ResourceManager {
         Color.valueOf(WORLD_MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
     );
 
+    private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(400, 0, 256, 160);
+
     private final ResourceBundle textBundle;
     private final AssetMap assets = new AssetMap();
     private final Factory3D factory3D = new DefaultFactory3D();
@@ -122,11 +124,6 @@ public class ArcadePacManGameVariant implements GameVariant, ResourceManager {
     }
 
     @Override
-    public Rectangle2D spriteRegionForArcadeBootScene() {
-        return new Rectangle2D(400, 0, 256, 160);
-    }
-
-    @Override
     public WorldSettings worldSettings() {
         return WORLD_CONFIG;
     }
@@ -177,7 +174,7 @@ public class ArcadePacManGameVariant implements GameVariant, ResourceManager {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), spriteRegionForArcadeBootScene());
+            case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, gameScene2D, canvas);
             case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene2D, canvas);
             case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet());
