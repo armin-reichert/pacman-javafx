@@ -5,13 +5,13 @@ import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 
-public record GameVariant(
+public record GameVariantRuntime(
     GameFlow gameFlow,
     AbstractGameModel gameModel,
     GameRules gameRules,
     GameVariantConfig config)
 {
-    public GameVariant(Cartridge cartridge) {
+    public GameVariantRuntime(Cartridge cartridge) {
         this(
             cartridge.gameFlowFactory().get(),
             cartridge.gameModelFactory().get(),

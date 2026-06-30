@@ -53,7 +53,7 @@ public final class GameImpl implements Game {
 
     private final PacManGamesMachine machine;
 
-    private final Map<String, GameVariant> gameVariantsMap = new HashMap<>();
+    private final Map<String, GameVariantRuntime> gameVariantsMap = new HashMap<>();
 
     private final StringProperty gameVariantName = new SimpleStringProperty();
 
@@ -130,7 +130,7 @@ public final class GameImpl implements Game {
     }
 
     @Override
-    public GameVariant currentGameVariant() {
+    public GameVariantRuntime currentGameVariant() {
         return gameVariant(currentGameVariantName());
     }
 
@@ -140,7 +140,7 @@ public final class GameImpl implements Game {
     }
 
     @Override
-    public GameVariant gameVariant(String variantName) {
+    public GameVariantRuntime gameVariant(String variantName) {
         return gameVariantsMap.computeIfAbsent(variantName, this::createGameVariant);
     }
 
@@ -285,20 +285,20 @@ public final class GameImpl implements Game {
     }
 
     private void enterGameVariant(String variantName) {
-        final GameVariant gameVariant = gameVariant(variantName);
+        final GameVariantRuntime gameVariantRuntime = gameVariant(variantName);
 
-        gameVariant.config().init(this);
-        ui.viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
+        gameVariantRuntime.config().init(this);
+        ui.viewModel().maze3D.init(gameVariantRuntime.config().worldSettings().maze());
 
         // create new game context for current game variant
-        currentGameContext = new GameContextImpl(this, gameVariant);
+        currentGameContext = new GameContextImpl(this, gameVariantRuntime);
         currentGameContext.model().hud().creditProperty().bind(coinMechanism().numCoinsProperty());
         currentGameContext.flow().addGameEventListener(globalGameEventHandler);
     }
 
-    private GameVariant createGameVariant(String variantName) {
+    private GameVariantRuntime createGameVariant(String variantName) {
         final Cartridge cartridge = machine.cartridgeByName(variantName);
-        final var gameVariant = new GameVariant(cartridge);
+        final var gameVariant = new GameVariantRuntime(cartridge);
 
         //TODO make configurable again if tests should be available
         final GameFlow flow = gameVariant.gameFlow();
