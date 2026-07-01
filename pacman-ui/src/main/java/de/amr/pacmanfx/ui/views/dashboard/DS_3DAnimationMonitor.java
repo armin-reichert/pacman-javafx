@@ -110,7 +110,7 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
         super.update(game);
 
         final AnimationRegistry animationSet =
-            game.ui().gameScenes().optCurrentGameScene()
+            game.ui().gameSceneManager().optCurrentGameScene()
                 .filter(PlayScene3D.class::isInstance)
                 .map(PlayScene3D.class::cast)
                 .flatMap(PlayScene3D::optGameLevel3D)

@@ -17,7 +17,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.ui.model.GameUIViewModel;
+import de.amr.pacmanfx.ui.model.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
@@ -105,7 +105,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     @Override
     public void connect(Game game) {
         this.game = requireNonNull(game);
-        final GameUIViewModel settings = game.ui().viewModel();
+        final GameViewModel settings = game.ui().viewModel();
 
         rootPane.setOnContextMenuRequested(this);
         game.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
@@ -129,9 +129,9 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> settings.miniView.activeProperty.get()
-                && game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D),
+                && game.ui().gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D),
             settings.miniView.activeProperty,
-            game.ui().gameScenes().currentGameSceneProperty()
+            game.ui().gameSceneManager().currentGameSceneProperty()
         ));
 
         // Keep this view always at the same size as the main scene
@@ -198,7 +198,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void onInput(Input input) {
         // First look for a matching action of the play view itself; if none found, delegate to the current game scene.
         if (actionBindings.executeMatchingAction(input).isEmpty()) {
-            game.ui().gameScenes().optCurrentGameScene().ifPresent(GameScene::onInput);
+            game.ui().gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
         }
     }
 
@@ -223,8 +223,8 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     @Override
     public void handleQuit(Game game) {
-        game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.handleQuit(game));
-        game.ui().views().selectStartPagesView();
+        game.ui().gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.handleQuit(game));
+        game.ui().viewManager().selectStartPagesView();
     }
 
     @Override
@@ -236,7 +236,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void render() {
 
         // Render current 2D game scene
-        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = game.ui().gameSceneManager().optCurrentGameScene().orElse(null);
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
             final GameModel gameModel = game.currentGameContext().model();
             if (sceneRenderer != null) {
@@ -262,10 +262,10 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void handle(ContextMenuEvent event) {
         contextMenu.getItems().clear();
 
-        game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+        game.ui().gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
             final TranslationManager translations = game.ui().translations();
             // Add 2D play scene-specific entries
-            if (game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
+            if (game.ui().gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
                 addLocalizedTitleItem(contextMenu, translations, "context_menu.scene_display");
                 addLocalizedActionItem(contextMenu, translations, game.actions().uiSettingsActions().actionTogglePlayScene2D3D(),
                     "context_menu.use_3D_scene");

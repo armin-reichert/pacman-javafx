@@ -23,7 +23,7 @@ public class DS_GameViewKeys extends GameDashboardSection {
     @Override
     public void update(Game game) {
         super.update(game);
-        game.ui().views().optCurrentView().ifPresent(view -> updateInfo(game, view));
+        game.ui().viewManager().optCurrentView().ifPresent(view -> updateInfo(game, view));
     }
 
     private void updateInfo(Game game, GameView view) {

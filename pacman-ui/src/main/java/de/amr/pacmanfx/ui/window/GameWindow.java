@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.window;
 
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -15,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
@@ -25,7 +27,7 @@ public class GameWindow {
     public static final int MIN_STAGE_WIDTH  = 280;
     public static final int MIN_STAGE_HEIGHT = 360;
 
-    private final BooleanProperty initialized = new SimpleBooleanProperty(false);
+    private final BooleanProperty connected = new SimpleBooleanProperty(false);
 
     private StringBinding titleBinding;
 
@@ -45,41 +47,22 @@ public class GameWindow {
     public void connect(Game game) {
         mainScene.connect(game);
 
-        titleBinding = createStringBinding(
-            () -> {
-                var views = game.ui().views();
-                var currentView = views.optCurrentView();
+        titleBinding = createStageTitleBinding(game);
+        stage.titleProperty().bind(titleBinding);
 
-                if (currentView.isEmpty()) {
-                    return game.ui().translations().translate("error.view_missing");
-                }
+        //TODO Without this, the title is not changed when returning from the editor. Why?
+        game.ui().viewManager().currentViewIDProperty().addListener((_, _, viewID) -> updateStageTitleBinding(game, viewID));
 
-                // Editor has its own title supplier → use it directly
-                if (views.currentViewID() == GameViewID.EDITOR) {
-                    return currentView.get().optTitleSupplier()
-                        .map(Supplier::get)
-                        .orElse("Editor");
-                }
+        game.gameVariantNameProperty().addListener((_, _, _) -> updateStageIcon(game));
 
-                // All other views use the normal title logic
-                return currentView.get().optTitleSupplier()
-                    .map(Supplier::get)
-                    .orElse(titleForCurrentGameScene(game));
-            },
-            initialized,
-            game.gameVariantNameProperty(),
-            game.clock().updatesDisabledProperty(),
-            game.ui().views().currentViewIDProperty(),
-            game.ui().gameScenes().currentGameSceneProperty(),
-            game.ui().viewModel().debugModeOnProperty,
-            game.ui().viewModel().common3D.view3DEnabledProperty
-        );
+        // Triggers title update
+        connected.set(true);
     }
 
     public void show(Game game) {
-        initStageBindings(game);
-        stage().centerOnScreen();
-        stage().show();
+        updateStageIcon(game);
+        stage.centerOnScreen();
+        stage.show();
     }
 
     public Stage stage() {
@@ -92,21 +75,35 @@ public class GameWindow {
 
     // Private area
 
-    private void initStageBindings(Game game) {
-        stage.titleProperty().bind(titleBinding);
-        game.ui().views().currentViewIDProperty().addListener((_, _, viewID) -> updateStageTitleBinding(game, viewID));
+    private StringBinding createStageTitleBinding(Game game) {
+        final GameUI ui = game.ui();
+        return createStringBinding(
+            () -> switch (ui.viewManager().currentViewID()) {
+                case null -> ""; // happens initially, don't mind
+                case START_PAGES, GAMEPLAY -> optCurrentViewTitle(ui).orElse(titleForCurrentGameScene(game));
+                // Editor has its own title supplier → use it directly
+                case EDITOR -> optCurrentViewTitle(ui).orElse(("Map Editor"));
+            },
+            connected,
+            game.gameVariantNameProperty(),
+            game.clock().updatesDisabledProperty(),
+            ui.viewModel().debugModeOnProperty,
+            ui.viewModel().common3D.view3DEnabledProperty,
+            ui.viewManager().currentViewIDProperty(),
+            ui.gameSceneManager().currentGameSceneProperty()
+        );
+    }
 
-        updateStageIcon(game);
-        game.gameVariantNameProperty().addListener((_, _, _) -> updateStageIcon(game));
-
-        // Trigger title update
-        initialized.set(true);
+    private Optional<String> optCurrentViewTitle(GameUI ui) {
+        return ui.viewManager().optCurrentView().isEmpty()
+            ? Optional.of("No View present")
+            : ui.viewManager().assertCurrentView().optTitleSupplier().map(Supplier::get);
     }
 
     private void updateStageTitleBinding(Game game, GameViewID viewID) {
         switch (viewID) {
             case START_PAGES, GAMEPLAY -> stage.titleProperty().bind(titleBinding);
-            case EDITOR -> game.ui().views().optEditorView().ifPresent(editorView -> {
+            case EDITOR -> game.ui().viewManager().optEditorView().ifPresent(editorView -> {
                 stage.titleProperty().unbind();
                 editorView.optTitleSupplier().ifPresent(titleSupplier -> stage.setTitle(titleSupplier.get()));
             });
@@ -123,7 +120,7 @@ public class GameWindow {
     }
 
     private String titleForCurrentGameScene(Game game) {
-        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = game.ui().gameSceneManager().optCurrentGameScene().orElse(null);
 
         final boolean debug = game.ui().viewModel().debugModeOnProperty.get();
         final boolean is3D = game.ui().viewModel().common3D.view3DEnabledProperty.get();

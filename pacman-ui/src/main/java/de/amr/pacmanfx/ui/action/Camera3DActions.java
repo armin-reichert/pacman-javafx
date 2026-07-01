@@ -90,7 +90,7 @@ public class Camera3DActions {
     }
 
     private boolean is3DPlaySceneActive(Game game) {
-        return game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
+        return game.ui().gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
     }
 
     private String translatedPerspectiveMessage(Game game, PerspectiveID perspectiveID) {

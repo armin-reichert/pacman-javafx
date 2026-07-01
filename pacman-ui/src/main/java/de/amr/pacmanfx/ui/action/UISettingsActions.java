@@ -45,12 +45,12 @@ public class UISettingsActions {
         actionShowHelp = new GameAction(game, "show_help") {
             @Override
             protected void doAction() {
-                game.ui().views().gamePlayView().showHelp(game);
+                game.ui().viewManager().gamePlayView().showHelp(game);
             }
 
             @Override
             public boolean isEnabled() {
-                final GameSceneManager gameScenes = game.ui().gameScenes();
+                final GameSceneManager gameScenes = game.ui().gameSceneManager();
                 final String variantName = game.currentGameVariantName();
                 final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
                 return isArcadeGame &&
@@ -63,12 +63,12 @@ public class UISettingsActions {
         actionToggleDashboard = new GameAction(game, "toggle_dashboard") {
             @Override
             protected void doAction() {
-                game.ui().views().gamePlayView().dashboard().toggleVisibility();
+                game.ui().viewManager().gamePlayView().dashboard().toggleVisibility();
             }
 
             @Override
             public boolean isEnabled() {
-                return game.ui().views().isSelected(GameViewID.GAMEPLAY);
+                return game.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
             }
         };
 
@@ -90,7 +90,7 @@ public class UISettingsActions {
             @Override
             protected void doAction() {
                 toggleBooleanProperty(game.ui().viewModel().miniView.activeProperty);
-                if (!game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
+                if (!game.ui().gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
                     final String msg = game.ui().translations().translate(
                         game.ui().viewModel().miniView.activeProperty.get() ? "flash.pip_on" : "flash.pip_off");
                     game.ui().shortMessage(msg);
@@ -108,17 +108,17 @@ public class UISettingsActions {
                         ? "flash.use_3D_scene" : "flash.use_2D_scene"));
                 }
                 if (isLevelPlaying()) {
-                    game.ui().gameScenes().forceGameSceneUpdate();
+                    game.ui().gameSceneManager().forceGameSceneUpdate();
                 }
             }
 
             @Override
             public boolean isEnabled() {
-                return game.ui().views().isSelected(GameViewID.GAMEPLAY);
+                return game.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
             }
 
             private boolean inPlayScene() {
-                final GameSceneManager gameScenes = game.ui().gameScenes();
+                final GameSceneManager gameScenes = game.ui().gameSceneManager();
                 return gameScenes.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)
                     || gameScenes.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
             }

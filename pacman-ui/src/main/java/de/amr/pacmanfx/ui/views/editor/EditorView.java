@@ -28,7 +28,7 @@ public class EditorView implements GameView {
     public void ensureEditorCreated(Game game) {
         if (editor == null) {
             editor = new TileMapEditor(game.ui().window().stage());
-            editor.setOnQuit(_ -> game.ui().views().selectStartPagesView());
+            editor.setOnQuit(_ -> game.ui().viewManager().selectStartPagesView());
             final MenuItem miQuitEditor = new MenuItem(game.ui().translations().translate("editor.menu.back_to_game"));
             miQuitEditor.setOnAction(_ -> editor.quit());
             editor.ui().menuSystem().fileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);

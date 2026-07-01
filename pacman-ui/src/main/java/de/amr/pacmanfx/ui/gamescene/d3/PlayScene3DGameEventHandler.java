@@ -18,7 +18,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
-import de.amr.pacmanfx.ui.model.GameUIViewModel;
+import de.amr.pacmanfx.ui.model.GameViewModel;
 import de.amr.pacmanfx.ui.model.Maze3DSettingsModel;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -293,7 +293,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.messageManager().hideMessage();
 
-        final GameUIViewModel viewModel = game().ui().viewModel();
+        final GameViewModel viewModel = game().ui().viewModel();
         playLevelEndAnimation(level3D.animationRegistry(),
             viewModel.common3D, viewModel.maze3D,
             level3D.maze3D(),

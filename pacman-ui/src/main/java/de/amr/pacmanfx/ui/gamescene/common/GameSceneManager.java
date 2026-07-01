@@ -174,14 +174,14 @@ public class GameSceneManager {
         requireNonNull(game);
         requireNonNull(gameScene);
 
-        game.ui().views().gamePlayView().contextMenu().hide();
+        game.ui().viewManager().gamePlayView().contextMenu().hide();
 
         gameScene.optSubSceneFX().ifPresent(subSceneFX -> {
             subSceneFX.widthProperty().unbind();
             subSceneFX.heightProperty().unbind();
         });
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
-            final DecorationPane frame = game.ui().views().gamePlayView().gameSceneFrame();
+            final DecorationPane frame = game.ui().viewManager().gamePlayView().gameSceneFrame();
             frame.canvas().widthProperty().unbind();
             frame.canvas().heightProperty().unbind();
             frame.unscaledWidthProperty().unbind();
@@ -196,7 +196,7 @@ public class GameSceneManager {
 
     public void embedGameSceneIntoPlayView(GameScene gameScene) {
         final GameVariant gameVariant = game.currentGameVariant();
-        final GameViewManager subViews = game.ui().views();
+        final GameViewManager subViews = game.ui().viewManager();
 
         subViews.gamePlayView().contextMenu().hide();
 
@@ -228,7 +228,7 @@ public class GameSceneManager {
     // 2D scenes without camera which are shown at full size
     private void embedGameScene2D(GameSceneConfig gameSceneConfig, AbstractGameScene2D gameScene2D) {
         final GameMainScene mainScene = game.ui().window().mainScene();
-        final GamePlayView playView = game.ui().views().gamePlayView();
+        final GamePlayView playView = game.ui().viewManager().gamePlayView();
         final DecorationPane frame = playView.gameSceneFrame();
 
         gameScene2D.backgroundColorProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty);

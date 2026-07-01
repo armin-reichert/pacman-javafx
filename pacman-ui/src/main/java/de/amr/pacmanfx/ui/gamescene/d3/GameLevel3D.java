@@ -28,7 +28,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationCon
 import de.amr.pacmanfx.ui.gamescene.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
-import de.amr.pacmanfx.ui.model.GameUIViewModel;
+import de.amr.pacmanfx.ui.model.GameViewModel;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -128,7 +128,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final GameVariant gameVariant;
 
-    private final GameUIViewModel viewModel;
+    private final GameViewModel viewModel;
 
     private final EntitySet entitySet = new EntitySet();
 
@@ -144,7 +144,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private MessageManager3D messageManager;
 
     public GameLevel3D(
-        GameUIViewModel viewModel,
+        GameViewModel viewModel,
         GameContext gameContext,
         GameLevel level,
         GameVariant gameVariant

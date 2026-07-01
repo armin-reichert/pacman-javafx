@@ -22,7 +22,7 @@ import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.ui.model.GameUIViewModel;
+import de.amr.pacmanfx.ui.model.GameViewModel;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
@@ -77,7 +77,7 @@ public final class GameImpl implements Game {
 
     @Override
     public void createUI(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage, int width, int height) {
-        final GameUIViewModel viewModel = new GameUIViewModel();
+        final GameViewModel viewModel = new GameViewModel();
         final TranslationManager translations = new GameTranslationManager();
 
         viewModel.init(settings);
@@ -103,7 +103,6 @@ public final class GameImpl implements Game {
             new SpriteAnimationManager(60),
             viewModel
         );
-
 
         ui.connect(this);
 
@@ -193,11 +192,11 @@ public final class GameImpl implements Game {
     public void showUI(GameVariantID variantID) {
         selectGameVariant(variantID.name());
 
-        ui.views().selectStartPagesView();
-        ui.views().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);
+        ui.viewManager().selectStartPagesView();
+        ui.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);
 
         // TODO: Dashboard expects current game view being already being set when connected
-        ui.views().gamePlayView().dashboard().connect(this);
+        ui.viewManager().gamePlayView().dashboard().connect(this);
 
         ui.window().show(this);
 
@@ -208,16 +207,16 @@ public final class GameImpl implements Game {
     public void start() {
         currentGameContext.flow().setGameContext(currentGameContext);
         currentGameContext.flow().restartState(GameStateID.BOOT);
-        ui.views().selectGamePlayView();
+        ui.viewManager().selectGamePlayView();
         Platform.runLater(clock()::start);
     }
 
     @Override
     public void stop() {
-        ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+        ui.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
             gameScene.deactivate();
-            ui.gameScenes().removeFromPlayView(gameScene);
-            ui.gameScenes().currentGameSceneProperty().set(null);
+            ui.gameSceneManager().removeFromPlayView(gameScene);
+            ui.gameSceneManager().currentGameSceneProperty().set(null);
         });
 
         ui.sounds().stopAll();
@@ -301,9 +300,9 @@ public final class GameImpl implements Game {
     private void configureGameClock() {
         clock().setUpdateAction(() -> {
             currentGameContext.flow().makeStep();
-            ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock().currentTick()));
+            ui.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock().currentTick()));
         });
-        clock().setPermanentAction(() -> ui.views().assertCurrentView().render());
+        clock().setPermanentAction(() -> ui.viewManager().assertCurrentView().render());
         clock().setErrorHandler(this::ka_tas_tro_phe);
     }
 

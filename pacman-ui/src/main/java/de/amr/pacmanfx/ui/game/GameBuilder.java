@@ -129,7 +129,7 @@ public class GameBuilder {
                 width,
                 height);
 
-            final StartPagesView startPagesView = game.ui().views()
+            final StartPagesView startPagesView = game.ui().viewManager()
                 .assertView(GameViewID.START_PAGES, StartPagesView.class);
 
             for (var factory : startPageFactories) {

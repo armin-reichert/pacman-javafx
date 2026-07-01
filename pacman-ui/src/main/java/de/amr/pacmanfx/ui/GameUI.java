@@ -8,7 +8,7 @@ import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
-import de.amr.pacmanfx.ui.model.GameUIViewModel;
+import de.amr.pacmanfx.ui.model.GameViewModel;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.window.GameWindow;
@@ -20,20 +20,20 @@ import static java.util.Objects.requireNonNull;
 
 public record GameUI(
     GameWindow window,
-    GameViewManager views,
-    GameSceneManager gameScenes,
+    GameViewManager viewManager,
+    GameSceneManager gameSceneManager,
     TranslationManager translations,
     SoundManager sounds,
     SpriteAnimationManager sprites,
-    GameUIViewModel viewModel)
+    GameViewModel viewModel)
 {
     public static final GameUISettings DEFAULT_SETTINGS =
         SettingsLoader.load(GameUI.class.getResource("/de/amr/pacmanfx/ui/ui.json"), GameUISettings.class);
 
     public void connect(Game game) {
         sounds.connect(game);
-        gameScenes.connect(game);
-        views.connect(game);
+        gameSceneManager.connect(game);
+        viewManager.connect(game);
         window.connect(game);
     }
 

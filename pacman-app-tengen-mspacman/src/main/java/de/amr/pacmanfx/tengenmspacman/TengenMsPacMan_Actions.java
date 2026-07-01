@@ -82,7 +82,7 @@ public final class TengenMsPacMan_Actions {
 
             @Override
             public boolean isEnabled() {
-                return game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D);
+                return game.ui().gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D);
             }
         };
 

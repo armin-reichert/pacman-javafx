@@ -126,7 +126,7 @@ public class PacManXXL_StartPage implements StartPage {
     // Private area
 
     private void pauseProgressTimer() {
-        game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().pauseProgress();
+        game.ui().viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().pauseProgress();
     }
 
     private void stopTalking() {

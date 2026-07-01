@@ -9,7 +9,7 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
-import de.amr.pacmanfx.ui.model.GameUIViewModel;
+import de.amr.pacmanfx.ui.model.GameViewModel;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -40,7 +40,7 @@ public class DS_3DSettings extends GameDashboardSection {
 
     @Override
     public void connect(Game game) {
-        final GameUIViewModel viewModel = game.ui().viewModel();
+        final GameViewModel viewModel = game.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
         comboPerspectives = choiceBox("Perspective", PerspectiveID.values());
@@ -99,11 +99,11 @@ public class DS_3DSettings extends GameDashboardSection {
     public void update(Game game) {
         super.update(game);
 
-        final GameUIViewModel viewModel = game.ui().viewModel();
+        final GameViewModel viewModel = game.ui().viewModel();
 
         comboPerspectives.setValue(viewModel.common3D.cameraPerspectiveIdProperty.get());
 
-        sliderMiniViewSceneHeight.setDisable(game.ui().views().gamePlayView().miniPlaySceneView().isMoving());
+        sliderMiniViewSceneHeight.setDisable(game.ui().viewManager().gamePlayView().miniPlaySceneView().isMoving());
 
         cbUsePlayScene3D.setSelected(viewModel.common3D.view3DEnabledProperty.get());
 
@@ -117,14 +117,14 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     private String subSceneSizeInfo(Game game) {
-        return game.ui().gameScenes().optCurrentGameScene()
+        return game.ui().gameSceneManager().optCurrentGameScene()
             .flatMap(GameScene::optSubSceneFX)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
     private String subSceneCameraInfo(Game game) {
-        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = game.ui().gameSceneManager().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
         return gameScene.optSubSceneFX().map(SubScene::getCamera)
             .map(camera -> "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
@@ -137,7 +137,7 @@ public class DS_3DSettings extends GameDashboardSection {
 
     private String sceneSizeInfo(Game game) {
         final GameModel gameModel = game.currentGameContext().model();
-        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = game.ui().gameSceneManager().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
 
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
