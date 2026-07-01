@@ -10,11 +10,12 @@ import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.GateKeeper;
-import de.amr.pacmanfx.simulation.HuntingResolver;
+import de.amr.pacmanfx.simulation.EntityCollisionResolver;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.simulation.HuntingCollisionDetector.detectCollisions;
+import static de.amr.pacmanfx.simulation.EntityCollisionDetector.detectCollisions;
+import static de.amr.pacmanfx.simulation.EntityCollisionResolver.evaluateCollisions;
 
 public class GameLevelPlayingState extends GameState {
 
@@ -35,6 +36,7 @@ public class GameLevelPlayingState extends GameState {
         final GameLevel level = gameContext.requireLevel();
         final Pac pac = level.entities().pac();
         final GateKeeper gateKeeper = gameModel.gateKeeper();
+        final boolean doubleChecked = gameContext.rules().collisionDoubleCheckedProperty().get();
 
         // Update
         gameModel.cheats().update(level);
@@ -47,20 +49,19 @@ public class GameLevelPlayingState extends GameState {
 
         gameContext.startNewHuntingStep();
 
+        // If double-check active, do an additional collision check before Pac has moved
         level.entities().forEach(entity -> {
-            if (entity != level.entities().pac()) {
+            if (entity != pac) {
                 entity.update(gameContext, level);
             }
         });
-        if (gameContext.rules().collisionDoubleCheckedProperty().get()) {
+        if (doubleChecked) {
             detectCollisions(gameContext);
         }
-        level.entities().pac().update(gameContext, level);
+        pac.update(gameContext, level);
         detectCollisions(gameContext);
 
-        // Resolving
-        HuntingResolver.evaluate(gameContext);
-
+        evaluateCollisions(gameContext);
         logHuntingStep(gameContext);
 
         // State transition

@@ -12,11 +12,11 @@ import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import org.tinylog.Logger;
 
-public final class HuntingResolver {
+public final class EntityCollisionResolver {
 
-    private HuntingResolver() {}
+    private EntityCollisionResolver() {}
 
-    public static void evaluate(GameContext gameContext) {
+    public static void evaluateCollisions(GameContext gameContext) {
         final HuntingStepResult result = gameContext.huntingResult();
         final GameModel gameModel = gameContext.model();
         final GameLevel level = gameModel.optGameLevel().orElseThrow();
@@ -32,7 +32,7 @@ public final class HuntingResolver {
 
         evalPacKilled(result, gameModel, level, pac);
         if (result.pacKilled()) {
-            HuntingResolver.fixPacPositionIfKilledInsidePortal(level, pac);
+            EntityCollisionResolver.fixPacPositionIfKilledInsidePortal(level, pac);
         }
         else {
             evalGhostsKilled(result, gameContext, gameModel, level);

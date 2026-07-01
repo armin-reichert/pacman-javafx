@@ -13,9 +13,9 @@ import de.amr.pacmanfx.model.world.FoodLayer;
 
 import java.util.List;
 
-public final class HuntingCollisionDetector {
+public final class EntityCollisionDetector {
 
-    private HuntingCollisionDetector() {}
+    private EntityCollisionDetector() {}
 
     public static void detectCollisions(GameContext context) {
         final HuntingStepResult result = context.huntingResult();
@@ -24,28 +24,28 @@ public final class HuntingCollisionDetector {
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
         final Bonus bonus = level.entities().optBonus().orElse(null);
-        final CollisionStrategy collisionStrategy = context.rules().getCollisionStrategy();
+        final CollisionStrategy strategy = context.rules().getCollisionStrategy();
 
-        detectFood(result, level, pac);
-        detectEdibleBonus(result, collisionStrategy, pac, bonus);
-        detectPacGhostCollisions(result, collisionStrategy, pac, ghosts);
+        detectFoodCollision(result, level, pac);
+        detectEdibleBonusCollision(result, strategy, pac, bonus);
+        detectPacGhostCollision(result, strategy, pac, ghosts);
     }
 
-    private static void detectPacGhostCollisions(HuntingStepResult result, CollisionStrategy strategy, Pac pac, List<Ghost> ghosts) {
+    private static void detectPacGhostCollision(HuntingStepResult result, CollisionStrategy strategy, Pac pac, List<Ghost> ghosts) {
         result.ghostsCollidingWithPac().clear();
         ghosts.stream()
             .filter(ghost -> strategy.collide(pac, ghost))
             .forEach(result.ghostsCollidingWithPac()::add);
     }
 
-    private static void detectEdibleBonus(HuntingStepResult result, CollisionStrategy strategy, Pac pac, Bonus bonus) {
+    private static void detectEdibleBonusCollision(HuntingStepResult result, CollisionStrategy strategy, Pac pac, Bonus bonus) {
         result.setEdibleBonus(null);
         if (bonus != null && bonus.state() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
             result.setEdibleBonus(bonus);
         }
     }
 
-    private static void detectFood(HuntingStepResult result, GameLevel level, Pac pac) {
+    private static void detectFoodCollision(HuntingStepResult result, GameLevel level, Pac pac) {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Vector2i pacTile = pac.computeTile();
         if (foodLayer.hasFoodAtTile(pacTile)) {
