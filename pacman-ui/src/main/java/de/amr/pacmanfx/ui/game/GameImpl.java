@@ -67,47 +67,46 @@ public final class GameImpl implements Game {
 
     public GameImpl(PacManGamesMachine machine) {
         this.machine = requireNonNull(machine);
-
         this.commonActions = new CommonActions(this);
         this.extensions = new GameExtensions(this);
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
+
+        configureGameClock();
 
         gameVariantName.addListener((_, oldName, newName) -> onGameVariantNameChanged(oldName, newName));
     }
 
     @Override
     public void createUI(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage, int width, int height) {
-        final GameViewModel viewModel = new GameViewModel();
-        final TranslationManager translations = new GameTranslationManager();
+        final TranslationManager translationManager = new GameTranslationManager();
 
+        final GameViewModel viewModel = new GameViewModel();
         viewModel.init(settings);
 
         final GamePlayView playView = new GamePlayView();
+        playView.populateDashboard(dashboardFactory, settings.dashboard(), translationManager);
 
-        final GameViewManager views = new GameViewManager();
-        views.registerView(GameViewID.START_PAGES, new StartPagesView());
-        views.registerView(GameViewID.GAMEPLAY, playView);
-        views.registerView(GameViewID.EDITOR, new EditorView());
+        final GameViewManager viewManager = new GameViewManager();
+        viewManager.registerView(GameViewID.START_PAGES, new StartPagesView());
+        viewManager.registerView(GameViewID.GAMEPLAY, playView);
+        viewManager.registerView(GameViewID.EDITOR, new EditorView());
 
-        playView.populateDashboard(dashboardFactory, settings.dashboard(), translations);
+        final SoundManager soundManager = new SoundManager();
+        soundManager.muteProperty().bind(viewModel.mutedProperty);
 
-        final SoundManager sounds = new SoundManager();
-        sounds.muteProperty().bind(viewModel.mutedProperty);
+        //noinspection ResultOfMethodCallIgnored
+        PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
 
         ui = new GameUI(
             new GameWindow(stage, width, height),
-            views,
+            viewManager,
             new GameSceneManager(),
-            translations,
-            sounds,
+            translationManager,
+            soundManager,
             new SpriteAnimationManager(60),
             viewModel
         );
-
         ui.connect(this);
-
-        load3DAssets();
-        configureGameClock();
     }
 
     // Game interface
@@ -292,18 +291,13 @@ public final class GameImpl implements Game {
         return gameVariantRuntime;
     }
 
-    private static void load3DAssets() {
-        //noinspection ResultOfMethodCallIgnored
-        PacManWorld3D.instance(); // loads 3D assets as side effect of accessing singleton
-    }
-
     private void configureGameClock() {
-        clock().setUpdateAction(() -> {
+        machine.clock().setUpdateAction(() -> {
             currentGameContext.flow().makeStep();
             ui.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock().currentTick()));
         });
-        clock().setPermanentAction(() -> ui.viewManager().assertCurrentView().render());
-        clock().setErrorHandler(this::ka_tas_tro_phe);
+        machine.clock().setPermanentAction(() -> ui.viewManager().assertCurrentView().render());
+        machine.clock().setErrorHandler(this::ka_tas_tro_phe);
     }
 
     private void startServicesLater() {
