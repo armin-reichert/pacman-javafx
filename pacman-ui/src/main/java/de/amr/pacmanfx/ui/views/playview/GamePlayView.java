@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
+import de.amr.pacmanfx.ui.config.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -18,7 +19,9 @@ import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.model.GameUIViewModel;
 import de.amr.pacmanfx.ui.views.GameView;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
+import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;
 import de.amr.pacmanfx.ui.views.help.HelpView;
 import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -43,6 +46,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
+
+import java.util.List;
 
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedActionItem;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedTitleItem;
@@ -150,6 +155,21 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     public GameDashboard dashboard() {
         return dashboard;
+    }
+
+    public void populateDashboard(
+        DashboardFactory factory,
+        List<DashboardSectionSettings> sectionDefinitions,
+        TranslationManager translations)
+    {
+        for (var sectionDef : sectionDefinitions) {
+            factory.identify(sectionDef.id()).ifPresentOrElse(dashboardID -> {
+                final GameDashboardSection section = factory.createSection(dashboard, dashboardID, translations);
+                dashboard.addSection(section);
+                section.setDisplayedStandalone(sectionDef.standalone());
+                section.setExpanded(sectionDef.expanded());
+            }, () -> Logger.error("Unknown dashboard ID: {}", sectionDef.id()));
+        }
     }
 
     public MiniPlaySceneView miniPlaySceneView() {
