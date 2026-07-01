@@ -74,7 +74,7 @@ public final class PacManGamesCollection implements Game {
         this.extensions = new GameExtensions(this);
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
 
-        configureGameClock();
+        new GameClockController(this, machine.clock()).configure();
 
         gameVariantName.addListener((_, oldName, newName) -> onGameVariantNameChanged(oldName, newName));
     }
@@ -242,7 +242,7 @@ public final class PacManGamesCollection implements Game {
     /**
      * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
      */
-    private void ka_tas_tro_phe(Throwable reason) {
+    public void ka_tas_tro_phe(Throwable reason) {
         Platform.runLater(() -> {
             final String errorMessage = ui.translations().translate("error.oh_no_my_program");
             ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
@@ -294,14 +294,6 @@ public final class PacManGamesCollection implements Game {
         return gameVariantRuntime;
     }
 
-    private void configureGameClock() {
-        machine.clock().setUpdateAction(() -> {
-            currentGameContext.flow().makeStep();
-            ui.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock().currentTick()));
-        });
-        machine.clock().setPermanentAction(() -> ui.viewManager().assertCurrentView().render());
-        machine.clock().setErrorHandler(this::ka_tas_tro_phe);
-    }
 
     private void startServicesLater() {
         Platform.runLater(() -> {
