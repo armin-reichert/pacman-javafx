@@ -64,7 +64,7 @@ public final class PacManGamesCollection implements Game {
 
     private GameUI ui;
 
-    private GameContextImpl currentGameContext;
+    private GameVariantContext currentGameContext;
 
     private final GlobalGameEventHandler globalGameEventHandler = new GlobalGameEventHandler(this);
 
@@ -274,7 +274,7 @@ public final class PacManGamesCollection implements Game {
         ui.viewModel().maze3D.init(gameVariantRuntime.gameVariant().worldSettings().maze());
 
         // create new game context for current game variant
-        currentGameContext = new GameContextImpl(this, gameVariantRuntime);
+        currentGameContext = new GameVariantContext(this, gameVariantRuntime);
         currentGameContext.model().hud().creditProperty().bind(coinMechanism().numCoinsProperty());
         currentGameContext.flow().addGameEventListener(globalGameEventHandler);
     }

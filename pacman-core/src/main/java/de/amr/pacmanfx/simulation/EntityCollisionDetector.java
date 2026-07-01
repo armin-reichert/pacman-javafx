@@ -18,7 +18,6 @@ public final class EntityCollisionDetector {
     private EntityCollisionDetector() {}
 
     public static void detectCollisions(GameContext context) {
-        final HuntingStepResult result = context.huntingResult();
         final GameModel gameModel = context.model();
         final GameLevel level = gameModel.optGameLevel().orElseThrow();
         final Pac pac = level.entities().pac();
@@ -26,9 +25,9 @@ public final class EntityCollisionDetector {
         final Bonus bonus = level.entities().optBonus().orElse(null);
         final CollisionStrategy strategy = context.rules().getCollisionStrategy();
 
-        detectFoodCollision(result, level, pac);
-        detectEdibleBonusCollision(result, strategy, pac, bonus);
-        detectPacGhostCollision(result, strategy, pac, ghosts);
+        detectFoodCollision(context.huntingStepResult(), level, pac);
+        detectEdibleBonusCollision(context.huntingStepResult(), strategy, pac, bonus);
+        detectPacGhostCollision(context.huntingStepResult(), strategy, pac, ghosts);
     }
 
     private static void detectPacGhostCollision(HuntingStepResult result, CollisionStrategy strategy, Pac pac, List<Ghost> ghosts) {

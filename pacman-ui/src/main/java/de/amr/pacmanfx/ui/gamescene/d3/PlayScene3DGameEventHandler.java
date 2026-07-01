@@ -260,7 +260,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
 
     private void onEatingGhost() {
         final GameLevel3D level3D = assertLevel3D();
-        gameContext().huntingResult().ghostsKilled().forEach(ghost -> {
+        gameContext().huntingStepResult().ghostsKilled().forEach(ghost -> {
             final Ghost3D ghost3D = level3D.ghost3D(ghost.personality());
             final int killIndex = level3D.level().indexInGhostKilledChain(ghost);
 

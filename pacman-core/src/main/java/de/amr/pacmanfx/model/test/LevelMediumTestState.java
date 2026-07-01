@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.simulation.EntityCollisionDetector;
+import de.amr.pacmanfx.simulation.HuntingStepResult;
 
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class LevelMediumTestState extends GameState implements TestState {
 
         level.heartbeat().triggerPulse();
 
-        gameContext.startNewHuntingStep();
+        gameContext.setHuntingStepResult(new HuntingStepResult());
         EntityCollisionDetector.detectCollisions(gameContext);
 
         //TODO add missing logic again
@@ -101,7 +102,7 @@ public class LevelMediumTestState extends GameState implements TestState {
         else if (pacKilled) {
             expire();
         }
-        else if (gameContext.huntingResult().hasGhostBeenKilled()) {
+        else if (gameContext.huntingStepResult().hasGhostBeenKilled()) {
             gameContext.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST);
         }
     }

@@ -13,16 +13,30 @@ import de.amr.pacmanfx.simulation.HuntingStepResult;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameContextImpl implements GameContext {
+/**
+ * Context for the currently selected game variant.
+ */
+public class GameVariantContext implements GameContext {
 
     private final PacManGamesCollection game;
+
     private final GameVariantRuntime gameVariantRuntime;
 
     private HuntingStepResult huntingStepResult;
 
-    public GameContextImpl(PacManGamesCollection game, GameVariantRuntime gameVariantRuntime) {
+    public GameVariantContext(PacManGamesCollection game, GameVariantRuntime gameVariantRuntime) {
         this.game = requireNonNull(game);
         this.gameVariantRuntime = requireNonNull(gameVariantRuntime);
+    }
+
+    @Override
+    public HuntingStepResult huntingStepResult() {
+        return huntingStepResult;
+    }
+
+    @Override
+    public void setHuntingStepResult(HuntingStepResult huntingStepResult) {
+        this.huntingStepResult = huntingStepResult;
     }
 
     @Override
@@ -43,15 +57,5 @@ public class GameContextImpl implements GameContext {
     @Override
     public GameFlow flow() {
         return gameVariantRuntime.gameFlow();
-    }
-
-    @Override
-    public void startNewHuntingStep() {
-        huntingStepResult = new HuntingStepResult();
-    }
-
-    @Override
-    public HuntingStepResult huntingResult() {
-        return huntingStepResult;
     }
 }

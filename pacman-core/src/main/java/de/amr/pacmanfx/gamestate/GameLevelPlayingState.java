@@ -46,8 +46,7 @@ public class GameLevelPlayingState extends GameState {
         }
         gameModel.updatePacPowerMode(gameContext, level, pac);
 
-        gameContext.startNewHuntingStep();
-
+        gameContext.setHuntingStepResult(new HuntingStepResult());
         // If double-check active, do an additional collision check before Pac has moved
         level.entities().forEach(entity -> {
             if (entity != pac) {
@@ -64,7 +63,7 @@ public class GameLevelPlayingState extends GameState {
         logHuntingStep(gameContext);
 
         // State transition
-        final GameStateID nextStateID = computeNextState(gameContext.huntingResult(), gameContext.rules(), level);
+        final GameStateID nextStateID = computeNextState(gameContext.huntingStepResult(), gameContext.rules(), level);
         gameContext.flow().enterState(nextStateID.name());
     }
 
@@ -83,7 +82,7 @@ public class GameLevelPlayingState extends GameState {
 
 
     private void logHuntingStep(GameContext context) {
-        final var report = HuntingStepResult.createReport(context.huntingResult());
+        final var report = HuntingStepResult.createReport(context.huntingStepResult());
         if (!report.isEmpty()) {
             Logger.info("Hunting Step:");
             for (var msg : report) {

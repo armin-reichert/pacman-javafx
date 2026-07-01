@@ -56,13 +56,13 @@ public class TestEatingFood {
         }
 
         @Override
-        public void startNewHuntingStep() {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public HuntingStepResult huntingStepResult() {
+            throw new UnsupportedOperationException();
         }
 
         @Override
-        public HuntingStepResult huntingResult() {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public void setHuntingStepResult(HuntingStepResult result) {
+            throw new UnsupportedOperationException();
         }
     }
 

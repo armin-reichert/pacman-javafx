@@ -17,25 +17,24 @@ public final class EntityCollisionResolver {
     private EntityCollisionResolver() {}
 
     public static void evaluateCollisions(GameContext gameContext) {
-        final HuntingStepResult result = gameContext.huntingResult();
         final GameModel gameModel = gameContext.model();
         final GameLevel level = gameModel.optGameLevel().orElseThrow();
         final Pac pac = level.entities().pac();
 
-        evalFoodFound(result, gameContext, level, pac);
-        if (gameContext.huntingResult().foodFound()) {
+        evalFoodFound(gameContext.huntingStepResult(), gameContext, level, pac);
+        if (gameContext.huntingStepResult().foodFound()) {
             gameContext.flow().publishGameEvent(
-                new PacEatsFoodEvent(gameContext, pac, gameContext.huntingResult().energizerFound(), false));
+                new PacEatsFoodEvent(gameContext, pac, gameContext.huntingStepResult().energizerFound(), false));
         }
 
-        evalBonusFound(result, gameContext, gameModel, level);
+        evalBonusFound(gameContext.huntingStepResult(), gameContext, gameModel, level);
 
-        evalPacKilled(result, gameModel, level, pac);
-        if (result.pacKilled()) {
+        evalPacKilled(gameContext.huntingStepResult(), gameModel, level, pac);
+        if (gameContext.huntingStepResult().pacKilled()) {
             EntityCollisionResolver.fixPacPositionIfKilledInsidePortal(level, pac);
         }
         else {
-            evalGhostsKilled(result, gameContext, gameModel, level);
+            evalGhostsKilled(gameContext, level);
         }
     }
 
@@ -78,14 +77,14 @@ public final class EntityCollisionResolver {
             .findFirst().ifPresent(_ -> result.setPacKilled(true));
     }
 
-    private static void evalGhostsKilled(HuntingStepResult result, GameContext gameContext, GameModel game, GameLevel level) {
-        if (result.detectedPacGhostCollision()) {
+    private static void evalGhostsKilled(GameContext gameContext, GameLevel level) {
+        if (gameContext.huntingStepResult().detectedPacGhostCollision()) {
             // Frightened ghosts get killed when colliding with Pac
-            result.ghostsCollidingWithPac().stream()
+            gameContext.huntingStepResult().ghostsCollidingWithPac().stream()
                 .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
-                .forEach(result.ghostsKilled()::add);
+                .forEach(gameContext.huntingStepResult().ghostsKilled()::add);
             // More than one ghost might have been killed in this step
-            result.ghostsKilled().forEach(ghost -> game.onEatGhost(gameContext, level, ghost));
+            gameContext.huntingStepResult().ghostsKilled().forEach(ghost -> gameContext.model().onEatGhost(gameContext, level, ghost));
         }
     }
 

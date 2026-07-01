@@ -35,7 +35,7 @@ public interface GameContext {
         return optCurrentLevel().orElseThrow(IllegalStateException::new);
     }
 
-    void startNewHuntingStep();
+    HuntingStepResult huntingStepResult();
 
-    HuntingStepResult huntingResult();
+    void setHuntingStepResult(HuntingStepResult result);
 }
