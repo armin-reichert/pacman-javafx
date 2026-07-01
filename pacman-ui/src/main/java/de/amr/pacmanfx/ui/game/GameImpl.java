@@ -32,8 +32,8 @@ import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
-import de.amr.pacmanfx.ui.window.GameTranslationManager;
-import de.amr.pacmanfx.ui.window.GameWindowImpl;
+import de.amr.pacmanfx.ui.GameTranslationManager;
+import de.amr.pacmanfx.ui.window.GameWindow;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
@@ -96,7 +96,7 @@ public final class GameImpl implements Game {
         sounds.muteProperty().bind(viewModel.mutedProperty);
 
         ui = new GameUI(
-            new GameWindowImpl(stage, width, height),
+            new GameWindow(stage, width, height),
             views,
             new GameSceneManager(),
             new GameTranslationManager(),
