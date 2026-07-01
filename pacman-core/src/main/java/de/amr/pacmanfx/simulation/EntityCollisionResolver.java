@@ -12,84 +12,89 @@ import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import org.tinylog.Logger;
 
+import java.util.Objects;
+
 public final class EntityCollisionResolver {
 
-    private EntityCollisionResolver() {}
+    private final GameContext context;
 
-    public static void evaluateCollisions(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameModel.optGameLevel().orElseThrow();
+    public EntityCollisionResolver(GameContext context) {
+        this.context = Objects.requireNonNull(context);
+    }
+
+    public void evaluateCollisions(GameLevel level) {
         final Pac pac = level.entities().pac();
 
-        evalFoodFound(gameContext.huntingStepResult(), gameContext, level, pac);
-        if (gameContext.huntingStepResult().foodFound()) {
-            gameContext.flow().publishGameEvent(
-                new PacEatsFoodEvent(gameContext, pac, gameContext.huntingStepResult().energizerFound(), false));
+        evalFoodFound(level);
+        if (context.huntingStepResult().foodFound()) {
+            context.flow().publishGameEvent(
+                new PacEatsFoodEvent(context, pac, context.huntingStepResult().energizerFound(), false));
         }
 
-        evalBonusFound(gameContext.huntingStepResult(), gameContext, gameModel, level);
+        evalBonusFound(level);
 
-        evalPacKilled(gameContext.huntingStepResult(), gameModel, level, pac);
-        if (gameContext.huntingStepResult().pacKilled()) {
-            EntityCollisionResolver.fixPacPositionIfKilledInsidePortal(level, pac);
+        evalPacKilled(level);
+        if (context.huntingStepResult().pacKilled()) {
+            fixPacPositionIfKilledInsidePortal(level);
         }
         else {
-            evalGhostsKilled(gameContext, level);
+            evalGhostsKilled(level);
         }
     }
 
-    private static void evalFoodFound(HuntingStepResult result, GameContext gameContext, GameLevel level, Pac pac) {
+    private void evalFoodFound(GameLevel level) {
+        final Pac pac = level.entities().pac();
+        final GameModel gameModel = context.model();
+        final Vector2i foodTile = context.huntingStepResult().foodFoundTile();
 
-        if (!result.foodFound()) {
+        if (!context.huntingStepResult().foodFound()) {
             pac.continueStarving();
             return;
         }
 
         pac.endStarving();
 
-        final GameModel gameModel = gameContext.model();
-        final Vector2i foodTile = result.foodFoundTile();
-
         level.worldMap().foodLayer().markFoodEatenAt(foodTile);
-        if (result.energizerFound()) {
-            gameModel.eatEnergizer(gameContext, level, foodTile);
+        if (context.huntingStepResult().energizerFound()) {
+            gameModel.eatEnergizer(context, level, foodTile);
         } else {
-            gameModel.eatPellet(gameContext, level, foodTile);
+            gameModel.eatPellet(context, level, foodTile);
         }
 
-        if (gameContext.rules().isBonusAwarded(level)) {
-            gameModel.activateNextBonus(gameContext, level);
-        }
-    }
-
-    private static void evalBonusFound(HuntingStepResult result, GameContext gameContext, GameModel game, GameLevel level) {
-        if (result.foundEdibleBonus()) {
-            game.eatBonus(gameContext, level, result.edibleBonus());
+        if (context.rules().isBonusAwarded(level)) {
+            gameModel.activateNextBonus(context, level);
         }
     }
 
-    private static void evalPacKilled(HuntingStepResult result, GameModel game, GameLevel level, Pac pac) {
-        if (level.isDemoLevel() && game.isPacSafeInDemoLevel(level) || pac.isImmune()) {
+    private void evalBonusFound(GameLevel level) {
+        if (context.huntingStepResult().foundEdibleBonus()) {
+            context.model().eatBonus(context, level, context.huntingStepResult().edibleBonus());
+        }
+    }
+
+    private void evalPacKilled(GameLevel level) {
+        if (level.isDemoLevel() && context.model().isPacSafeInDemoLevel(level) || level.entities().pac().isImmune()) {
             return;
         }
-        result.ghostsCollidingWithPac().stream()
+        context.huntingStepResult().ghostsCollidingWithPac().stream()
             .filter(ghost -> ghost.state() == GhostState.HUNTING_PAC)
-            .findFirst().ifPresent(_ -> result.setPacKilled(true));
+            .findFirst().ifPresent(_ -> context.huntingStepResult().setPacKilled(true));
     }
 
-    private static void evalGhostsKilled(GameContext gameContext, GameLevel level) {
-        if (gameContext.huntingStepResult().detectedPacGhostCollision()) {
+    private void evalGhostsKilled(GameLevel level) {
+        if (context.huntingStepResult().detectedPacGhostCollision()) {
             // Frightened ghosts get killed when colliding with Pac
-            gameContext.huntingStepResult().ghostsCollidingWithPac().stream()
+            context.huntingStepResult().ghostsCollidingWithPac().stream()
                 .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
-                .forEach(gameContext.huntingStepResult().ghostsKilled()::add);
+                .forEach(context.huntingStepResult().ghostsKilled()::add);
             // More than one ghost might have been killed in this step
-            gameContext.huntingStepResult().ghostsKilled().forEach(ghost -> gameContext.model().onEatGhost(gameContext, level, ghost));
+            context.huntingStepResult().ghostsKilled().forEach(ghost -> context.model().onEatGhost(context, level, ghost));
         }
     }
 
     // If collision happened while teleporting (horizontally), move collided actors into visible world
-    public static void fixPacPositionIfKilledInsidePortal(GameLevel level, Pac pac) {
+    public void fixPacPositionIfKilledInsidePortal(GameLevel level) {
+        final Pac pac = level.entities().pac();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         terrain.hPortalContainingTile(pac.computeTile()).ifPresent(hPortal -> {
             if (pac.moveDir() == Direction.LEFT) {
@@ -101,5 +106,4 @@ public final class EntityCollisionResolver {
             Logger.info("Detected collision while teleporting, moved Pac-Man back into world");
         });
     }
-
 }

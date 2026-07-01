@@ -10,11 +10,10 @@ import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.GateKeeper;
+import de.amr.pacmanfx.simulation.EntityCollisionDetector;
+import de.amr.pacmanfx.simulation.EntityCollisionResolver;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.tinylog.Logger;
-
-import static de.amr.pacmanfx.simulation.EntityCollisionDetector.detectCollisions;
-import static de.amr.pacmanfx.simulation.EntityCollisionResolver.evaluateCollisions;
 
 public class GameLevelPlayingState extends GameState {
 
@@ -46,7 +45,8 @@ public class GameLevelPlayingState extends GameState {
         }
         gameModel.updatePacPowerMode(gameContext, level, pac);
 
-        gameContext.setHuntingStepResult(new HuntingStepResult());
+        final EntityCollisionDetector collisionDetector = new EntityCollisionDetector(gameContext);
+
         // If double-check active, do an additional collision check before Pac has moved
         level.entities().forEach(entity -> {
             if (entity != pac) {
@@ -54,12 +54,14 @@ public class GameLevelPlayingState extends GameState {
             }
         });
         if (doubleChecked) {
-            detectCollisions(gameContext);
+            collisionDetector.detectCollisions(level);
         }
         pac.update(gameContext, level);
-        detectCollisions(gameContext);
+        collisionDetector.detectCollisions(level);
 
-        evaluateCollisions(gameContext);
+        final EntityCollisionResolver collisionResolver = new EntityCollisionResolver(gameContext);
+        collisionResolver.evaluateCollisions(level);
+
         logHuntingStep(gameContext);
 
         // State transition

@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.simulation.EntityCollisionDetector;
-import de.amr.pacmanfx.simulation.HuntingStepResult;
 
 import java.util.List;
 
@@ -79,8 +78,8 @@ public class LevelMediumTestState extends GameState implements TestState {
 
         level.heartbeat().triggerPulse();
 
-        gameContext.setHuntingStepResult(new HuntingStepResult());
-        EntityCollisionDetector.detectCollisions(gameContext);
+        final EntityCollisionDetector collisionDetector = new EntityCollisionDetector(gameContext);
+        collisionDetector.detectCollisions(level);
 
         //TODO add missing logic again
         boolean pacKilled = false;
