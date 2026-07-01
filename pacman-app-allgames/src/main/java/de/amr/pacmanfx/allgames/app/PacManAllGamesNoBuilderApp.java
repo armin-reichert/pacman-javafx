@@ -25,7 +25,7 @@ import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.game.GameExtension;
-import de.amr.pacmanfx.ui.game.GameImpl;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -57,7 +57,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
             PacManXXL_PacMan_Cartridge.CARTRIDGE,
             PacManXXL_MsPacMan_Cartridge.CARTRIDGE
         ));
-        game = new GameImpl(machine);
+        game = new PacManGamesCollection(machine);
 
         Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         game.createUI(

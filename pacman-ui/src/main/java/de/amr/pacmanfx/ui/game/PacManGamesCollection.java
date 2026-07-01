@@ -45,7 +45,10 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public final class GameImpl implements Game {
+/**
+ * The Pac-Man games collection.
+ */
+public final class PacManGamesCollection implements Game {
 
     private final PacManGamesMachine machine;
 
@@ -65,7 +68,7 @@ public final class GameImpl implements Game {
 
     private final GlobalGameEventHandler globalGameEventHandler = new GlobalGameEventHandler(this);
 
-    public GameImpl(PacManGamesMachine machine) {
+    public PacManGamesCollection(PacManGamesMachine machine) {
         this.machine = requireNonNull(machine);
         this.commonActions = new CommonActions(this);
         this.extensions = new GameExtensions(this);

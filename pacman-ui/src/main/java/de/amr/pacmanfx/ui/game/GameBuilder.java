@@ -113,7 +113,7 @@ public class GameBuilder {
                 machine.loadCartridge(c);
             }
 
-            final var game = new GameImpl(machine);
+            final var game = new PacManGamesCollection(machine);
 
             // Add game extensions
             for (var cartridge : cartridgeSet) {

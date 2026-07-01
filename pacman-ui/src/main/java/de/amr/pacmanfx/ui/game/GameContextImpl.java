@@ -15,12 +15,12 @@ import static java.util.Objects.requireNonNull;
 
 public class GameContextImpl implements GameContext {
 
-    private final GameImpl game;
+    private final PacManGamesCollection game;
     private final GameVariantRuntime gameVariantRuntime;
 
     private HuntingStepResult huntingStepResult;
 
-    public GameContextImpl(GameImpl game, GameVariantRuntime gameVariantRuntime) {
+    public GameContextImpl(PacManGamesCollection game, GameVariantRuntime gameVariantRuntime) {
         this.game = requireNonNull(game);
         this.gameVariantRuntime = requireNonNull(gameVariantRuntime);
     }
