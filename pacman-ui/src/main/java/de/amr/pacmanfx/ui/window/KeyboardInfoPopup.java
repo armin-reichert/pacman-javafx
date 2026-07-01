@@ -20,7 +20,7 @@ import javafx.scene.text.TextAlignment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KeyboardInfo {
+public class KeyboardInfoPopup {
 
     public static final Font LABEL_FONT = Font.font("Monospace", FontWeight.NORMAL, 16);
     public static final Font TITLE_FONT = Font.font("Sans", FontWeight.BOLD, 16);
@@ -29,7 +29,7 @@ public class KeyboardInfo {
     private final VBox rootPane = new VBox();
     private final VBox keyInfoBox = new VBox();
 
-    public KeyboardInfo() {
+    public KeyboardInfoPopup() {
         rootPane.setPrefSize(280, 50);
         rootPane.setMaxSize(280, 200);
         rootPane.setSpacing(3);

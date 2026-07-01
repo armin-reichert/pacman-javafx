@@ -43,7 +43,7 @@ public class GameMainScene extends Scene {
     private final StackPane gameViewHolder = new StackPane();
 
     private final StatusIconBox statusIconBox;
-    private final KeyboardInfo keyboardInfoPopup;
+    private final KeyboardInfoPopup keyboardInfoPopup;
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
 
@@ -61,7 +61,7 @@ public class GameMainScene extends Scene {
         statusIconBox = new StatusIconBox();
         StackPane.setAlignment(statusIconBox.rootPane(), Pos.BOTTOM_LEFT);
 
-        keyboardInfoPopup = new KeyboardInfo();
+        keyboardInfoPopup = new KeyboardInfoPopup();
         keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
 
         rootPane().setOnMouseClicked(e -> Logger.info("Mouse clicked: {}", e));
