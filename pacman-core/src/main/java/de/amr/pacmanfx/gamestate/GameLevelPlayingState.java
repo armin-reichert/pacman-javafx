@@ -46,10 +46,16 @@ public class GameLevelPlayingState extends GameState {
         gameModel.updatePacPowerMode(gameContext, level, pac);
 
         gameContext.startNewHuntingStep();
+
+        level.entities().forEach(entity -> {
+            if (entity != level.entities().pac()) {
+                entity.update(gameContext, level);
+            }
+        });
         if (gameContext.rules().collisionDoubleCheckedProperty().get()) {
             detectCollisions(gameContext);
         }
-        level.entities().forEach(entity -> entity.update(gameContext, level));
+        level.entities().pac().update(gameContext, level);
         detectCollisions(gameContext);
 
         // Resolving
