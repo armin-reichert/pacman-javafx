@@ -7,11 +7,9 @@ package de.amr.pacmanfx.gamestate;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.HuntingPhaseStartedEvent;
 import de.amr.pacmanfx.event.LevelStartedEvent;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameRules;
-import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;

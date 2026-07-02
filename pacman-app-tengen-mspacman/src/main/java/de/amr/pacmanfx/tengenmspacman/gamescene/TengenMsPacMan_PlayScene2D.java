@@ -167,7 +167,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
         if (gameModel().isPlaying()) {
             gameContext().optCurrentLevel().ifPresent(level -> gameModel().onGameOver(gameContext(), level));
         }
-        gameModel().cheats().clear();
+        gameContext().cheats().clear();
         gameModel().lives().setCount(0);
         onDeactivate();
     }
@@ -194,8 +194,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
         miScrolling.setToggleGroup(toggleGroup);
 
         addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
-        addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
-        addLocalizedCheckBox(contextMenu, translations, gameModel().cheats().pacImmuneProperty(), "context_menu.immunity");
+        addLocalizedCheckBox(contextMenu, translations, gameContext().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
+        addLocalizedCheckBox(contextMenu, translations, gameContext().cheats().pacImmuneProperty(), "context_menu.immunity");
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, game().ui().viewModel().mutedProperty, "context_menu.muted");
         addLocalizedActionItem(contextMenu, translations, game().actions().gameFlowActions().actionQuit(), "context_menu.quit");

@@ -57,8 +57,6 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected PersistentScore highScore;
 
-    protected GameCheats cheats;
-
     protected GameLevel currentLevel;
 
     protected PacManLives lives;
@@ -77,7 +75,6 @@ public abstract class AbstractGameModel implements GameModel {
         score = new Score();
         lives = new PacManLivesImpl();
         hud = new HUDState();
-        cheats = new DefaultCheatsImpl();
     }
 
     public void setMapSelector(WorldMapSelector mapSelector) {
@@ -87,11 +84,6 @@ public abstract class AbstractGameModel implements GameModel {
     /* -------------------------------------------------------------------------
      * GameModel interface implementation
      * ---------------------------------------------------------------------- */
-
-    @Override
-    public GameCheats cheats() {
-        return cheats;
-    }
 
     @Override
     public PacManLives lives() {
@@ -361,32 +353,6 @@ public abstract class AbstractGameModel implements GameModel {
                 level.huntingTimer().start();
                 level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
                 gameContext.flow().publishGameEvent(new PacLostPowerEvent(gameContext, pac));
-            }
-        }
-    }
-
-    /* -------------------------------------------------------------------------
-     * Cheating
-     * ---------------------------------------------------------------------- */
-
-    public class DefaultCheatsImpl extends GameCheats {
-
-        @Override
-        public void update(GameLevel level) {
-            if (level.isDemoLevel() || !level.gameModel().isPlaying()) {
-                return;
-            }
-            final Pac pac = level.entities().pac();
-            pac.immuneProperty().set(isPacImmune());
-            pac.usingAutopilotProperty().set(isPacUsingAutopilot());
-            if (isPacImmune() || isPacUsingAutopilot()) {
-                notifyCheatUsed();
-            }
-        }
-
-        public void handleCheatDetected() {
-            if (highScore != null) {
-                highScore.setEnabled(false);
             }
         }
     }

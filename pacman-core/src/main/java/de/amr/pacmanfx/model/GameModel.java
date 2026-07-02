@@ -66,9 +66,6 @@ public interface GameModel {
 
     // Components
 
-    //TODO move into game context
-    GameCheats cheats();
-
     PacManLives lives();
 
     GateKeeper gateKeeper();

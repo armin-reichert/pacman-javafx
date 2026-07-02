@@ -6,10 +6,8 @@ package de.amr.pacmanfx.gamestate;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.HuntingPhaseStartedEvent;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameRules;
-import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
@@ -54,7 +52,7 @@ public class GameLevelPlayingState extends GameState {
         final boolean doubleChecked = gameContext.rules().collisionDoubleCheckedProperty().get();
 
         // Update
-        gameModel.cheats().update(level);
+        gameContext.cheats().update(level);
         level.heartbeat().triggerPulse();
         level.huntingTimer().update(gameContext.rules(), level.number());
         if (gateKeeper != null) {

@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
@@ -49,7 +48,6 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
     public PlaySceneContextMenu(Game game) {
         this.game = requireNonNull(game);
 
-        final GameModel gameModel = game.currentGameContext().model();
         final TranslationManager translations = game.ui().translations();
         final Common3DSettingsModel settings3D = game.ui().viewModel().common3D;
 
@@ -75,8 +73,8 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         }
 
         addLocalizedTitleItem(this, translations, "context_menu.pacman");
-        addLocalizedCheckBox(this, translations, gameModel.cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
-        addLocalizedCheckBox(this, translations, gameModel.cheats().pacImmuneProperty(), "context_menu.immunity");
+        addLocalizedCheckBox(this, translations, game.currentGameContext().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
+        addLocalizedCheckBox(this, translations, game.currentGameContext().cheats().pacImmuneProperty(), "context_menu.immunity");
 
         addSeparator(this);
         addLocalizedCheckBox(this, translations, game.ui().viewModel().mutedProperty, "context_menu.muted");

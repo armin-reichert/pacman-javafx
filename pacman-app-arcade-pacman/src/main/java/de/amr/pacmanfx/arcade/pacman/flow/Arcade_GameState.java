@@ -189,7 +189,7 @@ public enum Arcade_GameState {
             if (timer().hasExpired()) {
                 final GameLevel level = gameContext.requireLevel();
                 level.clearMessage();
-                gameModel.cheats().clear();
+                gameContext.cheats().clear();
                 if (gameModel.canStartNewGame(gameContext)) {
                     flow.enterState(GameStateID.GAME_PREPARATION);
                 } else {

@@ -272,7 +272,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         if (gameModel().isPlaying()) {
             gameContext().optCurrentLevel().ifPresent(level -> gameModel().onGameOver(gameContext(), level));
         }
-        gameModel().cheats().clear();
+        gameContext().cheats().clear();
         gameModel().lives().setCount(0);
         onDeactivate();
     }

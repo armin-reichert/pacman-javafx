@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
@@ -111,13 +110,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void startLevel(GameContext gameContext) {
         final GameLevel level = optGameLevel().orElseThrow();
         level.recordStartTime(System.currentTimeMillis());
+
         prepareLevelForPlaying(level);
+
         showLevelMessage(level, GameLevelMessageType.READY);
         levelCounter.update(level.number(), level.bonusSymbolCode(0));
         score.setEnabled(true);
-        cheats.update(level);
-
-        Logger.info("Level {} started", level.number());
+        gameContext.cheats().update(level);
 
         // Note: This event is very important because it triggers the creation of the actor animations!
         gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));

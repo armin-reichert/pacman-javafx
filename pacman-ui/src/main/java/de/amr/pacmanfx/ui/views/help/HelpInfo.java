@@ -83,7 +83,7 @@ public class HelpInfo {
         pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
         final GameContext gameContext = game.currentGameContext();
-        final GameCheats cheats = gameContext.model().cheats();
+        final GameCheats cheats = gameContext.cheats();
 
         // add default entries:
         if (cheats.isPacUsingAutopilot()) {

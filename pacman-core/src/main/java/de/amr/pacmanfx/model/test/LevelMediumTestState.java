@@ -74,7 +74,7 @@ public class LevelMediumTestState extends GameState implements TestState {
         if (gameModel.gateKeeper() != null) {
             gameModel.gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
-        gameModel.cheats().update(level);
+        gameContext.cheats().update(level);
 
         level.heartbeat().triggerPulse();
 

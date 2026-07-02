@@ -219,7 +219,7 @@ public enum TengenMsPacMan_GameState {
             final GameLevel level = gameContext.requireLevel();
 
             if (timer().hasExpired()) {
-                gameModel.cheats().clear();
+                gameContext.cheats().clear();
                 level.clearMessage();
 
                 if (level.isDemoLevel()) {

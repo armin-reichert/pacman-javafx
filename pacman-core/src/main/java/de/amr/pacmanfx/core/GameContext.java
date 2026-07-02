@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameState;
+import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -24,6 +25,8 @@ public interface GameContext {
     }
 
     GameRules rules();
+
+    GameCheats cheats();
 
     GameModel model();
 

@@ -196,24 +196,20 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         level.recordStartTime(System.currentTimeMillis());
 
         prepareLevelForPlaying(level);
+
+        // In Tengen, actors are shown immediately
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
 
         if (pacBoosterMode == PacBooster.ALWAYS_ON) {
             activatePacBooster(level.entities().pac(), true);
         }
-        if (level.isDemoLevel()) {
-            showMessage(level, GameLevelMessageType.GAME_OVER);
-            score().setEnabled(true);
-            highScore().setEnabled(false);
-            Logger.info("Demo level {} started", level.number());
-        } else {
-            showMessage(level, GameLevelMessageType.READY);
-            levelCounter.update(level.number(), level.bonusSymbolCode(0));
-            score().setEnabled(true);
-            cheats.update(level);
-            Logger.info("Level {} started", level.number());
-        }
+
+        showMessage(level, GameLevelMessageType.READY);
+        levelCounter.update(level.number(), level.bonusSymbolCode(0));
+        score().setEnabled(true);
+        gameContext.cheats().update(level);
+
         // Note: This event is very important because it triggers the creation of the actor animations!
         gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));
     }
