@@ -51,7 +51,7 @@ public interface State<C> extends Identifier {
     }
 
     /**
-     * Sets the state timer to indefinite duration.
+     * Sets this state's timer to an indefinite duration. The timeout can be triggered by calling {@link #triggerTimeout()}.
      */
     default void waitForTimeout() {
         timer().resetToIndefiniteDuration();
