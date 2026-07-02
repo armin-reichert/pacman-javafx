@@ -140,11 +140,11 @@ public abstract class AbstractGameModel implements GameModel {
         mapSelector.loadMapPrototypes();
         lives.setInitialCount(3);
         hud.hide();
-        prepareNewGame();
+        resetForNewGame();
     }
 
     @Override
-    public void prepareNewGame() {
+    public void resetForNewGame() {
         lives.setCount(lives.initialCount());
         score.reset();
         if (highScore != null) {

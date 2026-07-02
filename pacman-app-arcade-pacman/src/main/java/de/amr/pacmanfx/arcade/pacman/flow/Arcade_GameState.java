@@ -69,7 +69,7 @@ public enum Arcade_GameState {
             final GameModel gameModel = gameContext.model();
 
             gameModel.hud().creditOff().livesCounterOn();
-            gameModel.prepareNewGame();
+            gameModel.resetForNewGame();
             gameModel.buildNormalLevel(gameContext, 1);
 
             flow.publishGameEvent(new GameStartedEvent(gameContext));

@@ -102,7 +102,7 @@ public enum TengenMsPacMan_GameState {
         public void onEnter(GameContext gameContext) {
             final GameModel gameModel = gameContext.model();
             
-            gameModel.prepareNewGame();
+            gameModel.resetForNewGame();
             gameModel.buildNormalLevel(gameContext, tengenMsPacman(gameModel).startLevelNumber());
 
             gameContext.flow().publishGameEvent(new GameStartedEvent(gameContext));

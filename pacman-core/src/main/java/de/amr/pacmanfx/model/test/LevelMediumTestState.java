@@ -56,7 +56,7 @@ public class LevelMediumTestState extends GameState implements TestState {
             ? 25
             : gameContext.rules().lastLevelNumber();
         timer().restartSeconds(TEST_DURATION_SEC);
-        gameModel.prepareNewGame();
+        gameModel.resetForNewGame();
         gameModel.buildNormalLevel(gameContext, 1);
         gameModel.startLevel(gameContext);
         configureLevelForTest(gameContext);

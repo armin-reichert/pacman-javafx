@@ -34,7 +34,7 @@ public class LevelShortTestState extends GameState implements TestState {
             ? 25
             : gameContext.rules().lastLevelNumber();
         lock();
-        gameModel.prepareNewGame();
+        gameModel.resetForNewGame();
         gameModel.buildNormalLevel(gameContext, 1);
         gameModel.startLevel(gameContext);
         final GameLevel level = gameModel.optGameLevel().orElseThrow();

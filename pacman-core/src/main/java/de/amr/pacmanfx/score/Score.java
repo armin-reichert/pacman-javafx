@@ -32,7 +32,6 @@ public class Score {
         setDate(LocalDate.now());
     }
 
-
     public BooleanProperty enabledProperty() { return enabled; }
 
     public boolean isEnabled() { return enabledProperty().get(); }

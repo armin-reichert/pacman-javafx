@@ -169,8 +169,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void prepareNewGame() {
-        super.prepareNewGame();
+    public void resetForNewGame() {
+        super.resetForNewGame();
         boosterActive = false;
     }
 

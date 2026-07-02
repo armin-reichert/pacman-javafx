@@ -89,7 +89,7 @@ public interface GameModel {
 
     void init();
 
-    void prepareNewGame();
+    void resetForNewGame();
 
     boolean canStartNewGame(GameContext gameContext);
 
