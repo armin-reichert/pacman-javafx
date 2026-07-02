@@ -33,7 +33,7 @@ public class LevelShortTestState extends GameState implements TestState {
         lastTestedLevelNumber = gameContext.rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
             : gameContext.rules().lastLevelNumber();
-        lock();
+        block();
         gameModel.resetForNewGame();
         gameModel.buildNormalLevel(gameContext, 1);
         gameModel.startLevel(gameContext);
@@ -88,7 +88,7 @@ public class LevelShortTestState extends GameState implements TestState {
             if (level.number() == lastTestedLevelNumber) {
                 gameContext.flow().restartState(GameStateID.BOOT);
             } else {
-                lock();
+                block();
                 gameModel.startNextLevel(gameContext);
             }
         } else {

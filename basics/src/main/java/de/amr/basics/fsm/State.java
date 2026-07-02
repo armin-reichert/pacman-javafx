@@ -46,14 +46,14 @@ public interface State<C> extends Identifier {
     /**
      * Lets the timer of this state expire immediately.
      */
-    default void expire() {
+    default void setExpired() {
         timer().expire();
     }
 
     /**
      * Sets the state timer to indefinite duration.
      */
-    default void lock() {
+    default void block() {
         timer().resetToIndefiniteDuration();
     }
 }

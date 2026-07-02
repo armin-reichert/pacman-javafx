@@ -23,7 +23,7 @@ public class CutScenesTestState extends GameState implements TestState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        lock();
+        block();
         testedCutSceneNumber = 1;
     }
 
@@ -32,7 +32,7 @@ public class CutScenesTestState extends GameState implements TestState {
         if (timer().hasExpired()) {
             if (testedCutSceneNumber < gameContext.rules().lastCutSceneNumber()) {
                 testedCutSceneNumber += 1;
-                lock();
+                block();
                 //TODO find another solution and get rid of this event type
                 gameContext.flow().publishGameEvent(new GenericChangeEvent(gameContext, "Cut Scene Test"));
             } else {

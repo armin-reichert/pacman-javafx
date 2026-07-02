@@ -237,9 +237,9 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         level3D.entities().ghosts3D().forEach(Ghost3D::stopAllAnimations);
         level3D.entities().selectAllOfType(Bonus3D.class).forEach(Bonus3D::lookExpired);
 
-        gameContext().state().lock();
+        gameContext().state().block();
         final Animation dyingAnimationSeq = createPacDyingAnimationSeq(level3D.animationRegistry(), pac3D, level3D.level());
-        dyingAnimationSeq.setOnFinished(_ -> gameContext().state().expire());
+        dyingAnimationSeq.setOnFinished(_ -> gameContext().state().setExpired());
         dyingAnimationSeq.play();
     }
 
@@ -316,11 +316,11 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         final Optional<ManagedAnimation> levelEndAnimation = animationRegistry.optAnimation(animationID);
 
         if (levelEndAnimation.isEmpty()) {
-            Ufx.pauseSecThen(2, () -> gameContext().state().expire()).play();
+            Ufx.pauseSecThen(2, () -> gameContext().state().setExpired()).play();
             return;
         }
 
-        gameContext().state().lock();
+        gameContext().state().block();
 
         final PerspectiveID perspectiveBeforeAnimation = settings3D.cameraPerspectiveIdProperty.get();
 
@@ -339,7 +339,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
             levelEndAnimation.get().animationFX(),
             restoreCameraPerspective
         );
-        seq.setOnFinished(_ -> gameContext().state().expire());
+        seq.setOnFinished(_ -> gameContext().state().setExpired());
 
         seq.play();
     }

@@ -72,7 +72,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
             case 204 -> gray(true);
             case 214 -> gray(false);
             case 220 -> {
-                gameState.expire();
+                gameState.setExpired();
                 return;
             }
         }

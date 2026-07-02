@@ -102,7 +102,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
 
     @Override
     public void onPacDead(PacDeadEvent e) {
-        gameContext().state().expire();
+        gameContext().state().setExpired();
     }
 
     @Override

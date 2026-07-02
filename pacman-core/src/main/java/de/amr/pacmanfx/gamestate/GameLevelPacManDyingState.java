@@ -37,7 +37,7 @@ public class GameLevelPacManDyingState extends GameState {
         final GameModel gameModel = context.model();
         final GameLevel level = context.model().optGameLevel().orElseThrow();
 
-        lock(); // UI triggers time-out
+        block(); // UI triggers time-out
 
         gameModel.gateKeeper().resetCounterAndSetEnabled(true);
 
