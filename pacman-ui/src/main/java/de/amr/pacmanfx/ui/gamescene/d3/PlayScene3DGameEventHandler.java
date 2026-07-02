@@ -36,6 +36,7 @@ import javafx.animation.SequentialTransition;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.Optional;
 
@@ -56,8 +57,9 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
     }
 
     @Override
-    public void onGameStateChange(GameStateChangeEvent event) {
-        final var gameState = event.newState();
+    public void onGameStateChange(GameStateChangeEvent e) {
+        Logger.info("Enter new game state '{}'", e.newState().name());
+        final var gameState = e.newState();
 
         if (gameState instanceof TestState) {
             handleTestState(game().ui().viewModel().common3D);

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.test.TestState;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -55,6 +56,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
+        Logger.info("Enter new game state '{}'", e.newState().name());
         final GameState newState = (GameState) e.newState();
 
         if (GameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {

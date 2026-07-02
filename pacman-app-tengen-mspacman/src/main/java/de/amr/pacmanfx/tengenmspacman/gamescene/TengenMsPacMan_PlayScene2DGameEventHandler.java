@@ -13,6 +13,7 @@ import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -66,6 +67,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
+        Logger.info("Enter new game state '{}'", e.newState().name());
         if (e.newState() == TengenMsPacMan_GameState.GAME_LEVEL_COMPLETE.state()) {
             final GameLevel level = optGameLevel().orElseThrow();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
