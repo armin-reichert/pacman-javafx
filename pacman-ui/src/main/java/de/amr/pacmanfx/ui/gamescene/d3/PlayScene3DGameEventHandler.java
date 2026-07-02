@@ -58,7 +58,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        Logger.info("Enter new game state '{}'", e.newState().name());
+        Logger.info("Enter game state '{}'", e.newState().name());
         final var gameState = e.newState();
 
         if (gameState instanceof TestState) {

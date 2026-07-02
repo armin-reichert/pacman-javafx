@@ -56,7 +56,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        Logger.info("Enter new game state '{}'", e.newState().name());
+        Logger.info("Enter game state '{}'", e.newState().name());
         final GameState newState = (GameState) e.newState();
 
         if (GameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {

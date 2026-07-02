@@ -40,7 +40,7 @@ public class DefaultGameEventListener implements GameEventListener{
 
     // public implementations remain the same
     public void onGameStateChange(GameStateChangeEvent e) {
-        Logger.info("Enter new game state '{}'", e.newState().name());
+        Logger.info("Enter game state '{}'", e.newState().name());
     }
 
     public void onCreditAdded(CreditAddedEvent e) {}

@@ -67,7 +67,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        Logger.info("Enter new game state '{}'", e.newState().name());
+        Logger.info("Enter game state '{}'", e.newState().name());
         if (e.newState() == TengenMsPacMan_GameState.GAME_LEVEL_COMPLETE.state()) {
             final GameLevel level = optGameLevel().orElseThrow();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
