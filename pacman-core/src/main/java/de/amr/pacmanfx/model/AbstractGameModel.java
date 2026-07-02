@@ -160,7 +160,7 @@ public abstract class AbstractGameModel implements GameModel {
         gateKeeper.reset();
         levelCounter.clear();
 
-        currentLevel = null;
+        setLevel(null);
         setPlaying(false);
     }
 
