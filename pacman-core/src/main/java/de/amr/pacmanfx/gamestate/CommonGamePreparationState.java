@@ -3,13 +3,9 @@ package de.amr.pacmanfx.gamestate;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 
-/**
- * Corresponds to the "MS PAC-MAN OPTIONS" screen where difficulty, booster, map category
- * and start level can be set.
- */
-public class GamePreparationState extends GameState {
+public class CommonGamePreparationState extends GameState {
 
-    public GamePreparationState() {
+    public CommonGamePreparationState() {
         super(GameStateID.GAME_PREPARATION);
     }
 

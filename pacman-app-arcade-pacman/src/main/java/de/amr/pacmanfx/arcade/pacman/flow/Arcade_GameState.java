@@ -11,7 +11,7 @@ import static java.util.Objects.requireNonNull;
 public enum Arcade_GameState {
     BOOT                       (new CommonGameBootState()),
     GAME_INTRO                 (new CommonGameIntroState()),
-    GAME_PREPARATION           (new GamePreparationState()),
+    GAME_PREPARATION           (new CommonGamePreparationState()),
     GAME_OR_LEVEL_STARTING     (new ArcadeGameOrLevelStartingState()),
     DEMO_LEVEL_PLAYING         (new CommonDemoLevelPlayingState(Timing.TICK_DEMO_LEVEL_HUNTING_START)),
     GAME_STARTING              (new ArcadeGameStartingState()),

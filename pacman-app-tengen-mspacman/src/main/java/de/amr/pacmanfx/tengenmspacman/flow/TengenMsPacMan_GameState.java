@@ -12,7 +12,7 @@ public enum TengenMsPacMan_GameState {
 
     BOOT                        (new CommonGameBootState()),
     GAME_INTRO                  (new CommonGameIntroState()),
-    GAME_PREPARATION            (new GamePreparationState()),
+    GAME_PREPARATION            (new CommonGamePreparationState()),
     SHOWING_HALL_OF_FAME        (new ShowingHallOfFameState() ),
     GAME_OR_LEVEL_STARTING      (new GameOrLevelStartingState()),
     DEMO_LEVEL_PLAYING          (new CommonDemoLevelPlayingState(Timing.TICK_DEMO_LEVEL_START_HUNTING)),
