@@ -65,7 +65,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
     public void onActivate() {
         final GameVariant gameVariant = game().currentGameVariant();
 
-        gameModel().hudState().hide();
+        gameModel().hudState().hideIt();
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) gameVariant.spriteSheet();
 

@@ -38,7 +38,7 @@ public enum Arcade_GameState {
         @Override
         public void onEnter(GameContext gameContext) {
             final GameModel gameModel = gameContext.model();
-            gameModel.hudState().scoreOn().levelCounterOn().show();
+            gameModel.hudState().scoreOn().levelCounterOn().showIt();
         }
 
         @Override
@@ -205,7 +205,7 @@ public enum Arcade_GameState {
         public void onEnter(GameContext gameContext) {
             final GameModel gameModel = gameContext.model();
             lock();
-            gameModel.hudState().creditOff().scoreOff().levelCounterOn().livesCounterOff().show();
+            gameModel.hudState().creditOff().scoreOff().levelCounterOn().livesCounterOff().showIt();
         }
 
         @Override
@@ -221,7 +221,7 @@ public enum Arcade_GameState {
         @Override
         public void onExit(GameContext gameContext) {
             final GameModel gameModel = gameContext.model();
-            gameModel.hudState().creditOff().scoreOn().levelCounterOn().livesCounterOn().show();
+            gameModel.hudState().creditOff().scoreOn().levelCounterOn().livesCounterOn().showIt();
         }
     });
 

@@ -111,7 +111,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
 
     @Override
     public void onEnteredFrom3DScene() {
-        gameModel().hudState().levelCounterOn().livesCounterOn().show();
+        gameModel().hudState().levelCounterOn().livesCounterOn().showIt();
         gameModel().optGameLevel().ifPresent(this::acceptGameLevel);
     }
 
@@ -126,7 +126,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
     @Override
     public void onActivate() {
         final TengenMsPacMan_HUDState hud = gameModel().hudState();
-        hud.scoreOn().levelCounterOn().livesCounterOn().show();
+        hud.scoreOn().levelCounterOn().livesCounterOn().showIt();
         if (gameModel().allOptionsDefault()) {
             hud.gameOptionsOff();
         } else {

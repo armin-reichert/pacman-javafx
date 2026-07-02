@@ -19,12 +19,11 @@ public class HUDState {
     private int visibleLifeCount;
     private boolean scoreOn = true;
 
-
     public HUDState() {}
 
-    public void show() { visible = true; }
+    public void showIt() { visible = true; }
 
-    public void hide() {
+    public void hideIt() {
         visible = false;
     }
 

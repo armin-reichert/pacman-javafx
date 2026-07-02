@@ -70,7 +70,7 @@ public enum TengenMsPacMan_GameState {
             final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext.model();
             final TengenMsPacMan_HUDState hud = gameModel.hudState();
         
-            hud.creditOff().scoreOn().levelCounterOn().livesCounterOn().show();
+            hud.creditOff().scoreOn().levelCounterOn().livesCounterOn().showIt();
 
             // The rules vary between map categories so update the rules here:
             final TengenMsPacMan_GameRules gameRules = (TengenMsPacMan_GameRules) gameContext.rules();
@@ -244,10 +244,10 @@ public enum TengenMsPacMan_GameState {
             lock();
 
             if (tengenMsPacman(gameModel).mapCategory() == MapCategory.ARCADE || isLastCutScene) {
-                hud.hide();
+                hud.hideIt();
             }
             else {
-                hud.gameOptionsOff().scoreOff().levelCounterOn().livesCounterOff().show();
+                hud.gameOptionsOff().scoreOff().levelCounterOn().livesCounterOff().showIt();
             }
         }
 
@@ -267,10 +267,10 @@ public enum TengenMsPacMan_GameState {
             final var hud = (TengenMsPacMan_HUDState) gameModel.hudState();
 
             if (tengenMsPacman(gameModel).mapCategory() == MapCategory.ARCADE) {
-                hud.hide();
+                hud.hideIt();
             }
             else {
-                hud.gameOptionsOn().scoreOn().levelCounterOn().livesCounterOff().show();
+                hud.gameOptionsOn().scoreOn().levelCounterOn().livesCounterOff().showIt();
             }
         }
     });
