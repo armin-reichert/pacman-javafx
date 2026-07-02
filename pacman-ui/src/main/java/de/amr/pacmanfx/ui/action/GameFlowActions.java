@@ -47,7 +47,7 @@ public class GameFlowActions {
         actionLetGameStateExpire = new GameAction(game, "let_game_state_expire") {
             @Override
             protected void doAction() {
-                game.currentGameContext().state().setExpired();
+                game.currentGameContext().state().triggerTimeout();
             }
         };
 

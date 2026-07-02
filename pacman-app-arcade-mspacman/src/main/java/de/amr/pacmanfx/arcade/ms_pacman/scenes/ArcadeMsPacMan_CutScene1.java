@@ -247,7 +247,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     private void updateStateInHeaven() {
         if (sceneTimer.hasExpired()) {
-            gameState().setExpired();
+            gameState().triggerTimeout();
         }
     }
 }

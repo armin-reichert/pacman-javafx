@@ -58,7 +58,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
             startBigPacManChasingBlinky();
         }
         else if (sceneTick == ANIMATION_START_TICK + 632) {
-            gameState().setExpired();
+            gameState().triggerTimeout();
         }
         if (sceneTick >= ANIMATION_START_TICK) {
             pacMan.move();

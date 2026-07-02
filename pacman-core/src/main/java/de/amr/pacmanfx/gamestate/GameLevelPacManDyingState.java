@@ -37,8 +37,6 @@ public class GameLevelPacManDyingState extends GameState {
         final GameModel gameModel = context.model();
         final GameLevel level = context.model().optGameLevel().orElseThrow();
 
-        block(); // UI triggers time-out
-
         gameModel.gateKeeper().resetCounterAndSetEnabled(true);
 
         level.huntingTimer().stop();
@@ -54,6 +52,7 @@ public class GameLevelPacManDyingState extends GameState {
         level.entities().ghosts().forEach(ghost -> ghost.onPacKilled(level));
 
         context.flow().publishGameEvent(new StopAllSoundsEvent(context));
+        waitForTimeout(); // UI triggers time-out
     }
 
     @Override

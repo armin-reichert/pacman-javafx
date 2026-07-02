@@ -63,7 +63,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
             final GameLevel level = optGameLevel().orElseThrow();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
-            final var completedAnimation = new LevelCompletedAnimation(level, () -> gameState().setExpired());
+            final var completedAnimation = new LevelCompletedAnimation(level, () -> gameState().triggerTimeout());
             playScene2D.setLevelCompletedAnimation(completedAnimation);
             completedAnimation.play();
         }
@@ -86,7 +86,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
     @Override
     public void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        gameState().setExpired();
+        gameState().triggerTimeout();
     }
 
     @Override

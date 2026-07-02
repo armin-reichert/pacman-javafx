@@ -99,7 +99,7 @@ public class LevelMediumTestState extends GameState implements TestState {
             gameContext.flow().enterState(GameStateID.GAME_INTRO);
         }
         else if (pacKilled) {
-            setExpired();
+            triggerTimeout();
         }
         else if (gameContext.huntingStepResult().hasGhostBeenKilled()) {
             gameContext.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST);

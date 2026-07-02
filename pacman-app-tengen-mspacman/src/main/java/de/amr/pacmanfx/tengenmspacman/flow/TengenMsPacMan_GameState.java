@@ -52,7 +52,7 @@ public enum TengenMsPacMan_GameState {
         
         @Override
         public void onEnter(GameContext gameContext) {
-            block();
+            waitForTimeout();
         }
 
         @Override
@@ -161,9 +161,8 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onEnter(GameContext gameContext) {
             final GameModel gameModel = gameContext.model();
-
-            block(); // Waits for UI to trigger timeout
             gameModel.onLevelCompleted(gameContext.requireLevel());
+            waitForTimeout(); // Waits for UI to trigger timeout
         }
 
         @Override
@@ -241,14 +240,13 @@ public enum TengenMsPacMan_GameState {
             final var hud = (TengenMsPacMan_HUDState) gameModel.hudState();
             final boolean isLastCutScene = level.cutSceneNumber() == gameContext.rules().lastCutSceneNumber();
 
-            block();
-
             if (tengenMsPacman(gameModel).mapCategory() == MapCategory.ARCADE || isLastCutScene) {
                 hud.hideIt();
             }
             else {
                 hud.gameOptionsOff().scoreOff().levelCounterOn().livesCounterOff().showIt();
             }
+            waitForTimeout();
         }
 
         @Override

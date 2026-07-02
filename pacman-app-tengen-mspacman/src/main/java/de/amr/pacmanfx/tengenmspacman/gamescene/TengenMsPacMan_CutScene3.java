@@ -152,7 +152,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     flyingBag.setAcceleration(0, 0);
                 }
                 case 640 -> darkness = true;
-                case TICK_EXPIRES -> gameState().setExpired();
+                case TICK_EXPIRES -> gameState().triggerTimeout();
             }
         }
 
