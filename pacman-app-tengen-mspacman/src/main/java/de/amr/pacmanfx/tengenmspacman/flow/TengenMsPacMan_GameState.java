@@ -96,7 +96,7 @@ public enum TengenMsPacMan_GameState {
         }
     }),
 
-    DEMO_LEVEL_PLAYING( new GameDemoLevelState(Timing.TICK_DEMO_LEVEL_START_HUNTING) ),
+    DEMO_LEVEL_PLAYING( new DemoLevelPlayingState(Timing.TICK_DEMO_LEVEL_START_HUNTING) ),
 
     GAME_STARTING( new GameState(GameStateID.GAME_STARTING) {
 

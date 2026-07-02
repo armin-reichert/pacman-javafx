@@ -58,7 +58,7 @@ public enum Arcade_GameState {
         }
     }),
 
-    DEMO_LEVEL_PLAYING(new GameDemoLevelState(Timing.TICK_DEMO_LEVEL_HUNTING_START)),
+    DEMO_LEVEL_PLAYING(new DemoLevelPlayingState(Timing.TICK_DEMO_LEVEL_HUNTING_START)),
 
     GAME_STARTING( new GameState(GameStateID.GAME_STARTING) {
 

@@ -29,7 +29,6 @@ public class GameLevelPlayingState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
         final GameLevel level = gameContext.requireLevel();
 
         // Clear "READY!" message. "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared!
