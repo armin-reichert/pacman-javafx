@@ -369,14 +369,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     private HuntingTimer createHuntingTimer(GameRules gameRules) {
         final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", gameRules.numHuntingPhases());
-        huntingTimer.phaseIndexProperty().addListener((_, _, newPhaseIndex) -> {
-            optGameLevel().ifPresent(level -> {
-                if (newPhaseIndex.intValue() > 0) {
-                    level.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
-                        .forEach(Ghost::requestTurnBack);
-                }
-            });
-        });
+        huntingTimer.setPhaseChangeCallback(newPhaseIndex -> optGameLevel().ifPresent(level -> {
+            if (newPhaseIndex > 0) {
+                level.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
+                    .forEach(Ghost::requestTurnBack);
+            }
+        }));
         return huntingTimer;
     }
 }

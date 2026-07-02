@@ -7,11 +7,10 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.HuntingPhaseStartedEvent;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static de.amr.basics.math.MathAdds.isEven;
 import static de.amr.basics.math.MathAdds.isOdd;
@@ -24,11 +23,15 @@ import static java.util.Objects.requireNonNull;
  */
 public class HuntingTimer {
 
+    private enum HuntingPhaseEvent { BEGINS, ENDS }
+
     private final TickTimer tickTimer;
 
     private final int numPhases;
 
     private int phaseIndex = Integer.MIN_VALUE;
+
+    private Consumer<Integer> phaseChangeCallback = index -> Logger.info("Hunting phase index is now {}", index);
 
     /**
      * @param name a readable name for this timer
@@ -37,6 +40,10 @@ public class HuntingTimer {
     public HuntingTimer(String name, int numPhases) {
         this.tickTimer = new TickTimer(name);
         this.numPhases = requireNonNegativeInt(numPhases);
+    }
+
+    public void setPhaseChangeCallback(Consumer<Integer> callback) {
+        this.phaseChangeCallback = requireNonNull(callback);
     }
 
     /**
@@ -48,8 +55,8 @@ public class HuntingTimer {
     public void update(GameRules rules, int levelNumber) {
         requireValidLevelNumber(levelNumber);
         if (tickTimer.hasExpired()) {
-            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), currentHuntingPhase(), tickTimer.tickCount());
-            int nextPhaseIndex = requireValidPhaseIndex(phaseIndex() + 1);
+            logPhase(phaseIndex, HuntingPhaseEvent.ENDS);
+            int nextPhaseIndex = requireValidPhaseIndex(phaseIndex + 1);
             startPhase(rules, levelNumber, nextPhaseIndex);
         } else {
             tickTimer.doTick();
@@ -68,12 +75,12 @@ public class HuntingTimer {
     }
 
     /**
-     * Stops and resets the hunting timer and the phase index to zero.
+     * Stops and resets the hunting timer and the phase index to an undefined value.
      */
     public void reset() {
         tickTimer.stop();
         tickTimer.reset(TickTimer.INDEFINITE);
-        setPhaseIndex(0);
+        phaseIndex = Integer.MIN_VALUE;
     }
 
     /**
@@ -106,8 +113,11 @@ public class HuntingTimer {
 
     public void setPhaseIndex(int index) {
         requireValidPhaseIndex(index);
-        phaseIndex = index;
-        logPhaseChange(phaseIndex);
+        if (phaseIndex != index) {
+            phaseIndex = index;
+            logPhase(phaseIndex, HuntingPhaseEvent.BEGINS);
+            phaseChangeCallback.accept(phaseIndex);
+        }
     }
 
     public int phaseIndex() { return phaseIndex; }
@@ -155,9 +165,14 @@ public class HuntingTimer {
         );
     }
 
-    public void logPhaseChange(int index) {
-        Logger.info("New hunting phase (index={}, {}, {} ticks / {} seconds). {}",
+    private void logPhase(int index, HuntingPhaseEvent event) {
+        final String eventText = switch (event) {
+            case BEGINS -> "begins:";
+            case ENDS   -> "ends:  ";
+        };
+        Logger.info("Hunting phase {} {} {}, {} ticks / {} seconds). {}",
             index,
+            eventText,
             phase(index),
             tickTimer.durationTicks(),
             (float) tickTimer.durationTicks() / GameClock.DEFAULT_TICKS_PER_SECOND,
