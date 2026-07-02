@@ -152,7 +152,7 @@ public class Bonus extends MovingActor {
 
     private boolean wanderMaze(GameLevel level) {
         routeNavigation.steer(this, level);
-        boolean mazeExitReached = routeNavigation.isComplete()
+        boolean mazeExitReached = routeNavigation.isRouteTraversed()
             || level.worldMap().terrainLayer().isTileInPortalSpace(computeTile());
         if (!mazeExitReached) {
             navigateTowardsTarget(level);

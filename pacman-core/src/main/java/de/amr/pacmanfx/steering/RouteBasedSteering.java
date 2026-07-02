@@ -6,7 +6,6 @@ package de.amr.pacmanfx.steering;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.level.GameLevel;
-import org.tinylog.Logger;
 
 import java.util.List;
 
@@ -19,47 +18,45 @@ public class RouteBasedSteering implements Steering {
 
     private final List<Vector2i> route;
     private int targetIndex;
-    private boolean complete;
+    private boolean routeTraversed;
 
     public RouteBasedSteering(List<Vector2i> route) {
         this.route = requireNonNull(route);
         init();
     }
 
-    public boolean isComplete() {
-        return complete;
+    public boolean isRouteTraversed() {
+        return routeTraversed;
     }
 
     @Override
     public void init() {
         targetIndex = 0;
-        complete = false;
+        routeTraversed = false;
     }
 
     @Override
-    public void steer(MovingActor movingActor, GameLevel gameLevel) {
-        movingActor.navigateTowardsTarget(gameLevel);
+    public void steer(MovingActor actor, GameLevel level) {
         if (targetIndex == route.size()) {
-            complete = true;
-        } else if (movingActor.optTargetTile().isEmpty()) {
-            movingActor.setTargetTile(currentTarget());
-            movingActor.navigateTowardsTarget(gameLevel);
-            Logger.trace("New target tile for {}={}s", movingActor.name(), movingActor.targetTile());
-        } else if (movingActor.computeTile().equals(currentTarget())) {
-            nextTarget(gameLevel, movingActor);
-            Logger.trace("New target tile for {}={}", movingActor.name(), movingActor.targetTile());
+            routeTraversed = true;
+        }
+        else if (actor.optTargetTile().isEmpty()) {
+            actor.setTargetTile(route.get(targetIndex));
+        }
+        else if (actor.computeTile().equals(route.get(targetIndex))) {
+            selectNextTargetTile(level, actor);
+        }
+        else {
+            actor.navigateTowardsTarget(level);
         }
     }
 
-    private void nextTarget(GameLevel gameLevel, MovingActor movingActor) {
+    private void selectNextTargetTile(GameLevel level, MovingActor actor) {
         ++targetIndex;
         if (targetIndex < route.size()) {
-            movingActor.setTargetTile(currentTarget());
-            movingActor.navigateTowardsTarget(gameLevel);
+            actor.setTargetTile(route.get(targetIndex));
+            // The next line is important!
+            actor.navigateTowardsTarget(level);
         }
-    }
-
-    private Vector2i currentTarget() {
-        return route.get(targetIndex);
     }
 }
