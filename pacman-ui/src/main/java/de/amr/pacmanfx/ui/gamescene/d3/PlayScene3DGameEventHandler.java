@@ -239,9 +239,9 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
 
         gameContext().state().waitForTimeout();
 
-        final Animation dyingAnimationSeq = createPacDyingAnimationSeq(level3D.animationRegistry(), pac3D, level3D.level());
-        dyingAnimationSeq.setOnFinished(_ -> gameContext().state().triggerTimeout());
-        dyingAnimationSeq.play();
+        final Animation seq = createPacDyingAnimationSeq(level3D.animationRegistry(), pac3D, level3D.level());
+        seq.setOnFinished(_ -> gameContext().state().triggerTimeout());
+        seq.play();
     }
 
     private Animation createPacDyingAnimationSeq(AnimationRegistry animationRegistry, Pac3D pac3D, GameLevel level) {

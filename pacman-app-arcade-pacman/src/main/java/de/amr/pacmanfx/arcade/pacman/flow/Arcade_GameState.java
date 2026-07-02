@@ -137,7 +137,7 @@ public enum Arcade_GameState {
         public void onEnter(GameContext gameContext) {
             final GameModel gameModel = gameContext.model();
             gameModel.onLevelCompleted(gameContext.requireLevel());
-            waitForTimeout(); // UI triggers expiration
+            waitForTimeout(); // UI triggers timeout
         }
 
         @Override

@@ -52,7 +52,7 @@ public class GameLevelPacManDyingState extends GameState {
         level.entities().ghosts().forEach(ghost -> ghost.onPacKilled(level));
 
         context.flow().publishGameEvent(new StopAllSoundsEvent(context));
-        waitForTimeout(); // UI triggers time-out
+        waitForTimeout(); // UI triggers timeout
     }
 
     @Override
