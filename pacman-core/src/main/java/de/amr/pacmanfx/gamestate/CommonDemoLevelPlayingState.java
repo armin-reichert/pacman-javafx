@@ -20,11 +20,11 @@ import de.amr.pacmanfx.simulation.EntityCollisionResolver;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 
-public class DemoLevelPlayingState extends GameState {
+public class CommonDemoLevelPlayingState extends GameState {
 
     private final int huntingStartTick;
 
-    public DemoLevelPlayingState(int huntingStartTick) {
+    public CommonDemoLevelPlayingState(int huntingStartTick) {
         super(GameStateID.DEMO_LEVEL_PLAYING);
         this.huntingStartTick = huntingStartTick;
     }

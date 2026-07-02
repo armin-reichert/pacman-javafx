@@ -16,7 +16,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import org.tinylog.Logger;
 
-public class GameLevelPacManDyingState extends GameState {
+public class CommonGameLevelPacManDyingState extends GameState {
 
     public record Timing(
         int hideGhostsTick,
@@ -25,11 +25,11 @@ public class GameLevelPacManDyingState extends GameState {
         int pacDeadTick
     ) {}
 
-    private final Timing timings;
+    private final Timing timing;
 
-    public GameLevelPacManDyingState(Timing timings) {
+    public CommonGameLevelPacManDyingState(Timing timing) {
         super(GameStateID.GAME_LEVEL_PACMAN_DYING);
-        this.timings = timings;
+        this.timing = timing;
     }
 
     @Override
@@ -71,20 +71,20 @@ public class GameLevelPacManDyingState extends GameState {
                     ? GameStateID.GAME_OVER : GameStateID.GAME_OR_LEVEL_STARTING);
             }
         }
-        else if (tick == timings.hideGhostsTick()) {
+        else if (tick == timing.hideGhostsTick()) {
             level.entities().ghosts().forEach(Ghost::hide);
             pac.animations().select(ArcadePacMan_AnimationID.PAC_DYING);
             pac.animations().resetSelected();
         }
-        else if (tick == timings.animationStartTick()) {
+        else if (tick == timing.animationStartTick()) {
             pac.animations().playSelected();
             gameContext.flow().publishGameEvent(new PacDyingEvent(gameContext, pac));
         }
-        else if (tick == timings.hidePacTick()) {
+        else if (tick == timing.hidePacTick()) {
             pac.hide();
             level.optBonus().ifPresent(Bonus::setInactive); //TODO check this
         }
-        else if (tick == timings.pacDeadTick()) {
+        else if (tick == timing.pacDeadTick()) {
             gameContext.flow().publishGameEvent(new PacDeadEvent(gameContext, pac));
         }
         else {

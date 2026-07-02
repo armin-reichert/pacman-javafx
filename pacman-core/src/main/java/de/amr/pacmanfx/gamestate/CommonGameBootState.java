@@ -6,7 +6,10 @@ package de.amr.pacmanfx.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 
-public class GameBootState extends GameState {
+/**
+ * Corresponds to the screen showing all these random symbols from the Arcade video memory.
+ */
+public class CommonGameBootState extends GameState {
 
     public interface Timing {
         int HEX_CODES      = 60;
@@ -15,7 +18,7 @@ public class GameBootState extends GameState {
         int EXPIRATION     = 240;
     }
 
-    public GameBootState() {
+    public CommonGameBootState() {
         // "Das muss das Boot abkönnen! Jawohl, Herr Kaleu!"
         super(GameStateID.BOOT);
     }

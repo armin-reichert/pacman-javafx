@@ -7,9 +7,9 @@ package de.amr.pacmanfx.gamestate;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 
-public class GameLevelTransitionState extends GameState{
+public class CommonGameLevelTransitionState extends GameState{
 
-    public GameLevelTransitionState() {
+    public CommonGameLevelTransitionState() {
         super(GameStateID.GAME_LEVEL_TRANSITION);
     }
 

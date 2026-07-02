@@ -11,9 +11,9 @@ import de.amr.pacmanfx.model.level.GameLevel;
 
 import java.util.Set;
 
-public class GameLevelEatingGhostState extends GameState {
+public class CommonGameLevelEatingGhostState extends GameState {
 
-    public GameLevelEatingGhostState() {
+    public CommonGameLevelEatingGhostState() {
         super(GameStateID.GAME_LEVEL_EATING_GHOST);
     }
 

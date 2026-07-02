@@ -6,9 +6,9 @@ package de.amr.pacmanfx.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 
-public class GameIntroState extends GameState {
+public class CommonGameIntroState extends GameState {
 
-    public GameIntroState() {
+    public CommonGameIntroState() {
         super(GameStateID.GAME_INTRO);
     }
 
