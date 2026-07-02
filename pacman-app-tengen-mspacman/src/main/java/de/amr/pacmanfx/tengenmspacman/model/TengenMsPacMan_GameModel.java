@@ -21,7 +21,6 @@ import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
-import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import org.tinylog.Logger;
 
@@ -217,26 +216,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
         gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));
-    }
-
-    //TODO Remove tick parameter, introduce game state
-    @Override
-    public void startDemoLevel(GameContext gameContext, long tick) {
-        if (tick == 1) {
-            buildDemoLevel(gameContext);
-        }
-        else if (tick == 2) {
-            startLevel(gameContext);
-        }
-        else if (tick == 3) {
-            // Now, actor animations are available
-            final GameLevel level = optGameLevel().orElseThrow();
-            level.entities().pac().show();
-            level.entities().ghosts().forEach(Ghost::show);
-        }
-        else if (tick == TengenMsPacMan_GameState.Timing.TICK_DEMO_LEVEL_START_HUNTING) {
-            gameContext.flow().enterState(TengenMsPacMan_GameState.GAME_LEVEL_PLAYING.state());
-        }
     }
 
     @Override

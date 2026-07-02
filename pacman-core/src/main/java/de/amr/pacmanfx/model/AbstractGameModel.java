@@ -252,10 +252,6 @@ public abstract class AbstractGameModel implements GameModel {
         level.setMessage(message);
     }
 
-    //TODO remove tick, introduce new game state
-    @Override
-    public abstract void startDemoLevel(GameContext gameContext, long tick);
-
     @Override
     public boolean isDemoLevelRunning() {
         return optGameLevel().isPresent() && optGameLevel().get().isDemoLevel();

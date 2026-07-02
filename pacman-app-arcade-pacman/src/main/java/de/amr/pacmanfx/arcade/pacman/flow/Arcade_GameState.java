@@ -45,7 +45,6 @@ public enum Arcade_GameState {
         public void onUpdate(GameContext gameContext) {
             final GameFlow flow = gameContext.flow();
             final GameModel gameModel = gameContext.model();
-            final long tick = timer().tickCount();
 
             if (gameModel.isPlaying()) {
                 flow.enterState(GameStateID.GAME_LEVEL_CONTINUE);
@@ -54,12 +53,12 @@ public enum Arcade_GameState {
                 flow.enterState(GameStateID.GAME_STARTING);
             }
             else {
-                gameModel.startDemoLevel(gameContext, tick);
-                gameModel.hud().creditOn().livesCounterOff();
+                flow.enterState(GameStateID.DEMO_LEVEL_PLAYING);
             }
         }
     }),
 
+    DEMO_LEVEL_PLAYING(new GameDemoLevelState(Timing.TICK_DEMO_LEVEL_HUNTING_START)),
 
     GAME_STARTING( new GameState(GameStateID.GAME_STARTING) {
 
@@ -236,11 +235,13 @@ public enum Arcade_GameState {
         return state;
     }
 
-    public static class Timing {
-        public static final int TICK_NEW_GAME_START_LEVEL = 2;
-        public static final int TICK_NEW_GAME_SHOW_GUYS = 60;
-        public static final int TICK_NEW_GAME_START_HUNTING = 240;
-        public static final int TICK_RESUME_HUNTING = 120;
-        public static final int TICK_CONTINUE_LEVEL = 60;
+    public interface Timing {
+        int TICK_NEW_GAME_START_LEVEL = 2;
+        int TICK_NEW_GAME_SHOW_GUYS = 60;
+        int TICK_NEW_GAME_START_HUNTING = 240;
+        int TICK_RESUME_HUNTING = 120;
+        int TICK_CONTINUE_LEVEL = 60;
+
+        int TICK_DEMO_LEVEL_HUNTING_START = 120;
     }
 }

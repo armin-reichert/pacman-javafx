@@ -121,8 +121,6 @@ public interface GameModel {
 
     void showLevelMessage(GameLevel level, GameLevelMessageType type);
 
-    void startDemoLevel(GameContext gameContext, long tick);
-
     boolean isDemoLevelRunning();
 
     void onStartLevelPlaying(GameContext gameContext, GameLevel level);

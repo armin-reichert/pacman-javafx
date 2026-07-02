@@ -82,19 +82,21 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onUpdate(GameContext gameContext) {
             final GameModel gameModel = gameContext.model();
-            final long tick = timer().tickCount();
-        
+            final GameFlow flow = gameContext.flow();
+
             if (gameModel.isPlaying()) {
-                gameContext.flow().enterState(GameStateID.GAME_LEVEL_CONTINUE);
+                flow.enterState(GameStateID.GAME_LEVEL_CONTINUE);
             }
             else if (gameModel.canStartNewGame(gameContext)) {
-                gameContext.flow().enterState(GameStateID.GAME_STARTING);
+                flow.enterState(GameStateID.GAME_STARTING);
             } 
             else {
-                gameModel.startDemoLevel(gameContext, tick);
+                flow.enterState(GameStateID.DEMO_LEVEL_PLAYING);
             }
         }
     }),
+
+    DEMO_LEVEL_PLAYING( new GameDemoLevelState(Timing.TICK_DEMO_LEVEL_START_HUNTING) ),
 
     GAME_STARTING( new GameState(GameStateID.GAME_STARTING) {
 

@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.event.LevelStartedEvent;
@@ -108,43 +107,18 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         gameContext.flow().publishGameEvent(new LevelCreatedEvent(gameContext, level));
     }
 
-    //TODO remove tick parameter, introduce game state
-    @Override
-    public void startDemoLevel(GameContext gameContext, long tick) {
-        if (tick == 1) {
-            buildDemoLevel(gameContext);
-        }
-        else if (tick == 2) {
-            startLevel(gameContext);
-        }
-        else if (tick == 3) {
-            // Now, actor animations are available, show them
-            final GameLevel level = optGameLevel().orElseThrow();
-            level.entities().pac().show();
-            level.entities().ghosts().forEach(Ghost::show);
-        }
-        else if (tick == Arcade_GameState.Timing.TICK_RESUME_HUNTING) {
-            gameContext.flow().enterState(Arcade_GameState.GAME_LEVEL_PLAYING.state());
-        }
-    }
-
     @Override
     public void startLevel(GameContext gameContext) {
         final GameLevel level = optGameLevel().orElseThrow();
         level.recordStartTime(System.currentTimeMillis());
         prepareLevelForPlaying(level);
-        if (level.isDemoLevel()) {
-            showLevelMessage(level, GameLevelMessageType.GAME_OVER);
-            score().setEnabled(false);
-            highScore().setEnabled(false);
-            Logger.info("Demo level {} started", level.number());
-        } else {
-            showLevelMessage(level, GameLevelMessageType.READY);
-            levelCounter.update(level.number(), level.bonusSymbolCode(0));
-            score.setEnabled(true);
-            cheats.update(level);
-            Logger.info("Level {} started", level.number());
-        }
+        showLevelMessage(level, GameLevelMessageType.READY);
+        levelCounter.update(level.number(), level.bonusSymbolCode(0));
+        score.setEnabled(true);
+        cheats.update(level);
+
+        Logger.info("Level {} started", level.number());
+
         // Note: This event is very important because it triggers the creation of the actor animations!
         gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));
     }
