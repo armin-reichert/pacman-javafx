@@ -15,6 +15,8 @@ import de.amr.pacmanfx.simulation.EntityCollisionResolver;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 
+import java.util.List;
+
 public class GameLevelPlayingState extends GameState {
 
     public GameLevelPlayingState() {
@@ -62,7 +64,7 @@ public class GameLevelPlayingState extends GameState {
         final EntityCollisionResolver collisionResolver = new EntityCollisionResolver(gameContext);
         collisionResolver.evaluateCollisions(level);
 
-        logHuntingStep(gameContext);
+        writeResultToLog(gameContext.huntingStepResult());
 
         // State transition
         final GameStateID nextStateID = computeNextState(gameContext.huntingStepResult(), gameContext.rules(), level);
@@ -82,13 +84,12 @@ public class GameLevelPlayingState extends GameState {
         return GameStateID.GAME_LEVEL_PLAYING;
     }
 
-
-    private void logHuntingStep(GameContext context) {
-        final var report = HuntingStepResult.createReport(context.huntingStepResult());
+    private void writeResultToLog(HuntingStepResult result) {
+        final List<String> report = result.asText();
         if (!report.isEmpty()) {
             Logger.info("Hunting Step:");
-            for (var msg : report) {
-                Logger.info("- " + msg);
+            for (String line : report) {
+                Logger.info("- " + line);
             }
         }
     }

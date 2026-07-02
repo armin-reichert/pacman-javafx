@@ -17,18 +17,12 @@ public final class HuntingStepResult {
 
     private Vector2i foodFoundTile;
     private boolean energizerFound;
-    private int bonusIndex;
     private Bonus edibleBonus;
     private boolean pacKilled;
-    private boolean pacGotPower;
-    private boolean pacStartsLosingPower;
-    private boolean pacLostPower;
     private final List<Ghost> ghostsKilled = new ArrayList<>();
     private final Set<Ghost> ghostsCollidingWithPac = new HashSet<>(4);
 
-    public HuntingStepResult() {
-        bonusIndex = -1;
-    }
+    public HuntingStepResult() {}
 
     public Vector2i foodFoundTile() {
         return foodFoundTile;
@@ -78,26 +72,6 @@ public final class HuntingStepResult {
         return edibleBonus != null;
     }
 
-    public int bonusIndex() {
-        return bonusIndex;
-    }
-
-    public void setBonusIndex(int bonusIndex) {
-        this.bonusIndex = bonusIndex;
-    }
-
-    public boolean pacGotPower() {
-        return pacGotPower;
-    }
-
-    public void setPacGotPower(boolean pacGotPower) {
-        this.pacGotPower = pacGotPower;
-    }
-
-    public boolean pacStartsLosingPower() {
-        return pacStartsLosingPower;
-    }
-
     public boolean pacKilled() {
         return pacKilled;
     }
@@ -106,45 +80,20 @@ public final class HuntingStepResult {
         this.pacKilled = pacKilled;
     }
 
-    public void setPacStartsLosingPower(boolean pacStartsLosingPower) {
-        this.pacStartsLosingPower = pacStartsLosingPower;
-    }
-
-    public void setPacLostPower(boolean pacLostPower) {
-        this.pacLostPower = pacLostPower;
-    }
-
-    public boolean pacLostPower() {
-        return pacLostPower;
-    }
-
-
-    public static List<String> createReport(HuntingStepResult result) {
-        var messages = new ArrayList<String>();
-        for (Ghost ghost : result.ghostsCollidingWithPac()) {
-            messages.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghost.computeTile(), ghost.state()));
+    public List<String> asText() {
+        var lines = new ArrayList<String>();
+        for (Ghost ghost : ghostsCollidingWithPac()) {
+            lines.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghost.computeTile(), ghost.state()));
         }
-        if (result.energizerFound()) {
-            messages.add("Energizer found at " + result.foodFoundTile());
+        if (energizerFound()) {
+            lines.add("Energizer found at " + foodFoundTile());
         }
-        if (result.bonusIndex() != -1) {
-            messages.add("Bonus score reached, index=" + result.bonusIndex());
+        if (edibleBonus() != null) {
+            lines.add("Bonus eaten: " + edibleBonus());
         }
-        if (result.edibleBonus() != null) {
-            messages.add("Bonus eaten: %s".formatted(result.edibleBonus()));
+        for (Ghost ghost : ghostsKilled()) {
+            lines.add("%s killed at %s".formatted(ghost.name(), ghost.computeTile()));
         }
-        if (result.pacGotPower()) {
-            messages.add("Pac gained power");
-        }
-        if (result.pacStartsLosingPower()) {
-            messages.add("Pac starts losing power");
-        }
-        if (result.pacLostPower()) {
-            messages.add("Pac lost power");
-        }
-        for (Ghost ghost : result.ghostsKilled()) {
-            messages.add("%s killed at %s".formatted(ghost.name(), ghost.computeTile()));
-        }
-        return messages;
+        return lines;
     }
 }
