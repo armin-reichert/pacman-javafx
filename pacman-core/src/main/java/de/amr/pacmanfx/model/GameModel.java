@@ -123,8 +123,6 @@ public interface GameModel {
 
     boolean isDemoLevelRunning();
 
-    void onStartLevelPlaying(GameContext gameContext, GameLevel level);
-
     void onLevelCompleted(GameLevel level);
 
     // Actor related

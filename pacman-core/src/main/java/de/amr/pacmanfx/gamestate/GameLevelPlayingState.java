@@ -4,11 +4,15 @@
 
 package de.amr.pacmanfx.gamestate;
 
+import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.event.HuntingPhaseStartedEvent;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameRules;
+import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.simulation.EntityCollisionDetector;
 import de.amr.pacmanfx.simulation.EntityCollisionResolver;
@@ -27,7 +31,26 @@ public class GameLevelPlayingState extends GameState {
     public void onEnter(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
         final GameLevel level = gameContext.requireLevel();
-        gameModel.onStartLevelPlaying(gameContext, level);
+
+        // Clear "READY!" message. "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared!
+        level.optMessage()
+            .filter(message -> message.type() == GameLevelMessageType.READY)
+            .ifPresent(_ -> level.clearMessage());
+
+        level.heartbeat().setStartState(Pulse.State.ON);
+        level.heartbeat().restart();
+
+        level.entities().pac().animations().playSelected();
+        level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
+
+        final HuntingTimer huntingTimer = level.huntingTimer();
+        huntingTimer.startFirstPhase(gameContext.rules(), level.number());
+
+        gameContext.flow().publishGameEvent(new HuntingPhaseStartedEvent(
+            gameContext,
+            huntingTimer.phaseIndex(),
+            huntingTimer.currentHuntingPhase())
+        );
     }
 
     @Override

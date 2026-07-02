@@ -269,28 +269,6 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public void onStartLevelPlaying(GameContext gameContext, GameLevel level) {
-        // Clear "READY!" message. "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared!
-        level.optMessage()
-            .filter(message -> message.type() == GameLevelMessageType.READY)
-            .ifPresent(_ -> level.clearMessage());
-
-        level.heartbeat().setStartState(Pulse.State.ON);
-        level.heartbeat().restart();
-
-        level.entities().pac().animations().playSelected();
-        level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
-
-        final HuntingTimer huntingTimer = level.huntingTimer();
-        huntingTimer.startFirstPhase(gameContext.rules(), level.number());
-        gameContext.flow().publishGameEvent(new HuntingPhaseStartedEvent(
-            gameContext,
-            huntingTimer.phaseIndex(),
-            huntingTimer.currentHuntingPhase())
-        );
-    }
-
-    @Override
     public void onLevelCompleted(GameLevel level) {
         level.huntingTimer().stop();
         Logger.info("Hunting timer stopped.");

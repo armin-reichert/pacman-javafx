@@ -30,7 +30,7 @@ public class Arcade_BootScene2D extends AbstractGameScene2D {
         // Make some noise
         final var rnd = new java.security.SecureRandom();
         for (int i = 0; i < noise.length; i++) {
-            final byte hexDigit = (byte) rnd.nextInt(16);;
+            final byte hexDigit = (byte) rnd.nextInt(16);
             noise[i] = Integer.toHexString(hexDigit);
         }
     }
