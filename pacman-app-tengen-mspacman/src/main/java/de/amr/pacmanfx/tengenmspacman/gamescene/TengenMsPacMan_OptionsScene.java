@@ -70,7 +70,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     @Override
     public void onActivate() {
         final TengenMsPacMan_GameModel gameModel = tengenGameModel();
-        gameModel.hud().hide();
+        gameModel.hudState().hide();
 
         final var actions = game().extensions()
             .value(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);

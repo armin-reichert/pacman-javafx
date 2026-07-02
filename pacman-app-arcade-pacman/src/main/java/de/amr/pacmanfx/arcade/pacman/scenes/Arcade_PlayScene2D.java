@@ -151,7 +151,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
     private void updateLivesCounter(GameState gameState, GameModel gameModel, Pac pac) {
         final boolean oneMore = GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameState) && !pac.isVisible();
         final int livesToDisplay = gameModel.lives().count() - 1 + (oneMore ? 1 : 0);
-        final int livesDisplayed = Math.clamp(livesToDisplay, 0, gameModel.hud().maxLivesDisplayed());
-        gameModel.hud().setVisibleLifeCount(livesDisplayed);
+        final int livesDisplayed = Math.clamp(livesToDisplay, 0, gameModel.hudState().maxLivesDisplayed());
+        gameModel.hudState().setVisibleLifeCount(livesDisplayed);
     }
 }

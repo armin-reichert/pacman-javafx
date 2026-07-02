@@ -275,7 +275,7 @@ public final class PacManGamesCollection implements Game {
 
         // create new game context for current game variant
         currentGameContext = new GameVariantContext(this, gameVariantRuntime);
-        currentGameContext.model().hud().creditProperty().bind(coinMechanism().numCoinsProperty());
+        currentGameContext.model().hudState().creditProperty().bind(coinMechanism().numCoinsProperty());
         currentGameContext.flow().addGameEventListener(globalGameEventHandler);
     }
 

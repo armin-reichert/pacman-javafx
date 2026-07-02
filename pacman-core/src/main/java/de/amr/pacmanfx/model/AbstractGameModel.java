@@ -101,7 +101,7 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public HUDState hud() {
+    public HUDState hudState() {
         return hud;
     }
 

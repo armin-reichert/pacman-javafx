@@ -119,7 +119,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         for (int i = 0; i < hud.visibleLifeCount(); ++i) {
             drawSprite(symbolSprite, TS(4 + i * 2), y, true);
         }
-        if (game.lives().count() > game.hud().maxLivesDisplayed()) {
+        if (game.lives().count() > game.hudState().maxLivesDisplayed()) {
             fillText("(%d)".formatted(game.lives().count()), NES_Palette.color(0x28), totalLivesFont.get(), TS(14), y + TS);
         }
     }

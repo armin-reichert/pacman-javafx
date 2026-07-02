@@ -147,7 +147,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public TengenMsPacMan_HUDState hud() {
+    public TengenMsPacMan_HUDState hudState() {
         return (TengenMsPacMan_HUDState) hud;
     }
 

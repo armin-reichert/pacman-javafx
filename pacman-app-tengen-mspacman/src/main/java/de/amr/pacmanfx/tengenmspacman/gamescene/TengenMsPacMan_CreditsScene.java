@@ -41,7 +41,7 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene2D {
         fadeProgress = 0;
         displayMode = DisplayMode.ORIGINAL_AUTHORS;
 
-        gameModel().hud().hide();
+        gameModel().hudState().hide();
     }
 
     @Override

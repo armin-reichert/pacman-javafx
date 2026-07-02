@@ -33,7 +33,7 @@ public class DemoLevelPlayingState extends GameState {
     public void onEnter(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
         gameModel.buildDemoLevel(gameContext);
-        gameModel.hud().creditOn().livesCounterOff();
+        gameModel.hudState().creditOn().livesCounterOff();
     }
 
     @Override

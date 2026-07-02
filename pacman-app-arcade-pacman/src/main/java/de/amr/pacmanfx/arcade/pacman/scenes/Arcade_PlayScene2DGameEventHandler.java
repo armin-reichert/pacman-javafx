@@ -68,7 +68,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
             completedAnimation.play();
         }
         else if (GameStateID.GAME_OVER.identifies(newState)) {
-            gameModel().hud().creditOn();
+            gameModel().hudState().creditOn();
             optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
         }
     }

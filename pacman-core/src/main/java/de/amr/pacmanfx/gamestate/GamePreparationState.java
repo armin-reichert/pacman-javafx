@@ -12,7 +12,7 @@ public class GamePreparationState extends GameState {
     @Override
     public void onEnter(GameContext context) {
         final GameModel gameModel = context.model();
-        gameModel.hud().creditOn().scoreOn().levelCounterOn().livesCounterOff().show();
+        gameModel.hudState().creditOn().scoreOn().levelCounterOn().livesCounterOff().show();
         gameModel.resetForNewGame();
     }
 

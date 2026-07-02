@@ -38,7 +38,7 @@ public enum Arcade_GameState {
         @Override
         public void onEnter(GameContext gameContext) {
             final GameModel gameModel = gameContext.model();
-            gameModel.hud().scoreOn().levelCounterOn().show();
+            gameModel.hudState().scoreOn().levelCounterOn().show();
         }
 
         @Override
@@ -67,7 +67,7 @@ public enum Arcade_GameState {
             final GameFlow flow = gameContext.flow();
             final GameModel gameModel = gameContext.model();
 
-            gameModel.hud().creditOff().livesCounterOn();
+            gameModel.hudState().creditOff().livesCounterOn();
             gameModel.resetForNewGame();
             gameModel.buildNormalLevel(gameContext, 1);
 
@@ -112,7 +112,7 @@ public enum Arcade_GameState {
             level.entities().ghosts().forEach(Ghost::show);
 
             gameModel.showLevelMessage(level, GameLevelMessageType.READY);
-            gameModel.hud().creditOff().livesCounterOn();
+            gameModel.hudState().creditOff().livesCounterOn();
         }
 
         @Override
@@ -205,7 +205,7 @@ public enum Arcade_GameState {
         public void onEnter(GameContext gameContext) {
             final GameModel gameModel = gameContext.model();
             lock();
-            gameModel.hud().creditOff().scoreOff().levelCounterOn().livesCounterOff().show();
+            gameModel.hudState().creditOff().scoreOff().levelCounterOn().livesCounterOff().show();
         }
 
         @Override
@@ -221,7 +221,7 @@ public enum Arcade_GameState {
         @Override
         public void onExit(GameContext gameContext) {
             final GameModel gameModel = gameContext.model();
-            gameModel.hud().creditOff().scoreOn().levelCounterOn().livesCounterOn().show();
+            gameModel.hudState().creditOff().scoreOn().levelCounterOn().livesCounterOn().show();
         }
     });
 

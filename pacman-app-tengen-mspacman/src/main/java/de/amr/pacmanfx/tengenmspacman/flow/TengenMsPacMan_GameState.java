@@ -68,7 +68,7 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onEnter(GameContext gameContext) {
             final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext.model();
-            final TengenMsPacMan_HUDState hud = gameModel.hud();
+            final TengenMsPacMan_HUDState hud = gameModel.hudState();
         
             hud.creditOff().scoreOn().levelCounterOn().livesCounterOn().show();
 
@@ -238,7 +238,7 @@ public enum TengenMsPacMan_GameState {
         public void onEnter(GameContext gameContext) {
             final GameModel gameModel = gameContext.model();
             final GameLevel level = gameContext.requireLevel();
-            final var hud = (TengenMsPacMan_HUDState) gameModel.hud();
+            final var hud = (TengenMsPacMan_HUDState) gameModel.hudState();
             final boolean isLastCutScene = level.cutSceneNumber() == gameContext.rules().lastCutSceneNumber();
 
             lock();
@@ -264,7 +264,7 @@ public enum TengenMsPacMan_GameState {
         @Override
         public void onExit(GameContext gameContext) {
             final GameModel gameModel = gameContext.model();
-            final var hud = (TengenMsPacMan_HUDState) gameModel.hud();
+            final var hud = (TengenMsPacMan_HUDState) gameModel.hudState();
 
             if (tengenMsPacman(gameModel).mapCategory() == MapCategory.ARCADE) {
                 hud.hide();

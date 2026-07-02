@@ -111,7 +111,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
 
     @Override
     public void onEnteredFrom3DScene() {
-        gameModel().hud().levelCounterOn().livesCounterOn().show();
+        gameModel().hudState().levelCounterOn().livesCounterOn().show();
         gameModel().optGameLevel().ifPresent(this::acceptGameLevel);
     }
 
@@ -125,7 +125,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final TengenMsPacMan_HUDState hud = gameModel().hud();
+        final TengenMsPacMan_HUDState hud = gameModel().hudState();
         hud.scoreOn().levelCounterOn().livesCounterOn().show();
         if (gameModel().allOptionsDefault()) {
             hud.gameOptionsOff();
@@ -267,14 +267,14 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
     }
 
     private void updateHUD(GameLevel level) {
-        final TengenMsPacMan_HUDState hud = gameModel().hud();
+        final TengenMsPacMan_HUDState hud = gameModel().hudState();
 
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         final boolean oneExtra = GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameState())
             && !level.entities().pac().isVisible();
         final int displayed = oneExtra ? gameModel().lives().count() : gameModel().lives().count() - 1;
 
-        final int visibleLives = Math.clamp(displayed, 0, gameModel().hud().maxLivesDisplayed());
+        final int visibleLives = Math.clamp(displayed, 0, gameModel().hudState().maxLivesDisplayed());
         hud.setVisibleLifeCount(visibleLives);
         if (gameModel().mapCategory() == MapCategory.ARCADE) {
             hud.levelNumberOff();
