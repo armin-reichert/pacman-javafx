@@ -376,7 +376,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                         .forEach(Ghost::requestTurnBack);
                 }
             });
-            huntingTimer.logPhase();
         });
         return huntingTimer;
     }

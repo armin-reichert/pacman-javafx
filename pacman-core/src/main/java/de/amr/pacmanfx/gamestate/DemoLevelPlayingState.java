@@ -70,14 +70,8 @@ public class DemoLevelPlayingState extends GameState {
             level.entities().pac().animations().playSelected();
             level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
 
-            final HuntingTimer huntingTimer = level.huntingTimer();
-            huntingTimer.startFirstPhase(gameContext.rules(), level.number());
-
-            gameContext.flow().publishGameEvent(new HuntingPhaseStartedEvent(
-                gameContext,
-                huntingTimer.phaseIndex(),
-                huntingTimer.currentHuntingPhase())
-            );
+            // This call fires a game event!
+            level.huntingTimer().startFirstPhase(gameContext, level.number());
         }
         else if (tick > huntingStartTick) {
             hunt(gameContext);

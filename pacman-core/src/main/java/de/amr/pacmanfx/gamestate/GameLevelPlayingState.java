@@ -31,7 +31,6 @@ public class GameLevelPlayingState extends GameState {
     public void onEnter(GameContext gameContext) {
         final GameLevel level = gameContext.requireLevel();
 
-        // Clear "READY!" message. "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared!
         level.optMessage()
             .filter(message -> message.type() == GameLevelMessageType.READY)
             .ifPresent(_ -> level.clearMessage());
@@ -42,14 +41,8 @@ public class GameLevelPlayingState extends GameState {
         level.entities().pac().animations().playSelected();
         level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
 
-        final HuntingTimer huntingTimer = level.huntingTimer();
-        huntingTimer.startFirstPhase(gameContext.rules(), level.number());
-
-        gameContext.flow().publishGameEvent(new HuntingPhaseStartedEvent(
-            gameContext,
-            huntingTimer.phaseIndex(),
-            huntingTimer.currentHuntingPhase())
-        );
+        // This call fires a game event!
+        level.huntingTimer().startFirstPhase(gameContext, level.number());
     }
 
     @Override
