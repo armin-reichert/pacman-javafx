@@ -14,6 +14,8 @@ import de.amr.pacmanfx.model.level.GameLevel;
 
 public class GameLevelContinueState extends GameState {
 
+    static final short TICK_RESUME_HUNTING = 240;
+
     public GameLevelContinueState() {
         super(GameStateID.GAME_LEVEL_CONTINUE);
     }
@@ -33,10 +35,8 @@ public class GameLevelContinueState extends GameState {
     @Override
     public void onUpdate(GameContext gameContext) {
         final long tick = timer().tickCount();
-
-        if (tick == TengenMsPacMan_GameState.Timing.TICK_RESUME_HUNTING) {
+        if (tick == TICK_RESUME_HUNTING) {
             gameContext.flow().enterState(GameStateID.GAME_LEVEL_PLAYING);
         }
     }
-
 }

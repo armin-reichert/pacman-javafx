@@ -8,14 +8,16 @@ import de.amr.pacmanfx.gamestate.*;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * The game states used by the Ms. Pac-Man Tengen game variant.
+ */
 public enum TengenMsPacMan_GameState {
-
     BOOT                        (new CommonGameBootState()),
     GAME_INTRO                  (new CommonGameIntroState()),
     GAME_PREPARATION            (new CommonGamePreparationState()),
     SHOWING_HALL_OF_FAME        (new ShowingHallOfFameState() ),
     GAME_OR_LEVEL_STARTING      (new GameOrLevelStartingState()),
-    DEMO_LEVEL_PLAYING          (new CommonDemoLevelPlayingState(Timing.TICK_DEMO_LEVEL_START_HUNTING)),
+    DEMO_LEVEL_PLAYING          (new CommonDemoLevelPlayingState(120)),
     GAME_STARTING               (new GameStartingState()),
     GAME_LEVEL_CONTINUE         (new GameLevelContinueState()),
     GAME_LEVEL_PLAYING          (new CommonGameLevelPlayingState()),
@@ -26,8 +28,6 @@ public enum TengenMsPacMan_GameState {
     GAME_OVER                   (new GameOverState()),
     GAME_LEVEL_INTERMISSION     (new GameLevelIntermissionState());
 
-    final GameState state;
-
     TengenMsPacMan_GameState(GameState state) {
         this.state = requireNonNull(state);
     }
@@ -36,12 +36,5 @@ public enum TengenMsPacMan_GameState {
         return state;
     }
 
-    //TODO make package-private again
-    public static class Timing {
-        public static final short TICK_SHOW_READY = 10;
-        public static final short TICK_NEW_GAME_SHOW_GUYS = 70;
-        public static final short TICK_NEW_GAME_START_HUNTING = 250;
-        public static final short TICK_RESUME_HUNTING = 240;
-        public static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
-    }
+    final GameState state;
 }

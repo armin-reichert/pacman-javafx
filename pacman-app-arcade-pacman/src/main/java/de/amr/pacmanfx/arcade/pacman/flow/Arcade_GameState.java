@@ -8,6 +8,9 @@ import de.amr.pacmanfx.gamestate.*;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * The game states used by the Arcade game variants (Pc-Man, Ms. Pac-Man and their XXL versions).
+ */
 public enum Arcade_GameState {
     BOOT                       (new CommonGameBootState()),
     GAME_INTRO                 (new CommonGameIntroState()),
@@ -24,13 +27,13 @@ public enum Arcade_GameState {
     GAME_OVER                  (new ArcadeGameOverState()),
     GAME_LEVEL_INTERMISSION    (new ArcadeGameLevelIntermissionState());
 
-    final GameState state;
-
     Arcade_GameState(GameState state) {
-        this.state = requireNonNull(state);
+        this.state = state;
     }
 
     public GameState state() {
         return state;
     }
+
+    final GameState state;
 }
