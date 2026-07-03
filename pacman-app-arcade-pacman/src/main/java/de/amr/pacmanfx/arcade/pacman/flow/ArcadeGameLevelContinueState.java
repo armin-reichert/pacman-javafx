@@ -16,6 +16,9 @@ import de.amr.pacmanfx.model.level.GameLevelMessageType;
 
 public class ArcadeGameLevelContinueState extends GameState {
 
+    static final int TICK_RESUME_HUNTING = 120;
+    static final int TICK_CONTINUE_LEVEL = 60;
+
     public ArcadeGameLevelContinueState() {
         super(GameStateID.GAME_LEVEL_CONTINUE);
     }
@@ -38,10 +41,10 @@ public class ArcadeGameLevelContinueState extends GameState {
         final GameFlow flow = gameContext.flow();
         final long tick = timer().tickCount();
 
-        if (tick == Arcade_GameState.Timing.TICK_CONTINUE_LEVEL) {
+        if (tick == TICK_CONTINUE_LEVEL) {
             flow.publishGameEvent(new GameContinuedEvent(gameContext));
         }
-        else if (tick == Arcade_GameState.Timing.TICK_RESUME_HUNTING) {
+        else if (tick == TICK_RESUME_HUNTING) {
             flow.enterState(GameStateID.GAME_LEVEL_PLAYING);
         }
     }
