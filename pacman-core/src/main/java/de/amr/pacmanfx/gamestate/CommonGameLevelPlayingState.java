@@ -27,7 +27,7 @@ public class CommonGameLevelPlayingState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        final GameLevel level = gameContext.requireLevel();
+        final GameLevel level = gameContext.assertLevel();
 
         level.optMessage()
             .filter(message -> message.type() == GameLevelMessageType.READY)
@@ -46,7 +46,7 @@ public class CommonGameLevelPlayingState extends GameState {
     @Override
     public void onUpdate(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameContext.requireLevel();
+        final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final GateKeeper gateKeeper = gameModel.gateKeeper();
         final boolean doubleChecked = gameContext.rules().collisionDoubleCheckedProperty().get();

@@ -58,7 +58,7 @@ public class LevelMediumTestState extends GameState implements TestState {
         timer().restartSeconds(TEST_DURATION_SEC);
         gameModel.resetForNewGame();
         gameModel.buildNormalLevel(gameContext, 1);
-        gameModel.startLevel(gameContext);
+        gameModel.startLevel(gameContext, gameContext.assertLevel());
         configureLevelForTest(gameContext);
     }
 
@@ -91,7 +91,7 @@ public class LevelMediumTestState extends GameState implements TestState {
             }
             else {
                 timer().restartSeconds(TEST_DURATION_SEC);
-                gameModel.startNextLevel(gameContext);
+                gameModel.startNextLevel(gameContext, gameContext.assertLevel());
                 configureLevelForTest(gameContext);
             }
         }

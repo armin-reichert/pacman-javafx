@@ -208,7 +208,7 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public abstract void startLevel(GameContext gameContext);
+    public abstract void startLevel(GameContext gameContext, GameLevel level);
 
     @Override
     public void prepareLevelForPlaying(GameLevel level) {
@@ -250,11 +250,10 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public void startNextLevel(GameContext gameContext) {
-        final GameLevel level = optGameLevel().orElseThrow();
+    public void startNextLevel(GameContext gameContext, GameLevel level) {
         if (level.number() < gameContext.rules().lastLevelNumber()) {
             buildNormalLevel(gameContext, level.number() + 1);
-            startLevel(gameContext);
+            startLevel(gameContext, level);
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", gameContext.rules().lastLevelNumber());
         }

@@ -20,7 +20,7 @@ public class ArcadeGameOverState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameContext.requireLevel();
+        final GameLevel level = gameContext.assertLevel();
 
         timer().restartTicks(level.gameOverStateTicks());
         //TODO check if this is needed
@@ -34,7 +34,7 @@ public class ArcadeGameOverState extends GameState {
         final GameModel gameModel = gameContext.model();
 
         if (timer().hasExpired()) {
-            final GameLevel level = gameContext.requireLevel();
+            final GameLevel level = gameContext.assertLevel();
             level.clearMessage();
             gameContext.cheats().clear();
             if (gameModel.canStartNewGame(gameContext)) {

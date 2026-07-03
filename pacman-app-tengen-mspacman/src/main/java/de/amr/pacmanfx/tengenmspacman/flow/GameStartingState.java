@@ -30,13 +30,13 @@ public class GameStartingState extends GameState {
     @Override
     public void onUpdate(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
+        final GameLevel level = gameContext.assertLevel();
         final long tick = timer().tickCount();
 
         if (tick == TengenMsPacMan_GameState.Timing.TICK_SHOW_READY) {
-            gameModel.startLevel(gameContext);
+            gameModel.startLevel(gameContext, level);
         }
         else if (tick == TengenMsPacMan_GameState.Timing.TICK_NEW_GAME_SHOW_GUYS) {
-            final GameLevel level = gameContext.requireLevel();
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
         }
@@ -45,5 +45,4 @@ public class GameStartingState extends GameState {
             gameContext.flow().enterState(GameStateID.GAME_LEVEL_PLAYING);
         }
     }
-
 }

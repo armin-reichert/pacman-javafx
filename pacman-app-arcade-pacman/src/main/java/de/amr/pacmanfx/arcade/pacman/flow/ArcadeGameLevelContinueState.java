@@ -23,7 +23,7 @@ public class ArcadeGameLevelContinueState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameContext.requireLevel();
+        final GameLevel level = gameContext.assertLevel();
 
         gameModel.prepareLevelForPlaying(level);
         level.entities().pac().show();

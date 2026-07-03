@@ -110,9 +110,9 @@ public interface GameModel {
 
     Optional<GameLevel> optGameLevel();
 
-    void startLevel(GameContext gameContext);
+    void startLevel(GameContext gameContext, GameLevel level);
 
-    void startNextLevel(GameContext gameContext);
+    void startNextLevel(GameContext gameContext, GameLevel currentLevel);
 
     void prepareLevelForPlaying(GameLevel level);
 

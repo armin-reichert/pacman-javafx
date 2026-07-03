@@ -191,10 +191,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startLevel(GameContext gameContext) {
-        final GameLevel level = optGameLevel().orElseThrow();
+    public void startLevel(GameContext gameContext, GameLevel level) {
         level.recordStartTime(System.currentTimeMillis());
-
         prepareLevelForPlaying(level);
 
         // In Tengen, actors are shown immediately

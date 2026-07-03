@@ -35,7 +35,7 @@ public class LevelShortTestState extends GameState implements TestState {
             : gameContext.rules().lastLevelNumber();
         gameModel.resetForNewGame();
         gameModel.buildNormalLevel(gameContext, 1);
-        gameModel.startLevel(gameContext);
+        gameModel.startLevel(gameContext, gameContext.assertLevel());
         final GameLevel level = gameModel.optGameLevel().orElseThrow();
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
@@ -90,7 +90,7 @@ public class LevelShortTestState extends GameState implements TestState {
                 gameContext.flow().restartState(GameStateID.BOOT);
             } else {
                 waitForTimeout();
-                gameModel.startNextLevel(gameContext);
+                gameModel.startNextLevel(gameContext, level);
             }
         } else {
             gameModel.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.update(gameContext, level));

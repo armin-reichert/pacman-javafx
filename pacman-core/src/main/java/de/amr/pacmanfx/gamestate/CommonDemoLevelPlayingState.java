@@ -40,7 +40,7 @@ public class CommonDemoLevelPlayingState extends GameState {
     public void onUpdate(GameContext gameContext) {
         final long tick = timer().tickCount();
         final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameContext.requireLevel();
+        final GameLevel level = gameContext.assertLevel();
 
         if (tick == 1) {
             gameModel.prepareLevelForPlaying(level);
@@ -80,7 +80,7 @@ public class CommonDemoLevelPlayingState extends GameState {
 
     private void hunt(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameContext.requireLevel();
+        final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final GateKeeper gateKeeper = gameModel.gateKeeper();
         final boolean doubleChecked = gameContext.rules().collisionDoubleCheckedProperty().get();

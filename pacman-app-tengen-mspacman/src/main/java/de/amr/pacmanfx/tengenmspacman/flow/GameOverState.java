@@ -20,7 +20,7 @@ public class GameOverState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameContext.requireLevel();
+        final GameLevel level = gameContext.assertLevel();
 
         // In case, entering game over state was forced by user:
         gameContext.model().lives().setCount(0);
@@ -32,7 +32,7 @@ public class GameOverState extends GameState {
     public void onUpdate(GameContext gameContext) {
         final GameFlow flow = gameContext.flow();
         final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameContext.requireLevel();
+        final GameLevel level = gameContext.assertLevel();
 
         if (timer().hasExpired()) {
             gameContext.cheats().clear();

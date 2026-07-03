@@ -20,14 +20,14 @@ public class GameLevelCompleteState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
-        gameModel.onLevelCompleted(gameContext.requireLevel());
+        gameModel.onLevelCompleted(gameContext.assertLevel());
         waitForTimeout(); // Waits for UI to trigger timeout
     }
 
     @Override
     public void onUpdate(GameContext gameContext) {
         final GameFlow flow = gameContext.flow();
-        final GameLevel level = gameContext.requireLevel();
+        final GameLevel level = gameContext.assertLevel();
 
         if (level.isDemoLevel()) {
             flow.enterState(TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);

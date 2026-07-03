@@ -35,9 +35,6 @@ public enum Arcade_GameState {
     }
 
     public interface Timing {
-        int TICK_NEW_GAME_START_LEVEL = 2;
-        int TICK_NEW_GAME_SHOW_GUYS = 60;
-        int TICK_NEW_GAME_START_HUNTING = 240;
         int TICK_RESUME_HUNTING = 120;
         int TICK_CONTINUE_LEVEL = 60;
 

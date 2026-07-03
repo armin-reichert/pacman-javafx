@@ -23,7 +23,7 @@ public class GameLevelIntermissionState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext.model();
-        final GameLevel level = gameContext.requireLevel();
+        final GameLevel level = gameContext.assertLevel();
         final var hudState = gameModel.hudState();
         final boolean isLastCutScene = level.cutSceneNumber() == gameContext.rules().lastCutSceneNumber();
 

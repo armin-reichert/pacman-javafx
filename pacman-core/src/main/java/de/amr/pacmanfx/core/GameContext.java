@@ -34,7 +34,7 @@ public interface GameContext {
         return model().optGameLevel();
     }
 
-    default GameLevel requireLevel() {
+    default GameLevel assertLevel() {
         return optCurrentLevel().orElseThrow(IllegalStateException::new);
     }
 

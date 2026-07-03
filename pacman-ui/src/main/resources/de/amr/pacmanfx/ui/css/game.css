@@ -139,7 +139,7 @@
 }
 
 .dashboard-section .label {
-    -fx-min-width:  150px;
+    -fx-min-width:  130px;
     -fx-min-height: 18px;
 }
 

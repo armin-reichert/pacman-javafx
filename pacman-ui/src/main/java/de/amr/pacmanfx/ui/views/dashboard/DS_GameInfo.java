@@ -57,7 +57,7 @@ public class DS_GameInfo extends GameDashboardSection {
                 colorScheme = game.currentGameVariant().colorScheme(worldMap);
             }
             if (colorScheme != null) {
-                return "%s/%s/%s".formatted(
+                return "%s / %s / %s".formatted(
                     formatColorHex(Color.valueOf(colorScheme.wallFill())),
                     formatColorHex(Color.valueOf(colorScheme.wallStroke())),
                     formatColorHex(Color.valueOf(colorScheme.pellet())));
