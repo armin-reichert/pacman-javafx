@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameFlow;
+import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.Elroy;
@@ -48,6 +49,11 @@ public class TestEatingFood {
         @Override
         public GameRules rules() {
             return gameRules;
+        }
+
+        @Override
+        public GameCheats cheats() {
+            throw new UnsupportedOperationException();
         }
 
         @Override
