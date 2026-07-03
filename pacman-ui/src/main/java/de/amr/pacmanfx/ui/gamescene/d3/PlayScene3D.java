@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3;
 
+import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
@@ -269,12 +270,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void handleQuit(Game game) {
-        if (gameModel().isPlaying()) {
-            gameContext().optCurrentLevel().ifPresent(level -> gameModel().onGameOver(gameContext(), level));
-        }
-        gameContext().cheats().clear();
-        gameModel().lives().setCount(0);
         onDeactivate();
+        gameContext().flow().enterState(GameStateID.GAME_OVER);
     }
 
     // Other stuff

@@ -167,13 +167,6 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public void onGameOver(GameContext gameContext, GameLevel level) {
-        updateHighScore();
-        setPlaying(false);
-        showLevelMessage(level, GameLevelMessageType.GAME_OVER);
-    }
-
-    @Override
     public boolean isPlaying() {
         return playing.get();
     }
@@ -385,7 +378,8 @@ public abstract class AbstractGameModel implements GameModel {
         score.setPoints(newScore);
     }
 
-    protected void updateHighScore() {
+    @Override
+    public void updateHighScore() {
         if (highScore == null) {
             Logger.error("Cannot update high-score, no high-score file has been assigned");
             return;

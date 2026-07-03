@@ -10,6 +10,7 @@ import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevelMessageType;
 
 public class GameOverState extends GameState {
 
@@ -22,10 +23,15 @@ public class GameOverState extends GameState {
         final GameModel gameModel = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
 
+        gameModel.updateHighScore();
+        gameModel.setPlaying(false);
+        gameModel.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
         // In case, entering game over state was forced by user:
-        gameContext.model().lives().setCount(0);
+        gameModel.lives().setCount(0);
+
+        gameContext.cheats().clear();
+
         timer().restartTicks(level.gameOverStateTicks());
-        gameModel.onGameOver(gameContext, level);
     }
 
     @Override

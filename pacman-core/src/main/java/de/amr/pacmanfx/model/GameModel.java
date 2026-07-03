@@ -92,11 +92,11 @@ public interface GameModel {
 
     boolean canContinueOnGameOver();
 
-    void onGameOver(GameContext gameContext, GameLevel level);
-
     boolean isPlaying();
 
     void setPlaying(boolean playing);
+
+    void updateHighScore();
 
     // Level related
 

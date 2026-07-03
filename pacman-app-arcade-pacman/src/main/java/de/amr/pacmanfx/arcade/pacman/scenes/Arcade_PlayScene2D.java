@@ -48,12 +48,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
 
     @Override
     public void handleQuit(Game game) {
-        if (gameModel().isPlaying()) {
-            gameContext().optCurrentLevel().ifPresent(level -> gameModel().onGameOver(gameContext(), level));
-        }
-        gameContext().cheats().clear();
-        gameModel().lives().setCount(0);
         onDeactivate();
+        gameContext().flow().enterState(GameStateID.GAME_OVER);
     }
 
     @Override
