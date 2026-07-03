@@ -20,8 +20,6 @@ public class ArcadePacMan_Cartridge {
         ArcadePacMan_GameModel::new,
         ArcadePacMan_GameRules::new,
         ArcadePacManGameVariant::new,
-        Set.of(
-            new GameExtension(Arcade_GameExtensions.ACTIONS, Arcade_Actions::new)
-        )
+        Set.of(new GameExtension(Arcade_GameExtensions.ACTIONS, Arcade_Actions::new))
     );
 }

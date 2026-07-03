@@ -33,12 +33,6 @@ public class TengenMsPacMan_GameRules implements GameRules {
         0x00, 0x18, 0x20                                // levels 17, 18, then 19+
     };
 
-    public static final PacBooster DEFAULT_PAC_BOOSTER = PacBooster.OFF;
-    public static final Difficulty DEFAULT_DIFFICULTY = Difficulty.NORMAL;
-    public static final MapCategory DEFAULT_MAP_CATEGORY = MapCategory.ARCADE;
-
-    public static final int DEFAULT_START_LEVEL = 1;
-
     public static final EnumMap<BonusSymbol, Integer> BONUS_POINTS = new EnumMap<>(BonusSymbol.class);
     static {
         BONUS_POINTS.put(BonusSymbol.CHERRY,       100);
@@ -59,8 +53,6 @@ public class TengenMsPacMan_GameRules implements GameRules {
 
     public static final int FIRST_LEVEL = 1;
     public static final int LAST_LEVEL_NUMBER = 32;
-
-    public static final int DEFAULT_NUM_CONTINUES = 4;
 
     private static final Map<Integer, Integer> CUT_SCENE_NUMBER_AFTER_LEVEL_NUMBER = Map.of(
         2, 1,

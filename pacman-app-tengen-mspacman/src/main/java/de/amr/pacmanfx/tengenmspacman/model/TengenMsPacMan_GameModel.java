@@ -39,6 +39,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
+    public static final int DEFAULT_START_LEVEL = 1;
+    public static final int DEFAULT_NUM_CONTINUES = 4;
+    public static final PacBooster DEFAULT_PAC_BOOSTER = PacBooster.OFF;
+    public static final Difficulty DEFAULT_DIFFICULTY = Difficulty.NORMAL;
+    public static final MapCategory DEFAULT_MAP_CATEGORY = MapCategory.ARCADE;
+
     public static final String GAME_OVER_MESSAGE_TEXT = "GAME OVER";
     public static final String READY_MESSAGE_TEXT = "READY!";
 
@@ -53,9 +59,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBoosterMode;
+
     private boolean boosterActive;
+
     private int startLevelNumber; // 1-7
+
     private boolean canStartNewGame;
+
     private int numContinues;
 
     public TengenMsPacMan_GameModel() {
@@ -71,11 +81,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     public boolean allOptionsDefault() {
-        return pacBoosterMode == TengenMsPacMan_GameRules.DEFAULT_PAC_BOOSTER
-            && difficulty == TengenMsPacMan_GameRules.DEFAULT_DIFFICULTY
-            && mapCategory == TengenMsPacMan_GameRules.DEFAULT_MAP_CATEGORY
-            && startLevelNumber == TengenMsPacMan_GameRules.DEFAULT_START_LEVEL
-            && numContinues == TengenMsPacMan_GameRules.DEFAULT_NUM_CONTINUES;
+        return pacBoosterMode == DEFAULT_PAC_BOOSTER
+            && difficulty == DEFAULT_DIFFICULTY
+            && mapCategory == DEFAULT_MAP_CATEGORY
+            && startLevelNumber == DEFAULT_START_LEVEL
+            && numContinues == DEFAULT_NUM_CONTINUES;
     }
 
     public void setPacBoosterMode(PacBooster mode) {
@@ -160,11 +170,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void init() {
         super.init();
 
-        setPacBoosterMode(TengenMsPacMan_GameRules.DEFAULT_PAC_BOOSTER);
-        setDifficulty(TengenMsPacMan_GameRules.DEFAULT_DIFFICULTY);
-        setMapCategory(TengenMsPacMan_GameRules.DEFAULT_MAP_CATEGORY);
-        setStartLevelNumber(TengenMsPacMan_GameRules.DEFAULT_START_LEVEL);
-        numContinues = TengenMsPacMan_GameRules.DEFAULT_NUM_CONTINUES;
+        setPacBoosterMode(DEFAULT_PAC_BOOSTER);
+        setDifficulty(DEFAULT_DIFFICULTY);
+        setMapCategory(DEFAULT_MAP_CATEGORY);
+        setStartLevelNumber(DEFAULT_START_LEVEL);
+        numContinues = DEFAULT_NUM_CONTINUES;
     }
 
     @Override
