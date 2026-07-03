@@ -22,8 +22,8 @@ public enum Arcade_GameState {
     GAME_LEVEL_PLAYING         (new CommonGameLevelPlayingState()),
     GAME_LEVEL_COMPLETE        (new ArcadeGameLevelCompleteState()),
     GAME_LEVEL_TRANSITION      (new CommonGameLevelTransitionState()),
-    GAME_LEVEL_EATING_GHOST    (new CommonGameLevelEatingGhostState()),
-    GAME_LEVEL_PACMAN_DYING    (new CommonGameLevelPacManDyingState(60, 90, 190, 210)),
+    GAME_LEVEL_EATING_GHOST    (new CommonEatingGhostState()),
+    GAME_LEVEL_PACMAN_DYING    (new CommonPacManDyingState(60, 90, 190, 210)),
     GAME_OVER                  (new ArcadeGameOverState()),
     GAME_LEVEL_INTERMISSION    (new ArcadeGameLevelIntermissionState());
 

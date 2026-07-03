@@ -16,14 +16,14 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import org.tinylog.Logger;
 
-public class CommonGameLevelPacManDyingState extends GameState {
+public class CommonPacManDyingState extends GameState {
 
     private final int hideGhostsTick;
     private final int animationStartTick;
     private final int hidePacTick;
     private final int pacDeadTick;
 
-    public CommonGameLevelPacManDyingState(
+    public CommonPacManDyingState(
         int hideGhostsTick,
         int animationStartTick,
         int hidePacTick,
@@ -44,6 +44,8 @@ public class CommonGameLevelPacManDyingState extends GameState {
         gameModel.gateKeeper().resetCounterAndSetEnabled(true);
 
         level.huntingTimer().stop();
+
+        level.entities().optBonus().ifPresent(Bonus::setInactive);
 
         final Pac pac = level.entities().pac();
         pac.animations().stopSelected();
