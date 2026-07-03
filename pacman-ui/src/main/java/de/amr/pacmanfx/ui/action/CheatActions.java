@@ -123,7 +123,7 @@ public final class CheatActions {
 
                 return normalLevel != null
                     && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState)
-                    && normalLevel.number() < gameContext.rules().lastLevelNumber();
+                    && normalLevel.number() < gameContext.model().rules().lastLevelNumber();
             }
         };
 

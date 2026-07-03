@@ -37,7 +37,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void eatPellet(GameContext gameContext, GameLevel level, Vector2i tile) {
         super.eatPellet(gameContext, level, tile);
-        level.entities().pac().setRestingTicks(gameContext.rules().restingTicksForPellet());
+        level.entities().pac().setRestingTicks(rules.restingTicksForPellet());
         checkRedGhostCruiseElroyActivation(level);
     }
 
@@ -46,11 +46,11 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(gameContext, gameContext.rules().pointsForEnergizer(), level.number());
+        scorePoints(gameContext, rules.pointsForEnergizer(), level.number());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         final Pac pac = level.entities().pac();
-        pac.setRestingTicks(gameContext.rules().restingTicksForEnergizer());
+        pac.setRestingTicks(rules.restingTicksForEnergizer());
         checkRedGhostCruiseElroyActivation(level);
 
         level.clearGhostKillChain();
@@ -78,7 +78,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void buildNormalLevel(GameContext gameContext, int levelNumber) {
         final GameLevel level = createLevel(gameContext, levelNumber, false);
-        level.setCutSceneNumber(gameContext.rules().cutSceneNumberAfterLevel(levelNumber).orElse(0));
+        level.setCutSceneNumber(rules.cutSceneNumberAfterLevel(levelNumber).orElse(0));
         levelCounter().setEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);

@@ -57,7 +57,7 @@ public class DS_GameControl extends GameDashboardSection {
         setGameAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
-            game.currentGameContext().rules().collisionDoubleCheckedProperty().set(cbCollisionCheckedTwice.isSelected()));
+            game.currentGameContext().model().rules().collisionDoubleCheckedProperty().set(cbCollisionCheckedTwice.isSelected()));
     }
 
     @Override
@@ -82,7 +82,7 @@ public class DS_GameControl extends GameDashboardSection {
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !GameStateID.GAME_INTRO.identifies(gameState));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(gameState instanceof CutScenesTestState));
 
-        cbCollisionCheckedTwice.setSelected(gameContext.rules().collisionDoubleCheckedProperty().get());
+        cbCollisionCheckedTwice.setSelected(gameContext.model().rules().collisionDoubleCheckedProperty().get());
     }
 
     private boolean canStartLevel(GameContext gameContext, GameModel game, GameState gameState) {

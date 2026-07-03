@@ -10,7 +10,6 @@ import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import org.tinylog.Logger;
 
@@ -28,10 +27,9 @@ public class GameOrLevelStartingState extends GameState {
         hud.creditOff().scoreOn().levelCounterOn().livesCounterOn().showIt();
 
         // The rules vary between map categories so update the rules here:
-        final TengenMsPacMan_GameRules gameRules = (TengenMsPacMan_GameRules) gameContext.rules();
-        gameRules.setCurrentMapCategory(gameModel.mapCategory());
+        gameModel.rules().setCurrentMapCategory(gameModel.mapCategory());
 
-        Logger.info("Using game rules for map category {}", gameRules.currentMapCategory());
+        Logger.info("Using game rules for map category {}", gameModel.rules().currentMapCategory());
     }
 
     @Override

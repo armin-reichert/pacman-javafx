@@ -90,7 +90,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         terrain.setHouse(house);
 
         final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
-        final HuntingTimer huntingTimer = createHuntingTimer(gameContext.rules());
+        final HuntingTimer huntingTimer = createHuntingTimer(rules);
 
         final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, levelData.numFlashes());
         level.setDemoLevel(demoLevel);
@@ -101,8 +101,8 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         createAndSetPacMan(level);
         createAndSetGhosts(level, house);
 
-        level.setBonusSymbolCode(0, gameContext.rules().selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, gameContext.rules().selectBonusSymbolCode(level.number(), 1));
+        level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
 
         levelCounter.setEnabled(true);
 
@@ -118,7 +118,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     public void activateNextBonus(GameContext gameContext, GameLevel level) {
         level.selectNextBonus();
         final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final Bonus bonus = new Bonus(bonusSymbolCode, gameContext.rules().pointsForBonus(bonusSymbolCode));
+        final Bonus bonus = new Bonus(bonusSymbolCode, rules.pointsForBonus(bonusSymbolCode));
         final Vector2i bonusTile = level.worldMap().terrainLayer()
             .getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
         bonus.setPosition(WorldMap.halfTileRightOf(bonusTile));

@@ -13,6 +13,9 @@ import static de.amr.basics.math.RandomNumberSupport.randomInt;
 
 public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
 
+    public ArcadeMsPacMan_GameRules() {
+    }
+
     @Override
     public boolean isBonusAwarded(GameLevel level) {
         final int pelletEaten = level.worldMap().foodLayer().eatenFoodCount();

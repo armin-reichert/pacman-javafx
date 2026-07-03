@@ -71,6 +71,9 @@ public class ArcadePacMan_GameRules implements GameRules {
         return collisionStrategy;
     }
 
+    public ArcadePacMan_GameRules() {
+    }
+
     @Override
     public boolean isLevelCompleted(GameLevel level) {
         return level.worldMap().foodLayer().remainingFoodCount() == 0;

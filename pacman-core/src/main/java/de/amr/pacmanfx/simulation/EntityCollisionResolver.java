@@ -61,7 +61,7 @@ public final class EntityCollisionResolver {
             gameModel.eatPellet(context, level, foodTile);
         }
 
-        if (context.rules().isBonusAwarded(level)) {
+        if (gameModel.rules().isBonusAwarded(level)) {
             gameModel.activateNextBonus(context, level);
         }
     }

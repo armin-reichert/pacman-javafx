@@ -49,12 +49,12 @@ public class CommonGameLevelPlayingState extends GameState {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final GateKeeper gateKeeper = gameModel.gateKeeper();
-        final boolean doubleChecked = gameContext.rules().collisionDoubleCheckedProperty().get();
+        final boolean doubleChecked = gameModel.rules().collisionDoubleCheckedProperty().get();
 
         // Update
         gameContext.cheats().update(level);
         level.heartbeat().triggerPulse();
-        level.huntingTimer().update(gameContext.rules(), level.number());
+        level.huntingTimer().update(gameModel.rules(), level.number());
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
@@ -80,7 +80,7 @@ public class CommonGameLevelPlayingState extends GameState {
         writeResultToLog(gameContext.huntingStepResult());
 
         // State transition
-        final GameStateID nextStateID = computeNextState(gameContext.huntingStepResult(), gameContext.rules(), level);
+        final GameStateID nextStateID = computeNextState(gameContext.huntingStepResult(), gameModel.rules(), level);
         gameContext.flow().enterState(nextStateID.name());
     }
 

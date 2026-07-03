@@ -82,6 +82,8 @@ public interface GameModel {
 
     WorldMapSelector mapSelector();
 
+    GameRules rules();
+
     // Lifecycle
 
     void init();

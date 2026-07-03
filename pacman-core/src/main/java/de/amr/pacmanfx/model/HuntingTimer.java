@@ -156,7 +156,7 @@ public class HuntingTimer {
         requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
-        startPhase(gameContext.rules(), levelNumber, 0);
+        startPhase(gameContext.model().rules(), levelNumber, 0);
 
         gameContext.flow().publishGameEvent(new HuntingPhaseStartedEvent(
             gameContext,

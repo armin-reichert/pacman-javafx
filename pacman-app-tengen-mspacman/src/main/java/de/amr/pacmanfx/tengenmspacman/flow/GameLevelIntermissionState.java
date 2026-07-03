@@ -25,7 +25,7 @@ public class GameLevelIntermissionState extends GameState {
         final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext.model();
         final GameLevel level = gameContext.assertLevel();
         final var hudState = gameModel.hudState();
-        final boolean isLastCutScene = level.cutSceneNumber() == gameContext.rules().lastCutSceneNumber();
+        final boolean isLastCutScene = level.cutSceneNumber() == gameModel.rules().lastCutSceneNumber();
 
         if (gameModel.mapCategory() == MapCategory.ARCADE || isLastCutScene) {
             hudState.hideIt();

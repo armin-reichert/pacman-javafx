@@ -29,8 +29,8 @@ public final class EntityCollisionDetector {
         detectPacGhostCollision(level);
     }
 
-    private void detectPacGhostCollision( GameLevel level) {
-        final CollisionStrategy strategy = context.rules().getCollisionStrategy();
+    private void detectPacGhostCollision(GameLevel level) {
+        final CollisionStrategy strategy = context.model().rules().getCollisionStrategy();
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
         context.huntingStepResult().ghostsCollidingWithPac().clear();
@@ -40,7 +40,7 @@ public final class EntityCollisionDetector {
     }
 
     private void detectEdibleBonusCollision(GameLevel level) {
-        final CollisionStrategy strategy = context.rules().getCollisionStrategy();
+        final CollisionStrategy strategy = context.model().rules().getCollisionStrategy();
         final Pac pac = level.entities().pac();
         final Bonus bonus = level.entities().optBonus().orElse(null);
         context.huntingStepResult().setEdibleBonus(null);

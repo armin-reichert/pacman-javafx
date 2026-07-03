@@ -73,7 +73,7 @@ public class CommonDemoLevelPlayingState extends GameState {
         }
         else if (tick > huntingStartTick) {
             hunt(gameContext);
-            final GameStateID nextStateID = computeNextState(gameContext.huntingStepResult(), gameContext.rules(), level);
+            final GameStateID nextStateID = computeNextState(gameContext.huntingStepResult(), gameModel.rules(), level);
             gameContext.flow().enterState(nextStateID);
         }
     }
@@ -83,11 +83,11 @@ public class CommonDemoLevelPlayingState extends GameState {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final GateKeeper gateKeeper = gameModel.gateKeeper();
-        final boolean doubleChecked = gameContext.rules().collisionDoubleCheckedProperty().get();
+        final boolean doubleChecked = gameModel.rules().collisionDoubleCheckedProperty().get();
 
         level.heartbeat().triggerPulse();
 
-        level.huntingTimer().update(gameContext.rules(), level.number());
+        level.huntingTimer().update(gameModel.rules(), level.number());
 
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());

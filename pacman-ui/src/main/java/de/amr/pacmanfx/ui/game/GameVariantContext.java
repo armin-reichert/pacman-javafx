@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 
 import static java.util.Objects.requireNonNull;
@@ -53,11 +52,6 @@ public class GameVariantContext implements GameContext {
     @Override
     public GameModel model() {
         return gameVariantRuntime.gameModel();
-    }
-
-    @Override
-    public GameRules rules() {
-        return gameVariantRuntime.gameRules();
     }
 
     @Override

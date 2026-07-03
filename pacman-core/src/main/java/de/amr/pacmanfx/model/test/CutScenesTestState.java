@@ -30,7 +30,7 @@ public class CutScenesTestState extends GameState implements TestState {
     @Override
     public void onUpdate(GameContext gameContext) {
         if (timer().hasExpired()) {
-            if (testedCutSceneNumber < gameContext.rules().lastCutSceneNumber()) {
+            if (testedCutSceneNumber < gameContext.model().rules().lastCutSceneNumber()) {
                 testedCutSceneNumber += 1;
                 waitForTimeout();
                 //TODO find another solution and get rid of this event type

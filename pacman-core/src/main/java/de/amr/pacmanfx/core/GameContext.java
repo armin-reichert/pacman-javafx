@@ -8,7 +8,6 @@ import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 
@@ -23,8 +22,6 @@ public interface GameContext {
     default GameState state() {
         return flow().state();
     }
-
-    GameRules rules();
 
     GameCheats cheats();
 
