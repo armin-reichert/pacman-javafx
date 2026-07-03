@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import static de.amr.basics.math.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.model.world.WorldMap.tile;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
@@ -41,19 +42,19 @@ import static java.util.Objects.requireNonNull;
 public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     protected static final List<Vector2i> DEMO_LEVEL_ROUTE = List.of(
-        WorldMap.tile( 9,26), WorldMap.tile( 9,29), WorldMap.tile(12,29), WorldMap.tile(12,32), WorldMap.tile(26,32),
-        WorldMap.tile(26,29), WorldMap.tile(24,29), WorldMap.tile(24,26), WorldMap.tile(26,26), WorldMap.tile(26,23),
-        WorldMap.tile(21,23), WorldMap.tile(18,23), WorldMap.tile(18,14), WorldMap.tile( 9,14), WorldMap.tile( 9,17),
-        WorldMap.tile( 6,17), WorldMap.tile( 6 ,4), WorldMap.tile( 1, 4), WorldMap.tile( 1, 8), WorldMap.tile(12, 8),
-        WorldMap.tile(12, 4), WorldMap.tile( 6, 4), WorldMap.tile( 6,11), WorldMap.tile( 1,11), WorldMap.tile( 1, 8),
-        WorldMap.tile( 9, 8), WorldMap.tile( 9,11), WorldMap.tile(12,11), WorldMap.tile(12,14), WorldMap.tile( 9,14),
-        WorldMap.tile( 9,17), WorldMap.tile( 0,17), /*tunnel*/   WorldMap.tile(21,17), WorldMap.tile(21,29),
-        WorldMap.tile(26,29), WorldMap.tile(26,32), WorldMap.tile( 1,32), WorldMap.tile( 1,29), WorldMap.tile( 3,29),
-        WorldMap.tile( 3,26), WorldMap.tile( 1,26), WorldMap.tile( 1,23), WorldMap.tile(12,23), WorldMap.tile(12,26),
-        WorldMap.tile(15,26), WorldMap.tile(15,23), WorldMap.tile(26,23), WorldMap.tile(26,26), WorldMap.tile(24,26),
-        WorldMap.tile(24,29), WorldMap.tile(26,29), WorldMap.tile(26,32), WorldMap.tile( 1,32),
-        WorldMap.tile( 1,29), WorldMap.tile( 3,29), WorldMap.tile( 3,26), WorldMap.tile( 1,26), WorldMap.tile( 1,23),
-        WorldMap.tile( 6,23)
+        tile( 9,26), tile( 9,29), tile(12,29), tile(12,32), tile(26,32),
+        tile(26,29), tile(24,29), tile(24,26), tile(26,26), tile(26,23),
+        tile(21,23), tile(18,23), tile(18,14), tile( 9,14), tile( 9,17),
+        tile( 6,17), tile( 6 ,4), tile( 1, 4), tile( 1, 8), tile(12, 8),
+        tile(12, 4), tile( 6, 4), tile( 6,11), tile( 1,11), tile( 1, 8),
+        tile( 9, 8), tile( 9,11), tile(12,11), tile(12,14), tile( 9,14),
+        tile( 9,17), tile( 0,17), /*tunnel*/   tile(21,17), tile(21,29),
+        tile(26,29), tile(26,32), tile( 1,32), tile( 1,29), tile( 3,29),
+        tile( 3,26), tile( 1,26), tile( 1,23), tile(12,23), tile(12,26),
+        tile(15,26), tile(15,23), tile(26,23), tile(26,26), tile(24,26),
+        tile(24,29), tile(26,29), tile(26,32), tile( 1,32),
+        tile( 1,29), tile( 3,29), tile( 3,26), tile( 1,26), tile( 1,23),
+        tile( 6,23)
     );
 
     protected static final int GAME_OVER_STATE_TICKS = 90;
