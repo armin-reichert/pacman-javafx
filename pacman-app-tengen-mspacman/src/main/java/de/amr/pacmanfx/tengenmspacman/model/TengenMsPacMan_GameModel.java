@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
-import de.amr.pacmanfx.event.LevelStartedEvent;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.HuntingTimer;
