@@ -88,8 +88,8 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void buildDemoLevel(GameContext gameContext) {
-        int levelNumber = 1;
-        final GameLevel level = createLevel(levelNumber, true);
+        final int demoLevelNumber = 1;
+        final GameLevel level = createLevel(demoLevelNumber, true);
         level.setCutSceneNumber(0);
 
         final Pac pac = level.entities().pac();
@@ -97,10 +97,10 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         pac.setUsingAutopilot(true);
         pac.setAutomaticSteering(demoLevelSteering);
 
-        gateKeeper.setLevelNumber(levelNumber);
+        gateKeeper.setLevelNumber(demoLevelNumber);
         demoLevelSteering.init();
         levelCounter.setEnabled(true);
-        score.setLevelNumber(levelNumber);
+        score.setLevelNumber(demoLevelNumber);
 
         setLevel(level);
         gameContext.flow().publishGameEvent(new LevelCreatedEvent(gameContext, level));
