@@ -86,7 +86,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public GameLevel buildDemoLevel(GameContext gameContext) {
+    public GameLevel buildDemoLevel() {
         final int demoLevelNumber = 1;
         final GameLevel level = createLevel(demoLevelNumber, true);
         final Pac pac = level.entities().pac();

@@ -269,7 +269,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public GameLevel buildDemoLevel(GameContext gameContext) {
+    public GameLevel buildDemoLevel() {
         final GameLevel demoLevel = createLevel(1, true);
         demoLevel.setGameOverStateTicks(120);
 

@@ -104,7 +104,7 @@ public interface GameModel {
 
     void buildNormalLevel(GameContext gameContext, int levelNumber);
 
-    GameLevel buildDemoLevel(GameContext gameContext);
+    GameLevel buildDemoLevel();
 
     void setLevel(GameLevel level);
 
