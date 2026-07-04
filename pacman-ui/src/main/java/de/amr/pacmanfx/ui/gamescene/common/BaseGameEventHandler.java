@@ -33,7 +33,7 @@ public class BaseGameEventHandler extends DefaultGameEventListener {
     }
 
     public GameContext gameContext() {
-        return game.currentGameContext();
+        return game.context();
     }
 
     public GameState gameState() {
@@ -45,7 +45,7 @@ public class BaseGameEventHandler extends DefaultGameEventListener {
     }
 
     public Optional<GameSoundEffects> optSoundEffects() {
-        return game.currentSoundEffects();
+        return game.soundEffects();
     }
 
     @Override

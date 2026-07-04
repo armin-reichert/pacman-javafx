@@ -136,7 +136,7 @@ public final class GameViewManager {
             return true;
         }
         if (isSelected(GameViewID.GAMEPLAY)) {
-            return !game.currentGameContext().model().isPlaying();
+            return !game.context().model().isPlaying();
         }
         return false;
     }

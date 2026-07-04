@@ -89,7 +89,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyPacPowerText(Game game) {
-        return () -> game.currentGameContext().model().optGameLevel()
+        return () -> game.context().model().optGameLevel()
             .map(level -> level.entities().pac())
             .map(this::pacPowerText)
             .orElse(NO_INFO);
@@ -106,7 +106,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyPacAnimationText(Game game) {
-        return () -> game.currentGameContext().model().optGameLevel().map(level -> {
+        return () -> game.context().model().optGameLevel().map(level -> {
             final Pac pac = level.entities().pac();
             if (pac.animations() instanceof SpriteAnimationMap<?> sam && sam.selectedAnimationID() != null) {
                 return "%s:%d".formatted(sam.selectedAnimationID(), pac.animations().currentFrame());

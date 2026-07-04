@@ -17,8 +17,8 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 public class GameStartingState extends GameState {
 
     static final short TICK_SHOW_READY = 10;
-    static final short TICK_NEW_GAME_SHOW_GUYS = 70;
-    static final short TICK_NEW_GAME_START_HUNTING = 250;
+    static final short TICK_SHOW_GUYS = 70;
+    static final short TICK_START_HUNTING = 250;
 
     public GameStartingState() {
         super(GameStateID.GAME_STARTING);
@@ -43,11 +43,11 @@ public class GameStartingState extends GameState {
             // Note: This event is very important because it triggers the creation of the actor animations!
             gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));
         }
-        else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
+        else if (tick == TICK_SHOW_GUYS) {
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
         }
-        else if (tick == TICK_NEW_GAME_START_HUNTING) {
+        else if (tick == TICK_START_HUNTING) {
             gameModel.setPlaying(true);
             gameContext.flow().enterState(GameStateID.GAME_LEVEL_PLAYING);
         }

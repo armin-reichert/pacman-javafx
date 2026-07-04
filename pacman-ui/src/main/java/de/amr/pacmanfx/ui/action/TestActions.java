@@ -28,39 +28,39 @@ public class TestActions {
         actionTestCutScenes = new GameAction(game, "test_cut_scenes") {
             @Override
             public void doAction() {
-                game.currentGameContext().flow().enterState(TestStateID.CUT_SCENE_TEST);
+                game.context().flow().enterState(TestStateID.CUT_SCENE_TEST);
                 game.ui().shortMessage("Cut scenes test"); //TODO localize
             }
 
             @Override
             public boolean isEnabled() {
-                return game.currentGameContext().flow().optState(TestStateID.CUT_SCENE_TEST).isPresent();
+                return game.context().flow().optState(TestStateID.CUT_SCENE_TEST).isPresent();
             }
         };
 
         actionTestLevelShort = new GameAction(game, "short_level_test") {
             @Override
             public void doAction() {
-                game.currentGameContext().flow().restartState(TestStateID.LEVEL_TEST_S);
+                game.context().flow().restartState(TestStateID.LEVEL_TEST_S);
                 game.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
             }
 
             @Override
             public boolean isEnabled() {
-                return game.currentGameContext().flow().optState(TestStateID.LEVEL_TEST_S).isPresent();
+                return game.context().flow().optState(TestStateID.LEVEL_TEST_S).isPresent();
             }
         };
 
         actionTestLevelMedium = new GameAction(game, "medium_level_test") {
             @Override
             public void doAction() {
-                game.currentGameContext().flow().restartState(TestStateID.LEVEL_TEST_M);
+                game.context().flow().restartState(TestStateID.LEVEL_TEST_M);
                 game.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
             }
 
             @Override
             public boolean isEnabled() {
-                return game.currentGameContext().flow().optState(TestStateID.LEVEL_TEST_M).isPresent();
+                return game.context().flow().optState(TestStateID.LEVEL_TEST_M).isPresent();
             }
         };
 

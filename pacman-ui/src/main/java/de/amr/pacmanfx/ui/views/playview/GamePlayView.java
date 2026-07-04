@@ -178,7 +178,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     public void showHelp(Game game) {
         final double scaling = gameSceneFrame.scalingProperty().get();
-        helpLayer.showHelpPopup(game, scaling, game.currentGameVariantName());
+        helpLayer.showHelpPopup(game, scaling, game.variantName());
     }
 
     public void setGameSceneContent(Node gameSceneContent) {
@@ -238,7 +238,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         // Render current 2D game scene
         final GameScene gameScene = game.ui().gameSceneManager().optCurrentGameScene().orElse(null);
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
-            final GameModel gameModel = game.currentGameContext().model();
+            final GameModel gameModel = game.context().model();
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D);
             }
@@ -281,7 +281,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void updateGameSceneRenderers(AbstractGameScene2D gameScene2D) {
-        final GameVariant gameVariant = game.currentGameVariant();
+        final GameVariant gameVariant = game.variant();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = gameVariant.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
             setFontSmoothing(game.ui().viewModel().common2D.fontSmoothingOnProperty.get());

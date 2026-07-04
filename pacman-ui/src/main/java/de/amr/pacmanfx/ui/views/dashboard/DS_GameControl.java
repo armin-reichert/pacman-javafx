@@ -49,7 +49,7 @@ public class DS_GameControl extends GameDashboardSection {
         addDynamicInfo("Collision Mode", supplyGameRulesInfo(game, rules -> rules.getCollisionStrategy().name()));
         cbCollisionCheckedTwice  = checkBox("Collision Check 2x");
 
-        setAction(choiceBoxInitialLives, () -> game.currentGameContext().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
+        setAction(choiceBoxInitialLives, () -> game.context().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
 
         setGameAction(buttonGroupLevelActions[GAME_LEVEL_QUIT],        actions.gameFlowActions().actionRestartIntro());
         setGameAction(buttonGroupLevelActions[GAME_LEVEL_NEXT],        actions.cheatActions().actionEnterNextLevel());
@@ -57,14 +57,14 @@ public class DS_GameControl extends GameDashboardSection {
         setGameAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
-            game.currentGameContext().model().rules().collisionDoubleCheckedProperty().set(cbCollisionCheckedTwice.isSelected()));
+            game.context().model().rules().collisionDoubleCheckedProperty().set(cbCollisionCheckedTwice.isSelected()));
     }
 
     @Override
     public void update(Game game) {
         super.update(game);
 
-        final GameContext gameContext = game.currentGameContext();
+        final GameContext gameContext = game.context();
         final GameModel gameModel = gameContext.model();
         final GameState gameState = gameContext.state();
 

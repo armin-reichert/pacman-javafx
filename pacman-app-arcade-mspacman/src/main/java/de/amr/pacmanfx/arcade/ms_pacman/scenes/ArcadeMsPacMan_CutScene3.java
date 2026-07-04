@@ -62,7 +62,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariant gameVariant = game().currentGameVariant();
+        final GameVariant gameVariant = game().variant();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();

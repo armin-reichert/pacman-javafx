@@ -33,7 +33,7 @@ public class ArcadePacMan_StartPage extends FlyerStartPage {
 
     @Override
     public void onEnter() {
-        game.selectGameVariant(GameVariantID.ARCADE_PACMAN.name());
+        game.selectVariant(GameVariantID.ARCADE_PACMAN.name());
         flyer.selectPage(0);
         startTalking();
         Platform.runLater(startButton::requestFocus);

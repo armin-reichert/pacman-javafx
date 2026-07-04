@@ -86,7 +86,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariant gameVariant = game().currentGameVariant();
+        final GameVariant gameVariant = game().variant();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
@@ -211,7 +211,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameContext gameContext = scene.game().currentGameContext();
+                final GameContext gameContext = scene.game().context();
                 final GameFlow flow = gameContext.flow();
                 final GameModel gameModel = gameContext.model();
                 scene.marquee.timer().doTick();

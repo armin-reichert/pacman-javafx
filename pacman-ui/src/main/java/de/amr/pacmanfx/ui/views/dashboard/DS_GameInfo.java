@@ -33,8 +33,8 @@ public class DS_GameInfo extends GameDashboardSection {
 
     @Override
     public void connect(Game game) {
-        addDynamicInfo("Game State",  () -> game.currentGameContext().state().name());
-        addDynamicInfo("State Timer", () -> stateTimerInfo(game.currentGameContext().state()));
+        addDynamicInfo("Game State",  () -> game.context().state().name());
+        addDynamicInfo("State Timer", () -> stateTimerInfo(game.context().state()));
         addDynamicInfo("Game Scene", supplyGameSceneInfo(game, gameScene -> gameScene.getClass().getSimpleName()));
 
         addDynamicInfo("Level Number", supplyGameLevelInfo(game, level ->
@@ -54,7 +54,7 @@ public class DS_GameInfo extends GameDashboardSection {
                 colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
             }
             else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                colorScheme = game.currentGameVariant().colorScheme(worldMap);
+                colorScheme = game.variant().colorScheme(worldMap);
             }
             if (colorScheme != null) {
                 return "%s / %s / %s".formatted(

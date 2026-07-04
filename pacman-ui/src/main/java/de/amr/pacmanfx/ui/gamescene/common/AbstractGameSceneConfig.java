@@ -59,7 +59,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     @Override
     public final Optional<GameScene> selectGameScene(Game game, GameModel gameModel) {
         requireNonNull(game);
-        final Identifier Identifier = determineSceneID(game.currentGameContext());
+        final Identifier Identifier = determineSceneID(game.context());
         final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, this::createGameScene);
         return Optional.of(gameScene);
     }

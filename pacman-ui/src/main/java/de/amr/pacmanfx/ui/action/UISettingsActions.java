@@ -51,7 +51,7 @@ public class UISettingsActions {
             @Override
             public boolean isEnabled() {
                 final GameSceneManager gameScenes = game.ui().gameSceneManager();
-                final String variantName = game.currentGameVariantName();
+                final String variantName = game.variantName();
                 final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
                 return isArcadeGame &&
                     (gameScenes.currentGameSceneHasID(CommonGameSceneID.INTRO_SCENE)
@@ -124,7 +124,7 @@ public class UISettingsActions {
             }
 
             private boolean isLevelPlaying() {
-                final GameState gameState = game.currentGameContext().state();
+                final GameState gameState = game.context().state();
                 return GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };

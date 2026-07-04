@@ -136,7 +136,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     private String sceneSizeInfo(Game game) {
-        final GameModel gameModel = game.currentGameContext().model();
+        final GameModel gameModel = game.context().model();
         final GameScene gameScene = game.ui().gameSceneManager().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
 

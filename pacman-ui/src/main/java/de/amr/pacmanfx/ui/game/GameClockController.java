@@ -24,7 +24,7 @@ public class GameClockController {
     }
 
     private void onUpdate() {
-        game.currentGameContext().flow().makeStep();
+        game.context().flow().makeStep();
         Platform.runLater(() -> game.ui().gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(clock.currentTick())));
     }
 

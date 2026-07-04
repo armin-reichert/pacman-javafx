@@ -32,24 +32,27 @@ public interface Game extends GameLifecycle {
 
     CoinMechanism coinMechanism();
 
-    StringProperty gameVariantNameProperty();
+    StringProperty variantNameProperty();
 
-    void selectGameVariant(String variantName);
+    void selectVariant(String variantName);
 
-    String currentGameVariantName();
+    String variantName();
 
-    GameVariant currentGameVariant();
+    GameVariant variant();
 
-    GameVariantRuntime currentGameVariantRuntime();
+    GameVariantRuntime variantRuntime();
 
-    GameVariantRuntime gameVariantRuntime(String variantName);
+    GameVariantRuntime variantRuntime(String variantName);
 
     CommonActions actions();
 
-    GameContext currentGameContext();
+    /**
+     * @return the game context of the currently selected game
+     */
+    GameContext context();
 
-    default Optional<GameSoundEffects> currentSoundEffects() {
-        return currentGameVariant().optSoundEffects();
+    default Optional<GameSoundEffects> soundEffects() {
+        return variant().optSoundEffects();
     }
 
     GameExtensions extensions();

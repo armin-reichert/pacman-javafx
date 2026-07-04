@@ -45,11 +45,11 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
     }
 
     protected Supplier<String> supplyGameLevelInfo(Game game, Function<GameLevel, String> fnInfo) {
-        return () -> game.currentGameContext().model().optGameLevel().map(fnInfo).orElse(NO_INFO);
+        return () -> game.context().model().optGameLevel().map(fnInfo).orElse(NO_INFO);
     }
 
     protected Supplier<String> supplyGameRulesInfo(Game game, Function<GameRules, String> fnInfo) {
-        return () -> fnInfo.apply(game.currentGameContext().model().rules());
+        return () -> fnInfo.apply(game.context().model().rules());
     }
 
     protected void addDynamicInfo(String label, Supplier<?> infoSupplier) {

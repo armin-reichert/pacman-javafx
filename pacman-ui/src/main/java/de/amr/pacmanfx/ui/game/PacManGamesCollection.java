@@ -52,9 +52,9 @@ public final class PacManGamesCollection implements Game {
 
     private final PacManGamesMachine machine;
 
-    private final Map<String, GameVariantRuntime> gameVariantRuntimesMap = new HashMap<>();
+    private final Map<String, GameVariantRuntime> variantRuntimesByName = new HashMap<>();
 
-    private final StringProperty gameVariantName = new SimpleStringProperty();
+    private final StringProperty variantName = new SimpleStringProperty();
 
     private final DirectoryWatchdog watchdog;
 
@@ -64,7 +64,7 @@ public final class PacManGamesCollection implements Game {
 
     private GameUI ui;
 
-    private GameVariantContext currentGameContext;
+    private GameVariantContext context;
 
     private final GlobalGameEventHandler globalGameEventHandler = new GlobalGameEventHandler(this);
 
@@ -76,7 +76,7 @@ public final class PacManGamesCollection implements Game {
 
         new GameClockController(this, machine.clock()).configure();
 
-        gameVariantName.addListener((_, oldName, newName) -> onGameVariantNameChanged(oldName, newName));
+        variantName.addListener((_, oldName, newName) -> onGameVariantNameChanged(oldName, newName));
     }
 
     @Override
@@ -115,42 +115,42 @@ public final class PacManGamesCollection implements Game {
     // Game interface
 
     @Override
-    public StringProperty gameVariantNameProperty() {
-        return gameVariantName;
+    public StringProperty variantNameProperty() {
+        return variantName;
     }
 
     @Override
-    public void selectGameVariant(String variantName) {
+    public void selectVariant(String variantName) {
         requireNonNull(variantName);
         if (machine.containsCartridgeWithName(variantName)) {
-            gameVariantName.set(variantName);
+            this.variantName.set(variantName);
         }
         else throw new IllegalArgumentException("Game with name '" + variantName + "' not found");
     }
 
     @Override
-    public GameVariantRuntime currentGameVariantRuntime() {
-        return gameVariantRuntime(currentGameVariantName());
+    public GameVariantRuntime variantRuntime() {
+        return variantRuntime(variantName());
     }
 
     @Override
-    public String currentGameVariantName() {
-        return gameVariantName.get();
+    public String variantName() {
+        return variantName.get();
     }
 
     @Override
-    public GameVariantRuntime gameVariantRuntime(String variantName) {
-        return gameVariantRuntimesMap.computeIfAbsent(variantName, this::createGameVariant);
+    public GameVariantRuntime variantRuntime(String variantName) {
+        return variantRuntimesByName.computeIfAbsent(variantName, this::createGameVariant);
     }
 
     @Override
-    public GameContext currentGameContext() {
-        return currentGameContext;
+    public GameContext context() {
+        return context;
     }
 
     @Override
-    public GameVariant currentGameVariant() {
-        return currentGameVariantRuntime().gameVariant();
+    public GameVariant variant() {
+        return variantRuntime().gameVariant();
     }
 
     @Override
@@ -192,7 +192,7 @@ public final class PacManGamesCollection implements Game {
 
     @Override
     public void showUI(GameVariantID variantID) {
-        selectGameVariant(variantID.name());
+        selectVariant(variantID.name());
 
         ui.viewManager().selectStartPagesView();
         ui.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);
@@ -207,8 +207,8 @@ public final class PacManGamesCollection implements Game {
 
     @Override
     public void start() {
-        currentGameContext.flow().setGameContext(currentGameContext);
-        currentGameContext.flow().restartState(GameStateID.BOOT);
+        context.flow().setGameContext(context);
+        context.flow().restartState(GameStateID.BOOT);
         ui.viewManager().selectGamePlayView();
         Platform.runLater(clock()::start);
     }
@@ -263,20 +263,20 @@ public final class PacManGamesCollection implements Game {
 
     private void exitGameVariant(String variantName) {
         ui.sounds().dispose();
-        gameVariantRuntime(variantName).gameVariant().dispose();
-        currentGameContext.flow().removeGameEventListener(globalGameEventHandler);
+        variantRuntime(variantName).gameVariant().dispose();
+        context.flow().removeGameEventListener(globalGameEventHandler);
     }
 
     private void enterGameVariant(String variantName) {
-        final GameVariantRuntime gameVariantRuntime = gameVariantRuntime(variantName);
+        final GameVariantRuntime gameVariantRuntime = variantRuntime(variantName);
 
         gameVariantRuntime.gameVariant().init(this);
         ui.viewModel().maze3D.init(gameVariantRuntime.gameVariant().worldSettings().maze());
 
         // create new game context for current game variant
-        currentGameContext = new GameVariantContext(this, gameVariantRuntime);
-        currentGameContext.model().hudState().creditProperty().bind(coinMechanism().numCoinsProperty());
-        currentGameContext.flow().addGameEventListener(globalGameEventHandler);
+        context = new GameVariantContext(this, gameVariantRuntime);
+        context.model().hudState().creditProperty().bind(coinMechanism().numCoinsProperty());
+        context.flow().addGameEventListener(globalGameEventHandler);
     }
 
     private GameVariantRuntime createGameVariant(String variantName) {

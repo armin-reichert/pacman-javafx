@@ -79,7 +79,7 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
 
     @Override
     public GameContext gameContext() {
-        return game().currentGameContext();
+        return game().context();
     }
 
     @Override
@@ -99,7 +99,7 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
 
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
-        return game().currentSoundEffects();
+        return game().soundEffects();
     }
 
     @Override
