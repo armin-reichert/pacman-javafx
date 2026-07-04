@@ -7,6 +7,7 @@ package de.amr.pacmanfx.gamestate;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.event.LevelStartedEvent;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameRules;
@@ -32,8 +33,9 @@ public class CommonDemoLevelPlayingState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
-        gameModel.buildDemoLevel(gameContext);
+        final GameLevel demoLevel = gameModel.buildDemoLevel(gameContext);
         gameModel.hudState().creditOn().livesCounterOff();
+        gameContext.flow().publishGameEvent(new LevelCreatedEvent(gameContext, demoLevel));
     }
 
     @Override

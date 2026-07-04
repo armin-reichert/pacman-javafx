@@ -269,11 +269,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void buildDemoLevel(GameContext gameContext) {
-        final GameLevel newLevel = createLevel(1, true);
-        newLevel.setGameOverStateTicks(120);
+    public GameLevel buildDemoLevel(GameContext gameContext) {
+        final GameLevel demoLevel = createLevel(1, true);
+        demoLevel.setGameOverStateTicks(120);
 
-        final Pac pac = newLevel.entities().pac();
+        final Pac pac = demoLevel.entities().pac();
         pac.setImmune(false);
         pac.setUsingAutopilot(true);
         pac.setAutomaticSteering(demoLevelSteering);
@@ -282,8 +282,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         demoLevelSteering.init();
         score.setLevelNumber(1);
 
-        setLevel(newLevel);
-        gameContext.flow().publishGameEvent(new LevelCreatedEvent(gameContext, newLevel));
+        setLevel(demoLevel);
+        return demoLevel;
     }
 
     @Override

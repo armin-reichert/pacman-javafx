@@ -86,7 +86,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void buildDemoLevel(GameContext gameContext) {
+    public GameLevel buildDemoLevel(GameContext gameContext) {
         final int demoLevelNumber = 1;
         final GameLevel level = createLevel(demoLevelNumber, true);
         final Pac pac = level.entities().pac();
@@ -100,7 +100,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         score.setLevelNumber(demoLevelNumber);
 
         setLevel(level);
-        gameContext.flow().publishGameEvent(new LevelCreatedEvent(gameContext, level));
+        return level;
     }
 
     @Override

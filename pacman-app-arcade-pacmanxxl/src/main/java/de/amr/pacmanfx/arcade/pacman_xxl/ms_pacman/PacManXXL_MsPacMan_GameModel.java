@@ -24,7 +24,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
     public PacManXXL_MapSelector mapSelector() { return (PacManXXL_MapSelector) mapSelector; }
 
     @Override
-    public void buildDemoLevel(GameContext gameContext) {
+    public GameLevel buildDemoLevel(GameContext gameContext) {
         mapSelector().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 
         // Select random (standard) level with different map and map color scheme for each choice
@@ -42,6 +42,6 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         score.setLevelNumber(levelNumber);
 
         setLevel(level);
-        gameContext.flow().publishGameEvent(new LevelCreatedEvent(gameContext, level));
+        return level;
     }
 }
