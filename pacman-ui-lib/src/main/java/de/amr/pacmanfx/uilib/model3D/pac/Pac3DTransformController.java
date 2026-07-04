@@ -21,12 +21,8 @@ public class Pac3DTransformController {
 
     public void update(Pac3D pac3D, WorldMap worldMap) {
         final Pac pac = pac3D.pac();
-
-        if (!pac.isAlive()) {
-            return;
-        }
-
         final Vector2f center = pac.computeCenter();
+
         pac3D.setTranslateX(center.x());
         pac3D.setTranslateY(center.y());
 
