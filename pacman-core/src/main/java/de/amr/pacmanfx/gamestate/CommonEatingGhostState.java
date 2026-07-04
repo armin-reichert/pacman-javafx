@@ -23,18 +23,18 @@ public class CommonEatingGhostState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameModel.optGameLevel().orElseThrow();
+    public void onUpdate(GameContext context) {
+        final GameModel model = context.model();
+        final GameLevel level = model.optGameLevel().orElseThrow();
         if (timer().hasExpired()) {
             level.entities().pac().show();
             level.ghostsInState(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
             level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
-            gameContext.flow().resumePreviousState();
+            context.flow().resumePreviousState();
         } else {
             if (timer().tickCount() < 60) {
                 level.ghostsInAnyOfStates(Set.of(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE))
-                    .forEach(ghost -> ghost.update(gameContext, level));
+                    .forEach(ghost -> ghost.update(context, level));
                 level.heartbeat().triggerPulse();
             }
         }

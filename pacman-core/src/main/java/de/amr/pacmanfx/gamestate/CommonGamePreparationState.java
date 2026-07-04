@@ -11,9 +11,9 @@ public class CommonGamePreparationState extends GameState {
 
     @Override
     public void onEnter(GameContext context) {
-        final GameModel gameModel = context.model();
-        gameModel.hudState().creditOn().scoreOn().levelCounterOn().livesCounterOff().showIt();
-        gameModel.resetForNewGame();
+        final GameModel model = context.model();
+        model.hudState().creditOn().scoreOn().levelCounterOn().livesCounterOff().showIt();
+        model.resetForNewGame();
     }
 
     @Override

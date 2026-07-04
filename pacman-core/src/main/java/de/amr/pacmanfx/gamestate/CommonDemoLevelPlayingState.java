@@ -31,27 +31,27 @@ public class CommonDemoLevelPlayingState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
-        gameModel.setLevel(gameModel.buildDemoLevel());
-        gameModel.hudState().creditOn().livesCounterOff();
-        gameContext.flow().publishGameEvent(new LevelCreatedEvent(gameContext, gameModel.assertLevel()));
+    public void onEnter(GameContext context) {
+        final GameModel model = context.model();
+        model.setLevel(model.buildDemoLevel());
+        model.hudState().creditOn().livesCounterOff();
+        context.flow().publishGameEvent(new LevelCreatedEvent(context, model.assertLevel()));
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
+    public void onUpdate(GameContext context) {
         final long tick = timer().tickCount();
-        final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameModel.assertLevel();
+        final GameModel model = context.model();
+        final GameLevel level = model.assertLevel();
 
         if (tick == 1) {
-            gameModel.prepareLevelForPlaying(level);
-            gameModel.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
-            gameModel.score().setEnabled(false);
-            gameModel.highScore().setEnabled(false);
+            model.prepareLevelForPlaying(level);
+            model.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
+            model.score().setEnabled(false);
+            model.highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
             // Note: This event is very important because it triggers the creation of the actor animations!
-            gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));
+            context.flow().publishGameEvent(new LevelStartedEvent(context, level));
         }
         else if (tick == 2) {
             // Now, actor animations are available, show them
@@ -71,47 +71,47 @@ public class CommonDemoLevelPlayingState extends GameState {
             level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
 
             // This call fires a game event!
-            level.huntingTimer().startFirstPhase(gameContext, level.number());
+            level.huntingTimer().startFirstPhase(context, level.number());
         }
         else if (tick > huntingStartTick) {
-            hunt(gameContext);
-            final GameStateID nextStateID = computeNextState(gameContext.huntingStepResult(), gameModel.rules(), level);
-            gameContext.flow().enterState(nextStateID);
+            hunt(context);
+            final GameStateID nextStateID = computeNextState(context.huntingStepResult(), model.rules(), level);
+            context.flow().enterState(nextStateID);
         }
     }
 
-    private void hunt(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameModel.assertLevel();
+    private void hunt(GameContext context) {
+        final GameModel model = context.model();
+        final GameLevel level = model.assertLevel();
         final Pac pac = level.entities().pac();
-        final GateKeeper gateKeeper = gameModel.gateKeeper();
-        final boolean doubleChecked = gameModel.rules().collisionDoubleCheckedProperty().get();
+        final GateKeeper gateKeeper = model.gateKeeper();
+        final boolean doubleChecked = model.rules().collisionDoubleCheckedProperty().get();
 
         level.heartbeat().triggerPulse();
 
-        level.huntingTimer().update(gameModel.rules(), level.number());
+        level.huntingTimer().update(model.rules(), level.number());
 
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
 
-        gameModel.updatePacPowerMode(gameContext, level, pac);
+        model.updatePacPowerMode(context, level, pac);
 
-        final EntityCollisionDetector collisionDetector = new EntityCollisionDetector(gameContext);
+        final EntityCollisionDetector collisionDetector = new EntityCollisionDetector(context);
 
         // If double-check active, do an additional collision check before Pac has moved
         level.entities().forEach(entity -> {
             if (entity != pac) {
-                entity.update(gameContext, level);
+                entity.update(context, level);
             }
         });
         if (doubleChecked) {
             collisionDetector.detectCollisions(level);
         }
-        pac.update(gameContext, level);
+        pac.update(context, level);
         collisionDetector.detectCollisions(level);
 
-        final EntityCollisionResolver collisionResolver = new EntityCollisionResolver(gameContext);
+        final EntityCollisionResolver collisionResolver = new EntityCollisionResolver(context);
         collisionResolver.evaluateCollisions(level);
     }
 
