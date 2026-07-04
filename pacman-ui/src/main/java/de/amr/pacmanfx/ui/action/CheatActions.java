@@ -25,7 +25,6 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
-
 public final class CheatActions {
 
     private final GameAction actionAddLives;
@@ -46,11 +45,11 @@ public final class CheatActions {
         actionAddLives = new GameAction(game, "cheat_add_lives") {
             @Override
             public void doAction() {
-                final GameModel gameModel = game.context().model();
-                gameModel.lives().add(3);
+                final GameModel model = game.context().model();
+                model.lives().add(3);
                 game.context().cheats().notifyCheatUsed();
 
-                final String msg = game.ui().translations().translate("flash.cheat_add_lives", gameModel.lives().count());
+                final String msg = game.ui().translations().translate("flash.cheat_add_lives", model.lives().count());
                 game.ui().shortMessage(msg);
             }
 
@@ -63,13 +62,13 @@ public final class CheatActions {
         actionEatAllPellets = new GameAction(game, "cheat_eat_all_pellets") {
             @Override
             public void doAction() {
-                final GameContext gameContext = game.context();
-                final GameLevel level = gameContext.model().assertLevel();
+                final GameContext context = game.context();
+                final GameLevel level = context.model().assertLevel();
 
                 level.worldMap().foodLayer().eatPellets();
-                gameContext.cheats().notifyCheatUsed();
+                context.cheats().notifyCheatUsed();
 
-                gameContext.flow().publishGameEvent(new PacEatsFoodEvent(gameContext, level.entities().pac(), false, true));
+                context.flow().publishGameEvent(new PacEatsFoodEvent(context, level.entities().pac(), false, true));
             }
 
             @Override
@@ -82,11 +81,11 @@ public final class CheatActions {
         actionKillGhosts = new GameAction(game, "cheat_kill_ghosts") {
             @Override
             public void doAction() {
-                final GameContext gameContext = game.context();
-                final GameModel gameModel = gameContext.model();
-                final GameLevel level = gameContext.model().assertLevel();
+                final GameContext context = game.context();
+                final GameModel model = context.model();
+                final GameLevel level = model.assertLevel();
 
-                gameContext.cheats().notifyCheatUsed();
+                context.cheats().notifyCheatUsed();
 
                 final List<Ghost> killableGhosts = level.entities().ghosts().stream()
                     .filter(ghost -> GhostState.FRIGHTENED == ghost.state() || GhostState.HUNTING_PAC == ghost.state())
@@ -94,8 +93,8 @@ public final class CheatActions {
 
                 if (!killableGhosts.isEmpty()) {
                     level.clearGhostKillChain(); // start again with lowest number for killing ghost
-                    killableGhosts.forEach(ghost -> gameModel.onEatGhost(gameContext, level, ghost));
-                    gameContext.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST);
+                    killableGhosts.forEach(ghost -> model.onEatGhost(context, level, ghost));
+                    context.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST);
                 }
             }
 
@@ -109,21 +108,21 @@ public final class CheatActions {
         actionEnterNextLevel = new GameAction(game, "cheat_enter_next_level") {
             @Override
             public void doAction() {
-                final GameContext gameContext = game.context();
+                final GameContext context = game.context();
 
-                gameContext.cheats().notifyCheatUsed();
-                gameContext.flow().enterState(GameStateID.GAME_LEVEL_COMPLETE);
+                context.cheats().notifyCheatUsed();
+                context.flow().enterState(GameStateID.GAME_LEVEL_COMPLETE);
             }
 
             @Override
             public boolean isEnabled() {
-                final GameContext gameContext = game.context();
-                final GameState gameState = gameContext.state();
-                final GameLevel normalLevel = normalLevel(game).orElse(null);
+                final GameContext context = game.context();
+                final GameState state = context.state();
+                final GameLevel level = normalLevel(game).orElse(null);
 
-                return normalLevel != null
-                    && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState)
-                    && normalLevel.number() < gameContext.model().rules().lastLevelNumber();
+                return level != null
+                    && GameStateID.GAME_LEVEL_PLAYING.identifies(state)
+                    && level.number() < context.model().rules().lastLevelNumber();
             }
         };
 

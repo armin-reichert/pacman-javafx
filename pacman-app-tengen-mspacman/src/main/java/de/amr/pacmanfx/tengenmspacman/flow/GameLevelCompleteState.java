@@ -18,19 +18,19 @@ public class GameLevelCompleteState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
-        gameModel.onLevelCompleted(gameModel.assertLevel());
+    public void onEnter(GameContext context) {
+        final GameModel model = context.model();
+        model.onLevelCompleted(model.assertLevel());
         waitForTimeout(); // Waits for UI to trigger timeout
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameFlow flow = gameContext.flow();
-        final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameModel.assertLevel();
+    public void onUpdate(GameContext context) {
+        final GameFlow flow = context.flow();
+        final GameModel model = context.model();
+        final GameLevel level = model.assertLevel();
         final boolean cutSceneFollows = !level.isDemoLevel()
-            && gameContext.model().rules().cutSceneNumberAfterLevel(level.number()).isPresent();
+            && context.model().rules().cutSceneNumberAfterLevel(level.number()).isPresent();
 
         if (level.isDemoLevel()) {
             flow.enterState(TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
@@ -50,5 +50,4 @@ public class GameLevelCompleteState extends GameState {
             }
         }
     }
-
 }

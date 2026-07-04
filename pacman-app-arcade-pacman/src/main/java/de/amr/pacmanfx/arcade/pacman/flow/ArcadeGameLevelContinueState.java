@@ -24,25 +24,25 @@ public class ArcadeGameLevelContinueState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameContext.model().assertLevel();
+    public void onEnter(GameContext context) {
+        final GameModel model = context.model();
+        final GameLevel level = context.model().assertLevel();
 
-        gameModel.prepareLevelForPlaying(level);
+        model.prepareLevelForPlaying(level);
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
 
-        gameModel.showLevelMessage(level, GameLevelMessageType.READY);
-        gameModel.hudState().creditOff().livesCounterOn();
+        model.showLevelMessage(level, GameLevelMessageType.READY);
+        model.hudState().creditOff().livesCounterOn();
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameFlow flow = gameContext.flow();
+    public void onUpdate(GameContext context) {
+        final GameFlow flow = context.flow();
         final long tick = timer().tickCount();
 
         if (tick == TICK_CONTINUE_LEVEL) {
-            flow.publishGameEvent(new GameContinuedEvent(gameContext));
+            flow.publishGameEvent(new GameContinuedEvent(context));
         }
         else if (tick == TICK_RESUME_HUNTING) {
             flow.enterState(GameStateID.GAME_LEVEL_PLAYING);

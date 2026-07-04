@@ -24,39 +24,39 @@ public class ArcadeGameStartingState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
+    public void onEnter(GameContext context) {
+        final GameModel model = context.model();
 
-        gameModel.hudState().creditOff().livesCounterOn();
-        gameModel.resetForNewGame();
-        gameModel.buildNormalLevel(gameContext, 1);
+        model.hudState().creditOff().livesCounterOn();
+        model.resetForNewGame();
+        model.buildNormalLevel(context, 1);
 
-        gameContext.flow().publishGameEvent(new GameStartedEvent(gameContext));
+        context.flow().publishGameEvent(new GameStartedEvent(context));
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameContext.model().assertLevel();
+    public void onUpdate(GameContext context) {
+        final GameModel model = context.model();
+        final GameLevel level = context.model().assertLevel();
         final long tick = timer().tickCount();
 
         if (tick == TICK_NEW_GAME_START_LEVEL) {
-            gameModel.startLevel(gameContext, level);
+            model.startLevel(context, level);
             // Note: This event is very important because it triggers the creation of the actor animations!
-            gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));
+            context.flow().publishGameEvent(new LevelStartedEvent(context, level));
         }
         else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
         }
         else if (tick == TICK_NEW_GAME_START_HUNTING) {
-            gameModel.setPlaying(true);
-            gameContext.flow().enterState(GameStateID.GAME_LEVEL_PLAYING);
+            model.setPlaying(true);
+            context.flow().enterState(GameStateID.GAME_LEVEL_PLAYING);
         }
     }
 
     @Override
-    public void onExit(GameContext gameContext) {
-        gameContext.coinMechanism().consumeCoin();
+    public void onExit(GameContext context) {
+        context.coinMechanism().consumeCoin();
     }
 }

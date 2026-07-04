@@ -43,8 +43,8 @@ public class PacManXXL_MsPacMan_GameSceneConfig extends AbstractGameSceneConfig 
     }
 
     @Override
-    protected Identifier determineSceneID(GameContext gameContext) {
-        final GameState state = gameContext.state();
+    protected Identifier determineSceneID(GameContext context) {
+        final GameState state = context.state();
 
         if (state instanceof CutScenesTestState testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
@@ -54,7 +54,7 @@ public class PacManXXL_MsPacMan_GameSceneConfig extends AbstractGameSceneConfig 
             return CommonGameSceneID.BOOT_SCENE;
         }
         if (GameStateID.GAME_LEVEL_INTERMISSION.identifies(state)) {
-            return resolveCutSceneID(gameContext);
+            return resolveCutSceneID(context);
         }
         if (GameStateID.GAME_INTRO.identifies(state)) {
             return CommonGameSceneID.INTRO_SCENE;

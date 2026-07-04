@@ -25,31 +25,31 @@ public class GameStartingState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext.model();
-        gameModel.resetForNewGame();
-        gameModel.buildNormalLevel(gameContext, gameModel.startLevelNumber());
-        gameContext.flow().publishGameEvent(new GameStartedEvent(gameContext));
+    public void onEnter(GameContext context) {
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+        model.resetForNewGame();
+        model.buildNormalLevel(context, model.startLevelNumber());
+        context.flow().publishGameEvent(new GameStartedEvent(context));
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameModel.assertLevel();
+    public void onUpdate(GameContext context) {
+        final GameModel model = context.model();
+        final GameLevel level = model.assertLevel();
         final long tick = timer().tickCount();
 
         if (tick == TICK_SHOW_READY) {
-            gameModel.startLevel(gameContext, level);
+            model.startLevel(context, level);
             // Note: This event is very important because it triggers the creation of the actor animations!
-            gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));
+            context.flow().publishGameEvent(new LevelStartedEvent(context, level));
         }
         else if (tick == TICK_SHOW_GUYS) {
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
         }
         else if (tick == TICK_START_HUNTING) {
-            gameModel.setPlaying(true);
-            gameContext.flow().enterState(GameStateID.GAME_LEVEL_PLAYING);
+            model.setPlaying(true);
+            context.flow().enterState(GameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

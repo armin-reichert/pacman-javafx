@@ -23,15 +23,15 @@ public class GameLevelIntermissionState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext.model();
-        final GameLevel level = gameModel.assertLevel();
-        final OptionalInt cutSceneNumber = gameModel.rules().cutSceneNumberAfterLevel(level.number());
+    public void onEnter(GameContext context) {
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+        final GameLevel level = model.assertLevel();
+        final OptionalInt cutSceneNumber = model.rules().cutSceneNumberAfterLevel(level.number());
         final boolean isLastCutScene = cutSceneNumber.isPresent()
-            && cutSceneNumber.getAsInt() == gameModel.rules().lastCutSceneNumber();
-        final var hudState = gameModel.hudState();
+            && cutSceneNumber.getAsInt() == model.rules().lastCutSceneNumber();
+        final var hudState = model.hudState();
 
-        if (gameModel.mapCategory() == MapCategory.ARCADE || isLastCutScene) {
+        if (model.mapCategory() == MapCategory.ARCADE || isLastCutScene) {
             hudState.hideIt();
         }
         else {
@@ -41,21 +41,21 @@ public class GameLevelIntermissionState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameFlow flow = gameContext.flow();
-        final GameModel gameModel = gameContext.model();
+    public void onUpdate(GameContext context) {
+        final GameFlow flow = context.flow();
+        final GameModel model = context.model();
 
         if (timer().hasExpired()) {
-            flow.enterState(gameModel.isPlaying() ? GameStateID.GAME_LEVEL_TRANSITION : GameStateID.GAME_INTRO);
+            flow.enterState(model.isPlaying() ? GameStateID.GAME_LEVEL_TRANSITION : GameStateID.GAME_INTRO);
         }
     }
 
     @Override
-    public void onExit(GameContext gameContext) {
-        final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext.model();
-        final TengenMsPacMan_HUDState hudState = gameModel.hudState();
+    public void onExit(GameContext context) {
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+        final TengenMsPacMan_HUDState hudState = model.hudState();
 
-        if (gameModel.mapCategory() == MapCategory.ARCADE) {
+        if (model.mapCategory() == MapCategory.ARCADE) {
             hudState.hideIt();
         }
         else {

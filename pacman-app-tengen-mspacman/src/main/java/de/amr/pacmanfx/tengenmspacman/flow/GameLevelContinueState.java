@@ -21,22 +21,22 @@ public class GameLevelContinueState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameModel.assertLevel();
+    public void onEnter(GameContext context) {
+        final GameModel model = context.model();
+        final GameLevel level = model.assertLevel();
 
-        gameModel.prepareLevelForPlaying(level);
+        model.prepareLevelForPlaying(level);
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
 
-        gameContext.flow().publishGameEvent(new GameContinuedEvent(gameContext));
+        context.flow().publishGameEvent(new GameContinuedEvent(context));
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
+    public void onUpdate(GameContext context) {
         final long tick = timer().tickCount();
         if (tick == TICK_RESUME_HUNTING) {
-            gameContext.flow().enterState(GameStateID.GAME_LEVEL_PLAYING);
+            context.flow().enterState(GameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

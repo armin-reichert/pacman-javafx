@@ -41,9 +41,9 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public Identifier resolveCutSceneID(GameContext gameContext) {
-        final GameLevel level = gameContext.model().assertLevel();
-        final OptionalInt cutSceneNumber = gameContext.model().rules().cutSceneNumberAfterLevel(level.number());
+    public Identifier resolveCutSceneID(GameContext context) {
+        final GameLevel level = context.model().assertLevel();
+        final OptionalInt cutSceneNumber = context.model().rules().cutSceneNumberAfterLevel(level.number());
         if (cutSceneNumber.isEmpty()) {
             throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(level.number()));
         }
@@ -57,7 +57,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public final Optional<GameScene> selectGameScene(Game game, GameModel gameModel) {
+    public final Optional<GameScene> selectGameScene(Game game, GameModel model) {
         requireNonNull(game);
         final Identifier Identifier = determineSceneID(game.context());
         final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, this::createGameScene);
@@ -73,5 +73,5 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     protected abstract GameScene createGameScene(Identifier Identifier);
 
-    protected abstract Identifier determineSceneID(GameContext gameContext);
+    protected abstract Identifier determineSceneID(GameContext context);
 }
