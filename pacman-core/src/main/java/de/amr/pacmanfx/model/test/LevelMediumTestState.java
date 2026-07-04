@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.event.LevelStartedEvent;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
@@ -59,6 +60,8 @@ public class LevelMediumTestState extends GameState {
         gameModel.resetForNewGame();
         gameModel.buildNormalLevel(gameContext, 1);
         gameModel.startLevel(gameContext, gameContext.assertLevel());
+        // Note: This event is very important because it triggers the creation of the actor animations!
+        gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, gameContext.assertLevel()));
         configureLevelForTest(gameContext);
     }
 

@@ -253,6 +253,8 @@ public abstract class AbstractGameModel implements GameModel {
         if (level.number() < rules.lastLevelNumber()) {
             buildNormalLevel(gameContext, level.number() + 1);
             startLevel(gameContext, level);
+            // Note: This event is very important because it triggers the creation of the actor animations!
+            gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", rules.lastLevelNumber());
         }

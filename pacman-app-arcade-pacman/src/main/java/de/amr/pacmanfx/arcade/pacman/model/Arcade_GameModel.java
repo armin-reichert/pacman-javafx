@@ -112,8 +112,5 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         levelCounter.update(level.number(), level.bonusSymbolCode(0));
         score.setEnabled(true);
         gameContext.cheats().update(level);
-
-        // Note: This event is very important because it triggers the creation of the actor animations!
-        gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));
     }
 }

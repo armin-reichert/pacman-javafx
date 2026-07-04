@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameStartedEvent;
+import de.amr.pacmanfx.event.LevelStartedEvent;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
@@ -41,6 +42,8 @@ public class ArcadeGameStartingState extends GameState {
 
         if (tick == TICK_NEW_GAME_START_LEVEL) {
             gameModel.startLevel(gameContext, level);
+            // Note: This event is very important because it triggers the creation of the actor animations!
+            gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));
         }
         else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
             level.entities().pac().show();

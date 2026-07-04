@@ -5,6 +5,7 @@ package de.amr.pacmanfx.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusEatenEvent;
+import de.amr.pacmanfx.event.LevelStartedEvent;
 import de.amr.pacmanfx.event.TestStartedEvent;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
@@ -36,6 +37,8 @@ public class LevelShortTestState extends GameState {
         level.entities().ghosts().forEach(Ghost::show);
 
         waitForTimeout();
+        // Note: This event is very important because it triggers the creation of the actor animations!
+        gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));
     }
 
     @Override
