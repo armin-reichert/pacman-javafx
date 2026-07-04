@@ -10,31 +10,30 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import org.tinylog.Logger;
 
+import java.util.Arrays;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 public class GameState implements State<GameContext>, Identifier {
 
-    private final String name;
+    private final Identifier id;
     private final TickTimer timer;
 
-    public GameState(String name) {
-        this.name = Objects.requireNonNull(name);
-        this.timer = new TickTimer("GameStateTimer-" + getClass().getSimpleName());
-    }
-
     public GameState(Identifier id) {
-        this.name = Objects.requireNonNull(id).name();
+        this.id = Objects.requireNonNull(id);
         this.timer = new TickTimer("GameStateTimer-" + getClass().getSimpleName());
     }
 
-    public boolean isOneOf(GameStateID... ids) {
-        return Stream.of(ids).map(GameStateID::name).anyMatch(idName -> idName.equals(this.name));
+    public Identifier id() {
+        return id;
+    }
+
+    public boolean isOneOf(Identifier... options) {
+        return Arrays.asList(options).contains(id);
     }
 
     @Override
     public String name() {
-        return name;
+        return id.name();
     }
 
     @Override

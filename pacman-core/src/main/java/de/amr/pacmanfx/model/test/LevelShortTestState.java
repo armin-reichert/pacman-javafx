@@ -13,17 +13,12 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 
-public class LevelShortTestState extends GameState implements TestState {
+public class LevelShortTestState extends GameState {
 
     private int lastTestedLevelNumber;
 
     public LevelShortTestState() {
-        super("Short Level Test State");
-    }
-
-    @Override
-    public String name() {
-        return "LevelShortTestState";
+        super(TestStateID.LEVEL_TEST_S);
     }
 
     @Override

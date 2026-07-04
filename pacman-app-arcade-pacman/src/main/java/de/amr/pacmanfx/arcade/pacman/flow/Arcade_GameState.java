@@ -6,8 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.gamestate.*;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * The game states used by the Arcade game variants (Pc-Man, Ms. Pac-Man and their XXL versions).
  */

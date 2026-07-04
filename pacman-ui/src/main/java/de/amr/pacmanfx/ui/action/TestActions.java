@@ -4,9 +4,7 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.model.test.LevelMediumTestState;
-import de.amr.pacmanfx.model.test.LevelShortTestState;
+import de.amr.pacmanfx.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
@@ -30,39 +28,39 @@ public class TestActions {
         actionTestCutScenes = new GameAction(game, "test_cut_scenes") {
             @Override
             public void doAction() {
-                game.currentGameContext().flow().enterState(CutScenesTestState.class.getSimpleName());
+                game.currentGameContext().flow().enterState(TestStateID.CUT_SCENE_TEST);
                 game.ui().shortMessage("Cut scenes test"); //TODO localize
             }
 
             @Override
             public boolean isEnabled() {
-                return game.currentGameContext().flow().optState(CutScenesTestState.class.getSimpleName()).isPresent();
+                return game.currentGameContext().flow().optState(TestStateID.CUT_SCENE_TEST).isPresent();
             }
         };
 
         actionTestLevelShort = new GameAction(game, "short_level_test") {
             @Override
             public void doAction() {
-                game.currentGameContext().flow().restartState(LevelShortTestState.class.getSimpleName());
+                game.currentGameContext().flow().restartState(TestStateID.LEVEL_TEST_S);
                 game.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
             }
 
             @Override
             public boolean isEnabled() {
-                return game.currentGameContext().flow().optState(LevelShortTestState.class.getSimpleName()).isPresent();
+                return game.currentGameContext().flow().optState(TestStateID.LEVEL_TEST_S).isPresent();
             }
         };
 
         actionTestLevelMedium = new GameAction(game, "medium_level_test") {
             @Override
             public void doAction() {
-                game.currentGameContext().flow().restartState(LevelMediumTestState.class.getSimpleName());
+                game.currentGameContext().flow().restartState(TestStateID.LEVEL_TEST_M);
                 game.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
             }
 
             @Override
             public boolean isEnabled() {
-                return game.currentGameContext().flow().optState(LevelMediumTestState.class.getSimpleName()).isPresent();
+                return game.currentGameContext().flow().optState(TestStateID.LEVEL_TEST_M).isPresent();
             }
         };
 

@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.test.TestState;
+import de.amr.pacmanfx.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
@@ -57,7 +57,7 @@ public class GameFlowActions {
                 final GameContext gameContext = game.currentGameContext();
                 final GameState gameState = gameContext.state();
 
-                if (gameState instanceof TestState) {
+                if (gameState.id() instanceof TestStateID) {
                     gameState.onExit(gameContext);
                 }
 

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.test.TestState;
+import de.amr.pacmanfx.model.test.TestStateID;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -48,7 +48,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
 
     @Override
     public void onGameStarted(GameStartedEvent e) {
-        final boolean silent = gameModel().isDemoLevelRunning() || gameState() instanceof TestState;
+        final boolean silent = gameModel().isDemoLevelRunning() || gameState().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }

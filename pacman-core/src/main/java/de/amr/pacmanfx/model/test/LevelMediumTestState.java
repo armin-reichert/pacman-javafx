@@ -15,14 +15,14 @@ import de.amr.pacmanfx.simulation.EntityCollisionDetector;
 
 import java.util.List;
 
-public class LevelMediumTestState extends GameState implements TestState {
+public class LevelMediumTestState extends GameState {
 
     static final int TEST_DURATION_SEC = 10;
 
     private int lastTestedLevelNumber;
 
     public LevelMediumTestState() {
-        super("Medium Level Test State");
+        super(TestStateID.LEVEL_TEST_M);
     }
 
     private void configureLevelForTest(GameContext gameContext) {

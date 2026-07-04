@@ -8,7 +8,7 @@ import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.model.test.TestState;
+import de.amr.pacmanfx.model.test.TestStateID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
@@ -59,7 +59,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
     @Override
     public void onGameStarted(GameStartedEvent e) {
         final GameModel gameModel = gameContext().model();
-        final boolean silent = gameModel.isDemoLevelRunning() || gameContext().state() instanceof TestState;
+        final boolean silent = gameModel.isDemoLevelRunning() || gameState().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }

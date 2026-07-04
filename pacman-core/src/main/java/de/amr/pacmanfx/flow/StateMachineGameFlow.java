@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.flow;
 
+import de.amr.basics.Identifier;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.pacmanfx.core.GameContext;
@@ -49,8 +50,8 @@ public class StateMachineGameFlow implements GameFlow {
     }
 
     @Override
-    public Optional<State<GameContext>> optState(String stateName) {
-        return stateMachine.optState(stateName);
+    public Optional<State<GameContext>> optState(Identifier stateID) {
+        return stateMachine.optState(stateID.name());
     }
 
     @Override

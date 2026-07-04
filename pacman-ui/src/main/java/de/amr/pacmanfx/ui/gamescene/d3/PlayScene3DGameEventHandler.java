@@ -9,9 +9,10 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.*;
+import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.test.TestState;
+import de.amr.pacmanfx.model.test.TestStateID;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
@@ -59,27 +60,31 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
         Logger.info("Enter game state '{}'", e.newState().name());
-        final var gameState = e.newState();
+        final var newState = e.newState();
 
-        if (gameState instanceof TestState) {
+        if (!(newState instanceof GameState gameState)) {
+            Logger.error("New state is not a game state?");
+            return;
+        }
+        if (gameState.id() instanceof TestStateID) {
             handleTestState(game().ui().viewModel().common3D);
         }
-        else if (GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameState)) {
+        else if (GameStateID.GAME_OR_LEVEL_STARTING.identifies(newState)) {
             onStartingGameOrLevel();
         }
-        else if (GameStateID.GAME_LEVEL_PLAYING.identifies(gameState)) {
+        else if (GameStateID.GAME_LEVEL_PLAYING.identifies(newState)) {
             onHuntingStart();
         }
-        else if (GameStateID.GAME_LEVEL_PACMAN_DYING.identifies(gameState)) {
+        else if (GameStateID.GAME_LEVEL_PACMAN_DYING.identifies(newState)) {
             onPacManDying();
         }
-        else if (GameStateID.GAME_LEVEL_EATING_GHOST.identifies(gameState)) {
+        else if (GameStateID.GAME_LEVEL_EATING_GHOST.identifies(newState)) {
             onEatingGhost();
         }
-        else if (GameStateID.GAME_LEVEL_COMPLETE.identifies(gameState)) {
+        else if (GameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
             onLevelComplete();
         }
-        else if (GameStateID.GAME_OVER.identifies(gameState)) {
+        else if (GameStateID.GAME_OVER.identifies(newState)) {
             onGameOver();
         }
     }
@@ -110,7 +115,9 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
     @Override
     public void onGameStarted(GameStartedEvent event) {
         final State<GameContext> state = gameContext().state();
-        final boolean silent = gameContext().model().isDemoLevelRunning() || state instanceof TestState;
+        final boolean silent = gameContext().model().isDemoLevelRunning()
+            || (state instanceof GameState gameState && gameState.id() instanceof TestStateID);
+
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -131,9 +138,10 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
     public void onLevelStarted(LevelStartedEvent event) {
         final GameLevel level = event.level();
         final GameContext gameContext = gameContext();
-        final State<GameContext> gameState = gameContext.state();
-        //TODO rethink
-        if (gameState instanceof TestState) {
+        final State<GameContext> newState = gameContext.state();
+
+        //TODO rethink this
+        if (newState instanceof GameState gameState && gameState.id() instanceof TestStateID) {
             playScene3D.replaceGameLevel3D(level);
             final GameLevel3D level3D = assertLevel3D();
             level3D.energizers3D().forEach(Energizer3D::startPumping);

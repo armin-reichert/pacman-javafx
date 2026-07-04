@@ -8,17 +8,12 @@ import de.amr.pacmanfx.event.GenericChangeEvent;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 
-public class CutScenesTestState extends GameState implements TestState {
+public class CutScenesTestState extends GameState {
 
     public int testedCutSceneNumber;
 
     public CutScenesTestState() {
-        super("Cut Scenes Test State");
-    }
-
-    @Override
-    public String name() {
-        return "CutScenesTestState";
+        super(TestStateID.CUT_SCENE_TEST);
     }
 
     @Override

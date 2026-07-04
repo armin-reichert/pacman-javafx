@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.gamestate.GameState;
-import de.amr.pacmanfx.gamestate.GameStateID;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -21,7 +20,7 @@ public interface GameFlow {
 
     GameContext gameContext();
 
-    Optional<State<GameContext>> optState(String stateName);
+    Optional<State<GameContext>> optState(Identifier stateID);
 
     GameState state();
 
@@ -42,8 +41,8 @@ public interface GameFlow {
 
     void restartState(String stateName);
 
-    default void restartState(GameStateID gameStateID) {
-        restartState(gameStateID.name());
+    default void restartState(Identifier stateID) {
+        restartState(stateID.name());
     }
 
     void makeStep();
