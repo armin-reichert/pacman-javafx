@@ -14,6 +14,7 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 import static java.util.Objects.requireNonNull;
 
@@ -41,15 +42,12 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     @Override
     public Identifier resolveCutSceneID(GameContext gameContext) {
-        final Optional<GameLevel> optGameLevel = gameContext.model().optGameLevel();
-        if (optGameLevel.isEmpty()) {
-            throw new IllegalStateException("Cannot determine cut scene, no game level available");
+        final GameLevel level = gameContext.assertLevel();
+        final OptionalInt cutSceneNumber = gameContext.model().rules().cutSceneNumberAfterLevel(level.number());
+        if (cutSceneNumber.isEmpty()) {
+            throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(level.number()));
         }
-        final int cutSceneNumber = optGameLevel.get().cutSceneNumber();
-        if (cutSceneNumber == 0) {
-            throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(optGameLevel.get().number()));
-        }
-        return AbstractGameSceneConfig.cutSceneID(cutSceneNumber);
+        return AbstractGameSceneConfig.cutSceneID(cutSceneNumber.getAsInt());
     }
 
     @Override

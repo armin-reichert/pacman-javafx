@@ -293,6 +293,10 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
 
     private void onLevelComplete() {
         final GameLevel3D level3D = assertLevel3D();
+        final GameLevel level = gameContext().assertLevel();
+        final boolean cutSceneFollows = !level.isDemoLevel()
+            && gameModel().rules().cutSceneNumberAfterLevel(level.number()).isPresent();
+        final GameViewModel viewModel = game().ui().viewModel();
 
         playScene3D.scoreOpacity.set(0);
 
@@ -304,11 +308,10 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
         level3D.messageManager().hideMessage();
 
-        final GameViewModel viewModel = game().ui().viewModel();
         playLevelEndAnimation(level3D.animationRegistry(),
             viewModel.common3D, viewModel.maze3D,
             level3D.maze3D(),
-            level3D.level().cutSceneNumber() != 0);
+            cutSceneFollows);
     }
 
     private void playLevelEndAnimation(
@@ -316,9 +319,9 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         Common3DSettingsModel settings3D,
         Maze3DSettingsModel maze3DSettings,
         Maze3D maze3D,
-        boolean cutSceneAfter)
+        boolean cutSceneFollows)
     {
-        final GameLevel3D.AnimationID animationID = cutSceneAfter
+        final GameLevel3D.AnimationID animationID = cutSceneFollows
             ? GameLevel3D.AnimationID.LEVEL_COMPLETED_SHORT
             : GameLevel3D.AnimationID.LEVEL_COMPLETED_FULL;
 

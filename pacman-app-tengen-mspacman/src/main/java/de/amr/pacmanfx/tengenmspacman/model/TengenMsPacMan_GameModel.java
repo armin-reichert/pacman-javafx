@@ -261,7 +261,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void buildNormalLevel(GameContext gameContext, int levelNumber) {
         final GameLevel newLevel = createLevel(levelNumber, false);
-        newLevel.setCutSceneNumber(rules.cutSceneNumberAfterLevel(levelNumber).orElse(0));
         score.setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
 
@@ -272,7 +271,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void buildDemoLevel(GameContext gameContext) {
         final GameLevel newLevel = createLevel(1, true);
-        newLevel.setCutSceneNumber(0);
         newLevel.setGameOverStateTicks(120);
 
         final Pac pac = newLevel.entities().pac();

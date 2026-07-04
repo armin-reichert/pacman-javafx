@@ -96,8 +96,6 @@ public class GameLevel {
     private float pacPowerSeconds;
     private float pacPowerFadingSeconds;
 
-    private int cutSceneNumber;
-
     public GameLevel(GameModel gameModel, int number, WorldMap worldMap, HuntingTimer huntingTimer, int numFlashes) {
         this.gameModel = requireNonNull(gameModel);
         this.number = requireValidLevelNumber(number);
@@ -143,20 +141,6 @@ public class GameLevel {
      */
     public WorldMap worldMap() {
         return worldMap;
-    }
-
-    /**
-     * @param cutSceneNumber Sets the number of the cut scene played after this level (0=no cut scene).
-     */
-    public void setCutSceneNumber(int cutSceneNumber) {
-        this.cutSceneNumber = (byte) cutSceneNumber;
-    }
-
-    /**
-     * @return number of cut scene played after this level (0=no cut scene).
-     */
-    public int cutSceneNumber() {
-        return cutSceneNumber;
     }
 
     /**

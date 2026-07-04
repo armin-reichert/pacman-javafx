@@ -78,7 +78,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void buildNormalLevel(GameContext gameContext, int levelNumber) {
         final GameLevel level = createLevel(levelNumber, false);
-        level.setCutSceneNumber(rules.cutSceneNumberAfterLevel(levelNumber).orElse(0));
         levelCounter().setEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
@@ -90,8 +89,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     public void buildDemoLevel(GameContext gameContext) {
         final int demoLevelNumber = 1;
         final GameLevel level = createLevel(demoLevelNumber, true);
-        level.setCutSceneNumber(0);
-
         final Pac pac = level.entities().pac();
         pac.setImmune(false);
         pac.setUsingAutopilot(true);

@@ -28,13 +28,15 @@ public class ArcadeGameLevelCompleteState extends GameState {
     public void onUpdate(GameContext gameContext) {
         final GameFlow flow = gameContext.flow();
         final GameLevel level = gameContext.assertLevel();
+        final boolean cutSceneFollows = !level.isDemoLevel()
+            && gameContext.model().rules().cutSceneNumberAfterLevel(level.number()).isPresent();
 
         if (timer().hasExpired()) {
             if (level.isDemoLevel()) {
                 // just in case: if demo level was completed, go back to intro scene
                 flow.enterState(GameStateID.GAME_INTRO);
             }
-            else if (flow.cutScenesEnabled() && level.cutSceneNumber() != 0) {
+            else if (cutSceneFollows && flow.cutScenesEnabled()) {
                 flow.enterState(GameStateID.GAME_LEVEL_INTERMISSION);
             }
             else {
