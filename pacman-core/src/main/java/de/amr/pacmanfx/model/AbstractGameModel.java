@@ -173,11 +173,6 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public boolean canContinueOnGameOver() {
-        return false;
-    }
-
-    @Override
     public boolean isPlaying() {
         return playing.get();
     }

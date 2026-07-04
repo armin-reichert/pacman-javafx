@@ -92,8 +92,6 @@ public interface GameModel {
 
     boolean canStartNewGame(GameContext gameContext);
 
-    boolean canContinueOnGameOver();
-
     boolean isPlaying();
 
     void setPlaying(boolean playing);
