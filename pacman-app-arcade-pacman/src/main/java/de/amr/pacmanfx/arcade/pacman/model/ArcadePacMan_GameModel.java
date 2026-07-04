@@ -77,7 +77,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(int levelNumber, boolean demoLevel) {
         requireValidLevelNumber(levelNumber);
 
         final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber);

@@ -188,7 +188,7 @@ public abstract class AbstractGameModel implements GameModel {
     // Level related
 
     @Override
-    public abstract GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel);
+    public abstract GameLevel createLevel(int levelNumber, boolean demoLevel);
 
     @Override
     public abstract void buildNormalLevel(GameContext gameContext, int levelNumber);

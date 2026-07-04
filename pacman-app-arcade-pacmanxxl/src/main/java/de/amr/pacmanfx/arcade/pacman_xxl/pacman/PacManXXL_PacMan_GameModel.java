@@ -38,7 +38,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
         // Select random (standard) level with different map and map color scheme for each choice
         final int levelNumber = DEMOLEVEL_NUMBERS[randomInt(0, DEMOLEVEL_NUMBERS.length)];
-        final GameLevel level = createLevel(gameContext, levelNumber, true);
+        final GameLevel level = createLevel(levelNumber, true);
 
         final Pac pac = level.entities().pac();
         pac.setImmune(false);

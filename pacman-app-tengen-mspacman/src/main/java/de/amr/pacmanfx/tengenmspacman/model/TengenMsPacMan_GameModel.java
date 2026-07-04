@@ -134,6 +134,17 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         return numContinues;
     }
 
+    public boolean canContinueOnGameOver() {
+        //TODO don't change values inside this method
+        if (startLevelNumber >= 10 && numContinues > 0) {
+            numContinues -= 1;
+            return true;
+        } else {
+            numContinues = 4;
+            return false;
+        }
+    }
+
     public boolean isBoosterActive() {
         return boosterActive;
     }
@@ -189,18 +200,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public boolean canContinueOnGameOver() {
-        //TODO don't change values inside this method
-        if (startLevelNumber >= 10 && numContinues > 0) {
-            numContinues -= 1;
-            return true;
-        } else {
-            numContinues = 4;
-            return false;
-        }
-    }
-
-    @Override
     public boolean canStartNewGame(GameContext gameContext) {
         return canStartNewGame;
     }
@@ -228,7 +227,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber, mapCategory);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
@@ -261,7 +260,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void buildNormalLevel(GameContext gameContext, int levelNumber) {
-        final GameLevel newLevel = createLevel(gameContext, levelNumber, false);
+        final GameLevel newLevel = createLevel(levelNumber, false);
         newLevel.setCutSceneNumber(rules.cutSceneNumberAfterLevel(levelNumber).orElse(0));
         score.setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
@@ -272,7 +271,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void buildDemoLevel(GameContext gameContext) {
-        final GameLevel newLevel = createLevel(gameContext, 1, true);
+        final GameLevel newLevel = createLevel(1, true);
         newLevel.setCutSceneNumber(0);
         newLevel.setGameOverStateTicks(120);
 

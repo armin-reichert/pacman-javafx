@@ -77,7 +77,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
     @Override
     public void buildNormalLevel(GameContext gameContext, int levelNumber) {
-        final GameLevel level = createLevel(gameContext, levelNumber, false);
+        final GameLevel level = createLevel(levelNumber, false);
         level.setCutSceneNumber(rules.cutSceneNumberAfterLevel(levelNumber).orElse(0));
         levelCounter().setEnabled(true);
         score().setLevelNumber(levelNumber);
@@ -89,7 +89,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     @Override
     public void buildDemoLevel(GameContext gameContext) {
         int levelNumber = 1;
-        final GameLevel level = createLevel(gameContext, levelNumber, true);
+        final GameLevel level = createLevel(levelNumber, true);
         level.setCutSceneNumber(0);
 
         final Pac pac = level.entities().pac();
