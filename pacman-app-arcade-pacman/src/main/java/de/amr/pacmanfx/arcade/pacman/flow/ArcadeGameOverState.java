@@ -50,5 +50,4 @@ public class ArcadeGameOverState extends GameState {
             }
         }
     }
-
 }

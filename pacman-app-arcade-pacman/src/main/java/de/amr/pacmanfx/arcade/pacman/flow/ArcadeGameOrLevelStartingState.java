@@ -17,20 +17,20 @@ public class ArcadeGameOrLevelStartingState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
-        gameModel.hudState().scoreOn().levelCounterOn().showIt();
+    public void onEnter(GameContext context) {
+        final GameModel model = context.model();
+        model.hudState().scoreOn().levelCounterOn().showIt();
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameFlow flow = gameContext.flow();
-        final GameModel gameModel = gameContext.model();
+    public void onUpdate(GameContext context) {
+        final GameFlow flow = context.flow();
+        final GameModel model = context.model();
 
-        if (gameModel.isPlaying()) {
+        if (model.isPlaying()) {
             flow.enterState(GameStateID.GAME_LEVEL_CONTINUE);
         }
-        else if (gameModel.canStartNewGame(gameContext)) {
+        else if (model.canStartNewGame(context)) {
             flow.enterState(GameStateID.GAME_STARTING);
         }
         else {

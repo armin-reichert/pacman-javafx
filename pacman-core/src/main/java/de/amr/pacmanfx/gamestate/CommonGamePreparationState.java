@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
@@ -20,5 +24,4 @@ public class CommonGamePreparationState extends GameState {
     public void onUpdate(GameContext context) {
         // Wait for user interaction (e.g. key press) to start playing
     }
-
 }

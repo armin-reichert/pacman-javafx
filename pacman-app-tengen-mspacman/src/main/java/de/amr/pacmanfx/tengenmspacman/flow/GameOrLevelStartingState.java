@@ -20,27 +20,27 @@ public class GameOrLevelStartingState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext.model();
-        final TengenMsPacMan_HUDState hud = gameModel.hudState();
+    public void onEnter(GameContext context) {
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+        final TengenMsPacMan_HUDState hud = model.hudState();
 
         hud.creditOff().scoreOn().levelCounterOn().livesCounterOn().showIt();
 
         // The rules vary between map categories so update the rules here:
-        gameModel.rules().setCurrentMapCategory(gameModel.mapCategory());
+        model.rules().setCurrentMapCategory(model.mapCategory());
 
-        Logger.info("Using game rules for map category {}", gameModel.rules().currentMapCategory());
+        Logger.info("Using game rules for map category {}", model.rules().currentMapCategory());
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
-        final GameFlow flow = gameContext.flow();
+    public void onUpdate(GameContext context) {
+        final GameModel model = context.model();
+        final GameFlow flow = context.flow();
 
-        if (gameModel.isPlaying()) {
+        if (model.isPlaying()) {
             flow.enterState(GameStateID.GAME_LEVEL_CONTINUE);
         }
-        else if (gameModel.canStartNewGame(gameContext)) {
+        else if (model.canStartNewGame(context)) {
             flow.enterState(GameStateID.GAME_STARTING);
         }
         else {
