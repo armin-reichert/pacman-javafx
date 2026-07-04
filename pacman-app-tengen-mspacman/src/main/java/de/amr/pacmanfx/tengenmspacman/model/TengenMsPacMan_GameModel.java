@@ -278,7 +278,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         demoLevelSteering.init();
         score.setLevelNumber(1);
 
-        setLevel(demoLevel);
         return demoLevel;
     }
 

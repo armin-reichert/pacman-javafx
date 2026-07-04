@@ -37,7 +37,7 @@ public class ArcadeGameStartingState extends GameState {
     @Override
     public void onUpdate(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameContext.model().assertLevel();
         final long tick = timer().tickCount();
 
         if (tick == TICK_NEW_GAME_START_LEVEL) {

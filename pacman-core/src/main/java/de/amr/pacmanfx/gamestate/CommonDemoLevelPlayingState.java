@@ -33,16 +33,16 @@ public class CommonDemoLevelPlayingState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
-        final GameLevel demoLevel = gameModel.buildDemoLevel();
+        gameModel.setLevel(gameModel.buildDemoLevel());
         gameModel.hudState().creditOn().livesCounterOff();
-        gameContext.flow().publishGameEvent(new LevelCreatedEvent(gameContext, demoLevel));
+        gameContext.flow().publishGameEvent(new LevelCreatedEvent(gameContext, gameModel.assertLevel()));
     }
 
     @Override
     public void onUpdate(GameContext gameContext) {
         final long tick = timer().tickCount();
         final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameModel.assertLevel();
 
         if (tick == 1) {
             gameModel.prepareLevelForPlaying(level);
@@ -82,7 +82,7 @@ public class CommonDemoLevelPlayingState extends GameState {
 
     private void hunt(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameModel.assertLevel();
         final Pac pac = level.entities().pac();
         final GateKeeper gateKeeper = gameModel.gateKeeper();
         final boolean doubleChecked = gameModel.rules().collisionDoubleCheckedProperty().get();

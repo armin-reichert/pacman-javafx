@@ -207,6 +207,11 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
+    public GameLevel assertLevel() {
+        return optGameLevel().orElseThrow();
+    }
+
+    @Override
     public abstract void startLevel(GameContext gameContext, GameLevel level);
 
     @Override

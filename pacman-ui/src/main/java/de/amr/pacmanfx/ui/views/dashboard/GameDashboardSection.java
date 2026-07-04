@@ -45,7 +45,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
     }
 
     protected Supplier<String> supplyGameLevelInfo(Game game, Function<GameLevel, String> fnInfo) {
-        return () -> game.currentGameContext().optCurrentLevel().map(fnInfo).orElse(NO_INFO);
+        return () -> game.currentGameContext().model().optGameLevel().map(fnInfo).orElse(NO_INFO);
     }
 
     protected Supplier<String> supplyGameRulesInfo(Game game, Function<GameRules, String> fnInfo) {

@@ -82,7 +82,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
         subScene.cameraProperty().bind(uiSettings.playSceneDisplay.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
 
-        scalingProperty().addListener((_, _, _) -> gameContext().optCurrentLevel().ifPresent(level ->
+        scalingProperty().addListener((_, _, _) -> gameModel().optGameLevel().ifPresent(level ->
             dynamicCamera.updateRange(level.worldMap().terrainLayer())));
 
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);

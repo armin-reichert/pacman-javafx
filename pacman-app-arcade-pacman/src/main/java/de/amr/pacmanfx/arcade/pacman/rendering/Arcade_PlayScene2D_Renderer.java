@@ -60,7 +60,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         }
         // Level creation happens by handling a game event after the play scene has been activated. Therefore,
         // the game level is not yet existing for the first two ticks after this scene got active.
-        scene.gameContext().optCurrentLevel().ifPresent(level -> {
+        scene.gameContext().model().optGameLevel().ifPresent(level -> {
             final RenderInfo info = createRenderInfo(level, playScene);
             levelRenderer.applyLevelSettings(level, info);
             levelRenderer.drawLevel(level, info);

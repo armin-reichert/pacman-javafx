@@ -225,7 +225,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void onTick(long tick) {
-        final GameLevel level = gameContext().optCurrentLevel().orElse(null);
+        final GameLevel level = gameContext().model().optGameLevel().orElse(null);
 
         if (level == null) {
             Logger.info("Tick {}: Game level not yet created, update ignored", tick);

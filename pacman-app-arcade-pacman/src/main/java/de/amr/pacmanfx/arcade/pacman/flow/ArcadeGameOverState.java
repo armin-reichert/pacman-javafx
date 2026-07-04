@@ -21,7 +21,7 @@ public class ArcadeGameOverState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameContext.model().assertLevel();
 
         gameModel.updateHighScore();
         gameModel.setPlaying(false);
@@ -40,7 +40,7 @@ public class ArcadeGameOverState extends GameState {
         final GameModel gameModel = gameContext.model();
 
         if (timer().hasExpired()) {
-            final GameLevel level = gameContext.assertLevel();
+            final GameLevel level = gameContext.model().assertLevel();
             level.clearMessage();
             gameContext.cheats().clear();
             if (gameModel.canStartNewGame(gameContext)) {

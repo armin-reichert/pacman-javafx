@@ -10,7 +10,6 @@ import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
@@ -43,10 +42,6 @@ public class BaseGameEventHandler extends DefaultGameEventListener {
 
     public GameModel gameModel() {
         return gameContext().model();
-    }
-
-    public Optional<GameLevel> optGameLevel() {
-        return gameContext().optCurrentLevel();
     }
 
     public Optional<GameSoundEffects> optSoundEffects() {

@@ -293,7 +293,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
 
     private void onLevelComplete() {
         final GameLevel3D level3D = assertLevel3D();
-        final GameLevel level = gameContext().assertLevel();
+        final GameLevel level = gameContext().model().assertLevel();
         final boolean cutSceneFollows = !level.isDemoLevel()
             && gameModel().rules().cutSceneNumberAfterLevel(level.number()).isPresent();
         final GameViewModel viewModel = game().ui().viewModel();

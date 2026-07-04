@@ -31,7 +31,7 @@ public class LevelShortTestState extends GameState {
             : gameModel.rules().lastLevelNumber();
         gameModel.resetForNewGame();
         gameModel.buildNormalLevel(gameContext, 1);
-        gameModel.startLevel(gameContext, gameContext.assertLevel());
+        gameModel.startLevel(gameContext, gameModel.assertLevel());
         final GameLevel level = gameModel.optGameLevel().orElseThrow();
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);

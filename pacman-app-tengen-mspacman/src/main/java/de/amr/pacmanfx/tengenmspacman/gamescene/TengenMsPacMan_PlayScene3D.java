@@ -48,7 +48,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void decorate(GameLevel3D level3D) {
         // If any of the default level settings has been changed, display the level info
-        gameContext().optCurrentLevel().ifPresent(_ -> {
+        gameModel().optGameLevel().ifPresent(_ -> {
             if (!gameModel().allOptionsDefault()) {
                 final ImageView levelInfo = createLevelInfoView(level3D);
                 level3D.getChildren().add(levelInfo);

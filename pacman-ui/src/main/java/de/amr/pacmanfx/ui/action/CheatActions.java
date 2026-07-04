@@ -64,7 +64,7 @@ public final class CheatActions {
             @Override
             public void doAction() {
                 final GameContext gameContext = game.currentGameContext();
-                final GameLevel level = gameContext.assertLevel();
+                final GameLevel level = gameContext.model().assertLevel();
 
                 level.worldMap().foodLayer().eatPellets();
                 gameContext.cheats().notifyCheatUsed();
@@ -84,7 +84,7 @@ public final class CheatActions {
             public void doAction() {
                 final GameContext gameContext = game.currentGameContext();
                 final GameModel gameModel = gameContext.model();
-                final GameLevel level = gameContext.assertLevel();
+                final GameLevel level = gameContext.model().assertLevel();
 
                 gameContext.cheats().notifyCheatUsed();
 
@@ -274,6 +274,6 @@ public final class CheatActions {
     }
 
     private Optional<GameLevel> normalLevel(Game game) {
-        return game.currentGameContext().optCurrentLevel().filter(level -> !level.isDemoLevel());
+        return game.currentGameContext().model().optGameLevel().filter(level -> !level.isDemoLevel());
     }
 }

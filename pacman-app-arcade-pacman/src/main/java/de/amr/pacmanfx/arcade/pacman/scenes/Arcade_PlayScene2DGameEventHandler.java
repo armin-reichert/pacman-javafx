@@ -43,7 +43,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
 
     @Override
     public void onGameContinued(GameContinuedEvent e) {
-        optGameLevel().ifPresent(playScene2D::resetActorAnimations);
+        gameModel().optGameLevel().ifPresent(playScene2D::resetActorAnimations);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
         final GameState newState = (GameState) e.newState();
 
         if (GameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
-            final GameLevel level = optGameLevel().orElseThrow();
+            final GameLevel level = gameModel().assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
             final var completedAnimation = new LevelCompletedAnimation(level, () -> gameState().triggerTimeout());

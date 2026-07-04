@@ -25,7 +25,7 @@ public class GameLevelIntermissionState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameModel.assertLevel();
         final OptionalInt cutSceneNumber = gameModel.rules().cutSceneNumberAfterLevel(level.number());
         final boolean isLastCutScene = cutSceneNumber.isPresent()
             && cutSceneNumber.getAsInt() == gameModel.rules().lastCutSceneNumber();

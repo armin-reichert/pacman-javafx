@@ -48,7 +48,6 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         levelCounter.setEnabled(false);
         score.setLevelNumber(levelNumber);
 
-        setLevel(level);
         return level;
     }
 }

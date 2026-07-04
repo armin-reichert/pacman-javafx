@@ -20,14 +20,15 @@ public class GameLevelCompleteState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
-        gameModel.onLevelCompleted(gameContext.assertLevel());
+        gameModel.onLevelCompleted(gameModel.assertLevel());
         waitForTimeout(); // Waits for UI to trigger timeout
     }
 
     @Override
     public void onUpdate(GameContext gameContext) {
         final GameFlow flow = gameContext.flow();
-        final GameLevel level = gameContext.assertLevel();
+        final GameModel gameModel = gameContext.model();
+        final GameLevel level = gameModel.assertLevel();
         final boolean cutSceneFollows = !level.isDemoLevel()
             && gameContext.model().rules().cutSceneNumberAfterLevel(level.number()).isPresent();
 

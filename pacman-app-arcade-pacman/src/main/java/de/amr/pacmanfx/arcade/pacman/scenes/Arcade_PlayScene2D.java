@@ -40,7 +40,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
 
     @Override
     public void onTick(long tick) {
-        gameContext().optCurrentLevel().ifPresent(level -> {
+        gameContext().model().optGameLevel().ifPresent(level -> {
             updateLivesCounter(gameState(), gameModel(), level.entities().pac());
             optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(gameContext(), level));
         });
@@ -84,7 +84,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
 
     @Override
     public void onEnteredFrom3DScene() {
-        gameContext().optCurrentLevel().ifPresent(this::acceptGameLevel);
+        gameContext().model().optGameLevel().ifPresent(this::acceptGameLevel);
     }
 
     public void setLevelCompletedAnimation(LevelCompletedAnimation levelCompletedAnimation) {

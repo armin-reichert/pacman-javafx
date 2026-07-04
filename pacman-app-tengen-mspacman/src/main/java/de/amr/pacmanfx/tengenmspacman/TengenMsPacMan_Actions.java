@@ -99,7 +99,7 @@ public final class TengenMsPacMan_Actions {
         actionTogglePacBooster = new GameAction(game, "toggle_pac_booster") {
             @Override
             public void doAction() {
-                game.currentGameContext().optCurrentLevel().ifPresent(gameLevel -> {
+                game.currentGameContext().model().optGameLevel().ifPresent(gameLevel -> {
                     final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game.currentGameContext().model();
                     tengenGame.activatePacBooster(gameLevel.entities().pac(), !tengenGame.isBoosterActive());
                     if (tengenGame.isBoosterActive()) {

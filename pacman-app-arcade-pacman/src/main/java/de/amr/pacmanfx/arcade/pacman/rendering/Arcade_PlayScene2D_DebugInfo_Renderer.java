@@ -36,7 +36,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
     public void draw(AbstractGameScene2D scene) {
         drawTileGrid(scene.unscaledWidth(), scene.unscaledHeight(), Color.LIGHTGRAY);
 
-        scene.gameContext().optCurrentLevel().ifPresent(level -> {
+        scene.gameContext().model().optGameLevel().ifPresent(level -> {
             // We assume all ghosts have the same set of special terrain tiles
             level.ghost(GameModel.RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
                 final double x = scaled(tile.x() * WorldMap.TS);

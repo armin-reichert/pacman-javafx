@@ -20,14 +20,14 @@ public class ArcadeGameLevelCompleteState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
-        gameModel.onLevelCompleted(gameContext.assertLevel());
+        gameModel.onLevelCompleted(gameContext.model().assertLevel());
         waitForTimeout(); // UI triggers timeout
     }
 
     @Override
     public void onUpdate(GameContext gameContext) {
         final GameFlow flow = gameContext.flow();
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameContext.model().assertLevel();
         final boolean cutSceneFollows = !level.isDemoLevel()
             && gameContext.model().rules().cutSceneNumberAfterLevel(level.number()).isPresent();
 

@@ -98,7 +98,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         levelCounter.setEnabled(true);
         score.setLevelNumber(demoLevelNumber);
 
-        setLevel(level);
         return level;
     }
 

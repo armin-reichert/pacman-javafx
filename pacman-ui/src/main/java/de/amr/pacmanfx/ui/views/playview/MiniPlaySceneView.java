@@ -147,7 +147,7 @@ public class MiniPlaySceneView {
             return;
         }
         if (game != null) {
-            game.currentGameContext().optCurrentLevel().ifPresent(this::draw);
+            game.currentGameContext().model().optGameLevel().ifPresent(this::draw);
         }
     }
     

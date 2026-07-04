@@ -47,7 +47,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
 
     @Override
     public void onGameContinued(GameContinuedEvent e) {
-        optGameLevel().ifPresent(level -> {
+        gameModel().optGameLevel().ifPresent(level -> {
             gameScene().resetAnimations(level);
             gameScene().dynamicCamera().playIntroSequence();
             if (gameContext().model() instanceof TengenMsPacMan_GameModel tengenGame) {
@@ -69,14 +69,14 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
     public void onGameStateChange(GameStateChangeEvent e) {
         Logger.info("Enter game state '{}'", e.newState().name());
         if (e.newState() == TengenMsPacMan_GameState.GAME_LEVEL_COMPLETE.state()) {
-            final GameLevel level = optGameLevel().orElseThrow();
+            final GameLevel level = gameModel().assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene().playLevelCompleteAnimation(level);
         }
         else if (e.newState() == TengenMsPacMan_GameState.GAME_OVER.state()) {
             final TengenMsPacMan_PlayScene2D playScene2D = gameScene();
             final PlayScene2DCamera camera = playScene2D.dynamicCamera();
-            final GameLevel level = optGameLevel().orElseThrow();
+            final GameLevel level = gameModel().assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             camera.enterManualMode();
             camera.setToTopPosition();
@@ -96,7 +96,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
 
     @Override
     public void onLevelStarted(LevelStartedEvent e) {
-        optGameLevel().ifPresent(level -> gameScene().resetAnimations(level));
+        gameModel().optGameLevel().ifPresent(level -> gameScene().resetAnimations(level));
         gameScene().dynamicCamera().playIntroSequence();
     }
 
