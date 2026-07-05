@@ -81,7 +81,7 @@ public class LevelShortTestState extends GameState {
         else if (timer().atSecond(START + 9)) {
             level.hidePacAndGhosts();
             level.heartbeat().stop();
-            gameModel.onLevelCompleted(level);
+            context.gamePlay().onLevelCompleted(level);
         }
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {

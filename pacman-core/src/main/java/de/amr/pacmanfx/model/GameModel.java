@@ -120,5 +120,4 @@ public interface GameModel {
 
     boolean isDemoLevelRunning();
 
-    void onLevelCompleted(GameLevel level);
 }

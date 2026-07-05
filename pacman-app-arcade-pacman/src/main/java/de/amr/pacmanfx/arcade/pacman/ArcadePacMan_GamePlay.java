@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.arcade.pacman;
 
-
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
@@ -125,6 +125,10 @@ public class ArcadePacMan_GamePlay implements GamePlay {
 
     @Override
     public void startPacPowerMode(GameContext context, GameLevel level, Pac pac) {
+        requireNonNull(context);
+        requireNonNull(level);
+        requireNonNull(pac);
+
         level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
         final float powerSeconds = level.pacPowerSeconds();
         if (powerSeconds > 0) {
@@ -158,6 +162,36 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     @Override
     public boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
         return false;
+    }
+
+    @Override
+    public void onLevelCompleted(GameLevel level) {
+        requireNonNull(level);
+
+        level.huntingTimer().stop();
+        Logger.info("Hunting timer stopped.");
+
+        level.heartbeat().setStartState(Pulse.State.OFF);
+        level.heartbeat().reset();
+
+        // If level was ended by cheat, there might still be food remaining, so eat it:
+        level.worldMap().foodLayer().eatAll();
+
+        final Pac pac = level.entities().pac();
+        pac.animations().stopSelected();
+        pac.animations().select(ArcadePacMan_AnimationID.PAC_FULL);
+        pac.setSpeed(0);
+        pac.powerTimer().stop();
+        pac.powerTimer().reset(0);
+        Logger.info("Power timer stopped and reset to zero.");
+
+        level.entities().ghosts().forEach(ghost -> {
+            ghost.animations().stopSelected();
+            //TODO check in emulator if ghost animation is reset to normal
+            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            ghost.setSpeed(0);
+        });
+        level.optBonus().ifPresent(Bonus::setInactive);
     }
 
     // -----------------------------------------------

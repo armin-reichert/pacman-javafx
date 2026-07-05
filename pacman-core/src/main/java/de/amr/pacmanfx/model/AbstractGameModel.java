@@ -259,34 +259,6 @@ public abstract class AbstractGameModel implements GameModel {
         }
     }
 
-    @Override
-    public void onLevelCompleted(GameLevel level) {
-        level.huntingTimer().stop();
-        Logger.info("Hunting timer stopped.");
-
-        level.heartbeat().setStartState(Pulse.State.OFF);
-        level.heartbeat().reset();
-
-        // If level was ended by cheat, there might still be food remaining, so eat it:
-        level.worldMap().foodLayer().eatAll();
-
-        final Pac pac = level.entities().pac();
-        pac.animations().stopSelected();
-        pac.animations().select(ArcadePacMan_AnimationID.PAC_FULL);
-        pac.setSpeed(0);
-        pac.powerTimer().stop();
-        pac.powerTimer().reset(0);
-        Logger.info("Power timer stopped and reset to zero.");
-
-        level.entities().ghosts().forEach(ghost -> {
-            ghost.animations().stopSelected();
-            //TODO check in emulator if ghost animation is reset to normal
-            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-            ghost.setSpeed(0);
-        });
-        level.optBonus().ifPresent(Bonus::setInactive);
-    }
-
     /* -------------------------------------------------------------------------
      * Score management
      * ---------------------------------------------------------------------- */

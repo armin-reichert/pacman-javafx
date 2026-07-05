@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman;
 
 
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.*;
@@ -187,4 +188,35 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
         float runningMillis = System.currentTimeMillis() - demoLevel.startTime();
         return runningMillis <= DEMO_LEVEL_MIN_DURATION_MILLIS;
     }
+
+    @Override
+    public void onLevelCompleted(GameLevel level) {
+        requireNonNull(level);
+
+        level.huntingTimer().stop();
+        Logger.info("Hunting timer stopped.");
+
+        level.heartbeat().setStartState(Pulse.State.OFF);
+        level.heartbeat().reset();
+
+        // If level was ended by cheat, there might still be food remaining, so eat it:
+        level.worldMap().foodLayer().eatAll();
+
+        final Pac pac = level.entities().pac();
+        pac.animations().stopSelected();
+        pac.animations().select(ArcadePacMan_AnimationID.PAC_FULL);
+        pac.setSpeed(0);
+        pac.powerTimer().stop();
+        pac.powerTimer().reset(0);
+        Logger.info("Power timer stopped and reset to zero.");
+
+        level.entities().ghosts().forEach(ghost -> {
+            ghost.animations().stopSelected();
+            //TODO check in emulator if ghost animation is reset to normal
+            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            ghost.setSpeed(0);
+        });
+        level.optBonus().ifPresent(Bonus::setInactive);
+    }
+
 }
