@@ -27,7 +27,7 @@ public class GameStartingState extends GameState {
     @Override
     public void onEnter(GameContext context) {
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
-        context.gamePlay().resetForNewGame(context);
+        context.gamePlay().resetForNewGame(model);
         context.gamePlay().buildNormalLevel(context.eventManager(), model, model.startLevelNumber());
         context.eventManager().publishGameEvent(new GameStartedEvent(context));
     }

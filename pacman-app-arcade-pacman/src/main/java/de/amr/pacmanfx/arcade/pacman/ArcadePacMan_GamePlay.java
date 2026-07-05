@@ -61,11 +61,11 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     // Game start
 
     @Override
-    public void init(GameContext context) {
-        context.model().mapSelector().loadMapPrototypes();
-        context.model().lives().setInitialCount(3);
-        context.model().hudState().hideIt();
-        resetForNewGame(context);
+    public void init(GameModel model) {
+        model.mapSelector().loadMapPrototypes();
+        model.lives().setInitialCount(3);
+        model.hudState().hideIt();
+        resetForNewGame(model);
     }
 
     @Override
@@ -74,10 +74,8 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void resetForNewGame(GameContext context) {
-        requireNonNull(context);
-
-        final GameModel model = context.model();
+    public void resetForNewGame(GameModel model) {
+        requireNonNull(model);
 
         model.lives().setCount(model.lives().initialCount());
         model.score().reset();

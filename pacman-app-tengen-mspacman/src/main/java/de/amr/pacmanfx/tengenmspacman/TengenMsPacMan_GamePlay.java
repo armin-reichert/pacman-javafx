@@ -48,21 +48,23 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
     // Game start
 
     @Override
-    public void init(GameContext context) {
-        requireNonNull(context);
+    public void init(GameModel model) {
+        requireNonNull(model);
 
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+        if (!(model instanceof TengenMsPacMan_GameModel tengenModel)) {
+            throw new IllegalArgumentException("Illegal model type");
+        }
 
-        model.mapSelector().loadMapPrototypes();
-        model.lives().setInitialCount(3);
-        model.hudState().hideIt();
-        resetForNewGame(context);
+        tengenModel.mapSelector().loadMapPrototypes();
+        tengenModel.lives().setInitialCount(3);
+        tengenModel.hudState().hideIt();
+        resetForNewGame(tengenModel);
 
-        model.setPacBoosterMode(DEFAULT_PAC_BOOSTER);
-        model.setDifficulty(DEFAULT_DIFFICULTY);
-        model.setMapCategory(DEFAULT_MAP_CATEGORY);
-        model.setStartLevelNumber(DEFAULT_START_LEVEL);
-        model.setNumContinues(DEFAULT_NUM_CONTINUES);
+        tengenModel.setPacBoosterMode(DEFAULT_PAC_BOOSTER);
+        tengenModel.setDifficulty(DEFAULT_DIFFICULTY);
+        tengenModel.setMapCategory(DEFAULT_MAP_CATEGORY);
+        tengenModel.setStartLevelNumber(DEFAULT_START_LEVEL);
+        tengenModel.setNumContinues(DEFAULT_NUM_CONTINUES);
     }
 
     @Override
@@ -74,15 +76,16 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void resetForNewGame(GameContext context) {
-        requireNonNull(context);
+    public void resetForNewGame(GameModel model) {
 
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+        if (!(model instanceof TengenMsPacMan_GameModel tengenModel)) {
+            throw new IllegalArgumentException("Illegal model type");
+        }
 
-        model.lives().setCount(model.lives().initialCount());
-        model.score().reset();
+        tengenModel.lives().setCount(tengenModel.lives().initialCount());
+        tengenModel.score().reset();
 
-        final PersistentScore highScore = model.highScore();
+        final PersistentScore highScore = tengenModel.highScore();
         if (highScore != null) {
             try {
                 highScore.load();
@@ -94,13 +97,13 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
             Logger.error("No high-score file has been assigned");
         }
 
-        model.gateKeeper().reset();
-        model.levelCounter().clear();
+        tengenModel.gateKeeper().reset();
+        tengenModel.levelCounter().clear();
 
-        model.setLevel(null);
-        model.setPlaying(false);
+        tengenModel.setLevel(null);
+        tengenModel.setPlaying(false);
 
-        model.setBoosterActive(false);
+        tengenModel.setBoosterActive(false);
     }
 
     @Override

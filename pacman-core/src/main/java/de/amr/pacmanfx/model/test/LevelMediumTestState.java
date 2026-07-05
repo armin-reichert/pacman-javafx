@@ -57,7 +57,7 @@ public class LevelMediumTestState extends GameState {
             ? 25
             : model.rules().lastLevelNumber();
         timer().restartSeconds(TEST_DURATION_SEC);
-        context.gamePlay().resetForNewGame(context);
+        context.gamePlay().resetForNewGame(model);
         context.gamePlay().buildNormalLevel(context.eventManager(), model, 1);
         context.gamePlay().startLevel(context.eventManager(), model, model.assertLevel());
         configureLevelForTest(context);

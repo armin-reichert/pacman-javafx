@@ -18,11 +18,11 @@ public interface GamePlay {
 
     // Game start
 
-    void init(GameContext context);
+    void init(GameModel model);
 
     boolean canStartNewGame(GameContext context);
 
-    void resetForNewGame(GameContext context);
+    void resetForNewGame(GameModel model);
 
     void prepareLevelForPlaying(GameLevel level);
 
