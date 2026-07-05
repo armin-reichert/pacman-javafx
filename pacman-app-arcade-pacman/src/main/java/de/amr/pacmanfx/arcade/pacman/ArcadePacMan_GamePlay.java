@@ -323,8 +323,6 @@ public class ArcadePacMan_GamePlay implements GamePlay {
         requireNonNull(level);
         requireNonNull(pac);
 
-        final GameModel model = level.gameModel();
-
         level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
         final float powerSeconds = level.pacPowerSeconds();
         if (powerSeconds > 0) {
