@@ -19,5 +19,7 @@ public interface GamePlay {
 
     void eatBonus(GameContext gameContext, GameLevel level, Bonus bonus);
 
+    void activateNextBonus(GameContext context, GameLevel level);
+
     void startPacPowerMode(GameContext context, GameLevel level, Pac pac);
 }

@@ -8,20 +8,25 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.event.BonusEatenEvent;
 import de.amr.pacmanfx.event.PacGetsPowerEvent;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.MovingActor;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.world.HPortal;
+import de.amr.pacmanfx.model.world.House;
+import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.simulation.GamePlay;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import org.tinylog.Logger;
 
+import java.util.List;
 import java.util.Set;
 
+import static de.amr.basics.math.RandomNumberSupport.randomBoolean;
+import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay implements GamePlay {
@@ -69,6 +74,55 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
         bonus.showEatenForSeconds(model.rules().eatenBonusDisplaySeconds());
 
         context.flow().publishGameEvent(new BonusEatenEvent(context, bonus));
+    }
+
+    @Override
+    public void activateNextBonus(GameContext context, GameLevel level) {
+        //TODO Find out how Tengen really implemented this
+        if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {
+            Logger.info("Previous bonus is still active, skip this bonus");
+            return;
+        }
+
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+
+        final House house = terrain.optHouse().orElse(null);
+        if (house == null) {
+            Logger.error("\"Cannot activate next bonus: No house exists in game level!");
+            return;
+        }
+
+        if (terrain.horizontalPortals().isEmpty()) {
+            Logger.error("Cannot activate next bonus: No portal exists in game level");
+            return;
+        }
+
+        final Vector2i houseEntry = WorldMap.computeTileAt(house.entryPosition());
+        final Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
+
+        final List<HPortal> portals = terrain.horizontalPortals();
+        final HPortal entryPortal = portals.get(randomInt(0, portals.size()));
+        final HPortal exitPortal  = portals.get(randomInt(0, portals.size()));
+
+        final boolean leftToRight = randomBoolean();
+        final List<Vector2i> route = List.of(
+            leftToRight ? entryPortal.leftBorderEntryTile() : entryPortal.rightBorderEntryTile(),
+            houseEntry,
+            houseEntryOpposite,
+            houseEntry,
+            leftToRight ? exitPortal.rightBorderEntryTile().plus(1, 0) : exitPortal.leftBorderEntryTile().minus(1, 0)
+        );
+
+        level.selectNextBonus();
+
+        final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
+        final Bonus bonus = new Bonus(symbolCode, context.model().rules().pointsForBonus(symbolCode));
+        bonus.setMazeRoute(route, leftToRight);
+        bonus.showEdibleAndStartWandering(context.model().actorSpeedControl().bonusSpeed(level));
+        Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
+
+        level.setBonus(bonus);
+        context.flow().publishGameEvent(new BonusActivatedEvent(context, bonus));
     }
 
     @Override

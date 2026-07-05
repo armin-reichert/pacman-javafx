@@ -8,15 +8,11 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.Elroy;
-import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 
 import static de.amr.pacmanfx.model.world.WorldMap.tile;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Common data and functionality of Pac-Man and Ms. Pac-Man Arcade games.

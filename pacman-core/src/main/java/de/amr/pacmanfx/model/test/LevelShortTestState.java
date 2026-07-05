@@ -42,8 +42,8 @@ public class LevelShortTestState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
+    public void onUpdate(GameContext context) {
+        final GameModel gameModel = context.model();
         final GameLevel level = gameModel.optGameLevel().orElseThrow();
         final float START = 1.0f;
         if (timer().atSecond(START)) {
@@ -55,27 +55,27 @@ public class LevelShortTestState extends GameState {
 
             level.heartbeat().restart();
 
-            gameContext.flow().publishGameEvent(new TestStartedEvent(gameContext, level));
+            context.flow().publishGameEvent(new TestStartedEvent(context, level));
         }
         else if (timer().atSecond(START + 1)) {
             level.clearMessage();
         }
         else if (timer().atSecond(START + 3)) {
-            gameModel.activateNextBonus(gameContext, level);
+            context.gamePlay().activateNextBonus(context, level);
         }
         else if (timer().atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
-                gameContext.flow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
+                context.flow().publishGameEvent(new BonusEatenEvent(context, bonus));
             });
         }
         else if (timer().atSecond(START + 6)) {
-            gameModel.activateNextBonus(gameContext, level);
+            context.gamePlay().activateNextBonus(context, level);
         }
         else if (timer().atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
-                gameContext.flow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
+                context.flow().publishGameEvent(new BonusEatenEvent(context, bonus));
             });
         }
         else if (timer().atSecond(START + 9)) {
@@ -85,13 +85,13 @@ public class LevelShortTestState extends GameState {
         }
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
-                gameContext.flow().restartState(GameStateID.BOOT);
+                context.flow().restartState(GameStateID.BOOT);
             } else {
                 waitForTimeout();
-                gameModel.startNextLevel(gameContext, level);
+                gameModel.startNextLevel(context, level);
             }
         } else {
-            gameModel.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.update(gameContext, level));
+            gameModel.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.update(context, level));
         }
     }
 

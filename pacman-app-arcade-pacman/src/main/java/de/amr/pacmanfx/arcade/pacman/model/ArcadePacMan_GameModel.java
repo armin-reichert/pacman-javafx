@@ -4,11 +4,12 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.HuntingTimer;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Elroy;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
@@ -19,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static de.amr.basics.math.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.model.world.WorldMap.tile;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
@@ -59,7 +59,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
 
     protected static final int GAME_OVER_STATE_TICKS = 90;
 
-    protected static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
+    public static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 
     public ArcadePacMan_GameModel() {
         this(new ArcadePacMan_MapSelector());
@@ -112,19 +112,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     @Override
     public boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
         return false;
-    }
-
-    @Override
-    public void activateNextBonus(GameContext context, GameLevel level) {
-        level.selectNextBonus();
-        final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final Bonus bonus = new Bonus(bonusSymbolCode, rules.pointsForBonus(bonusSymbolCode));
-        final Vector2i bonusTile = level.worldMap().terrainLayer()
-            .getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
-        bonus.setPosition(WorldMap.halfTileRightOf(bonusTile));
-        bonus.showEdibleForSeconds(randomFloat(9, 10));
-        level.setBonus(bonus);
-        context.flow().publishGameEvent(new BonusActivatedEvent(context, bonus));
     }
 
     // helpers

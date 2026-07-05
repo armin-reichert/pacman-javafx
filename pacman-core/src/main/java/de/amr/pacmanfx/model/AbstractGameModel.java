@@ -179,9 +179,6 @@ public abstract class AbstractGameModel implements GameModel {
         this.playing.set(playing);
     }
 
-    @Override
-    public abstract void activateNextBonus(GameContext context, GameLevel level);
-
     // Level related
 
     @Override

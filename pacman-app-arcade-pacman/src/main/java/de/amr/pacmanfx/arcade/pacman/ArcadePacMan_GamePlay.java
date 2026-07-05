@@ -7,19 +7,24 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.event.BonusEatenEvent;
 import de.amr.pacmanfx.event.PacGetsPowerEvent;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.simulation.GamePlay;
 import org.tinylog.Logger;
 
 import java.util.Set;
 
+import static de.amr.basics.math.RandomNumberSupport.randomFloat;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_GamePlay implements GamePlay {
@@ -76,6 +81,23 @@ public class ArcadePacMan_GamePlay implements GamePlay {
         context.flow().publishGameEvent(new BonusEatenEvent(context, bonus));
     }
 
+    @Override
+    public void activateNextBonus(GameContext context, GameLevel level) {
+        requireNonNull(context);
+        requireNonNull(level);
+
+        final GameModel model = context.model();
+
+        level.selectNextBonus();
+        final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
+        final Bonus bonus = new Bonus(bonusSymbolCode, model.rules().pointsForBonus(bonusSymbolCode));
+        final Vector2i bonusTile = level.worldMap().terrainLayer()
+            .getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameModel.DEFAULT_BONUS_TILE);
+        bonus.setPosition(WorldMap.halfTileRightOf(bonusTile));
+        bonus.showEdibleForSeconds(randomFloat(9, 10));
+        level.setBonus(bonus);
+        context.flow().publishGameEvent(new BonusActivatedEvent(context, bonus));
+    }
 
     @Override
     public void startPacPowerMode(GameContext context, GameLevel level, Pac pac) {

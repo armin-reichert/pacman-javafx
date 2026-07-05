@@ -6,7 +6,6 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
-import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -126,8 +125,6 @@ public interface GameModel {
     void onLevelCompleted(GameLevel level);
 
     // Actor related
-
-    void activateNextBonus(GameContext gameContext, GameLevel level);
 
     void onEatGhost(GameContext gameContext, GameLevel level, Ghost eatenGhost);
 

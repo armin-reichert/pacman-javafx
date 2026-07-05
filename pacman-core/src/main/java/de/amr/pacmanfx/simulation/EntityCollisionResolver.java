@@ -44,7 +44,7 @@ public final class EntityCollisionResolver {
 
     private void evalFoodFound(GameLevel level) {
         final Pac pac = level.entities().pac();
-        final GameModel gameModel = context.model();
+        final GameModel model = context.model();
         final Vector2i foodTile = context.huntingStepResult().foodFoundTile();
 
         if (!context.huntingStepResult().foodFound()) {
@@ -61,8 +61,8 @@ public final class EntityCollisionResolver {
             context.gamePlay().eatPellet(context, level, foodTile);
         }
 
-        if (gameModel.rules().isBonusAwarded(level)) {
-            gameModel.activateNextBonus(context, level);
+        if (model.rules().isBonusAwarded(level)) {
+            context.gamePlay().activateNextBonus(context, level);
         }
     }
 
