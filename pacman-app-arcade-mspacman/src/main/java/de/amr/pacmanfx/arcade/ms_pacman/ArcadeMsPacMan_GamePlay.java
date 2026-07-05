@@ -58,8 +58,9 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
      *
      **/
     @Override
-    public void activateNextBonus(GameEventManager eventManager, GameModel model, GameLevel level) {
+    public void activateNextBonus(GameEventManager eventManager, GameLevel level) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final GameModel model = level.gameModel();
 
         if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {
             Logger.info("Previous bonus is still active, skip this bonus");

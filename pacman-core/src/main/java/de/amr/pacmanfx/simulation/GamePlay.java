@@ -37,27 +37,27 @@ public interface GamePlay {
 
     void buildNormalLevel(GameEventManager eventManager, GameModel model, int levelNumber);
 
-    void startLevel(GameEventManager eventManager, GameModel model, GameLevel level);
+    void startLevel(GameEventManager eventManager, GameLevel level);
 
-    void startNextLevel(GameEventManager eventManager, GameModel model, GameLevel currentLevel);
+    void startNextLevel(GameEventManager eventManager, GameLevel currentLevel);
 
     void showLevelMessage(GameLevel level, GameLevelMessageType type);
 
     // Playing level
 
-    void onEatPellet(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile);
+    void onEatPellet(GameEventManager eventManager, GameLevel level, Vector2i tile);
 
-    void onEatEnergizer(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile);
+    void onEatEnergizer(GameEventManager eventManager, GameLevel level, Vector2i tile);
 
-    void onEatBonus(GameEventManager eventManager, GameModel model, GameLevel level, Bonus bonus);
+    void onEatBonus(GameEventManager eventManager, GameLevel level, Bonus bonus);
 
-    void onEatGhost(GameEventManager eventManager, GameModel model, GameLevel level, Ghost eatenGhost);
+    void onEatGhost(GameEventManager eventManager, GameLevel level, Ghost eatenGhost);
 
-    void activateNextBonus(GameEventManager eventManager, GameModel model, GameLevel level);
+    void activateNextBonus(GameEventManager eventManager, GameLevel level);
 
-    void startPacPowerMode(GameEventManager eventManager, GameModel model, GameLevel level, Pac pac);
+    void startPacPowerMode(GameEventManager eventManager, GameLevel level, Pac pac);
 
-    void updatePacPowerMode(GameEventManager eventManager, GameModel model, GameLevel level, Pac pac);
+    void updatePacPowerMode(GameEventManager eventManager, GameLevel level, Pac pac);
 
     void onLevelCompleted(GameLevel level);
 

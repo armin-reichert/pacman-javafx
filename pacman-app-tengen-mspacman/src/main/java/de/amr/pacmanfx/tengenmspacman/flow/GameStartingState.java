@@ -39,7 +39,7 @@ public class GameStartingState extends GameState {
         final long tick = timer().tickCount();
 
         if (tick == TICK_SHOW_READY) {
-            context.gamePlay().startLevel(context.eventManager(), model, level);
+            context.gamePlay().startLevel(context.eventManager(), level);
             // Note: This event is very important because it triggers the creation of the actor animations!
             context.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }

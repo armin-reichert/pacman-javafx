@@ -177,16 +177,17 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void startNextLevel(GameEventManager eventManager, GameModel model, GameLevel level) {
+    public void startNextLevel(GameEventManager eventManager, GameLevel level) {
         requireNonNull(eventManager);
-        requireNonNull(model);
         requireNonNull(level);
+
+        final GameModel model = level.gameModel();
 
         final int lastLevelNumber = model.rules().lastLevelNumber();
 
         if (level.number() < lastLevelNumber) {
             buildNormalLevel(eventManager, model, level.number() + 1);
-            startLevel(eventManager, model, level);
+            startLevel(eventManager, level);
             // Note: This event is very important because it triggers the creation of the actor animations!
             eventManager.publishGameEvent(new LevelStartedEvent(level));
         } else {
@@ -195,14 +196,15 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void startLevel(GameEventManager eventManager, GameModel model, GameLevel level) {
+    public void startLevel(GameEventManager eventManager, GameLevel level) {
         requireNonNull(eventManager);
-        requireNonNull(model);
         requireNonNull(level);
 
         level.recordStartTime(System.currentTimeMillis());
         prepareLevelForPlaying(level);
         showLevelMessage(level, GameLevelMessageType.READY);
+
+        final GameModel model = level.gameModel();
 
         model.levelCounter().update(level.number(), level.bonusSymbolCode(0));
         model.score().setEnabled(true);
@@ -221,10 +223,12 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     // Playing level
 
     @Override
-    public void onEatPellet(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile) {
+    public void onEatPellet(GameEventManager eventManager, GameLevel level, Vector2i tile) {
         requireNonNull(eventManager);
         requireNonNull(level);
         requireNonNull(tile);
+
+        final GameModel model = level.gameModel();
 
         scorePoints(eventManager, model, model.rules().pointsForPellet(), level.number());
         model.gateKeeper().registerFoodEaten(level);
@@ -233,11 +237,12 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void onEatEnergizer(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile) {
+    public void onEatEnergizer(GameEventManager eventManager, GameLevel level, Vector2i tile) {
         requireNonNull(eventManager);
-        requireNonNull(model);
         requireNonNull(level);
         requireNonNull(tile);
+
+        final GameModel model = level.gameModel();
 
         scorePoints(eventManager, model, model.rules().pointsForEnergizer(), level.number());
         model.gateKeeper().registerFoodEaten(level);
@@ -249,14 +254,16 @@ public class ArcadePacMan_GamePlay implements GamePlay {
 
         level.clearGhostKillChain();
 
-        startPacPowerMode(eventManager, model, level, pac);
+        startPacPowerMode(eventManager, level, pac);
     }
 
     @Override
-    public void onEatBonus(GameEventManager eventManager, GameModel model, GameLevel level, Bonus bonus) {
+    public void onEatBonus(GameEventManager eventManager, GameLevel level, Bonus bonus) {
         requireNonNull(eventManager);
         requireNonNull(level);
         requireNonNull(bonus);
+
+        final GameModel model = level.gameModel();
 
         scorePoints(eventManager, model, bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
@@ -266,11 +273,12 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void onEatGhost(GameEventManager eventManager, GameModel model, GameLevel level, Ghost eatenGhost) {
+    public void onEatGhost(GameEventManager eventManager, GameLevel level, Ghost eatenGhost) {
         requireNonNull(eventManager);
-        requireNonNull(model);
         requireNonNull(level);
         requireNonNull(eatenGhost);
+
+        final GameModel model = level.gameModel();
 
         final int killedBefore = level.ghostKillChainSize();
         final int points = model.rules().pointsForGhost(killedBefore);
@@ -291,10 +299,11 @@ public class ArcadePacMan_GamePlay implements GamePlay {
 
 
     @Override
-    public void activateNextBonus(GameEventManager eventManager, GameModel model, GameLevel level) {
+    public void activateNextBonus(GameEventManager eventManager, GameLevel level) {
         requireNonNull(eventManager);
-        requireNonNull(model);
         requireNonNull(level);
+
+        final GameModel model = level.gameModel();
 
         level.selectNextBonus();
         final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
@@ -309,11 +318,12 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void startPacPowerMode(GameEventManager eventManager, GameModel model, GameLevel level, Pac pac) {
+    public void startPacPowerMode(GameEventManager eventManager, GameLevel level, Pac pac) {
         requireNonNull(eventManager);
-        requireNonNull(model);
         requireNonNull(level);
         requireNonNull(pac);
+
+        final GameModel model = level.gameModel();
 
         level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
         final float powerSeconds = level.pacPowerSeconds();
@@ -329,7 +339,7 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void updatePacPowerMode(GameEventManager eventManager, GameModel model, GameLevel level, Pac pac) {
+    public void updatePacPowerMode(GameEventManager eventManager, GameLevel level, Pac pac) {
         if (pac.powerTimer().isRunning()) {
             pac.powerTimer().doTick();
             if (pac.isPowerFadingStarting(level)) {

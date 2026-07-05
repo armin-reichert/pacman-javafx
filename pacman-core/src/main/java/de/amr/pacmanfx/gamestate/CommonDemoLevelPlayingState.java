@@ -95,7 +95,7 @@ public class CommonDemoLevelPlayingState extends GameState {
             gateKeeper.unlockGhostIfPossible(level);
         }
 
-        context.gamePlay().updatePacPowerMode(context.eventManager(), model, level, pac);
+        context.gamePlay().updatePacPowerMode(context.eventManager(), level, pac);
 
         final EntityCollisionDetector collisionDetector = new EntityCollisionDetector(context);
 

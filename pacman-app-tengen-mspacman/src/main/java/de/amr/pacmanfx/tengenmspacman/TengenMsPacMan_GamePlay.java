@@ -183,14 +183,15 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void startNextLevel(GameEventManager eventManager, GameModel model, GameLevel level) {
+    public void startNextLevel(GameEventManager eventManager, GameLevel level) {
         requireNonNull(eventManager);
-        requireNonNull(model);
         requireNonNull(level);
+
+        final GameModel model = level.gameModel();
 
         if (level.number() < model.rules().lastLevelNumber()) {
             buildNormalLevel(eventManager, model, level.number() + 1);
-            startLevel(eventManager, model, level);
+            startLevel(eventManager, level);
             // Note: This event is very important because it triggers the creation of the actor animations!
             eventManager.publishGameEvent(new LevelStartedEvent(level));
         } else {
@@ -199,10 +200,11 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void startLevel(GameEventManager eventManager, GameModel model, GameLevel level) {
+    public void startLevel(GameEventManager eventManager, GameLevel level) {
         requireNonNull(eventManager);
-        requireNonNull(model);
         requireNonNull(level);
+
+        final GameModel model = level.gameModel();
 
         level.recordStartTime(System.currentTimeMillis());
         prepareLevelForPlaying(level);
@@ -238,11 +240,12 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
     // Playing level
 
     @Override
-    public void onEatPellet(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile) {
+    public void onEatPellet(GameEventManager eventManager, GameLevel level, Vector2i tile) {
         requireNonNull(eventManager);
-        requireNonNull(model);
         requireNonNull(level);
         requireNonNull(tile);
+
+        final GameModel model = level.gameModel();
 
         scorePoints(eventManager, model, model.rules().pointsForPellet(), level.number());
         model.gateKeeper().registerFoodEaten(level);
@@ -250,22 +253,25 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void onEatEnergizer(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile) {
+    public void onEatEnergizer(GameEventManager eventManager, GameLevel level, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(tile);
+
+        final GameModel model = level.gameModel();
 
         scorePoints(eventManager, model, model.rules().pointsForEnergizer(), level.number());
         model.gateKeeper().registerFoodEaten(level);
         level.clearGhostKillChain();
-        startPacPowerMode(eventManager, model, level, level.entities().pac());
+        startPacPowerMode(eventManager, level, level.entities().pac());
     }
 
     @Override
-    public void onEatBonus(GameEventManager eventManager, GameModel model, GameLevel level, Bonus bonus) {
+    public void onEatBonus(GameEventManager eventManager, GameLevel level, Bonus bonus) {
         requireNonNull(eventManager);
-        requireNonNull(model);
         requireNonNull(level);
         requireNonNull(bonus);
+
+        final GameModel model = level.gameModel();
 
         scorePoints(eventManager, model, bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
@@ -275,11 +281,12 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void onEatGhost(GameEventManager eventManager, GameModel model, GameLevel level, Ghost eatenGhost) {
+    public void onEatGhost(GameEventManager eventManager, GameLevel level, Ghost eatenGhost) {
         requireNonNull(eventManager);
-        requireNonNull(model);
         requireNonNull(level);
         requireNonNull(eatenGhost);
+
+        final GameModel model = level.gameModel();
 
         final int killedBefore = level.ghostKillChainSize();
         final int points = model.rules().pointsForGhost(killedBefore);
@@ -299,13 +306,15 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void activateNextBonus(GameEventManager eventManager, GameModel model, GameLevel level) {
+    public void activateNextBonus(GameEventManager eventManager, GameLevel level) {
+
         //TODO Find out how Tengen really implemented this
         if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {
             Logger.info("Previous bonus is still active, skip this bonus");
             return;
         }
 
+        final GameModel model = level.gameModel();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         final House house = terrain.optHouse().orElse(null);
@@ -348,7 +357,7 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void startPacPowerMode(GameEventManager eventManager, GameModel model, GameLevel level, Pac pac) {
+    public void startPacPowerMode(GameEventManager eventManager, GameLevel level, Pac pac) {
         level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
         final float powerSeconds = level.pacPowerSeconds();
         if (powerSeconds > 0) {
@@ -363,7 +372,7 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void updatePacPowerMode(GameEventManager eventManager, GameModel model, GameLevel level, Pac pac) {
+    public void updatePacPowerMode(GameEventManager eventManager, GameLevel level, Pac pac) {
         if (pac.powerTimer().isRunning()) {
             pac.powerTimer().doTick();
             if (pac.isPowerFadingStarting(level)) {

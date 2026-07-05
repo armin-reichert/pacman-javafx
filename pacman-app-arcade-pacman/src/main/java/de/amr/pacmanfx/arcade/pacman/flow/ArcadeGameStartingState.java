@@ -42,7 +42,7 @@ public class ArcadeGameStartingState extends GameState {
         final long tick = timer().tickCount();
 
         if (tick == TICK_NEW_GAME_START_LEVEL) {
-            context.gamePlay().startLevel(context.eventManager(), context.model(), level);
+            context.gamePlay().startLevel(context.eventManager(), level);
             // Note: This event is very important because it triggers the creation of the actor animations!
             context.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }
