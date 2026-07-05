@@ -247,13 +247,31 @@ public class ArcadePacMan_GamePlay implements GamePlay {
 
         if (level.number() < model.rules().lastLevelNumber()) {
             model.buildNormalLevel(context, level.number() + 1);
-            model.startLevel(context, level);
+            startLevel(context, level);
             // Note: This event is very important because it triggers the creation of the actor animations!
             context.flow().publishGameEvent(new LevelStartedEvent(context, level));
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", model.rules().lastLevelNumber());
         }
     }
+
+    @Override
+    public void startLevel(GameContext context, GameLevel level) {
+        requireNonNull(context);
+        requireNonNull(level);
+
+        final GameModel model = context.model();
+
+        level.recordStartTime(System.currentTimeMillis());
+        prepareLevelForPlaying(level);
+        showLevelMessage(level, GameLevelMessageType.READY);
+
+        model.levelCounter().update(level.number(), level.bonusSymbolCode(0));
+        model.score().setEnabled(true);
+
+        context.cheats().update(level);
+    }
+
 
     // -----------------------------------------------
 

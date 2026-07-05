@@ -108,6 +108,4 @@ public interface GameModel {
     Optional<GameLevel> optGameLevel();
 
     GameLevel assertLevel();
-
-    void startLevel(GameContext gameContext, GameLevel level);
 }

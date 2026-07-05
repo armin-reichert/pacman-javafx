@@ -4,20 +4,14 @@
 
 package de.amr.pacmanfx.model;
 
-import de.amr.basics.math.Direction;
-import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.event.SpecialScoreEvent;
+import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.GameLevelMessage;
-import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.level.LevelCounter;
 import de.amr.pacmanfx.model.lives.PacManLives;
 import de.amr.pacmanfx.model.lives.PacManLivesImpl;
 import de.amr.pacmanfx.model.world.GateKeeper;
-import de.amr.pacmanfx.model.world.House;
-import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
@@ -204,9 +198,6 @@ public abstract class AbstractGameModel implements GameModel {
     public GameLevel assertLevel() {
         return optGameLevel().orElseThrow();
     }
-
-    @Override
-    public abstract void startLevel(GameContext context, GameLevel level);
 
     /* -------------------------------------------------------------------------
      * Score management

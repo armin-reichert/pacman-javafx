@@ -58,15 +58,4 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         return level;
     }
-
-    @Override
-    public void startLevel(GameContext context, GameLevel level) {
-        level.recordStartTime(System.currentTimeMillis());
-        context.gamePlay().prepareLevelForPlaying(level);
-
-        context.gamePlay().showLevelMessage(level, GameLevelMessageType.READY);
-        levelCounter.update(level.number(), level.bonusSymbolCode(0));
-        score.setEnabled(true);
-        context.cheats().update(level);
-    }
 }

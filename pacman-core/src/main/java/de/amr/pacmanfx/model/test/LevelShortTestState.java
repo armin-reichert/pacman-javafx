@@ -23,22 +23,22 @@ public class LevelShortTestState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
+    public void onEnter(GameContext context) {
+        final GameModel model = context.model();
         //coinMechanism.setNumCoins(1);
-        lastTestedLevelNumber = gameModel.rules().lastLevelNumber() == Integer.MAX_VALUE
+        lastTestedLevelNumber = model.rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
-            : gameModel.rules().lastLevelNumber();
-        gameModel.resetForNewGame();
-        gameModel.buildNormalLevel(gameContext, 1);
-        gameModel.startLevel(gameContext, gameModel.assertLevel());
-        final GameLevel level = gameModel.optGameLevel().orElseThrow();
+            : model.rules().lastLevelNumber();
+        model.resetForNewGame();
+        model.buildNormalLevel(context, 1);
+        context.gamePlay().startLevel(context, model.assertLevel());
+        final GameLevel level = model.optGameLevel().orElseThrow();
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
 
         waitForTimeout();
         // Note: This event is very important because it triggers the creation of the actor animations!
-        gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));
+        context.flow().publishGameEvent(new LevelStartedEvent(context, level));
     }
 
     @Override

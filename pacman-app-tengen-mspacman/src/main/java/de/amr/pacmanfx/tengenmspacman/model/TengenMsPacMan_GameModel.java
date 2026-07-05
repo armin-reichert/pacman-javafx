@@ -201,25 +201,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startLevel(GameContext context, GameLevel level) {
-        level.recordStartTime(System.currentTimeMillis());
-        context.gamePlay().prepareLevelForPlaying(level);
-
-        // In Tengen, actors are shown immediately
-        level.entities().pac().show();
-        level.entities().ghosts().forEach(Ghost::show);
-
-        if (pacBoosterMode == PacBooster.ALWAYS_ON) {
-            activatePacBooster(level.entities().pac(), true);
-        }
-
-        showMessage(level, GameLevelMessageType.READY);
-        levelCounter.update(level.number(), level.bonusSymbolCode(0));
-        score().setEnabled(true);
-        context.cheats().update(level);
-    }
-
-    @Override
     public GameLevel createLevel(int levelNumber, boolean demoLevel) {
         final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber, mapCategory);
         final TerrainLayer terrain = worldMap.terrainLayer();

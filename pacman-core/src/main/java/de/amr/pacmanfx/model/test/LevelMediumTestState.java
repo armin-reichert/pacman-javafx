@@ -51,18 +51,18 @@ public class LevelMediumTestState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
-        lastTestedLevelNumber = gameModel.rules().lastLevelNumber() == Integer.MAX_VALUE
+    public void onEnter(GameContext context) {
+        final GameModel model = context.model();
+        lastTestedLevelNumber = model.rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
-            : gameModel.rules().lastLevelNumber();
+            : model.rules().lastLevelNumber();
         timer().restartSeconds(TEST_DURATION_SEC);
-        gameModel.resetForNewGame();
-        gameModel.buildNormalLevel(gameContext, 1);
-        gameModel.startLevel(gameContext, gameModel.assertLevel());
+        model.resetForNewGame();
+        model.buildNormalLevel(context, 1);
+        context.gamePlay().startLevel(context, model.assertLevel());
         // Note: This event is very important because it triggers the creation of the actor animations!
-        gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, gameModel.assertLevel()));
-        configureLevelForTest(gameContext);
+        context.flow().publishGameEvent(new LevelStartedEvent(context, model.assertLevel()));
+        configureLevelForTest(context);
     }
 
     @Override
