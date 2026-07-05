@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
@@ -49,19 +50,18 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         if (sceneTick < TICK_ANIMATION_START) {
             return;
         }
-        if (sceneTick == TICK_ANIMATION_START) {
-            game().ui().sounds().play(PacManGameSoundID.INTERMISSION_3, 2);
-            startBlinkyChasingPacMan();
-        }
-        else if (sceneTick == TICK_BLINKY_RUNNING_NAKED){
-            startBlinkyRunningNaked();
-        }
-        else if (sceneTick == TICK_ANIMATION_ENDS) {
-            gameState().triggerTimeout();
-            return;
+        switch (sceneTick) {
+            case TICK_ANIMATION_START      -> startAnimation();
+            case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked();
+            case TICK_ANIMATION_ENDS       -> gameState().triggerTimeout();
         }
         pacMan.move();
         blinky.move();
+    }
+
+    private void startAnimation() {
+        game().ui().sounds().play(PacManGameSoundID.INTERMISSION_3, 2);
+        startBlinkyChasingPacMan();
     }
 
     private void startBlinkyRunningNaked() {
@@ -79,6 +79,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         pacMan.show();
         pacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
         pacMan.animations().playSelected();
+
         blinky.placeAtTile(35, 20);
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
