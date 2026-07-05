@@ -20,6 +20,7 @@ public interface GamePlay {
 
     void init(GameModel model);
 
+    //TODO check if dependency from context can be removed
     boolean canStartNewGame(GameContext context);
 
     void resetForNewGame(GameModel model);
@@ -44,13 +45,13 @@ public interface GamePlay {
 
     // Playing level
 
-    void eatPellet(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile);
+    void onEatPellet(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile);
 
-    void eatEnergizer(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile);
+    void onEatEnergizer(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile);
 
-    void eatBonus(GameEventManager eventManager, GameModel model, GameLevel level, Bonus bonus);
+    void onEatBonus(GameEventManager eventManager, GameModel model, GameLevel level, Bonus bonus);
 
-    void eatGhost(GameEventManager eventManager, GameModel model, GameLevel level, Ghost eatenGhost);
+    void onEatGhost(GameEventManager eventManager, GameModel model, GameLevel level, Ghost eatenGhost);
 
     void activateNextBonus(GameEventManager eventManager, GameModel model, GameLevel level);
 

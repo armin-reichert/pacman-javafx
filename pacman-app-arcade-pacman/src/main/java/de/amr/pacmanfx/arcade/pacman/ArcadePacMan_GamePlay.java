@@ -221,7 +221,7 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     // Playing level
 
     @Override
-    public void eatPellet(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile) {
+    public void onEatPellet(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile) {
         requireNonNull(eventManager);
         requireNonNull(level);
         requireNonNull(tile);
@@ -233,7 +233,7 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void eatEnergizer(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile) {
+    public void onEatEnergizer(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile) {
         requireNonNull(eventManager);
         requireNonNull(model);
         requireNonNull(level);
@@ -253,7 +253,7 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void eatBonus(GameEventManager eventManager, GameModel model, GameLevel level, Bonus bonus) {
+    public void onEatBonus(GameEventManager eventManager, GameModel model, GameLevel level, Bonus bonus) {
         requireNonNull(eventManager);
         requireNonNull(level);
         requireNonNull(bonus);
@@ -266,7 +266,7 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     }
 
     @Override
-    public void eatGhost(GameEventManager eventManager, GameModel model, GameLevel level, Ghost eatenGhost) {
+    public void onEatGhost(GameEventManager eventManager, GameModel model, GameLevel level, Ghost eatenGhost) {
         requireNonNull(eventManager);
         requireNonNull(model);
         requireNonNull(level);

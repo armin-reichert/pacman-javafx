@@ -56,9 +56,9 @@ public final class EntityCollisionResolver {
 
         level.worldMap().foodLayer().markFoodEatenAt(foodTile);
         if (context.huntingStepResult().energizerFound()) {
-            context.gamePlay().eatEnergizer(context.eventManager(), model, level, foodTile);
+            context.gamePlay().onEatEnergizer(context.eventManager(), model, level, foodTile);
         } else {
-            context.gamePlay().eatPellet(context.eventManager(), model, level, foodTile);
+            context.gamePlay().onEatPellet(context.eventManager(), model, level, foodTile);
         }
 
         if (model.rules().isBonusAwarded(level)) {
@@ -68,7 +68,7 @@ public final class EntityCollisionResolver {
 
     private void evalBonusFound(GameLevel level) {
         if (context.huntingStepResult().foundEdibleBonus()) {
-            context.gamePlay().eatBonus(context.eventManager(), level.gameModel(), level, context.huntingStepResult().edibleBonus());
+            context.gamePlay().onEatBonus(context.eventManager(), level.gameModel(), level, context.huntingStepResult().edibleBonus());
         }
     }
 
@@ -89,7 +89,7 @@ public final class EntityCollisionResolver {
                 .forEach(context.huntingStepResult().ghostsKilled()::add);
             // More than one ghost might have been killed in this step
             context.huntingStepResult().ghostsKilled().forEach(ghost ->
-                context.gamePlay().eatGhost(context.eventManager(), context.model(), level, ghost));
+                context.gamePlay().onEatGhost(context.eventManager(), context.model(), level, ghost));
         }
     }
 

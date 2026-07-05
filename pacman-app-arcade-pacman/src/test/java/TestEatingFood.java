@@ -9,8 +9,6 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.GameCheats;
@@ -104,7 +102,7 @@ public class TestEatingFood {
             .filter(not(foodLayer::isEnergizerTile))
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                context.gamePlay().eatPellet(context.eventManager(), context.model(), level, tile);
+                context.gamePlay().onEatPellet(context.eventManager(), context.model(), level, tile);
             });
     }
 
@@ -114,7 +112,7 @@ public class TestEatingFood {
             .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                context.gamePlay().eatEnergizer(context.eventManager(), context.model(), level, tile);
+                context.gamePlay().onEatEnergizer(context.eventManager(), context.model(), level, tile);
             });
     }
 
