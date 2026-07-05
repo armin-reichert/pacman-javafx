@@ -9,6 +9,8 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.GameCheats;
@@ -37,6 +39,19 @@ public class TestEatingFood {
         private final GameFlow  gameFlow  = new Arcade_GameFlow();
         private final ArcadePacMan_GameModel gameModel = new ArcadePacMan_GameModel();
         private final GamePlay gamePlay = new ArcadePacMan_GamePlay();
+        private final GameEventManager eventManager = new GameEventManager() {
+            @Override
+            public void addGameEventListener(GameEventListener listener) {
+            }
+
+            @Override
+            public void removeGameEventListener(GameEventListener listener) {
+            }
+
+            @Override
+            public void publishGameEvent(GameEvent event) {
+            }
+        };
 
         public TestContext() {
             gameModel.setRules(new ArcadePacMan_GameRules());
@@ -79,7 +94,7 @@ public class TestEatingFood {
 
         @Override
         public GameEventManager eventManager() {
-            throw new UnsupportedOperationException();
+            return eventManager;
         }
     }
 
@@ -102,7 +117,7 @@ public class TestEatingFood {
             .filter(not(foodLayer::isEnergizerTile))
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                context.gamePlay().onEatPellet(context.eventManager(), context.model(), level, tile);
+                context.gamePlay().onEatPellet(context.eventManager(), level, tile);
             });
     }
 
@@ -112,7 +127,7 @@ public class TestEatingFood {
             .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                context.gamePlay().onEatEnergizer(context.eventManager(), context.model(), level, tile);
+                context.gamePlay().onEatEnergizer(context.eventManager(), level, tile);
             });
     }
 
