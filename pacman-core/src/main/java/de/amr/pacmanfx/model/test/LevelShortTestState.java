@@ -29,7 +29,7 @@ public class LevelShortTestState extends GameState {
         lastTestedLevelNumber = model.rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
             : model.rules().lastLevelNumber();
-        model.resetForNewGame();
+        context.gamePlay().resetForNewGame(context);
         context.gamePlay().buildNormalLevel(context, 1);
         context.gamePlay().startLevel(context, model.assertLevel());
         final GameLevel level = model.optGameLevel().orElseThrow();
@@ -98,7 +98,7 @@ public class LevelShortTestState extends GameState {
     @Override
     public void onExit(GameContext context) {
         final GameModel gameModel = context.model();
-        gameModel.init();
+        context.gamePlay().init(context);
         gameModel.levelCounter().clear();
     }
 }

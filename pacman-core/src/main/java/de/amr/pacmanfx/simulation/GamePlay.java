@@ -35,6 +35,10 @@ public interface GamePlay {
 
     boolean isDemoLevelRunning(GameContext context);
 
+    void init(GameContext context);
+
+    void resetForNewGame(GameContext context);
+
     void prepareLevelForPlaying(GameLevel level);
 
     void showLevelMessage(GameLevel level, GameLevelMessageType type);

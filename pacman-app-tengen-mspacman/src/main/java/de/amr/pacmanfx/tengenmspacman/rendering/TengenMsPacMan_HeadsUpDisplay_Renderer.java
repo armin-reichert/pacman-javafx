@@ -56,7 +56,8 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
 
         if (!hud.isVisible()) return;
         if (!(hud instanceof TengenMsPacMan_HUDState tengenHUD)) return;
-        if (!(context instanceof TengenMsPacMan_GameModel tengenGame)) return;
+
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
 
         ctx.save();
         ctx.translate(0, scaled(computeOffsetY(scene)));
@@ -77,7 +78,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         final int counterY = scene.unscaledHeight() - TS;
 
         if (hud.isLivesCounterOn()) {
-            drawLivesCounter(tengenGame, tengenHUD, counterY);
+            drawLivesCounter(model, tengenHUD, counterY);
         }
 
         context.model().optGameLevel().ifPresent(level -> {
@@ -87,7 +88,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         });
 
         if (tengenHUD.areGameOptionsOn()) {
-            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBoosterMode(), TS(16), TS(2.5f));
+            drawGameOptions(model.mapCategory(), model.difficulty(), model.pacBoosterMode(), TS(16), TS(2.5f));
         }
 
         ctx.restore();

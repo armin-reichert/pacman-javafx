@@ -26,7 +26,7 @@ public class CommonGameBootState extends GameState {
     @Override
     public void onEnter(GameContext context) {
         timer().restartTicks(Timing.EXPIRATION);
-        context.model().init();
+        context.gamePlay().init(context);
     }
 
     @Override

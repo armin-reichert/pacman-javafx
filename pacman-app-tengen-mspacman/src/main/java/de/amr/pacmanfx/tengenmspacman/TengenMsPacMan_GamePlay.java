@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
-
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
@@ -35,6 +34,7 @@ import java.util.Set;
 
 import static de.amr.basics.math.RandomNumberSupport.randomBoolean;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
+import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.*;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay implements GamePlay {
@@ -231,6 +231,54 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
     @Override
     public boolean isDemoLevelRunning(GameContext context) {
         return context.model().optGameLevel().isPresent() && context.model().assertLevel().isDemoLevel();
+    }
+
+    @Override
+    public void init(GameContext context) {
+        requireNonNull(context);
+
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+
+        model.mapSelector().loadMapPrototypes();
+        model.lives().setInitialCount(3);
+        model.hudState().hideIt();
+        resetForNewGame(context);
+
+        model.setPacBoosterMode(DEFAULT_PAC_BOOSTER);
+        model.setDifficulty(DEFAULT_DIFFICULTY);
+        model.setMapCategory(DEFAULT_MAP_CATEGORY);
+        model.setStartLevelNumber(DEFAULT_START_LEVEL);
+        model.setNumContinues(DEFAULT_NUM_CONTINUES);
+    }
+
+    @Override
+    public void resetForNewGame(GameContext context) {
+        requireNonNull(context);
+
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+
+        model.lives().setCount(model.lives().initialCount());
+        model.score().reset();
+
+        final PersistentScore highScore = model.highScore();
+        if (highScore != null) {
+            try {
+                highScore.load();
+                highScore.setEnabled(true);
+            } catch (IOException x) {
+                Logger.error(x, "Error loading high-score file {}", highScore.file().getAbsolutePath());
+            }
+        } else {
+            Logger.error("No high-score file has been assigned");
+        }
+
+        model.gateKeeper().reset();
+        model.levelCounter().clear();
+
+        model.setLevel(null);
+        model.setPlaying(false);
+
+        model.setBoosterActive(false);
     }
 
     @Override

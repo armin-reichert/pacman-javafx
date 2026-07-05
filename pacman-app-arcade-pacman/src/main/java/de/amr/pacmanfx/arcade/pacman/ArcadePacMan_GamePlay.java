@@ -210,6 +210,42 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     }
 
     @Override
+    public void init(GameContext context) {
+        context.model().mapSelector().loadMapPrototypes();
+        context.model().lives().setInitialCount(3);
+        context.model().hudState().hideIt();
+        resetForNewGame(context);
+    }
+
+    @Override
+    public void resetForNewGame(GameContext context) {
+        requireNonNull(context);
+
+        final GameModel model = context.model();
+
+        model.lives().setCount(model.lives().initialCount());
+        model.score().reset();
+
+        final PersistentScore highScore = model.highScore();
+        if (highScore != null) {
+            try {
+                highScore.load();
+                highScore.setEnabled(true);
+            } catch (IOException x) {
+                Logger.error(x, "Error loading high-score file {}", highScore.file().getAbsolutePath());
+            }
+        } else {
+            Logger.error("No high-score file has been assigned");
+        }
+
+        model.gateKeeper().reset();
+        model.levelCounter().clear();
+
+        model.setLevel(null);
+        model.setPlaying(false);
+    }
+
+    @Override
     public void prepareLevelForPlaying(GameLevel level) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final House house = terrain.optHouse().orElseThrow();

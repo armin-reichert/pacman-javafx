@@ -14,7 +14,7 @@ public class CommonGameIntroState extends GameState {
 
     @Override
     public void onEnter(GameContext context) {
-        context.model().resetForNewGame();
+        context.gamePlay().resetForNewGame(context);
         context.model().hudState().levelCounterOn().livesCounterOff().creditOn().scoreOn().showIt();
         waitForTimeout();
     }

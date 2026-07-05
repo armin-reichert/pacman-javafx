@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.SpecialScoreEvent;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.LevelCounter;
@@ -18,11 +17,8 @@ import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -130,35 +126,6 @@ public abstract class AbstractGameModel implements GameModel {
     // Lifecycle
 
     @Override
-    public void init() {
-        mapSelector.loadMapPrototypes();
-        lives.setInitialCount(3);
-        hud.hideIt();
-        resetForNewGame();
-    }
-
-    @Override
-    public void resetForNewGame() {
-        lives.setCount(lives.initialCount());
-        score.reset();
-        if (highScore != null) {
-            try {
-                highScore.load();
-                highScore.setEnabled(true);
-            } catch (IOException x) {
-                Logger.error(x, "Error loading high-score file {}", highScore.file().getAbsolutePath());
-            }
-        } else {
-            Logger.error("No high-score file has been assigned");
-        }
-        gateKeeper.reset();
-        levelCounter.clear();
-
-        setLevel(null);
-        setPlaying(false);
-    }
-
-    @Override
     public boolean canStartNewGame(GameContext context) {
         return !context.coinMechanism().isEmpty();
     }
@@ -197,5 +164,4 @@ public abstract class AbstractGameModel implements GameModel {
     public void setHighScoreFile(File file) {
         highScore = new PersistentScore(file);
     }
-
 }

@@ -31,10 +31,9 @@ public class GameLevelIntermissionState extends GameState {
             && cutSceneNumber.getAsInt() == model.rules().lastCutSceneNumber();
         final var hudState = model.hudState();
 
-        if (model.mapCategory() == MapCategory.ARCADE || isLastCutScene) {
+        if (isLastCutScene) {
             hudState.hideIt();
-        }
-        else {
+        } else {
             hudState.gameOptionsOff().scoreOff().levelCounterOn().livesCounterOff().showIt();
         }
         waitForTimeout();

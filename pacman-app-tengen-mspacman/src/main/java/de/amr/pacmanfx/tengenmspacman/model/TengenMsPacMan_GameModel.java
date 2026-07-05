@@ -125,6 +125,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         return startLevelNumber;
     }
 
+    public void setNumContinues(int numContinues) {
+        this.numContinues = numContinues;
+    }
+
     public int numContinues() {
         return numContinues;
     }
@@ -138,6 +142,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             numContinues = 4;
             return false;
         }
+    }
+
+    public void setBoosterActive(boolean boosterActive) {
+        this.boosterActive = boosterActive;
     }
 
     public boolean isBoosterActive() {
@@ -172,22 +180,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         return (TengenMsPacMan_LevelCounter) levelCounter;
     }
 
-    @Override
-    public void init() {
-        super.init();
-
-        setPacBoosterMode(DEFAULT_PAC_BOOSTER);
-        setDifficulty(DEFAULT_DIFFICULTY);
-        setMapCategory(DEFAULT_MAP_CATEGORY);
-        setStartLevelNumber(DEFAULT_START_LEVEL);
-        numContinues = DEFAULT_NUM_CONTINUES;
-    }
-
-    @Override
-    public void resetForNewGame() {
-        super.resetForNewGame();
-        boosterActive = false;
-    }
 
     @Override
     public TengenMsPacMan_GameRules rules() {
