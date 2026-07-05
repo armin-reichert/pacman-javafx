@@ -115,7 +115,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
     }
 
     @Override
-    public void activateNextBonus(GameContext gameContext, GameLevel level) {
+    public void activateNextBonus(GameContext context, GameLevel level) {
         level.selectNextBonus();
         final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
         final Bonus bonus = new Bonus(bonusSymbolCode, rules.pointsForBonus(bonusSymbolCode));
@@ -124,7 +124,7 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         bonus.setPosition(WorldMap.halfTileRightOf(bonusTile));
         bonus.showEdibleForSeconds(randomFloat(9, 10));
         level.setBonus(bonus);
-        gameContext.flow().publishGameEvent(new BonusActivatedEvent(gameContext, bonus));
+        context.flow().publishGameEvent(new BonusActivatedEvent(context, bonus));
     }
 
     // helpers

@@ -199,12 +199,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public boolean canStartNewGame(GameContext gameContext) {
+    public boolean canStartNewGame(GameContext context) {
         return canStartNewGame;
     }
 
     @Override
-    public void startLevel(GameContext gameContext, GameLevel level) {
+    public void startLevel(GameContext context, GameLevel level) {
         level.recordStartTime(System.currentTimeMillis());
         prepareLevelForPlaying(level);
 
@@ -219,7 +219,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         showMessage(level, GameLevelMessageType.READY);
         levelCounter.update(level.number(), level.bonusSymbolCode(0));
         score().setEnabled(true);
-        gameContext.cheats().update(level);
+        context.cheats().update(level);
     }
 
     @Override
@@ -255,13 +255,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void buildNormalLevel(GameContext gameContext, int levelNumber) {
+    public void buildNormalLevel(GameContext context, int levelNumber) {
         final GameLevel newLevel = createLevel(levelNumber, false);
         score.setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
 
         setLevel(newLevel);
-        gameContext.flow().publishGameEvent(new LevelCreatedEvent(gameContext, newLevel));
+        context.flow().publishGameEvent(new LevelCreatedEvent(context, newLevel));
     }
 
     @Override
@@ -288,7 +288,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void activateNextBonus(GameContext gameContext, GameLevel level) {
+    public void activateNextBonus(GameContext context, GameLevel level) {
         //TODO Find out how Tengen really implemented this
         if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {
             Logger.info("Previous bonus is still active, skip this bonus");
@@ -333,7 +333,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        gameContext.flow().publishGameEvent(new BonusActivatedEvent(gameContext, bonus));
+        context.flow().publishGameEvent(new BonusActivatedEvent(context, bonus));
     }
 
     @Override

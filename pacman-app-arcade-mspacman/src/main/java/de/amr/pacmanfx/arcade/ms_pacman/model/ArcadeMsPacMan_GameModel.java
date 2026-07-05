@@ -114,7 +114,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
      *
      **/
     @Override
-    public void activateNextBonus(GameContext gameContext, GameLevel level) {
+    public void activateNextBonus(GameContext context, GameLevel level) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {
@@ -141,7 +141,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         }
 
         level.setBonus(bonus);
-        gameContext.flow().publishGameEvent(new BonusActivatedEvent(gameContext, bonus));
+        context.flow().publishGameEvent(new BonusActivatedEvent(context, bonus));
     }
 
     // Helpers

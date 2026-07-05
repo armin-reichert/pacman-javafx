@@ -168,8 +168,8 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public boolean canStartNewGame(GameContext gameContext) {
-        return !gameContext.coinMechanism().isEmpty();
+    public boolean canStartNewGame(GameContext context) {
+        return !context.coinMechanism().isEmpty();
     }
 
     @Override
@@ -183,7 +183,7 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public abstract void activateNextBonus(GameContext gameContext, GameLevel level);
+    public abstract void activateNextBonus(GameContext context, GameLevel level);
 
     // Level related
 
@@ -191,7 +191,7 @@ public abstract class AbstractGameModel implements GameModel {
     public abstract GameLevel createLevel(int levelNumber, boolean demoLevel);
 
     @Override
-    public abstract void buildNormalLevel(GameContext gameContext, int levelNumber);
+    public abstract void buildNormalLevel(GameContext context, int levelNumber);
 
     @Override
     public abstract GameLevel buildDemoLevel();
@@ -212,7 +212,7 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public abstract void startLevel(GameContext gameContext, GameLevel level);
+    public abstract void startLevel(GameContext context, GameLevel level);
 
     @Override
     public void prepareLevelForPlaying(GameLevel level) {
@@ -254,12 +254,12 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public void startNextLevel(GameContext gameContext, GameLevel level) {
+    public void startNextLevel(GameContext context, GameLevel level) {
         if (level.number() < rules.lastLevelNumber()) {
-            buildNormalLevel(gameContext, level.number() + 1);
-            startLevel(gameContext, level);
+            buildNormalLevel(context, level.number() + 1);
+            startLevel(context, level);
             // Note: This event is very important because it triggers the creation of the actor animations!
-            gameContext.flow().publishGameEvent(new LevelStartedEvent(gameContext, level));
+            context.flow().publishGameEvent(new LevelStartedEvent(context, level));
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", rules.lastLevelNumber());
         }
@@ -296,29 +296,29 @@ public abstract class AbstractGameModel implements GameModel {
     // Actor related
 
     @Override
-    public void eatPellet(GameContext gameContext, GameLevel level, Vector2i tile) {
+    public void eatPellet(GameContext context, GameLevel level, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(tile);
-        scorePoints(gameContext, rules.pointsForPellet(), level.number());
+        scorePoints(context, rules.pointsForPellet(), level.number());
         if (gateKeeper != null) {
             gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
         }
     }
 
     @Override
-    public void eatBonus(GameContext gameContext, GameLevel level, Bonus bonus) {
-        scorePoints(gameContext, bonus.points(), level.number());
+    public void eatBonus(GameContext context, GameLevel level, Bonus bonus) {
+        scorePoints(context, bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
         bonus.showEatenForSeconds(rules.eatenBonusDisplaySeconds());
-        gameContext.flow().publishGameEvent(new BonusEatenEvent(gameContext, bonus));
+        context.flow().publishGameEvent(new BonusEatenEvent(context, bonus));
     }
 
     @Override
-    public void onEatGhost(GameContext gameContext, GameLevel level, Ghost eatenGhost) {
+    public void onEatGhost(GameContext context, GameLevel level, Ghost eatenGhost) {
         final int killedBefore = level.ghostKillChainSize();
         final int points = rules.pointsForGhost(killedBefore);
 
-        scorePoints(gameContext, points, level.number());
+        scorePoints(context, points, level.number());
         Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
 
         eatenGhost.setState(GhostState.EATEN);
@@ -329,10 +329,10 @@ public abstract class AbstractGameModel implements GameModel {
         level.entities().pac().hide();
         level.entities().ghosts().forEach(g -> g.animations().stopSelected());
 
-        gameContext.flow().publishGameEvent(new GhostEatenEvent(gameContext, eatenGhost));
+        context.flow().publishGameEvent(new GhostEatenEvent(context, eatenGhost));
     }
 
-    public void startPacPowerMode(GameContext gameContext, GameLevel level, Pac pac) {
+    public void startPacPowerMode(GameContext context, GameLevel level, Pac pac) {
         level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
         final float powerSeconds = level.pacPowerSeconds();
         if (powerSeconds > 0) {
@@ -342,22 +342,22 @@ public abstract class AbstractGameModel implements GameModel {
             pac.powerTimer().restartTicks(powerTicks);
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
             level.ghostsInState(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
-            gameContext.flow().publishGameEvent(new PacGetsPowerEvent(gameContext, pac));
+            context.flow().publishGameEvent(new PacGetsPowerEvent(context, pac));
         }
     }
 
-    public void updatePacPowerMode(GameContext gameContext, GameLevel level, Pac pac) {
+    public void updatePacPowerMode(GameContext context, GameLevel level, Pac pac) {
         if (pac.powerTimer().isRunning()) {
             pac.powerTimer().doTick();
             if (pac.isPowerFadingStarting(level)) {
-                gameContext.flow().publishGameEvent(new PacPowerFadesEvent(gameContext, pac));
+                context.flow().publishGameEvent(new PacPowerFadesEvent(context, pac));
             } else if (pac.powerTimer().hasExpired()) {
                 pac.powerTimer().stop();
                 pac.powerTimer().reset(0);
                 level.clearGhostKillChain();
                 level.huntingTimer().start();
                 level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-                gameContext.flow().publishGameEvent(new PacLostPowerEvent(gameContext, pac));
+                context.flow().publishGameEvent(new PacLostPowerEvent(context, pac));
             }
         }
     }
@@ -370,7 +370,7 @@ public abstract class AbstractGameModel implements GameModel {
         highScore = new PersistentScore(file);
     }
 
-    protected void scorePoints(GameContext gameContext, int points, int levelNumber) {
+    protected void scorePoints(GameContext context, int points, int levelNumber) {
         if (!score.isEnabled()) {
             return;
         }
@@ -379,7 +379,7 @@ public abstract class AbstractGameModel implements GameModel {
 
         if (rules.isExtraLifeAwarded(oldScore, newScore)) {
             lives.add(1);
-            gameContext.flow().publishGameEvent(new SpecialScoreEvent(gameContext, newScore));
+            context.flow().publishGameEvent(new SpecialScoreEvent(context, newScore));
         }
 
         if (highScore != null && highScore.isEnabled() && newScore > highScore.points()) {

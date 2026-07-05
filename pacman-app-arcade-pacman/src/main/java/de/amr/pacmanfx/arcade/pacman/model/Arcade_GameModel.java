@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
@@ -34,18 +35,19 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void eatPellet(GameContext gameContext, GameLevel level, Vector2i tile) {
-        super.eatPellet(gameContext, level, tile);
+    public void eatPellet(GameContext context, GameLevel level, Vector2i tile) {
+        super.eatPellet(context, level, tile);
         level.entities().pac().setRestingTicks(rules.restingTicksForPellet());
         checkRedGhostCruiseElroyActivation(level);
     }
 
     @Override
-    public void eatEnergizer(GameContext gameContext, GameLevel level, Vector2i tile) {
+    public void eatEnergizer(GameContext context, GameLevel level, Vector2i tile) {
+        requireNonNull(context);
         requireNonNull(level);
         requireNonNull(tile);
 
-        scorePoints(gameContext, rules.pointsForEnergizer(), level.number());
+        scorePoints(context, rules.pointsForEnergizer(), level.number());
         gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         final Pac pac = level.entities().pac();
@@ -54,7 +56,7 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
 
         level.clearGhostKillChain();
 
-        startPacPowerMode(gameContext, level, pac);
+        startPacPowerMode(context, level, pac);
     }
 
     protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
@@ -75,13 +77,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     // Game interface
 
     @Override
-    public void buildNormalLevel(GameContext gameContext, int levelNumber) {
+    public void buildNormalLevel(GameContext context, int levelNumber) {
         final GameLevel level = createLevel(levelNumber, false);
         levelCounter().setEnabled(true);
         score().setLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         setLevel(level);
-        gameContext.flow().publishGameEvent(new LevelCreatedEvent(gameContext, level));
+        context.flow().publishGameEvent(new LevelCreatedEvent(context, level));
     }
 
     @Override
@@ -102,13 +104,13 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startLevel(GameContext gameContext, GameLevel level) {
+    public void startLevel(GameContext context, GameLevel level) {
         level.recordStartTime(System.currentTimeMillis());
         prepareLevelForPlaying(level);
 
         showLevelMessage(level, GameLevelMessageType.READY);
         levelCounter.update(level.number(), level.bonusSymbolCode(0));
         score.setEnabled(true);
-        gameContext.cheats().update(level);
+        context.cheats().update(level);
     }
 }
