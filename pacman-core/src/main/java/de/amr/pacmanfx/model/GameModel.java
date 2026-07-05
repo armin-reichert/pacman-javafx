@@ -93,8 +93,6 @@ public interface GameModel {
 
     void updateHighScore();
 
-    void scorePoints(GameContext context, int points, int levelNumber);
-
     // Level related
 
     GameLevel createLevel(int levelNumber, boolean demoLevel);

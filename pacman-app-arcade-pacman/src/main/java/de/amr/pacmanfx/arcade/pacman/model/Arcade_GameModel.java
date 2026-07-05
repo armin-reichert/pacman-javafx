@@ -5,12 +5,9 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.GameLevelMessageType;
 
 import static de.amr.pacmanfx.model.world.WorldMap.tile;
 

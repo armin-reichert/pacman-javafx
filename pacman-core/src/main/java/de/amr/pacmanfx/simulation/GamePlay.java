@@ -44,4 +44,6 @@ public interface GamePlay {
     void startLevel(GameContext gameContext, GameLevel level);
 
     void startNextLevel(GameContext gameContext, GameLevel currentLevel);
+
+    void scorePoints(GameContext context, int points, int levelNumber);
 }

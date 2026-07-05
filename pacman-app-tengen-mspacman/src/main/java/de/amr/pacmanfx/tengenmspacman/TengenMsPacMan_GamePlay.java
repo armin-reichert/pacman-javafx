@@ -21,11 +21,13 @@ import de.amr.pacmanfx.model.world.HPortal;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.simulation.GamePlay;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import org.tinylog.Logger;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -47,7 +49,7 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
 
         final GameModel model = context.model();
 
-        model.scorePoints(context, model.rules().pointsForPellet(), level.number());
+        scorePoints(context, model.rules().pointsForPellet(), level.number());
         model.gateKeeper().registerFoodEaten(level, level.worldMap().terrainLayer().house());
         level.entities().pac().setRestingTicks(model.rules().restingTicksForPellet());
     }
@@ -59,7 +61,7 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
 
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
 
-        model.scorePoints(context, model.rules().pointsForEnergizer(), level.number());
+        scorePoints(context, model.rules().pointsForEnergizer(), level.number());
         model.gateKeeper().registerFoodEaten(level, level.worldMap().terrainLayer().house());
 
         level.clearGhostKillChain();
@@ -75,7 +77,7 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
 
         final GameModel model = context.model();
 
-        model.scorePoints(context, bonus.points(), level.number());
+        scorePoints(context, bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
         bonus.showEatenForSeconds(model.rules().eatenBonusDisplaySeconds());
 
@@ -93,7 +95,7 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
         final int killedBefore = level.ghostKillChainSize();
         final int points = model.rules().pointsForGhost(killedBefore);
 
-        model.scorePoints(context, points, level.number());
+        scorePoints(context, points, level.number());
         Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
 
         eatenGhost.setState(GhostState.EATEN);
@@ -279,7 +281,6 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
         context.flow().publishGameEvent(new LevelCreatedEvent(context, newLevel));
     }
 
-
     @Override
     public void startNextLevel(GameContext context, GameLevel level) {
         requireNonNull(context);
@@ -322,4 +323,31 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
         context.cheats().update(level);
     }
 
+    @Override
+    public void scorePoints(GameContext context, int points, int levelNumber) {
+        requireNonNull(context);
+        Validations.requireValidLevelNumber(levelNumber);
+
+        final GameModel model = context.model();
+
+        if (!model.score().isEnabled()) {
+            return;
+        }
+        final int oldScore = model.score().points();
+        final int newScore = oldScore + points;
+
+        if (model.rules().isExtraLifeAwarded(oldScore, newScore)) {
+            model.lives().add(1);
+            context.flow().publishGameEvent(new SpecialScoreEvent(context, newScore));
+        }
+
+        final Score highScore = model.highScore();
+        if (highScore != null && highScore.isEnabled() && newScore > highScore.points()) {
+            highScore.setPoints(newScore);
+            highScore.setLevelNumber(levelNumber);
+            highScore.setDate(LocalDate.now());
+        }
+
+        model.score().setPoints(newScore);
+    }
 }

@@ -134,5 +134,4 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         }));
         return huntingTimer;
     }
-
 }

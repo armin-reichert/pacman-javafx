@@ -176,12 +176,6 @@ public abstract class AbstractGameModel implements GameModel {
     // Level related
 
     @Override
-    public abstract GameLevel createLevel(int levelNumber, boolean demoLevel);
-
-    @Override
-    public abstract GameLevel buildDemoLevel();
-
-    @Override
     public void setLevel(GameLevel level) {
         currentLevel = level;
     }
@@ -202,28 +196,6 @@ public abstract class AbstractGameModel implements GameModel {
 
     public void setHighScoreFile(File file) {
         highScore = new PersistentScore(file);
-    }
-
-    @Override
-    public void scorePoints(GameContext context, int points, int levelNumber) {
-        if (!score.isEnabled()) {
-            return;
-        }
-        final int oldScore = score.points();
-        final int newScore = oldScore + points;
-
-        if (rules.isExtraLifeAwarded(oldScore, newScore)) {
-            lives.add(1);
-            context.flow().publishGameEvent(new SpecialScoreEvent(context, newScore));
-        }
-
-        if (highScore != null && highScore.isEnabled() && newScore > highScore.points()) {
-            highScore.setPoints(newScore);
-            highScore.setLevelNumber(levelNumber);
-            highScore.setDate(LocalDate.now());
-        }
-
-        score.setPoints(newScore);
     }
 
     @Override

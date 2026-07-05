@@ -9,7 +9,6 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameException;
-import de.amr.pacmanfx.event.LevelCreatedEvent;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.HuntingTimer;
