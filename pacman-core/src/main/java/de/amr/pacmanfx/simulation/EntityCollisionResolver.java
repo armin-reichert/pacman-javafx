@@ -68,7 +68,7 @@ public final class EntityCollisionResolver {
 
     private void evalBonusFound(GameLevel level) {
         if (context.huntingStepResult().foundEdibleBonus()) {
-            context.model().eatBonus(context, level, context.huntingStepResult().edibleBonus());
+            context.gamePlay().eatBonus(context, level, context.huntingStepResult().edibleBonus());
         }
     }
 

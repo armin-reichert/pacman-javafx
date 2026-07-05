@@ -129,8 +129,6 @@ public interface GameModel {
 
     void activateNextBonus(GameContext gameContext, GameLevel level);
 
-    void eatBonus(GameContext gameContext, GameLevel level, Bonus bonus);
-
     void onEatGhost(GameContext gameContext, GameLevel level, Ghost eatenGhost);
 
     void updatePacPowerMode(GameContext gameContext, GameLevel level, Pac pac);

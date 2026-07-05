@@ -293,14 +293,6 @@ public abstract class AbstractGameModel implements GameModel {
     // Actor related
 
     @Override
-    public void eatBonus(GameContext context, GameLevel level, Bonus bonus) {
-        scorePoints(context, bonus.points(), level.number());
-        Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-        bonus.showEatenForSeconds(rules.eatenBonusDisplaySeconds());
-        context.flow().publishGameEvent(new BonusEatenEvent(context, bonus));
-    }
-
-    @Override
     public void onEatGhost(GameContext context, GameLevel level, Ghost eatenGhost) {
         final int killedBefore = level.ghostKillChainSize();
         final int points = rules.pointsForGhost(killedBefore);
