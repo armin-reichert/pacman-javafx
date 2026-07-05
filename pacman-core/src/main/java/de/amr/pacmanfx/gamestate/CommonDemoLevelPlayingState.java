@@ -33,7 +33,7 @@ public class CommonDemoLevelPlayingState extends GameState {
     @Override
     public void onEnter(GameContext context) {
         final GameModel model = context.model();
-        model.setLevel(model.buildDemoLevel());
+        model.setLevel(context.gamePlay().buildDemoLevel(context));
         model.hudState().creditOn().livesCounterOff();
         context.flow().publishGameEvent(new LevelCreatedEvent(context, model.assertLevel()));
     }

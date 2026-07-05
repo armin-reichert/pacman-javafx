@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
+import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Elroy;
@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  * </ul>
  * </p>
  */
-public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
+public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
 
     protected static final int GAME_OVER_STATE_TICKS = 150;
 
@@ -49,7 +49,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         this.mapSelector = requireNonNull(mapSelector);
         rules = new ArcadeMsPacMan_GameRules();
         levelCounter = new ArcadeMsPacMan_LevelCounter();
-        demoLevelSteering = new RuleBasedPacSteering();
         automaticSteering = new RuleBasedPacSteering();
         createGateKeeper();
         mapSelector.loadMapPrototypes();

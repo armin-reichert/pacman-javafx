@@ -8,10 +8,13 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.*;
+import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -22,6 +25,27 @@ import static de.amr.basics.math.RandomNumberSupport.*;
 public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
+
+    @Override
+    public GameLevel buildDemoLevel(GameContext context) {
+        final int demoLevelNumber = 1;
+        final GameModel model = context.model();
+        final GameLevel level = model.createLevel(demoLevelNumber, true);
+
+        final Pac pac = level.entities().pac();
+        pac.setImmune(false);
+        pac.setUsingAutopilot(true);
+
+        final var demoLevelSteering = new RuleBasedPacSteering();
+        pac.setAutomaticSteering(demoLevelSteering);
+        demoLevelSteering.init();
+
+        model.gateKeeper().setLevelNumber(demoLevelNumber);
+        model.levelCounter().setEnabled(true);
+        model.score().setLevelNumber(demoLevelNumber);
+
+        return level;
+    }
 
     /**
      * Bonus symbol that enters the world at some tunnel entry, walks to the house entry, takes a tour around the

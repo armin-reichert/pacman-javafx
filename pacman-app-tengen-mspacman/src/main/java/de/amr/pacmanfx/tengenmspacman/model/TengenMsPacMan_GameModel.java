@@ -68,7 +68,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         hud = new TengenMsPacMan_HUDState();
         gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
         automaticSteering = new RuleBasedPacSteering();
-        demoLevelSteering = new RuleBasedPacSteering();
         rules = new TengenMsPacMan_GameRules();
 
         setDifficulty(Difficulty.NORMAL);
@@ -214,23 +213,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         levelCounter.setEnabled(levelNumber < 8);
 
         return level;
-    }
-
-    @Override
-    public GameLevel buildDemoLevel() {
-        final GameLevel demoLevel = createLevel(1, true);
-        demoLevel.setGameOverStateTicks(120);
-
-        final Pac pac = demoLevel.entities().pac();
-        pac.setImmune(false);
-        pac.setUsingAutopilot(true);
-        pac.setAutomaticSteering(demoLevelSteering);
-
-        gateKeeper.setLevelNumber(1);
-        demoLevelSteering.init();
-        score.setLevelNumber(1);
-
-        return demoLevel;
     }
 
     // Helpers

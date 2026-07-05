@@ -26,16 +26,35 @@ import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.simulation.GamePlay;
+import de.amr.pacmanfx.steering.RouteBasedSteering;
 import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import static de.amr.basics.math.RandomNumberSupport.randomFloat;
+import static de.amr.pacmanfx.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_GamePlay implements GamePlay {
+
+    static final List<Vector2i> DEMO_LEVEL_ROUTE = List.of(
+        tile( 9,26), tile( 9,29), tile(12,29), tile(12,32), tile(26,32),
+        tile(26,29), tile(24,29), tile(24,26), tile(26,26), tile(26,23),
+        tile(21,23), tile(18,23), tile(18,14), tile( 9,14), tile( 9,17),
+        tile( 6,17), tile( 6 ,4), tile( 1, 4), tile( 1, 8), tile(12, 8),
+        tile(12, 4), tile( 6, 4), tile( 6,11), tile( 1,11), tile( 1, 8),
+        tile( 9, 8), tile( 9,11), tile(12,11), tile(12,14), tile( 9,14),
+        tile( 9,17), tile( 0,17), /*tunnel*/   tile(21,17), tile(21,29),
+        tile(26,29), tile(26,32), tile( 1,32), tile( 1,29), tile( 3,29),
+        tile( 3,26), tile( 1,26), tile( 1,23), tile(12,23), tile(12,26),
+        tile(15,26), tile(15,23), tile(26,23), tile(26,26), tile(24,26),
+        tile(24,29), tile(26,29), tile(26,32), tile( 1,32),
+        tile( 1,29), tile( 3,29), tile( 3,26), tile( 1,26), tile( 1,23),
+        tile( 6,23)
+    );
 
     public ArcadePacMan_GamePlay() {
     }
@@ -282,6 +301,27 @@ public class ArcadePacMan_GamePlay implements GamePlay {
         final var message = new GameLevelMessage(type);
         message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
         level.setMessage(message);
+    }
+
+    @Override
+    public GameLevel buildDemoLevel(GameContext context) {
+        final int demoLevelNumber = 1;
+        final GameModel model = context.model();
+        final GameLevel level = model.createLevel(demoLevelNumber, true);
+
+        final Pac pac = level.entities().pac();
+        pac.setImmune(false);
+        pac.setUsingAutopilot(true);
+
+        final var demoLevelSteering = new RouteBasedSteering(DEMO_LEVEL_ROUTE);
+        pac.setAutomaticSteering(demoLevelSteering);
+        demoLevelSteering.init();
+
+        model.gateKeeper().setLevelNumber(demoLevelNumber);
+        model.levelCounter().setEnabled(true);
+        model.score().setLevelNumber(demoLevelNumber);
+
+        return level;
     }
 
     @Override

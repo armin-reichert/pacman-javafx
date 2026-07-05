@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.model;
 
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.LevelCounter;
 import de.amr.pacmanfx.model.lives.PacManLives;
@@ -19,12 +20,18 @@ import javafx.beans.property.SimpleBooleanProperty;
 import java.io.File;
 import java.util.Optional;
 
+import static de.amr.pacmanfx.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Base implementation of the {@link GameModel} interface providing the core simulation logic shared by all Pac-Man variants.
  */
 public abstract class AbstractGameModel implements GameModel {
+
+    /**
+     * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
+     */
+    public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
 
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
@@ -45,8 +52,6 @@ public abstract class AbstractGameModel implements GameModel {
     protected WorldMapSelector mapSelector;
 
     protected Steering automaticSteering;
-
-    protected Steering demoLevelSteering;
 
     protected GameRules rules;
 
@@ -138,10 +143,6 @@ public abstract class AbstractGameModel implements GameModel {
     public GameLevel assertLevel() {
         return optGameLevel().orElseThrow();
     }
-
-    /* -------------------------------------------------------------------------
-     * Score management
-     * ---------------------------------------------------------------------- */
 
     public void setHighScoreFile(File file) {
         highScore = new PersistentScore(file);

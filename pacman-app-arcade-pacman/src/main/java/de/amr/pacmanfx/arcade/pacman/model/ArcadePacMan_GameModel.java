@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Elroy;
@@ -39,23 +40,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public class ArcadePacMan_GameModel extends Arcade_GameModel {
-
-    protected static final List<Vector2i> DEMO_LEVEL_ROUTE = List.of(
-        tile( 9,26), tile( 9,29), tile(12,29), tile(12,32), tile(26,32),
-        tile(26,29), tile(24,29), tile(24,26), tile(26,26), tile(26,23),
-        tile(21,23), tile(18,23), tile(18,14), tile( 9,14), tile( 9,17),
-        tile( 6,17), tile( 6 ,4), tile( 1, 4), tile( 1, 8), tile(12, 8),
-        tile(12, 4), tile( 6, 4), tile( 6,11), tile( 1,11), tile( 1, 8),
-        tile( 9, 8), tile( 9,11), tile(12,11), tile(12,14), tile( 9,14),
-        tile( 9,17), tile( 0,17), /*tunnel*/   tile(21,17), tile(21,29),
-        tile(26,29), tile(26,32), tile( 1,32), tile( 1,29), tile( 3,29),
-        tile( 3,26), tile( 1,26), tile( 1,23), tile(12,23), tile(12,26),
-        tile(15,26), tile(15,23), tile(26,23), tile(26,26), tile(24,26),
-        tile(24,29), tile(26,29), tile(26,32), tile( 1,32),
-        tile( 1,29), tile( 3,29), tile( 3,26), tile( 1,26), tile( 1,23),
-        tile( 6,23)
-    );
+public class ArcadePacMan_GameModel extends AbstractGameModel {
 
     protected static final int GAME_OVER_STATE_TICKS = 90;
 
@@ -72,7 +57,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
         this.mapSelector = requireNonNull(mapSelector);
         rules = new ArcadePacMan_GameRules();
         levelCounter = new ArcadePacMan_LevelCounter();
-        demoLevelSteering = new RouteBasedSteering(DEMO_LEVEL_ROUTE);
         automaticSteering = new RuleBasedPacSteering();
         createGateKeeper();
     }
@@ -133,7 +117,6 @@ public class ArcadePacMan_GameModel extends Arcade_GameModel {
             ArcadePacMan_ActorFactory.createGhost(ORANGE_GHOST_POKEY, terrain, house, POS_GHOST_4_ORANGE, oneWayDownTiles)
         );
     }
-
 
     protected void createGateKeeper() {
         gateKeeper = new GateKeeper();

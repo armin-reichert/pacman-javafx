@@ -23,6 +23,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.simulation.GamePlay;
+import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import org.tinylog.Logger;
@@ -322,6 +323,30 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
         message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
         level.setMessage(message);
     }
+
+    @Override
+    public GameLevel buildDemoLevel(GameContext context) {
+        requireNonNull(context);
+
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+
+        final GameLevel demoLevel = model.createLevel(1, true);
+        demoLevel.setGameOverStateTicks(120);
+
+        final Pac pac = demoLevel.entities().pac();
+        pac.setImmune(false);
+        pac.setUsingAutopilot(true);
+
+        final var demoLevelSteering = new RuleBasedPacSteering();
+        pac.setAutomaticSteering(demoLevelSteering);
+        demoLevelSteering.init();
+
+        model.gateKeeper().setLevelNumber(1);
+        model.score().setLevelNumber(1);
+
+        return demoLevel;
+    }
+
 
     @Override
     public void buildNormalLevel(GameContext context, int levelNumber) {
