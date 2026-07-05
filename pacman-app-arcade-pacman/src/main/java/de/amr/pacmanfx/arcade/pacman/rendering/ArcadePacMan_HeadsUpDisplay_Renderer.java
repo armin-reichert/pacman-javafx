@@ -5,7 +5,6 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.HUDState;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;

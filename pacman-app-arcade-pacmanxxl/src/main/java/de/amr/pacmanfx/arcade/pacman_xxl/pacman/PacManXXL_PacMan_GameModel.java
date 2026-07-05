@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
-import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 
 /**
  * Extension of Arcade Pac-Man with 8 new builtin mazes (thanks to the one and only
