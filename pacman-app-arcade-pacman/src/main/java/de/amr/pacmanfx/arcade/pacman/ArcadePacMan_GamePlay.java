@@ -218,6 +218,11 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     }
 
     @Override
+    public boolean canStartNewGame(GameContext context) {
+        return !context.coinMechanism().isEmpty();
+    }
+
+    @Override
     public void resetForNewGame(GameContext context) {
         requireNonNull(context);
 

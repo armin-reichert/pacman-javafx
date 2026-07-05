@@ -211,11 +211,11 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameContext gameContext = scene.game().context();
-                final GameFlow flow = gameContext.flow();
-                final GameModel gameModel = gameContext.model();
+                final GameContext context = scene.game().context();
+                final GameFlow flow = context.flow();
+                final GameModel model = context.model();
                 scene.marquee.timer().doTick();
-                if (timer.atSecond(2.0) && !gameModel.canStartNewGame(gameContext)) {
+                if (timer.atSecond(2.0) && !context.gamePlay().canStartNewGame(context)) {
                     flow.enterState(GameStateID.GAME_OR_LEVEL_STARTING); // demo level
                 } else if (timer.atSecond(5)) {
                     flow.enterState(GameStateID.GAME_PREPARATION);

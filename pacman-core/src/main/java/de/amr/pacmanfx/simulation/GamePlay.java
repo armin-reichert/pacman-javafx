@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.simulation;
 
-
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -37,17 +36,19 @@ public interface GamePlay {
 
     void init(GameContext context);
 
+    boolean canStartNewGame(GameContext context);
+
     void resetForNewGame(GameContext context);
 
     void prepareLevelForPlaying(GameLevel level);
 
     void showLevelMessage(GameLevel level, GameLevelMessageType type);
 
-    void buildNormalLevel(GameContext gameContext, int levelNumber);
+    void buildNormalLevel(GameContext context, int levelNumber);
 
-    void startLevel(GameContext gameContext, GameLevel level);
+    void startLevel(GameContext context, GameLevel level);
 
-    void startNextLevel(GameContext gameContext, GameLevel currentLevel);
+    void startNextLevel(GameContext context, GameLevel currentLevel);
 
     void scorePoints(GameContext context, int points, int levelNumber);
 

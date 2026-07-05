@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.CreditAddedEvent;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
@@ -70,11 +69,10 @@ public final class Arcade_Actions {
                 if (coinMechanism.isEmpty()) {
                     return false;
                 }
-                final GameContext gameContext = game.context();
-                final GameModel gameModel = gameContext.model();
-                final GameState gameState = gameContext.state();
-                return (GameStateID.GAME_INTRO.identifies(gameState) || GameStateID.GAME_PREPARATION.identifies(gameState))
-                    && gameModel.canStartNewGame(gameContext);
+                final GameContext context = game.context();
+                final GameState state = context.state();
+                return (GameStateID.GAME_INTRO.identifies(state) || GameStateID.GAME_PREPARATION.identifies(state))
+                    && context.gamePlay().canStartNewGame(context);
             }
         };
 

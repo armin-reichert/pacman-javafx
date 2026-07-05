@@ -126,11 +126,6 @@ public abstract class AbstractGameModel implements GameModel {
     // Lifecycle
 
     @Override
-    public boolean canStartNewGame(GameContext context) {
-        return !context.coinMechanism().isEmpty();
-    }
-
-    @Override
     public boolean isPlaying() {
         return playing.get();
     }

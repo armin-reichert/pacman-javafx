@@ -252,6 +252,14 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
     }
 
     @Override
+    public boolean canStartNewGame(GameContext context) {
+        requireNonNull(context);
+
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+        return model.canStartNewGame();
+    }
+
+    @Override
     public void resetForNewGame(GameContext context) {
         requireNonNull(context);
 

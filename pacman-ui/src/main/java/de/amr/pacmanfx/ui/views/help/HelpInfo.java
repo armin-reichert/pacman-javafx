@@ -7,7 +7,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameCheats;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
@@ -28,16 +27,15 @@ public class HelpInfo {
 
     public static HelpInfo build(Game game) {
         final GameContext context = game.context();
-        final GameModel model = context.model();
         final GameState state = context.state();
         final boolean demoLevel = context.gamePlay().isDemoLevelRunning(context);
 
         final HelpInfo helpInfo = new HelpInfo(game);
         if (GameStateID.GAME_INTRO.identifies(state)) {
-            helpInfo.addInfoForIntroScene(context, model);
+            helpInfo.addInfoForIntroScene(context);
         }
         else if (GameStateID.GAME_PREPARATION.identifies(state)) {
-            helpInfo.addInfoForCreditScene(context, model);
+            helpInfo.addInfoForCreditScene(context);
         }
         else if (state.isOneOf(GameStateID.GAME_OR_LEVEL_STARTING, GameStateID.GAME_LEVEL_PLAYING,
             GameStateID.GAME_LEVEL_PACMAN_DYING, GameStateID.GAME_LEVEL_EATING_GHOST)) {
@@ -128,16 +126,16 @@ public class HelpInfo {
         addTranslatedEntry("help.show_intro", "Q");
     }
 
-    private void addInfoForIntroScene(GameContext gameContext, GameModel game) {
-        if (game.canStartNewGame(gameContext)) {
+    private void addInfoForIntroScene(GameContext context) {
+        if (context.gamePlay().canStartNewGame(context)) {
             addTranslatedEntry("help.start_game", "1");
         }
         addTranslatedEntry("help.add_credit", "5");
         addQuitEntry();
     }
 
-    private void addInfoForCreditScene(GameContext gameContext, GameModel game) {
-        if (game.canStartNewGame(gameContext)) {
+    private void addInfoForCreditScene(GameContext context) {
+        if (context.gamePlay().canStartNewGame(context)) {
             addTranslatedEntry("help.start_game", "1");
         }
         addTranslatedEntry("help.add_credit", "5");

@@ -7,7 +7,6 @@ package de.amr.pacmanfx.tengenmspacman.model;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
@@ -81,6 +80,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             && mapCategory == DEFAULT_MAP_CATEGORY
             && startLevelNumber == DEFAULT_START_LEVEL
             && numContinues == DEFAULT_NUM_CONTINUES;
+    }
+
+    public boolean canStartNewGame() {
+        return canStartNewGame;
     }
 
     public void setPacBoosterMode(PacBooster mode) {
@@ -184,11 +187,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public TengenMsPacMan_GameRules rules() {
         return (TengenMsPacMan_GameRules) rules;
-    }
-
-    @Override
-    public boolean canStartNewGame(GameContext context) {
-        return canStartNewGame;
     }
 
     @Override

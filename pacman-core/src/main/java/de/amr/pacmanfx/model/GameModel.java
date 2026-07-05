@@ -81,8 +81,6 @@ public interface GameModel {
 
     // Lifecycle
 
-    boolean canStartNewGame(GameContext gameContext);
-
     boolean isPlaying();
 
     void setPlaying(boolean playing);
