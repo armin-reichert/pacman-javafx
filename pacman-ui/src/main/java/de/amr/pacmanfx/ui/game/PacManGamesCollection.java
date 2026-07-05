@@ -264,7 +264,7 @@ public final class PacManGamesCollection implements Game {
     private void exitGameVariant(String variantName) {
         ui.sounds().dispose();
         variantRuntime(variantName).gameVariant().dispose();
-        context.flow().removeGameEventListener(globalGameEventHandler);
+        context.removeGameEventListener(globalGameEventHandler);
     }
 
     private void enterGameVariant(String variantName) {
@@ -276,7 +276,7 @@ public final class PacManGamesCollection implements Game {
         // create new game context for current game variant
         context = new GameContextImpl(this, gameVariantRuntime);
         context.model().hudState().creditProperty().bind(coinMechanism().numCoinsProperty());
-        context.flow().addGameEventListener(globalGameEventHandler);
+        context.addGameEventListener(globalGameEventHandler);
     }
 
     private GameVariantRuntime createGameVariant(String variantName) {

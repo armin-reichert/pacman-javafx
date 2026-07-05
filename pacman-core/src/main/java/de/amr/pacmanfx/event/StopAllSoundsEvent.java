@@ -4,6 +4,4 @@
 
 package de.amr.pacmanfx.event;
 
-import de.amr.pacmanfx.core.GameContext;
-
-public record StopAllSoundsEvent(GameContext context) implements GameEvent {}
+public record StopAllSoundsEvent() implements GameEvent {}

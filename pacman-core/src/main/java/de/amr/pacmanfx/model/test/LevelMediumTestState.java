@@ -26,9 +26,9 @@ public class LevelMediumTestState extends GameState {
         super(TestStateID.LEVEL_TEST_M);
     }
 
-    private void configureLevelForTest(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
-        final GameLevel level = gameModel.optGameLevel().orElseThrow();
+    private void configureLevelForTest(GameContext context) {
+        final GameModel model = context.model();
+        final GameLevel level = model.optGameLevel().orElseThrow();
 
         final Pac pac = level.entities().pac();
         pac.usingAutopilotProperty().unbind();
@@ -40,9 +40,9 @@ public class LevelMediumTestState extends GameState {
         ghosts.forEach(ghost -> ghost.animations().playSelected());
         ghosts.forEach(Ghost::show);
 
-        gameModel.hudState().showIt();
+        model.hudState().showIt();
 
-        gameContext.flow().publishGameEvent(new StopAllSoundsEvent(gameContext));
+        context.eventManager().publishGameEvent(new StopAllSoundsEvent());
     }
 
     @Override
@@ -58,24 +58,24 @@ public class LevelMediumTestState extends GameState {
             : model.rules().lastLevelNumber();
         timer().restartSeconds(TEST_DURATION_SEC);
         context.gamePlay().resetForNewGame(context);
-        context.gamePlay().buildNormalLevel(context, 1);
-        context.gamePlay().startLevel(context, model.assertLevel());
-        // Note: This event is very important because it triggers the creation of the actor animations!
-        context.flow().publishGameEvent(new LevelStartedEvent(context, model.assertLevel()));
+        context.gamePlay().buildNormalLevel(context.eventManager(), model, 1);
+        context.gamePlay().startLevel(context.eventManager(), model, model.assertLevel());
         configureLevelForTest(context);
+        // Note: This event is very important because it triggers the creation of the actor animations!
+        context.eventManager().publishGameEvent(new LevelStartedEvent(model.assertLevel()));
     }
 
     @Override
     public void onUpdate(GameContext context) {
-        final GameModel gameModel = context.model();
-        final GameLevel level = gameModel.optGameLevel().orElseThrow();
+        final GameModel model = context.model();
+        final GameLevel level = model.optGameLevel().orElseThrow();
 
         level.entities().pac().update(context, level);
         level.entities().ghosts().forEach(ghost -> ghost.update(context, level));
         level.optBonus().ifPresent(bonus -> bonus.update(context, level));
 
-        if (gameModel.gateKeeper() != null) {
-            gameModel.gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
+        if (model.gateKeeper() != null) {
+            model.gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
         context.cheats().update(level);
 
@@ -89,16 +89,16 @@ public class LevelMediumTestState extends GameState {
 
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
-                context.flow().publishGameEvent(new StopAllSoundsEvent(context));
+                context.eventManager().publishGameEvent(new StopAllSoundsEvent());
                 context.flow().enterState(GameStateID.GAME_INTRO);
             }
             else {
                 timer().restartSeconds(TEST_DURATION_SEC);
-                context.gamePlay().startNextLevel(context, gameModel.assertLevel());
+                context.gamePlay().startNextLevel(context.eventManager(), model, model.assertLevel());
                 configureLevelForTest(context);
             }
         }
-        else if (gameModel.rules().isLevelCompleted(level)) {
+        else if (model.rules().isLevelCompleted(level)) {
             context.flow().enterState(GameStateID.GAME_INTRO);
         }
         else if (pacKilled) {

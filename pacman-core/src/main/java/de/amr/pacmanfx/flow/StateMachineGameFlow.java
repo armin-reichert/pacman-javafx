@@ -25,13 +25,10 @@ import static java.util.Objects.requireNonNull;
 public class StateMachineGameFlow implements GameFlow {
 
     protected final StateMachine<GameContext> stateMachine = new StateMachine<>();
-    private final Set<GameEventListener> eventListeners = new HashSet<>();
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
     public StateMachineGameFlow(String name) {
         stateMachine.setName(name);
-        stateMachine.addStateChangeListener((oldState, newState)
-            -> publishGameEvent(new GameStateChangeEvent(gameContext(), oldState, newState)));
     }
 
     @Override
@@ -87,50 +84,6 @@ public class StateMachineGameFlow implements GameFlow {
     @Override
     public void makeStep() {
         stateMachine.update();
-    }
-
-    /**
-     * Registers a {@link GameEventListener}.
-     *
-     * @param listener the listener to add
-     */
-    @Override
-    public void addGameEventListener(GameEventListener listener) {
-        requireNonNull(listener);
-        final boolean added = eventListeners.add(listener);
-        if (added) {
-            Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
-        }
-    }
-
-    /**
-     * Removes a previously registered {@link GameEventListener}.
-     *
-     * @param listener the listener to remove
-     */
-    @Override
-    public void removeGameEventListener(GameEventListener listener) {
-        requireNonNull(listener);
-        boolean removed = eventListeners.remove(listener);
-        if (removed) {
-            Logger.info("{}: Game event listener removed: {}", getClass().getSimpleName(), listener);
-        } else {
-            Logger.warn("{}: Game event listener not removed, as not registered: {}", getClass().getSimpleName(), listener);
-        }
-    }
-
-    /**
-     * Publishes a {@link GameEvent} to all registered listeners.
-     *
-     * @param event the event to publish
-     */
-    @Override
-    public void publishGameEvent(GameEvent event) {
-        requireNonNull(event);
-        if (Logger.isTraceEnabled()) {
-            Logger.trace("Publish game event: {}", event);
-        }
-        eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
     }
 
     // Cut scenes

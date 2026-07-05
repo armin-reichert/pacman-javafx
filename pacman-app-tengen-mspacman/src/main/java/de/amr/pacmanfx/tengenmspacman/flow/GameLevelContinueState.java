@@ -29,7 +29,7 @@ public class GameLevelContinueState extends GameState {
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
 
-        context.flow().publishGameEvent(new GameContinuedEvent(context));
+        context.eventManager().publishGameEvent(new GameContinuedEvent());
     }
 
     @Override

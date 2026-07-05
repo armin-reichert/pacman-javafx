@@ -6,6 +6,8 @@ package de.amr.pacmanfx.simulation;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.event.GameEventManager;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -14,25 +16,7 @@ import de.amr.pacmanfx.model.level.GameLevelMessageType;
 
 public interface GamePlay {
 
-    void eatPellet(GameContext context, GameLevel level, Vector2i tile);
-
-    void eatEnergizer(GameContext context, GameLevel level, Vector2i tile);
-
-    void eatBonus(GameContext gameContext, GameLevel level, Bonus bonus);
-
-    void onEatGhost(GameContext gameContext, GameLevel level, Ghost eatenGhost);
-
-    void activateNextBonus(GameContext context, GameLevel level);
-
-    void startPacPowerMode(GameContext context, GameLevel level, Pac pac);
-
-    void updatePacPowerMode(GameContext gameContext, GameLevel level, Pac pac);
-
-    boolean isPacSafeInDemoLevel(GameLevel demoLevel);
-
-    void onLevelCompleted(GameLevel level);
-
-    boolean isDemoLevelRunning(GameContext context);
+    // Game start
 
     void init(GameContext context);
 
@@ -42,17 +26,43 @@ public interface GamePlay {
 
     void prepareLevelForPlaying(GameLevel level);
 
+    // Level building and level start
+
+    GameLevel buildDemoLevel(GameEventManager eventManager, GameModel model);
+
+    boolean isDemoLevelRunning(GameContext context);
+
+    boolean isPacSafeInDemoLevel(GameLevel demoLevel);
+
+    void buildNormalLevel(GameEventManager eventManager, GameModel model, int levelNumber);
+
+    void startLevel(GameEventManager eventManager, GameModel model, GameLevel level);
+
+    void startNextLevel(GameEventManager eventManager, GameModel model, GameLevel currentLevel);
+
     void showLevelMessage(GameLevel level, GameLevelMessageType type);
 
-    GameLevel buildDemoLevel(GameContext context);
+    // Playing level
 
-    void buildNormalLevel(GameContext context, int levelNumber);
+    void eatPellet(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile);
 
-    void startLevel(GameContext context, GameLevel level);
+    void eatEnergizer(GameEventManager eventManager, GameModel model, GameLevel level, Vector2i tile);
 
-    void startNextLevel(GameContext context, GameLevel currentLevel);
+    void eatBonus(GameEventManager eventManager, GameModel model, GameLevel level, Bonus bonus);
 
-    void scorePoints(GameContext context, int points, int levelNumber);
+    void eatGhost(GameEventManager eventManager, GameModel model, GameLevel level, Ghost eatenGhost);
 
-    void updateHighScore(GameContext context);
+    void activateNextBonus(GameEventManager eventManager, GameModel model, GameLevel level);
+
+    void startPacPowerMode(GameEventManager eventManager, GameModel model, GameLevel level, Pac pac);
+
+    void updatePacPowerMode(GameEventManager eventManager, GameModel model, GameLevel level, Pac pac);
+
+    void onLevelCompleted(GameLevel level);
+
+    // Scoring
+
+    void scorePoints(GameEventManager eventManager, GameModel model, int points, int levelNumber);
+
+    void updateHighScore(GameEventManager eventManager, GameModel model);
 }

@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
+import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.flow.StateMachineGameFlow;
 
 public class TengenMsPacMan_GameFlow extends StateMachineGameFlow {
@@ -9,5 +10,8 @@ public class TengenMsPacMan_GameFlow extends StateMachineGameFlow {
         for (TengenMsPacMan_GameState gameState : TengenMsPacMan_GameState.values()) {
             addState(gameState.state());
         }
+        stateMachine.addStateChangeListener((oldState, newState) ->
+            gameContext().eventManager().publishGameEvent(
+                new GameStateChangeEvent(gameContext(), oldState, newState)));
     }
 }

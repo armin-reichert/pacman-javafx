@@ -23,7 +23,7 @@ public class ArcadeGameOverState extends GameState {
         final GameModel model = context.model();
         final GameLevel level = context.model().assertLevel();
 
-        context.gamePlay().updateHighScore(context);
+        context.gamePlay().updateHighScore(context.eventManager(), model);
         context.gamePlay().showLevelMessage(level, GameLevelMessageType.GAME_OVER);
 
         // In case, entering game over state was forced by user:

@@ -68,7 +68,7 @@ public final class CheatActions {
                 level.worldMap().foodLayer().eatPellets();
                 context.cheats().notifyCheatUsed();
 
-                context.flow().publishGameEvent(new PacEatsFoodEvent(context, level.entities().pac(), false, true));
+                context.eventManager().publishGameEvent(new PacEatsFoodEvent(level.entities().pac(), false, true));
             }
 
             @Override
@@ -93,7 +93,7 @@ public final class CheatActions {
 
                 if (!killableGhosts.isEmpty()) {
                     level.clearGhostKillChain(); // start again with lowest number for killing ghost
-                    killableGhosts.forEach(ghost -> context.gamePlay().onEatGhost(context, level, ghost));
+                    killableGhosts.forEach(ghost -> context.gamePlay().eatGhost(context.eventManager(), model, level, ghost));
                     context.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST);
                 }
             }

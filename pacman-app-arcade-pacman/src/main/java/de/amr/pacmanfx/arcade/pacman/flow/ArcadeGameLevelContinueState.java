@@ -42,7 +42,7 @@ public class ArcadeGameLevelContinueState extends GameState {
         final long tick = timer().tickCount();
 
         if (tick == TICK_CONTINUE_LEVEL) {
-            flow.publishGameEvent(new GameContinuedEvent(context));
+            context.eventManager().publishGameEvent(new GameContinuedEvent());
         }
         else if (tick == TICK_RESUME_HUNTING) {
             flow.enterState(GameStateID.GAME_LEVEL_PLAYING);

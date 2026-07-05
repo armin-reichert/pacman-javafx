@@ -33,9 +33,9 @@ public class CommonDemoLevelPlayingState extends GameState {
     @Override
     public void onEnter(GameContext context) {
         final GameModel model = context.model();
-        model.setLevel(context.gamePlay().buildDemoLevel(context));
+        model.setLevel(context.gamePlay().buildDemoLevel(context.eventManager(), model));
         model.hudState().creditOn().livesCounterOff();
-        context.flow().publishGameEvent(new LevelCreatedEvent(context, model.assertLevel()));
+        context.eventManager().publishGameEvent(new LevelCreatedEvent(model.assertLevel()));
     }
 
     @Override
@@ -51,7 +51,7 @@ public class CommonDemoLevelPlayingState extends GameState {
             model.highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
             // Note: This event is very important because it triggers the creation of the actor animations!
-            context.flow().publishGameEvent(new LevelStartedEvent(context, level));
+            context.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }
         else if (tick == 2) {
             // Now, actor animations are available, show them
@@ -95,7 +95,7 @@ public class CommonDemoLevelPlayingState extends GameState {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
 
-        context.gamePlay().updatePacPowerMode(context, level, pac);
+        context.gamePlay().updatePacPowerMode(context.eventManager(), model, level, pac);
 
         final EntityCollisionDetector collisionDetector = new EntityCollisionDetector(context);
 

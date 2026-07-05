@@ -9,6 +9,9 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.event.GameEventListener;
+import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
@@ -75,6 +78,11 @@ public class TestEatingFood {
         public void setHuntingStepResult(HuntingStepResult result) {
             throw new UnsupportedOperationException();
         }
+
+        @Override
+        public GameEventManager eventManager() {
+            throw new UnsupportedOperationException();
+        }
     }
 
     private static TestContext context;
@@ -86,7 +94,7 @@ public class TestEatingFood {
 
     @BeforeEach
     public void createGameLevel() {
-        context.gamePlay().buildNormalLevel(context, 1);
+        context.gamePlay().buildNormalLevel(context.eventManager(), context.model(), 1);
     }
 
     private void eatNextPellet(GameLevel level) {
@@ -96,7 +104,7 @@ public class TestEatingFood {
             .filter(not(foodLayer::isEnergizerTile))
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                context.gamePlay().eatPellet(context, level, tile);
+                context.gamePlay().eatPellet(context.eventManager(), context.model(), level, tile);
             });
     }
 
@@ -106,7 +114,7 @@ public class TestEatingFood {
             .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                context.gamePlay().eatEnergizer(context, level, tile);
+                context.gamePlay().eatEnergizer(context.eventManager(), context.model(), level, tile);
             });
     }
 

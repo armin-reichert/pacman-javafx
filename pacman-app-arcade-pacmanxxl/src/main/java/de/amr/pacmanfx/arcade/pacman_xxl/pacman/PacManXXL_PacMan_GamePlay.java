@@ -6,7 +6,8 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
-import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.event.GameEventManager;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
@@ -19,10 +20,10 @@ public class PacManXXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
     private static final int[] DEMOLEVEL_NUMBERS = { 1, 3, 6, 10, 14, 18 };
 
     @Override
-    public GameLevel buildDemoLevel(GameContext context) {
-        final PacManXXL_PacMan_GameModel model = (PacManXXL_PacMan_GameModel) context.model();
+    public GameLevel buildDemoLevel(GameEventManager eventManager, GameModel model) {
+        final PacManXXL_PacMan_GameModel xxlModel = (PacManXXL_PacMan_GameModel) model;
 
-        model.mapSelector().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
+        xxlModel.mapSelector().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 
         // Select random (standard) level with different map and map color scheme for each choice
         final int levelNumber = DEMOLEVEL_NUMBERS[randomInt(0, DEMOLEVEL_NUMBERS.length)];

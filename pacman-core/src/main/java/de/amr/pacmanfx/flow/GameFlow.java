@@ -47,16 +47,6 @@ public interface GameFlow {
 
     void makeStep();
 
-    // Game events
-
-    void addGameEventListener(GameEventListener listener);
-
-    void removeGameEventListener(GameEventListener listener);
-
-    void publishGameEvent(GameEvent event);
-
-    // Cut scenes
-
     /** @return {@code true} if cut scenes are enabled */
     boolean cutScenesEnabled();
 

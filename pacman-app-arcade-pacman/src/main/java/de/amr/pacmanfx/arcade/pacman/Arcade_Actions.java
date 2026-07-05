@@ -32,12 +32,12 @@ public final class Arcade_Actions {
             @Override
             public void doAction() {
                 final CoinMechanism coinMechanism = game.coinMechanism();
-                final GameContext gameContext = game.context();
+                final GameContext context = game.context();
                 game.ui().sounds().stopAndDisposeVoice();
                 game.ui().sounds().setEnabled(true);
                 coinMechanism.insertCoin();
-                gameContext.flow().publishGameEvent(new CreditAddedEvent(gameContext, 1));
-                gameContext.flow().enterState(GameStateID.GAME_PREPARATION);
+                context.eventManager().publishGameEvent(new CreditAddedEvent(1));
+                context.flow().enterState(GameStateID.GAME_PREPARATION);
             }
 
             @Override

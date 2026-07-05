@@ -4,6 +4,4 @@
 
 package de.amr.pacmanfx.event;
 
-import de.amr.pacmanfx.core.GameContext;
-
-public record GenericChangeEvent(GameContext context, String description) implements GameEvent {}
+public record GenericChangeEvent(String description) implements GameEvent {}

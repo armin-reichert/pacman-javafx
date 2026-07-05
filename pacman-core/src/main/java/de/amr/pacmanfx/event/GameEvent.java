@@ -4,8 +4,6 @@
 
 package de.amr.pacmanfx.event;
 
-import de.amr.pacmanfx.core.GameContext;
-
 public sealed interface GameEvent permits
     BonusActivatedEvent,
     BonusEatenEvent,
@@ -31,6 +29,4 @@ public sealed interface GameEvent permits
     StopAllSoundsEvent,
     GenericChangeEvent,
     TestStartedEvent
-{
-    GameContext context();
-}
+{}

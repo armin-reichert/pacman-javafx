@@ -27,8 +27,8 @@ public final class EntityCollisionResolver {
 
         evalFoodFound(level);
         if (context.huntingStepResult().foodFound()) {
-            context.flow().publishGameEvent(
-                new PacEatsFoodEvent(context, pac, context.huntingStepResult().energizerFound(), false));
+            context.eventManager().publishGameEvent(
+                new PacEatsFoodEvent(pac, context.huntingStepResult().energizerFound(), false));
         }
 
         evalBonusFound(level);
@@ -56,19 +56,19 @@ public final class EntityCollisionResolver {
 
         level.worldMap().foodLayer().markFoodEatenAt(foodTile);
         if (context.huntingStepResult().energizerFound()) {
-            context.gamePlay().eatEnergizer(context, level, foodTile);
+            context.gamePlay().eatEnergizer(context.eventManager(), model, level, foodTile);
         } else {
-            context.gamePlay().eatPellet(context, level, foodTile);
+            context.gamePlay().eatPellet(context.eventManager(), model, level, foodTile);
         }
 
         if (model.rules().isBonusAwarded(level)) {
-            context.gamePlay().activateNextBonus(context, level);
+            context.gamePlay().activateNextBonus(context.eventManager(), model, level);
         }
     }
 
     private void evalBonusFound(GameLevel level) {
         if (context.huntingStepResult().foundEdibleBonus()) {
-            context.gamePlay().eatBonus(context, level, context.huntingStepResult().edibleBonus());
+            context.gamePlay().eatBonus(context.eventManager(), level.gameModel(), level, context.huntingStepResult().edibleBonus());
         }
     }
 
@@ -88,7 +88,8 @@ public final class EntityCollisionResolver {
                 .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
                 .forEach(context.huntingStepResult().ghostsKilled()::add);
             // More than one ghost might have been killed in this step
-            context.huntingStepResult().ghostsKilled().forEach(ghost -> context.gamePlay().onEatGhost(context, level, ghost));
+            context.huntingStepResult().ghostsKilled().forEach(ghost ->
+                context.gamePlay().eatGhost(context.eventManager(), context.model(), level, ghost));
         }
     }
 

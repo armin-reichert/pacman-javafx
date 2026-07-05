@@ -30,15 +30,15 @@ public class LevelShortTestState extends GameState {
             ? 25
             : model.rules().lastLevelNumber();
         context.gamePlay().resetForNewGame(context);
-        context.gamePlay().buildNormalLevel(context, 1);
-        context.gamePlay().startLevel(context, model.assertLevel());
+        context.gamePlay().buildNormalLevel(context.eventManager(), model, 1);
+        context.gamePlay().startLevel(context.eventManager(), model, model.assertLevel());
         final GameLevel level = model.optGameLevel().orElseThrow();
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
 
         waitForTimeout();
         // Note: This event is very important because it triggers the creation of the actor animations!
-        context.flow().publishGameEvent(new LevelStartedEvent(context, level));
+        context.eventManager().publishGameEvent(new LevelStartedEvent(level));
     }
 
     @Override
@@ -55,27 +55,27 @@ public class LevelShortTestState extends GameState {
 
             level.heartbeat().restart();
 
-            context.flow().publishGameEvent(new TestStartedEvent(context, level));
+            context.eventManager().publishGameEvent(new TestStartedEvent(level));
         }
         else if (timer().atSecond(START + 1)) {
             level.clearMessage();
         }
         else if (timer().atSecond(START + 3)) {
-            context.gamePlay().activateNextBonus(context, level);
+            context.gamePlay().activateNextBonus(context.eventManager(), model, level);
         }
         else if (timer().atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
-                context.flow().publishGameEvent(new BonusEatenEvent(context, bonus));
+                context.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
             });
         }
         else if (timer().atSecond(START + 6)) {
-            context.gamePlay().activateNextBonus(context, level);
+            context.gamePlay().activateNextBonus(context.eventManager(), model, level);
         }
         else if (timer().atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {
                 bonus.showEatenForSeconds(2);
-                context.flow().publishGameEvent(new BonusEatenEvent(context, bonus));
+                context.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
             });
         }
         else if (timer().atSecond(START + 9)) {
@@ -88,7 +88,7 @@ public class LevelShortTestState extends GameState {
                 context.flow().restartState(GameStateID.BOOT);
             } else {
                 waitForTimeout();
-                context.gamePlay().startNextLevel(context, level);
+                context.gamePlay().startNextLevel(context.eventManager(), model, level);
             }
         } else {
             model.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.update(context, level));

@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.flow;
 
+import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.flow.StateMachineGameFlow;
 
 /**
@@ -16,5 +17,8 @@ public class Arcade_GameFlow extends StateMachineGameFlow {
         for (Arcade_GameState gameState : Arcade_GameState.values()) {
             addState(gameState.state());
         }
+        stateMachine.addStateChangeListener((oldState, newState) ->
+            gameContext().eventManager().publishGameEvent(
+                new GameStateChangeEvent(gameContext(), oldState, newState)));
     }
 }

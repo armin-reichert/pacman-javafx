@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.event;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.Pac;
 
-public record PacEatsFoodEvent(GameContext context, Pac pac, boolean energizer, boolean allPellets) implements GameEvent {}
+public record PacEatsFoodEvent(Pac pac, boolean energizer, boolean allPellets) implements GameEvent {}

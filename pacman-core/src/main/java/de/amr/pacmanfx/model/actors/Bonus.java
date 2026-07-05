@@ -123,7 +123,7 @@ public class Bonus extends MovingActor {
     }
 
     @Override
-    public void update(GameContext gameContext, GameLevel level) {
+    public void update(GameContext context, GameLevel level) {
         timer.doTick();
         switch (state) {
             case EDIBLE -> {
@@ -137,13 +137,13 @@ public class Bonus extends MovingActor {
                 }
                 if (edibleStateOver) {
                     setInactive();
-                    gameContext.flow().publishGameEvent(new BonusExpiredEvent(gameContext, this));
+                    context.eventManager().publishGameEvent(new BonusExpiredEvent(this));
                 }
             }
             case EATEN -> {
                 if (timer.hasExpired()) {
                     setInactive();
-                    gameContext.flow().publishGameEvent(new BonusExpiredEvent(gameContext, this));
+                    context.eventManager().publishGameEvent(new BonusExpiredEvent(this));
                 }
             }
             case INACTIVE -> {}

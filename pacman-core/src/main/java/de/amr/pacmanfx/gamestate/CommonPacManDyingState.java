@@ -57,7 +57,7 @@ public class CommonPacManDyingState extends GameState {
 
         level.entities().ghosts().forEach(ghost -> ghost.onPacKilled(level));
 
-        context.flow().publishGameEvent(new StopAllSoundsEvent(context));
+        context.eventManager().publishGameEvent(new StopAllSoundsEvent());
         waitForTimeout(); // UI triggers timeout
     }
 
@@ -84,14 +84,14 @@ public class CommonPacManDyingState extends GameState {
         }
         else if (tick == animationStartTick) {
             pac.animations().playSelected();
-            context.flow().publishGameEvent(new PacDyingEvent(context, pac));
+            context.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == hidePacTick) {
             pac.hide();
             level.optBonus().ifPresent(Bonus::setInactive); //TODO check this
         }
         else if (tick == pacDeadTick) {
-            context.flow().publishGameEvent(new PacDeadEvent(context, pac));
+            context.eventManager().publishGameEvent(new PacDeadEvent(pac));
         }
         else {
             level.heartbeat().triggerPulse();
