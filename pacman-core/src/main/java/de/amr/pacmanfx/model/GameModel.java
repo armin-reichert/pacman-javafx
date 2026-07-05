@@ -99,8 +99,6 @@ public interface GameModel {
 
     GameLevel createLevel(int levelNumber, boolean demoLevel);
 
-    void buildNormalLevel(GameContext gameContext, int levelNumber);
-
     GameLevel buildDemoLevel();
 
     void setLevel(GameLevel level);

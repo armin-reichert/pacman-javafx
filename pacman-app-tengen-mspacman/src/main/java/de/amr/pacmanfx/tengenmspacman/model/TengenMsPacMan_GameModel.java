@@ -233,16 +233,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void buildNormalLevel(GameContext context, int levelNumber) {
-        final GameLevel newLevel = createLevel(levelNumber, false);
-        score.setLevelNumber(levelNumber);
-        gateKeeper.setLevelNumber(levelNumber);
-
-        setLevel(newLevel);
-        context.flow().publishGameEvent(new LevelCreatedEvent(context, newLevel));
-    }
-
-    @Override
     public GameLevel buildDemoLevel() {
         final GameLevel demoLevel = createLevel(1, true);
         demoLevel.setGameOverStateTicks(120);

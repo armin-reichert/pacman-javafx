@@ -10,6 +10,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
@@ -263,6 +264,23 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
     }
 
     @Override
+    public void buildNormalLevel(GameContext context, int levelNumber) {
+        requireNonNull(context);
+        Validations.requireValidLevelNumber(levelNumber);
+
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+
+        final GameLevel newLevel = model.createLevel(levelNumber, false);
+        model.score().setLevelNumber(levelNumber);
+        model.gateKeeper().setLevelNumber(levelNumber);
+
+        model.setLevel(newLevel);
+
+        context.flow().publishGameEvent(new LevelCreatedEvent(context, newLevel));
+    }
+
+
+    @Override
     public void startNextLevel(GameContext context, GameLevel level) {
         requireNonNull(context);
         requireNonNull(level);
@@ -270,7 +288,7 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
         final GameModel model = context.model();
 
         if (level.number() < model.rules().lastLevelNumber()) {
-            model.buildNormalLevel(context, level.number() + 1);
+            buildNormalLevel(context, level.number() + 1);
             startLevel(context, level);
             // Note: This event is very important because it triggers the creation of the actor animations!
             context.flow().publishGameEvent(new LevelStartedEvent(context, level));

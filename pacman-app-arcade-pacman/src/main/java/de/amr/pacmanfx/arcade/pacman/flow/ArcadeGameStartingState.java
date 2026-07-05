@@ -29,7 +29,7 @@ public class ArcadeGameStartingState extends GameState {
 
         model.hudState().creditOff().livesCounterOn();
         model.resetForNewGame();
-        model.buildNormalLevel(context, 1);
+        context.gamePlay().buildNormalLevel(context, 1);
 
         context.flow().publishGameEvent(new GameStartedEvent(context));
     }

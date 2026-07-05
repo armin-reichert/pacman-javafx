@@ -33,16 +33,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
     // Game interface
 
     @Override
-    public void buildNormalLevel(GameContext context, int levelNumber) {
-        final GameLevel level = createLevel(levelNumber, false);
-        levelCounter().setEnabled(true);
-        score().setLevelNumber(levelNumber);
-        gateKeeper.setLevelNumber(levelNumber);
-        setLevel(level);
-        context.flow().publishGameEvent(new LevelCreatedEvent(context, level));
-    }
-
-    @Override
     public GameLevel buildDemoLevel() {
         final int demoLevelNumber = 1;
         final GameLevel level = createLevel(demoLevelNumber, true);

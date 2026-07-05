@@ -39,6 +39,8 @@ public interface GamePlay {
 
     void showLevelMessage(GameLevel level, GameLevelMessageType type);
 
+    void buildNormalLevel(GameContext gameContext, int levelNumber);
+
     void startLevel(GameContext gameContext, GameLevel level);
 
     void startNextLevel(GameContext gameContext, GameLevel currentLevel);

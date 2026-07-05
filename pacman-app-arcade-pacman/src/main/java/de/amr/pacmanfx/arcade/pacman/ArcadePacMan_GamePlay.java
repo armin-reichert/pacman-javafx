@@ -12,6 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
@@ -239,6 +240,22 @@ public class ArcadePacMan_GamePlay implements GamePlay {
     }
 
     @Override
+    public void buildNormalLevel(GameContext context, int levelNumber) {
+        requireNonNull(context);
+        Validations.requireValidLevelNumber(levelNumber);
+
+        final GameModel model = context.model();
+
+        final GameLevel level = model.createLevel(levelNumber, false);
+        model.levelCounter().setEnabled(true);
+        model.score().setLevelNumber(levelNumber);
+        model.gateKeeper().setLevelNumber(levelNumber);
+        model.setLevel(level);
+
+        context.flow().publishGameEvent(new LevelCreatedEvent(context, level));
+    }
+
+    @Override
     public void startNextLevel(GameContext context, GameLevel level) {
         requireNonNull(context);
         requireNonNull(level);
@@ -246,7 +263,7 @@ public class ArcadePacMan_GamePlay implements GamePlay {
         final GameModel model = context.model();
 
         if (level.number() < model.rules().lastLevelNumber()) {
-            model.buildNormalLevel(context, level.number() + 1);
+            buildNormalLevel(context, level.number() + 1);
             startLevel(context, level);
             // Note: This event is very important because it triggers the creation of the actor animations!
             context.flow().publishGameEvent(new LevelStartedEvent(context, level));
@@ -271,7 +288,6 @@ public class ArcadePacMan_GamePlay implements GamePlay {
 
         context.cheats().update(level);
     }
-
 
     // -----------------------------------------------
 

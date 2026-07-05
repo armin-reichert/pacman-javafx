@@ -58,7 +58,7 @@ public class LevelMediumTestState extends GameState {
             : model.rules().lastLevelNumber();
         timer().restartSeconds(TEST_DURATION_SEC);
         model.resetForNewGame();
-        model.buildNormalLevel(context, 1);
+        context.gamePlay().buildNormalLevel(context, 1);
         context.gamePlay().startLevel(context, model.assertLevel());
         // Note: This event is very important because it triggers the creation of the actor animations!
         context.flow().publishGameEvent(new LevelStartedEvent(context, model.assertLevel()));

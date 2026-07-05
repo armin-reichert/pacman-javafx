@@ -86,7 +86,7 @@ public class TestEatingFood {
 
     @BeforeEach
     public void createGameLevel() {
-        context.model().buildNormalLevel(context, 1);
+        context.gamePlay().buildNormalLevel(context, 1);
     }
 
     private void eatNextPellet(GameLevel level) {

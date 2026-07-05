@@ -30,7 +30,7 @@ public class LevelShortTestState extends GameState {
             ? 25
             : model.rules().lastLevelNumber();
         model.resetForNewGame();
-        model.buildNormalLevel(context, 1);
+        context.gamePlay().buildNormalLevel(context, 1);
         context.gamePlay().startLevel(context, model.assertLevel());
         final GameLevel level = model.optGameLevel().orElseThrow();
         level.entities().pac().show();
