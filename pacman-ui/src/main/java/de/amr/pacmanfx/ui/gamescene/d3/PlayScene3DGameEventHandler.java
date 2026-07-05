@@ -115,7 +115,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
     @Override
     public void onGameStarted(GameStartedEvent event) {
         final State<GameContext> state = gameContext().state();
-        final boolean silent = gameContext().model().isDemoLevelRunning()
+        final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameContext())
             || (state instanceof GameState gameState && gameState.id() instanceof TestStateID);
 
         if (!silent) {

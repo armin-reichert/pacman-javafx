@@ -117,7 +117,4 @@ public interface GameModel {
     void prepareLevelForPlaying(GameLevel level);
 
     void showLevelMessage(GameLevel level, GameLevelMessageType type);
-
-    boolean isDemoLevelRunning();
-
 }

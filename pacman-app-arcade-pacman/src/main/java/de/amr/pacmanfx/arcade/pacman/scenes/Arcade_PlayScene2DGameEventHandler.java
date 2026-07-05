@@ -48,7 +48,8 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
 
     @Override
     public void onGameStarted(GameStartedEvent e) {
-        final boolean silent = gameModel().isDemoLevelRunning() || gameState().id() instanceof TestStateID;
+        final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameContext())
+            || gameState().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }

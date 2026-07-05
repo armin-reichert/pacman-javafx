@@ -27,17 +27,17 @@ import static java.util.Objects.requireNonNull;
 public class HelpInfo {
 
     public static HelpInfo build(Game game) {
-        final GameContext gameContext = game.context();
-        final GameModel gameModel = gameContext.model();
-        final GameState state = gameContext.state();
-        final boolean demoLevel = gameModel.isDemoLevelRunning();
+        final GameContext context = game.context();
+        final GameModel model = context.model();
+        final GameState state = context.state();
+        final boolean demoLevel = context.gamePlay().isDemoLevelRunning(context);
 
         final HelpInfo helpInfo = new HelpInfo(game);
         if (GameStateID.GAME_INTRO.identifies(state)) {
-            helpInfo.addInfoForIntroScene(gameContext, gameModel);
+            helpInfo.addInfoForIntroScene(context, model);
         }
         else if (GameStateID.GAME_PREPARATION.identifies(state)) {
-            helpInfo.addInfoForCreditScene(gameContext, gameModel);
+            helpInfo.addInfoForCreditScene(context, model);
         }
         else if (state.isOneOf(GameStateID.GAME_OR_LEVEL_STARTING, GameStateID.GAME_LEVEL_PLAYING,
             GameStateID.GAME_LEVEL_PACMAN_DYING, GameStateID.GAME_LEVEL_EATING_GHOST)) {

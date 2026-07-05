@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
@@ -56,8 +55,7 @@ public final class TengenMsPacMan_Actions {
 
             @Override
             public boolean isEnabled() {
-                final GameModel gameModel = game.context().model();
-                return gameModel.isDemoLevelRunning();
+                return game.context().gamePlay().isDemoLevelRunning(game.context());
             }
         };
 

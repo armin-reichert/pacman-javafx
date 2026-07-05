@@ -243,11 +243,6 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public boolean isDemoLevelRunning() {
-        return optGameLevel().isPresent() && optGameLevel().get().isDemoLevel();
-    }
-
-    @Override
     public void startNextLevel(GameContext context, GameLevel level) {
         if (level.number() < rules.lastLevelNumber()) {
             buildNormalLevel(context, level.number() + 1);

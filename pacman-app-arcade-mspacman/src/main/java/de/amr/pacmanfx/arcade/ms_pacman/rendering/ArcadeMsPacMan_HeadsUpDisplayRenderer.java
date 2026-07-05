@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.HUDState;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -39,18 +39,18 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
     }
 
     @Override
-    public void draw(HUDState hud, GameModel gameModel, AbstractGameScene2D scene) {
-        requireNonNull(gameModel);
+    public void draw(HUDState hud, GameContext context, AbstractGameScene2D scene) {
+        requireNonNull(context);
         requireNonNull(scene);
 
         if (!hud.isVisible()) return;
 
         if (hud.isScoreOn()) {
-            drawScore(gameModel.score(), SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, TS(1), TS(1));
+            drawScore(context.model().score(), SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, TS(1), TS(1));
 
-            final Score highScore = gameModel.highScore();
+            final Score highScore = context.model().highScore();
             Color color = SCORE_TEXT_COLOR;
-            if (!gameModel.isDemoLevelRunning() && !highScore.isEnabled()) {
+            if (!context.gamePlay().isDemoLevelRunning(context) && !highScore.isEnabled()) {
                 color = SCORE_TEXT_COLOR_DISABLED;
             }
             drawScore(highScore, HIGH_SCORE_TEXT, arcadeFont8(), color, TS(14), TS(1));
@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
             final RectShort[] bonusSymbols = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
             float x = scene.unscaledWidth() - TS(4);
             final float y = scene.unscaledHeight() - TS(2) + 2;
-            for (int symbolCode : gameModel.levelCounter().symbolCodes()) {
+            for (int symbolCode : context.model().levelCounter().symbolCodes()) {
                 drawSprite(bonusSymbols[symbolCode], x, y, true);
                 x -= TS(2); // symbols are drawn from right to left
             }
@@ -73,7 +73,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(sprite, x + i * TS(2), y, true);
             }
-            final int lifeCount = gameModel.lives().count();
+            final int lifeCount = context.model().lives().count();
             if (lifeCount > hud.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));

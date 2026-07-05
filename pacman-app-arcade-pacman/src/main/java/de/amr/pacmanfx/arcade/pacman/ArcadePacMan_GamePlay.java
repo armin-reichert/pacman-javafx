@@ -194,6 +194,11 @@ public class ArcadePacMan_GamePlay implements GamePlay {
         level.optBonus().ifPresent(Bonus::setInactive);
     }
 
+    @Override
+    public boolean isDemoLevelRunning(GameContext context) {
+        return context.model().optGameLevel().isPresent() && context.model().assertLevel().isDemoLevel();
+    }
+
     // -----------------------------------------------
 
     protected void checkRedGhostCruiseElroyActivation(GameLevel level) {

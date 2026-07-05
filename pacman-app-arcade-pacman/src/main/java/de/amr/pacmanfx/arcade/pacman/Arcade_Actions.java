@@ -47,12 +47,12 @@ public final class Arcade_Actions {
                 if (coinMechanism.isFull()) {
                     return false;
                 }
-                final GameContext gameContext = game.context();
+                final GameContext context = game.context();
                 // In demo level, coin can always be inserted
-                if (gameContext.model().isDemoLevelRunning()) {
+                if (context.gamePlay().isDemoLevelRunning(context)) {
                     return true;
                 }
-                final GameState gameState = gameContext.state();
+                final GameState gameState = context.state();
                 return GameStateID.GAME_INTRO.identifies(gameState) || GameStateID.GAME_PREPARATION.identifies(gameState);
             }
         };

@@ -243,7 +243,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
                 sceneRenderer.draw(gameScene2D);
             }
             if (hudRenderer != null) {
-                hudRenderer.draw(gameModel.hudState(), gameModel, gameScene2D);
+                hudRenderer.draw(gameModel.hudState(), game.context(), gameScene2D);
             }
         }
 

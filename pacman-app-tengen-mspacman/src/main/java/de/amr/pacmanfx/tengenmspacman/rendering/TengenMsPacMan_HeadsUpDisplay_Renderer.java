@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.HUDState;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -48,14 +49,14 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     @Override
-    public void draw(HUDState hud, GameModel game, AbstractGameScene2D scene) {
+    public void draw(HUDState hud, GameContext context, AbstractGameScene2D scene) {
         requireNonNull(hud);
-        requireNonNull(game);
+        requireNonNull(context);
         requireNonNull(scene);
 
         if (!hud.isVisible()) return;
         if (!(hud instanceof TengenMsPacMan_HUDState tengenHUD)) return;
-        if (!(game instanceof TengenMsPacMan_GameModel tengenGame)) return;
+        if (!(context instanceof TengenMsPacMan_GameModel tengenGame)) return;
 
         ctx.save();
         ctx.translate(0, scaled(computeOffsetY(scene)));
@@ -63,11 +64,11 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         if (hud.isScoreOn()) {
             // blink frequency = 1Hz (30 ticks on, 30 ticks off)
             final boolean on = scene.game().clock().currentTick() % 60 < 30;
-            drawScore(game.score(), on, arcadeFont8());
+            drawScore(context.model().score(), on, arcadeFont8());
 
-            final Score highScore = game.highScore();
+            final Score highScore = context.model().highScore();
             Color color = SCORE_TEXT_COLOR;
-            if (!highScore.isEnabled() && !game.isDemoLevelRunning()) {
+            if (!highScore.isEnabled() && !context.gamePlay().isDemoLevelRunning(context)) {
                 color = SCORE_TEXT_COLOR_DISABLED;
             }
             drawHighScore(highScore, arcadeFont8(), color);
@@ -79,7 +80,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             drawLivesCounter(tengenGame, tengenHUD, counterY);
         }
 
-        game.optGameLevel().ifPresent(level -> {
+        context.model().optGameLevel().ifPresent(level -> {
             if (tengenHUD.isLevelCounterOn()) {
                 drawLevelCounter(level, tengenHUD, counterY);
             }

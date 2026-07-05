@@ -31,4 +31,6 @@ public interface GamePlay {
     boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
     void onLevelCompleted(GameLevel level);
+
+    boolean isDemoLevelRunning(GameContext context);
 }
