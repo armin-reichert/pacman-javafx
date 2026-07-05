@@ -88,7 +88,7 @@ public class LevelShortTestState extends GameState {
                 context.flow().restartState(GameStateID.BOOT);
             } else {
                 waitForTimeout();
-                model.startNextLevel(context, level);
+                context.gamePlay().startNextLevel(context, level);
             }
         } else {
             model.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.update(context, level));

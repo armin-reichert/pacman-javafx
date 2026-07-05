@@ -66,22 +66,22 @@ public class LevelMediumTestState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
+    public void onUpdate(GameContext context) {
+        final GameModel gameModel = context.model();
         final GameLevel level = gameModel.optGameLevel().orElseThrow();
 
-        level.entities().pac().update(gameContext, level);
-        level.entities().ghosts().forEach(ghost -> ghost.update(gameContext, level));
-        level.optBonus().ifPresent(bonus -> bonus.update(gameContext, level));
+        level.entities().pac().update(context, level);
+        level.entities().ghosts().forEach(ghost -> ghost.update(context, level));
+        level.optBonus().ifPresent(bonus -> bonus.update(context, level));
 
         if (gameModel.gateKeeper() != null) {
             gameModel.gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
-        gameContext.cheats().update(level);
+        context.cheats().update(level);
 
         level.heartbeat().triggerPulse();
 
-        final EntityCollisionDetector collisionDetector = new EntityCollisionDetector(gameContext);
+        final EntityCollisionDetector collisionDetector = new EntityCollisionDetector(context);
         collisionDetector.detectCollisions(level);
 
         //TODO add missing logic again
@@ -89,23 +89,23 @@ public class LevelMediumTestState extends GameState {
 
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
-                gameContext.flow().publishGameEvent(new StopAllSoundsEvent(gameContext));
-                gameContext.flow().enterState(GameStateID.GAME_INTRO);
+                context.flow().publishGameEvent(new StopAllSoundsEvent(context));
+                context.flow().enterState(GameStateID.GAME_INTRO);
             }
             else {
                 timer().restartSeconds(TEST_DURATION_SEC);
-                gameModel.startNextLevel(gameContext, gameModel.assertLevel());
-                configureLevelForTest(gameContext);
+                context.gamePlay().startNextLevel(context, gameModel.assertLevel());
+                configureLevelForTest(context);
             }
         }
         else if (gameModel.rules().isLevelCompleted(level)) {
-            gameContext.flow().enterState(GameStateID.GAME_INTRO);
+            context.flow().enterState(GameStateID.GAME_INTRO);
         }
         else if (pacKilled) {
             triggerTimeout();
         }
-        else if (gameContext.huntingStepResult().hasGhostBeenKilled()) {
-            gameContext.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST);
+        else if (context.huntingStepResult().hasGhostBeenKilled()) {
+            context.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST);
         }
     }
 

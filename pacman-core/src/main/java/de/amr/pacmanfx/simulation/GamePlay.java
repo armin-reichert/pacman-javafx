@@ -38,4 +38,6 @@ public interface GamePlay {
     void prepareLevelForPlaying(GameLevel level);
 
     void showLevelMessage(GameLevel level, GameLevelMessageType type);
+
+    void startNextLevel(GameContext gameContext, GameLevel currentLevel);
 }

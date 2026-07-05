@@ -110,7 +110,4 @@ public interface GameModel {
     GameLevel assertLevel();
 
     void startLevel(GameContext gameContext, GameLevel level);
-
-    void startNextLevel(GameContext gameContext, GameLevel currentLevel);
-
 }
