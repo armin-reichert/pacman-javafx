@@ -2,6 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
@@ -11,11 +12,11 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.Elroy;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
+import de.amr.pacmanfx.simulation.GamePlay;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,8 +34,12 @@ public class TestEatingFood {
 
         private final PacManGamesMachine machine = new PacManGamesMachine();
         private final GameFlow  gameFlow  = new Arcade_GameFlow();
-        private final GameModel gameModel = new ArcadePacMan_GameModel();
-        private final GameRules gameRules = new ArcadePacMan_GameRules();
+        private final ArcadePacMan_GameModel gameModel = new ArcadePacMan_GameModel();
+        private final GamePlay gamePlay = new ArcadePacMan_GamePlay();
+
+        public TestContext() {
+            gameModel.setRules(new ArcadePacMan_GameRules());
+        }
 
         @Override
         public CoinMechanism coinMechanism() {
@@ -42,13 +47,13 @@ public class TestEatingFood {
         }
 
         @Override
-        public GameFlow flow() {
-            return gameFlow;
+        public GamePlay gamePlay() {
+            return gamePlay;
         }
 
         @Override
-        public GameRules rules() {
-            return gameRules;
+        public GameFlow flow() {
+            return gameFlow;
         }
 
         @Override
@@ -72,16 +77,16 @@ public class TestEatingFood {
         }
     }
 
-    private static TestContext testContext;
+    private static TestContext context;
 
     @BeforeAll
     static void setup() {
-        testContext = new TestContext();
+        context = new TestContext();
     }
 
     @BeforeEach
     public void createGameLevel() {
-        testContext.model().buildNormalLevel(testContext, 1);
+        context.model().buildNormalLevel(context, 1);
     }
 
     private void eatNextPellet(GameLevel level) {
@@ -91,7 +96,7 @@ public class TestEatingFood {
             .filter(not(foodLayer::isEnergizerTile))
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                level.gameModel().eatPellet(testContext, level, tile);
+                context.gamePlay().eatPellet(context, level, tile);
             });
     }
 
@@ -101,14 +106,14 @@ public class TestEatingFood {
             .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                level.gameModel().eatEnergizer(testContext, level, tile);
+                context.gamePlay().eatEnergizer(context, level, tile);
             });
     }
 
     @Test
     @DisplayName("Test Food Counting")
     public void testFoodCounting() {
-        testContext.model().optGameLevel().ifPresent(level -> {
+        context.model().optGameLevel().ifPresent(level -> {
             final FoodLayer foodLayer = level.worldMap().foodLayer();
 
             int eaten = foodLayer.eatenFoodCount();
@@ -129,20 +134,20 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Level Completion")
     public void testLevelCompletion() {
-        testContext.model().optGameLevel().ifPresent(level -> {
+        context.model().optGameLevel().ifPresent(level -> {
             while (level.worldMap().foodLayer().remainingFoodCount() > 0) {
-                assertFalse(testContext.rules().isLevelCompleted(level));
+                assertFalse(context.model().rules().isLevelCompleted(level));
                 eatNextPellet(level);
                 eatNextEnergizer(level);
             }
-            assertTrue(testContext.rules().isLevelCompleted(level));
+            assertTrue(context.model().rules().isLevelCompleted(level));
         });
     }
 
     @Test
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
-        testContext.model().optGameLevel().ifPresent(level -> {
+        context.model().optGameLevel().ifPresent(level -> {
             final Ghost blinky = level.ghost(RED_GHOST_SHADOW);
             final FoodLayer foodLayer = level.worldMap().foodLayer();
             final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
@@ -172,7 +177,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Resting")
     public void testResting() {
-        testContext.model().optGameLevel().ifPresent(level -> {
+        context.model().optGameLevel().ifPresent(level -> {
             eatNextPellet(level);
             assertEquals(1, level.entities().pac().restingTicks());
             eatNextEnergizer(level);

@@ -34,46 +34,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
         actorSpeedControl = new Arcade_ActorSpeedControl();
     }
 
-    @Override
-    public void eatPellet(GameContext context, GameLevel level, Vector2i tile) {
-        super.eatPellet(context, level, tile);
-        level.entities().pac().setRestingTicks(rules.restingTicksForPellet());
-        checkRedGhostCruiseElroyActivation(level);
-    }
-
-    @Override
-    public void eatEnergizer(GameContext context, GameLevel level, Vector2i tile) {
-        requireNonNull(context);
-        requireNonNull(level);
-        requireNonNull(tile);
-
-        scorePoints(context, rules.pointsForEnergizer(), level.number());
-        gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
-
-        final Pac pac = level.entities().pac();
-        pac.setRestingTicks(rules.restingTicksForEnergizer());
-        checkRedGhostCruiseElroyActivation(level);
-
-        level.clearGhostKillChain();
-
-        startPacPowerMode(context, level, pac);
-    }
-
-    protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
-        final Ghost redGhost = level.ghost(GameModel.RED_GHOST_SHADOW);
-        if (redGhost != null) {
-            final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
-            final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();
-            if (uneatenFoodCount == data.numDotsLeftElroy1()) {
-                redGhost.elroy().setBoost(Elroy.Boost.MEDIUM);
-            } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
-                redGhost.elroy().setBoost(Elroy.Boost.LARGE);
-            }
-        } else {
-            throw new IllegalStateException("Red ghost not existing in this level");
-        }
-    }
-
     // Game interface
 
     @Override

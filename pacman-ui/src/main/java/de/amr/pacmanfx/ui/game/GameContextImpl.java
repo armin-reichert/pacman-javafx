@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.simulation.GamePlay;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 
 import static java.util.Objects.requireNonNull;
@@ -16,7 +17,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Context for the currently selected game variant.
  */
-public class GameVariantContext implements GameContext {
+public class GameContextImpl implements GameContext {
 
     private final PacManGamesCollection game;
 
@@ -24,7 +25,7 @@ public class GameVariantContext implements GameContext {
 
     private HuntingStepResult huntingStepResult;
 
-    public GameVariantContext(PacManGamesCollection game, GameVariantRuntime gameVariantRuntime) {
+    public GameContextImpl(PacManGamesCollection game, GameVariantRuntime gameVariantRuntime) {
         this.game = requireNonNull(game);
         this.gameVariantRuntime = requireNonNull(gameVariantRuntime);
     }
@@ -52,6 +53,11 @@ public class GameVariantContext implements GameContext {
     @Override
     public GameModel model() {
         return gameVariantRuntime.gameModel();
+    }
+
+    @Override
+    public GamePlay gamePlay() {
+        return gameVariantRuntime.gamePlay();
     }
 
     @Override

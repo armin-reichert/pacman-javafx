@@ -1,0 +1,20 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.simulation;
+
+
+import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.level.GameLevel;
+
+public interface GamePlay {
+
+    void eatPellet(GameContext context, GameLevel level, Vector2i tile);
+
+    void eatEnergizer(GameContext context, GameLevel level, Vector2i tile);
+
+    void startPacPowerMode(GameContext context, GameLevel level, Pac pac);
+}

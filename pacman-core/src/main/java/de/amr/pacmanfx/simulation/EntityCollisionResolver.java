@@ -12,14 +12,14 @@ import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import org.tinylog.Logger;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 public final class EntityCollisionResolver {
 
     private final GameContext context;
 
     public EntityCollisionResolver(GameContext context) {
-        this.context = Objects.requireNonNull(context);
+        this.context = requireNonNull(context);
     }
 
     public void evaluateCollisions(GameLevel level) {
@@ -56,9 +56,9 @@ public final class EntityCollisionResolver {
 
         level.worldMap().foodLayer().markFoodEatenAt(foodTile);
         if (context.huntingStepResult().energizerFound()) {
-            gameModel.eatEnergizer(context, level, foodTile);
+            context.gamePlay().eatEnergizer(context, level, foodTile);
         } else {
-            gameModel.eatPellet(context, level, foodTile);
+            context.gamePlay().eatPellet(context, level, foodTile);
         }
 
         if (gameModel.rules().isBonusAwarded(level)) {

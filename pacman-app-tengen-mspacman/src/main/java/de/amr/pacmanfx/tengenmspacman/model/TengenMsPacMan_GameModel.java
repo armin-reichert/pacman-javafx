@@ -336,18 +336,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         context.flow().publishGameEvent(new BonusActivatedEvent(context, bonus));
     }
 
-    @Override
-    public void eatEnergizer(GameContext gameContext, GameLevel level, Vector2i tile) {
-        requireNonNull(level);
-        requireNonNull(tile);
-
-        scorePoints(gameContext, rules.pointsForEnergizer(), level.number());
-        gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
-
-        level.clearGhostKillChain();
-
-        startPacPowerMode(gameContext, level, level.entities().pac());
-    }
 
     // Helpers
 

@@ -5,9 +5,7 @@
 package de.amr.pacmanfx.model;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.actors.*;
@@ -32,7 +30,6 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
-import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -296,16 +293,6 @@ public abstract class AbstractGameModel implements GameModel {
     // Actor related
 
     @Override
-    public void eatPellet(GameContext context, GameLevel level, Vector2i tile) {
-        requireNonNull(level);
-        requireNonNull(tile);
-        scorePoints(context, rules.pointsForPellet(), level.number());
-        if (gateKeeper != null) {
-            gateKeeper.registerFoodEaten(level, level.worldMap().terrainLayer().house());
-        }
-    }
-
-    @Override
     public void eatBonus(GameContext context, GameLevel level, Bonus bonus) {
         scorePoints(context, bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
@@ -332,20 +319,6 @@ public abstract class AbstractGameModel implements GameModel {
         context.flow().publishGameEvent(new GhostEatenEvent(context, eatenGhost));
     }
 
-    public void startPacPowerMode(GameContext context, GameLevel level, Pac pac) {
-        level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
-        final float powerSeconds = level.pacPowerSeconds();
-        if (powerSeconds > 0) {
-            level.huntingTimer().stop();
-            Logger.debug("Hunting stopped (Pac-Man got power)");
-            final long powerTicks = TickTimer.secToTicks(powerSeconds);
-            pac.powerTimer().restartTicks(powerTicks);
-            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
-            level.ghostsInState(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
-            context.flow().publishGameEvent(new PacGetsPowerEvent(context, pac));
-        }
-    }
-
     public void updatePacPowerMode(GameContext context, GameLevel level, Pac pac) {
         if (pac.powerTimer().isRunning()) {
             pac.powerTimer().doTick();
@@ -370,7 +343,8 @@ public abstract class AbstractGameModel implements GameModel {
         highScore = new PersistentScore(file);
     }
 
-    protected void scorePoints(GameContext context, int points, int levelNumber) {
+    @Override
+    public void scorePoints(GameContext context, int points, int levelNumber) {
         if (!score.isEnabled()) {
             return;
         }

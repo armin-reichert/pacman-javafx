@@ -18,6 +18,7 @@ import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.simulation.EntityCollisionDetector;
 import de.amr.pacmanfx.simulation.EntityCollisionResolver;
+import de.amr.pacmanfx.simulation.GamePlay;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 

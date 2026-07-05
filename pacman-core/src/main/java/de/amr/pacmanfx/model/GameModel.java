@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.model;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -98,6 +97,8 @@ public interface GameModel {
 
     void updateHighScore();
 
+    void scorePoints(GameContext context, int points, int levelNumber);
+
     // Level related
 
     GameLevel createLevel(int levelNumber, boolean demoLevel);
@@ -126,17 +127,11 @@ public interface GameModel {
 
     // Actor related
 
-    void eatPellet(GameContext gameContext, GameLevel level, Vector2i tile);
-
-    void eatEnergizer(GameContext gameContext, GameLevel level, Vector2i tile);
-
     void activateNextBonus(GameContext gameContext, GameLevel level);
 
     void eatBonus(GameContext gameContext, GameLevel level, Bonus bonus);
 
     void onEatGhost(GameContext gameContext, GameLevel level, Ghost eatenGhost);
-
-    void startPacPowerMode(GameContext gameContext, GameLevel level, Pac pac);
 
     void updatePacPowerMode(GameContext gameContext, GameLevel level, Pac pac);
 
