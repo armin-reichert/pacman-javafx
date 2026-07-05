@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.game;
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.simulation.GamePlay;
 import de.amr.pacmanfx.ui.GameVariant;
 
@@ -19,7 +18,6 @@ public record Cartridge(
     Supplier<? extends GamePlay> gamePlayFactory,
     Supplier<? extends GameFlow> gameFlowFactory,
     Supplier<? extends AbstractGameModel> gameModelFactory,
-    Supplier<? extends GameRules> gameRulesFactory,
     Supplier<? extends GameVariant> uiConfigFactory,
     Set<GameExtension> gameExtensions)
     implements Identifier

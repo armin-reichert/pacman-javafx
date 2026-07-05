@@ -47,6 +47,7 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
     public ArcadeMsPacMan_GameModel(WorldMapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
+        rules = new ArcadeMsPacMan_GameRules();
         levelCounter = new ArcadeMsPacMan_LevelCounter();
         demoLevelSteering = new RuleBasedPacSteering();
         automaticSteering = new RuleBasedPacSteering();

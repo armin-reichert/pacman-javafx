@@ -22,6 +22,5 @@ public record GameVariantRuntime(
             new DefaultCheatsImpl(),
             cartridge.uiConfigFactory().get()
         );
-        gameModel.setRules(cartridge.gameRulesFactory().get());
     }
 }
