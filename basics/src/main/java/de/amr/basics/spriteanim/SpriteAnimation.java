@@ -17,7 +17,7 @@ public class SpriteAnimation {
     private final SpriteAnimationContainer container;
 
     private RectShort[] sprites;
-    private int currentFrameIndex;
+    private int frame;
     private boolean loop;
     private boolean running;
 
@@ -28,7 +28,7 @@ public class SpriteAnimation {
         this.container = Objects.requireNonNull(container);
 
         sprites = new RectShort[0];
-        currentFrameIndex = 0;
+        frame = 0;
         loop = false;
         running = false;
         smallTick = 0;
@@ -41,8 +41,10 @@ public class SpriteAnimation {
         }
         if (smallTick == frameDurationTicks - 1) {
             advanceFrame();
+            smallTick = 0;
+        } else {
+            ++smallTick;
         }
-        smallTick = (smallTick + 1) % frameDurationTicks;
     }
 
     public void start() {
@@ -63,19 +65,19 @@ public class SpriteAnimation {
 
     public void reset() {
         stop();
-        currentFrameIndex = 0;
+        frame = 0;
         smallTick = 0;
     }
 
     public void advanceFrame() {
-        if (currentFrameIndex == sprites.length - 1) {
+        if (frame == sprites.length - 1) {
             if (loop) {
-                currentFrameIndex = 0;
+                frame = 0;
             } else {
                 stop();
             }
         } else {
-            ++currentFrameIndex;
+            ++frame;
         }
         smallTick = 0;
     }
@@ -88,8 +90,7 @@ public class SpriteAnimation {
         if (sprites.length == 0) {
             throw new IllegalArgumentException("Sprites array is empty");
         }
-        currentFrameIndex = 0;
-        smallTick = 0;
+        reset();
     }
 
     public void setFrameDurationTicks(int numTicks) {
@@ -103,16 +104,18 @@ public class SpriteAnimation {
         this.loop = loop;
     }
 
-    public void setCurrentFrameIndex(int frame) {
-        if (!isValidFrame(frame)) {
-            throw new IllegalArgumentException("Frame %d is out of range, number of sprites: %d".formatted(frame, sprites.length));
-        }
-        currentFrameIndex = frame;
+    public void setFrame(int index) {
+        this.frame = requireValidFrame(index);
     }
 
-    public int currentFrame() { return currentFrameIndex; }
+    public int frame() { return frame; }
 
-    public RectShort currentSprite() { return sprites[currentFrameIndex]; }
+    public RectShort sprite() { return sprites[frame]; }
 
-    private boolean isValidFrame(int index) { return 0 <= index && index < sprites.length; }
+    private int requireValidFrame(int index) {
+        if (0 <= index && index < sprites.length) {
+            return index;
+        }
+        throw new IllegalArgumentException("Frame %d is out of range, number of sprites: %d".formatted(index, sprites.length));
+    }
 }

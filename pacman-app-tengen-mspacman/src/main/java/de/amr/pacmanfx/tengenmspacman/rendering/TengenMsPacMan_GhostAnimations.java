@@ -78,7 +78,7 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     public void setAnimationFrame(Identifier animationID, int frameIndex) {
         super.setAnimationFrame(animationID, frameIndex);
         if (ArcadePacMan_AnimationID.GHOST_POINTS.equals(animationID)) {
-            animation(ArcadePacMan_AnimationID.GHOST_POINTS).setCurrentFrameIndex(frameIndex);
+            animation(ArcadePacMan_AnimationID.GHOST_POINTS).setFrame(frameIndex);
         }
     }
 }

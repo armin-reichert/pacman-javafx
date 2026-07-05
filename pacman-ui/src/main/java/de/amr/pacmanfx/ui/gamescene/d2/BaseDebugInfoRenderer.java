@@ -73,7 +73,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
 
     private void drawAnimationInfo(Actor actor, SpriteAnimationMap<?> spriteAnimationMap, Object selectedID) {
         ctx.save();
-        String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().currentFrame());
+        String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().frame());
         double x = scaled(actor.x() - 4), y = scaled(actor.y() - 4);
         ctx.setFill(debugTextFill);
         ctx.fillText(text, x, y);

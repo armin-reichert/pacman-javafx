@@ -47,7 +47,7 @@ public abstract class SpriteAnimationMap<ID extends Identifier> implements Sprit
     @Override
     public RectShort currentSprite() {
         final SpriteAnimation currentAnimation = currentAnimation();
-        return currentAnimation == null ? null : currentAnimation.currentSprite();
+        return currentAnimation == null ? null : currentAnimation.sprite();
     }
 
     @Override
@@ -79,7 +79,7 @@ public abstract class SpriteAnimationMap<ID extends Identifier> implements Sprit
         if (!animationID.equals(selectedAnimationID)) {
             selectedAnimationID = animationID;
             if (currentAnimation() != null) {
-                currentAnimation().setCurrentFrameIndex(0);
+                currentAnimation().setFrame(0);
             } else {
                 Logger.warn("No animation with ID {} exists", animationID);
             }
@@ -88,7 +88,7 @@ public abstract class SpriteAnimationMap<ID extends Identifier> implements Sprit
 
     @Override
     public int currentFrame() {
-        return currentAnimation() != null ? currentAnimation().currentFrame() : -1;
+        return currentAnimation() != null ? currentAnimation().frame() : -1;
     }
 
     @Override

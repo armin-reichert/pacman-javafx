@@ -84,14 +84,14 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private FacingSprite computePacDyingSprite(Pac pac) {
         final var dyingAnimation = pac.animations().animation(ArcadePacMan_AnimationID.PAC_DYING);
         if (dyingAnimation instanceof SpriteAnimation spriteAnimation) {
-            final Direction facingDir = switch (spriteAnimation.currentFrame()) {
+            final Direction facingDir = switch (spriteAnimation.frame()) {
                 case 0, 4, 8  -> Direction.DOWN;
                 case 1, 5, 9  -> Direction.LEFT;
                 case 2, 6, 10 -> Direction.UP;
                 case 3, 7     -> Direction.RIGHT;
                 default       -> Direction.UP; // end position from frame 11 on
             };
-            return new FacingSprite(spriteAnimation.currentSprite(), facingDir);
+            return new FacingSprite(spriteAnimation.sprite(), facingDir);
         } else {
             throw new IllegalArgumentException("No sprite animation set for Pac-Man dying");
         }
