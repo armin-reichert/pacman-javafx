@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevelMessageType;
 
 public interface GamePlay {
 
@@ -35,4 +36,6 @@ public interface GamePlay {
     boolean isDemoLevelRunning(GameContext context);
 
     void prepareLevelForPlaying(GameLevel level);
+
+    void showLevelMessage(GameLevel level, GameLevelMessageType type);
 }

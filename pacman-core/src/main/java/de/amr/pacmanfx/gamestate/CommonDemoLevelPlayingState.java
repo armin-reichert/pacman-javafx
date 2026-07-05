@@ -46,7 +46,7 @@ public class CommonDemoLevelPlayingState extends GameState {
 
         if (tick == 1) {
             context.gamePlay().prepareLevelForPlaying(level);
-            model.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
+            context.gamePlay().showLevelMessage(level, GameLevelMessageType.GAME_OVER);
             model.score().setEnabled(false);
             model.highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());

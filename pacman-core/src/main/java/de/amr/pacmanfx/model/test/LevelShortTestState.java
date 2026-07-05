@@ -50,7 +50,7 @@ public class LevelShortTestState extends GameState {
             context.gamePlay().prepareLevelForPlaying(level);
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
-            model.showLevelMessage(level, GameLevelMessageType.READY);
+            context.gamePlay().showLevelMessage(level, GameLevelMessageType.READY);
             model.hudState().creditOff().livesCounterOn();
 
             level.heartbeat().restart();

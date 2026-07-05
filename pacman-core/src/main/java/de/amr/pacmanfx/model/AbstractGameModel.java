@@ -209,13 +209,6 @@ public abstract class AbstractGameModel implements GameModel {
     public abstract void startLevel(GameContext context, GameLevel level);
 
     @Override
-    public void showLevelMessage(GameLevel level, GameLevelMessageType type) {
-        final var message = new GameLevelMessage(type);
-        message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
-        level.setMessage(message);
-    }
-
-    @Override
     public void startNextLevel(GameContext context, GameLevel level) {
         if (level.number() < rules.lastLevelNumber()) {
             buildNormalLevel(context, level.number() + 1);

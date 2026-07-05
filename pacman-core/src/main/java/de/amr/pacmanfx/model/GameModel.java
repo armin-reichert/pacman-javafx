@@ -7,7 +7,6 @@ package de.amr.pacmanfx.model;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.level.LevelCounter;
 import de.amr.pacmanfx.model.lives.PacManLives;
 import de.amr.pacmanfx.model.world.GateKeeper;
@@ -114,5 +113,4 @@ public interface GameModel {
 
     void startNextLevel(GameContext gameContext, GameLevel currentLevel);
 
-    void showLevelMessage(GameLevel level, GameLevelMessageType type);
 }

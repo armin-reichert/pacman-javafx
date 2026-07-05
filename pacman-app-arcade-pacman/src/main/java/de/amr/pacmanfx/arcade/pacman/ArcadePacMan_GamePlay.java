@@ -16,6 +16,8 @@ import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.level.GameLevelMessage;
+import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
@@ -227,6 +229,13 @@ public class ArcadePacMan_GamePlay implements GamePlay {
 
         level.heartbeat().setStartState(Pulse.State.ON); // Energizers are visible when ON
         level.heartbeat().reset();
+    }
+
+    @Override
+    public void showLevelMessage(GameLevel level, GameLevelMessageType type) {
+        final var message = new GameLevelMessage(type);
+        message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
+        level.setMessage(message);
     }
 
     // -----------------------------------------------

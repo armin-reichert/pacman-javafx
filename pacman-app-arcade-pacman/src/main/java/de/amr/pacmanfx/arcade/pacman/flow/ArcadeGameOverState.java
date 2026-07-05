@@ -25,7 +25,7 @@ public class ArcadeGameOverState extends GameState {
 
         model.updateHighScore();
         model.setPlaying(false);
-        model.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
+        context.gamePlay().showLevelMessage(level, GameLevelMessageType.GAME_OVER);
         // In case, entering game over state was forced by user:
         model.lives().setCount(0);
 
