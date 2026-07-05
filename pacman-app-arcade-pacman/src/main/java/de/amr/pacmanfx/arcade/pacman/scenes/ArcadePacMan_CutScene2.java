@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
+import static de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene2.NailDressState.*;
 import static de.amr.pacmanfx.model.GameModel.RED_GHOST_SHADOW;
 
 /**
@@ -30,17 +31,7 @@ import static de.amr.pacmanfx.model.GameModel.RED_GHOST_SHADOW;
 public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
 
     public enum NailDressState {
-        NAIL(0), STRETCHED_SMALL(1), STRETCHED_MEDIUM(2), STRETCHED_LARGE(3), RAPTURED(4);
-
-        NailDressState(int frame) {
-            this.frame = (byte) frame;
-        }
-
-        public byte frame() {
-            return frame;
-        }
-
-        private final byte frame;
+        NAIL, STRETCHED_SMALL, STRETCHED_MEDIUM, STRETCHED_LARGE, RAPTURED
     }
 
     public static final int TICK_ANIMATION_START = 120;
@@ -91,36 +82,38 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
             return;
         }
         switch (sceneTick) {
-            case TICK_ANIMATION_START -> {
-                game().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
-                setNailDressAnimationState(NailDressState.NAIL);
-            }
+            case TICK_ANIMATION_START        -> startTheShow();
             case TICK_PAC_MAN_STARTS_RUNNING -> pacManStartsRunning();
-            case TICK_BLINKY_STARTS_RUNNING -> blinkyStartsRunning();
-            case TICK_BLINKY_GETS_CAUGHT -> blinkyGetsCaughtOnNail();
-            case TICK_DRESS_STRETCHED_SMALL -> setNailDressAnimationState(NailDressState.STRETCHED_SMALL);
-            case TICK_DRESS_STRETCHED_MEDIUM -> setNailDressAnimationState(NailDressState.STRETCHED_MEDIUM);
-            case TICK_DRESS_STRETCHED_LARGE -> setNailDressAnimationState(NailDressState.STRETCHED_LARGE);
-            case TICK_BLINKY_STOPS_MOVING -> blinkyStopsMoving();
-            case TICK_DRESS_RAPTURES -> dressRaptures();
-            case TICK_BLINK_INSPECTS_DAMAGE -> blinkyLooksDownToInspectDamage();
-            case TICK_ANIMATION_ENDS -> animationEnds();
+            case TICK_BLINKY_STARTS_RUNNING  -> blinkyStartsRunning();
+            case TICK_BLINKY_GETS_CAUGHT     -> blinkyGetsCaughtOnNail();
+            case TICK_DRESS_STRETCHED_SMALL  -> setDressState(STRETCHED_SMALL);
+            case TICK_DRESS_STRETCHED_MEDIUM -> setDressState(STRETCHED_MEDIUM);
+            case TICK_DRESS_STRETCHED_LARGE  -> setDressState(STRETCHED_LARGE);
+            case TICK_BLINKY_STOPS_MOVING    -> blinkyStopsMoving();
+            case TICK_DRESS_RAPTURES         -> dressRaptures();
+            case TICK_BLINK_INSPECTS_DAMAGE  -> blinkyInspectsDamagedDress();
+            case TICK_ANIMATION_ENDS         -> endTheShow();
         }
         pacMan.move();
         blinky.move();
     }
 
-    private void blinkyLooksDownToInspectDamage() {
+    private void blinkyInspectsDamagedDress() {
         blinkyAnimation(ArcadePacMan_AnimationID.BLINKY_DAMAGED).advanceFrame();
     }
 
-    private void animationEnds() {
+    private void startTheShow() {
+        game().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
+        setDressState(NailDressState.NAIL);
+    }
+
+    private void endTheShow() {
         blinky.setVisible(false);
         gameState().triggerTimeout();
     }
 
     private void dressRaptures() {
-        setNailDressAnimationState(NailDressState.RAPTURED);
+        setDressState(NailDressState.RAPTURED);
         blinky.setX(blinky.x() - 4);
         blinky.animations().select(ArcadePacMan_AnimationID.BLINKY_DAMAGED);
     }
@@ -154,8 +147,8 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         pacMan.show();
     }
 
-    private void setNailDressAnimationState(NailDressState state) {
-        nailDressAnimation.setFrame(state.frame());
+    private void setDressState(NailDressState state) {
+        nailDressAnimation.setFrame(state.ordinal());
     }
 
     private SpriteAnimation blinkyAnimation(Identifier animationID) {

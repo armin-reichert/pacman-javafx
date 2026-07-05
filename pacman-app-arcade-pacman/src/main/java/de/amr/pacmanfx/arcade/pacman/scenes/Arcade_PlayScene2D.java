@@ -123,11 +123,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
     private void acceptNormalLevel(GameLevel level) {
         actionBindings().registerAllBindings(game().actions().steeringActions().bindings());
         actionBindings().registerAllBindings(game().actions().cheatActions().bindings());
-
         Logger.info(actionBindings());
-
         game().ui().sounds().setEnabled(true);
-
         Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
@@ -137,9 +134,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings());
         Logger.info(actionBindings());
-
         game().ui().sounds().setEnabled(false);
-
         Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
     }
 

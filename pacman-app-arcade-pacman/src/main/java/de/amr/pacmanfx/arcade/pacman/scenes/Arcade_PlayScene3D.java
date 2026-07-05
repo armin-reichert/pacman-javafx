@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
@@ -20,8 +21,7 @@ public class Arcade_PlayScene3D extends PlayScene3D {
     public void replaceActionBindings(GameLevel level) {
         actionBindings().dispose();
 
-        final Arcade_Actions actions = game().extensions().
-            value(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = game().extensions().value(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         if (level.isDemoLevel()) {
             actionBindings().registerAllBindings(actions.gameStartActionBindings());
