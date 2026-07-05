@@ -23,10 +23,12 @@ import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapPropertyName;
+import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.simulation.GamePlay;
 import org.tinylog.Logger;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -317,6 +319,29 @@ public class ArcadePacMan_GamePlay implements GamePlay {
         }
 
         model.score().setPoints(newScore);
+    }
+
+    @Override
+    public void updateHighScore(GameContext context) {
+        final PersistentScore highScore;
+        try {
+            highScore = context.model().highScore();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if (highScore == null) {
+            Logger.error("Cannot update high-score, no high-score file has been assigned");
+            return;
+        }
+        final PersistentScore savedHighScore = new PersistentScore(highScore.file());
+        try {
+            savedHighScore.load();
+            if (highScore.points() > savedHighScore.points()) {
+                highScore.save();
+            }
+        } catch (IOException x) {
+            Logger.error(x, "Could not update high-score");
+        }
     }
 
     // -----------------------------------------------

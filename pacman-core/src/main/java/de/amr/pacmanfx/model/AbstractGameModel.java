@@ -198,20 +198,4 @@ public abstract class AbstractGameModel implements GameModel {
         highScore = new PersistentScore(file);
     }
 
-    @Override
-    public void updateHighScore() {
-        if (highScore == null) {
-            Logger.error("Cannot update high-score, no high-score file has been assigned");
-            return;
-        }
-        final PersistentScore savedHighScore = new PersistentScore(highScore.file());
-        try {
-            savedHighScore.load();
-            if (highScore.points() > savedHighScore.points()) {
-                highScore.save();
-            }
-        } catch (IOException x) {
-            Logger.error(x, "Could not update high-score");
-        }
-    }
 }

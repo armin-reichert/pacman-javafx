@@ -46,4 +46,6 @@ public interface GamePlay {
     void startNextLevel(GameContext gameContext, GameLevel currentLevel);
 
     void scorePoints(GameContext context, int points, int levelNumber);
+
+    void updateHighScore(GameContext context);
 }

@@ -91,8 +91,6 @@ public interface GameModel {
 
     void setPlaying(boolean playing);
 
-    void updateHighScore();
-
     // Level related
 
     GameLevel createLevel(int levelNumber, boolean demoLevel);

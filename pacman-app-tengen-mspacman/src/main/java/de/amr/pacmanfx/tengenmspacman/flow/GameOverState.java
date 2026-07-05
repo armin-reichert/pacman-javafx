@@ -25,8 +25,9 @@ public class GameOverState extends GameState {
         final GameLevel level = model.assertLevel();
 
         model.setPlaying(false);
-        model.updateHighScore();
         model.lives().setCount(0); // Needed if state entry was triggered by user interaction
+
+        context.gamePlay().updateHighScore(context);
         context.gamePlay().showLevelMessage(level, GameLevelMessageType.GAME_OVER);
 
         context.cheats().clear();
