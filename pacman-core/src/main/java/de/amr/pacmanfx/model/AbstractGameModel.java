@@ -289,25 +289,6 @@ public abstract class AbstractGameModel implements GameModel {
 
     // Actor related
 
-    @Override
-    public void onEatGhost(GameContext context, GameLevel level, Ghost eatenGhost) {
-        final int killedBefore = level.ghostKillChainSize();
-        final int points = rules.pointsForGhost(killedBefore);
-
-        scorePoints(context, points, level.number());
-        Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
-
-        eatenGhost.setState(GhostState.EATEN);
-        // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
-        eatenGhost.animations().selectAndSetFrame(ArcadePacMan_AnimationID.GHOST_POINTS, killedBefore);
-
-        level.addToGhostKillChain(eatenGhost);
-        level.entities().pac().hide();
-        level.entities().ghosts().forEach(g -> g.animations().stopSelected());
-
-        context.flow().publishGameEvent(new GhostEatenEvent(context, eatenGhost));
-    }
-
     public void updatePacPowerMode(GameContext context, GameLevel level, Pac pac) {
         if (pac.powerTimer().isRunning()) {
             pac.powerTimer().doTick();

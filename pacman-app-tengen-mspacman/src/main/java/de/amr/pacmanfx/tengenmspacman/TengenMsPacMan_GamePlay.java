@@ -10,6 +10,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.event.BonusEatenEvent;
+import de.amr.pacmanfx.event.GhostEatenEvent;
 import de.amr.pacmanfx.event.PacGetsPowerEvent;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
@@ -74,6 +75,31 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
         bonus.showEatenForSeconds(model.rules().eatenBonusDisplaySeconds());
 
         context.flow().publishGameEvent(new BonusEatenEvent(context, bonus));
+    }
+
+    @Override
+    public void onEatGhost(GameContext context, GameLevel level, Ghost eatenGhost) {
+        requireNonNull(context);
+        requireNonNull(level);
+        requireNonNull(eatenGhost);
+
+        final GameModel model = context.model();
+
+        final int killedBefore = level.ghostKillChainSize();
+        final int points = model.rules().pointsForGhost(killedBefore);
+
+        model.scorePoints(context, points, level.number());
+        Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
+
+        eatenGhost.setState(GhostState.EATEN);
+        // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
+        eatenGhost.animations().selectAndSetFrame(ArcadePacMan_AnimationID.GHOST_POINTS, killedBefore);
+
+        level.addToGhostKillChain(eatenGhost);
+        level.entities().pac().hide();
+        level.entities().ghosts().forEach(g -> g.animations().stopSelected());
+
+        context.flow().publishGameEvent(new GhostEatenEvent(context, eatenGhost));
     }
 
     @Override

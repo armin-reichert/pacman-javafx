@@ -88,7 +88,7 @@ public final class EntityCollisionResolver {
                 .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
                 .forEach(context.huntingStepResult().ghostsKilled()::add);
             // More than one ghost might have been killed in this step
-            context.huntingStepResult().ghostsKilled().forEach(ghost -> context.model().onEatGhost(context, level, ghost));
+            context.huntingStepResult().ghostsKilled().forEach(ghost -> context.gamePlay().onEatGhost(context, level, ghost));
         }
     }
 
