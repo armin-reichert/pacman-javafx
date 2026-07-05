@@ -56,7 +56,7 @@ public class CommonGameLevelPlayingState extends GameState {
         level.heartbeat().triggerPulse();
         level.huntingTimer().update(model.rules(), level.number());
         if (gateKeeper != null) {
-            gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
+            gateKeeper.unlockGhostIfPossible(level);
         }
         context.gamePlay().updatePacPowerMode(context.eventManager(), model, level, pac);
 

@@ -227,7 +227,7 @@ public class ArcadePacMan_GamePlay implements GamePlay {
         requireNonNull(tile);
 
         scorePoints(eventManager, model, model.rules().pointsForPellet(), level.number());
-        model.gateKeeper().registerFoodEaten(level, level.worldMap().terrainLayer().house());
+        model.gateKeeper().registerFoodEaten(level);
         level.entities().pac().setRestingTicks(model.rules().restingTicksForPellet());
         checkRedGhostCruiseElroyActivation(level);
     }
@@ -240,7 +240,7 @@ public class ArcadePacMan_GamePlay implements GamePlay {
         requireNonNull(tile);
 
         scorePoints(eventManager, model, model.rules().pointsForEnergizer(), level.number());
-        model.gateKeeper().registerFoodEaten(level, level.worldMap().terrainLayer().house());
+        model.gateKeeper().registerFoodEaten(level);
 
         final Pac pac = level.entities().pac();
         pac.setRestingTicks(model.rules().restingTicksForEnergizer());

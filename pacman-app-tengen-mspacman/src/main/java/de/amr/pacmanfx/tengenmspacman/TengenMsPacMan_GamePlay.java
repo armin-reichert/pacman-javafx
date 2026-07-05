@@ -245,7 +245,7 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
         requireNonNull(tile);
 
         scorePoints(eventManager, model, model.rules().pointsForPellet(), level.number());
-        model.gateKeeper().registerFoodEaten(level, level.worldMap().terrainLayer().house());
+        model.gateKeeper().registerFoodEaten(level);
         level.entities().pac().setRestingTicks(model.rules().restingTicksForPellet());
     }
 
@@ -255,7 +255,7 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
         requireNonNull(tile);
 
         scorePoints(eventManager, model, model.rules().pointsForEnergizer(), level.number());
-        model.gateKeeper().registerFoodEaten(level, level.worldMap().terrainLayer().house());
+        model.gateKeeper().registerFoodEaten(level);
         level.clearGhostKillChain();
         startPacPowerMode(eventManager, model, level, level.entities().pac());
     }

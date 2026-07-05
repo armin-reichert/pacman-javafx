@@ -75,7 +75,7 @@ public class LevelMediumTestState extends GameState {
         level.optBonus().ifPresent(bonus -> bonus.update(context, level));
 
         if (model.gateKeeper() != null) {
-            model.gateKeeper().unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
+            model.gateKeeper().unlockGhostIfPossible(level);
         }
         context.cheats().update(level);
 

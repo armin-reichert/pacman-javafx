@@ -109,6 +109,7 @@ import static java.util.Objects.requireNonNull;
  * </pre>
  */
 public class GateKeeper {
+
     private static final byte NO_LIMIT = -1;
     private static final byte[] GLOBAL_LIMITS = new byte[] {NO_LIMIT, 7, 17, NO_LIMIT};
 
@@ -120,6 +121,9 @@ public class GateKeeper {
     private final int[]  ghostCounters = new int[4];
     private int          globalCounterValue;
     private boolean      globalCounterEnabled;
+
+    public GateKeeper() {
+    }
 
     public void setOnGhostReleased(BiConsumer<GameLevel, Ghost> handler) {
         this.onGhostReleased = handler;
@@ -180,9 +184,15 @@ public class GateKeeper {
         Logger.info("Global dot counter set to {} and {}", globalCounterValue, enabled ? "enabled" : "disabled");
     }
 
-    public void registerFoodEaten(GameLevel level, House house) {
+    public void registerFoodEaten(GameLevel level) {
         requireNonNull(level);
-        requireNonNull(house);
+
+        final House house = level.worldMap().terrainLayer().house();
+        if (house == null) {
+            Logger.error("Cannot register eaten food without house");
+            return;
+        }
+
         if (globalCounterEnabled) {
             if (level.ghost(GameModel.ORANGE_GHOST_POKEY).state() == GhostState.LOCKED && globalCounterValue == 32) {
                 Logger.info("{} inside house when global counter reached {}",
@@ -200,8 +210,15 @@ public class GateKeeper {
         }
     }
 
-    public void unlockGhostIfPossible(GameLevel level, House house) {
+    public void unlockGhostIfPossible(GameLevel level) {
         requireNonNull(level);
+
+        final House house = level.worldMap().terrainLayer().house();
+        if (house == null) {
+            Logger.error("Cannot unlock ghost without house");
+            return;
+        }
+
         final Ghost blinky = level.ghost(GameModel.RED_GHOST_SHADOW);
         if (blinky.state() == GhostState.LOCKED) {
             if (house.isVisitedBy(blinky)) {
@@ -220,9 +237,7 @@ public class GateKeeper {
             .map(level::ghost)
             .filter(ghost -> ghost.state() == GhostState.LOCKED)
             .findFirst()
-            .ifPresent(prisoner -> checkReleaseOfGhost(level, prisoner).ifPresent(reason -> {
-     //           level.game().simulationStep().setGhostReleasedFromJailhouse(prisoner);
-     //           level.game().simulationStep().setGhostReleaseInfo(reason);
+            .ifPresent(prisoner -> checkReleaseOfGhost(level, prisoner).ifPresent(_ -> {
                 prisoner.setMoveDir(Direction.UP);
                 prisoner.setWishDir(Direction.UP);
                 prisoner.setState(GhostState.LEAVING_HOUSE);
