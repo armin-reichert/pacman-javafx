@@ -58,7 +58,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             bonus.showEdibleForSeconds(randomFloat(9, 10));
         } else {
             computeBonusRoute(bonus, terrain, house);
-            bonus.showEdibleAndStartWandering(context.model().actorSpeedControl().bonusSpeed(level));
+            bonus.showEdibleAndStartWandering(context.model().rules().actorSpeedControl().bonusSpeed(level));
         }
 
         level.setBonus(bonus);

@@ -153,7 +153,7 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
         final Bonus bonus = new Bonus(symbolCode, context.model().rules().pointsForBonus(symbolCode));
         bonus.setMazeRoute(route, leftToRight);
-        bonus.showEdibleAndStartWandering(context.model().actorSpeedControl().bonusSpeed(level));
+        bonus.showEdibleAndStartWandering(context.model().rules().actorSpeedControl().bonusSpeed(level));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);

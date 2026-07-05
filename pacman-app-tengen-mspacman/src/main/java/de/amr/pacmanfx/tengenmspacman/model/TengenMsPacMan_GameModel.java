@@ -66,10 +66,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
         hud = new TengenMsPacMan_HUDState();
-        actorSpeedControl = new TengenMsPacMan_ActorSpeedControl();
         gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
         automaticSteering = new RuleBasedPacSteering();
         demoLevelSteering = new RuleBasedPacSteering();
+        rules = new TengenMsPacMan_GameRules();
 
         setDifficulty(Difficulty.NORMAL);
     }
@@ -110,7 +110,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = requireNonNull(difficulty);
-        actorSpeedControl().setDifficulty(difficulty);
+        rules().actorSpeedControl().setDifficulty(difficulty);
     }
 
     public Difficulty difficulty() {
@@ -166,11 +166,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * GameClock.DEFAULT_TICKS_PER_SECOND)
             : new GameLevelMessage(type, center);
         level.setMessage(message);
-    }
-
-    @Override
-    public TengenMsPacMan_ActorSpeedControl actorSpeedControl() {
-        return (TengenMsPacMan_ActorSpeedControl) actorSpeedControl;
     }
 
     @Override

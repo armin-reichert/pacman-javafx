@@ -75,6 +75,8 @@ public class TengenMsPacMan_GameRules implements GameRules {
         return collisionStrategy;
     }
 
+    private final TengenMsPacMan_ActorSpeedControl actorSpeedControl = new TengenMsPacMan_ActorSpeedControl();
+
     private MapCategory currentMapCategory = MapCategory.ARCADE;
 
     public TengenMsPacMan_GameRules() {}
@@ -85,6 +87,11 @@ public class TengenMsPacMan_GameRules implements GameRules {
 
     public MapCategory currentMapCategory() {
         return currentMapCategory;
+    }
+
+    @Override
+    public TengenMsPacMan_ActorSpeedControl actorSpeedControl() {
+        return actorSpeedControl;
     }
 
     @Override

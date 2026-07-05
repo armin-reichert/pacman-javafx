@@ -50,7 +50,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         levelCounter = new ArcadeMsPacMan_LevelCounter();
         demoLevelSteering = new RuleBasedPacSteering();
         automaticSteering = new RuleBasedPacSteering();
-        actorSpeedControl = new ArcadeMsPacMan_ActorSpeedControl();
         createGateKeeper();
         mapSelector.loadMapPrototypes();
     }

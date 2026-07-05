@@ -4,8 +4,6 @@
 
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.LevelCounter;
 import de.amr.pacmanfx.model.lives.PacManLives;
@@ -28,15 +26,9 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameModel implements GameModel {
 
-    // Common properties
-
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
-    // Common data
-
     protected final Score score;
-
-    protected ActorSpeedControl actorSpeedControl;
 
     protected GateKeeper gateKeeper;
 
@@ -81,11 +73,6 @@ public abstract class AbstractGameModel implements GameModel {
     @Override
     public PacManLives lives() {
         return lives;
-    }
-
-    @Override
-    public ActorSpeedControl actorSpeedControl() {
-        return actorSpeedControl;
     }
 
     @Override

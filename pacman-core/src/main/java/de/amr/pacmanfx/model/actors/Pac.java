@@ -152,7 +152,7 @@ public class Pac extends MovingActor {
     public void init(GameContext gameContext, GameLevel level) {}
 
     @Override
-    public void update(GameContext gameContext, GameLevel level) {
+    public void update(GameContext context, GameLevel level) {
 
         if (isDead() || restingTicks == REST_FOREVER) {
             return;
@@ -168,8 +168,8 @@ public class Pac extends MovingActor {
         }
 
         setSpeed(powerTimer.isRunning()
-            ? level.gameModel().actorSpeedControl().pacSpeedWhenHasPower(level)
-            : level.gameModel().actorSpeedControl().pacSpeed(level));
+            ? context.model().rules().actorSpeedControl().pacSpeedWhenHasPower(level)
+            : context.model().rules().actorSpeedControl().pacSpeed(level));
         tryMovingOrTeleporting(level);
 
         if (moveInfo.moved) {

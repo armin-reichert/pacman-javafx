@@ -23,10 +23,6 @@ public abstract class Arcade_GameModel extends AbstractGameModel {
      */
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
 
-    protected Arcade_GameModel() {
-        actorSpeedControl = new Arcade_ActorSpeedControl();
-    }
-
     // Game interface
 
     @Override

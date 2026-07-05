@@ -14,6 +14,7 @@ import static de.amr.basics.math.RandomNumberSupport.randomInt;
 public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
 
     public ArcadeMsPacMan_GameRules() {
+        actorSpeedControl = new ArcadeMsPacMan_ActorSpeedControl();
     }
 
     @Override
