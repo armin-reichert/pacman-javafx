@@ -8,10 +8,7 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.BonusActivatedEvent;
-import de.amr.pacmanfx.event.BonusEatenEvent;
-import de.amr.pacmanfx.event.GhostEatenEvent;
-import de.amr.pacmanfx.event.PacGetsPowerEvent;
+import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -163,6 +160,23 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
             level.ghostsInState(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
             context.flow().publishGameEvent(new PacGetsPowerEvent(context, pac));
+        }
+    }
+
+    @Override
+    public void updatePacPowerMode(GameContext context, GameLevel level, Pac pac) {
+        if (pac.powerTimer().isRunning()) {
+            pac.powerTimer().doTick();
+            if (pac.isPowerFadingStarting(level)) {
+                context.flow().publishGameEvent(new PacPowerFadesEvent(context, pac));
+            } else if (pac.powerTimer().hasExpired()) {
+                pac.powerTimer().stop();
+                pac.powerTimer().reset(0);
+                level.clearGhostKillChain();
+                level.huntingTimer().start();
+                level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
+                context.flow().publishGameEvent(new PacLostPowerEvent(context, pac));
+            }
         }
     }
 }

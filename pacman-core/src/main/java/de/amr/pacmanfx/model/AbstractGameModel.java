@@ -287,24 +287,6 @@ public abstract class AbstractGameModel implements GameModel {
         level.optBonus().ifPresent(Bonus::setInactive);
     }
 
-    // Actor related
-
-    public void updatePacPowerMode(GameContext context, GameLevel level, Pac pac) {
-        if (pac.powerTimer().isRunning()) {
-            pac.powerTimer().doTick();
-            if (pac.isPowerFadingStarting(level)) {
-                context.flow().publishGameEvent(new PacPowerFadesEvent(context, pac));
-            } else if (pac.powerTimer().hasExpired()) {
-                pac.powerTimer().stop();
-                pac.powerTimer().reset(0);
-                level.clearGhostKillChain();
-                level.huntingTimer().start();
-                level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-                context.flow().publishGameEvent(new PacLostPowerEvent(context, pac));
-            }
-        }
-    }
-
     /* -------------------------------------------------------------------------
      * Score management
      * ---------------------------------------------------------------------- */

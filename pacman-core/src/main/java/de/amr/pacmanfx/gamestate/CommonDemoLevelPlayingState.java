@@ -18,7 +18,6 @@ import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.simulation.EntityCollisionDetector;
 import de.amr.pacmanfx.simulation.EntityCollisionResolver;
-import de.amr.pacmanfx.simulation.GamePlay;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 
@@ -96,7 +95,7 @@ public class CommonDemoLevelPlayingState extends GameState {
             gateKeeper.unlockGhostIfPossible(level, level.worldMap().terrainLayer().house());
         }
 
-        model.updatePacPowerMode(context, level, pac);
+        context.gamePlay().updatePacPowerMode(context, level, pac);
 
         final EntityCollisionDetector collisionDetector = new EntityCollisionDetector(context);
 

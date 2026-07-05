@@ -25,4 +25,6 @@ public interface GamePlay {
     void activateNextBonus(GameContext context, GameLevel level);
 
     void startPacPowerMode(GameContext context, GameLevel level, Pac pac);
+
+    void updatePacPowerMode(GameContext gameContext, GameLevel level, Pac pac);
 }

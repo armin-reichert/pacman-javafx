@@ -11,10 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.BonusActivatedEvent;
-import de.amr.pacmanfx.event.BonusEatenEvent;
-import de.amr.pacmanfx.event.GhostEatenEvent;
-import de.amr.pacmanfx.event.PacGetsPowerEvent;
+import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -140,6 +137,24 @@ public class ArcadePacMan_GamePlay implements GamePlay {
             context.flow().publishGameEvent(new PacGetsPowerEvent(context, pac));
         }
     }
+
+    @Override
+    public void updatePacPowerMode(GameContext context, GameLevel level, Pac pac) {
+        if (pac.powerTimer().isRunning()) {
+            pac.powerTimer().doTick();
+            if (pac.isPowerFadingStarting(level)) {
+                context.flow().publishGameEvent(new PacPowerFadesEvent(context, pac));
+            } else if (pac.powerTimer().hasExpired()) {
+                pac.powerTimer().stop();
+                pac.powerTimer().reset(0);
+                level.clearGhostKillChain();
+                level.huntingTimer().start();
+                level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
+                context.flow().publishGameEvent(new PacLostPowerEvent(context, pac));
+            }
+        }
+    }
+
 
     protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
         final Ghost redGhost = level.ghost(GameModel.RED_GHOST_SHADOW);
