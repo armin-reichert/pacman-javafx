@@ -28,7 +28,7 @@ public class ArcadeGameLevelContinueState extends GameState {
         final GameModel model = context.model();
         final GameLevel level = context.model().assertLevel();
 
-        model.prepareLevelForPlaying(level);
+        context.gamePlay().prepareLevelForPlaying(level);
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
 

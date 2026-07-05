@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 
+import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
@@ -222,5 +223,32 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
     @Override
     public boolean isDemoLevelRunning(GameContext context) {
         return context.model().optGameLevel().isPresent() && context.model().assertLevel().isDemoLevel();
+    }
+
+    @Override
+    public void prepareLevelForPlaying(GameLevel level) {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final House house = terrain.optHouse().orElseThrow();
+
+        final Pac pac = level.entities().pac();
+        pac.reset(); // initially invisible!
+        pac.setPosition(terrain.pacStartPosition());
+        pac.setMoveDir(Direction.LEFT);
+        pac.setWishDir(Direction.LEFT);
+        pac.powerTimer().resetToIndefiniteDuration();
+        pac.animations().resetSelected();
+
+        level.entities().ghosts().forEach(ghost -> {
+            ghost.reset(); // initially invisible!
+            ghost.setPosition(ghost.startPosition());
+            final Direction direction = house.ghostStartDirection(ghost.personality());
+            ghost.setMoveDir(direction);
+            ghost.setWishDir(direction);
+            ghost.setState(GhostState.LOCKED);
+            ghost.animations().resetSelected();
+        });
+
+        level.heartbeat().setStartState(Pulse.State.ON); // Energizers are visible when ON
+        level.heartbeat().reset();
     }
 }

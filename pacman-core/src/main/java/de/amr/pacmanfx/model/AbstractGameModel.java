@@ -209,33 +209,6 @@ public abstract class AbstractGameModel implements GameModel {
     public abstract void startLevel(GameContext context, GameLevel level);
 
     @Override
-    public void prepareLevelForPlaying(GameLevel level) {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = terrain.optHouse().orElseThrow();
-
-        final Pac pac = level.entities().pac();
-        pac.reset(); // initially invisible!
-        pac.setPosition(terrain.pacStartPosition());
-        pac.setMoveDir(Direction.LEFT);
-        pac.setWishDir(Direction.LEFT);
-        pac.powerTimer().resetToIndefiniteDuration();
-        pac.animations().resetSelected();
-
-        level.entities().ghosts().forEach(ghost -> {
-            ghost.reset(); // initially invisible!
-            ghost.setPosition(ghost.startPosition());
-            final Direction direction = house.ghostStartDirection(ghost.personality());
-            ghost.setMoveDir(direction);
-            ghost.setWishDir(direction);
-            ghost.setState(GhostState.LOCKED);
-            ghost.animations().resetSelected();
-        });
-
-        level.heartbeat().setStartState(Pulse.State.ON); // Energizers are visible when ON
-        level.heartbeat().reset();
-    }
-
-    @Override
     public void showLevelMessage(GameLevel level, GameLevelMessageType type) {
         final var message = new GameLevelMessage(type);
         message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());

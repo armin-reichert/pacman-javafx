@@ -45,7 +45,7 @@ public class CommonDemoLevelPlayingState extends GameState {
         final GameLevel level = model.assertLevel();
 
         if (tick == 1) {
-            model.prepareLevelForPlaying(level);
+            context.gamePlay().prepareLevelForPlaying(level);
             model.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
             model.score().setEnabled(false);
             model.highScore().setEnabled(false);

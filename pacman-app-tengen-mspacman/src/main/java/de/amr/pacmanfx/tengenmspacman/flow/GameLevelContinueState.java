@@ -25,7 +25,7 @@ public class GameLevelContinueState extends GameState {
         final GameModel model = context.model();
         final GameLevel level = model.assertLevel();
 
-        model.prepareLevelForPlaying(level);
+        context.gamePlay().prepareLevelForPlaying(level);
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
 

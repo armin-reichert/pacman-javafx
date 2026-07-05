@@ -33,4 +33,6 @@ public interface GamePlay {
     void onLevelCompleted(GameLevel level);
 
     boolean isDemoLevelRunning(GameContext context);
+
+    void prepareLevelForPlaying(GameLevel level);
 }

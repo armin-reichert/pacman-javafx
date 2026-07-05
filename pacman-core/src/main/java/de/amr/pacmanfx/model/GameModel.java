@@ -114,7 +114,5 @@ public interface GameModel {
 
     void startNextLevel(GameContext gameContext, GameLevel currentLevel);
 
-    void prepareLevelForPlaying(GameLevel level);
-
     void showLevelMessage(GameLevel level, GameLevelMessageType type);
 }
