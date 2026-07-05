@@ -47,7 +47,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public static final Vector2i HOUSE_MIN_TILE = WorldMap.tile(10, 15);
 
-    public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
     public static final byte GAME_OVER_MESSAGE_DELAY_SEC = 2;
 
     private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
@@ -278,13 +277,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
         return demoLevel;
     }
-
-    @Override
-    public boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
-        float runningMillis = System.currentTimeMillis() - demoLevel.startTime();
-        return runningMillis <= DEMO_LEVEL_MIN_DURATION_MILLIS;
-    }
-
 
     // Helpers
 

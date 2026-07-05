@@ -21,6 +21,8 @@ import static de.amr.basics.math.RandomNumberSupport.*;
 
 public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
+    private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
+
     /**
      * Bonus symbol that enters the world at some tunnel entry, walks to the house entry, takes a tour around the
      * house and finally leaves the world through a tunnel on the opposite side of the world.
@@ -62,6 +64,14 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setBonus(bonus);
         context.flow().publishGameEvent(new BonusActivatedEvent(context, bonus));
     }
+
+    @Override
+    public boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
+        float runningMillis = System.currentTimeMillis() - demoLevel.startTime();
+        return runningMillis <= DEMO_LEVEL_MIN_DURATION_MILLIS;
+    }
+
+    // ------------------------------------------------
 
     private void computeBonusRoute(Bonus bonus, TerrainLayer terrain, House house) {
         final List<HPortal> portals = terrain.horizontalPortals();

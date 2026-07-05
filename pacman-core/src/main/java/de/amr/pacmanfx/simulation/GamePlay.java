@@ -27,4 +27,6 @@ public interface GamePlay {
     void startPacPowerMode(GameContext context, GameLevel level, Pac pac);
 
     void updatePacPowerMode(GameContext gameContext, GameLevel level, Pac pac);
+
+    boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 }

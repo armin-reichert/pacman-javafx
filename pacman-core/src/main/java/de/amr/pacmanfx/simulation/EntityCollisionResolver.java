@@ -73,7 +73,7 @@ public final class EntityCollisionResolver {
     }
 
     private void evalPacKilled(GameLevel level) {
-        if (level.isDemoLevel() && context.model().isPacSafeInDemoLevel(level) || level.entities().pac().isImmune()) {
+        if (level.isDemoLevel() && context.gamePlay().isPacSafeInDemoLevel(level) || level.entities().pac().isImmune()) {
             return;
         }
         context.huntingStepResult().ghostsCollidingWithPac().stream()

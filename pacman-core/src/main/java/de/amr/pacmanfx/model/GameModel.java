@@ -121,8 +121,4 @@ public interface GameModel {
     boolean isDemoLevelRunning();
 
     void onLevelCompleted(GameLevel level);
-
-    // Actor related
-
-    boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 }

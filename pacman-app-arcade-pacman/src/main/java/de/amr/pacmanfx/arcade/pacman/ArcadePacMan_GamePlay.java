@@ -155,6 +155,12 @@ public class ArcadePacMan_GamePlay implements GamePlay {
         }
     }
 
+    @Override
+    public boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
+        return false;
+    }
+
+    // -----------------------------------------------
 
     protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
         final Ghost redGhost = level.ghost(GameModel.RED_GHOST_SHADOW);

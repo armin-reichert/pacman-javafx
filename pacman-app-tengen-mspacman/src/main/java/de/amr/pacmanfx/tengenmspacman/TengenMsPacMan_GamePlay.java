@@ -29,6 +29,8 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay implements GamePlay {
 
+    public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
+
     public TengenMsPacMan_GamePlay() {
     }
 
@@ -178,5 +180,11 @@ public class TengenMsPacMan_GamePlay implements GamePlay {
                 context.flow().publishGameEvent(new PacLostPowerEvent(context, pac));
             }
         }
+    }
+
+    @Override
+    public boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
+        float runningMillis = System.currentTimeMillis() - demoLevel.startTime();
+        return runningMillis <= DEMO_LEVEL_MIN_DURATION_MILLIS;
     }
 }

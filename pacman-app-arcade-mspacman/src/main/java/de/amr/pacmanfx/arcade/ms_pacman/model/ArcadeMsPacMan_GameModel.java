@@ -39,8 +39,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
 
-    private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
-
     protected static final int GAME_OVER_STATE_TICKS = 150;
 
     public ArcadeMsPacMan_GameModel() {
@@ -92,12 +90,6 @@ public class ArcadeMsPacMan_GameModel extends Arcade_GameModel {
         levelCounter.setEnabled(levelNumber < 8);
 
         return level;
-    }
-
-    @Override
-    public boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
-        float runningMillis = System.currentTimeMillis() - demoLevel.startTime();
-        return runningMillis <= DEMO_LEVEL_MIN_DURATION_MILLIS;
     }
 
     // Helpers
