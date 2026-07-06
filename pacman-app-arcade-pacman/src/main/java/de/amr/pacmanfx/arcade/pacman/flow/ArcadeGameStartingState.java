@@ -30,7 +30,7 @@ public class ArcadeGameStartingState extends GameState {
         model.hudState().creditOff().livesCounterOn();
 
         context.gamePlay().resetForNewGame(model);
-        context.gamePlay().buildNormalLevel(context.eventManager(), context.model(), 1);
+        context.gamePlay().buildNormalLevel(context.createPlayContextWithoutLevel(), 1);
 
         context.eventManager().publishGameEvent(new GameStartedEvent(context));
     }
@@ -42,7 +42,7 @@ public class ArcadeGameStartingState extends GameState {
         final long tick = timer().tickCount();
 
         if (tick == TICK_NEW_GAME_START_LEVEL) {
-            context.gamePlay().startLevel(context.eventManager(), level);
+            context.gamePlay().startLevel(context.createPlayContext());
             // Note: This event is very important because it triggers the creation of the actor animations!
             context.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }

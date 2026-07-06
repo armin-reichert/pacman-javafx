@@ -88,11 +88,11 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public void startLevel(GameEventManager eventManager, GameLevel level) {
-        requireNonNull(eventManager);
-        requireNonNull(level);
+    public void startLevel(GamePlayContext playContext) {
+        requireNonNull(playContext);
 
-        final GameModel model = level.gameModel();
+        final GameModel model = playContext.model();
+        final GameLevel level = playContext.level();
 
         level.recordStartTime(System.currentTimeMillis());
         prepareLevelForPlaying(level);

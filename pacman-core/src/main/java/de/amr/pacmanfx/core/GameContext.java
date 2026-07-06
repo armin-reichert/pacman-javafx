@@ -33,4 +33,8 @@ public interface GameContext {
     default GamePlayContext createPlayContext() {
         return new GamePlayContext(model().assertLevel(), model(), eventManager());
     }
+
+    default GamePlayContext createPlayContextWithoutLevel() {
+        return new GamePlayContext(null, model(), eventManager());
+    }
 }

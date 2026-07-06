@@ -8,7 +8,6 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
@@ -27,10 +26,11 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Set;
 
+import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Common game play functionality. Can be modofied by game-variant specific subclasses.
+ * Common game play functionality. Can be modified by game-variant specific subclasses.
  */
 public abstract class CommonGamePlay implements GamePlay {
 
@@ -217,12 +217,15 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void buildNormalLevel(GameEventManager eventManager, GameModel model, int levelNumber) {
-        requireNonNull(eventManager);
-        requireNonNull(model);
-        Validations.requireValidLevelNumber(levelNumber);
+    public void buildNormalLevel(GamePlayContext playContext, int levelNumber) {
+        requireNonNull(playContext);
+        requireValidLevelNumber(levelNumber);
+
+        final GameModel model = playContext.model();
+        final GameEventManager eventManager = playContext.eventManager();
 
         final GameLevel level = model.createLevel(levelNumber, false);
+
         model.levelCounter().setEnabled(true);
         model.score().setLevelNumber(levelNumber);
         model.gateKeeper().setLevelNumber(levelNumber);
@@ -232,16 +235,17 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void startNextLevel(GameEventManager eventManager, GameLevel level) {
-        requireNonNull(eventManager);
-        requireNonNull(level);
+    public void startNextLevel(GamePlayContext playContext) {
+        requireNonNull(playContext);
 
-        final GameModel model = level.gameModel();
+        final GameModel model = playContext.model();
+        final GameLevel level = playContext.level();
+        final GameEventManager eventManager = playContext.eventManager();
 
         final int lastLevelNumber = model.rules().lastLevelNumber();
         if (level.number() < lastLevelNumber) {
-            buildNormalLevel(eventManager, model, level.number() + 1);
-            startLevel(eventManager, level);
+            buildNormalLevel(playContext, level.number() + 1);
+            startLevel(playContext);
             // Note: This event is very important because it triggers the creation of the actor animations!
             eventManager.publishGameEvent(new LevelStartedEvent(level));
         } else {
@@ -401,7 +405,7 @@ public abstract class CommonGamePlay implements GamePlay {
     public void scorePoints(GameEventManager eventManager, GameModel model, int points, int levelNumber) {
         requireNonNull(eventManager);
         requireNonNull(model);
-        Validations.requireValidLevelNumber(levelNumber);
+        requireValidLevelNumber(levelNumber);
 
         if (!model.score().isEnabled()) {
             return;

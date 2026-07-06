@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.simulation.GamePlay;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 
 import java.util.List;
@@ -34,17 +35,23 @@ public class LevelMediumTestState extends GameState {
 
     @Override
     public void onEnter(GameContext context) {
+        final GamePlay gamePlay = context.gamePlay();
         final GameModel model = context.model();
+        final GameEventManager eventManager = context.eventManager();
+
         lastTestedLevelNumber = model.rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
             : model.rules().lastLevelNumber();
+
         timer().restartSeconds(TEST_DURATION_SEC);
-        context.gamePlay().resetForNewGame(model);
-        context.gamePlay().buildNormalLevel(context.eventManager(), model, 1);
-        context.gamePlay().startLevel(context.eventManager(), model.assertLevel());
+
+        gamePlay.resetForNewGame(model);
+        gamePlay.buildNormalLevel(context.createPlayContextWithoutLevel(), 1);
+        gamePlay.startLevel(context.createPlayContext());
         configureLevelForTest(context);
+
         // Note: This event is very important because it triggers the creation of the actor animations!
-        context.eventManager().publishGameEvent(new LevelStartedEvent(model.assertLevel()));
+        eventManager.publishGameEvent(new LevelStartedEvent(model.assertLevel()));
     }
 
     @Override
@@ -63,7 +70,7 @@ public class LevelMediumTestState extends GameState {
             }
             else {
                 // Test next level
-                context.gamePlay().startNextLevel(eventManager, level);
+                context.gamePlay().startNextLevel(context.createPlayContext());
                 configureLevelForTest(context);
                 timer().restartSeconds(TEST_DURATION_SEC);
             }

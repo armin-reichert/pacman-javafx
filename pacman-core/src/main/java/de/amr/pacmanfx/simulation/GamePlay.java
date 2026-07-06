@@ -31,11 +31,11 @@ public interface GamePlay {
 
     boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
-    void buildNormalLevel(GameEventManager eventManager, GameModel model, int levelNumber);
+    void buildNormalLevel(GamePlayContext playContext, int levelNumber);
 
-    void startLevel(GameEventManager eventManager, GameLevel level);
+    void startLevel(GamePlayContext playContext);
 
-    void startNextLevel(GameEventManager eventManager, GameLevel currentLevel);
+    void startNextLevel(GamePlayContext playContext);
 
     void showLevelMessage(GameLevel level, GameLevelMessageType type);
 
