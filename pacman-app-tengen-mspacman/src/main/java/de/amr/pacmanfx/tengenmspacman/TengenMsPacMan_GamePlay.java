@@ -28,36 +28,21 @@ import java.util.List;
 
 import static de.amr.basics.math.RandomNumberSupport.randomBoolean;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.*;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
-    public TengenMsPacMan_GamePlay() {
-    }
+    public TengenMsPacMan_GamePlay() {}
 
     // Game start
 
     @Override
     public void init(GameModel model) {
         requireNonNull(model);
-
-        if (!(model instanceof TengenMsPacMan_GameModel tengenModel)) {
-            throw new IllegalArgumentException("Illegal model type");
-        }
-
-        tengenModel.mapSelector().loadMapPrototypes();
-        tengenModel.lives().setInitialCount(3);
-        tengenModel.hudState().hideIt();
+        model.init();
         resetForNewGame(model);
-
-        tengenModel.setPacBoosterMode(DEFAULT_PAC_BOOSTER);
-        tengenModel.setDifficulty(DEFAULT_DIFFICULTY);
-        tengenModel.setMapCategory(DEFAULT_MAP_CATEGORY);
-        tengenModel.setStartLevelNumber(DEFAULT_START_LEVEL);
-        tengenModel.setNumContinues(DEFAULT_NUM_CONTINUES);
     }
 
     @Override

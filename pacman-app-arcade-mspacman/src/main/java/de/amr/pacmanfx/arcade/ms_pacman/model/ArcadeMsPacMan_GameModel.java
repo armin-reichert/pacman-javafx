@@ -22,6 +22,7 @@ import org.tinylog.Logger;
 import java.util.Set;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.model.world.WorldMap.tile;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
@@ -41,6 +42,11 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
 
     protected static final int GAME_OVER_STATE_TICKS = 150;
 
+    /**
+     * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
+     */
+    public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
+
     public ArcadeMsPacMan_GameModel() {
         this(new ArcadeMsPacMan_MapSelector());
     }
@@ -51,7 +57,13 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
         levelCounter = new ArcadeMsPacMan_LevelCounter();
         automaticSteering = new RuleBasedPacSteering();
         createGateKeeper();
-        mapSelector.loadMapPrototypes();
+    }
+
+    @Override
+    public void init() {
+        mapSelector().loadMapPrototypes();
+        lives().setInitialCount(3);
+        hudState().hideIt();
     }
 
     @Override

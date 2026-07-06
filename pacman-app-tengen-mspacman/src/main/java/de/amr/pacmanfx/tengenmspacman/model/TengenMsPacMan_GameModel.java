@@ -167,6 +167,20 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         level.setMessage(message);
     }
 
+    // GameModel interface
+
+    @Override
+    public void init() {
+        mapSelector().loadMapPrototypes();
+        lives().setInitialCount(3);
+        hudState().hideIt();
+        setPacBoosterMode(DEFAULT_PAC_BOOSTER);
+        setDifficulty(DEFAULT_DIFFICULTY);
+        setMapCategory(DEFAULT_MAP_CATEGORY);
+        setStartLevelNumber(DEFAULT_START_LEVEL);
+        setNumContinues(DEFAULT_NUM_CONTINUES);
+    }
+
     @Override
     public TengenMsPacMan_HUDState hudState() {
         return (TengenMsPacMan_HUDState) hud;
@@ -176,7 +190,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public TengenMsPacMan_LevelCounter levelCounter() {
         return (TengenMsPacMan_LevelCounter) levelCounter;
     }
-
 
     @Override
     public TengenMsPacMan_GameRules rules() {

@@ -29,6 +29,9 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Common game play functionality. Can be modofied by game-variant specific subclasses.
+ */
 public abstract class CommonGamePlay implements GamePlay {
 
     @Override
@@ -131,11 +134,7 @@ public abstract class CommonGamePlay implements GamePlay {
             .findFirst().ifPresent(_ -> huntingStepResult.setPacKilled(true));
     }
 
-    private void evalGhostsKilled(
-        HuntingStepResult huntingStepResult,
-        GameEventManager eventManager,
-        GameLevel level
-    ) {
+    private void evalGhostsKilled(HuntingStepResult huntingStepResult, GameEventManager eventManager, GameLevel level) {
         if (huntingStepResult.detectedPacGhostCollision()) {
             // Frightened ghosts get killed when colliding with Pac
             huntingStepResult.ghostsCollidingWithPac().stream()
@@ -271,7 +270,6 @@ public abstract class CommonGamePlay implements GamePlay {
         model.gateKeeper().registerFoodEaten(level);
         level.entities().pac().setRestingTicks(model.rules().restingTicksForPellet());
     }
-
 
     @Override
     public void onEatEnergizer(GameEventManager eventManager, GameLevel level, Vector2i tile) {

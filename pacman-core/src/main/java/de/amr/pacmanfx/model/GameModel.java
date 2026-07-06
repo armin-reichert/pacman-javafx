@@ -78,6 +78,8 @@ public interface GameModel {
 
     void setPlaying(boolean playing);
 
+    void init();
+
     GameLevel createLevel(int levelNumber, boolean demoLevel);
 
     void setLevel(GameLevel level);

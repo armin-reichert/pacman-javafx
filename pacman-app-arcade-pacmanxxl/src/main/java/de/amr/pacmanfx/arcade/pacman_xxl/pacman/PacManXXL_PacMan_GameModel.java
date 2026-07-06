@@ -4,8 +4,11 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
+import de.amr.pacmanfx.model.GameRules;
+import de.amr.pacmanfx.model.level.GameLevel;
 
 /**
  * Extension of Arcade Pac-Man with 8 new builtin mazes (thanks to the one and only
@@ -14,11 +17,24 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
  */
 public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
+    private static GameRules createRules() {
+        return new ArcadeMsPacMan_GameRules() {
+            @Override
+            public boolean isBonusAwarded(GameLevel level) {
+                final int totalFoodCount = level.worldMap().foodLayer().totalFoodCount();
+                final int pelletsEaten = level.worldMap().foodLayer().eatenFoodCount();
+                // XXL maps may have different food count, use heuristic values
+                return pelletsEaten == totalFoodCount / 4 || pelletsEaten == totalFoodCount * 3 / 4;
+            }
+        };
+    }
+
     public PacManXXL_PacMan_GameModel() {
-        rules = new PacManXXL_PacMan_GameRules();
+        setRules(createRules());
     }
 
     @Override
-    public PacManXXL_MapSelector mapSelector() { return (PacManXXL_MapSelector) mapSelector; }
-
+    public PacManXXL_MapSelector mapSelector() {
+        return (PacManXXL_MapSelector) mapSelector;
+    }
 }

@@ -52,9 +52,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public void init(GameModel model) {
-        model.mapSelector().loadMapPrototypes();
-        model.lives().setInitialCount(3);
-        model.hudState().hideIt();
+        requireNonNull(model);
+        model.init();
         resetForNewGame(model);
     }
 
