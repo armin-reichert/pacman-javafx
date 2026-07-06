@@ -35,24 +35,34 @@ import static java.util.Objects.requireNonNull;
 public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public static final int DEFAULT_START_LEVEL = 1;
+
     public static final int DEFAULT_NUM_CONTINUES = 4;
+
     public static final PacBooster DEFAULT_PAC_BOOSTER = PacBooster.OFF;
+
     public static final Difficulty DEFAULT_DIFFICULTY = Difficulty.NORMAL;
+
     public static final MapCategory DEFAULT_MAP_CATEGORY = MapCategory.ARCADE;
 
     public static final String GAME_OVER_MESSAGE_TEXT = "GAME OVER";
+
     public static final String READY_MESSAGE_TEXT = "READY!";
 
     public static final Vector2i HOUSE_MIN_TILE = WorldMap.tile(10, 15);
 
-    public static final byte GAME_OVER_MESSAGE_DELAY_SEC = 2;
+    public static final int GAME_OVER_MESSAGE_DELAY_SEC = 2;
 
     private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
+
     private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
 
-    private final TengenMsPacMan_HUDState hudState =  new TengenMsPacMan_HUDState();
+    // --- End static
 
-    private final GateKeeper gateKeeper = new GateKeeper();
+    private final TengenMsPacMan_HUDState hudState;
+
+    private final GateKeeper gateKeeper;
+
+    private final TengenMsPacMan_GameRules rules;
 
     private MapCategory mapCategory;
 
@@ -69,6 +79,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel() {
+        gateKeeper = new GateKeeper();
+        hudState =  new TengenMsPacMan_HUDState();
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
         automaticSteering = new RuleBasedPacSteering();
@@ -76,7 +88,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         setDifficulty(Difficulty.NORMAL);
     }
 
-    public boolean allOptionsDefault() {
+    public boolean allOptionsHaveDefaultValue() {
         return pacBoosterMode == DEFAULT_PAC_BOOSTER
             && difficulty == DEFAULT_DIFFICULTY
             && mapCategory == DEFAULT_MAP_CATEGORY
@@ -201,7 +213,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public TengenMsPacMan_GameRules rules() {
-        return (TengenMsPacMan_GameRules) rules;
+        return rules;
     }
 
     @Override

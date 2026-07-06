@@ -127,7 +127,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
     public void onActivate() {
         final TengenMsPacMan_HUDState hud = gameModel().hudState();
         hud.scoreOn().levelCounterOn().livesCounterOn().showIt();
-        if (gameModel().allOptionsDefault()) {
+        if (gameModel().allOptionsHaveDefaultValue()) {
             hud.gameOptionsOff();
         } else {
             hud.gameOptionsOn();

@@ -235,7 +235,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 if (timer.atSecond(8)) {
                     // start demo level or show options
                     final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) scene.gameModel();
-                    if (gameModel.allOptionsDefault()) {
+                    if (gameModel.allOptionsHaveDefaultValue()) {
                         gameModel.setCanStartNewGame(false); // TODO check this
                         gameContext.flow().restartState(TengenMsPacMan_GameState.GAME_OR_LEVEL_STARTING.state());
                     } else {
