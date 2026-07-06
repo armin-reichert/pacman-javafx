@@ -21,6 +21,7 @@ import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
+import org.tinylog.Logger;
 
 import java.util.Set;
 
@@ -63,6 +64,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private final GateKeeper gateKeeper;
 
     private final TengenMsPacMan_GameRules rules;
+
+    private final TengenMsPacMan_MapSelector mapSelector;
 
     private MapCategory mapCategory;
 
@@ -204,6 +207,16 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public TengenMsPacMan_HUDState hudState() {
         return hudState;
+    }
+
+    @Override
+    public TengenMsPacMan_MapSelector mapSelector() {
+        return mapSelector;
+    }
+
+    @Override
+    public void setMapSelector(WorldMapSelector mapSelector) {
+        Logger.error("Map selector cannot be changed in this game variant");
     }
 
     @Override

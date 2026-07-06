@@ -20,8 +20,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import java.io.File;
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Base implementation of the {@link GameModel} interface.
  */
@@ -39,8 +37,6 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected LevelCounter levelCounter;
 
-    protected WorldMapSelector mapSelector;
-
     protected Steering automaticSteering;
 
     protected HuntingStepResult huntingStepResult;
@@ -52,13 +48,11 @@ public abstract class AbstractGameModel implements GameModel {
         lives = new PacManLivesImpl();
     }
 
-    public void setMapSelector(WorldMapSelector mapSelector) {
-        this.mapSelector =  requireNonNull(mapSelector);
-    }
-
     public void setHighScoreFile(File file) {
         highScore = new PersistentScore(file);
     }
+
+    public abstract void setMapSelector(WorldMapSelector mapSelector);
 
     /* -------------------------------------------------------------------------
      * GameModel interface implementation
@@ -101,9 +95,7 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public WorldMapSelector mapSelector() {
-        return mapSelector;
-    }
+    public abstract WorldMapSelector mapSelector();
 
     @Override
     public abstract GameRules rules();

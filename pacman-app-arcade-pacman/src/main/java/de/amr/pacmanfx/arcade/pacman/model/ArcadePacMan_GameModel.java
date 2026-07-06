@@ -56,6 +56,8 @@ public class ArcadePacMan_GameModel extends AbstractGameModel {
 
     protected ArcadePacMan_GameRules rules;
 
+    protected WorldMapSelector mapSelector;
+
     public ArcadePacMan_GameModel() {
         this(new ArcadePacMan_MapSelector());
     }
@@ -119,6 +121,16 @@ public class ArcadePacMan_GameModel extends AbstractGameModel {
     @Override
     public HUDState hudState() {
         return hudState;
+    }
+
+    @Override
+    public WorldMapSelector mapSelector() {
+        return mapSelector;
+    }
+
+    @Override
+    public void setMapSelector(WorldMapSelector mapSelector) {
+        this.mapSelector = mapSelector;
     }
 
     @Override
