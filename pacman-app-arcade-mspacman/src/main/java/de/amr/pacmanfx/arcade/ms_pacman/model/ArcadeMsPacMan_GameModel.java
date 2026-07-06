@@ -52,6 +52,8 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
 
     protected final GateKeeper gateKeeper = new GateKeeper();
 
+    protected ArcadeMsPacMan_GameRules rules;
+
     public ArcadeMsPacMan_GameModel() {
         this(new ArcadeMsPacMan_MapSelector());
     }
@@ -116,6 +118,11 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public HUDState hudState() {
         return hudState;
+    }
+
+    @Override
+    public GameRules rules() {
+        return rules;
     }
 
     // Helpers

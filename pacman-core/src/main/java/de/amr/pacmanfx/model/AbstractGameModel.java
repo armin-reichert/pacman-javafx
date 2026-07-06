@@ -43,8 +43,6 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected Steering automaticSteering;
 
-    protected GameRules rules;
-
     protected HuntingStepResult huntingStepResult;
 
     // Constructor
@@ -52,10 +50,6 @@ public abstract class AbstractGameModel implements GameModel {
     protected AbstractGameModel() {
         score = new Score();
         lives = new PacManLivesImpl();
-    }
-
-    public void setRules(GameRules rules) {
-        this.rules = rules;
     }
 
     public void setMapSelector(WorldMapSelector mapSelector) {
@@ -112,9 +106,7 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public GameRules rules() {
-        return rules;
-    }
+    public abstract GameRules rules();
 
     @Override
     public boolean isPlaying() {

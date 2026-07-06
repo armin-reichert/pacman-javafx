@@ -4,10 +4,9 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
-import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.level.GameLevel;
 
 /**
@@ -17,8 +16,8 @@ import de.amr.pacmanfx.model.level.GameLevel;
  */
 public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
-    private static GameRules createRules() {
-        return new ArcadeMsPacMan_GameRules() {
+    private static ArcadePacMan_GameRules createRules() {
+        return new ArcadePacMan_GameRules() {
             @Override
             public boolean isBonusAwarded(GameLevel level) {
                 final int totalFoodCount = level.worldMap().foodLayer().totalFoodCount();
@@ -30,7 +29,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
     }
 
     public PacManXXL_PacMan_GameModel() {
-        setRules(createRules());
+        rules = createRules();
     }
 
     @Override
