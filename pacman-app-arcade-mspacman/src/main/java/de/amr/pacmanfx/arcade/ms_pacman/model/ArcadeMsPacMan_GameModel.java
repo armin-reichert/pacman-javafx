@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
+import de.amr.pacmanfx.model.HUDState;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Elroy;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -46,6 +47,8 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
      * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
      */
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
+
+    protected final HUDState hudState = new HUDState();
 
     public ArcadeMsPacMan_GameModel() {
         this(new ArcadeMsPacMan_MapSelector());
@@ -101,6 +104,11 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
         levelCounter.setEnabled(levelNumber < 8);
 
         return level;
+    }
+
+    @Override
+    public HUDState hudState() {
+        return hudState;
     }
 
     // Helpers

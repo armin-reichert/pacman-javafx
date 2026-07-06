@@ -33,13 +33,11 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected GateKeeper gateKeeper;
 
-    protected HUDState hud;
-
     protected PersistentScore highScore;
 
     protected GameLevel currentLevel;
 
-    protected PacManLives lives;
+    protected final PacManLives lives;
 
     protected LevelCounter levelCounter;
 
@@ -56,7 +54,6 @@ public abstract class AbstractGameModel implements GameModel {
     protected AbstractGameModel() {
         score = new Score();
         lives = new PacManLivesImpl();
-        hud = new HUDState();
     }
 
     public void setRules(GameRules rules) {
@@ -86,9 +83,7 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public HUDState hudState() {
-        return hud;
-    }
+    public abstract HUDState hudState();
 
     @Override
     public PersistentScore highScore() {

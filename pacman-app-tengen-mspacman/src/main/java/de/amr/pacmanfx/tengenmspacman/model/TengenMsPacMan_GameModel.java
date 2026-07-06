@@ -50,6 +50,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
     private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
 
+    private final TengenMsPacMan_HUDState hudState =  new TengenMsPacMan_HUDState();
+
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBoosterMode;
@@ -65,7 +67,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public TengenMsPacMan_GameModel() {
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
-        hud = new TengenMsPacMan_HUDState();
         gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
         automaticSteering = new RuleBasedPacSteering();
         rules = new TengenMsPacMan_GameRules();
@@ -183,7 +184,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public TengenMsPacMan_HUDState hudState() {
-        return (TengenMsPacMan_HUDState) hud;
+        return hudState;
     }
 
     @Override

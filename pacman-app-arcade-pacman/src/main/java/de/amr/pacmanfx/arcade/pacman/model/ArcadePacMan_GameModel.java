@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameRules;
+import de.amr.pacmanfx.model.HUDState;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Elroy;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -48,6 +49,8 @@ public class ArcadePacMan_GameModel extends AbstractGameModel {
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
 
     public static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
+
+    protected final HUDState hudState = new HUDState();
 
     public ArcadePacMan_GameModel() {
         this(new ArcadePacMan_MapSelector());
@@ -102,6 +105,11 @@ public class ArcadePacMan_GameModel extends AbstractGameModel {
         levelCounter.setEnabled(true);
 
         return level;
+    }
+
+    @Override
+    public HUDState hudState() {
+        return hudState;
     }
 
     // helpers
