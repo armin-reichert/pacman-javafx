@@ -61,13 +61,13 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
-    public GameLevel buildDemoLevel(GameEventManager eventManager, GameModel model) {
-        requireNonNull(eventManager);
-        requireNonNull(model);
+    public GameLevel buildDemoLevel(GamePlayContext playContext) {
+        requireNonNull(playContext);
 
-        final GameLevel level = model.createLevel(1, true);
+        final GameModel model = playContext.model();
+        final GameLevel demoLevel = model.createLevel(1, true);
 
-        final Pac pac = level.entities().pac();
+        final Pac pac = demoLevel.entities().pac();
         pac.setImmune(false);
         pac.setUsingAutopilot(true);
 
@@ -79,7 +79,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         model.levelCounter().setEnabled(true);
         model.score().setLevelNumber(1);
 
-        return level;
+        return demoLevel;
     }
 
     @Override

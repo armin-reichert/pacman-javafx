@@ -25,7 +25,7 @@ public interface GamePlay {
 
     // Level building and level start
 
-    GameLevel buildDemoLevel(GameEventManager eventManager, GameModel model);
+    GameLevel buildDemoLevel(GamePlayContext playContext);
 
     boolean isDemoLevelRunning(GameModel model);
 

@@ -19,6 +19,7 @@ import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.simulation.CommonGamePlay;
+import de.amr.pacmanfx.simulation.GamePlayContext;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
@@ -60,10 +61,10 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
-    public GameLevel buildDemoLevel(GameEventManager eventManager, GameModel model) {
-        requireNonNull(eventManager);
-        requireNonNull(model);
+    public GameLevel buildDemoLevel(GamePlayContext playContext) {
+        requireNonNull(playContext);
 
+        final GameModel model = playContext.model();
         final GameLevel demoLevel = model.createLevel(1, true);
         demoLevel.setGameOverStateTicks(120);
 

@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.*;
+import de.amr.pacmanfx.simulation.GamePlayContext;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -27,11 +28,13 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
     @Override
-    public GameLevel buildDemoLevel(GameEventManager eventManager, GameModel model) {
+    public GameLevel buildDemoLevel(GamePlayContext playContext) {
         final int demoLevelNumber = 1;
-        final GameLevel level = model.createLevel(demoLevelNumber, true);
+        final GameModel model = playContext.model();
 
-        final Pac pac = level.entities().pac();
+        final GameLevel demoLevel = model.createLevel(demoLevelNumber, true);
+
+        final Pac pac = demoLevel.entities().pac();
         pac.setImmune(false);
         pac.setUsingAutopilot(true);
 
@@ -43,7 +46,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         model.levelCounter().setEnabled(true);
         model.score().setLevelNumber(demoLevelNumber);
 
-        return level;
+        return demoLevel;
     }
 
     /**
