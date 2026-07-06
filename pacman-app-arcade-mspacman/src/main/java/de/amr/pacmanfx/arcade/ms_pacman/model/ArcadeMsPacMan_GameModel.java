@@ -48,9 +48,11 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
      */
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
 
-    protected final HUDState hudState = new HUDState();
+    protected final HUDState hudState;
 
-    protected final GateKeeper gateKeeper = new GateKeeper();
+    protected final GateKeeper gateKeeper;
+
+    protected final ArcadeMsPacMan_LevelCounter levelCounter;
 
     protected WorldMapSelector mapSelector;
 
@@ -62,6 +64,8 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
 
     public ArcadeMsPacMan_GameModel(WorldMapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
+        hudState = new HUDState();
+        gateKeeper = new GateKeeper();
         rules = new ArcadeMsPacMan_GameRules();
         levelCounter = new ArcadeMsPacMan_LevelCounter();
         automaticSteering = new RuleBasedPacSteering();
@@ -120,6 +124,11 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public HUDState hudState() {
         return hudState;
+    }
+
+    @Override
+    public ArcadeMsPacMan_LevelCounter levelCounter() {
+        return levelCounter;
     }
 
     @Override

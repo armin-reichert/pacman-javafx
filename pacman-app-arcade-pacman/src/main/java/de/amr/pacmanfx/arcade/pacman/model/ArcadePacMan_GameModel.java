@@ -54,6 +54,8 @@ public class ArcadePacMan_GameModel extends AbstractGameModel {
 
     protected final GateKeeper gateKeeper = new GateKeeper();
 
+    protected final ArcadePacMan_LevelCounter levelCounter;
+
     protected ArcadePacMan_GameRules rules;
 
     protected WorldMapSelector mapSelector;
@@ -121,6 +123,11 @@ public class ArcadePacMan_GameModel extends AbstractGameModel {
     @Override
     public HUDState hudState() {
         return hudState;
+    }
+
+    @Override
+    public ArcadePacMan_LevelCounter levelCounter() {
+        return levelCounter;
     }
 
     @Override

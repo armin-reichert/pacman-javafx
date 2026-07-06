@@ -67,6 +67,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     private final TengenMsPacMan_MapSelector mapSelector;
 
+    private final TengenMsPacMan_LevelCounter levelCounter;
+
     private MapCategory mapCategory;
 
     private Difficulty difficulty;
@@ -221,7 +223,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public TengenMsPacMan_LevelCounter levelCounter() {
-        return (TengenMsPacMan_LevelCounter) levelCounter;
+        return levelCounter;
     }
 
     @Override

@@ -35,8 +35,6 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected final PacManLives lives;
 
-    protected LevelCounter levelCounter;
-
     protected Steering automaticSteering;
 
     protected HuntingStepResult huntingStepResult;
@@ -85,9 +83,7 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public LevelCounter levelCounter() {
-        return levelCounter;
-    }
+    public abstract LevelCounter levelCounter();
 
     @Override
     public Score score() {
