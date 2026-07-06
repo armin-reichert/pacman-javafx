@@ -65,14 +65,11 @@ public final class Arcade_Actions {
 
             @Override
             public boolean isEnabled() {
-                final CoinMechanism coinMechanism = game.coinMechanism();
-                if (coinMechanism.isEmpty()) {
+                if (game.coinMechanism().isEmpty()) {
                     return false;
                 }
-                final GameContext context = game.context();
-                final GameState state = context.state();
-                return (GameStateID.GAME_INTRO.identifies(state) || GameStateID.GAME_PREPARATION.identifies(state))
-                    && context.gamePlay().canStartNewGame(context);
+                final GameState state = game.context().state();
+                return (GameStateID.GAME_INTRO.identifies(state) || GameStateID.GAME_PREPARATION.identifies(state));
             }
         };
 

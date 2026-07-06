@@ -213,11 +213,13 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 final GameContext context = scene.game().context();
                 final GameFlow flow = context.flow();
-                final GameModel model = context.model();
+                final boolean canPlay = !context.coinMechanism().isEmpty();
                 scene.marquee.timer().doTick();
-                if (timer.atSecond(2.0) && !context.gamePlay().canStartNewGame(context)) {
-                    flow.enterState(GameStateID.GAME_OR_LEVEL_STARTING); // demo level
-                } else if (timer.atSecond(5)) {
+                if (timer.atSecond(2.0) && !canPlay) {
+                    flow.enterState(GameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
+                }
+                //TODO can this happen at all?
+                else if (timer.atSecond(5)) {
                     flow.enterState(GameStateID.GAME_PREPARATION);
                 }
             }
