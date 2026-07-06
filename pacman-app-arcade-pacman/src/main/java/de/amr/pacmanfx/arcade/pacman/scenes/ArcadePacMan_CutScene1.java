@@ -38,8 +38,8 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
     public void onActivate() {
         final SpriteAnimationContainer spriteAnimationContainer = game().ui().sprites().animations();
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(game().variant().createPacAnimations(spriteAnimationContainer));
-        blinky = game().variant().createAnimatedGhost(spriteAnimationContainer, RED_GHOST_SHADOW);
+        pacMan.setAnimations(game().config().createPacAnimations(spriteAnimationContainer));
+        blinky = game().config().createAnimatedGhost(spriteAnimationContainer, RED_GHOST_SHADOW);
         sceneTick = -1;
     }
 

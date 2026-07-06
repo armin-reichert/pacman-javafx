@@ -27,18 +27,18 @@ public class GameContextImpl implements GameContext, GameEventManager {
 
     private final PacManGamesCollection game;
 
-    private final GameVariantRuntime gameVariantRuntime;
+    private final GameVariant gameVariant;
 
     private final Set<GameEventListener> eventListeners = new HashSet<>();
 
-    public GameContextImpl(PacManGamesCollection game, GameVariantRuntime gameVariantRuntime) {
+    public GameContextImpl(PacManGamesCollection game, GameVariant gameVariant) {
         this.game = requireNonNull(game);
-        this.gameVariantRuntime = requireNonNull(gameVariantRuntime);
+        this.gameVariant = requireNonNull(gameVariant);
     }
 
     @Override
     public GameCheats cheats() {
-        return gameVariantRuntime.cheats();
+        return gameVariant.cheats();
     }
 
     @Override
@@ -48,12 +48,12 @@ public class GameContextImpl implements GameContext, GameEventManager {
 
     @Override
     public GameModel model() {
-        return gameVariantRuntime.gameModel();
+        return gameVariant.gameModel();
     }
 
     @Override
     public GamePlay gamePlay() {
-        return gameVariantRuntime.gamePlay();
+        return gameVariant.gamePlay();
     }
 
     @Override
@@ -63,7 +63,7 @@ public class GameContextImpl implements GameContext, GameEventManager {
 
     @Override
     public GameFlow flow() {
-        return gameVariantRuntime.gameFlow();
+        return gameVariant.gameFlow();
     }
 
     /**
@@ -109,5 +109,4 @@ public class GameContextImpl implements GameContext, GameEventManager {
         }
         eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
     }
-
 }

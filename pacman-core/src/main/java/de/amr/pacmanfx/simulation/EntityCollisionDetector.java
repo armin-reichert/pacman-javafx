@@ -5,15 +5,12 @@
 package de.amr.pacmanfx.simulation;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
 
 import java.util.List;
-
-import static java.util.Objects.requireNonNull;
 
 public final class EntityCollisionDetector {
 

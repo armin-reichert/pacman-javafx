@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.actors.GhostFactory;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.ui.GameVariant;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
@@ -41,7 +41,7 @@ import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
-public final class PacManXXLGameVariant implements GameVariant, ResourceManager {
+public final class PacManXXLGameVariant implements GameVariantConfig, ResourceManager {
 
     private static final ResourceManager ARCADE_PACMAN_RES = () -> ArcadePacManGameVariant.class;
 

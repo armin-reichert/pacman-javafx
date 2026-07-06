@@ -8,19 +8,11 @@ import de.amr.basics.Identifier;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.gamestate.GameState;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import org.tinylog.Logger;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
-
-import static java.util.Objects.requireNonNull;
 
 public class StateMachineGameFlow implements GameFlow {
 

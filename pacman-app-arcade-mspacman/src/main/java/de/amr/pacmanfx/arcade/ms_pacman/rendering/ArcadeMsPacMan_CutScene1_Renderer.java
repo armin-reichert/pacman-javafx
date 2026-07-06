@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_CutScene1;
-import de.amr.pacmanfx.ui.GameVariant;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -19,7 +19,7 @@ public class ArcadeMsPacMan_CutScene1_Renderer extends BaseRenderer implements G
     private final ArcadeMsPacMan_ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public ArcadeMsPacMan_CutScene1_Renderer(GameVariant gameVariant, AbstractGameScene2D scene, Canvas canvas) {
+    public ArcadeMsPacMan_CutScene1_Renderer(GameVariantConfig gameVariant, AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
         actorRenderer = scene.configureRenderer((ArcadeMsPacMan_ActorRenderer) gameVariant.createActorRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);

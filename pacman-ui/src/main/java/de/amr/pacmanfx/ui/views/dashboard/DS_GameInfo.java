@@ -57,7 +57,7 @@ public class DS_GameInfo extends GameDashboardSection {
                 colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
             }
             else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                colorScheme = game.variant().colorScheme(worldMap);
+                colorScheme = game.config().colorScheme(worldMap);
             }
             if (colorScheme != null) {
                 return "%s / %s / %s".formatted(

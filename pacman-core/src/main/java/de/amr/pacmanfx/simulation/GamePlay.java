@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.simulation;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;

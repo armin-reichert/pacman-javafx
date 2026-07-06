@@ -8,7 +8,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.GameVariant;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.animation.Animation;
@@ -99,7 +99,7 @@ public class MiniPlaySceneView {
         worldSize.set(size);
     }
 
-    public void setVariantConfig(GameVariant variant) {
+    public void setVariantConfig(GameVariantConfig variant) {
         canvasRenderer = new BaseRenderer(canvas);
 
         levelRenderer = variant.createGameLevelRenderer(canvas);

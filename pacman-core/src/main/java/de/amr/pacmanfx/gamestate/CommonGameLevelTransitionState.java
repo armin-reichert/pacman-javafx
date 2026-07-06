@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.model.GameModel;
 
 public class CommonGameLevelTransitionState extends GameState{
 

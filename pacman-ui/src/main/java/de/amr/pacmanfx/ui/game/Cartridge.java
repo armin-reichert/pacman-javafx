@@ -8,7 +8,7 @@ import de.amr.basics.Identifier;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.simulation.GamePlay;
-import de.amr.pacmanfx.ui.GameVariant;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -18,7 +18,7 @@ public record Cartridge(
     Supplier<? extends GamePlay> gamePlayFactory,
     Supplier<? extends GameFlow> gameFlowFactory,
     Supplier<? extends AbstractGameModel> gameModelFactory,
-    Supplier<? extends GameVariant> uiConfigFactory,
+    Supplier<? extends GameVariantConfig> uiConfigFactory,
     Set<GameExtension> gameExtensions)
     implements Identifier
 {

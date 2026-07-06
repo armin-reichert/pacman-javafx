@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.GameVariant;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -55,7 +55,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariant gameVariant = game().variant();
+        final GameVariantConfig gameVariant = game().config();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));

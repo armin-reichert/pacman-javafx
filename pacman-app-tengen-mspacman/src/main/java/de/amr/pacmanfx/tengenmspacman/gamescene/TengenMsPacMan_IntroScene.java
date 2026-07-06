@@ -18,7 +18,7 @@ import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.GameVariant;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
@@ -63,7 +63,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariant gameVariant = game().variant();
+        final GameVariantConfig gameVariant = game().config();
 
         gameModel().hudState().hideIt();
 
@@ -119,7 +119,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameVariant gameVariant = scene.game().variant();
+                final GameVariantConfig gameVariant = scene.game().config();
                 final SpriteAnimationContainer spriteAnimationContainer = scene.game().ui().sprites().animations();
 
                 timer.restartTicks(TickTimer.INDEFINITE);

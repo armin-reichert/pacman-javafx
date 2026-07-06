@@ -30,7 +30,7 @@ import javafx.scene.paint.Color;
 import java.util.Optional;
 
 //TODO: Clean-up this mess!
-public interface GameVariant extends Disposable {
+public interface GameVariantConfig extends Disposable {
 
     void init(Game game);
 

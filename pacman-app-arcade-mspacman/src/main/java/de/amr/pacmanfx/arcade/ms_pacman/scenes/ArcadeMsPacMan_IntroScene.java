@@ -21,7 +21,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.GameVariant;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -86,7 +86,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariant gameVariant = game().variant();
+        final GameVariantConfig gameVariant = game().config();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);

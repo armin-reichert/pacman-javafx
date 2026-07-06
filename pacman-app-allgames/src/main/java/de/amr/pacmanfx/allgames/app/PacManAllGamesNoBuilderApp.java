@@ -67,8 +67,8 @@ public class PacManAllGamesNoBuilderApp extends Application {
         );
 
         PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
-        game.variantRuntime(GameVariantID.ARCADE_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
-        game.variantRuntime(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
+        game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
+        game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
 
         StartPagesView start = game.ui().viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
         start.addStartPage(game, new ArcadePacMan_StartPage());

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.ui.GameVariant;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.input.Joypad;
@@ -76,7 +76,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariant gameVariant = game().variant();
+        final GameVariantConfig gameVariant = game().config();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         // Quit cut scene when "START" button on "joypad" is pressed

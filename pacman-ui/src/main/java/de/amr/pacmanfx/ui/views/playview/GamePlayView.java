@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.ui.GameVariant;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.config.ui.DashboardSectionSettings;
@@ -281,7 +281,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void updateGameSceneRenderers(AbstractGameScene2D gameScene2D) {
-        final GameVariant gameVariant = game.variant();
+        final GameVariantConfig gameVariant = game.config();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = gameVariant.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
             setFontSmoothing(game.ui().viewModel().common2D.fontSmoothingOnProperty.get());

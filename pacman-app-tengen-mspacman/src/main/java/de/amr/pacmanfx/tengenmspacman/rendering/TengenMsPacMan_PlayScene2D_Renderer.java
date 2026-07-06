@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_PlayScene2D;
-import de.amr.pacmanfx.ui.GameVariant;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -68,7 +68,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     private final BaseDebugInfoRenderer debugRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    public TengenMsPacMan_PlayScene2D_Renderer(GameVariant gameVariant, AbstractGameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_PlayScene2D_Renderer(GameVariantConfig gameVariant, AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
         levelRenderer = scene.configureRenderer((TengenMsPacMan_GameLevelRenderer) gameVariant.createGameLevelRenderer(canvas));
         actorRenderer = scene.configureRenderer((TengenMsPacMan_ActorRenderer)     gameVariant.createActorRenderer(canvas));

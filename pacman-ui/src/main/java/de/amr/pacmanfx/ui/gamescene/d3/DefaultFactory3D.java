@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.GameVariant;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.config.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.config.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
@@ -141,12 +141,12 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Node createNumberBox3D(GameVariant gameVariant, int index) {
+    public Node createNumberBox3D(GameVariantConfig gameVariant, int index) {
         final Image numberImage = createNumberImage(gameVariant, index);
         return new NumberBox3D(numberImage);
     }
 
-    protected Image createNumberImage(GameVariant gameVariant, int index) {
+    protected Image createNumberImage(GameVariantConfig gameVariant, int index) {
         return gameVariant.killedGhostPointsImage(index);
     }
 }

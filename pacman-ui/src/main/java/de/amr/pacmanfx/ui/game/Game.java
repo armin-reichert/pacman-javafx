@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameVariant;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.input.Input;
@@ -38,11 +38,11 @@ public interface Game extends GameLifecycle {
 
     String variantName();
 
-    GameVariant variant();
+    GameVariantConfig config();
 
-    GameVariantRuntime variantRuntime();
+    GameVariant gameVariant();
 
-    GameVariantRuntime variantRuntime(String variantName);
+    GameVariant gameVariant(String variantName);
 
     CommonActions actions();
 
@@ -52,7 +52,7 @@ public interface Game extends GameLifecycle {
     GameContext context();
 
     default Optional<GameSoundEffects> soundEffects() {
-        return variant().optSoundEffects();
+        return config().optSoundEffects();
     }
 
     GameExtensions extensions();

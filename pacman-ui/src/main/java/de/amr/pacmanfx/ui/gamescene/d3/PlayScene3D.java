@@ -127,7 +127,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         } else {
             scores3D.showTextForScore(
                 game().ui().translations().translate("score.game_over"),
-                game().variant().assets().color("color.game_over_message"));
+                game().config().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -165,7 +165,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         }
         final GameViewModel viewModel = game().ui().viewModel();
 
-        level3D = new GameLevel3D(viewModel, gameContext(), level, game().variant());
+        level3D = new GameLevel3D(viewModel, gameContext(), level, game().config());
         decorate(level3D);
         level3DEmbedder.getChildren().setAll(level3D);
 
