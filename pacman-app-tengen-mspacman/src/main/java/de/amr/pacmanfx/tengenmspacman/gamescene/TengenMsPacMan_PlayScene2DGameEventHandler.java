@@ -57,7 +57,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
 
     @Override
     public void onGameStarted(GameStartedEvent e) {
-        final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameContext())
+        final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameModel())
             || gameState().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);

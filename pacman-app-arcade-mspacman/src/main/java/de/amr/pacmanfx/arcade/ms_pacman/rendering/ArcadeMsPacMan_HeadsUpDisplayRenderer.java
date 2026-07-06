@@ -50,7 +50,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
 
             final Score highScore = context.model().highScore();
             Color color = SCORE_TEXT_COLOR;
-            if (!context.gamePlay().isDemoLevelRunning(context) && !highScore.isEnabled()) {
+            if (!context.gamePlay().isDemoLevelRunning(context.model()) && !highScore.isEnabled()) {
                 color = SCORE_TEXT_COLOR_DISABLED;
             }
             drawScore(highScore, HIGH_SCORE_TEXT, arcadeFont8(), color, TS(14), TS(1));

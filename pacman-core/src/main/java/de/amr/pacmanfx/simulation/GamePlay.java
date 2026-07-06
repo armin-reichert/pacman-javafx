@@ -31,7 +31,7 @@ public interface GamePlay {
 
     GameLevel buildDemoLevel(GameEventManager eventManager, GameModel model);
 
-    boolean isDemoLevelRunning(GameContext context);
+    boolean isDemoLevelRunning(GameModel model);
 
     boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 

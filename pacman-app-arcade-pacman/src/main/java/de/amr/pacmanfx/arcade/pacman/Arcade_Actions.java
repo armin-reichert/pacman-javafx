@@ -48,7 +48,7 @@ public final class Arcade_Actions {
                 }
                 final GameContext context = game.context();
                 // In demo level, coin can always be inserted
-                if (context.gamePlay().isDemoLevelRunning(context)) {
+                if (context.gamePlay().isDemoLevelRunning(context.model())) {
                     return true;
                 }
                 final GameState gameState = context.state();
