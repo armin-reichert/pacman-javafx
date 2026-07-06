@@ -88,9 +88,13 @@ public interface GameModel {
 
     GameLevel assertLevel();
 
-    //TODO This is a temporary solution for storing the result of the last hunting step
+    //TODO This is a questionable way of the result of the last hunting step
 
     HuntingStepResult huntingStepResult();
 
     void setHuntingStepResult(HuntingStepResult result);
+
+    default void clearHuntingStepResult() {
+        setHuntingStepResult(null);
+    }
 }

@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.simulation.GamePlayContext;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 
@@ -43,10 +44,14 @@ public class CommonGameLevelPlayingState extends GameState {
     public void onUpdate(GameContext context) {
         final GameModel model = context.model();
         final GameLevel level = model.assertLevel();
-        model.setHuntingStepResult(context.gamePlay().hunt(context.eventManager(), level));
+
+        final HuntingStepResult result = context.gamePlay().hunt(context.createPlayContext());
+        logHuntingStepResult(result);
+        model.setHuntingStepResult(result);
+
         context.cheats().update(level);
-        logHuntingStepResult(model.huntingStepResult());
-        context.flow().enterState(computeNextState(model.huntingStepResult(), level));
+
+        context.flow().enterState(computeNextState(result, level));
     }
 
     private GameStateID computeNextState(HuntingStepResult result, GameLevel level) {

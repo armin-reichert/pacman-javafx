@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.simulation.GamePlayContext;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 
@@ -39,7 +40,7 @@ public class CommonDemoLevelPlayingState extends GameState {
         final GameModel model = context.model();
         final GameLevel level = model.assertLevel();
 
-        model.setHuntingStepResult(null);
+        model.clearHuntingStepResult();
 
         final long tick = timer().tickCount();
         if (tick == 1) {
@@ -72,7 +73,8 @@ public class CommonDemoLevelPlayingState extends GameState {
             level.huntingTimer().startFirstPhase(context, level.number());
         }
         else if (tick > huntingStartTick) {
-            model.setHuntingStepResult(context.gamePlay().hunt(context.eventManager(), level));
+            final HuntingStepResult result = context.gamePlay().hunt(context.createPlayContext());
+            model.setHuntingStepResult(result);
             context.flow().enterState(computeNextState(model.huntingStepResult(), level));
         }
     }

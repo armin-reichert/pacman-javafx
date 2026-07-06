@@ -10,6 +10,7 @@ import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.simulation.GamePlay;
+import de.amr.pacmanfx.simulation.GamePlayContext;
 
 public interface GameContext {
 
@@ -28,4 +29,8 @@ public interface GameContext {
     GameCheats cheats();
 
     GameModel model();
+
+    default GamePlayContext createPlayContext() {
+        return new GamePlayContext(model().assertLevel(), model(), eventManager());
+    }
 }

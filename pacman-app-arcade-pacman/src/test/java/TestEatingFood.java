@@ -52,9 +52,7 @@ public class TestEatingFood {
             }
         };
 
-        public TestContext() {
-            gameModel.setRules(new ArcadePacMan_GameRules());
-        }
+        public TestContext() {}
 
         @Override
         public CoinMechanism coinMechanism() {
@@ -104,9 +102,9 @@ public class TestEatingFood {
         foodLayer.tiles()
             .filter(foodLayer::hasFoodAtTile)
             .filter(not(foodLayer::isEnergizerTile))
-            .findFirst().ifPresent(tile -> {
-                foodLayer.markFoodEatenAt(tile);
-                context.gamePlay().onEatPellet(context.eventManager(), level, tile);
+            .findFirst().ifPresent(pelletTile -> {
+                foodLayer.markFoodEatenAt(pelletTile);
+                context.gamePlay().onEatPellet(context.createPlayContext(), pelletTile);
             });
     }
 

@@ -20,6 +20,7 @@ import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.simulation.CommonGamePlay;
+import de.amr.pacmanfx.simulation.GamePlayContext;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 
 import java.util.List;
@@ -106,9 +107,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Playing level
 
     @Override
-    public void onEatPellet(GameEventManager eventManager, GameLevel level, Vector2i tile) {
-        super.onEatPellet(eventManager, level, tile);
-        checkRedGhostCruiseElroyActivation(level);
+    public void onEatPellet(GamePlayContext playContext, Vector2i tile) {
+        super.onEatPellet(playContext, tile);
+        checkRedGhostCruiseElroyActivation(playContext.level());
     }
 
     @Override
