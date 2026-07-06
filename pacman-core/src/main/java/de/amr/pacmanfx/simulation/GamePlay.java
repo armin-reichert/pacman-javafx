@@ -53,15 +53,15 @@ public interface GamePlay {
 
     void activateNextBonus(GamePlayContext playContext);
 
-    void startPacPowerMode(GameEventManager eventManager, GameLevel level, Pac pac);
+    void startPacPowerMode(GamePlayContext playContext, Pac pac);
 
-    void updatePacPowerMode(GameEventManager eventManager, GameLevel level, Pac pac);
+    void updatePacPowerMode(GamePlayContext playContext, Pac pac);
 
     void onLevelCompleted(GameLevel level);
 
     // Scoring
 
-    void scorePoints(GameEventManager eventManager, GameModel model, int points, int levelNumber);
+    void scorePoints(GamePlayContext playContext, int points, int levelNumber);
 
-    void updateHighScore(GameEventManager eventManager, GameModel model);
+    void updateHighScore(GamePlayContext playContext);
 }

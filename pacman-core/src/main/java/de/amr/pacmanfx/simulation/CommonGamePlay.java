@@ -50,7 +50,7 @@ public abstract class CommonGamePlay implements GamePlay {
             gateKeeper.unlockGhostIfPossible(level);
         }
 
-        updatePacPowerMode(eventManager, level, pac);
+        updatePacPowerMode(playContext, pac);
 
         final EntityCollisionDetector collisionDetector = new EntityCollisionDetector();
         // If double-check active, do an additional collision check before Pac has moved
@@ -266,9 +266,8 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameModel model = playContext.model();
         final GameLevel level = playContext.level();
-        final GameEventManager eventManager = playContext.eventManager();
 
-        scorePoints(eventManager, model, model.rules().pointsForPellet(), level.number());
+        scorePoints(playContext, model.rules().pointsForPellet(), level.number());
         model.gateKeeper().registerFoodEaten(level);
         level.entities().pac().setRestingTicks(model.rules().restingTicksForPellet());
     }
@@ -280,14 +279,13 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameModel model = playContext.model();
         final GameLevel level = playContext.level();
-        final GameEventManager eventManager = playContext.eventManager();
         final Pac pac = level.entities().pac();
 
-        scorePoints(eventManager, model, model.rules().pointsForEnergizer(), level.number());
+        scorePoints(playContext, model.rules().pointsForEnergizer(), level.number());
         model.gateKeeper().registerFoodEaten(level);
         pac.setRestingTicks(model.rules().restingTicksForEnergizer());
         level.clearGhostKillChain();
-        startPacPowerMode(eventManager, level, pac);
+        startPacPowerMode(playContext, pac);
     }
 
     @Override
@@ -301,7 +299,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         bonus.showEatenForSeconds(model.rules().eatenBonusDisplaySeconds());
 
-        scorePoints(eventManager, model, bonus.points(), level.number());
+        scorePoints(playContext, bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
 
         eventManager.publishGameEvent(new BonusEatenEvent(bonus));
@@ -318,7 +316,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final int killedBefore = level.ghostKillChainSize();
         final int points = model.rules().pointsForGhost(killedBefore);
 
-        scorePoints(eventManager, model, points, level.number());
+        scorePoints(playContext, points, level.number());
         Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
 
         eatenGhost.setState(GhostState.EATEN);
@@ -363,10 +361,12 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void startPacPowerMode(GameEventManager eventManager, GameLevel level, Pac pac) {
-        requireNonNull(eventManager);
-        requireNonNull(level);
+    public void startPacPowerMode(GamePlayContext playContext, Pac pac) {
+        requireNonNull(playContext);
         requireNonNull(pac);
+
+        final GameLevel level = playContext.level();
+        final GameEventManager eventManager = playContext.eventManager();
 
         level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
         final float powerSeconds = level.pacPowerSeconds();
@@ -382,7 +382,12 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void updatePacPowerMode(GameEventManager eventManager, GameLevel level, Pac pac) {
+    public void updatePacPowerMode(GamePlayContext playContext, Pac pac) {
+        requireNonNull(playContext);
+        requireNonNull(pac);
+
+        final GameLevel level = playContext.level();
+        final GameEventManager eventManager = playContext.eventManager();
         if (pac.powerTimer().isRunning()) {
             pac.powerTimer().doTick();
             if (pac.isPowerFadingStarting(level)) {
@@ -401,10 +406,12 @@ public abstract class CommonGamePlay implements GamePlay {
     // Scoring
 
     @Override
-    public void scorePoints(GameEventManager eventManager, GameModel model, int points, int levelNumber) {
-        requireNonNull(eventManager);
-        requireNonNull(model);
+    public void scorePoints(GamePlayContext playContext, int points, int levelNumber) {
+        requireNonNull(playContext);
         requireValidLevelNumber(levelNumber);
+
+        final GameModel model = playContext.model();
+        final GameEventManager eventManager = playContext.eventManager();
 
         if (!model.score().isEnabled()) {
             return;
@@ -428,7 +435,9 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void updateHighScore(GameEventManager eventManager, GameModel model) {
+    public void updateHighScore(GamePlayContext playContext) {
+        final GameModel model = playContext.model();
+
         final PropertyFileScore highScore;
         try {
             highScore = model.highScore();
