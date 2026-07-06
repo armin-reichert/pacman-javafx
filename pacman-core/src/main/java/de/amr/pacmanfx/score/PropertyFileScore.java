@@ -30,11 +30,10 @@ import static java.util.Objects.requireNonNull;
  * <p>The XML format is intentionally simple and stable. If the file is missing,
  * a new one is created with the current score values.</p>
  */
-public class PersistentScore extends Score {
+public class PropertyFileScore extends Score {
 
     /** Timestamp format used in the XML comment header. */
-    private static final DateTimeFormatter DATE_TIME_FORMATTER =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /** The file where the score is stored. */
     private final File file;
@@ -44,7 +43,7 @@ public class PersistentScore extends Score {
      *
      * @param file the XML file used for persistence (must not be {@code null})
      */
-    public PersistentScore(File file) {
+    public PropertyFileScore(File file) {
         this.file = requireNonNull(file, "file must not be null");
     }
 

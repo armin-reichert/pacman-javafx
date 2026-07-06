@@ -14,6 +14,7 @@ import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.test.CutScenesTestState;
 import de.amr.pacmanfx.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.model.test.LevelShortTestState;
+import de.amr.pacmanfx.score.PropertyFileScore;
 import de.amr.pacmanfx.ui.GameTranslationManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameVariant;
@@ -289,7 +290,7 @@ public final class PacManGamesCollection implements Game {
         flow.addState(new LevelMediumTestState());
         flow.addState(new CutScenesTestState());
 
-        gameVariantRuntime.gameModel().setHighScoreFile(PacManGamesMachine.highScoreFile(variantName));
+        gameVariantRuntime.gameModel().setHighScore(new PropertyFileScore(PacManGamesMachine.highScoreFile(variantName)));
 
         return gameVariantRuntime;
     }

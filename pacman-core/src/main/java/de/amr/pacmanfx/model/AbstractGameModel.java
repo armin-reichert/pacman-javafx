@@ -10,15 +10,16 @@ import de.amr.pacmanfx.model.lives.PacManLives;
 import de.amr.pacmanfx.model.lives.PacManLivesImpl;
 import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.score.PersistentScore;
+import de.amr.pacmanfx.score.PropertyFileScore;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-import java.io.File;
 import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Base implementation of the {@link GameModel} interface.
@@ -29,7 +30,7 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected final Score score;
 
-    protected PersistentScore highScore;
+    protected PropertyFileScore highScore;
 
     protected GameLevel currentLevel;
 
@@ -46,8 +47,8 @@ public abstract class AbstractGameModel implements GameModel {
         lives = new PacManLivesImpl();
     }
 
-    public void setHighScoreFile(File file) {
-        highScore = new PersistentScore(file);
+    public void setHighScore(PropertyFileScore score) {
+        highScore = requireNonNull(score);
     }
 
     public abstract void setMapSelector(WorldMapSelector mapSelector);
@@ -68,7 +69,7 @@ public abstract class AbstractGameModel implements GameModel {
     public abstract HUDState hudState();
 
     @Override
-    public PersistentScore highScore() {
+    public PropertyFileScore highScore() {
         return highScore;
     }
 

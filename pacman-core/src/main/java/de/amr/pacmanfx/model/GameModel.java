@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.level.LevelCounter;
 import de.amr.pacmanfx.model.lives.PacManLives;
 import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
-import de.amr.pacmanfx.score.PersistentScore;
+import de.amr.pacmanfx.score.PropertyFileScore;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 
@@ -68,7 +68,7 @@ public interface GameModel {
 
     Score score();
 
-    PersistentScore highScore();
+    PropertyFileScore highScore();
 
     WorldMapSelector mapSelector();
 

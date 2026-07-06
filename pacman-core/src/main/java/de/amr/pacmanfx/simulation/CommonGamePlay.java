@@ -19,7 +19,7 @@ import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.model.world.House;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.score.PersistentScore;
+import de.amr.pacmanfx.score.PropertyFileScore;
 import de.amr.pacmanfx.score.Score;
 import org.tinylog.Logger;
 
@@ -167,7 +167,7 @@ public abstract class CommonGamePlay implements GamePlay {
         model.lives().setCount(model.lives().initialCount());
         model.score().reset();
 
-        final PersistentScore highScore = model.highScore();
+        final PropertyFileScore highScore = model.highScore();
         if (highScore != null) {
             try {
                 highScore.load();
@@ -423,7 +423,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public void updateHighScore(GameEventManager eventManager, GameModel model) {
-        final PersistentScore highScore;
+        final PropertyFileScore highScore;
         try {
             highScore = model.highScore();
         } catch (Exception e) {
@@ -433,7 +433,7 @@ public abstract class CommonGamePlay implements GamePlay {
             Logger.error("Cannot update high-score, no high-score file has been assigned");
             return;
         }
-        final PersistentScore savedHighScore = new PersistentScore(highScore.file());
+        final PropertyFileScore savedHighScore = new PropertyFileScore(highScore.file());
         try {
             savedHighScore.load();
             if (highScore.points() > savedHighScore.points()) {
