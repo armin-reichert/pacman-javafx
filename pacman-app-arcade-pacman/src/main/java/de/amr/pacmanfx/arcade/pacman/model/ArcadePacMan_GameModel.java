@@ -52,6 +52,8 @@ public class ArcadePacMan_GameModel extends AbstractGameModel {
 
     protected final HUDState hudState = new HUDState();
 
+    protected final GateKeeper gateKeeper = new GateKeeper();
+
     public ArcadePacMan_GameModel() {
         this(new ArcadePacMan_MapSelector());
     }
@@ -64,7 +66,7 @@ public class ArcadePacMan_GameModel extends AbstractGameModel {
         rules = new ArcadePacMan_GameRules();
         levelCounter = new ArcadePacMan_LevelCounter();
         automaticSteering = new RuleBasedPacSteering();
-        createGateKeeper();
+        configureGateKeeper();
     }
 
     @Override
@@ -108,6 +110,11 @@ public class ArcadePacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
+    public GateKeeper gateKeeper() {
+        return gateKeeper;
+    }
+
+    @Override
     public HUDState hudState() {
         return hudState;
     }
@@ -136,8 +143,7 @@ public class ArcadePacMan_GameModel extends AbstractGameModel {
         );
     }
 
-    protected void createGateKeeper() {
-        gateKeeper = new GateKeeper();
+    protected void configureGateKeeper() {
         gateKeeper.setOnGhostReleased((level, prisoner) -> {
             if (prisoner.personality() == ORANGE_GHOST_POKEY) {
                 final Ghost redGhost = level.ghost(RED_GHOST_SHADOW);

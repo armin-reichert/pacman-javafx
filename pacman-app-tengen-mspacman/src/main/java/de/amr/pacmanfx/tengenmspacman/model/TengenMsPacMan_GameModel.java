@@ -52,8 +52,12 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     private final TengenMsPacMan_HUDState hudState =  new TengenMsPacMan_HUDState();
 
+    private final GateKeeper gateKeeper = new GateKeeper();
+
     private MapCategory mapCategory;
+
     private Difficulty difficulty;
+
     private PacBooster pacBoosterMode;
 
     private boolean boosterActive;
@@ -67,10 +71,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public TengenMsPacMan_GameModel() {
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
-        gateKeeper = new GateKeeper(); //TODO implement original logic from Tengen game
         automaticSteering = new RuleBasedPacSteering();
         rules = new TengenMsPacMan_GameRules();
-
         setDifficulty(Difficulty.NORMAL);
     }
 
@@ -180,6 +182,11 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         setMapCategory(DEFAULT_MAP_CATEGORY);
         setStartLevelNumber(DEFAULT_START_LEVEL);
         setNumContinues(DEFAULT_NUM_CONTINUES);
+    }
+
+    @Override
+    public GateKeeper gateKeeper() {
+        return gateKeeper;
     }
 
     @Override

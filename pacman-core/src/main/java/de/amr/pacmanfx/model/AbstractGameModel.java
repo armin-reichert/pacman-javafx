@@ -31,8 +31,6 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected final Score score;
 
-    protected GateKeeper gateKeeper;
-
     protected PersistentScore highScore;
 
     protected GameLevel currentLevel;
@@ -78,9 +76,7 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
-    public GateKeeper gateKeeper() {
-        return gateKeeper;
-    }
+    public abstract GateKeeper gateKeeper();
 
     @Override
     public abstract HUDState hudState();
