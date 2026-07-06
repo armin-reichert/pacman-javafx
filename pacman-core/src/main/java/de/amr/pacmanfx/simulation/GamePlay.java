@@ -45,7 +45,7 @@ public interface GamePlay {
 
     void onEatPellet(GamePlayContext playContext, Vector2i tile);
 
-    void onEatEnergizer(GameEventManager eventManager, GameLevel level, Vector2i tile);
+    void onEatEnergizer(GamePlayContext playContext, Vector2i tile);
 
     void onEatBonus(GamePlayContext playContext, Bonus bonus);
 

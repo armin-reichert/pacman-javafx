@@ -114,7 +114,7 @@ public class TestEatingFood {
             .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                context.gamePlay().onEatEnergizer(context.eventManager(), level, tile);
+                context.gamePlay().onEatEnergizer(context.createPlayContext(), tile);
             });
     }
 

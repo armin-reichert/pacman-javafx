@@ -113,9 +113,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public void onEatEnergizer(GameEventManager eventManager, GameLevel level, Vector2i tile) {
-        super.onEatEnergizer(eventManager, level, tile);
-        checkRedGhostCruiseElroyActivation(level);
+    public void onEatEnergizer(GamePlayContext playContext, Vector2i tile) {
+        super.onEatEnergizer(playContext, tile);
+        checkRedGhostCruiseElroyActivation(playContext.level());
     }
 
     @Override

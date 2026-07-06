@@ -107,7 +107,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         level.worldMap().foodLayer().markFoodEatenAt(foodTile);
         if (result.energizerFound()) {
-            onEatEnergizer(eventManager, level, foodTile);
+            onEatEnergizer(playContext, foodTile);
         } else {
             onEatPellet(playContext, foodTile);
         }
@@ -271,15 +271,17 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void onEatEnergizer(GameEventManager eventManager, GameLevel level, Vector2i tile) {
-        requireNonNull(eventManager);
-        requireNonNull(level);
+    public void onEatEnergizer(GamePlayContext playContext, Vector2i tile) {
+        requireNonNull(playContext);
         requireNonNull(tile);
 
-        final GameModel model = level.gameModel();
+        final GameModel model = playContext.model();
+        final GameLevel level = playContext.level();
+        final GameEventManager eventManager = playContext.eventManager();
+        final Pac pac = level.entities().pac();
+
         scorePoints(eventManager, model, model.rules().pointsForEnergizer(), level.number());
         model.gateKeeper().registerFoodEaten(level);
-        final Pac pac = level.entities().pac();
         pac.setRestingTicks(model.rules().restingTicksForEnergizer());
         level.clearGhostKillChain();
         startPacPowerMode(eventManager, level, pac);
