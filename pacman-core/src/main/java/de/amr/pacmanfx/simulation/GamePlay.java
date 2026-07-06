@@ -45,6 +45,8 @@ public interface GamePlay {
 
     // Playing level
 
+    HuntingStepResult hunt(GameContext context, GameEventManager eventManager, GameLevel level);
+
     void onEatPellet(GameEventManager eventManager, GameLevel level, Vector2i tile);
 
     void onEatEnergizer(GameEventManager eventManager, GameLevel level, Vector2i tile);
@@ -52,8 +54,6 @@ public interface GamePlay {
     void onEatBonus(GameEventManager eventManager, GameLevel level, Bonus bonus);
 
     void onEatGhost(GameEventManager eventManager, GameLevel level, Ghost eatenGhost);
-
-    void evaluateCollisions(HuntingStepResult huntingStepResult, GameEventManager eventManager, GameLevel level);
 
     void activateNextBonus(GameEventManager eventManager, GameLevel level);
 

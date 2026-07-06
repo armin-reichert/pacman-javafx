@@ -18,7 +18,6 @@ public class Arcade_GameFlow extends StateMachineGameFlow {
             addState(gameState.state());
         }
         stateMachine.addStateChangeListener((oldState, newState) ->
-            gameContext().eventManager().publishGameEvent(
-                new GameStateChangeEvent(gameContext(), oldState, newState)));
+            gameContext().eventManager().publishGameEvent(new GameStateChangeEvent(oldState, newState)));
     }
 }

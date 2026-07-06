@@ -11,8 +11,10 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.test.TestStateID;
+import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
@@ -39,6 +41,7 @@ import javafx.scene.Node;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.List;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
@@ -51,10 +54,10 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
     private final PlayScene3D playScene3D;
     private final RandomTextPicker gameOverMessagePicker;
 
-    public PlayScene3DGameEventHandler(PlayScene3D playScene3D) {
-        super(playScene3D.game());
+    public PlayScene3DGameEventHandler(Game game, PlayScene3D playScene3D) {
+        super(game);
         this.playScene3D = requireNonNull(playScene3D);
-        gameOverMessagePicker = new RandomTextPicker(game().ui().translations().textBundle(), "game.over");
+        gameOverMessagePicker = new RandomTextPicker(game.ui().translations().textBundle(), "game.over");
     }
 
     @Override
@@ -79,7 +82,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
             onPacManDying();
         }
         else if (GameStateID.GAME_LEVEL_EATING_GHOST.identifies(newState)) {
-            onEatingGhost();
+            onGhostsKilled(gameModel().huntingStepResult().ghostsKilled());
         }
         else if (GameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
             onLevelComplete();
@@ -269,9 +272,9 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         );
     }
 
-    private void onEatingGhost() {
+    private void onGhostsKilled(List<Ghost> ghostsKilled) {
         final GameLevel3D level3D = assertLevel3D();
-        gameContext().huntingStepResult().ghostsKilled().forEach(ghost -> {
+        ghostsKilled.forEach(ghost -> {
             final Ghost3D ghost3D = level3D.ghost3D(ghost.personality());
             final int killIndex = level3D.level().indexInGhostKilledChain(ghost);
 

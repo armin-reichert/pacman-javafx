@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
+import de.amr.pacmanfx.simulation.HuntingStepResult;
 import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -55,6 +56,8 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected GameRules rules;
 
+    protected HuntingStepResult huntingStepResult;
+
     // Constructor
 
     protected AbstractGameModel() {
@@ -69,6 +72,16 @@ public abstract class AbstractGameModel implements GameModel {
 
     public void setMapSelector(WorldMapSelector mapSelector) {
         this.mapSelector =  requireNonNull(mapSelector);
+    }
+
+    @Override
+    public HuntingStepResult huntingStepResult() {
+        return huntingStepResult;
+    }
+
+    @Override
+    public void setHuntingStepResult(HuntingStepResult huntingStepResult) {
+        this.huntingStepResult = huntingStepResult;
     }
 
     /* -------------------------------------------------------------------------

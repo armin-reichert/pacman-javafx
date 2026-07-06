@@ -84,7 +84,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
         actionBindings = game().actions().camera3DActions().bindings();
 
-        setGameEventHandler(new PlayScene3DGameEventHandler(this));
+        setGameEventHandler(new PlayScene3DGameEventHandler(game, this));
 
         drawModeChangeListener = (_, _, drawMode) -> {
             if (level3D != null) {

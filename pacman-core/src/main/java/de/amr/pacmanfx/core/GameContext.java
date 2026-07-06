@@ -10,7 +10,6 @@ import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.simulation.GamePlay;
-import de.amr.pacmanfx.simulation.HuntingStepResult;
 
 public interface GameContext {
 
@@ -29,8 +28,4 @@ public interface GameContext {
     GameCheats cheats();
 
     GameModel model();
-
-    HuntingStepResult huntingStepResult();
-
-    void setHuntingStepResult(HuntingStepResult result);
 }

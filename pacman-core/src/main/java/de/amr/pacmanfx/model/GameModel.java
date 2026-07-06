@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
+import de.amr.pacmanfx.simulation.HuntingStepResult;
 
 import java.util.Optional;
 
@@ -84,4 +85,10 @@ public interface GameModel {
     Optional<GameLevel> optGameLevel();
 
     GameLevel assertLevel();
+
+    //TODO This is a temporary solution for storing the result of the last hunting step
+
+    HuntingStepResult huntingStepResult();
+
+    void setHuntingStepResult(HuntingStepResult result);
 }

@@ -13,7 +13,6 @@ import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.simulation.GamePlay;
-import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 
 import java.util.HashSet;
@@ -30,23 +29,11 @@ public class GameContextImpl implements GameContext, GameEventManager {
 
     private final GameVariantRuntime gameVariantRuntime;
 
-    private HuntingStepResult huntingStepResult;
-
     private final Set<GameEventListener> eventListeners = new HashSet<>();
 
     public GameContextImpl(PacManGamesCollection game, GameVariantRuntime gameVariantRuntime) {
         this.game = requireNonNull(game);
         this.gameVariantRuntime = requireNonNull(gameVariantRuntime);
-    }
-
-    @Override
-    public HuntingStepResult huntingStepResult() {
-        return huntingStepResult;
-    }
-
-    @Override
-    public void setHuntingStepResult(HuntingStepResult huntingStepResult) {
-        this.huntingStepResult = huntingStepResult;
     }
 
     @Override

@@ -12,11 +12,8 @@ import de.amr.pacmanfx.event.LevelStartedEvent;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameRules;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.model.world.GateKeeper;
-import de.amr.pacmanfx.simulation.EntityCollisionDetector;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 
@@ -39,10 +36,12 @@ public class CommonDemoLevelPlayingState extends GameState {
 
     @Override
     public void onUpdate(GameContext context) {
-        final long tick = timer().tickCount();
         final GameModel model = context.model();
         final GameLevel level = model.assertLevel();
 
+        model.setHuntingStepResult(null);
+
+        final long tick = timer().tickCount();
         if (tick == 1) {
             context.gamePlay().prepareLevelForPlaying(level);
             context.gamePlay().showLevelMessage(level, GameLevelMessageType.GAME_OVER);
@@ -73,51 +72,13 @@ public class CommonDemoLevelPlayingState extends GameState {
             level.huntingTimer().startFirstPhase(context, level.number());
         }
         else if (tick > huntingStartTick) {
-            hunt(context);
-            final GameStateID nextStateID = computeNextState(context.huntingStepResult(), model.rules(), level);
-            context.flow().enterState(nextStateID);
+            model.setHuntingStepResult(context.gamePlay().hunt(context, context.eventManager(), level));
+            context.flow().enterState(computeNextState(model.huntingStepResult(), level));
         }
     }
 
-    private void hunt(GameContext context) {
-        final GameModel model = context.model();
-        final GameLevel level = model.assertLevel();
-        final Pac pac = level.entities().pac();
-        final GateKeeper gateKeeper = model.gateKeeper();
-        final boolean doubleChecked = model.rules().collisionDoubleCheckedProperty().get();
-
-        level.heartbeat().triggerPulse();
-
-        level.huntingTimer().update(model.rules(), level.number());
-
-        if (gateKeeper != null) {
-            gateKeeper.unlockGhostIfPossible(level);
-        }
-
-        context.gamePlay().updatePacPowerMode(context.eventManager(), level, pac);
-
-        final EntityCollisionDetector collisionDetector = new EntityCollisionDetector(context);
-
-        // If double-check active, do an additional collision check before Pac has moved
-        level.entities().forEach(entity -> {
-            if (entity != pac) {
-                entity.update(context, level);
-            }
-        });
-        if (doubleChecked) {
-            collisionDetector.detectCollisions(level);
-        }
-        pac.update(context, level);
-        collisionDetector.detectCollisions(level);
-
-        context.gamePlay().evaluateCollisions(
-            context.huntingStepResult(),
-            context.eventManager(),
-            level
-        );
-    }
-
-    private GameStateID computeNextState(HuntingStepResult result, GameRules rules, GameLevel level) {
+    private GameStateID computeNextState(HuntingStepResult result, GameLevel level) {
+        final GameRules rules = level.gameModel().rules();
         if (rules.isLevelCompleted(level)) {
             return GameStateID.GAME_INTRO;
         }

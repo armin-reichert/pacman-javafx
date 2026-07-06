@@ -20,7 +20,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.FoodLayer;
 import de.amr.pacmanfx.simulation.GamePlay;
-import de.amr.pacmanfx.simulation.HuntingStepResult;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,16 +79,6 @@ public class TestEatingFood {
         @Override
         public GameModel model() {
             return gameModel;
-        }
-
-        @Override
-        public HuntingStepResult huntingStepResult() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void setHuntingStepResult(HuntingStepResult result) {
-            throw new UnsupportedOperationException();
         }
 
         @Override

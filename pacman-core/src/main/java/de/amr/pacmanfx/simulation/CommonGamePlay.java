@@ -6,23 +6,55 @@ package de.amr.pacmanfx.simulation;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.PacEatsFoodEvent;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import org.tinylog.Logger;
 
 public abstract class CommonGamePlay implements GamePlay {
 
-    public void evaluateCollisions(
-        HuntingStepResult huntingStepResult,
-        GameEventManager eventManager,
-        GameLevel level
-    ) {
+    @Override
+    public HuntingStepResult hunt(GameContext context, GameEventManager eventManager, GameLevel level) {
+        final GameModel model = level.gameModel();
+        final Pac pac = level.entities().pac();
+        final GateKeeper gateKeeper = model.gateKeeper();
+        final boolean doubleChecked = model.rules().collisionDoubleCheckedProperty().get();
+
+        level.heartbeat().triggerPulse();
+        level.huntingTimer().update(model.rules(), level.number());
+
+        if (gateKeeper != null) {
+            gateKeeper.unlockGhostIfPossible(level);
+        }
+
+        updatePacPowerMode(eventManager, level, pac);
+
+        final EntityCollisionDetector collisionDetector = new EntityCollisionDetector();
+        // If double-check active, do an additional collision check before Pac has moved
+        level.entities().forEach(entity -> {
+            if (entity != pac) {
+                entity.update(context, level);
+            }
+        });
+        if (doubleChecked) {
+            collisionDetector.detectCollisions(level);
+        }
+        pac.update(context, level);
+
+        final HuntingStepResult result = collisionDetector.detectCollisions(level);
+        evaluateCollisions(result, context.eventManager(), level);
+
+        return result;
+    }
+
+    private void evaluateCollisions(HuntingStepResult huntingStepResult, GameEventManager eventManager, GameLevel level) {
         final Pac pac = level.entities().pac();
 
         evalFoodFound(huntingStepResult, eventManager, level);
@@ -108,7 +140,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     // If collision happened while teleporting (horizontally), move collided actors into visible world
-    public void fixPacPositionIfKilledInsidePortal(GameLevel level) {
+    private void fixPacPositionIfKilledInsidePortal(GameLevel level) {
         final Pac pac = level.entities().pac();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         terrain.hPortalContainingTile(pac.computeTile()).ifPresent(hPortal -> {
