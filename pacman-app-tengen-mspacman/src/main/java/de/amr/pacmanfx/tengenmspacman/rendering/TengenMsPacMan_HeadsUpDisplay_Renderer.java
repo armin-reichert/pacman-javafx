@@ -81,7 +81,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             drawLivesCounter(model, tengenHUD, counterY);
         }
 
-        context.model().optGameLevel().ifPresent(level -> {
+        context.model().optLevel().ifPresent(level -> {
             if (tengenHUD.isLevelCounterOn()) {
                 drawLevelCounter(level, tengenHUD, counterY);
             }

@@ -184,7 +184,7 @@ public class ArcadePacMan_GameModel extends AbstractGameModel {
     protected HuntingTimer createHuntingTimer(GameRules gameRules) {
         final var huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", gameRules.numHuntingPhases());
         // On each phase start (except the initial phase), the ghosts reverse their move direction
-        huntingTimer.setPhaseChangeCallback(newPhaseIndex -> optGameLevel().ifPresent(level -> {
+        huntingTimer.setPhaseChangeCallback(newPhaseIndex -> optLevel().ifPresent(level -> {
             if (newPhaseIndex > 0) {
                 level.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
                     .forEach(Ghost::requestTurnBack);

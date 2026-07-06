@@ -273,6 +273,6 @@ public final class CheatActions {
     }
 
     private Optional<GameLevel> normalLevel(Game game) {
-        return game.context().model().optGameLevel().filter(level -> !level.isDemoLevel());
+        return game.context().model().optLevel().filter(level -> !level.isDemoLevel());
     }
 }

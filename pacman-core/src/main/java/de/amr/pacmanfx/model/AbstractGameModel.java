@@ -32,7 +32,7 @@ public abstract class AbstractGameModel implements GameModel {
 
     protected PropertyFileScore highScore;
 
-    protected GameLevel currentLevel;
+    protected GameLevel level;
 
     protected final PacManLives lives;
 
@@ -109,16 +109,16 @@ public abstract class AbstractGameModel implements GameModel {
 
     @Override
     public void setLevel(GameLevel level) {
-        currentLevel = level;
+        this.level = level;
     }
 
     @Override
-    public Optional<GameLevel> optGameLevel() {
-        return Optional.ofNullable(currentLevel);
+    public Optional<GameLevel> optLevel() {
+        return Optional.ofNullable(level);
     }
 
     @Override
     public GameLevel assertLevel() {
-        return optGameLevel().orElseThrow();
+        return optLevel().orElseThrow();
     }
 }

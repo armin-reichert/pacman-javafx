@@ -39,7 +39,7 @@ public class CommonPacManDyingState extends GameState {
     @Override
     public void onEnter(GameContext context) {
         final GameModel model = context.model();
-        final GameLevel level = context.model().optGameLevel().orElseThrow();
+        final GameLevel level = context.model().optLevel().orElseThrow();
 
         model.gateKeeper().resetCounterAndSetEnabled(true);
 
@@ -64,7 +64,7 @@ public class CommonPacManDyingState extends GameState {
     @Override
     public void onUpdate(GameContext context) {
         final GameModel model = context.model();
-        final GameLevel level = model.optGameLevel().orElseThrow();
+        final GameLevel level = model.optLevel().orElseThrow();
         final Pac pac = level.entities().pac();
         final long tick = timer().tickCount();
 

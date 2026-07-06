@@ -215,7 +215,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public boolean isDemoLevelRunning(GameModel model) {
-        return model.optGameLevel().isPresent() && model.assertLevel().isDemoLevel();
+        return model.optLevel().isPresent() && model.assertLevel().isDemoLevel();
     }
 
     @Override

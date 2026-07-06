@@ -53,7 +53,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             ctx.setFill(debugTextFill);
             ctx.setFont(debugTextFont);
             ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * WorldMap.TS));
-            gameModel.optGameLevel().ifPresent(level -> {
+            gameModel.optLevel().ifPresent(level -> {
                 drawMovingActorInfo(level.entities().pac());
                 level.entities().ghosts().forEach(this::drawMovingActorInfo);
             });
@@ -94,7 +94,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         final GameModel gameModel = playScene2D.gameModel();
         final long tick = playScene2D.game().clock().currentTick();
 
-        gameModel.optGameLevel().ifPresent(level -> {
+        gameModel.optLevel().ifPresent(level -> {
             final WorldMap worldMap = level.worldMap();
             final double scaledIndent = scaled(CONTENT_INDENT);
 

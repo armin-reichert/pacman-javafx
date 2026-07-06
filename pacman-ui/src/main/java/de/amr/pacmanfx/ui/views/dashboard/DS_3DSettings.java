@@ -146,8 +146,8 @@ public class DS_3DSettings extends GameDashboardSection {
                 gameScene2D.width(), gameScene2D.height());
         }
 
-        if (gameModel.optGameLevel().isPresent()) {
-            final WorldMap worldMap = gameModel.optGameLevel().get().worldMap();
+        if (gameModel.optLevel().isPresent()) {
+            final WorldMap worldMap = gameModel.optLevel().get().worldMap();
             return "%dx%d (map size px)".formatted(worldMap.numCols() * WorldMap.TS, worldMap.numRows() * WorldMap.TS);
         }
 

@@ -83,7 +83,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyGameLevelSpeedInfo(Game game, BiFunction<GameLevel,ActorSpeedControl, String> fnInfo) {
-        return () -> game.context().model().optGameLevel()
+        return () -> game.context().model().optLevel()
             .map(level -> fnInfo.apply(level, game.context().model().rules().actorSpeedControl()))
             .orElse(NO_INFO);
     }

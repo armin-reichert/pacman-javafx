@@ -97,7 +97,7 @@ public final class TengenMsPacMan_Actions {
         actionTogglePacBooster = new GameAction(game, "toggle_pac_booster") {
             @Override
             public void doAction() {
-                game.context().model().optGameLevel().ifPresent(gameLevel -> {
+                game.context().model().optLevel().ifPresent(gameLevel -> {
                     final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game.context().model();
                     tengenGame.activatePacBooster(gameLevel.entities().pac(), !tengenGame.isBoosterActive());
                     if (tengenGame.isBoosterActive()) {
@@ -109,7 +109,7 @@ public final class TengenMsPacMan_Actions {
             @Override
             public boolean isEnabled() {
                 final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) game.context().model();
-                return tengenGame.pacBoosterMode() == PacBooster.USE_A_OR_B && tengenGame.optGameLevel().isPresent();
+                return tengenGame.pacBoosterMode() == PacBooster.USE_A_OR_B && tengenGame.optLevel().isPresent();
             }
         };
 

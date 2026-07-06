@@ -25,7 +25,7 @@ public class CommonEatingGhostState extends GameState {
     @Override
     public void onUpdate(GameContext context) {
         final GameModel model = context.model();
-        final GameLevel level = model.optGameLevel().orElseThrow();
+        final GameLevel level = model.optLevel().orElseThrow();
         if (timer().hasExpired()) {
             level.entities().pac().show();
             level.ghostsInState(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));

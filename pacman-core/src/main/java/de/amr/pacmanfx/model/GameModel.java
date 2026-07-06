@@ -84,7 +84,7 @@ public interface GameModel {
 
     void setLevel(GameLevel level);
 
-    Optional<GameLevel> optGameLevel();
+    Optional<GameLevel> optLevel();
 
     GameLevel assertLevel();
 

@@ -89,7 +89,7 @@ public class LevelMediumTestState extends GameState {
 
     private void configureLevelForTest(GameContext context) {
         final GameModel model = context.model();
-        final GameLevel level = model.optGameLevel().orElseThrow();
+        final GameLevel level = model.optLevel().orElseThrow();
 
         final Pac pac = level.entities().pac();
         pac.usingAutopilotProperty().unbind();

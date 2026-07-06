@@ -81,7 +81,7 @@ public class DS_GameControl extends GameDashboardSection {
         final boolean booting = GameStateID.BOOT.identifies(state);
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(game, state));
         buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(model, state));
-        buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || model.optGameLevel().isEmpty());
+        buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || model.optLevel().isEmpty());
 
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !GameStateID.GAME_INTRO.identifies(state));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(state instanceof CutScenesTestState));

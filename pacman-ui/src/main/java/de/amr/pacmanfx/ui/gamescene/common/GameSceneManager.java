@@ -81,7 +81,7 @@ public class GameSceneManager {
 
         nextGameScene.activate();
 
-        gameModel.optGameLevel().ifPresent(level -> handle2D3DSwitch(gameVariant, level, prevGameScene, nextGameScene));
+        gameModel.optLevel().ifPresent(level -> handle2D3DSwitch(gameVariant, level, prevGameScene, nextGameScene));
 
         currentGameSceneProperty().set(nextGameScene);
     }

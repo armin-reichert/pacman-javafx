@@ -43,7 +43,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
 
     @Override
     public void onGameContinued(GameContinuedEvent e) {
-        gameModel().optGameLevel().ifPresent(playScene2D::resetActorAnimations);
+        gameModel().optLevel().ifPresent(playScene2D::resetActorAnimations);
     }
 
     @Override

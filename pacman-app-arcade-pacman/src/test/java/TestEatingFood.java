@@ -123,7 +123,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Food Counting")
     public void testFoodCounting() {
-        context.model().optGameLevel().ifPresent(level -> {
+        context.model().optLevel().ifPresent(level -> {
             final FoodLayer foodLayer = level.worldMap().foodLayer();
 
             int eaten = foodLayer.eatenFoodCount();
@@ -144,7 +144,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Level Completion")
     public void testLevelCompletion() {
-        context.model().optGameLevel().ifPresent(level -> {
+        context.model().optLevel().ifPresent(level -> {
             while (level.worldMap().foodLayer().remainingFoodCount() > 0) {
                 assertFalse(context.model().rules().isLevelCompleted(level));
                 eatNextPellet(level);
@@ -157,7 +157,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
-        context.model().optGameLevel().ifPresent(level -> {
+        context.model().optLevel().ifPresent(level -> {
             final Ghost blinky = level.ghost(RED_GHOST_SHADOW);
             final FoodLayer foodLayer = level.worldMap().foodLayer();
             final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
@@ -187,7 +187,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Resting")
     public void testResting() {
-        context.model().optGameLevel().ifPresent(level -> {
+        context.model().optLevel().ifPresent(level -> {
             eatNextPellet(level);
             assertEquals(1, level.entities().pac().restingTicks());
             eatNextEnergizer(level);

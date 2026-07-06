@@ -82,7 +82,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
         subScene.cameraProperty().bind(uiSettings.playSceneDisplay.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
 
-        scalingProperty().addListener((_, _, _) -> gameModel().optGameLevel().ifPresent(level ->
+        scalingProperty().addListener((_, _, _) -> gameModel().optLevel().ifPresent(level ->
             dynamicCamera.updateRange(level.worldMap().terrainLayer())));
 
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
@@ -112,7 +112,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
     @Override
     public void onEnteredFrom3DScene() {
         gameModel().hudState().levelCounterOn().livesCounterOn().showIt();
-        gameModel().optGameLevel().ifPresent(this::acceptGameLevel);
+        gameModel().optLevel().ifPresent(this::acceptGameLevel);
     }
 
     @Override
@@ -146,7 +146,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
 
     @Override
     public void onTick(long tick) {
-        gameModel().optGameLevel().ifPresent(level -> {
+        gameModel().optLevel().ifPresent(level -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final int numRows = terrain.numRows();
             canvasHeightUnscaled.set(TS(numRows + 2)); // 2 additional rows for level counter below maze
