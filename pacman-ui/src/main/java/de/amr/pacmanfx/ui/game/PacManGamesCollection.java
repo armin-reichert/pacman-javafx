@@ -282,17 +282,17 @@ public final class PacManGamesCollection implements Game {
 
     private GameVariant createGameVariant(String variantName) {
         final Cartridge cartridge = machine.cartridgeByName(variantName);
-        final var gameVariantRuntime = new GameVariant(cartridge);
+        final var gameVariant = new GameVariant(cartridge);
 
         //TODO make configurable again if tests should be available
-        final GameFlow flow = gameVariantRuntime.gameFlow();
+        final GameFlow flow = gameVariant.gameFlow();
         flow.addState(new LevelShortTestState());
         flow.addState(new LevelMediumTestState());
         flow.addState(new CutScenesTestState());
 
-        gameVariantRuntime.gameModel().setHighScore(new PropertyFileScore(PacManGamesMachine.highScoreFile(variantName)));
+        gameVariant.gameModel().setHighScore(new PropertyFileScore(PacManGamesMachine.highScoreFile(variantName)));
 
-        return gameVariantRuntime;
+        return gameVariant;
     }
 
 
