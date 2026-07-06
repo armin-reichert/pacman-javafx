@@ -119,11 +119,12 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public void activateNextBonus(GameEventManager eventManager, GameLevel level) {
-        requireNonNull(eventManager);
-        requireNonNull(level);
+    public void activateNextBonus(GamePlayContext playContext) {
+        requireNonNull(playContext);
 
-        final GameModel model = level.gameModel();
+        final GameModel model = playContext.model();
+        final GameLevel level = playContext.level();
+        final GameEventManager eventManager = playContext.eventManager();
 
         level.selectNextBonus();
         final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());

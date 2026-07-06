@@ -51,7 +51,7 @@ public interface GamePlay {
 
     void onEatGhost(GamePlayContext playContext, Ghost eatenGhost);
 
-    void activateNextBonus(GameEventManager eventManager, GameLevel level);
+    void activateNextBonus(GamePlayContext playContext);
 
     void startPacPowerMode(GameEventManager eventManager, GameLevel level, Pac pac);
 

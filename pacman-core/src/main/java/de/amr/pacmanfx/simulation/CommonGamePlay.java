@@ -94,7 +94,6 @@ public abstract class CommonGamePlay implements GamePlay {
     private void evalFoodFound(GamePlayContext playContext, HuntingStepResult result) {
         final GameModel model = playContext.model();
         final GameLevel level = playContext.level();
-        final GameEventManager eventManager = playContext.eventManager();
         final Pac pac = level.entities().pac();
         final Vector2i foodTile = result.foodFoundTile();
 
@@ -113,7 +112,7 @@ public abstract class CommonGamePlay implements GamePlay {
         }
 
         if (model.rules().isBonusAwarded(level)) {
-            activateNextBonus(eventManager, level);
+            activateNextBonus(playContext);
         }
     }
 

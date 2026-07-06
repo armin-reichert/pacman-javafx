@@ -120,15 +120,17 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Playing level
 
     @Override
-    public void activateNextBonus(GameEventManager eventManager, GameLevel level) {
+    public void activateNextBonus(GamePlayContext playContext) {
+        final GameModel model = playContext.model();
+        final GameLevel level = playContext.level();
+        final GameEventManager eventManager = playContext.eventManager();
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+
         //TODO Find out how Tengen really implemented this
         if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {
             Logger.info("Previous bonus is still active, skip this bonus");
             return;
         }
-
-        final GameModel model = level.gameModel();
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         final House house = terrain.optHouse().orElse(null);
         if (house == null) {

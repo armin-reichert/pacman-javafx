@@ -61,7 +61,7 @@ public class LevelShortTestState extends GameState {
             level.clearMessage();
         }
         else if (timer().atSecond(START + 3)) {
-            context.gamePlay().activateNextBonus(context.eventManager(), level);
+            context.gamePlay().activateNextBonus(context.createPlayContext());
         }
         else if (timer().atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
@@ -70,7 +70,7 @@ public class LevelShortTestState extends GameState {
             });
         }
         else if (timer().atSecond(START + 6)) {
-            context.gamePlay().activateNextBonus(context.eventManager(), level);
+            context.gamePlay().activateNextBonus(context.createPlayContext());
         }
         else if (timer().atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {

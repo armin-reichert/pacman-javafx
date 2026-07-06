@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.basics.math.RandomNumberSupport.*;
+import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
@@ -61,9 +62,14 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
      *
      **/
     @Override
-    public void activateNextBonus(GameEventManager eventManager, GameLevel level) {
+    public void activateNextBonus(GamePlayContext playContext) {
+        requireNonNull(playContext);
+
+        final GameModel model = playContext.model();
+        final GameLevel level = playContext.level();
+        final GameEventManager eventManager = playContext.eventManager();
+
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final GameModel model = level.gameModel();
 
         if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {
             Logger.info("Previous bonus is still active, skip this bonus");
