@@ -8,7 +8,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import org.tinylog.Logger;
@@ -34,13 +33,14 @@ public class GameOrLevelStartingState extends GameState {
 
     @Override
     public void onUpdate(GameContext context) {
-        final GameModel model = context.model();
+        if (!(context.model() instanceof TengenMsPacMan_GameModel model)) {
+            throw new IllegalStateException("Illegal game model: " + context.model());
+        }
         final GameFlow flow = context.flow();
-
         if (model.isPlaying()) {
             flow.enterState(GameStateID.GAME_LEVEL_CONTINUE);
         }
-        else if (context.gamePlay().canStartNewGame(context)) {
+        else if (model.canStartNewGame()) {
             flow.enterState(GameStateID.GAME_STARTING);
         }
         else {
