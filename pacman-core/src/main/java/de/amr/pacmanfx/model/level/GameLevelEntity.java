@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.model.level;
 
-import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.event.GameEventManager;
 
 public interface GameLevelEntity {
 
-    void init(GameContext gameContext, GameLevel level);
+    void init(GameLevel level);
 
-    void update(GameContext gameContext, GameLevel level);
+    void update(GameLevel level, GameEventManager eventManager);
 }

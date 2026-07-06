@@ -91,7 +91,7 @@ public class LevelShortTestState extends GameState {
                 context.gamePlay().startNextLevel(context.eventManager(), level);
             }
         } else {
-            model.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.update(context, level));
+            model.optGameLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.update(level, context.eventManager()));
         }
     }
 

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntity;
 import de.amr.pacmanfx.model.world.ArcadeHouse;
@@ -92,10 +92,10 @@ public class MazeHouse3D implements GameLevelEntity, Disposable {
     }
 
     @Override
-    public void init(GameContext gameContext, GameLevel level) {}
+    public void init(GameLevel level) {}
 
     @Override
-    public void update(GameContext gameContext, GameLevel level) {
+    public void update(GameLevel level, GameEventManager eventManager) {
         arcadeHouse3D.update(level);
     }
 

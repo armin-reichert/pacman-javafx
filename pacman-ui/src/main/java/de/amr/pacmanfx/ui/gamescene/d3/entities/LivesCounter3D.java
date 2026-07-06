@@ -3,9 +3,7 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.gamestate.GameState;
-import de.amr.pacmanfx.gamestate.GameStateID;
+import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -154,18 +152,21 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
     }
 
     @Override
-    public void init(GameContext gameContext, GameLevel level) {}
+    public void init(GameLevel level) {}
 
     @Override
-    public void update(GameContext gameContext, GameLevel level) {
-        final GameModel gameModel = gameContext.model();
-        final GameState gameState = gameContext.state();
+    public void update(GameLevel level, GameEventManager eventManager) {
+        final GameModel gameModel = level.gameModel();
         final Pac pac = level.entities().pac();
 
         // Show remaining lives in counter
         int lifeCount = gameModel.lives().count() - 1;
+
+        //TODO fixme
+        //final GameState gameState = gameContext.state();
+
         // While the game starts and Pac-Man is not yet visible in maze, show one more:
-        if (GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameState) && !pac.isVisible()) {
+        if (!gameModel.isPlaying() && !pac.isVisible()) {
             lifeCount += 1;
         }
 

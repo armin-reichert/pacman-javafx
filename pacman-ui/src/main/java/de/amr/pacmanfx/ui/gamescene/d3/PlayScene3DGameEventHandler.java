@@ -150,7 +150,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
             level3D.energizers3D().forEach(Energizer3D::startPumping);
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level.number());
         }
-        assertLevel3D().entities().selectAll().forEach(e -> e.init(gameContext, level));
+        assertLevel3D().entities().selectAll().forEach(e -> e.init(level));
         playScene3D.replaceActionBindings(level);
         playScene3D.fadeInAnimation().playFromStart();
     }
@@ -219,13 +219,15 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
 
     private void onStartingGameOrLevel() {
         playScene3D.optGameLevel3D().ifPresent(level3D ->
-            level3D.entities().selectAll().forEach(entity -> entity.init(gameContext(), level3D.level())));
+            level3D.entities().selectAll().forEach(entity -> entity.init(level3D.level())));
     }
 
     private void onHuntingStart() {
         final GameLevel3D level3D = assertLevel3D();
-        level3D.entities().pac3D().init(gameContext(), level3D.level());
-        level3D.entities().ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext(), level3D.level()));
+        final GameLevel level = level3D.level();
+
+        level3D.entities().pac3D().init(level);
+        level3D.entities().ghosts3D().forEach(ghost3D -> ghost3D.init(level));
         level3D.energizers3D().forEach(Energizer3D::startPumping);
 
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.PARTICLES)
@@ -257,7 +259,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
 
     private Animation createPacDyingAnimationSeq(AnimationRegistry animationRegistry, Pac3D pac3D, GameLevel level) {
         final Animation pacStopping = Ufx.doNow(() -> {
-            pac3D.update(gameContext(), level);
+            pac3D.update(level, gameContext().eventManager());
             animationRegistry.animation(Pac3D.AnimationID.CHEWING).stop();
             animationRegistry.animation(Pac3D.AnimationID.MOVING).stop();
         });

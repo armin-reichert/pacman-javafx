@@ -5,7 +5,7 @@ package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.basics.Identifier;
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -94,10 +94,10 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
     }
 
     @Override
-    public void init(GameContext gameContext, GameLevel level) {}
+    public void init(GameLevel level) {}
 
     @Override
-    public void update(GameContext gameContext, GameLevel level) {
+    public void update(GameLevel level, GameEventManager eventManager) {
         switch (bonus.state()) {
             case INACTIVE, EATEN -> {}
             case EDIBLE -> {

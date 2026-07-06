@@ -40,13 +40,13 @@ public abstract class CommonGamePlay implements GamePlay {
         // If double-check active, do an additional collision check before Pac has moved
         level.entities().forEach(entity -> {
             if (entity != pac) {
-                entity.update(context, level);
+                entity.update(level, eventManager);
             }
         });
         if (doubleChecked) {
             collisionDetector.detectCollisions(level);
         }
-        pac.update(context, level);
+        pac.update(level, eventManager);
 
         final HuntingStepResult result = collisionDetector.detectCollisions(level);
         evaluateCollisions(result, context.eventManager(), level);
@@ -64,7 +64,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         evalBonusFound(huntingStepResult, eventManager, level);
 
-        evalPacKilled(huntingStepResult, eventManager, level);
+        evalPacKilled(huntingStepResult, level);
         if (huntingStepResult.pacKilled()) {
             fixPacPositionIfKilledInsidePortal(level);
         }
@@ -111,11 +111,7 @@ public abstract class CommonGamePlay implements GamePlay {
         }
     }
 
-    private void evalPacKilled(
-        HuntingStepResult huntingStepResult,
-        GameEventManager eventManager,
-        GameLevel level
-    ) {
+    private void evalPacKilled(HuntingStepResult huntingStepResult, GameLevel level) {
         if (level.isDemoLevel() && isPacSafeInDemoLevel(level) || level.entities().pac().isImmune()) {
             return;
         }

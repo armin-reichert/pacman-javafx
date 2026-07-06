@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D.pac;
 
 import de.amr.basics.Identifier;
-import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntity;
@@ -118,7 +118,7 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
     }
 
     @Override
-    public void init(GameContext gameContext, GameLevel level) {
+    public void init(GameLevel level) {
         requireNonNull(level);
         transformController.init(this, level.worldMap());
         animationController.init(this);
@@ -126,7 +126,7 @@ public class Pac3D extends Group implements GameLevelEntity, DisposableGraphicsO
     }
 
     @Override
-    public void update(GameContext gameContext, GameLevel level) {
+    public void update(GameLevel level, GameEventManager eventManager) {
         requireNonNull(level);
         transformController.update(this, level.worldMap());
         animationController.update(this);

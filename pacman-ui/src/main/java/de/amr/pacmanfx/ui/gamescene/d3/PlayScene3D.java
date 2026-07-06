@@ -139,8 +139,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         requireNonNull(pac3D);
         requireNonNull(level);
 
-        pac3D.init(gameContext(), level);
-        pac3D.update(gameContext(), level);
+        pac3D.init(level);
+        pac3D.update(level, gameContext().eventManager());
     }
 
     public void initFood3D(GameLevel level, boolean startEnergizerPumping) {
@@ -170,7 +170,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         level3DEmbedder.getChildren().setAll(level3D);
 
         level3D.createAnimations(Common3DSettingsModel.DEFAULT_PARTICLE_ANIMATION_CONFIG);
-        level3D.entities().selectAll().forEach(entity -> entity.init(gameContext(), level));
+        level3D.entities().selectAll().forEach(entity -> entity.init(level));
         level3D.startLivesCounterTrackingPac();
 
         Logger.info("New 3D game level created");
@@ -237,7 +237,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             return;
         }
 
-        level3D.entities().selectAll().forEach(entity -> entity.update(gameContext(), level));
+        level3D.entities().selectAll().forEach(entity -> entity.update(level, gameContext().eventManager()));
 
         perspectiveManager.updatePerspective(level);
         updateHUD3D(level);
