@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.simulation.HuntingStepResult;
 
 import java.util.List;
 
@@ -69,7 +68,7 @@ public class LevelMediumTestState extends GameState {
             }
         }
         else {
-            model.setHuntingStepResult(context.gamePlay().hunt(context, eventManager, level));
+            model.setHuntingStepResult(context.gamePlay().hunt(eventManager, level));
             if (model.rules().isLevelCompleted(level)) {
                 context.flow().enterState(GameStateID.GAME_INTRO);
             }

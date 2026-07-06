@@ -43,7 +43,7 @@ public class CommonGameLevelPlayingState extends GameState {
     public void onUpdate(GameContext context) {
         final GameModel model = context.model();
         final GameLevel level = model.assertLevel();
-        model.setHuntingStepResult(context.gamePlay().hunt(context, context.eventManager(), level));
+        model.setHuntingStepResult(context.gamePlay().hunt(context.eventManager(), level));
         context.cheats().update(level);
         logHuntingStepResult(model.huntingStepResult());
         context.flow().enterState(computeNextState(model.huntingStepResult(), level));

@@ -72,7 +72,7 @@ public class CommonDemoLevelPlayingState extends GameState {
             level.huntingTimer().startFirstPhase(context, level.number());
         }
         else if (tick > huntingStartTick) {
-            model.setHuntingStepResult(context.gamePlay().hunt(context, context.eventManager(), level));
+            model.setHuntingStepResult(context.gamePlay().hunt(context.eventManager(), level));
             context.flow().enterState(computeNextState(model.huntingStepResult(), level));
         }
     }

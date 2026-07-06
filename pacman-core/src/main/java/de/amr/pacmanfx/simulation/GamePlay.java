@@ -45,7 +45,7 @@ public interface GamePlay {
 
     // Playing level
 
-    HuntingStepResult hunt(GameContext context, GameEventManager eventManager, GameLevel level);
+    HuntingStepResult hunt(GameEventManager eventManager, GameLevel level);
 
     void onEatPellet(GameEventManager eventManager, GameLevel level, Vector2i tile);
 

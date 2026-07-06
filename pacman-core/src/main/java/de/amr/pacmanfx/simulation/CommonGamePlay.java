@@ -6,7 +6,6 @@ package de.amr.pacmanfx.simulation;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.PacEatsFoodEvent;
 import de.amr.pacmanfx.model.GameModel;
@@ -21,7 +20,7 @@ import org.tinylog.Logger;
 public abstract class CommonGamePlay implements GamePlay {
 
     @Override
-    public HuntingStepResult hunt(GameContext context, GameEventManager eventManager, GameLevel level) {
+    public HuntingStepResult hunt(GameEventManager eventManager, GameLevel level) {
         final GameModel model = level.gameModel();
         final Pac pac = level.entities().pac();
         final GateKeeper gateKeeper = model.gateKeeper();
@@ -49,7 +48,7 @@ public abstract class CommonGamePlay implements GamePlay {
         pac.update(level, eventManager);
 
         final HuntingStepResult result = collisionDetector.detectCollisions(level);
-        evaluateCollisions(result, context.eventManager(), level);
+        evaluateCollisions(result, eventManager, level);
 
         return result;
     }
