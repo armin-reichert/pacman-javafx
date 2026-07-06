@@ -32,7 +32,7 @@ public class HelpInfo {
 
         final HelpInfo helpInfo = new HelpInfo(game);
         if (GameStateID.GAME_INTRO.identifies(state)) {
-            helpInfo.addInfoForIntroScene(context);
+            helpInfo.addInfoForIntroScene();
         }
         else if (GameStateID.GAME_PREPARATION.identifies(state)) {
             helpInfo.addInfoForCreditScene(context);
@@ -126,10 +126,9 @@ public class HelpInfo {
         addTranslatedEntry("help.show_intro", "Q");
     }
 
-    private void addInfoForIntroScene(GameContext context) {
-        if (context.gamePlay().canStartNewGame(context)) {
-            addTranslatedEntry("help.start_game", "1");
-        }
+    private void addInfoForIntroScene() {
+        //TODO make context-sensitive
+        addTranslatedEntry("help.start_game", "1");
         addTranslatedEntry("help.add_credit", "5");
         addQuitEntry();
     }
