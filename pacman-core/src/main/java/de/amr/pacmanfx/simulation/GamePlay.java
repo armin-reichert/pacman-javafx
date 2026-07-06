@@ -53,6 +53,8 @@ public interface GamePlay {
 
     void onEatGhost(GameEventManager eventManager, GameLevel level, Ghost eatenGhost);
 
+    void evaluateCollisions(HuntingStepResult huntingStepResult, GameEventManager eventManager, GameLevel level);
+
     void activateNextBonus(GameEventManager eventManager, GameLevel level);
 
     void startPacPowerMode(GameEventManager eventManager, GameLevel level, Pac pac);

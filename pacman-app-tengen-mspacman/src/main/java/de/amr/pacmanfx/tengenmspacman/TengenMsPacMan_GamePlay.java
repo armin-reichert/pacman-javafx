@@ -22,7 +22,7 @@ import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
-import de.amr.pacmanfx.simulation.GamePlay;
+import de.amr.pacmanfx.simulation.CommonGamePlay;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
@@ -38,7 +38,7 @@ import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.*;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_GamePlay implements GamePlay {
+public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 

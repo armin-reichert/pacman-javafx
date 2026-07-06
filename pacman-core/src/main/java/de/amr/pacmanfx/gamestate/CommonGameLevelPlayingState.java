@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.model.world.GateKeeper;
 import de.amr.pacmanfx.simulation.EntityCollisionDetector;
-import de.amr.pacmanfx.simulation.EntityCollisionResolver;
 import de.amr.pacmanfx.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 
@@ -74,8 +73,11 @@ public class CommonGameLevelPlayingState extends GameState {
         pac.update(context, level);
         collisionDetector.detectCollisions(level);
 
-        final EntityCollisionResolver collisionResolver = new EntityCollisionResolver(context);
-        collisionResolver.evaluateCollisions(level);
+        context.gamePlay().evaluateCollisions(
+            context.huntingStepResult(),
+            context.eventManager(),
+            level
+        );
 
         writeResultToLog(context.huntingStepResult());
 

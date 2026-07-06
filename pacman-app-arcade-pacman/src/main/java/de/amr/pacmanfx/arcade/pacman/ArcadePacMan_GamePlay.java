@@ -25,7 +25,7 @@ import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.score.Score;
-import de.amr.pacmanfx.simulation.GamePlay;
+import de.amr.pacmanfx.simulation.CommonGamePlay;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import org.tinylog.Logger;
 
@@ -38,7 +38,7 @@ import static de.amr.basics.math.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_GamePlay implements GamePlay {
+public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     static final List<Vector2i> DEMO_LEVEL_ROUTE = List.of(
         tile( 9,26), tile( 9,29), tile(12,29), tile(12,32), tile(26,32),
