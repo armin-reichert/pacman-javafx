@@ -5,6 +5,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
@@ -51,8 +52,11 @@ public class DS_GameControl extends GameDashboardSection {
 
         setAction(choiceBoxInitialLives, () -> game.context().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
 
+        //TODO Here we would need to access the Arcade-specific action to start the game
+//        setGameAction(buttonGroupLevelActions[GAME_LEVEL_START],       actionToStartTheGamePlay);
         setGameAction(buttonGroupLevelActions[GAME_LEVEL_QUIT],        actions.gameFlowActions().actionRestartIntro());
         setGameAction(buttonGroupLevelActions[GAME_LEVEL_NEXT],        actions.cheatActions().actionEnterNextLevel());
+
         setGameAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], actions.sceneTestActions().actionTestCutScenes());
         setGameAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
 
@@ -75,7 +79,7 @@ public class DS_GameControl extends GameDashboardSection {
         spinnerCredit.setDisable(creditDisabled);
 
         final boolean booting = GameStateID.BOOT.identifies(state);
-        buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(context, state));
+        buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(game, state));
         buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(model, state));
         buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || model.optGameLevel().isEmpty());
 
@@ -85,8 +89,10 @@ public class DS_GameControl extends GameDashboardSection {
         cbCollisionCheckedTwice.setSelected(context.model().rules().collisionDoubleCheckedProperty().get());
     }
 
-    private boolean canStartLevel(GameContext context, GameState gameState) {
-        return context.gamePlay().canStartNewGame(context)
+    private boolean canStartLevel(Game game, GameState gameState) {
+        boolean isArcadeGame = GameVariantID.isArcadeGameName(game.variantName());
+        if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
+        return !game.context().coinMechanism().isEmpty()
             && gameState.isOneOf(GameStateID.GAME_INTRO, GameStateID.GAME_PREPARATION);
     }
 

@@ -35,7 +35,7 @@ public class HelpInfo {
             helpInfo.addInfoForIntroScene();
         }
         else if (GameStateID.GAME_PREPARATION.identifies(state)) {
-            helpInfo.addInfoForCreditScene(context);
+            helpInfo.addInfoForCreditScene();
         }
         else if (state.isOneOf(GameStateID.GAME_OR_LEVEL_STARTING, GameStateID.GAME_LEVEL_PLAYING,
             GameStateID.GAME_LEVEL_PACMAN_DYING, GameStateID.GAME_LEVEL_EATING_GHOST)) {
@@ -133,10 +133,8 @@ public class HelpInfo {
         addQuitEntry();
     }
 
-    private void addInfoForCreditScene(GameContext context) {
-        if (context.gamePlay().canStartNewGame(context)) {
-            addTranslatedEntry("help.start_game", "1");
-        }
+    private void addInfoForCreditScene() {
+        addTranslatedEntry("help.start_game", "1");
         addTranslatedEntry("help.add_credit", "5");
         addQuitEntry();
     }

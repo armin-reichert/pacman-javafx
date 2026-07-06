@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.GameModel;
@@ -59,17 +58,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         tengenModel.setMapCategory(DEFAULT_MAP_CATEGORY);
         tengenModel.setStartLevelNumber(DEFAULT_START_LEVEL);
         tengenModel.setNumContinues(DEFAULT_NUM_CONTINUES);
-    }
-
-    @Override
-    public boolean canStartNewGame(GameContext context) {
-        requireNonNull(context);
-
-        if (!(context.model() instanceof TengenMsPacMan_GameModel tengenModel)) {
-            throw new IllegalArgumentException("Illegal model type");
-        }
-
-        return tengenModel.canStartNewGame();
     }
 
     @Override

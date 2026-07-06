@@ -4,29 +4,24 @@
 
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.BonusActivatedEvent;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.Elroy;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.model.world.House;
-import de.amr.pacmanfx.model.world.TerrainLayer;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.model.world.WorldMapPropertyName;
-import de.amr.pacmanfx.score.PersistentScore;
 import de.amr.pacmanfx.simulation.CommonGamePlay;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
-import org.tinylog.Logger;
 
-import java.io.IOException;
 import java.util.List;
 
 import static de.amr.basics.math.RandomNumberSupport.randomFloat;
@@ -61,11 +56,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         model.lives().setInitialCount(3);
         model.hudState().hideIt();
         resetForNewGame(model);
-    }
-
-    @Override
-    public boolean canStartNewGame(GameContext context) {
-        return !context.coinMechanism().isEmpty();
     }
 
     // Level building and level start

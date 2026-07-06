@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.simulation;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -19,9 +18,6 @@ public interface GamePlay {
     // Game start
 
     void init(GameModel model);
-
-    //TODO check if dependency from context can be removed
-    boolean canStartNewGame(GameContext context);
 
     void resetForNewGame(GameModel model);
 
