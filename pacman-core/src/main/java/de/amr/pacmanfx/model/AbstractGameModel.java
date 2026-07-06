@@ -67,14 +67,8 @@ public abstract class AbstractGameModel implements GameModel {
         this.mapSelector =  requireNonNull(mapSelector);
     }
 
-    @Override
-    public HuntingStepResult huntingStepResult() {
-        return huntingStepResult;
-    }
-
-    @Override
-    public void setHuntingStepResult(HuntingStepResult huntingStepResult) {
-        this.huntingStepResult = huntingStepResult;
+    public void setHighScoreFile(File file) {
+        highScore = new PersistentScore(file);
     }
 
     /* -------------------------------------------------------------------------
@@ -97,6 +91,21 @@ public abstract class AbstractGameModel implements GameModel {
     }
 
     @Override
+    public PersistentScore highScore() {
+        return highScore;
+    }
+
+    @Override
+    public HuntingStepResult huntingStepResult() {
+        return huntingStepResult;
+    }
+
+    @Override
+    public void setHuntingStepResult(HuntingStepResult huntingStepResult) {
+        this.huntingStepResult = huntingStepResult;
+    }
+
+    @Override
     public LevelCounter levelCounter() {
         return levelCounter;
     }
@@ -104,11 +113,6 @@ public abstract class AbstractGameModel implements GameModel {
     @Override
     public Score score() {
         return score;
-    }
-
-    @Override
-    public PersistentScore highScore() {
-        return highScore;
     }
 
     @Override
@@ -121,8 +125,6 @@ public abstract class AbstractGameModel implements GameModel {
         return rules;
     }
 
-    // Lifecycle
-
     @Override
     public boolean isPlaying() {
         return playing.get();
@@ -132,8 +134,6 @@ public abstract class AbstractGameModel implements GameModel {
     public void setPlaying(boolean playing) {
         this.playing.set(playing);
     }
-
-    // Level related
 
     @Override
     public void setLevel(GameLevel level) {
@@ -148,9 +148,5 @@ public abstract class AbstractGameModel implements GameModel {
     @Override
     public GameLevel assertLevel() {
         return optGameLevel().orElseThrow();
-    }
-
-    public void setHighScoreFile(File file) {
-        highScore = new PersistentScore(file);
     }
 }
