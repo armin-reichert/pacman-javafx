@@ -14,69 +14,31 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.Optional;
 
-public class StateMachineControlledGameFlow implements GameFlow {
-
-    protected final StateMachine<GameContext> stateMachine = new StateMachine<>();
+public class StateMachineControlledGameFlow extends StateMachine<GameContext> implements GameFlow {
 
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
-    public StateMachineControlledGameFlow(String name) {
-        stateMachine.setName(name);
-    }
-
-    @Override
-    public void setContext(GameContext context) {
-        stateMachine.setContext(context);
-    }
-
-    @Override
-    public GameContext context() {
-        return stateMachine.context();
+    public StateMachineControlledGameFlow(String name) { setName(name);
     }
 
     @Override
     public GameState state() {
-        return (GameState) stateMachine.state();
+        return (GameState) super.state();
     }
 
     @Override
     public Optional<State<GameContext>> optState(Identifier stateID) {
-        return stateMachine.optState(stateID.name());
-    }
-
-    @Override
-    public void addState(State<GameContext> gameState) {
-        stateMachine.addState(gameState);
-    }
-
-    @Override
-    public void enterState(State<GameContext> gameState) {
-        stateMachine.enterState(gameState);
+        return super.optState(stateID.name());
     }
 
     @Override
     public void enterState(String stateName) {
-        stateMachine.enterStateWithName(stateName);
-    }
-
-    @Override
-    public void resumePreviousState() {
-        stateMachine.resumePreviousState();
-    }
-
-    @Override
-    public void restartState(State<GameContext> gameState) {
-        stateMachine.restartState(gameState);
-    }
-
-    @Override
-    public void restartState(String stateName) {
-        stateMachine.restartState(stateName);
+        super.enterStateWithName(stateName);
     }
 
     @Override
     public void makeStep() {
-        stateMachine.update();
+        super.update();
     }
 
     // Cut scenes

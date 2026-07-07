@@ -10,7 +10,7 @@ public class TengenMsPacMan_GameFlow extends StateMachineControlledGameFlow {
         for (TengenMsPacMan_GameState gameState : TengenMsPacMan_GameState.values()) {
             addState(gameState.state());
         }
-        stateMachine.addStateChangeListener((oldState, newState) ->
+        addStateChangeListener((oldState, newState) ->
             context().eventManager().publishGameEvent(new GameStateChangeEvent(oldState, newState)));
     }
 }
