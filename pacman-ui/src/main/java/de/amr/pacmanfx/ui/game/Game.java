@@ -24,7 +24,9 @@ public interface Game extends GameLifecycle {
 
     Input input();
 
-    void createUI(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage, int width, int height);
+    GameUI createUI(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage, int width, int height);
+
+    void setUI(GameUI ui);
 
     GameUI ui();
 

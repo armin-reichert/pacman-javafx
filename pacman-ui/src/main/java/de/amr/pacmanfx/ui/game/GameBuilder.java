@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.game;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
@@ -110,30 +111,35 @@ public class GameBuilder {
                 }
             }
 
-            game.createUI(
+            final GameUI ui = game.createUI(
                 uiSettings,
                 dashboardFactory,
                 stage,
                 width,
                 height);
 
-            final StartPagesView startPagesView = game.ui().viewManager()
-                .assertView(GameViewID.START_PAGES, StartPagesView.class);
+            game.setUI(ui);
 
-            for (var factory : startPageFactories) {
-                final StartPage page = factory.get();
-                if (page != null) {
-                    startPagesView.addStartPage(game, page);
-                } else {
-                    error("Start page could not be created using factory: " + factory);
-                }
-            }
+            // Can only be done after UI has been assigned to game!
+            addStartPages(game);
 
             return Optional.of(game);
         }
         catch (Exception x) {
-            Logger.error("Game building failed: {}", x.getMessage());
+            Logger.error(x, "Game building failed");
             return Optional.empty();
+        }
+    }
+
+    private void addStartPages(Game game) {
+        final StartPagesView startPagesView = game.ui().viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
+        for (var factory : startPageFactories) {
+            final StartPage page = factory.get();
+            if (page != null) {
+                startPagesView.addStartPage(game, page);
+            } else {
+                error("Start page could not be created using factory: " + factory);
+            }
         }
     }
 

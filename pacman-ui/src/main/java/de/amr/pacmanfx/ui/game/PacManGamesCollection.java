@@ -78,8 +78,10 @@ public final class PacManGamesCollection implements Game {
         variantName.addListener((_, oldName, newName) -> onGameVariantNameChanged(oldName, newName));
     }
 
+    // Game interface
+
     @Override
-    public void createUI(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage, int width, int height) {
+    public GameUI createUI(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage, int width, int height) {
         final TranslationManager translationManager = new GameTranslationManager();
 
         final GameViewModel viewModel = new GameViewModel();
@@ -99,7 +101,7 @@ public final class PacManGamesCollection implements Game {
         //noinspection ResultOfMethodCallIgnored
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
 
-        ui = new GameUI(
+        return new GameUI(
             new GameWindow(stage, width, height),
             viewManager,
             new GameSceneManager(),
@@ -108,10 +110,13 @@ public final class PacManGamesCollection implements Game {
             new SpriteAnimationManager(60),
             viewModel
         );
-        ui.connect(this);
     }
 
-    // Game interface
+    @Override
+    public void setUI(GameUI ui) {
+        this.ui = requireNonNull(ui);
+        ui.connect(this);
+    }
 
     @Override
     public StringProperty variantNameProperty() {
