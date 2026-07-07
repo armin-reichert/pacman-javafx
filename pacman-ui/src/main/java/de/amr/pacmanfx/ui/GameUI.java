@@ -89,7 +89,7 @@ public class GameUI extends DefaultGameEventListener {
 
     public void terminate() {
         sprites.stopAnimationTimer();
-        sprites.animations().clear();
+        sprites.animationContainer().clear();
         window.mainScene().flashMessageManager().stopAnimationTimer();
     }
 
@@ -128,7 +128,7 @@ public class GameUI extends DefaultGameEventListener {
             case LevelCreatedEvent levelCreated -> {
                 final GameLevel level = levelCreated.level();
                 final GameVariantConfig gameVariant = game.config();
-                final SpriteAnimationContainer spriteAnimationContainer = sprites().animations();
+                final SpriteAnimationContainer spriteAnimationContainer = sprites().animationContainer();
 
                 level.entities().pac().setAnimations(gameVariant.createPacAnimations(spriteAnimationContainer));
                 level.entities().ghosts().forEach(ghost ->

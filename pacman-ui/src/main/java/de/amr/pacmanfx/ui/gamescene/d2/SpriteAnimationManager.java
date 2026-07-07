@@ -13,21 +13,21 @@ import javafx.util.Duration;
 
 public class SpriteAnimationManager {
 
-    private final SpriteAnimationContainer context;
+    private final SpriteAnimationContainer animationContainer;
     private final Animation timer;
 
     public SpriteAnimationManager(int fps) {
-        context = new SpriteAnimationContainer();
+        animationContainer = new SpriteAnimationContainer();
         timer = new Timeline(new KeyFrame(Duration.seconds(1.0 / fps), _ -> {
-            for (SpriteAnimation animation : context.activeAnimations()) {
+            for (SpriteAnimation animation : animationContainer.activeAnimations()) {
                 animation.tick();
             }
         }));
         timer.setCycleCount(Animation.INDEFINITE);
     }
 
-    public SpriteAnimationContainer animations() {
-        return context;
+    public SpriteAnimationContainer animationContainer() {
+        return animationContainer;
     }
 
     public void startAnimationTimer() {

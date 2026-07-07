@@ -112,7 +112,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     private void initScene() {
         final GameVariantConfig gameVariant = game().config();
-        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
+        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animationContainer();
 
         blinking = new Pulse(10, Pulse.State.ON);
 

@@ -106,22 +106,6 @@ public final class PacManGamesCollection implements Game {
         );
     }
 
-    private GameViewManager createGameViewManager(
-        GameUISettings settings,
-        DashboardFactory dashboardFactory,
-        TranslationManager translationManager)
-    {
-        final GamePlayView playView = new GamePlayView();
-        playView.populateDashboard(dashboardFactory, settings.dashboard(), translationManager);
-
-        final GameViewManager viewManager = new GameViewManager();
-        viewManager.registerView(GameViewID.START_PAGES, new StartPagesView());
-        viewManager.registerView(GameViewID.GAMEPLAY, playView);
-        viewManager.registerView(GameViewID.EDITOR, new EditorView());
-
-        return viewManager;
-    }
-
     @Override
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
@@ -251,6 +235,22 @@ public final class PacManGamesCollection implements Game {
     }
 
     // Private area, no trespassing!
+
+    private GameViewManager createGameViewManager(
+        GameUISettings settings,
+        DashboardFactory dashboardFactory,
+        TranslationManager translationManager)
+    {
+        final GamePlayView playView = new GamePlayView();
+        playView.populateDashboard(dashboardFactory, settings.dashboard(), translationManager);
+
+        final GameViewManager viewManager = new GameViewManager();
+        viewManager.registerView(GameViewID.START_PAGES, new StartPagesView());
+        viewManager.registerView(GameViewID.GAMEPLAY, playView);
+        viewManager.registerView(GameViewID.EDITOR, new EditorView());
+
+        return viewManager;
+    }
 
     /**
      * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>

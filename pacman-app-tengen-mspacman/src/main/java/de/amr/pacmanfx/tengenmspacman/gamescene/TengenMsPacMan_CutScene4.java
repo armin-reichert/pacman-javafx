@@ -68,7 +68,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     @Override
     public void onActivate() {
         final GameVariantConfig gameVariant = game().config();
-        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
+        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animationContainer();
 
         clapperboard = new Clapperboard(4, "THE END");
         clapperboard.setPosition(TS(3), TS(10));
@@ -174,7 +174,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         junior.setPosition((float) randomX, unscaledHeight() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(gameVariant.createPacAnimations(game().ui().sprites().animations()));
+        junior.setAnimations(gameVariant.createPacAnimations(game().ui().sprites().animationContainer()));
         junior.animations().select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);
