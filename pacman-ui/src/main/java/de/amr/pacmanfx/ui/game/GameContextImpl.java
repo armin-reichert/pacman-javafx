@@ -21,20 +21,23 @@ import java.util.Set;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Context for the currently selected game variant.
+ * Context for the currently running game variant.
  */
-public class GameContextImpl implements GameContext, GameEventManager {
+public class GameContextImpl implements GameContext {
 
     private final PacManGamesCollection game;
 
     private final GameVariant gameVariant;
 
-    private final Set<GameEventListener> eventListeners = new HashSet<>();
+    private final GameEventManager eventManager;
 
     public GameContextImpl(PacManGamesCollection game, GameVariant gameVariant) {
         this.game = requireNonNull(game);
         this.gameVariant = requireNonNull(gameVariant);
+        this.eventManager = new EventManager();
     }
+
+    // --- GameContext
 
     @Override
     public GameCheats cheats() {
@@ -47,18 +50,13 @@ public class GameContextImpl implements GameContext, GameEventManager {
     }
 
     @Override
+    public GameEventManager eventManager() {
+        return eventManager;
+    }
+
+    @Override
     public GameModel model() {
         return gameVariant.gameModel();
-    }
-
-    @Override
-    public GamePlay gamePlay() {
-        return gameVariant.gamePlay();
-    }
-
-    @Override
-    public GameEventManager eventManager() {
-        return this;
     }
 
     @Override
@@ -66,47 +64,44 @@ public class GameContextImpl implements GameContext, GameEventManager {
         return gameVariant.gameFlow();
     }
 
-    /**
-     * Registers a {@link GameEventListener}.
-     *
-     * @param listener the listener to add
-     */
     @Override
-    public void addGameEventListener(GameEventListener listener) {
-        requireNonNull(listener);
-        final boolean added = eventListeners.add(listener);
-        if (added) {
-            Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
-        }
+    public GamePlay gamePlay() {
+        return gameVariant.gamePlay();
     }
 
-    /**
-     * Removes a previously registered {@link GameEventListener}.
-     *
-     * @param listener the listener to remove
-     */
-    @Override
-    public void removeGameEventListener(GameEventListener listener) {
-        requireNonNull(listener);
-        boolean removed = eventListeners.remove(listener);
-        if (removed) {
-            Logger.info("{}: Game event listener removed: {}", getClass().getSimpleName(), listener);
-        } else {
-            Logger.warn("{}: Game event listener not removed, as not registered: {}", getClass().getSimpleName(), listener);
-        }
-    }
+    // --- GameEventManager
 
-    /**
-     * Publishes a {@link GameEvent} to all registered listeners.
-     *
-     * @param event the event to publish
-     */
-    @Override
-    public void publishGameEvent(GameEvent event) {
-        requireNonNull(event);
-        if (Logger.isTraceEnabled()) {
-            Logger.trace("Publish game event: {}", event);
+    private static class EventManager implements GameEventManager {
+
+        private final Set<GameEventListener> eventListeners = new HashSet<>();
+
+        @Override
+        public void addGameEventListener(GameEventListener listener) {
+            requireNonNull(listener);
+            final boolean added = eventListeners.add(listener);
+            if (added) {
+                Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
+            }
         }
-        eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
+
+        @Override
+        public void removeGameEventListener(GameEventListener listener) {
+            requireNonNull(listener);
+            boolean removed = eventListeners.remove(listener);
+            if (removed) {
+                Logger.info("{}: Game event listener removed: {}", getClass().getSimpleName(), listener);
+            } else {
+                Logger.warn("{}: Game event listener not removed, as not registered: {}", getClass().getSimpleName(), listener);
+            }
+        }
+
+        @Override
+        public void publishGameEvent(GameEvent event) {
+            requireNonNull(event);
+            if (Logger.isTraceEnabled()) {
+                Logger.trace("Publish game event: {}", event);
+            }
+            eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
+        }
     }
 }
