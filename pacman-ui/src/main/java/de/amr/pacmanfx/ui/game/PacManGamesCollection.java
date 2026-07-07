@@ -37,6 +37,8 @@ import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -84,10 +86,14 @@ public final class PacManGamesCollection implements Game {
         this.translationManager = new GameTranslationManager();
 
         new GameClockController(this, machine.clock()).configure();
-        variantName.addListener((_, oldName, newName) -> onGameVariantNameChanged(oldName, newName));
+        variantName.addListener(new GameVariantChangeHandler(this));
 
         //noinspection ResultOfMethodCallIgnored
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
+    }
+
+    public void setGameVariantContext(GameVariantContext gameVariantContext) {
+        this.gameVariantContext = gameVariantContext;
     }
 
     // Game interface
@@ -265,31 +271,45 @@ public final class PacManGamesCollection implements Game {
         });
     }
 
-    private void onGameVariantNameChanged(String oldVariantName, String newVariantName) {
-        if (oldVariantName != null) {
-            exitGameVariant(gameVariant(oldVariantName));
+    public static class GameVariantChangeHandler implements ChangeListener<String> {
+
+        private final PacManGamesCollection game;
+
+        public GameVariantChangeHandler(PacManGamesCollection game) {
+            this.game = game;
         }
-        if (newVariantName != null) {
-            enterGameVariant(gameVariant(newVariantName));
+
+        @Override
+        public void changed(ObservableValue<? extends String> observable, String oldVariantName, String newVariantName) {
+            Logger.info("Game variant name change: {} -> {}", oldVariantName, newVariantName);
+
+            if (oldVariantName != null) {
+                exitGameVariant(game.gameVariant(oldVariantName));
+            }
+            if (newVariantName != null) {
+                enterGameVariant(game.gameVariant(newVariantName));
+            }
         }
-    }
 
-    private void enterGameVariant(GameVariant gameVariant) {
-        gameVariant.config().init(this);
-        //TODO rethink
-        ui.viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
+        private void enterGameVariant(GameVariant gameVariant) {
+            gameVariant.config().init(game);
+            //TODO rethink
+            game.ui().viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
 
-        gameVariantContext = new GameVariantContext(this, gameVariant);
-        gameVariantContext.flow().setContext(gameVariantContext);
-        gameVariantContext.eventManager().addGameEventSubscriber(ui);
-    }
+            final var gameVariantContext = new GameVariantContext(game, gameVariant);
+            gameVariantContext.flow().setContext(gameVariantContext);
+            gameVariantContext.eventManager().addGameEventSubscriber(game.ui());
 
-    private void exitGameVariant(GameVariant gameVariant) {
-        ui.sounds().dispose();
-        gameVariant.config().dispose();
+            game.setGameVariantContext(gameVariantContext);
+        }
 
-        gameVariantContext.eventManager().removeGameEventSubscriber(ui);
-        gameVariantContext = null;
+        private void exitGameVariant(GameVariant gameVariant) {
+            game.ui().sounds().dispose();
+            gameVariant.config().dispose();
+
+            game.context().eventManager().removeGameEventSubscriber(game.ui());
+            game.setGameVariantContext(null);
+        }
     }
 
     private GameVariant createGameVariant(String variantName) {
