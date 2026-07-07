@@ -308,7 +308,6 @@ public final class PacManGamesCollection implements Game {
         return gameVariant;
     }
 
-
     private void startBackgroundServices() {
         Platform.runLater(() -> {
             watchdog.startWatching();
