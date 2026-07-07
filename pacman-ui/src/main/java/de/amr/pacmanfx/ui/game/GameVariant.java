@@ -4,6 +4,7 @@ import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.DefaultCheatsImpl;
 import de.amr.pacmanfx.model.GameCheats;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.simulation.GamePlay;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 
@@ -30,7 +31,7 @@ public class GameVariant {
         return gameFlow;
     }
 
-    public AbstractGameModel gameModel() {
+    public GameModel gameModel() {
         return gameModel;
     }
 

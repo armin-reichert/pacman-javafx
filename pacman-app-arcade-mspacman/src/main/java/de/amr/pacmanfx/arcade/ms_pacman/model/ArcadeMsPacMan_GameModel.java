@@ -137,11 +137,6 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void setMapSelector(WorldMapSelector mapSelector) {
-        this.mapSelector = mapSelector;
-    }
-
-    @Override
     public GameRules rules() {
         return rules;
     }

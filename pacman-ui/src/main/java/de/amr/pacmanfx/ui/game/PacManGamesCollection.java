@@ -290,7 +290,8 @@ public final class PacManGamesCollection implements Game {
         flow.addState(new LevelMediumTestState());
         flow.addState(new CutScenesTestState());
 
-        gameVariant.gameModel().setHighScore(new PropertyFileScore(PacManGamesMachine.highScoreFile(variantName)));
+        gameVariant.gameModel().setHighScore(
+            new PropertyFileScore(PacManGamesMachine.highScoreFile(variantName)));
 
         return gameVariant;
     }

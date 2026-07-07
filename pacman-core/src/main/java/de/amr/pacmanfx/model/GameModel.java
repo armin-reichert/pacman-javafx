@@ -68,6 +68,8 @@ public interface GameModel {
 
     Score score();
 
+    void setHighScore(PropertyFileScore score);
+
     PropertyFileScore highScore();
 
     WorldMapSelector mapSelector();

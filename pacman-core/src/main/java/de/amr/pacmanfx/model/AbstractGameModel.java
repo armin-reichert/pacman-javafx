@@ -47,12 +47,6 @@ public abstract class AbstractGameModel implements GameModel {
         lives = new PacManLivesImpl();
     }
 
-    public void setHighScore(PropertyFileScore score) {
-        highScore = requireNonNull(score);
-    }
-
-    public abstract void setMapSelector(WorldMapSelector mapSelector);
-
     /* -------------------------------------------------------------------------
      * GameModel interface implementation
      * ---------------------------------------------------------------------- */
@@ -89,6 +83,11 @@ public abstract class AbstractGameModel implements GameModel {
     @Override
     public Score score() {
         return score;
+    }
+
+    @Override
+    public void setHighScore(PropertyFileScore score) {
+        highScore = requireNonNull(score);
     }
 
     @Override

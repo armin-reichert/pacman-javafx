@@ -4,8 +4,6 @@
 package de.amr.pacmanfx.ui.game;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.model.world.WorldMapSelector;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
@@ -30,15 +28,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameBuilder {
 
-    record GameVariantConfig(WorldMapSelector mapSelector) {}
-
     private final Set<Cartridge> cartridgeSet = new HashSet<>();
 
     private GameUISettings uiSettings;
 
     private DashboardFactory dashboardFactory;
-
-    private final Map<String, GameVariantConfig> gameVariantConfigMap = new LinkedHashMap<>();
 
     private final List<Supplier<? extends StartPage>> startPageFactories = new ArrayList<>();
 
@@ -81,12 +75,6 @@ public class GameBuilder {
 
     public GameBuilder dashboardFactory(DashboardFactory dashboardFactory) {
         this.dashboardFactory = requireNonNull(dashboardFactory);
-        return this;
-    }
-
-    public GameBuilder worldMapSelector(GameVariantID gameVariantID, WorldMapSelector mapSelector) {
-        validateGameVariantName(gameVariantID.name());
-        gameVariantConfigMap.put(gameVariantID.name(), new GameVariantConfig(mapSelector));
         return this;
     }
 
@@ -141,13 +129,6 @@ public class GameBuilder {
                 }
             }
 
-            //TODO Find better solution for shared world map selector
-            gameVariantConfigMap.forEach((variantName, config) -> {
-                if (config.mapSelector() != null) {
-                    game.gameVariant(variantName).gameModel().setMapSelector(config.mapSelector());
-                }
-            });
-
             return Optional.of(game);
         }
         catch (Exception x) {
@@ -174,18 +155,6 @@ public class GameBuilder {
         }
         if (startPageFactories.isEmpty()) {
             error("No start page specified, don't know how to start your game");
-        }
-    }
-
-    private void validateGameVariantName(String name) {
-        if (name == null) {
-            error("Game variant name must not be null");
-        }
-        if (name.isBlank()) {
-            error("Game variant name must not be blank");
-        }
-        if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(name).matches()) {
-            error("Game variant name '%s' does not match pattern '%s'".formatted(name, GameConstants.GAME_VARIANT_NAME_PATTERN));
         }
     }
 
