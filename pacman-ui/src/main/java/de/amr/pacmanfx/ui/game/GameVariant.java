@@ -11,7 +11,7 @@ import de.amr.pacmanfx.ui.GameVariantConfig;
 public class GameVariant {
     private final GamePlay gamePlay;
     private final GameFlow gameFlow;
-    private final AbstractGameModel gameModel;
+    private final GameModel gameModel;
     private final GameCheats cheats;
     private final GameVariantConfig gameVariantUIConfig;
 
