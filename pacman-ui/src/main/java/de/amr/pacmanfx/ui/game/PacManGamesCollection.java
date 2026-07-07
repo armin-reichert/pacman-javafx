@@ -63,6 +63,12 @@ public final class PacManGamesCollection implements Game {
 
     private final CommonActions commonActions;
 
+    private final GameViewModel viewModel;
+
+    private final SoundManager soundManager;
+
+    private final TranslationManager translationManager;
+
     private GameUI ui;
 
     private GameVariantContext gameVariantContext;
@@ -72,21 +78,39 @@ public final class PacManGamesCollection implements Game {
         this.commonActions = new CommonActions(this);
         this.extensions = new GameExtensions(this);
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
+        this.viewModel = new GameViewModel();
+        this.soundManager = new SoundManager();
+        soundManager.muteProperty().bind(viewModel.mutedProperty);
+        this.translationManager = new GameTranslationManager();
 
         new GameClockController(this, machine.clock()).configure();
-
         variantName.addListener((_, oldName, newName) -> onGameVariantNameChanged(oldName, newName));
+
+        //noinspection ResultOfMethodCallIgnored
+        PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
     }
 
     // Game interface
 
     @Override
     public GameUI createUI(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage, int width, int height) {
-        final TranslationManager translationManager = new GameTranslationManager();
-
-        final GameViewModel viewModel = new GameViewModel();
         viewModel.init(settings);
+        return new GameUI(
+            new GameWindow(stage, width, height),
+            createGameViewManager(settings, dashboardFactory, translationManager),
+            new GameSceneManager(),
+            translationManager,
+            soundManager,
+            new SpriteAnimationManager(60),
+            viewModel
+        );
+    }
 
+    private GameViewManager createGameViewManager(
+        GameUISettings settings,
+        DashboardFactory dashboardFactory,
+        TranslationManager translationManager)
+    {
         final GamePlayView playView = new GamePlayView();
         playView.populateDashboard(dashboardFactory, settings.dashboard(), translationManager);
 
@@ -95,21 +119,7 @@ public final class PacManGamesCollection implements Game {
         viewManager.registerView(GameViewID.GAMEPLAY, playView);
         viewManager.registerView(GameViewID.EDITOR, new EditorView());
 
-        final SoundManager soundManager = new SoundManager();
-        soundManager.muteProperty().bind(viewModel.mutedProperty);
-
-        //noinspection ResultOfMethodCallIgnored
-        PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
-
-        return new GameUI(
-            new GameWindow(stage, width, height),
-            viewManager,
-            new GameSceneManager(),
-            translationManager,
-            soundManager,
-            new SpriteAnimationManager(60),
-            viewModel
-        );
+        return viewManager;
     }
 
     @Override
