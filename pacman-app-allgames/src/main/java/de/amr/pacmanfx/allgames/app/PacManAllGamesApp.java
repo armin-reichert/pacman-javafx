@@ -21,9 +21,6 @@ import de.amr.pacmanfx.ui.game.GameBuilder;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import static de.amr.pacmanfx.core.GameVariantID.ARCADE_MS_PACMAN_XXL;
-import static de.amr.pacmanfx.core.GameVariantID.ARCADE_PACMAN_XXL;
-
 public class PacManAllGamesApp extends Application {
 
     Game game;
@@ -36,8 +33,6 @@ public class PacManAllGamesApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        final PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
-
         game = new GameBuilder()
             .cartridges(
                 ArcadePacMan_Cartridge.CARTRIDGE,
@@ -47,8 +42,6 @@ public class PacManAllGamesApp extends Application {
                 PacManXXL_MsPacMan_Cartridge.CARTRIDGE
             )
             .dashboardFactory(TengenDashboardFactory.instance())
-            .worldMapSelector(ARCADE_PACMAN_XXL, sharedMapSelector)
-            .worldMapSelector(ARCADE_MS_PACMAN_XXL, sharedMapSelector)
             .startPage(ArcadePacMan_StartPage::new)
             .startPage(ArcadeMsPacMan_StartPage::new)
             .startPage(TengenMsPacMan_StartPage::new)
@@ -59,8 +52,7 @@ public class PacManAllGamesApp extends Application {
             .orElse(null);
 
         if (game != null) {
-            //TODO find more elegant solution
-            game.watchdog().addEventListener(sharedMapSelector);
+            game.watchdog().addEventListener(PacManXXL_MapSelector.instance());
             game.showUI(GameVariantID.ARCADE_PACMAN);
         }
     }

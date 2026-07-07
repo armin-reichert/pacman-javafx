@@ -26,6 +26,14 @@ import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventListener {
 
+    private static class LazyThreadSafeSingletonHolder {
+        static final PacManXXL_MapSelector SINGLETON = new PacManXXL_MapSelector();
+    }
+
+    public static PacManXXL_MapSelector instance() {
+        return LazyThreadSafeSingletonHolder.SINGLETON;
+    }
+
     public static final WorldMapColorScheme[] WORLD_MAP_COLOR_SCHEMES = {
         new WorldMapColorScheme("#359c9c", "#85e2ff", "#fcb5ff", "#feb8ae"),
         new WorldMapColorScheme("#c2b853", "#ffeace", "#fcb5ff", "#feb8ae"),
@@ -41,7 +49,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
     private final List<WorldMap> builtinMaps = new ArrayList<>();
     private WorldMapSelectionMode selectionMode;
 
-    public PacManXXL_MapSelector() {
+    private PacManXXL_MapSelector() {
         this.selectionMode = WorldMapSelectionMode.CUSTOM_MAPS_FIRST;
         addJuniorPacMapPrototypesIfEmptyDir();
     }

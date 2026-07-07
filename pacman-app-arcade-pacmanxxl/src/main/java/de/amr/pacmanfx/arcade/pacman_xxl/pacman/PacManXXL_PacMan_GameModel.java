@@ -29,6 +29,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
     }
 
     public PacManXXL_PacMan_GameModel() {
+        mapSelector = PacManXXL_MapSelector.instance();
         rules = createRules();
     }
 

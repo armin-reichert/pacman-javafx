@@ -66,10 +66,6 @@ public class PacManAllGamesNoBuilderApp extends Application {
             stage, sceneSize.x(), sceneSize.y()
         );
 
-        PacManXXL_MapSelector sharedMapSelector = new PacManXXL_MapSelector();
-        game.gameVariant(GameVariantID.ARCADE_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
-        game.gameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name()).gameModel().setMapSelector(sharedMapSelector);
-
         StartPagesView start = game.ui().viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
         start.addStartPage(game, new ArcadePacMan_StartPage());
         start.addStartPage(game, new ArcadeMsPacMan_StartPage());
@@ -81,7 +77,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
         game.extensions().add(new GameExtension(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions::new));
         game.extensions().add(new GameExtension(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings::new));
 
-        game.watchdog().addEventListener(sharedMapSelector);
+        game.watchdog().addEventListener(PacManXXL_MapSelector.instance());
 
         game.showUI(GameVariantID.ARCADE_PACMAN);
     }
