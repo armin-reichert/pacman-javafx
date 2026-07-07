@@ -261,8 +261,8 @@ public final class PacManGamesCollection implements Game {
     }
 
     private void enterGameVariant(GameVariant gameVariant) {
+        //TODO rethink
         gameVariant.config().init(this);
-
         ui.viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
 
         // create new game context for current game variant
@@ -272,9 +272,11 @@ public final class PacManGamesCollection implements Game {
     }
 
     private void exitGameVariant(GameVariant gameVariant) {
-        context.eventManager().removeGameEventListener(ui);
         ui.sounds().dispose();
         gameVariant.config().dispose();
+
+        context.eventManager().removeGameEventListener(ui);
+        context = null;
     }
 
     private GameVariant createGameVariant(String variantName) {
