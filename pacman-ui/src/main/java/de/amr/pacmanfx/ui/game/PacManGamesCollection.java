@@ -80,9 +80,9 @@ public final class PacManGamesCollection implements Game {
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
         this.viewModel = new GameViewModel();
         this.soundManager = new SoundManager();
-        soundManager.muteProperty().bind(viewModel.mutedProperty);
         this.translationManager = new GameTranslationManager();
 
+        soundManager.muteProperty().bind(viewModel.mutedProperty);
         new GameClockController(this, machine.clock()).configure();
         variantName.addListener(new GameVariantChangeHandler(this));
 
