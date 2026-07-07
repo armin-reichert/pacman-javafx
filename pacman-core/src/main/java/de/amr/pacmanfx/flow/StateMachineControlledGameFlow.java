@@ -14,11 +14,15 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.Optional;
 
+/**
+ * A game flow implementation using a state machine.
+ */
 public class StateMachineControlledGameFlow extends StateMachine<GameContext> implements GameFlow {
 
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
-    public StateMachineControlledGameFlow(String name) { setName(name);
+    public StateMachineControlledGameFlow(String name) {
+        setName(name);
     }
 
     @Override
@@ -32,16 +36,9 @@ public class StateMachineControlledGameFlow extends StateMachine<GameContext> im
     }
 
     @Override
-    public void enterState(String stateName) {
-        super.enterStateWithName(stateName);
-    }
-
-    @Override
     public void makeStep() {
         super.update();
     }
-
-    // Cut scenes
 
     @Override
     public boolean cutScenesEnabled() {

@@ -28,10 +28,10 @@ public interface GameFlow {
 
     default void enterState(Identifier id) {
         Objects.requireNonNull(id);
-        enterState(id.name());
+        enterStateWithName(id.name());
     }
 
-    void enterState(String stateName);
+    void enterStateWithName(String stateName);
 
     void resumePreviousState();
 
