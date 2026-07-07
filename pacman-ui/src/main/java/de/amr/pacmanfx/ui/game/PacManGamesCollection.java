@@ -253,29 +253,28 @@ public final class PacManGamesCollection implements Game {
 
     private void onGameVariantNameChanged(String oldVariantName, String newVariantName) {
         if (oldVariantName != null) {
-            exitGameVariant(oldVariantName);
+            exitGameVariant(gameVariant(oldVariantName));
         }
         if (newVariantName != null) {
-            enterGameVariant(newVariantName);
+            enterGameVariant(gameVariant(newVariantName));
         }
     }
 
-    private void exitGameVariant(String variantName) {
-        context.eventManager().removeGameEventListener(ui);
-        ui.sounds().dispose();
-        gameVariant(variantName).config().dispose();
-    }
-
-    private void enterGameVariant(String variantName) {
-        final GameVariant gameVariant = gameVariant(variantName);
-
+    private void enterGameVariant(GameVariant gameVariant) {
         gameVariant.config().init(this);
+
         ui.viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
 
         // create new game context for current game variant
         context = new GameContextImpl(this, gameVariant);
         context.eventManager().addGameEventListener(ui);
         context.model().hudState().creditProperty().bind(coinMechanism().numCoinsProperty());
+    }
+
+    private void exitGameVariant(GameVariant gameVariant) {
+        context.eventManager().removeGameEventListener(ui);
+        ui.sounds().dispose();
+        gameVariant.config().dispose();
     }
 
     private GameVariant createGameVariant(String variantName) {
