@@ -151,7 +151,7 @@ public final class PacManGamesCollection implements Game {
 
     @Override
     public GameVariantConfig config() {
-        return gameVariant().gameVariantConfig();
+        return gameVariant().config();
     }
 
     @Override
@@ -264,15 +264,15 @@ public final class PacManGamesCollection implements Game {
 
     private void exitGameVariant(String variantName) {
         ui.sounds().dispose();
-        gameVariant(variantName).gameVariantConfig().dispose();
+        gameVariant(variantName).config().dispose();
         context.removeGameEventListener(globalGameEventHandler);
     }
 
     private void enterGameVariant(String variantName) {
         final GameVariant gameVariant = gameVariant(variantName);
 
-        gameVariant.gameVariantConfig().init(this);
-        ui.viewModel().maze3D.init(gameVariant.gameVariantConfig().worldSettings().maze());
+        gameVariant.config().init(this);
+        ui.viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
 
         // create new game context for current game variant
         context = new GameContextImpl(this, gameVariant);

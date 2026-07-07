@@ -1,7 +1,6 @@
 package de.amr.pacmanfx.ui.game;
 
 import de.amr.pacmanfx.flow.GameFlow;
-import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.DefaultCheatsImpl;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
@@ -13,14 +12,14 @@ public class GameVariant {
     private final GameFlow gameFlow;
     private final GameModel gameModel;
     private final GameCheats cheats;
-    private final GameVariantConfig gameVariantUIConfig;
+    private final GameVariantConfig config;
 
     public GameVariant(Cartridge cartridge) {
         gamePlay = cartridge.gamePlayFactory().get();
         gameFlow = cartridge.gameFlowFactory().get();
         gameModel = cartridge.gameModelFactory().get();
         cheats = new DefaultCheatsImpl();
-        gameVariantUIConfig = cartridge.uiConfigFactory().get();
+        config = cartridge.uiConfigFactory().get();
     }
 
     public GamePlay gamePlay() {
@@ -39,7 +38,7 @@ public class GameVariant {
         return cheats;
     }
 
-    public GameVariantConfig gameVariantConfig() {
-        return gameVariantUIConfig;
+    public GameVariantConfig config() {
+        return config;
     }
 }
