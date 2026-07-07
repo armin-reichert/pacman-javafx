@@ -2,7 +2,7 @@ package de.amr.pacmanfx.event;
 
 import org.tinylog.Logger;
 
-public class DefaultGameEventListener implements GameEventListener{
+public class DefaultGameEventListener implements GameEventListener {
 
     /**
      * Central event dispatcher. Implementors can override this for common handling
