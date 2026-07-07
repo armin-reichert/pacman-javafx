@@ -40,11 +40,11 @@ public class TestEatingFood {
         private final GamePlay gamePlay = new ArcadePacMan_GamePlay();
         private final GameEventManager eventManager = new GameEventManager() {
             @Override
-            public void addGameEventListener(GameEventListener listener) {
+            public void addGameEventSubscriber(GameEventListener listener) {
             }
 
             @Override
-            public void removeGameEventListener(GameEventListener listener) {
+            public void removeGameEventSubscriber(GameEventListener listener) {
             }
 
             @Override

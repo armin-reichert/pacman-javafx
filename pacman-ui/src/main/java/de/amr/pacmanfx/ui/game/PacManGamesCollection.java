@@ -65,7 +65,7 @@ public final class PacManGamesCollection implements Game {
 
     private GameUI ui;
 
-    private GameContextImpl context;
+    private GameVariantContext gameVariantContext;
 
     public PacManGamesCollection(PacManGamesMachine machine) {
         this.machine = requireNonNull(machine);
@@ -149,7 +149,7 @@ public final class PacManGamesCollection implements Game {
 
     @Override
     public GameContext context() {
-        return context;
+        return gameVariantContext;
     }
 
     @Override
@@ -211,8 +211,8 @@ public final class PacManGamesCollection implements Game {
 
     @Override
     public void start() {
-        context.flow().setGameContext(context);
-        context.flow().restartState(GameStateID.BOOT);
+        gameVariantContext.flow().setGameContext(gameVariantContext);
+        gameVariantContext.flow().restartState(GameStateID.BOOT);
         ui.viewManager().selectGamePlayView();
         Platform.runLater(clock()::start);
     }
@@ -266,22 +266,20 @@ public final class PacManGamesCollection implements Game {
     }
 
     private void enterGameVariant(GameVariant gameVariant) {
-        //TODO rethink
         gameVariant.config().init(this);
+        //TODO rethink
         ui.viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
 
-        // create new game context for current game variant
-        context = new GameContextImpl(this, gameVariant);
-        context.eventManager().addGameEventListener(ui);
-        context.model().hudState().creditProperty().bind(coinMechanism().numCoinsProperty());
+        gameVariantContext = new GameVariantContext(this, gameVariant);
+        gameVariantContext.eventManager().addGameEventSubscriber(ui);
     }
 
     private void exitGameVariant(GameVariant gameVariant) {
         ui.sounds().dispose();
         gameVariant.config().dispose();
 
-        context.eventManager().removeGameEventListener(ui);
-        context = null;
+        gameVariantContext.eventManager().removeGameEventSubscriber(ui);
+        gameVariantContext = null;
     }
 
     private GameVariant createGameVariant(String variantName) {

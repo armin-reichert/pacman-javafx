@@ -6,9 +6,9 @@ package de.amr.pacmanfx.event;
 
 public interface GameEventManager {
 
-    void addGameEventListener(GameEventListener listener);
+    void addGameEventSubscriber(GameEventListener listener);
 
-    void removeGameEventListener(GameEventListener listener);
+    void removeGameEventSubscriber(GameEventListener listener);
 
     void publishGameEvent(GameEvent event);
 }

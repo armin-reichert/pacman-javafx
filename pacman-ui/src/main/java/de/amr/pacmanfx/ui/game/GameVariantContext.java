@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Context for the currently running game variant.
  */
-public class GameContextImpl implements GameContext {
+public class GameVariantContext implements GameContext {
 
     private final PacManGamesCollection game;
 
@@ -31,10 +31,13 @@ public class GameContextImpl implements GameContext {
 
     private final GameEventManager eventManager;
 
-    public GameContextImpl(PacManGamesCollection game, GameVariant gameVariant) {
+    public GameVariantContext(PacManGamesCollection game, GameVariant gameVariant) {
         this.game = requireNonNull(game);
         this.gameVariant = requireNonNull(gameVariant);
         this.eventManager = new EventManager();
+
+        //TODO rethink this
+        model().hudState().creditProperty().bind(coinMechanism().numCoinsProperty());
     }
 
     // --- GameContext
@@ -73,25 +76,25 @@ public class GameContextImpl implements GameContext {
 
     private static class EventManager implements GameEventManager {
 
-        private final Set<GameEventListener> eventListeners = new HashSet<>();
+        private final Set<GameEventListener> subscribers = new HashSet<>();
 
         @Override
-        public void addGameEventListener(GameEventListener listener) {
-            requireNonNull(listener);
-            final boolean added = eventListeners.add(listener);
+        public void addGameEventSubscriber(GameEventListener subscriber) {
+            requireNonNull(subscriber);
+            final boolean added = subscribers.add(subscriber);
             if (added) {
-                Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
+                Logger.info("{}: Game event subscriber registered: {}", getClass().getSimpleName(), subscriber);
             }
         }
 
         @Override
-        public void removeGameEventListener(GameEventListener listener) {
-            requireNonNull(listener);
-            boolean removed = eventListeners.remove(listener);
+        public void removeGameEventSubscriber(GameEventListener subscriber) {
+            requireNonNull(subscriber);
+            boolean removed = subscribers.remove(subscriber);
             if (removed) {
-                Logger.info("{}: Game event listener removed: {}", getClass().getSimpleName(), listener);
+                Logger.info("{}: Game event subscriber removed: {}", getClass().getSimpleName(), subscriber);
             } else {
-                Logger.warn("{}: Game event listener not removed, as not registered: {}", getClass().getSimpleName(), listener);
+                Logger.warn("{}: Game event subscriber not removed (was not registered): {}", getClass().getSimpleName(), subscriber);
             }
         }
 
@@ -101,7 +104,7 @@ public class GameContextImpl implements GameContext {
             if (Logger.isTraceEnabled()) {
                 Logger.trace("Publish game event: {}", event);
             }
-            eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
+            subscribers.forEach(subscriber -> subscriber.onGameEvent(event));
         }
     }
 }
