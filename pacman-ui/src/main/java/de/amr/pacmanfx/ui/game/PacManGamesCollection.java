@@ -270,7 +270,7 @@ public final class PacManGamesCollection implements Game {
         ui.viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
 
         gameVariantContext = new GameVariantContext(this, gameVariant);
-        gameVariantContext.flow().setGameContext(gameVariantContext);
+        gameVariantContext.flow().setContext(gameVariantContext);
         gameVariantContext.eventManager().addGameEventSubscriber(ui);
     }
 

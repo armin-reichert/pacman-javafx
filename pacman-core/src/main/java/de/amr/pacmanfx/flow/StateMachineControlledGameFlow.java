@@ -14,22 +14,23 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.Optional;
 
-public class StateMachineGameFlow implements GameFlow {
+public class StateMachineControlledGameFlow implements GameFlow {
 
     protected final StateMachine<GameContext> stateMachine = new StateMachine<>();
+
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
-    public StateMachineGameFlow(String name) {
+    public StateMachineControlledGameFlow(String name) {
         stateMachine.setName(name);
     }
 
     @Override
-    public void setGameContext(GameContext gameContext) {
-        stateMachine.setContext(gameContext);
+    public void setContext(GameContext context) {
+        stateMachine.setContext(context);
     }
 
     @Override
-    public GameContext gameContext() {
+    public GameContext context() {
         return stateMachine.context();
     }
 

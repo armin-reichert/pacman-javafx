@@ -1,9 +1,9 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.event.GameStateChangeEvent;
-import de.amr.pacmanfx.flow.StateMachineGameFlow;
+import de.amr.pacmanfx.flow.StateMachineControlledGameFlow;
 
-public class TengenMsPacMan_GameFlow extends StateMachineGameFlow {
+public class TengenMsPacMan_GameFlow extends StateMachineControlledGameFlow {
 
     public TengenMsPacMan_GameFlow() {
         super("Tengen Ms. Pac-Man Game Flow");
@@ -11,6 +11,6 @@ public class TengenMsPacMan_GameFlow extends StateMachineGameFlow {
             addState(gameState.state());
         }
         stateMachine.addStateChangeListener((oldState, newState) ->
-            gameContext().eventManager().publishGameEvent(new GameStateChangeEvent(oldState, newState)));
+            context().eventManager().publishGameEvent(new GameStateChangeEvent(oldState, newState)));
     }
 }
