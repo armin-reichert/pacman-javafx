@@ -196,22 +196,21 @@ public final class PacManGamesCollection implements Game {
 
     @Override
     public void showUI(GameVariantID variantID) {
+        requireNonNull(variantID);
+
         selectVariant(variantID.name());
 
         ui.viewManager().selectStartPagesView();
         ui.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);
-
         // TODO: Dashboard expects current game view being already being set when connected
         ui.viewManager().gamePlayView().dashboard().connect(this);
-
         ui.window().show(this);
 
-        startServicesLater();
+        startBackgroundServices();
     }
 
     @Override
     public void start() {
-        gameVariantContext.flow().setGameContext(gameVariantContext);
         gameVariantContext.flow().restartState(GameStateID.BOOT);
         ui.viewManager().selectGamePlayView();
         Platform.runLater(clock()::start);
@@ -271,6 +270,7 @@ public final class PacManGamesCollection implements Game {
         ui.viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
 
         gameVariantContext = new GameVariantContext(this, gameVariant);
+        gameVariantContext.flow().setGameContext(gameVariantContext);
         gameVariantContext.eventManager().addGameEventSubscriber(ui);
     }
 
@@ -299,7 +299,7 @@ public final class PacManGamesCollection implements Game {
     }
 
 
-    private void startServicesLater() {
+    private void startBackgroundServices() {
         Platform.runLater(() -> {
             watchdog.startWatching();
             ui.window().mainScene().flashMessageManager().startAnimationTimer();
