@@ -35,129 +35,6 @@ import static java.util.Objects.requireNonNull;
 public abstract class CommonGamePlay implements GamePlay {
 
     @Override
-    public HuntingStepResult hunt(GamePlayContext playContext) {
-        final GameModel model = playContext.model();
-        final GameLevel level = playContext.level();
-        final GameEventManager eventManager = playContext.eventManager();
-        final Pac pac = level.entities().pac();
-        final GateKeeper gateKeeper = model.gateKeeper();
-        final boolean doubleChecked = model.rules().collisionDoubleCheckedProperty().get();
-
-        level.heartbeat().triggerPulse();
-        level.huntingTimer().update(model.rules(), level.number());
-
-        if (gateKeeper != null) {
-            gateKeeper.unlockGhostIfPossible(level);
-        }
-
-        updatePacPowerMode(playContext, pac);
-
-        final EntityCollisionDetector collisionDetector = new EntityCollisionDetector();
-        // If double-check active, do an additional collision check before Pac has moved
-        level.entities().forEach(entity -> {
-            if (entity != pac) {
-                entity.update(level, eventManager);
-            }
-        });
-        if (doubleChecked) {
-            collisionDetector.detectCollisions(level);
-        }
-        pac.update(level, eventManager);
-
-        final HuntingStepResult result = collisionDetector.detectCollisions(level);
-        evaluateCollisions(playContext, result);
-
-        return result;
-    }
-
-    private void evaluateCollisions(GamePlayContext playContext, HuntingStepResult result) {
-        final GameLevel level = playContext.level();
-        final GameEventManager eventManager = playContext.eventManager();
-        final Pac pac = level.entities().pac();
-
-        evalFoodFound(playContext, result);
-        if (result.foodFound()) {
-            eventManager.publishGameEvent(new PacEatsFoodEvent(pac, result.energizerFound(), false));
-        }
-
-        evalBonusFound(playContext, result);
-
-        evalPacKilled(result, level);
-        if (result.pacKilled()) {
-            fixPacPositionIfKilledInsidePortal(level);
-        }
-        else {
-            evalGhostsKilled(playContext, result);
-        }
-    }
-
-    private void evalFoodFound(GamePlayContext playContext, HuntingStepResult result) {
-        final GameModel model = playContext.model();
-        final GameLevel level = playContext.level();
-        final Pac pac = level.entities().pac();
-        final Vector2i foodTile = result.foodFoundTile();
-
-        if (!result.foodFound()) {
-            pac.continueStarving();
-            return;
-        }
-
-        pac.endStarving();
-
-        level.worldMap().foodLayer().markFoodEatenAt(foodTile);
-        if (result.energizerFound()) {
-            onEatEnergizer(playContext, foodTile);
-        } else {
-            onEatPellet(playContext, foodTile);
-        }
-
-        if (model.rules().isBonusAwarded(level)) {
-            activateNextBonus(playContext);
-        }
-    }
-
-    private void evalBonusFound(GamePlayContext playContext, HuntingStepResult result) {
-        if (result.foundEdibleBonus()) {
-            onEatBonus(playContext, result.edibleBonus());
-        }
-    }
-
-    private void evalPacKilled(HuntingStepResult huntingStepResult, GameLevel level) {
-        if (level.isDemoLevel() && isPacSafeInDemoLevel(level) || level.entities().pac().isImmune()) {
-            return;
-        }
-        huntingStepResult.ghostsCollidingWithPac().stream()
-            .filter(ghost -> ghost.state() == GhostState.HUNTING_PAC)
-            .findFirst().ifPresent(_ -> huntingStepResult.setPacKilled(true));
-    }
-
-    private void evalGhostsKilled(GamePlayContext playContext, HuntingStepResult result) {
-        if (result.detectedPacGhostCollision()) {
-            // Frightened ghosts get killed when colliding with Pac
-            result.ghostsCollidingWithPac().stream()
-                .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
-                .forEach(result.ghostsKilled()::add);
-            // More than one ghost might have been killed in this step
-            result.ghostsKilled().forEach(ghost -> onEatGhost(playContext, ghost));
-        }
-    }
-
-    // If collision happened while teleporting (horizontally), move collided actors into visible world
-    private void fixPacPositionIfKilledInsidePortal(GameLevel level) {
-        final Pac pac = level.entities().pac();
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        terrain.hPortalContainingTile(pac.computeTile()).ifPresent(hPortal -> {
-            if (pac.moveDir() == Direction.LEFT) {
-                pac.setX(hPortal.rightBorderEntryTile().x() * WorldMap.TS + WorldMap.HTS);
-            } else if (pac.moveDir() == Direction.RIGHT) {
-                pac.setX(hPortal.leftBorderEntryTile().x() * WorldMap.TS - WorldMap.HTS);
-            }
-            // Not sure if colliding ghosts should also be moved back to visible area
-            Logger.info("Detected collision while teleporting, moved Pac-Man back into world");
-        });
-    }
-
-    @Override
     public void resetForNewGame(GameModel model) {
         requireNonNull(model);
 
@@ -257,6 +134,124 @@ public abstract class CommonGamePlay implements GamePlay {
         final var message = new GameLevelMessage(type);
         message.setPosition(level.worldMap().terrainLayer().messageCenterPosition());
         level.setMessage(message);
+    }
+
+    @Override
+    public HuntingStepResult hunt(GamePlayContext playContext) {
+        final GameModel model = playContext.model();
+        final GameLevel level = playContext.level();
+        final GameEventManager eventManager = playContext.eventManager();
+        final Pac pac = level.entities().pac();
+        final GateKeeper gateKeeper = model.gateKeeper();
+        final boolean doubleChecked = model.rules().collisionDoubleCheckedProperty().get();
+
+        level.heartbeat().triggerPulse();
+        level.huntingTimer().update(model.rules(), level.number());
+
+        if (gateKeeper != null) {
+            gateKeeper.unlockGhostIfPossible(level);
+        }
+
+        updatePacPowerMode(playContext, pac);
+
+        final EntityCollisionDetector collisionDetector = new EntityCollisionDetector();
+        // If double-check active, do an additional collision check before Pac has moved
+        level.entities().forEach(entity -> {
+            if (entity != pac) {
+                entity.update(level, eventManager);
+            }
+        });
+        if (doubleChecked) {
+            collisionDetector.detectCollisions(level);
+        }
+        pac.update(level, eventManager);
+
+        final HuntingStepResult result = collisionDetector.detectCollisions(level);
+        evalCollisions(playContext, result);
+
+        return result;
+    }
+
+    private void evalCollisions(GamePlayContext playContext, HuntingStepResult result) {
+        final GameLevel level = playContext.level();
+
+        evalFoodFound(playContext, result);
+
+        if (result.foundEdibleBonus()) {
+            onEatBonus(playContext, result.edibleBonus());
+        }
+
+        evalPacKilled(result, level);
+        if (result.pacKilled()) {
+            fixPacPositionIfKilledInsidePortal(level);
+        }
+        else {
+            evalGhostsKilled(playContext, result);
+        }
+    }
+
+    private void evalFoodFound(GamePlayContext playContext, HuntingStepResult result) {
+        final GameModel model = playContext.model();
+        final GameLevel level = playContext.level();
+        final GameEventManager eventManager = playContext.eventManager();
+        final Pac pac = level.entities().pac();
+
+        if (!result.foodFound()) {
+            pac.continueStarving();
+            return;
+        }
+
+        pac.endStarving();
+
+        final Vector2i foodTile = result.foodFoundTile();
+        level.worldMap().foodLayer().markFoodEatenAt(foodTile);
+
+        if (result.energizerFound()) {
+            onEatEnergizer(playContext, foodTile);
+        } else {
+            onEatPellet(playContext, foodTile);
+        }
+
+        eventManager.publishGameEvent(new PacEatsFoodEvent(pac, result.energizerFound(), false));
+
+        if (model.rules().isBonusAwarded(level)) {
+            activateNextBonus(playContext);
+        }
+    }
+
+    private void evalPacKilled(HuntingStepResult result, GameLevel level) {
+        if (level.isDemoLevel() && isPacSafeInDemoLevel(level) || level.entities().pac().isImmune()) {
+            return;
+        }
+        result.setPacKilled(
+            result.ghostsCollidingWithPac().stream().anyMatch(ghost -> ghost.state() == GhostState.HUNTING_PAC)
+        );
+    }
+
+    private void evalGhostsKilled(GamePlayContext playContext, HuntingStepResult result) {
+        if (result.detectedPacGhostCollision()) {
+            // Frightened ghosts get killed when colliding with Pac
+            result.ghostsCollidingWithPac().stream()
+                .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
+                .forEach(result.ghostsKilled()::add);
+            // More than one ghost might have been killed in this step
+            result.ghostsKilled().forEach(ghost -> onEatGhost(playContext, ghost));
+        }
+    }
+
+    // If collision happened while teleporting (horizontally), move collided actors into visible world
+    private void fixPacPositionIfKilledInsidePortal(GameLevel level) {
+        final Pac pac = level.entities().pac();
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        terrain.hPortalContainingTile(pac.computeTile()).ifPresent(hPortal -> {
+            if (pac.moveDir() == Direction.LEFT) {
+                pac.setX(hPortal.rightBorderEntryTile().x() * WorldMap.TS + WorldMap.HTS);
+            } else if (pac.moveDir() == Direction.RIGHT) {
+                pac.setX(hPortal.leftBorderEntryTile().x() * WorldMap.TS - WorldMap.HTS);
+            }
+            // Not sure if colliding ghosts should also be moved back to visible area
+            Logger.info("Detected collision while teleporting, moved Pac-Man back into world");
+        });
     }
 
     @Override
