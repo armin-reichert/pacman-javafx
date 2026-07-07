@@ -67,8 +67,6 @@ public final class PacManGamesCollection implements Game {
 
     private GameContextImpl context;
 
-    private final GlobalGameEventHandler globalGameEventHandler = new GlobalGameEventHandler(this);
-
     public PacManGamesCollection(PacManGamesMachine machine) {
         this.machine = requireNonNull(machine);
         this.commonActions = new CommonActions(this);
@@ -263,9 +261,9 @@ public final class PacManGamesCollection implements Game {
     }
 
     private void exitGameVariant(String variantName) {
+        context.eventManager().removeGameEventListener(ui.gameEventHandler());
         ui.sounds().dispose();
         gameVariant(variantName).config().dispose();
-        context.eventManager().removeGameEventListener(globalGameEventHandler);
     }
 
     private void enterGameVariant(String variantName) {
@@ -276,8 +274,8 @@ public final class PacManGamesCollection implements Game {
 
         // create new game context for current game variant
         context = new GameContextImpl(this, gameVariant);
+        context.eventManager().addGameEventListener(ui.gameEventHandler());
         context.model().hudState().creditProperty().bind(coinMechanism().numCoinsProperty());
-        context.eventManager().addGameEventListener(globalGameEventHandler);
     }
 
     private GameVariant createGameVariant(String variantName) {
