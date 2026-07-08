@@ -16,8 +16,8 @@ public class ArcadePacMan_CutScene1_Renderer extends ArcadePacMan_CutScene_Rende
         super(scene, canvas);
         debugRenderer = scene.configureRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override
-            public void draw(AbstractGameScene2D scene) {
-                super.draw(scene);
+            public void draw(AbstractGameScene2D scene, long tick) {
+                super.draw(scene, tick);
                 if (scene instanceof ArcadePacMan_CutScene1 cutScene1) {
                     final String text = cutScene1.sceneTick < ArcadePacMan_CutScene1.ANIMATION_START_TICK
                         ? String.format("Wait %d", ArcadePacMan_CutScene1.ANIMATION_START_TICK - cutScene1.sceneTick)

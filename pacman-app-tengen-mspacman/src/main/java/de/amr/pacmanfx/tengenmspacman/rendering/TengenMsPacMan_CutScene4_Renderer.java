@@ -22,7 +22,8 @@ public class TengenMsPacMan_CutScene4_Renderer extends BaseRenderer implements G
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 
-    public void draw(AbstractGameScene2D scene) {
+    @Override
+    public void draw(AbstractGameScene2D scene, long tick) {
         clearCanvas();
         if (scene instanceof TengenMsPacMan_CutScene4 cutScene) {
             actorRenderer.drawActor(cutScene.clapperboard());
@@ -31,7 +32,7 @@ public class TengenMsPacMan_CutScene4_Renderer extends BaseRenderer implements G
             cutScene.juniors().forEach(actorRenderer::drawActor);
         }
         if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
-            debugRenderer.draw(scene);
+            debugRenderer.draw(scene, tick);
         }
     }
 }

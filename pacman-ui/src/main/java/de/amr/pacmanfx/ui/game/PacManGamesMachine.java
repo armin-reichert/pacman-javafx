@@ -41,10 +41,6 @@ public class PacManGamesMachine {
         }
     }
 
-    public PacManGamesMachine(Cartridge cartridge) {
-        this(List.of(cartridge));
-    }
-
     public PacManGamesMachine(List<Cartridge> cartridges) {
         requireNonNull(cartridges);
         final boolean ok = validateUserDirs();

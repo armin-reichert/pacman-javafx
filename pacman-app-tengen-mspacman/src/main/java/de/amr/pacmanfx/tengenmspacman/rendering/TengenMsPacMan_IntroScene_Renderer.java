@@ -49,19 +49,19 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene) {
+    public void draw(AbstractGameScene2D scene, long tick) {
         clearCanvas();
 
         final TengenMsPacMan_IntroScene introScene = (TengenMsPacMan_IntroScene) scene;
-        final long tick = introScene.sceneFlow.state().timer().tickCount();
+        final long stateTick = introScene.sceneFlow.state().timer().tickCount();
 
         ctx.setFont(arcadeFont8());
         ctx.setImageSmoothing(false);
         switch (introScene.sceneFlow.state()) {
             case SceneState.WAITING_FOR_START -> {
                 if (!introScene.dark) {
-                    boolean blinkingOn = tick % 60 < 30;
-                    fillText("TENGEN PRESENTS", shadeOfBlue(tick), introScene.presentsText.x(), introScene.presentsText.y());
+                    boolean blinkingOn = stateTick % 60 < 30;
+                    fillText("TENGEN PRESENTS", shadeOfBlue(stateTick), introScene.presentsText.x(), introScene.presentsText.y());
                     drawSprite(spriteSheet().sprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * WorldMap.TS, MARQUEE_Y, true);
                     if (blinkingOn) fillText("PRESS START", NES_Palette.color(0x20), 11 * WorldMap.TS, MARQUEE_Y + 9 * WorldMap.TS);
                     fillText("MS PAC-MAN TM NAMCO LTD", NES_Palette.color(0x25), 6 * WorldMap.TS, MARQUEE_Y + 15 * WorldMap.TS);
@@ -103,7 +103,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         }
 
         if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
-            debugRenderer.draw(scene);
+            debugRenderer.draw(scene, tick);
         }
     }
 

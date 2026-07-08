@@ -41,7 +41,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         }
 
         @Override
-        public void draw(AbstractGameScene2D scene) {
+        public void draw(AbstractGameScene2D scene, long tick) {
             final GameModel gameModel = scene.gameModel();
             final GameState gameState = scene.gameState();
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
@@ -86,13 +86,12 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene) {
+    public void draw(AbstractGameScene2D scene, long tick) {
         clearCanvas();
         if (!(scene instanceof TengenMsPacMan_PlayScene2D playScene2D)) {
             return;
         }
         final GameModel gameModel = playScene2D.gameModel();
-        final long tick = playScene2D.game().machine().clock().currentTick();
 
         gameModel.optLevel().ifPresent(level -> {
             final WorldMap worldMap = level.worldMap();
@@ -109,7 +108,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             ctx.restore();
 
             if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
-                debugRenderer.draw(playScene2D);
+                debugRenderer.draw(playScene2D, tick);
             }
             else {
                 // All maps are 28 tiles wide but the NES screen is 32 tiles wide.

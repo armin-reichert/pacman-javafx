@@ -26,7 +26,7 @@ public class ArcadeMsPacMan_CutScene1_Renderer extends BaseRenderer implements G
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene) {
+    public void draw(AbstractGameScene2D scene, long tick) {
         clearCanvas();
 
         if (scene instanceof ArcadeMsPacMan_CutScene1 cutScene) {
@@ -41,7 +41,7 @@ public class ArcadeMsPacMan_CutScene1_Renderer extends BaseRenderer implements G
         }
 
         if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
-            debugRenderer.draw(scene);
+            debugRenderer.draw(scene, tick);
         }
     }
 }

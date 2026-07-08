@@ -21,7 +21,8 @@ public class ArcadePacMan_StartScene_Renderer extends BaseRenderer implements Ga
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 
-    public void draw(AbstractGameScene2D scene) {
+    @Override
+    public void draw(AbstractGameScene2D scene, long tick) {
         clearCanvas();
 
         fillText("PUSH START BUTTON",       ARCADE_ORANGE, arcadeFont8(), TS(6),  TS(17));
@@ -31,7 +32,7 @@ public class ArcadePacMan_StartScene_Renderer extends BaseRenderer implements Ga
         fillText("© 1980 MIDWAY MFG.CO.",   ARCADE_PINK,   arcadeFont8(), TS(4),  TS(29));
 
         if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
-            debugRenderer.draw(scene);
+            debugRenderer.draw(scene, tick);
         }
     }
 }

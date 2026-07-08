@@ -33,7 +33,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene) {
+    public void draw(AbstractGameScene2D scene, long tick) {
         drawTileGrid(scene.unscaledWidth(), scene.unscaledHeight(), Color.LIGHTGRAY);
 
         scene.gameContext().model().optLevel().ifPresent(level -> {

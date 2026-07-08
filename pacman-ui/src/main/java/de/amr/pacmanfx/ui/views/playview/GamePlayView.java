@@ -240,7 +240,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
             final GameModel gameModel = game.context().model();
             if (sceneRenderer != null) {
-                sceneRenderer.draw(gameScene2D);
+                sceneRenderer.draw(gameScene2D, game.machine().clock().currentTick());
             }
             if (hudRenderer != null) {
                 hudRenderer.draw(gameModel.hudState(), game.context(), gameScene2D);

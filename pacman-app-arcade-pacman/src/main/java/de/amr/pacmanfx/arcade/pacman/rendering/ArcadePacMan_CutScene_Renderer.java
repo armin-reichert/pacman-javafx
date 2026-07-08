@@ -30,11 +30,11 @@ public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implem
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene) {
+    public void draw(AbstractGameScene2D scene, long tick) {
         clearCanvas();
         drawSceneContent(scene);
         if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
-            debugRenderer.draw(scene);
+            debugRenderer.draw(scene, tick);
         }
     }
 

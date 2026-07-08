@@ -23,7 +23,7 @@ public class TengenMsPacMan_CutScene3_Renderer extends BaseRenderer implements G
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene) {
+    public void draw(AbstractGameScene2D scene, long tick) {
         clearCanvas();
         if (scene instanceof TengenMsPacMan_CutScene3 cutScene) {
             if (!cutScene.darkness()) {
@@ -35,7 +35,7 @@ public class TengenMsPacMan_CutScene3_Renderer extends BaseRenderer implements G
             }
         }
         if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
-            debugRenderer.draw(scene);
+            debugRenderer.draw(scene, tick);
         }
     }
 }

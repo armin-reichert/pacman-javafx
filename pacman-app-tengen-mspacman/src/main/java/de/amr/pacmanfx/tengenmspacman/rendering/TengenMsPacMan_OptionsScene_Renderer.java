@@ -52,7 +52,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         return this;
     }
 
-    public void draw(AbstractGameScene2D gameScene2D) {
+    public void draw(AbstractGameScene2D gameScene2D, long tick) {
         final GameVariantConfig gameVariantConfig = gameScene2D.game().gameVariant().config();
         final var gameScene = (TengenMsPacMan_OptionsScene) gameScene2D;
         final var gameModel = (TengenMsPacMan_GameModel) gameScene.gameModel();
@@ -138,7 +138,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), gameScene.unscaledWidth(), TS, 212);
 
         if (gameScene2D.game().ui().viewModel().debugModeOnProperty.get()) {
-            debugRenderer.draw(gameScene2D);
+            debugRenderer.draw(gameScene2D, tick);
         }
     }
 

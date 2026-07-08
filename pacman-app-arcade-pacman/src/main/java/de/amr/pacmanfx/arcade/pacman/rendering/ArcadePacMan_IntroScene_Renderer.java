@@ -42,9 +42,9 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
         actorRenderer = scene.configureRenderer((ArcadePacMan_ActorRenderer) gameVariant.createActorRenderer(canvas));
         debugRenderer = scene.configureRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override
-            public void draw(AbstractGameScene2D scene) {
+            public void draw(AbstractGameScene2D scene, long tick) {
                 ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene;
-                super.draw(scene);
+                super.draw(scene, tick);
                 ctx.fillText("Scene timer %d".formatted(introScene.flow.state().timer().tickCount()), 0, scaled(5 * WorldMap.TS));
             }
         });
@@ -58,7 +58,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene) {
+    public void draw(AbstractGameScene2D scene, long tick) {
         final var introScene = (ArcadePacMan_IntroScene) scene;
         clearCanvas();
         drawGhostGallery(introScene);
@@ -78,7 +78,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
             default -> {}
         }
         if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
-            debugRenderer.draw(scene);
+            debugRenderer.draw(scene, tick);
         }
     }
 

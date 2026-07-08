@@ -38,7 +38,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene) {
+    public void draw(AbstractGameScene2D scene, long tick) {
         final double STS = scaled(TS);
 
         clearCanvas();
@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
         drawSprite(spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL), TS(13), TS(23) + 1, true);
         copyrightRenderer.drawCopyright(copyrightImage, TS(6), TS(28));
         if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
-            debugRenderer.draw(scene);
+            debugRenderer.draw(scene, tick);
         }
     }
 }

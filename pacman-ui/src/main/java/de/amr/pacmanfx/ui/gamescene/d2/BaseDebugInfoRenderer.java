@@ -31,7 +31,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene) {
+    public void draw(AbstractGameScene2D scene, long tick) {
         final GameState gameState = scene.gameState();
         final String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
             gameState.name(),

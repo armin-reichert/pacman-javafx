@@ -53,7 +53,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene) {
+    public void draw(AbstractGameScene2D scene, long tick) {
         clearCanvas();
         if (!(scene instanceof Arcade_PlayScene2D playScene)) {
             return;
@@ -67,7 +67,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
             updateActorZOrder(level);
             actorsInZOrder.forEach(actorRenderer::drawActor);
             if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
-                debugRenderer.draw(scene);
+                debugRenderer.draw(scene, tick);
             }
         });
     }

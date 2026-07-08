@@ -26,7 +26,7 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer implements G
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene) {
+    public void draw(AbstractGameScene2D scene, long tick) {
         clearCanvas();
 
         final TengenMsPacMan_BootScene bootScene = (TengenMsPacMan_BootScene) scene;
@@ -39,7 +39,7 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer implements G
         }
 
         if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
-            debugRenderer.draw(scene);
+            debugRenderer.draw(scene, tick);
         }
     }
 }

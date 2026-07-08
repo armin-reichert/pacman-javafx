@@ -44,7 +44,8 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 
-    public void draw(AbstractGameScene2D scene) {
+    @Override
+    public void draw(AbstractGameScene2D scene, long tick) {
         clearCanvas();
 
         final ArcadeMsPacMan_IntroScene introScene = (ArcadeMsPacMan_IntroScene) scene;
@@ -77,7 +78,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
         copyrightRenderer.drawCopyright(copyrightImage, TS(6), TS(28));
 
         if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
-            debugRenderer.draw(scene);
+            debugRenderer.draw(scene, tick);
         }
     }
 

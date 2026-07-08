@@ -75,7 +75,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene) {
+    public void draw(AbstractGameScene2D scene, long tick) {
         clearCanvas();
         if (!(scene instanceof TengenMsPacMan_CreditsScene creditsScene)) {
             return;
@@ -99,7 +99,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
         }
 
         if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
-            debugRenderer.draw(scene);
+            debugRenderer.draw(scene, tick);
         }
     }
 }
