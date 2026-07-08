@@ -5,13 +5,14 @@
 package de.amr.pacmanfx.ui.game;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import javafx.stage.Stage;
 
-public interface Game extends GameLifecycle {
+public interface Game {
 
     PacManGamesMachine machine();
 
@@ -31,4 +32,12 @@ public interface Game extends GameLifecycle {
     GameContext context();
 
     GameExtensions extensions();
+
+    void stop();
+
+    void start();
+
+    void showUI(GameVariantID variantID);
+
+    void terminate();
 }
