@@ -63,11 +63,11 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariantConfig gameVariant = game().config();
+        final GameVariantConfig gameVariantConfig = game().gameVariant().config();
 
         gameModel().hudState().hideIt();
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) gameVariant.spriteSheet();
+        spriteSheet = (TengenMsPacMan_SpriteSheet) gameVariantConfig.spriteSheet();
 
         final var actions = game().extensions()
             .value(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
@@ -75,7 +75,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
         actionBindings().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
 
-        final List<GhostSettings> ghostConfigs = gameVariant.worldSettings().ghosts();
+        final List<GhostSettings> ghostConfigs = gameVariantConfig.worldSettings().ghosts();
         ghostColors = Stream.of(GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
             .map(personality -> ghostConfigs.get(personality).colors().normal().dressColor())
             .toArray(Color[]::new);
@@ -119,13 +119,13 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameVariantConfig gameVariant = scene.game().config();
+                final GameVariantConfig gameVariantConfig = scene.game().gameVariant().config();
                 final SpriteAnimationContainer spriteAnimationContainer = scene.game().ui().sprites().animationContainer();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
                 scene.msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-                scene.msPacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimationContainer));
+                scene.msPacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimationContainer));
                 scene.msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
                 scene.msPacMan.animations().playSelected();
                 scene.msPacMan.setPosition(WorldMap.TS * 33, ACTOR_Y);
@@ -134,10 +134,10 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 scene.msPacMan.setVisible(true);
 
                 scene.ghosts = List.of(
-                    gameVariant.createAnimatedGhost(spriteAnimationContainer, GameModel.RED_GHOST_SHADOW),
-                    gameVariant.createAnimatedGhost(spriteAnimationContainer, GameModel.CYAN_GHOST_BASHFUL),
-                    gameVariant.createAnimatedGhost(spriteAnimationContainer, GameModel.PINK_GHOST_SPEEDY),
-                    gameVariant.createAnimatedGhost(spriteAnimationContainer, GameModel.ORANGE_GHOST_POKEY)
+                    gameVariantConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.RED_GHOST_SHADOW),
+                    gameVariantConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.CYAN_GHOST_BASHFUL),
+                    gameVariantConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.PINK_GHOST_SPEEDY),
+                    gameVariantConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.ORANGE_GHOST_POKEY)
                 );
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(WorldMap.TS * 33, ACTOR_Y);

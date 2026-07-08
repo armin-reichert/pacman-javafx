@@ -70,19 +70,19 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig gameVariant = game().config();
+        final GameVariantConfig gameVariantConfig = game().gameVariant().config();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animationContainer();
-        final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) gameVariant.spriteSheet();
+        final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) gameVariantConfig.spriteSheet();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
+        pacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
 
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
+        msPacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
 
-        inky = gameVariant.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
+        inky = gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
 
-        pinky = gameVariant.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
+        pinky = gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
 
         heart = new Actor();
         heart.setAnimations(singleSpriteAnimation(spriteSheet.sprite(SpriteID.HEART)));

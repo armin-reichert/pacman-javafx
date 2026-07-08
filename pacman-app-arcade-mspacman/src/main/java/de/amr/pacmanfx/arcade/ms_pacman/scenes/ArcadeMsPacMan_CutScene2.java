@@ -55,12 +55,12 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig gameVariant = game().config();
+        final GameVariantConfig gameVariantConfig = game().gameVariant().config();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animationContainer();
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
+        pacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
+        msPacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.setPosition(TS(3), TS(10));
         clapperboard.startAnimation();

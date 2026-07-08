@@ -127,15 +127,15 @@ public class GameUI extends DefaultGameEventListener {
 
             case LevelCreatedEvent levelCreated -> {
                 final GameLevel level = levelCreated.level();
-                final GameVariantConfig gameVariant = game.config();
+                final GameVariantConfig gameVariantConfig = game.gameVariant().config();
                 final SpriteAnimationContainer spriteAnimationContainer = sprites().animationContainer();
 
-                level.entities().pac().setAnimations(gameVariant.createPacAnimations(spriteAnimationContainer));
+                level.entities().pac().setAnimations(gameVariantConfig.createPacAnimations(spriteAnimationContainer));
                 level.entities().ghosts().forEach(ghost ->
-                    ghost.setAnimations(gameVariant.createGhostAnimations(spriteAnimationContainer, ghost.personality())));
+                    ghost.setAnimations(gameVariantConfig.createGhostAnimations(spriteAnimationContainer, ghost.personality())));
 
                 final MiniPlaySceneView miniPlayView = viewManager().gamePlayView().miniPlaySceneView();
-                miniPlayView.setVariantConfig(gameVariant);
+                miniPlayView.setVariantConfig(gameVariantConfig);
                 miniPlayView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
                 miniPlayView.slideIn();
 

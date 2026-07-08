@@ -17,7 +17,6 @@ import de.amr.pacmanfx.model.test.LevelShortTestState;
 import de.amr.pacmanfx.score.PropertyFileScore;
 import de.amr.pacmanfx.ui.GameTranslationManager;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
@@ -148,11 +147,6 @@ public final class PacManGamesCollection implements Game {
     @Override
     public GameContext context() {
         return gameVariantContext;
-    }
-
-    @Override
-    public GameVariantConfig config() {
-        return gameVariant().config();
     }
 
     @Override

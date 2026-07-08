@@ -281,11 +281,11 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void updateGameSceneRenderers(AbstractGameScene2D gameScene2D) {
-        final GameVariantConfig gameVariant = game.config();
+        final GameVariantConfig gameVariantConfig = game.gameVariant().config();
         if (gameScene2D.canvas() != null) {
-            sceneRenderer = gameVariant.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
+            sceneRenderer = gameVariantConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
             setFontSmoothing(game.ui().viewModel().common2D.fontSmoothingOnProperty.get());
-            hudRenderer = gameVariant.createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
+            hudRenderer = gameVariantConfig.createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
         }

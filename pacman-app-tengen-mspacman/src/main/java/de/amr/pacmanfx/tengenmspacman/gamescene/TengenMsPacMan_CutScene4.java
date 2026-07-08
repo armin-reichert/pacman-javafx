@@ -67,7 +67,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariantConfig gameVariant = game().config();
+        final GameVariantConfig gameVariantConfig = game().gameVariant().config();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animationContainer();
 
         clapperboard = new Clapperboard(4, "THE END");
@@ -76,10 +76,10 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
+        msPacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
+        pacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
 
         juniors = new ArrayList<>();
         juniorCreationTimes = new ArrayList<>();
@@ -94,7 +94,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
     @Override
     public void onTick(long tick) {
-        final GameVariantConfig gameVariant = game().config();
+        final GameVariantConfig gameVariantConfig = game().gameVariant().config();
         final long gameStateTick = gameState().timer().tickCount();
 
         clapperboard.tick();
@@ -161,7 +161,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     pacMan.hide();
                     msPacMan.hide();
                 }
-                case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(gameVariant, gameStateTick);
+                case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(gameVariantConfig, gameStateTick);
                 case 1500 -> optSoundEffects().ifPresent(GameSoundEffects::stopAll);
                 case TICK_EXPIRES -> gameContext().flow().enterState(TengenMsPacMan_GameState.GAME_PREPARATION.state());
             }

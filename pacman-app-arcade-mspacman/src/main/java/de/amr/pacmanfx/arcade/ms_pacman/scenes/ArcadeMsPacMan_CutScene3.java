@@ -62,14 +62,14 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig gameVariant = game().config();
+        final GameVariantConfig gameVariantConfig = game().gameVariant().config();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animationContainer();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
+        pacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
 
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(gameVariant.createPacAnimations(spriteAnimations));
+        msPacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
 
         stork = new Stork(spriteAnimations);
 
