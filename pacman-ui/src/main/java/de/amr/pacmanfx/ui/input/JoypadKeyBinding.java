@@ -6,14 +6,14 @@ package de.amr.pacmanfx.ui.input;
 import javafx.scene.input.KeyCodeCombination;
 
 public record JoypadKeyBinding(
-        KeyCodeCombination selectButtonKey,
-        KeyCodeCombination startButtonKey,
-        KeyCodeCombination bButtonKey,
-        KeyCodeCombination aButtonKey,
-        KeyCodeCombination upButtonKey,
-        KeyCodeCombination downButtonKey,
-        KeyCodeCombination leftButtonKey,
-        KeyCodeCombination rightButtonKey)
+    KeyCodeCombination selectButtonKey,
+    KeyCodeCombination startButtonKey,
+    KeyCodeCombination bButtonKey,
+    KeyCodeCombination aButtonKey,
+    KeyCodeCombination upButtonKey,
+    KeyCodeCombination downButtonKey,
+    KeyCodeCombination leftButtonKey,
+    KeyCodeCombination rightButtonKey)
 {
     public KeyCodeCombination key(JoypadButton buttonID) {
         return switch (buttonID) {
