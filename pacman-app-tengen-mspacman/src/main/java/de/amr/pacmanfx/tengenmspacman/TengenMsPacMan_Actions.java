@@ -14,8 +14,8 @@ import de.amr.pacmanfx.ui.action.SteeringActions;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
+import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -40,6 +40,8 @@ public final class TengenMsPacMan_Actions {
     private final Set<ActionKeyBinding> localBindings;
 
     public TengenMsPacMan_Actions(Game game) {
+        final Joypad joypad = game.machine().input().joypad();
+
         actionEnterStartScreen = new GameAction(game, "enter_start_screen") {
             @Override
             public void doAction() {
@@ -122,18 +124,19 @@ public final class TengenMsPacMan_Actions {
 
         final SteeringActions steeringActions = game.actions().steeringActions();
         steeringBindings = Set.of(
-            new ActionKeyBinding(steeringActions.actionSteer(Direction.UP),    keyFor(JoypadButton.UP),    combine().ctrl().key(KeyCode.UP)),
-            new ActionKeyBinding(steeringActions.actionSteer(Direction.DOWN),  keyFor(JoypadButton.DOWN),  combine().ctrl().key(KeyCode.DOWN)),
-            new ActionKeyBinding(steeringActions.actionSteer(Direction.LEFT),  keyFor(JoypadButton.LEFT),  combine().ctrl().key(KeyCode.LEFT)),
-            new ActionKeyBinding(steeringActions.actionSteer(Direction.RIGHT), keyFor(JoypadButton.RIGHT), combine().ctrl().key(KeyCode.RIGHT))
+            new ActionKeyBinding(steeringActions.actionSteer(Direction.UP),    keyForJoypadButton(joypad, JoypadButton.UP),    combine().ctrl().key(KeyCode.UP)),
+            new ActionKeyBinding(steeringActions.actionSteer(Direction.DOWN),  keyForJoypadButton(joypad, JoypadButton.DOWN),  combine().ctrl().key(KeyCode.DOWN)),
+            new ActionKeyBinding(steeringActions.actionSteer(Direction.LEFT),  keyForJoypadButton(joypad, JoypadButton.LEFT),  combine().ctrl().key(KeyCode.LEFT)),
+            new ActionKeyBinding(steeringActions.actionSteer(Direction.RIGHT), keyForJoypadButton(joypad, JoypadButton.RIGHT), combine().ctrl().key(KeyCode.RIGHT))
         );
 
         localBindings = Set.of(
-            new ActionKeyBinding(actionQuitDemoLevel(), keyFor(JoypadButton.START)),
-            new ActionKeyBinding(actionEnterStartScreen(), keyFor(JoypadButton.START)),
-            new ActionKeyBinding(actionStartPlaying(), keyFor(JoypadButton.START)),
-            new ActionKeyBinding(actionTogglePacBooster(), keyFor(JoypadButton.A), keyFor(JoypadButton.B)),
-            new ActionKeyBinding(actionTogglePlaySceneDisplayMode(), combine().alt().key(KeyCode.C)),
+            new ActionKeyBinding(actionQuitDemoLevel(),                 keyForJoypadButton(joypad, JoypadButton.START)),
+            new ActionKeyBinding(actionEnterStartScreen(),              keyForJoypadButton(joypad, JoypadButton.START)),
+            new ActionKeyBinding(actionStartPlaying(),                  keyForJoypadButton(joypad, JoypadButton.START)),
+            new ActionKeyBinding(actionTogglePacBooster(),              keyForJoypadButton(joypad, JoypadButton.A),
+                                                                        keyForJoypadButton(joypad, JoypadButton.B)),
+            new ActionKeyBinding(actionTogglePlaySceneDisplayMode(),    combine().alt().key(KeyCode.C)),
             new ActionKeyBinding(actionToggleJoypadBindingsDisplayed(), bareKey(KeyCode.SPACE))
         );
     }
@@ -174,7 +177,7 @@ public final class TengenMsPacMan_Actions {
         return actionSelectNextJoypadKeyBinding;
     }
 
-    private KeyCodeCombination keyFor(JoypadButton button) {
-        return PacManGamesMachine.instance().input().joypad().keyForButton(button);
+    private static KeyCodeCombination keyForJoypadButton(Joypad joypad, JoypadButton button) {
+        return joypad.keyForButton(button);
     }
 }

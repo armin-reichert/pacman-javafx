@@ -13,7 +13,6 @@ import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -113,16 +112,14 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
 
     @Override
     public void onInput() {
-        final Input input = game().machine().input();
-
-        if (input.joypad().isButtonPressed(JoypadButton.DOWN)) {
+        if (input().joypad().isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);
         }
-        else if (input.joypad().isButtonPressed(JoypadButton.UP)) {
+        else if (input().joypad().isButtonPressed(JoypadButton.UP)) {
             selectedOption.set(selectedOption() == 0 ? NUM_OPTIONS - 1 : selectedOption() - 1);
         }
         // Button "A" on the joypad is located right of "B": select next value
-        else if (input.joypad().isButtonPressed(JoypadButton.A) || input.keyboard().isKeyPressed(KeyCode.RIGHT)) {
+        else if (input().joypad().isButtonPressed(JoypadButton.A) || input().keyboard().isKeyPressed(KeyCode.RIGHT)) {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue();
@@ -131,7 +128,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
             }
         }
         // Button "B" is left of "A": select previous value
-        else if (input.joypad().isButtonPressed(JoypadButton.B) || input.keyboard().isKeyPressed(KeyCode.LEFT)) {
+        else if (input().joypad().isButtonPressed(JoypadButton.B) || input().keyboard().isKeyPressed(KeyCode.LEFT)) {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();

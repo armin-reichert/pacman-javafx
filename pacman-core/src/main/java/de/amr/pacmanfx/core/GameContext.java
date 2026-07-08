@@ -12,6 +12,9 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.simulation.GamePlay;
 import de.amr.pacmanfx.simulation.GamePlayContext;
 
+/**
+ * Facade giving access to non UI related classes.
+ */
 public interface GameContext {
 
     CoinMechanism coinMechanism();

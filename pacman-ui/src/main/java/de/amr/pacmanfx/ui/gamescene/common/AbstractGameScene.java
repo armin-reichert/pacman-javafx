@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
 import org.tinylog.Logger;
@@ -73,6 +74,11 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
     }
 
     @Override
+    public Input input() {
+        return game.machine().input();
+    }
+
+    @Override
     public Game game() {
         return game;
     }
@@ -109,7 +115,7 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
 
     @Override
     public void onInput() {
-        actionBindings().executeMatchingAction(game.machine().input());
+        actionBindings().executeMatchingAction(input());
     }
 
     // --- Interface "QuitHandler"

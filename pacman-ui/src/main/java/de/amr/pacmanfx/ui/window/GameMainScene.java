@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -105,7 +106,8 @@ public class GameMainScene extends Scene {
     }
 
     private void connectKeyboard(Game game) {
-        final Keyboard keyboard = game.machine().input().keyboard();
+        final Input input = game.machine().input();
+        final Keyboard keyboard = input.keyboard();
         final GameViewManager views = game.ui().viewManager();
 
         keyboard.filterKeyEventsFrom(this);
@@ -115,8 +117,8 @@ public class GameMainScene extends Scene {
                 final GameViewID currentViewID = views.currentViewID();
                 if (isUsingGlobalKeyboard(currentViewID)) {
                     // Check for matching "global" action first, if none, let current view handle it.
-                    if (actionBindings.executeMatchingAction(game.machine().input()).isEmpty()) {
-                        views.assertView(currentViewID).onInput(game.machine().input());
+                    if (actionBindings.executeMatchingAction(input).isEmpty()) {
+                        views.assertView(currentViewID).onInput(input);
                     }
                 }
             }
