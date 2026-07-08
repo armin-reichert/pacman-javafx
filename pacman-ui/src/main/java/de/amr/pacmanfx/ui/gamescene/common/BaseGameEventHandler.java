@@ -45,7 +45,7 @@ public class BaseGameEventHandler extends DefaultGameEventListener {
     }
 
     public Optional<GameSoundEffects> optSoundEffects() {
-        return game.soundEffects();
+        return game.variantManager().selectedVariant().config().optSoundEffects();
     }
 
     @Override

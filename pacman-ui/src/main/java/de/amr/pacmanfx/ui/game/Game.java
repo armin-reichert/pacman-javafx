@@ -8,11 +8,8 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
-import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import javafx.stage.Stage;
-
-import java.util.Optional;
 
 public interface Game extends GameLifecycle {
 
@@ -32,10 +29,6 @@ public interface Game extends GameLifecycle {
      * @return the game context of the currently selected game
      */
     GameContext context();
-
-    default Optional<GameSoundEffects> soundEffects() {
-        return variantManager().selectedVariant().config().optSoundEffects();
-    }
 
     GameExtensions extensions();
 }

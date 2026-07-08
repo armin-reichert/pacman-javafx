@@ -105,7 +105,7 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
 
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
-        return game().soundEffects();
+        return game().variantManager().selectedVariant().config().optSoundEffects();
     }
 
     @Override
