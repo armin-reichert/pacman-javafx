@@ -10,18 +10,28 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.ui.action.CommonActions;
+import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
+import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
+import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
+import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.model.GameViewModel;
 import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.playview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.window.GameWindow;
 import de.amr.pacmanfx.uilib.SettingsLoader;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.util.Duration;
+import org.tinylog.Logger;
+
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -37,6 +47,7 @@ public class GameUI extends DefaultGameEventListener {
     private final SoundManager sounds;
     private final SpriteAnimationManager sprites;
     private final GameViewModel viewModel;
+    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
 
     private Game game;
 
@@ -85,6 +96,43 @@ public class GameUI extends DefaultGameEventListener {
         gameSceneManager.connect(game);
         viewManager.connect(game);
         window.connect(game);
+
+        connectKeyboard();
+        registerGlobalActions();
+    }
+
+    private void connectKeyboard() {
+        final Keyboard keyboard = game.machine().input().keyboard();
+        keyboard.enabledProperty().bind(viewManager.currentViewIDProperty().map(GameUI::isViewAcceptingKeyboardInput));
+        keyboard.addStateListener(_ -> handleKeyboardStateChange());
+        keyboard.filterKeyEventsFrom(window.mainScene());
+    }
+
+    private void handleKeyboardStateChange() {
+        final Input input = game.machine().input();
+        if (input.keyboard().anyNormalKeyPressed()) { // ignore modifier state change
+            final GameViewID currentViewID = viewManager.currentViewID();
+            if (isViewAcceptingKeyboardInput(currentViewID)) {
+                // Check for matching "global" action first, if none, let current view handle it.
+                if (actionBindings.executeMatchingAction(input).isEmpty()) {
+                    viewManager.assertView(currentViewID).onInput(input);
+                }
+            }
+        }
+    }
+
+    private static boolean isViewAcceptingKeyboardInput(GameViewID viewID) {
+        return viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY;
+    }
+
+    private void registerGlobalActions() {
+        final CommonActions actions = game.actions();
+        final Set<ActionKeyBinding> bindings = actions.bindings();
+        actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionToggleKeyboardMonitor(), bindings);
+        actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionEnterFullScreen(), bindings);
+        actionBindings.selectAnyMatchingBinding(actions.simulationActions().actionToggleMuted(), bindings);
+        actionBindings.selectAnyMatchingBinding(actions.editorActions().actionOpenEditor(), bindings);
+        Logger.info(actionBindings);
     }
 
     public void terminate() {
