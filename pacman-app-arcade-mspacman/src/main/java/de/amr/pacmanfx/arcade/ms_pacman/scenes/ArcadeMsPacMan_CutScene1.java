@@ -70,7 +70,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig gameVariantConfig = game().gameVariant().config();
+        final GameVariantConfig gameVariantConfig = game().variantManager().selectedVariant().config();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animationContainer();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) gameVariantConfig.spriteSheet();
 

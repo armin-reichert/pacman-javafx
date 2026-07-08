@@ -10,7 +10,6 @@ import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
-import javafx.beans.property.StringProperty;
 import javafx.stage.Stage;
 
 import java.util.Optional;
@@ -25,15 +24,7 @@ public interface Game extends GameLifecycle {
 
     GameUI ui();
 
-    StringProperty variantNameProperty();
-
-    void selectVariant(String variantName);
-
-    String variantName();
-
-    GameVariant gameVariant();
-
-    GameVariant gameVariant(String variantName);
+    GameVariantManager variantManager();
 
     CommonActions actions();
 
@@ -43,7 +34,7 @@ public interface Game extends GameLifecycle {
     GameContext context();
 
     default Optional<GameSoundEffects> soundEffects() {
-        return gameVariant().config().optSoundEffects();
+        return variantManager().selectedVariant().config().optSoundEffects();
     }
 
     GameExtensions extensions();

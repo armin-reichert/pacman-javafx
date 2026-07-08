@@ -60,7 +60,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariantConfig gameVariantConfig = game().gameVariant().config();
+        final GameVariantConfig gameVariantConfig = game().variantManager().selectedVariant().config();
         final SpriteAnimationContainer spriteAnimationContainer = game().ui().sprites().animationContainer();
         final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
 

@@ -53,7 +53,7 @@ public class GameWindow {
         //TODO Without this, the title is not changed when returning from the editor. Why?
         game.ui().viewManager().currentViewIDProperty().addListener((_, _, viewID) -> updateStageTitleBinding(game, viewID));
 
-        game.variantNameProperty().addListener((_, _, _) -> updateStageIcon(game));
+        game.variantManager().addVariantNameListener((_, _, _) -> updateStageIcon(game));
 
         // Triggers title update
         connected.set(true);
@@ -85,7 +85,7 @@ public class GameWindow {
                 case EDITOR -> optCurrentViewTitle(ui).orElse(("Map Editor"));
             },
             connected,
-            game.variantNameProperty(),
+            game.variantManager().variantNameProperty(),
             game.machine().clock().updatesDisabledProperty(),
             ui.viewModel().debugModeOnProperty,
             ui.viewModel().common3D.view3DEnabledProperty,
@@ -111,7 +111,7 @@ public class GameWindow {
     }
 
     private void updateStageIcon(Game game) {
-        final Image icon = game.gameVariant().config().assets().image("app_icon");
+        final Image icon = game.variantManager().selectedVariant().config().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         } else {
@@ -133,7 +133,7 @@ public class GameWindow {
     }
 
     private String stageTitle(Game game, boolean paused, boolean is3D) {
-        final String gameVariantName = game.variantName();
+        final String gameVariantName = game.variantManager().selectedVariantName();
         if (gameVariantName == null) {
             return "";
         }
@@ -145,7 +145,7 @@ public class GameWindow {
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager variantTranslations = game.gameVariant().config().translations();
+        final TranslationManager variantTranslations = game.variantManager().selectedVariant().config().translations();
         final String titleKey = paused ? "app.title.paused" : "app.title";
         if (variantTranslations.textBundle() != null
             && variantTranslations.textBundle().containsKey(titleKey)) {

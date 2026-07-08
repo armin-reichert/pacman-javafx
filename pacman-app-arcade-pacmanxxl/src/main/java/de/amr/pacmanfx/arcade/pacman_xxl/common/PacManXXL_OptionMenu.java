@@ -86,9 +86,9 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         scaling = createScaling(game.ui().window().stage());
 
-        final GameVariantConfig gameVariantConfig = game.gameVariant().config();
+        final GameVariantConfig gameVariantConfig = game.variantManager().selectedVariant().config();
         final GameContext gameContext = game.context();
-        final GameVariantID gameVariantID = GameVariantID.valueOf(game.variantName());
+        final GameVariantID gameVariantID = GameVariantID.valueOf(game.variantManager().selectedVariantName());
         final GameModel gameModel = gameContext.model();
 
         if (!(gameModel.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
@@ -153,7 +153,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldVariantID, GameVariantID newVariantID) {
-        game.selectVariant(newVariantID.name());
+        game.variantManager().selectVariant(newVariantID.name());
     }
 
     private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
@@ -173,7 +173,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
                 if (game != null) {
-                    final GameVariantConfig gameVariant = game.gameVariant(newVariant.name()).config();
+                    final GameVariantConfig gameVariant = game.variantManager().variant(newVariant.name()).config();
                     chaseAnimation.init(gameVariant, canvas, game.ui().sprites().animationContainer());
                 }
             }

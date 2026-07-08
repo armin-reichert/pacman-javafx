@@ -127,7 +127,7 @@ public class GameUI extends DefaultGameEventListener {
 
             case LevelCreatedEvent levelCreated -> {
                 final GameLevel level = levelCreated.level();
-                final GameVariantConfig gameVariantConfig = game.gameVariant().config();
+                final GameVariantConfig gameVariantConfig = game.variantManager().selectedVariant().config();
                 final SpriteAnimationContainer spriteAnimationContainer = sprites().animationContainer();
 
                 level.entities().pac().setAnimations(gameVariantConfig.createPacAnimations(spriteAnimationContainer));
