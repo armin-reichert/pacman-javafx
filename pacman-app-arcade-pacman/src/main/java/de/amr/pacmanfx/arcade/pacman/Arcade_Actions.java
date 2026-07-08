@@ -31,7 +31,7 @@ public final class Arcade_Actions {
         actionInsertCoin = new GameAction(game, "insert_coin") {
             @Override
             public void doAction() {
-                final CoinMechanism coinMechanism = game.coinMechanism();
+                final CoinMechanism coinMechanism = game.machine().coinMechanism();
                 final GameContext context = game.context();
                 game.ui().sounds().stopAndDisposeVoice();
                 game.ui().sounds().setEnabled(true);
@@ -42,7 +42,7 @@ public final class Arcade_Actions {
 
             @Override
             public boolean isEnabled() {
-                final CoinMechanism coinMechanism = game.coinMechanism();
+                final CoinMechanism coinMechanism = game.machine().coinMechanism();
                 if (coinMechanism.isFull()) {
                     return false;
                 }
@@ -65,7 +65,7 @@ public final class Arcade_Actions {
 
             @Override
             public boolean isEnabled() {
-                if (game.coinMechanism().isEmpty()) {
+                if (game.machine().coinMechanism().isEmpty()) {
                     return false;
                 }
                 final GameState state = game.context().state();

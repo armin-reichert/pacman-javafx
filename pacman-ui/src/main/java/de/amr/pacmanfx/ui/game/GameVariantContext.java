@@ -49,7 +49,7 @@ public class GameVariantContext implements GameContext {
 
     @Override
     public CoinMechanism coinMechanism() {
-        return game.coinMechanism();
+        return game.machine().coinMechanism();
     }
 
     @Override

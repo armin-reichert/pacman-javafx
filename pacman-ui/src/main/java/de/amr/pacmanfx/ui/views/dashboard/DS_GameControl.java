@@ -40,7 +40,7 @@ public class DS_GameControl extends GameDashboardSection {
 
     @Override
     public void connect(Game game) {
-        final CoinMechanism coinMechanism = game.coinMechanism();
+        final CoinMechanism coinMechanism = game.machine().coinMechanism();
         final CommonActions actions = game.actions();
 
         spinnerCredit            = intSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());

@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.game;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.GameUI;
@@ -21,6 +20,8 @@ import java.util.Optional;
 
 public interface Game extends GameLifecycle {
 
+    PacManGamesMachine machine();
+
     Input input();
 
     GameUI createUI(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage, int width, int height);
@@ -30,8 +31,6 @@ public interface Game extends GameLifecycle {
     GameUI ui();
 
     GameClock clock();
-
-    CoinMechanism coinMechanism();
 
     StringProperty variantNameProperty();
 

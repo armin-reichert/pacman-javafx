@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.game;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
@@ -95,6 +94,7 @@ public final class PacManGamesCollection implements Game {
 
     // Game interface
 
+
     @Override
     public GameUI createUI(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage, int width, int height) {
         viewModel.init(settings);
@@ -145,6 +145,11 @@ public final class PacManGamesCollection implements Game {
     }
 
     @Override
+    public PacManGamesMachine machine() {
+        return machine;
+    }
+
+    @Override
     public GameContext context() {
         return gameVariantContext;
     }
@@ -157,11 +162,6 @@ public final class PacManGamesCollection implements Game {
     @Override
     public GameClock clock() {
         return machine.clock();
-    }
-
-    @Override
-    public CoinMechanism coinMechanism() {
-        return machine.coinMechanism();
     }
 
     @Override
