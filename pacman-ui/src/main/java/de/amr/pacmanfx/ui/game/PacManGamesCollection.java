@@ -83,7 +83,7 @@ public final class PacManGamesCollection implements Game {
         this.translationManager = new GameTranslationManager();
 
         soundManager.muteProperty().bind(viewModel.mutedProperty);
-        new GameClockController(this, machine.clock()).configure();
+        configureClock();
         variantName.addListener(new GameVariantChangeHandler(this));
 
         //noinspection ResultOfMethodCallIgnored
@@ -256,19 +256,6 @@ public final class PacManGamesCollection implements Game {
         return viewManager;
     }
 
-    /**
-     * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
-     */
-    public void ka_tas_tro_phe(Throwable reason) {
-        Platform.runLater(() -> {
-            final String errorMessage = ui.translations().translate("error.oh_no_my_program");
-            ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
-            stop();
-            Logger.error("*** SOMETHING VERY BAD HAPPENED:");
-            Logger.error(reason);
-        });
-    }
-
     private GameVariant createGameVariant(String variantName) {
         final Cartridge cartridge = machine.cartridgeByName(variantName);
         final var gameVariant = new GameVariant(cartridge);
@@ -290,6 +277,39 @@ public final class PacManGamesCollection implements Game {
             watchdog.startWatching();
             ui.window().mainScene().flashMessageManager().startAnimationTimer();
             ui.sprites().startAnimationTimer();
+        });
+    }
+
+    private void configureClock() {
+        machine.clock().setUpdateAction(this::simulateAndUpdateCurrentGameScene);
+        machine.clock().setPermanentAction(this::renderCurrentView);
+        machine.clock().setErrorHandler(this::handleFatalError);
+    }
+
+    private void simulateAndUpdateCurrentGameScene() {
+        gameVariantContext.flow().makeStep();
+        Platform.runLater(() -> ui.gameSceneManager().optCurrentGameScene()
+            .ifPresent(gameScene -> gameScene.onTick(machine.clock().currentTick())));
+    }
+
+    private void renderCurrentView() {
+        Platform.runLater(() -> ui.viewManager().assertCurrentView().render());
+    }
+
+    private void handleFatalError(Throwable reason) {
+        ka_tas_tro_phe(reason);
+    }
+
+    /*
+     * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
+     */
+    private void ka_tas_tro_phe(Throwable reason) {
+        Platform.runLater(() -> {
+            final String errorMessage = ui.translations().translate("error.oh_no_my_program");
+            ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+            stop();
+            Logger.error("*** SOMETHING VERY BAD HAPPENED:");
+            Logger.error(reason);
         });
     }
 }
