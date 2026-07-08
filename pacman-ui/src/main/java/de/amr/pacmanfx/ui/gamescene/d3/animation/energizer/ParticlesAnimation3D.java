@@ -81,7 +81,7 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
         // The 3 ghost revival positions inside the house from left to right
         swirlBases = Stream.of(GameModel.CYAN_GHOST_BASHFUL, GameModel.PINK_GHOST_SPEEDY, GameModel.ORANGE_GHOST_POKEY)
             .map(house::ghostRevivalTile)
-            .map(tile -> tile.scaled(WorldMap.TS).plus(WorldMap.HTS, WorldMap.HTS))
+            .map(tile -> tile.scaled(WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS))
             .map(pos -> new Vector3f(pos.x(), pos.y(), 0))
             .toList();
 
