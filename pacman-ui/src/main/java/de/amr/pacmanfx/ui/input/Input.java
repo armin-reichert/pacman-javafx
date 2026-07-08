@@ -4,18 +4,21 @@
 
 package de.amr.pacmanfx.ui.input;
 
-public record Input(Keyboard keyboard, Joypad joypad) {
+public final class Input {
 
-    public static Input instance() {
-        return LazyThreadSafeSingletonHolder.SINGLETON;
+    private final Keyboard keyboard;
+    private final Joypad joypad;
+
+    public Input() {
+        keyboard = new Keyboard();
+        joypad = new Joypad(keyboard);
     }
 
-    private static Input createSingleton() {
-        final Keyboard kb = new Keyboard();
-        return new Input(kb, new Joypad(kb));
+    public Keyboard keyboard() {
+        return keyboard;
     }
 
-    private static class LazyThreadSafeSingletonHolder {
-        static final Input SINGLETON = createSingleton();
+    public Joypad joypad() {
+        return joypad;
     }
 }

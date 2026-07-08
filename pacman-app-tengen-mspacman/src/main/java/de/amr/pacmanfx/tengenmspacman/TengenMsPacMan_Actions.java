@@ -14,8 +14,8 @@ import de.amr.pacmanfx.ui.action.SteeringActions;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -175,6 +175,6 @@ public final class TengenMsPacMan_Actions {
     }
 
     private KeyCodeCombination keyFor(JoypadButton button) {
-        return Input.instance().joypad().keyForButton(button);
+        return PacManGamesMachine.instance().input().joypad().keyForButton(button);
     }
 }

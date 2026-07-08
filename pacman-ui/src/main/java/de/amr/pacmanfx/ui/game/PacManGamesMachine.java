@@ -12,7 +12,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -40,6 +39,7 @@ public class PacManGamesMachine {
     }
 
     private final Set<Cartridge> cartridges = new HashSet<>();
+    private final Input input = new Input();
     private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private final GameClock clock = new GameClockFX();
 
@@ -59,7 +59,7 @@ public class PacManGamesMachine {
     }
 
     public Input input() {
-        return Input.instance();
+        return input;
     }
 
     public void loadCartridges(Cartridge... cartridges) {
