@@ -142,11 +142,13 @@ public class GameClockFX implements GameClock {
     public void start() {
         setUpdatesDisabled(false);
         clockwork.play();
+        Logger.info("Game clock started! Target FPS: {}", targetFrameRate());
     }
 
     @Override
     public void stop() {
         clockwork.stop();
+        Logger.info("Game clock stopped!");
     }
 
     @Override

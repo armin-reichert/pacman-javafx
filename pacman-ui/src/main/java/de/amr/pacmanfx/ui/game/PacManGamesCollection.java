@@ -149,7 +149,7 @@ public final class PacManGamesCollection implements Game {
     }
 
     @Override
-    public void stop() {
+    public void pause() {
         ui.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
             gameScene.deactivate();
             ui.gameSceneManager().removeFromPlayView(gameScene);
@@ -160,13 +160,11 @@ public final class PacManGamesCollection implements Game {
 
         machine().clock().stop();
         machine().clock().setTargetFrameRate(GameClock.DEFAULT_TICKS_PER_SECOND);
-
-        Logger.info("Game STOPPED!");
     }
 
     @Override
     public void terminate() {
-        stop();
+        pause();
         ui.terminate();
         machine().dispose();
         Logger.info("Application terminated. There is no way back!");
@@ -231,7 +229,7 @@ public final class PacManGamesCollection implements Game {
         Platform.runLater(() -> {
             final String errorMessage = ui.translations().translate("error.oh_no_my_program");
             ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
-            stop();
+            pause();
             Logger.error("*** SOMETHING VERY BAD HAPPENED:");
             Logger.error(reason);
         });

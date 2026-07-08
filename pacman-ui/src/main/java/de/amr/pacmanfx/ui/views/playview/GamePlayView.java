@@ -214,7 +214,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     @Override
     public void onExit() {
-        game.stop();
+        game.pause();
         game.ui().sounds().stopAll();
         game.ui().sounds().stopAndDisposeVoice();
         actionBindings.dispose();

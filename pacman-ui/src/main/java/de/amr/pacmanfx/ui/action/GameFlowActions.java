@@ -61,7 +61,7 @@ public class GameFlowActions {
                     gameState.onExit(gameContext);
                 }
 
-                game.stop();
+                game.pause();
                 game.machine().clock().start();
                 gameContext.flow().restartState(GameStateID.GAME_INTRO);
             }

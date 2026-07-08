@@ -18,6 +18,8 @@ public interface Game {
 
     GameUI createUI(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage, int width, int height);
 
+    void showUI(GameVariantID variantID);
+
     void setUI(GameUI ui);
 
     GameUI ui();
@@ -26,18 +28,13 @@ public interface Game {
 
     CommonActions actions();
 
-    /**
-     * @return the game context of the currently selected game
-     */
     GameContext context();
 
     GameExtensions extensions();
 
-    void stop();
-
     void start();
 
-    void showUI(GameVariantID variantID);
+    void pause();
 
     void terminate();
 }
