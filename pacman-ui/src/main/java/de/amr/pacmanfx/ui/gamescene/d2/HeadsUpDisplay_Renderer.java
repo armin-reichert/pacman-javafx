@@ -15,6 +15,7 @@ public interface HeadsUpDisplay_Renderer extends Renderer {
      * @param hud the HUD
      * @param context the game context
      * @param scene 2D scene
+     * @param tick current tick of the game machine clock
      */
-    void draw(HUDState hud, GameContext context, AbstractGameScene2D scene);
+    void draw(HUDState hud, GameContext context, AbstractGameScene2D scene, long tick);
 }

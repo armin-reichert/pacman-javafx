@@ -234,16 +234,16 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     @Override
     public void render() {
-
+        final long tick = game.machine().clock().currentTick();
         // Render current 2D game scene
         final GameScene gameScene = game.ui().gameSceneManager().optCurrentGameScene().orElse(null);
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
             final GameModel gameModel = game.context().model();
             if (sceneRenderer != null) {
-                sceneRenderer.draw(gameScene2D, game.machine().clock().currentTick());
+                sceneRenderer.draw(gameScene2D, tick);
             }
             if (hudRenderer != null) {
-                hudRenderer.draw(gameModel.hudState(), game.context(), gameScene2D);
+                hudRenderer.draw(gameModel.hudState(), game.context(), gameScene2D, tick);
             }
         }
 

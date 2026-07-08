@@ -40,7 +40,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
     }
 
     @Override
-    public void draw(HUDState hud, GameContext context, AbstractGameScene2D scene) {
+    public void draw(HUDState hud, GameContext context, AbstractGameScene2D scene, long tick) {
         requireNonNull(context);
         requireNonNull(scene);
 
