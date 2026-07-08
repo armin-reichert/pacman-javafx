@@ -4,6 +4,8 @@
 
 package de.amr.pacmanfx.ui.game;
 
+import de.amr.basics.Disposable;
+import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.ui.input.Input;
@@ -23,7 +25,7 @@ import static java.util.Objects.requireNonNull;
  * All games in a single box (only 1,99 € / game)!
  * </p>
  */
-public class PacManGamesMachine {
+public class PacManGamesMachine implements Disposable {
 
     private static class LazyThreadSafeSingletonHolder {
         static final PacManGamesMachine SINGLETON = new PacManGamesMachine();
@@ -34,6 +36,7 @@ public class PacManGamesMachine {
     }
 
     public static File highScoreFile(String variantName) {
+        requireNonNull(variantName);
         final String fileName = "highscore-%s.xml".formatted(variantName).toLowerCase();
         return new File(GameConstants.USER_HOME_DIR, fileName);
     }
@@ -42,12 +45,20 @@ public class PacManGamesMachine {
     private final Input input = new Input();
     private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private final GameClock clock = new GameClockFX();
+    private final DirectoryWatchdog watchdog;
 
     private PacManGamesMachine() {
         final boolean ok = validateUserDirs();
         if (!ok) {
             throw new IllegalStateException("GameBox: User directory validation failed");
         }
+        watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
+    }
+
+    @Override
+    public void dispose() {
+        clock.stop();
+        watchdog.dispose();
     }
 
     public CoinMechanism coinMechanism() {
@@ -60,6 +71,10 @@ public class PacManGamesMachine {
 
     public Input input() {
         return input;
+    }
+
+    public DirectoryWatchdog watchdog() {
+        return watchdog;
     }
 
     public void loadCartridges(Cartridge... cartridges) {
@@ -107,11 +122,11 @@ public class PacManGamesMachine {
         return findCartridgeByName(name).isPresent();
     }
 
+    // other stuff
+
     private Optional<Cartridge> findCartridgeByName(String name) {
         return cartridges.stream().filter(cartridge -> cartridge.name().equals(name)).findFirst();
     }
-
-    // other stuff
 
     private boolean validateUserDirs() {
         return dirExistsAndIsWritable(GameConstants.USER_HOME_DIR, "Game root directory")

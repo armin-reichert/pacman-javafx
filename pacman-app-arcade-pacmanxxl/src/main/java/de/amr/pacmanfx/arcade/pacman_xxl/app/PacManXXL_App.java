@@ -29,7 +29,7 @@ public class PacManXXL_App extends Application {
             .orElse(null);
 
         if (game != null) {
-            game.watchdog().addEventListener(PacManXXL_MapSelector.instance());
+            game.machine().watchdog().addEventListener(PacManXXL_MapSelector.instance());
             game.showUI(GameVariantID.ARCADE_PACMAN_XXL);
         }
     }

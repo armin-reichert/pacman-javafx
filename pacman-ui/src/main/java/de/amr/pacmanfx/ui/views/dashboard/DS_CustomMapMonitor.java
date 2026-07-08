@@ -66,7 +66,7 @@ public class DS_CustomMapMonitor extends GameDashboardSection {
     @Override
     public void connect(Game game) {
         requireNonNull(game);
-        setCustomDirWatchDog(game.watchdog());
+        setCustomDirWatchDog(game.machine().watchdog());
         setMapEditFunction(mapFile ->
             game.actions().editorActions().createEditMapFileAction(mapFile).execute());
     }

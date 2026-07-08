@@ -34,10 +34,12 @@ public class TestEatingFood {
 
     static class TestContext implements GameContext {
 
-        private final PacManGamesMachine machine = new PacManGamesMachine();
         private final GameFlow  gameFlow  = new Arcade_GameFlow();
+
         private final ArcadePacMan_GameModel gameModel = new ArcadePacMan_GameModel();
+
         private final GamePlay gamePlay = new ArcadePacMan_GamePlay();
+
         private final GameEventManager eventManager = new GameEventManager() {
             @Override
             public void addGameEventSubscriber(GameEventListener listener) {
@@ -56,7 +58,7 @@ public class TestEatingFood {
 
         @Override
         public CoinMechanism coinMechanism() {
-            return machine.coinMechanism();
+            return PacManGamesMachine.instance().coinMechanism();
         }
 
         @Override

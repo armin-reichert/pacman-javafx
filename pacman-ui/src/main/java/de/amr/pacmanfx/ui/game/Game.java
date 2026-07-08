@@ -4,13 +4,10 @@
 
 package de.amr.pacmanfx.ui.game;
 
-import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import javafx.beans.property.StringProperty;
@@ -50,6 +47,4 @@ public interface Game extends GameLifecycle {
     }
 
     GameExtensions extensions();
-
-    DirectoryWatchdog watchdog();
 }

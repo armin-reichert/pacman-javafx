@@ -76,7 +76,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
         game.extensions().add(new GameExtension(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions::new));
         game.extensions().add(new GameExtension(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings::new));
 
-        game.watchdog().addEventListener(PacManXXL_MapSelector.instance());
+        game.machine().watchdog().addEventListener(PacManXXL_MapSelector.instance());
 
         game.setUI(ui);
         game.showUI(GameVariantID.ARCADE_PACMAN);

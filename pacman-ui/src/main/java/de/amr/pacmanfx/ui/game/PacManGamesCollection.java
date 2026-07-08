@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.game;
 
-import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
@@ -52,8 +51,6 @@ public final class PacManGamesCollection implements Game {
 
     private final StringProperty variantName = new SimpleStringProperty();
 
-    private final DirectoryWatchdog watchdog;
-
     private final GameExtensions extensions;
 
     private final CommonActions commonActions;
@@ -71,7 +68,6 @@ public final class PacManGamesCollection implements Game {
     public PacManGamesCollection() {
         this.commonActions = new CommonActions(this);
         this.extensions = new GameExtensions(this);
-        this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
         this.viewModel = new GameViewModel();
         this.soundManager = new SoundManager();
         this.translationManager = new GameTranslationManager();
@@ -165,11 +161,6 @@ public final class PacManGamesCollection implements Game {
         return ui;
     }
 
-    @Override
-    public DirectoryWatchdog watchdog() {
-        return watchdog;
-    }
-
     // GameLifecycle interface
 
     @Override
@@ -214,7 +205,7 @@ public final class PacManGamesCollection implements Game {
     public void terminate() {
         stop();
         ui.terminate();
-        watchdog.dispose();
+        machine().dispose();
         Logger.info("Application terminated. There is no way back!");
     }
 
@@ -254,7 +245,11 @@ public final class PacManGamesCollection implements Game {
 
     private void startBackgroundServices() {
         Platform.runLater(() -> {
-            watchdog.startWatching();
+            if (variantsByName.containsKey(GameVariantID.ARCADE_PACMAN_XXL.name())
+                || variantsByName.containsKey(GameVariantID.ARCADE_MS_PACMAN_XXL.name())) {
+                machine().watchdog().startWatching();
+                Logger.info("Custom map directory is getting watched!");
+            }
             ui.window().mainScene().flashMessageManager().startAnimationTimer();
             ui.sprites().startAnimationTimer();
         });
