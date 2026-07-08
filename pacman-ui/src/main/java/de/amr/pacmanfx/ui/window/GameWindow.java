@@ -86,7 +86,7 @@ public class GameWindow {
             },
             connected,
             game.variantNameProperty(),
-            game.clock().updatesDisabledProperty(),
+            game.machine().clock().updatesDisabledProperty(),
             ui.viewModel().debugModeOnProperty,
             ui.viewModel().common3D.view3DEnabledProperty,
             ui.viewManager().currentViewIDProperty(),
@@ -124,7 +124,7 @@ public class GameWindow {
 
         final boolean debug = game.ui().viewModel().debugModeOnProperty.get();
         final boolean is3D = game.ui().viewModel().common3D.view3DEnabledProperty.get();
-        final boolean paused = game.clock().getUpdatesDisabled();
+        final boolean paused = game.machine().clock().getUpdatesDisabled();
 
         final String normalTitle = stageTitle(game, paused, is3D);
         return (gameScene == null || !debug)

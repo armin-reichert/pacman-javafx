@@ -40,7 +40,7 @@ public class SimulationActions {
         actionFaster = new GameAction(game, "simulation_faster") {
             @Override
             protected void doAction() {
-                final GameClock clock = game.clock();
+                final GameClock clock = game.machine().clock();
                 final int newRate = Math.clamp(clock.targetFrameRate() + GameConstants.SIM_SPEED_DELTA,
                     GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
                 clock.setTargetFrameRate(newRate);
@@ -53,7 +53,7 @@ public class SimulationActions {
         actionFastest = new GameAction(game, "simulation_fastest") {
             @Override
             protected void doAction() {
-                game.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
+                game.machine().clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
                 final String msg = "At maximum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MAX);
                 game.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
             }
@@ -62,7 +62,7 @@ public class SimulationActions {
         actionSlower = new GameAction(game, "simulation_slower") {
             @Override
             protected void doAction() {
-                final GameClock clock = game.clock();
+                final GameClock clock = game.machine().clock();
                 final int newRate = Math.clamp(clock.targetFrameRate() - GameConstants.SIM_SPEED_DELTA,
                     GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
                 clock.setTargetFrameRate(newRate);
@@ -75,7 +75,7 @@ public class SimulationActions {
         actionSlowest = new GameAction(game, "simulation_slowest") {
             @Override
             protected void doAction() {
-                game.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
+                game.machine().clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
                 final String msg = "At minimum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MIN);
                 game.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
             }
@@ -84,41 +84,41 @@ public class SimulationActions {
         actionOneStep = new GameAction(game, "simulation_one_step") {
             @Override
             protected void doAction() {
-                final boolean failure = !game.clock().makeOneStep(true);
+                final boolean failure = !game.machine().clock().makeOneStep(true);
                 if (failure) {
                     game.ui().shortMessage("Simulation step error!");
                 }
             }
 
             @Override
-            public boolean isEnabled() { return game.clock().getUpdatesDisabled(); }
+            public boolean isEnabled() { return game.machine().clock().getUpdatesDisabled(); }
         };
 
         actionTenSteps = new GameAction(game, "simulation_ten_steps") {
             @Override
             protected void doAction() {
-                final boolean failure = !game.clock().makeSteps(10, true);
+                final boolean failure = !game.machine().clock().makeSteps(10, true);
                 if (failure) {
                     game.ui().shortMessage("Simulation steps error!");
                 }
             }
 
             @Override
-            public boolean isEnabled() { return game.clock().getUpdatesDisabled(); }
+            public boolean isEnabled() { return game.machine().clock().getUpdatesDisabled(); }
         };
 
         actionReset = new GameAction(game, "simulation_reset") {
             @Override
             protected void doAction() {
-                game.clock().setTargetFrameRate(DEFAULT_TICKS_PER_SECOND);
-                game.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), game.clock().targetFrameRate() + "Hz");
+                game.machine().clock().setTargetFrameRate(DEFAULT_TICKS_PER_SECOND);
+                game.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), game.machine().clock().targetFrameRate() + "Hz");
             }
         };
 
         actionTogglePaused = new GameAction(game, "toggle_paused") {
             @Override
             protected void doAction() {
-                final GameClock gameClock = game.clock();
+                final GameClock gameClock = game.machine().clock();
                 toggleBooleanProperty(gameClock.updatesDisabledProperty());
                 final boolean paused = gameClock.getUpdatesDisabled();
                 if (paused) {

@@ -64,7 +64,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
 
         if (hud.isScoreOn()) {
             // blink frequency = 1Hz (30 ticks on, 30 ticks off)
-            final boolean on = scene.game().clock().currentTick() % 60 < 30;
+            final boolean on = scene.game().machine().clock().currentTick() % 60 < 30;
             drawScore(context.model().score(), on, arcadeFont8());
 
             final Score highScore = context.model().highScore();

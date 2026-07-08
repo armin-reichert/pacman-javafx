@@ -30,8 +30,6 @@ public interface Game extends GameLifecycle {
 
     GameUI ui();
 
-    GameClock clock();
-
     StringProperty variantNameProperty();
 
     void selectVariant(String variantName);

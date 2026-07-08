@@ -62,7 +62,7 @@ public class GameFlowActions {
                 }
 
                 game.stop();
-                game.clock().start();
+                game.machine().clock().start();
                 gameContext.flow().restartState(GameStateID.GAME_INTRO);
             }
         };

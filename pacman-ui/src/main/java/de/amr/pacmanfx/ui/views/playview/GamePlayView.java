@@ -116,7 +116,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         miniPlaySceneView.setUI(game);
 
-        pausedIcon.visibleProperty().bind(game.clock().updatesDisabledProperty());
+        pausedIcon.visibleProperty().bind(game.machine().clock().updatesDisabledProperty());
 
         settings.common2D.fontSmoothingOnProperty.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 

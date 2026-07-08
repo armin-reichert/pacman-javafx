@@ -28,7 +28,7 @@ public class DS_General extends GameDashboardSection {
     @Override
     public void connect(Game game) {
         final GameViewModel viewModel = game.ui().viewModel();
-        final GameClock gameClock = game.clock();
+        final GameClock gameClock = game.machine().clock();
 
         info("Java Version",   Runtime.version().toString());
         info("JavaFX Version", System.getProperty("javafx.runtime.version"));

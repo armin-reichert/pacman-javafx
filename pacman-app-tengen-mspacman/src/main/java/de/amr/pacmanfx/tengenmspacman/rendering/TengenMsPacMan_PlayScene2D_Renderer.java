@@ -92,7 +92,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             return;
         }
         final GameModel gameModel = playScene2D.gameModel();
-        final long tick = playScene2D.game().clock().currentTick();
+        final long tick = playScene2D.game().machine().clock().currentTick();
 
         gameModel.optLevel().ifPresent(level -> {
             final WorldMap worldMap = level.worldMap();

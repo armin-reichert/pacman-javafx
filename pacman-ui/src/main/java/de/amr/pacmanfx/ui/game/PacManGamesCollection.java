@@ -160,11 +160,6 @@ public final class PacManGamesCollection implements Game {
     }
 
     @Override
-    public GameClock clock() {
-        return machine.clock();
-    }
-
-    @Override
     public CommonActions actions() {
         return commonActions;
     }
@@ -205,7 +200,7 @@ public final class PacManGamesCollection implements Game {
     public void start() {
         gameVariantContext.flow().restartState(GameStateID.BOOT);
         ui.viewManager().selectGamePlayView();
-        Platform.runLater(clock()::start);
+        Platform.runLater(machine.clock()::start);
     }
 
     @Override
@@ -218,8 +213,8 @@ public final class PacManGamesCollection implements Game {
 
         ui.sounds().stopAll();
 
-        clock().stop();
-        clock().setTargetFrameRate(GameClock.DEFAULT_TICKS_PER_SECOND);
+        machine.clock().stop();
+        machine.clock().setTargetFrameRate(GameClock.DEFAULT_TICKS_PER_SECOND);
 
         Logger.info("Game STOPPED!");
     }

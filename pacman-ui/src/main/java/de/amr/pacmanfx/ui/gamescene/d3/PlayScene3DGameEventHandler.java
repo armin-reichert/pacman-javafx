@@ -172,7 +172,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
             }
             else {
                 level3D.pellet3DAtTile(tile).ifPresent(pellet3D -> removePelletAfterDelay(level3D, pellet3D));
-                final long tick = game().clock().currentTick();
+                final long tick = game().machine().clock().currentTick();
                 optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
             }
         }
