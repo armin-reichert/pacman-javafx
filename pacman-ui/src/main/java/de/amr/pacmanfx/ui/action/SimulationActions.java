@@ -110,8 +110,9 @@ public class SimulationActions {
         actionReset = new GameAction(game, "simulation_reset") {
             @Override
             protected void doAction() {
-                game.machine().clock().setTargetFrameRate(DEFAULT_TICKS_PER_SECOND);
-                game.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), game.machine().clock().targetFrameRate() + "Hz");
+                final GameClock gameClock = game.machine().clock();
+                gameClock.setTargetFrameRate(DEFAULT_TICKS_PER_SECOND);
+                game.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), gameClock.targetFrameRate() + "Hz");
             }
         };
 

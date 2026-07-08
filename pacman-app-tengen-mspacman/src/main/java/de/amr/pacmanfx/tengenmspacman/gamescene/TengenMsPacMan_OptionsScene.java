@@ -113,7 +113,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
 
     @Override
     public void onInput() {
-        final Input input = game().input();
+        final Input input = game().machine().input();
 
         if (input.joypad().isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);

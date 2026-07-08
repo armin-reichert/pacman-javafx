@@ -54,7 +54,7 @@ public abstract class GameAction {
         }
 
         // Clear the input that triggered this action
-        game.input().keyboard().clearState();
+        game.machine().input().keyboard().clearState();
 
         return success;
     }

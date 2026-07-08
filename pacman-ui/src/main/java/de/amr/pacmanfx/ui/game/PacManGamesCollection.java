@@ -20,7 +20,6 @@ import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.model.GameViewModel;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -49,8 +48,6 @@ import static java.util.Objects.requireNonNull;
  */
 public final class PacManGamesCollection implements Game {
 
-    private final PacManGamesMachine machine;
-
     private final Map<String, GameVariant> variantsByName = new HashMap<>();
 
     private final StringProperty variantName = new SimpleStringProperty();
@@ -71,8 +68,7 @@ public final class PacManGamesCollection implements Game {
 
     private GameVariantContext gameVariantContext;
 
-    public PacManGamesCollection(PacManGamesMachine machine) {
-        this.machine = requireNonNull(machine);
+    public PacManGamesCollection() {
         this.commonActions = new CommonActions(this);
         this.extensions = new GameExtensions(this);
         this.watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
@@ -123,7 +119,7 @@ public final class PacManGamesCollection implements Game {
     @Override
     public void selectVariant(String variantName) {
         requireNonNull(variantName);
-        if (machine.containsCartridgeWithName(variantName)) {
+        if (machine().containsCartridgeWithName(variantName)) {
             this.variantName.set(variantName);
         }
         else throw new IllegalArgumentException("Game with name '" + variantName + "' not found");
@@ -146,17 +142,12 @@ public final class PacManGamesCollection implements Game {
 
     @Override
     public PacManGamesMachine machine() {
-        return machine;
+        return PacManGamesMachine.instance();
     }
 
     @Override
     public GameContext context() {
         return gameVariantContext;
-    }
-
-    @Override
-    public Input input() {
-        return Input.instance();
     }
 
     @Override
@@ -200,7 +191,7 @@ public final class PacManGamesCollection implements Game {
     public void start() {
         gameVariantContext.flow().restartState(GameStateID.BOOT);
         ui.viewManager().selectGamePlayView();
-        Platform.runLater(machine.clock()::start);
+        Platform.runLater(machine().clock()::start);
     }
 
     @Override
@@ -213,8 +204,8 @@ public final class PacManGamesCollection implements Game {
 
         ui.sounds().stopAll();
 
-        machine.clock().stop();
-        machine.clock().setTargetFrameRate(GameClock.DEFAULT_TICKS_PER_SECOND);
+        machine().clock().stop();
+        machine().clock().setTargetFrameRate(GameClock.DEFAULT_TICKS_PER_SECOND);
 
         Logger.info("Game STOPPED!");
     }
@@ -246,7 +237,7 @@ public final class PacManGamesCollection implements Game {
     }
 
     private GameVariant createGameVariant(String variantName) {
-        final Cartridge cartridge = machine.cartridgeByName(variantName);
+        final Cartridge cartridge = machine().cartridgeByName(variantName);
         final var gameVariant = new GameVariant(cartridge);
 
         //TODO make configurable again if tests should be available
@@ -270,15 +261,15 @@ public final class PacManGamesCollection implements Game {
     }
 
     private void configureClock() {
-        machine.clock().setUpdateAction(this::simulateAndUpdateCurrentGameScene);
-        machine.clock().setPermanentAction(this::renderCurrentView);
-        machine.clock().setErrorHandler(this::handleFatalError);
+        machine().clock().setUpdateAction(this::simulateAndUpdateCurrentGameScene);
+        machine().clock().setPermanentAction(this::renderCurrentView);
+        machine().clock().setErrorHandler(this::handleFatalError);
     }
 
     private void simulateAndUpdateCurrentGameScene() {
         gameVariantContext.flow().makeStep();
         Platform.runLater(() -> ui.gameSceneManager().optCurrentGameScene()
-            .ifPresent(gameScene -> gameScene.onTick(machine.clock().currentTick())));
+            .ifPresent(gameScene -> gameScene.onTick(machine().clock().currentTick())));
     }
 
     private void renderCurrentView() {

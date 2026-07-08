@@ -105,7 +105,7 @@ public class GameMainScene extends Scene {
     }
 
     private void connectKeyboard(Game game) {
-        final Keyboard keyboard = game.input().keyboard();
+        final Keyboard keyboard = game.machine().input().keyboard();
         final GameViewManager views = game.ui().viewManager();
 
         keyboard.filterKeyEventsFrom(this);
@@ -115,8 +115,8 @@ public class GameMainScene extends Scene {
                 final GameViewID currentViewID = views.currentViewID();
                 if (isUsingGlobalKeyboard(currentViewID)) {
                     // Check for matching "global" action first, if none, let current view handle it.
-                    if (actionBindings.executeMatchingAction(game.input()).isEmpty()) {
-                        views.assertView(currentViewID).onInput(game.input());
+                    if (actionBindings.executeMatchingAction(game.machine().input()).isEmpty()) {
+                        views.assertView(currentViewID).onInput(game.machine().input());
                     }
                 }
             }

@@ -33,8 +33,6 @@ import de.amr.pacmanfx.uilib.Ufx;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.util.List;
-
 public class PacManAllGamesNoBuilderApp extends Application {
 
     static final float ASPECT_RATIO    = 1.6f; // 16:10
@@ -50,14 +48,14 @@ public class PacManAllGamesNoBuilderApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        var machine = new PacManGamesMachine(List.of(
+        PacManGamesMachine.instance().loadCartridges(
             ArcadePacMan_Cartridge.CARTRIDGE,
             ArcadeMsPacMan_Cartridge.CARTRIDGE,
             TengenMsPacMan_Cartridge.CARTRIDGE,
             PacManXXL_PacMan_Cartridge.CARTRIDGE,
             PacManXXL_MsPacMan_Cartridge.CARTRIDGE
-        ));
-        game = new PacManGamesCollection(machine);
+        );
+        game = new PacManGamesCollection();
 
         Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 

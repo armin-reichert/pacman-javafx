@@ -20,7 +20,7 @@ public class DS_JoypadKeyBindings extends GameDashboardSection {
 
     @Override
     public void connect(Game game) {
-        final Joypad joypad = game.input().joypad();
+        final Joypad joypad = game.machine().input().joypad();
 
         final ResourceManager resourceManager = this::getClass;
 

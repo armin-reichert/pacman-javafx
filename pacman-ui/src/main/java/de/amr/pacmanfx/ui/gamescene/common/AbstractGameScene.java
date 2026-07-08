@@ -109,7 +109,7 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
 
     @Override
     public void onInput() {
-        actionBindings().executeMatchingAction(game.input());
+        actionBindings().executeMatchingAction(game.machine().input());
     }
 
     // --- Interface "QuitHandler"

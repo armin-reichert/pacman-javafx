@@ -97,12 +97,11 @@ public class GameBuilder {
         try {
             validateConfigurationData();
 
-            var machine = new PacManGamesMachine();
             for (var c : cartridgeSet) {
-                machine.loadCartridge(c);
+                PacManGamesMachine.instance().loadCartridge(c);
             }
 
-            final var game = new PacManGamesCollection(machine);
+            final var game = new PacManGamesCollection();
 
             // Add game extensions
             for (var cartridge : cartridgeSet) {

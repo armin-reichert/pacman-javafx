@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.game;
 
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.GameClockFX;
 import org.tinylog.Logger;
 
@@ -25,6 +26,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManGamesMachine {
 
+    private static class LazyThreadSafeSingletonHolder {
+        static final PacManGamesMachine SINGLETON = new PacManGamesMachine();
+    }
+
+    public static PacManGamesMachine instance() {
+        return LazyThreadSafeSingletonHolder.SINGLETON;
+    }
+
     public static File highScoreFile(String variantName) {
         final String fileName = "highscore-%s.xml".formatted(variantName).toLowerCase();
         return new File(GameConstants.USER_HOME_DIR, fileName);
@@ -34,24 +43,10 @@ public class PacManGamesMachine {
     private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private final GameClock clock = new GameClockFX();
 
-    public PacManGamesMachine() {
+    private PacManGamesMachine() {
         final boolean ok = validateUserDirs();
         if (!ok) {
             throw new IllegalStateException("GameBox: User directory validation failed");
-        }
-    }
-
-    public PacManGamesMachine(List<Cartridge> cartridges) {
-        requireNonNull(cartridges);
-        final boolean ok = validateUserDirs();
-        if (!ok) {
-            throw new IllegalStateException("GameBox: User directory validation failed");
-        }
-        for (var c : cartridges) {
-            if (c == null) {
-                throw new IllegalArgumentException("NULL cartridge detected");
-            }
-            loadCartridge(c);
         }
     }
 
@@ -61,6 +56,19 @@ public class PacManGamesMachine {
 
     public GameClock clock() {
         return clock;
+    }
+
+    public Input input() {
+        return Input.instance();
+    }
+
+    public void loadCartridges(Cartridge... cartridges) {
+        for (var c : cartridges) {
+            if (c == null) {
+                throw new IllegalArgumentException("NULL cartridge detected");
+            }
+            loadCartridge(c);
+        }
     }
 
     /**

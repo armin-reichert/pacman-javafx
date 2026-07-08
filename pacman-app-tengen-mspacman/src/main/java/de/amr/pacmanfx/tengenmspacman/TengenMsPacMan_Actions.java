@@ -116,7 +116,7 @@ public final class TengenMsPacMan_Actions {
         actionSelectNextJoypadKeyBinding = new GameAction(game, "select_next_joypad_binding") {
             @Override
             public void doAction() {
-                game.input().joypad().selectNextBinding();
+                game.machine().input().joypad().selectNextBinding();
             }
         };
 

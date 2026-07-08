@@ -22,8 +22,6 @@ public interface Game extends GameLifecycle {
 
     PacManGamesMachine machine();
 
-    Input input();
-
     GameUI createUI(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage, int width, int height);
 
     void setUI(GameUI ui);
