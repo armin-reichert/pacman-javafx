@@ -7,12 +7,7 @@ package de.amr.pacmanfx.ui.game;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.flow.GameFlow;
 import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.model.test.LevelMediumTestState;
-import de.amr.pacmanfx.model.test.LevelShortTestState;
-import de.amr.pacmanfx.score.PropertyFileScore;
 import de.amr.pacmanfx.ui.GameTranslationManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
@@ -31,16 +26,9 @@ import de.amr.pacmanfx.ui.window.GameWindow;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
@@ -48,113 +36,6 @@ import static java.util.Objects.requireNonNull;
  * The Pac-Man games collection.
  */
 public final class PacManGamesCollection implements Game {
-
-    public static class VariantManager implements GameVariantManager, ChangeListener<String> {
-
-        private final PacManGamesCollection game;
-
-        private final Map<String, GameVariant> variantsByName = new HashMap<>();
-
-        private final StringProperty variantName = new SimpleStringProperty();
-
-        public VariantManager(PacManGamesCollection game) {
-            this.game = requireNonNull(game);
-            variantName.addListener(this);
-        }
-
-        @Override
-        public StringProperty variantNameProperty() {
-            return variantName;
-        }
-
-        @Override
-        public void addVariantNameListener(ChangeListener<String> listener) {
-            requireNonNull(listener);
-            variantName.addListener(listener);
-        }
-
-        @Override
-        public void selectVariant(String gameVariantName) {
-            requireNonNull(gameVariantName);
-            if (machine().containsCartridgeWithName(gameVariantName)) {
-                this.variantName.set(gameVariantName);
-            }
-            else throw new IllegalArgumentException("Game with name '" + gameVariantName + "' not found");
-        }
-
-        @Override
-        public GameVariant selectedVariant() {
-            return variant(selectedVariantName());
-        }
-
-        @Override
-        public String selectedVariantName() {
-            return variantName.get();
-        }
-
-        @Override
-        public GameVariant variant(String gameVariantName) {
-            return variantsByName.computeIfAbsent(gameVariantName, this::createGameVariant);
-        }
-
-        @Override
-        public boolean isVariantRegistered(String gameVariantName) {
-            requireNonNull(gameVariantName);
-            return variantsByName.containsKey(gameVariantName);
-        }
-
-        private GameVariant createGameVariant(String variantName) {
-            final Cartridge cartridge = machine().cartridgeByName(variantName);
-            final var gameVariant = new GameVariant(cartridge);
-
-            //TODO make configurable again if tests should be available
-            final GameFlow flow = gameVariant.gameFlow();
-            flow.addState(new LevelShortTestState());
-            flow.addState(new LevelMediumTestState());
-            flow.addState(new CutScenesTestState());
-
-            gameVariant.gameModel().setHighScore(
-                new PropertyFileScore(PacManGamesMachine.highScoreFile(variantName)));
-
-            return gameVariant;
-        }
-
-        @Override
-        public void changed(ObservableValue<? extends String> observable, String oldVariantName, String newVariantName) {
-            Logger.info("Game variant name change: {} -> {}", oldVariantName, newVariantName);
-
-            if (oldVariantName != null) {
-                exitGameVariant(variant(oldVariantName));
-            }
-            if (newVariantName != null) {
-                enterGameVariant(variant(newVariantName));
-            }
-        }
-
-        private void enterGameVariant(GameVariant gameVariant) {
-            gameVariant.config().init(game);
-            //TODO rethink
-            game.ui().viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
-
-            final var gameVariantContext = new GameVariantContext(game, gameVariant);
-            gameVariantContext.flow().setContext(gameVariantContext);
-            gameVariantContext.eventManager().addGameEventSubscriber(game.ui());
-
-            game.setGameVariantContext(gameVariantContext);
-        }
-
-        private void exitGameVariant(GameVariant gameVariant) {
-            game.ui().sounds().dispose();
-            gameVariant.config().dispose();
-
-            game.context().eventManager().removeGameEventSubscriber(game.ui());
-            game.setGameVariantContext(null);
-        }
-
-        private PacManGamesMachine machine() {
-            return PacManGamesMachine.instance();
-        }
-    }
 
     private final GameVariantManager variantManager;
 
