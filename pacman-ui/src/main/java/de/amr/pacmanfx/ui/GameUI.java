@@ -93,41 +93,7 @@ public class GameUI implements GameEventListener {
         window.connect(game);
 
         connectKeyboard();
-        registerGlobalActions();
-    }
-
-    private void connectKeyboard() {
-        final Keyboard keyboard = game.machine().input().keyboard();
-        keyboard.enabledProperty().bind(viewManager.currentViewIDProperty().map(GameUI::isViewAcceptingKeyboardInput));
-        keyboard.addStateListener(_ -> handleKeyboardStateChange());
-        keyboard.filterKeyEventsFrom(window.mainScene());
-    }
-
-    private void handleKeyboardStateChange() {
-        final Input input = game.machine().input();
-        if (input.keyboard().anyNormalKeyPressed()) { // ignore modifier state change
-            final GameViewID currentViewID = viewManager.currentViewID();
-            if (isViewAcceptingKeyboardInput(currentViewID)) {
-                // Check for matching "global" action first, if none, let current view handle it.
-                if (actionBindings.executeMatchingAction(input).isEmpty()) {
-                    viewManager.assertView(currentViewID).onInput(input);
-                }
-            }
-        }
-    }
-
-    private static boolean isViewAcceptingKeyboardInput(GameViewID viewID) {
-        return viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY;
-    }
-
-    private void registerGlobalActions() {
-        final CommonActions actions = game.actions();
-        final Set<ActionKeyBinding> bindings = actions.bindings();
-        actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionToggleKeyboardMonitor(), bindings);
-        actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionEnterFullScreen(), bindings);
-        actionBindings.selectAnyMatchingBinding(actions.simulationActions().actionToggleMuted(), bindings);
-        actionBindings.selectAnyMatchingBinding(actions.editorActions().actionOpenEditor(), bindings);
-        Logger.info(actionBindings);
+        bindCommonActions();
     }
 
     public void terminate() {
@@ -177,6 +143,43 @@ public class GameUI implements GameEventListener {
             default -> {}
         }
         gameSceneManager.updateGameSceneAndForceReload(forceGameSceneReload);
-        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
+        gameSceneManager.optCurrentGameScene()
+            .ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
+    }
+
+    // private
+
+    private void connectKeyboard() {
+        final Keyboard keyboard = game.machine().input().keyboard();
+        keyboard.enabledProperty().bind(viewManager.currentViewIDProperty().map(GameUI::isViewAcceptingKeyboardInput));
+        keyboard.addStateListener(_ -> handleKeyboardStateChange());
+        keyboard.filterKeyEventsFrom(window.mainScene());
+    }
+
+    private void handleKeyboardStateChange() {
+        final Input input = game.machine().input();
+        if (input.keyboard().anyNormalKeyPressed()) { // ignore modifier state change
+            final GameViewID currentViewID = viewManager.currentViewID();
+            if (isViewAcceptingKeyboardInput(currentViewID)) {
+                // Check for matching "global" action first, if none, let current view handle it.
+                if (actionBindings.executeMatchingAction(input).isEmpty()) {
+                    viewManager.assertView(currentViewID).onInput(input);
+                }
+            }
+        }
+    }
+
+    private static boolean isViewAcceptingKeyboardInput(GameViewID viewID) {
+        return viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY;
+    }
+
+    private void bindCommonActions() {
+        final CommonActions actions = game.actions();
+        final Set<ActionKeyBinding> bindings = actions.bindings();
+        actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionToggleKeyboardMonitor(), bindings);
+        actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionEnterFullScreen(), bindings);
+        actionBindings.selectAnyMatchingBinding(actions.simulationActions().actionToggleMuted(), bindings);
+        actionBindings.selectAnyMatchingBinding(actions.editorActions().actionOpenEditor(), bindings);
+        Logger.info(actionBindings);
     }
 }

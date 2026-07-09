@@ -7,7 +7,4 @@ package de.amr.pacmanfx.event;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameContext;
 
-public record GameStateChangeEvent(
-    State<GameContext> oldState,
-    State<GameContext> newState
-) implements GameEvent {}
+public record GameStateChangeEvent(State<GameContext> oldState, State<GameContext> newState) implements GameEvent {}
