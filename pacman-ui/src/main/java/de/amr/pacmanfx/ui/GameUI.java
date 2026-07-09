@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
 
 public class GameUI extends DefaultGameEventListener {
 
-    public static final GameUISettings SETTINGS = SettingsLoader.load(
+    public static final GameUISettings DEFAULT_UI_SETTINGS = SettingsLoader.load(
         GameUI.class.getResource("/de/amr/pacmanfx/ui/ui.json"), GameUISettings.class);
 
     private final GameWindow window;
