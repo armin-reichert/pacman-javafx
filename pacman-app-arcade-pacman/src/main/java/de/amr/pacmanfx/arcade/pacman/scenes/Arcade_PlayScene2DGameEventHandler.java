@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
@@ -43,7 +44,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
 
     @Override
     public void onGameContinued(GameContinuedEvent e) {
-        gameModel().optLevel().ifPresent(playScene2D::resetActorAnimations);
+        gameModel().optLevel().ifPresent(ActorAnimationManager::resetActorAnimations);
     }
 
     @Override

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
@@ -21,7 +20,6 @@ import de.amr.pacmanfx.ui.model.GameViewModel;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
-import de.amr.pacmanfx.ui.views.playview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.window.GameWindow;
 import de.amr.pacmanfx.uilib.SettingsLoader;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -170,15 +168,13 @@ public class GameUI implements GameEventListener {
         boolean forceGameSceneReload = false;
         switch (gameEvent) {
             case LevelCreatedEvent e -> {
-                final GameVariantConfig config = game.variantManager().selectedVariant().config();
-                final GameLevel level = e.level();
-                showMiniPlayView(config, level);
+                viewManager.gamePlayView().onLevelCreated(e.level());
                 // game scene size might have changed: re-embed
                 gameSceneManager.optCurrentGameScene().ifPresent(gameSceneManager::embedGameSceneIntoPlayView);
             }
             case GameStateChangeEvent e -> {
                 if (GameStateID.GAME_LEVEL_COMPLETE.identifies(e.newState())) {
-                    hideMiniPlayView();
+                    viewManager.gamePlayView().onLevelCompleted();
                 }
             }
             case GenericChangeEvent _ -> forceGameSceneReload = true;
@@ -186,16 +182,5 @@ public class GameUI implements GameEventListener {
         }
         gameSceneManager.updateGameSceneAndForceReload(forceGameSceneReload);
         gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
-    }
-
-    private void showMiniPlayView(GameVariantConfig config, GameLevel level) {
-        final MiniPlaySceneView mini = viewManager.gamePlayView().miniPlaySceneView();
-        mini.setVariantConfig(config);
-        mini.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
-        mini.slideIn();
-    }
-
-    private void hideMiniPlayView() {
-        viewManager.gamePlayView().miniPlaySceneView().slideOut();
     }
 }

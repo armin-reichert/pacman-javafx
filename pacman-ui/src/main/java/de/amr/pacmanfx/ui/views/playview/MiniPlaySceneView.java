@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -155,6 +156,7 @@ public class MiniPlaySceneView {
         canvasRenderer.clearCanvas();
 
         if (levelRenderer != null && actorRenderer != null) {
+            ActorAnimationManager.ensureActorAnimationsCreated(game, level);
             drawGameLevel(level);
         }
 

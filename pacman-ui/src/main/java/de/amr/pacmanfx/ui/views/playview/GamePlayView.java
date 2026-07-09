@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
@@ -185,6 +186,14 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         gameSceneLayer.setCenter(gameSceneContent);
     }
 
+    public void onLevelCreated(GameLevel level) {
+        showMiniPlayView(level);
+    }
+
+    public void onLevelCompleted() {
+        hideMiniPlayView();
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // View interface implementation
     // -----------------------------------------------------------------------------------------------------------------
@@ -331,5 +340,16 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         if (sceneRenderer != null) {
             sceneRenderer.ctx().setFontSmoothingType(smoothing ? FontSmoothingType.LCD : FontSmoothingType.GRAY);
         }
+    }
+
+    private void showMiniPlayView(GameLevel level) {
+        final GameVariantConfig config = game.variantManager().selectedVariant().config();
+        miniPlaySceneView.setVariantConfig(config);
+        miniPlaySceneView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
+        miniPlaySceneView.slideIn();
+    }
+
+    private void hideMiniPlayView() {
+        miniPlaySceneView.slideOut();
     }
 }
