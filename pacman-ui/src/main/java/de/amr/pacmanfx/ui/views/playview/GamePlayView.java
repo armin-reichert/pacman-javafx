@@ -320,6 +320,31 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         }
     }
 
+    public void disembedGameScene(GameScene gameScene) {
+        requireNonNull(game);
+        requireNonNull(gameScene);
+
+        game.ui().viewManager().gamePlayView().contextMenu().hide();
+
+        gameScene.optSubSceneFX().ifPresent(subSceneFX -> {
+            subSceneFX.widthProperty().unbind();
+            subSceneFX.heightProperty().unbind();
+        });
+
+        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
+            final DecorationPane frame = game.ui().viewManager().gamePlayView().gameSceneFrame();
+            frame.canvas().widthProperty().unbind();
+            frame.canvas().heightProperty().unbind();
+            frame.unscaledWidthProperty().unbind();
+            frame.unscaledHeightProperty().unbind();
+            frame.backgroundProperty().unbind();
+            gameScene2D.backgroundColorProperty().unbind();
+            gameScene2D.scalingProperty().unbind();
+        }
+        Logger.info("Game scene {} REMOVED from play view!", gameScene.getClass().getSimpleName());
+    }
+
+
     // Private
 
     private void createLayout() {

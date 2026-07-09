@@ -167,9 +167,7 @@ public class GameUI implements GameEventListener {
     public void onGameEvent(GameEvent gameEvent) {
         boolean forceGameSceneReload = false;
         switch (gameEvent) {
-            case LevelCreatedEvent e -> {
-                viewManager.gamePlayView().onLevelCreated(e.level());
-            }
+            case LevelCreatedEvent e -> viewManager.gamePlayView().onLevelCreated(e.level());
             case GameStateChangeEvent e -> {
                 if (GameStateID.GAME_LEVEL_COMPLETE.identifies(e.newState())) {
                     viewManager.gamePlayView().onLevelCompleted();

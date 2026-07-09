@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Identifier;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.ui.GameVariantConfig;
@@ -14,7 +13,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.views.playview.DecorationPane;
+import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -65,13 +64,16 @@ public class GameSceneManager {
             return;
         }
 
+        final GamePlayView playView = game.ui().viewManager().gamePlayView();
+
         if (currentGameScene != null) {
             currentGameScene.deactivate();
-            removeFromPlayView(currentGameScene);
+            playView.disembedGameScene(currentGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
-        game.ui().viewManager().gamePlayView().embedGameScene(nextGameScene);
+        playView.embedGameScene(nextGameScene);
+
         nextGameScene.activate();
         model.optLevel().ifPresent(level -> handle2D3DSwitch(variantConfig, level, currentGameScene, nextGameScene));
         currentGameSceneProperty().set(nextGameScene);
@@ -157,31 +159,5 @@ public class GameSceneManager {
             case PlayScene3D ignored when sceneAfter instanceof AbstractGameScene2D -> GameSceneSwitchType.FROM_3D_TO_2D;
             case null, default -> GameSceneSwitchType.NONE; // may happen, it's ok
         };
-    }
-
-    // Scene embedding
-
-    public void removeFromPlayView(GameScene gameScene) {
-        requireNonNull(game);
-        requireNonNull(gameScene);
-
-        game.ui().viewManager().gamePlayView().contextMenu().hide();
-
-        gameScene.optSubSceneFX().ifPresent(subSceneFX -> {
-            subSceneFX.widthProperty().unbind();
-            subSceneFX.heightProperty().unbind();
-        });
-
-        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
-            final DecorationPane frame = game.ui().viewManager().gamePlayView().gameSceneFrame();
-            frame.canvas().widthProperty().unbind();
-            frame.canvas().heightProperty().unbind();
-            frame.unscaledWidthProperty().unbind();
-            frame.unscaledHeightProperty().unbind();
-            frame.backgroundProperty().unbind();
-            gameScene2D.backgroundColorProperty().unbind();
-            gameScene2D.scalingProperty().unbind();
-        }
-        Logger.info("Game scene {} REMOVED from play view!", gameScene.getClass().getSimpleName());
     }
 }
