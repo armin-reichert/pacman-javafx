@@ -154,13 +154,10 @@ public final class PacManGamesCollection implements Game {
     @Override
     public void pause() {
         ui.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
-            gameScene.deactivate();
-            ui.gameSceneManager().removeFromPlayView(gameScene);
+            ui.viewManager().gamePlayView().disembedGameScene(gameScene);
             ui.gameSceneManager().currentGameSceneProperty().set(null);
         });
-
         ui.sounds().stopAll();
-
         machine().clock().stop();
         machine().clock().setTargetFrameRate(GameClock.DEFAULT_TICKS_PER_SECOND);
     }

@@ -149,10 +149,6 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         gameSceneFrame.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
     }
 
-    public ContextMenu contextMenu() {
-        return contextMenu;
-    }
-
     public DecorationPane gameSceneFrame() {
         return gameSceneFrame;
     }
@@ -306,6 +302,15 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         }
     }
 
+    public void replaceGameScene(GameScene currentGameScene, GameScene nextGameScene) {
+        requireNonNull(nextGameScene);
+        if (currentGameScene != null) {
+            disembedGameScene(currentGameScene);
+        }
+        nextGameScene.onBeforeEmbedded();
+        embedGameScene(nextGameScene);
+    }
+
     public void embedGameScene(GameScene gameScene) {
         final GameVariantConfig config = game.variantManager().selectedVariant().config();
 
@@ -318,13 +323,17 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }
+
+        gameScene.activate();
+
+        Logger.info("Game scene {} EMBEDDED into play view!", gameScene.getClass().getSimpleName());
     }
 
     public void disembedGameScene(GameScene gameScene) {
-        requireNonNull(game);
         requireNonNull(gameScene);
 
-        game.ui().viewManager().gamePlayView().contextMenu().hide();
+        gameScene.deactivate();
+        contextMenu.hide();
 
         gameScene.optSubSceneFX().ifPresent(subSceneFX -> {
             subSceneFX.widthProperty().unbind();
@@ -332,16 +341,16 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         });
 
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
-            final DecorationPane frame = game.ui().viewManager().gamePlayView().gameSceneFrame();
-            frame.canvas().widthProperty().unbind();
-            frame.canvas().heightProperty().unbind();
-            frame.unscaledWidthProperty().unbind();
-            frame.unscaledHeightProperty().unbind();
-            frame.backgroundProperty().unbind();
+            gameSceneFrame.canvas().widthProperty().unbind();
+            gameSceneFrame.canvas().heightProperty().unbind();
+            gameSceneFrame.unscaledWidthProperty().unbind();
+            gameSceneFrame.unscaledHeightProperty().unbind();
+            gameSceneFrame.backgroundProperty().unbind();
             gameScene2D.backgroundColorProperty().unbind();
             gameScene2D.scalingProperty().unbind();
         }
-        Logger.info("Game scene {} REMOVED from play view!", gameScene.getClass().getSimpleName());
+
+        Logger.info("Game scene {} DISEMBEDDED from play view!", gameScene.getClass().getSimpleName());
     }
 
 
