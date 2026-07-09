@@ -60,7 +60,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
         Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
 
         GameUI ui = game.createUI(
-            GameUI.DEFAULT_SETTINGS,
+            GameUI.SETTINGS,
             TengenDashboardFactory.instance(),
             stage, sceneSize.x(), sceneSize.y()
         );

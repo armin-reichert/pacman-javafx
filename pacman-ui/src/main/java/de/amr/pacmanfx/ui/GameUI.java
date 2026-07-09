@@ -4,9 +4,7 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.basics.fsm.State;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -37,8 +35,8 @@ import static java.util.Objects.requireNonNull;
 
 public class GameUI extends DefaultGameEventListener {
 
-    public static final GameUISettings DEFAULT_SETTINGS =
-        SettingsLoader.load(GameUI.class.getResource("/de/amr/pacmanfx/ui/ui.json"), GameUISettings.class);
+    public static final GameUISettings SETTINGS = SettingsLoader.load(
+        GameUI.class.getResource("/de/amr/pacmanfx/ui/ui.json"), GameUISettings.class);
 
     private final GameWindow window;
     private final GameViewManager viewManager;
@@ -170,44 +168,43 @@ public class GameUI extends DefaultGameEventListener {
 
     @Override
     public void onGameEvent(GameEvent gameEvent) {
-
+        boolean forceGameSceneReload = false;
         switch (gameEvent) {
-
-            case LevelCreatedEvent levelCreated -> {
-                final GameLevel level = levelCreated.level();
-                final GameVariantConfig gameVariantConfig = game.variantManager().selectedVariant().config();
-                final SpriteAnimationContainer spriteAnimationContainer = sprites().animationContainer();
-
-                level.entities().pac().setAnimations(gameVariantConfig.createPacAnimations(spriteAnimationContainer));
-                level.entities().ghosts().forEach(ghost ->
-                    ghost.setAnimations(gameVariantConfig.createGhostAnimations(spriteAnimationContainer, ghost.personality())));
-
-                final MiniPlaySceneView miniPlayView = viewManager().gamePlayView().miniPlaySceneView();
-                miniPlayView.setVariantConfig(gameVariantConfig);
-                miniPlayView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
-                miniPlayView.slideIn();
-
-                // size of game scene might have changed, so re-embed
-                gameSceneManager().optCurrentGameScene().ifPresent(
-                    gameScene -> gameSceneManager().embedGameSceneIntoPlayView(gameScene));
+            case LevelCreatedEvent e -> {
+                final GameVariantConfig config = game.variantManager().selectedVariant().config();
+                final GameLevel level = e.level();
+                setActorAnimations(config, level);
+                showMiniPlayView(config, level);
+                // game scene size might have changed: re-embed
+                gameSceneManager.optCurrentGameScene().ifPresent(gameSceneManager::embedGameSceneIntoPlayView);
             }
-
-            case GameStateChangeEvent stateChangeEvent -> {
-                final State<GameContext> gameState = stateChangeEvent.newState();
-                if (GameStateID.GAME_LEVEL_COMPLETE.identifies(gameState)) {
-                    final MiniPlaySceneView miniPlayView = viewManager().gamePlayView().miniPlaySceneView();
-                    miniPlayView.slideOut();
+            case GameStateChangeEvent e -> {
+                if (GameStateID.GAME_LEVEL_COMPLETE.identifies(e.newState())) {
+                    hideMiniPlayView();
                 }
             }
-
-            case GenericChangeEvent _ -> gameSceneManager().forceGameSceneUpdate();
-
+            case GenericChangeEvent _ -> forceGameSceneReload = true;
             default -> {}
         }
+        gameSceneManager.updateGameSceneAndForceReload(forceGameSceneReload);
+        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
+    }
 
-        gameSceneManager().updateGameSceneAndForceReload(false);
+    private void setActorAnimations(GameVariantConfig config, GameLevel level) {
+        final SpriteAnimationContainer animationContainer = sprites.animationContainer();
+        level.entities().pac().setAnimations(config.createPacAnimations(animationContainer));
+        level.entities().ghosts().forEach(ghost -> ghost.setAnimations(
+            config.createGhostAnimations(animationContainer, ghost.personality())));
+    }
 
-        // Call game event handler for current game scene
-        gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
+    private void showMiniPlayView(GameVariantConfig config, GameLevel level) {
+        final MiniPlaySceneView mini = viewManager.gamePlayView().miniPlaySceneView();
+        mini.setVariantConfig(config);
+        mini.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
+        mini.slideIn();
+    }
+
+    private void hideMiniPlayView() {
+        viewManager.gamePlayView().miniPlaySceneView().slideOut();
     }
 }
