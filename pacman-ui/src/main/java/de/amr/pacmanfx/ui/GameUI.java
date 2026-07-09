@@ -169,8 +169,6 @@ public class GameUI implements GameEventListener {
         switch (gameEvent) {
             case LevelCreatedEvent e -> {
                 viewManager.gamePlayView().onLevelCreated(e.level());
-                // game scene size might have changed: re-embed
-                gameSceneManager.optCurrentGameScene().ifPresent(gameSceneManager::embedGameSceneIntoPlayView);
             }
             case GameStateChangeEvent e -> {
                 if (GameStateID.GAME_LEVEL_COMPLETE.identifies(e.newState())) {

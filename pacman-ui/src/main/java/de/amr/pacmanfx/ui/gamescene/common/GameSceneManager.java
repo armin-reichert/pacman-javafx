@@ -14,15 +14,10 @@ import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.ui.views.playview.DecorationPane;
-import de.amr.pacmanfx.ui.views.playview.GamePlayView;
-import de.amr.pacmanfx.ui.window.GameMainScene;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.SubScene;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -38,7 +33,7 @@ public class GameSceneManager {
     public GameSceneManager() {
         currentGameScene.addListener((_, _, newGameScene) -> {
             if (newGameScene != null) {
-                embedGameSceneIntoPlayView(newGameScene);
+                game.ui().viewManager().gamePlayView().embedGameScene(newGameScene);
             }
         });
     }
@@ -60,29 +55,25 @@ public class GameSceneManager {
     }
 
     public void updateGameSceneAndForceReload(boolean forceReload) {
-        final GameVariantConfig gameVariantConfig = game.variantManager().selectedVariant().config();
-        final GameContext gameContext = game.context();
-        final GameModel gameModel = gameContext.model();
+        final GameVariantConfig variantConfig = game.variantManager().selectedVariant().config();
+        final GameModel model = game.context().model();
 
-        final GameScene prevGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = gameVariantConfig.gameSceneConfig().selectGameScene(game, gameModel).orElseThrow();
+        final GameScene currentGameScene = optCurrentGameScene().orElse(null);
+        final GameScene nextGameScene = variantConfig.gameSceneConfig().selectGameScene(game, model).orElseThrow();
 
-        if (nextGameScene == prevGameScene && !forceReload) {
+        if (nextGameScene == currentGameScene && !forceReload) {
             return;
         }
 
-        if (prevGameScene != null) {
-            prevGameScene.deactivate();
-            removeFromPlayView(prevGameScene);
+        if (currentGameScene != null) {
+            currentGameScene.deactivate();
+            removeFromPlayView(currentGameScene);
         }
 
         nextGameScene.onEmbedded(); // Must be called *before* embedding
-        embedGameSceneIntoPlayView(nextGameScene);
-
+        game.ui().viewManager().gamePlayView().embedGameScene(nextGameScene);
         nextGameScene.activate();
-
-        gameModel.optLevel().ifPresent(level -> handle2D3DSwitch(gameVariantConfig, level, prevGameScene, nextGameScene));
-
+        model.optLevel().ifPresent(level -> handle2D3DSwitch(variantConfig, level, currentGameScene, nextGameScene));
         currentGameSceneProperty().set(nextGameScene);
     }
 
@@ -180,6 +171,7 @@ public class GameSceneManager {
             subSceneFX.widthProperty().unbind();
             subSceneFX.heightProperty().unbind();
         });
+
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
             final DecorationPane frame = game.ui().viewManager().gamePlayView().gameSceneFrame();
             frame.canvas().widthProperty().unbind();
@@ -190,81 +182,6 @@ public class GameSceneManager {
             gameScene2D.backgroundColorProperty().unbind();
             gameScene2D.scalingProperty().unbind();
         }
-
         Logger.info("Game scene {} REMOVED from play view!", gameScene.getClass().getSimpleName());
-    }
-
-    public void embedGameSceneIntoPlayView(GameScene gameScene) {
-        final GameVariantConfig gameVariantConfig = game.variantManager().selectedVariant().config();
-        final GameViewManager subViews = game.ui().viewManager();
-
-        subViews.gamePlayView().contextMenu().hide();
-
-        if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(subViews.gamePlayView(), gameScene, gameScene.optSubSceneFX().get());
-        } else if (gameScene instanceof AbstractGameScene2D gameScene2D) {
-            embedGameScene2D(gameVariantConfig.gameSceneConfig(), gameScene2D);
-        } else {
-            Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
-        }
-    }
-
-    // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(GamePlayView playView, GameScene gameScene, SubScene subSceneFX) {
-        final GameMainScene mainScene = game.ui().window().mainScene();
-
-        // stretch sub scene to available space
-        subSceneFX.widthProperty().bind(mainScene.widthProperty());
-        subSceneFX.heightProperty().bind(mainScene.heightProperty());
-
-        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
-            // use the canvas of the decorated pane for 2D scene even though the decoration is not used
-            gameScene2D.setCanvas(playView.gameSceneFrame().canvas());
-            playView.updateGameSceneRenderers(gameScene2D);
-        }
-        playView.setGameSceneContent(subSceneFX);
-    }
-
-    // 2D scenes without camera which are shown at full size
-    private void embedGameScene2D(GameSceneConfig gameSceneConfig, AbstractGameScene2D gameScene2D) {
-        final GameMainScene mainScene = game.ui().window().mainScene();
-        final GamePlayView playView = game.ui().viewManager().gamePlayView();
-        final DecorationPane frame = playView.gameSceneFrame();
-
-        gameScene2D.backgroundColorProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty);
-
-        final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
-        if (decorated) {
-            frame.newCanvas(); //TODO check why creating a new canvas is needed
-            frame.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(Ufx::paintBackground));
-
-            // set unscaled decoration pane size to game scene (=world map) size
-            frame.unscaledWidthProperty().bind(gameScene2D.unscaledWidthProperty());
-            frame.unscaledHeightProperty().bind(gameScene2D.unscaledHeightProperty());
-
-            // Limit scaling
-            gameScene2D.scalingProperty().bind(frame.scalingProperty().map(
-                scaling -> Math.min(scaling.doubleValue(), GamePlayView.MAX_GAME_SCENE_SCALING)));
-
-            frame.stretchTo(mainScene.getWidth(), mainScene.getHeight());
-
-            playView.setGameSceneContent(frame);
-        }
-        else {
-            // Undecorated game scene taking complete height
-            frame.canvas().heightProperty().bind(mainScene.heightProperty());
-
-            frame.canvas().widthProperty().bind(mainScene.heightProperty()
-                .map(h -> h.doubleValue() * gameScene2D.aspectRatio()));
-
-
-            gameScene2D.scalingProperty().bind(mainScene.heightProperty().divide(gameScene2D.unscaledHeight()));
-
-            playView.setGameSceneContent(frame.canvas());
-        }
-
-        gameScene2D.setCanvas(frame.canvas());
-        playView.updateGameSceneRenderers(gameScene2D);
-        frame.clearCanvas();
     }
 }

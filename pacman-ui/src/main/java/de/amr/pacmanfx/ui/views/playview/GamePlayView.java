@@ -14,6 +14,8 @@ import de.amr.pacmanfx.ui.config.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
@@ -36,6 +38,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
@@ -188,6 +191,9 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     public void onLevelCreated(GameLevel level) {
         showMiniPlayView(level);
+        // game scene size might have changed: re-embed
+        final GameSceneManager gameSceneManager = game.ui().gameSceneManager();
+        gameSceneManager.optCurrentGameScene().ifPresent(this::embedGameScene);
     }
 
     public void onLevelCompleted() {
@@ -300,6 +306,20 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         }
     }
 
+    public void embedGameScene(GameScene gameScene) {
+        final GameVariantConfig config = game.variantManager().selectedVariant().config();
+
+        contextMenu.hide();
+
+        if (gameScene.optSubSceneFX().isPresent()) {
+            embedGameSceneWithSubSceneFX(gameScene, gameScene.optSubSceneFX().get());
+        } else if (gameScene instanceof AbstractGameScene2D gameScene2D) {
+            embedGameScene2D(config.gameSceneConfig(), gameScene2D);
+        } else {
+            Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
+        }
+    }
+
     // Private
 
     private void createLayout() {
@@ -351,5 +371,64 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     private void hideMiniPlayView() {
         miniPlaySceneView.slideOut();
+    }
+
+    // 3D scenes or 2D scenes with camera
+    private void embedGameSceneWithSubSceneFX(GameScene gameScene, SubScene subSceneFX) {
+        final GameMainScene mainScene = game.ui().window().mainScene();
+
+        // stretch sub scene to available space
+        subSceneFX.widthProperty().bind(mainScene.widthProperty());
+        subSceneFX.heightProperty().bind(mainScene.heightProperty());
+
+        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
+            // use the canvas of the decorated pane for 2D scene even though the decoration is not used
+            gameScene2D.setCanvas(gameSceneFrame().canvas());
+            updateGameSceneRenderers(gameScene2D);
+        }
+        setGameSceneContent(subSceneFX);
+    }
+
+    // 2D scenes without camera which are shown at full size
+    private void embedGameScene2D(GameSceneConfig gameSceneConfig, AbstractGameScene2D gameScene2D) {
+        final GameMainScene mainScene = game.ui().window().mainScene();
+        final GamePlayView playView = game.ui().viewManager().gamePlayView();
+        final DecorationPane frame = playView.gameSceneFrame();
+
+        gameScene2D.backgroundColorProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty);
+
+        final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
+        if (decorated) {
+            frame.newCanvas(); //TODO check why creating a new canvas is needed
+            frame.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(Ufx::paintBackground));
+
+            // set unscaled decoration pane size to game scene (=world map) size
+            frame.unscaledWidthProperty().bind(gameScene2D.unscaledWidthProperty());
+            frame.unscaledHeightProperty().bind(gameScene2D.unscaledHeightProperty());
+
+            // Limit scaling
+            gameScene2D.scalingProperty().bind(frame.scalingProperty().map(
+                scaling -> Math.min(scaling.doubleValue(), GamePlayView.MAX_GAME_SCENE_SCALING)));
+
+            frame.stretchTo(mainScene.getWidth(), mainScene.getHeight());
+
+            playView.setGameSceneContent(frame);
+        }
+        else {
+            // Undecorated game scene taking complete height
+            frame.canvas().heightProperty().bind(mainScene.heightProperty());
+
+            frame.canvas().widthProperty().bind(mainScene.heightProperty()
+                .map(h -> h.doubleValue() * gameScene2D.aspectRatio()));
+
+
+            gameScene2D.scalingProperty().bind(mainScene.heightProperty().divide(gameScene2D.unscaledHeight()));
+
+            playView.setGameSceneContent(frame.canvas());
+        }
+
+        gameScene2D.setCanvas(frame.canvas());
+        playView.updateGameSceneRenderers(gameScene2D);
+        frame.clearCanvas();
     }
 }
