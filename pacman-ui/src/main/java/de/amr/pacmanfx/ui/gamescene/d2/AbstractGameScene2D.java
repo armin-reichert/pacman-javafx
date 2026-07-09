@@ -48,7 +48,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
     }
 
     @Override
-    public void onEmbedded() {
+    public void onBeforeEmbedded() {
         //TODO remove this hook method
     }
 

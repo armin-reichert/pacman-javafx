@@ -52,7 +52,7 @@ public interface GameScene extends QuitHandler, Disposable {
     void deactivate();
 
     /** Called when the scene is embedded into the UI. */
-    void onEmbedded();
+    void onBeforeEmbedded();
 
     /**
      * Called when a key combination is pressed inside this scene.

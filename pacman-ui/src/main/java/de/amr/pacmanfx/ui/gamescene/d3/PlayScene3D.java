@@ -187,7 +187,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     }
 
     @Override
-    public void onEmbedded() {
+    public void onBeforeEmbedded() {
         // TODO: reconsider whether scores need recreation here (variant/font change?)
         replaceScores3D();
     }

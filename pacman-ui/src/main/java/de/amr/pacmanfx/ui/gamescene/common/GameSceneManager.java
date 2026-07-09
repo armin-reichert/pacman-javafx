@@ -71,7 +71,7 @@ public class GameSceneManager {
             playView.disembedGameScene(currentGameScene);
         }
 
-        nextGameScene.onEmbedded(); // Must be called *before* embedding
+        nextGameScene.onBeforeEmbedded(); // Must be called *before* embedding
         playView.embedGameScene(nextGameScene);
 
         nextGameScene.activate();
