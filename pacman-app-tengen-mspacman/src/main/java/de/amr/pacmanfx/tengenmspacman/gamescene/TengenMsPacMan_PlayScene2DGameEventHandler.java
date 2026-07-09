@@ -47,7 +47,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
     @Override
     public void onGameContinued(GameContinuedEvent e) {
         gameModel().optLevel().ifPresent(level -> {
-            gameScene().resetAnimations(level);
+            gameScene().resetActorAnimations(level);
             gameScene().dynamicCamera().playIntroSequence();
             if (gameContext().model() instanceof TengenMsPacMan_GameModel tengenGame) {
                 tengenGame.showMessage(level, GameLevelMessageType.READY);
@@ -95,7 +95,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
 
     @Override
     public void onLevelStarted(LevelStartedEvent e) {
-        gameModel().optLevel().ifPresent(level -> gameScene().resetAnimations(level));
+        gameModel().optLevel().ifPresent(level -> gameScene().resetActorAnimations(level));
         gameScene().dynamicCamera().playIntroSequence();
     }
 

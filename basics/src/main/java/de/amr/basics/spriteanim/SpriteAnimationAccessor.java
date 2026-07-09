@@ -26,6 +26,10 @@ public interface SpriteAnimationAccessor {
 
     SpriteAnimationContainer container();
 
+    default boolean isEmpty() {
+        return this == EMPTY_SPRITE_ANIMATION_ACCESSOR;
+    }
+
     Object animation(Identifier animationID);
 
     Identifier selectedAnimationID();
@@ -55,5 +59,4 @@ public interface SpriteAnimationAccessor {
     void stopSelected();
 
     void resetSelected();
-
 }

@@ -64,6 +64,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         final int frame = animationManager.currentFrame();
         final Direction dir = pac.moveDir();
         return switch (animationManager.selectedAnimationID()) {
+            case null -> throw new IllegalStateException("Could not determine Pac-sprite, no animation selected");
             case ArcadePacMan_AnimationID.PAC_DYING    -> computePacDyingSprite(pac);
             case ArcadePacMan_AnimationID.PAC_MUNCHING -> facingSprite(SpriteID.MS_PAC_MUNCHING, frame, dir);
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER -> facingSprite(SpriteID.MS_PAC_MUNCHING_BOOSTER, frame, dir);

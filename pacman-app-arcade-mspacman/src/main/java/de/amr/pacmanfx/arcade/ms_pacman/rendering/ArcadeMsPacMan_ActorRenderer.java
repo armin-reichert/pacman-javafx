@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
@@ -58,17 +59,22 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private RectShort computePacSprite(Pac pac) {
         final SpriteAnimationAccessor animations = pac.animations();
+        RectShort sprite = null;
         if (animations.isSelected(ArcadePacMan_AnimationID.PAC_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.moveDir());
-            return spriteOrDefault(sprites, animations.currentFrame());
+            sprite = spriteOrDefault(sprites, animations.currentFrame());
         }
         else if (animations.isSelected(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().mrPacManMunchingSprites(pac.moveDir());
-            return spriteOrDefault(sprites, animations.currentFrame());
+            sprite = spriteOrDefault(sprites, animations.currentFrame());
         }
         else {
-            return animations.currentSprite();
+            sprite = animations.currentSprite();
         }
+        if (sprite == null) {
+            throw new IllegalStateException("Could not determine Pac sprite");
+        }
+        return sprite;
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {

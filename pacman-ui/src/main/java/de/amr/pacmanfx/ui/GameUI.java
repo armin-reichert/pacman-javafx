@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.event.*;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.level.GameLevel;
@@ -33,7 +32,7 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameUI extends DefaultGameEventListener {
+public class GameUI implements GameEventListener {
 
     public static final GameUISettings DEFAULT_UI_SETTINGS = SettingsLoader.load(
         GameUI.class.getResource("/de/amr/pacmanfx/ui/ui.json"), GameUISettings.class);
@@ -173,7 +172,6 @@ public class GameUI extends DefaultGameEventListener {
             case LevelCreatedEvent e -> {
                 final GameVariantConfig config = game.variantManager().selectedVariant().config();
                 final GameLevel level = e.level();
-                setActorAnimations(config, level);
                 showMiniPlayView(config, level);
                 // game scene size might have changed: re-embed
                 gameSceneManager.optCurrentGameScene().ifPresent(gameSceneManager::embedGameSceneIntoPlayView);
@@ -188,13 +186,6 @@ public class GameUI extends DefaultGameEventListener {
         }
         gameSceneManager.updateGameSceneAndForceReload(forceGameSceneReload);
         gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
-    }
-
-    private void setActorAnimations(GameVariantConfig config, GameLevel level) {
-        final SpriteAnimationContainer animationContainer = sprites.animationContainer();
-        level.entities().pac().setAnimations(config.createPacAnimations(animationContainer));
-        level.entities().ghosts().forEach(ghost -> ghost.setAnimations(
-            config.createGhostAnimations(animationContainer, ghost.personality())));
     }
 
     private void showMiniPlayView(GameVariantConfig config, GameLevel level) {

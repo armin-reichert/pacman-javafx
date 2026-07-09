@@ -5,14 +5,17 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.gamestate.GameState;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -41,6 +44,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
     @Override
     public void onTick(long tick) {
         gameContext().model().optLevel().ifPresent(level -> {
+            ensureActorAnimationsCreated(level);
             updateLivesCounter(gameState(), gameModel(), level.entities().pac());
             optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(gameContext(), level));
         });
@@ -101,7 +105,6 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());
         unscaledHeightProperty().set(terrainSize.y());
-
         if (level.isDemoLevel()) {
             acceptDemoLevel();
         } else {
@@ -109,15 +112,36 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
         }
     }
 
+    private void ensureActorAnimationsCreated(GameLevel level) {
+        final GameVariantConfig config = game().variantManager().selectedVariant().config();
+        final SpriteAnimationContainer animationContainer = game().ui().sprites().animationContainer();
+        final Pac pac = level.entities().pac();
+        if (pac.animations().isEmpty()) {
+            pac.setAnimations(config.createPacAnimations(animationContainer));
+            resetPacAnimation(pac);
+        }
+        level.entities().ghosts().forEach(ghost -> {
+            if (ghost.animations().isEmpty()) {
+                ghost.setAnimations(config.createGhostAnimations(animationContainer, ghost.personality()));
+                resetGhostAnimation(ghost);
+            }
+        });
+    }
+
     // Called from game event handler
     public void resetActorAnimations(GameLevel level) {
-        final Pac pac = level.entities().pac();
+        resetPacAnimation(level.entities().pac());
+        level.entities().ghosts().forEach(this::resetGhostAnimation);
+    }
+
+    private void resetPacAnimation(Pac pac) {
         pac.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
         pac.animations().resetSelected();
-        level.entities().ghosts().forEach(ghost -> {
-            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-            ghost.animations().resetSelected();
-        });
+    }
+
+    private void resetGhostAnimation(Ghost ghost) {
+        ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        ghost.animations().resetSelected();
     }
 
     private void acceptNormalLevel(GameLevel level) {

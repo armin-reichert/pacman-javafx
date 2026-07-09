@@ -5,8 +5,10 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
@@ -19,6 +21,7 @@ import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
+import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
@@ -154,6 +157,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
                 dynamicCamera.update(TS(terrain.numRows()), level.entities().pac());
             }
             updateDemoLevelMessage(level);
+            ensureActorAnimationsCreated(level);
             updateHUD(level);
             optSoundEffects().ifPresent(soundEffects -> {
                 soundEffects.setEnabled(!level.isDemoLevel());
@@ -301,16 +305,38 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
         }
     }
 
-    void resetAnimations(GameLevel level) {
-        final Pac pac = level.entities().pac();
+    private void ensureActorAnimationsCreated(GameLevel level) {
+        final GameVariantConfig config = game().variantManager().selectedVariant().config();
+        final SpriteAnimationContainer animationContainer = game().ui().sprites().animationContainer();
 
-        pac.animations().select(gameModel().isBoosterActive()
-            ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : ArcadePacMan_AnimationID.PAC_MUNCHING);
-        pac.animations().resetSelected();
+        final Pac pac = level.entities().pac();
+        if (pac.animations().isEmpty()) {
+            pac.setAnimations(config.createPacAnimations(animationContainer));
+            resetPacAnimation(pac);
+        }
 
         level.entities().ghosts().forEach(ghost -> {
-            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-            ghost.animations().resetSelected();
+            if (ghost.animations().isEmpty()) {
+                ghost.setAnimations(config.createGhostAnimations(animationContainer, ghost.personality()));
+                resetGhostAnimation(ghost);
+            }
         });
+    }
+
+    void resetActorAnimations(GameLevel level) {
+        resetPacAnimation(level.entities().pac());
+        level.entities().ghosts().forEach(this::resetGhostAnimation);
+    }
+
+    private void resetPacAnimation(Pac pac) {
+        pac.animations().select(gameModel().isBoosterActive()
+            ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
+            : ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pac.animations().resetSelected();
+    }
+
+    private void resetGhostAnimation(Ghost ghost) {
+        ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        ghost.animations().resetSelected();
     }
 }
