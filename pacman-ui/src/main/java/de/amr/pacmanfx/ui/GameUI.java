@@ -121,7 +121,7 @@ public class GameUI implements GameEventListener {
 
     public void terminate() {
         sprites.stopAnimationTimer();
-        sprites.animationContainer().clear();
+        sprites.animations().clear();
         window.mainScene().flashMessageManager().stopAnimationTimer();
     }
 

@@ -89,7 +89,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
     @Override
     public void onActivate() {
         final GameVariantConfig gameVariantConfig = game().variantManager().selectedVariant().config();
-        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animationContainer();
+        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
         // Quit cut scene when "START" button on "joypad" is pressed

@@ -307,7 +307,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
 
     private void ensureActorAnimationsCreated(GameLevel level) {
         final GameVariantConfig config = game().variantManager().selectedVariant().config();
-        final SpriteAnimationContainer animationContainer = game().ui().sprites().animationContainer();
+        final SpriteAnimationContainer animationContainer = game().ui().sprites().animations();
 
         final Pac pac = level.entities().pac();
         if (pac.animations().isEmpty()) {

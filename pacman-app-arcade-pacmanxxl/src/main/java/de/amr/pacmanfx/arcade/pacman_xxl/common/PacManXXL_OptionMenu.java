@@ -108,7 +108,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         logMenuState();
 
         soundEnabledProperty().bind(game.ui().sounds().muteProperty().not());
-        chaseAnimation.init(gameVariantConfig, canvas, game.ui().sprites().animationContainer());
+        chaseAnimation.init(gameVariantConfig, canvas, game.ui().sprites().animations());
     }
 
     public void bind() {
@@ -174,7 +174,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
                 if (game != null) {
                     final GameVariantConfig gameVariant = game.variantManager().variant(newVariant.name()).config();
-                    chaseAnimation.init(gameVariant, canvas, game.ui().sprites().animationContainer());
+                    chaseAnimation.init(gameVariant, canvas, game.ui().sprites().animations());
                 }
             }
         };

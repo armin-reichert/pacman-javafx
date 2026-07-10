@@ -120,7 +120,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
                 final GameVariantConfig gameVariantConfig = scene.game().variantManager().selectedVariant().config();
-                final SpriteAnimationContainer spriteAnimationContainer = scene.game().ui().sprites().animationContainer();
+                final SpriteAnimationContainer spriteAnimationContainer = scene.game().ui().sprites().animations();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 

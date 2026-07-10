@@ -87,7 +87,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
     private void initScene() {
         final GameVariantConfig gameVariantConfig = game().variantManager().selectedVariant().config();
-        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animationContainer();
+        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);
