@@ -10,6 +10,7 @@ import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
+import de.amr.pacmanfx.ui.config.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
@@ -20,12 +21,18 @@ import de.amr.pacmanfx.ui.model.GameViewModel;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
+import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
+import de.amr.pacmanfx.ui.views.editor.EditorView;
+import de.amr.pacmanfx.ui.views.playview.GamePlayView;
+import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.window.GameWindow;
 import de.amr.pacmanfx.uilib.SettingsLoader;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.List;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -46,14 +53,17 @@ public class GameUI implements GameEventListener {
 
     private Game game;
 
-    public GameUI(GameWindow window, GameViewManager viewManager, GameSceneManager gameSceneManager, TranslationManager translations, SoundManager sounds, SpriteAnimationManager sprites, GameViewModel viewModel) {
-        this.window = window;
-        this.viewManager = viewManager;
-        this.gameSceneManager = gameSceneManager;
-        this.translations = translations;
-        this.sounds = sounds;
-        this.sprites = sprites;
-        this.viewModel = viewModel;
+    public GameUI(Stage stage, int width, int height, GameUISettings settings, DashboardFactory dashboardFactory) {
+        viewModel = new GameViewModel();
+        gameSceneManager = new GameSceneManager();
+        translations = new GameTranslationManager();
+        viewManager = createGameViewManager(settings.dashboard(), dashboardFactory, translations);
+        sounds = new SoundManager();
+        sprites = new SpriteAnimationManager(60);
+        window = new GameWindow(stage, width, height);
+
+        viewModel.init(settings);
+        sounds.muteProperty().bind(viewModel.mutedProperty);
     }
 
     public GameWindow window() {
@@ -148,6 +158,22 @@ public class GameUI implements GameEventListener {
     }
 
     // private
+
+    private GameViewManager createGameViewManager(
+        List<DashboardSectionSettings> dashboardSectionSettings,
+        DashboardFactory dashboardFactory,
+        TranslationManager translationManager)
+    {
+        final GamePlayView playView = new GamePlayView();
+        playView.populateDashboard(dashboardFactory, dashboardSectionSettings, translationManager);
+
+        final GameViewManager viewManager = new GameViewManager();
+        viewManager.registerView(GameViewID.START_PAGES, new StartPagesView());
+        viewManager.registerView(GameViewID.GAMEPLAY, playView);
+        viewManager.registerView(GameViewID.EDITOR, new EditorView());
+
+        return viewManager;
+    }
 
     private void connectKeyboard() {
         final Keyboard keyboard = game.machine().input().keyboard();

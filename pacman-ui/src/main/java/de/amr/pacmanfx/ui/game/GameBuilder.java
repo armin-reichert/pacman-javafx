@@ -110,14 +110,7 @@ public class GameBuilder {
                 }
             }
 
-            final GameUI ui = game.createUI(
-                uiSettings,
-                dashboardFactory,
-                stage,
-                width,
-                height);
-
-            game.setUI(ui);
+            game.setUI(new GameUI(stage, width, height, uiSettings, dashboardFactory));
 
             // Can only be done after UI has been assigned to game!
             addStartPages(game);

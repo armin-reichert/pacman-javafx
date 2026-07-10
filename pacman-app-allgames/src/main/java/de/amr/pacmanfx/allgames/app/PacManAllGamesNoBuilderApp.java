@@ -57,15 +57,14 @@ public class PacManAllGamesNoBuilderApp extends Application {
         );
         game = new PacManGamesCollection();
 
-        Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
-
-        GameUI ui = game.createUI(
+        final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
+        final GameUI ui = new GameUI(
+            stage, sceneSize.x(), sceneSize.y(),
             GameUI.DEFAULT_UI_SETTINGS,
-            TengenDashboardFactory.instance(),
-            stage, sceneSize.x(), sceneSize.y()
+            TengenDashboardFactory.instance()
         );
 
-        StartPagesView start = ui.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
+        final StartPagesView start = ui.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
         start.addStartPage(game, new ArcadePacMan_StartPage());
         start.addStartPage(game, new ArcadeMsPacMan_StartPage());
         start.addStartPage(game, new TengenMsPacMan_StartPage());

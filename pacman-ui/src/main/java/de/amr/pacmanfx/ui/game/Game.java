@@ -8,15 +8,10 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.config.ui.GameUISettings;
-import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
-import javafx.stage.Stage;
 
 public interface Game {
 
     PacManGamesMachine machine();
-
-    GameUI createUI(GameUISettings settings, DashboardFactory dashboardFactory, Stage stage, int width, int height);
 
     void showUI(GameVariantID variantID);
 
