@@ -56,8 +56,8 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         final GameVariantConfig gameVariantConfig = gameScene2D.game().variantManager().selectedVariant().config();
         final var gameScene = (TengenMsPacMan_OptionsScene) gameScene2D;
         final var gameModel = (TengenMsPacMan_GameModel) gameScene.gameModel();
-        final var uiSettings = gameScene2D.game().extensions()
-            .value(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        final var uiSettings = gameScene2D.game().variantManager().selectedVariant()
+            .getExtensionValue(gameScene2D.game(), TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
         clearCanvas();
         if (gameScene.initialDelay > 0) return;

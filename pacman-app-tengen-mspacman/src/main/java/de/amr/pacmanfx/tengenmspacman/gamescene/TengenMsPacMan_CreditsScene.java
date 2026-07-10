@@ -33,8 +33,8 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final var actions = game().extensions()
-            .value(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = game().variantManager().selectedVariant()
+            .getExtensionValue(game(), TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
 

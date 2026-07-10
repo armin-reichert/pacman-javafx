@@ -21,8 +21,6 @@ public interface Game {
 
     GameContext context();
 
-    GameExtensions extensions();
-
     void setUI(GameUI ui);
 
     void showGameVariant(GameVariantID variantID);

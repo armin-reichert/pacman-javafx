@@ -26,8 +26,6 @@ public final class PacManGamesCollection implements Game {
 
     private final GameVariantManager variantManager;
 
-    private final GameExtensions extensions;
-
     private final CommonActions commonActions;
 
     private GameUI ui;
@@ -37,7 +35,6 @@ public final class PacManGamesCollection implements Game {
     public PacManGamesCollection() {
         this.variantManager = new VariantManager(this);
         this.commonActions = new CommonActions(this);
-        this.extensions = new GameExtensions(this);
         configureClock();
         //noinspection ResultOfMethodCallIgnored
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
@@ -73,11 +70,6 @@ public final class PacManGamesCollection implements Game {
     @Override
     public CommonActions actions() {
         return commonActions;
-    }
-
-    @Override
-    public GameExtensions extensions() {
-        return extensions;
     }
 
     @Override

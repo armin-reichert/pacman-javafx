@@ -102,14 +102,6 @@ public class GameBuilder {
             }
 
             final var game = new PacManGamesCollection();
-
-            // Add game extensions
-            for (var cartridge : cartridgeSet) {
-                for (GameExtension extension : cartridge.gameExtensions()) {
-                    game.extensions().add(extension);
-                }
-            }
-
             game.setUI(new GameUI(stage, width, height, uiSettings, dashboardFactory));
 
             // Can only be done after UI has been assigned to game!

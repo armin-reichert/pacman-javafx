@@ -71,9 +71,9 @@ public class PacManAllGamesNoBuilderApp extends Application {
         start.addStartPage(game, new PacManXXL_StartPage());
         start.rootPane().setSelectedIndex(0);
 
-        game.extensions().add(new GameExtension(Arcade_GameExtensions.ACTIONS, Arcade_Actions::new));
-        game.extensions().add(new GameExtension(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions::new));
-        game.extensions().add(new GameExtension(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings::new));
+//        game.extensions().add(new GameExtension(Arcade_GameExtensions.ACTIONS, Arcade_Actions::new));
+//        game.extensions().add(new GameExtension(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions::new));
+//        game.extensions().add(new GameExtension(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings::new));
 
         game.machine().watchdog().addEventListener(PacManXXL_MapSelector.instance());
 
