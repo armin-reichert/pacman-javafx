@@ -25,17 +25,17 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameVariantContext implements GameContext {
 
-    private final PacManGamesCollection game;
+    private final CoinMechanism coinMechanism;
 
     private final GameVariant gameVariant;
 
     private final GameEventManager eventManager;
 
-    public GameVariantContext(PacManGamesCollection game, GameVariant gameVariant) {
-        this.game = requireNonNull(game);
+    public GameVariantContext(CoinMechanism coinMechanism, GameVariant gameVariant) {
         this.gameVariant = requireNonNull(gameVariant);
         this.eventManager = new EventManager();
 
+        this.coinMechanism = requireNonNull(coinMechanism);
         //TODO rethink this
         model().hudState().creditProperty().bind(coinMechanism().numCoinsProperty());
     }
@@ -49,7 +49,7 @@ public class GameVariantContext implements GameContext {
 
     @Override
     public CoinMechanism coinMechanism() {
-        return game.machine().coinMechanism();
+        return coinMechanism;
     }
 
     @Override

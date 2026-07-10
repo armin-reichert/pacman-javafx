@@ -106,7 +106,7 @@ public class VariantManager implements GameVariantManager, ChangeListener<String
         //TODO rethink
         game.ui().viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
 
-        final var gameVariantContext = new GameVariantContext(game, gameVariant);
+        final var gameVariantContext = new GameVariantContext(game.machine().coinMechanism(), gameVariant);
         gameVariantContext.flow().setContext(gameVariantContext);
         gameVariantContext.eventManager().addGameEventSubscriber(game.ui());
 
