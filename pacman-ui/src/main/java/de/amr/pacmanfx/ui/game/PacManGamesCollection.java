@@ -58,7 +58,7 @@ public final class PacManGamesCollection implements Game {
     }
 
     @Override
-    public GameVariantManager variantManager() {
+    public GameVariantManager variants() {
         return variantManager;
     }
 

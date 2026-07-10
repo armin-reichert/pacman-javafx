@@ -178,7 +178,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     public void showHelp(Game game) {
         final double scaling = gameSceneFrame.scalingProperty().get();
-        helpLayer.showHelpPopup(game, scaling, game.variantManager().selectedVariantName());
+        helpLayer.showHelpPopup(game, scaling, game.variants().selectedVariantName());
     }
 
     public void setGameSceneContent(Node gameSceneContent) {
@@ -292,7 +292,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void updateGameSceneRenderers(AbstractGameScene2D gameScene2D) {
-        final GameVariantConfig gameVariantConfig = game.variantManager().selectedVariant().config();
+        final GameVariantConfig gameVariantConfig = game.variants().selectedVariant().config();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = gameVariantConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
             setFontSmoothing(game.ui().viewModel().common2D.fontSmoothingOnProperty.get());
@@ -312,7 +312,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void embedGameScene(GameScene gameScene) {
-        final GameVariantConfig config = game.variantManager().selectedVariant().config();
+        final GameVariantConfig config = game.variants().selectedVariant().config();
 
         contextMenu.hide();
 
@@ -397,7 +397,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     private void showMiniPlayView(GameLevel level) {
-        final GameVariantConfig config = game.variantManager().selectedVariant().config();
+        final GameVariantConfig config = game.variants().selectedVariant().config();
         miniPlaySceneView.setVariantConfig(config);
         miniPlaySceneView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
         miniPlaySceneView.slideIn();

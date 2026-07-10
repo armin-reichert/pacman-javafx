@@ -90,7 +90,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = game().variantManager().selectedVariant()
+        final Arcade_Actions actions = game().variants().selectedVariant()
             .getExtensionValue(game(), Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
@@ -112,7 +112,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig gameVariantConfig = game().variantManager().selectedVariant().config();
+        final GameVariantConfig gameVariantConfig = game().variants().selectedVariant().config();
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         blinking = new Pulse(10, Pulse.State.ON);

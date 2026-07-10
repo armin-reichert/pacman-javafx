@@ -15,7 +15,7 @@ public interface Game {
 
     GameUI ui();
 
-    GameVariantManager variantManager();
+    GameVariantManager variants();
 
     CommonActions actions();
 

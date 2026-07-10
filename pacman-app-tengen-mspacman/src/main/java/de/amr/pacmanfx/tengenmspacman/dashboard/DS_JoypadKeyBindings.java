@@ -47,7 +47,7 @@ public class DS_JoypadKeyBindings extends GameDashboardSection {
         );
 
         // Take dashboard title from Tengen Ms. Pac-Man text bundle
-        final GameVariant tengenGameVariant = game.variantManager().variant(GameVariantID.TENGEN_MS_PACMAN.name());
+        final GameVariant tengenGameVariant = game.variants().variant(GameVariantID.TENGEN_MS_PACMAN.name());
         setText(tengenGameVariant.config().translations().translate("infobox.joypad.title"));
     }
 

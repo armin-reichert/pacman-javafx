@@ -228,12 +228,12 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
     }
 
     private TengenMsPacMan_Actions tengenActions() {
-        return game().variantManager().selectedVariant().getExtensionValue(game(),
+        return game().variants().selectedVariant().getExtensionValue(game(),
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
     }
 
     private TengenMsPacMan_UISettings tengenUISettings() {
-        return game().variantManager().selectedVariant().getExtensionValue(game(),
+        return game().variants().selectedVariant().getExtensionValue(game(),
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 
@@ -309,7 +309,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
     }
 
     private void ensureActorAnimationsCreated(GameLevel level) {
-        final GameVariantConfig config = game().variantManager().selectedVariant().config();
+        final GameVariantConfig config = game().variants().selectedVariant().config();
         final SpriteAnimationContainer animationContainer = game().ui().sprites().animations();
 
         final Pac pac = level.entities().pac();

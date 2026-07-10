@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.game.Game;
 public class ActorAnimationManager {
 
     public static void ensureActorAnimationsCreated(Game game, GameLevel level) {
-        final GameVariantConfig config = game.variantManager().selectedVariant().config();
+        final GameVariantConfig config = game.variants().selectedVariant().config();
         final SpriteAnimationContainer animationContainer = game.ui().sprites().animations();
         final Pac pac = level.entities().pac();
         if (pac.animations().isEmpty()) {
