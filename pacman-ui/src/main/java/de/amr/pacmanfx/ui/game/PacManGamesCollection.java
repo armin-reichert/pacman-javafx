@@ -85,7 +85,7 @@ public final class PacManGamesCollection implements Game {
         return ui;
     }
 
-    // GameLifecycle interface
+    // Lifecycle
 
     @Override
     public void showGameVariant(GameVariantID variantID) {
@@ -130,7 +130,6 @@ public final class PacManGamesCollection implements Game {
 
     // Private area, no trespassing!
 
-
     private void startBackgroundServices() {
         Platform.runLater(() -> {
             if (
@@ -162,19 +161,11 @@ public final class PacManGamesCollection implements Game {
     }
 
     private void handleFatalError(Throwable reason) {
-        ka_tas_tro_phe(reason);
-    }
-
-    /*
-     * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
-     */
-    private void ka_tas_tro_phe(Throwable reason) {
         Platform.runLater(() -> {
+            suspendGamePlay();
             final String errorMessage = ui.translations().translate("error.oh_no_my_program");
             ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
-            suspendGamePlay();
-            Logger.error("*** SOMETHING VERY BAD HAPPENED:");
-            Logger.error(reason);
+            Logger.error(reason, "*** KA TAS TROOOOOPHE! SOMETHING VERY BAD HAPPENED:");
         });
     }
 }
