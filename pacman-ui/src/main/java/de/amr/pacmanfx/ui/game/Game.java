@@ -13,10 +13,6 @@ public interface Game {
 
     PacManGamesMachine machine();
 
-    void showGameVariant(GameVariantID variantID);
-
-    void setUI(GameUI ui);
-
     GameUI ui();
 
     GameVariantManager variantManager();
@@ -27,9 +23,13 @@ public interface Game {
 
     GameExtensions extensions();
 
-    void start();
+    void setUI(GameUI ui);
 
-    void pause();
+    void showGameVariant(GameVariantID variantID);
+
+    void startGamePlay();
+
+    void suspendGamePlay();
 
     void terminate();
 }

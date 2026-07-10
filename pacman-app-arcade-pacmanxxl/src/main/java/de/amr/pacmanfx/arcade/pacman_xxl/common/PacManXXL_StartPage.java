@@ -78,7 +78,7 @@ public class PacManXXL_StartPage implements StartPage {
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
             pauseProgressTimer();
-            game.start();
+            game.startGamePlay();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
             game.ui().shortMessage("OK, I shut my mouth");

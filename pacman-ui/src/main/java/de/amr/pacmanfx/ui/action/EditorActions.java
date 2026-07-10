@@ -77,7 +77,7 @@ public class EditorActions {
     // Private
 
     private void startEditor(TileMapEditor editor) {
-        game.pause();
+        game.suspendGamePlay();
         editor.init(GameConstants.CUSTOM_MAP_DIR);
         editor.start();
     }

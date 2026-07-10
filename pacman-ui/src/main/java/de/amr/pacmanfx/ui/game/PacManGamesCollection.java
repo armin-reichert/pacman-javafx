@@ -103,14 +103,14 @@ public final class PacManGamesCollection implements Game {
     }
 
     @Override
-    public void start() {
+    public void startGamePlay() {
         gameVariantContext.flow().restartState(GameStateID.BOOT);
         ui.viewManager().selectGamePlayView();
         Platform.runLater(machine().clock()::start);
     }
 
     @Override
-    public void pause() {
+    public void suspendGamePlay() {
         ui.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
             ui.viewManager().gamePlayView().disembedGameScene(gameScene);
             ui.gameSceneManager().currentGameSceneProperty().set(null);
@@ -122,7 +122,7 @@ public final class PacManGamesCollection implements Game {
 
     @Override
     public void terminate() {
-        pause();
+        suspendGamePlay();
         ui.terminate();
         machine().dispose();
         Logger.info("Application terminated. There is no way back!");
@@ -172,7 +172,7 @@ public final class PacManGamesCollection implements Game {
         Platform.runLater(() -> {
             final String errorMessage = ui.translations().translate("error.oh_no_my_program");
             ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
-            pause();
+            suspendGamePlay();
             Logger.error("*** SOMETHING VERY BAD HAPPENED:");
             Logger.error(reason);
         });
