@@ -38,18 +38,18 @@ public record GameVariant(
     }
 
     public <T> T getExtensionValue(Game game, Identifier id, Class<T> type) {
-        if (extensionValues.containsKey(id)) {
-            return type.cast(extensionValues.get(id));
+        final Object cached = extensionValues.get(id);
+        if (cached != null) {
+            return type.cast(cached);
         }
-        for (GameExtension extension : extensions) {
-            if (extension.id().equals(id)) {
-                extensionValues.put(id, extension.creator().apply(game));
-                break;
-            }
-        }
-        if (extensionValues.containsKey(id)) {
-            return type.cast(extensionValues.get(id));
-        }
-        throw new IllegalArgumentException("Extension with id " + id + " not found");
+
+        final GameExtension ext = extensions.stream()
+            .filter(e -> e.id().equals(id))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Extension with id " + id + " not found"));
+
+        final Object created = ext.creator().apply(game);
+        extensionValues.put(id, created);
+        return type.cast(created);
     }
 }
