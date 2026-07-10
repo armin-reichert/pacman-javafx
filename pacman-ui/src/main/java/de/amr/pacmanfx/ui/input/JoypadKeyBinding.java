@@ -1,37 +1,41 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.input;
 
 import javafx.scene.input.KeyCodeCombination;
 
+import static java.util.Objects.requireNonNull;
+
 public record JoypadKeyBinding(
-    KeyCodeCombination selectButtonKey,
-    KeyCodeCombination startButtonKey,
-    KeyCodeCombination bButtonKey,
-    KeyCodeCombination aButtonKey,
-    KeyCodeCombination upButtonKey,
-    KeyCodeCombination downButtonKey,
-    KeyCodeCombination leftButtonKey,
-    KeyCodeCombination rightButtonKey)
+    KeyCodeCombination select,
+    KeyCodeCombination start,
+    KeyCodeCombination b,
+    KeyCodeCombination a,
+    KeyCodeCombination up,
+    KeyCodeCombination down,
+    KeyCodeCombination left,
+    KeyCodeCombination right)
 {
     public KeyCodeCombination key(JoypadButton buttonID) {
+        requireNonNull(buttonID);
         return switch (buttonID) {
-            case SELECT -> selectButtonKey;
-            case START -> startButtonKey;
-            case A -> aButtonKey;
-            case B -> bButtonKey;
-            case UP -> upButtonKey;
-            case DOWN -> downButtonKey;
-            case LEFT -> leftButtonKey;
-            case RIGHT -> rightButtonKey;
+            case SELECT -> select;
+            case START -> start;
+            case A -> a;
+            case B -> b;
+            case UP -> up;
+            case DOWN -> down;
+            case LEFT -> left;
+            case RIGHT -> right;
         };
     }
 
     @Override
     public String toString() {
         return "SELECT=[%s] START=[%s] B=[%s] A=[%s] UP=[%s] DOWN=[%s] LEFT=[%s] RIGHT=[%s]".formatted(
-            selectButtonKey, startButtonKey, bButtonKey, aButtonKey, upButtonKey, downButtonKey, leftButtonKey, rightButtonKey
+            select, start, b, a, up, down, left, right
         );
     }
 }
