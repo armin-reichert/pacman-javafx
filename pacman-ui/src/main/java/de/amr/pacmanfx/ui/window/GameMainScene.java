@@ -54,12 +54,12 @@ public class GameMainScene extends Scene {
 
     public void connect(Game game) {
         // Delegate mouse scroll events to current game scene
-        setOnScroll(e -> game.ui().gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        setOnScroll(e -> game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> selectBackground(game),
-            game.ui().viewManager().currentViewIDProperty(),
-            game.ui().gameSceneManager().currentGameSceneProperty()
+            game.ui().views().currentViewIDProperty(),
+            game.ui().gameScenes().currentGameSceneProperty()
         ));
 
         statusIconBox.connect(game);
@@ -83,7 +83,7 @@ public class GameMainScene extends Scene {
     }
 
     private Background selectBackground(Game game) {
-        return game.ui().gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)
+        return game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)
             ? randomArrayEntry(GlobalAssets.GRADIENT_BACKGROUNDS)
             : GlobalAssets.BACKGROUND_PAC_MAN_WALLPAPER;
     }

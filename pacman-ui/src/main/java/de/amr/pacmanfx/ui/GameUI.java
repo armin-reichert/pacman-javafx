@@ -10,7 +10,6 @@ import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
-import de.amr.pacmanfx.ui.config.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
@@ -33,7 +32,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.net.URL;
-import java.util.List;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -55,8 +53,8 @@ public class GameUI implements GameEventListener {
     public static final GameUISettings DEFAULT_UI_SETTINGS = loadDefaultSettings();
 
     private final GameWindow window;
-    private final GameViewManager viewManager;
-    private final GameSceneManager gameSceneManager;
+    private final GameViewManager views;
+    private final GameSceneManager gameScenes;
     private final TranslationManager translations;
     private final SoundManager sounds;
     private final SpriteAnimationManager sprites;
@@ -67,14 +65,17 @@ public class GameUI implements GameEventListener {
 
     public GameUI(Stage stage, int width, int height, GameUISettings settings, DashboardFactory dashboardFactory) {
         viewModel = new GameViewModel();
-        gameSceneManager = new GameSceneManager();
-        translations = new GameTranslationManager();
-        viewManager = createGameViewManager(settings.dashboard(), dashboardFactory, translations);
-        sounds = new SoundManager();
+        viewModel.init(settings);
+
         sprites = new SpriteAnimationManager(60);
         window = new GameWindow(stage, width, height);
+        gameScenes = new GameSceneManager();
+        translations = new GameTranslationManager();
 
-        viewModel.init(settings);
+        views = createGameViews();
+        views.gamePlayView().populateDashboard(dashboardFactory, settings.dashboard(), translations);
+
+        sounds = new SoundManager();
         sounds.muteProperty().bind(viewModel.mutedProperty);
     }
 
@@ -82,12 +83,12 @@ public class GameUI implements GameEventListener {
         return window;
     }
 
-    public GameViewManager viewManager() {
-        return viewManager;
+    public GameViewManager views() {
+        return views;
     }
 
-    public GameSceneManager gameSceneManager() {
-        return gameSceneManager;
+    public GameSceneManager gameScenes() {
+        return gameScenes;
     }
 
     public TranslationManager translations() {
@@ -110,8 +111,8 @@ public class GameUI implements GameEventListener {
         this.game = requireNonNull(game);
 
         sounds.connect(game);
-        gameSceneManager.connect(game);
-        viewManager.connect(game);
+        gameScenes.connect(game);
+        views.connect(game);
         window.connect(game);
 
         connectKeyboard();
@@ -155,40 +156,33 @@ public class GameUI implements GameEventListener {
     public void onGameEvent(GameEvent gameEvent) {
         boolean forceGameSceneReload = false;
         switch (gameEvent) {
-            case LevelCreatedEvent e -> viewManager.gamePlayView().onLevelCreated(e.level());
+            case LevelCreatedEvent e -> views.gamePlayView().onLevelCreated(e.level());
             case GameStateChangeEvent e -> {
                 if (GameStateID.GAME_LEVEL_COMPLETE.identifies(e.newState())) {
-                    viewManager.gamePlayView().onLevelCompleted();
+                    views.gamePlayView().onLevelCompleted();
                 }
             }
             case GenericChangeEvent _ -> forceGameSceneReload = true;
             default -> {}
         }
-        gameSceneManager.updateGameSceneAndForceReload(forceGameSceneReload);
-        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
+        gameScenes.updateGameSceneAndForceReload(forceGameSceneReload);
+        gameScenes.optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
     }
 
     // private
 
-    private GameViewManager createGameViewManager(
-        List<DashboardSectionSettings> dashboardSectionSettings,
-        DashboardFactory dashboardFactory,
-        TranslationManager translationManager)
+    private GameViewManager createGameViews()
     {
-        final GamePlayView playView = new GamePlayView();
-        playView.populateDashboard(dashboardFactory, dashboardSectionSettings, translationManager);
-
-        final GameViewManager viewManager = new GameViewManager();
-        viewManager.registerView(GameViewID.START_PAGES, new StartPagesView());
-        viewManager.registerView(GameViewID.GAMEPLAY, playView);
-        viewManager.registerView(GameViewID.EDITOR, new EditorView());
-
-        return viewManager;
+        final GameViewManager views = new GameViewManager();
+        views.registerView(GameViewID.START_PAGES, new StartPagesView());
+        views.registerView(GameViewID.GAMEPLAY, new GamePlayView());
+        views.registerView(GameViewID.EDITOR, new EditorView());
+        return views;
     }
 
     private void connectKeyboard() {
         final Keyboard keyboard = game.machine().input().keyboard();
-        keyboard.enabledProperty().bind(viewManager.currentViewIDProperty().map(GameUI::isViewAcceptingKeyboardInput));
+        keyboard.enabledProperty().bind(views.currentViewIDProperty().map(GameUI::isViewAcceptingKeyboardInput));
         keyboard.addStateListener(_ -> handleKeyboardStateChange());
         keyboard.filterKeyEventsFrom(window.mainScene());
     }
@@ -196,11 +190,11 @@ public class GameUI implements GameEventListener {
     private void handleKeyboardStateChange() {
         final Input input = game.machine().input();
         if (input.keyboard().anyNormalKeyPressed()) { // ignore modifier state change
-            final GameViewID currentViewID = viewManager.currentViewID();
+            final GameViewID currentViewID = views.currentViewID();
             if (isViewAcceptingKeyboardInput(currentViewID)) {
                 // Check for matching "global" action first, if none, let current view handle it.
                 if (actionBindings.executeMatchingAction(input).isEmpty()) {
-                    viewManager.assertView(currentViewID).onInput(input);
+                    views.assertView(currentViewID).onInput(input);
                 }
             }
         }

@@ -31,7 +31,7 @@ public class GameSceneManager {
     public GameSceneManager() {
         currentGameScene.addListener((_, _, newGameScene) -> {
             if (newGameScene != null) {
-                game.ui().viewManager().gamePlayView().embedGameScene(newGameScene);
+                game.ui().views().gamePlayView().embedGameScene(newGameScene);
             }
         });
     }
@@ -70,7 +70,7 @@ public class GameSceneManager {
             Logger.info("No game scene change but reload requested");
         }
 
-        game.ui().viewManager().gamePlayView().replaceGameScene(currentGameScene, nextGameScene);
+        game.ui().views().gamePlayView().replaceGameScene(currentGameScene, nextGameScene);
 
         //TODO rethink this
         model.optLevel().ifPresent(level -> handle2D3DSwitch(variantConfig, level, currentGameScene, nextGameScene));

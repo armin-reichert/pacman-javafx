@@ -133,9 +133,9 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> settings.miniView.activeProperty.get()
-                && game.ui().gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D),
+                && game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D),
             settings.miniView.activeProperty,
-            game.ui().gameSceneManager().currentGameSceneProperty()
+            game.ui().gameScenes().currentGameSceneProperty()
         ));
 
         // Keep this view always at the same size as the main scene
@@ -188,7 +188,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void onLevelCreated(GameLevel level) {
         showMiniPlayView(level);
         // game scene size might have changed: re-embed
-        final GameSceneManager gameSceneManager = game.ui().gameSceneManager();
+        final GameSceneManager gameSceneManager = game.ui().gameScenes();
         gameSceneManager.optCurrentGameScene().ifPresent(this::embedGameScene);
     }
 
@@ -209,7 +209,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void onInput(Input input) {
         // First look for a matching action of the play view itself; if none found, delegate to the current game scene.
         if (actionBindings.executeMatchingAction(input).isEmpty()) {
-            game.ui().gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
+            game.ui().gameScenes().optCurrentGameScene().ifPresent(GameScene::onInput);
         }
     }
 
@@ -234,8 +234,8 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     @Override
     public void handleQuit(Game game) {
-        game.ui().gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.handleQuit(game));
-        game.ui().viewManager().selectStartPagesView();
+        game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.handleQuit(game));
+        game.ui().views().selectStartPagesView();
     }
 
     @Override
@@ -247,7 +247,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void render() {
         final long tick = game.machine().clock().currentTick();
         // Render current 2D game scene
-        final GameScene gameScene = game.ui().gameSceneManager().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
             final GameModel gameModel = game.context().model();
             if (sceneRenderer != null) {
@@ -273,10 +273,10 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void handle(ContextMenuEvent event) {
         contextMenu.getItems().clear();
 
-        game.ui().gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
+        game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             final TranslationManager translations = game.ui().translations();
             // Add 2D play scene-specific entries
-            if (game.ui().gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
+            if (game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
                 addLocalizedTitleItem(contextMenu, translations, "context_menu.scene_display");
                 addLocalizedActionItem(contextMenu, translations, game.actions().uiSettingsActions().actionTogglePlayScene2D3D(),
                     "context_menu.use_3D_scene");
@@ -426,7 +426,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     // 2D scenes without camera which are shown at full size
     private void embedGameScene2D(GameSceneConfig gameSceneConfig, AbstractGameScene2D gameScene2D) {
         final GameMainScene mainScene = game.ui().window().mainScene();
-        final GamePlayView playView = game.ui().viewManager().gamePlayView();
+        final GamePlayView playView = game.ui().views().gamePlayView();
         final DecorationPane frame = playView.gameSceneFrame();
 
         gameScene2D.backgroundColorProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty);

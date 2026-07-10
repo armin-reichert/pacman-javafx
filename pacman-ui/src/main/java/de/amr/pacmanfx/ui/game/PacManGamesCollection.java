@@ -93,10 +93,10 @@ public final class PacManGamesCollection implements Game {
 
         variantManager.selectVariant(variantID.name());
 
-        ui.viewManager().selectStartPagesView();
-        ui.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);
+        ui.views().selectStartPagesView();
+        ui.views().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);
         // TODO: Dashboard expects current game view being already being set when connected
-        ui.viewManager().gamePlayView().dashboard().connect(this);
+        ui.views().gamePlayView().dashboard().connect(this);
         ui.window().show(this);
 
         startBackgroundServices();
@@ -105,15 +105,15 @@ public final class PacManGamesCollection implements Game {
     @Override
     public void startGamePlay() {
         gameVariantContext.flow().restartState(GameStateID.BOOT);
-        ui.viewManager().selectGamePlayView();
+        ui.views().selectGamePlayView();
         Platform.runLater(machine().clock()::start);
     }
 
     @Override
     public void suspendGamePlay() {
-        ui.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> {
-            ui.viewManager().gamePlayView().disembedGameScene(gameScene);
-            ui.gameSceneManager().currentGameSceneProperty().set(null);
+        ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+            ui.views().gamePlayView().disembedGameScene(gameScene);
+            ui.gameScenes().currentGameSceneProperty().set(null);
         });
         ui.sounds().stopAll();
         machine().clock().stop();
@@ -152,12 +152,12 @@ public final class PacManGamesCollection implements Game {
 
     private void simulateAndUpdateCurrentGameScene() {
         gameVariantContext.flow().makeStep();
-        Platform.runLater(() -> ui.gameSceneManager().optCurrentGameScene()
+        Platform.runLater(() -> ui.gameScenes().optCurrentGameScene()
             .ifPresent(gameScene -> gameScene.onTick(machine().clock().currentTick())));
     }
 
     private void renderCurrentView() {
-        Platform.runLater(() -> ui.viewManager().assertCurrentView().render());
+        Platform.runLater(() -> ui.views().assertCurrentView().render());
     }
 
     private void handleFatalError(Throwable reason) {

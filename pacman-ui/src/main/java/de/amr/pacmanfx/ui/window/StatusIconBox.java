@@ -74,7 +74,7 @@ public class StatusIconBox implements Disposable {
         setTooltip(iconImmune, translations.translate("status_icon.immune"));
         setTooltip(iconCheated, translations.translate("status_icon.cheated"));
 
-        final GameViewManager views = game.ui().viewManager();
+        final GameViewManager views = game.ui().views();
         // Hide status icon box in editor view
         rootPane().visibleProperty().bind(
                 views.currentViewIDProperty().isEqualTo(GameViewID.GAMEPLAY)

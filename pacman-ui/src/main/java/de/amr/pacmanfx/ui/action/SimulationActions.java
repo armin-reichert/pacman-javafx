@@ -130,7 +130,7 @@ public class SimulationActions {
 
             @Override
             public boolean isEnabled() {
-                return game.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
+                return game.ui().views().isSelected(GameViewID.GAMEPLAY);
             }
         };
 

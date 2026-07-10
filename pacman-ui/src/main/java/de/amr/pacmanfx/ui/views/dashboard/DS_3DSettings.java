@@ -103,7 +103,7 @@ public class DS_3DSettings extends GameDashboardSection {
 
         comboPerspectives.setValue(viewModel.common3D.cameraPerspectiveIdProperty.get());
 
-        sliderMiniViewSceneHeight.setDisable(game.ui().viewManager().gamePlayView().miniPlaySceneView().isMoving());
+        sliderMiniViewSceneHeight.setDisable(game.ui().views().gamePlayView().miniPlaySceneView().isMoving());
 
         cbUsePlayScene3D.setSelected(viewModel.common3D.view3DEnabledProperty.get());
 
@@ -117,14 +117,14 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     private String subSceneSizeInfo(Game game) {
-        return game.ui().gameSceneManager().optCurrentGameScene()
+        return game.ui().gameScenes().optCurrentGameScene()
             .flatMap(GameScene::optSubSceneFX)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
     private String subSceneCameraInfo(Game game) {
-        final GameScene gameScene = game.ui().gameSceneManager().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
         return gameScene.optSubSceneFX().map(SubScene::getCamera)
             .map(camera -> "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
@@ -137,7 +137,7 @@ public class DS_3DSettings extends GameDashboardSection {
 
     private String sceneSizeInfo(Game game) {
         final GameModel gameModel = game.context().model();
-        final GameScene gameScene = game.ui().gameSceneManager().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
 
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {

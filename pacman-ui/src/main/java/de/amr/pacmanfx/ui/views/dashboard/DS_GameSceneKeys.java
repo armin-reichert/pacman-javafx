@@ -20,7 +20,7 @@ public class DS_GameSceneKeys extends GameDashboardSection {
     @Override
     public void update(Game game) {
         super.update(game);
-        game.ui().gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> updateInfo(game, gameScene));
+        game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> updateInfo(game, gameScene));
     }
 
     private void updateInfo(Game game, GameScene gameScene) {
