@@ -67,7 +67,7 @@ public class GameUI implements GameEventListener {
         viewModel = new GameViewModel();
         viewModel.init(settings);
 
-        sprites = new SpriteAnimationManager(60);
+        sprites = new SpriteAnimationManager();
         window = new GameWindow(stage, width, height);
         gameScenes = new GameSceneManager();
         translations = new GameTranslationManager();

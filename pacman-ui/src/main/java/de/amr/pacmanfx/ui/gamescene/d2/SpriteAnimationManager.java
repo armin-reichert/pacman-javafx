@@ -16,6 +16,10 @@ public class SpriteAnimationManager {
     private final SpriteAnimationContainer animationContainer;
     private final Animation timer;
 
+    public SpriteAnimationManager() {
+        this(60);
+    }
+
     public SpriteAnimationManager(int fps) {
         animationContainer = new SpriteAnimationContainer();
         timer = new Timeline(new KeyFrame(Duration.seconds(1.0 / fps), _ -> {
