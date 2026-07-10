@@ -55,12 +55,19 @@ public class GameSceneManager {
     public void updateGameSceneAndForceReload(boolean forceReload) {
         final GameVariantConfig variantConfig = game.variantManager().selectedVariant().config();
         final GameModel model = game.context().model();
-        final GameScene currentGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = variantConfig.gameSceneConfig().selectGameScene(game, model)
-            .orElseThrow(() -> new IllegalStateException("Could not determine next game scene"));
 
-        if (nextGameScene == currentGameScene && !forceReload) {
-            return;
+        final GameScene currentGameScene = optCurrentGameScene().orElse(null);
+        final GameScene nextGameScene = variantConfig.gameSceneConfig().selectGameScene(game, model).orElse(null);
+
+        if (nextGameScene == null) {
+            throw new IllegalStateException("Could not determine next game scene");
+        }
+
+        if (nextGameScene == currentGameScene) {
+            if (!forceReload) {
+                return;
+            }
+            Logger.info("No game scene change but reload requested");
         }
 
         game.ui().viewManager().gamePlayView().replaceGameScene(currentGameScene, nextGameScene);

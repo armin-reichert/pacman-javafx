@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
@@ -39,8 +40,17 @@ import static java.util.Objects.requireNonNull;
 
 public class GameUI implements GameEventListener {
 
-    public static final GameUISettings DEFAULT_UI_SETTINGS = SettingsLoader.load(
-        GameUI.class.getResource("/de/amr/pacmanfx/ui/ui.json"), GameUISettings.class);
+    public static final GameUISettings DEFAULT_UI_SETTINGS;
+
+    static {
+        final String path = "/de/amr/pacmanfx/ui/ui.json";
+        final URL settingsFileURL = GameUI.class.getResource(path);
+        if (settingsFileURL == null) {
+            throw new IllegalArgumentException("Could not load default UI settings file from path '%s'".formatted(path));
+        }
+        DEFAULT_UI_SETTINGS = SettingsLoader.load(settingsFileURL, GameUISettings.class);
+        Logger.info("Default UI settings read successfully, URL={}", settingsFileURL);
+    }
 
     private final GameWindow window;
     private final GameViewManager viewManager;
@@ -153,8 +163,7 @@ public class GameUI implements GameEventListener {
             default -> {}
         }
         gameSceneManager.updateGameSceneAndForceReload(forceGameSceneReload);
-        gameSceneManager.optCurrentGameScene()
-            .ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
+        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
     }
 
     // private
