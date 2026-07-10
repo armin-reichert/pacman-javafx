@@ -30,7 +30,7 @@ public class TengenMsPacMan_App extends Application {
             .orElse(null);
 
         if (game != null) {
-            game.showUI(TENGEN_MS_PACMAN);
+            game.showGameVariant(TENGEN_MS_PACMAN);
         }
     }
 

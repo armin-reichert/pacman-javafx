@@ -13,7 +13,7 @@ public interface Game {
 
     PacManGamesMachine machine();
 
-    void showUI(GameVariantID variantID);
+    void showGameVariant(GameVariantID variantID);
 
     void setUI(GameUI ui);
 

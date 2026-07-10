@@ -78,7 +78,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
         game.machine().watchdog().addEventListener(PacManXXL_MapSelector.instance());
 
         game.setUI(ui);
-        game.showUI(GameVariantID.ARCADE_PACMAN);
+        game.showGameVariant(GameVariantID.ARCADE_PACMAN);
     }
 
     @Override

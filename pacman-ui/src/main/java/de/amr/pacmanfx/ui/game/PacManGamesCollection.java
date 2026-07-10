@@ -88,7 +88,7 @@ public final class PacManGamesCollection implements Game {
     // GameLifecycle interface
 
     @Override
-    public void showUI(GameVariantID variantID) {
+    public void showGameVariant(GameVariantID variantID) {
         requireNonNull(variantID);
 
         variantManager.selectVariant(variantID.name());
