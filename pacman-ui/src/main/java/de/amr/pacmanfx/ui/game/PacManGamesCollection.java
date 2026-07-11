@@ -87,8 +87,10 @@ public final class PacManGamesCollection implements Game {
 
         ui.views().selectStartPagesView();
         ui.views().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);
-        // TODO: Dashboard expects current game view being already being set when connected
+
+        //TODO rethink this
         ui.views().gamePlayView().dashboard().connect(this);
+
         ui.window().show(this);
 
         startBackgroundServices();
