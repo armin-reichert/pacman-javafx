@@ -9,6 +9,7 @@ import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
@@ -22,13 +23,15 @@ public class FlyerStartPage implements StartPage {
 
     protected final StackPane rootPane = new StackPane();
     protected final Flyer flyer = new Flyer();
-    protected final String title;
+    protected String title;
+    protected final String gameVariantName;
     protected final GameStartButton startButton;
     protected Game game;
     protected Media voice;
 
-    public FlyerStartPage(String title) {
-        this.title = requireNonNull(title);
+    public FlyerStartPage(String gameVariantName) {
+        this.gameVariantName = requireNonNull(gameVariantName);
+        title = "Start " + gameVariantName;
 
         rootPane.getStyleClass().add("flyer-start-page");
 
@@ -73,7 +76,10 @@ public class FlyerStartPage implements StartPage {
 
     @Override
     public void onEnter() {
-        startButton.requestFocus();
+        game.variants().selectVariant(gameVariantName);
+        flyer.selectPage(0);
+        talk();
+        Platform.runLater(startButton::requestFocus);
     }
 
     @Override
@@ -100,6 +106,7 @@ public class FlyerStartPage implements StartPage {
             game.ui().sounds().playVoice(voice);
         }
     }
+
 
     public void stopTalking() {
         game.ui().sounds().stopAndDisposeVoice();

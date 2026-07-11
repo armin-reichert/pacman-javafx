@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.views.startpages.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 
@@ -25,16 +24,9 @@ public class ArcadeMsPacMan_StartPage extends FlyerStartPage {
     };
 
     public ArcadeMsPacMan_StartPage()  {
-        super("Ms. Pac-Man (Arcade)"); // TODO; localize
+        super(GameVariantID.ARCADE_MS_PACMAN.name());
+        title = "Ms. Pac-Man (Arcade)"; // TODO; localize
         flyer.setImages(FLYER_IMAGES);
         setVoice(VARIANT_NARRATION);
-    }
-
-    @Override
-    public void onEnter() {
-        game.variants().selectVariant(GameVariantID.ARCADE_MS_PACMAN.name());
-        flyer.selectPage(0);
-        talk();
-        Platform.runLater(startButton::requestFocus);
     }
 }

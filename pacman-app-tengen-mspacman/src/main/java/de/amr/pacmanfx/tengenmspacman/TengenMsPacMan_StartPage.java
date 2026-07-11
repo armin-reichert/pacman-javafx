@@ -7,7 +7,6 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.views.startpages.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 
@@ -25,16 +24,10 @@ public class TengenMsPacMan_StartPage extends FlyerStartPage {
     };
 
     public TengenMsPacMan_StartPage() {
-        super("Ms. Pac-Man (Tengen)"); //TODO localize
+        super(GameVariantID.TENGEN_MS_PACMAN.name());
+        //TODO localize
+        title = "Ms. Pac-Man (Tengen)";
         flyer.setImages(FLYER_IMAGES);
         setVoice(VARIANT_NARRATION);
-    }
-
-    @Override
-    public void onEnter() {
-        game.variants().selectVariant(GameVariantID.TENGEN_MS_PACMAN.name());
-        flyer.selectPage(0);
-        talk();
-        Platform.runLater(startButton::requestFocus);
     }
 }
