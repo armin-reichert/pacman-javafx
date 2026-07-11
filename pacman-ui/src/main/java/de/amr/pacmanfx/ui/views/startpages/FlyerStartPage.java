@@ -30,13 +30,7 @@ public class FlyerStartPage implements StartPage {
     protected Game game;
     protected Media voice;
 
-    public FlyerStartPage(
-        String variantName,
-        String title,
-        Media voiceMedia,
-        Image... images
-    )
-    {
+    public FlyerStartPage(String variantName, String title, Media voiceMedia, Image... images) {
         this(variantName);
         setTitle(title);
         setVoice(voiceMedia);
