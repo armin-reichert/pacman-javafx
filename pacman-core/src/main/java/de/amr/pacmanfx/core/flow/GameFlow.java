@@ -6,48 +6,53 @@ package de.amr.pacmanfx.core.flow;
 
 import de.amr.basics.Identifier;
 import de.amr.basics.fsm.State;
+import de.amr.basics.fsm.StateMachine;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.state.GameState;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.Objects;
 import java.util.Optional;
 
-public interface GameFlow {
+/**
+ * A game flow implementation using a state machine.
+ */
+public class GameFlow extends StateMachine<GameContext> {
 
-    void setContext(GameContext context);
+    private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
-    GameContext context();
+    public GameFlow(String name) {
+        setName(name);
+    }
 
-    Optional<State<GameContext>> optState(Identifier stateID);
-
-    GameState state();
-
-    void addState(State<GameContext> gameState);
-
-    void enterState(State<GameContext> gameState);
-
-    default void enterState(Identifier id) {
+    public void enterState(Identifier id) {
         Objects.requireNonNull(id);
         enterStateWithName(id.name());
     }
 
-    void enterStateWithName(String stateName);
-
-    void resumePreviousState();
-
-    void restartState(State<GameContext> gameState);
-
-    void restartState(String stateName);
-
-    default void restartState(Identifier stateID) {
+    public void restartState(Identifier stateID) {
         restartState(stateID.name());
     }
 
-    void makeStep();
+    @Override
+    public GameState state() {
+        return (GameState) super.state();
+    }
 
-    /** @return {@code true} if cut scenes are enabled */
-    boolean cutScenesEnabled();
+    public Optional<State<GameContext>> optState(Identifier stateID) {
+        return super.optState(stateID.name());
+    }
 
-    /** Enables or disables cut scenes. */
-    void setCutScenesEnabled(boolean enabled);
+    public void makeStep() {
+        super.update();
+    }
+
+    public boolean cutScenesEnabled() {
+        return cutScenesEnabled.get();
+    }
+
+    public void setCutScenesEnabled(boolean enabled) {
+        cutScenesEnabled.set(enabled);
+    }
 }

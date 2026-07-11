@@ -5,12 +5,12 @@
 package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.event.GameStateChangeEvent;
-import de.amr.pacmanfx.core.flow.StateMachineControlledGameFlow;
+import de.amr.pacmanfx.core.flow.GameFlow;
 
 /**
  * State machine with all Arcade game states.
  */
-public class Arcade_GameFlow extends StateMachineControlledGameFlow {
+public class Arcade_GameFlow extends GameFlow {
 
     public Arcade_GameFlow() {
         super("Arcade Pac-Man Games Control Flow");

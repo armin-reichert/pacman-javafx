@@ -34,7 +34,7 @@ public class TestEatingFood {
 
     static class TestContext implements GameContext {
 
-        private final GameFlow  gameFlow  = new Arcade_GameFlow();
+        private final Arcade_GameFlow gameFlow = new Arcade_GameFlow();
 
         private final ArcadePacMan_GameModel gameModel = new ArcadePacMan_GameModel();
 
