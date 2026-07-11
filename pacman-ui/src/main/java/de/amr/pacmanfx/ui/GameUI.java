@@ -25,7 +25,7 @@ import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.window.GameWindow;
-import de.amr.pacmanfx.uilib.SettingsLoader;
+import de.amr.pacmanfx.uilib.JsonConfigLoader;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -45,7 +45,7 @@ public class GameUI implements GameEventListener {
         if (url == null) {
             throw new IllegalArgumentException("Could not load default UI settings file from path '%s'".formatted(DEFAULT_SETTINGS_PATH));
         }
-        final var settings = SettingsLoader.load(url, GameUISettings.class);
+        final var settings = JsonConfigLoader.load(url, GameUISettings.class);
         Logger.info("Default UI settings loaded, URL={}", url);
         return settings;
     }

@@ -19,21 +19,21 @@ import java.nio.charset.StandardCharsets;
 
 import static java.util.Objects.requireNonNull;
 
-public class SettingsLoader {
+public class JsonConfigLoader {
 
-    public static <T> T load(URL url, Class<T> settingsClass) {
+    public static <T> T load(URL url, Class<T> configClass) {
         requireNonNull(url);
-        requireNonNull(settingsClass);
+        requireNonNull(configClass);
         try {
-            return new SettingsLoader().loadJSON(url, settingsClass);
+            return new JsonConfigLoader().loadJSON(url, configClass);
         } catch (IOException e) {
-            throw new RuntimeException("Error loading settings file from URL '%s'".formatted(url), e);
+            throw new RuntimeException("Error loading JSON file from URL '%s'".formatted(url), e);
         }
     }
 
     protected final Gson parser;
 
-    public SettingsLoader() {
+    public JsonConfigLoader() {
         parser = createParser();
     }
 
@@ -44,14 +44,14 @@ public class SettingsLoader {
             .create();
     }
 
-    public <T> T loadJSON(URL settingsFileURL, Class<T> settingsClass) throws IOException {
-        requireNonNull(settingsFileURL);
-        requireNonNull(settingsClass);
-        try (var in = settingsFileURL.openStream()) {
+    public <T> T loadJSON(URL fileURL, Class<T> configClass) throws IOException {
+        requireNonNull(fileURL);
+        requireNonNull(configClass);
+        try (var in = fileURL.openStream()) {
             final var reader = new InputStreamReader(in, StandardCharsets.UTF_8);
-            final var settingsObject = parser.fromJson(reader, settingsClass);
-            Logger.info(settingsObject);
-            return settingsObject;
+            final var config = parser.fromJson(reader, configClass);
+            Logger.info(config);
+            return config;
         }
     }
 

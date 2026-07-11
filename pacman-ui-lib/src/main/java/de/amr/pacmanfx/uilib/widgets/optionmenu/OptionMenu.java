@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.widgets.optionmenu;
 
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.uilib.SettingsLoader;
+import de.amr.pacmanfx.uilib.JsonConfigLoader;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
@@ -35,7 +35,7 @@ public class OptionMenu {
 
     public static final String CSS_STYLE_CLASS = "option-menu";
 
-    public static final OptionMenuSettings DEFAULT_SETTINGS = SettingsLoader.load(
+    public static final OptionMenuSettings DEFAULT_SETTINGS = JsonConfigLoader.load(
         OptionMenu.class.getResource("option-menu.json"),
         OptionMenuSettings.class);
 

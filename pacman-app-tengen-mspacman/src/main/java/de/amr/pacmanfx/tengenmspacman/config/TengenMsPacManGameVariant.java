@@ -47,7 +47,7 @@ public class TengenMsPacManGameVariant implements GameVariantConfig {
     // Local resources are stored inside main resource folder subdirectories named after package name of this class
     private static final ResourceManager LOCAL_RESOURCES = TengenMsPacMan_ResourceManager.instance();
 
-    private static final WorldSettings WORLD_CONFIG = TengenSettingsLoader.load(
+    private static final WorldSettings WORLD_CONFIG = TengenJsonConfigLoader.load(
         TengenMsPacManGameVariant.class.getResource("/de/amr/pacmanfx/tengenmspacman/world.json"), WorldSettings.class);
 
     // Note: Order of bonus symbols in spritesheet is not 1:1 with order of bonus values!

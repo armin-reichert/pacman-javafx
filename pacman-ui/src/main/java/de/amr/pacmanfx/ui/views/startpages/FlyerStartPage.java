@@ -7,6 +7,8 @@ package de.amr.pacmanfx.ui.views.startpages;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.uilib.JsonConfigLoader;
+import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.application.Platform;
@@ -18,26 +20,51 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 
+import java.net.URL;
+import java.util.stream.Stream;
+
 import static java.util.Objects.requireNonNull;
 
 public class FlyerStartPage implements StartPage {
 
+    public record Config(
+        String gameVariant,
+        String title,
+        String voice,
+        String[] images
+    ) {}
+
     protected final StackPane rootPane = new StackPane();
     protected final Flyer flyer = new Flyer();
     protected String title;
-    protected final String gameVariantName;
-    protected final GameStartButton startButton;
+    protected String gameVariantName;
+    protected GameStartButton startButton;
     protected Game game;
     protected Media voice;
 
+    public FlyerStartPage(URL configURL) {
+        requireNonNull(configURL);
+        final ResourceManager resourceManager = this::getClass;
+
+        var config = JsonConfigLoader.load(configURL, Config.class);
+        init(config.gameVariant());
+
+        setTitle(config.title());
+        setVoice(resourceManager.loadMedia(config.voice()));
+        flyer.setImages(
+            Stream.of(config.images()).map(resourceManager::loadImage).toArray(Image[]::new)
+        );
+    }
+
     public FlyerStartPage(String variantName, String title, Media voiceMedia, Image... images) {
-        this(variantName);
+        init(variantName);
+
         setTitle(title);
         setVoice(voiceMedia);
         flyer.setImages(images);
     }
 
-    public FlyerStartPage(String gameVariantName) {
+    private void init(String gameVariantName) {
         this.gameVariantName = requireNonNull(gameVariantName);
 
         title = "Start " + gameVariantName;

@@ -27,7 +27,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.SettingsLoader;
+import de.amr.pacmanfx.uilib.JsonConfigLoader;
 import de.amr.pacmanfx.uilib.UfxImages;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -51,7 +51,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacManGameVariant implements GameVariantConfig, ResourceManager {
 
-    public static final WorldSettings WORLD_CONFIG = SettingsLoader.load(
+    public static final WorldSettings WORLD_CONFIG = JsonConfigLoader.load(
         GameUI.class.getResource("/de/amr/pacmanfx/ui/world.json"), WorldSettings.class);
 
     public static final WorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new WorldMapColorScheme(

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
-import de.amr.pacmanfx.uilib.SettingsLoader;
+import de.amr.pacmanfx.uilib.JsonConfigLoader;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
@@ -43,7 +43,7 @@ public class GameBuilder {
 
     public GameBuilder() {
         dashboardFactory = CommonDashboardFactory.instance();
-        uiSettings = SettingsLoader.load(
+        uiSettings = JsonConfigLoader.load(
             getClass().getResource("/de/amr/pacmanfx/ui/ui.json"),
             GameUISettings.class);
         Rectangle2D bounds = Screen.getPrimary().getBounds();
@@ -89,7 +89,7 @@ public class GameBuilder {
 
     public GameBuilder uiSettings(URL url) {
         requireNonNull(url);
-        uiSettings = SettingsLoader.load(url, GameUISettings.class);
+        uiSettings = JsonConfigLoader.load(url, GameUISettings.class);
         return this;
     }
 
