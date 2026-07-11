@@ -26,6 +26,11 @@ public class GameFlow extends StateMachine<GameContext> {
         setName(name);
     }
 
+    @Override
+    public GameState state() {
+        return (GameState) super.state();
+    }
+
     public void enterState(Identifier id) {
         Objects.requireNonNull(id);
         enterStateWithName(id.name());
@@ -35,17 +40,8 @@ public class GameFlow extends StateMachine<GameContext> {
         restartState(stateID.name());
     }
 
-    @Override
-    public GameState state() {
-        return (GameState) super.state();
-    }
-
     public Optional<State<GameContext>> optState(Identifier stateID) {
         return super.optState(stateID.name());
-    }
-
-    public void makeStep() {
-        super.update();
     }
 
     public boolean cutScenesEnabled() {

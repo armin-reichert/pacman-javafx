@@ -141,7 +141,7 @@ public final class PacManGamesCollection implements Game {
     }
 
     private void simulateAndUpdateCurrentGameScene() {
-        gameVariantContext.flow().makeStep();
+        gameVariantContext.flow().update();
         Platform.runLater(() -> ui.gameScenes().optCurrentGameScene()
             .ifPresent(gameScene -> gameScene.onTick(machine().clock().currentTick())));
     }
