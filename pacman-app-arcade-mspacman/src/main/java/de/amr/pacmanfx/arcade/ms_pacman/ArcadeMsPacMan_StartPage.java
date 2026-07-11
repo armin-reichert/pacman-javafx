@@ -7,26 +7,19 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.views.startpages.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import javafx.scene.image.Image;
-import javafx.scene.media.Media;
 
 public class ArcadeMsPacMan_StartPage extends FlyerStartPage {
 
-    private static final String ROOT_PATH = "/de/amr/pacmanfx/arcade/ms_pacman/";
-
-    private static final ResourceManager RM = () -> ArcadeMsPacMan_StartPage.class;
-
-    private static final Media VARIANT_NARRATION = RM.loadMedia(ROOT_PATH + "sound/flyer-text.mp3");
-
-    private static final Image[] FLYER_IMAGES = {
-        RM.loadImage(ROOT_PATH + "graphics/flyer-page-1.jpg"),
-        RM.loadImage(ROOT_PATH + "graphics/flyer-page-2.jpg")
-    };
+    private static final String RESOURCE_ROOT = "/de/amr/pacmanfx/arcade/ms_pacman/";
+    private static final ResourceManager RESOURCE_MANAGER = () -> ArcadeMsPacMan_StartPage.class;
 
     public ArcadeMsPacMan_StartPage()  {
-        super(GameVariantID.ARCADE_MS_PACMAN.name());
-        title = "Ms. Pac-Man (Arcade)"; // TODO; localize
-        flyer.setImages(FLYER_IMAGES);
-        setVoice(VARIANT_NARRATION);
+        super(
+            GameVariantID.ARCADE_MS_PACMAN.name(),
+            "Ms. Pac-Man (Arcade)",
+            RESOURCE_MANAGER.loadMedia(RESOURCE_ROOT + "sound/flyer-text.mp3"),
+            RESOURCE_MANAGER.loadImage(RESOURCE_ROOT + "graphics/flyer-page-1.jpg"),
+            RESOURCE_MANAGER.loadImage(RESOURCE_ROOT + "graphics/flyer-page-2.jpg")
+            );
     }
 }

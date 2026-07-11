@@ -11,6 +11,7 @@ import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
@@ -29,12 +30,25 @@ public class FlyerStartPage implements StartPage {
     protected Game game;
     protected Media voice;
 
+    public FlyerStartPage(
+        String variantName,
+        String title,
+        Media voiceMedia,
+        Image... images
+    )
+    {
+        this(variantName);
+        setTitle(title);
+        setVoice(voiceMedia);
+        flyer.setImages(images);
+    }
+
     public FlyerStartPage(String gameVariantName) {
         this.gameVariantName = requireNonNull(gameVariantName);
+
         title = "Start " + gameVariantName;
 
         rootPane.getStyleClass().add("flyer-start-page");
-
         rootPane.getChildren().add(flyer);
 
         // Let scroll wheel scroll through flyer pages
@@ -95,6 +109,10 @@ public class FlyerStartPage implements StartPage {
     @Override
     public String title() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setVoice(Media voice) {

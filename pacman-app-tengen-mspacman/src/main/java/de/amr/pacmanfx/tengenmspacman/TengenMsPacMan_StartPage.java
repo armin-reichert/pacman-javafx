@@ -7,27 +7,19 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.views.startpages.FlyerStartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import javafx.scene.image.Image;
-import javafx.scene.media.Media;
 
 public class TengenMsPacMan_StartPage extends FlyerStartPage {
 
-    private static final String ROOT_PATH = "/de/amr/pacmanfx/tengenmspacman/";
-
-    private static final ResourceManager RM = () -> TengenMsPacMan_StartPage.class;
-
-    private static final Media VARIANT_NARRATION = RM.loadMedia(ROOT_PATH + "sound/flyer-text.mp3");
-
-    private static final Image[] FLYER_IMAGES = {
-        RM.loadImage(ROOT_PATH + "graphics/flyer-page-1.png"),
-        RM.loadImage(ROOT_PATH + "graphics/flyer-page-2.png")
-    };
+    private static final String RESOURCE_ROOT = "/de/amr/pacmanfx/tengenmspacman/";
+    private static final ResourceManager RESOURCE_MANAGER = () -> TengenMsPacMan_StartPage.class;
 
     public TengenMsPacMan_StartPage() {
-        super(GameVariantID.TENGEN_MS_PACMAN.name());
-        //TODO localize
-        title = "Ms. Pac-Man (Tengen)";
-        flyer.setImages(FLYER_IMAGES);
-        setVoice(VARIANT_NARRATION);
+        super(
+            GameVariantID.TENGEN_MS_PACMAN.name(),
+            "Ms. Pac-Man (Tengen)",
+            RESOURCE_MANAGER.loadMedia(RESOURCE_ROOT + "sound/flyer-text.mp3"),
+            RESOURCE_MANAGER.loadImage(RESOURCE_ROOT + "graphics/flyer-page-1.png"),
+            RESOURCE_MANAGER.loadImage(RESOURCE_ROOT + "graphics/flyer-page-2.png")
+        );
     }
 }
