@@ -111,7 +111,7 @@ public class GameWindow {
     }
 
     private void updateStageIcon(Game game) {
-        final Image icon = game.variants().selectedVariant().config().assets().image("app_icon");
+        final Image icon = game.variants().currentVariant().config().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         } else {
@@ -133,7 +133,7 @@ public class GameWindow {
     }
 
     private String stageTitle(Game game, boolean paused, boolean is3D) {
-        final String gameVariantName = game.variants().selectedVariantName();
+        final String gameVariantName = game.variants().currentVariantName();
         if (gameVariantName == null) {
             return "";
         }
@@ -145,7 +145,7 @@ public class GameWindow {
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager variantTranslations = game.variants().selectedVariant().config().translations();
+        final TranslationManager variantTranslations = game.variants().currentVariant().config().translations();
         final String titleKey = paused ? "app.title.paused" : "app.title";
         if (variantTranslations.textBundle() != null
             && variantTranslations.textBundle().containsKey(titleKey)) {

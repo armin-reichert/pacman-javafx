@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.game;
 
-
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 
@@ -16,9 +15,9 @@ public interface GameVariantManager {
 
     void selectVariant(String gameVariantName);
 
-    String selectedVariantName();
+    String currentVariantName();
 
-    GameVariant selectedVariant();
+    GameVariant currentVariant();
 
     GameVariant variant(String gameVariantName);
 

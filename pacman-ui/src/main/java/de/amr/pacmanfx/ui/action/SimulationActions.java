@@ -124,7 +124,7 @@ public class SimulationActions {
                 final boolean paused = gameClock.getUpdatesDisabled();
                 if (paused) {
                     game.ui().sounds().stopAll();
-                    game.variants().selectedVariant().config().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+                    game.variants().currentVariant().config().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
                 }
             }
 

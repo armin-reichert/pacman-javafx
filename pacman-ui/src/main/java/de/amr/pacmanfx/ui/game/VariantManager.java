@@ -53,12 +53,12 @@ public class VariantManager implements GameVariantManager, ChangeListener<String
     }
 
     @Override
-    public GameVariant selectedVariant() {
-        return variant(selectedVariantName());
+    public GameVariant currentVariant() {
+        return variant(currentVariantName());
     }
 
     @Override
-    public String selectedVariantName() {
+    public String currentVariantName() {
         return variantName.get();
     }
 
