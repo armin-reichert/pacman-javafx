@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.views;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
+import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -97,6 +98,10 @@ public final class GameViewManager {
 
     public void selectStartPagesView() {
         currentViewIDProperty().set(GameViewID.START_PAGES);
+    }
+
+    public StartPagesView startPagesView() {
+        return (StartPagesView) assertView(GameViewID.START_PAGES);
     }
 
     // Game play view

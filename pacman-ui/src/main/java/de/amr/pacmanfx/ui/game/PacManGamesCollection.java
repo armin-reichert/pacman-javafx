@@ -10,8 +10,6 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.gamestate.GameStateID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.views.GameViewID;
-import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
 import javafx.util.Duration;
@@ -82,13 +80,11 @@ public final class PacManGamesCollection implements Game {
     @Override
     public void showGameVariant(GameVariantID variantID) {
         requireNonNull(variantID);
-
         variantManager.selectVariant(variantID.name());
 
-        ui.views().selectStartPagesView();
-        ui.views().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().setSelectedIndex(0);
-
         //TODO rethink this
+        ui.views().selectStartPagesView();
+        ui.views().startPagesView().rootPane().setSelectedIndex(0);
         ui.views().gamePlayView().dashboard().connect(this);
 
         ui.window().show(this);
