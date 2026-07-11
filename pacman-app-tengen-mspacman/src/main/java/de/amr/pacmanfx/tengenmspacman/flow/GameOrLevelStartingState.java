@@ -6,13 +6,13 @@ package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.flow.GameFlow;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import org.tinylog.Logger;
 
-public class GameOrLevelStartingState extends GameState {
+public class GameOrLevelStartingState extends TimedGameState {
 
     public GameOrLevelStartingState() {
         super(GameStateID.GAME_OR_LEVEL_STARTING);

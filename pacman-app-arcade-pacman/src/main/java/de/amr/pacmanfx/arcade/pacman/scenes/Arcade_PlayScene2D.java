@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -128,7 +128,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
     }
 
     // While Pac-Man is not yet visible on game/level start, an additional lives symbol more is shown in the counter
-    private void updateLivesCounter(GameState state, GameModel model, Pac pac) {
+    private void updateLivesCounter(TimedGameState state, GameModel model, Pac pac) {
         final boolean oneMore = GameStateID.GAME_OR_LEVEL_STARTING.identifies(state) && !pac.isVisible();
         final int livesToDisplay = model.lives().count() - 1 + (oneMore ? 1 : 0);
         final int livesDisplayed = Math.clamp(livesToDisplay, 0, model.hudState().maxLivesDisplayed());

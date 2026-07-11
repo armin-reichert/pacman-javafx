@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.views.help;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.game.Game;
@@ -27,7 +27,7 @@ public class HelpInfo {
 
     public static HelpInfo build(Game game) {
         final GameContext context = game.context();
-        final GameState state = context.state();
+        final TimedGameState state = context.state();
         final boolean demoLevel = context.gamePlay().isDemoLevelRunning(context.model());
 
         final HelpInfo helpInfo = new HelpInfo(game);

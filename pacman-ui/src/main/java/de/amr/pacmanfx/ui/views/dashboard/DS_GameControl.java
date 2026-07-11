@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
@@ -70,7 +70,7 @@ public class DS_GameControl extends GameDashboardSection {
 
         final GameContext context = game.context();
         final GameModel model = context.model();
-        final GameState state = context.state();
+        final TimedGameState state = context.state();
 
         choiceBoxInitialLives.setValue(model.lives().initialCount());
         choiceBoxInitialLives.setDisable(!GameStateID.GAME_INTRO.identifies(state));
@@ -89,14 +89,14 @@ public class DS_GameControl extends GameDashboardSection {
         cbCollisionCheckedTwice.setSelected(context.model().rules().collisionDoubleCheckedProperty().get());
     }
 
-    private boolean canStartLevel(Game game, GameState gameState) {
+    private boolean canStartLevel(Game game, TimedGameState gameState) {
         boolean isArcadeGame = GameVariantID.isArcadeGameName(game.variants().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
         return !game.context().coinMechanism().isEmpty()
             && gameState.isOneOf(GameStateID.GAME_INTRO, GameStateID.GAME_PREPARATION);
     }
 
-    private boolean canEnterNextLevel(GameModel game, GameState gameState) {
+    private boolean canEnterNextLevel(GameModel game, TimedGameState gameState) {
         return game.isPlaying() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
     }
 }

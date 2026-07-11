@@ -13,12 +13,15 @@ import org.tinylog.Logger;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class GameState implements State<GameContext>, Identifier {
+/**
+ * Represents a game state like "booting", "intro", "playing" etc. Each game state has an internal tick timer.
+ */
+public class TimedGameState implements State<GameContext>, Identifier {
 
     private final Identifier id;
     private final TickTimer timer;
 
-    public GameState(Identifier id) {
+    public TimedGameState(Identifier id) {
         this.id = Objects.requireNonNull(id);
         this.timer = new TickTimer("GameStateTimer-" + getClass().getSimpleName());
     }

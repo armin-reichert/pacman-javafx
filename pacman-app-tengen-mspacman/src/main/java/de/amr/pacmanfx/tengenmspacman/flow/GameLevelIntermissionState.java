@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.flow.GameFlow;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -16,7 +16,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 
 import java.util.OptionalInt;
 
-public class GameLevelIntermissionState extends GameState {
+public class GameLevelIntermissionState extends TimedGameState {
 
     public GameLevelIntermissionState() {
         super(GameStateID.GAME_LEVEL_INTERMISSION);

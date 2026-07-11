@@ -7,14 +7,14 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameContinuedEvent;
 import de.amr.pacmanfx.core.flow.GameFlow;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 
-public class ArcadeGameLevelContinueState extends GameState {
+public class ArcadeGameLevelContinueState extends TimedGameState {
 
     static final int TICK_RESUME_HUNTING = 120;
     static final int TICK_CONTINUE_LEVEL = 60;

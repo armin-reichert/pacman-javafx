@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import org.tinylog.Logger;
 
-public class CommonPacManDyingState extends GameState {
+public class CommonPacManDyingState extends TimedGameState {
 
     private final int hideGhostsTick;
     private final int animationStartTick;

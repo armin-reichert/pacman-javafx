@@ -8,7 +8,7 @@ import de.amr.basics.Identifier;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -27,8 +27,8 @@ public class GameFlow extends StateMachine<GameContext> {
     }
 
     @Override
-    public GameState state() {
-        return (GameState) super.state();
+    public TimedGameState state() {
+        return (TimedGameState) super.state();
     }
 
     public void enterState(Identifier id) {

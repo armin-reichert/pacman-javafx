@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 
-public class CommonDemoLevelPlayingState extends GameState {
+public class CommonDemoLevelPlayingState extends TimedGameState {
 
     private final int huntingStartTick;
 

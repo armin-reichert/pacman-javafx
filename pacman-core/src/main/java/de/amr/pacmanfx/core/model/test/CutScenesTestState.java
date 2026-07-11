@@ -5,10 +5,10 @@ package de.amr.pacmanfx.core.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 
-public class CutScenesTestState extends GameState {
+public class CutScenesTestState extends TimedGameState {
 
     public int testedCutSceneNumber;
 

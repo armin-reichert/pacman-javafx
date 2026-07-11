@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.CreditAddedEvent;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -51,7 +51,7 @@ public final class Arcade_Actions {
                 if (context.gamePlay().isDemoLevelRunning(context.model())) {
                     return true;
                 }
-                final GameState gameState = context.state();
+                final TimedGameState gameState = context.state();
                 return GameStateID.GAME_INTRO.identifies(gameState) || GameStateID.GAME_PREPARATION.identifies(gameState);
             }
         };
@@ -68,7 +68,7 @@ public final class Arcade_Actions {
                 if (game.machine().coinMechanism().isEmpty()) {
                     return false;
                 }
-                final GameState state = game.context().state();
+                final TimedGameState state = game.context().state();
                 return (GameStateID.GAME_INTRO.identifies(state) || GameStateID.GAME_PREPARATION.identifies(state));
             }
         };

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.PacEatsFoodEvent;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
@@ -73,7 +73,7 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled() {
-                final GameState gameState = game.context().state();
+                final TimedGameState gameState = game.context().state();
                 return normalLevel(game).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };
@@ -100,7 +100,7 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled() {
-                final GameState gameState = game.context().state();
+                final TimedGameState gameState = game.context().state();
                 return normalLevel(game).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };
@@ -117,7 +117,7 @@ public final class CheatActions {
             @Override
             public boolean isEnabled() {
                 final GameContext context = game.context();
-                final GameState state = context.state();
+                final TimedGameState state = context.state();
                 final GameLevel level = normalLevel(game).orElse(null);
 
                 return level != null

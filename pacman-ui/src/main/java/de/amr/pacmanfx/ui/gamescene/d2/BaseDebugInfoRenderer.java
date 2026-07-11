@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.MovingActor;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -32,7 +32,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
 
     @Override
     public void draw(AbstractGameScene2D scene, long tick) {
-        final GameState gameState = scene.gameState();
+        final TimedGameState gameState = scene.gameState();
         final String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
             gameState.name(),
             gameState.timer().tickCount(),
