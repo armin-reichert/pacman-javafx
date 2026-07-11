@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;

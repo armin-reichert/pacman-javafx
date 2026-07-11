@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.Actor;
 
 public interface ActorRenderer extends Renderer {
 

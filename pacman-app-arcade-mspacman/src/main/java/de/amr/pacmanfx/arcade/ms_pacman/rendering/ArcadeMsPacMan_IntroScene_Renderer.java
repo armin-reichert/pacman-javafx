@@ -16,8 +16,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene.*;
-import static de.amr.pacmanfx.model.GameModel.RED_GHOST_SHADOW;
-import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.model.GameModel.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements GameScene2D_Renderer {

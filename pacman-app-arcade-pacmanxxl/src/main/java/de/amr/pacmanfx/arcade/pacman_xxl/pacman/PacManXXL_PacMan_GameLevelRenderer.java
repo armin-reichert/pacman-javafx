@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GameLevel_Renderer;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.model.world.WorldMapConfigKey;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.gamescene.d2.GenericMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;

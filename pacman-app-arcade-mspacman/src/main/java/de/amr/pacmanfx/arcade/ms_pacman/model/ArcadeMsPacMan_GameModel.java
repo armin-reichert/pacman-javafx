@@ -7,24 +7,23 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
-import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.GameRules;
-import de.amr.pacmanfx.model.HUDState;
-import de.amr.pacmanfx.model.HuntingTimer;
-import de.amr.pacmanfx.model.actors.Elroy;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.world.*;
-import de.amr.pacmanfx.steering.RuleBasedPacSteering;
+import de.amr.pacmanfx.core.model.AbstractGameModel;
+import de.amr.pacmanfx.core.model.GameRules;
+import de.amr.pacmanfx.core.model.HUDState;
+import de.amr.pacmanfx.core.model.HuntingTimer;
+import de.amr.pacmanfx.core.model.actors.Elroy;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.*;
+import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.util.Set;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.model.world.WorldMap.tile;
-import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
+import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -86,8 +85,8 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
         final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
-        final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
-        terrain.propertyMap().put(POS_HOUSE_MIN_TILE, houseMinTile.toString());
+        final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
+        terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE, houseMinTile.toString());
 
         terrain.setHouse(new ArcadeHouse(houseMinTile));
 
@@ -152,10 +151,10 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
     private void createAndSetGhosts(GameLevel level, House house) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         level.setGhosts(
-            ArcadeMsPacMan_ActorFactory.createGhost(RED_GHOST_SHADOW, terrain, house, POS_GHOST_1_RED),
-            ArcadeMsPacMan_ActorFactory.createGhost(PINK_GHOST_SPEEDY, terrain, house, POS_GHOST_2_PINK),
-            ArcadeMsPacMan_ActorFactory.createGhost(CYAN_GHOST_BASHFUL, terrain, house, POS_GHOST_3_CYAN),
-            ArcadeMsPacMan_ActorFactory.createGhost(ORANGE_GHOST_POKEY, terrain, house, POS_GHOST_4_ORANGE)
+            ArcadeMsPacMan_ActorFactory.createGhost(RED_GHOST_SHADOW, terrain, house,   WorldMapPropertyName.POS_GHOST_1_RED),
+            ArcadeMsPacMan_ActorFactory.createGhost(PINK_GHOST_SPEEDY, terrain, house,  WorldMapPropertyName.POS_GHOST_2_PINK),
+            ArcadeMsPacMan_ActorFactory.createGhost(CYAN_GHOST_BASHFUL, terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN),
+            ArcadeMsPacMan_ActorFactory.createGhost(ORANGE_GHOST_POKEY, terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE)
         );
     }
 

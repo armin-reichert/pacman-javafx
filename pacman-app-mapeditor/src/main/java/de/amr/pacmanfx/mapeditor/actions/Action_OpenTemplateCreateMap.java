@@ -6,7 +6,7 @@ package de.amr.pacmanfx.mapeditor.actions;
 import de.amr.pacmanfx.mapeditor.EditMode;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import org.tinylog.Logger;

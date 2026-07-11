@@ -3,11 +3,11 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.pacmanfx.gamestate.GameState;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;

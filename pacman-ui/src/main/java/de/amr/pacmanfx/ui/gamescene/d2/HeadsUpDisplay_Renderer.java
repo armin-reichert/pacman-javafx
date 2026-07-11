@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.model.HUDState;
+import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
 public interface HeadsUpDisplay_Renderer extends Renderer {

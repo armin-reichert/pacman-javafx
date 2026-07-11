@@ -13,10 +13,10 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.game.Game;
@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
-import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
+import static de.amr.pacmanfx.core.model.actors.GhostState.EATEN;
+import static de.amr.pacmanfx.core.model.actors.GhostState.FRIGHTENED;
 
 /**
  * The ghosts are presented one by one, then Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.

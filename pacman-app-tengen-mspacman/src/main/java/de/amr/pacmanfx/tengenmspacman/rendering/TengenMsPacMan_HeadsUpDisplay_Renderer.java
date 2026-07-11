@@ -5,11 +5,10 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.HUDState;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.score.Score;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.HUDState;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.score.Score;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene1;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;
@@ -26,8 +25,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer implements SpriteRendererMixin, HeadsUpDisplay_Renderer {

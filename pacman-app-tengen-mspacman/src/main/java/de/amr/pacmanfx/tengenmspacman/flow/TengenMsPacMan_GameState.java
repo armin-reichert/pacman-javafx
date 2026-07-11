@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.flow;
 
-import de.amr.pacmanfx.gamestate.*;
+import de.amr.pacmanfx.core.state.*;
 
 import static java.util.Objects.requireNonNull;
 

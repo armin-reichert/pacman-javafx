@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.game;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.gamestate.GameStateID;
+import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;

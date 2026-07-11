@@ -8,25 +8,25 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
-import de.amr.pacmanfx.event.BonusActivatedEvent;
-import de.amr.pacmanfx.event.GameEventManager;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Elroy;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.model.world.WorldMapPropertyName;
-import de.amr.pacmanfx.simulation.CommonGamePlay;
-import de.amr.pacmanfx.simulation.GamePlayContext;
-import de.amr.pacmanfx.steering.RouteBasedSteering;
+import de.amr.pacmanfx.core.event.BonusActivatedEvent;
+import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.Bonus;
+import de.amr.pacmanfx.core.model.actors.Elroy;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMapPropertyName;
+import de.amr.pacmanfx.core.simulation.CommonGamePlay;
+import de.amr.pacmanfx.core.simulation.GamePlayContext;
+import de.amr.pacmanfx.core.steering.RouteBasedSteering;
 
 import java.util.List;
 
 import static de.amr.basics.math.RandomNumberSupport.randomFloat;
-import static de.amr.pacmanfx.model.world.WorldMap.tile;
+import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_GamePlay extends CommonGamePlay {

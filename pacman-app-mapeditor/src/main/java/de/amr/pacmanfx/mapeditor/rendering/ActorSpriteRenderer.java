@@ -5,7 +5,7 @@ package de.amr.pacmanfx.mapeditor.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
 

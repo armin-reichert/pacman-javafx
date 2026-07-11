@@ -4,13 +4,13 @@
 
 package de.amr.pacmanfx.core;
 
-import de.amr.pacmanfx.event.GameEventManager;
-import de.amr.pacmanfx.flow.GameFlow;
-import de.amr.pacmanfx.gamestate.GameState;
-import de.amr.pacmanfx.model.GameCheats;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.simulation.GamePlay;
-import de.amr.pacmanfx.simulation.GamePlayContext;
+import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.model.GameCheats;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.simulation.GamePlay;
+import de.amr.pacmanfx.core.simulation.GamePlayContext;
 
 /**
  * Facade giving access to non UI related classes.

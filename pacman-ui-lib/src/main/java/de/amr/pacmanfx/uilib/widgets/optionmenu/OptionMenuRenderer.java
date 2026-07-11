@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.uilib.widgets.optionmenu;
 
-import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
@@ -11,7 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.model.world.WorldMap.*;
+import static de.amr.pacmanfx.core.model.world.WorldMap.*;
 import static de.amr.pacmanfx.uilib.Ufx.scaleFontBy;
 
 /**

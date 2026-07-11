@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
-import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.gamestate.GameState;
-import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.test.TestStateID;
+import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;

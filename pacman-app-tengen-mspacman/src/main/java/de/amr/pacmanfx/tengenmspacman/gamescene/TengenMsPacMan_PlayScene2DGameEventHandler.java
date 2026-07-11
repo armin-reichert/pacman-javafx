@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
-import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.model.test.TestStateID;
+import de.amr.pacmanfx.core.event.*;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;

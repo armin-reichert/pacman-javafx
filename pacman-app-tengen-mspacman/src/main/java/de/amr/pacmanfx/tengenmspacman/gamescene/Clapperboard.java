@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 

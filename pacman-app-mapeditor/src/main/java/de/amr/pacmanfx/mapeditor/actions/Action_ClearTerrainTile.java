@@ -5,7 +5,7 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.model.world.TerrainTile;
+import de.amr.pacmanfx.core.model.world.TerrainTile;
 
 /**
  * Ignores symmetric edit mode!

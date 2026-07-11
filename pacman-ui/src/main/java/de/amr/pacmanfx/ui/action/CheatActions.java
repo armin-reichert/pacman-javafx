@@ -5,14 +5,14 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.PacEatsFoodEvent;
-import de.amr.pacmanfx.gamestate.GameState;
-import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.GameCheats;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.core.event.PacEatsFoodEvent;
+import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.model.GameCheats;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;

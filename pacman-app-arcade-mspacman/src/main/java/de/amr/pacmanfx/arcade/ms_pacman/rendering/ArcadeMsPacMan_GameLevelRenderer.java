@@ -4,20 +4,19 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.GameLevelMessage;
-import de.amr.pacmanfx.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.model.world.WorldMapConfigKey;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.level.GameLevelMessage;
+import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.world.FoodLayer;
+import de.amr.pacmanfx.core.model.world.TerrainLayer;
+import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.function.Predicate.not;

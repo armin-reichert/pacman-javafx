@@ -4,10 +4,10 @@
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.model.world.TerrainTile;
-import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.model.world.WorldMapLayer;
-import de.amr.pacmanfx.model.world.WorldMapPropertyName;
+import de.amr.pacmanfx.core.model.world.TerrainTile;
+import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMapLayer;
+import de.amr.pacmanfx.core.model.world.WorldMapPropertyName;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;

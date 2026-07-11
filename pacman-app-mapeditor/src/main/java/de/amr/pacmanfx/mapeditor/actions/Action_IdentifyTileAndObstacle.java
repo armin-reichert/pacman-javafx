@@ -4,18 +4,14 @@
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
-import de.amr.pacmanfx.model.world.FoodTile;
-import de.amr.pacmanfx.model.world.Obstacle;
-import de.amr.pacmanfx.model.world.TerrainTile;
-import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
-import static de.amr.pacmanfx.model.world.WorldMap.HTS;
-import static de.amr.pacmanfx.model.world.WorldMap.computeTileAt;
-import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
+import static de.amr.pacmanfx.core.model.world.WorldMap.HTS;
+import static de.amr.pacmanfx.core.model.world.WorldMap.computeTileAt;
 import static java.util.Objects.requireNonNull;
 
 public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {
@@ -48,16 +44,16 @@ public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {
 
     private String terrainInfo(WorldMap worldMap, byte terrainCode) {
         if (terrainCode == TerrainTile.EMPTY.$) {
-            if (isScatterTarget(worldMap, POS_SCATTER_RED_GHOST)) {
+            if (isScatterTarget(worldMap, WorldMapPropertyName.POS_SCATTER_RED_GHOST)) {
                 return "Red Ghost Scatter Target";
             }
-            if (isScatterTarget(worldMap, POS_SCATTER_PINK_GHOST)) {
+            if (isScatterTarget(worldMap, WorldMapPropertyName.POS_SCATTER_PINK_GHOST)) {
                 return "Pink Ghost Scatter Target";
             }
-            if (isScatterTarget(worldMap, POS_SCATTER_CYAN_GHOST)) {
+            if (isScatterTarget(worldMap, WorldMapPropertyName.POS_SCATTER_CYAN_GHOST)) {
                 return "Cyan Ghost Scatter Target";
             }
-            if (isScatterTarget(worldMap, POS_SCATTER_ORANGE_GHOST)) {
+            if (isScatterTarget(worldMap, WorldMapPropertyName.POS_SCATTER_ORANGE_GHOST)) {
                 return "Orange Ghost Scatter Target";
             }
         } else {

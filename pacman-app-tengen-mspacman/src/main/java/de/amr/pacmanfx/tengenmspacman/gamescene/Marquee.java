@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
-import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;

@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.model.level.GameLevelMessage;
-import de.amr.pacmanfx.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.level.GameLevelMessage;
+import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 
 import static java.util.Objects.requireNonNull;
 

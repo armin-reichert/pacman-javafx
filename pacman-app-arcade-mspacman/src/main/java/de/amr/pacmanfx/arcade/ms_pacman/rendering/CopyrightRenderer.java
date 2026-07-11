@@ -4,12 +4,11 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
 public class CopyrightRenderer extends BaseRenderer {

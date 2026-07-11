@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.model3D.world;
 
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.layout.GridPane;

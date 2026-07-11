@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.widgets.optionmenu;
 
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.SettingsLoader;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.animation.AnimationTimer;

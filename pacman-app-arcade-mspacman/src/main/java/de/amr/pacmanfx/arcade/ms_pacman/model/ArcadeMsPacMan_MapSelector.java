@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-import de.amr.pacmanfx.model.world.*;
+import de.amr.pacmanfx.core.model.world.*;
 import org.tinylog.Logger;
 
 import java.io.IOException;

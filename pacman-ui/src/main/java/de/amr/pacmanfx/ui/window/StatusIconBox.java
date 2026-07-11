@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.model.GameCheats;
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.core.model.GameCheats;
+import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;

@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.flow.GameFlow;
-import de.amr.pacmanfx.gamestate.GameState;
-import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;

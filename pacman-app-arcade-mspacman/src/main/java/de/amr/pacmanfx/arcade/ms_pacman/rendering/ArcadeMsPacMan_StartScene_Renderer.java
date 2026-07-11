@@ -13,8 +13,8 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ORANGE;
 
 public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {

@@ -4,13 +4,12 @@
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.model.world.*;
 import org.tinylog.Logger;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 public class Action_PlaceArcadeHouse extends EditorAction<Void> {
@@ -39,8 +38,8 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
             return null;
         }
 
-        terrainProperties.put(POS_HOUSE_MIN_TILE, String.valueOf(minTile));
-        terrainProperties.put(POS_HOUSE_MAX_TILE, String.valueOf(maxTile));
+        terrainProperties.put(WorldMapPropertyName.POS_HOUSE_MIN_TILE, String.valueOf(minTile));
+        terrainProperties.put(WorldMapPropertyName.POS_HOUSE_MAX_TILE, String.valueOf(maxTile));
 
         // clear new house area
         clearArea(minTile, maxTile);
@@ -54,10 +53,10 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
         editor.setTerrainMapChanged();
 
         // place ghosts
-        terrainProperties.put(POS_GHOST_1_RED,    String.valueOf(minTile.plus(3, -1)));
-        terrainProperties.put(POS_GHOST_3_CYAN,   String.valueOf(minTile.plus(1, 2)));
-        terrainProperties.put(POS_GHOST_2_PINK,   String.valueOf(minTile.plus(3, 2)));
-        terrainProperties.put(POS_GHOST_4_ORANGE, String.valueOf(minTile.plus(5, 2)));
+        terrainProperties.put(WorldMapPropertyName.POS_GHOST_1_RED,    String.valueOf(minTile.plus(3, -1)));
+        terrainProperties.put(WorldMapPropertyName.POS_GHOST_3_CYAN,   String.valueOf(minTile.plus(1, 2)));
+        terrainProperties.put(WorldMapPropertyName.POS_GHOST_2_PINK,   String.valueOf(minTile.plus(3, 2)));
+        terrainProperties.put(WorldMapPropertyName.POS_GHOST_4_ORANGE, String.valueOf(minTile.plus(5, 2)));
         editor.setTerrainMapPropertyChanged();
 
         return null;

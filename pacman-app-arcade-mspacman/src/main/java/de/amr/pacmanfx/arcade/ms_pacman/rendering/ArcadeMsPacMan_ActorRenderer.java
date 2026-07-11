@@ -6,11 +6,10 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationAccessor;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;

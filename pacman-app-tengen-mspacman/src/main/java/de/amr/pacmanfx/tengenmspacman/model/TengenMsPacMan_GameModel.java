@@ -8,23 +8,22 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameException;
-import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.GameRules;
-import de.amr.pacmanfx.model.HuntingTimer;
-import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.GameLevelMessage;
-import de.amr.pacmanfx.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.model.world.*;
-import de.amr.pacmanfx.steering.RuleBasedPacSteering;
+import de.amr.pacmanfx.core.model.AbstractGameModel;
+import de.amr.pacmanfx.core.model.GameRules;
+import de.amr.pacmanfx.core.model.HuntingTimer;
+import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.level.GameLevelMessage;
+import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.world.*;
+import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -269,10 +268,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private void setGhosts(GameLevel level, House house) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         level.setGhosts(
-            TengenMsPacMan_ActorFactory.createGhost(RED_GHOST_SHADOW,   house, terrain, POS_GHOST_1_RED),
-            TengenMsPacMan_ActorFactory.createGhost(PINK_GHOST_SPEEDY,  house, terrain, POS_GHOST_2_PINK),
-            TengenMsPacMan_ActorFactory.createGhost(CYAN_GHOST_BASHFUL, house, terrain, POS_GHOST_3_CYAN),
-            TengenMsPacMan_ActorFactory.createGhost(ORANGE_GHOST_POKEY, house, terrain, POS_GHOST_4_ORANGE)
+            TengenMsPacMan_ActorFactory.createGhost(RED_GHOST_SHADOW,   house, terrain, WorldMapPropertyName.POS_GHOST_1_RED),
+            TengenMsPacMan_ActorFactory.createGhost(PINK_GHOST_SPEEDY,  house, terrain, WorldMapPropertyName.POS_GHOST_2_PINK),
+            TengenMsPacMan_ActorFactory.createGhost(CYAN_GHOST_BASHFUL, house, terrain, WorldMapPropertyName.POS_GHOST_3_CYAN),
+            TengenMsPacMan_ActorFactory.createGhost(ORANGE_GHOST_POKEY, house, terrain, WorldMapPropertyName.POS_GHOST_4_ORANGE)
         );
     }
 

@@ -1,0 +1,28 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+package de.amr.pacmanfx.core.model.level;
+
+import de.amr.basics.math.Vector2f;
+import de.amr.pacmanfx.core.model.actors.Actor;
+
+import static java.util.Objects.requireNonNull;
+
+public class GameLevelMessage extends Actor {
+
+    private final GameLevelMessageType type;
+
+    public GameLevelMessage(GameLevelMessageType type) {
+        this.type = requireNonNull(type);
+    }
+
+    public GameLevelMessage(GameLevelMessageType type, Vector2f position) {
+        this.type = requireNonNull(type);
+        setX(position.x());
+        setY(position.y());
+    }
+
+    public GameLevelMessageType type() {
+        return type;
+    }
+}

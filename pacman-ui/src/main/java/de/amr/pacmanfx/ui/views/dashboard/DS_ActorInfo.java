@@ -6,12 +6,12 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.MovingActor;
-import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.actors.MovingActor;
+import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 

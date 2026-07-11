@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.basics.math.RandomNumberSupport;import de.amr.pacmanfx.model.world.MapColorScheme;
+import de.amr.basics.math.RandomNumberSupport;import de.amr.pacmanfx.core.model.world.MapColorScheme;
 
 /**
  * The color schemes used in the Tengen Ms. Pac-Man maps. That was quite some work to figure these out.

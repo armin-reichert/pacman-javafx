@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.model.GameRules;
-import de.amr.pacmanfx.model.actors.CollisionStrategy;
+import de.amr.pacmanfx.core.model.GameRules;
+import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.game.Game;

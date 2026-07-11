@@ -11,7 +11,7 @@ import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
-import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.core.model.world.WorldMap.TS;
 
 /**
  * SpriteSheet for non‐arcade maps in Tengen Ms. Pac-Man.

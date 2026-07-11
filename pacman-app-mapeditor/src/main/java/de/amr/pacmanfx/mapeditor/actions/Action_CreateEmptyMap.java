@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 
 public class Action_CreateEmptyMap extends EditorAction<WorldMap> {
 

@@ -8,7 +8,7 @@ import de.amr.basics.graph.GridGraph;
 import de.amr.basics.graph.GridGraphImpl;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.model.world.*;
+import de.amr.pacmanfx.core.model.world.*;
 import org.tinylog.Logger;
 
 import java.io.File;

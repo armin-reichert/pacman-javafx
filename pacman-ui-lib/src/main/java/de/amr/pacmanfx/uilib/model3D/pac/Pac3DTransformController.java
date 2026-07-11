@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.uilib.model3D.pac;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 
 
 public class Pac3DTransformController {

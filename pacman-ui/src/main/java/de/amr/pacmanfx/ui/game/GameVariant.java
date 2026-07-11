@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.ui.game;
 
 import de.amr.basics.Identifier;
-import de.amr.pacmanfx.flow.GameFlow;
-import de.amr.pacmanfx.model.DefaultCheatsImpl;
-import de.amr.pacmanfx.model.GameCheats;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.simulation.GamePlay;
+import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.model.DefaultCheatsImpl;
+import de.amr.pacmanfx.core.model.GameCheats;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.simulation.GamePlay;
 
 import java.util.HashMap;
 import java.util.Map;

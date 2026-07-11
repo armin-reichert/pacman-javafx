@@ -8,8 +8,8 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
-import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.ArcadeMsPacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import static java.util.Objects.requireNonNull;

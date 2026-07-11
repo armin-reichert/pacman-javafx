@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.basics.math.RectShort;
+import de.amr.pacmanfx.core.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -18,7 +19,6 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 public final class TileMapEditorGlobals {
@@ -64,12 +64,12 @@ public final class TileMapEditorGlobals {
     public static final ExtensionFilter FILTER_ALL_FILES       = new ExtensionFilter("Any File", "*.*");
 
     public static final Map<String, RectShort> ACTOR_SPRITES = Map.of(
-        POS_PAC,            ArcadeSprites.PAC_MAN,
-        POS_GHOST_1_RED,    ArcadeSprites.RED_GHOST,
-        POS_GHOST_2_PINK,   ArcadeSprites.PINK_GHOST,
-        POS_GHOST_3_CYAN,   ArcadeSprites.CYAN_GHOST,
-        POS_GHOST_4_ORANGE, ArcadeSprites.ORANGE_GHOST,
-        POS_BONUS,          ArcadeSprites.STRAWBERRY
+        WorldMapPropertyName.POS_PAC,            ArcadeSprites.PAC_MAN,
+        WorldMapPropertyName.POS_GHOST_1_RED,    ArcadeSprites.RED_GHOST,
+        WorldMapPropertyName.POS_GHOST_2_PINK,   ArcadeSprites.PINK_GHOST,
+        WorldMapPropertyName.POS_GHOST_3_CYAN,   ArcadeSprites.CYAN_GHOST,
+        WorldMapPropertyName.POS_GHOST_4_ORANGE, ArcadeSprites.ORANGE_GHOST,
+        WorldMapPropertyName.POS_BONUS,          ArcadeSprites.STRAWBERRY
     );
 
     public static boolean matchesExtensionFilter(File file, ExtensionFilter filter) {

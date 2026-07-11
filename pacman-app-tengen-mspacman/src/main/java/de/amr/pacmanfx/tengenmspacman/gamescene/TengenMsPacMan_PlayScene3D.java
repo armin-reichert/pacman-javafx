@@ -3,10 +3,9 @@
  */
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.score.Score;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.score.Score;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
@@ -22,8 +21,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.

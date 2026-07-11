@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
-import de.amr.pacmanfx.event.GameStateChangeEvent;
-import de.amr.pacmanfx.flow.StateMachineControlledGameFlow;
+import de.amr.pacmanfx.core.event.GameStateChangeEvent;
+import de.amr.pacmanfx.core.flow.StateMachineControlledGameFlow;
 
 public class TengenMsPacMan_GameFlow extends StateMachineControlledGameFlow {
 

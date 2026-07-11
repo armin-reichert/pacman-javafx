@@ -8,16 +8,16 @@ import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetFoodTileCode;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainTileCode;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
-import de.amr.pacmanfx.model.world.FoodTile;
-import de.amr.pacmanfx.model.world.TerrainTile;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.FoodTile;
+import de.amr.pacmanfx.core.model.world.TerrainTile;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 import static de.amr.basics.math.MathAdds.isEven;
-import static de.amr.pacmanfx.model.world.TerrainTile.*;
+import static de.amr.pacmanfx.core.model.world.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
 
 public class ObstacleEditor {

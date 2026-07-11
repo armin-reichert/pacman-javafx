@@ -6,15 +6,15 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.model.HuntingPhase;
-import de.amr.pacmanfx.model.HuntingTimer;
-import de.amr.pacmanfx.model.actors.ActorSpeedControl;
-import de.amr.pacmanfx.model.actors.CollisionStrategy;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.model.world.MapColorScheme;
-import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.model.world.WorldMapConfigKey;
+import de.amr.pacmanfx.core.model.HuntingPhase;
+import de.amr.pacmanfx.core.model.HuntingTimer;
+import de.amr.pacmanfx.core.model.actors.ActorSpeedControl;
+import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.FoodLayer;
+import de.amr.pacmanfx.core.model.world.MapColorScheme;
+import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.game.Game;
 import javafx.scene.paint.Color;
 
@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 
 import static de.amr.basics.timer.TickTimer.secToTicks;
 import static de.amr.pacmanfx.core.GameClock.DEFAULT_TICKS_PER_SECOND;
-import static de.amr.pacmanfx.model.GameModel.CYAN_GHOST_BASHFUL;
+import static de.amr.pacmanfx.core.model.GameModel.CYAN_GHOST_BASHFUL;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
 public class DS_GameInfo extends GameDashboardSection {

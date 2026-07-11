@@ -5,7 +5,7 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import javafx.scene.image.Image;
 
 public class Action_SetEmptyMapFromTemplateImage extends EditorUIAction<Void> {

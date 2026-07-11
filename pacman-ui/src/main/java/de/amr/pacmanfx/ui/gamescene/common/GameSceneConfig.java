@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Disposable;
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.ui.game.Game;
 
 import java.util.Optional;

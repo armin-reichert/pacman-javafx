@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.CreditAddedEvent;
-import de.amr.pacmanfx.event.DefaultGameEventListener;
-import de.amr.pacmanfx.event.StopAllSoundsEvent;
-import de.amr.pacmanfx.gamestate.GameState;
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.core.event.CreditAddedEvent;
+import de.amr.pacmanfx.core.event.DefaultGameEventListener;
+import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
+import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 

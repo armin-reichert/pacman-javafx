@@ -3,12 +3,13 @@
  */
 package de.amr.pacmanfx.mapeditor.palette;
 
+import de.amr.pacmanfx.core.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
-import de.amr.pacmanfx.model.world.FoodTile;
-import de.amr.pacmanfx.model.world.TerrainTile;
-import de.amr.pacmanfx.model.world.WorldMapLayerID;
+import de.amr.pacmanfx.core.model.world.FoodTile;
+import de.amr.pacmanfx.core.model.world.TerrainTile;
+import de.amr.pacmanfx.core.model.world.WorldMapLayerID;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tab;
@@ -18,7 +19,6 @@ import javafx.scene.text.Text;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.*;
-import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 
 public class EditorPaletteTabPane extends TabPane {
 
@@ -94,16 +94,16 @@ public class EditorPaletteTabPane extends TabPane {
     private Palette createActorsPalette(TileMapEditorUI ui, TerrainMapTileRenderer prototype) {
         var palette = new Palette(PaletteID.ACTORS, 10);
 
-        palette.addTool(new ActorTool(ui, POS_PAC,                  "Pac-Man", ArcadeSprites.PAC_MAN));
-        palette.addTool(new ActorTool(ui, POS_GHOST_1_RED,            "Red Ghost", ArcadeSprites.RED_GHOST));
-        palette.addTool(new ActorTool(ui, POS_GHOST_2_PINK,           "Pink Ghost", ArcadeSprites.PINK_GHOST));
-        palette.addTool(new ActorTool(ui, POS_GHOST_3_CYAN,           "Cyan Ghost", ArcadeSprites.CYAN_GHOST));
-        palette.addTool(new ActorTool(ui, POS_GHOST_4_ORANGE,         "Orange Ghost", ArcadeSprites.ORANGE_GHOST));
-        palette.addTool(new ActorTool(ui, POS_BONUS,                "Bonus", ArcadeSprites.STRAWBERRY));
-        palette.addTool(new ActorTool(ui, POS_SCATTER_RED_GHOST,    "Red Ghost Scatter", ArcadeSprites.RED_GHOST));
-        palette.addTool(new ActorTool(ui, POS_SCATTER_PINK_GHOST,   "Pink Ghost Scatter", ArcadeSprites.PINK_GHOST));
-        palette.addTool(new ActorTool(ui, POS_SCATTER_CYAN_GHOST,   "Cyan Ghost Scatter", ArcadeSprites.CYAN_GHOST));
-        palette.addTool(new ActorTool(ui, POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter", ArcadeSprites.ORANGE_GHOST));
+        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_PAC,                  "Pac-Man", ArcadeSprites.PAC_MAN));
+        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_GHOST_1_RED,          "Red Ghost", ArcadeSprites.RED_GHOST));
+        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_GHOST_2_PINK,         "Pink Ghost", ArcadeSprites.PINK_GHOST));
+        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_GHOST_3_CYAN,         "Cyan Ghost", ArcadeSprites.CYAN_GHOST));
+        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_GHOST_4_ORANGE,       "Orange Ghost", ArcadeSprites.ORANGE_GHOST));
+        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_BONUS,                "Bonus", ArcadeSprites.STRAWBERRY));
+        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_SCATTER_RED_GHOST,    "Red Ghost Scatter", ArcadeSprites.RED_GHOST));
+        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_SCATTER_PINK_GHOST,   "Pink Ghost Scatter", ArcadeSprites.PINK_GHOST));
+        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_SCATTER_CYAN_GHOST,   "Cyan Ghost Scatter", ArcadeSprites.CYAN_GHOST));
+        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter", ArcadeSprites.ORANGE_GHOST));
 
         palette.setSelectedToolIndex(0); // "No actor"
 

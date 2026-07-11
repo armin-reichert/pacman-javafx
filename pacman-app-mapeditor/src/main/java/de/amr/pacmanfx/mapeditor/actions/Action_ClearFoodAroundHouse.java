@@ -5,13 +5,13 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.model.world.TerrainTile;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.TerrainTile;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.model.world.WorldMapParser.parseTile;
-import static de.amr.pacmanfx.model.world.WorldMapPropertyName.POS_HOUSE_MAX_TILE;
-import static de.amr.pacmanfx.model.world.WorldMapPropertyName.POS_HOUSE_MIN_TILE;
+import static de.amr.pacmanfx.core.model.world.WorldMapParser.parseTile;
+import static de.amr.pacmanfx.core.model.world.WorldMapPropertyName.POS_HOUSE_MAX_TILE;
+import static de.amr.pacmanfx.core.model.world.WorldMapPropertyName.POS_HOUSE_MIN_TILE;
 import static java.util.Objects.requireNonNull;
 
 public class Action_ClearFoodAroundHouse extends EditorAction<Void> {

@@ -3,11 +3,11 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.GameLevelMessage;
-import de.amr.pacmanfx.model.world.FoodLayer;
-import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.level.GameLevelMessage;
+import de.amr.pacmanfx.core.model.world.FoodLayer;
+import de.amr.pacmanfx.core.model.world.TerrainLayer;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;

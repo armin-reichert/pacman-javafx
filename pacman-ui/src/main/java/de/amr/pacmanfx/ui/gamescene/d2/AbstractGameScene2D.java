@@ -5,8 +5,8 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.rendering.Renderer;

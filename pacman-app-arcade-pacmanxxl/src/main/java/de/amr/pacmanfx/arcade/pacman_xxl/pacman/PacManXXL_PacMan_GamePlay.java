@@ -6,11 +6,11 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
-import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
-import de.amr.pacmanfx.simulation.GamePlayContext;
-import de.amr.pacmanfx.steering.RuleBasedPacSteering;
+import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.WorldMapSelectionMode;
+import de.amr.pacmanfx.core.simulation.GamePlayContext;
+import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 

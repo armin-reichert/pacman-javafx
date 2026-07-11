@@ -6,16 +6,16 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
-import de.amr.pacmanfx.event.BonusActivatedEvent;
-import de.amr.pacmanfx.event.GameEventManager;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.BonusState;
-import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.world.*;
-import de.amr.pacmanfx.simulation.GamePlayContext;
-import de.amr.pacmanfx.steering.RuleBasedPacSteering;
+import de.amr.pacmanfx.core.event.BonusActivatedEvent;
+import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.Bonus;
+import de.amr.pacmanfx.core.model.actors.BonusState;
+import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.*;
+import de.amr.pacmanfx.core.simulation.GamePlayContext;
+import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.util.List;

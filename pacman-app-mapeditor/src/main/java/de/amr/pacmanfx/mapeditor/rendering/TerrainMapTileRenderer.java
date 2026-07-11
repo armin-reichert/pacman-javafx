@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.model.world.*;
+import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapRenderer;
@@ -30,8 +30,7 @@ import java.util.Set;
 import java.util.function.BiPredicate;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
-import static de.amr.pacmanfx.model.world.TerrainTile.*;
-import static de.amr.pacmanfx.model.world.WorldMap.HTS;
+import static de.amr.pacmanfx.core.model.world.WorldMap.HTS;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -301,10 +300,10 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
         double x = tile.x() * WorldMap.TS, y = tile.y() * WorldMap.TS;
         ctx.setStroke(colorScheme().wallStrokeColor());
         ctx.setLineWidth(1);
-        if (cornerType == ARC_NW.$) ctx.strokeArc(x + 4, y + 4, WorldMap.TS, WorldMap.TS, 90, 90,  ArcType.OPEN);
-        if (cornerType == ARC_NE.$) ctx.strokeArc(x - 4, y + 4, WorldMap.TS, WorldMap.TS, 0, 90,   ArcType.OPEN);
-        if (cornerType == ARC_SE.$) ctx.strokeArc(x - 4, y - 4, WorldMap.TS, WorldMap.TS, 270, 90, ArcType.OPEN);
-        if (cornerType == ARC_SW.$) ctx.strokeArc(x + 4, y - 4, WorldMap.TS, WorldMap.TS, 180, 90, ArcType.OPEN);
+        if (cornerType == TerrainTile.ARC_NW.$) ctx.strokeArc(x + 4, y + 4, WorldMap.TS, WorldMap.TS, 90, 90,  ArcType.OPEN);
+        if (cornerType == TerrainTile.ARC_NE.$) ctx.strokeArc(x - 4, y + 4, WorldMap.TS, WorldMap.TS, 0, 90,   ArcType.OPEN);
+        if (cornerType == TerrainTile.ARC_SE.$) ctx.strokeArc(x - 4, y - 4, WorldMap.TS, WorldMap.TS, 270, 90, ArcType.OPEN);
+        if (cornerType == TerrainTile.ARC_SW.$) ctx.strokeArc(x + 4, y - 4, WorldMap.TS, WorldMap.TS, 180, 90, ArcType.OPEN);
     }
 
     private void drawDCorner(Vector2i tile, byte code, double[] xp, double[] yp) {

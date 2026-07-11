@@ -6,9 +6,9 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.model.world.WorldMapSelectionMode;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
@@ -23,8 +23,7 @@ import java.util.List;
 
 import static de.amr.pacmanfx.core.GameVariantID.ARCADE_MS_PACMAN_XXL;
 import static de.amr.pacmanfx.core.GameVariantID.ARCADE_PACMAN_XXL;
-import static de.amr.pacmanfx.model.world.WorldMap.TS;
-import static de.amr.pacmanfx.model.world.WorldMapSelectionMode.*;
+import static de.amr.pacmanfx.core.model.world.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
@@ -198,7 +197,11 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     private OptionMenuEntry<WorldMapSelectionMode> createMapOrderEntry() {
-        final var entry = new OptionMenuEntry<>("MAP ORDER", List.of(CUSTOM_MAPS_FIRST, ALL_RANDOM, NO_CUSTOM_MAPS), CUSTOM_MAPS_FIRST);
+        final var entry = new OptionMenuEntry<>("MAP ORDER", List.of(
+            WorldMapSelectionMode.CUSTOM_MAPS_FIRST,
+            WorldMapSelectionMode.ALL_RANDOM,
+            WorldMapSelectionMode.NO_CUSTOM_MAPS),
+            WorldMapSelectionMode.CUSTOM_MAPS_FIRST);
         entry.setValueFormatter(order -> {
             if (!entry.isEnabled()) {
                 return "NO CUSTOM MAPS!";

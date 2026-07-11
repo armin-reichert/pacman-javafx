@@ -5,13 +5,13 @@
 package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.GameStartedEvent;
-import de.amr.pacmanfx.event.LevelStartedEvent;
-import de.amr.pacmanfx.gamestate.GameState;
-import de.amr.pacmanfx.gamestate.GameStateID;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.core.event.GameStartedEvent;
+import de.amr.pacmanfx.core.event.LevelStartedEvent;
+import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 
 public class ArcadeGameStartingState extends GameState {
 

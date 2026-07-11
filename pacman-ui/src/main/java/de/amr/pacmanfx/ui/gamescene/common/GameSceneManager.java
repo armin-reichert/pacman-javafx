@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Identifier;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;

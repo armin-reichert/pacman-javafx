@@ -1,8 +1,8 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
-import de.amr.pacmanfx.model.world.ArcadeHouse;
-import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.core.model.world.ArcadeHouse;
+import de.amr.pacmanfx.core.model.world.TerrainLayer;
+import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.MazeHouse3D;

@@ -17,7 +17,7 @@ import javafx.scene.canvas.Canvas;
 import static de.amr.basics.math.MathAdds.lerp;
 import static de.amr.basics.math.RandomNumberSupport.randomFloat;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
-import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.core.model.world.WorldMap.TS;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.lang.Math.clamp;
 import static java.util.Objects.requireNonNull;

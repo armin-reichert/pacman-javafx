@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3.camera;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.PerspectiveCamera;

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;

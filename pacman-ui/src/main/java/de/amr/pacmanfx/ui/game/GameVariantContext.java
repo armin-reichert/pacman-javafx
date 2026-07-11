@@ -6,11 +6,12 @@ package de.amr.pacmanfx.ui.game;
 
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.GameEventManager;
-import de.amr.pacmanfx.flow.GameFlow;
-import de.amr.pacmanfx.model.GameCheats;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.simulation.GamePlay;
+import de.amr.pacmanfx.core.event.GameEventManagerImpl;
+import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.model.GameCheats;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.simulation.GamePlay;
 
 import static java.util.Objects.requireNonNull;
 
@@ -28,7 +29,7 @@ public class GameVariantContext implements GameContext {
     public GameVariantContext(CoinMechanism coinMechanism, GameVariant gameVariant) {
         this.coinMechanism = requireNonNull(coinMechanism);
         this.gameVariant = requireNonNull(gameVariant);
-        this.eventManager = new de.amr.pacmanfx.event.GameEventManagerImpl();
+        this.eventManager = new GameEventManagerImpl();
         //TODO rethink this
         model().hudState().creditProperty().bind(coinMechanism().numCoinsProperty());
     }

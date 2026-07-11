@@ -4,10 +4,10 @@
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.editcanvas.TileMatcher;
-import de.amr.pacmanfx.model.world.*;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;
@@ -17,7 +17,7 @@ import java.nio.IntBuffer;
 import java.time.LocalTime;
 
 import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.getColorFromMapLayer;
-import static de.amr.pacmanfx.model.world.WorldMap.tile;
+import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
 
 public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
 

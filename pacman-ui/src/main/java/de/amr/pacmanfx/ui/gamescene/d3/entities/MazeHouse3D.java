@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.event.GameEventManager;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.GameLevelEntity;
-import de.amr.pacmanfx.model.world.ArcadeHouse;
-import de.amr.pacmanfx.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.level.GameLevelEntity;
+import de.amr.pacmanfx.core.model.world.ArcadeHouse;
+import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.config.world.House3DSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.world.ArcadeHouse3D;

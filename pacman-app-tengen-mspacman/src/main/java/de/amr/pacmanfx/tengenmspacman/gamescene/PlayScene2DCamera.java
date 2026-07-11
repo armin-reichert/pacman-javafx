@@ -4,16 +4,15 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.model.actors.MovingActor;
-import de.amr.pacmanfx.model.world.TerrainLayer;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.actors.MovingActor;
+import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.ParallelCamera;
 import org.tinylog.Logger;
 
 import static de.amr.basics.math.MathAdds.lerp;
-import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
 
 public class PlayScene2DCamera extends ParallelCamera {
 

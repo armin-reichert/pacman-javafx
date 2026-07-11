@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.event.*;
-import de.amr.pacmanfx.gamestate.GameStateID;
+import de.amr.pacmanfx.core.event.*;
+import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;

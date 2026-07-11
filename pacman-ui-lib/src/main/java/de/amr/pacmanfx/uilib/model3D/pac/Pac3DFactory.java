@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.model3D.pac;
 
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.animation.HeadBangingAnimation3D;

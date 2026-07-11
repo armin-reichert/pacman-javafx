@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.arcade.pacman.flow;
 
-import de.amr.pacmanfx.event.GameStateChangeEvent;
-import de.amr.pacmanfx.flow.StateMachineControlledGameFlow;
+import de.amr.pacmanfx.core.event.GameStateChangeEvent;
+import de.amr.pacmanfx.core.flow.StateMachineControlledGameFlow;
 
 /**
  * State machine with all Arcade game states.

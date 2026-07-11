@@ -3,14 +3,13 @@
  */
 package de.amr.pacmanfx.mapeditor.editcanvas;
 
-import de.amr.pacmanfx.model.world.FoodTile;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.FoodTile;
+import de.amr.pacmanfx.core.model.world.TerrainTile;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import javafx.scene.paint.Color;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
-
-import static de.amr.pacmanfx.model.world.TerrainTile.*;
 
 public class TileMatcher {
 
@@ -58,19 +57,19 @@ public class TileMatcher {
     }
 
     public byte matchTerrainTile(int[] tilePixels) {
-        if (matchesAngularDoubleNWCorner(tilePixels)) return ANG_ARC_NW.$;
-        if (matchesAngularDoubleSWCorner(tilePixels)) return ANG_ARC_SW.$;
-        if (matchesAngularDoubleSECorner(tilePixels)) return ANG_ARC_SE.$;
-        if (matchesAngularDoubleNECorner(tilePixels)) return ANG_ARC_NE.$;
+        if (matchesAngularDoubleNWCorner(tilePixels)) return TerrainTile.ANG_ARC_NW.$;
+        if (matchesAngularDoubleSWCorner(tilePixels)) return TerrainTile.ANG_ARC_SW.$;
+        if (matchesAngularDoubleSECorner(tilePixels)) return TerrainTile.ANG_ARC_SE.$;
+        if (matchesAngularDoubleNECorner(tilePixels)) return TerrainTile.ANG_ARC_NE.$;
         //TODO: what if door and fill color are equal?
-        if (matchesDoor(tilePixels))     return DOOR.$;
-        if (matchesHWall(tilePixels))    return WALL_H.$;
-        if (matchesVWall(tilePixels))    return WALL_V.$;
-        if (matchesNWCorner(tilePixels)) return ARC_NW.$;
-        if (matchesSWCorner(tilePixels)) return ARC_SW.$;
-        if (matchesNECorner(tilePixels)) return ARC_NE.$;
-        if (matchesSECorner(tilePixels)) return ARC_SE.$;
-        return EMPTY.$;
+        if (matchesDoor(tilePixels))     return TerrainTile.DOOR.$;
+        if (matchesHWall(tilePixels))    return TerrainTile.WALL_H.$;
+        if (matchesVWall(tilePixels))    return TerrainTile.WALL_V.$;
+        if (matchesNWCorner(tilePixels)) return TerrainTile.ARC_NW.$;
+        if (matchesSWCorner(tilePixels)) return TerrainTile.ARC_SW.$;
+        if (matchesNECorner(tilePixels)) return TerrainTile.ARC_NE.$;
+        if (matchesSECorner(tilePixels)) return TerrainTile.ARC_SE.$;
+        return TerrainTile.EMPTY.$;
     }
 
     private IntStream allIndices() { return IntStream.range(0, 64); }

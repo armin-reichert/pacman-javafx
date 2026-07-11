@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
-import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
 import javafx.animation.Animation;
@@ -17,7 +17,7 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.model.GameModel.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.core.model.GameModel.RED_GHOST_SHADOW;
 import static java.util.Objects.requireNonNull;
 
 /**

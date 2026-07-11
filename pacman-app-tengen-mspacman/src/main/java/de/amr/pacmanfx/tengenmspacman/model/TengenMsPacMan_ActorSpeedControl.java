@@ -6,12 +6,12 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameException;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.ActorSpeedControl;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.ActorSpeedControl;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.Validations.inClosedRange;

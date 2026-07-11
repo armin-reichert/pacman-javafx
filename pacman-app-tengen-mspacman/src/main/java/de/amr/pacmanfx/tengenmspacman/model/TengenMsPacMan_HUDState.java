@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.model;
 
-import de.amr.pacmanfx.model.HUDState;
+import de.amr.pacmanfx.core.model.HUDState;
 
 public class TengenMsPacMan_HUDState extends HUDState {
 

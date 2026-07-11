@@ -4,12 +4,11 @@
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
-import de.amr.pacmanfx.model.world.TerrainTile;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.TerrainTile;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import org.tinylog.Logger;
-
-import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 
 public class Action_DeleteArcadeHouse extends EditorAction<Void> {
 
@@ -21,13 +20,13 @@ public class Action_DeleteArcadeHouse extends EditorAction<Void> {
     public Void execute() {
         WorldMap worldMap = editor.currentWorldMap();
 
-        Vector2i minTile = worldMap.terrainLayer().getTileProperty(POS_HOUSE_MIN_TILE);
+        Vector2i minTile = worldMap.terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MIN_TILE);
         if (minTile == null) {
             Logger.error("Cannot delete Arcade house, minTile is null");
             return null;
         }
 
-        Vector2i maxTile = worldMap.terrainLayer().getTileProperty(POS_HOUSE_MAX_TILE);
+        Vector2i maxTile = worldMap.terrainLayer().getTileProperty(WorldMapPropertyName.POS_HOUSE_MAX_TILE);
         if (maxTile == null) {
             Logger.error("Cannot delete Arcade house, maxTile is null");
             return null;
@@ -40,12 +39,12 @@ public class Action_DeleteArcadeHouse extends EditorAction<Void> {
         }
 
         var terrainProperties = worldMap.terrainLayer().propertyMap();
-        terrainProperties.remove(POS_HOUSE_MIN_TILE);
-        terrainProperties.remove(POS_HOUSE_MAX_TILE);
-        terrainProperties.remove(POS_GHOST_1_RED);
-        terrainProperties.remove(POS_GHOST_2_PINK);
-        terrainProperties.remove(POS_GHOST_3_CYAN);
-        terrainProperties.remove(POS_GHOST_4_ORANGE);
+        terrainProperties.remove(WorldMapPropertyName.POS_HOUSE_MIN_TILE);
+        terrainProperties.remove(WorldMapPropertyName.POS_HOUSE_MAX_TILE);
+        terrainProperties.remove(WorldMapPropertyName.POS_GHOST_1_RED);
+        terrainProperties.remove(WorldMapPropertyName.POS_GHOST_2_PINK);
+        terrainProperties.remove(WorldMapPropertyName.POS_GHOST_3_CYAN);
+        terrainProperties.remove(WorldMapPropertyName.POS_GHOST_4_ORANGE);
 
         editor.setWorldMapChanged();
         editor.setEdited(true);

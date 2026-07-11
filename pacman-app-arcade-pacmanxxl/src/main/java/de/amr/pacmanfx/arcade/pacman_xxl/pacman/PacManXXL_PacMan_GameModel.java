@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
-import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 
 /**
  * Extension of Arcade Pac-Man with 8 new builtin mazes (thanks to the one and only

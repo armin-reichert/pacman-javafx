@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.ui.game;
 
-import de.amr.pacmanfx.flow.GameFlow;
-import de.amr.pacmanfx.model.test.CutScenesTestState;
-import de.amr.pacmanfx.model.test.LevelMediumTestState;
-import de.amr.pacmanfx.model.test.LevelShortTestState;
-import de.amr.pacmanfx.score.PropertyFileScore;
+import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.model.test.CutScenesTestState;
+import de.amr.pacmanfx.core.model.test.LevelMediumTestState;
+import de.amr.pacmanfx.core.model.test.LevelShortTestState;
+import de.amr.pacmanfx.core.score.PropertyFileScore;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;

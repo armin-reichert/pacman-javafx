@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.arcade.pacman.model;
 
-import de.amr.pacmanfx.model.world.WorldMap;
-import de.amr.pacmanfx.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.model.world.WorldMapSelector;
+import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
+import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import org.tinylog.Logger;
 
 import java.net.URL;

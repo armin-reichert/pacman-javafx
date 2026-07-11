@@ -1,0 +1,211 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+package de.amr.pacmanfx.core.model.world;
+
+import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.model.GameModel;
+import org.tinylog.Logger;
+
+import java.util.*;
+import java.util.stream.Stream;
+
+import static de.amr.basics.math.Vector2f.vec2_float;
+import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
+import static de.amr.pacmanfx.core.model.world.TerrainTile.TUNNEL;
+import static de.amr.pacmanfx.core.model.world.TerrainTile.isBlocked;
+import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.model.world.WorldMapPropertyName.*;
+import static java.util.Objects.requireNonNull;
+import static java.util.function.Predicate.not;
+
+public final class TerrainLayer extends WorldMapLayer {
+
+    private static Vector2f halfTileRightOf(Vector2i tile) { return vec2_float(tile.x() * WorldMap.TS + WorldMap.HTS, tile.y() * WorldMap.TS); }
+
+    private final Vector2i[] scatterTiles = new Vector2i[4];
+    private Vector2f pacStartPosition;
+    private HPortal[] hPortals;
+    private House house;
+    private Set<Obstacle> obstacleSet; // uninitialized!
+
+    public TerrainLayer(int numRows, int numCols) {
+        super(numRows, numCols);
+    }
+
+    public TerrainLayer(TerrainLayer layer) {
+        super(layer);
+        hPortals = findHorizontalPortals();
+        Vector2i pacTile = getTileProperty(POS_PAC);
+        if (pacTile == null) {
+            //TODO use default position but where?
+            Logger.error("No Pac position stored in map");
+        } else {
+            pacStartPosition = halfTileRightOf(pacTile);
+        }
+        scatterTiles[GameModel.RED_GHOST_SHADOW]   = getTilePropertyOrDefault(POS_SCATTER_RED_GHOST,    WorldMap.tile(0, numCols() - 3));
+        scatterTiles[GameModel.PINK_GHOST_SPEEDY]  = getTilePropertyOrDefault(POS_SCATTER_PINK_GHOST,   WorldMap.tile(0, 3));
+        scatterTiles[GameModel.CYAN_GHOST_BASHFUL] = getTilePropertyOrDefault(POS_SCATTER_CYAN_GHOST,   WorldMap.tile(numRows() - emptyRowsBelowMaze(), numCols() - 1));
+        scatterTiles[GameModel.ORANGE_GHOST_POKEY] = getTilePropertyOrDefault(POS_SCATTER_ORANGE_GHOST, WorldMap.tile(numRows() - emptyRowsBelowMaze(), 0));
+
+        this.house = layer.house; // TODO make copy
+        if (layer.obstacleSet != null) {
+            this.obstacleSet = Set.copyOf(layer.obstacleSet);
+        }
+    }
+
+    public Vector2f pacStartPosition() {
+        return pacStartPosition;
+    }
+
+    public Vector2i ghostScatterTile(byte personality) {
+        return scatterTiles[requireValidGhostPersonality(personality)];
+    }
+
+    public void setHouse(House house) {
+        this.house = house;
+    }
+
+    public House house() {
+        return house;
+    }
+
+    public Optional<House> optHouse() {
+        return Optional.ofNullable(house);
+    }
+
+    /**
+     * @return position where level messages ("READY!", "GAME OVER") are displayed.
+     */
+    public Vector2f messageCenterPosition() {
+        if (house != null) {
+            Vector2i houseSize = house.sizeInTiles();
+            float cx = tilesPx(house.minTile().x() + houseSize.x() * 0.5f);
+            float cy = tilesPx(house.minTile().y() + houseSize.y() + 1);
+            return vec2_float(cx, cy);
+        }
+        else {
+            Vector2i worldSize = sizeInPixel();
+            return vec2_float(worldSize.x() * 0.5f, worldSize.y() * 0.5f); // should not happen
+        }
+    }
+
+    public List<HPortal> horizontalPortals() { return Arrays.asList(hPortals); }
+
+    private HPortal[] findHorizontalPortals() {
+        var portals = new ArrayList<HPortal>();
+        int firstColumn = 0, lastColumn = numCols() - 1;
+        for (int row = 0; row < numRows(); ++row) {
+            Vector2i leftBorderTile = WorldMap.tile(firstColumn, row);
+            Vector2i rightBorderTile = WorldMap.tile(lastColumn, row);
+            if (content(row, firstColumn) == TUNNEL.$ && content(row, lastColumn) == TUNNEL.$) {
+                portals.add(new HPortal(leftBorderTile, rightBorderTile, 2));
+            }
+        }
+        return portals.toArray(new HPortal[0]);
+    }
+
+    public List<Vector2i> createObstacles() {
+        List<Vector2i> tilesWithErrors = new ArrayList<>();
+        obstacleSet = ObstacleBuilder.buildObstacleSet(this, tilesWithErrors);
+
+        Vector2i houseMinTile = getTileProperty(WorldMapPropertyName.POS_HOUSE_MIN_TILE);
+        if (houseMinTile == null) {
+            Logger.info("Could not remove house placeholder from obstacle list, house min tile not set");
+        } else {
+            Vector2i houseStartPoint = houseMinTile.scaled(WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS);
+            obstacleSet.stream()
+                .filter(obstacle -> obstacle.startPoint().equals(houseStartPoint))
+                .findFirst().ifPresent(houseObstacle -> {
+                    Logger.debug("Removing house placeholder-obstacle starting at tile {}, point {}", houseMinTile, houseStartPoint);
+                    obstacleSet.remove(houseObstacle);
+                });
+        }
+        return tilesWithErrors;
+    }
+
+    public Set<Obstacle> obstacles() {
+        return obstacleSet == null ? Set.of() : Collections.unmodifiableSet(obstacleSet);
+    }
+
+    public Stream<Vector2i> neighborTilesOutsideWorld(Vector2i tile) {
+        requireNonNull(tile);
+        return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
+            .map(dir -> tile.plus(dir.vector()))
+            .filter(this::outOfBounds);
+    }
+
+    public Stream<Vector2i> neighborTilesInsideWorld(Vector2i tile) {
+        requireNonNull(tile);
+        return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
+            .map(dir -> tile.plus(dir.vector()))
+            .filter(not(this::outOfBounds));
+    }
+
+    public Optional<HPortal> hPortalContainingTile(Vector2i tile) {
+        requireNonNull(tile);
+        return horizontalPortals().stream().filter(portal -> portal.contains(tile)).findFirst();
+    }
+
+    public boolean isTileInPortalSpace(Vector2i tile) {
+        requireNonNull(tile);
+        return horizontalPortals().stream().anyMatch(portal -> portal.contains(tile));
+    }
+
+    public boolean isTileBlocked(Vector2i tile) {
+        return !outOfBounds(tile) && isBlocked(content(tile));
+    }
+
+    public boolean isTunnel(Vector2i tile) {
+        return !outOfBounds(tile) && content(tile) == TUNNEL.$;
+    }
+
+    public boolean isIntersection(Vector2i tile) {
+        if (outOfBounds(tile) || isTileBlocked(tile)) {
+            return false;
+        }
+        if (house != null && house.contains(tile)) {
+            return false;
+        }
+        long inaccessible = 0;
+        inaccessible += neighborTilesOutsideWorld(tile).count();
+        inaccessible += neighborTilesInsideWorld(tile).filter(this::isTileBlocked).count();
+        if (house != null) {
+            inaccessible += neighborTilesInsideWorld(tile).filter(house::isDoorAt).count();
+        }
+        return inaccessible <= 1;
+    }
+
+    /**
+     * @return world size in pixels as (width, height)
+     */
+    public Vector2i sizeInPixel() {
+        return new Vector2i(numCols() * WorldMap.TS, numRows() * WorldMap.TS);
+    }
+
+    /**
+     * @param propertyName property name
+     * @param defaultTile tile returned if property map does not contain property name (can be null)
+     * @return tile value of property in terrain layer or default value
+     */
+    public Vector2i getTilePropertyOrDefault(String propertyName, Vector2i defaultTile) {
+        requireNonNull(propertyName);
+        String value = propertyMap().get(propertyName);
+        if (value == null) return defaultTile;
+        try {
+            return WorldMapParser.parseTile(value);
+        } catch (IllegalArgumentException x) {
+            return defaultTile;
+        }
+    }
+
+    /**
+     * @param propertyName property name
+     * @return tile value of property in terrain layer or <code>null</code>
+     */
+    public Vector2i getTileProperty(String propertyName) {
+        return getTilePropertyOrDefault(propertyName, null);
+    }
+}

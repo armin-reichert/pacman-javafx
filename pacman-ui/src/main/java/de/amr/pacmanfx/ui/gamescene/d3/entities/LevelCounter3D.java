@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
 import de.amr.basics.Identifier;
-import de.amr.pacmanfx.event.GameEventManager;
-import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.model.level.GameLevelEntity;
+import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.level.GameLevelEntity;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.config.world.LevelCounter3DSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -28,7 +28,7 @@ import javafx.util.Duration;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.model.world.WorldMap.HTS;
+import static de.amr.pacmanfx.core.model.world.WorldMap.HTS;
 import static java.util.Objects.requireNonNull;
 
 public class LevelCounter3D extends Group implements GameLevelEntity, DisposableGraphicsObject {

@@ -6,9 +6,9 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.gamestate.GameState;
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.core.event.GameEventListener;
+import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.game.Game;

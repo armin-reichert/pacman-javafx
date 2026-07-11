@@ -8,7 +8,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationAccessor;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.tengenmspacman.gamescene.Clapperboard;
 import de.amr.pacmanfx.tengenmspacman.gamescene.Stork;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;

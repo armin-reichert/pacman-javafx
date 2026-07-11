@@ -5,8 +5,8 @@ package de.amr.pacmanfx.mapeditor.preview;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
-import de.amr.pacmanfx.model.world.*;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import de.amr.pacmanfx.uilib.model3D.pac.FemaleBodyPartsColors;

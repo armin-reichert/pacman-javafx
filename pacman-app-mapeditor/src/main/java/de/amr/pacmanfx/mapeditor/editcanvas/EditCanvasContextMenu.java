@@ -13,7 +13,7 @@ import de.amr.pacmanfx.mapeditor.actions.Action_CarveTunnel;
 import de.amr.pacmanfx.mapeditor.actions.Action_ClearFoodAroundHouse;
 import de.amr.pacmanfx.mapeditor.actions.Action_FloodWithPellets;
 import de.amr.pacmanfx.mapeditor.actions.Action_MoveArcadeHouse;
-import de.amr.pacmanfx.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;

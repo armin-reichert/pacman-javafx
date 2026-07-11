@@ -5,16 +5,16 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostFactory;
-import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.model.world.House;
-import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.actors.GhostFactory;
+import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.world.House;
+import de.amr.pacmanfx.core.model.world.TerrainLayer;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.model.world.WorldMap.halfTileRightOf;
+import static de.amr.pacmanfx.core.model.world.WorldMap.halfTileRightOf;
 
 public class ArcadePacMan_ActorFactory {
 
