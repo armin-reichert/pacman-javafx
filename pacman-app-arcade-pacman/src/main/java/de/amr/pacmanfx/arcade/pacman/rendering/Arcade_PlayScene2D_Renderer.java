@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.level.GameLevel;
-import de.amr.pacmanfx.ui.GameVariantConfig;
+import de.amr.pacmanfx.ui.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;

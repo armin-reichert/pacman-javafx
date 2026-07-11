@@ -20,7 +20,7 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class VariantManager implements GameVariantManager, ChangeListener<String> {
+public class GameVariantManagerImpl implements GameVariantManager, ChangeListener<String> {
 
     private final PacManGamesCollection game;
 
@@ -28,7 +28,7 @@ public class VariantManager implements GameVariantManager, ChangeListener<String
 
     private final StringProperty variantName = new SimpleStringProperty();
 
-    public VariantManager(PacManGamesCollection game) {
+    public GameVariantManagerImpl(PacManGamesCollection game) {
         this.game = requireNonNull(game);
         variantName.addListener(this);
     }

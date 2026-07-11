@@ -70,7 +70,7 @@ public class GameUI implements GameEventListener {
         sprites = new SpriteAnimationManager();
         window = new GameWindow(stage, width, height);
         gameScenes = new GameSceneManager();
-        translations = new GameTranslationManager();
+        translations = new CommonTranslationManager();
 
         views = createGameViews();
         views.gamePlayView().populateDashboard(dashboardFactory, settings.dashboard(), translations);

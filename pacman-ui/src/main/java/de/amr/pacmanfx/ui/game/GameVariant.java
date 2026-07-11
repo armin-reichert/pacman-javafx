@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.DefaultCheatsImpl;
 import de.amr.pacmanfx.model.GameCheats;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.simulation.GamePlay;
-import de.amr.pacmanfx.ui.GameVariantConfig;
 
 import java.util.HashMap;
 import java.util.Map;

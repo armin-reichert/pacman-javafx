@@ -28,7 +28,7 @@ public class GameVariantContext implements GameContext {
     public GameVariantContext(CoinMechanism coinMechanism, GameVariant gameVariant) {
         this.coinMechanism = requireNonNull(coinMechanism);
         this.gameVariant = requireNonNull(gameVariant);
-        this.eventManager = new GameEventManagerImpl();
+        this.eventManager = new de.amr.pacmanfx.event.GameEventManagerImpl();
         //TODO rethink this
         model().hudState().creditProperty().bind(coinMechanism().numCoinsProperty());
     }

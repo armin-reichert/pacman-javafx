@@ -1,8 +1,5 @@
-package de.amr.pacmanfx.ui.game;
+package de.amr.pacmanfx.event;
 
-import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.event.GameEventManager;
 import org.tinylog.Logger;
 
 import java.util.HashSet;
