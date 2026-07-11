@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
@@ -17,7 +18,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene.*;
 import static de.amr.pacmanfx.model.GameModel.RED_GHOST_SHADOW;
-import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements GameScene2D_Renderer {
@@ -63,19 +64,19 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
                 String ghostName = GHOST_NAMES[introScene.presentedGhostPersonality];
                 Color ghostColor = GHOST_COLORS[introScene.presentedGhostPersonality];
                 if (introScene.presentedGhostPersonality == RED_GHOST_SHADOW) {
-                    fillText("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
+                    fillText("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + tilesPx(3));
                 }
-                double x = TITLE_X + (ghostName.length() < 4 ? TS(4) : TS(3));
-                double y = TOP_Y + TS(6);
+                double x = TITLE_X + (ghostName.length() < 4 ? tilesPx(4) : tilesPx(3));
+                double y = TOP_Y + tilesPx(6);
                 fillText(ghostName, ghostColor, x, y);
             }
             case SceneState.MS_PACMAN_MARCHING_IN, SceneState.READY_TO_PLAY -> {
-                fillText("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
-                fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
+                fillText("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + tilesPx(3));
+                fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + tilesPx(6));
             }
             default -> {}
         }
-        copyrightRenderer.drawCopyright(copyrightImage, TS(6), TS(28));
+        copyrightRenderer.drawCopyright(copyrightImage, tilesPx(6), tilesPx(28));
 
         if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(scene, tick);

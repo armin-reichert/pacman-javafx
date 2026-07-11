@@ -36,9 +36,9 @@ public class WorldMap {
 
     /**
      * @param numTiles number of tiles
-     * @return number of pixels corresponding to given number of tiles
+     * @return pixels corresponding to given number of tiles
      */
-    public static float TS(double numTiles) { return (float) numTiles * TS; }
+    public static float tilesPx(double numTiles) { return (float) numTiles * TS; }
 
     /**
      * @param position a position

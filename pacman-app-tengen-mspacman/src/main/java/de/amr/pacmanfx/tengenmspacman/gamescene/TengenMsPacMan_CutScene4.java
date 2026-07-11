@@ -8,6 +8,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.*;
 
 public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
@@ -71,7 +73,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
 
         clapperboard = new Clapperboard(4, "THE END");
-        clapperboard.setPosition(TS(3), TS(10));
+        clapperboard.setPosition(tilesPx(3), tilesPx(10));
         clapperboard.setVisible(true);
         clapperboard.startAnimation();
 

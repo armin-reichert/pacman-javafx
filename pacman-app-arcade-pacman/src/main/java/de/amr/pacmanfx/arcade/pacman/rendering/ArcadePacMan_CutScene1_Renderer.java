@@ -4,11 +4,12 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene1;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import javafx.scene.canvas.Canvas;
 
-import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 
 public class ArcadePacMan_CutScene1_Renderer extends ArcadePacMan_CutScene_Renderer {
 
@@ -22,7 +23,7 @@ public class ArcadePacMan_CutScene1_Renderer extends ArcadePacMan_CutScene_Rende
                     final String text = cutScene1.sceneTick < ArcadePacMan_CutScene1.ANIMATION_START_TICK
                         ? String.format("Wait %d", ArcadePacMan_CutScene1.ANIMATION_START_TICK - cutScene1.sceneTick)
                         : String.format("Frame %d", cutScene1.sceneTick);
-                    fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
+                    fillText(text, debugTextFill, debugTextFont, tilesPx(1), tilesPx(5));
                 }
             }
         });

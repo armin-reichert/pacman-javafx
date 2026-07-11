@@ -6,13 +6,14 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.ParallelCamera;
 import org.tinylog.Logger;
 
 import static de.amr.basics.math.MathAdds.lerp;
-import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 
 public class PlayScene2DCamera extends ParallelCamera {
 
@@ -53,8 +54,8 @@ public class PlayScene2DCamera extends ParallelCamera {
                 yield 0;
             }
         };
-        double top = Math.floor(scaling.get() * TS(topPosition));
-        double bottom = Math.ceil(scaling.get() * TS(topPosition + spannedTiles));
+        double top = Math.floor(scaling.get() * tilesPx(topPosition));
+        double bottom = Math.ceil(scaling.get() * tilesPx(topPosition + spannedTiles));
         rangeY = new RangeY(top, bottom);
     }
 

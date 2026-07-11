@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
@@ -14,6 +15,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ORANGE;
 
 public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {
@@ -49,8 +51,8 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
         ctx.fillText("ADDITIONAL    AT 10000", STS*2, STS*25);
         ctx.setFont(arcadeFont6());
         ctx.fillText("PTS", STS*25, STS*25);
-        drawSprite(spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL), TS(13), TS(23) + 1, true);
-        copyrightRenderer.drawCopyright(copyrightImage, TS(6), TS(28));
+        drawSprite(spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL), tilesPx(13), tilesPx(23) + 1, true);
+        copyrightRenderer.drawCopyright(copyrightImage, tilesPx(6), tilesPx(28));
         if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(scene, tick);
         }

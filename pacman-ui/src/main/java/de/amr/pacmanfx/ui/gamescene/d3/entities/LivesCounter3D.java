@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelEntity;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;
@@ -24,7 +25,7 @@ import javafx.scene.transform.Rotate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -89,7 +90,7 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
         for (int i = 0; i < counterShapes.length; ++i) {
             final Node shape = counterShapes[i];
 
-            final float x = i * TS(2);
+            final float x = i * tilesPx(2);
             final int lift = i % 2 == 0 ? 0 : 4;
 
             final var stand = new Stand();

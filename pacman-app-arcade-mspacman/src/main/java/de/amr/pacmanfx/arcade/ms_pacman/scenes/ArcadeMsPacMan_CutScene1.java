@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.basics.spriteanim.SpriteAnimationAccessor.singleSpriteAnimation;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 
 /**
  * Intermission scene 1: "They meet".
@@ -88,7 +89,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         heart.setAnimations(singleSpriteAnimation(spriteSheet.sprite(SpriteID.HEART)));
 
         clapperboard = new Clapperboard("1", "THEY MEET");
-        clapperboard.setPosition(WorldMap.TS(3), WorldMap.TS(10));
+        clapperboard.setPosition(tilesPx(3), tilesPx(10));
         clapperboard.startAnimation();
     }
 

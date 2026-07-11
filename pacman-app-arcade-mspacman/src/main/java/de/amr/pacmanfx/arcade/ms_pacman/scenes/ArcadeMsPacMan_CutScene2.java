@@ -11,12 +11,14 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.ui.GameVariantConfig;
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 
 /**
  * Intermission scene 2: "The chase".
@@ -62,7 +64,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
         clapperboard = new Clapperboard("2", "THE CHASE");
-        clapperboard.setPosition(TS(3), TS(10));
+        clapperboard.setPosition(tilesPx(3), tilesPx(10));
         clapperboard.startAnimation();
     }
 

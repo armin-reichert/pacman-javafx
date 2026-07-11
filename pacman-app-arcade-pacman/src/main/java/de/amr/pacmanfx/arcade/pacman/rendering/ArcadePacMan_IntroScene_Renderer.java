@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene.SceneState.*;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {
@@ -85,7 +86,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     private void drawGhostGallery(ArcadePacMan_IntroScene introScene) {
         ctx.setFont(arcadeFont8());
         if (introScene.titleVisible) {
-            fillText("CHARACTER / NICKNAME", ARCADE_WHITE, WorldMap.TS(LEFT_TILE_X + 3), WorldMap.TS(6));
+            fillText("CHARACTER / NICKNAME", ARCADE_WHITE, tilesPx(LEFT_TILE_X + 3), tilesPx(6));
         }
         final int y = WorldMap.TS * 8;
         for (byte p = GameModel.RED_GHOST_SHADOW; p <= GameModel.ORANGE_GHOST_POKEY; ++p) {
@@ -111,19 +112,19 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     }
 
     private void drawCopyright() {
-        fillText(MIDWAY_MFG_CO, ARCADE_PINK, arcadeFont8(), WorldMap.TS(4), WorldMap.TS(32));
+        fillText(MIDWAY_MFG_CO, ARCADE_PINK, arcadeFont8(), tilesPx(4), tilesPx(32));
     }
 
     private void drawPoints(ArcadePacMan_IntroScene introScene) {
         ctx.setFill(ARCADE_ROSE);
         // normal pellet
-        ctx.fillRect(scaled(WorldMap.TS(LEFT_TILE_X + 6) + 4), scaled(WorldMap.TS(24) + 4), scaled(2), scaled(2));
-        fillText("10",  ARCADE_WHITE, arcadeFont8(), WorldMap.TS(LEFT_TILE_X + 8), WorldMap.TS(25));
-        fillText("PTS", ARCADE_WHITE, arcadeFont6(), WorldMap.TS(LEFT_TILE_X + 11), WorldMap.TS(25));
+        ctx.fillRect(scaled(tilesPx(LEFT_TILE_X + 6) + 4), scaled(tilesPx(24) + 4), scaled(2), scaled(2));
+        fillText("10",  ARCADE_WHITE, arcadeFont8(), tilesPx(LEFT_TILE_X + 8), tilesPx(25));
+        fillText("PTS", ARCADE_WHITE, arcadeFont6(), tilesPx(LEFT_TILE_X + 11), tilesPx(25));
         // energizer
-        drawBlinkingEnergizer(introScene.blinking, WorldMap.TS(LEFT_TILE_X + 6), WorldMap.TS(26));
-        fillText("50",  ARCADE_WHITE, arcadeFont8(), WorldMap.TS(LEFT_TILE_X + 8), WorldMap.TS(27));
-        fillText("PTS", ARCADE_WHITE, arcadeFont6(), WorldMap.TS(LEFT_TILE_X + 11), WorldMap.TS(27));
+        drawBlinkingEnergizer(introScene.blinking, tilesPx(LEFT_TILE_X + 6), tilesPx(26));
+        fillText("50",  ARCADE_WHITE, arcadeFont8(), tilesPx(LEFT_TILE_X + 8), tilesPx(27));
+        fillText("PTS", ARCADE_WHITE, arcadeFont6(), tilesPx(LEFT_TILE_X + 11), tilesPx(27));
     }
 
     private void drawBlinkingEnergizer(Pulse blinking, double x, double y) {

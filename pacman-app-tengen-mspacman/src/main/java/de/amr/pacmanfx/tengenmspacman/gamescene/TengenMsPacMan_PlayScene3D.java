@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
@@ -22,6 +23,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.
@@ -59,8 +61,8 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     private ImageView createLevelInfoView(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
         final ImageView levelInfo = new ImageView();
-        final double infoWidth = TS(level.worldMap().numCols());
-        final double infoHeight = TS(2);
+        final double infoWidth = tilesPx(level.worldMap().numCols());
+        final double infoHeight = tilesPx(2);
         levelInfo.setFitWidth(infoWidth);
         levelInfo.setFitHeight(infoHeight);
         levelInfo.imageProperty().bind(game().ui().viewModel().maze3D.floorColorProperty.map(
@@ -88,7 +90,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             gameModel.mapCategory(),
             gameModel.difficulty(),
             gameModel.pacBoosterMode(),
-            0.5 * width, TS(1.5f)
+            0.5 * width, tilesPx(1.5f)
         );
 
         return canvas.snapshot(null, null);

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.HUDState;
 import de.amr.pacmanfx.model.level.GameLevel;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.score.Score;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene1;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
@@ -26,6 +27,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer implements SpriteRendererMixin, HeadsUpDisplay_Renderer {
@@ -33,8 +35,8 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     private static final Color SCORE_TEXT_COLOR = NES_Palette.color(0x20);
     private static final Color SCORE_TEXT_COLOR_DISABLED = NES_Palette.color(0x10);
 
-    public static final float LEVEL_COUNTER_POS_LEFT = TS(2);
-    public static final float LEVEL_COUNTER_POS_RIGHT = TS(28);
+    public static final float LEVEL_COUNTER_POS_LEFT = tilesPx(2);
+    public static final float LEVEL_COUNTER_POS_RIGHT = tilesPx(28);
 
     private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
 
@@ -88,7 +90,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         });
 
         if (tengenHUD.areGameOptionsOn()) {
-            drawGameOptions(model.mapCategory(), model.difficulty(), model.pacBoosterMode(), TS(16), TS(2.5f));
+            drawGameOptions(model.mapCategory(), model.difficulty(), model.pacBoosterMode(), tilesPx(16), tilesPx(2.5f));
         }
 
         ctx.restore();
@@ -106,35 +108,35 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
 
     private void drawScore(Score score, boolean on, Font font) {
         if (on) {
-            fillText("1UP", SCORE_TEXT_COLOR, font, TS(4), TS(1));
+            fillText("1UP", SCORE_TEXT_COLOR, font, tilesPx(4), tilesPx(1));
         }
-        fillText("%6d".formatted(score.points()), SCORE_TEXT_COLOR, font, TS(2), TS(2));
+        fillText("%6d".formatted(score.points()), SCORE_TEXT_COLOR, font, tilesPx(2), tilesPx(2));
     }
 
     private void drawHighScore(Score score, Font font, Color color) {
-        fillText("HIGH SCORE", color, font, TS(11), TS(1));
-        fillText("%6d".formatted(score.points()), color, font, TS(13), TS(2));
+        fillText("HIGH SCORE", color, font, tilesPx(11), tilesPx(1));
+        fillText("%6d".formatted(score.points()), color, font, tilesPx(13), tilesPx(2));
     }
 
     private void drawLivesCounter(GameModel game, TengenMsPacMan_HUDState hud, float y) {
         final RectShort symbolSprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < hud.visibleLifeCount(); ++i) {
-            drawSprite(symbolSprite, TS(4 + i * 2), y, true);
+            drawSprite(symbolSprite, tilesPx(4 + i * 2), y, true);
         }
         if (game.lives().count() > game.hudState().maxLivesDisplayed()) {
-            fillText("(%d)".formatted(game.lives().count()), NES_Palette.color(0x28), totalLivesFont.get(), TS(14), y + TS);
+            fillText("(%d)".formatted(game.lives().count()), NES_Palette.color(0x28), totalLivesFont.get(), tilesPx(14), y + TS);
         }
     }
 
     private void drawLevelCounter(GameLevel level, TengenMsPacMan_HUDState hud, float y) {
         final RectShort[] symbolSprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
-        float x = LEVEL_COUNTER_POS_RIGHT - TS(2);
+        float x = LEVEL_COUNTER_POS_RIGHT - tilesPx(2);
         // symbols are drawn from right to left!
         for (int symbolCode : level.gameModel().levelCounter().symbolCodes()) {
             if (0 <= symbolCode && symbolCode < symbolSprites.length) {
                 drawSprite(symbolSprites[symbolCode], x, y, true);
             }
-            x -= TS(2);
+            x -= tilesPx(2);
         }
         if (hud.isLevelNumberOn()) {
             drawLevelNumberBox(level.number(), LEVEL_COUNTER_POS_LEFT, y); // left box
@@ -168,9 +170,9 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         };
         drawSpriteCentered(spriteSheet().sprite(SpriteID.INFO_FRAME), centerX, y);
         if (booster != PacBooster.OFF) {
-            drawSpriteCentered(spriteSheet().sprite(SpriteID.INFO_BOOSTER), centerX - TS(5.5f), y);
+            drawSpriteCentered(spriteSheet().sprite(SpriteID.INFO_BOOSTER), centerX - tilesPx(5.5f), y);
         }
         drawSpriteCentered(difficultySprite, centerX, y);
-        drawSpriteCentered(categorySprite, centerX + TS(4.5f), y);
+        drawSpriteCentered(categorySprite, centerX + tilesPx(4.5f), y);
     }
 }

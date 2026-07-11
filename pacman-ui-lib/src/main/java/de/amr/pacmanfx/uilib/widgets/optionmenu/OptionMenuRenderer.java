@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.widgets.optionmenu;
 
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
@@ -10,8 +11,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.model.world.WorldMap.HTS;
-import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.*;
 import static de.amr.pacmanfx.uilib.Ufx.scaleFontBy;
 
 /**
@@ -77,7 +77,7 @@ public class OptionMenuRenderer extends BaseRenderer {
         float lineSkip = 2f * TS;
 
         final double centerX = 0.5 * menu.settings().numTilesX() * TS;
-        double y = TS(menu.settings().numTilesY() - 8);
+        double y = tilesPx(menu.settings().numTilesY() - 8);
 
         fillTextCentered(SELECT_OPTIONS_WITH_UP_AND_DOWN, normalColor, font, centerX, y);
         fillTextCentered(SELECT_OPTIONS_WITH_UP_DOWN_OVERLAY, brightColor, font, centerX, y);

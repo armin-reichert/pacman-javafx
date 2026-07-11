@@ -16,6 +16,7 @@ import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.model.world.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.model.world.TerrainTile.isBlocked;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.model.world.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
@@ -81,8 +82,8 @@ public final class TerrainLayer extends WorldMapLayer {
     public Vector2f messageCenterPosition() {
         if (house != null) {
             Vector2i houseSize = house.sizeInTiles();
-            float cx = WorldMap.TS(house.minTile().x() + houseSize.x() * 0.5f);
-            float cy = WorldMap.TS(house.minTile().y() + houseSize.y() + 1);
+            float cx = tilesPx(house.minTile().x() + houseSize.x() * 0.5f);
+            float cy = tilesPx(house.minTile().y() + houseSize.y() + 1);
             return vec2_float(cx, cy);
         }
         else {

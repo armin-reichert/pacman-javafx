@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CreditsScene;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
@@ -12,6 +13,7 @@ import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 
 public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, TengenMsPacMan_SceneRendererMixin {
 
@@ -56,8 +58,8 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
         }
 
         public void drawLine(Line line) {
-            fillText(line.text(), NES_Palette.color(line.paletteIndex()), TS(line.column()), y);
-            y += TS(line.skipTiles());
+            fillText(line.text(), NES_Palette.color(line.paletteIndex()), tilesPx(line.column()), y);
+            y += tilesPx(line.skipTiles());
         }
     }
 
@@ -86,13 +88,13 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
         ctx.setFont(arcadeFont8());
         switch (creditsScene.displayMode) {
             case ORIGINAL_AUTHORS -> {
-                pen.setY(TS(7));
+                pen.setY(tilesPx(7));
                 pen.drawLines(ORIGINAL_AUTHORS_LINES);
             }
             case REMAKE_AUTHORS -> {
                 ctx.save();
                 ctx.setGlobalAlpha(creditsScene.fadeProgress);
-                pen.setY(TS(7));
+                pen.setY(tilesPx(7));
                 pen.drawLines(REMAKE_AUTHORS_LINES);
                 ctx.restore();
             }

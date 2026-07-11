@@ -20,6 +20,7 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 
 /**
  * Intermission scene 3: "Junior".
@@ -77,7 +78,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         bag.setOpen(false);
 
         clapperboard = new Clapperboard("3", "JUNIOR");
-        clapperboard.setPosition(TS(3), TS(10));
+        clapperboard.setPosition(tilesPx(3), tilesPx(10));
         clapperboard.startAnimation();
     }
 

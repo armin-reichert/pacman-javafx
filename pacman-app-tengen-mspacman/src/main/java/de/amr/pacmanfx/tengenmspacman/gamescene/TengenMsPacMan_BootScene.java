@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import javafx.scene.paint.Color;
 
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.*;
 
 /**
@@ -20,7 +21,7 @@ import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.*;
  */
 public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
 
-    private static final float GHOST_Y = WorldMap.TS(21.5f);
+    private static final float GHOST_Y = tilesPx(21.5f);
 
     public boolean gray;
     public Actor movingText;
@@ -37,7 +38,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
     public void onActivate() {
         actionBindings().dispose();
         movingText = new Actor();
-        movingText.setPosition(WorldMap.TS(9), unscaledHeight()); // lower border of screen
+        movingText.setPosition(tilesPx(9), unscaledHeight()); // lower border of screen
         ghost = game().variants().currentVariant().config().createAnimatedGhost(
             game().ui().sprites().animations(), GameModel.RED_GHOST_SHADOW);
     }
@@ -55,7 +56,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
                 movingText.show();
             }
             case  55 -> {
-                movingText.setPosition(WorldMap.TS(9), WorldMap.TS(13));
+                movingText.setPosition(tilesPx(9), tilesPx(13));
                 movingText.setVelocity(0, 0);
             }
             case 113 -> {

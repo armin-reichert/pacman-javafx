@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.level.GameLevel;
 import de.amr.pacmanfx.model.level.GameLevelMessage;
 import de.amr.pacmanfx.model.world.TerrainLayer;
+import de.amr.pacmanfx.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
@@ -44,6 +45,7 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.model.world.WorldMap.TS;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay.SCROLLING;
@@ -151,9 +153,9 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
         gameModel().optLevel().ifPresent(level -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final int numRows = terrain.numRows();
-            canvasHeightUnscaled.set(TS(numRows + 2)); // 2 additional rows for level counter below maze
+            canvasHeightUnscaled.set(tilesPx(numRows + 2)); // 2 additional rows for level counter below maze
             if (subScene.getCamera() == dynamicCamera) {
-                dynamicCamera.update(TS(terrain.numRows()), level.entities().pac());
+                dynamicCamera.update(tilesPx(terrain.numRows()), level.entities().pac());
             }
             updateDemoLevelMessage(level);
             ensureActorAnimationsCreated(level);

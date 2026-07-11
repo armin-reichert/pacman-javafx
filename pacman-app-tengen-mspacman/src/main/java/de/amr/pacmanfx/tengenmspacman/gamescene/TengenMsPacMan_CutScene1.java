@@ -23,6 +23,7 @@ import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.basics.spriteanim.SpriteAnimationAccessor.singleSpriteAnimation;
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.NES_SCREEN_WIDTH;
 
@@ -231,7 +232,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                     msPacMan.animations().resetSelected();
                 }
                 case 560 -> {
-                    heart.setPosition(0.5f * (pacMan.x() + msPacMan.x()), pacMan.y() - WorldMap.TS(2));
+                    heart.setPosition(0.5f * (pacMan.x() + msPacMan.x()), pacMan.y() - tilesPx(2));
                     heart.show();
                 }
                 case 760 -> {

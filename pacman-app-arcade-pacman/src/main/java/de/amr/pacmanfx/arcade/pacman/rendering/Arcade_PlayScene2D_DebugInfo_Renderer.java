@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.model.world.WorldMap.tilesPx;
+
 public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer {
 
     private static final List<Direction> CLOCK_ORDER = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
@@ -75,7 +77,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
             ctx.setFill(debugTextFill);
             ctx.setStroke(debugTextStroke);
             ctx.setFont(debugTextFont);
-            ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, WorldMap.TS(8));
+            ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, tilesPx(8));
 
             updateActorDrawingOrder(level);
             actorsInZOrder.stream()
