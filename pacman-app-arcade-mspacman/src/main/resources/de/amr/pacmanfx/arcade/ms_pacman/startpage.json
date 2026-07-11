@@ -1,0 +1,9 @@
+{
+  "gameVariant": "ARCADE_MS_PACMAN",
+  "title": "Ms. Pac-Man (Arcade)",
+  "voice": "/de/amr/pacmanfx/arcade/ms_pacman/sound/flyer-text.mp3",
+  "images": [
+    "/de/amr/pacmanfx/arcade/ms_pacman/graphics/flyer-page-1.jpg",
+    "/de/amr/pacmanfx/arcade/ms_pacman/graphics/flyer-page-2.jpg"
+  ]
+}
