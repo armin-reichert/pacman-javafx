@@ -14,9 +14,9 @@ import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuSettings;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.input.KeyCode;
-import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -84,10 +84,10 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public void init(Game game) {
         this.game = requireNonNull(game);
 
-        scaling = createScaling(game.ui().window().stage());
+        scaling = createScalingValue(game.ui().window().stage().heightProperty());
 
-        final GameVariantConfig gameVariantConfig = game.variants().currentVariant().config();
         final GameContext gameContext = game.context();
+        final GameVariantConfig variantConfig = game.variants().currentVariant().config();
         final GameVariantID gameVariantID = GameVariantID.valueOf(game.variants().currentVariantName());
         final GameModel gameModel = gameContext.model();
 
@@ -108,7 +108,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         logMenuState();
 
         soundEnabledProperty().bind(game.ui().sounds().muteProperty().not());
-        chaseAnimation.init(gameVariantConfig, canvas, game.ui().sprites().animations());
+        chaseAnimation.init(variantConfig, canvas, game.ui().sprites().animations());
     }
 
     public void bind() {
@@ -140,15 +140,12 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     // Private
 
-    private ObservableValue<Double> createScaling(Stage stage) {
-        // rounded to 2 decimal digits to avoid too much resizing
-        return stage.heightProperty().map(stageHeight -> {
-            final double menuHeight = Math.clamp(
-                stageHeight.doubleValue() * settings.relHeight(),
-                settings.minHeight(), settings.maxHeight());
-            final double relHeight = menuHeight / (TS * settings.numTilesY());
-            // Round scaling to 2 decimal digits to avoid too much resizing
-            return Math.round(relHeight * 100.0) / 100.0;
+    private ObservableValue<Double> createScalingValue(ReadOnlyDoubleProperty stageHeightProperty) {
+        return stageHeightProperty.map(Number::doubleValue).map(h -> {
+            final double menuHeightPixels = Math.clamp(h * settings.relHeight(), settings.minHeight(), settings.maxHeight());
+            final double scaling = menuHeightPixels / (TS * settings.numTilesY());
+            // Round to 2 decimal digits to reduce number of resizing changes
+            return Math.round(scaling * 100.0) / 100.0;
         });
     }
 
