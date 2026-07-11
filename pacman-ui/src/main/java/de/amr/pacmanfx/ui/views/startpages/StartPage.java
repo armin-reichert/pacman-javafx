@@ -5,11 +5,8 @@ package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.pacmanfx.ui.game.Game;
 import de.amr.pacmanfx.ui.input.Input;
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
-
-import java.util.Optional;
 
 /**
  * Represents a single start page in the application's start‑view system.
@@ -31,6 +28,4 @@ public interface StartPage {
     }
 
     String title();
-
-    Optional<Node> startButton();
 }

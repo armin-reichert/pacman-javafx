@@ -96,10 +96,7 @@ public class GameBuilder {
     public Optional<Game> build() {
         try {
             validateConfigurationData();
-
-            for (var c : cartridgeSet) {
-                PacManGamesMachine.instance().loadCartridge(c);
-            }
+            PacManGamesMachine.instance().plugInCartridges(cartridgeSet.toArray(Cartridge[]::new));
 
             final var game = new PacManGamesCollection();
             game.setUI(new GameUI(stage, width, height, uiSettings, dashboardFactory));

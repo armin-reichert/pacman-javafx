@@ -20,21 +20,28 @@ import java.util.Set;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Collection of the playable game variants.
+ * Machine for playing Pac-Man game variants. Can be configured by plugging-in game cartridges.
  * <p>
- * All games in a single box (only 1,99 € / game)!
+ * Buy your cartridge now (super hot Black Friday deal: $0,99 per game)!
  * </p>
  */
 public class PacManGamesMachine implements Disposable {
 
-    private static class LazyThreadSafeSingletonHolder {
+    // The lazy thread-safe singleton holder pattern
+    private static class SingletonHolder {
         static final PacManGamesMachine SINGLETON = new PacManGamesMachine();
     }
 
     public static PacManGamesMachine instance() {
-        return LazyThreadSafeSingletonHolder.SINGLETON;
+        return SingletonHolder.SINGLETON;
     }
 
+    /**
+     * High score file for game variant XYZ is stored as "highscore-xyz.xml" inside user home directory
+
+     * @param variantName name of the game variant e.g. MS_PACMAN
+     * @return highscore file name for this game variant
+     */
     public static File highScoreFile(String variantName) {
         requireNonNull(variantName);
         final String fileName = "highscore-%s.xml".formatted(variantName).toLowerCase();
@@ -77,19 +84,25 @@ public class PacManGamesMachine implements Disposable {
         return watchdog;
     }
 
-    public void loadCartridges(Cartridge... cartridges) {
+    /**
+     * Plugs the given cartridges into this machine.
+     */
+    public void plugInCartridges(Cartridge... cartridges) {
         for (var c : cartridges) {
             if (c == null) {
-                throw new IllegalArgumentException("NULL cartridge detected");
+                Logger.error("NULL cartridge detected! Are you kdding me?");
+            } else {
+                plugInCartridge(c);
             }
-            loadCartridge(c);
         }
     }
 
     /**
+     * Plugs the given cartridge into this machine.
+     *
      * @param cartridge the game specification implementing the game variant
      */
-    public void loadCartridge(Cartridge cartridge) {
+    public void plugInCartridge(Cartridge cartridge) {
         requireNonNull(cartridge);
 
         if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(cartridge.name()).matches()) {

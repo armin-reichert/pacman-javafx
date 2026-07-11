@@ -8,23 +8,17 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.app.ArcadeMsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
-import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
-import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.app.ArcadePacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.app.PacManXXL_MsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.app.PacManXXL_PacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
-import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GameExtension;
 import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -48,11 +42,13 @@ public class PacManAllGamesNoBuilderApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        PacManGamesMachine.instance().loadCartridges(
+        PacManGamesMachine.instance().plugInCartridges(
             ArcadePacMan_Cartridge.CARTRIDGE,
             ArcadeMsPacMan_Cartridge.CARTRIDGE,
             TengenMsPacMan_Cartridge.CARTRIDGE,
+            null,
             PacManXXL_PacMan_Cartridge.CARTRIDGE,
+            null,
             PacManXXL_MsPacMan_Cartridge.CARTRIDGE
         );
         game = new PacManGamesCollection();
@@ -64,21 +60,19 @@ public class PacManAllGamesNoBuilderApp extends Application {
             TengenDashboardFactory.instance()
         );
 
-        final StartPagesView start = ui.views().assertView(GameViewID.START_PAGES, StartPagesView.class);
-        start.addStartPage(game, new ArcadePacMan_StartPage());
-        start.addStartPage(game, new ArcadeMsPacMan_StartPage());
-        start.addStartPage(game, new TengenMsPacMan_StartPage());
-        start.addStartPage(game, new PacManXXL_StartPage());
-        start.rootPane().setSelectedIndex(0);
-
-//        game.extensions().add(new GameExtension(Arcade_GameExtensions.ACTIONS, Arcade_Actions::new));
-//        game.extensions().add(new GameExtension(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions::new));
-//        game.extensions().add(new GameExtension(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings::new));
+        final StartPagesView startPages = ui.views().assertView(GameViewID.START_PAGES, StartPagesView.class);
+        startPages.addStartPage(game, new ArcadePacMan_StartPage());
+        startPages.addStartPage(game, new ArcadeMsPacMan_StartPage());
+        startPages.addStartPage(game, new TengenMsPacMan_StartPage());
+        startPages.addStartPage(game, new PacManXXL_StartPage());
 
         game.machine().watchdog().addEventListener(PacManXXL_MapSelector.instance());
 
         game.setUI(ui);
         game.showGameVariant(GameVariantID.ARCADE_PACMAN);
+
+        // This must happen *after* UI has been set!
+        startPages.rootPane().setSelectedIndex(0);
     }
 
     @Override

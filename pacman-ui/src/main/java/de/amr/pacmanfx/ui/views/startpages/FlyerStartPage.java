@@ -10,14 +10,11 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
-
-import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -26,7 +23,7 @@ public class FlyerStartPage implements StartPage {
     protected final StackPane rootPane = new StackPane();
     protected final Flyer flyer = new Flyer();
     protected final String title;
-    protected GameStartButton startButton;
+    protected final GameStartButton startButton;
     protected Game game;
     protected Media voice;
 
@@ -45,6 +42,8 @@ public class FlyerStartPage implements StartPage {
                 flyer.prevFlyerPage();
             }
         });
+
+        startButton = createStartButton();
     }
 
     @Override
@@ -70,22 +69,11 @@ public class FlyerStartPage implements StartPage {
     @Override
     public void connect(Game game) {
         this.game = requireNonNull(game);
-        if (startButton == null) {
-            final String text = game.ui().translations().translate("startpage.play_button");
-            startButton = new GameStartButton(text);
-            startButton.setOnAction(_ -> game.actions().gameFlowActions().actionStartGame().execute());
-            rootPane.getChildren().add(startButton);
-
-            StackPane.setAlignment(startButton, Pos.BOTTOM_CENTER);
-            startButton.translateYProperty().bind(rootPane.heightProperty().divide(10).negate());
-        }
     }
 
     @Override
     public void onEnter() {
-        if (startButton != null) {
-            startButton.requestFocus();
-        }
+        startButton.requestFocus();
     }
 
     @Override
@@ -99,11 +87,6 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public Optional<Node> startButton() {
-        return Optional.of(startButton);
-    }
-
-    @Override
     public String title() {
         return title;
     }
@@ -112,7 +95,7 @@ public class FlyerStartPage implements StartPage {
         this.voice = requireNonNull(voice);
     }
 
-    public void startTalking() {
+    public void talk() {
         if (voice != null) {
             game.ui().sounds().playVoice(voice);
         }
@@ -120,5 +103,16 @@ public class FlyerStartPage implements StartPage {
 
     public void stopTalking() {
         game.ui().sounds().stopAndDisposeVoice();
+    }
+
+    protected GameStartButton createStartButton() {
+        final var button = new GameStartButton("START!");
+        button.setOnAction(_ -> game.actions().gameFlowActions().actionStartGame().execute());
+        rootPane.getChildren().add(button);
+
+        StackPane.setAlignment(button, Pos.BOTTOM_CENTER);
+        button.translateYProperty().bind(rootPane.heightProperty().divide(10).negate());
+
+        return button;
     }
 }

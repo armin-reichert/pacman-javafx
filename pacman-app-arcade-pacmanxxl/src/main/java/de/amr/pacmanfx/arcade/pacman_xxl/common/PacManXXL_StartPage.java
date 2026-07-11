@@ -17,14 +17,11 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuSettings;
 import javafx.application.Platform;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
-
-import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -111,11 +108,6 @@ public class PacManXXL_StartPage implements StartPage {
     @Override
     public Pane rootPane() {
         return rootPane;
-    }
-
-    @Override
-    public Optional<Node> startButton() {
-        return Optional.empty();
     }
 
     @Override
