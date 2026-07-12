@@ -48,9 +48,9 @@ public class SteeringActions {
     private final EnumMap<Direction, GameAction> actions = new EnumMap<>(Direction.class);
     private final Set<ActionKeyBinding> bindings;
 
-    public SteeringActions(GameActionContext game) {
+    public SteeringActions(GameActionContext actionContext) {
         for (Direction dir : Direction.values()) {
-            actions.put(dir, new SteeringAction(game, dir));
+            actions.put(dir, new SteeringAction(actionContext, dir));
         }
 
         bindings = Set.of(

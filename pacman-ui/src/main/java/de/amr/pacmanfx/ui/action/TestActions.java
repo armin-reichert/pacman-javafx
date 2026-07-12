@@ -23,9 +23,9 @@ public class TestActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public TestActions(GameActionContext game) {
+    public TestActions(GameActionContext actionContext) {
 
-        actionTestCutScenes = new GameAction(game, "test_cut_scenes") {
+        actionTestCutScenes = new GameAction(actionContext, "test_cut_scenes") {
             @Override
             public void doAction() {
                 actionContext.gameContext().flow().enterState(TestStateID.CUT_SCENE_TEST);
@@ -38,7 +38,7 @@ public class TestActions {
             }
         };
 
-        actionTestLevelShort = new GameAction(game, "short_level_test") {
+        actionTestLevelShort = new GameAction(actionContext, "short_level_test") {
             @Override
             public void doAction() {
                 actionContext.gameContext().flow().restartState(TestStateID.LEVEL_TEST_S);
@@ -51,7 +51,7 @@ public class TestActions {
             }
         };
 
-        actionTestLevelMedium = new GameAction(game, "medium_level_test") {
+        actionTestLevelMedium = new GameAction(actionContext, "medium_level_test") {
             @Override
             public void doAction() {
                 actionContext.gameContext().flow().restartState(TestStateID.LEVEL_TEST_M);

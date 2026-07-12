@@ -40,9 +40,9 @@ public final class CheatActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public CheatActions(GameActionContext game) {
+    public CheatActions(GameActionContext actionContext) {
 
-        actionAddLives = new GameAction(game, "cheat_add_lives") {
+        actionAddLives = new GameAction(actionContext, "cheat_add_lives") {
             @Override
             public void doAction() {
                 final GameModel model = actionContext.gameContext().model();
@@ -59,7 +59,7 @@ public final class CheatActions {
             }
         };
 
-        actionEatAllPellets = new GameAction(game, "cheat_eat_all_pellets") {
+        actionEatAllPellets = new GameAction(actionContext, "cheat_eat_all_pellets") {
             @Override
             public void doAction() {
                 final GameContext context = this.actionContext.gameContext();
@@ -78,7 +78,7 @@ public final class CheatActions {
             }
         };
 
-        actionKillGhosts = new GameAction(game, "cheat_kill_ghosts") {
+        actionKillGhosts = new GameAction(actionContext, "cheat_kill_ghosts") {
             @Override
             public void doAction() {
                 final GameContext context = this.actionContext.gameContext();
@@ -105,7 +105,7 @@ public final class CheatActions {
             }
         };
 
-        actionEnterNextLevel = new GameAction(game, "cheat_enter_next_level") {
+        actionEnterNextLevel = new GameAction(actionContext, "cheat_enter_next_level") {
             @Override
             public void doAction() {
                 final GameContext context = this.actionContext.gameContext();
@@ -126,7 +126,7 @@ public final class CheatActions {
             }
         };
 
-        actionToggleAutopilot = new GameAction(game, "toggle_autopilot") {
+        actionToggleAutopilot = new GameAction(actionContext, "toggle_autopilot") {
             @Override
             public void doAction() {
                 final GameCheats cheats = actionContext.gameContext().cheats();
@@ -139,7 +139,7 @@ public final class CheatActions {
             }
         };
 
-        actionActivateAutopilot = new GameAction(game, "activate_autopilot") {
+        actionActivateAutopilot = new GameAction(actionContext, "activate_autopilot") {
             @Override
             public void doAction() {
                 setAutopilot(actionContext, true);
@@ -151,7 +151,7 @@ public final class CheatActions {
             }
         };
 
-        actionDeactivateAutopilot = new GameAction(game, "deactivate_autopilot") {
+        actionDeactivateAutopilot = new GameAction(actionContext, "deactivate_autopilot") {
             @Override
             public void doAction() {
                 setAutopilot(actionContext, false);
@@ -163,7 +163,7 @@ public final class CheatActions {
             }
         };
 
-        actionActivateImmunity = new GameAction(game, "activate_immunity") {
+        actionActivateImmunity = new GameAction(actionContext, "activate_immunity") {
             @Override
             public void doAction() {
                 setPacImmune(actionContext, true);
@@ -175,7 +175,7 @@ public final class CheatActions {
             }
         };
 
-        actionDeactivateImmunity = new GameAction(game, "deactivate_immunity") {
+        actionDeactivateImmunity = new GameAction(actionContext, "deactivate_immunity") {
             @Override
             public void doAction() {
                 setPacImmune(actionContext, false);
@@ -187,7 +187,7 @@ public final class CheatActions {
             }
         };
 
-        actionToggleImmunity = new GameAction(game, "toggle_immunity") {
+        actionToggleImmunity = new GameAction(actionContext, "toggle_immunity") {
             @Override
             public void doAction() {
                 final GameCheats cheats = actionContext.gameContext().cheats();

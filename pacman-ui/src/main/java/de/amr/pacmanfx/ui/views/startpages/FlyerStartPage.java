@@ -107,8 +107,8 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public void connect(GameActionContext game, CommonActions commonActions) {
-        this.actionContext = requireNonNull(game);
+    public void connect(GameActionContext actionContext, CommonActions commonActions) {
+        this.actionContext = requireNonNull(actionContext);
         this.commonActions = requireNonNull(commonActions);
     }
 

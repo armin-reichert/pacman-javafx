@@ -33,16 +33,16 @@ public class UISettingsActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public UISettingsActions(GameActionContext game) {
+    public UISettingsActions(GameActionContext actionContext) {
 
-        actionEnterFullScreen = new GameAction(game, "enter_fullscreen") {
+        actionEnterFullScreen = new GameAction(actionContext, "enter_fullscreen") {
             @Override
             protected void doAction() {
                 actionContext.ui().window().stage().setFullScreen(true);
             }
         };
 
-        actionShowHelp = new GameAction(game, "show_help") {
+        actionShowHelp = new GameAction(actionContext, "show_help") {
             @Override
             protected void doAction() {
                 actionContext.ui().views().gamePlayView().showHelp(actionContext);
@@ -60,7 +60,7 @@ public class UISettingsActions {
             }
         };
 
-        actionToggleDashboard = new GameAction(game, "toggle_dashboard") {
+        actionToggleDashboard = new GameAction(actionContext, "toggle_dashboard") {
             @Override
             protected void doAction() {
                 actionContext.ui().views().gamePlayView().dashboard().toggleVisibility();
@@ -72,21 +72,21 @@ public class UISettingsActions {
             }
         };
 
-        actionToggleDebugInfo = new GameAction(game, "toggle_debug_info") {
+        actionToggleDebugInfo = new GameAction(actionContext, "toggle_debug_info") {
             @Override
             protected void doAction() {
                 toggleBooleanProperty(actionContext.ui().viewModel().debugModeOnProperty);
             }
         };
 
-        actionToggleKeyboardMonitor = new GameAction(game, "toggle_keyboard_monitor") {
+        actionToggleKeyboardMonitor = new GameAction(actionContext, "toggle_keyboard_monitor") {
             @Override
             protected void doAction() {
                 toggleBooleanProperty(actionContext.ui().viewModel().keyboardMonitorOnProperty);
             }
         };
 
-        actionToggleMiniViewVisibility = new GameAction(game, "toggle_mini_view_visibility") {
+        actionToggleMiniViewVisibility = new GameAction(actionContext, "toggle_mini_view_visibility") {
             @Override
             protected void doAction() {
                 toggleBooleanProperty(actionContext.ui().viewModel().miniView.activeProperty);
@@ -98,7 +98,7 @@ public class UISettingsActions {
             }
         };
 
-        actionTogglePlayScene2D3D = new GameAction(game, "toggle_play_scene_2d_3d") {
+        actionTogglePlayScene2D3D = new GameAction(actionContext, "toggle_play_scene_2d_3d") {
             @Override
             protected void doAction() {
                 toggleBooleanProperty(actionContext.ui().viewModel().common3D.view3DEnabledProperty);

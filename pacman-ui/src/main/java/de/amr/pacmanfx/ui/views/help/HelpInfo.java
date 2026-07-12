@@ -25,12 +25,12 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    public static HelpInfo build(GameActionContext game) {
-        final GameContext context = game.gameContext();
+    public static HelpInfo build(GameActionContext actionContext) {
+        final GameContext context = actionContext.gameContext();
         final TimedGameState state = context.state();
         final boolean demoLevel = context.gamePlay().isDemoLevelRunning(context.model());
 
-        final HelpInfo helpInfo = new HelpInfo(game);
+        final HelpInfo helpInfo = new HelpInfo(actionContext);
         if (GameStateID.GAME_INTRO.identifies(state)) {
             helpInfo.addInfoForIntroScene();
         }
@@ -51,20 +51,20 @@ public class HelpInfo {
         return helpInfo;
     }
 
-    private final GameActionContext game;
+    private final GameActionContext actionContext;
 
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text>  column1 = new ArrayList<>();
 
-    public HelpInfo(GameActionContext game) {
-        this.game = requireNonNull(game);
+    public HelpInfo(GameActionContext actionContext) {
+        this.actionContext = requireNonNull(actionContext);
     }
 
     private String translate(String key, Object... args) {
-        return game.ui().translations().translate(key, args);
+        return actionContext.ui().translations().translate(key, args);
     }
 
-    public Pane createPane(GameActionContext game, Color backgroundColor, Font font) {
+    public Pane createPane(GameActionContext actionContext, Color backgroundColor, Font font) {
         final var grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(10);
@@ -80,7 +80,7 @@ public class HelpInfo {
         pane.setPadding(new Insets(10));
         pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
-        final GameContext gameContext = game.gameContext();
+        final GameContext gameContext = actionContext.gameContext();
         final GameCheats cheats = gameContext.cheats();
 
         // add default entries:

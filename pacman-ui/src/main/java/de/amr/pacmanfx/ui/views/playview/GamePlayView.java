@@ -177,9 +177,9 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         return miniPlaySceneView;
     }
 
-    public void showHelp(GameActionContext game) {
+    public void showHelp(GameActionContext actionContext) {
         final double scaling = gameSceneFrame.scalingProperty().get();
-        helpLayer.showHelpPopup(game, scaling, game.variants().currentVariantName());
+        helpLayer.showHelpPopup(actionContext, scaling, actionContext.variants().currentVariantName());
     }
 
     public void setGameSceneContent(Node gameSceneContent) {

@@ -27,16 +27,16 @@ public class GameFlowActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public GameFlowActions(GameActionContext game) {
+    public GameFlowActions(GameActionContext actionContext) {
 
-        actionStartGame = new GameAction(game, "start_game") {
+        actionStartGame = new GameAction(actionContext, "start_game") {
             @Override
             protected void doAction() {
                 actionContext.startGamePlay();
             }
         };
 
-        actionQuit = new GameAction(game, "quit") {
+        actionQuit = new GameAction(actionContext, "quit") {
             @Override
             protected void doAction() {
                 Logger.info("Call QUIT handler for {}", actionContext.ui().views().assertCurrentView());
@@ -44,14 +44,14 @@ public class GameFlowActions {
             }
         };
 
-        actionLetGameStateExpire = new GameAction(game, "let_game_state_expire") {
+        actionLetGameStateExpire = new GameAction(actionContext, "let_game_state_expire") {
             @Override
             protected void doAction() {
                 actionContext.gameContext().state().triggerTimeout();
             }
         };
 
-        actionRestartIntro = new GameAction(game, "restart_intro") {
+        actionRestartIntro = new GameAction(actionContext, "restart_intro") {
             @Override
             protected void doAction() {
                 final GameContext gameContext = actionContext.gameContext();

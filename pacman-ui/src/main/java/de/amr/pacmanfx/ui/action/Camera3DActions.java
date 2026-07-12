@@ -26,9 +26,9 @@ public class Camera3DActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public Camera3DActions(GameActionContext game) {
+    public Camera3DActions(GameActionContext actionContext) {
 
-        actionNextPerspective = new GameAction(game, "perspective_next") {
+        actionNextPerspective = new GameAction(actionContext, "perspective_next") {
             @Override
             protected void doAction() {
                 final PerspectiveID nextID = actionContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().next();
@@ -42,7 +42,7 @@ public class Camera3DActions {
             }
         };
 
-        actionPreviousPerspective = new GameAction(game, "perspective_previous") {
+        actionPreviousPerspective = new GameAction(actionContext, "perspective_previous") {
             @Override
             protected void doAction() {
                 final PerspectiveID prevID = actionContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().prev();
@@ -55,7 +55,7 @@ public class Camera3DActions {
             }
         };
 
-        actionToggleDrawMode = new GameAction(game, "toggle_draw_mode") {
+        actionToggleDrawMode = new GameAction(actionContext, "toggle_draw_mode") {
             @Override
             protected void doAction() {
                 Ufx.toggleProperty(actionContext.ui().viewModel().common3D.drawModeProperty, DrawMode.LINE, DrawMode.FILL);
