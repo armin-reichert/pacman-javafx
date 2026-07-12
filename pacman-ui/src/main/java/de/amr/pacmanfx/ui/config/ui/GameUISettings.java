@@ -11,7 +11,6 @@ public record GameUISettings(
     boolean debugModeOn,
     boolean keyboardMonitorOn,
     boolean muted,
-    int numSimulationSteps,
     List<DashboardSectionSettings> dashboard,
     MiniViewSettings miniView,
     Common2DSettings common2D,

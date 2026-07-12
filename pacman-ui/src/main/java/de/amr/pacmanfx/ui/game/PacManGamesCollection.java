@@ -122,13 +122,8 @@ public final class PacManGamesCollection implements Game {
 
     private void startBackgroundServices() {
         Platform.runLater(() -> {
-            if (
-                variantManager.isVariantRegistered(GameVariantID.ARCADE_PACMAN_XXL.name()) ||
-                variantManager.isVariantRegistered(GameVariantID.ARCADE_MS_PACMAN_XXL.name())
-            ) {
-                machine().watchdog().startWatching();
-                Logger.info("Custom map directory is getting watched!");
-            }
+            machine().watchdog().startWatching();
+            Logger.info("Custom map directory is getting watched!");
             ui.window().mainScene().flashMessageManager().startAnimationTimer();
             ui.sprites().startAnimationTimer();
         });

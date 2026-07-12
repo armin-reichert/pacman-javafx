@@ -26,7 +26,7 @@ public class GameViewModel {
         debugModeOnProperty = new SimpleBooleanProperty();
         keyboardMonitorOnProperty = new SimpleBooleanProperty();
         mutedProperty = new SimpleBooleanProperty();
-        numSimulationStepsProperty = new SimpleIntegerProperty();
+        numSimulationStepsProperty = new SimpleIntegerProperty(1);
 
         miniView = new MiniViewModel();
         common2D = new Common2DSettingsModel();
@@ -39,7 +39,6 @@ public class GameViewModel {
         debugModeOnProperty.set(settings.debugModeOn());
         keyboardMonitorOnProperty.set(settings.keyboardMonitorOn());
         mutedProperty.set(settings.muted());
-        numSimulationStepsProperty.set(settings.numSimulationSteps());
 
         miniView.init(settings.miniView());
         common2D.init(settings.common2D());

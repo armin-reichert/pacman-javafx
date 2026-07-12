@@ -3,7 +3,6 @@
   "debugModeOn": false,
   "keyboardMonitorOn": false,
   "muted": false,
-  "numSimulationSteps": 1,
 
   "dashboard": [
     {
