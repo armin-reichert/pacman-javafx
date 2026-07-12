@@ -31,7 +31,7 @@ public final class PacManGamesCollection implements Game {
     private GameVariantContext gameVariantContext;
 
     public PacManGamesCollection() {
-        this.variantManager = new GameVariantManagerImpl(this);
+        this.variantManager = new GameVariantManager(this);
         this.commonActions = new CommonActions(this);
         configureClock();
         //noinspection ResultOfMethodCallIgnored
