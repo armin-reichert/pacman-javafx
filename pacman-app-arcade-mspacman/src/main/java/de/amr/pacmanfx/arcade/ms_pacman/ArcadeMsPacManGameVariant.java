@@ -19,6 +19,7 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
@@ -131,7 +132,9 @@ public class ArcadeMsPacManGameVariant implements GameVariantConfig, ResourceMan
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
         requireNonNull(worldMap);
         final int index = worldMap.getConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX);
-        return enhanceContrast(ArcadeMsPacMan_MapSelector.MAP_COLOR_SCHEMES[index]);
+        return GlobalAssets.enhanceContrast(
+            worldSettings(),
+            ArcadeMsPacMan_MapSelector.MAP_COLOR_SCHEMES[index]);
     }
 
     @Override

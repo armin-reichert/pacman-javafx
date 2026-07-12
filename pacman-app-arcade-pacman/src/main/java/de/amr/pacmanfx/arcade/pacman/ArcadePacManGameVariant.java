@@ -16,9 +16,10 @@ import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -131,7 +132,7 @@ public class ArcadePacManGameVariant implements GameVariantConfig, ResourceManag
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
         requireNonNull(worldMap);
-        return enhanceContrast(WORLD_MAP_COLOR_SCHEME);
+        return GlobalAssets.enhanceContrast(worldSettings(), WORLD_MAP_COLOR_SCHEME);
     }
 
     @Override

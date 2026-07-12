@@ -68,18 +68,4 @@ public interface GameVariantConfig extends Disposable {
     SpriteAnimationAccessor createPacAnimations(SpriteAnimationContainer animationSet);
 
     Image killedGhostPointsImage(int killedIndex);
-
-
-    //TODO move elsewhere
-    default WorldMapColorScheme enhanceContrast(WorldMapColorScheme colorScheme) {
-        final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
-        if (wallFillColor.getBrightness() < 0.1) {
-            return new WorldMapColorScheme(
-                worldSettings().maze().darkWallFillColor(),
-                colorScheme.wallStroke(),
-                colorScheme.door(),
-                colorScheme.pellet());
-        }
-        return colorScheme;
-    }
 }

@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
@@ -179,7 +180,9 @@ public final class PacManXXLGameVariant implements GameVariantConfig, ResourceMa
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        return enhanceContrast(worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME));
+        return GlobalAssets.enhanceContrast(
+            worldSettings(),
+            worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME));
     }
 
     @Override

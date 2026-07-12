@@ -4,11 +4,14 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.EggradientSamples;
 import javafx.scene.layout.Background;
 import javafx.scene.media.Media;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
@@ -72,5 +75,17 @@ public final class GlobalAssets {
         for (var predefinedFont : PredefinedFont.values()) {
             Logger.info(predefinedFont.font());
         }
+    }
+
+    public static WorldMapColorScheme enhanceContrast(WorldSettings worldSettings, WorldMapColorScheme colorScheme) {
+        final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
+        if (wallFillColor.getBrightness() < 0.1) {
+            return new WorldMapColorScheme(
+                worldSettings.maze().darkWallFillColor(),
+                colorScheme.wallStroke(),
+                colorScheme.door(),
+                colorScheme.pellet());
+        }
+        return colorScheme;
     }
 }

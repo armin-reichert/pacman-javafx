@@ -20,6 +20,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.*;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.game.Game;
@@ -239,7 +240,7 @@ public class TengenMsPacManGameVariant implements GameVariantConfig {
         final MapColorScheme scheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
         final WorldMapColorScheme colorScheme = new WorldMapColorScheme(
             scheme.wallFill(), scheme.wallStroke(), scheme.door(), scheme.pellet());
-        return enhanceContrast(colorScheme);
+        return GlobalAssets.enhanceContrast(worldSettings(), colorScheme);
     }
 
     @Override
