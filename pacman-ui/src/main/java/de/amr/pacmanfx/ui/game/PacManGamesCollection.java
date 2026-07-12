@@ -89,7 +89,7 @@ public final class PacManGamesCollection implements Game {
 
         ui.window().show(this);
 
-        startBackgroundServices();
+        Platform.runLater(this::startBackgroundServices);
     }
 
     @Override
@@ -121,12 +121,10 @@ public final class PacManGamesCollection implements Game {
     // Private area, no trespassing!
 
     private void startBackgroundServices() {
-        Platform.runLater(() -> {
-            machine().watchdog().startWatching();
-            Logger.info("Custom map directory is getting watched!");
-            ui.window().mainScene().flashMessageManager().startAnimationTimer();
-            ui.sprites().startAnimationTimer();
-        });
+        machine().watchdog().startWatching();
+        Logger.info("Custom map directory is getting watched!");
+        ui.window().mainScene().flashMessageManager().startAnimationTimer();
+        ui.sprites().startAnimationTimer();
     }
 
     private void configureClock() {
