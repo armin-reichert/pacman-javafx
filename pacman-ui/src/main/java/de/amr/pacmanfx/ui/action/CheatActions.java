@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import javafx.scene.input.KeyCode;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public final class CheatActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public CheatActions(Game game) {
+    public CheatActions(PacManGamesCollection game) {
 
         actionAddLives = new GameAction(game, "cheat_add_lives") {
             @Override
@@ -256,7 +256,7 @@ public final class CheatActions {
 
     // Helpers
 
-    private void setAutopilot(Game game, boolean auto) {
+    private void setAutopilot(PacManGamesCollection game, boolean auto) {
         final GameCheats cheats = game.context().cheats();
         cheats.pacUsingAutopilotProperty().set(auto);
 
@@ -264,7 +264,7 @@ public final class CheatActions {
         game.ui().sounds().playVoice(auto ? GlobalAssets.Voice.AUTOPILOT_ON.media() : GlobalAssets.Voice.AUTOPILOT_OFF.media());
     }
 
-    private void setPacImmune(Game game, boolean immune) {
+    private void setPacImmune(PacManGamesCollection game, boolean immune) {
         final GameCheats cheats = game.context().cheats();
         cheats.pacImmuneProperty().set(immune);
 
@@ -272,7 +272,7 @@ public final class CheatActions {
         game.ui().sounds().playVoice(immune ? GlobalAssets.Voice.IMMUNITY_ON.media() : GlobalAssets.Voice.IMMUNITY_OFF.media());
     }
 
-    private Optional<GameLevel> normalLevel(Game game) {
+    private Optional<GameLevel> normalLevel(PacManGamesCollection game) {
         return game.context().model().optLevel().filter(level -> !level.isDemoLevel());
     }
 }

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXLGameVariant;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -38,7 +38,7 @@ public class PacManXXL_StartPage implements StartPage {
     private final StackPane rootPane;
     private final PacManXXL_OptionMenu menu;
 
-    private Game game;
+    private PacManGamesCollection game;
     private final String title;
 
     public PacManXXL_StartPage() {
@@ -62,7 +62,7 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     @Override
-    public void connect(Game game) {
+    public void connect(PacManGamesCollection game) {
         this.game = requireNonNull(game);
     }
 

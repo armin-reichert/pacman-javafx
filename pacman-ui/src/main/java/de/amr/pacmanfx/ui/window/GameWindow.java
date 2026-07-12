@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -44,7 +44,7 @@ public class GameWindow {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
-    public void connect(Game game) {
+    public void connect(PacManGamesCollection game) {
         mainScene.connect(game);
 
         titleBinding = createStageTitleBinding(game);
@@ -59,7 +59,7 @@ public class GameWindow {
         connected.set(true);
     }
 
-    public void show(Game game) {
+    public void show(PacManGamesCollection game) {
         updateStageIcon(game);
         stage.centerOnScreen();
         stage.show();
@@ -75,7 +75,7 @@ public class GameWindow {
 
     // Private area
 
-    private StringBinding createStageTitleBinding(Game game) {
+    private StringBinding createStageTitleBinding(PacManGamesCollection game) {
         final GameUI ui = game.ui();
         return createStringBinding(
             () -> switch (ui.views().currentViewID()) {
@@ -100,7 +100,7 @@ public class GameWindow {
             : ui.views().assertCurrentView().optTitleSupplier().map(Supplier::get);
     }
 
-    private void updateStageTitleBinding(Game game, GameViewID viewID) {
+    private void updateStageTitleBinding(PacManGamesCollection game, GameViewID viewID) {
         switch (viewID) {
             case START_PAGES, GAMEPLAY -> stage.titleProperty().bind(titleBinding);
             case EDITOR -> game.ui().views().optEditorView().ifPresent(editorView -> {
@@ -110,7 +110,7 @@ public class GameWindow {
         }
     }
 
-    private void updateStageIcon(Game game) {
+    private void updateStageIcon(PacManGamesCollection game) {
         final Image icon = game.variants().currentVariant().config().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
@@ -119,7 +119,7 @@ public class GameWindow {
         }
     }
 
-    private String titleForCurrentGameScene(Game game) {
+    private String titleForCurrentGameScene(PacManGamesCollection game) {
         final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
 
         final boolean debug = game.ui().viewModel().debugModeOnProperty.get();
@@ -132,7 +132,7 @@ public class GameWindow {
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String stageTitle(Game game, boolean paused, boolean is3D) {
+    private String stageTitle(PacManGamesCollection game, boolean paused, boolean is3D) {
         final String gameVariantName = game.variants().currentVariantName();
         if (gameVariantName == null) {
             return "";

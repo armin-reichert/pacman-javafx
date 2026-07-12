@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -39,7 +39,7 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     @Override
-    public void connect(Game game) {
+    public void connect(PacManGamesCollection game) {
         final CoinMechanism coinMechanism = game.machine().coinMechanism();
         final CommonActions actions = game.actions();
 
@@ -65,7 +65,7 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     @Override
-    public void update(Game game) {
+    public void update(PacManGamesCollection game) {
         super.update(game);
 
         final GameContext context = game.context();
@@ -89,7 +89,7 @@ public class DS_GameControl extends GameDashboardSection {
         cbCollisionCheckedTwice.setSelected(context.model().rules().collisionDoubleCheckedProperty().get());
     }
 
-    private boolean canStartLevel(Game game, TimedGameState gameState) {
+    private boolean canStartLevel(PacManGamesCollection game, TimedGameState gameState) {
         boolean isArcadeGame = GameVariantID.isArcadeGameName(game.variants().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
         return !game.context().coinMechanism().isEmpty()

@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -43,9 +43,9 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         }
     };
 
-    private final Game game;
+    private final PacManGamesCollection game;
 
-    public PlaySceneContextMenu(Game game) {
+    public PlaySceneContextMenu(PacManGamesCollection game) {
         this.game = requireNonNull(game);
 
         final TranslationManager translations = game.ui().translations();

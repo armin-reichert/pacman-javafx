@@ -16,14 +16,14 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class PacManAllGamesApp extends Application {
 
-    Game game;
+    PacManGamesCollection game;
     boolean includeTests;
 
     @Override

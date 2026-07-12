@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -33,7 +33,7 @@ public class UISettingsActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public UISettingsActions(Game game) {
+    public UISettingsActions(PacManGamesCollection game) {
 
         actionEnterFullScreen = new GameAction(game, "enter_fullscreen") {
             @Override

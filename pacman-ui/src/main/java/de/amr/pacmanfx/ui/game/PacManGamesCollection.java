@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
 
-public interface Game {
+public interface PacManGamesCollection {
 
     PacManGamesMachine machine();
 

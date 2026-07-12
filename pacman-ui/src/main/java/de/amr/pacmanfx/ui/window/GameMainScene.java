@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.views.GameView;
 import javafx.beans.binding.Bindings;
@@ -52,7 +52,7 @@ public class GameMainScene extends Scene {
         return (StackPane) getRoot();
     }
 
-    public void connect(Game game) {
+    public void connect(PacManGamesCollection game) {
         // Delegate mouse scroll events to current game scene
         setOnScroll(e -> game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
@@ -82,7 +82,7 @@ public class GameMainScene extends Scene {
         gameViewHolder.getChildren().setAll(gameView.rootPane());
     }
 
-    private Background selectBackground(Game game) {
+    private Background selectBackground(PacManGamesCollection game) {
         return game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)
             ? randomArrayEntry(GlobalAssets.GRADIENT_BACKGROUNDS)
             : GlobalAssets.BACKGROUND_PAC_MAN_WALLPAPER;

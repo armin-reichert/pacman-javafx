@@ -22,7 +22,7 @@ import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -76,7 +76,7 @@ public class ArcadeMsPacManGameVariant implements GameVariantConfig, ResourceMan
     }
 
     @Override
-    public void init(Game game) {
+    public void init(PacManGamesCollection game) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
         initSound(game.ui().sounds());

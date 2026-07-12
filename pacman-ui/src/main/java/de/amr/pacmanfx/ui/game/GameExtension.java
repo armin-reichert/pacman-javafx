@@ -4,4 +4,4 @@ import de.amr.basics.Identifier;
 
 import java.util.function.Function;
 
-public record GameExtension(Identifier id, Function<Game, Object> creator) {}
+public record GameExtension(Identifier id, Function<PacManGamesCollection, Object> creator) {}

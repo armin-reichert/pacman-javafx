@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.JsonConfigLoader;
@@ -39,7 +39,7 @@ public class FlyerStartPage implements StartPage {
     protected String title;
     protected String gameVariantName;
     protected GameStartButton startButton;
-    protected Game game;
+    protected PacManGamesCollection game;
     protected Media voice;
 
     public FlyerStartPage(URL configURL) {
@@ -105,7 +105,7 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public void connect(Game game) {
+    public void connect(PacManGamesCollection game) {
         this.game = requireNonNull(game);
     }
 

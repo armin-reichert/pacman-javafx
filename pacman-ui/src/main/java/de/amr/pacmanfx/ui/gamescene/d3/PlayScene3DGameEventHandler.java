@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
@@ -54,7 +54,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
     private final PlayScene3D playScene3D;
     private final RandomTextPicker gameOverMessagePicker;
 
-    public PlayScene3DGameEventHandler(Game game, PlayScene3D playScene3D) {
+    public PlayScene3DGameEventHandler(PacManGamesCollection game, PlayScene3D playScene3D) {
         super(game);
         this.playScene3D = requireNonNull(playScene3D);
         gameOverMessagePicker = new RandomTextPicker(game.ui().translations().textBundle(), "game.over");

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
@@ -22,7 +22,7 @@ import java.util.Optional;
 
 public interface GameScene extends QuitHandler, Disposable {
 
-    Game game();
+    PacManGamesCollection game();
 
     Input input();
 

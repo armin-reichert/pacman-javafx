@@ -8,7 +8,7 @@ import de.amr.basics.Disposable;
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 
 import java.util.Optional;
 
@@ -20,7 +20,7 @@ public interface GameSceneConfig extends Disposable {
 
     boolean gameSceneHasID(GameScene gameScene, Identifier sceneID);
 
-    Optional<GameScene> selectGameScene(Game game, GameModel model);
+    Optional<GameScene> selectGameScene(PacManGamesCollection game, GameModel model);
 
     Identifier resolveCutSceneID(GameContext gameContext);
 

@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    public static HelpInfo build(Game game) {
+    public static HelpInfo build(PacManGamesCollection game) {
         final GameContext context = game.context();
         final TimedGameState state = context.state();
         final boolean demoLevel = context.gamePlay().isDemoLevelRunning(context.model());
@@ -51,12 +51,12 @@ public class HelpInfo {
         return helpInfo;
     }
 
-    private final Game game;
+    private final PacManGamesCollection game;
 
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text>  column1 = new ArrayList<>();
 
-    public HelpInfo(Game game) {
+    public HelpInfo(PacManGamesCollection game) {
         this.game = requireNonNull(game);
     }
 
@@ -64,7 +64,7 @@ public class HelpInfo {
         return game.ui().translations().translate(key, args);
     }
 
-    public Pane createPane(Game game, Color backgroundColor, Font font) {
+    public Pane createPane(PacManGamesCollection game, Color backgroundColor, Font font) {
         final var grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(10);

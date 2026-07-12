@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 
 /**
@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
  */
 public class ArcadePacMan_StartScene extends AbstractGameScene2D {
 
-    public ArcadePacMan_StartScene(Game game) {
+    public ArcadePacMan_StartScene(PacManGamesCollection game) {
         super(game);
     }
 

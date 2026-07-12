@@ -7,14 +7,14 @@ package de.amr.pacmanfx.arcade.pacman_xxl.app;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class PacManXXL_App extends Application {
 
-    Game game;
+    PacManGamesCollection game;
 
     @Override
     public void start(Stage stage) {

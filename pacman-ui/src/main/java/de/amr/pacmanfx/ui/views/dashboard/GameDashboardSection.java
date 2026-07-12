@@ -8,7 +8,7 @@ import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.model.GameRules;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.widgets.DashboardSection;
 import de.amr.pacmanfx.uilib.widgets.DashboardSectionCreator;
@@ -34,21 +34,21 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         return this;
     }
 
-    public void connect(Game game) {}
+    public void connect(PacManGamesCollection game) {}
 
-    public void update(Game game) {
+    public void update(PacManGamesCollection game) {
         dynamicInfoTexts.forEach(DynamicInfoText::update);
     }
 
-    protected Supplier<String> supplyGameSceneInfo(Game game, Function<GameScene, String> fnInfo) {
+    protected Supplier<String> supplyGameSceneInfo(PacManGamesCollection game, Function<GameScene, String> fnInfo) {
         return () -> game.ui().gameScenes().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> supplyGameLevelInfo(Game game, Function<GameLevel, String> fnInfo) {
+    protected Supplier<String> supplyGameLevelInfo(PacManGamesCollection game, Function<GameLevel, String> fnInfo) {
         return () -> game.context().model().optLevel().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> supplyGameRulesInfo(Game game, Function<GameRules, String> fnInfo) {
+    protected Supplier<String> supplyGameRulesInfo(PacManGamesCollection game, Function<GameRules, String> fnInfo) {
         return () -> fnInfo.apply(game.context().model().rules());
     }
 

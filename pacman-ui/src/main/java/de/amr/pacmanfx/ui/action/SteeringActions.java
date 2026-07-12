@@ -8,7 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import javafx.scene.input.KeyCode;
 
 import java.util.EnumMap;
@@ -28,7 +28,7 @@ public class SteeringActions {
 
         private final Direction dir;
 
-        public SteeringAction(Game game, Direction dir) {
+        public SteeringAction(PacManGamesCollection game, Direction dir) {
             super(game, createActionID(requireNonNull(dir)));
             this.dir = requireNonNull(dir);
         }
@@ -48,7 +48,7 @@ public class SteeringActions {
     private final EnumMap<Direction, GameAction> actions = new EnumMap<>(Direction.class);
     private final Set<ActionKeyBinding> bindings;
 
-    public SteeringActions(Game game) {
+    public SteeringActions(PacManGamesCollection game) {
         for (Direction dir : Direction.values()) {
             actions.put(dir, new SteeringAction(game, dir));
         }

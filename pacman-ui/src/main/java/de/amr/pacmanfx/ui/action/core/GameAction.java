@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.action.core;
 
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import org.tinylog.Logger;
 
 /**
@@ -13,10 +13,10 @@ import org.tinylog.Logger;
  */
 public abstract class GameAction {
 
-    protected final Game game;
+    protected final PacManGamesCollection game;
     protected final String id;
 
-    protected GameAction(Game game, String id) {
+    protected GameAction(PacManGamesCollection game, String id) {
         this.game = game;
         this.id = Validations.requireValidIdentifier(id);
     }

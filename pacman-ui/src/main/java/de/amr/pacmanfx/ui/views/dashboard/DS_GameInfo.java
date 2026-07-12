@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.model.world.MapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import javafx.scene.paint.Color;
 
 import java.net.URLDecoder;
@@ -35,7 +35,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     @Override
-    public void connect(Game game) {
+    public void connect(PacManGamesCollection game) {
         addDynamicInfo("Game State",  () -> game.context().state().name());
         addDynamicInfo("State Timer", () -> stateTimerInfo(game.context().state()));
         addDynamicInfo("Game Scene", supplyGameSceneInfo(game, gameScene -> gameScene.getClass().getSimpleName()));
@@ -82,7 +82,7 @@ public class DS_GameInfo extends GameDashboardSection {
         addDynamicInfo("Maze flashes",   supplyGameLevelInfo(game, this::fmtNumFlashes));
     }
 
-    private Supplier<String> supplyGameLevelSpeedInfo(Game game, BiFunction<GameLevel,ActorSpeedControl, String> fnInfo) {
+    private Supplier<String> supplyGameLevelSpeedInfo(PacManGamesCollection game, BiFunction<GameLevel,ActorSpeedControl, String> fnInfo) {
         return () -> game.context().model().optLevel()
             .map(level -> fnInfo.apply(level, game.context().model().rules().actorSpeedControl()))
             .orElse(NO_INFO);

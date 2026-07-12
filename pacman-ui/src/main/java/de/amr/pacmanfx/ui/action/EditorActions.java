@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
@@ -22,12 +22,12 @@ import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
 public class EditorActions {
 
-    private final Game game;
+    private final PacManGamesCollection game;
     private final GameAction actionOpenEditor;
 
     private final Set<ActionKeyBinding> bindings;
 
-    public EditorActions(Game game) {
+    public EditorActions(PacManGamesCollection game) {
         this.game = game;
 
         actionOpenEditor = new GameAction(game, "open_editor") {

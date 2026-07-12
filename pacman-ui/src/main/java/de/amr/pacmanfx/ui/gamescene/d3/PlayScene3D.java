@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.score.Score;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
@@ -65,7 +65,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
-    public PlayScene3D(Game game) {
+    public PlayScene3D(PacManGamesCollection game) {
         super(game);
 
         final GameViewModel viewModel = game.ui().viewModel();
@@ -269,7 +269,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     }
 
     @Override
-    public void handleQuit(Game game) {
+    public void handleQuit(PacManGamesCollection game) {
         onDeactivate();
         gameContext().flow().enterState(GameStateID.GAME_OVER);
     }

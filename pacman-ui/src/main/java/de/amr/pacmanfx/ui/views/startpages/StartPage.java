@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.input.Input;
 import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
@@ -15,7 +15,7 @@ public interface StartPage {
 
     Pane rootPane();
 
-    void connect(Game game);
+    void connect(PacManGamesCollection game);
 
     void onEnter();
 

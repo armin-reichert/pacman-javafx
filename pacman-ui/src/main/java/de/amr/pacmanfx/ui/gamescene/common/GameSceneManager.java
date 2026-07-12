@@ -8,7 +8,7 @@ import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSceneManager {
 
-    private Game game;
+    private PacManGamesCollection game;
 
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
@@ -36,7 +36,7 @@ public class GameSceneManager {
         });
     }
 
-    public void connect(Game game) {
+    public void connect(PacManGamesCollection game) {
         this.game = requireNonNull(game);
     }
 

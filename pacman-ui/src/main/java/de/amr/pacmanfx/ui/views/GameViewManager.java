@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views;
 
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -25,7 +25,7 @@ public final class GameViewManager {
 
     public GameViewManager() {}
 
-    public void connect(Game game) {
+    public void connect(PacManGamesCollection game) {
         requireNonNull(game);
 
         currentViewIDProperty().addListener((_, oldID, newID) -> {
@@ -121,7 +121,7 @@ public final class GameViewManager {
         return Optional.ofNullable(editorView);
     }
 
-    public boolean trySelectEditorView(Game game) {
+    public boolean trySelectEditorView(PacManGamesCollection game) {
         if (views.get(GameViewID.EDITOR) == null) {
             Logger.info("Editor view has not been created yet");
             return false;
@@ -136,7 +136,7 @@ public final class GameViewManager {
         }
     }
 
-    private boolean canOpenEditor(Game game) {
+    private boolean canOpenEditor(PacManGamesCollection game) {
         if (isSelected(GameViewID.START_PAGES)) {
             return true;
         }

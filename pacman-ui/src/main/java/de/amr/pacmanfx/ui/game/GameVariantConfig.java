@@ -24,14 +24,13 @@ import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 import java.util.Optional;
 
 //TODO: Clean-up this mess!
 public interface GameVariantConfig extends Disposable {
 
-    void init(Game game);
+    void init(PacManGamesCollection game);
 
     AssetMap assets();
 

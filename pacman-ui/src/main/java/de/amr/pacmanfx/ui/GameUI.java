@@ -11,7 +11,7 @@ import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.input.Input;
@@ -61,7 +61,7 @@ public class GameUI implements GameEventListener {
     private final GameViewModel viewModel;
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
 
-    private Game game;
+    private PacManGamesCollection game;
 
     public GameUI(Stage stage, int width, int height, GameUISettings settings, DashboardFactory dashboardFactory) {
         viewModel = new GameViewModel();
@@ -107,7 +107,7 @@ public class GameUI implements GameEventListener {
         return viewModel;
     }
 
-    public void connect(Game game) {
+    public void connect(PacManGamesCollection game) {
         this.game = requireNonNull(game);
 
         sounds.connect(game);

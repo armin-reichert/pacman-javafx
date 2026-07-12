@@ -1,8 +1,8 @@
 package de.amr.pacmanfx.ui.action.core;
 
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 
 public interface QuitHandler {
 
-    void handleQuit(Game game);
+    void handleQuit(PacManGamesCollection game);
 }

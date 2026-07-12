@@ -13,7 +13,7 @@ import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -44,7 +44,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     private List<Long> juniorCreationTimes;
     private Clapperboard clapperboard;
 
-    public TengenMsPacMan_CutScene4(Game game) {
+    public TengenMsPacMan_CutScene4(PacManGamesCollection game) {
         super(game);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);

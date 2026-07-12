@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views;
 
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.input.Input;
 import javafx.scene.Node;
 
@@ -27,7 +27,7 @@ public interface GameView extends QuitHandler {
         return Optional.empty();
     }
 
-    void connect(Game game);
+    void connect(PacManGamesCollection game);
 
     void onEnter();
 

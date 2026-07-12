@@ -19,7 +19,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
 import javafx.scene.paint.Color;
@@ -54,7 +54,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
     private int waitBeforeRising;
     public boolean dark;
 
-    public TengenMsPacMan_IntroScene(Game game) {
+    public TengenMsPacMan_IntroScene(PacManGamesCollection game) {
         super(game);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);

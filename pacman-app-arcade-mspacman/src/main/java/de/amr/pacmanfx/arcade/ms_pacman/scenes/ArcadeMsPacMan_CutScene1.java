@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -48,7 +48,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     public Actor heart;
     public Clapperboard clapperboard;
 
-    public ArcadeMsPacMan_CutScene1(Game game) {
+    public ArcadeMsPacMan_CutScene1(PacManGamesCollection game) {
         super(game);
     }
 

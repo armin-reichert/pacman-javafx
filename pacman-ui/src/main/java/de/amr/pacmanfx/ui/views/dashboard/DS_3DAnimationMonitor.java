@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -100,13 +100,13 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
     }
 
     @Override
-    public void connect(Game game) {
+    public void connect(PacManGamesCollection game) {
         tableView.prefHeightProperty().bind(game.ui().window().stage().heightProperty()
             .map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
     }
 
     @Override
-    public void update(Game game) {
+    public void update(PacManGamesCollection game) {
         super.update(game);
 
         final AnimationRegistry animationSet =

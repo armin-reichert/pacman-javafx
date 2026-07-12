@@ -93,12 +93,12 @@ public class GameBuilder {
         return this;
     }
 
-    public Optional<Game> build() {
+    public Optional<PacManGamesCollection> build() {
         try {
             validateConfigurationData();
             PacManGamesMachine.instance().plugInCartridges(cartridgeSet.toArray(Cartridge[]::new));
 
-            final var game = new GameImpl();
+            final var game = new PacManGamesCollectionImpl();
             game.setUI(new GameUI(stage, width, height, uiSettings, dashboardFactory));
 
             // Can only be done after UI has been assigned to game!
@@ -112,7 +112,7 @@ public class GameBuilder {
         }
     }
 
-    private void addStartPages(Game game) {
+    private void addStartPages(PacManGamesCollection game) {
         final StartPagesView startPagesView = game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class);
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();

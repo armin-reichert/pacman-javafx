@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.editor;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -25,7 +25,7 @@ public class EditorView implements GameView {
 
     public EditorView() {}
 
-    public void ensureEditorCreated(Game game) {
+    public void ensureEditorCreated(PacManGamesCollection game) {
         if (editor == null) {
             editor = new TileMapEditor(game.ui().window().stage());
             editor.setOnQuit(_ -> game.ui().views().selectStartPagesView());
@@ -37,7 +37,7 @@ public class EditorView implements GameView {
     }
 
     @Override
-    public void connect(Game game) {}
+    public void connect(PacManGamesCollection game) {}
 
     public TileMapEditor editor() {
         return editor;
@@ -60,7 +60,7 @@ public class EditorView implements GameView {
     }
 
     @Override
-    public void handleQuit(Game game) {
+    public void handleQuit(PacManGamesCollection game) {
         editor.quit();
     }
 

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 
 class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    public ArcadePacMan_GameSceneConfig(Game game) {
+    public ArcadePacMan_GameSceneConfig(PacManGamesCollection game) {
         this.game = requireNonNull(game);
     }
 

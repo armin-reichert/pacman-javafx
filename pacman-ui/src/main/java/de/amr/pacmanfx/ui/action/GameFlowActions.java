@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
@@ -27,7 +27,7 @@ public class GameFlowActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public GameFlowActions(Game game) {
+    public GameFlowActions(PacManGamesCollection game) {
 
         actionStartGame = new GameAction(game, "start_game") {
             @Override

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.ui.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.config.ui.DashboardSectionSettings;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
@@ -76,7 +76,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for Play View");
 
-    private Game game;
+    private PacManGamesCollection game;
 
     private final ContextMenu contextMenu = new ContextMenu();
 
@@ -107,7 +107,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     @Override
-    public void connect(Game game) {
+    public void connect(PacManGamesCollection game) {
         this.game = requireNonNull(game);
         final GameViewModel settings = game.ui().viewModel();
 
@@ -176,7 +176,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         return miniPlaySceneView;
     }
 
-    public void showHelp(Game game) {
+    public void showHelp(PacManGamesCollection game) {
         final double scaling = gameSceneFrame.scalingProperty().get();
         helpLayer.showHelpPopup(game, scaling, game.variants().currentVariantName());
     }
@@ -233,7 +233,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     @Override
-    public void handleQuit(Game game) {
+    public void handleQuit(PacManGamesCollection game) {
         game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.handleQuit(game));
         game.ui().views().selectStartPagesView();
     }

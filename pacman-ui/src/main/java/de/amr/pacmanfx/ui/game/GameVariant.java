@@ -36,7 +36,7 @@ public record GameVariant(
         );
     }
 
-    public <T> T getExtensionValue(Game game, Identifier id, Class<T> type) {
+    public <T> T getExtensionValue(PacManGamesCollection game, Identifier id, Class<T> type) {
         final Object cached = extensionValues.get(id);
         if (cached != null) {
             return type.cast(cached);

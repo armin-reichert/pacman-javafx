@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import javafx.scene.paint.Color;
 
@@ -28,7 +28,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
     public Ghost ghost;
     public Color shadeOfBlue;
 
-    public TengenMsPacMan_BootScene(Game game) {
+    public TengenMsPacMan_BootScene(PacManGamesCollection game) {
         super(game);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);

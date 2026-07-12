@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.MovingActor;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import java.util.function.BiFunction;
@@ -27,7 +27,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     @Override
-    public void connect(Game game) {
+    public void connect(PacManGamesCollection game) {
         addDynamicInfo("Pac Name",  supplyPacText(game, (_, pac) -> pac.name()));
         addDynamicInfo("Lives",     supplyLivesCount(game));
         addDynamicInfo("Movement",  supplyPacText(game, this::actorMovementText));
@@ -44,11 +44,11 @@ public class DS_ActorInfo extends GameDashboardSection {
         addGhostInfo(game, GameModel.ORANGE_GHOST_POKEY);
     }
 
-    private Supplier<String> supplyLivesCount(Game game) {
+    private Supplier<String> supplyLivesCount(PacManGamesCollection game) {
         return supplyGameLevelInfo(game, level -> "%d".formatted(level.gameModel().lives().count()));
     }
 
-    private void addGhostInfo(Game game, byte personality) {
+    private void addGhostInfo(PacManGamesCollection game, byte personality) {
         addDynamicInfo(ghostName(personality), supplyGhostText(game, this::ghostNameAndStateText, personality));
         addDynamicInfo("Movement",  supplyGhostText(game, this::actorMovementText,  personality));
         addDynamicInfo("Tile",      supplyGhostText(game, this::actorLocationText,  personality));
@@ -88,7 +88,7 @@ public class DS_ActorInfo extends GameDashboardSection {
             : "%.2fpx/s %s (%s)%s".formatted(speed, movingActor.moveDir(), movingActor.wishDir(), reverseText);
     }
 
-    private Supplier<String> supplyPacPowerText(Game game) {
+    private Supplier<String> supplyPacPowerText(PacManGamesCollection game) {
         return () -> game.context().model().optLevel()
             .map(level -> level.entities().pac())
             .map(this::pacPowerText)
@@ -101,11 +101,11 @@ public class DS_ActorInfo extends GameDashboardSection {
             : "No Power";
     }
 
-    private Supplier<String> supplyPacText(Game game, BiFunction<GameLevel, Pac, String> infoSupplier) {
+    private Supplier<String> supplyPacText(PacManGamesCollection game, BiFunction<GameLevel, Pac, String> infoSupplier) {
         return supplyGameLevelInfo(game, level -> infoSupplier.apply(level, level.entities().pac()));
     }
 
-    private Supplier<String> supplyPacAnimationText(Game game) {
+    private Supplier<String> supplyPacAnimationText(PacManGamesCollection game) {
         return () -> game.context().model().optLevel().map(level -> {
             final Pac pac = level.entities().pac();
             if (pac.animations() instanceof SpriteAnimationMap<?> sam && sam.selectedAnimationID() != null) {
@@ -115,7 +115,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         }).orElse(NO_INFO);
     }
 
-    private Supplier<String> supplyGhostText(Game game, BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
+    private Supplier<String> supplyGhostText(PacManGamesCollection game, BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
         return supplyGameLevelInfo(game, level -> {
             if (!level.entities().ghosts().isEmpty()) {
                 return infoSupplier.apply(level, level.ghost(personality));

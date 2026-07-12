@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.animation.Animation;
@@ -45,7 +45,7 @@ public class MiniPlaySceneView {
     private final HBox rootPane;
     private final Canvas canvas;
 
-    private Game game;
+    private PacManGamesCollection game;
 
     // Note: The level and actor renderers cannot be created in the constructor, because the game controller has not yet
     //       selected a game variant when the constructor is called, so no variant configuration is available yet!
@@ -75,7 +75,7 @@ public class MiniPlaySceneView {
         return rootPane;
     }
 
-    public void setUI(Game game) {
+    public void setUI(PacManGamesCollection game) {
         this.game = requireNonNull(game);
 
         rootPane.backgroundProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));

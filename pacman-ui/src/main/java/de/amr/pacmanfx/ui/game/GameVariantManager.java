@@ -22,13 +22,13 @@ import static java.util.Objects.requireNonNull;
 
 public class GameVariantManager implements ChangeListener<String> {
 
-    private final Game game;
+    private final PacManGamesCollection game;
 
     private final Map<String, GameVariant> variantsByName = new HashMap<>();
 
     private final StringProperty variantName = new SimpleStringProperty();
 
-    public GameVariantManager(Game game) {
+    public GameVariantManager(PacManGamesCollection game) {
         this.game = requireNonNull(game);
         variantName.addListener(this);
     }

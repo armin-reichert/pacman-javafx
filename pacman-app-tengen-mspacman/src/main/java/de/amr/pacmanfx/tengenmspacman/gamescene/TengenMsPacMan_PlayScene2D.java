@@ -22,7 +22,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -67,7 +67,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public TengenMsPacMan_PlayScene2D(Game game) {
+    public TengenMsPacMan_PlayScene2D(PacManGamesCollection game) {
         super(game);
 
         dynamicCamera = new PlayScene2DCamera();
@@ -167,7 +167,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
     }
 
     @Override
-    public void handleQuit(Game game) {
+    public void handleQuit(PacManGamesCollection game) {
         onDeactivate();
         game.context().flow().enterState(GameStateID.GAME_OVER);
     }

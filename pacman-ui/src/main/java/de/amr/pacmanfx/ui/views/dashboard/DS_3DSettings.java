@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -39,7 +39,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void connect(Game game) {
+    public void connect(PacManGamesCollection game) {
         final GameViewModel viewModel = game.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
@@ -96,7 +96,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void update(Game game) {
+    public void update(PacManGamesCollection game) {
         super.update(game);
 
         final GameViewModel viewModel = game.ui().viewModel();
@@ -116,14 +116,14 @@ public class DS_3DSettings extends GameDashboardSection {
         cbWireframeMode.setSelected(viewModel.common3D.drawModeProperty.get() == DrawMode.LINE);
     }
 
-    private String subSceneSizeInfo(Game game) {
+    private String subSceneSizeInfo(PacManGamesCollection game) {
         return game.ui().gameScenes().optCurrentGameScene()
             .flatMap(GameScene::optSubSceneFX)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
-    private String subSceneCameraInfo(Game game) {
+    private String subSceneCameraInfo(PacManGamesCollection game) {
         final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
         return gameScene.optSubSceneFX().map(SubScene::getCamera)
@@ -135,7 +135,7 @@ public class DS_3DSettings extends GameDashboardSection {
             .orElse(NO_INFO);
     }
 
-    private String sceneSizeInfo(Game game) {
+    private String sceneSizeInfo(PacManGamesCollection game) {
         final GameModel gameModel = game.context().model();
         final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;

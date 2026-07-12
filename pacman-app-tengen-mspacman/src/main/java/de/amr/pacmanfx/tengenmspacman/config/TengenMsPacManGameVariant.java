@@ -23,7 +23,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -140,7 +140,7 @@ public class TengenMsPacManGameVariant implements GameVariantConfig {
     }
 
     @Override
-    public void init(Game game) {
+    public void init(PacManGamesCollection game) {
         loadAssets();
         registerSoundObjects(game.ui().sounds());
         gameSceneConfig = new GameSceneConfig(game);

@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.game.GameConstants;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -35,7 +35,7 @@ public class SimulationActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public SimulationActions(Game game) {
+    public SimulationActions(PacManGamesCollection game) {
 
         actionFaster = new GameAction(game, "simulation_faster") {
             @Override

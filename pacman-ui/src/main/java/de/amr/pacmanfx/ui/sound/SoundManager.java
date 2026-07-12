@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.sound;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -36,11 +36,11 @@ public class SoundManager implements Disposable {
 
     private MediaPlayer voicePlayer;
 
-    private Game game;
+    private PacManGamesCollection game;
 
     public SoundManager() {}
 
-    public void connect(Game game) {
+    public void connect(PacManGamesCollection game) {
         this.game = requireNonNull(game);
     }
 

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.game.GameBuilder;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.NE
 
 public class TengenMsPacMan_App extends Application {
 
-    Game game;
+    PacManGamesCollection game;
 
     @Override
     public void start(Stage stage) {

@@ -18,8 +18,8 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.game.Game;
-import de.amr.pacmanfx.ui.game.GameImpl;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.game.PacManGamesCollectionImpl;
 import de.amr.pacmanfx.ui.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -32,7 +32,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
     static final float ASPECT_RATIO    = 1.6f; // 16:10
     static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    Game game;
+    PacManGamesCollection game;
     boolean includeTests;
 
     @Override
@@ -51,7 +51,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
             null,
             PacManXXL_MsPacMan_Cartridge.CARTRIDGE
         );
-        game = new GameImpl();
+        game = new PacManGamesCollectionImpl();
 
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         final GameUI ui = new GameUI(

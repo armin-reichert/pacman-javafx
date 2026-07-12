@@ -10,11 +10,11 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 
 public class ActorAnimationManager {
 
-    public static void ensureActorAnimationsCreated(Game game, GameLevel level) {
+    public static void ensureActorAnimationsCreated(PacManGamesCollection game, GameLevel level) {
         final GameVariantConfig config = game.variants().currentVariant().config();
         final SpriteAnimationContainer animationContainer = game.ui().sprites().animations();
         final Pac pac = level.entities().pac();

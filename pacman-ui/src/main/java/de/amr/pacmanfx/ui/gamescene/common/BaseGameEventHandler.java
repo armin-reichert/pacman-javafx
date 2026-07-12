@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.event.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.ui.game.Game;
+import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import java.util.Optional;
@@ -22,13 +22,13 @@ import static java.util.Objects.requireNonNull;
  */
 public class BaseGameEventHandler extends DefaultGameEventListener {
 
-    private final Game game;
+    private final PacManGamesCollection game;
 
-    public BaseGameEventHandler(Game game) {
+    public BaseGameEventHandler(PacManGamesCollection game) {
         this.game = requireNonNull(game);
     }
 
-    public Game game() {
+    public PacManGamesCollection game() {
         return game;
     }
 

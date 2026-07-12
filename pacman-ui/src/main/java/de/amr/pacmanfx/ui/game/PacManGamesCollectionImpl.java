@@ -20,7 +20,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games collection.
  */
-public final class GameImpl implements Game {
+public final class PacManGamesCollectionImpl implements PacManGamesCollection {
 
     private final GameVariantManager variantManager;
 
@@ -30,7 +30,7 @@ public final class GameImpl implements Game {
 
     private GameContext context;
 
-    public GameImpl() {
+    public PacManGamesCollectionImpl() {
         this.variantManager = new GameVariantManager(this);
         this.commonActions = new CommonActions(this);
         configureClock();
