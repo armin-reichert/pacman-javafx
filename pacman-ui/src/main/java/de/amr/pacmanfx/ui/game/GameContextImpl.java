@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Context for the currently running game variant.
  */
-public class GameVariantContext implements GameContext {
+public class GameContextImpl implements GameContext {
 
     private final CoinMechanism coinMechanism;
 
@@ -26,7 +26,7 @@ public class GameVariantContext implements GameContext {
 
     private final GameEventManager eventManager;
 
-    public GameVariantContext(CoinMechanism coinMechanism, GameVariant gameVariant) {
+    public GameContextImpl(CoinMechanism coinMechanism, GameVariant gameVariant) {
         this.coinMechanism = requireNonNull(coinMechanism);
         this.gameVariant = requireNonNull(gameVariant);
         this.eventManager = new GameEventManagerImpl();

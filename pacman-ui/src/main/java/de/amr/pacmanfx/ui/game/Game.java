@@ -19,6 +19,8 @@ public interface Game {
 
     CommonActions actions();
 
+    void setContextForCurrentVariant(GameContext context);
+
     GameContext context();
 
     void setUI(GameUI ui);

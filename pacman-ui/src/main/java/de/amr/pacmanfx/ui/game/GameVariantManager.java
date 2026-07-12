@@ -22,13 +22,13 @@ import static java.util.Objects.requireNonNull;
 
 public class GameVariantManager implements ChangeListener<String> {
 
-    private final PacManGamesCollection game;
+    private final Game game;
 
     private final Map<String, GameVariant> variantsByName = new HashMap<>();
 
     private final StringProperty variantName = new SimpleStringProperty();
 
-    public GameVariantManager(PacManGamesCollection game) {
+    public GameVariantManager(Game game) {
         this.game = requireNonNull(game);
         variantName.addListener(this);
     }
@@ -99,11 +99,11 @@ public class GameVariantManager implements ChangeListener<String> {
         //TODO rethink
         game.ui().viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
 
-        final var gameVariantContext = new GameVariantContext(game.machine().coinMechanism(), gameVariant);
+        final var gameVariantContext = new GameContextImpl(game.machine().coinMechanism(), gameVariant);
         gameVariantContext.flow().setContext(gameVariantContext);
         gameVariantContext.eventManager().addGameEventSubscriber(game.ui());
 
-        game.setGameVariantContext(gameVariantContext);
+        game.setContextForCurrentVariant(gameVariantContext);
     }
 
     private void exitGameVariant(GameVariant gameVariant) {
@@ -111,7 +111,7 @@ public class GameVariantManager implements ChangeListener<String> {
         gameVariant.config().dispose();
 
         game.context().eventManager().removeGameEventSubscriber(game.ui());
-        game.setGameVariantContext(null);
+        game.setContextForCurrentVariant(null);
     }
 
     private PacManGamesMachine machine() {

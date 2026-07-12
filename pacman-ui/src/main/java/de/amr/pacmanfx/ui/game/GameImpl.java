@@ -20,7 +20,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games collection.
  */
-public final class PacManGamesCollection implements Game {
+public final class GameImpl implements Game {
 
     private final GameVariantManager variantManager;
 
@@ -28,9 +28,9 @@ public final class PacManGamesCollection implements Game {
 
     private GameUI ui;
 
-    private GameVariantContext gameVariantContext;
+    private GameContext context;
 
-    public PacManGamesCollection() {
+    public GameImpl() {
         this.variantManager = new GameVariantManager(this);
         this.commonActions = new CommonActions(this);
         configureClock();
@@ -38,8 +38,8 @@ public final class PacManGamesCollection implements Game {
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
     }
 
-    public void setGameVariantContext(GameVariantContext gameVariantContext) {
-        this.gameVariantContext = gameVariantContext;
+    public void setContext(GameContext context) {
+        this.context = context;
     }
 
     // Game interface
@@ -60,9 +60,15 @@ public final class PacManGamesCollection implements Game {
         return variantManager;
     }
 
+
+    @Override
+    public void setContextForCurrentVariant(GameContext context) {
+        this.context = context;
+    }
+
     @Override
     public GameContext context() {
-        return gameVariantContext;
+        return context;
     }
 
     @Override
@@ -94,7 +100,7 @@ public final class PacManGamesCollection implements Game {
 
     @Override
     public void startGamePlay() {
-        gameVariantContext.flow().restartState(GameStateID.BOOT);
+        context.flow().restartState(GameStateID.BOOT);
         ui.views().selectGamePlayView();
         Platform.runLater(machine().clock()::start);
     }
@@ -134,7 +140,7 @@ public final class PacManGamesCollection implements Game {
     }
 
     private void simulateAndUpdateCurrentGameScene() {
-        gameVariantContext.flow().update();
+        context.flow().update();
         Platform.runLater(() -> ui.gameScenes().optCurrentGameScene()
             .ifPresent(gameScene -> gameScene.onTick(machine().clock().currentTick())));
     }

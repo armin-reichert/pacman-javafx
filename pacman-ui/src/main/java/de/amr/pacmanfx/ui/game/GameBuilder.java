@@ -98,7 +98,7 @@ public class GameBuilder {
             validateConfigurationData();
             PacManGamesMachine.instance().plugInCartridges(cartridgeSet.toArray(Cartridge[]::new));
 
-            final var game = new PacManGamesCollection();
+            final var game = new GameImpl();
             game.setUI(new GameUI(stage, width, height, uiSettings, dashboardFactory));
 
             // Can only be done after UI has been assigned to game!
