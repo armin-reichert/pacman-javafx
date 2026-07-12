@@ -11,7 +11,7 @@ import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.input.Input;
@@ -205,7 +205,7 @@ public class GameUI implements GameEventListener {
     }
 
     private void bindCommonActions() {
-        final CommonActions actions = game.actions();
+        final CommonActions actions = game.commonActions();
         final Set<ActionKeyBinding> bindings = actions.bindings();
         actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionToggleKeyboardMonitor(), bindings);
         actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionEnterFullScreen(), bindings);

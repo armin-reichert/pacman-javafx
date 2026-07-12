@@ -8,7 +8,7 @@ import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.model.GameRules;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.widgets.DashboardSection;
 import de.amr.pacmanfx.uilib.widgets.DashboardSectionCreator;
@@ -45,11 +45,11 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
     }
 
     protected Supplier<String> supplyGameLevelInfo(PacManGamesCollection game, Function<GameLevel, String> fnInfo) {
-        return () -> game.context().model().optLevel().map(fnInfo).orElse(NO_INFO);
+        return () -> game.gameContext().model().optLevel().map(fnInfo).orElse(NO_INFO);
     }
 
     protected Supplier<String> supplyGameRulesInfo(PacManGamesCollection game, Function<GameRules, String> fnInfo) {
-        return () -> fnInfo.apply(game.context().model().rules());
+        return () -> fnInfo.apply(game.gameContext().model().rules());
     }
 
     protected void addDynamicInfo(String label, Supplier<?> infoSupplier) {

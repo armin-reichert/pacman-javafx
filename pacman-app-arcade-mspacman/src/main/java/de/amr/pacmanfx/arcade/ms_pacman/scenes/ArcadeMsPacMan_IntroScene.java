@@ -21,9 +21,9 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 
 import java.util.List;
@@ -65,11 +65,10 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = game().variants().currentVariant()
-            .getExtensionValue(game(), Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = actionContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings());
-        actionBindings().registerAllBindings(game().actions().sceneTestActions().bindings());
+        actionBindings().registerAllBindings(game().commonActions().sceneTestActions().bindings());
 
         sceneFlow.restartState(SceneState.STARTING);
     }
@@ -211,7 +210,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameContext context = scene.game().context();
+                final GameContext context = scene.game().gameContext();
                 final GameFlow flow = context.flow();
                 final boolean canPlay = !context.coinMechanism().isEmpty();
                 scene.marquee.timer().doTick();

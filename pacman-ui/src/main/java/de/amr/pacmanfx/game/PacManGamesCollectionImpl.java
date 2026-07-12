@@ -2,14 +2,17 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.game;
+package de.amr.pacmanfx.game;
 
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
 import javafx.util.Duration;
@@ -20,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games collection.
  */
-public final class PacManGamesCollectionImpl implements PacManGamesCollection {
+public final class PacManGamesCollectionImpl implements PacManGamesCollection, GameActionContext {
 
     private final GameVariantManager variantManager;
 
@@ -41,8 +44,6 @@ public final class PacManGamesCollectionImpl implements PacManGamesCollection {
     public void setContext(GameContext context) {
         this.context = context;
     }
-
-    // Game interface
 
     @Override
     public void setUI(GameUI ui) {
@@ -67,13 +68,28 @@ public final class PacManGamesCollectionImpl implements PacManGamesCollection {
     }
 
     @Override
-    public GameContext context() {
+    public GameContext gameContext() {
         return context;
     }
 
     @Override
-    public CommonActions actions() {
+    public CommonActions commonActions() {
         return commonActions;
+    }
+
+    @Override
+    public GameClock clock() {
+        return machine().clock();
+    }
+
+    @Override
+    public CoinMechanism coinMechanism() {
+        return machine().coinMechanism();
+    }
+
+    @Override
+    public Input input() {
+        return machine().input();
     }
 
     @Override

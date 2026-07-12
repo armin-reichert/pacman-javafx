@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -25,8 +25,8 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    public static HelpInfo build(PacManGamesCollection game) {
-        final GameContext context = game.context();
+    public static HelpInfo build(GameActionContext game) {
+        final GameContext context = game.gameContext();
         final TimedGameState state = context.state();
         final boolean demoLevel = context.gamePlay().isDemoLevelRunning(context.model());
 
@@ -51,12 +51,12 @@ public class HelpInfo {
         return helpInfo;
     }
 
-    private final PacManGamesCollection game;
+    private final GameActionContext game;
 
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text>  column1 = new ArrayList<>();
 
-    public HelpInfo(PacManGamesCollection game) {
+    public HelpInfo(GameActionContext game) {
         this.game = requireNonNull(game);
     }
 
@@ -64,7 +64,7 @@ public class HelpInfo {
         return game.ui().translations().translate(key, args);
     }
 
-    public Pane createPane(PacManGamesCollection game, Color backgroundColor, Font font) {
+    public Pane createPane(GameActionContext game, Color backgroundColor, Font font) {
         final var grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(10);
@@ -80,7 +80,7 @@ public class HelpInfo {
         pane.setPadding(new Insets(10));
         pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
-        final GameContext gameContext = game.context();
+        final GameContext gameContext = game.gameContext();
         final GameCheats cheats = gameContext.cheats();
 
         // add default entries:

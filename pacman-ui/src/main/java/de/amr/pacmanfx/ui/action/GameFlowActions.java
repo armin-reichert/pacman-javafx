@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
@@ -27,42 +27,42 @@ public class GameFlowActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public GameFlowActions(PacManGamesCollection game) {
+    public GameFlowActions(GameActionContext game) {
 
         actionStartGame = new GameAction(game, "start_game") {
             @Override
             protected void doAction() {
-                game.startGamePlay();
+                actionContext.startGamePlay();
             }
         };
 
         actionQuit = new GameAction(game, "quit") {
             @Override
             protected void doAction() {
-                Logger.info("Call QUIT handler for {}", game.ui().views().assertCurrentView());
-                game.ui().views().assertCurrentView().handleQuit(game);
+                Logger.info("Call QUIT handler for {}", actionContext.ui().views().assertCurrentView());
+                actionContext.ui().views().assertCurrentView().handleQuit(actionContext);
             }
         };
 
         actionLetGameStateExpire = new GameAction(game, "let_game_state_expire") {
             @Override
             protected void doAction() {
-                game.context().state().triggerTimeout();
+                actionContext.gameContext().state().triggerTimeout();
             }
         };
 
         actionRestartIntro = new GameAction(game, "restart_intro") {
             @Override
             protected void doAction() {
-                final GameContext gameContext = game.context();
+                final GameContext gameContext = actionContext.gameContext();
                 final TimedGameState gameState = gameContext.state();
 
                 if (gameState.id() instanceof TestStateID) {
                     gameState.onExit(gameContext);
                 }
 
-                game.suspendGamePlay();
-                game.machine().clock().start();
+                actionContext.suspendGamePlay();
+                actionContext.clock().start();
                 gameContext.flow().restartState(GameStateID.GAME_INTRO);
             }
         };

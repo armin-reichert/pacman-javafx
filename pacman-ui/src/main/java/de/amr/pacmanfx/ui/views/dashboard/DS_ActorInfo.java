@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.MovingActor;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import java.util.function.BiFunction;
@@ -89,7 +89,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyPacPowerText(PacManGamesCollection game) {
-        return () -> game.context().model().optLevel()
+        return () -> game.gameContext().model().optLevel()
             .map(level -> level.entities().pac())
             .map(this::pacPowerText)
             .orElse(NO_INFO);
@@ -106,7 +106,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyPacAnimationText(PacManGamesCollection game) {
-        return () -> game.context().model().optLevel().map(level -> {
+        return () -> game.gameContext().model().optLevel().map(level -> {
             final Pac pac = level.entities().pac();
             if (pac.animations() instanceof SpriteAnimationMap<?> sam && sam.selectedAnimationID() != null) {
                 return "%s:%d".formatted(sam.selectedAnimationID(), pac.animations().currentFrame());

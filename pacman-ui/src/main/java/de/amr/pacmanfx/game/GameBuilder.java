@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.game;
+package de.amr.pacmanfx.game;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.ui.GameUI;
@@ -112,7 +112,7 @@ public class GameBuilder {
         }
     }
 
-    private void addStartPages(PacManGamesCollection game) {
+    private void addStartPages(PacManGamesCollectionImpl game) {
         final StartPagesView startPagesView = game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class);
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();

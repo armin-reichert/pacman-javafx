@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;

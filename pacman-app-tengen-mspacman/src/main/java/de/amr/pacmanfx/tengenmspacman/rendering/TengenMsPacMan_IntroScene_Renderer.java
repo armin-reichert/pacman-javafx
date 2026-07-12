@@ -9,7 +9,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.SceneState;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -95,8 +95,8 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             default -> {}
         }
 
-        final var uiSettings = scene.game().variants().currentVariant()
-            .getExtensionValue(scene.game(), TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        final var uiSettings = scene.actionContext().getExtensionValue(
+            TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
         if (uiSettings.joypadBindingsDisplayed.get()) {
             drawJoypadKeyBinding(scene.input().joypad().currentKeyBinding());

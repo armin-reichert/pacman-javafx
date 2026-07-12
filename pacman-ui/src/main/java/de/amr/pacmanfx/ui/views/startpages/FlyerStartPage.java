@@ -4,7 +4,8 @@
 
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.CommonActions;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.JsonConfigLoader;
@@ -39,7 +40,8 @@ public class FlyerStartPage implements StartPage {
     protected String title;
     protected String gameVariantName;
     protected GameStartButton startButton;
-    protected PacManGamesCollection game;
+    protected GameActionContext actionContext;
+    protected CommonActions commonActions;
     protected Media voice;
 
     public FlyerStartPage(URL configURL) {
@@ -94,9 +96,9 @@ public class FlyerStartPage implements StartPage {
             flyer.prevFlyerPage();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
-            if (game != null) {
-                game.ui().sounds().stopAndDisposeVoice();
-                game.ui().shortMessage(game.ui().translations().translate("flash.shut_up"));
+            if (actionContext != null) {
+                actionContext.ui().sounds().stopAndDisposeVoice();
+                actionContext.ui().shortMessage(actionContext.ui().translations().translate("flash.shut_up"));
             }
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER) && startButton != null) {
@@ -105,13 +107,14 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public void connect(PacManGamesCollection game) {
-        this.game = requireNonNull(game);
+    public void connect(GameActionContext game, CommonActions commonActions) {
+        this.actionContext = requireNonNull(game);
+        this.commonActions = requireNonNull(commonActions);
     }
 
     @Override
     public void onEnter() {
-        game.variants().selectVariant(gameVariantName);
+        actionContext.variants().selectVariant(gameVariantName);
         flyer.selectPage(0);
         talk();
         Platform.runLater(startButton::requestFocus);
@@ -142,18 +145,18 @@ public class FlyerStartPage implements StartPage {
 
     public void talk() {
         if (voice != null) {
-            game.ui().sounds().playVoice(voice);
+            actionContext.ui().sounds().playVoice(voice);
         }
     }
 
 
     public void stopTalking() {
-        game.ui().sounds().stopAndDisposeVoice();
+        actionContext.ui().sounds().stopAndDisposeVoice();
     }
 
     protected GameStartButton createStartButton() {
         final var button = new GameStartButton("START!");
-        button.setOnAction(_ -> game.actions().gameFlowActions().actionStartGame().execute());
+        button.setOnAction(_ -> commonActions.gameFlowActions().actionStartGame().execute());
         rootPane.getChildren().add(button);
 
         StackPane.setAlignment(button, Pos.BOTTOM_CENTER);

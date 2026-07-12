@@ -18,9 +18,8 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
-import de.amr.pacmanfx.ui.game.PacManGamesCollectionImpl;
-import de.amr.pacmanfx.ui.game.PacManGamesMachine;
+import de.amr.pacmanfx.game.PacManGamesCollectionImpl;
+import de.amr.pacmanfx.game.PacManGamesMachine;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -32,8 +31,8 @@ public class PacManAllGamesNoBuilderApp extends Application {
     static final float ASPECT_RATIO    = 1.6f; // 16:10
     static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
-    PacManGamesCollection game;
-    boolean includeTests;
+    private PacManGamesCollectionImpl game;
+    private boolean includeTests;
 
     @Override
     public void init() {

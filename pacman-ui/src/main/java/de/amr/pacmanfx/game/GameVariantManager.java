@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.game;
+package de.amr.pacmanfx.game;
 
 import de.amr.pacmanfx.core.flow.GameFlow;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
@@ -22,13 +22,13 @@ import static java.util.Objects.requireNonNull;
 
 public class GameVariantManager implements ChangeListener<String> {
 
-    private final PacManGamesCollection game;
+    private final PacManGamesCollectionImpl game;
 
     private final Map<String, GameVariant> variantsByName = new HashMap<>();
 
     private final StringProperty variantName = new SimpleStringProperty();
 
-    public GameVariantManager(PacManGamesCollection game) {
+    public GameVariantManager(PacManGamesCollectionImpl game) {
         this.game = requireNonNull(game);
         variantName.addListener(this);
     }
@@ -110,7 +110,7 @@ public class GameVariantManager implements ChangeListener<String> {
         game.ui().sounds().dispose();
         gameVariant.config().dispose();
 
-        game.context().eventManager().removeGameEventSubscriber(game.ui());
+        game.gameContext().eventManager().removeGameEventSubscriber(game.ui());
         game.setContextForCurrentVariant(null);
     }
 

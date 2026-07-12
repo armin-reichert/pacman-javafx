@@ -6,7 +6,8 @@ package de.amr.pacmanfx.ui.views.editor;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -25,11 +26,11 @@ public class EditorView implements GameView {
 
     public EditorView() {}
 
-    public void ensureEditorCreated(PacManGamesCollection game) {
+    public void ensureEditorCreated(GameActionContext actionContext) {
         if (editor == null) {
-            editor = new TileMapEditor(game.ui().window().stage());
-            editor.setOnQuit(_ -> game.ui().views().selectStartPagesView());
-            final MenuItem miQuitEditor = new MenuItem(game.ui().translations().translate("editor.menu.back_to_game"));
+            editor = new TileMapEditor(actionContext.ui().window().stage());
+            editor.setOnQuit(_ -> actionContext.ui().views().selectStartPagesView());
+            final MenuItem miQuitEditor = new MenuItem(actionContext.ui().translations().translate("editor.menu.back_to_game"));
             miQuitEditor.setOnAction(_ -> editor.quit());
             editor.ui().menuSystem().fileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
             editor.ui().layoutPane().setBackground(Ufx.paintBackground(Color.valueOf("#dddddd"))); // JavaFX default grey
@@ -60,7 +61,7 @@ public class EditorView implements GameView {
     }
 
     @Override
-    public void handleQuit(PacManGamesCollection game) {
+    public void handleQuit(GameActionContext actionContext) {
         editor.quit();
     }
 

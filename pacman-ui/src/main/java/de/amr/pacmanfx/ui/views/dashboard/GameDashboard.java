@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.Identifier;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.uilib.widgets.Dashboard;
 import de.amr.pacmanfx.uilib.widgets.DashboardSection;
 

@@ -7,11 +7,12 @@ package de.amr.pacmanfx.ui.views.playview;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.config.ui.DashboardSectionSettings;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
@@ -176,7 +177,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         return miniPlaySceneView;
     }
 
-    public void showHelp(PacManGamesCollection game) {
+    public void showHelp(GameActionContext game) {
         final double scaling = gameSceneFrame.scalingProperty().get();
         helpLayer.showHelpPopup(game, scaling, game.variants().currentVariantName());
     }
@@ -217,7 +218,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void onEnter() {
         rootPane.requestFocus();
 
-        actionBindings.registerAllBindings(game.actions().bindings());
+        actionBindings.registerAllBindings(game.commonActions().bindings());
         Logger.info(actionBindings);
 
         gameSceneFrame.installBindings();
@@ -233,9 +234,9 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     @Override
-    public void handleQuit(PacManGamesCollection game) {
-        game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.handleQuit(game));
-        game.ui().views().selectStartPagesView();
+    public void handleQuit(GameActionContext actionContext) {
+        actionContext.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.handleQuit(actionContext));
+        actionContext.ui().views().selectStartPagesView();
     }
 
     @Override
@@ -249,12 +250,12 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         // Render current 2D game scene
         final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
-            final GameModel gameModel = game.context().model();
+            final GameModel gameModel = game.gameContext().model();
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D, tick);
             }
             if (hudRenderer != null) {
-                hudRenderer.draw(gameModel.hudState(), game.context(), gameScene2D, tick);
+                hudRenderer.draw(gameModel.hudState(), game.gameContext(), gameScene2D, tick);
             }
         }
 
@@ -278,7 +279,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
             // Add 2D play scene-specific entries
             if (game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
                 addLocalizedTitleItem(contextMenu, translations, "context_menu.scene_display");
-                addLocalizedActionItem(contextMenu, translations, game.actions().uiSettingsActions().actionTogglePlayScene2D3D(),
+                addLocalizedActionItem(contextMenu, translations, game.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(),
                     "context_menu.use_3D_scene");
             }
             // Add scene-specific entries

@@ -9,8 +9,8 @@ import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 
 public class ActorAnimationManager {
 

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.window;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -84,7 +84,7 @@ public class StatusIconBox implements Disposable {
         // Visibility of "autopilot", "cheated" and "immune" is bound to *current game model*'s cheat object!
         final ChangeListener<String> variantChangeHandler = (_, _, variantName) -> {
             final GameModel gameModel = game.variants().variant(variantName).gameModel();
-            final GameCheats cheats = game.context().cheats();
+            final GameCheats cheats = game.gameContext().cheats();
 
             iconAutopilot.visibleProperty().unbind();
             iconAutopilot.visibleProperty().bind(cheats.pacUsingAutopilotProperty());

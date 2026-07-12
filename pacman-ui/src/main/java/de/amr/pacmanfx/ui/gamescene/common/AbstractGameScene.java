@@ -11,7 +11,8 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
@@ -74,6 +75,11 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
     }
 
     @Override
+    public GameActionContext actionContext() {
+        return (GameActionContext) game; //TODO rethink
+    }
+
+    @Override
     public Input input() {
         return game.machine().input();
     }
@@ -85,7 +91,7 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
 
     @Override
     public GameContext gameContext() {
-        return game().context();
+        return game().gameContext();
     }
 
     @Override
@@ -121,7 +127,7 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
     // --- Interface "QuitHandler"
 
     @Override
-    public void handleQuit(PacManGamesCollection game) {
+    public void handleQuit(GameActionContext ac) {
         Logger.info("Game scene {} quitted", getClass().getSimpleName());
         onDeactivate();
     }

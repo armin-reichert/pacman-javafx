@@ -14,8 +14,8 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 

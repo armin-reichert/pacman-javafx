@@ -9,8 +9,8 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapSelectionMode;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuSettings;
@@ -35,7 +35,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     private final ChaseAnimation chaseAnimation;
 
-    private PacManGamesCollection game;
+    private GameActionContext actionContext;
 
     private ObservableValue<Double> scaling;
 
@@ -80,14 +80,14 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             meMapOrder.value());
     }
 
-    public void init(PacManGamesCollection game) {
-        this.game = requireNonNull(game);
+    public void init(GameActionContext actionContext) {
+        this.actionContext = requireNonNull(actionContext);
 
-        scaling = createScalingValue(game.ui().window().stage().heightProperty());
+        scaling = createScalingValue(actionContext.ui().window().stage().heightProperty());
 
-        final GameContext gameContext = game.context();
-        final GameVariantConfig variantConfig = game.variants().currentVariant().config();
-        final GameVariantID gameVariantID = GameVariantID.valueOf(game.variants().currentVariantName());
+        final GameContext gameContext = actionContext.gameContext();
+        final GameVariantConfig variantConfig = actionContext.variants().currentVariant().config();
+        final GameVariantID gameVariantID = GameVariantID.valueOf(actionContext.variants().currentVariantName());
         final GameModel gameModel = gameContext.model();
 
         if (!(gameModel.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
@@ -99,15 +99,15 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         // Init entries
         meGameVariantID.setValue(gameVariantID);
-        meView3DEnabled.setValue(game.ui().viewModel().common3D.view3DEnabledProperty.get());
+        meView3DEnabled.setValue(actionContext.ui().viewModel().common3D.view3DEnabledProperty.get());
         meCutScenesEnabled.setValue(gameContext.flow().cutScenesEnabled());
         meMapOrder.setValue(mapSelector.selectionMode());
         meMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());
 
         logMenuState();
 
-        soundEnabledProperty().bind(game.ui().sounds().muteProperty().not());
-        chaseAnimation.init(variantConfig, canvas, game.ui().sprites().animations());
+        soundEnabledProperty().bind(actionContext.ui().sounds().muteProperty().not());
+        chaseAnimation.init(variantConfig, canvas, actionContext.ui().sprites().animations());
     }
 
     public void bind() {
@@ -149,15 +149,15 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldVariantID, GameVariantID newVariantID) {
-        game.variants().selectVariant(newVariantID.name());
+        actionContext.variants().selectVariant(newVariantID.name());
     }
 
     private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        game.ui().viewModel().common3D.view3DEnabledProperty.set(newValue);
+        actionContext.ui().viewModel().common3D.view3DEnabledProperty.set(newValue);
     }
 
     private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        game.context().flow().setCutScenesEnabled(newValue);
+        actionContext.gameContext().flow().setCutScenesEnabled(newValue);
     }
 
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {
@@ -168,9 +168,9 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         {
             @Override
             public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
-                if (game != null) {
-                    final GameVariantConfig gameVariant = game.variants().variant(newVariant.name()).config();
-                    chaseAnimation.init(gameVariant, canvas, game.ui().sprites().animations());
+                if (actionContext != null) {
+                    final GameVariantConfig gameVariant = actionContext.variants().variant(newVariant.name()).config();
+                    chaseAnimation.init(gameVariant, canvas, actionContext.ui().sprites().animations());
                 }
             }
         };

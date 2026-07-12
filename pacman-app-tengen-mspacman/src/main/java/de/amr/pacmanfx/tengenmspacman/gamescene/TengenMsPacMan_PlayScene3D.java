@@ -11,7 +11,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
@@ -99,8 +99,8 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     public void replaceActionBindings(GameLevel level) {
         actionBindings().dispose();
 
-        final var actions = game().variants().currentVariant()
-            .getExtensionValue(game(), TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = actionContext().getExtensionValue(
+            TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         if (level.isDemoLevel()) {
             // In demo level, allow going back to options screen
@@ -108,7 +108,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         } else {
             actionBindings().registerAllBindings(actions.steeringBindings());
             actionBindings().selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
-            actionBindings().registerAllBindings(game().actions().cheatActions().bindings());
+            actionBindings().registerAllBindings(game().commonActions().cheatActions().bindings());
         }
         bindActions();
 

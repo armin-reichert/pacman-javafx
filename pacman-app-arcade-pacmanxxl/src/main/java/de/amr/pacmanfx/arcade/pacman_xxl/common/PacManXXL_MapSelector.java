@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.filesystem.PathWatchEventListener;
 import de.amr.pacmanfx.core.model.world.*;
-import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.core.GameConstants;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.tinylog.Logger;

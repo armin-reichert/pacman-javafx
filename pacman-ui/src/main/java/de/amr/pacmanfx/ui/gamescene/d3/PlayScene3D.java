@@ -12,7 +12,8 @@ import de.amr.pacmanfx.core.score.Score;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
@@ -82,7 +83,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
 
-        actionBindings = game().actions().camera3DActions().bindings();
+        actionBindings = game().commonActions().camera3DActions().bindings();
 
         setGameEventHandler(new PlayScene3DGameEventHandler(game, this));
 
@@ -269,7 +270,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     }
 
     @Override
-    public void handleQuit(PacManGamesCollection game) {
+    public void handleQuit(GameActionContext actionContext) {
         onDeactivate();
         gameContext().flow().enterState(GameStateID.GAME_OVER);
     }

@@ -16,8 +16,8 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
-import de.amr.pacmanfx.ui.game.GameBuilder;
+import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.GameBuilder;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

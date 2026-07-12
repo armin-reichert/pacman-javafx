@@ -6,17 +6,17 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.PacEatsFoodEvent;
-import de.amr.pacmanfx.core.state.TimedGameState;
-import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import javafx.scene.input.KeyCode;
 
 import java.util.List;
@@ -40,29 +40,29 @@ public final class CheatActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public CheatActions(PacManGamesCollection game) {
+    public CheatActions(GameActionContext game) {
 
         actionAddLives = new GameAction(game, "cheat_add_lives") {
             @Override
             public void doAction() {
-                final GameModel model = game.context().model();
+                final GameModel model = actionContext.gameContext().model();
                 model.lives().add(3);
-                game.context().cheats().notifyCheatUsed();
+                actionContext.gameContext().cheats().notifyCheatUsed();
 
-                final String msg = game.ui().translations().translate("flash.cheat_add_lives", model.lives().count());
-                game.ui().shortMessage(msg);
+                final String msg = actionContext.ui().translations().translate("flash.cheat_add_lives", model.lives().count());
+                actionContext.ui().shortMessage(msg);
             }
 
             @Override
             public boolean isEnabled() {
-                return normalLevel(game).isPresent();
+                return normalLevel(actionContext).isPresent();
             }
         };
 
         actionEatAllPellets = new GameAction(game, "cheat_eat_all_pellets") {
             @Override
             public void doAction() {
-                final GameContext context = game.context();
+                final GameContext context = this.actionContext.gameContext();
                 final GameLevel level = context.model().assertLevel();
 
                 level.worldMap().foodLayer().eatPellets();
@@ -73,15 +73,15 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled() {
-                final TimedGameState gameState = game.context().state();
-                return normalLevel(game).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
+                final TimedGameState gameState = actionContext.gameContext().state();
+                return normalLevel(actionContext).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };
 
         actionKillGhosts = new GameAction(game, "cheat_kill_ghosts") {
             @Override
             public void doAction() {
-                final GameContext context = game.context();
+                final GameContext context = this.actionContext.gameContext();
                 final GameModel model = context.model();
                 final GameLevel level = model.assertLevel();
 
@@ -100,15 +100,15 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled() {
-                final TimedGameState gameState = game.context().state();
-                return normalLevel(game).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
+                final TimedGameState gameState = actionContext.gameContext().state();
+                return normalLevel(actionContext).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };
 
         actionEnterNextLevel = new GameAction(game, "cheat_enter_next_level") {
             @Override
             public void doAction() {
-                final GameContext context = game.context();
+                final GameContext context = this.actionContext.gameContext();
 
                 context.cheats().notifyCheatUsed();
                 context.flow().enterState(GameStateID.GAME_LEVEL_COMPLETE);
@@ -116,9 +116,9 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled() {
-                final GameContext context = game.context();
+                final GameContext context = this.actionContext.gameContext();
                 final TimedGameState state = context.state();
-                final GameLevel level = normalLevel(game).orElse(null);
+                final GameLevel level = normalLevel(this.actionContext).orElse(null);
 
                 return level != null
                     && GameStateID.GAME_LEVEL_PLAYING.identifies(state)
@@ -129,74 +129,74 @@ public final class CheatActions {
         actionToggleAutopilot = new GameAction(game, "toggle_autopilot") {
             @Override
             public void doAction() {
-                final GameCheats cheats = game.context().cheats();
-                setAutopilot(game, !cheats.isPacUsingAutopilot());
+                final GameCheats cheats = actionContext.gameContext().cheats();
+                setAutopilot(actionContext, !cheats.isPacUsingAutopilot());
             }
 
             @Override
             public boolean isEnabled() {
-                return normalLevel(game).isPresent();
+                return normalLevel(actionContext).isPresent();
             }
         };
 
         actionActivateAutopilot = new GameAction(game, "activate_autopilot") {
             @Override
             public void doAction() {
-                setAutopilot(game, true);
+                setAutopilot(actionContext, true);
             }
 
             @Override
             public boolean isEnabled() {
-                return normalLevel(game).isPresent();
+                return normalLevel(actionContext).isPresent();
             }
         };
 
         actionDeactivateAutopilot = new GameAction(game, "deactivate_autopilot") {
             @Override
             public void doAction() {
-                setAutopilot(game, false);
+                setAutopilot(actionContext, false);
             }
 
             @Override
             public boolean isEnabled() {
-                return normalLevel(game).isPresent();
+                return normalLevel(actionContext).isPresent();
             }
         };
 
         actionActivateImmunity = new GameAction(game, "activate_immunity") {
             @Override
             public void doAction() {
-                setPacImmune(game, true);
+                setPacImmune(actionContext, true);
             }
 
             @Override
             public boolean isEnabled() {
-                return normalLevel(game).isPresent();
+                return normalLevel(actionContext).isPresent();
             }
         };
 
         actionDeactivateImmunity = new GameAction(game, "deactivate_immunity") {
             @Override
             public void doAction() {
-                setPacImmune(game, false);
+                setPacImmune(actionContext, false);
             }
 
             @Override
             public boolean isEnabled() {
-                return normalLevel(game).isPresent();
+                return normalLevel(actionContext).isPresent();
             }
         };
 
         actionToggleImmunity = new GameAction(game, "toggle_immunity") {
             @Override
             public void doAction() {
-                final GameCheats cheats = game.context().cheats();
-                setPacImmune(game, !cheats.isPacImmune());
+                final GameCheats cheats = actionContext.gameContext().cheats();
+                setPacImmune(actionContext, !cheats.isPacImmune());
             }
 
             @Override
             public boolean isEnabled() {
-                return normalLevel(game).isPresent();
+                return normalLevel(actionContext).isPresent();
             }
         };
 
@@ -256,23 +256,23 @@ public final class CheatActions {
 
     // Helpers
 
-    private void setAutopilot(PacManGamesCollection game, boolean auto) {
-        final GameCheats cheats = game.context().cheats();
+    private void setAutopilot(GameActionContext actionContext, boolean auto) {
+        final GameCheats cheats = actionContext.gameContext().cheats();
         cheats.pacUsingAutopilotProperty().set(auto);
 
-        game.ui().shortMessage(game.ui().translations().translate(auto ? "flash.autopilot_on" : "flash.autopilot_off"));
-        game.ui().sounds().playVoice(auto ? GlobalAssets.Voice.AUTOPILOT_ON.media() : GlobalAssets.Voice.AUTOPILOT_OFF.media());
+        actionContext.ui().shortMessage(actionContext.ui().translations().translate(auto ? "flash.autopilot_on" : "flash.autopilot_off"));
+        actionContext.ui().sounds().playVoice(auto ? GlobalAssets.Voice.AUTOPILOT_ON.media() : GlobalAssets.Voice.AUTOPILOT_OFF.media());
     }
 
-    private void setPacImmune(PacManGamesCollection game, boolean immune) {
-        final GameCheats cheats = game.context().cheats();
+    private void setPacImmune(GameActionContext actionContext, boolean immune) {
+        final GameCheats cheats = actionContext.gameContext().cheats();
         cheats.pacImmuneProperty().set(immune);
 
-        game.ui().shortMessage(game.ui().translations().translate(immune ? "flash.player_immunity_on" : "flash.player_immunity_off"));
-        game.ui().sounds().playVoice(immune ? GlobalAssets.Voice.IMMUNITY_ON.media() : GlobalAssets.Voice.IMMUNITY_OFF.media());
+        actionContext.ui().shortMessage(actionContext.ui().translations().translate(immune ? "flash.player_immunity_on" : "flash.player_immunity_off"));
+        actionContext.ui().sounds().playVoice(immune ? GlobalAssets.Voice.IMMUNITY_ON.media() : GlobalAssets.Voice.IMMUNITY_OFF.media());
     }
 
-    private Optional<GameLevel> normalLevel(PacManGamesCollection game) {
-        return game.context().model().optLevel().filter(level -> !level.isDemoLevel());
+    private Optional<GameLevel> normalLevel(GameActionContext actionContext) {
+        return actionContext.gameContext().model().optLevel().filter(level -> !level.isDemoLevel());
     }
 }

@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.game;
+package de.amr.pacmanfx.game;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.spriteanim.SpriteAnimationAccessor;

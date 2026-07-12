@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.event.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import java.util.Optional;
@@ -33,7 +33,7 @@ public class BaseGameEventHandler extends DefaultGameEventListener {
     }
 
     public GameContext gameContext() {
-        return game.context();
+        return game.gameContext();
     }
 
     public TimedGameState gameState() {

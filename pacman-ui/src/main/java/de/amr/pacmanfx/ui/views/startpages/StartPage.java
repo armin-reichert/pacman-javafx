@@ -3,7 +3,8 @@
  */
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.CommonActions;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.input.Input;
 import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
@@ -15,7 +16,7 @@ public interface StartPage {
 
     Pane rootPane();
 
-    void connect(PacManGamesCollection game);
+    void connect(GameActionContext actionContext, CommonActions commonActions);
 
     void onEnter();
 

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import javafx.scene.input.KeyCode;
 
 import java.util.Set;
@@ -26,15 +26,15 @@ public final class Arcade_Actions {
 
     private final Set<ActionKeyBinding> gameStartActionBindings;
 
-    public Arcade_Actions(PacManGamesCollection game) {
+    public Arcade_Actions(GameActionContext actionContext) {
 
-        actionInsertCoin = new GameAction(game, "insert_coin") {
+        actionInsertCoin = new GameAction(actionContext, "insert_coin") {
             @Override
             public void doAction() {
-                final CoinMechanism coinMechanism = game.machine().coinMechanism();
-                final GameContext context = game.context();
-                game.ui().sounds().stopAndDisposeVoice();
-                game.ui().sounds().setEnabled(true);
+                final CoinMechanism coinMechanism = actionContext.coinMechanism();
+                final GameContext context = this.actionContext.gameContext();
+                this.actionContext.ui().sounds().stopAndDisposeVoice();
+                this.actionContext.ui().sounds().setEnabled(true);
                 coinMechanism.insertCoin();
                 context.eventManager().publishGameEvent(new CreditAddedEvent(1));
                 context.flow().enterState(GameStateID.GAME_PREPARATION);
@@ -42,11 +42,11 @@ public final class Arcade_Actions {
 
             @Override
             public boolean isEnabled() {
-                final CoinMechanism coinMechanism = game.machine().coinMechanism();
+                final CoinMechanism coinMechanism = actionContext.coinMechanism();
                 if (coinMechanism.isFull()) {
                     return false;
                 }
-                final GameContext context = game.context();
+                final GameContext context = this.actionContext.gameContext();
                 // In demo level, coin can always be inserted
                 if (context.gamePlay().isDemoLevelRunning(context.model())) {
                     return true;
@@ -56,19 +56,19 @@ public final class Arcade_Actions {
             }
         };
 
-        actionStartPlaying = new GameAction(game, "start_playing") {
+        actionStartPlaying = new GameAction(actionContext, "start_playing") {
             @Override
             public void doAction() {
-                game.ui().sounds().stopAndDisposeVoice();
-                game.context().flow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
+                actionContext.ui().sounds().stopAndDisposeVoice();
+                actionContext.gameContext().flow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
             }
 
             @Override
             public boolean isEnabled() {
-                if (game.machine().coinMechanism().isEmpty()) {
+                if (actionContext.coinMechanism().isEmpty()) {
                     return false;
                 }
-                final TimedGameState state = game.context().state();
+                final TimedGameState state = actionContext.gameContext().state();
                 return (GameStateID.GAME_INTRO.identifies(state) || GameStateID.GAME_PREPARATION.identifies(state));
             }
         };

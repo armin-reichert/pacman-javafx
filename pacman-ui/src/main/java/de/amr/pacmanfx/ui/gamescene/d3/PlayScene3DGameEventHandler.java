@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;

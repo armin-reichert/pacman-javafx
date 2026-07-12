@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -91,8 +91,8 @@ public class DS_3DSettings extends GameDashboardSection {
         editPropertyWithSlider(sliderWallOpacity,               viewModel.maze3D.wallOpacityProperty);
         editPropertyWithChoiceBox(comboPerspectives,               viewModel.common3D.cameraPerspectiveIdProperty);
 
-        cbUsePlayScene3D.setOnAction(_ -> game.actions().uiSettingsActions().actionTogglePlayScene2D3D().execute());
-        cbWireframeMode.setOnAction(_ -> game.actions().camera3DActions().actionToggleDrawMode().execute());
+        cbUsePlayScene3D.setOnAction(_ -> game.commonActions().uiSettingsActions().actionTogglePlayScene2D3D().execute());
+        cbWireframeMode.setOnAction(_ -> game.commonActions().camera3DActions().actionToggleDrawMode().execute());
     }
 
     @Override
@@ -136,7 +136,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     private String sceneSizeInfo(PacManGamesCollection game) {
-        final GameModel gameModel = game.context().model();
+        final GameModel gameModel = game.gameContext().model();
         final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene == null) return NO_INFO;
 

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;

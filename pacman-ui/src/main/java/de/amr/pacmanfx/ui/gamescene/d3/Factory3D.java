@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.config.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.config.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;

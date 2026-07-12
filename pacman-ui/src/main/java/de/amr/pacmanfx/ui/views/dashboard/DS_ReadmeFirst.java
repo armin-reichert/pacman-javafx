@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

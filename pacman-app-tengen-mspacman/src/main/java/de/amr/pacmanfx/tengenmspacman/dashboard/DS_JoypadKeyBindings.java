@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.tengenmspacman.dashboard;
 
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
-import de.amr.pacmanfx.ui.game.GameVariant;
+import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;

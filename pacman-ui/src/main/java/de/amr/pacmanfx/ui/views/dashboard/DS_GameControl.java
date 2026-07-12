@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -41,7 +41,7 @@ public class DS_GameControl extends GameDashboardSection {
     @Override
     public void connect(PacManGamesCollection game) {
         final CoinMechanism coinMechanism = game.machine().coinMechanism();
-        final CommonActions actions = game.actions();
+        final CommonActions actions = game.commonActions();
 
         spinnerCredit            = intSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
         choiceBoxInitialLives    = choiceBox("Initial Lives", new Integer[] {3, 5});
@@ -50,7 +50,7 @@ public class DS_GameControl extends GameDashboardSection {
         addDynamicInfo("Collision Mode", supplyGameRulesInfo(game, rules -> rules.getCollisionStrategy().name()));
         cbCollisionCheckedTwice  = checkBox("Collision Check 2x");
 
-        setAction(choiceBoxInitialLives, () -> game.context().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
+        setAction(choiceBoxInitialLives, () -> game.gameContext().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
 
         //TODO Here we would need to access the Arcade-specific action to start the game
 //        setGameAction(buttonGroupLevelActions[GAME_LEVEL_START],       actionToStartTheGamePlay);
@@ -61,14 +61,14 @@ public class DS_GameControl extends GameDashboardSection {
         setGameAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
-            game.context().model().rules().collisionDoubleCheckedProperty().set(cbCollisionCheckedTwice.isSelected()));
+            game.gameContext().model().rules().collisionDoubleCheckedProperty().set(cbCollisionCheckedTwice.isSelected()));
     }
 
     @Override
     public void update(PacManGamesCollection game) {
         super.update(game);
 
-        final GameContext context = game.context();
+        final GameContext context = game.gameContext();
         final GameModel model = context.model();
         final TimedGameState state = context.state();
 
@@ -92,7 +92,7 @@ public class DS_GameControl extends GameDashboardSection {
     private boolean canStartLevel(PacManGamesCollection game, TimedGameState gameState) {
         boolean isArcadeGame = GameVariantID.isArcadeGameName(game.variants().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
-        return !game.context().coinMechanism().isEmpty()
+        return !game.gameContext().coinMechanism().isEmpty()
             && gameState.isOneOf(GameStateID.GAME_INTRO, GameStateID.GAME_PREPARATION);
     }
 

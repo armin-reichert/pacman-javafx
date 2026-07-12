@@ -7,8 +7,8 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.game.Cartridge;
-import de.amr.pacmanfx.ui.game.GameExtension;
+import de.amr.pacmanfx.game.Cartridge;
+import de.amr.pacmanfx.game.GameExtension;
 
 import java.util.Set;
 

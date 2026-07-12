@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.game;
+package de.amr.pacmanfx.game;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.filesystem.DirectoryWatchdog;
@@ -45,7 +45,7 @@ public class PacManGamesMachine implements Disposable {
     public static File highScoreFile(String variantName) {
         requireNonNull(variantName);
         final String fileName = "highscore-%s.xml".formatted(variantName).toLowerCase();
-        return new File(GameConstants.USER_HOME_DIR, fileName);
+        return new File(de.amr.pacmanfx.core.GameConstants.USER_HOME_DIR, fileName);
     }
 
     private final Set<Cartridge> cartridges = new HashSet<>();
@@ -59,7 +59,7 @@ public class PacManGamesMachine implements Disposable {
         if (!ok) {
             throw new IllegalStateException("GameBox: User directory validation failed");
         }
-        watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
+        watchdog = new DirectoryWatchdog(de.amr.pacmanfx.core.GameConstants.CUSTOM_MAP_DIR);
     }
 
     @Override
@@ -105,9 +105,9 @@ public class PacManGamesMachine implements Disposable {
     public void plugInCartridge(Cartridge cartridge) {
         requireNonNull(cartridge);
 
-        if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(cartridge.name()).matches()) {
+        if (!de.amr.pacmanfx.core.GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(cartridge.name()).matches()) {
             throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
-                .formatted(cartridge.name(), GameConstants.GAME_VARIANT_NAME_PATTERN));
+                .formatted(cartridge.name(), de.amr.pacmanfx.core.GameConstants.GAME_VARIANT_NAME_PATTERN));
         }
 
         final boolean added = cartridges.add(cartridge);
@@ -142,8 +142,8 @@ public class PacManGamesMachine implements Disposable {
     }
 
     private boolean validateUserDirs() {
-        return dirExistsAndIsWritable(GameConstants.USER_HOME_DIR, "Game root directory")
-            && dirExistsAndIsWritable(GameConstants.CUSTOM_MAP_DIR, "Custom maps directory");
+        return dirExistsAndIsWritable(de.amr.pacmanfx.core.GameConstants.USER_HOME_DIR, "Game root directory")
+            && dirExistsAndIsWritable(de.amr.pacmanfx.core.GameConstants.CUSTOM_MAP_DIR, "Custom maps directory");
     }
 
     private static boolean dirExistsAndIsWritable(File dir, String description) {

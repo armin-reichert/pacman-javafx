@@ -5,7 +5,7 @@
 package experiments.custommaps;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.pacmanfx.ui.game.GameConstants;
+import de.amr.pacmanfx.core.GameConstants;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

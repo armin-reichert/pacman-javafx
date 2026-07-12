@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_CutScene2;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;

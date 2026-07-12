@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 
 import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.NES_SCREEN_HEIGHT;
@@ -33,8 +33,7 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final var actions = game().variants().currentVariant()
-            .getExtensionValue(game(), TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = actionContext().getExtensionValue(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
 

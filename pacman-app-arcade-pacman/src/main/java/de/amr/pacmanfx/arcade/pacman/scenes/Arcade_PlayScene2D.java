@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -14,7 +15,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.CheatActions;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -48,7 +49,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
     }
 
     @Override
-    public void handleQuit(PacManGamesCollection game) {
+    public void handleQuit(GameActionContext actionContext) {
         onDeactivate();
         gameContext().flow().enterState(GameStateID.GAME_OVER);
     }
@@ -56,7 +57,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
     @Override
     public Optional<ContextMenu> optContextMenu() {
         final TranslationManager translations = game().ui().translations();
-        final CheatActions cheatActions = game().actions().cheatActions();
+        final CheatActions cheatActions = game().commonActions().cheatActions();
 
         final var contextMenu = new ContextMenu();
         addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
@@ -78,7 +79,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
         });
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, game().ui().viewModel().mutedProperty, "context_menu.muted");
-        addLocalizedActionItem(contextMenu, translations, game().actions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedActionItem(contextMenu, translations, game().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -110,16 +111,15 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
     }
 
     private void acceptNormalLevel(GameLevel level) {
-        actionBindings().registerAllBindings(game().actions().steeringActions().bindings());
-        actionBindings().registerAllBindings(game().actions().cheatActions().bindings());
+        actionBindings().registerAllBindings(game().commonActions().steeringActions().bindings());
+        actionBindings().registerAllBindings(game().commonActions().cheatActions().bindings());
         Logger.info(actionBindings());
         game().ui().sounds().setEnabled(true);
         Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
     private void acceptDemoLevel() {
-        final Arcade_Actions actions = game().variants().currentVariant()
-            .getExtensionValue(game(), Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = actionContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings());
         Logger.info(actionBindings());

@@ -8,8 +8,8 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.animation.Animation;
@@ -148,7 +148,7 @@ public class MiniPlaySceneView {
             return;
         }
         if (game != null) {
-            game.context().model().optLevel().ifPresent(this::draw);
+            game.gameContext().model().optLevel().ifPresent(this::draw);
         }
     }
     

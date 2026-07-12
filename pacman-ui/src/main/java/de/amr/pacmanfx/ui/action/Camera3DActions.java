@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -26,43 +26,43 @@ public class Camera3DActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public Camera3DActions(PacManGamesCollection game) {
+    public Camera3DActions(GameActionContext game) {
 
         actionNextPerspective = new GameAction(game, "perspective_next") {
             @Override
             protected void doAction() {
-                final PerspectiveID nextID = game.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().next();
-                game.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(nextID);
-                game.ui().shortMessage(translatedPerspectiveMessage(game, nextID));
+                final PerspectiveID nextID = actionContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().next();
+                actionContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(nextID);
+                actionContext.ui().shortMessage(translatedPerspectiveMessage(actionContext, nextID));
             }
 
             @Override
             public boolean isEnabled() {
-                return is3DPlaySceneActive(game);
+                return is3DPlaySceneActive(actionContext);
             }
         };
 
         actionPreviousPerspective = new GameAction(game, "perspective_previous") {
             @Override
             protected void doAction() {
-                final PerspectiveID prevID = game.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().prev();
-                game.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(prevID);
-                game.ui().shortMessage(translatedPerspectiveMessage(game, prevID));
+                final PerspectiveID prevID = actionContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().prev();
+                actionContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(prevID);
+                actionContext.ui().shortMessage(translatedPerspectiveMessage(actionContext, prevID));
             }
             @Override
             public boolean isEnabled() {
-                return is3DPlaySceneActive(game);
+                return is3DPlaySceneActive(actionContext);
             }
         };
 
         actionToggleDrawMode = new GameAction(game, "toggle_draw_mode") {
             @Override
             protected void doAction() {
-                Ufx.toggleProperty(game.ui().viewModel().common3D.drawModeProperty, DrawMode.LINE, DrawMode.FILL);
+                Ufx.toggleProperty(actionContext.ui().viewModel().common3D.drawModeProperty, DrawMode.LINE, DrawMode.FILL);
             }
             @Override
             public boolean isEnabled() {
-                return is3DPlaySceneActive(game);
+                return is3DPlaySceneActive(actionContext);
             }
         };
 
@@ -89,12 +89,12 @@ public class Camera3DActions {
         return bindings;
     }
 
-    private boolean is3DPlaySceneActive(PacManGamesCollection game) {
-        return game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
+    private boolean is3DPlaySceneActive(GameActionContext actionContext) {
+        return actionContext.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
     }
 
-    private String translatedPerspectiveMessage(PacManGamesCollection game, PerspectiveID perspectiveID) {
-        final TranslationManager translations = game.ui().translations();
+    private String translatedPerspectiveMessage(GameActionContext actionContext, PerspectiveID perspectiveID) {
+        final TranslationManager translations = actionContext.ui().translations();
         return translations.translate(
             "camera_perspective",
             translations.translate("perspective_id_" + perspectiveID.name())

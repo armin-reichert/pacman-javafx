@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_PlayScene2D;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;

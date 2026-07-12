@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -54,7 +54,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         addLocalizedTitleItem(this, translations, "context_menu.scene_display");
 
         addLocalizedActionItem(this, translations,
-            game.actions().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
+            game.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
 
         addLocalizedCheckBox(this, translations,
             game.ui().viewModel().miniView.activeProperty, "context_menu.pip");
@@ -73,12 +73,12 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         }
 
         addLocalizedTitleItem(this, translations, "context_menu.pacman");
-        addLocalizedCheckBox(this, translations, game.context().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
-        addLocalizedCheckBox(this, translations, game.context().cheats().pacImmuneProperty(), "context_menu.immunity");
+        addLocalizedCheckBox(this, translations, game.gameContext().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
+        addLocalizedCheckBox(this, translations, game.gameContext().cheats().pacImmuneProperty(), "context_menu.immunity");
 
         addSeparator(this);
         addLocalizedCheckBox(this, translations, game.ui().viewModel().mutedProperty, "context_menu.muted");
-        addLocalizedActionItem(this, translations, game.actions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedActionItem(this, translations, game.commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         settings3D.cameraPerspectiveIdProperty.addListener(perspectiveListener);
     }

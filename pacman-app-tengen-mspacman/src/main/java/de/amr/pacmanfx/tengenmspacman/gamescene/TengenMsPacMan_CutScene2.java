@@ -10,8 +10,8 @@ import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
@@ -65,7 +65,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
 
         // Quit cut scene when "START" button on "joypad" is pressed
         final Joypad joypad = input().joypad();
-        actionBindings().bindActionToKeyCombination(game().actions().gameFlowActions().actionLetGameStateExpire(),
+        actionBindings().bindActionToKeyCombination(game().commonActions().gameFlowActions().actionLetGameStateExpire(),
             joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(2, "THE CHASE");

@@ -7,8 +7,8 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
@@ -54,7 +54,7 @@ public class GameSceneManager {
 
     public void updateGameSceneAndForceReload(boolean forceReload) {
         final GameVariantConfig variantConfig = game.variants().currentVariant().config();
-        final GameModel model = game.context().model();
+        final GameModel model = game.gameContext().model();
 
         final GameScene currentGameScene = optCurrentGameScene().orElse(null);
         final GameScene nextGameScene = variantConfig.gameSceneConfig().selectGameScene(game, model).orElse(null);

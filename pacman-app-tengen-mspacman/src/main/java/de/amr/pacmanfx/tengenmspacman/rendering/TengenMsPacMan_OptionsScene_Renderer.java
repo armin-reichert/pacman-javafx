@@ -9,7 +9,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -57,8 +57,8 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         final GameVariantConfig gameVariantConfig = gameScene2D.game().variants().currentVariant().config();
         final var gameScene = (TengenMsPacMan_OptionsScene) gameScene2D;
         final var gameModel = (TengenMsPacMan_GameModel) gameScene.gameModel();
-        final var uiSettings = gameScene2D.game().variants().currentVariant()
-            .getExtensionValue(gameScene2D.game(), TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        final var uiSettings = gameScene2D.actionContext().getExtensionValue(
+            TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
         clearCanvas();
         if (gameScene.initialDelay > 0) return;

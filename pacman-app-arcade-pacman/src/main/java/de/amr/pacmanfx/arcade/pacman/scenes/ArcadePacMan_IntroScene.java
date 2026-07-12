@@ -17,9 +17,9 @@ import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 
 import java.util.Arrays;
@@ -90,11 +90,10 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = game().variants().currentVariant()
-            .getExtensionValue(game(), Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = actionContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
-        actionBindings().registerAllBindings(game().actions().sceneTestActions().bindings()); // actions for starting tests
+        actionBindings().registerAllBindings(game().commonActions().sceneTestActions().bindings()); // actions for starting tests
 
         flow.restartState(SceneState.STARTING);
     }

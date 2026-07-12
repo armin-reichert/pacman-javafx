@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.model.world.*;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.config.world.Bonus3DSettings;
 import de.amr.pacmanfx.ui.config.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.config.world.Pellet3DSettings;

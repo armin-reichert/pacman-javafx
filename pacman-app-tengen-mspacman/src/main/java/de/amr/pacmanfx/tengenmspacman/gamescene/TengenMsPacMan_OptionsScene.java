@@ -11,7 +11,7 @@ import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import javafx.beans.property.IntegerProperty;
@@ -71,13 +71,13 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
         final TengenMsPacMan_GameModel gameModel = tengenGameModel();
         gameModel.hudState().hideIt();
 
-        final var actions = game().variants().currentVariant()
-            .getExtensionValue(game(), TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = actionContext().getExtensionValue(
+            TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindings().selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());
         actionBindings().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
         actionBindings().bindActionToKeyCombination(actions.actionSelectNextJoypadKeyBinding(), combine().alt().key(KeyCode.J));
-        actionBindings().registerAllBindings(game().actions().sceneTestActions().bindings());
+        actionBindings().registerAllBindings(game().commonActions().sceneTestActions().bindings());
 
         selectedOption.set(OPTION_PAC_BOOSTER);
         gameModel.setCanStartNewGame(true);

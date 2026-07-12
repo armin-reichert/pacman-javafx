@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.action.core;
 
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
 import org.tinylog.Logger;
 
 /**
@@ -13,11 +12,11 @@ import org.tinylog.Logger;
  */
 public abstract class GameAction {
 
-    protected final PacManGamesCollection game;
+    protected final GameActionContext actionContext;
     protected final String id;
 
-    protected GameAction(PacManGamesCollection game, String id) {
-        this.game = game;
+    protected GameAction(GameActionContext actionContext, String id) {
+        this.actionContext = actionContext;
         this.id = Validations.requireValidIdentifier(id);
     }
 
@@ -54,7 +53,7 @@ public abstract class GameAction {
         }
 
         // Clear the input that triggered this action
-        game.machine().input().keyboard().clearState();
+        actionContext.input().keyboard().clearState();
 
         return success;
     }

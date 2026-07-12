@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.sound;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.PacManGamesCollection;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

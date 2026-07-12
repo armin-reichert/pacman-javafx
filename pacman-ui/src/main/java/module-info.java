@@ -20,7 +20,6 @@ open module de.amr.pacmanfx.ui {
 
     exports de.amr.pacmanfx.ui;
     exports de.amr.pacmanfx.ui.action;
-    exports de.amr.pacmanfx.ui.game;
     exports de.amr.pacmanfx.ui.views.dashboard;
     exports de.amr.pacmanfx.ui.gamescene.d2;
     exports de.amr.pacmanfx.ui.gamescene.d3;
@@ -41,4 +40,5 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.model;
     exports de.amr.pacmanfx.ui.config.ui;
     exports de.amr.pacmanfx.ui.config.world;
+    exports de.amr.pacmanfx.game;
 }

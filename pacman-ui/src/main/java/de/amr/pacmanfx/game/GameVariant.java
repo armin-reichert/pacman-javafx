@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.game;
+package de.amr.pacmanfx.game;
 
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.flow.GameFlow;
@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.model.DefaultCheatsImpl;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.simulation.GamePlay;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,7 @@ public record GameVariant(
         );
     }
 
-    public <T> T getExtensionValue(PacManGamesCollection game, Identifier id, Class<T> type) {
+    public <T> T getExtensionValue(GameActionContext actionContext, Identifier id, Class<T> type) {
         final Object cached = extensionValues.get(id);
         if (cached != null) {
             return type.cast(cached);
@@ -47,7 +48,7 @@ public record GameVariant(
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Extension with id " + id + " not found"));
 
-        final Object created = ext.creator().apply(game);
+        final Object created = ext.creator().apply(actionContext);
         extensionValues.put(id, created);
         return type.cast(created);
     }

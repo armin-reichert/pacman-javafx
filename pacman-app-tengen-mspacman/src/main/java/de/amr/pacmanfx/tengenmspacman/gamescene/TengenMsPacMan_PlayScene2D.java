@@ -21,8 +21,9 @@ import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.ui.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.game.PacManGamesCollection;
+import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -167,9 +168,9 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
     }
 
     @Override
-    public void handleQuit(PacManGamesCollection game) {
+    public void handleQuit(GameActionContext actionContext) {
         onDeactivate();
-        game.context().flow().enterState(GameStateID.GAME_OVER);
+        actionContext.gameContext().flow().enterState(GameStateID.GAME_OVER);
     }
 
     @Override
@@ -197,7 +198,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
         addLocalizedCheckBox(contextMenu, translations, gameContext().cheats().pacImmuneProperty(), "context_menu.immunity");
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, game().ui().viewModel().mutedProperty, "context_menu.muted");
-        addLocalizedActionItem(contextMenu, translations, game().actions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedActionItem(contextMenu, translations, game().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -229,12 +230,12 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
     }
 
     private TengenMsPacMan_Actions tengenActions() {
-        return game().variants().currentVariant().getExtensionValue(game(),
+        return actionContext().getExtensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
     }
 
     private TengenMsPacMan_UISettings tengenUISettings() {
-        return game().variants().currentVariant().getExtensionValue(game(),
+        return actionContext().getExtensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 
@@ -245,7 +246,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
 
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
         actionBindings().registerAllBindings(actions.steeringBindings());
-        actionBindings().registerAllBindings(game().actions().cheatActions().bindings());
+        actionBindings().registerAllBindings(game().commonActions().cheatActions().bindings());
         actionBindings().selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
         actionBindings().selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
     }
