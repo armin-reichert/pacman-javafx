@@ -94,12 +94,12 @@ public class GameBuilder {
         return this;
     }
 
-    public Optional<PacManGamesCollectionImpl> build() {
+    public Optional<PacManGames> build() {
         try {
             validateConfigurationData();
-            PacManGamesMachine.instance().plugInCartridges(cartridgeSet.toArray(Cartridge[]::new));
+            GameBox.instance().plugInCartridges(cartridgeSet.toArray(Cartridge[]::new));
 
-            final var game = new PacManGamesCollectionImpl();
+            final var game = new PacManGames();
             game.setUI(new GameUI(stage, width, height, uiSettings, dashboardFactory));
 
             // Can only be done after UI has been assigned to game!

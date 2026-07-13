@@ -20,14 +20,28 @@ import javafx.application.Platform;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.io.File;
+
 import static java.util.Objects.requireNonNull;
 
 /**
  * The Pac-Man games collection.
  */
-public final class PacManGamesCollectionImpl implements GameActionContext, GameLifecycle {
+public final class PacManGames implements GameActionContext, GameLifecycle {
 
-    private final PacManGamesMachine machine = PacManGamesMachine.instance();
+    /**
+     * High score file for game variant XYZ is stored as "highscore-xyz.xml" inside user home directory
+
+     * @param variantName name of the game variant e.g. MS_PACMAN
+     * @return highscore file name for this game variant
+     */
+    public static File highScoreFile(String variantName) {
+        requireNonNull(variantName);
+        final String fileName = "highscore-%s.xml".formatted(variantName).toLowerCase();
+        return new File(de.amr.pacmanfx.core.GameConstants.USER_HOME_DIR, fileName);
+    }
+
+    private final GameBox machine = GameBox.instance();
 
     private final GameVariantManager variantManager;
 
@@ -37,7 +51,7 @@ public final class PacManGamesCollectionImpl implements GameActionContext, GameL
 
     private GameContext gameContext;
 
-    public PacManGamesCollectionImpl() {
+    public PacManGames() {
         variantManager = new GameVariantManager(this);
         commonActions = new CommonActions(this);
         configureClock();
@@ -174,7 +188,7 @@ public final class PacManGamesCollectionImpl implements GameActionContext, GameL
             suspendGamePlay();
             final String errorMessage = ui.translations().translate("error.oh_no_my_program");
             ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
-            Logger.error(reason, "*** KA TAS TROOOOOPHE! SOMETHING VERY BAD HAPPENED:");
+            Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
         });
     }
 }

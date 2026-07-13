@@ -7,13 +7,13 @@ package de.amr.pacmanfx.arcade.ms_pacman.app;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.GameBuilder;
-import de.amr.pacmanfx.game.PacManGamesCollectionImpl;
+import de.amr.pacmanfx.game.PacManGames;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class ArcadeMsPacMan_App extends Application {
 
-    private PacManGamesCollectionImpl game;
+    private PacManGames game;
 
     @Override
     public void start(Stage stage) {

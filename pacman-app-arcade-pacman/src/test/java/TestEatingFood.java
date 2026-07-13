@@ -20,7 +20,7 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.simulation.GamePlay;
-import de.amr.pacmanfx.game.PacManGamesMachine;
+import de.amr.pacmanfx.game.GameBox;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -58,7 +58,7 @@ public class TestEatingFood {
 
         @Override
         public CoinMechanism coinMechanism() {
-            return PacManGamesMachine.instance().coinMechanism();
+            return GameBox.instance().coinMechanism();
         }
 
         @Override

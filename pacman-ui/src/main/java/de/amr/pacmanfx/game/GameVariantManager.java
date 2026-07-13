@@ -22,13 +22,13 @@ import static java.util.Objects.requireNonNull;
 
 public class GameVariantManager implements ChangeListener<String> {
 
-    private final PacManGamesCollectionImpl gameImpl;
+    private final PacManGames gameImpl;
 
     private final Map<String, GameVariant> variantsByName = new HashMap<>();
 
     private final StringProperty variantName = new SimpleStringProperty();
 
-    public GameVariantManager(PacManGamesCollectionImpl gameImpl) {
+    public GameVariantManager(PacManGames gameImpl) {
         this.gameImpl = requireNonNull(gameImpl);
         variantName.addListener(this);
     }
@@ -77,7 +77,7 @@ public class GameVariantManager implements ChangeListener<String> {
         flow.addState(new CutScenesTestState());
 
         gameVariant.gameModel().setHighScore(
-            new PropertyFileScore(PacManGamesMachine.highScoreFile(variantName)));
+            new PropertyFileScore(PacManGames.highScoreFile(variantName)));
 
         return gameVariant;
     }
@@ -114,7 +114,7 @@ public class GameVariantManager implements ChangeListener<String> {
         gameImpl.setGameContext(null);
     }
 
-    private PacManGamesMachine machine() {
-        return PacManGamesMachine.instance();
+    private GameBox machine() {
+        return GameBox.instance();
     }
 }

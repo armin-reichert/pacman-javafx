@@ -25,27 +25,15 @@ import static java.util.Objects.requireNonNull;
  * Buy your cartridge now (super hot Black Friday deal: $0,99 per game)!
  * </p>
  */
-public class PacManGamesMachine implements Disposable {
+public class GameBox implements Disposable {
 
     // The lazy thread-safe singleton holder pattern
     private static class SingletonHolder {
-        static final PacManGamesMachine SINGLETON = new PacManGamesMachine();
+        static final GameBox SINGLETON = new GameBox();
     }
 
-    public static PacManGamesMachine instance() {
+    public static GameBox instance() {
         return SingletonHolder.SINGLETON;
-    }
-
-    /**
-     * High score file for game variant XYZ is stored as "highscore-xyz.xml" inside user home directory
-
-     * @param variantName name of the game variant e.g. MS_PACMAN
-     * @return highscore file name for this game variant
-     */
-    public static File highScoreFile(String variantName) {
-        requireNonNull(variantName);
-        final String fileName = "highscore-%s.xml".formatted(variantName).toLowerCase();
-        return new File(de.amr.pacmanfx.core.GameConstants.USER_HOME_DIR, fileName);
     }
 
     private final Set<Cartridge> cartridges = new HashSet<>();
@@ -54,7 +42,7 @@ public class PacManGamesMachine implements Disposable {
     private final GameClock clock = new GameClockFX();
     private final DirectoryWatchdog watchdog;
 
-    private PacManGamesMachine() {
+    private GameBox() {
         final boolean ok = validateUserDirs();
         if (!ok) {
             throw new IllegalStateException("GameBox: User directory validation failed");
