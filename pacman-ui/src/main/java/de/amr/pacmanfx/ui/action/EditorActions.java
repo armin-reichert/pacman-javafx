@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
@@ -77,7 +77,7 @@ public class EditorActions {
     // Private
 
     private void startEditor(TileMapEditor editor) {
-        actionContext.suspendGamePlay();
+        actionContext.lifecycle().suspendGamePlay();
         editor.init(GameConstants.CUSTOM_MAP_DIR);
         editor.start();
     }

@@ -17,7 +17,9 @@ import de.amr.pacmanfx.ui.input.Input;
 
 import java.util.Optional;
 
-public interface GameActionContext extends GameLifecycle {
+public interface GameActionContext {
+
+    GameLifecycle lifecycle();
 
     CoinMechanism coinMechanism();
 

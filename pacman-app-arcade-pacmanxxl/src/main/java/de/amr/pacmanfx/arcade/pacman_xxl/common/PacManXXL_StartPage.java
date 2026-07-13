@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXLGameVariant;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -76,7 +75,7 @@ public class PacManXXL_StartPage implements StartPage {
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
             pauseProgressTimer();
-            actionContext.startGamePlay();
+            actionContext.lifecycle().startGamePlay();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
             actionContext.ui().shortMessage("OK, I shut my mouth");

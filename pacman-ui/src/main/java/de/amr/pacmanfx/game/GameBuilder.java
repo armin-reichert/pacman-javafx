@@ -93,7 +93,7 @@ public class GameBuilder {
         return this;
     }
 
-    public Optional<PacManGamesCollection> build() {
+    public Optional<PacManGamesCollectionImpl> build() {
         try {
             validateConfigurationData();
             PacManGamesMachine.instance().plugInCartridges(cartridgeSet.toArray(Cartridge[]::new));

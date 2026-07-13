@@ -8,9 +8,8 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
-import de.amr.pacmanfx.ui.action.core.GameLifecycle;
 
-public interface PacManGamesCollection extends GameLifecycle {
+public interface PacManGamesCollection {
     PacManGamesMachine machine();
     GameContext currentGameContext();
     GameUI ui();

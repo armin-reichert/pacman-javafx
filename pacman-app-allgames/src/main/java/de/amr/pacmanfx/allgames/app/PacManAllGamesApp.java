@@ -13,18 +13,18 @@ import de.amr.pacmanfx.arcade.pacman_xxl.app.PacManXXL_PacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.game.GameBuilder;
+import de.amr.pacmanfx.game.PacManGamesCollectionImpl;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
-import de.amr.pacmanfx.game.PacManGamesCollection;
-import de.amr.pacmanfx.game.GameBuilder;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class PacManAllGamesApp extends Application {
 
-    PacManGamesCollection game;
-    boolean includeTests;
+    private PacManGamesCollectionImpl game;
+    private boolean includeTests;
 
     @Override
     public void init() {

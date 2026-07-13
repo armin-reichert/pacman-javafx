@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameLifecycle;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
@@ -24,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games collection.
  */
-public final class PacManGamesCollectionImpl implements PacManGamesCollection, GameActionContext {
+public final class PacManGamesCollectionImpl implements PacManGamesCollection, GameActionContext, GameLifecycle {
 
     private final GameVariantManager variantManager;
 
@@ -40,6 +41,11 @@ public final class PacManGamesCollectionImpl implements PacManGamesCollection, G
         configureClock();
         //noinspection ResultOfMethodCallIgnored
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
+    }
+
+    @Override
+    public GameLifecycle lifecycle() {
+        return this;
     }
 
     @Override

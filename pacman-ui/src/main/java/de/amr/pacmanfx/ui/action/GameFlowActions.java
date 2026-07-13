@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.state.TimedGameState;
-import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.test.TestStateID;
+import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
@@ -32,7 +32,7 @@ public class GameFlowActions {
         actionStartGame = new GameAction(actionContext, "start_game") {
             @Override
             protected void doAction() {
-                actionContext.startGamePlay();
+                actionContext.lifecycle().startGamePlay();
             }
         };
 
@@ -61,7 +61,7 @@ public class GameFlowActions {
                     gameState.onExit(gameContext);
                 }
 
-                actionContext.suspendGamePlay();
+                actionContext.lifecycle().suspendGamePlay();
                 actionContext.clock().start();
                 gameContext.flow().restartState(GameStateID.GAME_INTRO);
             }
