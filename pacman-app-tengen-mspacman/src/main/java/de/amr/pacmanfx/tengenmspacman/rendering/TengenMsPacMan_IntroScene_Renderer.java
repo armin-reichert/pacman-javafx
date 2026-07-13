@@ -5,11 +5,11 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.SceneState;
-import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -102,7 +102,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             drawJoypadKeyBinding(scene.input().joypad().currentKeyBinding());
         }
 
-        if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
+        if (scene.actionContext().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(scene, tick);
         }
     }

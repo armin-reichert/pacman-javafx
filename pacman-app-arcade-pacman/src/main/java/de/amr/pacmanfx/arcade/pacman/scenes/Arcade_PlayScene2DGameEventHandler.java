@@ -5,12 +5,12 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.core.event.*;
-import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
-import de.amr.pacmanfx.core.state.TimedGameState;
-import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
+import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
+import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import org.tinylog.Logger;
@@ -22,7 +22,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
     private final Arcade_PlayScene2D playScene2D;
 
     public Arcade_PlayScene2DGameEventHandler(Arcade_PlayScene2D playScene2D) {
-        super(playScene2D.game());
+        super(playScene2D.actionContext());
         this.playScene2D = requireNonNull(playScene2D);
     }
 
@@ -98,7 +98,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = game().machine().clock().currentTick();
+        final long tick = actionContext().clock().currentTick();
         optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 
@@ -119,6 +119,6 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
 
     @Override
     public void onTestStarted(TestStartedEvent e) {
-        game().ui().shortMessage("Testing level %d".formatted(e.level().number()));
+        actionContext().ui().shortMessage("Testing level %d".formatted(e.level().number()));
     }
 }

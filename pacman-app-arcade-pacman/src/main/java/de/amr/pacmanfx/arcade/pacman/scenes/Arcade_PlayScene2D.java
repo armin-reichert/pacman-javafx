@@ -7,16 +7,15 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
-import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
-import de.amr.pacmanfx.core.state.TimedGameState;
-import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.ui.action.CheatActions;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.control.CheckMenuItem;
@@ -34,8 +33,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public Arcade_PlayScene2D(PacManGamesCollection game) {
-        super(game);
+    public Arcade_PlayScene2D(GameActionContext actionContext) {
+        super(actionContext);
         setGameEventHandler(new Arcade_PlayScene2DGameEventHandler(this));
     }
 
@@ -56,8 +55,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
-        final TranslationManager translations = game().ui().translations();
-        final CheatActions cheatActions = game().commonActions().cheatActions();
+        final TranslationManager translations = actionContext().ui().translations();
+        final CheatActions cheatActions = actionContext().commonActions().cheatActions();
 
         final var contextMenu = new ContextMenu();
         addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
@@ -78,8 +77,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
             }
         });
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, game().ui().viewModel().mutedProperty, "context_menu.muted");
-        addLocalizedActionItem(contextMenu, translations, game().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedCheckBox(contextMenu, translations, actionContext().ui().viewModel().mutedProperty, "context_menu.muted");
+        addLocalizedActionItem(contextMenu, translations, actionContext().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -111,10 +110,10 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
     }
 
     private void acceptNormalLevel(GameLevel level) {
-        actionBindings().registerAllBindings(game().commonActions().steeringActions().bindings());
-        actionBindings().registerAllBindings(game().commonActions().cheatActions().bindings());
+        actionBindings().registerAllBindings(actionContext().commonActions().steeringActions().bindings());
+        actionBindings().registerAllBindings(actionContext().commonActions().cheatActions().bindings());
         Logger.info(actionBindings());
-        game().ui().sounds().setEnabled(true);
+        actionContext().ui().sounds().setEnabled(true);
         Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
@@ -123,7 +122,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings());
         Logger.info(actionBindings());
-        game().ui().sounds().setEnabled(false);
+        actionContext().ui().sounds().setEnabled(false);
         Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
     }
 

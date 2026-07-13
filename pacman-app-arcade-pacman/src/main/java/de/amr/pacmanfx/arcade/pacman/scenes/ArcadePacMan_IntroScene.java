@@ -13,13 +13,13 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.core.model.actors.*;
-import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 
 import java.util.Arrays;
@@ -82,9 +82,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     private int ghostIndex;
     private long lastGhostEatenTick;
 
-    public ArcadePacMan_IntroScene(PacManGamesCollection game) {
-        super(game);
-
+    public ArcadePacMan_IntroScene(GameActionContext actionContext) {
+        super(actionContext);
         flow = new StateMachine<>(this, List.of(SceneState.values()));
     }
 
@@ -93,7 +92,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         final Arcade_Actions actions = actionContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
-        actionBindings().registerAllBindings(game().commonActions().sceneTestActions().bindings()); // actions for starting tests
+        actionBindings().registerAllBindings(actionContext().commonActions().sceneTestActions().bindings()); // actions for starting tests
 
         flow.restartState(SceneState.STARTING);
     }
@@ -101,7 +100,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     @Override
     public void onDeactivate() {
         blinking.stop();
-        game().ui().sounds().stopAndDisposeVoice();
+        actionContext().ui().sounds().stopAndDisposeVoice();
         actionBindings().dispose();
     }
 
@@ -111,8 +110,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig gameVariantConfig = game().variants().currentVariant().config();
-        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
+        final GameVariantConfig gameVariantConfig = actionContext().variants().currentVariant().config();
+        final SpriteAnimationContainer spriteAnimations = actionContext().ui().sprites().animations();
 
         blinking = new Pulse(10, Pulse.State.ON);
 
@@ -133,7 +132,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         lastGhostEatenTick = 0;
         numGhostsEaten = 0;
 
-        game().ui().sounds().playVoice(GlobalAssets.Voice.EXPLAIN_GAME_START.media());
+        actionContext().ui().sounds().playVoice(GlobalAssets.Voice.EXPLAIN_GAME_START.media());
     }
 
     private void startChasingPacMan() {

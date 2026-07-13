@@ -6,13 +6,13 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 
 public class ArcadeMsPacMan_StartScene extends AbstractGameScene2D {
 
-    public ArcadeMsPacMan_StartScene(PacManGamesCollection game) {
-        super(game);
+    public ArcadeMsPacMan_StartScene(GameActionContext actionContext) {
+        super(actionContext);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene2D {
 
     @Override
     public void onDeactivate() {
-        game().ui().sounds().stopAndDisposeVoice();
+        actionContext().ui().sounds().stopAndDisposeVoice();
         actionBindings().dispose();
     }
 

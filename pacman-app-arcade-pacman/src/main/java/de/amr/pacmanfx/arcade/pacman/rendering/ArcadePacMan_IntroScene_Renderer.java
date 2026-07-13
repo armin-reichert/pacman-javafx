@@ -78,7 +78,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
             }
             default -> {}
         }
-        if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
+        if (scene.actionContext().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(scene, tick);
         }
     }

@@ -8,7 +8,6 @@ import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import org.tinylog.Logger;
 
@@ -31,8 +30,12 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
         };
     }
 
-    protected PacManGamesCollection game;
+    protected final GameActionContext actionContext;
     protected final Map<Identifier, GameScene> scenesByID = new HashMap<>();
+
+    public AbstractGameSceneConfig(GameActionContext actionContext) {
+        this.actionContext = requireNonNull(actionContext);
+    }
 
     @Override
     public void dispose() {

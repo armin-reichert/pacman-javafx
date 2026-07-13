@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_BootScene;
 import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_BootScene;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -38,7 +38,7 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer implements G
             actorRenderer.drawActor(bootScene.ghost);
         }
 
-        if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
+        if (scene.actionContext().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(scene, tick);
         }
     }

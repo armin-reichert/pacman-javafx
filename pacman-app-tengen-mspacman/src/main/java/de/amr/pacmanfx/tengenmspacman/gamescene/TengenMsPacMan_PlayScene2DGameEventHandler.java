@@ -21,7 +21,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
     private final TengenMsPacMan_PlayScene2D playScene;
 
     public TengenMsPacMan_PlayScene2DGameEventHandler(TengenMsPacMan_PlayScene2D playScene) {
-        super(playScene.game());
+        super(playScene.actionContext());
         this.playScene = requireNonNull(playScene);
     }
 
@@ -112,7 +112,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
 
     @Override
     public void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = game().machine().clock().currentTick();
+        final long tick = actionContext().clock().currentTick();
         gameScene().optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 

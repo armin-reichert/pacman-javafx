@@ -12,14 +12,14 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
 import javafx.scene.paint.Color;
@@ -54,8 +54,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
     private int waitBeforeRising;
     public boolean dark;
 
-    public TengenMsPacMan_IntroScene(PacManGamesCollection game) {
-        super(game);
+    public TengenMsPacMan_IntroScene(GameActionContext actionContext) {
+        super(actionContext);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
         sceneFlow = new StateMachine<>(this, List.of(SceneState.values()));
@@ -63,7 +63,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariantConfig gameVariantConfig = game().variants().currentVariant().config();
+        final GameVariantConfig gameVariantConfig = actionContext().variants().currentVariant().config();
 
         gameModel().hudState().hideIt();
 
@@ -119,8 +119,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameVariantConfig gameVariantConfig = scene.game().variants().currentVariant().config();
-                final SpriteAnimationContainer spriteAnimationContainer = scene.game().ui().sprites().animations();
+                final GameVariantConfig gameVariantConfig = scene.actionContext().variants().currentVariant().config();
+                final SpriteAnimationContainer spriteAnimationContainer = scene.actionContext().ui().sprites().animations();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 

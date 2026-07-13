@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
         ctx.fillText("PTS", STS*25, STS*25);
         drawSprite(spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL), tilesPx(13), tilesPx(23) + 1, true);
         copyrightRenderer.drawCopyright(copyrightImage, tilesPx(6), tilesPx(28));
-        if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
+        if (scene.actionContext().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(scene, tick);
         }
     }

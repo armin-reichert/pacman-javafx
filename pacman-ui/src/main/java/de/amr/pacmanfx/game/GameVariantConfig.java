@@ -10,6 +10,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -30,7 +31,7 @@ import java.util.Optional;
 //TODO: Clean-up this mess!
 public interface GameVariantConfig extends Disposable {
 
-    void init(PacManGamesCollection game);
+    void init(GameActionContext actionContext);
 
     AssetMap assets();
 

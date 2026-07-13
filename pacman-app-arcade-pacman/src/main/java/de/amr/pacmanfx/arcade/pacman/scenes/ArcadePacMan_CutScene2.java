@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -54,14 +54,14 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     public Ghost blinky;
     public SpriteAnimation nailDressAnimation;
 
-    public ArcadePacMan_CutScene2(PacManGamesCollection game) {
-        super(game);
+    public ArcadePacMan_CutScene2(GameActionContext actionContext) {
+        super(actionContext);
     }
 
     @Override
     public void onActivate() {
-        final GameVariantConfig gameVariantConfig = game().variants().currentVariant().config();
-        final SpriteAnimationContainer spriteAnimationContainer = game().ui().sprites().animations();
+        final GameVariantConfig gameVariantConfig = actionContext().variants().currentVariant().config();
+        final SpriteAnimationContainer spriteAnimationContainer = actionContext().ui().sprites().animations();
         final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
@@ -104,7 +104,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void startTheShow() {
-        game().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
+        actionContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
         setDressState(NailDressState.NAIL);
     }
 

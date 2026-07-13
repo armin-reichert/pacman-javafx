@@ -4,12 +4,12 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.core.state.TimedGameState;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import javafx.scene.paint.Color;
 
@@ -28,8 +28,8 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
     public Ghost ghost;
     public Color shadeOfBlue;
 
-    public TengenMsPacMan_BootScene(PacManGamesCollection game) {
-        super(game);
+    public TengenMsPacMan_BootScene(GameActionContext actionContext) {
+        super(actionContext);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
@@ -39,8 +39,8 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
         actionBindings().dispose();
         movingText = new Actor();
         movingText.setPosition(tilesPx(9), unscaledHeight()); // lower border of screen
-        ghost = game().variants().currentVariant().config().createAnimatedGhost(
-            game().ui().sprites().animations(), GameModel.RED_GHOST_SHADOW);
+        ghost = actionContext().variants().currentVariant().config().createAnimatedGhost(
+            actionContext().ui().sprites().animations(), GameModel.RED_GHOST_SHADOW);
     }
 
     @Override

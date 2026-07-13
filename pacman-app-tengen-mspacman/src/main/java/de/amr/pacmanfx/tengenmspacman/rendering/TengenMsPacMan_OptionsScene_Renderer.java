@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -54,7 +54,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     }
 
     public void draw(AbstractGameScene2D gameScene2D, long tick) {
-        final GameVariantConfig gameVariantConfig = gameScene2D.game().variants().currentVariant().config();
+        final GameVariantConfig gameVariantConfig = gameScene2D.actionContext().variants().currentVariant().config();
         final var gameScene = (TengenMsPacMan_OptionsScene) gameScene2D;
         final var gameModel = (TengenMsPacMan_GameModel) gameScene.gameModel();
         final var uiSettings = gameScene2D.actionContext().getExtensionValue(
@@ -66,7 +66,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         ctx.setFont(arcadeFont8());
 
         if (uiSettings.joypadBindingsDisplayed.get()) {
-            drawJoypadKeyBinding(gameScene2D.game().machine().input().joypad().currentKeyBinding());
+            drawJoypadKeyBinding(gameScene2D.actionContext().input().joypad().currentKeyBinding());
         }
 
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), gameScene.unscaledWidth(), TS, 20);
@@ -138,7 +138,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), gameScene.unscaledWidth(), TS, 212);
 
-        if (gameScene2D.game().ui().viewModel().debugModeOnProperty.get()) {
+        if (gameScene2D.actionContext().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(gameScene2D, tick);
         }
     }

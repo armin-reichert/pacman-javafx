@@ -14,16 +14,16 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.flow.GameFlow;
-import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 
 import java.util.List;
@@ -56,11 +56,9 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
     private int numTicksBeforeRising;
 
-    public ArcadeMsPacMan_IntroScene(PacManGamesCollection game) {
-        super(game);
-
+    public ArcadeMsPacMan_IntroScene(GameActionContext actionContext) {
+        super(actionContext);
         sceneFlow = new StateMachine<>(this, List.of(SceneState.values()));
-
     }
 
     @Override
@@ -68,14 +66,14 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         final Arcade_Actions actions = actionContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings());
-        actionBindings().registerAllBindings(game().commonActions().sceneTestActions().bindings());
+        actionBindings().registerAllBindings(actionContext().commonActions().sceneTestActions().bindings());
 
         sceneFlow.restartState(SceneState.STARTING);
     }
 
     @Override
     public void onDeactivate() {
-        game().ui().sounds().stopAndDisposeVoice();
+        actionContext().ui().sounds().stopAndDisposeVoice();
         actionBindings().dispose();
     }
 
@@ -85,8 +83,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig gameVariantConfig = game().variants().currentVariant().config();
-        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
+        final GameVariantConfig gameVariantConfig = actionContext().variants().currentVariant().config();
+        final SpriteAnimationContainer spriteAnimations = actionContext().ui().sprites().animations();
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);
@@ -123,7 +121,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         presentedGhostPersonality = GameModel.RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        game().ui().sounds().playVoice(GlobalAssets.Voice.EXPLAIN_GAME_START.media());
+        actionContext().ui().sounds().playVoice(GlobalAssets.Voice.EXPLAIN_GAME_START.media());
     }
 
     // Scene flow state machine
@@ -210,7 +208,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameContext context = scene.game().currentGameContext();
+                final GameContext context = scene.actionContext().currentGameContext();
                 final GameFlow flow = context.flow();
                 final boolean canPlay = !context.coinMechanism().isEmpty();
                 scene.marquee.timer().doTick();

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.core.state.CommonGameBootState;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 
 /**
@@ -25,8 +25,8 @@ public class Arcade_BootScene2D extends AbstractGameScene2D {
 
     public String[] noise = new String[28*36];
 
-    public Arcade_BootScene2D(PacManGamesCollection game) {
-        super(game);
+    public Arcade_BootScene2D(GameActionContext actionContext) {
+        super(actionContext);
 
         // Make some noise
         final var rnd = new java.security.SecureRandom();

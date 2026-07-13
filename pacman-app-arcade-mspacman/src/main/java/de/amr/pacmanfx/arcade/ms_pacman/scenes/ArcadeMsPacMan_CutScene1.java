@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -48,8 +48,8 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     public Actor heart;
     public Clapperboard clapperboard;
 
-    public ArcadeMsPacMan_CutScene1(PacManGamesCollection game) {
-        super(game);
+    public ArcadeMsPacMan_CutScene1(GameActionContext actionContext) {
+        super(actionContext);
     }
 
     @Override
@@ -71,8 +71,8 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig gameVariantConfig = game().variants().currentVariant().config();
-        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
+        final GameVariantConfig gameVariantConfig = actionContext().variants().currentVariant().config();
+        final SpriteAnimationContainer spriteAnimations = actionContext().ui().sprites().animations();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) gameVariantConfig.spriteSheet();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
@@ -109,7 +109,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (sceneTimer.atSecond(1)) {
-            game().ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
+            actionContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
         } else if (sceneTimer.hasExpired()) {
             enterStateChasedByGhosts();
         }

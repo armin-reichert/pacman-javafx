@@ -15,11 +15,11 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
-import de.amr.pacmanfx.game.PacManGamesCollection;
-import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -85,11 +85,11 @@ public class ArcadePacManGameVariant implements GameVariantConfig, ResourceManag
     // GameVariant interface
 
     @Override
-    public void init(PacManGamesCollection game) {
+    public void init(GameActionContext actionContext) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
-        initSound(game.ui().sounds());
-        gameSceneConfig = new ArcadePacMan_GameSceneConfig(game);
+        initSound(actionContext.ui().sounds());
+        gameSceneConfig = new ArcadePacMan_GameSceneConfig(actionContext);
     }
 
     @Override

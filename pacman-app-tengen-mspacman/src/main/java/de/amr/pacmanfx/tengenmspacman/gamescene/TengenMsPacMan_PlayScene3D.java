@@ -11,7 +11,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
@@ -32,8 +32,8 @@ import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
  */
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
-    public TengenMsPacMan_PlayScene3D(PacManGamesCollection game) {
-        super(game);
+    public TengenMsPacMan_PlayScene3D(GameActionContext actionContext) {
+        super(actionContext);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final double infoHeight = tilesPx(2);
         levelInfo.setFitWidth(infoWidth);
         levelInfo.setFitHeight(infoHeight);
-        levelInfo.imageProperty().bind(game().ui().viewModel().maze3D.floorColorProperty.map(
+        levelInfo.imageProperty().bind(actionContext().ui().viewModel().maze3D.floorColorProperty.map(
             color -> createLevelInfoImage(level.number(), infoWidth, infoHeight, color)));
         // Display the level info at front side of floor just over the surface
         final Maze3D maze3D = level3D.maze3D();
@@ -108,7 +108,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         } else {
             actionBindings().registerAllBindings(actions.steeringBindings());
             actionBindings().selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
-            actionBindings().registerAllBindings(game().commonActions().cheatActions().bindings());
+            actionBindings().registerAllBindings(actionContext().commonActions().cheatActions().bindings());
         }
         bindActions();
 
@@ -122,7 +122,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             if (score.isEnabled()) {
                 scores3D.showScore(score.points(), score.levelNumber());
             } else {
-                scores3D.showTextForScore(game().ui().translations().translate("score.game_over"),
+                scores3D.showTextForScore(actionContext().ui().translations().translate("score.game_over"),
                     Color.valueOf(NES_Palette.rgb(0x16)));
             }
             // Always show high score

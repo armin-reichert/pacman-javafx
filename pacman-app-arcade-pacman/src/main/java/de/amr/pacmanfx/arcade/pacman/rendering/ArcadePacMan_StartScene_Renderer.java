@@ -31,7 +31,7 @@ public class ArcadePacMan_StartScene_Renderer extends BaseRenderer implements Ga
         fillText("PTS",                     ARCADE_ROSE,   arcadeFont6(), tilesPx(25), tilesPx(25));
         fillText("© 1980 MIDWAY MFG.CO.",   ARCADE_PINK,   arcadeFont8(), tilesPx(4),  tilesPx(29));
 
-        if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
+        if (scene.actionContext().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(scene, tick);
         }
     }

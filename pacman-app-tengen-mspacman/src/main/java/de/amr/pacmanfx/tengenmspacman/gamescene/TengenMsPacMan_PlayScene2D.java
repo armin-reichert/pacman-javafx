@@ -6,13 +6,14 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
+import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
@@ -21,8 +22,6 @@ import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
@@ -68,17 +67,17 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public TengenMsPacMan_PlayScene2D(PacManGamesCollection game) {
-        super(game);
+    public TengenMsPacMan_PlayScene2D(GameActionContext actionContext) {
+        super(actionContext);
 
         dynamicCamera = new PlayScene2DCamera();
         dynamicCamera.scalingProperty().bind(scalingProperty());
 
-        rootPane.backgroundProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
+        rootPane.backgroundProperty().bind(actionContext.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
 
         // Scene size gets bound to parent scene when embedded in game view, initial size doesn't matter.
         subScene = new SubScene(rootPane, 88, 88);
-        subScene.fillProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty);
+        subScene.fillProperty().bind(actionContext.ui().viewModel().common2D.canvasBackgroundColorProperty);
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
 
         final var uiSettings = tengenUISettings();
@@ -177,7 +176,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
     public Optional<ContextMenu> optContextMenu() {
         final var uiSettings = tengenUISettings();
 
-        final TranslationManager translations = game().ui().translations();
+        final TranslationManager translations = actionContext().ui().translations();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
         final var contextMenu = new ContextMenu();
 
@@ -197,8 +196,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
         addLocalizedCheckBox(contextMenu, translations, gameContext().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
         addLocalizedCheckBox(contextMenu, translations, gameContext().cheats().pacImmuneProperty(), "context_menu.immunity");
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, game().ui().viewModel().mutedProperty, "context_menu.muted");
-        addLocalizedActionItem(contextMenu, translations, game().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedCheckBox(contextMenu, translations, actionContext().ui().viewModel().mutedProperty, "context_menu.muted");
+        addLocalizedActionItem(contextMenu, translations, actionContext().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -240,19 +239,19 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
     }
 
     private void acceptNormalLevel() {
-        game().ui().sounds().setEnabled(true); //TODO needed?
+        actionContext().ui().sounds().setEnabled(true); //TODO needed?
 
         final var actions = tengenActions();
 
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
         actionBindings().registerAllBindings(actions.steeringBindings());
-        actionBindings().registerAllBindings(game().commonActions().cheatActions().bindings());
+        actionBindings().registerAllBindings(actionContext().commonActions().cheatActions().bindings());
         actionBindings().selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
         actionBindings().selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
     }
 
     private void acceptDemoLevel() {
-        game().ui().sounds().setEnabled(false); //TODO needed?
+        actionContext().ui().sounds().setEnabled(false); //TODO needed?
 
         final var actions = tengenActions();
         actionBindings().selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
@@ -311,8 +310,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
     }
 
     private void ensureActorAnimationsCreated(GameLevel level) {
-        final GameVariantConfig config = game().variants().currentVariant().config();
-        final SpriteAnimationContainer animationContainer = game().ui().sprites().animations();
+        final GameVariantConfig config = actionContext().variants().currentVariant().config();
+        final SpriteAnimationContainer animationContainer = actionContext().ui().sprites().animations();
 
         final Pac pac = level.entities().pac();
         if (pac.animations().isEmpty()) {

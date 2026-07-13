@@ -8,12 +8,12 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -44,8 +44,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     private List<Long> juniorCreationTimes;
     private Clapperboard clapperboard;
 
-    public TengenMsPacMan_CutScene4(PacManGamesCollection game) {
-        super(game);
+    public TengenMsPacMan_CutScene4(GameActionContext actionContext) {
+        super(actionContext);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
@@ -68,8 +68,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariantConfig gameVariantConfig = game().variants().currentVariant().config();
-        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
+        final GameVariantConfig gameVariantConfig = actionContext().variants().currentVariant().config();
+        final SpriteAnimationContainer spriteAnimations = actionContext().ui().sprites().animations();
 
         clapperboard = new Clapperboard(4, "THE END");
         clapperboard.setPosition(tilesPx(3), tilesPx(10));
@@ -85,17 +85,17 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         juniors = new ArrayList<>();
         juniorCreationTimes = new ArrayList<>();
 
-        game().ui().sounds().play(PacManGameSoundID.INTERMISSION_4);
+        actionContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_4);
     }
 
     @Override
     public void onDeactivate() {
-        game().ui().sounds().stop(PacManGameSoundID.INTERMISSION_4);
+        actionContext().ui().sounds().stop(PacManGameSoundID.INTERMISSION_4);
     }
 
     @Override
     public void onTick(long tick) {
-        final GameVariantConfig gameVariantConfig = game().variants().currentVariant().config();
+        final GameVariantConfig gameVariantConfig = actionContext().variants().currentVariant().config();
         final long gameStateTick = gameState().timer().tickCount();
 
         clapperboard.tick();
@@ -175,7 +175,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         junior.setPosition((float) randomX, unscaledHeight() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(gameVariant.createPacAnimations(game().ui().sprites().animations()));
+        junior.setAnimations(gameVariant.createPacAnimations(actionContext().ui().sprites().animations()));
         junior.animations().select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);
@@ -186,7 +186,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             case 2 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_2;
             default -> throw new IllegalArgumentException();
         };
-        game().ui().sounds().loop(soundID);
+        actionContext().ui().sounds().loop(soundID);
 
         Logger.info("Junior spawned at tick {}", tick);
     }

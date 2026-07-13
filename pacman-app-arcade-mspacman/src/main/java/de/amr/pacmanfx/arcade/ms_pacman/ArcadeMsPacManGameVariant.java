@@ -21,6 +21,7 @@ import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
@@ -76,11 +77,11 @@ public class ArcadeMsPacManGameVariant implements GameVariantConfig, ResourceMan
     }
 
     @Override
-    public void init(PacManGamesCollection game) {
+    public void init(GameActionContext actionContext) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
-        initSound(game.ui().sounds());
-        gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig(game);
+        initSound(actionContext.ui().sounds());
+        gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig(actionContext);
     }
 
     @Override

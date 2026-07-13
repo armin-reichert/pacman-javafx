@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.state.TimedGameState;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
-import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -27,15 +26,15 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameScene implements GameScene, Disposable {
 
-    private final PacManGamesCollection game;
+    private final GameActionContext actionContext;
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for " + getClass().getSimpleName());
 
     private GameEventListener gameEventHandler;
 
-    public AbstractGameScene(PacManGamesCollection game) {
-        this.game = requireNonNull(game);
-        gameEventHandler = new BaseGameEventHandler(game);
+    public AbstractGameScene(GameActionContext actionContext) {
+        this.actionContext = requireNonNull(actionContext);
+        gameEventHandler = new BaseGameEventHandler(actionContext);
     }
 
     public void setGameEventHandler(GameEventListener delegate) {
@@ -76,22 +75,17 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
 
     @Override
     public GameActionContext actionContext() {
-        return (GameActionContext) game; //TODO rethink
+        return actionContext;
     }
 
     @Override
     public Input input() {
-        return game.machine().input();
-    }
-
-    @Override
-    public PacManGamesCollection game() {
-        return game;
+        return actionContext.input();
     }
 
     @Override
     public GameContext gameContext() {
-        return game().currentGameContext();
+        return actionContext.currentGameContext();
     }
 
     @Override
@@ -111,7 +105,7 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
 
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
-        return game().variants().currentVariant().config().optSoundEffects();
+        return actionContext.variants().currentVariant().config().optSoundEffects();
     }
 
     @Override

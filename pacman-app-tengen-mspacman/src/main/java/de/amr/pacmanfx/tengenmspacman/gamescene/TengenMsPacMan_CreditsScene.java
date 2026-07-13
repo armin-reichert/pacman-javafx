@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 
 import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.NES_SCREEN_HEIGHT;
@@ -25,8 +25,8 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene2D {
     public DisplayMode displayMode = DisplayMode.ORIGINAL_AUTHORS;
     public float fadeProgress = 0;
 
-    public TengenMsPacMan_CreditsScene(PacManGamesCollection game) {
-        super(game);
+    public TengenMsPacMan_CreditsScene(GameActionContext actionContext) {
+        super(actionContext);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }

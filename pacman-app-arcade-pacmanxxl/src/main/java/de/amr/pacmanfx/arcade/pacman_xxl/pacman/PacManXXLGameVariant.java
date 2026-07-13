@@ -15,10 +15,10 @@ import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
-import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -58,7 +58,7 @@ public final class PacManXXLGameVariant implements GameVariantConfig, ResourceMa
     private GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
-    private PacManGamesCollection game;
+    private GameActionContext actionContext;
 
     public PacManXXLGameVariant() {
         textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman");
@@ -75,17 +75,17 @@ public final class PacManXXLGameVariant implements GameVariantConfig, ResourceMa
     }
 
     @Override
-    public void init(PacManGamesCollection game) {
-        this.game = game;
+    public void init(GameActionContext actionContext) {
+        this.actionContext = actionContext;
 
-        gameSceneConfig = new PacManXXL_PacMan_GameSceneConfig(game);
+        gameSceneConfig = new PacManXXL_PacMan_GameSceneConfig(actionContext);
 
         Logger.info("Load assets of UI configuration {}", getClass().getSimpleName());
         loadAssets();
 
         Logger.info("Register sounds and effects of UI configuration {}", getClass().getSimpleName());
-        registerSounds(game.ui().sounds());
-        soundEffects = new GameSoundEffects(game.ui().sounds());
+        registerSounds(actionContext.ui().sounds());
+        soundEffects = new GameSoundEffects(actionContext.ui().sounds());
         initSoundEffects();
     }
 
@@ -98,9 +98,9 @@ public final class PacManXXLGameVariant implements GameVariantConfig, ResourceMa
         Logger.info("Dispose assets of UI configuration {}", getClass().getSimpleName());
         assets().dispose();
 
-        if (game != null) {
+        if (actionContext != null) {
             Logger.info("Unregister sounds and effects of UI configuration {}", getClass().getSimpleName());
-            unregisterSounds(game.ui().sounds());
+            unregisterSounds(actionContext.ui().sounds());
             soundEffects.dispose();
         }
     }

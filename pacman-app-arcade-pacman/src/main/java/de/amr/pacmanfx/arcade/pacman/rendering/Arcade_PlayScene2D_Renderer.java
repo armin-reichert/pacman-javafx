@@ -41,7 +41,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
 
-        final GameVariantConfig gameVariantConfig = scene.game().variants().currentVariant().config();
+        final GameVariantConfig gameVariantConfig = scene.actionContext().variants().currentVariant().config();
         levelRenderer = scene.configureRenderer(gameVariantConfig.createGameLevelRenderer(canvas));
         actorRenderer = scene.configureRenderer(gameVariantConfig.createActorRenderer(canvas));
         debugRenderer = scene.configureRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(canvas));
@@ -66,7 +66,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
             levelRenderer.drawLevel(level, info);
             updateActorZOrder(level);
             actorsInZOrder.forEach(actorRenderer::drawActor);
-            if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
+            if (scene.actionContext().ui().viewModel().debugModeOnProperty.get()) {
                 debugRenderer.draw(scene, tick);
             }
         });

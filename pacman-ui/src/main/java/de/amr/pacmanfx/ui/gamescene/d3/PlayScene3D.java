@@ -4,15 +4,14 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3;
 
-import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.score.Score;
+import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
@@ -66,10 +65,10 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
-    public PlayScene3D(PacManGamesCollection game) {
-        super(game);
+    public PlayScene3D(GameActionContext actionContext) {
+        super(actionContext);
 
-        final GameViewModel viewModel = game.ui().viewModel();
+        final GameViewModel viewModel = actionContext.ui().viewModel();
 
         perspectiveManager = new PerspectiveManager(camera);
         final var coordinateSystem = new CoordinateSystem();
@@ -83,9 +82,9 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
 
-        actionBindings = game().commonActions().camera3DActions().bindings();
+        actionBindings = actionContext.commonActions().camera3DActions().bindings();
 
-        setGameEventHandler(new PlayScene3DGameEventHandler(game, this));
+        setGameEventHandler(new PlayScene3DGameEventHandler(actionContext, this));
 
         drawModeChangeListener = (_, _, drawMode) -> {
             if (level3D != null) {
@@ -127,8 +126,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
             scores3D.showTextForScore(
-                game().ui().translations().translate("score.game_over"),
-                game().variants().currentVariant().config().assets().color("color.game_over_message"));
+                actionContext().ui().translations().translate("score.game_over"),
+                actionContext().variants().currentVariant().config().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -164,9 +163,9 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
             Logger.info("Old 3D game level is disposed...");
             level3D.dispose();
         }
-        final GameViewModel viewModel = game().ui().viewModel();
+        final GameViewModel viewModel = actionContext().ui().viewModel();
 
-        level3D = new GameLevel3D(viewModel, gameContext(), level, game().variants().currentVariant().config());
+        level3D = new GameLevel3D(viewModel, gameContext(), level, actionContext().variants().currentVariant().config());
         decorate(level3D);
         level3DEmbedder.getChildren().setAll(level3D);
 
@@ -195,7 +194,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public void onActivate() {
-        final Common3DSettingsModel settings3D = game().ui().viewModel().common3D;
+        final Common3DSettingsModel settings3D = actionContext().ui().viewModel().common3D;
         perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIdProperty);
         settings3D.drawModeProperty.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
@@ -205,7 +204,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     @Override
     public void onDeactivate() {
         perspectiveManager.activeIDProperty().unbind();
-        game().ui().viewModel().common3D.drawModeProperty.removeListener(drawModeChangeListener);
+        actionContext().ui().viewModel().common3D.drawModeProperty.removeListener(drawModeChangeListener);
         disposeContextMenu();
         actionBindings().dispose();
     }
@@ -265,7 +264,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
-        contextMenu = new PlaySceneContextMenu(game());
+        contextMenu = new PlaySceneContextMenu(actionContext());
         return Optional.of(contextMenu);
     }
 
@@ -291,8 +290,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         final Scores3D oldScores3D = scores3D;
 
         scores3D = new Scores3D(
-            game().ui().translations().translate("score.score"),
-            game().ui().translations().translate("score.high_score"),
+            actionContext().ui().translations().translate("score.score"),
+            actionContext().ui().translations().translate("score.high_score"),
             GlobalAssets.PredefinedFont.ARCADE8.font());
 
         scores3D.textOpacity.bind(scoreOpacity);

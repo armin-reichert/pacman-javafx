@@ -19,7 +19,7 @@ public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implem
 
     public ArcadePacMan_CutScene_Renderer(AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
-        final GameVariantConfig gameVariantConfig = scene.game().variants().currentVariant().config();
+        final GameVariantConfig gameVariantConfig = scene.actionContext().variants().currentVariant().config();
         actorRenderer = scene.configureRenderer(gameVariantConfig.createActorRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
@@ -33,7 +33,7 @@ public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implem
     public void draw(AbstractGameScene2D scene, long tick) {
         clearCanvas();
         drawSceneContent(scene);
-        if (scene.game().ui().viewModel().debugModeOnProperty.get()) {
+        if (scene.actionContext().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(scene, tick);
         }
     }

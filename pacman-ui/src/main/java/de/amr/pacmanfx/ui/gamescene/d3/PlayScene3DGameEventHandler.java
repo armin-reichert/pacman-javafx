@@ -9,12 +9,12 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.*;
-import de.amr.pacmanfx.core.state.TimedGameState;
-import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.state.TimedGameState;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
@@ -54,10 +54,10 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
     private final PlayScene3D playScene3D;
     private final RandomTextPicker gameOverMessagePicker;
 
-    public PlayScene3DGameEventHandler(PacManGamesCollection game, PlayScene3D playScene3D) {
-        super(game);
+    public PlayScene3DGameEventHandler(GameActionContext actionContext, PlayScene3D playScene3D) {
+        super(actionContext);
         this.playScene3D = requireNonNull(playScene3D);
-        gameOverMessagePicker = new RandomTextPicker(game.ui().translations().textBundle(), "game.over");
+        gameOverMessagePicker = new RandomTextPicker(actionContext.ui().translations().textBundle(), "game.over");
     }
 
     @Override
@@ -70,7 +70,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
             return;
         }
         if (gameState.id() instanceof TestStateID) {
-            handleTestState(game().ui().viewModel().common3D);
+            handleTestState(actionContext().ui().viewModel().common3D);
         }
         else if (GameStateID.GAME_OR_LEVEL_STARTING.identifies(newState)) {
             onStartingGameOrLevel();
@@ -172,7 +172,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
             }
             else {
                 level3D.pellet3DAtTile(tile).ifPresent(pellet3D -> removePelletAfterDelay(level3D, pellet3D));
-                final long tick = game().machine().clock().currentTick();
+                final long tick = actionContext().clock().currentTick();
                 optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
             }
         }
@@ -280,8 +280,8 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
             final Ghost3D ghost3D = level3D.ghost3D(ghost.personality());
             final int killIndex = level3D.level().indexInGhostKilledChain(ghost);
 
-            final Factory3D factory3D = game().variants().currentVariant().config().factory3D();
-            final Node numberBox3D = factory3D.createNumberBox3D(game().variants().currentVariant().config(), killIndex);
+            final Factory3D factory3D = actionContext().variants().currentVariant().config().factory3D();
+            final Node numberBox3D = factory3D.createNumberBox3D(actionContext().variants().currentVariant().config(), killIndex);
             numberBox3D.setTranslateX(ghost3D.getTranslateX());
             numberBox3D.setTranslateY(ghost3D.getTranslateY());
             numberBox3D.setTranslateZ(ghost3D.getTranslateZ());
@@ -301,7 +301,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         final GameLevel level = gameContext().model().assertLevel();
         final boolean cutSceneFollows = !level.isDemoLevel()
             && gameModel().rules().cutSceneNumberAfterLevel(level.number()).isPresent();
-        final GameViewModel viewModel = game().ui().viewModel();
+        final GameViewModel viewModel = actionContext().ui().viewModel();
 
         playScene3D.scoreOpacity.set(0);
 
@@ -364,7 +364,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
     private void onGameOver() {
         GameLevel3D level3D = assertLevel3D();
         if (!level3D.level().isDemoLevel() && RandomNumberSupport.chance(0.25)) {
-            game().ui().shortMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
+            actionContext().ui().shortMessage(Duration.seconds(2.5), gameOverMessagePicker.selectNextText());
         }
         level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).stop();
         level3D.cleanupFoodAndParticles();

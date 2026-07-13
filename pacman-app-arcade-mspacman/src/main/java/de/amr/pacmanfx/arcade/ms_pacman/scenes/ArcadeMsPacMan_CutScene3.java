@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import org.tinylog.Logger;
@@ -46,8 +46,8 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     private SceneState sceneState;
     private long sceneTick;
 
-    public ArcadeMsPacMan_CutScene3(PacManGamesCollection game) {
-        super(game);
+    public ArcadeMsPacMan_CutScene3(GameActionContext actionContext) {
+        super(actionContext);
     }
 
     @Override
@@ -63,8 +63,8 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig gameVariantConfig = game().variants().currentVariant().config();
-        final SpriteAnimationContainer spriteAnimations = game().ui().sprites().animations();
+        final GameVariantConfig gameVariantConfig = actionContext().variants().currentVariant().config();
+        final SpriteAnimationContainer spriteAnimations = actionContext().ui().sprites().animations();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
@@ -130,7 +130,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     private void updateClapperboardState() {
         clapperboard.tick();
         if (sceneTick == SceneState.CLAPPERBOARD.start() + 60) {
-            game().ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
+            actionContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
         }
     }
 
