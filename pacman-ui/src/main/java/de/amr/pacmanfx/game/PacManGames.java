@@ -30,7 +30,7 @@ public final class PacManGames implements GameActionContext, GameLifecycle {
      * High score file for game variant XYZ is stored as "highscore-xyz.xml" inside user home directory
 
      * @param variantName name of the game variant e.g. MS_PACMAN
-     * @return highscore file name for this game variant
+     * @return high score file name for this game variant
      */
     public static File highScoreFile(String variantName) {
         requireNonNull(variantName);

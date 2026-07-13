@@ -41,7 +41,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        GameBox.instance().plugInCartridges(
+        GameBox.instance().insertCartridges(
             ArcadePacMan_Cartridge.CARTRIDGE,
             ArcadeMsPacMan_Cartridge.CARTRIDGE,
             TengenMsPacMan_Cartridge.CARTRIDGE,

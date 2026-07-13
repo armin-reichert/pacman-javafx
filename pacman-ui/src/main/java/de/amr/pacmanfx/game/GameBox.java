@@ -37,7 +37,7 @@ public class GameBox implements Disposable {
         return SingletonHolder.SINGLETON;
     }
 
-    private final Set<Cartridge> cartridges = new HashSet<>();
+    private final Set<Cartridge> cartridges = new HashSet<>(6);
     private final Input input = new Input();
     private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private final GameClock clock = new GameClockImpl();
@@ -74,38 +74,22 @@ public class GameBox implements Disposable {
         return watchdog;
     }
 
-    /**
-     * Plugs the given cartridges into this machine.
-     */
-    public void plugInCartridges(Cartridge... cartridges) {
-        for (var c : cartridges) {
-            if (c == null) {
-                Logger.error("NULL cartridge detected! Are you kdding me?");
+    public void insertCartridges(Cartridge... cartridgesToInsert) {
+        for (var cartridge : cartridgesToInsert) {
+            if (cartridge == null) {
+                Logger.error("NULL cartridge detected! Are you kidding me?");
             } else {
-                plugInCartridge(c);
+                if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(cartridge.name()).matches()) {
+                    throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
+                        .formatted(cartridge.name(), GameConstants.GAME_VARIANT_NAME_PATTERN));
+                }
+                final boolean added = cartridges.add(cartridge);
+                if (added) {
+                    Logger.info("Cartridge {} inserted into machine", cartridge.name());
+                } else {
+                    Logger.info("Cartridge {} already inserted", cartridge.name());
+                }
             }
-        }
-    }
-
-    /**
-     * Plugs the given cartridge into this machine.
-     *
-     * @param cartridge the game specification implementing the game variant
-     */
-    public void plugInCartridge(Cartridge cartridge) {
-        requireNonNull(cartridge);
-
-        if (!de.amr.pacmanfx.core.GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(cartridge.name()).matches()) {
-            throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
-                .formatted(cartridge.name(), de.amr.pacmanfx.core.GameConstants.GAME_VARIANT_NAME_PATTERN));
-        }
-
-        final boolean added = cartridges.add(cartridge);
-        if (added) {
-            Logger.info("Cartridge {} inserted into machine", cartridge.name());
-        }
-        else {
-            Logger.info("Cartridge {} already inserted", cartridge.name());
         }
     }
 

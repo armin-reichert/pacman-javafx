@@ -97,7 +97,7 @@ public class GameBuilder {
     public Optional<PacManGames> build() {
         try {
             validateConfigurationData();
-            GameBox.instance().plugInCartridges(cartridgeSet.toArray(Cartridge[]::new));
+            GameBox.instance().insertCartridges(cartridgeSet.toArray(Cartridge[]::new));
 
             final var game = new PacManGames();
             game.setUI(new GameUI(stage, width, height, uiSettings, dashboardFactory));
