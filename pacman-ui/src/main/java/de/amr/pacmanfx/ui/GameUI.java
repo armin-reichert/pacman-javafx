@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.state.GameStateID;
-import de.amr.pacmanfx.ui.action.CommonActions;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
@@ -205,7 +205,7 @@ public class GameUI implements GameEventListener {
     }
 
     private void bindCommonActions() {
-        final CommonActions actions = actionContext.commonActions();
+        final CommonGameActions actions = actionContext.commonActions();
         final Set<ActionKeyBinding> bindings = actions.bindings();
         actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionToggleKeyboardMonitor(), bindings);
         actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionEnterFullScreen(), bindings);

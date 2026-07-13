@@ -8,7 +8,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.CommonActions;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.action.core.GameLifecycle;
 import de.amr.pacmanfx.ui.input.Input;
@@ -38,23 +38,21 @@ public final class PacManGames implements GameActionContext, GameLifecycle {
         return new File(de.amr.pacmanfx.core.GameConstants.USER_HOME_DIR, fileName);
     }
 
-    private final GameBox machine = GameBox.instance();
+    private final GameBox machine;
 
     private final GameVariantManager variantManager;
 
-    private final CommonActions commonActions;
+    private final CommonGameActions actions;
 
     private GameUI ui;
 
     private GameContext gameContext;
 
     public PacManGames() {
+        machine = GameBox.instance();
         variantManager = new GameVariantManager(this);
-        commonActions = new CommonActions(this);
+        actions = new CommonGameActions(this);
         configureClock();
-
-        //noinspection ResultOfMethodCallIgnored
-        PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
     }
 
     public void setUI(GameUI ui) {
@@ -103,8 +101,8 @@ public final class PacManGames implements GameActionContext, GameLifecycle {
     }
 
     @Override
-    public CommonActions commonActions() {
-        return commonActions;
+    public CommonGameActions commonActions() {
+        return actions;
     }
 
     @Override
@@ -162,6 +160,9 @@ public final class PacManGames implements GameActionContext, GameLifecycle {
         Logger.info("Custom map directory is getting watched!");
         ui.window().mainScene().flashMessageManager().startAnimationTimer();
         ui.sprites().startAnimationTimer();
+
+        //noinspection ResultOfMethodCallIgnored
+        PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
     }
 
     private void configureClock() {

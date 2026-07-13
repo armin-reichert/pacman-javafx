@@ -24,7 +24,7 @@ import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
  * For each action, there must exist a line of the form <pre>{@code action.<actionID>=localized text}</pre>
  * in the global UI resource bundle.
  */
-public final class CommonActions {
+public final class CommonGameActions {
 
     private final SimulationActions simulationActions;
     private final GameFlowActions gameFlowActions;
@@ -39,7 +39,7 @@ public final class CommonActions {
 
     private final Set<ActionKeyBinding> commonBindings;
 
-    public CommonActions(GameActionContext actionContext) {
+    public CommonGameActions(GameActionContext actionContext) {
         simulationActions = new SimulationActions(actionContext);
         gameFlowActions = new GameFlowActions(actionContext);
         steeringActions = new SteeringActions(actionContext);

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.ui.action.CommonActions;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -41,7 +41,7 @@ public class DS_GameControl extends GameDashboardSection {
     @Override
     public void setGameActionContext(GameActionContext actionContext) {
         final CoinMechanism coinMechanism = actionContext.coinMechanism();
-        final CommonActions actions = actionContext.commonActions();
+        final CommonGameActions actions = actionContext.commonActions();
 
         spinnerCredit            = intSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
         choiceBoxInitialLives    = choiceBox("Initial Lives", new Integer[] {3, 5});
