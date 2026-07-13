@@ -5,10 +5,7 @@
 package de.amr.pacmanfx.game;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonActions;
@@ -147,7 +144,7 @@ public final class PacManGames implements GameActionContext, GameLifecycle {
         });
         ui.sounds().stopAll();
         clock().stop();
-        clock().setTargetFrameRate(GameClock.DEFAULT_TICKS_PER_SECOND);
+        clock().setTargetFrameRate(GameConstants.SIMULATION_FPS);
     }
 
     @Override

@@ -27,7 +27,9 @@ public class GameConstants {
      */
     public static final File CUSTOM_MAP_DIR = new File(USER_HOME_DIR, "maps");
 
-    // Simulation speed changes
+    // Simulation speed
+
+    public static int SIMULATION_FPS = 60;
 
     public static float SIM_STEP_MESSAGE_SEC = 0.75f;
 

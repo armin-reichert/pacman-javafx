@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
@@ -80,7 +80,7 @@ public class DS_ActorInfo extends GameDashboardSection {
 
     private String actorMovementText(GameLevel level, MovingActor movingActor) {
         if (movingActor == null) return NO_INFO;
-        var speed = movingActor.computeSpeed() * GameClock.DEFAULT_TICKS_PER_SECOND;
+        var speed = movingActor.computeSpeed() * GameConstants.SIMULATION_FPS;
         var blocked = !movingActor.moveInfo().moved;
         var reverseText = movingActor.turnBackRequested() ? "REV!" : "";
         return blocked

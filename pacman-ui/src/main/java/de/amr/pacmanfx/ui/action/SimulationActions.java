@@ -16,7 +16,6 @@ import javafx.util.Duration;
 
 import java.util.Set;
 
-import static de.amr.pacmanfx.core.GameClock.DEFAULT_TICKS_PER_SECOND;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 import static de.amr.pacmanfx.uilib.Ufx.toggleBooleanProperty;
@@ -111,7 +110,7 @@ public class SimulationActions {
             @Override
             protected void doAction() {
                 final GameClock gameClock = actionContext.clock();
-                gameClock.setTargetFrameRate(DEFAULT_TICKS_PER_SECOND);
+                gameClock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
                 actionContext.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), gameClock.targetFrameRate() + "Hz");
             }
         };

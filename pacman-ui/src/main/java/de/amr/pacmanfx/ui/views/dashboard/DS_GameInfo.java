@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.HuntingPhase;
 import de.amr.pacmanfx.core.model.HuntingTimer;
@@ -25,7 +26,6 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static de.amr.basics.timer.TickTimer.secToTicks;
-import static de.amr.pacmanfx.core.GameClock.DEFAULT_TICKS_PER_SECOND;
 import static de.amr.pacmanfx.core.model.GameModel.CYAN_GHOST_BASHFUL;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
@@ -138,7 +138,7 @@ public class DS_GameInfo extends GameDashboardSection {
         if (duration == TickTimer.INDEFINITE) {
             return "indefinite";
         }
-        return "%.2f sec".formatted(duration / (float) DEFAULT_TICKS_PER_SECOND);
+        return "%.2f sec".formatted(duration / (float) GameConstants.SIMULATION_FPS);
     }
 
     private String fmtHuntingTicksRunning(HuntingTimer timer) {
@@ -161,33 +161,33 @@ public class DS_GameInfo extends GameDashboardSection {
     private String fmtGhostAttackSpeed(GameLevel level, ActorSpeedControl speedControl) {
         // do not use Blinky because he has varying attack speed (Cruise Elroy mode)
         final float speed = speedControl.ghostSpeedAttacking(level, level.ghost(CYAN_GHOST_BASHFUL));
-        return "%.4f px/s".formatted(speed * DEFAULT_TICKS_PER_SECOND);
+        return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level, ActorSpeedControl speedControl) {
         final float speed = speedControl.ghostSpeedFrightened(level);
-        return "%.4f px/s".formatted(speed * DEFAULT_TICKS_PER_SECOND);
+        return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level, ActorSpeedControl speedControl) {
         final float speed = speedControl.ghostSpeedTunnel(level.number());
-        return "%.4f px/s".formatted(speed * DEFAULT_TICKS_PER_SECOND);
+        return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 
     private String fmtPacNormalSpeed(GameLevel level, ActorSpeedControl speedControl) {
         final float speed = speedControl.pacSpeed(level);
-        return "%.4f px/s".formatted(speed * DEFAULT_TICKS_PER_SECOND);
+        return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 
     private String fmtPacSpeedPowered(GameLevel level, ActorSpeedControl speedControl) {
         final float speed = speedControl.pacSpeedWhenHasPower(level);
-        return "%.4f px/s".formatted(speed * DEFAULT_TICKS_PER_SECOND);
+        return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 
     private String fmtPacPowerTime(GameLevel level) {
         double powerSec = level.pacPowerSeconds();
         long powerTicks = secToTicks(powerSec);
-        return "%.2f sec (%d ticks)".formatted(powerTicks / (float) DEFAULT_TICKS_PER_SECOND, powerTicks);
+        return "%.2f sec (%d ticks)".formatted(powerTicks / (float) GameConstants.SIMULATION_FPS, powerTicks);
     }
 
     private String fmtNumFlashes(GameLevel level) {

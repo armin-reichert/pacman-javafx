@@ -8,8 +8,9 @@ import de.amr.basics.Disposable;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.uilib.GameClockFX;
+import de.amr.pacmanfx.uilib.GameClockImpl;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -39,7 +40,7 @@ public class GameBox implements Disposable {
     private final Set<Cartridge> cartridges = new HashSet<>();
     private final Input input = new Input();
     private final CoinMechanism coinMechanism = new CoinMechanism(99);
-    private final GameClock clock = new GameClockFX();
+    private final GameClock clock = new GameClockImpl();
     private final DirectoryWatchdog watchdog;
 
     private GameBox() {
@@ -47,6 +48,7 @@ public class GameBox implements Disposable {
         if (!ok) {
             throw new IllegalStateException("GameBox: User directory validation failed");
         }
+        clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
         watchdog = new DirectoryWatchdog(de.amr.pacmanfx.core.GameConstants.CUSTOM_MAP_DIR);
     }
 

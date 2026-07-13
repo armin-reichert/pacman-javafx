@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  * All tick execution occurs on the JavaFX Application Thread, as required by
  * {@link Timeline}. Actions should therefore avoid long‑running work.
  */
-public class GameClockFX implements GameClock {
+public class GameClockImpl implements GameClock {
 
     /**
      * The desired frame rate. Changing this property rebuilds the internal
@@ -49,7 +49,7 @@ public class GameClockFX implements GameClock {
             if (wasRunning) {
                 stop();
             }
-            createClockwork(targetFrameRate());
+            createClockwork();
             if (wasRunning) {
                 start();
             }
@@ -88,8 +88,8 @@ public class GameClockFX implements GameClock {
      * Creates a new game clock with the default target frame rate.
      * The internal {@link Timeline} is initialized immediately.
      */
-    public GameClockFX() {
-        createClockwork(targetFrameRate());
+    public GameClockImpl() {
+        createClockwork();
         clockwork.statusProperty().addListener((_, oldStatus, newStatus) ->
             Logger.info("Clock status {} -> {}, target frequency: {} Hz", oldStatus, newStatus, targetFrameRate()));
     }
@@ -211,11 +211,9 @@ public class GameClockFX implements GameClock {
      * The timeline is configured with a single {@link KeyFrame} whose duration
      * corresponds to the desired frame period. Each frame triggers a call to
      * {@link #makeOneStep(boolean)}.
-     *
-     * @param frameRate the desired frames per second
      */
-    private void createClockwork(double frameRate) {
-        final var period = Duration.seconds(1.0 / frameRate);
+    private void createClockwork() {
+        final var period = Duration.seconds(1.0 / targetFrameRate());
         clockwork.getKeyFrames().setAll(new KeyFrame(period, _ -> makeOneStep(!getUpdatesDisabled())));
         clockwork.setCycleCount(Animation.INDEFINITE);
         ticksInFrame = 0;

@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.core.model;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.HuntingPhaseStartedEvent;
 import org.tinylog.Logger;
@@ -175,7 +175,7 @@ public class HuntingTimer {
             eventText,
             phase(index),
             tickTimer.durationTicks(),
-            (float) tickTimer.durationTicks() / GameClock.DEFAULT_TICKS_PER_SECOND,
+            (float) tickTimer.durationTicks() / GameConstants.SIMULATION_FPS,
             this);
     }
 
