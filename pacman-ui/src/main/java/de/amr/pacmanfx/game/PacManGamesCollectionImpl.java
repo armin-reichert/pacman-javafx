@@ -36,9 +36,10 @@ public final class PacManGamesCollectionImpl implements GameActionContext, GameL
     private GameContext gameContext;
 
     public PacManGamesCollectionImpl() {
-        this.variantManager = new GameVariantManager(this);
-        this.commonActions = new CommonActions(this);
+        variantManager = new GameVariantManager(this);
+        commonActions = new CommonActions(this);
         configureClock();
+
         //noinspection ResultOfMethodCallIgnored
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
     }
@@ -69,6 +70,8 @@ public final class PacManGamesCollectionImpl implements GameActionContext, GameL
     public void setGameContext(GameContext gameContext) {
         this.gameContext = gameContext;
     }
+
+    // GameActionContext
 
     @Override
     public GameLifecycle lifecycle() {
@@ -115,13 +118,13 @@ public final class PacManGamesCollectionImpl implements GameActionContext, GameL
         return ui;
     }
 
-    // Lifecycle
+    // GameLifecycle
 
     @Override
     public void startGamePlay() {
         gameContext.flow().restartState(GameStateID.BOOT);
         ui.views().selectGamePlayView();
-        Platform.runLater(machine().clock()::start);
+        clock().start();
     }
 
     @Override
@@ -131,8 +134,8 @@ public final class PacManGamesCollectionImpl implements GameActionContext, GameL
             ui.gameScenes().currentGameSceneProperty().set(null);
         });
         ui.sounds().stopAll();
-        machine().clock().stop();
-        machine().clock().setTargetFrameRate(GameClock.DEFAULT_TICKS_PER_SECOND);
+        clock().stop();
+        clock().setTargetFrameRate(GameClock.DEFAULT_TICKS_PER_SECOND);
     }
 
     @Override
@@ -146,22 +149,22 @@ public final class PacManGamesCollectionImpl implements GameActionContext, GameL
     // Private area, no trespassing!
 
     private void startBackgroundServices() {
-        machine().watchdog().startWatching();
+        watchdog().startWatching();
         Logger.info("Custom map directory is getting watched!");
         ui.window().mainScene().flashMessageManager().startAnimationTimer();
         ui.sprites().startAnimationTimer();
     }
 
     private void configureClock() {
-        machine().clock().setUpdateAction(this::simulateAndUpdateCurrentGameScene);
-        machine().clock().setPermanentAction(this::renderCurrentView);
-        machine().clock().setErrorHandler(this::handleFatalError);
+        clock().setUpdateAction(this::simulateAndUpdateCurrentGameScene);
+        clock().setPermanentAction(this::renderCurrentView);
+        clock().setErrorHandler(this::handleFatalError);
     }
 
     private void simulateAndUpdateCurrentGameScene() {
         gameContext.flow().update();
         Platform.runLater(() -> ui.gameScenes().optCurrentGameScene()
-            .ifPresent(gameScene -> gameScene.onTick(machine().clock().currentTick())));
+            .ifPresent(gameScene -> gameScene.onTick(clock().currentTick())));
     }
 
     private void renderCurrentView() {

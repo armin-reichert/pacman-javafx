@@ -65,7 +65,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
         startPages.addStartPage(game, new TengenMsPacMan_StartPage());
         startPages.addStartPage(game, new PacManXXL_StartPage());
 
-        game.machine().watchdog().addEventListener(PacManXXL_MapSelector.instance());
+        game.watchdog().addEventListener(PacManXXL_MapSelector.instance());
 
         game.setUI(ui);
         game.selectGameVariantAndShow(GameVariantID.ARCADE_PACMAN);

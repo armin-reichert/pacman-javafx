@@ -52,7 +52,7 @@ public class PacManAllGamesApp extends Application {
             .orElse(null);
 
         if (game != null) {
-            game.machine().watchdog().addEventListener(PacManXXL_MapSelector.instance());
+            game.watchdog().addEventListener(PacManXXL_MapSelector.instance());
             game.selectGameVariantAndShow(GameVariantID.ARCADE_PACMAN);
         }
     }
