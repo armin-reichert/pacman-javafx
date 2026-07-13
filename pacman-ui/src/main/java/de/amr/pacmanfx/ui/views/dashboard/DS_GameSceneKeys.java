@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import javafx.scene.input.KeyCombination;
 
@@ -18,12 +18,12 @@ public class DS_GameSceneKeys extends GameDashboardSection {
     }
 
     @Override
-    public void update(PacManGamesCollection game) {
-        super.update(game);
-        game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> updateInfo(game, gameScene));
+    public void update(GameActionContext actionContext) {
+        super.update(actionContext);
+        actionContext.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> updateInfo(actionContext, gameScene));
     }
 
-    private void updateInfo(PacManGamesCollection game, GameScene gameScene) {
+    private void updateInfo(GameActionContext actionContext, GameScene gameScene) {
         clearSection();
         final var currentBindingsMap = gameScene.actionBindings().actionBindings();
         if (currentBindingsMap.isEmpty()) {
@@ -34,7 +34,7 @@ public class DS_GameSceneKeys extends GameDashboardSection {
                 .forEach(entry -> {
                     final KeyCombination keyCombination = entry.getKey();
                     final GameAction action = entry.getValue();
-                    final String localizedActionText = game.ui().translations().translate(action.resourceBundleKey());
+                    final String localizedActionText = actionContext.ui().translations().translate(action.resourceBundleKey());
                     addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled()));
                 });
         }

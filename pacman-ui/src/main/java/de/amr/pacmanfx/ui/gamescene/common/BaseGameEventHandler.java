@@ -33,7 +33,7 @@ public class BaseGameEventHandler extends DefaultGameEventListener {
     }
 
     public GameContext gameContext() {
-        return game.gameContext();
+        return game.currentGameContext();
     }
 
     public TimedGameState gameState() {

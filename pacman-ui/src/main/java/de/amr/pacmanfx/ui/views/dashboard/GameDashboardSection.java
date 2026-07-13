@@ -8,7 +8,7 @@ import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.model.GameRules;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.widgets.DashboardSection;
 import de.amr.pacmanfx.uilib.widgets.DashboardSectionCreator;
@@ -34,22 +34,22 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         return this;
     }
 
-    public void connect(PacManGamesCollection game) {}
+    public void setGameActionContext(GameActionContext actionContext) {}
 
-    public void update(PacManGamesCollection game) {
+    public void update(GameActionContext actionContext) {
         dynamicInfoTexts.forEach(DynamicInfoText::update);
     }
 
-    protected Supplier<String> supplyGameSceneInfo(PacManGamesCollection game, Function<GameScene, String> fnInfo) {
-        return () -> game.ui().gameScenes().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
+    protected Supplier<String> fnGameSceneInfo(GameActionContext actionContext, Function<GameScene, String> fnInfo) {
+        return () -> actionContext.optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> supplyGameLevelInfo(PacManGamesCollection game, Function<GameLevel, String> fnInfo) {
-        return () -> game.gameContext().model().optLevel().map(fnInfo).orElse(NO_INFO);
+    protected Supplier<String> fnGameLevelInfo(GameActionContext actionContext, Function<GameLevel, String> fnInfo) {
+        return () -> actionContext.currentGameContext().model().optLevel().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> supplyGameRulesInfo(PacManGamesCollection game, Function<GameRules, String> fnInfo) {
-        return () -> fnInfo.apply(game.gameContext().model().rules());
+    protected Supplier<String> fnGameRulesInfo(GameActionContext actionContext, Function<GameRules, String> fnInfo) {
+        return () -> fnInfo.apply(actionContext.currentGameContext().model().rules());
     }
 
     protected void addDynamicInfo(String label, Supplier<?> infoSupplier) {

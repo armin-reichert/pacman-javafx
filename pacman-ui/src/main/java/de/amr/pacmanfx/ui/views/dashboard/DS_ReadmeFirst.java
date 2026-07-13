@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -27,9 +27,9 @@ public class DS_ReadmeFirst extends GameDashboardSection {
     }
 
     @Override
-    public void connect(PacManGamesCollection game) {
+    public void setGameActionContext(GameActionContext actionContext) {
         final var readmeText = new Text();
-        readmeText.setText(game.ui().translations().translate("infobox.readme.content"));
+        readmeText.setText(actionContext.ui().translations().translate("infobox.readme.content"));
 
         final var pane = new BorderPane();
         pane.setBorder(Ufx.border(Color.TRANSPARENT, 5));
@@ -38,7 +38,7 @@ public class DS_ReadmeFirst extends GameDashboardSection {
         buttonPane.setAlignment(Pos.CENTER);
         buttonPane.setPadding(new Insets(10, 0, 0, 0));
 
-        final var btnGotIt = new Button(game.ui().translations().translate("infobox.readme.got_it"));
+        final var btnGotIt = new Button(actionContext.ui().translations().translate("infobox.readme.got_it"));
         buttonPane.getChildren().add(btnGotIt);
         btnGotIt.setOnAction(_ -> {
             if (removeFromDashboardAction != null) removeFromDashboardAction.run();

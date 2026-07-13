@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.game;
 
+import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
@@ -31,7 +32,7 @@ public final class PacManGamesCollectionImpl implements PacManGamesCollection, G
 
     private GameUI ui;
 
-    private GameContext context;
+    private GameContext gameContext;
 
     public PacManGamesCollectionImpl() {
         this.variantManager = new GameVariantManager(this);
@@ -41,14 +42,10 @@ public final class PacManGamesCollectionImpl implements PacManGamesCollection, G
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
     }
 
-    public void setContext(GameContext context) {
-        this.context = context;
-    }
-
     @Override
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
-        ui.connect(this);
+        ui.setGameActionContext(this);
     }
 
     @Override
@@ -57,19 +54,23 @@ public final class PacManGamesCollectionImpl implements PacManGamesCollection, G
     }
 
     @Override
+    public DirectoryWatchdog watchdog() {
+        return machine().watchdog();
+    }
+
+    @Override
     public GameVariantManager variants() {
         return variantManager;
     }
 
-
     @Override
-    public void setContextForCurrentVariant(GameContext context) {
-        this.context = context;
+    public void setGameContext(GameContext gameContext) {
+        this.gameContext = gameContext;
     }
 
     @Override
-    public GameContext gameContext() {
-        return context;
+    public GameContext currentGameContext() {
+        return gameContext;
     }
 
     @Override
@@ -107,7 +108,7 @@ public final class PacManGamesCollectionImpl implements PacManGamesCollection, G
         //TODO rethink this
         ui.views().selectStartPagesView();
         ui.views().startPagesView().rootPane().setSelectedIndex(0);
-        ui.views().gamePlayView().dashboard().connect(this);
+        ui.views().gamePlayView().dashboard().setGameActionContext(this);
 
         ui.window().show(this);
 
@@ -116,7 +117,7 @@ public final class PacManGamesCollectionImpl implements PacManGamesCollection, G
 
     @Override
     public void startGamePlay() {
-        context.flow().restartState(GameStateID.BOOT);
+        gameContext.flow().restartState(GameStateID.BOOT);
         ui.views().selectGamePlayView();
         Platform.runLater(machine().clock()::start);
     }
@@ -156,7 +157,7 @@ public final class PacManGamesCollectionImpl implements PacManGamesCollection, G
     }
 
     private void simulateAndUpdateCurrentGameScene() {
-        context.flow().update();
+        gameContext.flow().update();
         Platform.runLater(() -> ui.gameScenes().optCurrentGameScene()
             .ifPresent(gameScene -> gameScene.onTick(machine().clock().currentTick())));
     }

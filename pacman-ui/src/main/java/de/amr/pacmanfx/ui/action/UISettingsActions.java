@@ -124,7 +124,7 @@ public class UISettingsActions {
             }
 
             private boolean isLevelPlaying() {
-                final TimedGameState gameState = actionContext.gameContext().state();
+                final TimedGameState gameState = actionContext.currentGameContext().state();
                 return GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };

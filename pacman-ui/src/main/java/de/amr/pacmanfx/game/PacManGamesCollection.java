@@ -12,11 +12,11 @@ import de.amr.pacmanfx.ui.action.core.GameLifecycle;
 
 public interface PacManGamesCollection extends GameLifecycle {
     PacManGamesMachine machine();
-    GameContext gameContext();
+    GameContext currentGameContext();
     GameUI ui();
     CommonActions commonActions();
     GameVariantManager variants();
-    void setContextForCurrentVariant(GameContext context);
+    void setGameContext(GameContext context);
     void setUI(GameUI ui);
     void showGameVariant(GameVariantID variantID);
 }

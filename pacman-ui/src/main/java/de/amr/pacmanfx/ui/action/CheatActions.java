@@ -45,9 +45,9 @@ public final class CheatActions {
         actionAddLives = new GameAction(actionContext, "cheat_add_lives") {
             @Override
             public void doAction() {
-                final GameModel model = actionContext.gameContext().model();
+                final GameModel model = actionContext.currentGameContext().model();
                 model.lives().add(3);
-                actionContext.gameContext().cheats().notifyCheatUsed();
+                actionContext.currentGameContext().cheats().notifyCheatUsed();
 
                 final String msg = actionContext.ui().translations().translate("flash.cheat_add_lives", model.lives().count());
                 actionContext.ui().shortMessage(msg);
@@ -62,7 +62,7 @@ public final class CheatActions {
         actionEatAllPellets = new GameAction(actionContext, "cheat_eat_all_pellets") {
             @Override
             public void doAction() {
-                final GameContext context = this.actionContext.gameContext();
+                final GameContext context = this.actionContext.currentGameContext();
                 final GameLevel level = context.model().assertLevel();
 
                 level.worldMap().foodLayer().eatPellets();
@@ -73,7 +73,7 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled() {
-                final TimedGameState gameState = actionContext.gameContext().state();
+                final TimedGameState gameState = actionContext.currentGameContext().state();
                 return normalLevel(actionContext).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };
@@ -81,7 +81,7 @@ public final class CheatActions {
         actionKillGhosts = new GameAction(actionContext, "cheat_kill_ghosts") {
             @Override
             public void doAction() {
-                final GameContext context = this.actionContext.gameContext();
+                final GameContext context = this.actionContext.currentGameContext();
                 final GameModel model = context.model();
                 final GameLevel level = model.assertLevel();
 
@@ -100,7 +100,7 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled() {
-                final TimedGameState gameState = actionContext.gameContext().state();
+                final TimedGameState gameState = actionContext.currentGameContext().state();
                 return normalLevel(actionContext).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };
@@ -108,7 +108,7 @@ public final class CheatActions {
         actionEnterNextLevel = new GameAction(actionContext, "cheat_enter_next_level") {
             @Override
             public void doAction() {
-                final GameContext context = this.actionContext.gameContext();
+                final GameContext context = this.actionContext.currentGameContext();
 
                 context.cheats().notifyCheatUsed();
                 context.flow().enterState(GameStateID.GAME_LEVEL_COMPLETE);
@@ -116,7 +116,7 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled() {
-                final GameContext context = this.actionContext.gameContext();
+                final GameContext context = this.actionContext.currentGameContext();
                 final TimedGameState state = context.state();
                 final GameLevel level = normalLevel(this.actionContext).orElse(null);
 
@@ -129,7 +129,7 @@ public final class CheatActions {
         actionToggleAutopilot = new GameAction(actionContext, "toggle_autopilot") {
             @Override
             public void doAction() {
-                final GameCheats cheats = actionContext.gameContext().cheats();
+                final GameCheats cheats = actionContext.currentGameContext().cheats();
                 setAutopilot(actionContext, !cheats.isPacUsingAutopilot());
             }
 
@@ -190,7 +190,7 @@ public final class CheatActions {
         actionToggleImmunity = new GameAction(actionContext, "toggle_immunity") {
             @Override
             public void doAction() {
-                final GameCheats cheats = actionContext.gameContext().cheats();
+                final GameCheats cheats = actionContext.currentGameContext().cheats();
                 setPacImmune(actionContext, !cheats.isPacImmune());
             }
 
@@ -257,7 +257,7 @@ public final class CheatActions {
     // Helpers
 
     private void setAutopilot(GameActionContext actionContext, boolean auto) {
-        final GameCheats cheats = actionContext.gameContext().cheats();
+        final GameCheats cheats = actionContext.currentGameContext().cheats();
         cheats.pacUsingAutopilotProperty().set(auto);
 
         actionContext.ui().shortMessage(actionContext.ui().translations().translate(auto ? "flash.autopilot_on" : "flash.autopilot_off"));
@@ -265,7 +265,7 @@ public final class CheatActions {
     }
 
     private void setPacImmune(GameActionContext actionContext, boolean immune) {
-        final GameCheats cheats = actionContext.gameContext().cheats();
+        final GameCheats cheats = actionContext.currentGameContext().cheats();
         cheats.pacImmuneProperty().set(immune);
 
         actionContext.ui().shortMessage(actionContext.ui().translations().translate(immune ? "flash.player_immunity_on" : "flash.player_immunity_off"));
@@ -273,6 +273,6 @@ public final class CheatActions {
     }
 
     private Optional<GameLevel> normalLevel(GameActionContext actionContext) {
-        return actionContext.gameContext().model().optLevel().filter(level -> !level.isDemoLevel());
+        return actionContext.currentGameContext().model().optLevel().filter(level -> !level.isDemoLevel());
     }
 }

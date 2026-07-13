@@ -32,7 +32,7 @@ public final class Arcade_Actions {
             @Override
             public void doAction() {
                 final CoinMechanism coinMechanism = actionContext.coinMechanism();
-                final GameContext context = this.actionContext.gameContext();
+                final GameContext context = this.actionContext.currentGameContext();
                 this.actionContext.ui().sounds().stopAndDisposeVoice();
                 this.actionContext.ui().sounds().setEnabled(true);
                 coinMechanism.insertCoin();
@@ -46,7 +46,7 @@ public final class Arcade_Actions {
                 if (coinMechanism.isFull()) {
                     return false;
                 }
-                final GameContext context = this.actionContext.gameContext();
+                final GameContext context = this.actionContext.currentGameContext();
                 // In demo level, coin can always be inserted
                 if (context.gamePlay().isDemoLevelRunning(context.model())) {
                     return true;
@@ -60,7 +60,7 @@ public final class Arcade_Actions {
             @Override
             public void doAction() {
                 actionContext.ui().sounds().stopAndDisposeVoice();
-                actionContext.gameContext().flow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
+                actionContext.currentGameContext().flow().enterState(Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
             }
 
             @Override
@@ -68,7 +68,7 @@ public final class Arcade_Actions {
                 if (actionContext.coinMechanism().isEmpty()) {
                     return false;
                 }
-                final TimedGameState state = actionContext.gameContext().state();
+                final TimedGameState state = actionContext.currentGameContext().state();
                 return (GameStateID.GAME_INTRO.identifies(state) || GameStateID.GAME_PREPARATION.identifies(state));
             }
         };

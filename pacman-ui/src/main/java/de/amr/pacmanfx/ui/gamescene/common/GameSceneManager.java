@@ -8,7 +8,7 @@ import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
@@ -24,20 +24,20 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSceneManager {
 
-    private PacManGamesCollection game;
+    private GameActionContext actionContext;
 
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
     public GameSceneManager() {
         currentGameScene.addListener((_, _, newGameScene) -> {
             if (newGameScene != null) {
-                game.ui().views().gamePlayView().embedGameScene(newGameScene);
+                actionContext.ui().views().gamePlayView().embedGameScene(newGameScene);
             }
         });
     }
 
-    public void connect(PacManGamesCollection game) {
-        this.game = requireNonNull(game);
+    public void setGameActionContext(GameActionContext actionContext) {
+        this.actionContext = requireNonNull(actionContext);
     }
 
     public Optional<GameScene> optCurrentGameScene() {
@@ -53,11 +53,11 @@ public class GameSceneManager {
     }
 
     public void updateGameSceneAndForceReload(boolean forceReload) {
-        final GameVariantConfig variantConfig = game.variants().currentVariant().config();
-        final GameModel model = game.gameContext().model();
+        final GameVariantConfig variantConfig = actionContext.variants().currentVariant().config();
+        final GameModel model = actionContext.currentGameContext().model();
 
         final GameScene currentGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = variantConfig.gameSceneConfig().selectGameScene(game, model).orElse(null);
+        final GameScene nextGameScene = variantConfig.gameSceneConfig().selectGameScene(actionContext, model).orElse(null);
 
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
@@ -70,7 +70,7 @@ public class GameSceneManager {
             Logger.info("No game scene change but reload requested");
         }
 
-        game.ui().views().gamePlayView().replaceGameScene(currentGameScene, nextGameScene);
+        actionContext.ui().views().gamePlayView().replaceGameScene(currentGameScene, nextGameScene);
 
         //TODO rethink this
         model.optLevel().ifPresent(level -> handle2D3DSwitch(variantConfig, level, currentGameScene, nextGameScene));
@@ -89,7 +89,7 @@ public class GameSceneManager {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
 
-        final GameVariantConfig config = game.variants().currentVariant().config();
+        final GameVariantConfig config = actionContext.variants().currentVariant().config();
         return config.gameSceneConfig().gameSceneHasID(gameScene, sceneID);
     }
 

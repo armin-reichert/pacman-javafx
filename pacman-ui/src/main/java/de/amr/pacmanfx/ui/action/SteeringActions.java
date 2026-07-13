@@ -35,12 +35,12 @@ public class SteeringActions {
 
         @Override
         public void doAction() {
-            actionContext.gameContext().model().optLevel().ifPresent(level -> level.entities().pac().setWishDir(dir));
+            actionContext.currentGameContext().model().optLevel().ifPresent(level -> level.entities().pac().setWishDir(dir));
         }
 
         @Override
         public boolean isEnabled() {
-            final GameLevel level = actionContext.gameContext().model().optLevel().orElse(null);
+            final GameLevel level = actionContext.currentGameContext().model().optLevel().orElse(null);
             return level != null && !level.isDemoLevel() && !level.entities().pac().isUsingAutopilot();
         }
     }

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.views.editor;
 
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
@@ -38,7 +37,7 @@ public class EditorView implements GameView {
     }
 
     @Override
-    public void connect(PacManGamesCollection game) {}
+    public void setGameActionContext(GameActionContext actionContext) {}
 
     public TileMapEditor editor() {
         return editor;

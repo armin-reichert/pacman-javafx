@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.model.GameViewModel;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.control.Button;
@@ -26,9 +26,9 @@ public class DS_General extends GameDashboardSection {
     }
 
     @Override
-    public void connect(PacManGamesCollection game) {
-        final GameViewModel viewModel = game.ui().viewModel();
-        final GameClock gameClock = game.machine().clock();
+    public void setGameActionContext(GameActionContext actionContext) {
+        final GameViewModel viewModel = actionContext.ui().viewModel();
+        final GameClock gameClock = actionContext.clock();
 
         info("Java Version",   Runtime.version().toString());
         info("JavaFX Version", System.getProperty("javafx.runtime.version"));
@@ -51,7 +51,7 @@ public class DS_General extends GameDashboardSection {
         btnPlayPause.setStyle("-fx-background-color: transparent");
         btnPlayPause.graphicProperty().bind(gameClock.updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
         btnPlayPause.tooltipProperty().bind(gameClock.updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
-        setGameAction(btnPlayPause, game.commonActions().simulationActions().actionTogglePaused());
+        setGameAction(btnPlayPause, actionContext.commonActions().simulationActions().actionTogglePaused());
 
         final Button btnStep = buttonsSimulationControl[1];
         btnStep.setGraphic(iconStep);

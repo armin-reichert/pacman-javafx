@@ -40,7 +40,6 @@ public class PacManXXL_StartPage implements StartPage {
     private final PacManXXL_OptionMenu menu;
 
     private GameActionContext actionContext;
-    private CommonActions commonActions;
     private final String title;
 
     public PacManXXL_StartPage() {
@@ -64,9 +63,8 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     @Override
-    public void connect(GameActionContext actionContext, CommonActions commonActions) {
+    public void setGameActionContext(GameActionContext actionContext) {
         this.actionContext = requireNonNull(actionContext);
-        this.commonActions = requireNonNull(commonActions);
     }
 
     @Override
@@ -74,7 +72,7 @@ public class PacManXXL_StartPage implements StartPage {
         final Keyboard keyboard = input.keyboard();
         if (keyboard.isKeyPressed(KeyCode.E)) {
             pauseProgressTimer();
-            commonActions.editorActions().actionOpenEditor().execute();
+            actionContext.commonActions().editorActions().actionOpenEditor().execute();
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
             pauseProgressTimer();

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -44,23 +44,24 @@ public class GameWindow {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
-    public void connect(PacManGamesCollection game) {
-        mainScene.connect(game);
+    public void setActionContext(GameActionContext actionContext) {
+        mainScene.setGameActionContext(actionContext);
 
-        titleBinding = createStageTitleBinding(game);
+        titleBinding = createStageTitleBinding(actionContext);
         stage.titleProperty().bind(titleBinding);
 
         //TODO Without this, the title is not changed when returning from the editor. Why?
-        game.ui().views().currentViewIDProperty().addListener((_, _, viewID) -> updateStageTitleBinding(game, viewID));
+        actionContext.ui().views().currentViewIDProperty().addListener(
+            (_, _, viewID) -> updateStageTitleBinding(actionContext.ui(), viewID));
 
-        game.variants().addVariantNameListener((_, _, _) -> updateStageIcon(game));
+        actionContext.variants().addVariantNameListener((_, _, _) -> updateStageIcon(actionContext));
 
         // Triggers title update
         connected.set(true);
     }
 
-    public void show(PacManGamesCollection game) {
-        updateStageIcon(game);
+    public void show(GameActionContext actionContext) {
+        updateStageIcon(actionContext);
         stage.centerOnScreen();
         stage.show();
     }
@@ -75,18 +76,18 @@ public class GameWindow {
 
     // Private area
 
-    private StringBinding createStageTitleBinding(PacManGamesCollection game) {
-        final GameUI ui = game.ui();
+    private StringBinding createStageTitleBinding(GameActionContext actionContext) {
+        final GameUI ui = actionContext.ui();
         return createStringBinding(
             () -> switch (ui.views().currentViewID()) {
                 case null -> ""; // happens initially, don't mind
-                case START_PAGES, GAMEPLAY -> optCurrentViewTitle(ui).orElse(titleForCurrentGameScene(game));
+                case START_PAGES, GAMEPLAY -> optCurrentViewTitle(ui).orElse(titleForCurrentGameScene(actionContext));
                 // Editor has its own title supplier → use it directly
                 case EDITOR -> optCurrentViewTitle(ui).orElse(("Map Editor"));
             },
             connected,
-            game.variants().variantNameProperty(),
-            game.machine().clock().updatesDisabledProperty(),
+            actionContext.variants().variantNameProperty(),
+            actionContext.clock().updatesDisabledProperty(),
             ui.viewModel().debugModeOnProperty,
             ui.viewModel().common3D.view3DEnabledProperty,
             ui.views().currentViewIDProperty(),
@@ -100,18 +101,18 @@ public class GameWindow {
             : ui.views().assertCurrentView().optTitleSupplier().map(Supplier::get);
     }
 
-    private void updateStageTitleBinding(PacManGamesCollection game, GameViewID viewID) {
+    private void updateStageTitleBinding(GameUI ui, GameViewID viewID) {
         switch (viewID) {
             case START_PAGES, GAMEPLAY -> stage.titleProperty().bind(titleBinding);
-            case EDITOR -> game.ui().views().optEditorView().ifPresent(editorView -> {
+            case EDITOR -> ui.views().optEditorView().ifPresent(editorView -> {
                 stage.titleProperty().unbind();
                 editorView.optTitleSupplier().ifPresent(titleSupplier -> stage.setTitle(titleSupplier.get()));
             });
         }
     }
 
-    private void updateStageIcon(PacManGamesCollection game) {
-        final Image icon = game.variants().currentVariant().config().assets().image("app_icon");
+    private void updateStageIcon(GameActionContext actionContext) {
+        final Image icon = actionContext.variants().currentVariant().config().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         } else {
@@ -119,33 +120,33 @@ public class GameWindow {
         }
     }
 
-    private String titleForCurrentGameScene(PacManGamesCollection game) {
-        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+    private String titleForCurrentGameScene(GameActionContext actionContext) {
+        final GameScene gameScene = actionContext.ui().gameScenes().optCurrentGameScene().orElse(null);
 
-        final boolean debug = game.ui().viewModel().debugModeOnProperty.get();
-        final boolean is3D = game.ui().viewModel().common3D.view3DEnabledProperty.get();
-        final boolean paused = game.machine().clock().getUpdatesDisabled();
+        final boolean debug = actionContext.ui().viewModel().debugModeOnProperty.get();
+        final boolean is3D = actionContext.ui().viewModel().common3D.view3DEnabledProperty.get();
+        final boolean paused = actionContext.clock().getUpdatesDisabled();
 
-        final String normalTitle = stageTitle(game, paused, is3D);
+        final String normalTitle = stageTitle(actionContext, paused, is3D);
         return (gameScene == null || !debug)
             ? normalTitle
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String stageTitle(PacManGamesCollection game, boolean paused, boolean is3D) {
-        final String gameVariantName = game.variants().currentVariantName();
+    private String stageTitle(GameActionContext actionContext, boolean paused, boolean is3D) {
+        final String gameVariantName = actionContext.variants().currentVariantName();
         if (gameVariantName == null) {
             return "";
         }
 
-        final String viewModeKey = game.ui().translations().translate(is3D ?
+        final String viewModeKey = actionContext.ui().translations().translate(is3D ?
             "view_mode.3d" : "view_mode.2d");
 
         // In game-variant specific resource bundles, there should be two entries with placeholder
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager variantTranslations = game.variants().currentVariant().config().translations();
+        final TranslationManager variantTranslations = actionContext.variants().currentVariant().config().translations();
         final String titleKey = paused ? "app.title.paused" : "app.title";
         if (variantTranslations.textBundle() != null
             && variantTranslations.textBundle().containsKey(titleKey)) {

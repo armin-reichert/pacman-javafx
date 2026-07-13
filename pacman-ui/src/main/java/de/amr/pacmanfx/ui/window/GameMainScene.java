@@ -4,8 +4,9 @@
 
 package de.amr.pacmanfx.ui.window;
 
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.views.GameView;
 import javafx.beans.binding.Bindings;
@@ -52,18 +53,18 @@ public class GameMainScene extends Scene {
         return (StackPane) getRoot();
     }
 
-    public void connect(PacManGamesCollection game) {
+    public void setGameActionContext(GameActionContext actionContext) {
         // Delegate mouse scroll events to current game scene
-        setOnScroll(e -> game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        setOnScroll(e -> actionContext.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> selectBackground(game),
-            game.ui().views().currentViewIDProperty(),
-            game.ui().gameScenes().currentGameSceneProperty()
+            () -> selectBackground(actionContext.ui()),
+            actionContext.ui().views().currentViewIDProperty(),
+            actionContext.ui().gameScenes().currentGameSceneProperty()
         ));
 
-        statusIconBox.connect(game);
-        keyboardInfoPopup.connect(game);
+        statusIconBox.setGameActionContext(actionContext);
+        keyboardInfoPopup.setGameActionContext(actionContext);
 
         rootPane().getChildren().addAll(
             gameViewHolder,
@@ -82,8 +83,8 @@ public class GameMainScene extends Scene {
         gameViewHolder.getChildren().setAll(gameView.rootPane());
     }
 
-    private Background selectBackground(PacManGamesCollection game) {
-        return game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)
+    private Background selectBackground(GameUI ui) {
+        return ui.gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)
             ? randomArrayEntry(GlobalAssets.GRADIENT_BACKGROUNDS)
             : GlobalAssets.BACKGROUND_PAC_MAN_WALLPAPER;
     }

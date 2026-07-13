@@ -103,15 +103,15 @@ public class GameVariantManager implements ChangeListener<String> {
         gameVariantContext.flow().setContext(gameVariantContext);
         gameVariantContext.eventManager().addGameEventSubscriber(game.ui());
 
-        game.setContextForCurrentVariant(gameVariantContext);
+        game.setGameContext(gameVariantContext);
     }
 
     private void exitGameVariant(GameVariant gameVariant) {
         game.ui().sounds().dispose();
         gameVariant.config().dispose();
 
-        game.gameContext().eventManager().removeGameEventSubscriber(game.ui());
-        game.setContextForCurrentVariant(null);
+        game.currentGameContext().eventManager().removeGameEventSubscriber(game.ui());
+        game.setGameContext(null);
     }
 
     private PacManGamesMachine machine() {

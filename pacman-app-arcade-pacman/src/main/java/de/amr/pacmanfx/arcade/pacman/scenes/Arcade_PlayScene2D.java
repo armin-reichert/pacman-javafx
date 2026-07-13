@@ -42,7 +42,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D {
     @Override
     public void onTick(long tick) {
         gameContext().model().optLevel().ifPresent(level -> {
-            ActorAnimationManager.ensureActorAnimationsCreated(game(), level);
+            ActorAnimationManager.ensureActorAnimationsCreated(actionContext(), level);
             updateLivesCounter(gameState(), gameModel(), level.entities().pac());
             optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(gameContext(), level));
         });

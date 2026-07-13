@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.window;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -65,8 +65,8 @@ public class StatusIconBox implements Disposable {
         return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
     }
 
-    public void connect(PacManGamesCollection game) {
-        final TranslationManager translations = game.ui().translations();
+    public void setGameActionContext(GameActionContext actionContext) {
+        final TranslationManager translations = actionContext.ui().translations();
 
         setTooltip(iconMuted, translations.translate("status_icon.muted"));
         setTooltip(icon3D, translations.translate("status_icon.3d"));
@@ -74,7 +74,7 @@ public class StatusIconBox implements Disposable {
         setTooltip(iconImmune, translations.translate("status_icon.immune"));
         setTooltip(iconCheated, translations.translate("status_icon.cheated"));
 
-        final GameViewManager views = game.ui().views();
+        final GameViewManager views = actionContext.ui().views();
         // Hide status icon box in editor view
         rootPane().visibleProperty().bind(
                 views.currentViewIDProperty().isEqualTo(GameViewID.GAMEPLAY)
@@ -83,8 +83,8 @@ public class StatusIconBox implements Disposable {
 
         // Visibility of "autopilot", "cheated" and "immune" is bound to *current game model*'s cheat object!
         final ChangeListener<String> variantChangeHandler = (_, _, variantName) -> {
-            final GameModel gameModel = game.variants().variant(variantName).gameModel();
-            final GameCheats cheats = game.gameContext().cheats();
+            final GameModel gameModel = actionContext.variants().variant(variantName).gameModel();
+            final GameCheats cheats = actionContext.currentGameContext().cheats();
 
             iconAutopilot.visibleProperty().unbind();
             iconAutopilot.visibleProperty().bind(cheats.pacUsingAutopilotProperty());
@@ -98,10 +98,10 @@ public class StatusIconBox implements Disposable {
             Logger.info("Icons autopilot, cheated and immune visibility bound to game model {}", gameModel);
         };
 
-        game.variants().addVariantNameListener(variantChangeHandler);
+        actionContext.variants().addVariantNameListener(variantChangeHandler);
 
-        iconMuted.visibleProperty().bind(game.ui().viewModel().mutedProperty);
-        icon3D.visibleProperty().bind(game.ui().viewModel().common3D.view3DEnabledProperty);
+        iconMuted.visibleProperty().bind(actionContext.ui().viewModel().mutedProperty);
+        icon3D.visibleProperty().bind(actionContext.ui().viewModel().common3D.view3DEnabledProperty);
     }
 
     @Override

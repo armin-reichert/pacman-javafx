@@ -85,7 +85,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         scaling = createScalingValue(actionContext.ui().window().stage().heightProperty());
 
-        final GameContext gameContext = actionContext.gameContext();
+        final GameContext gameContext = actionContext.currentGameContext();
         final GameVariantConfig variantConfig = actionContext.variants().currentVariant().config();
         final GameVariantID gameVariantID = GameVariantID.valueOf(actionContext.variants().currentVariantName());
         final GameModel gameModel = gameContext.model();
@@ -157,7 +157,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        actionContext.gameContext().flow().setCutScenesEnabled(newValue);
+        actionContext.currentGameContext().flow().setCutScenesEnabled(newValue);
     }
 
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {

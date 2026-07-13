@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -39,16 +39,16 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void connect(PacManGamesCollection game) {
-        final GameViewModel viewModel = game.ui().viewModel();
+    public void setGameActionContext(GameActionContext actionContext) {
+        final GameViewModel viewModel = actionContext.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
         comboPerspectives = choiceBox("Perspective", PerspectiveID.values());
         colorPicker("Light Color", viewModel.maze3D.lightColorProperty);
         colorPicker("Floor Color", viewModel.maze3D.floorColorProperty);
-        addDynamicInfo("Camera",         () -> subSceneCameraInfo(game));
-        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(game));
-        addDynamicInfo("Scene Size",     () -> sceneSizeInfo(game));
+        addDynamicInfo("Camera",         () -> subSceneCameraInfo(actionContext));
+        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(actionContext));
+        addDynamicInfo("Scene Size",     () -> sceneSizeInfo(actionContext));
 
         cbMiniViewVisible = checkBox("Mini View", viewModel.miniView.activeProperty);
 
@@ -91,19 +91,19 @@ public class DS_3DSettings extends GameDashboardSection {
         editPropertyWithSlider(sliderWallOpacity,               viewModel.maze3D.wallOpacityProperty);
         editPropertyWithChoiceBox(comboPerspectives,               viewModel.common3D.cameraPerspectiveIdProperty);
 
-        cbUsePlayScene3D.setOnAction(_ -> game.commonActions().uiSettingsActions().actionTogglePlayScene2D3D().execute());
-        cbWireframeMode.setOnAction(_ -> game.commonActions().camera3DActions().actionToggleDrawMode().execute());
+        cbUsePlayScene3D.setOnAction(_ -> actionContext.commonActions().uiSettingsActions().actionTogglePlayScene2D3D().execute());
+        cbWireframeMode.setOnAction(_ -> actionContext.commonActions().camera3DActions().actionToggleDrawMode().execute());
     }
 
     @Override
-    public void update(PacManGamesCollection game) {
-        super.update(game);
+    public void update(GameActionContext actionContext) {
+        super.update(actionContext);
 
-        final GameViewModel viewModel = game.ui().viewModel();
+        final GameViewModel viewModel = actionContext.ui().viewModel();
 
         comboPerspectives.setValue(viewModel.common3D.cameraPerspectiveIdProperty.get());
 
-        sliderMiniViewSceneHeight.setDisable(game.ui().views().gamePlayView().miniPlaySceneView().isMoving());
+        sliderMiniViewSceneHeight.setDisable(actionContext.ui().views().gamePlayView().miniPlaySceneView().isMoving());
 
         cbUsePlayScene3D.setSelected(viewModel.common3D.view3DEnabledProperty.get());
 
@@ -116,16 +116,18 @@ public class DS_3DSettings extends GameDashboardSection {
         cbWireframeMode.setSelected(viewModel.common3D.drawModeProperty.get() == DrawMode.LINE);
     }
 
-    private String subSceneSizeInfo(PacManGamesCollection game) {
-        return game.ui().gameScenes().optCurrentGameScene()
+    private String subSceneSizeInfo(GameActionContext actionContext) {
+        return actionContext.optCurrentGameScene()
             .flatMap(GameScene::optSubSceneFX)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
-    private String subSceneCameraInfo(PacManGamesCollection game) {
-        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+    private String subSceneCameraInfo(GameActionContext actionContext) {
+        final GameScene gameScene = actionContext.optCurrentGameScene().orElse(null);
+
         if (gameScene == null) return NO_INFO;
+
         return gameScene.optSubSceneFX().map(SubScene::getCamera)
             .map(camera -> "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
                 camera.getRotate(),
@@ -135,9 +137,10 @@ public class DS_3DSettings extends GameDashboardSection {
             .orElse(NO_INFO);
     }
 
-    private String sceneSizeInfo(PacManGamesCollection game) {
-        final GameModel gameModel = game.gameContext().model();
-        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+    private String sceneSizeInfo(GameActionContext actionContext) {
+        final GameModel gameModel = actionContext.currentGameContext().model();
+        final GameScene gameScene = actionContext.optCurrentGameScene().orElse(null);
+
         if (gameScene == null) return NO_INFO;
 
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {

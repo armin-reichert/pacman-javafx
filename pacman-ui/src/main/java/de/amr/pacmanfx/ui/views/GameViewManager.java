@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.views;
 
-import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
@@ -26,23 +25,23 @@ public final class GameViewManager {
 
     public GameViewManager() {}
 
-    public void connect(PacManGamesCollection game) {
-        requireNonNull(game);
+    public void setGameActionContext(GameActionContext actionContext) {
+        requireNonNull(actionContext);
 
         currentViewIDProperty().addListener((_, oldID, newID) -> {
-            game.ui().clearMessage();
+            actionContext.ui().clearMessage();
 
             if (oldID != null) {
                 assertView(oldID).onExit();
             }
 
             final GameView newView = assertView(newID);
-            game.ui().window().mainScene().replaceGameView(newView);
+            actionContext.ui().window().mainScene().replaceGameView(newView);
 
             newView.onEnter();
         });
 
-        views.values().forEach(gameView -> gameView.connect(game));
+        views.values().forEach(gameView -> gameView.setGameActionContext(actionContext));
     }
 
     public void registerView(GameViewID viewID, GameView gameView) {
@@ -142,7 +141,7 @@ public final class GameViewManager {
             return true;
         }
         if (isSelected(GameViewID.GAMEPLAY)) {
-            return !actionContext.gameContext().model().isPlaying();
+            return !actionContext.currentGameContext().model().isPlaying();
         }
         return false;
     }

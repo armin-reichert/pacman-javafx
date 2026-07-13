@@ -10,13 +10,13 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 
 public class ActorAnimationManager {
 
-    public static void ensureActorAnimationsCreated(PacManGamesCollection game, GameLevel level) {
-        final GameVariantConfig config = game.variants().currentVariant().config();
-        final SpriteAnimationContainer animationContainer = game.ui().sprites().animations();
+    public static void ensureActorAnimationsCreated(GameActionContext actionContext, GameLevel level) {
+        final GameVariantConfig config = actionContext.variants().currentVariant().config();
+        final SpriteAnimationContainer animationContainer = actionContext.ui().sprites().animations();
         final Pac pac = level.entities().pac();
         if (pac.animations().isEmpty()) {
             pac.setAnimations(config.createPacAnimations(animationContainer));

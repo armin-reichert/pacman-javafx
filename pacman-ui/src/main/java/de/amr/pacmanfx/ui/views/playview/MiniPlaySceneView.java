@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.animation.Animation;
@@ -45,7 +45,7 @@ public class MiniPlaySceneView {
     private final HBox rootPane;
     private final Canvas canvas;
 
-    private PacManGamesCollection game;
+    private GameActionContext actionContext;
 
     // Note: The level and actor renderers cannot be created in the constructor, because the game controller has not yet
     //       selected a game variant when the constructor is called, so no variant configuration is available yet!
@@ -75,13 +75,13 @@ public class MiniPlaySceneView {
         return rootPane;
     }
 
-    public void setUI(PacManGamesCollection game) {
-        this.game = requireNonNull(game);
+    public void setActionContext(GameActionContext actionContext) {
+        this.actionContext = requireNonNull(actionContext);
 
-        rootPane.backgroundProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
-        rootPane.opacityProperty().bind(game.ui().viewModel().miniView.opacityPercentageProperty.divide(100.0));
+        rootPane.backgroundProperty().bind(actionContext.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
+        rootPane.opacityProperty().bind(actionContext.ui().viewModel().miniView.opacityPercentageProperty.divide(100.0));
 
-        canvas.heightProperty().bind(game.ui().viewModel().miniView.heightProperty);
+        canvas.heightProperty().bind(actionContext.ui().viewModel().miniView.heightProperty);
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> {
                 final double aspect = (double) worldSize.get().x() / worldSize.get().y();
@@ -105,11 +105,11 @@ public class MiniPlaySceneView {
 
         levelRenderer = variant.createGameLevelRenderer(canvas);
         levelRenderer.scalingProperty().bind(scaling);
-        levelRenderer.backgroundColorProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty);
+        levelRenderer.backgroundColorProperty().bind(actionContext.ui().viewModel().common2D.canvasBackgroundColorProperty);
 
         actorRenderer = variant.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scaling);
-        actorRenderer.backgroundColorProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty);
+        actorRenderer.backgroundColorProperty().bind(actionContext.ui().viewModel().common2D.canvasBackgroundColorProperty);
     }
 
     public void slideIn() {
@@ -117,7 +117,7 @@ public class MiniPlaySceneView {
             slideInAnimation.stop();
         }
         slideInAnimation = new TranslateTransition(
-            Duration.seconds(game.ui().viewModel().miniView.slideInSecondsProperty.get()), rootPane);
+            Duration.seconds(actionContext.ui().viewModel().miniView.slideInSecondsProperty.get()), rootPane);
         slideInAnimation.setToY(0);
         slideInAnimation.setByY(10);
         slideInAnimation.setDelay(Duration.seconds(1));
@@ -130,7 +130,7 @@ public class MiniPlaySceneView {
             slideOutAnimation.stop();
         }
         slideOutAnimation = new TranslateTransition(
-            Duration.seconds(game.ui().viewModel().miniView.slideOutSecondsProperty.get()), rootPane);
+            Duration.seconds(actionContext.ui().viewModel().miniView.slideOutSecondsProperty.get()), rootPane);
         slideOutAnimation.setToY(-rootPane.getHeight());
         slideOutAnimation.setByY(10);
         slideOutAnimation.setDelay(Duration.seconds(2));
@@ -147,8 +147,8 @@ public class MiniPlaySceneView {
         if (canvasRenderer == null) {
             return;
         }
-        if (game != null) {
-            game.gameContext().model().optLevel().ifPresent(this::draw);
+        if (actionContext != null) {
+            actionContext.currentGameContext().model().optLevel().ifPresent(this::draw);
         }
     }
     
@@ -156,11 +156,11 @@ public class MiniPlaySceneView {
         canvasRenderer.clearCanvas();
 
         if (levelRenderer != null && actorRenderer != null) {
-            ActorAnimationManager.ensureActorAnimationsCreated(game, level);
+            ActorAnimationManager.ensureActorAnimationsCreated(actionContext, level);
             drawGameLevel(level);
         }
 
-        if (game.ui().viewModel().debugModeOnProperty.get()) {
+        if (actionContext.ui().viewModel().debugModeOnProperty.get()) {
             canvasRenderer.fillTextCentered(
                 "scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
                 Color.WHITE, Font.font(12 * scaling.get()),
@@ -178,7 +178,7 @@ public class MiniPlaySceneView {
             CommonRenderInfoKey.MAP_BRIGHT, false,
             CommonRenderInfoKey.MAP_EMPTY, level.worldMap().foodLayer().remainingFoodCount() == 0,
             CommonRenderInfoKey.MAP_FLASHING, false,
-            CommonRenderInfoKey.TICK, game.machine().clock().currentTick()
+            CommonRenderInfoKey.TICK, actionContext.clock().currentTick()
         ));
         levelRenderer.applyLevelSettings(level, info);
         levelRenderer.drawLevel(level, info);

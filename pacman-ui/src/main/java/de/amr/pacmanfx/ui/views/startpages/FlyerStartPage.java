@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.ui.action.CommonActions;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -41,7 +40,6 @@ public class FlyerStartPage implements StartPage {
     protected String gameVariantName;
     protected GameStartButton startButton;
     protected GameActionContext actionContext;
-    protected CommonActions commonActions;
     protected Media voice;
 
     public FlyerStartPage(URL configURL) {
@@ -107,9 +105,8 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public void connect(GameActionContext actionContext, CommonActions commonActions) {
+    public void setGameActionContext(GameActionContext actionContext) {
         this.actionContext = requireNonNull(actionContext);
-        this.commonActions = requireNonNull(commonActions);
     }
 
     @Override
@@ -156,7 +153,7 @@ public class FlyerStartPage implements StartPage {
 
     protected GameStartButton createStartButton() {
         final var button = new GameStartButton("START!");
-        button.setOnAction(_ -> commonActions.gameFlowActions().actionStartGame().execute());
+        button.setOnAction(_ -> actionContext.commonActions().gameFlowActions().actionStartGame().execute());
         rootPane.getChildren().add(button);
 
         StackPane.setAlignment(button, Pos.BOTTOM_CENTER);

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.MovingActor;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import java.util.function.BiFunction;
@@ -27,32 +27,32 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     @Override
-    public void connect(PacManGamesCollection game) {
-        addDynamicInfo("Pac Name",  supplyPacText(game, (_, pac) -> pac.name()));
-        addDynamicInfo("Lives",     supplyLivesCount(game));
-        addDynamicInfo("Movement",  supplyPacText(game, this::actorMovementText));
-        addDynamicInfo("Tile",      supplyPacText(game, this::actorLocationText));
-        addDynamicInfo("Power",     supplyPacPowerText(game));
-        addDynamicInfo("Animation", supplyPacAnimationText(game));
+    public void setGameActionContext(GameActionContext actionContext) {
+        addDynamicInfo("Pac Name",  supplyPacText(actionContext, (_, pac) -> pac.name()));
+        addDynamicInfo("Lives",     supplyLivesCount(actionContext));
+        addDynamicInfo("Movement",  supplyPacText(actionContext, this::actorMovementText));
+        addDynamicInfo("Tile",      supplyPacText(actionContext, this::actorLocationText));
+        addDynamicInfo("Power",     supplyPacPowerText(actionContext));
+        addDynamicInfo("Animation", supplyPacAnimationText(actionContext));
         emptyRow();
-        addGhostInfo(game, GameModel.RED_GHOST_SHADOW);
+        addGhostInfo(actionContext, GameModel.RED_GHOST_SHADOW);
         emptyRow();
-        addGhostInfo(game, GameModel.PINK_GHOST_SPEEDY);
+        addGhostInfo(actionContext, GameModel.PINK_GHOST_SPEEDY);
         emptyRow();
-        addGhostInfo(game, GameModel.CYAN_GHOST_BASHFUL);
+        addGhostInfo(actionContext, GameModel.CYAN_GHOST_BASHFUL);
         emptyRow();
-        addGhostInfo(game, GameModel.ORANGE_GHOST_POKEY);
+        addGhostInfo(actionContext, GameModel.ORANGE_GHOST_POKEY);
     }
 
-    private Supplier<String> supplyLivesCount(PacManGamesCollection game) {
-        return supplyGameLevelInfo(game, level -> "%d".formatted(level.gameModel().lives().count()));
+    private Supplier<String> supplyLivesCount(GameActionContext actionContext) {
+        return fnGameLevelInfo(actionContext, level -> "%d".formatted(level.gameModel().lives().count()));
     }
 
-    private void addGhostInfo(PacManGamesCollection game, byte personality) {
-        addDynamicInfo(ghostName(personality), supplyGhostText(game, this::ghostNameAndStateText, personality));
-        addDynamicInfo("Movement",  supplyGhostText(game, this::actorMovementText,  personality));
-        addDynamicInfo("Tile",      supplyGhostText(game, this::actorLocationText,  personality));
-        addDynamicInfo("Animation", supplyGhostText(game, this::ghostAnimationText, personality));
+    private void addGhostInfo(GameActionContext actionContext, byte personality) {
+        addDynamicInfo(ghostName(personality), supplyGhostText(actionContext, this::ghostNameAndStateText, personality));
+        addDynamicInfo("Movement",  supplyGhostText(actionContext, this::actorMovementText,  personality));
+        addDynamicInfo("Tile",      supplyGhostText(actionContext, this::actorLocationText,  personality));
+        addDynamicInfo("Animation", supplyGhostText(actionContext, this::ghostAnimationText, personality));
     }
 
     private static String ghostName(byte personality) {
@@ -88,8 +88,8 @@ public class DS_ActorInfo extends GameDashboardSection {
             : "%.2fpx/s %s (%s)%s".formatted(speed, movingActor.moveDir(), movingActor.wishDir(), reverseText);
     }
 
-    private Supplier<String> supplyPacPowerText(PacManGamesCollection game) {
-        return () -> game.gameContext().model().optLevel()
+    private Supplier<String> supplyPacPowerText(GameActionContext actionContext) {
+        return () -> actionContext.currentGameContext().model().optLevel()
             .map(level -> level.entities().pac())
             .map(this::pacPowerText)
             .orElse(NO_INFO);
@@ -101,12 +101,12 @@ public class DS_ActorInfo extends GameDashboardSection {
             : "No Power";
     }
 
-    private Supplier<String> supplyPacText(PacManGamesCollection game, BiFunction<GameLevel, Pac, String> infoSupplier) {
-        return supplyGameLevelInfo(game, level -> infoSupplier.apply(level, level.entities().pac()));
+    private Supplier<String> supplyPacText(GameActionContext actionContext, BiFunction<GameLevel, Pac, String> infoSupplier) {
+        return fnGameLevelInfo(actionContext, level -> infoSupplier.apply(level, level.entities().pac()));
     }
 
-    private Supplier<String> supplyPacAnimationText(PacManGamesCollection game) {
-        return () -> game.gameContext().model().optLevel().map(level -> {
+    private Supplier<String> supplyPacAnimationText(GameActionContext actionContext) {
+        return () -> actionContext.currentGameContext().model().optLevel().map(level -> {
             final Pac pac = level.entities().pac();
             if (pac.animations() instanceof SpriteAnimationMap<?> sam && sam.selectedAnimationID() != null) {
                 return "%s:%d".formatted(sam.selectedAnimationID(), pac.animations().currentFrame());
@@ -115,8 +115,9 @@ public class DS_ActorInfo extends GameDashboardSection {
         }).orElse(NO_INFO);
     }
 
-    private Supplier<String> supplyGhostText(PacManGamesCollection game, BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
-        return supplyGameLevelInfo(game, level -> {
+    private Supplier<String> supplyGhostText(GameActionContext actionContext,
+                                             BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
+        return fnGameLevelInfo(actionContext, level -> {
             if (!level.entities().ghosts().isEmpty()) {
                 return infoSupplier.apply(level, level.ghost(personality));
             }

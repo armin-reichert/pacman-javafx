@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.Identifier;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.uilib.widgets.Dashboard;
 import de.amr.pacmanfx.uilib.widgets.DashboardSection;
 
@@ -21,16 +21,16 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
         setId("game-dashboard");
     }
 
-    public void connect(PacManGamesCollection game) {
-        requireNonNull(game);
-        sections().forEach(section -> section.connect(game));
+    public void setGameActionContext(GameActionContext actionContext) {
+        requireNonNull(actionContext);
+        sections().forEach(section -> section.setGameActionContext(actionContext));
     }
 
-    public void update(PacManGamesCollection game) {
-        requireNonNull(game);
+    public void update(GameActionContext actionContext) {
+        requireNonNull(actionContext);
         sections()
             .filter(GameDashboardSection::isExpanded)
-            .forEach(section -> section.update(game));
+            .forEach(section -> section.update(actionContext));
     }
 
     public void updateSectionOrder() {

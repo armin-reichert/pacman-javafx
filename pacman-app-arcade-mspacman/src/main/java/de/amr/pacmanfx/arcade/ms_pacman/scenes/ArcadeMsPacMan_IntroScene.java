@@ -210,7 +210,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameContext context = scene.game().gameContext();
+                final GameContext context = scene.game().currentGameContext();
                 final GameFlow flow = context.flow();
                 final boolean canPlay = !context.coinMechanism().isEmpty();
                 scene.marquee.timer().doTick();

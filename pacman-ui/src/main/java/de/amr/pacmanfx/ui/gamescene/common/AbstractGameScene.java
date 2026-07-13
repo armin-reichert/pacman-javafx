@@ -91,7 +91,7 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
 
     @Override
     public GameContext gameContext() {
-        return game().gameContext();
+        return game().currentGameContext();
     }
 
     @Override

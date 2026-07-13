@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 public class HelpInfo {
 
     public static HelpInfo build(GameActionContext actionContext) {
-        final GameContext context = actionContext.gameContext();
+        final GameContext context = actionContext.currentGameContext();
         final TimedGameState state = context.state();
         final boolean demoLevel = context.gamePlay().isDemoLevelRunning(context.model());
 
@@ -80,7 +80,7 @@ public class HelpInfo {
         pane.setPadding(new Insets(10));
         pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
-        final GameContext gameContext = actionContext.gameContext();
+        final GameContext gameContext = actionContext.currentGameContext();
         final GameCheats cheats = gameContext.cheats();
 
         // add default entries:

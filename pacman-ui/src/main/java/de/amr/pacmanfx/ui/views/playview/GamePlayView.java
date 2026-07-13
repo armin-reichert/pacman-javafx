@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.config.ui.DashboardSectionSettings;
-import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
@@ -77,7 +76,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for Play View");
 
-    private PacManGamesCollection game;
+    private GameActionContext actionContext;
 
     private final ContextMenu contextMenu = new ContextMenu();
 
@@ -108,20 +107,20 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     @Override
-    public void connect(PacManGamesCollection game) {
-        this.game = requireNonNull(game);
-        final GameViewModel settings = game.ui().viewModel();
+    public void setGameActionContext(GameActionContext actionContext) {
+        this.actionContext = requireNonNull(actionContext);
+        final GameViewModel settings = actionContext.ui().viewModel();
 
         rootPane.setOnContextMenuRequested(this);
-        game.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+        actionContext.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() != MouseButton.SECONDARY) {
                 contextMenu.hide();
             }
         });
 
-        miniPlaySceneView.setUI(game);
+        miniPlaySceneView.setActionContext(actionContext);
 
-        pausedIcon.visibleProperty().bind(game.machine().clock().updatesDisabledProperty());
+        pausedIcon.visibleProperty().bind(actionContext.clock().updatesDisabledProperty());
 
         settings.common2D.fontSmoothingOnProperty.addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
 
@@ -134,13 +133,13 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         miniPlaySceneView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> settings.miniView.activeProperty.get()
-                && game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D),
+                && actionContext.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D),
             settings.miniView.activeProperty,
-            game.ui().gameScenes().currentGameSceneProperty()
+            actionContext.ui().gameScenes().currentGameSceneProperty()
         ));
 
         // Keep this view always at the same size as the main scene
-        final GameMainScene mainScene = game.ui().window().mainScene();
+        final GameMainScene mainScene = actionContext.ui().window().mainScene();
         final ChangeListener<? super Number> resizeHandler = (_, _, _) -> resizeToFit(mainScene);
         mainScene.widthProperty().addListener(resizeHandler);
         mainScene.heightProperty().addListener(resizeHandler);
@@ -189,7 +188,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void onLevelCreated(GameLevel level) {
         showMiniPlayView(level);
         // game scene size might have changed: re-embed
-        final GameSceneManager gameSceneManager = game.ui().gameScenes();
+        final GameSceneManager gameSceneManager = actionContext.ui().gameScenes();
         gameSceneManager.optCurrentGameScene().ifPresent(this::embedGameScene);
     }
 
@@ -210,7 +209,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void onInput(Input input) {
         // First look for a matching action of the play view itself; if none found, delegate to the current game scene.
         if (actionBindings.executeMatchingAction(input).isEmpty()) {
-            game.ui().gameScenes().optCurrentGameScene().ifPresent(GameScene::onInput);
+            actionContext.ui().gameScenes().optCurrentGameScene().ifPresent(GameScene::onInput);
         }
     }
 
@@ -218,7 +217,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void onEnter() {
         rootPane.requestFocus();
 
-        actionBindings.registerAllBindings(game.commonActions().bindings());
+        actionBindings.registerAllBindings(actionContext.commonActions().bindings());
         Logger.info(actionBindings);
 
         gameSceneFrame.installBindings();
@@ -226,9 +225,9 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     @Override
     public void onExit() {
-        game.suspendGamePlay();
-        game.ui().sounds().stopAll();
-        game.ui().sounds().stopAndDisposeVoice();
+        actionContext.suspendGamePlay();
+        actionContext.ui().sounds().stopAll();
+        actionContext.ui().sounds().stopAndDisposeVoice();
         actionBindings.dispose();
         gameSceneFrame.uninstallBindings();
     }
@@ -246,16 +245,16 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     @Override
     public void render() {
-        final long tick = game.machine().clock().currentTick();
+        final long tick = actionContext.clock().currentTick();
         // Render current 2D game scene
-        final GameScene gameScene = game.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = actionContext.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
-            final GameModel gameModel = game.gameContext().model();
+            final GameModel gameModel = actionContext.currentGameContext().model();
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D, tick);
             }
             if (hudRenderer != null) {
-                hudRenderer.draw(gameModel.hudState(), game.gameContext(), gameScene2D, tick);
+                hudRenderer.draw(gameModel.hudState(), actionContext.currentGameContext(), gameScene2D, tick);
             }
         }
 
@@ -264,7 +263,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         // Dashboard must always be updated even if simulation is stopped!
         if (overlayLayer.isVisible()) {
-            dashboard.update(game);
+            dashboard.update(actionContext);
         }
     }
 
@@ -274,12 +273,12 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void handle(ContextMenuEvent event) {
         contextMenu.getItems().clear();
 
-        game.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
-            final TranslationManager translations = game.ui().translations();
+        actionContext.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+            final TranslationManager translations = actionContext.ui().translations();
             // Add 2D play scene-specific entries
-            if (game.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
+            if (actionContext.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
                 addLocalizedTitleItem(contextMenu, translations, "context_menu.scene_display");
-                addLocalizedActionItem(contextMenu, translations, game.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(),
+                addLocalizedActionItem(contextMenu, translations, actionContext.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(),
                     "context_menu.use_3D_scene");
             }
             // Add scene-specific entries
@@ -293,10 +292,10 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void updateGameSceneRenderers(AbstractGameScene2D gameScene2D) {
-        final GameVariantConfig gameVariantConfig = game.variants().currentVariant().config();
+        final GameVariantConfig gameVariantConfig = actionContext.variants().currentVariant().config();
         if (gameScene2D.canvas() != null) {
             sceneRenderer = gameVariantConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
-            setFontSmoothing(game.ui().viewModel().common2D.fontSmoothingOnProperty.get());
+            setFontSmoothing(actionContext.ui().viewModel().common2D.fontSmoothingOnProperty.get());
             hudRenderer = gameVariantConfig.createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
@@ -313,7 +312,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void embedGameScene(GameScene gameScene) {
-        final GameVariantConfig config = game.variants().currentVariant().config();
+        final GameVariantConfig config = actionContext.variants().currentVariant().config();
 
         contextMenu.hide();
 
@@ -398,7 +397,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     private void showMiniPlayView(GameLevel level) {
-        final GameVariantConfig config = game.variants().currentVariant().config();
+        final GameVariantConfig config = actionContext.variants().currentVariant().config();
         miniPlaySceneView.setVariantConfig(config);
         miniPlaySceneView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
         miniPlaySceneView.slideIn();
@@ -410,7 +409,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     // 3D scenes or 2D scenes with camera
     private void embedGameSceneWithSubSceneFX(GameScene gameScene, SubScene subSceneFX) {
-        final GameMainScene mainScene = game.ui().window().mainScene();
+        final GameMainScene mainScene = actionContext.ui().window().mainScene();
 
         // stretch sub scene to available space
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
@@ -426,11 +425,11 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     // 2D scenes without camera which are shown at full size
     private void embedGameScene2D(GameSceneConfig gameSceneConfig, AbstractGameScene2D gameScene2D) {
-        final GameMainScene mainScene = game.ui().window().mainScene();
-        final GamePlayView playView = game.ui().views().gamePlayView();
+        final GameMainScene mainScene = actionContext.ui().window().mainScene();
+        final GamePlayView playView = actionContext.ui().views().gamePlayView();
         final DecorationPane frame = playView.gameSceneFrame();
 
-        gameScene2D.backgroundColorProperty().bind(game.ui().viewModel().common2D.canvasBackgroundColorProperty);
+        gameScene2D.backgroundColorProperty().bind(actionContext.ui().viewModel().common2D.canvasBackgroundColorProperty);
 
         final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
         if (decorated) {

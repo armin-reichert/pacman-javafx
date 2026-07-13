@@ -28,39 +28,39 @@ public class TestActions {
         actionTestCutScenes = new GameAction(actionContext, "test_cut_scenes") {
             @Override
             public void doAction() {
-                actionContext.gameContext().flow().enterState(TestStateID.CUT_SCENE_TEST);
+                actionContext.currentGameContext().flow().enterState(TestStateID.CUT_SCENE_TEST);
                 actionContext.ui().shortMessage("Cut scenes test"); //TODO localize
             }
 
             @Override
             public boolean isEnabled() {
-                return actionContext.gameContext().flow().optState(TestStateID.CUT_SCENE_TEST).isPresent();
+                return actionContext.currentGameContext().flow().optState(TestStateID.CUT_SCENE_TEST).isPresent();
             }
         };
 
         actionTestLevelShort = new GameAction(actionContext, "short_level_test") {
             @Override
             public void doAction() {
-                actionContext.gameContext().flow().restartState(TestStateID.LEVEL_TEST_S);
+                actionContext.currentGameContext().flow().restartState(TestStateID.LEVEL_TEST_S);
                 actionContext.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
             }
 
             @Override
             public boolean isEnabled() {
-                return actionContext.gameContext().flow().optState(TestStateID.LEVEL_TEST_S).isPresent();
+                return actionContext.currentGameContext().flow().optState(TestStateID.LEVEL_TEST_S).isPresent();
             }
         };
 
         actionTestLevelMedium = new GameAction(actionContext, "medium_level_test") {
             @Override
             public void doAction() {
-                actionContext.gameContext().flow().restartState(TestStateID.LEVEL_TEST_M);
+                actionContext.currentGameContext().flow().restartState(TestStateID.LEVEL_TEST_M);
                 actionContext.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
             }
 
             @Override
             public boolean isEnabled() {
-                return actionContext.gameContext().flow().optState(TestStateID.LEVEL_TEST_M).isPresent();
+                return actionContext.currentGameContext().flow().optState(TestStateID.LEVEL_TEST_M).isPresent();
             }
         };
 

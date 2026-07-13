@@ -47,14 +47,14 @@ public class GameFlowActions {
         actionLetGameStateExpire = new GameAction(actionContext, "let_game_state_expire") {
             @Override
             protected void doAction() {
-                actionContext.gameContext().state().triggerTimeout();
+                actionContext.currentGameContext().state().triggerTimeout();
             }
         };
 
         actionRestartIntro = new GameAction(actionContext, "restart_intro") {
             @Override
             protected void doAction() {
-                final GameContext gameContext = actionContext.gameContext();
+                final GameContext gameContext = actionContext.currentGameContext();
                 final TimedGameState gameState = gameContext.state();
 
                 if (gameState.id() instanceof TestStateID) {

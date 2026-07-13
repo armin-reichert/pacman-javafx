@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.game.PacManGamesCollectionImpl;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
@@ -30,7 +29,7 @@ public class StartPagesView implements GameView {
 
     private final List<StartPage> pages = new ArrayList<>();
 
-    private PacManGamesCollection game;
+    private GameActionContext actionContext;
 
     private final Carousel carousel;
 
@@ -62,8 +61,8 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void connect(PacManGamesCollection game) {
-        this.game = requireNonNull(game);
+    public void setGameActionContext(GameActionContext actionContext) {
+        this.actionContext = requireNonNull(actionContext);
     }
 
     @Override
@@ -108,7 +107,7 @@ public class StartPagesView implements GameView {
         }
         pages.add(startPage);
         carousel.getItems().add(startPage.rootPane());
-        startPage.connect(game, game.commonActions());
+        startPage.setGameActionContext(game);
     }
 
     // Private area
@@ -128,6 +127,6 @@ public class StartPagesView implements GameView {
 
     private String composeTitle() {
         final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
-        return game != null ? game.ui().translations().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
+        return actionContext != null ? actionContext.ui().translations().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

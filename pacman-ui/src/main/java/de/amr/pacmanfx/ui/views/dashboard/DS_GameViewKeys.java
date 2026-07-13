@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.game.PacManGamesCollection;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.views.GameView;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCodeCombination;
@@ -21,12 +21,12 @@ public class DS_GameViewKeys extends GameDashboardSection {
     }
 
     @Override
-    public void update(PacManGamesCollection game) {
-        super.update(game);
-        game.ui().views().optCurrentView().ifPresent(view -> updateInfo(game, view));
+    public void update(GameActionContext actionContext) {
+        super.update(actionContext);
+        actionContext.ui().views().optCurrentView().ifPresent(view -> updateInfo(actionContext, view));
     }
 
-    private void updateInfo(PacManGamesCollection game, GameView view) {
+    private void updateInfo(GameActionContext actionContext, GameView view) {
         clearSection();
 
         final Map<KeyCodeCombination, GameAction> currentBindingMap = view.actionBindings().actionBindings();
@@ -38,7 +38,7 @@ public class DS_GameViewKeys extends GameDashboardSection {
                 .sorted(Comparator.comparing(KeyCombination::getDisplayText))
                 .forEach(key -> {
                     final GameAction action = currentBindingMap.get(key);
-                    final String actionText = game.ui().translations().translate(action.resourceBundleKey());
+                    final String actionText = actionContext.ui().translations().translate(action.resourceBundleKey());
                     final Label label = createLabel(actionText, action.isEnabled());
                     addRow(key.getDisplayText(), label);
                 });
