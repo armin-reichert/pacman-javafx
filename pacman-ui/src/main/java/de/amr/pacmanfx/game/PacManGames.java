@@ -27,15 +27,15 @@ import static java.util.Objects.requireNonNull;
 public final class PacManGames implements GameActionContext, GameLifecycle {
 
     /**
-     * High score file for game variant XYZ is stored as "highscore-xyz.xml" inside user home directory
-
+     * High score file for game variant XYZ is stored as "highscore-xyz.xml" inside user home directory.
+     *
      * @param variantName name of the game variant e.g. MS_PACMAN
      * @return high score file name for this game variant
      */
     public static File highScoreFile(String variantName) {
         requireNonNull(variantName);
         final String fileName = "highscore-%s.xml".formatted(variantName).toLowerCase();
-        return new File(de.amr.pacmanfx.core.GameConstants.USER_HOME_DIR, fileName);
+        return new File(GameConstants.USER_HOME_DIR, fileName);
     }
 
     private final GameBox machine;
