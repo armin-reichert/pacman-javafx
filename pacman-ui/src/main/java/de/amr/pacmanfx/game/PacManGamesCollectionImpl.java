@@ -27,6 +27,8 @@ import static java.util.Objects.requireNonNull;
  */
 public final class PacManGamesCollectionImpl implements GameActionContext, GameLifecycle {
 
+    private final PacManGamesMachine machine = PacManGamesMachine.instance();
+
     private final GameVariantManager variantManager;
 
     private final CommonActions commonActions;
@@ -42,10 +44,6 @@ public final class PacManGamesCollectionImpl implements GameActionContext, GameL
 
         //noinspection ResultOfMethodCallIgnored
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
-    }
-
-    public PacManGamesMachine machine() {
-        return PacManGamesMachine.instance();
     }
 
     public void setUI(GameUI ui) {
@@ -80,7 +78,7 @@ public final class PacManGamesCollectionImpl implements GameActionContext, GameL
 
     @Override
     public DirectoryWatchdog watchdog() {
-        return machine().watchdog();
+        return machine.watchdog();
     }
 
     @Override
@@ -100,17 +98,17 @@ public final class PacManGamesCollectionImpl implements GameActionContext, GameL
 
     @Override
     public GameClock clock() {
-        return machine().clock();
+        return machine.clock();
     }
 
     @Override
     public CoinMechanism coinMechanism() {
-        return machine().coinMechanism();
+        return machine.coinMechanism();
     }
 
     @Override
     public Input input() {
-        return machine().input();
+        return machine.input();
     }
 
     @Override
@@ -142,7 +140,7 @@ public final class PacManGamesCollectionImpl implements GameActionContext, GameL
     public void terminate() {
         suspendGamePlay();
         ui.terminate();
-        machine().dispose();
+        machine.dispose();
         Logger.info("Application terminated. There is no way back!");
     }
 
