@@ -22,14 +22,14 @@ import static java.util.Objects.requireNonNull;
 
 public class GameVariantManager implements ChangeListener<String> {
 
-    private final PacManGamesCollectionImpl game;
+    private final PacManGamesCollectionImpl gameImpl;
 
     private final Map<String, GameVariant> variantsByName = new HashMap<>();
 
     private final StringProperty variantName = new SimpleStringProperty();
 
-    public GameVariantManager(PacManGamesCollectionImpl game) {
-        this.game = requireNonNull(game);
+    public GameVariantManager(PacManGamesCollectionImpl gameImpl) {
+        this.gameImpl = requireNonNull(gameImpl);
         variantName.addListener(this);
     }
 
@@ -95,23 +95,23 @@ public class GameVariantManager implements ChangeListener<String> {
     }
 
     private void enterGameVariant(GameVariant gameVariant) {
-        gameVariant.config().init(game);
+        gameVariant.config().init(gameImpl);
         //TODO rethink
-        game.ui().viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
+        gameImpl.ui().viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
 
-        final var gameVariantContext = new GameContextImpl(game.machine().coinMechanism(), gameVariant);
+        final var gameVariantContext = new GameContextImpl(gameImpl.coinMechanism(), gameVariant);
         gameVariantContext.flow().setContext(gameVariantContext);
-        gameVariantContext.eventManager().addGameEventSubscriber(game.ui());
+        gameVariantContext.eventManager().addGameEventSubscriber(gameImpl.ui());
 
-        game.setGameContext(gameVariantContext);
+        gameImpl.setGameContext(gameVariantContext);
     }
 
     private void exitGameVariant(GameVariant gameVariant) {
-        game.ui().sounds().dispose();
+        gameImpl.ui().sounds().dispose();
         gameVariant.config().dispose();
 
-        game.currentGameContext().eventManager().removeGameEventSubscriber(game.ui());
-        game.setGameContext(null);
+        gameImpl.currentGameContext().eventManager().removeGameEventSubscriber(gameImpl.ui());
+        gameImpl.setGameContext(null);
     }
 
     private PacManGamesMachine machine() {
