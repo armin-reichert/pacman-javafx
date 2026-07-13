@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.state.GameStateID;
-import de.amr.pacmanfx.core.state.TimedGameState;
+import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
@@ -65,7 +65,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         Logger.info("Enter game state '{}'", e.newState().name());
         final var newState = e.newState();
 
-        if (!(newState instanceof TimedGameState gameState)) {
+        if (!(newState instanceof GameState gameState)) {
             Logger.error("New state is not a game state?");
             return;
         }
@@ -119,7 +119,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
     public void onGameStarted(GameStartedEvent event) {
         final State<GameContext> state = gameContext().state();
         final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameModel())
-            || (state instanceof TimedGameState gameState && gameState.id() instanceof TestStateID);
+            || (state instanceof GameState gameState && gameState.id() instanceof TestStateID);
 
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
@@ -144,7 +144,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         final State<GameContext> newState = gameContext.state();
 
         //TODO rethink this
-        if (newState instanceof TimedGameState gameState && gameState.id() instanceof TestStateID) {
+        if (newState instanceof GameState gameState && gameState.id() instanceof TestStateID) {
             playScene3D.replaceGameLevel3D(level);
             final GameLevel3D level3D = assertLevel3D();
             level3D.energizers3D().forEach(Energizer3D::startPumping);

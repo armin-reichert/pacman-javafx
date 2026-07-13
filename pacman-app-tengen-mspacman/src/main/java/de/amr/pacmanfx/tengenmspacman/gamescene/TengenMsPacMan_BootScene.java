@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.state.TimedGameState;
+import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import javafx.scene.paint.Color;
@@ -45,7 +45,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
 
     @Override
     public void onTick(long tick) {
-        final TimedGameState gameState = gameState();
+        final GameState gameState = gameState();
         final int t = (int) gameState.timer().tickCount();
         switch (t) {
             case   1 -> gray(false);

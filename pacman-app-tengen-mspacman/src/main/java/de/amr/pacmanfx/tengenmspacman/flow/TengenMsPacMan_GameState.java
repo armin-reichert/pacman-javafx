@@ -28,13 +28,13 @@ public enum TengenMsPacMan_GameState {
     GAME_OVER                   (new GameOverState()),
     GAME_LEVEL_INTERMISSION     (new GameLevelIntermissionState());
 
-    TengenMsPacMan_GameState(TimedGameState state) {
+    TengenMsPacMan_GameState(GameState state) {
         this.state = requireNonNull(state);
     }
 
-    public TimedGameState state() {
+    public GameState state() {
         return state;
     }
 
-    final TimedGameState state;
+    final GameState state;
 }

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.state;
 
 import de.amr.pacmanfx.core.GameContext;
 
-public class CommonGameIntroState extends TimedGameState {
+public class CommonGameIntroState extends GameState {
 
     public CommonGameIntroState() {
         super(GameStateID.GAME_INTRO);

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.CreditAddedEvent;
 import de.amr.pacmanfx.core.event.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
-import de.amr.pacmanfx.core.state.TimedGameState;
+import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -36,7 +36,7 @@ public class BaseGameEventHandler extends DefaultGameEventListener {
         return actionContext.currentGameContext();
     }
 
-    public TimedGameState gameState() {
+    public GameState gameState() {
         return gameContext().state();
     }
 

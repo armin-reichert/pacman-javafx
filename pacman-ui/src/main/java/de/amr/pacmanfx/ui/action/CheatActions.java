@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.state.GameStateID;
-import de.amr.pacmanfx.core.state.TimedGameState;
+import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -73,7 +73,7 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled() {
-                final TimedGameState gameState = actionContext.currentGameContext().state();
+                final GameState gameState = actionContext.currentGameContext().state();
                 return normalLevel(actionContext).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };
@@ -100,7 +100,7 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled() {
-                final TimedGameState gameState = actionContext.currentGameContext().state();
+                final GameState gameState = actionContext.currentGameContext().state();
                 return normalLevel(actionContext).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };
@@ -117,7 +117,7 @@ public final class CheatActions {
             @Override
             public boolean isEnabled() {
                 final GameContext context = this.actionContext.currentGameContext();
-                final TimedGameState state = context.state();
+                final GameState state = context.state();
                 final GameLevel level = normalLevel(this.actionContext).orElse(null);
 
                 return level != null

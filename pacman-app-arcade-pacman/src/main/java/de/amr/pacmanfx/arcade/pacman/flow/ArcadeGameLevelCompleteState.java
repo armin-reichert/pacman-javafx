@@ -6,12 +6,12 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.flow.GameFlow;
-import de.amr.pacmanfx.core.state.TimedGameState;
+import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
-public class ArcadeGameLevelCompleteState extends TimedGameState {
+public class ArcadeGameLevelCompleteState extends GameState {
 
     public ArcadeGameLevelCompleteState() {
         super(GameStateID.GAME_LEVEL_COMPLETE);

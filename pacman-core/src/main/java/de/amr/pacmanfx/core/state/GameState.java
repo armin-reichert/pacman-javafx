@@ -16,12 +16,12 @@ import java.util.Objects;
 /**
  * Represents a game state like "booting", "intro", "playing" etc. Each game state has an internal tick timer.
  */
-public class TimedGameState implements State<GameContext>, Identifier {
+public class GameState implements State<GameContext>, Identifier {
 
     private final Identifier id;
     private final TickTimer timer;
 
-    public TimedGameState(Identifier id) {
+    public GameState(Identifier id) {
         this.id = Objects.requireNonNull(id);
         this.timer = new TickTimer("GameStateTimer-" + getClass().getSimpleName());
     }

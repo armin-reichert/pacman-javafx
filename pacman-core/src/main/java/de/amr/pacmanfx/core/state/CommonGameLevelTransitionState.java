@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.state;
 
 import de.amr.pacmanfx.core.GameContext;
 
-public class CommonGameLevelTransitionState extends TimedGameState {
+public class CommonGameLevelTransitionState extends GameState {
 
     public CommonGameLevelTransitionState() {
         super(GameStateID.GAME_LEVEL_TRANSITION);

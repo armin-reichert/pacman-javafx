@@ -8,7 +8,7 @@ import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameEventListener;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.state.TimedGameState;
+import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
@@ -30,7 +30,7 @@ public interface GameScene extends QuitHandler, Disposable {
 
     GameModel gameModel();
 
-    TimedGameState gameState();
+    GameState gameState();
 
     ActionBindingsRegistry actionBindings();
 

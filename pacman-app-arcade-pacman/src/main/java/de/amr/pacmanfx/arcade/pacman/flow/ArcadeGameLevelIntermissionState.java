@@ -6,11 +6,11 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.flow.GameFlow;
-import de.amr.pacmanfx.core.state.TimedGameState;
+import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
 
-public class ArcadeGameLevelIntermissionState extends TimedGameState {
+public class ArcadeGameLevelIntermissionState extends GameState {
 
     public ArcadeGameLevelIntermissionState() {
         super(GameStateID.GAME_LEVEL_INTERMISSION);

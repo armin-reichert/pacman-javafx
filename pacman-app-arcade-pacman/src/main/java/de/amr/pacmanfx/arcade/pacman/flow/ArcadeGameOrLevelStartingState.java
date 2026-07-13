@@ -6,11 +6,11 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.flow.GameFlow;
-import de.amr.pacmanfx.core.state.TimedGameState;
+import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
 
-public class ArcadeGameOrLevelStartingState extends TimedGameState {
+public class ArcadeGameOrLevelStartingState extends GameState {
 
     public ArcadeGameOrLevelStartingState() {
         super(GameStateID.GAME_OR_LEVEL_STARTING);

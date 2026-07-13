@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.core.state.TimedGameState;
+import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -124,7 +124,7 @@ public class UISettingsActions {
             }
 
             private boolean isLevelPlaying() {
-                final TimedGameState gameState = actionContext.currentGameContext().state();
+                final GameState gameState = actionContext.currentGameContext().state();
                 return GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };

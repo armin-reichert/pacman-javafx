@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 
 import java.util.Set;
 
-public class CommonEatingGhostState extends TimedGameState {
+public class CommonEatingGhostState extends GameState {
 
     public CommonEatingGhostState() {
         super(GameStateID.GAME_LEVEL_EATING_GHOST);

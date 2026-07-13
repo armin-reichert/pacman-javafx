@@ -5,14 +5,14 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.state.TimedGameState;
+import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 
 /**
  * Corresponds to the screen showing the people that have contributed to the game. Here, a seconds
  * screen with the contributors to the remake has been added.
  */
-public class ShowingHallOfFameState extends TimedGameState {
+public class ShowingHallOfFameState extends GameState {
 
     public ShowingHallOfFameState() {
         super(TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);

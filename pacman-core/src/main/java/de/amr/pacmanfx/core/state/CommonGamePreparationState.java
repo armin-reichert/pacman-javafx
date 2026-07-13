@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.state;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 
-public class CommonGamePreparationState extends TimedGameState {
+public class CommonGamePreparationState extends GameState {
 
     public CommonGamePreparationState() {
         super(GameStateID.GAME_PREPARATION);

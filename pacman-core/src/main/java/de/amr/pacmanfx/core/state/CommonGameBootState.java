@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 /**
  * Corresponds to the screen showing all these random symbols from the Arcade video memory.
  */
-public class CommonGameBootState extends TimedGameState {
+public class CommonGameBootState extends GameState {
 
     public interface Timing {
         int HEX_CODES      = 60;
