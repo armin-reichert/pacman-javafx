@@ -5,6 +5,7 @@ package de.amr.pacmanfx.game;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.config.ui.GameUISettings;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
@@ -112,12 +113,12 @@ public class GameBuilder {
         }
     }
 
-    private void addStartPages(PacManGamesCollectionImpl game) {
-        final StartPagesView startPagesView = game.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class);
+    private void addStartPages(GameActionContext actionContext) {
+        final StartPagesView startPagesView = actionContext.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class);
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();
             if (page != null) {
-                startPagesView.addStartPage(game, page);
+                startPagesView.addStartPage(actionContext, page);
             } else {
                 error("Start page could not be created using factory: " + factory);
             }

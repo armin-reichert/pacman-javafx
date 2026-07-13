@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games collection.
  */
-public final class PacManGamesCollectionImpl implements PacManGamesCollection, GameActionContext, GameLifecycle {
+public final class PacManGamesCollectionImpl implements GameActionContext, GameLifecycle {
 
     private final GameVariantManager variantManager;
 
@@ -43,20 +43,36 @@ public final class PacManGamesCollectionImpl implements PacManGamesCollection, G
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
     }
 
-    @Override
-    public GameLifecycle lifecycle() {
-        return this;
+    public PacManGamesMachine machine() {
+        return PacManGamesMachine.instance();
     }
 
-    @Override
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
         ui.setGameActionContext(this);
     }
 
+    public void selectGameVariantAndShow(GameVariantID variantID) {
+        requireNonNull(variantID);
+        variantManager.selectVariant(variantID.name());
+
+        //TODO rethink this
+        ui.views().selectStartPagesView();
+        ui.views().startPagesView().rootPane().setSelectedIndex(0);
+        ui.views().gamePlayView().dashboard().setGameActionContext(this);
+
+        ui.window().show(this);
+
+        Platform.runLater(this::startBackgroundServices);
+    }
+
+    public void setGameContext(GameContext gameContext) {
+        this.gameContext = gameContext;
+    }
+
     @Override
-    public PacManGamesMachine machine() {
-        return PacManGamesMachine.instance();
+    public GameLifecycle lifecycle() {
+        return this;
     }
 
     @Override
@@ -67,11 +83,6 @@ public final class PacManGamesCollectionImpl implements PacManGamesCollection, G
     @Override
     public GameVariantManager variants() {
         return variantManager;
-    }
-
-    @Override
-    public void setGameContext(GameContext gameContext) {
-        this.gameContext = gameContext;
     }
 
     @Override
@@ -105,21 +116,6 @@ public final class PacManGamesCollectionImpl implements PacManGamesCollection, G
     }
 
     // Lifecycle
-
-    @Override
-    public void showGameVariant(GameVariantID variantID) {
-        requireNonNull(variantID);
-        variantManager.selectVariant(variantID.name());
-
-        //TODO rethink this
-        ui.views().selectStartPagesView();
-        ui.views().startPagesView().rootPane().setSelectedIndex(0);
-        ui.views().gamePlayView().dashboard().setGameActionContext(this);
-
-        ui.window().show(this);
-
-        Platform.runLater(this::startBackgroundServices);
-    }
 
     @Override
     public void startGamePlay() {

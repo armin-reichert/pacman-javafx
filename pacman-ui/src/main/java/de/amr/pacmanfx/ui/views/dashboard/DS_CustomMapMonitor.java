@@ -4,9 +4,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.game.PacManGamesCollection;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

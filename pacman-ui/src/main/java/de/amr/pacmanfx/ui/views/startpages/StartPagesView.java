@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.views.startpages;
 
-import de.amr.pacmanfx.game.PacManGamesCollectionImpl;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.input.Input;
@@ -99,7 +98,7 @@ public class StartPagesView implements GameView {
         return Optional.of(this::composeTitle);
     }
 
-    public void addStartPage(PacManGamesCollectionImpl game, StartPage startPage) {
+    public void addStartPage(GameActionContext actionContext, StartPage startPage) {
         requireNonNull(startPage);
         if (pages.contains(startPage)) {
             Logger.warn("Start page already exists in list");
@@ -107,7 +106,7 @@ public class StartPagesView implements GameView {
         }
         pages.add(startPage);
         carousel.getItems().add(startPage.rootPane());
-        startPage.setGameActionContext(game);
+        startPage.setGameActionContext(actionContext);
     }
 
     // Private area

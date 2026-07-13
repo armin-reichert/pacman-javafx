@@ -26,7 +26,7 @@ public class ArcadeMsPacMan_App extends Application {
             .orElse(null);
 
         if (game != null) {
-            game.showGameVariant(GameVariantID.ARCADE_MS_PACMAN);
+            game.selectGameVariantAndShow(GameVariantID.ARCADE_MS_PACMAN);
         }
     }
 
