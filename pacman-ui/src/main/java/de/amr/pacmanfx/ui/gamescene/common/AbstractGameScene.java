@@ -29,20 +29,8 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for " + getClass().getSimpleName());
 
-    private GameSceneGameEventHandler gameEventHandler;
-
     public AbstractGameScene(GameActionContext actionContext) {
         this.actionContext = requireNonNull(actionContext);
-        gameEventHandler = new GameSceneGameEventHandler() {
-            @Override
-            public GameScene gameScene() {
-                return AbstractGameScene.this;
-            }
-        };
-    }
-
-    public void setGameEventHandler(GameSceneGameEventHandler handler) {
-        gameEventHandler = requireNonNull(handler);
     }
 
     /**
@@ -110,11 +98,6 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
         return actionContext.variants().currentVariant().config().optSoundEffects();
-    }
-
-    @Override
-    public GameSceneGameEventHandler gameEventHandler() {
-        return gameEventHandler;
     }
 
     @Override

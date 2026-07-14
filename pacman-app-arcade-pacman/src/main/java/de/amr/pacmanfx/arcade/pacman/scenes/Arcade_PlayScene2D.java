@@ -36,7 +36,6 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
 
     public Arcade_PlayScene2D(GameActionContext actionContext) {
         super(actionContext);
-        setGameEventHandler(this);
     }
 
     @Override

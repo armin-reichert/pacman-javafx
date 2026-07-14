@@ -19,7 +19,7 @@ import javafx.scene.input.ScrollEvent;
 
 import java.util.Optional;
 
-public interface GameScene extends QuitHandler, Disposable {
+public interface GameScene extends GameSceneGameEventHandler, QuitHandler, Disposable {
 
     Input input();
 
@@ -32,8 +32,6 @@ public interface GameScene extends QuitHandler, Disposable {
     GameState gameState();
 
     ActionBindingsRegistry actionBindings();
-
-    GameSceneGameEventHandler gameEventHandler();
 
     /**
      * Activates the scene and assigns keyboard bindings.
@@ -85,4 +83,9 @@ public interface GameScene extends QuitHandler, Disposable {
      * @return optional context menu contributed by this scene
      */
     Optional<ContextMenu> optContextMenu();
+
+    @Override
+    default GameScene gameScene() {
+        return this;
+    }
 }

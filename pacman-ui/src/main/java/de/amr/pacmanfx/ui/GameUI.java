@@ -166,7 +166,7 @@ public class GameUI implements GameEventListener {
             default -> {}
         }
         gameScenes.updateGameSceneAndForceReload(forceGameSceneReload);
-        gameScenes.optCurrentGameScene().ifPresent(gameScene -> gameScene.gameEventHandler().onGameEvent(gameEvent));
+        gameScenes.optCurrentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
     }
 
     // private

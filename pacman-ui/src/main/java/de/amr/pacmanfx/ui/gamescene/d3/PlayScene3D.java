@@ -90,8 +90,6 @@ public class PlayScene3D extends AbstractGameScene
 
         actionBindings = actionContext.commonActions().camera3DActions().bindings();
 
-        setGameEventHandler(this);
-
         drawModeChangeListener = (_, _, drawMode) -> {
             if (level3D != null) {
                 level3D.setDrawMode(drawMode);

@@ -91,8 +91,6 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         // Default height. Varies with map size.
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
-
-        setGameEventHandler(this);
     }
 
     @Override
