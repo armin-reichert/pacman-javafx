@@ -17,20 +17,6 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
-/**
- * Classic Arcade Pac-Man game.
- *
- * <p>There are still some differences to the original.
- *     <ul>
- *         <li>Only single player mode supported</li>
- *         <li>Attract mode (demo level) differs from original (frightened ghosts move "really" randomly)</li>
- *         <li>Pac-Man steering: Next move direction can be pre-selected before an intersection is reached</li>
- *         <li>Cornering not implemented as in original game, just some slowdown for ghosts going around corners</li>
- *     </ul>
- * </p>
- *
- * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
- */
 public class ArcadePacMan_GameModel extends GameModel {
 
     /**

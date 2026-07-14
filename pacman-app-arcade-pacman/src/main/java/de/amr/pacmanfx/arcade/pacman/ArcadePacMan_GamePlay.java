@@ -31,9 +31,23 @@ import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Classic Arcade Pac-Man game.
+ *
+ * <p>There are still some differences to the original.
+ *     <ul>
+ *         <li>Only single player mode supported</li>
+ *         <li>Attract mode (demo level) differs from original (frightened ghosts move "really" randomly)</li>
+ *         <li>Pac-Man steering: Next move direction can be pre-selected before an intersection is reached</li>
+ *         <li>Cornering not implemented as in original game, just some slowdown for ghosts going around corners</li>
+ *     </ul>
+ * </p>
+ *
+ * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
+ */
 public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
-    static final List<Vector2i> DEMO_LEVEL_ROUTE = List.of(
+    public static final List<Vector2i> DEMO_LEVEL_ROUTE = List.of(
         tile( 9,26), tile( 9,29), tile(12,29), tile(12,32), tile(26,32),
         tile(26,29), tile(24,29), tile(24,26), tile(26,26), tile(26,23),
         tile(21,23), tile(18,23), tile(18,14), tile( 9,14), tile( 9,17),
@@ -50,7 +64,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     );
 
     protected static final int GAME_OVER_STATE_TICKS = 90;
-
 
     public ArcadePacMan_GamePlay() {}
 
