@@ -108,7 +108,7 @@ import static java.util.Objects.requireNonNull;
  * </p>
  * </pre>
  */
-public class GateKeeper {
+public final class ArcadeHouseGateKeeper {
 
     private static final byte NO_LIMIT = -1;
     private static final byte[] GLOBAL_LIMITS = new byte[] {NO_LIMIT, 7, 17, NO_LIMIT};
@@ -122,7 +122,7 @@ public class GateKeeper {
     private int          globalCounterValue;
     private boolean      globalCounterEnabled;
 
-    public GateKeeper() {
+    public ArcadeHouseGateKeeper() {
     }
 
     public void setOnGhostReleased(BiConsumer<GameLevel, Ghost> handler) {

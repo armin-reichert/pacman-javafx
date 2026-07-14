@@ -14,7 +14,6 @@ import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.world.GateKeeper;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
@@ -50,8 +49,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     private final TengenMsPacMan_HUDState hudState;
 
-    private final GateKeeper gateKeeper;
-
     private final TengenMsPacMan_GameRules rules;
 
     private final TengenMsPacMan_MapSelector mapSelector;
@@ -73,7 +70,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel() {
-        gateKeeper = new GateKeeper();
         hudState =  new TengenMsPacMan_HUDState();
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
@@ -188,11 +184,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         setMapCategory(DEFAULT_MAP_CATEGORY);
         setStartLevelNumber(DEFAULT_START_LEVEL);
         setNumContinues(DEFAULT_NUM_CONTINUES);
-    }
-
-    @Override
-    public GateKeeper gateKeeper() {
-        return gateKeeper;
     }
 
     @Override

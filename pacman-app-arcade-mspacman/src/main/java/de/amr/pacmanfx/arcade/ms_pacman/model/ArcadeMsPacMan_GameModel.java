@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameRules;
 import de.amr.pacmanfx.core.model.HUDState;
@@ -14,7 +13,6 @@ import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -33,14 +31,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     protected static final int GAME_OVER_STATE_TICKS = 150;
 
-    /**
-     * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
-     */
-    public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
-
     protected final HUDState hudState;
-
-    protected final GateKeeper gateKeeper;
 
     protected final ArcadeMsPacMan_LevelCounter levelCounter;
 
@@ -55,7 +46,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     public ArcadeMsPacMan_GameModel(WorldMapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
         hudState = new HUDState();
-        gateKeeper = new GateKeeper();
         rules = new ArcadeMsPacMan_GameRules();
         levelCounter = new ArcadeMsPacMan_LevelCounter();
         automaticSteering = new RuleBasedPacSteering();
@@ -67,11 +57,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         mapSelector().loadMapPrototypes();
         lives().setInitialCount(3);
         hudState().hideIt();
-    }
-
-    @Override
-    public GateKeeper gateKeeper() {
-        return gateKeeper;
     }
 
     @Override
@@ -108,5 +93,4 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
             }
         });
     }
-
 }

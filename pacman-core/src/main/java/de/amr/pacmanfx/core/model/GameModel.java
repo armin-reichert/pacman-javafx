@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.LevelCounter;
 import de.amr.pacmanfx.core.model.lives.PacManLives;
 import de.amr.pacmanfx.core.model.lives.PacManLivesImpl;
-import de.amr.pacmanfx.core.model.world.GateKeeper;
+import de.amr.pacmanfx.core.model.world.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import de.amr.pacmanfx.core.score.PropertyFileScore;
 import de.amr.pacmanfx.core.score.Score;
@@ -75,6 +75,8 @@ public abstract class GameModel {
 
     protected GameLevel level;
 
+    protected final ArcadeHouseGateKeeper gateKeeper;
+
     protected final PacManLives lives;
 
     protected Steering automaticSteering;
@@ -86,6 +88,7 @@ public abstract class GameModel {
     protected GameModel() {
         score = new Score();
         lives = new PacManLivesImpl();
+        gateKeeper = new ArcadeHouseGateKeeper();
     }
 
     /* -------------------------------------------------------------------------
@@ -102,7 +105,9 @@ public abstract class GameModel {
         return lives;
     }
 
-    public abstract GateKeeper gateKeeper();
+    public ArcadeHouseGateKeeper gateKeeper() {
+        return gateKeeper;
+    }
 
     public abstract HUDState hudState();
 

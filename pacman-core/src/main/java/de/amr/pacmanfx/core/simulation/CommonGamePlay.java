@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.world.GateKeeper;
+import de.amr.pacmanfx.core.model.world.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -142,7 +142,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameLevel level = playContext.level();
         final GameEventManager eventManager = playContext.eventManager();
         final Pac pac = level.entities().pac();
-        final GateKeeper gateKeeper = model.gateKeeper();
+        final ArcadeHouseGateKeeper gateKeeper = model.gateKeeper();
         final boolean doubleChecked = model.rules().collisionDoubleCheckedProperty().get();
 
         level.heartbeat().triggerPulse();

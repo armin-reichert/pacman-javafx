@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.model.GameRules;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.actors.Elroy;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.world.GateKeeper;
+import de.amr.pacmanfx.core.model.world.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -42,7 +42,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     protected final HUDState hudState = new HUDState();
 
-    protected final GateKeeper gateKeeper = new GateKeeper();
+    protected final ArcadeHouseGateKeeper gateKeeper = new ArcadeHouseGateKeeper();
 
     protected final ArcadePacMan_LevelCounter levelCounter;
 
@@ -70,11 +70,6 @@ public class ArcadePacMan_GameModel extends GameModel {
         mapSelector().loadMapPrototypes();
         lives().setInitialCount(3);
         hudState().hideIt();
-    }
-
-    @Override
-    public GateKeeper gateKeeper() {
-        return gateKeeper;
     }
 
     @Override
