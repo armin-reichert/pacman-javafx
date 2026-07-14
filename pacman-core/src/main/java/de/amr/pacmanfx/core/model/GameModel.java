@@ -82,8 +82,6 @@ public interface GameModel {
 
     void init();
 
-    GameLevel createLevel(int levelNumber, boolean demoLevel);
-
     void setLevel(GameLevel level);
 
     Optional<GameLevel> optLevel();

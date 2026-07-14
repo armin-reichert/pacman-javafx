@@ -5,24 +5,15 @@
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
-import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.model.AbstractGameModel;
 import de.amr.pacmanfx.core.model.GameRules;
 import de.amr.pacmanfx.core.model.HUDState;
-import de.amr.pacmanfx.core.model.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.Elroy;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.GhostState;
-import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
-import java.util.Set;
-
-import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
@@ -79,43 +70,6 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public GameLevel createLevel(int levelNumber, boolean demoLevel) {
-        requireValidLevelNumber(levelNumber);
-
-        final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber);
-        final TerrainLayer terrain = worldMap.terrainLayer();
-
-        final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
-        terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE, houseMinTile.toString());
-
-        terrain.setHouse(new ArcadeHouse(houseMinTile));
-
-        final HuntingTimer huntingTimer = createHuntingTimer(rules);
-        final int numFlashes = ArcadePacMan_GameRules.levelData(levelNumber).numFlashes();
-
-        final GameLevel level = new GameLevel(this, levelNumber, worldMap, huntingTimer, numFlashes);
-        level.setDemoLevel(demoLevel);
-
-        level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
-
-        final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
-        level.setPacPowerSeconds(levelData.secPacPower());
-        level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
-
-        createAndSetMsPacMan(level);
-        createAndSetGhosts(level, terrain.house());
-
-        level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
-
-        /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
-         * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        levelCounter.setEnabled(levelNumber < 8);
-
-        return level;
-    }
-
-    @Override
     public GateKeeper gateKeeper() {
         return gateKeeper;
     }
@@ -142,22 +96,6 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
 
     // Helpers
 
-    private void createAndSetMsPacMan(GameLevel level) {
-        final Pac msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAutomaticSteering(automaticSteering);
-        level.setPac(msPacMan);
-    }
-
-    private void createAndSetGhosts(GameLevel level, House house) {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        level.setGhosts(
-            ArcadeMsPacMan_ActorFactory.createGhost(RED_GHOST_SHADOW, terrain, house,   WorldMapPropertyName.POS_GHOST_1_RED),
-            ArcadeMsPacMan_ActorFactory.createGhost(PINK_GHOST_SPEEDY, terrain, house,  WorldMapPropertyName.POS_GHOST_2_PINK),
-            ArcadeMsPacMan_ActorFactory.createGhost(CYAN_GHOST_BASHFUL, terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN),
-            ArcadeMsPacMan_ActorFactory.createGhost(ORANGE_GHOST_POKEY, terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE)
-        );
-    }
-
     private void configureGateKeeper() {
         gateKeeper.setOnGhostReleased((level, releasedPrisoner) -> {
             if (releasedPrisoner.personality() == ORANGE_GHOST_POKEY) {
@@ -171,14 +109,4 @@ public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
         });
     }
 
-    private HuntingTimer createHuntingTimer(GameRules gameRules) {
-        final var huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", gameRules.numHuntingPhases());
-        huntingTimer.setPhaseChangeCallback(newPhaseIndex -> optLevel().ifPresent(level -> {
-            if (newPhaseIndex > 0) {
-                level.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
-                    .forEach(Ghost::requestTurnBack);
-            }
-        }));
-        return huntingTimer;
-    }
 }

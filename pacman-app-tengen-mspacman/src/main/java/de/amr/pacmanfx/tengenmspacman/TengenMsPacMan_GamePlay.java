@@ -7,31 +7,31 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.model.AbstractGameModel;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.Bonus;
-import de.amr.pacmanfx.core.model.actors.BonusState;
-import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.HuntingTimer;
+import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.world.HPortal;
-import de.amr.pacmanfx.core.model.world.House;
-import de.amr.pacmanfx.core.model.world.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.simulation.CommonGamePlay;
 import de.amr.pacmanfx.core.simulation.GamePlayContext;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
-import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.model.*;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.Set;
 
 import static de.amr.basics.math.RandomNumberSupport.randomBoolean;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay extends CommonGamePlay {
+
+    private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
+
+    private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
 
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
@@ -61,11 +61,74 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
+    public GameLevel createLevel(AbstractGameModel gameModel, int levelNumber, boolean demoLevel) {
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameModel;
+
+        final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber, model.mapCategory());
+        final TerrainLayer terrain = worldMap.terrainLayer();
+
+        final ArcadeHouse house = new ArcadeHouse(TengenMsPacMan_GameModel.HOUSE_MIN_TILE);
+        terrain.setHouse(house);
+
+        final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", model.rules().numHuntingPhases());
+
+        final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, 3);
+        level.setDemoLevel(demoLevel);
+
+        huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
+            if (newPhaseIndex > 0) {
+                level.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
+                    .forEach(Ghost::requestTurnBack);
+            }
+        });
+
+        int index = levelNumber <= 19 ? levelNumber - 1 : 18;
+        float powerSeconds = TengenMsPacMan_GameRules.POWER_PELLET_TIMES[index] / 16.0f;
+        level.setPacPowerSeconds(powerSeconds);
+        level.setPacPowerFadingSeconds(0.5f * 3);
+
+        // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
+        level.setGameOverStateTicks(model.mapCategory() == MapCategory.ARCADE
+            ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
+
+        setMsPacMan(model, level);
+        setGhosts(level, house);
+
+        //TODO not sure about this:
+        level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
+
+        model.levelCounter().setEnabled(levelNumber < 8);
+
+        return level;
+    }
+
+    // Helpers
+
+    private void setMsPacMan(TengenMsPacMan_GameModel model, GameLevel level) {
+        final Pac msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
+        msPacMan.setAutomaticSteering(model.automaticSteering());
+        model.activatePacBooster(msPacMan, model.pacBoosterMode() == PacBooster.ALWAYS_ON);
+        level.setPac(msPacMan);
+    }
+
+    private void setGhosts(GameLevel level, House house) {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        level.setGhosts(
+            TengenMsPacMan_ActorFactory.createGhost(GameModel.RED_GHOST_SHADOW,   house, terrain, WorldMapPropertyName.POS_GHOST_1_RED),
+            TengenMsPacMan_ActorFactory.createGhost(GameModel.PINK_GHOST_SPEEDY,  house, terrain, WorldMapPropertyName.POS_GHOST_2_PINK),
+            TengenMsPacMan_ActorFactory.createGhost(GameModel.CYAN_GHOST_BASHFUL, house, terrain, WorldMapPropertyName.POS_GHOST_3_CYAN),
+            TengenMsPacMan_ActorFactory.createGhost(GameModel.ORANGE_GHOST_POKEY, house, terrain, WorldMapPropertyName.POS_GHOST_4_ORANGE)
+        );
+    }
+
+    @Override
     public GameLevel buildDemoLevel(GamePlayContext playContext) {
         requireNonNull(playContext);
 
-        final GameModel model = playContext.model();
-        final GameLevel demoLevel = model.createLevel(1, true);
+        final AbstractGameModel model = (AbstractGameModel) playContext.model();
+
+        final GameLevel demoLevel = createLevel(model, 1, true);
         demoLevel.setGameOverStateTicks(120);
 
         final Pac pac = demoLevel.entities().pac();

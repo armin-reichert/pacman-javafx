@@ -47,6 +47,10 @@ public abstract class AbstractGameModel implements GameModel {
         lives = new PacManLivesImpl();
     }
 
+    public Steering automaticSteering() {
+        return automaticSteering;
+    }
+
     /* -------------------------------------------------------------------------
      * GameModel interface implementation
      * ---------------------------------------------------------------------- */

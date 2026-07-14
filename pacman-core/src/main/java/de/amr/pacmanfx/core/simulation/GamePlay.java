@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.simulation;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.model.AbstractGameModel;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.Ghost;
@@ -24,13 +25,15 @@ public interface GamePlay {
 
     // Level building and level start
 
+    GameLevel createLevel(AbstractGameModel model, int levelNumber, boolean demoLevel);
+
     GameLevel buildDemoLevel(GamePlayContext playContext);
+
+    void buildNormalLevel(GamePlayContext playContext, int levelNumber);
 
     boolean isDemoLevelRunning(GameModel model);
 
     boolean isPacSafeInDemoLevel(GameLevel demoLevel);
-
-    void buildNormalLevel(GamePlayContext playContext, int levelNumber);
 
     void startLevel(GamePlayContext playContext);
 

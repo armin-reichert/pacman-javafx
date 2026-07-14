@@ -5,13 +5,17 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
+import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.model.AbstractGameModel;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.Bonus;
-import de.amr.pacmanfx.core.model.actors.BonusState;
-import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.HuntingTimer;
+import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.simulation.GamePlayContext;
@@ -19,9 +23,11 @@ import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.basics.math.RandomNumberSupport.*;
+import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
@@ -29,11 +35,79 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
     @Override
+    public GameLevel createLevel(AbstractGameModel model, int levelNumber, boolean demoLevel) {
+        requireValidLevelNumber(levelNumber);
+
+        final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber);
+        final TerrainLayer terrain = worldMap.terrainLayer();
+
+        final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
+            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GameModel.ARCADE_MAP_HOUSE_MIN_TILE);
+        terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE, houseMinTile.toString());
+
+        terrain.setHouse(new ArcadeHouse(houseMinTile));
+
+        final int numFlashes = ArcadePacMan_GameRules.levelData(levelNumber).numFlashes();
+
+        final HuntingTimer huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", model.rules().numHuntingPhases());
+
+        final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, numFlashes);
+        level.setDemoLevel(demoLevel);
+        level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
+
+        huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
+            if (newPhaseIndex > 0) {
+                level.ghostsInAnyOfStates(Set.of(
+                    GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
+                    .forEach(Ghost::requestTurnBack);
+            }
+        });
+
+        final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
+        level.setPacPowerSeconds(levelData.secPacPower());
+        level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
+
+        createAndSetMsPacMan(model, level);
+        createAndSetGhosts(level, terrain.house());
+
+        level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
+
+        /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
+         * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
+        model.levelCounter().setEnabled(levelNumber < 8);
+
+        return level;
+    }
+
+    protected void createAndSetMsPacMan(AbstractGameModel model, GameLevel level) {
+        final Pac msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
+        msPacMan.setAutomaticSteering(model.automaticSteering());
+        level.setPac(msPacMan);
+    }
+
+    protected void createAndSetGhosts(GameLevel level, House house) {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        level.setGhosts(
+            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.RED_GHOST_SHADOW,
+                terrain, house,   WorldMapPropertyName.POS_GHOST_1_RED),
+            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.PINK_GHOST_SPEEDY,
+                terrain, house,  WorldMapPropertyName.POS_GHOST_2_PINK),
+            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.CYAN_GHOST_BASHFUL,
+                terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN),
+            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.ORANGE_GHOST_POKEY,
+                terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE)
+        );
+    }
+
+    @Override
     public GameLevel buildDemoLevel(GamePlayContext playContext) {
         final int demoLevelNumber = 1;
-        final GameModel model = playContext.model();
 
-        final GameLevel demoLevel = model.createLevel(demoLevelNumber, true);
+        //TODO avoid cast
+        final AbstractGameModel model = (AbstractGameModel) playContext.model();
+
+        final GameLevel demoLevel = createLevel(model, demoLevelNumber, true);
 
         final Pac pac = demoLevel.entities().pac();
         pac.setImmune(false);

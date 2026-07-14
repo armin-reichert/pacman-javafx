@@ -9,20 +9,15 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.core.model.AbstractGameModel;
-import de.amr.pacmanfx.core.model.GameRules;
-import de.amr.pacmanfx.core.model.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.world.*;
+import de.amr.pacmanfx.core.model.world.GateKeeper;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-
-import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -50,10 +45,6 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public static final Vector2i HOUSE_MIN_TILE = WorldMap.tile(10, 15);
 
     public static final int GAME_OVER_MESSAGE_DELAY_SEC = 2;
-
-    private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
-
-    private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
 
     // --- End static
 
@@ -222,67 +213,5 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public TengenMsPacMan_GameRules rules() {
         return rules;
-    }
-
-    @Override
-    public GameLevel createLevel(int levelNumber, boolean demoLevel) {
-        final WorldMap worldMap = mapSelector.supplyWorldMap(levelNumber, mapCategory);
-        final TerrainLayer terrain = worldMap.terrainLayer();
-
-        final ArcadeHouse house = new ArcadeHouse(HOUSE_MIN_TILE);
-        terrain.setHouse(house);
-
-        final GameLevel level = new GameLevel(this, levelNumber, worldMap, createHuntingTimer(rules), 3);
-        level.setDemoLevel(demoLevel);
-
-        int index = levelNumber <= 19 ? levelNumber - 1 : 18;
-        float powerSeconds = TengenMsPacMan_GameRules.POWER_PELLET_TIMES[index] / 16.0f;
-        level.setPacPowerSeconds(powerSeconds);
-        level.setPacPowerFadingSeconds(0.5f * 3);
-
-        // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
-        level.setGameOverStateTicks(mapCategory == MapCategory.ARCADE
-            ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
-
-        setMsPacMan(level);
-        setGhosts(level, house);
-
-        //TODO not sure about this:
-        level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
-
-        levelCounter.setEnabled(levelNumber < 8);
-
-        return level;
-    }
-
-    // Helpers
-
-    private void setMsPacMan(GameLevel level) {
-        final Pac msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAutomaticSteering(automaticSteering);
-        activatePacBooster(msPacMan, pacBoosterMode == PacBooster.ALWAYS_ON);
-        level.setPac(msPacMan);
-    }
-
-    private void setGhosts(GameLevel level, House house) {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        level.setGhosts(
-            TengenMsPacMan_ActorFactory.createGhost(RED_GHOST_SHADOW,   house, terrain, WorldMapPropertyName.POS_GHOST_1_RED),
-            TengenMsPacMan_ActorFactory.createGhost(PINK_GHOST_SPEEDY,  house, terrain, WorldMapPropertyName.POS_GHOST_2_PINK),
-            TengenMsPacMan_ActorFactory.createGhost(CYAN_GHOST_BASHFUL, house, terrain, WorldMapPropertyName.POS_GHOST_3_CYAN),
-            TengenMsPacMan_ActorFactory.createGhost(ORANGE_GHOST_POKEY, house, terrain, WorldMapPropertyName.POS_GHOST_4_ORANGE)
-        );
-    }
-
-    private HuntingTimer createHuntingTimer(GameRules gameRules) {
-        final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", gameRules.numHuntingPhases());
-        huntingTimer.setPhaseChangeCallback(newPhaseIndex -> optLevel().ifPresent(level -> {
-            if (newPhaseIndex > 0) {
-                level.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
-                    .forEach(Ghost::requestTurnBack);
-            }
-        }));
-        return huntingTimer;
     }
 }
