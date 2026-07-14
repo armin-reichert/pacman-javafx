@@ -17,7 +17,7 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneEventHandler {
+public class Arcade_PlayScene2DGameEventHandler implements BaseGameSceneEventHandler {
 
     private final Arcade_PlayScene2D playScene2D;
 

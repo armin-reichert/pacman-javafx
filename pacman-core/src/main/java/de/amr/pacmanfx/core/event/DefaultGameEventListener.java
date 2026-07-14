@@ -2,14 +2,13 @@ package de.amr.pacmanfx.core.event;
 
 import org.tinylog.Logger;
 
-public class DefaultGameEventListener implements GameEventListener {
+/**
+ * Implementors can override {@link #onGameEvent(GameEvent)} or specific methods for targeted reactions.
+ */
+public interface DefaultGameEventListener extends GameEventListener {
 
-    /**
-     * Central event dispatcher. Implementors can override this for common handling
-     * or override specific methods for targeted reactions.
-     */
     @Override
-    public void onGameEvent(GameEvent event) {
+    default void onGameEvent(GameEvent event) {
         switch (event) {
             case BonusActivatedEvent e           -> onBonusActivated(e);
             case BonusEatenEvent e               -> onBonusEaten(e);
@@ -39,32 +38,32 @@ public class DefaultGameEventListener implements GameEventListener {
     }
 
     // public implementations remain the same
-    public void onGameStateChange(GameStateChangeEvent e) {
+    default void onGameStateChange(GameStateChangeEvent e) {
         Logger.info("Enter game state '{}'", e.newState().name());
     }
 
-    public void onCreditAdded(CreditAddedEvent e) {}
-    public void onSpecialScore(SpecialScoreEvent e) {}
-    public void onBonusActivated(BonusActivatedEvent e) {}
-    public void onBonusEaten(BonusEatenEvent e) {}
-    public void onBonusExpired(BonusExpiredEvent e) {}
-    public void onGameContinued(GameContinuedEvent e) {}
-    public void onGameStarted(GameStartedEvent e) {}
-    public void onGhostEaten(GhostEatenEvent e) {}
-    public void onGhostEntersHouse(GhostEntersHouseEvent e) {}
-    public void onGhostStartsReturningHome(GhostStartsReturningHomeEvent e) {}
-    public void onHuntingPhaseStarted(HuntingPhaseStartedEvent e) {}
-    public void onIntermissionStarted(IntermissionStartedEvent e) {}
-    public void onLevelCreated(LevelCreatedEvent e) {}
-    public void onLevelStarted(LevelStartedEvent e) {}
-    public void onPacDead(PacDeadEvent e) {}
-    public void onPacDying(PacDyingEvent e) {}
-    public void onPacEatsFood(PacEatsFoodEvent e) {}
-    public void onPacGetsPower(PacGetsPowerEvent e) {}
-    public void onPacLostPower(PacLostPowerEvent e) {}
-    public void onPacPowerFades(PacPowerFadesEvent e) {}
-    public void onStopAllSounds(StopAllSoundsEvent e) {}
-    public void onTestStarted(TestStartedEvent e) {}
+    default void onCreditAdded(CreditAddedEvent e) {}
+    default void onSpecialScore(SpecialScoreEvent e) {}
+    default void onBonusActivated(BonusActivatedEvent e) {}
+    default void onBonusEaten(BonusEatenEvent e) {}
+    default void onBonusExpired(BonusExpiredEvent e) {}
+    default void onGameContinued(GameContinuedEvent e) {}
+    default void onGameStarted(GameStartedEvent e) {}
+    default void onGhostEaten(GhostEatenEvent e) {}
+    default void onGhostEntersHouse(GhostEntersHouseEvent e) {}
+    default void onGhostStartsReturningHome(GhostStartsReturningHomeEvent e) {}
+    default void onHuntingPhaseStarted(HuntingPhaseStartedEvent e) {}
+    default void onIntermissionStarted(IntermissionStartedEvent e) {}
+    default void onLevelCreated(LevelCreatedEvent e) {}
+    default void onLevelStarted(LevelStartedEvent e) {}
+    default void onPacDead(PacDeadEvent e) {}
+    default void onPacDying(PacDyingEvent e) {}
+    default void onPacEatsFood(PacEatsFoodEvent e) {}
+    default void onPacGetsPower(PacGetsPowerEvent e) {}
+    default void onPacLostPower(PacLostPowerEvent e) {}
+    default void onPacPowerFades(PacPowerFadesEvent e) {}
+    default void onStopAllSounds(StopAllSoundsEvent e) {}
+    default void onTestStarted(TestStartedEvent e) {}
 
-    public void onGenericChange(GenericChangeEvent e) {}
+    default void onGenericChange(GenericChangeEvent e) {}
 }

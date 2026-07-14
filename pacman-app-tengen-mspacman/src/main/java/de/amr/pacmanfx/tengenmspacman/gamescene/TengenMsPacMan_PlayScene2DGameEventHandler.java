@@ -16,7 +16,7 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameSceneEventHandler {
+public class TengenMsPacMan_PlayScene2DGameEventHandler implements BaseGameSceneEventHandler {
 
     private final TengenMsPacMan_PlayScene2D playScene;
 

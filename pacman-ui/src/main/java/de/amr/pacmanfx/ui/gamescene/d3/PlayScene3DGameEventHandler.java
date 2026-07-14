@@ -46,7 +46,7 @@ import java.util.Optional;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
-public class PlayScene3DGameEventHandler extends BaseGameSceneEventHandler {
+public class PlayScene3DGameEventHandler implements BaseGameSceneEventHandler {
 
     public static final double PELLET_EATING_DELAY_SEC = 0.05;
 

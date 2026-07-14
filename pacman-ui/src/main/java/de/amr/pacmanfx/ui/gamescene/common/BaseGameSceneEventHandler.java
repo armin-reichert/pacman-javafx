@@ -16,29 +16,29 @@ import java.util.Optional;
 /**
  * Default event handler used by game scenes.
  */
-public abstract class BaseGameSceneEventHandler extends DefaultGameEventListener {
+public interface BaseGameSceneEventHandler extends DefaultGameEventListener {
 
-    public abstract GameScene gameScene();
+    GameScene gameScene();
 
-    public GameActionContext actionContext() {
+    default GameActionContext actionContext() {
         return gameScene().actionContext();
     }
 
-    public GameContext gameContext() {
+    default GameContext gameContext() {
         return actionContext().currentGameContext();
     }
 
-    public Optional<GameSoundEffects> optSoundEffects() {
+    default Optional<GameSoundEffects> optSoundEffects() {
         return actionContext().variants().currentVariant().config().optSoundEffects();
     }
 
     @Override
-    public void onCreditAdded(CreditAddedEvent e) {
+    default void onCreditAdded(CreditAddedEvent e) {
         optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
 
     @Override
-    public void onStopAllSounds(StopAllSoundsEvent event) {
+    default void onStopAllSounds(StopAllSoundsEvent event) {
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
     }
 }
