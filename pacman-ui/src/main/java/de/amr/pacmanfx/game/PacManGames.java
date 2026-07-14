@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
-import de.amr.pacmanfx.ui.action.core.GameLifecycle;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;

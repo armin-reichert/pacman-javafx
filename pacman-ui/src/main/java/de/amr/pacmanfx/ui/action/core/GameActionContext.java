@@ -9,6 +9,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.game.GameLifecycle;
 import de.amr.pacmanfx.game.GameVariantManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
