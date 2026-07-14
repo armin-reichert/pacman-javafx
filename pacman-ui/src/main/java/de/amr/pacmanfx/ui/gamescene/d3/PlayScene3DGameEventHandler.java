@@ -54,10 +54,14 @@ public class PlayScene3DGameEventHandler extends BaseGameSceneEventHandler {
     private final RandomTextPicker gameOverMessagePicker;
 
     public PlayScene3DGameEventHandler(PlayScene3D playScene3D) {
-        super(playScene3D);
         this.playScene3D = requireNonNull(playScene3D);
         gameOverMessagePicker = new RandomTextPicker(
             playScene3D.actionContext().ui().translations().textBundle(), "game.over");
+    }
+
+    @Override
+    public PlayScene3D gameScene() {
+        return playScene3D;
     }
 
     @Override

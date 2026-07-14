@@ -22,8 +22,12 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneEventHandle
     private final Arcade_PlayScene2D playScene2D;
 
     public Arcade_PlayScene2DGameEventHandler(Arcade_PlayScene2D playScene2D) {
-        super(playScene2D);
         this.playScene2D = requireNonNull(playScene2D);
+    }
+
+    @Override
+    public Arcade_PlayScene2D gameScene() {
+        return playScene2D;
     }
 
     @Override

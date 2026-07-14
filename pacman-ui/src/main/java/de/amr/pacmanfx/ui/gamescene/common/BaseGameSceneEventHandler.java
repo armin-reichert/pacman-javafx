@@ -13,21 +13,15 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Default event handler used by game scenes.
  */
-public class BaseGameSceneEventHandler extends DefaultGameEventListener {
+public abstract class BaseGameSceneEventHandler extends DefaultGameEventListener {
 
-    private final GameScene gameScene;
-
-    public BaseGameSceneEventHandler(GameScene gameScene) {
-        this.gameScene = requireNonNull(gameScene);
-    }
+    public abstract GameScene gameScene();
 
     public GameActionContext actionContext() {
-        return gameScene.actionContext();
+        return gameScene().actionContext();
     }
 
     public GameContext gameContext() {
