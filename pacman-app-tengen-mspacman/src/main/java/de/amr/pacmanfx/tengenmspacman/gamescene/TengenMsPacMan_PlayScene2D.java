@@ -55,8 +55,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default to accommodate to NES screen size.
  */
-public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
-
+public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
+    implements GameEventHandlerMixin
+{
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SCREEN_HEIGHT);
 
     private final StackPane rootPane = new StackPane();
@@ -92,7 +93,12 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D {
         // Default height. Varies with map size.
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 
-        setGameEventHandler(new TengenMsPacMan_PlayScene2DGameEventHandler(this));
+        setGameEventHandler(this);
+    }
+
+    @Override
+    public TengenMsPacMan_PlayScene2D gameScene() {
+        return this;
     }
 
     public double canvasHeightUnscaled() {

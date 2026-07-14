@@ -22,6 +22,7 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
 import de.amr.pacmanfx.ui.model.GameViewModel;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Scores3D;
@@ -42,7 +43,8 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public class PlayScene3D extends AbstractGameScene implements DisposableGraphicsObject {
+public class PlayScene3D extends AbstractGameScene
+    implements PlayScene3D_GameEventHandler, DisposableGraphicsObject {
 
     public final DoubleProperty scoreOpacity = new SimpleDoubleProperty(0);
 
@@ -58,6 +60,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     private PlaySceneContextMenu contextMenu;
     private AmbientLight ambientLight;
 
+    private final RandomTextPicker textPicker;
+
     private final ChangeListener<DrawMode> drawModeChangeListener;
 
     private final ManagedAnimation fadeInAnimation = new PlaySceneFadeInAnimation(Duration.seconds(3), this);
@@ -67,6 +71,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
      */
     public PlayScene3D(GameActionContext actionContext) {
         super(actionContext);
+
+        textPicker = new RandomTextPicker(actionContext.ui().translations().textBundle(), "game.over");
 
         final GameViewModel viewModel = actionContext.ui().viewModel();
 
@@ -84,13 +90,23 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
 
         actionBindings = actionContext.commonActions().camera3DActions().bindings();
 
-        setGameEventHandler(new PlayScene3DGameEventHandler(this));
+        setGameEventHandler(this);
 
         drawModeChangeListener = (_, _, drawMode) -> {
             if (level3D != null) {
                 level3D.setDrawMode(drawMode);
             }
         };
+    }
+
+    @Override
+    public RandomTextPicker textPicker() {
+        return textPicker;
+    }
+
+    @Override
+    public PlayScene3D gameScene() {
+        return this;
     }
 
     public SubScene subScene() {

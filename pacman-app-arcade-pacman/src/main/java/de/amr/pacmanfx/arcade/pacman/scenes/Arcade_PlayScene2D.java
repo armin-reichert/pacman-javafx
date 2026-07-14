@@ -10,8 +10,8 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -29,13 +29,19 @@ import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 /**
  * 2D play scene for Arcade game variants.
  */
-public class Arcade_PlayScene2D extends AbstractGameScene2D {
-
+public class Arcade_PlayScene2D extends AbstractGameScene2D
+    implements Arcade_PlayScene2D_GameEventHandler
+{
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public Arcade_PlayScene2D(GameActionContext actionContext) {
         super(actionContext);
-        setGameEventHandler(new Arcade_PlayScene2DGameEventHandler(this));
+        setGameEventHandler(this);
+    }
+
+    @Override
+    public Arcade_PlayScene2D gameScene() {
+        return this;
     }
 
     @Override
