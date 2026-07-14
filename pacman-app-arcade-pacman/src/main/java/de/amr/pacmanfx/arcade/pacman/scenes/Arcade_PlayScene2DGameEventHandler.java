@@ -7,8 +7,8 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
@@ -22,7 +22,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
     private final Arcade_PlayScene2D playScene2D;
 
     public Arcade_PlayScene2DGameEventHandler(Arcade_PlayScene2D playScene2D) {
-        super(playScene2D.actionContext());
+        super(playScene2D);
         this.playScene2D = requireNonNull(playScene2D);
     }
 

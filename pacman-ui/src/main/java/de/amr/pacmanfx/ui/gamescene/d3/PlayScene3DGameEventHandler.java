@@ -12,9 +12,8 @@ import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
@@ -54,10 +53,11 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
     private final PlayScene3D playScene3D;
     private final RandomTextPicker gameOverMessagePicker;
 
-    public PlayScene3DGameEventHandler(GameActionContext actionContext, PlayScene3D playScene3D) {
-        super(actionContext);
+    public PlayScene3DGameEventHandler(PlayScene3D playScene3D) {
+        super(playScene3D);
         this.playScene3D = requireNonNull(playScene3D);
-        gameOverMessagePicker = new RandomTextPicker(actionContext.ui().translations().textBundle(), "game.over");
+        gameOverMessagePicker = new RandomTextPicker(
+            playScene3D.actionContext().ui().translations().textBundle(), "game.over");
     }
 
     @Override

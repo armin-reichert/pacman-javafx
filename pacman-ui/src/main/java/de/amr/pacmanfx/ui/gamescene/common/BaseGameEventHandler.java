@@ -8,8 +8,8 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.CreditAddedEvent;
 import de.amr.pacmanfx.core.event.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
-import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
@@ -22,18 +22,18 @@ import static java.util.Objects.requireNonNull;
  */
 public class BaseGameEventHandler extends DefaultGameEventListener {
 
-    private final GameActionContext actionContext;
+    private final GameScene gameScene;
 
-    public BaseGameEventHandler(GameActionContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+    public BaseGameEventHandler(GameScene gameScene) {
+        this.gameScene = requireNonNull(gameScene);
     }
 
     public GameActionContext actionContext() {
-        return actionContext;
+        return gameScene.actionContext();
     }
 
     public GameContext gameContext() {
-        return actionContext.currentGameContext();
+        return actionContext().currentGameContext();
     }
 
     public GameState gameState() {
@@ -45,7 +45,7 @@ public class BaseGameEventHandler extends DefaultGameEventListener {
     }
 
     public Optional<GameSoundEffects> optSoundEffects() {
-        return actionContext.variants().currentVariant().config().optSoundEffects();
+        return actionContext().variants().currentVariant().config().optSoundEffects();
     }
 
     @Override
