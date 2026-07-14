@@ -146,7 +146,7 @@ public class DS_3DSettings extends GameDashboardSection {
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
             return "%dx%d (scaled: %.0fx%.0f)".formatted(
                 gameScene2D.unscaledWidth(), gameScene2D.unscaledHeight(),
-                gameScene2D.width(), gameScene2D.height());
+                gameScene2D.scaledWidth(), gameScene2D.scaledHeight());
         }
 
         if (gameModel.optLevel().isPresent()) {

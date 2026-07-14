@@ -41,7 +41,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
 
-    protected Canvas canvas;
+    private Canvas canvas;
 
     public AbstractGameScene2D(GameActionContext actionContext) {
         super(actionContext);
@@ -91,7 +91,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
     public void onEnteredFrom3DScene() {}
 
     /**
-     * Assigns the canvas used for rendering this scene.
+     * Assigns the canvas inside which this scene is drawn.
      *
      * @param canvas the JavaFX canvas, must not be {@code null}
      */
@@ -166,18 +166,18 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
     }
 
     /** @return the scaled scene width in pixels */
-    public double width() {
+    public double scaledWidth() {
         return scaling() * unscaledWidth();
     }
 
     /** @return the scaled scene height in pixels */
-    public double height() {
+    public double scaledHeight() {
         return scaling() * unscaledHeight();
     }
 
     /** @return the aspect ratio (width / height) */
     public double aspectRatio() {
-        return width() / height();
+        return scaledWidth() / scaledHeight();
     }
 
     /**
@@ -185,8 +185,8 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
      * but it gets called when the 3D->2D scene switch happens.
      */
     public void acceptGameLevel(GameLevel level) {
-        final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
-        unscaledWidthProperty().set(terrainSize.x());
-        unscaledHeightProperty().set(terrainSize.y());
+        final Vector2i size = level.worldMap().terrainLayer().sizeInPixel();
+        unscaledWidthProperty().set(size.x());
+        unscaledHeightProperty().set(size.y());
     }
 }

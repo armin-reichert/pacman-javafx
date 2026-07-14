@@ -50,7 +50,6 @@ import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.NE
 import static de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay.SCROLLING;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default to accommodate to NES screen size.
@@ -126,7 +125,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
 
     @Override
     public void setCanvas(Canvas canvas) {
-        this.canvas = requireNonNull(canvas);
+        super.setCanvas(canvas);
         canvas.widthProperty() .bind(scalingProperty().multiply(NES_SCREEN_WIDTH));
         canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
         rootPane.getChildren().setAll(canvas);
@@ -216,10 +215,10 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     @Override
     public void acceptGameLevel(GameLevel level) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final Vector2i terrainSize = terrain.sizeInPixel();
+        final Vector2i size = terrain.sizeInPixel();
 
-        unscaledWidthProperty().set(terrainSize.x());
-        unscaledHeightProperty().set(terrainSize.y());
+        unscaledWidthProperty().set(size.x());
+        unscaledHeightProperty().set(size.y());
 
         dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(terrain);
