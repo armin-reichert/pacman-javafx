@@ -4,39 +4,41 @@
 package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.pacmanfx.core.model.HUDState;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 public class TengenMsPacMan_HUDState extends HUDState {
 
-    private boolean levelNumberOn;
-    private boolean gameOptionsOn;
+    public final BooleanProperty levelNumberVisible = new SimpleBooleanProperty();
+    public final BooleanProperty gameOptionsVisible = new SimpleBooleanProperty();
 
     public TengenMsPacMan_HUDState() {}
 
-    public TengenMsPacMan_HUDState gameOptionsOn() {
-        gameOptionsOn = true;
+    public TengenMsPacMan_HUDState showGameOptions() {
+        gameOptionsVisible.set(true);
         return this;
     }
 
-    public TengenMsPacMan_HUDState gameOptionsOff() {
-        gameOptionsOn = false;
+    public TengenMsPacMan_HUDState hideGameOptions() {
+        gameOptionsVisible.set(false);
         return this;
     }
 
-    public boolean areGameOptionsOn() {
-        return gameOptionsOn;
+    public boolean gameOptionsVisible() {
+        return gameOptionsVisible.get();
     }
 
-    public TengenMsPacMan_HUDState levelNumberOn() {
-        levelNumberOn = true;
+    public TengenMsPacMan_HUDState showLevelNumber() {
+        levelNumberVisible.set(true);
         return this;
     }
 
-    public TengenMsPacMan_HUDState levelNumberOff() {
-        levelNumberOn = false;
+    public TengenMsPacMan_HUDState hideLevelNumber() {
+        levelNumberVisible.set(false);
         return this;
     }
 
-    public boolean isLevelNumberOn() {
-        return levelNumberOn;
+    public boolean isLevelNumberVisible() {
+        return levelNumberVisible.get();
     }
 }

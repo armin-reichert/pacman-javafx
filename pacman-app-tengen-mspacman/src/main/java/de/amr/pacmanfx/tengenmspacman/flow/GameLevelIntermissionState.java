@@ -34,7 +34,7 @@ public class GameLevelIntermissionState extends GameState {
         if (isLastCutScene) {
             hudState.hide();
         } else {
-            hudState.gameOptionsOff().hideScore().showLevelCounter().hideLivesCounter().show();
+            hudState.hideGameOptions().hideScore().showLevelCounter().hideLivesCounter().show();
         }
         waitForTimeout();
     }
@@ -58,7 +58,7 @@ public class GameLevelIntermissionState extends GameState {
             hudState.hide();
         }
         else {
-            hudState.gameOptionsOn().showScore().showLevelCounter().hideLivesCounter().show();
+            hudState.showGameOptions().showScore().showLevelCounter().hideLivesCounter().show();
         }
     }
 }

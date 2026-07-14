@@ -134,9 +134,9 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         final TengenMsPacMan_HUDState hud = gameModel().hudState();
         hud.showScore().showLevelCounter().showLivesCounter().show();
         if (gameModel().allOptionsHaveDefaultValue()) {
-            hud.gameOptionsOff();
+            hud.hideGameOptions();
         } else {
-            hud.gameOptionsOn();
+            hud.showGameOptions();
         }
 
         updateScaling();
@@ -284,9 +284,9 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         final int visibleLives = Math.clamp(displayed, 0, gameModel().hudState().maxLivesShown());
         hud.setLivesCount(visibleLives);
         if (gameModel().mapCategory() == MapCategory.ARCADE) {
-            hud.levelNumberOff();
+            hud.hideLevelNumber();
         } else {
-            hud.levelNumberOn();
+            hud.showLevelNumber();
         }
     }
 

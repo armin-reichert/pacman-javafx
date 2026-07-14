@@ -88,7 +88,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             }
         });
 
-        if (tengenHUD.areGameOptionsOn()) {
+        if (tengenHUD.gameOptionsVisible()) {
             drawGameOptions(model.mapCategory(), model.difficulty(), model.pacBoosterMode(), tilesPx(16), tilesPx(2.5f));
         }
 
@@ -137,7 +137,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             }
             x -= tilesPx(2);
         }
-        if (hud.isLevelNumberOn()) {
+        if (hud.isLevelNumberVisible()) {
             drawLevelNumberBox(level.number(), LEVEL_COUNTER_POS_LEFT, y); // left box
             drawLevelNumberBox(level.number(), LEVEL_COUNTER_POS_RIGHT, y); // right box
         }
