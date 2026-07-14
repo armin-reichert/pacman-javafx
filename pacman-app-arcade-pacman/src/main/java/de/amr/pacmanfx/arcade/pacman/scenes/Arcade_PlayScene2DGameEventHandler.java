@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
-import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
+import de.amr.pacmanfx.ui.gamescene.common.BaseGameSceneEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -17,7 +17,7 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
+public class Arcade_PlayScene2DGameEventHandler extends BaseGameSceneEventHandler {
 
     private final Arcade_PlayScene2D playScene2D;
 
@@ -44,13 +44,13 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
 
     @Override
     public void onGameContinued(GameContinuedEvent e) {
-        gameModel().optLevel().ifPresent(ActorAnimationManager::resetActorAnimations);
+        gameContext().model().optLevel().ifPresent(ActorAnimationManager::resetActorAnimations);
     }
 
     @Override
     public void onGameStarted(GameStartedEvent e) {
-        final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameModel())
-            || gameState().id() instanceof TestStateID;
+        final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameContext().model())
+            || gameContext().state().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -62,15 +62,15 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
         final GameState newState = (GameState) e.newState();
 
         if (GameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
-            final GameLevel level = gameModel().assertLevel();
+            final GameLevel level = gameContext().model().assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
-            final var completedAnimation = new LevelCompletedAnimation(level, () -> gameState().triggerTimeout());
+            final var completedAnimation = new LevelCompletedAnimation(level, () -> gameContext().state().triggerTimeout());
             playScene2D.setLevelCompletedAnimation(completedAnimation);
             completedAnimation.play();
         }
         else if (GameStateID.GAME_OVER.identifies(newState)) {
-            gameModel().hudState().creditOn();
+            gameContext().model().hudState().creditOn();
             optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
         }
     }
@@ -88,7 +88,7 @@ public class Arcade_PlayScene2DGameEventHandler extends BaseGameEventHandler {
     @Override
     public void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        gameState().triggerTimeout();
+        gameContext().state().triggerTimeout();
     }
 
     @Override

@@ -34,7 +34,7 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
 
     public AbstractGameScene(GameActionContext actionContext) {
         this.actionContext = requireNonNull(actionContext);
-        gameEventHandler = new BaseGameEventHandler(this);
+        gameEventHandler = new BaseGameSceneEventHandler(this);
     }
 
     public void setGameEventHandler(GameEventListener delegate) {

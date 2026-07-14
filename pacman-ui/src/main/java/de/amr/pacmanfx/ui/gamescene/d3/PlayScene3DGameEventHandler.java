@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
-import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
+import de.amr.pacmanfx.ui.gamescene.common.BaseGameSceneEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -46,7 +46,7 @@ import java.util.Optional;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
-public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
+public class PlayScene3DGameEventHandler extends BaseGameSceneEventHandler {
 
     public static final double PELLET_EATING_DELAY_SEC = 0.05;
 
@@ -82,7 +82,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
             onPacManDying();
         }
         else if (GameStateID.GAME_LEVEL_EATING_GHOST.identifies(newState)) {
-            onGhostsKilled(gameModel().huntingStepResult().ghostsKilled());
+            onGhostsKilled(gameContext().model().huntingStepResult().ghostsKilled());
         }
         else if (GameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
             onLevelComplete();
@@ -118,7 +118,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
     @Override
     public void onGameStarted(GameStartedEvent event) {
         final State<GameContext> state = gameContext().state();
-        final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameModel())
+        final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameContext().model())
             || (state instanceof GameState gameState && gameState.id() instanceof TestStateID);
 
         if (!silent) {
@@ -300,7 +300,7 @@ public class PlayScene3DGameEventHandler extends BaseGameEventHandler {
         final GameLevel3D level3D = assertLevel3D();
         final GameLevel level = gameContext().model().assertLevel();
         final boolean cutSceneFollows = !level.isDemoLevel()
-            && gameModel().rules().cutSceneNumberAfterLevel(level.number()).isPresent();
+            && gameContext().model().rules().cutSceneNumberAfterLevel(level.number()).isPresent();
         final GameViewModel viewModel = actionContext().ui().viewModel();
 
         playScene3D.scoreOpacity.set(0);

@@ -10,13 +10,13 @@ import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.gamescene.common.BaseGameEventHandler;
+import de.amr.pacmanfx.ui.gamescene.common.BaseGameSceneEventHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHandler {
+public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameSceneEventHandler {
 
     private final TengenMsPacMan_PlayScene2D playScene;
 
@@ -46,7 +46,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
 
     @Override
     public void onGameContinued(GameContinuedEvent e) {
-        gameModel().optLevel().ifPresent(level -> {
+        gameContext().model().optLevel().ifPresent(level -> {
             gameScene().resetActorAnimations(level);
             gameScene().dynamicCamera().playIntroSequence();
             if (gameContext().model() instanceof TengenMsPacMan_GameModel tengenGame) {
@@ -57,8 +57,8 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
 
     @Override
     public void onGameStarted(GameStartedEvent e) {
-        final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameModel())
-            || gameState().id() instanceof TestStateID;
+        final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameContext().model())
+            || gameContext().state().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -68,14 +68,14 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
     public void onGameStateChange(GameStateChangeEvent e) {
         Logger.info("Enter game state '{}'", e.newState().name());
         if (e.newState() == TengenMsPacMan_GameState.GAME_LEVEL_COMPLETE.state()) {
-            final GameLevel level = gameModel().assertLevel();
+            final GameLevel level = gameContext().model().assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene().playLevelCompleteAnimation(level);
         }
         else if (e.newState() == TengenMsPacMan_GameState.GAME_OVER.state()) {
             final TengenMsPacMan_PlayScene2D playScene2D = gameScene();
             final PlayScene2DCamera camera = playScene2D.dynamicCamera();
-            final GameLevel level = gameModel().assertLevel();
+            final GameLevel level = gameContext().model().assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             camera.enterManualMode();
             camera.setToTopPosition();
@@ -95,7 +95,7 @@ public class TengenMsPacMan_PlayScene2DGameEventHandler extends BaseGameEventHan
 
     @Override
     public void onLevelStarted(LevelStartedEvent e) {
-        gameModel().optLevel().ifPresent(level -> gameScene().resetActorAnimations(level));
+        gameContext().model().optLevel().ifPresent(level -> gameScene().resetActorAnimations(level));
         gameScene().dynamicCamera().playIntroSequence();
     }
 
