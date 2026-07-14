@@ -12,7 +12,6 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
-import de.amr.pacmanfx.core.model.AbstractGameModel;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.*;
@@ -35,7 +34,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
     @Override
-    public GameLevel createLevel(AbstractGameModel model, int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(GameModel model, int levelNumber, boolean demoLevel) {
         requireValidLevelNumber(levelNumber);
 
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber);
@@ -80,7 +79,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         return level;
     }
 
-    protected void createAndSetMsPacMan(AbstractGameModel model, GameLevel level) {
+    protected void createAndSetMsPacMan(GameModel model, GameLevel level) {
         final Pac msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAutomaticSteering(model.automaticSteering());
         level.setPac(msPacMan);
@@ -104,9 +103,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     public GameLevel buildDemoLevel(GamePlayContext playContext) {
         final int demoLevelNumber = 1;
 
-        //TODO avoid cast
-        final AbstractGameModel model = (AbstractGameModel) playContext.model();
-
+        final GameModel model = playContext.model();
         final GameLevel demoLevel = createLevel(model, demoLevelNumber, true);
 
         final Pac pac = demoLevel.entities().pac();

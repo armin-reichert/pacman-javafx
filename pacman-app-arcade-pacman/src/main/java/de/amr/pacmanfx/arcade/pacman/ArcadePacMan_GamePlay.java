@@ -11,7 +11,6 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
-import de.amr.pacmanfx.core.model.AbstractGameModel;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.*;
@@ -67,7 +66,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
-    public GameLevel createLevel(AbstractGameModel model, int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(GameModel model, int levelNumber, boolean demoLevel) {
         requireValidLevelNumber(levelNumber);
 
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber);
@@ -108,7 +107,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         return level;
     }
 
-    protected void createAndSetPacMan(AbstractGameModel model, GameLevel level) {
+    protected void createAndSetPacMan(GameModel model, GameLevel level) {
         final Pac pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAutomaticSteering(model.automaticSteering());
         level.setPac(pacMan);
@@ -134,8 +133,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     public GameLevel buildDemoLevel(GamePlayContext playContext) {
         requireNonNull(playContext);
 
-        //TODO avoid cast
-        final AbstractGameModel model = (AbstractGameModel) playContext.model();
+        final GameModel model = playContext.model();
         final GameLevel demoLevel = createLevel(model, 1, true);
 
         final Pac pac = demoLevel.entities().pac();

@@ -7,7 +7,6 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
-import de.amr.pacmanfx.core.model.AbstractGameModel;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.*;
@@ -61,7 +60,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
-    public GameLevel createLevel(AbstractGameModel gameModel, int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(GameModel gameModel, int levelNumber, boolean demoLevel) {
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameModel;
 
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber, model.mapCategory());
@@ -126,8 +125,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     public GameLevel buildDemoLevel(GamePlayContext playContext) {
         requireNonNull(playContext);
 
-        final AbstractGameModel model = (AbstractGameModel) playContext.model();
-
+        final GameModel model = playContext.model();
         final GameLevel demoLevel = createLevel(model, 1, true);
         demoLevel.setGameOverStateTicks(120);
 

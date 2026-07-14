@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import de.amr.pacmanfx.core.score.PropertyFileScore;
 import de.amr.pacmanfx.core.score.Score;
 import de.amr.pacmanfx.core.simulation.HuntingStepResult;
+import de.amr.pacmanfx.core.steering.Steering;
 
 import java.util.Optional;
 
@@ -57,6 +58,8 @@ public interface GameModel {
      * at times and should still be considered a threat.
      */
     byte ORANGE_GHOST_POKEY = 3;
+
+    Steering automaticSteering();
 
     PacManLives lives();
 
