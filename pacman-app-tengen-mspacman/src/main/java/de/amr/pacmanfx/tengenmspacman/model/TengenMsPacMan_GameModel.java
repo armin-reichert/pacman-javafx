@@ -178,7 +178,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void init() {
         mapSelector().loadMapPrototypes();
         lives().setInitialCount(3);
-        hudState().hideIt();
+        hudState().hide();
         setPacBoosterMode(DEFAULT_PAC_BOOSTER);
         setDifficulty(DEFAULT_DIFFICULTY);
         setMapCategory(DEFAULT_MAP_CATEGORY);

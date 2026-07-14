@@ -117,7 +117,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
 
     @Override
     public void onEnteredFrom3DScene() {
-        gameModel().hudState().levelCounterOn().livesCounterOn().showIt();
+        gameModel().hudState().showLevelCounter().showLivesCounter().show();
         gameModel().optLevel().ifPresent(this::acceptGameLevel);
     }
 
@@ -132,7 +132,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     @Override
     public void onActivate() {
         final TengenMsPacMan_HUDState hud = gameModel().hudState();
-        hud.scoreOn().levelCounterOn().livesCounterOn().showIt();
+        hud.showScore().showLevelCounter().showLivesCounter().show();
         if (gameModel().allOptionsHaveDefaultValue()) {
             hud.gameOptionsOff();
         } else {
@@ -281,8 +281,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
             && !level.entities().pac().isVisible();
         final int displayed = oneExtra ? gameModel().lives().count() : gameModel().lives().count() - 1;
 
-        final int visibleLives = Math.clamp(displayed, 0, gameModel().hudState().maxLivesDisplayed());
-        hud.setVisibleLifeCount(visibleLives);
+        final int visibleLives = Math.clamp(displayed, 0, gameModel().hudState().maxLivesShown());
+        hud.setLivesCount(visibleLives);
         if (gameModel().mapCategory() == MapCategory.ARCADE) {
             hud.levelNumberOff();
         } else {

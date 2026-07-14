@@ -56,7 +56,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     public void init() {
         mapSelector().loadMapPrototypes();
         lives().setInitialCount(3);
-        hudState().hideIt();
+        hudState().hide();
     }
 
     @Override

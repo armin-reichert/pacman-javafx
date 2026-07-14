@@ -19,7 +19,7 @@ public class ArcadeGameOrLevelStartingState extends GameState {
     @Override
     public void onEnter(GameContext context) {
         final GameModel model = context.model();
-        model.hudState().scoreOn().levelCounterOn().showIt();
+        model.hudState().showScore().showLevelCounter().show();
     }
 
     @Override

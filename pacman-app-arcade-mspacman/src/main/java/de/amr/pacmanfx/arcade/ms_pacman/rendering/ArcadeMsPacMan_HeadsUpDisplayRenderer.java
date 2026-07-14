@@ -46,7 +46,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
 
         if (!hud.isVisible()) return;
 
-        if (hud.isScoreOn()) {
+        if (hud.isScoreShown()) {
             drawScore(context.model().score(), SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, tilesPx(1), tilesPx(1));
 
             final Score highScore = context.model().highScore();
@@ -57,7 +57,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
             drawScore(highScore, HIGH_SCORE_TEXT, arcadeFont8(), color, tilesPx(14), tilesPx(1));
         }
 
-        if (hud.isLevelCounterOn()) {
+        if (hud.isLevelCounterShown()) {
             final RectShort[] bonusSymbols = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
             float x = scene.unscaledWidth() - tilesPx(4);
             final float y = scene.unscaledHeight() - tilesPx(2) + 2;
@@ -67,7 +67,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
             }
         }
 
-        if (hud.isLivesCounterOn()) {
+        if (hud.isLivesCounterShown()) {
             final RectShort sprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             final float x = tilesPx(2);
             final float y = scene.unscaledHeight() - tilesPx(2);
@@ -75,14 +75,14 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
                 drawSprite(sprite, x + i * tilesPx(2), y, true);
             }
             final int lifeCount = context.model().lives().count();
-            if (lifeCount > hud.maxLivesDisplayed()) {
+            if (lifeCount > hud.maxLivesShown()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));
                 fillText("%d".formatted(lifeCount), ARCADE_YELLOW, hintFont, x - 14, y + TS);
             }
         }
 
-        if (hud.isCreditOn()) {
+        if (hud.isCreditShown()) {
             fillText("CREDIT %2d".formatted(hud.credit()), ARCADE_WHITE, arcadeFont8(), tilesPx(2), scene.unscaledHeight());
         }
     }

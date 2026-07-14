@@ -30,7 +30,7 @@ public class CommonDemoLevelPlayingState extends GameState {
     public void onEnter(GameContext context) {
         final GameModel model = context.model();
         model.setLevel(context.gamePlay().buildDemoLevel(context.createPlayContextWithoutLevel()));
-        model.hudState().creditOn().livesCounterOff();
+        model.hudState().showCredit().hideLivesCounter();
         context.eventManager().publishGameEvent(new LevelCreatedEvent(model.assertLevel()));
     }
 

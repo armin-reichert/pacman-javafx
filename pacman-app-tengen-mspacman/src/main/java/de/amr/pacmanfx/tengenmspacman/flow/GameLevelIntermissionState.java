@@ -32,9 +32,9 @@ public class GameLevelIntermissionState extends GameState {
         final var hudState = model.hudState();
 
         if (isLastCutScene) {
-            hudState.hideIt();
+            hudState.hide();
         } else {
-            hudState.gameOptionsOff().scoreOff().levelCounterOn().livesCounterOff().showIt();
+            hudState.gameOptionsOff().hideScore().showLevelCounter().hideLivesCounter().show();
         }
         waitForTimeout();
     }
@@ -55,10 +55,10 @@ public class GameLevelIntermissionState extends GameState {
         final TengenMsPacMan_HUDState hudState = model.hudState();
 
         if (model.mapCategory() == MapCategory.ARCADE) {
-            hudState.hideIt();
+            hudState.hide();
         }
         else {
-            hudState.gameOptionsOn().scoreOn().levelCounterOn().livesCounterOff().showIt();
+            hudState.gameOptionsOn().showScore().showLevelCounter().hideLivesCounter().show();
         }
     }
 }

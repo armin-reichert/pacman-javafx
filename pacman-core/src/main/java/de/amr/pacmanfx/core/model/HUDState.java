@@ -4,102 +4,109 @@
 
 package de.amr.pacmanfx.core.model;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class HUDState {
 
-    private final IntegerProperty credit = new SimpleIntegerProperty(0);
+    public final BooleanProperty visible = new SimpleBooleanProperty(true);
 
-    private boolean visible = true;
+    public final IntegerProperty credit = new SimpleIntegerProperty(0);
+    public final BooleanProperty creditShown = new SimpleBooleanProperty(false);
 
-    private boolean creditOn;
-    private boolean levelCounterOn = true;
-    private boolean livesCounterOn = true;
-    private int visibleLifeCount;
-    private boolean scoreOn = true;
+    public final BooleanProperty levelCounterShown = new SimpleBooleanProperty(true);
+
+    public final BooleanProperty livesCounterShown = new SimpleBooleanProperty(true);
+
+    public final BooleanProperty scoreShown = new SimpleBooleanProperty(true);
+
+    private int livesCount;
 
     public HUDState() {}
 
-    public void showIt() { visible = true; }
+    public void show() { visible.set(true); }
 
-    public void hideIt() {
-        visible = false;
+    public void hide() {
+        visible.set(false);
     }
 
-    public boolean isVisible() { return visible; }
+    public boolean isVisible() { return visible.get(); }
 
     // credit
 
-    public boolean isCreditOn() { return creditOn; }
+    public boolean isCreditShown() { return creditShown.get(); }
 
-    public HUDState creditOn() {
-        creditOn = true;
+    public HUDState showCredit() {
+        creditShown.set(true);
         return this;
     }
 
-    public HUDState creditOff() {
-        creditOn = false;
+    public HUDState hideCredit() {
+        creditShown.set(false);
         return this;
     }
 
     // level counter
 
-    public boolean isLevelCounterOn() {
-        return levelCounterOn;
+    public boolean isLevelCounterShown() {
+        return levelCounterShown.get();
     }
 
-    public HUDState levelCounterOn() {
-        levelCounterOn = true;
+    public HUDState showLevelCounter() {
+        levelCounterShown.set(true);
         return this;
     }
 
-    public HUDState levelCounterOff() {
-        levelCounterOn = false;
+    public HUDState hideLevelCounter() {
+        levelCounterShown.set(false);
         return this;
     }
 
     // lives counter
 
-    public boolean isLivesCounterOn() {
-        return livesCounterOn;
+    public boolean isLivesCounterShown() {
+        return livesCounterShown.get();
     }
 
-    public HUDState livesCounterOn() {
-        livesCounterOn = true;
+    public HUDState showLivesCounter() {
+        livesCounterShown.set(true);
         return this;
     }
 
-    public HUDState livesCounterOff() {
-        livesCounterOn = false;
+    public HUDState hideLivesCounter() {
+        livesCounterShown.set(false);
         return this;
     }
+
+    // visible lives count
 
     public int visibleLifeCount() {
-        return visibleLifeCount;
+        return livesCount;
     }
 
-    public void setVisibleLifeCount(int count) {
-        visibleLifeCount = count;
+    public void setLivesCount(int count) {
+        livesCount = count;
     }
 
-    public int maxLivesDisplayed() {
+    public int maxLivesShown() {
         return 5;
     }
 
     // scores
 
-    public boolean isScoreOn() {
-        return scoreOn;
+    public boolean isScoreShown() {
+        return scoreShown.get();
     }
 
-    public HUDState scoreOn() {
-        scoreOn = true;
+    public HUDState showScore() {
+        scoreShown.set(true);
         return this;
     }
 
-    public HUDState scoreOff() {
-        scoreOn = false;
+    public HUDState hideScore() {
+        scoreShown.set(false);
         return this;
     }
 

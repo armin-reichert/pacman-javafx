@@ -111,7 +111,7 @@ public class LevelMediumTestState extends GameState {
         ghosts.forEach(ghost -> ghost.animations().playSelected());
         ghosts.forEach(Ghost::show);
 
-        model.hudState().showIt();
+        model.hudState().show();
 
         context.eventManager().publishGameEvent(new StopAllSoundsEvent());
     }
