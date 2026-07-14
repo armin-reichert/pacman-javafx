@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.AbstractGameModel;
+import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameRules;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.actors.Elroy;
@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public class ArcadePacMan_GameModel extends AbstractGameModel {
+public class ArcadePacMan_GameModel extends GameModel {
 
     /**
      * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).

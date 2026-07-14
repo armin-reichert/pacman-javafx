@@ -7,26 +7,32 @@ package de.amr.pacmanfx.core.model;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.LevelCounter;
 import de.amr.pacmanfx.core.model.lives.PacManLives;
+import de.amr.pacmanfx.core.model.lives.PacManLivesImpl;
 import de.amr.pacmanfx.core.model.world.GateKeeper;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import de.amr.pacmanfx.core.score.PropertyFileScore;
 import de.amr.pacmanfx.core.score.Score;
 import de.amr.pacmanfx.core.simulation.HuntingStepResult;
 import de.amr.pacmanfx.core.steering.Steering;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.Optional;
 
+import static java.util.Objects.requireNonNull;
+
 /**
- * Common interface for all Pac‑Man game models.
+ * Base class of all Pac-Man game model classes.
  */
-public interface GameModel {
+public abstract class GameModel {
+
     /**
      * The red ghost's character is aptly described as that of a shadow and is best-known as “Blinky”.
      * In Japan, his character is represented by the word oikake, which means “to run down or pursue”.
      * Blinky seems to always be the first of the ghosts to track Pac-Man down in the maze.
      * He is by far the most aggressive of the four and will doggedly pursue Pac-Man once behind him.
-      */
-    byte RED_GHOST_SHADOW = 0;
+     */
+    public static final byte RED_GHOST_SHADOW = 0;
 
     /**
      * Nicknamed “Pinky”, the pink ghost's character is described as one who is speedy.
@@ -35,7 +41,7 @@ public interface GameModel {
      * as Inky and Clyde, however, which suggests speedy is a poor translation of the more appropriate machibuse.
      * Pinky and Blinky often seem to be working in concert to box Pac-Man in, leaving him with nowhere to run.
      */
-    byte PINK_GHOST_SPEEDY = 1;
+    public static final byte PINK_GHOST_SPEEDY = 1;
 
     /**
      * The light-blue ghost is nicknamed “Inky” and his character is described as one who is bashful.
@@ -46,7 +52,7 @@ public interface GameModel {
      * Bashful is not a very good translation of kimagure, and misleads the player to assume Inky will shy away
      * from Pac-Man when he gets close which is not always the case.
      */
-    byte CYAN_GHOST_BASHFUL = 2;
+    public static final byte CYAN_GHOST_BASHFUL = 2;
 
     /**
      * The orange ghost is nicknamed “Clyde” and is characterized as one who is pokey.
@@ -57,47 +63,96 @@ public interface GameModel {
      * of the maze. Although not nearly as dangerous as the other three ghosts, his behavior can seem unpredictable
      * at times and should still be considered a threat.
      */
-    byte ORANGE_GHOST_POKEY = 3;
+    public static final byte ORANGE_GHOST_POKEY = 3;
 
-    Steering automaticSteering();
+    // Data
 
-    PacManLives lives();
+    private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
-    GateKeeper gateKeeper();
+    protected final Score score;
 
-    HUDState hudState();
+    protected PropertyFileScore highScore;
 
-    LevelCounter levelCounter();
+    protected GameLevel level;
 
-    Score score();
+    protected final PacManLives lives;
 
-    void setHighScore(PropertyFileScore score);
+    protected Steering automaticSteering;
 
-    PropertyFileScore highScore();
+    protected HuntingStepResult huntingStepResult;
 
-    WorldMapSelector mapSelector();
+    // Constructor
 
-    GameRules rules();
+    protected GameModel() {
+        score = new Score();
+        lives = new PacManLivesImpl();
+    }
 
-    boolean isPlaying();
+    /* -------------------------------------------------------------------------
+     * API
+     * ---------------------------------------------------------------------- */
 
-    void setPlaying(boolean playing);
+    public Steering automaticSteering() {
+        return automaticSteering;
+    }
 
-    void init();
+    public abstract void init();
 
-    void setLevel(GameLevel level);
+    public PacManLives lives() {
+        return lives;
+    }
 
-    Optional<GameLevel> optLevel();
+    public abstract GateKeeper gateKeeper();
 
-    GameLevel assertLevel();
+    public abstract HUDState hudState();
 
-    //TODO This is a questionable way of the result of the last hunting step
+    public PropertyFileScore highScore() {
+        return highScore;
+    }
 
-    HuntingStepResult huntingStepResult();
+    public HuntingStepResult huntingStepResult() {
+        return huntingStepResult;
+    }
 
-    void setHuntingStepResult(HuntingStepResult result);
+    public void setHuntingStepResult(HuntingStepResult huntingStepResult) {
+        this.huntingStepResult = huntingStepResult;
+    }
 
-    default void clearHuntingStepResult() {
+    public void clearHuntingStepResult() {
         setHuntingStepResult(null);
+    }
+
+    public abstract LevelCounter levelCounter();
+
+    public Score score() {
+        return score;
+    }
+
+    public void setHighScore(PropertyFileScore score) {
+        highScore = requireNonNull(score);
+    }
+
+    public abstract WorldMapSelector mapSelector();
+
+    public abstract GameRules rules();
+
+    public boolean isPlaying() {
+        return playing.get();
+    }
+
+    public void setPlaying(boolean playing) {
+        this.playing.set(playing);
+    }
+
+    public void setLevel(GameLevel level) {
+        this.level = level;
+    }
+
+    public Optional<GameLevel> optLevel() {
+        return Optional.ofNullable(level);
+    }
+
+    public GameLevel assertLevel() {
+        return optLevel().orElseThrow();
     }
 }

@@ -9,7 +9,6 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.event.*;
-import de.amr.pacmanfx.core.model.AbstractGameModel;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -98,7 +97,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(playContext);
         requireValidLevelNumber(levelNumber);
 
-        final AbstractGameModel model = (AbstractGameModel) playContext.model();
+        final GameModel model = (GameModel) playContext.model();
         final GameEventManager eventManager = playContext.eventManager();
 
         final GameLevel level = createLevel(model, levelNumber, false);

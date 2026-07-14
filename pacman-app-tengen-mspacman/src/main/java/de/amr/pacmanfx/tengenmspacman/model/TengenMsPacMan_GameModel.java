@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameException;
-import de.amr.pacmanfx.core.model.AbstractGameModel;
+import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly">Ms.Pac-Man-NES-Tengen-Disassembly</a>
  */
-public class TengenMsPacMan_GameModel extends AbstractGameModel {
+public class TengenMsPacMan_GameModel extends GameModel {
 
     public static final int DEFAULT_START_LEVEL = 1;
 

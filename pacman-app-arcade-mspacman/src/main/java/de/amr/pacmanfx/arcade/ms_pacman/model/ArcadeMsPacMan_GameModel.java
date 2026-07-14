@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.AbstractGameModel;
+import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameRules;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.actors.Elroy;
@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  * </ul>
  * </p>
  */
-public class ArcadeMsPacMan_GameModel extends AbstractGameModel {
+public class ArcadeMsPacMan_GameModel extends GameModel {
 
     protected static final int GAME_OVER_STATE_TICKS = 150;
 
