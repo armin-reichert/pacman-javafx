@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * Default event handler used by game scenes.
  */
-public interface BaseGameSceneEventHandler extends DefaultGameEventListener {
+public interface GameSceneGameEventHandler extends DefaultGameEventListener {
 
     GameScene gameScene();
 

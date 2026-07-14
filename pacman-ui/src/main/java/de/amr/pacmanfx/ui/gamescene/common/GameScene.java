@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.GameEventListener;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
@@ -34,7 +33,7 @@ public interface GameScene extends QuitHandler, Disposable {
 
     ActionBindingsRegistry actionBindings();
 
-    GameEventListener gameEventHandler();
+    GameSceneGameEventHandler gameEventHandler();
 
     /**
      * Activates the scene and assigns keyboard bindings.

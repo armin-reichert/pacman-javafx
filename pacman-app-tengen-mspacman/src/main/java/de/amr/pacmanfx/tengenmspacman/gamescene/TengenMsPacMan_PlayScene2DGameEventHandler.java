@@ -10,13 +10,13 @@ import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.gamescene.common.BaseGameSceneEventHandler;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneGameEventHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_PlayScene2DGameEventHandler implements BaseGameSceneEventHandler {
+public class TengenMsPacMan_PlayScene2DGameEventHandler implements GameSceneGameEventHandler {
 
     private final TengenMsPacMan_PlayScene2D playScene;
 

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
-import de.amr.pacmanfx.ui.gamescene.common.BaseGameSceneEventHandler;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneGameEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -17,7 +17,7 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class Arcade_PlayScene2DGameEventHandler implements BaseGameSceneEventHandler {
+public class Arcade_PlayScene2DGameEventHandler implements GameSceneGameEventHandler {
 
     private final Arcade_PlayScene2D playScene2D;
 

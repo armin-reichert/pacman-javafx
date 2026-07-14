@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
-import de.amr.pacmanfx.ui.gamescene.common.BaseGameSceneEventHandler;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneGameEventHandler;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -46,7 +46,7 @@ import java.util.Optional;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
-public class PlayScene3DGameEventHandler implements BaseGameSceneEventHandler {
+public class PlayScene3DGameEventHandler implements GameSceneGameEventHandler {
 
     public static final double PELLET_EATING_DELAY_SEC = 0.05;
 

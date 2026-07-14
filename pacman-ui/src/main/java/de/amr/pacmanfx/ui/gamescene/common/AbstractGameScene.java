@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.GameEventListener;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
@@ -30,11 +29,11 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for " + getClass().getSimpleName());
 
-    private GameEventListener gameEventHandler;
+    private GameSceneGameEventHandler gameEventHandler;
 
     public AbstractGameScene(GameActionContext actionContext) {
         this.actionContext = requireNonNull(actionContext);
-        gameEventHandler = new BaseGameSceneEventHandler() {
+        gameEventHandler = new GameSceneGameEventHandler() {
             @Override
             public GameScene gameScene() {
                 return AbstractGameScene.this;
@@ -42,8 +41,8 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
         };
     }
 
-    public void setGameEventHandler(GameEventListener delegate) {
-        gameEventHandler = requireNonNull(delegate);
+    public void setGameEventHandler(GameSceneGameEventHandler handler) {
+        gameEventHandler = requireNonNull(handler);
     }
 
     /**
@@ -114,7 +113,7 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
     }
 
     @Override
-    public GameEventListener gameEventHandler() {
+    public GameSceneGameEventHandler gameEventHandler() {
         return gameEventHandler;
     }
 
