@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.mapeditor.editcanvas;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.mapeditor.EditMode;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
@@ -13,7 +14,6 @@ import de.amr.pacmanfx.mapeditor.actions.Action_CarveTunnel;
 import de.amr.pacmanfx.mapeditor.actions.Action_ClearFoodAroundHouse;
 import de.amr.pacmanfx.mapeditor.actions.Action_FloodWithPellets;
 import de.amr.pacmanfx.mapeditor.actions.Action_MoveArcadeHouse;
-import de.amr.pacmanfx.core.model.world.WorldMap;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;

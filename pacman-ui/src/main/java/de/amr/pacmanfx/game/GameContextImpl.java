@@ -6,8 +6,8 @@ package de.amr.pacmanfx.game;
 
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.GameEventManagerImpl;
 import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.event.GameEventManagerImpl;
 import de.amr.pacmanfx.core.flow.GameFlow;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;

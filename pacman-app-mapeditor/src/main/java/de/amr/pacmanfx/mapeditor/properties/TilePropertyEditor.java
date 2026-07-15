@@ -4,10 +4,10 @@
 package de.amr.pacmanfx.mapeditor.properties;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.core.model.world.WorldMapLayer;
 import de.amr.pacmanfx.core.model.world.WorldMapLayerID;
 import de.amr.pacmanfx.core.model.world.WorldMapParser;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.Node;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;

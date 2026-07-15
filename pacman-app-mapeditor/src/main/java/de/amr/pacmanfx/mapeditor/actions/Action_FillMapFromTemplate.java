@@ -16,8 +16,8 @@ import org.tinylog.Logger;
 import java.nio.IntBuffer;
 import java.time.LocalTime;
 
-import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.getColorFromMapLayer;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
+import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.getColorFromMapLayer;
 
 public class Action_FillMapFromTemplate extends EditorUIAction<Void> {
 

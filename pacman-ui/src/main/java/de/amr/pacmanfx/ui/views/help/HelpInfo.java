@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.ui.views.help;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
-import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;

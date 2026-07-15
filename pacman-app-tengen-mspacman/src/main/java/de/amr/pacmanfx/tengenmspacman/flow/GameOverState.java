@@ -6,11 +6,11 @@ package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 
 public class GameOverState extends GameState {

@@ -3,13 +3,13 @@
  */
 package de.amr.pacmanfx.mapeditor.palette;
 
+import de.amr.pacmanfx.core.model.world.FoodTile;
+import de.amr.pacmanfx.core.model.world.TerrainTile;
+import de.amr.pacmanfx.core.model.world.WorldMapLayerID;
 import de.amr.pacmanfx.core.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
-import de.amr.pacmanfx.core.model.world.FoodTile;
-import de.amr.pacmanfx.core.model.world.TerrainTile;
-import de.amr.pacmanfx.core.model.world.WorldMapLayerID;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tab;

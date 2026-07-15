@@ -4,13 +4,13 @@
 package de.amr.pacmanfx.mapeditor.editcanvas;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.model.world.FoodTile;
+import de.amr.pacmanfx.core.model.world.TerrainTile;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetFoodTileCode;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainTileCode;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
-import de.amr.pacmanfx.core.model.world.FoodTile;
-import de.amr.pacmanfx.core.model.world.TerrainTile;
-import de.amr.pacmanfx.core.model.world.WorldMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;

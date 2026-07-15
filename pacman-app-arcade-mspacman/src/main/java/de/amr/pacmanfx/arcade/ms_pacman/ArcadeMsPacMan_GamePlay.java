@@ -81,7 +81,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
     protected void createAndSetMsPacMan(GameModel model, GameLevel level) {
         final Pac msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAutomaticSteering(model.automaticSteering());
+        msPacMan.setAutomaticSteering(new RuleBasedPacSteering());
         level.setPac(msPacMan);
     }
 

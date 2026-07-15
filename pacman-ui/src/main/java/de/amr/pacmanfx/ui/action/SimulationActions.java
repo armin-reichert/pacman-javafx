@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.views.GameViewID;

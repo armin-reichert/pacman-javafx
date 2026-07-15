@@ -5,17 +5,17 @@
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.TerrainTile;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.mapeditor.actions.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.scene.control.*;
 
+import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.NO_GRAPHIC;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.translated;
-import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
 
 public class TileMapEditorMenus {
 

@@ -3,6 +3,10 @@
  */
 package de.amr.pacmanfx.mapeditor;
 
+import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMapLayer;
+import de.amr.pacmanfx.core.model.world.WorldMapLayerID;
+import de.amr.pacmanfx.core.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.mapeditor.editcanvas.EditCanvas;
 import de.amr.pacmanfx.mapeditor.editcanvas.TemplateImageCanvas;
@@ -12,10 +16,6 @@ import de.amr.pacmanfx.mapeditor.palette.PaletteID;
 import de.amr.pacmanfx.mapeditor.preview.Preview2D;
 import de.amr.pacmanfx.mapeditor.preview.Preview3D;
 import de.amr.pacmanfx.mapeditor.properties.MapLayerPropertiesEditor;
-import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.model.world.WorldMapLayer;
-import de.amr.pacmanfx.core.model.world.WorldMapLayerID;
-import de.amr.pacmanfx.core.model.world.WorldMapPropertyName;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;

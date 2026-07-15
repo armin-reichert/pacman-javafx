@@ -13,7 +13,6 @@ import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import de.amr.pacmanfx.core.score.PropertyFileScore;
 import de.amr.pacmanfx.core.score.Score;
 import de.amr.pacmanfx.core.simulation.HuntingStepResult;
-import de.amr.pacmanfx.core.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -79,8 +78,6 @@ public abstract class GameModel {
 
     protected final PacManLives lives;
 
-    protected Steering automaticSteering;
-
     protected HuntingStepResult huntingStepResult;
 
     // Constructor
@@ -94,10 +91,6 @@ public abstract class GameModel {
     /* -------------------------------------------------------------------------
      * API
      * ---------------------------------------------------------------------- */
-
-    public Steering automaticSteering() {
-        return automaticSteering;
-    }
 
     public abstract void init();
 

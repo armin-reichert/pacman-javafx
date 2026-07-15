@@ -4,10 +4,10 @@
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.core.model.world.FoodTile;
 import de.amr.pacmanfx.core.model.world.TerrainTile;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.mapeditor.TileMapEditor;
 
 import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;

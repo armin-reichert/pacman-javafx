@@ -3,11 +3,11 @@
  */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.mapeditor.MessageType;
-import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapLayer;
 import de.amr.pacmanfx.core.model.world.WorldMapLayerID;
+import de.amr.pacmanfx.mapeditor.MessageType;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;

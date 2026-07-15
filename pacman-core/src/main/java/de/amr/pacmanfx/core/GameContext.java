@@ -6,11 +6,11 @@ package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.flow.GameFlow;
-import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.simulation.GamePlay;
 import de.amr.pacmanfx.core.simulation.GamePlayContext;
+import de.amr.pacmanfx.core.state.GameState;
 
 /**
  * Facade giving access to non UI related classes.

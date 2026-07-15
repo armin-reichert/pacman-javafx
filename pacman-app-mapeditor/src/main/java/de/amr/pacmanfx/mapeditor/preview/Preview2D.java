@@ -4,12 +4,12 @@
 package de.amr.pacmanfx.mapeditor.preview;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
-import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
-import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
 import de.amr.pacmanfx.core.model.world.TerrainTile;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapPropertyName;
+import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
+import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
+import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
 import de.amr.pacmanfx.uilib.rendering.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;

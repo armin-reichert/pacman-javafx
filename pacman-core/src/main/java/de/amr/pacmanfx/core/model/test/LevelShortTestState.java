@@ -7,12 +7,12 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.LevelStartedEvent;
 import de.amr.pacmanfx.core.event.TestStartedEvent;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.GameStateID;
 
 public class LevelShortTestState extends GameState {
 

@@ -9,8 +9,7 @@ import de.amr.pacmanfx.core.model.GameRules;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.actors.Elroy;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.world.*;
-import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
+import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -48,7 +47,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         hudState = new HUDState();
         rules = new ArcadeMsPacMan_GameRules();
         levelCounter = new ArcadeMsPacMan_LevelCounter();
-        automaticSteering = new RuleBasedPacSteering();
         configureGateKeeper();
     }
 

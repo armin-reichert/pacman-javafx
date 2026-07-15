@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.model.actors.Elroy;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
-import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
@@ -47,7 +46,6 @@ public class ArcadePacMan_GameModel extends GameModel {
         this.mapSelector = requireNonNull(mapSelector);
         rules = new ArcadePacMan_GameRules();
         levelCounter = new ArcadePacMan_LevelCounter();
-        automaticSteering = new RuleBasedPacSteering();
         configureGateKeeper();
     }
 

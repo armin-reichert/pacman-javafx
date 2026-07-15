@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
-import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
 import de.amr.pacmanfx.core.model.world.WorldMapLayer;
 import de.amr.pacmanfx.core.model.world.WorldMapLayerID;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.paint.Color;

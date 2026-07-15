@@ -106,7 +106,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     private void setMsPacMan(TengenMsPacMan_GameModel model, GameLevel level) {
         final Pac msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAutomaticSteering(model.automaticSteering());
+        msPacMan.setAutomaticSteering(new RuleBasedPacSteering());
         model.activatePacBooster(msPacMan, model.pacBoosterMode() == PacBooster.ALWAYS_ON);
         level.setPac(msPacMan);
     }

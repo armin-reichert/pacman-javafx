@@ -20,6 +20,7 @@ import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.simulation.CommonGamePlay;
 import de.amr.pacmanfx.core.simulation.GamePlayContext;
 import de.amr.pacmanfx.core.steering.RouteBasedSteering;
+import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 
 import java.util.List;
 import java.util.Set;
@@ -122,7 +123,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     protected void createAndSetPacMan(GameModel model, GameLevel level) {
         final Pac pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAutomaticSteering(model.automaticSteering());
+        pacMan.setAutomaticSteering(new RuleBasedPacSteering());
         level.setPac(pacMan);
     }
 

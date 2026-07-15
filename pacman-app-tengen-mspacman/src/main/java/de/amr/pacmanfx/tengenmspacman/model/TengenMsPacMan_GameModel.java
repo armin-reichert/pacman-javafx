@@ -15,7 +15,6 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 
 import static java.util.Objects.requireNonNull;
@@ -73,7 +72,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         hudState =  new TengenMsPacMan_HUDState();
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
-        automaticSteering = new RuleBasedPacSteering();
         rules = new TengenMsPacMan_GameRules();
         setDifficulty(Difficulty.NORMAL);
     }

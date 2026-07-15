@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.mapeditor.actions;
 
-import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import org.tinylog.Logger;
 
 import java.io.File;
