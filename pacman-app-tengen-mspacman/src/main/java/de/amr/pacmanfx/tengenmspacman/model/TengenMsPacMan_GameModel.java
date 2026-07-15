@@ -4,16 +4,11 @@
 
 package de.amr.pacmanfx.tengenmspacman.model;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.level.GameLevelMessage;
-import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 
@@ -41,8 +36,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public static final String READY_MESSAGE_TEXT = "READY!";
 
     public static final Vector2i HOUSE_MIN_TILE = WorldMap.tile(10, 15);
-
-    public static final int GAME_OVER_MESSAGE_DELAY_SEC = 2;
 
     // --- End static
 
@@ -155,15 +148,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     public void setCanStartNewGame(boolean canStartNewGame) {
         this.canStartNewGame = canStartNewGame;
-    }
-
-    public void showMessage(GameLevel level, GameLevelMessageType type) {
-        final Vector2f center = level.worldMap().terrainLayer().messageCenterPosition();
-        // Non-Arcade maps show a moving "Game Over" message
-        final GameLevelMessage message = type == GameLevelMessageType.GAME_OVER && mapCategory != MapCategory.ARCADE
-            ? new MovingGameLevelMessage(type, center, GAME_OVER_MESSAGE_DELAY_SEC * GameConstants.SIMULATION_FPS)
-            : new GameLevelMessage(type, center);
-        level.setMessage(message);
     }
 
     // GameModel interface

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.FoodLayer;
 
 /**
  * Extension of Arcade Pac-Man with 8 new builtin mazes (thanks to the one and only
@@ -20,10 +21,11 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         return new ArcadePacMan_GameRules() {
             @Override
             public boolean isBonusAwarded(GameLevel level) {
-                final int totalFoodCount = level.worldMap().foodLayer().totalFoodCount();
-                final int pelletsEaten = level.worldMap().foodLayer().eatenFoodCount();
+                final FoodLayer foodLayer = level.worldMap().foodLayer();
+                final int total = foodLayer.totalFoodCount();
+                final int eaten = foodLayer.eatenFoodCount();
                 // XXL maps may have different food count, use heuristic values
-                return pelletsEaten == totalFoodCount / 4 || pelletsEaten == totalFoodCount * 3 / 4;
+                return eaten == total / 4 || eaten == total * 3 / 4;
             }
         };
     }

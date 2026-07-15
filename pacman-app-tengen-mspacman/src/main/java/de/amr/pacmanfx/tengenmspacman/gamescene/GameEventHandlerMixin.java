@@ -8,8 +8,8 @@ import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.test.TestStateID;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneGameEventHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import org.tinylog.Logger;
@@ -39,8 +39,8 @@ public interface GameEventHandlerMixin extends GameSceneGameEventHandler {
         gameContext().model().optLevel().ifPresent(level -> {
             gameScene().resetActorAnimations(level);
             gameScene().dynamicCamera().playIntroSequence();
-            if (gameContext().model() instanceof TengenMsPacMan_GameModel tengenGame) {
-                tengenGame.showMessage(level, GameLevelMessageType.READY);
+            if (gameContext().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
+                tengenGame.showLevelMessage(level, GameLevelMessageType.READY);
             }
         });
     }

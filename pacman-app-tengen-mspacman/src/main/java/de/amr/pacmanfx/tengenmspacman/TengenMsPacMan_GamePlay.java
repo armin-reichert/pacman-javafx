@@ -4,13 +4,16 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.simulation.CommonGamePlay;
@@ -33,6 +36,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
 
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
+
+    public static final int GAME_OVER_MESSAGE_DELAY_SEC = 2;
 
     public TengenMsPacMan_GamePlay() {}
 
@@ -102,6 +107,17 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         return level;
     }
 
+    @Override
+    public void showLevelMessage(GameLevel level, GameLevelMessageType type) {
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) level.gameModel();
+        final Vector2f messagePosition = level.worldMap().terrainLayer().messageCenterPosition();
+        // For map categories "mini", "big" or "strange", the "game over" message is animated
+        final GameLevelMessage message = type == GameLevelMessageType.GAME_OVER && model.mapCategory() != MapCategory.ARCADE
+            ? new MovingGameLevelMessage(type, messagePosition, GAME_OVER_MESSAGE_DELAY_SEC * GameConstants.SIMULATION_FPS)
+            : new GameLevelMessage(type, messagePosition);
+        level.setMessage(message);
+    }
+
     // Helpers
 
     private void setMsPacMan(TengenMsPacMan_GameModel model, GameLevel level) {
@@ -169,7 +185,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         if (tengenModel.pacBoosterMode() == PacBooster.ALWAYS_ON) {
             tengenModel.activatePacBooster(level.entities().pac(), true);
         }
-        tengenModel.showMessage(level, GameLevelMessageType.READY);
+        showLevelMessage(level, GameLevelMessageType.READY);
 
         tengenModel.levelCounter().update(level.number(), level.bonusSymbolCode(0));
         tengenModel.score().setEnabled(true);

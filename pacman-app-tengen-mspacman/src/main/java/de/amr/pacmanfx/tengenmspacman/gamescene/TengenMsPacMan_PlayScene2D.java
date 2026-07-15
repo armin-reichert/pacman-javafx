@@ -159,7 +159,9 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
             if (subScene.getCamera() == dynamicCamera) {
                 dynamicCamera.update(tilesPx(terrain.numRows()), level.entities().pac());
             }
-            updateDemoLevelMessage(level);
+            if (!level.isDemoLevel()) {
+                updateLevelMessage(level);
+            }
             ensureActorAnimationsCreated(level);
             updateHUD(level);
             optSoundEffects().ifPresent(soundEffects -> {
@@ -290,12 +292,9 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         }
     }
 
-    private void updateDemoLevelMessage(GameLevel level) {
-        if (level.isDemoLevel()) {
-            level.optMessage()
-                .filter(MovingGameLevelMessage.class::isInstance)
-                .map(MovingGameLevelMessage.class::cast)
-                .ifPresent(MovingGameLevelMessage::updateMovement);
+    private void updateLevelMessage(GameLevel level) {
+        if (level.optMessage().isPresent() && level.optMessage().get() instanceof MovingGameLevelMessage message) {
+            message.updateMovement();
         }
     }
 
