@@ -74,6 +74,8 @@ public abstract class GameModel {
 
     protected GameLevel level;
 
+    protected WorldMapSelector mapSelector;
+
     protected final ArcadeHouseGateKeeper gateKeeper;
 
     protected final PacManLives lives;
@@ -130,7 +132,9 @@ public abstract class GameModel {
         highScore = requireNonNull(score);
     }
 
-    public abstract WorldMapSelector mapSelector();
+    public WorldMapSelector mapSelector() {
+        return mapSelector;
+    }
 
     public abstract GameRules rules();
 

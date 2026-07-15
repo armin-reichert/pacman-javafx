@@ -33,8 +33,6 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     protected ArcadePacMan_GameRules rules;
 
-    protected WorldMapSelector mapSelector;
-
     public ArcadePacMan_GameModel() {
         this(new ArcadePacMan_MapSelector());
     }
@@ -64,11 +62,6 @@ public class ArcadePacMan_GameModel extends GameModel {
     @Override
     public ArcadePacMan_LevelCounter levelCounter() {
         return levelCounter;
-    }
-
-    @Override
-    public WorldMapSelector mapSelector() {
-        return mapSelector;
     }
 
     @Override

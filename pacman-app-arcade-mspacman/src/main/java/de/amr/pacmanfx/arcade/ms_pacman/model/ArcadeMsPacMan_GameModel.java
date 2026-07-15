@@ -28,13 +28,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameModel extends GameModel {
 
-    protected static final int GAME_OVER_STATE_TICKS = 150;
-
     protected final HUDState hudState;
 
     protected final ArcadeMsPacMan_LevelCounter levelCounter;
-
-    protected WorldMapSelector mapSelector;
 
     protected ArcadeMsPacMan_GameRules rules;
 
@@ -65,11 +61,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     @Override
     public ArcadeMsPacMan_LevelCounter levelCounter() {
         return levelCounter;
-    }
-
-    @Override
-    public WorldMapSelector mapSelector() {
-        return mapSelector;
     }
 
     @Override
