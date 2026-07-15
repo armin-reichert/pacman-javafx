@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.HuntingPhase;
 import de.amr.pacmanfx.core.model.HuntingTimer;
-import de.amr.pacmanfx.core.model.actors.ActorSpeedControl;
+import de.amr.pacmanfx.core.model.actors.ActorSpeedSettings;
 import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
@@ -95,10 +95,10 @@ public class DS_GameInfo extends GameDashboardSection {
 
     private Supplier<String> supplyGameLevelSpeedInfo(
         GameActionContext actionContext,
-        BiFunction<GameLevel,ActorSpeedControl, String> fnInfo) {
+        BiFunction<GameLevel, ActorSpeedSettings, String> fnInfo) {
         return () -> {
             final GameModel model = actionContext.currentGameContext().model();
-            final ActorSpeedControl speedControl = model.rules().actorSpeedControl();
+            final ActorSpeedSettings speedControl = model.rules().actorSpeedControl();
             return model.optLevel().map(level -> fnInfo.apply(level, speedControl)).orElse(NO_INFO);
         };
     }
@@ -158,28 +158,28 @@ public class DS_GameInfo extends GameDashboardSection {
         );
     }
 
-    private String fmtGhostAttackSpeed(GameLevel level, ActorSpeedControl speedControl) {
+    private String fmtGhostAttackSpeed(GameLevel level, ActorSpeedSettings speedControl) {
         // do not use Blinky because he has varying attack speed (Cruise Elroy mode)
         final float speed = speedControl.ghostSpeedAttacking(level, level.ghost(CYAN_GHOST_BASHFUL));
         return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 
-    private String fmtGhostSpeedFrightened(GameLevel level, ActorSpeedControl speedControl) {
+    private String fmtGhostSpeedFrightened(GameLevel level, ActorSpeedSettings speedControl) {
         final float speed = speedControl.ghostSpeedFrightened(level);
         return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 
-    private String fmtGhostSpeedTunnel(GameLevel level, ActorSpeedControl speedControl) {
+    private String fmtGhostSpeedTunnel(GameLevel level, ActorSpeedSettings speedControl) {
         final float speed = speedControl.ghostSpeedTunnel(level.number());
         return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 
-    private String fmtPacNormalSpeed(GameLevel level, ActorSpeedControl speedControl) {
+    private String fmtPacNormalSpeed(GameLevel level, ActorSpeedSettings speedControl) {
         final float speed = speedControl.pacSpeed(level);
         return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 
-    private String fmtPacSpeedPowered(GameLevel level, ActorSpeedControl speedControl) {
+    private String fmtPacSpeedPowered(GameLevel level, ActorSpeedSettings speedControl) {
         final float speed = speedControl.pacSpeedWhenHasPower(level);
         return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
-public interface ActorSpeedControl {
+public interface ActorSpeedSettings {
 
     /**
      * Returns Pac‑Man's bonus speed for the given level.

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.model;
 
-import de.amr.pacmanfx.core.model.actors.ActorSpeedControl;
+import de.amr.pacmanfx.core.model.actors.ActorSpeedSettings;
 import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import javafx.beans.property.BooleanProperty;
@@ -14,7 +14,7 @@ import java.util.OptionalInt;
 
 public interface GameRules {
 
-    ActorSpeedControl actorSpeedControl();
+    ActorSpeedSettings actorSpeedControl();
 
     ObjectProperty<CollisionStrategy> collisionStrategyProperty();
 

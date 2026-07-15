@@ -5,12 +5,12 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.ActorSpeedControl;
+import de.amr.pacmanfx.core.model.actors.ActorSpeedSettings;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 
-public class Arcade_ActorSpeedControl implements ActorSpeedControl {
+public class Arcade_ActorSpeedSettings implements ActorSpeedSettings {
 
     /** Base speed is 75 px per second (=1.25 px/tick). */
     public static final float BASE_SPEED = 1.25f;
