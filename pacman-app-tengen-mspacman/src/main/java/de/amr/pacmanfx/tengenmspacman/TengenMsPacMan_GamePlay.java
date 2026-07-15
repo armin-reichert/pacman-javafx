@@ -118,25 +118,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.setMessage(message);
     }
 
-    // Helpers
-
-    private void setMsPacMan(TengenMsPacMan_GameModel model, GameLevel level) {
-        final Pac msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAutomaticSteering(new RuleBasedPacSteering());
-        model.activatePacBooster(msPacMan, model.pacBoosterMode() == PacBooster.ALWAYS_ON);
-        level.setPac(msPacMan);
-    }
-
-    private void setGhosts(GameLevel level, House house) {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        level.setGhosts(
-            TengenMsPacMan_ActorFactory.createGhost(GameModel.RED_GHOST_SHADOW,   house, terrain, WorldMapPropertyName.POS_GHOST_1_RED),
-            TengenMsPacMan_ActorFactory.createGhost(GameModel.PINK_GHOST_SPEEDY,  house, terrain, WorldMapPropertyName.POS_GHOST_2_PINK),
-            TengenMsPacMan_ActorFactory.createGhost(GameModel.CYAN_GHOST_BASHFUL, house, terrain, WorldMapPropertyName.POS_GHOST_3_CYAN),
-            TengenMsPacMan_ActorFactory.createGhost(GameModel.ORANGE_GHOST_POKEY, house, terrain, WorldMapPropertyName.POS_GHOST_4_ORANGE)
-        );
-    }
-
     @Override
     public GameLevel buildDemoLevel(GamePlayContext playContext) {
         requireNonNull(playContext);
@@ -246,5 +227,24 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         level.setBonus(bonus);
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
+    }
+
+    // private
+
+    private void setMsPacMan(TengenMsPacMan_GameModel model, GameLevel level) {
+        final Pac msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
+        msPacMan.setAutomaticSteering(new RuleBasedPacSteering());
+        model.activatePacBooster(msPacMan, model.pacBoosterMode() == PacBooster.ALWAYS_ON);
+        level.setPac(msPacMan);
+    }
+
+    private void setGhosts(GameLevel level, House house) {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        level.setGhosts(
+            TengenMsPacMan_ActorFactory.createGhost(GameModel.RED_GHOST_SHADOW,   house, terrain, WorldMapPropertyName.POS_GHOST_1_RED),
+            TengenMsPacMan_ActorFactory.createGhost(GameModel.PINK_GHOST_SPEEDY,  house, terrain, WorldMapPropertyName.POS_GHOST_2_PINK),
+            TengenMsPacMan_ActorFactory.createGhost(GameModel.CYAN_GHOST_BASHFUL, house, terrain, WorldMapPropertyName.POS_GHOST_3_CYAN),
+            TengenMsPacMan_ActorFactory.createGhost(GameModel.ORANGE_GHOST_POKEY, house, terrain, WorldMapPropertyName.POS_GHOST_4_ORANGE)
+        );
     }
 }
