@@ -30,8 +30,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     protected final HUDState hudState;
 
-    protected final ArcadeMsPacMan_LevelCounter levelCounter;
-
     protected ArcadeMsPacMan_GameRules rules;
 
     public ArcadeMsPacMan_GameModel() {
@@ -60,7 +58,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public ArcadeMsPacMan_LevelCounter levelCounter() {
-        return levelCounter;
+        return (ArcadeMsPacMan_LevelCounter) levelCounter;
     }
 
     @Override

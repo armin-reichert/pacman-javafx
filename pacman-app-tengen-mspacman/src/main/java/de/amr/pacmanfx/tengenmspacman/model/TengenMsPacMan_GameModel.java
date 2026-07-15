@@ -50,10 +50,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     private final TengenMsPacMan_GameRules rules;
 
-    private final TengenMsPacMan_MapSelector mapSelector;
-
-    private final TengenMsPacMan_LevelCounter levelCounter;
-
     private MapCategory mapCategory;
 
     private Difficulty difficulty;
@@ -191,12 +187,12 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public TengenMsPacMan_MapSelector mapSelector() {
-        return mapSelector;
+        return (TengenMsPacMan_MapSelector) mapSelector;
     }
 
     @Override
     public TengenMsPacMan_LevelCounter levelCounter() {
-        return levelCounter;
+        return (TengenMsPacMan_LevelCounter) levelCounter;
     }
 
     @Override

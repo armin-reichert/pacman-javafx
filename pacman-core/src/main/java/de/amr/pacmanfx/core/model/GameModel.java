@@ -74,6 +74,8 @@ public abstract class GameModel {
 
     protected GameLevel level;
 
+    protected LevelCounter levelCounter;
+
     protected WorldMapSelector mapSelector;
 
     protected final ArcadeHouseGateKeeper gateKeeper;
@@ -122,7 +124,9 @@ public abstract class GameModel {
         setHuntingStepResult(null);
     }
 
-    public abstract LevelCounter levelCounter();
+    public LevelCounter levelCounter() {
+        return levelCounter;
+    }
 
     public Score score() {
         return score;

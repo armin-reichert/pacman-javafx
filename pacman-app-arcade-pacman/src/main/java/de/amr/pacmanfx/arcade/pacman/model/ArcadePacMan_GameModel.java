@@ -29,8 +29,6 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     protected final ArcadeHouseGateKeeper gateKeeper = new ArcadeHouseGateKeeper();
 
-    protected final ArcadePacMan_LevelCounter levelCounter;
-
     protected ArcadePacMan_GameRules rules;
 
     public ArcadePacMan_GameModel() {
@@ -61,7 +59,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     @Override
     public ArcadePacMan_LevelCounter levelCounter() {
-        return levelCounter;
+        return (ArcadePacMan_LevelCounter) levelCounter;
     }
 
     @Override
