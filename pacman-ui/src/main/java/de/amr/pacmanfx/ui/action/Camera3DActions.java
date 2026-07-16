@@ -31,38 +31,38 @@ public class Camera3DActions {
         actionNextPerspective = new GameAction(actionContext, "perspective_next") {
             @Override
             protected void doAction() {
-                final PerspectiveID nextID = actionContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().next();
-                actionContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(nextID);
-                actionContext.ui().shortMessage(translatedPerspectiveMessage(actionContext, nextID));
+                final PerspectiveID nextID = appContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().next();
+                appContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(nextID);
+                appContext.ui().shortMessage(translatedPerspectiveMessage(appContext, nextID));
             }
 
             @Override
             public boolean isEnabled() {
-                return is3DPlaySceneActive(actionContext);
+                return is3DPlaySceneActive(appContext);
             }
         };
 
         actionPreviousPerspective = new GameAction(actionContext, "perspective_previous") {
             @Override
             protected void doAction() {
-                final PerspectiveID prevID = actionContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().prev();
-                actionContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(prevID);
-                actionContext.ui().shortMessage(translatedPerspectiveMessage(actionContext, prevID));
+                final PerspectiveID prevID = appContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().prev();
+                appContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(prevID);
+                appContext.ui().shortMessage(translatedPerspectiveMessage(appContext, prevID));
             }
             @Override
             public boolean isEnabled() {
-                return is3DPlaySceneActive(actionContext);
+                return is3DPlaySceneActive(appContext);
             }
         };
 
         actionToggleDrawMode = new GameAction(actionContext, "toggle_draw_mode") {
             @Override
             protected void doAction() {
-                Ufx.toggleProperty(actionContext.ui().viewModel().common3D.drawModeProperty, DrawMode.LINE, DrawMode.FILL);
+                Ufx.toggleProperty(appContext.ui().viewModel().common3D.drawModeProperty, DrawMode.LINE, DrawMode.FILL);
             }
             @Override
             public boolean isEnabled() {
-                return is3DPlaySceneActive(actionContext);
+                return is3DPlaySceneActive(appContext);
             }
         };
 

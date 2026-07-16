@@ -71,7 +71,7 @@ public final class TengenMsPacMan_Actions {
         actionTogglePlaySceneDisplayMode = new GameAction(actionContext, "toggle_play_scene_display_mode") {
             @Override
             public void doAction() {
-                final var uiSettings = actionContext.getExtensionValue(
+                final var uiSettings = appContext.getExtensionValue(
                     TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
                 final SceneDisplay mode = uiSettings.playSceneDisplay.get();
@@ -82,14 +82,14 @@ public final class TengenMsPacMan_Actions {
 
             @Override
             public boolean isEnabled() {
-                return actionContext.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D);
+                return appContext.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D);
             }
         };
 
         actionToggleJoypadBindingsDisplayed = new GameAction(actionContext, "toggle_joypad_bindings_displayed") {
             @Override
             public void doAction() {
-                final var uiSettings = actionContext.getExtensionValue(
+                final var uiSettings = appContext.getExtensionValue(
                     TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
                 toggleBooleanProperty(uiSettings.joypadBindingsDisplayed);
@@ -103,7 +103,7 @@ public final class TengenMsPacMan_Actions {
                     final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) gameContext().model();
                     tengenGame.activatePacBooster(gameLevel.entities().pac(), !tengenGame.isBoosterActive());
                     if (tengenGame.isBoosterActive()) {
-                        actionContext.ui().shortMessage("Booster!"); //TODO localize
+                        appContext.ui().shortMessage("Booster!"); //TODO localize
                     }
                 });
             }
@@ -118,7 +118,7 @@ public final class TengenMsPacMan_Actions {
         actionSelectNextJoypadKeyBinding = new GameAction(actionContext, "select_next_joypad_binding") {
             @Override
             public void doAction() {
-                actionContext.input().joypad().selectNextBinding();
+                appContext.input().joypad().selectNextBinding();
             }
         };
 

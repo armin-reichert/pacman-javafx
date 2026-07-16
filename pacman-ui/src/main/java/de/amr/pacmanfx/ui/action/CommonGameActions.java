@@ -52,13 +52,13 @@ public final class CommonGameActions {
         actionToggleCollisionStrategy = new GameAction(actionContext, "toggle_collision_strategy") {
             @Override
             protected void doAction() {
-                final GameRules rules = actionContext.currentGameContext().model().rules();
+                final GameRules rules = appContext.currentGameContext().model().rules();
                 Ufx.toggleProperty(rules.collisionStrategyProperty(), CollisionStrategy.SAME_TILE, CollisionStrategy.CENTER_DISTANCE);
                 final CollisionStrategy strategy = rules.getCollisionStrategy();
                 if (strategy == CollisionStrategy.SAME_TILE) {
-                    actionContext.ui().shortMessage("Using original Arcade collision strategy (same tile)");
+                    appContext.ui().shortMessage("Using original Arcade collision strategy (same tile)");
                 } else {
-                    actionContext.ui().shortMessage("Using safe collision strategy");
+                    appContext.ui().shortMessage("Using safe collision strategy");
                 }
             }
         };

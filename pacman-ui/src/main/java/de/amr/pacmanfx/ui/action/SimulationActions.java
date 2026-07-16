@@ -39,104 +39,104 @@ public class SimulationActions {
         actionFaster = new GameAction(actionContext, "simulation_faster") {
             @Override
             protected void doAction() {
-                final GameClock clock = actionContext.clock();
+                final GameClock clock = appContext.clock();
                 final int newRate = Math.clamp(clock.targetFrameRate() + GameConstants.SIM_SPEED_DELTA,
                     GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
                 clock.setTargetFrameRate(newRate);
 
                 final String msg = newRate == GameConstants.SIM_SPEED_MAX ? "At maximum speed: %d Hz" : "%d Hz";
-                actionContext.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+                appContext.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
             }
         };
 
         actionFastest = new GameAction(actionContext, "simulation_fastest") {
             @Override
             protected void doAction() {
-                actionContext.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
+                appContext.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
                 final String msg = "At maximum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MAX);
-                actionContext.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
+                appContext.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
             }
         };
 
         actionSlower = new GameAction(actionContext, "simulation_slower") {
             @Override
             protected void doAction() {
-                final GameClock clock = actionContext.clock();
+                final GameClock clock = appContext.clock();
                 final int newRate = Math.clamp(clock.targetFrameRate() - GameConstants.SIM_SPEED_DELTA,
                     GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
                 clock.setTargetFrameRate(newRate);
 
                 final String msg = newRate == GameConstants.SIM_SPEED_MIN ? "At minimum speed: %d Hz" : "%d Hz";
-                actionContext.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
+                appContext.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg.formatted(newRate));
             }
         };
 
         actionSlowest = new GameAction(actionContext, "simulation_slowest") {
             @Override
             protected void doAction() {
-                actionContext.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
+                appContext.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
                 final String msg = "At minimum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MIN);
-                actionContext.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
+                appContext.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
             }
         };
 
         actionOneStep = new GameAction(actionContext, "simulation_one_step") {
             @Override
             protected void doAction() {
-                final boolean failure = !actionContext.clock().makeOneStep(true);
+                final boolean failure = !appContext.clock().makeOneStep(true);
                 if (failure) {
-                    actionContext.ui().shortMessage("Simulation step error!");
+                    appContext.ui().shortMessage("Simulation step error!");
                 }
             }
 
             @Override
-            public boolean isEnabled() { return actionContext.clock().getUpdatesDisabled(); }
+            public boolean isEnabled() { return appContext.clock().getUpdatesDisabled(); }
         };
 
         actionTenSteps = new GameAction(actionContext, "simulation_ten_steps") {
             @Override
             protected void doAction() {
-                final boolean failure = !actionContext.clock().makeSteps(10, true);
+                final boolean failure = !appContext.clock().makeSteps(10, true);
                 if (failure) {
-                    actionContext.ui().shortMessage("Simulation steps error!");
+                    appContext.ui().shortMessage("Simulation steps error!");
                 }
             }
 
             @Override
-            public boolean isEnabled() { return actionContext.clock().getUpdatesDisabled(); }
+            public boolean isEnabled() { return appContext.clock().getUpdatesDisabled(); }
         };
 
         actionReset = new GameAction(actionContext, "simulation_reset") {
             @Override
             protected void doAction() {
-                final GameClock gameClock = actionContext.clock();
+                final GameClock gameClock = appContext.clock();
                 gameClock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
-                actionContext.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), gameClock.targetFrameRate() + "Hz");
+                appContext.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), gameClock.targetFrameRate() + "Hz");
             }
         };
 
         actionTogglePaused = new GameAction(actionContext, "toggle_paused") {
             @Override
             protected void doAction() {
-                final GameClock gameClock = actionContext.clock();
+                final GameClock gameClock = appContext.clock();
                 toggleBooleanProperty(gameClock.updatesDisabledProperty());
                 final boolean paused = gameClock.getUpdatesDisabled();
                 if (paused) {
-                    actionContext.ui().sounds().stopAll();
-                    actionContext.variants().currentVariant().config().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+                    appContext.ui().sounds().stopAll();
+                    appContext.variants().currentVariant().config().optSoundEffects().ifPresent(GameSoundEffects::stopAll);
                 }
             }
 
             @Override
             public boolean isEnabled() {
-                return actionContext.ui().views().isSelected(GameViewID.GAMEPLAY);
+                return appContext.ui().views().isSelected(GameViewID.GAMEPLAY);
             }
         };
 
         actionToggleMuted = new GameAction(actionContext, "toggle_muted") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(actionContext.ui().viewModel().mutedProperty);
+                toggleBooleanProperty(appContext.ui().viewModel().mutedProperty);
             }
         };
 

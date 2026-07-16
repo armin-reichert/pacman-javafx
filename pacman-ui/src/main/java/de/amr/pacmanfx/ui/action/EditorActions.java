@@ -57,7 +57,7 @@ public class EditorActions {
                         try {
                             editor.editFile(mapFile);
                         } catch (Exception x) {
-                            actionContext.ui().shortMessage("Cannot edit map file");
+                            appContext.ui().shortMessage("Cannot edit map file");
                             Logger.error(x, "Cannot edit map file {}", mapFile);
                         }
                     }

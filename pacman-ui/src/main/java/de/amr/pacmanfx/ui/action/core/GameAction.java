@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.action.core;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import org.tinylog.Logger;
 
 /**
@@ -13,16 +14,20 @@ import org.tinylog.Logger;
  */
 public abstract class GameAction {
 
-    protected final GameAppContext actionContext;
+    protected final GameAppContext appContext;
     protected final String id;
 
-    protected GameAction(GameAppContext actionContext, String id) {
-        this.actionContext = actionContext;
+    protected GameAction(GameAppContext appContext, String id) {
+        this.appContext = appContext;
         this.id = Validations.requireValidIdentifier(id);
     }
 
     public GameContext gameContext() {
-        return actionContext.currentGameContext();
+        return appContext.currentGameContext();
+    }
+
+    public GameFlowController gameFlow() {
+        return gameContext().flow();
     }
 
     @Override
@@ -58,7 +63,7 @@ public abstract class GameAction {
         }
 
         // Clear the input that triggered this action
-        actionContext.input().keyboard().clearState();
+        appContext.input().keyboard().clearState();
 
         return success;
     }

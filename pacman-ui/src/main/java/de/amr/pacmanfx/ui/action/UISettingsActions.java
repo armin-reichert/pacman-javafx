@@ -38,20 +38,20 @@ public class UISettingsActions {
         actionEnterFullScreen = new GameAction(actionContext, "enter_fullscreen") {
             @Override
             protected void doAction() {
-                actionContext.ui().window().stage().setFullScreen(true);
+                appContext.ui().window().stage().setFullScreen(true);
             }
         };
 
         actionShowHelp = new GameAction(actionContext, "show_help") {
             @Override
             protected void doAction() {
-                actionContext.ui().views().gamePlayView().showHelp(actionContext);
+                appContext.ui().views().gamePlayView().showHelp(appContext);
             }
 
             @Override
             public boolean isEnabled() {
-                final GameSceneManager gameScenes = actionContext.ui().gameScenes();
-                final String variantName = actionContext.variants().currentVariantName();
+                final GameSceneManager gameScenes = appContext.ui().gameScenes();
+                final String variantName = appContext.variants().currentVariantName();
                 final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
                 return isArcadeGame &&
                     (gameScenes.currentGameSceneHasID(CommonGameSceneID.INTRO_SCENE)
@@ -63,37 +63,37 @@ public class UISettingsActions {
         actionToggleDashboard = new GameAction(actionContext, "toggle_dashboard") {
             @Override
             protected void doAction() {
-                actionContext.ui().views().gamePlayView().dashboard().toggleVisibility();
+                appContext.ui().views().gamePlayView().dashboard().toggleVisibility();
             }
 
             @Override
             public boolean isEnabled() {
-                return actionContext.ui().views().isSelected(GameViewID.GAMEPLAY);
+                return appContext.ui().views().isSelected(GameViewID.GAMEPLAY);
             }
         };
 
         actionToggleDebugInfo = new GameAction(actionContext, "toggle_debug_info") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(actionContext.ui().viewModel().debugModeOnProperty);
+                toggleBooleanProperty(appContext.ui().viewModel().debugModeOnProperty);
             }
         };
 
         actionToggleKeyboardMonitor = new GameAction(actionContext, "toggle_keyboard_monitor") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(actionContext.ui().viewModel().keyboardMonitorOnProperty);
+                toggleBooleanProperty(appContext.ui().viewModel().keyboardMonitorOnProperty);
             }
         };
 
         actionToggleMiniViewVisibility = new GameAction(actionContext, "toggle_mini_view_visibility") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(actionContext.ui().viewModel().miniView.activeProperty);
-                if (!actionContext.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
-                    final String msg = actionContext.ui().translations().translate(
-                        actionContext.ui().viewModel().miniView.activeProperty.get() ? "flash.pip_on" : "flash.pip_off");
-                    actionContext.ui().shortMessage(msg);
+                toggleBooleanProperty(appContext.ui().viewModel().miniView.activeProperty);
+                if (!appContext.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
+                    final String msg = appContext.ui().translations().translate(
+                        appContext.ui().viewModel().miniView.activeProperty.get() ? "flash.pip_on" : "flash.pip_off");
+                    appContext.ui().shortMessage(msg);
                 }
             }
         };
@@ -101,30 +101,30 @@ public class UISettingsActions {
         actionTogglePlayScene2D3D = new GameAction(actionContext, "toggle_play_scene_2d_3d") {
             @Override
             protected void doAction() {
-                toggleBooleanProperty(actionContext.ui().viewModel().common3D.view3DEnabledProperty);
-                final boolean is3DEnabled = actionContext.ui().viewModel().common3D.view3DEnabledProperty.get();
+                toggleBooleanProperty(appContext.ui().viewModel().common3D.view3DEnabledProperty);
+                final boolean is3DEnabled = appContext.ui().viewModel().common3D.view3DEnabledProperty.get();
                 if (!inPlayScene()) {
-                    actionContext.ui().shortMessage(actionContext.ui().translations().translate(is3DEnabled
+                    appContext.ui().shortMessage(appContext.ui().translations().translate(is3DEnabled
                         ? "flash.use_3D_scene" : "flash.use_2D_scene"));
                 }
                 if (isLevelPlaying()) {
-                    actionContext.ui().gameScenes().forceGameSceneUpdate();
+                    appContext.ui().gameScenes().forceGameSceneUpdate();
                 }
             }
 
             @Override
             public boolean isEnabled() {
-                return actionContext.ui().views().isSelected(GameViewID.GAMEPLAY);
+                return appContext.ui().views().isSelected(GameViewID.GAMEPLAY);
             }
 
             private boolean inPlayScene() {
-                final GameSceneManager gameScenes = actionContext.ui().gameScenes();
+                final GameSceneManager gameScenes = appContext.ui().gameScenes();
                 return gameScenes.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)
                     || gameScenes.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
             }
 
             private boolean isLevelPlaying() {
-                final GameState gameState = actionContext.currentGameContext().state();
+                final GameState gameState = appContext.currentGameContext().state();
                 return GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };

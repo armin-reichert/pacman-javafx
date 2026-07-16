@@ -32,38 +32,38 @@ public class GameFlowActions {
         actionStartGame = new GameAction(actionContext, "start_game") {
             @Override
             protected void doAction() {
-                actionContext.lifecycle().startPlaying();
+                appContext.lifecycle().startPlaying();
             }
         };
 
         actionQuit = new GameAction(actionContext, "quit") {
             @Override
             protected void doAction() {
-                Logger.info("Call QUIT handler for {}", actionContext.ui().views().assertCurrentView());
-                actionContext.ui().views().assertCurrentView().handleQuit(actionContext);
+                Logger.info("Call QUIT handler for {}", appContext.ui().views().assertCurrentView());
+                appContext.ui().views().assertCurrentView().handleQuit(appContext);
             }
         };
 
         actionLetGameStateExpire = new GameAction(actionContext, "let_game_state_expire") {
             @Override
             protected void doAction() {
-                actionContext.currentGameContext().state().triggerTimeout();
+                appContext.currentGameContext().state().triggerTimeout();
             }
         };
 
         actionRestartIntro = new GameAction(actionContext, "restart_intro") {
             @Override
             protected void doAction() {
-                final GameContext gameContext = actionContext.currentGameContext();
+                final GameContext gameContext = appContext.currentGameContext();
                 final GameState gameState = gameContext.state();
 
                 if (gameState.id() instanceof TestStateID) {
                     gameState.onExit(gameContext);
                 }
 
-                actionContext.lifecycle().suspendPlaying();
-                actionContext.clock().start();
-                gameContext.flow().restartState(actionContext.currentGameContext(), GameStateID.GAME_INTRO);
+                appContext.lifecycle().suspendPlaying();
+                appContext.clock().start();
+                gameContext.flow().restartState(appContext.currentGameContext(), GameStateID.GAME_INTRO);
             }
         };
 
