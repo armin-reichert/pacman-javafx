@@ -15,7 +15,7 @@ public class CommonGameLevelTransitionState extends GameState {
     @Override
     public void onEnter(GameContext context) {
         timer().restartSeconds(2);
-        context.gamePlay().startNextLevel(context.createPlayContext());
+        context.gamePlay().startNextLevel(context);
     }
 
     @Override

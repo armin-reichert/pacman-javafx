@@ -29,7 +29,7 @@ public class GameOverState extends GameState {
         model.setPlaying(false);
         model.lives().setCount(0); // Needed if state entry was triggered by user interaction
 
-        game.updateHighScore(context.createPlayContext());
+        game.updateHighScore(context);
         game.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
 
         context.cheats().clear();

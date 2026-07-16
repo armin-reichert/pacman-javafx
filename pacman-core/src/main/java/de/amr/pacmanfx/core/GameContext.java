@@ -8,8 +8,8 @@ import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.flow.GameFlow;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.simulation.GamePlay;
-import de.amr.pacmanfx.core.simulation.GamePlayContext;
 import de.amr.pacmanfx.core.state.GameState;
 
 /**
@@ -33,11 +33,5 @@ public interface GameContext {
 
     GameModel model();
 
-    default GamePlayContext createPlayContext() {
-        return new GamePlayContext(model().assertLevel(), model(), eventManager());
-    }
-
-    default GamePlayContext createPlayContextWithoutLevel() {
-        return new GamePlayContext(null, model(), eventManager());
-    }
+    GameLevel level();
 }

@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.model.GameModel;
@@ -17,7 +18,6 @@ import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.simulation.CommonGamePlay;
-import de.amr.pacmanfx.core.simulation.GamePlayContext;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.model.*;
 import org.tinylog.Logger;
@@ -119,7 +119,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public GameLevel buildDemoLevel(GamePlayContext playContext) {
+    public GameLevel buildDemoLevel(GameContext playContext) {
         requireNonNull(playContext);
 
         final GameModel model = playContext.model();
@@ -148,7 +148,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public void startLevel(GamePlayContext playContext) {
+    public void startLevel(GameContext playContext) {
         requireNonNull(playContext);
 
         if (!(playContext.model() instanceof TengenMsPacMan_GameModel tengenModel)) {
@@ -178,7 +178,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Playing level
 
     @Override
-    public void activateNextBonus(GamePlayContext playContext) {
+    public void activateNextBonus(GameContext playContext) {
         final GameModel model = playContext.model();
         final GameLevel level = playContext.level();
         final GameEventManager eventManager = playContext.eventManager();

@@ -10,6 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.model.GameModel;
@@ -17,7 +18,6 @@ import de.amr.pacmanfx.core.model.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.*;
-import de.amr.pacmanfx.core.simulation.GamePlayContext;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -100,7 +100,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     }
 
     @Override
-    public GameLevel buildDemoLevel(GamePlayContext playContext) {
+    public GameLevel buildDemoLevel(GameContext playContext) {
         final int demoLevelNumber = 1;
 
         final GameModel model = playContext.model();
@@ -133,7 +133,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
      *
      **/
     @Override
-    public void activateNextBonus(GamePlayContext playContext) {
+    public void activateNextBonus(GameContext playContext) {
         requireNonNull(playContext);
 
         final GameModel model = playContext.model();

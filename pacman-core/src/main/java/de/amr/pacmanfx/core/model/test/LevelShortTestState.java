@@ -30,8 +30,8 @@ public class LevelShortTestState extends GameState {
             ? 25
             : model.rules().lastLevelNumber();
         context.gamePlay().resetForNewGame(model);
-        context.gamePlay().buildNormalLevel(context.createPlayContextWithoutLevel(), 1);
-        context.gamePlay().startLevel(context.createPlayContext());
+        context.gamePlay().buildNormalLevel(context, 1);
+        context.gamePlay().startLevel(context);
         final GameLevel level = model.optLevel().orElseThrow();
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
@@ -61,7 +61,7 @@ public class LevelShortTestState extends GameState {
             level.clearMessage();
         }
         else if (timer().atSecond(START + 3)) {
-            context.gamePlay().activateNextBonus(context.createPlayContext());
+            context.gamePlay().activateNextBonus(context);
         }
         else if (timer().atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
@@ -70,7 +70,7 @@ public class LevelShortTestState extends GameState {
             });
         }
         else if (timer().atSecond(START + 6)) {
-            context.gamePlay().activateNextBonus(context.createPlayContext());
+            context.gamePlay().activateNextBonus(context);
         }
         else if (timer().atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {
@@ -88,7 +88,7 @@ public class LevelShortTestState extends GameState {
                 context.flow().restartState(GameStateID.BOOT);
             } else {
                 waitForTimeout();
-                context.gamePlay().startNextLevel(context.createPlayContext());
+                context.gamePlay().startNextLevel(context);
             }
         } else {
             model.optLevel().flatMap(GameLevel::optBonus).ifPresent(bonus -> bonus.update(level, context.eventManager()));

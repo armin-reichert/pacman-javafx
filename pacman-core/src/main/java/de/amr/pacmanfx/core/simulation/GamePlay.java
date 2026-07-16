@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.simulation;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.Ghost;
@@ -26,43 +27,43 @@ public interface GamePlay {
 
     GameLevel createLevel(GameModel model, int levelNumber, boolean demoLevel);
 
-    GameLevel buildDemoLevel(GamePlayContext playContext);
+    GameLevel buildDemoLevel(GameContext playContext);
 
-    void buildNormalLevel(GamePlayContext playContext, int levelNumber);
+    void buildNormalLevel(GameContext playContext, int levelNumber);
 
     boolean isDemoLevelRunning(GameModel model);
 
     boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
-    void startLevel(GamePlayContext playContext);
+    void startLevel(GameContext playContext);
 
-    void startNextLevel(GamePlayContext playContext);
+    void startNextLevel(GameContext playContext);
 
     void showLevelMessage(GameLevel level, GameLevelMessageType type);
 
     // Playing level
 
-    HuntingStepResult hunt(GamePlayContext playContext);
+    HuntingStepResult hunt(GameContext playContext);
 
-    void onEatPellet(GamePlayContext playContext, Vector2i tile);
+    void onEatPellet(GameContext playContext, Vector2i tile);
 
-    void onEatEnergizer(GamePlayContext playContext, Vector2i tile);
+    void onEatEnergizer(GameContext playContext, Vector2i tile);
 
-    void onEatBonus(GamePlayContext playContext, Bonus bonus);
+    void onEatBonus(GameContext playContext, Bonus bonus);
 
-    void onEatGhost(GamePlayContext playContext, Ghost eatenGhost);
+    void onEatGhost(GameContext playContext, Ghost eatenGhost);
 
-    void activateNextBonus(GamePlayContext playContext);
+    void activateNextBonus(GameContext playContext);
 
-    void startPacPowerMode(GamePlayContext playContext, Pac pac);
+    void startPacPowerMode(GameContext playContext, Pac pac);
 
-    void updatePacPowerMode(GamePlayContext playContext, Pac pac);
+    void updatePacPowerMode(GameContext playContext, Pac pac);
 
     void onLevelCompleted(GameLevel level);
 
     // Scoring
 
-    void scorePoints(GamePlayContext playContext, int points, int levelNumber);
+    void scorePoints(GameContext playContext, int points, int levelNumber);
 
-    void updateHighScore(GamePlayContext playContext);
+    void updateHighScore(GameContext playContext);
 }

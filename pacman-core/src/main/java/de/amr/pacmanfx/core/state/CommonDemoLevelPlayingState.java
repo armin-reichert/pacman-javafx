@@ -29,7 +29,7 @@ public class CommonDemoLevelPlayingState extends GameState {
     @Override
     public void onEnter(GameContext context) {
         final GameModel model = context.model();
-        model.setLevel(context.gamePlay().buildDemoLevel(context.createPlayContextWithoutLevel()));
+        model.setLevel(context.gamePlay().buildDemoLevel(context));
         model.hudState().showCredit().hideLivesCounter();
         context.eventManager().publishGameEvent(new LevelCreatedEvent(model.assertLevel()));
     }
@@ -72,7 +72,7 @@ public class CommonDemoLevelPlayingState extends GameState {
             level.huntingTimer().startFirstPhase(context, level.number());
         }
         else if (tick > huntingStartTick) {
-            final HuntingStepResult result = context.gamePlay().hunt(context.createPlayContext());
+            final HuntingStepResult result = context.gamePlay().hunt(context);
             model.setHuntingStepResult(result);
             context.flow().enterState(computeNextState(model.huntingStepResult(), level));
         }

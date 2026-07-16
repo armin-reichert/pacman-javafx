@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GamePlay;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.WorldMapSelectionMode;
-import de.amr.pacmanfx.core.simulation.GamePlayContext;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
@@ -18,7 +18,7 @@ public class PacManXXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
     private static final int[] DEMO_LEVEL_NUMBERS = { 1, 3, 6, 10, 14, 18 };
 
     @Override
-    public GameLevel buildDemoLevel(GamePlayContext playContext) {
+    public GameLevel buildDemoLevel(GameContext playContext) {
         final PacManXXL_MsPacMan_GameModel xxlModel = (PacManXXL_MsPacMan_GameModel) playContext.model();
 
         xxlModel.mapSelector().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);

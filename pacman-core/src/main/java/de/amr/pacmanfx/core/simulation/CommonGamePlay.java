@@ -8,6 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
@@ -93,7 +94,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void buildNormalLevel(GamePlayContext playContext, int levelNumber) {
+    public void buildNormalLevel(GameContext playContext, int levelNumber) {
         requireNonNull(playContext);
         requireValidLevelNumber(levelNumber);
 
@@ -111,7 +112,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void startNextLevel(GamePlayContext playContext) {
+    public void startNextLevel(GameContext playContext) {
         requireNonNull(playContext);
 
         final GameModel model = playContext.model();
@@ -137,7 +138,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public HuntingStepResult hunt(GamePlayContext playContext) {
+    public HuntingStepResult hunt(GameContext playContext) {
         final GameModel model = playContext.model();
         final GameLevel level = playContext.level();
         final GameEventManager eventManager = playContext.eventManager();
@@ -172,7 +173,7 @@ public abstract class CommonGamePlay implements GamePlay {
         return result;
     }
 
-    private void evalCollisions(GamePlayContext playContext, HuntingStepResult result) {
+    private void evalCollisions(GameContext playContext, HuntingStepResult result) {
         final GameLevel level = playContext.level();
 
         evalFoodFound(playContext, result);
@@ -190,7 +191,7 @@ public abstract class CommonGamePlay implements GamePlay {
         }
     }
 
-    private void evalFoodFound(GamePlayContext playContext, HuntingStepResult result) {
+    private void evalFoodFound(GameContext playContext, HuntingStepResult result) {
         final GameModel model = playContext.model();
         final GameLevel level = playContext.level();
         final GameEventManager eventManager = playContext.eventManager();
@@ -228,7 +229,7 @@ public abstract class CommonGamePlay implements GamePlay {
         );
     }
 
-    private void evalGhostsKilled(GamePlayContext playContext, HuntingStepResult result) {
+    private void evalGhostsKilled(GameContext playContext, HuntingStepResult result) {
         if (result.detectedPacGhostCollision()) {
             // Frightened ghosts get killed when colliding with Pac
             result.ghostsCollidingWithPac().stream()
@@ -255,7 +256,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void onEatPellet(GamePlayContext playContext, Vector2i tile) {
+    public void onEatPellet(GameContext playContext, Vector2i tile) {
         requireNonNull(playContext);
         requireNonNull(tile);
 
@@ -268,7 +269,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void onEatEnergizer(GamePlayContext playContext, Vector2i tile) {
+    public void onEatEnergizer(GameContext playContext, Vector2i tile) {
         requireNonNull(playContext);
         requireNonNull(tile);
 
@@ -284,7 +285,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void onEatBonus(GamePlayContext playContext, Bonus bonus) {
+    public void onEatBonus(GameContext playContext, Bonus bonus) {
         requireNonNull(playContext);
         requireNonNull(bonus);
 
@@ -301,7 +302,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void onEatGhost(GamePlayContext playContext, Ghost eatenGhost) {
+    public void onEatGhost(GameContext playContext, Ghost eatenGhost) {
         requireNonNull(playContext);
         requireNonNull(eatenGhost);
 
@@ -356,7 +357,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void startPacPowerMode(GamePlayContext playContext, Pac pac) {
+    public void startPacPowerMode(GameContext playContext, Pac pac) {
         requireNonNull(playContext);
         requireNonNull(pac);
 
@@ -377,7 +378,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void updatePacPowerMode(GamePlayContext playContext, Pac pac) {
+    public void updatePacPowerMode(GameContext playContext, Pac pac) {
         requireNonNull(playContext);
         requireNonNull(pac);
 
@@ -401,7 +402,7 @@ public abstract class CommonGamePlay implements GamePlay {
     // Scoring
 
     @Override
-    public void scorePoints(GamePlayContext playContext, int points, int levelNumber) {
+    public void scorePoints(GameContext playContext, int points, int levelNumber) {
         requireNonNull(playContext);
         requireValidLevelNumber(levelNumber);
 
@@ -430,7 +431,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void updateHighScore(GamePlayContext playContext) {
+    public void updateHighScore(GameContext playContext) {
         final GameModel model = playContext.model();
 
         final PropertyFileScore highScore;

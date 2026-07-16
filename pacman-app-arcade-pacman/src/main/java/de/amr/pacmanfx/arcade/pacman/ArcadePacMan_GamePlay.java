@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.model.GameModel;
@@ -18,7 +19,6 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.simulation.CommonGamePlay;
-import de.amr.pacmanfx.core.simulation.GamePlayContext;
 import de.amr.pacmanfx.core.steering.RouteBasedSteering;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 
@@ -144,7 +144,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public GameLevel buildDemoLevel(GamePlayContext playContext) {
+    public GameLevel buildDemoLevel(GameContext playContext) {
         requireNonNull(playContext);
 
         final GameModel model = playContext.model();
@@ -171,7 +171,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public void startLevel(GamePlayContext playContext) {
+    public void startLevel(GameContext playContext) {
         requireNonNull(playContext);
 
         final GameModel model = playContext.model();
@@ -190,19 +190,19 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Playing level
 
     @Override
-    public void onEatPellet(GamePlayContext playContext, Vector2i tile) {
+    public void onEatPellet(GameContext playContext, Vector2i tile) {
         super.onEatPellet(playContext, tile);
         checkRedGhostCruiseElroyActivation(playContext.level());
     }
 
     @Override
-    public void onEatEnergizer(GamePlayContext playContext, Vector2i tile) {
+    public void onEatEnergizer(GameContext playContext, Vector2i tile) {
         super.onEatEnergizer(playContext, tile);
         checkRedGhostCruiseElroyActivation(playContext.level());
     }
 
     @Override
-    public void activateNextBonus(GamePlayContext playContext) {
+    public void activateNextBonus(GameContext playContext) {
         requireNonNull(playContext);
 
         final GameModel model = playContext.model();

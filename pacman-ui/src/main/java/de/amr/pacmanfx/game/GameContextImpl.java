@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.event.GameEventManagerImpl;
 import de.amr.pacmanfx.core.flow.GameFlow;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.simulation.GamePlay;
 
 import static java.util.Objects.requireNonNull;
@@ -52,6 +53,11 @@ public class GameContextImpl implements GameContext {
     @Override
     public GameModel model() {
         return gameVariant.gameModel();
+    }
+
+    @Override
+    public GameLevel level() {
+        return model().optLevel().orElse(null);
     }
 
     @Override

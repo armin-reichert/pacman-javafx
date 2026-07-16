@@ -46,8 +46,8 @@ public class LevelMediumTestState extends GameState {
         timer().restartSeconds(TEST_DURATION_SEC);
 
         gamePlay.resetForNewGame(model);
-        gamePlay.buildNormalLevel(context.createPlayContextWithoutLevel(), 1);
-        gamePlay.startLevel(context.createPlayContext());
+        gamePlay.buildNormalLevel(context, 1);
+        gamePlay.startLevel(context);
         configureLevelForTest(context);
 
         // Note: This event is very important because it triggers the creation of the actor animations!
@@ -70,13 +70,13 @@ public class LevelMediumTestState extends GameState {
             }
             else {
                 // Test next level
-                context.gamePlay().startNextLevel(context.createPlayContext());
+                context.gamePlay().startNextLevel(context);
                 configureLevelForTest(context);
                 timer().restartSeconds(TEST_DURATION_SEC);
             }
         }
         else {
-            final HuntingStepResult result = context.gamePlay().hunt(context.createPlayContext());
+            final HuntingStepResult result = context.gamePlay().hunt(context);
             model.setHuntingStepResult(result);
 
             if (model.rules().isLevelCompleted(level)) {

@@ -28,7 +28,7 @@ public class GameStartingState extends GameState {
     public void onEnter(GameContext context) {
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
         context.gamePlay().resetForNewGame(model);
-        context.gamePlay().buildNormalLevel(context.createPlayContextWithoutLevel(), model.startLevelNumber());
+        context.gamePlay().buildNormalLevel(context, model.startLevelNumber());
         context.eventManager().publishGameEvent(new GameStartedEvent(context));
     }
 
@@ -39,7 +39,7 @@ public class GameStartingState extends GameState {
         final long tick = timer().tickCount();
 
         if (tick == TICK_SHOW_READY) {
-            context.gamePlay().startLevel(context.createPlayContext());
+            context.gamePlay().startLevel(context);
             // Note: This event is very important because it triggers the creation of the actor animations!
             context.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }

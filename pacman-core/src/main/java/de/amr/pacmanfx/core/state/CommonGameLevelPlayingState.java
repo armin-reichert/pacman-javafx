@@ -44,7 +44,7 @@ public class CommonGameLevelPlayingState extends GameState {
         final GameModel model = context.model();
         final GameLevel level = model.assertLevel();
 
-        final HuntingStepResult result = context.gamePlay().hunt(context.createPlayContext());
+        final HuntingStepResult result = context.gamePlay().hunt(context);
         logHuntingStepResult(result);
         model.setHuntingStepResult(result);
 
