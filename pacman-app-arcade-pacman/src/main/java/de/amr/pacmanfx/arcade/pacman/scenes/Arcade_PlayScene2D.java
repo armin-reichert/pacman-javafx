@@ -47,7 +47,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     @Override
     public void onTick(GameContext gameContext) {
         gameContext().model().optLevel().ifPresent(level -> {
-            ActorAnimationManager.ensureActorAnimationsCreated(actionContext(), level);
+            ActorAnimationManager.ensureActorAnimationsCreated(appContext(), level);
             updateLivesCounter(gameState(), gameModel(), level.entities().pac());
             optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(gameContext(), level));
         });
@@ -61,8 +61,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
-        final TranslationManager translations = actionContext().ui().translations();
-        final CheatActions cheatActions = actionContext().commonActions().cheatActions();
+        final TranslationManager translations = appContext().ui().translations();
+        final CheatActions cheatActions = appContext().commonActions().cheatActions();
 
         final var contextMenu = new ContextMenu();
         addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
@@ -83,8 +83,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
             }
         });
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, actionContext().ui().viewModel().mutedProperty, "context_menu.muted");
-        addLocalizedActionItem(contextMenu, translations, actionContext().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedCheckBox(contextMenu, translations, appContext().ui().viewModel().mutedProperty, "context_menu.muted");
+        addLocalizedActionItem(contextMenu, translations, appContext().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -116,19 +116,19 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     }
 
     private void acceptNormalLevel(GameLevel level) {
-        actionBindings().registerAllBindings(actionContext().commonActions().steeringActions().bindings());
-        actionBindings().registerAllBindings(actionContext().commonActions().cheatActions().bindings());
+        actionBindings().registerAllBindings(appContext().commonActions().steeringActions().bindings());
+        actionBindings().registerAllBindings(appContext().commonActions().cheatActions().bindings());
         Logger.info(actionBindings());
-        actionContext().ui().sounds().setEnabled(true);
+        appContext().ui().sounds().setEnabled(true);
         Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
     private void acceptDemoLevel() {
-        final Arcade_Actions actions = actionContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = appContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings());
         Logger.info(actionBindings());
-        actionContext().ui().sounds().setEnabled(false);
+        appContext().ui().sounds().setEnabled(false);
         Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
     }
 

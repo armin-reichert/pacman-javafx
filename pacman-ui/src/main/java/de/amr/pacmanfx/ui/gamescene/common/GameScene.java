@@ -23,7 +23,7 @@ public interface GameScene extends GameSceneGameEventHandler, QuitHandler, Dispo
 
     Input input();
 
-    GameAppContext actionContext();
+    GameAppContext appContext();
 
     GameContext gameContext();
 

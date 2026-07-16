@@ -25,12 +25,12 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameScene implements GameScene, Disposable {
 
-    private final GameAppContext actionContext;
+    private final GameAppContext appContext;
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for " + getClass().getSimpleName());
 
-    public AbstractGameScene(GameAppContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+    public AbstractGameScene(GameAppContext appContext) {
+        this.appContext = requireNonNull(appContext);
     }
 
     /**
@@ -66,18 +66,13 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
     }
 
     @Override
-    public GameAppContext actionContext() {
-        return actionContext;
-    }
-
-    @Override
-    public Input input() {
-        return actionContext.input();
+    public GameAppContext appContext() {
+        return appContext;
     }
 
     @Override
     public GameContext gameContext() {
-        return actionContext.currentGameContext();
+        return appContext.currentGameContext();
     }
 
     @Override
@@ -91,13 +86,18 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
     }
 
     @Override
+    public Input input() {
+        return appContext.input();
+    }
+
+    @Override
     public Optional<SubScene> optSubSceneFX() {
         return Optional.empty();
     }
 
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
-        return actionContext.variants().currentVariant().config().optSoundEffects();
+        return appContext.variants().currentVariant().config().optSoundEffects();
     }
 
     @Override
@@ -109,7 +109,7 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
 
     @Override
     public void handleQuit(GameAppContext ac) {
-        Logger.info("Game scene {} quitted", getClass().getSimpleName());
+        Logger.info("Game scene {} quit", getClass().getSimpleName());
         onDeactivate();
     }
 }

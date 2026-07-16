@@ -64,7 +64,7 @@ public interface PlayScene3D_GameEventHandler extends GameSceneGameEventHandler 
             return;
         }
         if (gameState.id() instanceof TestStateID) {
-            handleTestState(actionContext().ui().viewModel().common3D);
+            handleTestState(appContext().ui().viewModel().common3D);
         }
         else if (GameStateID.GAME_OR_LEVEL_STARTING.identifies(newState)) {
             onStartingGameOrLevel();
@@ -166,7 +166,7 @@ public interface PlayScene3D_GameEventHandler extends GameSceneGameEventHandler 
             }
             else {
                 level3D.pellet3DAtTile(tile).ifPresent(pellet3D -> removePelletAfterDelay(level3D, pellet3D));
-                final long tick = actionContext().clock().currentTick();
+                final long tick = appContext().clock().currentTick();
                 optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
             }
         }
@@ -274,8 +274,8 @@ public interface PlayScene3D_GameEventHandler extends GameSceneGameEventHandler 
             final Ghost3D ghost3D = level3D.ghost3D(ghost.personality());
             final int killIndex = level3D.level().indexInGhostKilledChain(ghost);
 
-            final Factory3D factory3D = actionContext().variants().currentVariant().config().factory3D();
-            final Node numberBox3D = factory3D.createNumberBox3D(actionContext().variants().currentVariant().config(), killIndex);
+            final Factory3D factory3D = appContext().variants().currentVariant().config().factory3D();
+            final Node numberBox3D = factory3D.createNumberBox3D(appContext().variants().currentVariant().config(), killIndex);
             numberBox3D.setTranslateX(ghost3D.getTranslateX());
             numberBox3D.setTranslateY(ghost3D.getTranslateY());
             numberBox3D.setTranslateZ(ghost3D.getTranslateZ());
@@ -295,7 +295,7 @@ public interface PlayScene3D_GameEventHandler extends GameSceneGameEventHandler 
         final GameLevel level = gameContext().model().assertLevel();
         final boolean cutSceneFollows = !level.isDemoLevel()
             && gameContext().model().rules().cutSceneNumberAfterLevel(level.number()).isPresent();
-        final GameViewModel viewModel = actionContext().ui().viewModel();
+        final GameViewModel viewModel = appContext().ui().viewModel();
 
         gameScene().scoreOpacity.set(0);
 
@@ -358,7 +358,7 @@ public interface PlayScene3D_GameEventHandler extends GameSceneGameEventHandler 
     private void onGameOver() {
         GameLevel3D level3D = assertLevel3D();
         if (!level3D.level().isDemoLevel() && RandomNumberSupport.chance(0.25)) {
-            actionContext().ui().shortMessage(Duration.seconds(2.5), textPicker().selectNextText());
+            appContext().ui().shortMessage(Duration.seconds(2.5), textPicker().selectNextText());
         }
         level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).stop();
         level3D.cleanupFoodAndParticles();

@@ -20,13 +20,13 @@ public class ArcadePacMan_StartScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = actionContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = appContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
         actionBindings().registerAllBindings(actions.gameStartActionBindings());
     }
 
     @Override
     public void onDeactivate() {
-        actionContext().ui().sounds().stopAndDisposeVoice();
+        appContext().ui().sounds().stopAndDisposeVoice();
         actionBindings().dispose();
     }
 

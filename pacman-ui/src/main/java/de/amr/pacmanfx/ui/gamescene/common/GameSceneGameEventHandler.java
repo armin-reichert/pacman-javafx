@@ -20,16 +20,16 @@ public interface GameSceneGameEventHandler extends DefaultGameEventListener {
 
     GameScene gameScene();
 
-    default GameAppContext actionContext() {
-        return gameScene().actionContext();
+    default GameAppContext appContext() {
+        return gameScene().appContext();
     }
 
     default GameContext gameContext() {
-        return actionContext().currentGameContext();
+        return appContext().currentGameContext();
     }
 
     default Optional<GameSoundEffects> optSoundEffects() {
-        return actionContext().variants().currentVariant().config().optSoundEffects();
+        return appContext().variants().currentVariant().config().optSoundEffects();
     }
 
     @Override

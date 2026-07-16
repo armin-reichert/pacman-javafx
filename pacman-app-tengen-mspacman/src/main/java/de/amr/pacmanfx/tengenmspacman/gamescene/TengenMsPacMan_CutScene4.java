@@ -69,8 +69,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariantConfig gameVariantConfig = actionContext().variants().currentVariant().config();
-        final SpriteAnimationContainer spriteAnimations = actionContext().ui().sprites().animations();
+        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
+        final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
 
         clapperboard = new Clapperboard(4, "THE END");
         clapperboard.setPosition(tilesPx(3), tilesPx(10));
@@ -86,17 +86,17 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         juniors = new ArrayList<>();
         juniorCreationTimes = new ArrayList<>();
 
-        actionContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_4);
+        appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_4);
     }
 
     @Override
     public void onDeactivate() {
-        actionContext().ui().sounds().stop(PacManGameSoundID.INTERMISSION_4);
+        appContext().ui().sounds().stop(PacManGameSoundID.INTERMISSION_4);
     }
 
     @Override
     public void onTick(GameContext gameContext) {
-        final GameVariantConfig gameVariantConfig = actionContext().variants().currentVariant().config();
+        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
         final long gameStateTick = gameState().timer().tickCount();
 
         clapperboard.tick();
@@ -176,7 +176,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         junior.setPosition((float) randomX, unscaledHeight() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(gameVariant.createPacAnimations(actionContext().ui().sprites().animations()));
+        junior.setAnimations(gameVariant.createPacAnimations(appContext().ui().sprites().animations()));
         junior.animations().select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);
@@ -187,7 +187,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             case 2 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_2;
             default -> throw new IllegalArgumentException();
         };
-        actionContext().ui().sounds().loop(soundID);
+        appContext().ui().sounds().loop(soundID);
 
         Logger.info("Junior spawned at tick {}", tick);
     }

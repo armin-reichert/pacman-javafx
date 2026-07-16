@@ -54,10 +54,10 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     }
 
     public void draw(AbstractGameScene2D gameScene2D, long tick) {
-        final GameVariantConfig gameVariantConfig = gameScene2D.actionContext().variants().currentVariant().config();
+        final GameVariantConfig gameVariantConfig = gameScene2D.appContext().variants().currentVariant().config();
         final var gameScene = (TengenMsPacMan_OptionsScene) gameScene2D;
         final var gameModel = (TengenMsPacMan_GameModel) gameScene.gameModel();
-        final var uiSettings = gameScene2D.actionContext().getExtensionValue(
+        final var uiSettings = gameScene2D.appContext().getExtensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
         clearCanvas();
@@ -66,7 +66,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         ctx.setFont(arcadeFont8());
 
         if (uiSettings.joypadBindingsDisplayed.get()) {
-            drawJoypadKeyBinding(gameScene2D.actionContext().input().joypad().currentKeyBinding());
+            drawJoypadKeyBinding(gameScene2D.appContext().input().joypad().currentKeyBinding());
         }
 
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), gameScene.unscaledWidth(), TS, 20);
@@ -138,7 +138,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), gameScene.unscaledWidth(), TS, 212);
 
-        if (gameScene2D.actionContext().ui().viewModel().debugModeOnProperty.get()) {
+        if (gameScene2D.appContext().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(gameScene2D, tick);
         }
     }

@@ -61,8 +61,8 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariantConfig gameVariantConfig = actionContext().variants().currentVariant().config();
-        final SpriteAnimationContainer spriteAnimationContainer = actionContext().ui().sprites().animations();
+        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
+        final SpriteAnimationContainer spriteAnimationContainer = appContext().ui().sprites().animations();
         final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
@@ -105,7 +105,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void startTheShow() {
-        actionContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
+        appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
         setDressState(NailDressState.NAIL);
     }
 

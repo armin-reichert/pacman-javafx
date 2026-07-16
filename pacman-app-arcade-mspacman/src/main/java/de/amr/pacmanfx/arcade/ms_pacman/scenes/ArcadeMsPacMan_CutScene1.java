@@ -72,8 +72,8 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig gameVariantConfig = actionContext().variants().currentVariant().config();
-        final SpriteAnimationContainer spriteAnimations = actionContext().ui().sprites().animations();
+        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
+        final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) gameVariantConfig.spriteSheet();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
@@ -110,7 +110,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (sceneTimer.atSecond(1)) {
-            actionContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
+            appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
         } else if (sceneTimer.hasExpired()) {
             enterStateChasedByGhosts();
         }

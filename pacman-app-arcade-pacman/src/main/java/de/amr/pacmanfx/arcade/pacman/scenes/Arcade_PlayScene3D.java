@@ -21,13 +21,13 @@ public class Arcade_PlayScene3D extends PlayScene3D {
     public void replaceActionBindings(GameLevel level) {
         actionBindings().dispose();
 
-        final Arcade_Actions actions = actionContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = appContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         if (level.isDemoLevel()) {
             actionBindings().registerAllBindings(actions.gameStartActionBindings());
         } else {
-            actionBindings().registerAllBindings(actionContext().commonActions().steeringActions().bindings());
-            actionBindings().registerAllBindings(actionContext().commonActions().cheatActions().bindings());
+            actionBindings().registerAllBindings(appContext().commonActions().steeringActions().bindings());
+            actionBindings().registerAllBindings(appContext().commonActions().cheatActions().bindings());
         }
         bindActions();
         Logger.info(actionBindings());

@@ -92,7 +92,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends GameSceneGameEventH
 
     @Override
     default void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = actionContext().clock().currentTick();
+        final long tick = appContext().clock().currentTick();
         optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 
@@ -113,6 +113,6 @@ public interface Arcade_PlayScene2D_GameEventHandler extends GameSceneGameEventH
 
     @Override
     default void onTestStarted(TestStartedEvent e) {
-        actionContext().ui().shortMessage("Testing level %d".formatted(e.level().number()));
+        appContext().ui().shortMessage("Testing level %d".formatted(e.level().number()));
     }
 }

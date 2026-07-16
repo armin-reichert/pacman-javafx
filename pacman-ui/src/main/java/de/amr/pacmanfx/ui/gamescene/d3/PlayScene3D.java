@@ -141,8 +141,8 @@ public class PlayScene3D extends AbstractGameScene
             scores3D.showScore(score.points(), score.levelNumber());
         } else {
             scores3D.showTextForScore(
-                actionContext().ui().translations().translate("score.game_over"),
-                actionContext().variants().currentVariant().config().assets().color("color.game_over_message"));
+                appContext().ui().translations().translate("score.game_over"),
+                appContext().variants().currentVariant().config().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -178,9 +178,9 @@ public class PlayScene3D extends AbstractGameScene
             Logger.info("Old 3D game level is disposed...");
             level3D.dispose();
         }
-        final GameViewModel viewModel = actionContext().ui().viewModel();
+        final GameViewModel viewModel = appContext().ui().viewModel();
 
-        level3D = new GameLevel3D(viewModel, gameContext(), level, actionContext().variants().currentVariant().config());
+        level3D = new GameLevel3D(viewModel, gameContext(), level, appContext().variants().currentVariant().config());
         decorate(level3D);
         level3DEmbedder.getChildren().setAll(level3D);
 
@@ -209,7 +209,7 @@ public class PlayScene3D extends AbstractGameScene
 
     @Override
     public void onActivate() {
-        final Common3DSettingsModel settings3D = actionContext().ui().viewModel().common3D;
+        final Common3DSettingsModel settings3D = appContext().ui().viewModel().common3D;
         perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIdProperty);
         settings3D.drawModeProperty.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
@@ -219,7 +219,7 @@ public class PlayScene3D extends AbstractGameScene
     @Override
     public void onDeactivate() {
         perspectiveManager.activeIDProperty().unbind();
-        actionContext().ui().viewModel().common3D.drawModeProperty.removeListener(drawModeChangeListener);
+        appContext().ui().viewModel().common3D.drawModeProperty.removeListener(drawModeChangeListener);
         disposeContextMenu();
         actionBindings().dispose();
     }
@@ -279,7 +279,7 @@ public class PlayScene3D extends AbstractGameScene
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
-        contextMenu = new PlaySceneContextMenu(actionContext());
+        contextMenu = new PlaySceneContextMenu(appContext());
         return Optional.of(contextMenu);
     }
 
@@ -305,8 +305,8 @@ public class PlayScene3D extends AbstractGameScene
         final Scores3D oldScores3D = scores3D;
 
         scores3D = new Scores3D(
-            actionContext().ui().translations().translate("score.score"),
-            actionContext().ui().translations().translate("score.high_score"),
+            appContext().ui().translations().translate("score.score"),
+            appContext().ui().translations().translate("score.high_score"),
             GlobalAssets.PredefinedFont.ARCADE8.font());
 
         scores3D.textOpacity.bind(scoreOpacity);

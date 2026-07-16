@@ -63,13 +63,13 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariantConfig gameVariantConfig = actionContext().variants().currentVariant().config();
+        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
 
         gameModel().hudState().hide();
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) gameVariantConfig.spriteSheet();
 
-        final var actions = actionContext().getExtensionValue(
+        final var actions = appContext().getExtensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
@@ -119,8 +119,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameVariantConfig gameVariantConfig = scene.actionContext().variants().currentVariant().config();
-                final SpriteAnimationContainer spriteAnimationContainer = scene.actionContext().ui().sprites().animations();
+                final GameVariantConfig gameVariantConfig = scene.appContext().variants().currentVariant().config();
+                final SpriteAnimationContainer spriteAnimationContainer = scene.appContext().ui().sprites().animations();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 

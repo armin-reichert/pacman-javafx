@@ -102,7 +102,7 @@ public interface GameEventHandlerMixin extends GameSceneGameEventHandler {
 
     @Override
     default void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = actionContext().clock().currentTick();
+        final long tick = appContext().clock().currentTick();
         gameScene().optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 
