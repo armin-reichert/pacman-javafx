@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.scene.input.KeyCode;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public final class CheatActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public CheatActions(GameActionContext actionContext) {
+    public CheatActions(GameAppContext actionContext) {
 
         actionAddLives = new GameAction(actionContext, "cheat_add_lives") {
             @Override
@@ -256,7 +256,7 @@ public final class CheatActions {
 
     // Helpers
 
-    private void setAutopilot(GameActionContext actionContext, boolean auto) {
+    private void setAutopilot(GameAppContext actionContext, boolean auto) {
         final GameCheats cheats = actionContext.currentGameContext().cheats();
         cheats.pacUsingAutopilotProperty().set(auto);
 
@@ -264,7 +264,7 @@ public final class CheatActions {
         actionContext.ui().sounds().playVoice(auto ? GlobalAssets.Voice.AUTOPILOT_ON.media() : GlobalAssets.Voice.AUTOPILOT_OFF.media());
     }
 
-    private void setPacImmune(GameActionContext actionContext, boolean immune) {
+    private void setPacImmune(GameAppContext actionContext, boolean immune) {
         final GameCheats cheats = actionContext.currentGameContext().cheats();
         cheats.pacImmuneProperty().set(immune);
 
@@ -272,7 +272,7 @@ public final class CheatActions {
         actionContext.ui().sounds().playVoice(immune ? GlobalAssets.Voice.IMMUNITY_ON.media() : GlobalAssets.Voice.IMMUNITY_OFF.media());
     }
 
-    private Optional<GameLevel> normalLevel(GameActionContext actionContext) {
+    private Optional<GameLevel> normalLevel(GameAppContext actionContext) {
         return actionContext.currentGameContext().model().optLevel().filter(level -> !level.isDemoLevel());
     }
 }

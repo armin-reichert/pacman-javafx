@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.model.GameRules;
 import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.input.KeyCode;
 
@@ -39,7 +39,7 @@ public final class CommonGameActions {
 
     private final Set<ActionKeyBinding> commonBindings;
 
-    public CommonGameActions(GameActionContext actionContext) {
+    public CommonGameActions(GameAppContext actionContext) {
         simulationActions = new SimulationActions(actionContext);
         gameFlowActions = new GameFlowActions(actionContext);
         steeringActions = new SteeringActions(actionContext);

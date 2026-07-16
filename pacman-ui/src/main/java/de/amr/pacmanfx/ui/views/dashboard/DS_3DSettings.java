@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -39,7 +39,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void setGameActionContext(GameActionContext actionContext) {
+    public void setGameActionContext(GameAppContext actionContext) {
         final GameViewModel viewModel = actionContext.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
@@ -96,7 +96,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void update(GameActionContext actionContext) {
+    public void update(GameAppContext actionContext) {
         super.update(actionContext);
 
         final GameViewModel viewModel = actionContext.ui().viewModel();
@@ -116,14 +116,14 @@ public class DS_3DSettings extends GameDashboardSection {
         cbWireframeMode.setSelected(viewModel.common3D.drawModeProperty.get() == DrawMode.LINE);
     }
 
-    private String subSceneSizeInfo(GameActionContext actionContext) {
+    private String subSceneSizeInfo(GameAppContext actionContext) {
         return actionContext.optCurrentGameScene()
             .flatMap(GameScene::optSubSceneFX)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
-    private String subSceneCameraInfo(GameActionContext actionContext) {
+    private String subSceneCameraInfo(GameAppContext actionContext) {
         final GameScene gameScene = actionContext.optCurrentGameScene().orElse(null);
 
         if (gameScene == null) return NO_INFO;
@@ -137,7 +137,7 @@ public class DS_3DSettings extends GameDashboardSection {
             .orElse(NO_INFO);
     }
 
-    private String sceneSizeInfo(GameActionContext actionContext) {
+    private String sceneSizeInfo(GameAppContext actionContext) {
         final GameModel gameModel = actionContext.currentGameContext().model();
         final GameScene gameScene = actionContext.optCurrentGameScene().orElse(null);
 

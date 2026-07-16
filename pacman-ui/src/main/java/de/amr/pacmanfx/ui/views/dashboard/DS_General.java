@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.model.GameViewModel;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.control.Button;
@@ -26,7 +26,7 @@ public class DS_General extends GameDashboardSection {
     }
 
     @Override
-    public void setGameActionContext(GameActionContext actionContext) {
+    public void setGameActionContext(GameAppContext actionContext) {
         final GameViewModel viewModel = actionContext.ui().viewModel();
         final GameClock gameClock = actionContext.clock();
 

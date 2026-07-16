@@ -10,7 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.core.state.GameStateID;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
@@ -19,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 
 class PacManXXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    public PacManXXL_PacMan_GameSceneConfig(GameActionContext actionContext) {
+    public PacManXXL_PacMan_GameSceneConfig(GameAppContext actionContext) {
         super(actionContext);
     }
 

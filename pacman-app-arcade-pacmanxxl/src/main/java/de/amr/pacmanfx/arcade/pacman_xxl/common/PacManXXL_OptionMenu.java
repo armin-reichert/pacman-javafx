@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuSettings;
@@ -35,7 +35,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     private final ChaseAnimation chaseAnimation;
 
-    private GameActionContext actionContext;
+    private GameAppContext actionContext;
 
     private ObservableValue<Double> scaling;
 
@@ -80,7 +80,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             meMapOrder.value());
     }
 
-    public void init(GameActionContext actionContext) {
+    public void init(GameAppContext actionContext) {
         this.actionContext = requireNonNull(actionContext);
 
         scaling = createScalingValue(actionContext.ui().window().stage().heightProperty());

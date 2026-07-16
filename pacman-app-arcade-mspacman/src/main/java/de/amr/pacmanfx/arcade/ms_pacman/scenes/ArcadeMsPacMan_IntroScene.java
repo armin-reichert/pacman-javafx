@@ -23,7 +23,7 @@ import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
     private int numTicksBeforeRising;
 
-    public ArcadeMsPacMan_IntroScene(GameActionContext actionContext) {
+    public ArcadeMsPacMan_IntroScene(GameAppContext actionContext) {
         super(actionContext);
         sceneFlow = new StateMachine<>(List.of(SceneState.values()));
     }

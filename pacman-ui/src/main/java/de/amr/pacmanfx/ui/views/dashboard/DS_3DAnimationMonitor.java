@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -100,13 +100,13 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
     }
 
     @Override
-    public void setGameActionContext(GameActionContext actionContext) {
+    public void setGameActionContext(GameAppContext actionContext) {
         tableView.prefHeightProperty().bind(actionContext.ui().window().stage().heightProperty()
             .map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
     }
 
     @Override
-    public void update(GameActionContext actionContext) {
+    public void update(GameAppContext actionContext) {
         super.update(actionContext);
 
         final AnimationRegistry animationSet =

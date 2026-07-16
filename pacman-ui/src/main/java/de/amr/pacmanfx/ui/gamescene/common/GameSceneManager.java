@@ -8,7 +8,7 @@ import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSceneManager {
 
-    private GameActionContext actionContext;
+    private GameAppContext actionContext;
 
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
@@ -36,7 +36,7 @@ public class GameSceneManager {
         });
     }
 
-    public void setGameActionContext(GameActionContext actionContext) {
+    public void setGameActionContext(GameAppContext actionContext) {
         this.actionContext = requireNonNull(actionContext);
     }
 

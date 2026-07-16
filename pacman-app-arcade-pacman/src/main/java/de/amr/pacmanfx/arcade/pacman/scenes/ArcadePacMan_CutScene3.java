@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -33,7 +33,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
     public Pac pacMan;
     public Ghost blinky;
 
-    public ArcadePacMan_CutScene3(GameActionContext actionContext) {
+    public ArcadePacMan_CutScene3(GameAppContext actionContext) {
         super(actionContext);
     }
 

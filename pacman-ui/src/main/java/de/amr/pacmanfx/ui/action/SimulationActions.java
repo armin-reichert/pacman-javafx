@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import javafx.scene.input.KeyCode;
@@ -34,7 +34,7 @@ public class SimulationActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public SimulationActions(GameActionContext actionContext) {
+    public SimulationActions(GameAppContext actionContext) {
 
         actionFaster = new GameAction(actionContext, "simulation_faster") {
             @Override

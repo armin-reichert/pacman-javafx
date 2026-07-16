@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -85,7 +85,7 @@ public class ArcadePacManGameVariant implements GameVariantConfig, ResourceManag
     // GameVariant interface
 
     @Override
-    public void init(GameActionContext actionContext) {
+    public void init(GameAppContext actionContext) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
         initSound(actionContext.ui().sounds());

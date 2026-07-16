@@ -23,7 +23,7 @@ import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -68,7 +68,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public TengenMsPacMan_PlayScene2D(GameActionContext actionContext) {
+    public TengenMsPacMan_PlayScene2D(GameAppContext actionContext) {
         super(actionContext);
 
         dynamicCamera = new PlayScene2DCamera();
@@ -173,7 +173,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     @Override
-    public void handleQuit(GameActionContext actionContext) {
+    public void handleQuit(GameAppContext actionContext) {
         onDeactivate();
         gameContext().flow().enterState(gameContext(), GameStateID.GAME_OVER);
     }

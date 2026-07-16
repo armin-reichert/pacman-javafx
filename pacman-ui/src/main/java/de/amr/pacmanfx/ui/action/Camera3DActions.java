@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -26,7 +26,7 @@ public class Camera3DActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public Camera3DActions(GameActionContext actionContext) {
+    public Camera3DActions(GameAppContext actionContext) {
 
         actionNextPerspective = new GameAction(actionContext, "perspective_next") {
             @Override
@@ -89,11 +89,11 @@ public class Camera3DActions {
         return bindings;
     }
 
-    private boolean is3DPlaySceneActive(GameActionContext actionContext) {
+    private boolean is3DPlaySceneActive(GameAppContext actionContext) {
         return actionContext.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
     }
 
-    private String translatedPerspectiveMessage(GameActionContext actionContext, PerspectiveID perspectiveID) {
+    private String translatedPerspectiveMessage(GameAppContext actionContext, PerspectiveID perspectiveID) {
         final TranslationManager translations = actionContext.ui().translations();
         return translations.translate(
             "camera_perspective",

@@ -13,10 +13,10 @@ import org.tinylog.Logger;
  */
 public abstract class GameAction {
 
-    protected final GameActionContext actionContext;
+    protected final GameAppContext actionContext;
     protected final String id;
 
-    protected GameAction(GameActionContext actionContext, String id) {
+    protected GameAction(GameAppContext actionContext, String id) {
         this.actionContext = actionContext;
         this.id = Validations.requireValidIdentifier(id);
     }

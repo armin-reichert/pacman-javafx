@@ -8,7 +8,7 @@ import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -30,10 +30,10 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
         };
     }
 
-    protected final GameActionContext actionContext;
+    protected final GameAppContext actionContext;
     protected final Map<Identifier, GameScene> scenesByID = new HashMap<>();
 
-    public AbstractGameSceneConfig(GameActionContext actionContext) {
+    public AbstractGameSceneConfig(GameAppContext actionContext) {
         this.actionContext = requireNonNull(actionContext);
     }
 
@@ -61,7 +61,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public final Optional<GameScene> selectGameScene(GameActionContext actionContext, GameModel model) {
+    public final Optional<GameScene> selectGameScene(GameAppContext actionContext, GameModel model) {
         requireNonNull(actionContext);
         final Identifier Identifier = determineSceneID(actionContext.currentGameContext());
         final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, this::createGameScene);

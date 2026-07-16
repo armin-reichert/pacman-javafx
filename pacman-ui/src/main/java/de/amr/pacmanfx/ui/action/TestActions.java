@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 
@@ -23,7 +23,7 @@ public class TestActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public TestActions(GameActionContext actionContext) {
+    public TestActions(GameAppContext actionContext) {
 
         actionTestCutScenes = new GameAction(actionContext, "test_cut_scenes") {
             @Override

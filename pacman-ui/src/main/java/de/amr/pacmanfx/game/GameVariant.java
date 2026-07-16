@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.DefaultCheatsImpl;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.simulation.GamePlay;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +37,7 @@ public record GameVariant(
         );
     }
 
-    public <T> T getExtensionValue(GameActionContext actionContext, Identifier id, Class<T> type) {
+    public <T> T getExtensionValue(GameAppContext actionContext, Identifier id, Class<T> type) {
         final Object cached = extensionValues.get(id);
         if (cached != null) {
             return type.cast(cached);

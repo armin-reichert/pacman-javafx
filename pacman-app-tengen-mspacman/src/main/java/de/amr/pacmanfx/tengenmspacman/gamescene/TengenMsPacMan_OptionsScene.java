@@ -12,7 +12,7 @@ import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import javafx.beans.property.IntegerProperty;
@@ -61,7 +61,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     private int idleTicks;
     public int initialDelay;
 
-    public TengenMsPacMan_OptionsScene(GameActionContext actionContext) {
+    public TengenMsPacMan_OptionsScene(GameAppContext actionContext) {
         super(actionContext);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);

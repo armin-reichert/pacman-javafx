@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.controls.Carousel;
@@ -28,7 +28,7 @@ public class StartPagesView implements GameView {
 
     private final List<StartPage> pages = new ArrayList<>();
 
-    private GameActionContext actionContext;
+    private GameAppContext actionContext;
 
     private final Carousel carousel;
 
@@ -60,7 +60,7 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void setGameActionContext(GameActionContext actionContext) {
+    public void setGameActionContext(GameAppContext actionContext) {
         this.actionContext = requireNonNull(actionContext);
     }
 
@@ -83,7 +83,7 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void handleQuit(GameActionContext actionContext) {}
+    public void handleQuit(GameAppContext actionContext) {}
 
     @Override
     public ActionBindingsRegistry actionBindings() {
@@ -98,7 +98,7 @@ public class StartPagesView implements GameView {
         return Optional.of(this::composeTitle);
     }
 
-    public void addStartPage(GameActionContext actionContext, StartPage startPage) {
+    public void addStartPage(GameAppContext actionContext, StartPage startPage) {
         requireNonNull(startPage);
         if (pages.contains(startPage)) {
             Logger.warn("Start page already exists in list");

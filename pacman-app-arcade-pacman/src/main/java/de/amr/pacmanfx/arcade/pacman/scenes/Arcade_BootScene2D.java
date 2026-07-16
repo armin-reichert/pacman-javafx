@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.state.CommonGameBootState;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 
 /**
@@ -26,7 +26,7 @@ public class Arcade_BootScene2D extends AbstractGameScene2D {
 
     public String[] noise = new String[28*36];
 
-    public Arcade_BootScene2D(GameActionContext actionContext) {
+    public Arcade_BootScene2D(GameAppContext actionContext) {
         super(actionContext);
 
         // Make some noise

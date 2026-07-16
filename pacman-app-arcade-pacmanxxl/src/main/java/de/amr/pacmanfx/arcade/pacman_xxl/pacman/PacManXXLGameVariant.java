@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -58,7 +58,7 @@ public final class PacManXXLGameVariant implements GameVariantConfig, ResourceMa
     private GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
-    private GameActionContext actionContext;
+    private GameAppContext actionContext;
 
     public PacManXXLGameVariant() {
         textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman");
@@ -75,7 +75,7 @@ public final class PacManXXLGameVariant implements GameVariantConfig, ResourceMa
     }
 
     @Override
-    public void init(GameActionContext actionContext) {
+    public void init(GameAppContext actionContext) {
         this.actionContext = actionContext;
 
         gameSceneConfig = new PacManXXL_PacMan_GameSceneConfig(actionContext);

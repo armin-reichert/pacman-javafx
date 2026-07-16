@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.model.world.MapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.scene.paint.Color;
 
 import java.net.URLDecoder;
@@ -36,7 +36,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     @Override
-    public void setGameActionContext(GameActionContext actionContext) {
+    public void setGameActionContext(GameAppContext actionContext) {
 
         addDynamicInfo("Game State",  () -> actionContext.currentGameContext().state().name());
 
@@ -94,7 +94,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyGameLevelSpeedInfo(
-        GameActionContext actionContext,
+        GameAppContext actionContext,
         BiFunction<GameLevel, ActorSpeedSettings, String> fnInfo) {
         return () -> {
             final GameModel model = actionContext.currentGameContext().model();

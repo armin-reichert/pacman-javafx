@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -43,9 +43,9 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         }
     };
 
-    private final GameActionContext actionContext;
+    private final GameAppContext actionContext;
 
-    public PlaySceneContextMenu(GameActionContext actionContext) {
+    public PlaySceneContextMenu(GameAppContext actionContext) {
         this.actionContext = requireNonNull(actionContext);
 
         final TranslationManager translations = actionContext.ui().translations();

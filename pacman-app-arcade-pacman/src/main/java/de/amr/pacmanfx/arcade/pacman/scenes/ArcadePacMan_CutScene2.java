@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -55,7 +55,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     public Ghost blinky;
     public SpriteAnimation nailDressAnimation;
 
-    public ArcadePacMan_CutScene2(GameActionContext actionContext) {
+    public ArcadePacMan_CutScene2(GameAppContext actionContext) {
         super(actionContext);
     }
 

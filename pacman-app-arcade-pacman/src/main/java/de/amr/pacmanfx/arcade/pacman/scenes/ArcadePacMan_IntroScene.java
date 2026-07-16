@@ -20,7 +20,7 @@ import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 
 import java.util.Arrays;
@@ -83,7 +83,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     private int ghostIndex;
     private long lastGhostEatenTick;
 
-    public ArcadePacMan_IntroScene(GameActionContext actionContext) {
+    public ArcadePacMan_IntroScene(GameAppContext actionContext) {
         super(actionContext);
         flow = new StateMachine<>(List.of(SceneState.values()));
     }

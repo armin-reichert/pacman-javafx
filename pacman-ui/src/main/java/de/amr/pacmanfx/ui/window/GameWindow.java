@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -44,7 +44,7 @@ public class GameWindow {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
-    public void setActionContext(GameActionContext actionContext) {
+    public void setActionContext(GameAppContext actionContext) {
         mainScene.setGameActionContext(actionContext);
 
         titleBinding = createStageTitleBinding(actionContext);
@@ -60,7 +60,7 @@ public class GameWindow {
         connected.set(true);
     }
 
-    public void show(GameActionContext actionContext) {
+    public void show(GameAppContext actionContext) {
         updateStageIcon(actionContext);
         stage.centerOnScreen();
         stage.show();
@@ -76,7 +76,7 @@ public class GameWindow {
 
     // Private area
 
-    private StringBinding createStageTitleBinding(GameActionContext actionContext) {
+    private StringBinding createStageTitleBinding(GameAppContext actionContext) {
         final GameUI ui = actionContext.ui();
         return createStringBinding(
             () -> switch (ui.views().currentViewID()) {
@@ -111,7 +111,7 @@ public class GameWindow {
         }
     }
 
-    private void updateStageIcon(GameActionContext actionContext) {
+    private void updateStageIcon(GameAppContext actionContext) {
         final Image icon = actionContext.variants().currentVariant().config().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
@@ -120,7 +120,7 @@ public class GameWindow {
         }
     }
 
-    private String titleForCurrentGameScene(GameActionContext actionContext) {
+    private String titleForCurrentGameScene(GameAppContext actionContext) {
         final GameScene gameScene = actionContext.ui().gameScenes().optCurrentGameScene().orElse(null);
 
         final boolean debug = actionContext.ui().viewModel().debugModeOnProperty.get();
@@ -133,7 +133,7 @@ public class GameWindow {
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String stageTitle(GameActionContext actionContext, boolean paused, boolean is3D) {
+    private String stageTitle(GameAppContext actionContext, boolean paused, boolean is3D) {
         final String gameVariantName = actionContext.variants().currentVariantName();
         if (gameVariantName == null) {
             return "";

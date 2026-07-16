@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.CreditAddedEvent;
 import de.amr.pacmanfx.core.event.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 
 import java.util.Optional;
@@ -20,7 +20,7 @@ public interface GameSceneGameEventHandler extends DefaultGameEventListener {
 
     GameScene gameScene();
 
-    default GameActionContext actionContext() {
+    default GameAppContext actionContext() {
         return gameScene().actionContext();
     }
 

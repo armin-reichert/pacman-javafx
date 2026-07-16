@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.config.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -76,7 +76,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for Play View");
 
-    private GameActionContext actionContext;
+    private GameAppContext actionContext;
 
     private final ContextMenu contextMenu = new ContextMenu();
 
@@ -107,7 +107,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     @Override
-    public void setGameActionContext(GameActionContext actionContext) {
+    public void setGameActionContext(GameAppContext actionContext) {
         this.actionContext = requireNonNull(actionContext);
         final GameViewModel settings = actionContext.ui().viewModel();
 
@@ -176,7 +176,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         return miniPlaySceneView;
     }
 
-    public void showHelp(GameActionContext actionContext) {
+    public void showHelp(GameAppContext actionContext) {
         final double scaling = gameSceneFrame.scalingProperty().get();
         helpLayer.showHelpPopup(actionContext, scaling, actionContext.variants().currentVariantName());
     }
@@ -233,7 +233,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     @Override
-    public void handleQuit(GameActionContext actionContext) {
+    public void handleQuit(GameAppContext actionContext) {
         actionContext.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.handleQuit(actionContext));
         actionContext.ui().views().selectStartPagesView();
     }

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games collection.
  */
-public final class PacManGames implements GameActionContext, GameLifecycle {
+public final class PacManGames implements GameAppContext, GameLifecycle {
 
     /**
      * High score file for game variant XYZ is stored as "highscore-xyz.xml" inside user home directory.

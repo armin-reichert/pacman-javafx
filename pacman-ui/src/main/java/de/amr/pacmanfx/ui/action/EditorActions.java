@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import javafx.scene.input.KeyCode;
@@ -22,12 +22,12 @@ import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
 public class EditorActions {
 
-    private final GameActionContext actionContext;
+    private final GameAppContext actionContext;
     private final GameAction actionOpenEditor;
 
     private final Set<ActionKeyBinding> bindings;
 
-    public EditorActions(GameActionContext actionContext) {
+    public EditorActions(GameAppContext actionContext) {
         this.actionContext = actionContext;
 
         actionOpenEditor = new GameAction(actionContext, "open_editor") {

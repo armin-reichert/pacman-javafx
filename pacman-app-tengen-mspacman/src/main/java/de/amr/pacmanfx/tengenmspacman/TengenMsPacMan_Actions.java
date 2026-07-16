@@ -13,7 +13,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.action.SteeringActions;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
@@ -39,7 +39,7 @@ public final class TengenMsPacMan_Actions {
     private final Set<ActionKeyBinding> steeringBindings;
     private final Set<ActionKeyBinding> localBindings;
 
-    public TengenMsPacMan_Actions(GameActionContext actionContext) {
+    public TengenMsPacMan_Actions(GameAppContext actionContext) {
         final Joypad joypad = actionContext.input().joypad();
 
         actionEnterStartScreen = new GameAction(actionContext, "enter_start_screen") {

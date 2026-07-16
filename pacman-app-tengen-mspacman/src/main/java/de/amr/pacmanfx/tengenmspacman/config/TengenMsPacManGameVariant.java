@@ -22,7 +22,7 @@ import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.*;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.config.world.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -140,7 +140,7 @@ public class TengenMsPacManGameVariant implements GameVariantConfig {
     }
 
     @Override
-    public void init(GameActionContext actionContext) {
+    public void init(GameAppContext actionContext) {
         loadAssets();
         registerSoundObjects(actionContext.ui().sounds());
         gameSceneConfig = new GameSceneConfig(actionContext);

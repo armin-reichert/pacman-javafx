@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -39,7 +39,7 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     @Override
-    public void setGameActionContext(GameActionContext actionContext) {
+    public void setGameActionContext(GameAppContext actionContext) {
         final CoinMechanism coinMechanism = actionContext.coinMechanism();
         final CommonGameActions actions = actionContext.commonActions();
 
@@ -65,7 +65,7 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     @Override
-    public void update(GameActionContext actionContext) {
+    public void update(GameAppContext actionContext) {
         super.update(actionContext);
 
         final GameContext gameContext = actionContext.currentGameContext();
@@ -89,7 +89,7 @@ public class DS_GameControl extends GameDashboardSection {
         cbCollisionCheckedTwice.setSelected(gameContext.model().rules().collisionDoubleCheckedProperty().get());
     }
 
-    private boolean canStartLevel(GameActionContext actionContext, GameState gameState) {
+    private boolean canStartLevel(GameAppContext actionContext, GameState gameState) {
         boolean isArcadeGame = GameVariantID.isArcadeGameName(actionContext.variants().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
         return !actionContext.currentGameContext().coinMechanism().isEmpty()

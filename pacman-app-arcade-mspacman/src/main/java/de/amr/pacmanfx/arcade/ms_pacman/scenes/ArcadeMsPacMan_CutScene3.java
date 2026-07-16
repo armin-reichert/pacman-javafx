@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import org.tinylog.Logger;
@@ -47,7 +47,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     private SceneState sceneState;
     private long sceneTick;
 
-    public ArcadeMsPacMan_CutScene3(GameActionContext actionContext) {
+    public ArcadeMsPacMan_CutScene3(GameAppContext actionContext) {
         super(actionContext);
     }
 

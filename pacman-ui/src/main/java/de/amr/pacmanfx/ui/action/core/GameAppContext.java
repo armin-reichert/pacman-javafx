@@ -18,31 +18,31 @@ import de.amr.pacmanfx.ui.input.Input;
 
 import java.util.Optional;
 
-public interface GameActionContext {
+public interface GameAppContext {
 
     GameLifecycle lifecycle();
 
-    CoinMechanism coinMechanism();
+    GameContext currentGameContext();
 
-    DirectoryWatchdog watchdog();
-
-    GameClock clock();
+    CommonGameActions commonActions();
 
     GameVariantManager variants();
 
     GameUI ui();
 
+    default Optional<GameScene> optCurrentGameScene() {
+        return ui().gameScenes().optCurrentGameScene();
+    }
+
     Input input();
 
-    CommonGameActions commonActions();
+    GameClock clock();
+
+    CoinMechanism coinMechanism();
+
+    DirectoryWatchdog watchdog();
 
     default <T> T getExtensionValue(Identifier id, Class<T> type) {
         return variants().currentVariant().getExtensionValue(this, id, type);
-    }
-
-    GameContext currentGameContext();
-
-    default Optional<GameScene> optCurrentGameScene() {
-        return ui().gameScenes().optCurrentGameScene();
     }
 }

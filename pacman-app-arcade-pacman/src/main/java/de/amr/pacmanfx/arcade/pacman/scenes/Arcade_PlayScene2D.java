@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.action.CheatActions;
-import de.amr.pacmanfx.ui.action.core.GameActionContext;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
@@ -35,7 +35,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
 {
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public Arcade_PlayScene2D(GameActionContext actionContext) {
+    public Arcade_PlayScene2D(GameAppContext actionContext) {
         super(actionContext);
     }
 
@@ -54,7 +54,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     }
 
     @Override
-    public void handleQuit(GameActionContext actionContext) {
+    public void handleQuit(GameAppContext actionContext) {
         onDeactivate();
         gameContext().flow().enterState(gameContext(), GameStateID.GAME_OVER);
     }
