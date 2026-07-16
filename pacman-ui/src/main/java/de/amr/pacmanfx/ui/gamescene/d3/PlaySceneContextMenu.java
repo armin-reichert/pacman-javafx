@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.Disposable;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
@@ -43,21 +44,22 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         }
     };
 
-    private final GameAppContext actionContext;
+    private final GameAppContext appContext;
 
-    public PlaySceneContextMenu(GameAppContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+    public PlaySceneContextMenu(GameAppContext appContext) {
+        this.appContext = requireNonNull(appContext);
 
-        final TranslationManager translations = actionContext.ui().translations();
-        final Common3DSettingsModel settings3D = actionContext.ui().viewModel().common3D;
+        final GameUI ui = appContext.ui();
+        final TranslationManager translations  = ui.translations();
+        final Common3DSettingsModel settings3D = ui.viewModel().common3D;
 
         addLocalizedTitleItem(this, translations, "context_menu.scene_display");
 
         addLocalizedActionItem(this, translations,
-            actionContext.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
+            appContext.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
 
         addLocalizedCheckBox(this, translations,
-            actionContext.ui().viewModel().miniView.activeProperty, "context_menu.pip");
+            ui.viewModel().miniView.activeProperty, "context_menu.pip");
 
         addLocalizedTitleItem(this, translations, "context_menu.select_perspective");
         for (PerspectiveID id : PerspectiveID.values()) {
@@ -73,12 +75,12 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         }
 
         addLocalizedTitleItem(this, translations, "context_menu.pacman");
-        addLocalizedCheckBox(this, translations, actionContext.currentGameContext().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
-        addLocalizedCheckBox(this, translations, actionContext.currentGameContext().cheats().pacImmuneProperty(), "context_menu.immunity");
+        addLocalizedCheckBox(this, translations, appContext.currentGameContext().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
+        addLocalizedCheckBox(this, translations, appContext.currentGameContext().cheats().pacImmuneProperty(), "context_menu.immunity");
 
         addSeparator(this);
-        addLocalizedCheckBox(this, translations, actionContext.ui().viewModel().mutedProperty, "context_menu.muted");
-        addLocalizedActionItem(this, translations, actionContext.commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedCheckBox(this, translations, ui.viewModel().mutedProperty, "context_menu.muted");
+        addLocalizedActionItem(this, translations, appContext.commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         settings3D.cameraPerspectiveIdProperty.addListener(perspectiveListener);
     }
@@ -90,6 +92,6 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
      */
     @Override
     public void dispose() {
-        actionContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.removeListener(perspectiveListener);
+        appContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.removeListener(perspectiveListener);
     }
 }

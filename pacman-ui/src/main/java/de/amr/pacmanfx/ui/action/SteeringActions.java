@@ -28,29 +28,30 @@ public class SteeringActions {
 
         private final Direction dir;
 
-        public SteeringAction(GameAppContext actionContext, Direction dir) {
-            super(actionContext, createActionID(requireNonNull(dir)));
+        public SteeringAction(GameAppContext appContext, Direction dir) {
+            super(appContext, createActionID(requireNonNull(dir)));
             this.dir = requireNonNull(dir);
         }
 
         @Override
         public void doAction() {
-            appContext.currentGameContext().model().optLevel().ifPresent(level -> level.entities().pac().setWishDir(dir));
+            gameContext().model().optLevel().ifPresent(level -> level.entities().pac().setWishDir(dir));
         }
 
         @Override
         public boolean isEnabled() {
-            final GameLevel level = appContext.currentGameContext().model().optLevel().orElse(null);
-            return level != null && !level.isDemoLevel() && !level.entities().pac().isUsingAutopilot();
+            return gameContext().optLevel().isPresent()
+                && !gameContext().assertLevel().isDemoLevel()
+                && !gameContext().assertLevel().entities().pac().isUsingAutopilot();
         }
     }
 
     private final EnumMap<Direction, GameAction> actions = new EnumMap<>(Direction.class);
     private final Set<ActionKeyBinding> bindings;
 
-    public SteeringActions(GameAppContext actionContext) {
+    public SteeringActions(GameAppContext appContext) {
         for (Direction dir : Direction.values()) {
-            actions.put(dir, new SteeringAction(actionContext, dir));
+            actions.put(dir, new SteeringAction(appContext, dir));
         }
 
         bindings = Set.of(

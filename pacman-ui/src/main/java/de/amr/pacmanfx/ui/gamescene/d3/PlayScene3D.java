@@ -70,12 +70,12 @@ public class PlayScene3D extends AbstractGameScene
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
-    public PlayScene3D(GameAppContext actionContext) {
-        super(actionContext);
+    public PlayScene3D(GameAppContext appContext) {
+        super(appContext);
 
-        textPicker = new RandomTextPicker(actionContext.ui().translations().textBundle(), "game.over");
+        textPicker = new RandomTextPicker(appContext.ui().translations().textBundle(), "game.over");
 
-        final GameViewModel viewModel = actionContext.ui().viewModel();
+        final GameViewModel viewModel = appContext.ui().viewModel();
 
         perspectiveManager = new PerspectiveManager(camera);
         final var coordinateSystem = new CoordinateSystem();
@@ -89,7 +89,7 @@ public class PlayScene3D extends AbstractGameScene
         subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
 
-        actionBindings = actionContext.commonActions().camera3DActions().bindings();
+        actionBindings = appContext.commonActions().camera3DActions().bindings();
 
         drawModeChangeListener = (_, _, drawMode) -> {
             if (level3D != null) {
@@ -284,9 +284,9 @@ public class PlayScene3D extends AbstractGameScene
     }
 
     @Override
-    public void handleQuit(GameAppContext actionContext) {
+    public void handleQuit(GameAppContext appContext) {
         onDeactivate();
-        gameContext().flow().enterState(actionContext.currentGameContext(), GameStateID.GAME_OVER);
+        gameContext().flow().enterState(gameContext(), GameStateID.GAME_OVER);
     }
 
     // Other stuff

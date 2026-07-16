@@ -45,7 +45,7 @@ public class MiniPlaySceneView {
     private final HBox rootPane;
     private final Canvas canvas;
 
-    private GameAppContext actionContext;
+    private GameAppContext appContext;
 
     // Note: The level and actor renderers cannot be created in the constructor, because the game controller has not yet
     //       selected a game variant when the constructor is called, so no variant configuration is available yet!
@@ -75,13 +75,13 @@ public class MiniPlaySceneView {
         return rootPane;
     }
 
-    public void setActionContext(GameAppContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+    public void setActionContext(GameAppContext appContext) {
+        this.appContext = requireNonNull(appContext);
 
-        rootPane.backgroundProperty().bind(actionContext.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
-        rootPane.opacityProperty().bind(actionContext.ui().viewModel().miniView.opacityPercentageProperty.divide(100.0));
+        rootPane.backgroundProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
+        rootPane.opacityProperty().bind(appContext.ui().viewModel().miniView.opacityPercentageProperty.divide(100.0));
 
-        canvas.heightProperty().bind(actionContext.ui().viewModel().miniView.heightProperty);
+        canvas.heightProperty().bind(appContext.ui().viewModel().miniView.heightProperty);
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> {
                 final double aspect = (double) worldSize.get().x() / worldSize.get().y();
@@ -105,11 +105,11 @@ public class MiniPlaySceneView {
 
         levelRenderer = variant.createGameLevelRenderer(canvas);
         levelRenderer.scalingProperty().bind(scaling);
-        levelRenderer.backgroundColorProperty().bind(actionContext.ui().viewModel().common2D.canvasBackgroundColorProperty);
+        levelRenderer.backgroundColorProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty);
 
         actorRenderer = variant.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scaling);
-        actorRenderer.backgroundColorProperty().bind(actionContext.ui().viewModel().common2D.canvasBackgroundColorProperty);
+        actorRenderer.backgroundColorProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty);
     }
 
     public void slideIn() {
@@ -117,7 +117,7 @@ public class MiniPlaySceneView {
             slideInAnimation.stop();
         }
         slideInAnimation = new TranslateTransition(
-            Duration.seconds(actionContext.ui().viewModel().miniView.slideInSecondsProperty.get()), rootPane);
+            Duration.seconds(appContext.ui().viewModel().miniView.slideInSecondsProperty.get()), rootPane);
         slideInAnimation.setToY(0);
         slideInAnimation.setByY(10);
         slideInAnimation.setDelay(Duration.seconds(1));
@@ -130,7 +130,7 @@ public class MiniPlaySceneView {
             slideOutAnimation.stop();
         }
         slideOutAnimation = new TranslateTransition(
-            Duration.seconds(actionContext.ui().viewModel().miniView.slideOutSecondsProperty.get()), rootPane);
+            Duration.seconds(appContext.ui().viewModel().miniView.slideOutSecondsProperty.get()), rootPane);
         slideOutAnimation.setToY(-rootPane.getHeight());
         slideOutAnimation.setByY(10);
         slideOutAnimation.setDelay(Duration.seconds(2));
@@ -147,8 +147,8 @@ public class MiniPlaySceneView {
         if (canvasRenderer == null) {
             return;
         }
-        if (actionContext != null) {
-            actionContext.currentGameContext().model().optLevel().ifPresent(this::draw);
+        if (appContext != null) {
+            appContext.currentGameContext().model().optLevel().ifPresent(this::draw);
         }
     }
     
@@ -156,11 +156,11 @@ public class MiniPlaySceneView {
         canvasRenderer.clearCanvas();
 
         if (levelRenderer != null && actorRenderer != null) {
-            ActorAnimationManager.ensureActorAnimationsCreated(actionContext, level);
+            ActorAnimationManager.ensureActorAnimationsCreated(appContext, level);
             drawGameLevel(level);
         }
 
-        if (actionContext.ui().viewModel().debugModeOnProperty.get()) {
+        if (appContext.ui().viewModel().debugModeOnProperty.get()) {
             canvasRenderer.fillTextCentered(
                 "scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
                 Color.WHITE, Font.font(12 * scaling.get()),
@@ -178,7 +178,7 @@ public class MiniPlaySceneView {
             CommonRenderInfoKey.MAP_BRIGHT, false,
             CommonRenderInfoKey.MAP_EMPTY, level.worldMap().foodLayer().remainingFoodCount() == 0,
             CommonRenderInfoKey.MAP_FLASHING, false,
-            CommonRenderInfoKey.TICK, actionContext.clock().currentTick()
+            CommonRenderInfoKey.TICK, appContext.clock().currentTick()
         ));
         levelRenderer.applyLevelSettings(level, info);
         levelRenderer.drawLevel(level, info);

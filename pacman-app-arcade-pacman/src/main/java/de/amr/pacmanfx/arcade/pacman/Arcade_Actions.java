@@ -25,9 +25,9 @@ public final class Arcade_Actions {
 
     private final Set<ActionKeyBinding> gameStartActionBindings;
 
-    public Arcade_Actions(GameAppContext context) {
+    public Arcade_Actions(GameAppContext appContext) {
 
-        actionInsertCoin = new GameAction(context, "insert_coin") {
+        actionInsertCoin = new GameAction(appContext, "insert_coin") {
             @Override
             public void doAction() {
                 final CoinMechanism coinMechanism = appContext.coinMechanism();
@@ -53,7 +53,7 @@ public final class Arcade_Actions {
             }
         };
 
-        actionStartPlaying = new GameAction(context, "start_playing") {
+        actionStartPlaying = new GameAction(appContext, "start_playing") {
             @Override
             public void doAction() {
                 appContext.ui().sounds().stopAndDisposeVoice();

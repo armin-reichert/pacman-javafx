@@ -34,9 +34,9 @@ public class SimulationActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public SimulationActions(GameAppContext actionContext) {
+    public SimulationActions(GameAppContext appContext) {
 
-        actionFaster = new GameAction(actionContext, "simulation_faster") {
+        actionFaster = new GameAction(appContext, "simulation_faster") {
             @Override
             protected void doAction() {
                 final GameClock clock = appContext.clock();
@@ -49,7 +49,7 @@ public class SimulationActions {
             }
         };
 
-        actionFastest = new GameAction(actionContext, "simulation_fastest") {
+        actionFastest = new GameAction(appContext, "simulation_fastest") {
             @Override
             protected void doAction() {
                 appContext.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
@@ -58,7 +58,7 @@ public class SimulationActions {
             }
         };
 
-        actionSlower = new GameAction(actionContext, "simulation_slower") {
+        actionSlower = new GameAction(appContext, "simulation_slower") {
             @Override
             protected void doAction() {
                 final GameClock clock = appContext.clock();
@@ -71,7 +71,7 @@ public class SimulationActions {
             }
         };
 
-        actionSlowest = new GameAction(actionContext, "simulation_slowest") {
+        actionSlowest = new GameAction(appContext, "simulation_slowest") {
             @Override
             protected void doAction() {
                 appContext.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
@@ -80,7 +80,7 @@ public class SimulationActions {
             }
         };
 
-        actionOneStep = new GameAction(actionContext, "simulation_one_step") {
+        actionOneStep = new GameAction(appContext, "simulation_one_step") {
             @Override
             protected void doAction() {
                 final boolean failure = !appContext.clock().makeOneStep(true);
@@ -93,7 +93,7 @@ public class SimulationActions {
             public boolean isEnabled() { return appContext.clock().getUpdatesDisabled(); }
         };
 
-        actionTenSteps = new GameAction(actionContext, "simulation_ten_steps") {
+        actionTenSteps = new GameAction(appContext, "simulation_ten_steps") {
             @Override
             protected void doAction() {
                 final boolean failure = !appContext.clock().makeSteps(10, true);
@@ -106,7 +106,7 @@ public class SimulationActions {
             public boolean isEnabled() { return appContext.clock().getUpdatesDisabled(); }
         };
 
-        actionReset = new GameAction(actionContext, "simulation_reset") {
+        actionReset = new GameAction(appContext, "simulation_reset") {
             @Override
             protected void doAction() {
                 final GameClock gameClock = appContext.clock();
@@ -115,7 +115,7 @@ public class SimulationActions {
             }
         };
 
-        actionTogglePaused = new GameAction(actionContext, "toggle_paused") {
+        actionTogglePaused = new GameAction(appContext, "toggle_paused") {
             @Override
             protected void doAction() {
                 final GameClock gameClock = appContext.clock();
@@ -133,7 +133,7 @@ public class SimulationActions {
             }
         };
 
-        actionToggleMuted = new GameAction(actionContext, "toggle_muted") {
+        actionToggleMuted = new GameAction(appContext, "toggle_muted") {
             @Override
             protected void doAction() {
                 toggleBooleanProperty(appContext.ui().viewModel().mutedProperty);

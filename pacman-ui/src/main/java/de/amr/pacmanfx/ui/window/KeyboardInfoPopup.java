@@ -62,10 +62,10 @@ public class KeyboardInfoPopup {
         rootPane.getChildren().add(keyInfoBox);
     }
 
-    public void setGameActionContext(GameAppContext actionContext) {
-        rootPane.visibleProperty().bind(actionContext.ui().viewModel().keyboardMonitorOnProperty);
+    public void setGameActionContext(GameAppContext appContext) {
+        rootPane.visibleProperty().bind(appContext.ui().viewModel().keyboardMonitorOnProperty);
 
-        actionContext.input().keyboard().addStateListener(state -> {
+        appContext.input().keyboard().addStateListener(state -> {
             keyInfoBox.getChildren().clear();
             final String modifiersText = createModifierString(state);
             keyInfoBox.getChildren().add(createInfoText("[" + modifiersText + "]"));

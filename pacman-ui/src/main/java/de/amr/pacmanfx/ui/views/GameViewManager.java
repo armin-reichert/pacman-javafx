@@ -25,23 +25,23 @@ public final class GameViewManager {
 
     public GameViewManager() {}
 
-    public void setGameActionContext(GameAppContext actionContext) {
-        requireNonNull(actionContext);
+    public void setGameActionContext(GameAppContext appContext) {
+        requireNonNull(appContext);
 
         currentViewIDProperty().addListener((_, oldID, newID) -> {
-            actionContext.ui().clearMessage();
+            appContext.ui().clearMessage();
 
             if (oldID != null) {
                 assertView(oldID).onExit();
             }
 
             final GameView newView = assertView(newID);
-            actionContext.ui().window().mainScene().replaceGameView(newView);
+            appContext.ui().window().mainScene().replaceGameView(newView);
 
             newView.onEnter();
         });
 
-        views.values().forEach(gameView -> gameView.setGameActionContext(actionContext));
+        views.values().forEach(gameView -> gameView.setGameActionContext(appContext));
     }
 
     public void registerView(GameViewID viewID, GameView gameView) {
@@ -121,12 +121,12 @@ public final class GameViewManager {
         return Optional.ofNullable(editorView);
     }
 
-    public boolean trySelectEditorView(GameAppContext actionContext) {
+    public boolean trySelectEditorView(GameAppContext appContext) {
         if (views.get(GameViewID.EDITOR) == null) {
             Logger.info("Editor view has not been created yet");
             return false;
         }
-        if (canOpenEditor(actionContext)) {
+        if (canOpenEditor(appContext)) {
             currentViewIDProperty().set(GameViewID.EDITOR);
             return true;
         }
@@ -136,12 +136,12 @@ public final class GameViewManager {
         }
     }
 
-    private boolean canOpenEditor(GameAppContext actionContext) {
+    private boolean canOpenEditor(GameAppContext appContext) {
         if (isSelected(GameViewID.START_PAGES)) {
             return true;
         }
         if (isSelected(GameViewID.GAMEPLAY)) {
-            return !actionContext.currentGameContext().model().isPlaying();
+            return !appContext.currentGameContext().model().isPlaying();
         }
         return false;
     }

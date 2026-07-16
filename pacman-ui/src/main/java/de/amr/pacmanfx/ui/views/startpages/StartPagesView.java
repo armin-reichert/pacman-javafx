@@ -28,7 +28,7 @@ public class StartPagesView implements GameView {
 
     private final List<StartPage> pages = new ArrayList<>();
 
-    private GameAppContext actionContext;
+    private GameAppContext appContext;
 
     private final Carousel carousel;
 
@@ -60,8 +60,8 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void setGameActionContext(GameAppContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+    public void setGameActionContext(GameAppContext appContext) {
+        this.appContext = requireNonNull(appContext);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void handleQuit(GameAppContext actionContext) {}
+    public void handleQuit(GameAppContext appContext) {}
 
     @Override
     public ActionBindingsRegistry actionBindings() {
@@ -98,7 +98,7 @@ public class StartPagesView implements GameView {
         return Optional.of(this::composeTitle);
     }
 
-    public void addStartPage(GameAppContext actionContext, StartPage startPage) {
+    public void addStartPage(GameAppContext appContext, StartPage startPage) {
         requireNonNull(startPage);
         if (pages.contains(startPage)) {
             Logger.warn("Start page already exists in list");
@@ -106,7 +106,7 @@ public class StartPagesView implements GameView {
         }
         pages.add(startPage);
         carousel.getItems().add(startPage.rootPane());
-        startPage.setGameActionContext(actionContext);
+        startPage.setGameActionContext(appContext);
     }
 
     // Private area
@@ -126,6 +126,6 @@ public class StartPagesView implements GameView {
 
     private String composeTitle() {
         final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
-        return actionContext != null ? actionContext.ui().translations().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
+        return appContext != null ? appContext.ui().translations().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

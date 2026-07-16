@@ -39,7 +39,7 @@ public class FlyerStartPage implements StartPage {
     protected String title;
     protected String gameVariantName;
     protected GameStartButton startButton;
-    protected GameAppContext actionContext;
+    protected GameAppContext appContext;
     protected Media voice;
 
     public FlyerStartPage(URL configURL) {
@@ -94,9 +94,9 @@ public class FlyerStartPage implements StartPage {
             flyer.prevFlyerPage();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
-            if (actionContext != null) {
-                actionContext.ui().sounds().stopAndDisposeVoice();
-                actionContext.ui().shortMessage(actionContext.ui().translations().translate("flash.shut_up"));
+            if (appContext != null) {
+                appContext.ui().sounds().stopAndDisposeVoice();
+                appContext.ui().shortMessage(appContext.ui().translations().translate("flash.shut_up"));
             }
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER) && startButton != null) {
@@ -105,13 +105,13 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public void setGameActionContext(GameAppContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+    public void setGameActionContext(GameAppContext appContext) {
+        this.appContext = requireNonNull(appContext);
     }
 
     @Override
     public void onEnter() {
-        actionContext.variants().selectVariant(gameVariantName);
+        appContext.variants().selectVariant(gameVariantName);
         flyer.selectPage(0);
         talk();
         Platform.runLater(startButton::requestFocus);
@@ -142,18 +142,18 @@ public class FlyerStartPage implements StartPage {
 
     public void talk() {
         if (voice != null) {
-            actionContext.ui().sounds().playVoice(voice);
+            appContext.ui().sounds().playVoice(voice);
         }
     }
 
 
     public void stopTalking() {
-        actionContext.ui().sounds().stopAndDisposeVoice();
+        appContext.ui().sounds().stopAndDisposeVoice();
     }
 
     protected GameStartButton createStartButton() {
         final var button = new GameStartButton("START!");
-        button.setOnAction(_ -> actionContext.commonActions().gameFlowActions().actionStartGame().execute());
+        button.setOnAction(_ -> appContext.commonActions().gameFlowActions().actionStartGame().execute());
         rootPane.getChildren().add(button);
 
         StackPane.setAlignment(button, Pos.BOTTOM_CENTER);

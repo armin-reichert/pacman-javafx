@@ -36,12 +36,12 @@ public class SoundManager implements Disposable {
 
     private MediaPlayer voicePlayer;
 
-    private GameAppContext actionContext;
+    private GameAppContext appContext;
 
     public SoundManager() {}
 
-    public void setGameActionContext(GameAppContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+    public void setGameActionContext(GameAppContext appContext) {
+        this.appContext = requireNonNull(appContext);
     }
 
     public void playVoice(Media voiceMedia) {
@@ -52,7 +52,7 @@ public class SoundManager implements Disposable {
         }
         stopAndDisposeVoice();
         voicePlayer = new MediaPlayer(voiceMedia);
-        voicePlayer.muteProperty().bind(actionContext.ui().viewModel().mutedProperty);
+        voicePlayer.muteProperty().bind(appContext.ui().viewModel().mutedProperty);
         voicePlayer.setOnError(() ->
             Logger.error("Voice playback error: {}", voicePlayer.getError())
         );

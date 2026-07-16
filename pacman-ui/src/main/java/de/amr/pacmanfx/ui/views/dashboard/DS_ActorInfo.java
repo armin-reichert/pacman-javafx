@@ -27,32 +27,32 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     @Override
-    public void setGameActionContext(GameAppContext actionContext) {
-        addDynamicInfo("Pac Name",  supplyPacText(actionContext, (_, pac) -> pac.name()));
-        addDynamicInfo("Lives",     supplyLivesCount(actionContext));
-        addDynamicInfo("Movement",  supplyPacText(actionContext, this::actorMovementText));
-        addDynamicInfo("Tile",      supplyPacText(actionContext, this::actorLocationText));
-        addDynamicInfo("Power",     supplyPacPowerText(actionContext));
-        addDynamicInfo("Animation", supplyPacAnimationText(actionContext));
+    public void setGameActionContext(GameAppContext appContext) {
+        addDynamicInfo("Pac Name",  supplyPacText(appContext, (_, pac) -> pac.name()));
+        addDynamicInfo("Lives",     supplyLivesCount(appContext));
+        addDynamicInfo("Movement",  supplyPacText(appContext, this::actorMovementText));
+        addDynamicInfo("Tile",      supplyPacText(appContext, this::actorLocationText));
+        addDynamicInfo("Power",     supplyPacPowerText(appContext));
+        addDynamicInfo("Animation", supplyPacAnimationText(appContext));
         emptyRow();
-        addGhostInfo(actionContext, GameModel.RED_GHOST_SHADOW);
+        addGhostInfo(appContext, GameModel.RED_GHOST_SHADOW);
         emptyRow();
-        addGhostInfo(actionContext, GameModel.PINK_GHOST_SPEEDY);
+        addGhostInfo(appContext, GameModel.PINK_GHOST_SPEEDY);
         emptyRow();
-        addGhostInfo(actionContext, GameModel.CYAN_GHOST_BASHFUL);
+        addGhostInfo(appContext, GameModel.CYAN_GHOST_BASHFUL);
         emptyRow();
-        addGhostInfo(actionContext, GameModel.ORANGE_GHOST_POKEY);
+        addGhostInfo(appContext, GameModel.ORANGE_GHOST_POKEY);
     }
 
-    private Supplier<String> supplyLivesCount(GameAppContext actionContext) {
-        return fnGameLevelInfo(actionContext, level -> "%d".formatted(level.gameModel().lives().count()));
+    private Supplier<String> supplyLivesCount(GameAppContext appContext) {
+        return fnGameLevelInfo(appContext, level -> "%d".formatted(level.gameModel().lives().count()));
     }
 
-    private void addGhostInfo(GameAppContext actionContext, byte personality) {
-        addDynamicInfo(ghostName(personality), supplyGhostText(actionContext, this::ghostNameAndStateText, personality));
-        addDynamicInfo("Movement",  supplyGhostText(actionContext, this::actorMovementText,  personality));
-        addDynamicInfo("Tile",      supplyGhostText(actionContext, this::actorLocationText,  personality));
-        addDynamicInfo("Animation", supplyGhostText(actionContext, this::ghostAnimationText, personality));
+    private void addGhostInfo(GameAppContext appContext, byte personality) {
+        addDynamicInfo(ghostName(personality), supplyGhostText(appContext, this::ghostNameAndStateText, personality));
+        addDynamicInfo("Movement",  supplyGhostText(appContext, this::actorMovementText,  personality));
+        addDynamicInfo("Tile",      supplyGhostText(appContext, this::actorLocationText,  personality));
+        addDynamicInfo("Animation", supplyGhostText(appContext, this::ghostAnimationText, personality));
     }
 
     private static String ghostName(byte personality) {
@@ -88,8 +88,8 @@ public class DS_ActorInfo extends GameDashboardSection {
             : "%.2fpx/s %s (%s)%s".formatted(speed, movingActor.moveDir(), movingActor.wishDir(), reverseText);
     }
 
-    private Supplier<String> supplyPacPowerText(GameAppContext actionContext) {
-        return () -> actionContext.currentGameContext().model().optLevel()
+    private Supplier<String> supplyPacPowerText(GameAppContext appContext) {
+        return () -> appContext.currentGameContext().model().optLevel()
             .map(level -> level.entities().pac())
             .map(this::pacPowerText)
             .orElse(NO_INFO);
@@ -101,12 +101,12 @@ public class DS_ActorInfo extends GameDashboardSection {
             : "No Power";
     }
 
-    private Supplier<String> supplyPacText(GameAppContext actionContext, BiFunction<GameLevel, Pac, String> infoSupplier) {
-        return fnGameLevelInfo(actionContext, level -> infoSupplier.apply(level, level.entities().pac()));
+    private Supplier<String> supplyPacText(GameAppContext appContext, BiFunction<GameLevel, Pac, String> infoSupplier) {
+        return fnGameLevelInfo(appContext, level -> infoSupplier.apply(level, level.entities().pac()));
     }
 
-    private Supplier<String> supplyPacAnimationText(GameAppContext actionContext) {
-        return () -> actionContext.currentGameContext().model().optLevel().map(level -> {
+    private Supplier<String> supplyPacAnimationText(GameAppContext appContext) {
+        return () -> appContext.currentGameContext().model().optLevel().map(level -> {
             final Pac pac = level.entities().pac();
             if (pac.animations() instanceof SpriteAnimationMap<?> sam && sam.selectedAnimationID() != null) {
                 return "%s:%d".formatted(sam.selectedAnimationID(), pac.animations().currentFrame());
@@ -115,9 +115,9 @@ public class DS_ActorInfo extends GameDashboardSection {
         }).orElse(NO_INFO);
     }
 
-    private Supplier<String> supplyGhostText(GameAppContext actionContext,
+    private Supplier<String> supplyGhostText(GameAppContext appContext,
                                              BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
-        return fnGameLevelInfo(actionContext, level -> {
+        return fnGameLevelInfo(appContext, level -> {
             if (!level.entities().ghosts().isEmpty()) {
                 return infoSupplier.apply(level, level.ghost(personality));
             }

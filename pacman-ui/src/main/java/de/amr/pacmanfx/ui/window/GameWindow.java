@@ -44,24 +44,24 @@ public class GameWindow {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
-    public void setActionContext(GameAppContext actionContext) {
-        mainScene.setGameActionContext(actionContext);
+    public void setActionContext(GameAppContext appContext) {
+        mainScene.setGameActionContext(appContext);
 
-        titleBinding = createStageTitleBinding(actionContext);
+        titleBinding = createStageTitleBinding(appContext);
         stage.titleProperty().bind(titleBinding);
 
         //TODO Without this, the title is not changed when returning from the editor. Why?
-        actionContext.ui().views().currentViewIDProperty().addListener(
-            (_, _, viewID) -> updateStageTitleBinding(actionContext.ui(), viewID));
+        appContext.ui().views().currentViewIDProperty().addListener(
+            (_, _, viewID) -> updateStageTitleBinding(appContext.ui(), viewID));
 
-        actionContext.variants().addVariantNameListener((_, _, _) -> updateStageIcon(actionContext));
+        appContext.variants().addVariantNameListener((_, _, _) -> updateStageIcon(appContext));
 
         // Triggers title update
         connected.set(true);
     }
 
-    public void show(GameAppContext actionContext) {
-        updateStageIcon(actionContext);
+    public void show(GameAppContext appContext) {
+        updateStageIcon(appContext);
         stage.centerOnScreen();
         stage.show();
     }
@@ -76,18 +76,18 @@ public class GameWindow {
 
     // Private area
 
-    private StringBinding createStageTitleBinding(GameAppContext actionContext) {
-        final GameUI ui = actionContext.ui();
+    private StringBinding createStageTitleBinding(GameAppContext appContext) {
+        final GameUI ui = appContext.ui();
         return createStringBinding(
             () -> switch (ui.views().currentViewID()) {
                 case null -> ""; // happens initially, don't mind
-                case START_PAGES, GAMEPLAY -> optCurrentViewTitle(ui).orElse(titleForCurrentGameScene(actionContext));
+                case START_PAGES, GAMEPLAY -> optCurrentViewTitle(ui).orElse(titleForCurrentGameScene(appContext));
                 // Editor has its own title supplier → use it directly
                 case EDITOR -> optCurrentViewTitle(ui).orElse(("Map Editor"));
             },
             connected,
-            actionContext.variants().variantNameProperty(),
-            actionContext.clock().updatesDisabledProperty(),
+            appContext.variants().variantNameProperty(),
+            appContext.clock().updatesDisabledProperty(),
             ui.viewModel().debugModeOnProperty,
             ui.viewModel().common3D.view3DEnabledProperty,
             ui.views().currentViewIDProperty(),
@@ -111,8 +111,8 @@ public class GameWindow {
         }
     }
 
-    private void updateStageIcon(GameAppContext actionContext) {
-        final Image icon = actionContext.variants().currentVariant().config().assets().image("app_icon");
+    private void updateStageIcon(GameAppContext appContext) {
+        final Image icon = appContext.variants().currentVariant().config().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         } else {
@@ -120,33 +120,33 @@ public class GameWindow {
         }
     }
 
-    private String titleForCurrentGameScene(GameAppContext actionContext) {
-        final GameScene gameScene = actionContext.ui().gameScenes().optCurrentGameScene().orElse(null);
+    private String titleForCurrentGameScene(GameAppContext appContext) {
+        final GameScene gameScene = appContext.ui().gameScenes().optCurrentGameScene().orElse(null);
 
-        final boolean debug = actionContext.ui().viewModel().debugModeOnProperty.get();
-        final boolean is3D = actionContext.ui().viewModel().common3D.view3DEnabledProperty.get();
-        final boolean paused = actionContext.clock().getUpdatesDisabled();
+        final boolean debug = appContext.ui().viewModel().debugModeOnProperty.get();
+        final boolean is3D = appContext.ui().viewModel().common3D.view3DEnabledProperty.get();
+        final boolean paused = appContext.clock().getUpdatesDisabled();
 
-        final String normalTitle = stageTitle(actionContext, paused, is3D);
+        final String normalTitle = stageTitle(appContext, paused, is3D);
         return (gameScene == null || !debug)
             ? normalTitle
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());
     }
 
-    private String stageTitle(GameAppContext actionContext, boolean paused, boolean is3D) {
-        final String gameVariantName = actionContext.variants().currentVariantName();
+    private String stageTitle(GameAppContext appContext, boolean paused, boolean is3D) {
+        final String gameVariantName = appContext.variants().currentVariantName();
         if (gameVariantName == null) {
             return "";
         }
 
-        final String viewModeKey = actionContext.ui().translations().translate(is3D ?
+        final String viewModeKey = appContext.ui().translations().translate(is3D ?
             "view_mode.3d" : "view_mode.2d");
 
         // In game-variant specific resource bundles, there should be two entries with placeholder
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager variantTranslations = actionContext.variants().currentVariant().config().translations();
+        final TranslationManager variantTranslations = appContext.variants().currentVariant().config().translations();
         final String titleKey = paused ? "app.title.paused" : "app.title";
         if (variantTranslations.textBundle() != null
             && variantTranslations.textBundle().containsKey(titleKey)) {

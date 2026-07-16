@@ -18,12 +18,12 @@ public class DS_GameSceneKeys extends GameDashboardSection {
     }
 
     @Override
-    public void update(GameAppContext actionContext) {
-        super.update(actionContext);
-        actionContext.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> updateInfo(actionContext, gameScene));
+    public void update(GameAppContext appContext) {
+        super.update(appContext);
+        appContext.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> updateInfo(appContext, gameScene));
     }
 
-    private void updateInfo(GameAppContext actionContext, GameScene gameScene) {
+    private void updateInfo(GameAppContext appContext, GameScene gameScene) {
         clearSection();
         final var currentBindingsMap = gameScene.actionBindings().actionBindings();
         if (currentBindingsMap.isEmpty()) {
@@ -34,7 +34,7 @@ public class DS_GameSceneKeys extends GameDashboardSection {
                 .forEach(entry -> {
                     final KeyCombination keyCombination = entry.getKey();
                     final GameAction action = entry.getValue();
-                    final String localizedActionText = actionContext.ui().translations().translate(action.resourceBundleKey());
+                    final String localizedActionText = appContext.ui().translations().translate(action.resourceBundleKey());
                     addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled()));
                 });
         }

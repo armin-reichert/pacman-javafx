@@ -25,12 +25,12 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    public static HelpInfo build(GameAppContext actionContext) {
-        final GameContext gameContext = actionContext.currentGameContext();
+    public static HelpInfo build(GameAppContext appContext) {
+        final GameContext gameContext = appContext.currentGameContext();
         final GameState state = gameContext.state();
         final boolean demoLevel = gameContext.gamePlay().isDemoLevelRunning(gameContext);
 
-        final HelpInfo helpInfo = new HelpInfo(actionContext);
+        final HelpInfo helpInfo = new HelpInfo(appContext);
         if (GameStateID.GAME_INTRO.identifies(state)) {
             helpInfo.addInfoForIntroScene();
         }
@@ -51,20 +51,20 @@ public class HelpInfo {
         return helpInfo;
     }
 
-    private final GameAppContext actionContext;
+    private final GameAppContext appContext;
 
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text>  column1 = new ArrayList<>();
 
-    public HelpInfo(GameAppContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+    public HelpInfo(GameAppContext appContext) {
+        this.appContext = requireNonNull(appContext);
     }
 
     private String translate(String key, Object... args) {
-        return actionContext.ui().translations().translate(key, args);
+        return appContext.ui().translations().translate(key, args);
     }
 
-    public Pane createPane(GameAppContext actionContext, Color backgroundColor, Font font) {
+    public Pane createPane(GameAppContext appContext, Color backgroundColor, Font font) {
         final var grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(10);
@@ -80,7 +80,7 @@ public class HelpInfo {
         pane.setPadding(new Insets(10));
         pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
-        final GameContext gameContext = actionContext.currentGameContext();
+        final GameContext gameContext = appContext.currentGameContext();
         final GameCheats cheats = gameContext.cheats();
 
         // add default entries:

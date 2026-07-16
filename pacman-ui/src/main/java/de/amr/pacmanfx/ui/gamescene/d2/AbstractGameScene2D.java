@@ -43,8 +43,8 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 
     private Canvas canvas;
 
-    public AbstractGameScene2D(GameAppContext actionContext) {
-        super(actionContext);
+    public AbstractGameScene2D(GameAppContext appContext) {
+        super(appContext);
     }
 
     @Override

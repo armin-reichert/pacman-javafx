@@ -20,7 +20,7 @@ public interface GameSceneConfig extends Disposable {
 
     boolean gameSceneHasID(GameScene gameScene, Identifier sceneID);
 
-    Optional<GameScene> selectGameScene(GameAppContext actionContext, GameModel model);
+    Optional<GameScene> selectGameScene(GameAppContext appContext, GameModel model);
 
     Identifier resolveCutSceneID(GameContext gameContext);
 

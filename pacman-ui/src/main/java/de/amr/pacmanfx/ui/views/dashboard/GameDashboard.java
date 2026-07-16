@@ -21,16 +21,16 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
         setId("game-dashboard");
     }
 
-    public void setGameActionContext(GameAppContext actionContext) {
-        requireNonNull(actionContext);
-        sections().forEach(section -> section.setGameActionContext(actionContext));
+    public void setGameActionContext(GameAppContext appContext) {
+        requireNonNull(appContext);
+        sections().forEach(section -> section.setGameActionContext(appContext));
     }
 
-    public void update(GameAppContext actionContext) {
-        requireNonNull(actionContext);
+    public void update(GameAppContext appContext) {
+        requireNonNull(appContext);
         sections()
             .filter(GameDashboardSection::isExpanded)
-            .forEach(section -> section.update(actionContext));
+            .forEach(section -> section.update(appContext));
     }
 
     public void updateSectionOrder() {

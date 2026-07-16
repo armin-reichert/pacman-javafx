@@ -36,21 +36,21 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     @Override
-    public void setGameActionContext(GameAppContext actionContext) {
+    public void setGameActionContext(GameAppContext appContext) {
 
-        addDynamicInfo("Game State",  () -> actionContext.currentGameContext().state().name());
+        addDynamicInfo("Game State",  () -> appContext.currentGameContext().state().name());
 
-        addDynamicInfo("State Timer", () -> stateTimerInfo(actionContext.currentGameContext().state()));
+        addDynamicInfo("State Timer", () -> stateTimerInfo(appContext.currentGameContext().state()));
 
-        addDynamicInfo("Game Scene", fnGameSceneInfo(actionContext,
+        addDynamicInfo("Game Scene", fnGameSceneInfo(appContext,
             gameScene -> gameScene.getClass().getSimpleName())
         );
 
-        addDynamicInfo("Level Number", fnGameLevelInfo(actionContext,
+        addDynamicInfo("Level Number", fnGameLevelInfo(appContext,
             level -> (level.isDemoLevel() ? "%d (Demo Level)" : "%d").formatted(level.number()))
         );
 
-        addDynamicInfo("World Map", fnGameLevelInfo(actionContext,
+        addDynamicInfo("World Map", fnGameLevelInfo(appContext,
             level -> {
                 final String url = level.worldMap().url();
                 return url == null
@@ -59,7 +59,7 @@ public class DS_GameInfo extends GameDashboardSection {
             })
         );
 
-        addDynamicInfo("Fill/Stroke/Pellet", fnGameLevelInfo(actionContext,
+        addDynamicInfo("Fill/Stroke/Pellet", fnGameLevelInfo(appContext,
             level -> {
                 final WorldMap worldMap = level.worldMap();
                 MapColorScheme colorScheme = null;
@@ -67,7 +67,7 @@ public class DS_GameInfo extends GameDashboardSection {
                     colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
                 }
                 else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                    colorScheme = actionContext.variants().currentVariant().config().colorScheme(worldMap);
+                    colorScheme = appContext.variants().currentVariant().config().colorScheme(worldMap);
                 }
                 if (colorScheme != null) {
                     return "%s / %s / %s".formatted(
@@ -79,25 +79,25 @@ public class DS_GameInfo extends GameDashboardSection {
             })
         );
 
-        addDynamicInfo("Hunting Phase",  fnGameLevelInfo(actionContext, this::fmtHuntingPhase));
-        addDynamicInfo("-Running",       fnGameLevelInfo(actionContext, level -> fmtHuntingTicksRunning(level.huntingTimer())));
-        addDynamicInfo("-Remaining",     fnGameLevelInfo(actionContext, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
-        addDynamicInfo("Collision mode", fnGameRulesInfo(actionContext, rules -> fmtCollisionMode(rules.getCollisionStrategy())));
-        addDynamicInfo("Pac-Man speed",  supplyGameLevelSpeedInfo(actionContext, this::fmtPacNormalSpeed));
-        addDynamicInfo("- empowered",    supplyGameLevelSpeedInfo(actionContext, this::fmtPacSpeedPowered));
-        addDynamicInfo("Power Duration", fnGameLevelInfo(actionContext, this::fmtPacPowerTime));
-        addDynamicInfo("Pellets",        fnGameLevelInfo(actionContext, this::fmtPelletCount));
-        addDynamicInfo("Ghost speed",    supplyGameLevelSpeedInfo(actionContext, this::fmtGhostAttackSpeed));
-        addDynamicInfo("- frightened",   supplyGameLevelSpeedInfo(actionContext, this::fmtGhostSpeedFrightened));
-        addDynamicInfo("- in tunnel",    supplyGameLevelSpeedInfo(actionContext, this::fmtGhostSpeedTunnel));
-        addDynamicInfo("Maze flashes",   fnGameLevelInfo(actionContext, this::fmtNumFlashes));
+        addDynamicInfo("Hunting Phase",  fnGameLevelInfo(appContext, this::fmtHuntingPhase));
+        addDynamicInfo("-Running",       fnGameLevelInfo(appContext, level -> fmtHuntingTicksRunning(level.huntingTimer())));
+        addDynamicInfo("-Remaining",     fnGameLevelInfo(appContext, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
+        addDynamicInfo("Collision mode", fnGameRulesInfo(appContext, rules -> fmtCollisionMode(rules.getCollisionStrategy())));
+        addDynamicInfo("Pac-Man speed",  supplyGameLevelSpeedInfo(appContext, this::fmtPacNormalSpeed));
+        addDynamicInfo("- empowered",    supplyGameLevelSpeedInfo(appContext, this::fmtPacSpeedPowered));
+        addDynamicInfo("Power Duration", fnGameLevelInfo(appContext, this::fmtPacPowerTime));
+        addDynamicInfo("Pellets",        fnGameLevelInfo(appContext, this::fmtPelletCount));
+        addDynamicInfo("Ghost speed",    supplyGameLevelSpeedInfo(appContext, this::fmtGhostAttackSpeed));
+        addDynamicInfo("- frightened",   supplyGameLevelSpeedInfo(appContext, this::fmtGhostSpeedFrightened));
+        addDynamicInfo("- in tunnel",    supplyGameLevelSpeedInfo(appContext, this::fmtGhostSpeedTunnel));
+        addDynamicInfo("Maze flashes",   fnGameLevelInfo(appContext, this::fmtNumFlashes));
     }
 
     private Supplier<String> supplyGameLevelSpeedInfo(
-        GameAppContext actionContext,
+        GameAppContext appContext,
         BiFunction<GameLevel, ActorSpeedSettings, String> fnInfo) {
         return () -> {
-            final GameModel model = actionContext.currentGameContext().model();
+            final GameModel model = appContext.currentGameContext().model();
             final ActorSpeedSettings speedControl = model.rules().actorSpeedControl();
             return model.optLevel().map(level -> fnInfo.apply(level, speedControl)).orElse(NO_INFO);
         };

@@ -34,22 +34,22 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         return this;
     }
 
-    public void setGameActionContext(GameAppContext actionContext) {}
+    public void setGameActionContext(GameAppContext appContext) {}
 
-    public void update(GameAppContext actionContext) {
+    public void update(GameAppContext appContext) {
         dynamicInfoTexts.forEach(DynamicInfoText::update);
     }
 
-    protected Supplier<String> fnGameSceneInfo(GameAppContext actionContext, Function<GameScene, String> fnInfo) {
-        return () -> actionContext.optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
+    protected Supplier<String> fnGameSceneInfo(GameAppContext appContext, Function<GameScene, String> fnInfo) {
+        return () -> appContext.optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> fnGameLevelInfo(GameAppContext actionContext, Function<GameLevel, String> fnInfo) {
-        return () -> actionContext.currentGameContext().model().optLevel().map(fnInfo).orElse(NO_INFO);
+    protected Supplier<String> fnGameLevelInfo(GameAppContext appContext, Function<GameLevel, String> fnInfo) {
+        return () -> appContext.currentGameContext().model().optLevel().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> fnGameRulesInfo(GameAppContext actionContext, Function<GameRules, String> fnInfo) {
-        return () -> fnInfo.apply(actionContext.currentGameContext().model().rules());
+    protected Supplier<String> fnGameRulesInfo(GameAppContext appContext, Function<GameRules, String> fnInfo) {
+        return () -> fnInfo.apply(appContext.currentGameContext().model().rules());
     }
 
     protected void addDynamicInfo(String label, Supplier<?> infoSupplier) {

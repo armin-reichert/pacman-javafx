@@ -24,20 +24,20 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSceneManager {
 
-    private GameAppContext actionContext;
+    private GameAppContext appContext;
 
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
     public GameSceneManager() {
         currentGameScene.addListener((_, _, newGameScene) -> {
             if (newGameScene != null) {
-                actionContext.ui().views().gamePlayView().embedGameScene(newGameScene);
+                appContext.ui().views().gamePlayView().embedGameScene(newGameScene);
             }
         });
     }
 
-    public void setGameActionContext(GameAppContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+    public void setGameActionContext(GameAppContext appContext) {
+        this.appContext = requireNonNull(appContext);
     }
 
     public Optional<GameScene> optCurrentGameScene() {
@@ -53,11 +53,11 @@ public class GameSceneManager {
     }
 
     public void updateGameSceneAndForceReload(boolean forceReload) {
-        final GameVariantConfig variantConfig = actionContext.variants().currentVariant().config();
-        final GameModel model = actionContext.currentGameContext().model();
+        final GameVariantConfig variantConfig = appContext.variants().currentVariant().config();
+        final GameModel model = appContext.currentGameContext().model();
 
         final GameScene currentGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = variantConfig.gameSceneConfig().selectGameScene(actionContext, model).orElse(null);
+        final GameScene nextGameScene = variantConfig.gameSceneConfig().selectGameScene(appContext, model).orElse(null);
 
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
@@ -70,7 +70,7 @@ public class GameSceneManager {
             Logger.info("No game scene change but reload requested");
         }
 
-        actionContext.ui().views().gamePlayView().replaceGameScene(currentGameScene, nextGameScene);
+        appContext.ui().views().gamePlayView().replaceGameScene(currentGameScene, nextGameScene);
 
         //TODO rethink this
         model.optLevel().ifPresent(level -> handle2D3DSwitch(variantConfig, level, currentGameScene, nextGameScene));
@@ -89,7 +89,7 @@ public class GameSceneManager {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
 
-        final GameVariantConfig config = actionContext.variants().currentVariant().config();
+        final GameVariantConfig config = appContext.variants().currentVariant().config();
         return config.gameSceneConfig().gameSceneHasID(gameScene, sceneID);
     }
 

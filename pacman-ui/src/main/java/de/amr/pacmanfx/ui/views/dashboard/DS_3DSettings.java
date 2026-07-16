@@ -39,16 +39,16 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void setGameActionContext(GameAppContext actionContext) {
-        final GameViewModel viewModel = actionContext.ui().viewModel();
+    public void setGameActionContext(GameAppContext appContext) {
+        final GameViewModel viewModel = appContext.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
         comboPerspectives = choiceBox("Perspective", PerspectiveID.values());
         colorPicker("Light Color", viewModel.maze3D.lightColorProperty);
         colorPicker("Floor Color", viewModel.maze3D.floorColorProperty);
-        addDynamicInfo("Camera",         () -> subSceneCameraInfo(actionContext));
-        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(actionContext));
-        addDynamicInfo("Scene Size",     () -> sceneSizeInfo(actionContext));
+        addDynamicInfo("Camera",         () -> subSceneCameraInfo(appContext));
+        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(appContext));
+        addDynamicInfo("Scene Size",     () -> sceneSizeInfo(appContext));
 
         cbMiniViewVisible = checkBox("Mini View", viewModel.miniView.activeProperty);
 
@@ -91,19 +91,19 @@ public class DS_3DSettings extends GameDashboardSection {
         editPropertyWithSlider(sliderWallOpacity,               viewModel.maze3D.wallOpacityProperty);
         editPropertyWithChoiceBox(comboPerspectives,               viewModel.common3D.cameraPerspectiveIdProperty);
 
-        cbUsePlayScene3D.setOnAction(_ -> actionContext.commonActions().uiSettingsActions().actionTogglePlayScene2D3D().execute());
-        cbWireframeMode.setOnAction(_ -> actionContext.commonActions().camera3DActions().actionToggleDrawMode().execute());
+        cbUsePlayScene3D.setOnAction(_ -> appContext.commonActions().uiSettingsActions().actionTogglePlayScene2D3D().execute());
+        cbWireframeMode.setOnAction(_ -> appContext.commonActions().camera3DActions().actionToggleDrawMode().execute());
     }
 
     @Override
-    public void update(GameAppContext actionContext) {
-        super.update(actionContext);
+    public void update(GameAppContext appContext) {
+        super.update(appContext);
 
-        final GameViewModel viewModel = actionContext.ui().viewModel();
+        final GameViewModel viewModel = appContext.ui().viewModel();
 
         comboPerspectives.setValue(viewModel.common3D.cameraPerspectiveIdProperty.get());
 
-        sliderMiniViewSceneHeight.setDisable(actionContext.ui().views().gamePlayView().miniPlaySceneView().isMoving());
+        sliderMiniViewSceneHeight.setDisable(appContext.ui().views().gamePlayView().miniPlaySceneView().isMoving());
 
         cbUsePlayScene3D.setSelected(viewModel.common3D.view3DEnabledProperty.get());
 
@@ -116,15 +116,15 @@ public class DS_3DSettings extends GameDashboardSection {
         cbWireframeMode.setSelected(viewModel.common3D.drawModeProperty.get() == DrawMode.LINE);
     }
 
-    private String subSceneSizeInfo(GameAppContext actionContext) {
-        return actionContext.optCurrentGameScene()
+    private String subSceneSizeInfo(GameAppContext appContext) {
+        return appContext.optCurrentGameScene()
             .flatMap(GameScene::optSubSceneFX)
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
-    private String subSceneCameraInfo(GameAppContext actionContext) {
-        final GameScene gameScene = actionContext.optCurrentGameScene().orElse(null);
+    private String subSceneCameraInfo(GameAppContext appContext) {
+        final GameScene gameScene = appContext.optCurrentGameScene().orElse(null);
 
         if (gameScene == null) return NO_INFO;
 
@@ -137,20 +137,20 @@ public class DS_3DSettings extends GameDashboardSection {
             .orElse(NO_INFO);
     }
 
-    private String sceneSizeInfo(GameAppContext actionContext) {
-        final GameModel gameModel = actionContext.currentGameContext().model();
-        final GameScene gameScene = actionContext.optCurrentGameScene().orElse(null);
+    private String sceneSizeInfo(GameAppContext appContext) {
+        final GameModel model = appContext.currentGameContext().model();
+        final GameScene scene = appContext.optCurrentGameScene().orElse(null);
 
-        if (gameScene == null) return NO_INFO;
+        if (scene == null) return NO_INFO;
 
-        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
+        if (scene instanceof AbstractGameScene2D gameScene2D) {
             return "%dx%d (scaled: %.0fx%.0f)".formatted(
                 gameScene2D.unscaledWidth(), gameScene2D.unscaledHeight(),
                 gameScene2D.scaledWidth(), gameScene2D.scaledHeight());
         }
 
-        if (gameModel.optLevel().isPresent()) {
-            final WorldMap worldMap = gameModel.optLevel().get().worldMap();
+        if (model.optLevel().isPresent()) {
+            final WorldMap worldMap = model.assertLevel().worldMap();
             return "%dx%d (map size px)".formatted(worldMap.numCols() * WorldMap.TS, worldMap.numRows() * WorldMap.TS);
         }
 

@@ -2,5 +2,5 @@ package de.amr.pacmanfx.ui.action.core;
 
 public interface QuitHandler {
 
-    void handleQuit(GameAppContext actionContext);
+    void handleQuit(GameAppContext appContext);
 }

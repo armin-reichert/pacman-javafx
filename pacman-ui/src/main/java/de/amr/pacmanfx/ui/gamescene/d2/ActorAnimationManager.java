@@ -14,9 +14,9 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 
 public class ActorAnimationManager {
 
-    public static void ensureActorAnimationsCreated(GameAppContext actionContext, GameLevel level) {
-        final GameVariantConfig config = actionContext.variants().currentVariant().config();
-        final SpriteAnimationContainer animationContainer = actionContext.ui().sprites().animations();
+    public static void ensureActorAnimationsCreated(GameAppContext appContext, GameLevel level) {
+        final GameVariantConfig config = appContext.variants().currentVariant().config();
+        final SpriteAnimationContainer animationContainer = appContext.ui().sprites().animations();
         final Pac pac = level.entities().pac();
         if (pac.animations().isEmpty()) {
             pac.setAnimations(config.createPacAnimations(animationContainer));

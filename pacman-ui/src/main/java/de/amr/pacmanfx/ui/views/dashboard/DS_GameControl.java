@@ -39,18 +39,18 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     @Override
-    public void setGameActionContext(GameAppContext actionContext) {
-        final CoinMechanism coinMechanism = actionContext.coinMechanism();
-        final CommonGameActions actions = actionContext.commonActions();
+    public void setGameActionContext(GameAppContext appContext) {
+        final CoinMechanism coinMechanism = appContext.coinMechanism();
+        final CommonGameActions actions = appContext.commonActions();
 
         spinnerCredit            = intSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
         choiceBoxInitialLives    = choiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = buttonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = buttonList("Cut Scenes Test", List.of("Start", "Quit"));
-        addDynamicInfo("Collision Mode", fnGameRulesInfo(actionContext, rules -> rules.getCollisionStrategy().name()));
+        addDynamicInfo("Collision Mode", fnGameRulesInfo(appContext, rules -> rules.getCollisionStrategy().name()));
         cbCollisionCheckedTwice  = checkBox("Collision Check 2x");
 
-        setAction(choiceBoxInitialLives, () -> actionContext.currentGameContext().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
+        setAction(choiceBoxInitialLives, () -> appContext.currentGameContext().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
 
         //TODO Here we would need to access the Arcade-specific action to start the game
 //        setGameAction(buttonGroupLevelActions[GAME_LEVEL_START],       actionToStartTheGamePlay);
@@ -61,14 +61,14 @@ public class DS_GameControl extends GameDashboardSection {
         setGameAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
-            actionContext.currentGameContext().model().rules().collisionDoubleCheckedProperty().set(cbCollisionCheckedTwice.isSelected()));
+            appContext.currentGameContext().model().rules().collisionDoubleCheckedProperty().set(cbCollisionCheckedTwice.isSelected()));
     }
 
     @Override
-    public void update(GameAppContext actionContext) {
-        super.update(actionContext);
+    public void update(GameAppContext appContext) {
+        super.update(appContext);
 
-        final GameContext gameContext = actionContext.currentGameContext();
+        final GameContext gameContext = appContext.currentGameContext();
         final GameModel model = gameContext.model();
         final GameState state = gameContext.state();
 
@@ -79,7 +79,7 @@ public class DS_GameControl extends GameDashboardSection {
         spinnerCredit.setDisable(creditDisabled);
 
         final boolean booting = GameStateID.BOOT.identifies(state);
-        buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(actionContext, state));
+        buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(appContext, state));
         buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(model, state));
         buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || model.optLevel().isEmpty());
 
@@ -89,10 +89,10 @@ public class DS_GameControl extends GameDashboardSection {
         cbCollisionCheckedTwice.setSelected(gameContext.model().rules().collisionDoubleCheckedProperty().get());
     }
 
-    private boolean canStartLevel(GameAppContext actionContext, GameState gameState) {
-        boolean isArcadeGame = GameVariantID.isArcadeGameName(actionContext.variants().currentVariantName());
+    private boolean canStartLevel(GameAppContext appContext, GameState gameState) {
+        boolean isArcadeGame = GameVariantID.isArcadeGameName(appContext.variants().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
-        return !actionContext.currentGameContext().coinMechanism().isEmpty()
+        return !appContext.currentGameContext().coinMechanism().isEmpty()
             && gameState.isOneOf(GameStateID.GAME_INTRO, GameStateID.GAME_PREPARATION);
     }
 

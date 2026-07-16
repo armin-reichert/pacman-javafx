@@ -53,18 +53,18 @@ public class GameMainScene extends Scene {
         return (StackPane) getRoot();
     }
 
-    public void setGameActionContext(GameAppContext actionContext) {
+    public void setGameActionContext(GameAppContext appContext) {
         // Delegate mouse scroll events to current game scene
-        setOnScroll(e -> actionContext.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        setOnScroll(e -> appContext.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> selectBackground(actionContext.ui()),
-            actionContext.ui().views().currentViewIDProperty(),
-            actionContext.ui().gameScenes().currentGameSceneProperty()
+            () -> selectBackground(appContext.ui()),
+            appContext.ui().views().currentViewIDProperty(),
+            appContext.ui().gameScenes().currentGameSceneProperty()
         ));
 
-        statusIconBox.setGameActionContext(actionContext);
-        keyboardInfoPopup.setGameActionContext(actionContext);
+        statusIconBox.setGameActionContext(appContext);
+        keyboardInfoPopup.setGameActionContext(appContext);
 
         rootPane().getChildren().addAll(
             gameViewHolder,

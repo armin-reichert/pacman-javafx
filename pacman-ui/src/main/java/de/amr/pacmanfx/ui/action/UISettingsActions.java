@@ -33,16 +33,16 @@ public class UISettingsActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public UISettingsActions(GameAppContext actionContext) {
+    public UISettingsActions(GameAppContext appContext) {
 
-        actionEnterFullScreen = new GameAction(actionContext, "enter_fullscreen") {
+        actionEnterFullScreen = new GameAction(appContext, "enter_fullscreen") {
             @Override
             protected void doAction() {
                 appContext.ui().window().stage().setFullScreen(true);
             }
         };
 
-        actionShowHelp = new GameAction(actionContext, "show_help") {
+        actionShowHelp = new GameAction(appContext, "show_help") {
             @Override
             protected void doAction() {
                 appContext.ui().views().gamePlayView().showHelp(appContext);
@@ -60,7 +60,7 @@ public class UISettingsActions {
             }
         };
 
-        actionToggleDashboard = new GameAction(actionContext, "toggle_dashboard") {
+        actionToggleDashboard = new GameAction(appContext, "toggle_dashboard") {
             @Override
             protected void doAction() {
                 appContext.ui().views().gamePlayView().dashboard().toggleVisibility();
@@ -72,21 +72,21 @@ public class UISettingsActions {
             }
         };
 
-        actionToggleDebugInfo = new GameAction(actionContext, "toggle_debug_info") {
+        actionToggleDebugInfo = new GameAction(appContext, "toggle_debug_info") {
             @Override
             protected void doAction() {
                 toggleBooleanProperty(appContext.ui().viewModel().debugModeOnProperty);
             }
         };
 
-        actionToggleKeyboardMonitor = new GameAction(actionContext, "toggle_keyboard_monitor") {
+        actionToggleKeyboardMonitor = new GameAction(appContext, "toggle_keyboard_monitor") {
             @Override
             protected void doAction() {
                 toggleBooleanProperty(appContext.ui().viewModel().keyboardMonitorOnProperty);
             }
         };
 
-        actionToggleMiniViewVisibility = new GameAction(actionContext, "toggle_mini_view_visibility") {
+        actionToggleMiniViewVisibility = new GameAction(appContext, "toggle_mini_view_visibility") {
             @Override
             protected void doAction() {
                 toggleBooleanProperty(appContext.ui().viewModel().miniView.activeProperty);
@@ -98,7 +98,7 @@ public class UISettingsActions {
             }
         };
 
-        actionTogglePlayScene2D3D = new GameAction(actionContext, "toggle_play_scene_2d_3d") {
+        actionTogglePlayScene2D3D = new GameAction(appContext, "toggle_play_scene_2d_3d") {
             @Override
             protected void doAction() {
                 toggleBooleanProperty(appContext.ui().viewModel().common3D.view3DEnabledProperty);
@@ -124,7 +124,7 @@ public class UISettingsActions {
             }
 
             private boolean isLevelPlaying() {
-                final GameState gameState = appContext.currentGameContext().state();
+                final GameState gameState = gameContext().state();
                 return GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };
