@@ -49,7 +49,7 @@ public class GameStartingState extends GameState {
         }
         else if (tick == TICK_START_HUNTING) {
             model.setPlaying(true);
-            context.flow().enterState(GameStateID.GAME_LEVEL_PLAYING);
+            context.flow().enterState(context, GameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

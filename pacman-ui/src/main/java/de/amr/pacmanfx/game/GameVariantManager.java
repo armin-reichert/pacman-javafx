@@ -99,11 +99,9 @@ public class GameVariantManager implements ChangeListener<String> {
         //TODO rethink
         gameImpl.ui().viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
 
-        final var gameVariantContext = new GameContextImpl(gameImpl.coinMechanism(), gameVariant);
-        gameVariantContext.flow().setContext(gameVariantContext);
-        gameVariantContext.eventManager().addGameEventSubscriber(gameImpl.ui());
-
-        gameImpl.setGameContext(gameVariantContext);
+        final var gameContext = new GameContextImpl(gameImpl.coinMechanism(), gameVariant);
+        gameContext.eventManager().addGameEventSubscriber(gameImpl.ui());
+        gameImpl.setGameContext(gameContext);
     }
 
     private void exitGameVariant(GameVariant gameVariant) {

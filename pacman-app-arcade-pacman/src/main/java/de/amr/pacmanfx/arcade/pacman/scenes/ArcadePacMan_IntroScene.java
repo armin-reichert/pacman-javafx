@@ -85,7 +85,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     public ArcadePacMan_IntroScene(GameActionContext actionContext) {
         super(actionContext);
-        flow = new StateMachine<>(this, List.of(SceneState.values()));
+        flow = new StateMachine<>(List.of(SceneState.values()));
     }
 
     @Override
@@ -95,7 +95,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         actionBindings().registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
         actionBindings().registerAllBindings(actionContext().commonActions().sceneTestActions().bindings()); // actions for starting tests
 
-        flow.restartState(SceneState.STARTING);
+        flow.restartState(this, SceneState.STARTING);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        flow.update();
+        flow.update(this);
     }
 
     private void initScene() {
@@ -253,7 +253,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
                 if (timer.tickCount() == TICK_TITLE_VISIBLE) {
                     scene.titleVisible = true;
                 } else if (timer.tickCount() == TICK_START_PRESENTING_GHOSTS) {
-                    scene.flow.enterState(PRESENTING_GHOSTS);
+                    scene.flow.enterState(scene, PRESENTING_GHOSTS);
                 }
             }
         },
@@ -269,7 +269,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
                     case TICK_GHOST_CHARACTER_VISIBLE -> scene.ghostCharacterVisible[scene.ghostIndex] = true;
                     case TICK_GHOST_NICKNAME_VISIBLE  -> scene.ghostNicknameVisible[scene.ghostIndex] = true;
                     case TICK_GHOST_PRESENT_NEXT      -> presentNextGhost(scene);
-                    case TICK_GHOST_PRESENTATION_END  -> scene.flow.enterState(SHOWING_POINTS);
+                    case TICK_GHOST_PRESENTATION_END  -> scene.flow.enterState(scene, SHOWING_POINTS);
                 }
             }
 
@@ -290,7 +290,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (timer.tickCount() == TICK_SHOW_POINTS_DURATION) {
-                    scene.flow.enterState(CHASING_PAC_MAN);
+                    scene.flow.enterState(scene, CHASING_PAC_MAN);
                 }
             }
         },
@@ -315,7 +315,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
                     scene.turnCardsRestartPacMan();
                 }
                 else if (tick == TICK_CHASING_PAC_MAN_END) {
-                    scene.flow.enterState(CHASING_GHOSTS);
+                    scene.flow.enterState(scene, CHASING_GHOSTS);
                     return;
                 }
                 scene.chasePacMan(tick);
@@ -337,7 +337,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
                 final long tick = timer.tickCount();
                 if (tick == TICK_CHASING_GHOSTS_END) {
                     scene.pacMan.hide();
-                    scene.flow.enterState(WAIT_FOR_DEMO_LEVEL);
+                    scene.flow.enterState(scene, WAIT_FOR_DEMO_LEVEL);
                 } else {
                     scene.chaseGhosts(tick);
                 }
@@ -354,7 +354,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.ghosts[GameModel.ORANGE_GHOST_POKEY].hide();
-                    scene.gameContext().flow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
+                    scene.gameContext().flow().enterState(scene.gameContext(), GameStateID.GAME_OR_LEVEL_STARTING);
                 }
             }
         };

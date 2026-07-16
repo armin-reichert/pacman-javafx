@@ -58,7 +58,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
     public ArcadeMsPacMan_IntroScene(GameActionContext actionContext) {
         super(actionContext);
-        sceneFlow = new StateMachine<>(this, List.of(SceneState.values()));
+        sceneFlow = new StateMachine<>(List.of(SceneState.values()));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         actionBindings().registerAllBindings(actions.gameStartActionBindings());
         actionBindings().registerAllBindings(actionContext().commonActions().sceneTestActions().bindings());
 
-        sceneFlow.restartState(SceneState.STARTING);
+        sceneFlow.restartState(this, SceneState.STARTING);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        sceneFlow.update();
+        sceneFlow.update(this);
     }
 
     private void initScene() {
@@ -142,7 +142,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marquee.timer().doTick();
                 if (timer.atSecond(1)) {
-                    scene.sceneFlow.enterState(GHOSTS_MARCHING_IN);
+                    scene.sceneFlow.enterState(scene, GHOSTS_MARCHING_IN);
                 }
             }
         },
@@ -154,7 +154,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                 boolean atEndPosition = letGhostWalkIn(scene);
                 if (atEndPosition) {
                     if (scene.presentedGhostPersonality == GameModel.ORANGE_GHOST_POKEY) {
-                        scene.sceneFlow.enterState(MS_PACMAN_MARCHING_IN);
+                        scene.sceneFlow.enterState(scene, MS_PACMAN_MARCHING_IN);
                     } else {
                         ++scene.presentedGhostPersonality;
                     }
@@ -200,7 +200,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                 if (scene.msPacMan.x() <= STOP_X_MS_PACMAN) {
                     scene.msPacMan.setSpeed(0);
                     scene.msPacMan.animations().resetSelected();
-                    scene.sceneFlow.enterState(READY_TO_PLAY);
+                    scene.sceneFlow.enterState(scene, READY_TO_PLAY);
                 }
             }
         },
@@ -208,16 +208,16 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameContext context = scene.actionContext().currentGameContext();
-                final GameFlow flow = context.flow();
-                final boolean canPlay = !context.coinMechanism().isEmpty();
+                final GameContext gameContext = scene.actionContext().currentGameContext();
+                final GameFlow gameFlow = gameContext.flow();
+                final boolean canPlay = !gameContext.coinMechanism().isEmpty();
                 scene.marquee.timer().doTick();
                 if (timer.atSecond(2.0) && !canPlay) {
-                    flow.enterState(GameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
+                    gameFlow.enterState(gameContext, GameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
                 }
                 //TODO can this happen at all?
                 else if (timer.atSecond(5)) {
-                    flow.enterState(GameStateID.GAME_PREPARATION);
+                    gameFlow.enterState(gameContext, GameStateID.GAME_PREPARATION);
                 }
             }
         };

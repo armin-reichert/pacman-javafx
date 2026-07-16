@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.game;
 
 public interface GameLifecycle {
-    void startGamePlay();
-    void suspendGamePlay();
+    void startPlaying();
+    void suspendPlaying();
     void terminate();
 }

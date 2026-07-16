@@ -28,7 +28,7 @@ public class TestActions {
         actionTestCutScenes = new GameAction(actionContext, "test_cut_scenes") {
             @Override
             public void doAction() {
-                actionContext.currentGameContext().flow().enterState(TestStateID.CUT_SCENE_TEST);
+                actionContext.currentGameContext().flow().enterState(actionContext.currentGameContext(), TestStateID.CUT_SCENE_TEST);
                 actionContext.ui().shortMessage("Cut scenes test"); //TODO localize
             }
 
@@ -41,7 +41,7 @@ public class TestActions {
         actionTestLevelShort = new GameAction(actionContext, "short_level_test") {
             @Override
             public void doAction() {
-                actionContext.currentGameContext().flow().restartState(TestStateID.LEVEL_TEST_S);
+                actionContext.currentGameContext().flow().restartState(actionContext.currentGameContext(), TestStateID.LEVEL_TEST_S);
                 actionContext.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
             }
 
@@ -54,7 +54,7 @@ public class TestActions {
         actionTestLevelMedium = new GameAction(actionContext, "medium_level_test") {
             @Override
             public void doAction() {
-                actionContext.currentGameContext().flow().restartState(TestStateID.LEVEL_TEST_M);
+                actionContext.currentGameContext().flow().restartState(actionContext.currentGameContext(), TestStateID.LEVEL_TEST_M);
                 actionContext.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
             }
 

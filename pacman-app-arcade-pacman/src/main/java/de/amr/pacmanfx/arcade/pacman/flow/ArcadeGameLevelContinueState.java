@@ -45,7 +45,7 @@ public class ArcadeGameLevelContinueState extends GameState {
             context.eventManager().publishGameEvent(new GameContinuedEvent());
         }
         else if (tick == TICK_RESUME_HUNTING) {
-            flow.enterState(GameStateID.GAME_LEVEL_PLAYING);
+            flow.enterState(context, GameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

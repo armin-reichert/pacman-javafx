@@ -32,7 +32,7 @@ public class GameFlowActions {
         actionStartGame = new GameAction(actionContext, "start_game") {
             @Override
             protected void doAction() {
-                actionContext.lifecycle().startGamePlay();
+                actionContext.lifecycle().startPlaying();
             }
         };
 
@@ -61,9 +61,9 @@ public class GameFlowActions {
                     gameState.onExit(gameContext);
                 }
 
-                actionContext.lifecycle().suspendGamePlay();
+                actionContext.lifecycle().suspendPlaying();
                 actionContext.clock().start();
-                gameContext.flow().restartState(GameStateID.GAME_INTRO);
+                gameContext.flow().restartState(actionContext.currentGameContext(), GameStateID.GAME_INTRO);
             }
         };
 

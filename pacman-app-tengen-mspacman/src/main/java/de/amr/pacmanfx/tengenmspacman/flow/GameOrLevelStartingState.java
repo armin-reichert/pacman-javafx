@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.flow.GameFlow;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
@@ -36,15 +35,16 @@ public class GameOrLevelStartingState extends GameState {
         if (!(context.model() instanceof TengenMsPacMan_GameModel model)) {
             throw new IllegalStateException("Illegal game model: " + context.model());
         }
-        final GameFlow flow = context.flow();
+        context.flow().enterState(context, computeNextState(model));
+    }
+
+    private GameStateID computeNextState(TengenMsPacMan_GameModel model) {
         if (model.isPlaying()) {
-            flow.enterState(GameStateID.GAME_LEVEL_CONTINUE);
+            return GameStateID.GAME_LEVEL_CONTINUE;
         }
-        else if (model.canStartNewGame()) {
-            flow.enterState(GameStateID.GAME_STARTING);
+        if (model.canStartNewGame()) {
+            return GameStateID.GAME_STARTING;
         }
-        else {
-            flow.enterState(GameStateID.DEMO_LEVEL_PLAYING);
-        }
+        return GameStateID.DEMO_LEVEL_PLAYING;
     }
 }

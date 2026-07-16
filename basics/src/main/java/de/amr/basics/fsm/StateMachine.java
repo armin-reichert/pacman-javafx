@@ -26,20 +26,17 @@ public class StateMachine<C> {
 
     protected final Set<State<C>> states = new HashSet<>();
     protected final Set<StateChangeListener<State<C>>> stateChangeListeners = new HashSet<>(5);
-    protected C context;
     protected String name = getClass().getSimpleName();
     protected State<C> state;
     protected State<C> previousState;
 
     public StateMachine() {}
 
-    public StateMachine(C context, Collection<State<C>> states) {
-        requireNonNull(context);
+    public StateMachine(Collection<State<C>> states) {
         requireNonNull(states);
         if (states.isEmpty()) {
             Logger.warn("Empty state set?");
         }
-        setContext(context);
         addStates(states);
     }
 
@@ -67,14 +64,6 @@ public class StateMachine<C> {
 
     public void setName(String name) {
         this.name = requireNonNull(name);
-    }
-
-    public C context() {
-        return context;
-    }
-
-    public void setContext(C context) {
-        this.context = requireNonNull(context);
     }
 
     @Override
@@ -150,15 +139,16 @@ public class StateMachine<C> {
      *
      * @param state the state to enter
      */
-    public void restartState(State<C> state) {
+    public void restartState(C context, State<C> state) {
         requireNonNull(state);
         resetTimers();
         this.state = null;
-        enterState(state);
+        enterState(context, state);
     }
 
-    public void restartState(String stateName) {
-        optState(stateName).ifPresentOrElse(this::restartState,
+    public void restartState(C context, String stateName) {
+        optState(stateName).ifPresentOrElse(
+            state -> restartState(context, state),
             () -> Logger.error("No state named {} found", stateName));
     }
 
@@ -171,7 +161,7 @@ public class StateMachine<C> {
      *
      * @param newState the new state
      */
-    public void enterState(State<C> newState) {
+    public void enterState(C context, State<C> newState) {
         requireNonNull(newState);
         if (newState == state) {
             return;
@@ -189,15 +179,16 @@ public class StateMachine<C> {
         stateChangeListeners.forEach(listener -> listener.onStateChange(previousState, state));
     }
 
-    public void enterStateWithName(String stateName) {
-        optState(stateName).ifPresentOrElse(this::enterState,
+    public void enterStateWithName(C context, String stateName) {
+        optState(stateName).ifPresentOrElse(
+            state -> enterState(context, state),
             () -> Logger.error("No state named {} found", stateName));
     }
 
     /**
      * Returns to the previous state.
      */
-    public void resumePreviousState() {
+    public void resumePreviousState(C context) {
         if (previousState == null) {
             throw new IllegalStateException("State machine cannot resume previous state: no previous state exists");
         }
@@ -214,7 +205,7 @@ public class StateMachine<C> {
      * <p>
      * Runs the {@link State#onUpdate} hook method (if defined) of the current state and advances the state timer.
      */
-    public void update() {
+    public void update(C context) {
         if (state == null) {
             throw new IllegalStateException("State machine cannot be updated: current state is not defined");
         }

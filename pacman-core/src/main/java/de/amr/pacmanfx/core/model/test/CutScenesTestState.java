@@ -31,7 +31,7 @@ public class CutScenesTestState extends GameState {
                 //TODO find another solution and get rid of this event type
                 context.eventManager().publishGameEvent(new GenericChangeEvent("Cut Scene Test"));
             } else {
-                context.flow().enterState(GameStateID.GAME_INTRO);
+                context.flow().enterState(context, GameStateID.GAME_INTRO);
             }
         }
     }

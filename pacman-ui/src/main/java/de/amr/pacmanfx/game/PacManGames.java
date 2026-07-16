@@ -6,6 +6,7 @@ package de.amr.pacmanfx.game;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.*;
+import de.amr.pacmanfx.core.flow.GameFlow;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
@@ -127,14 +128,18 @@ public final class PacManGames implements GameActionContext, GameLifecycle {
     // GameLifecycle
 
     @Override
-    public void startGamePlay() {
-        gameContext.flow().restartState(GameStateID.BOOT);
-        ui.views().selectGamePlayView();
+    public void startPlaying() {
+        final GameFlow gameFlow = gameContext.flow();
+
+        gameFlow.setGameContext(gameContext);
+        gameFlow.restartState(gameContext, GameStateID.BOOT);
         clock().start();
+
+        ui.views().selectGamePlayView();
     }
 
     @Override
-    public void suspendGamePlay() {
+    public void suspendPlaying() {
         ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             ui.views().gamePlayView().disembedGameScene(gameScene);
             ui.gameScenes().currentGameSceneProperty().set(null);
@@ -146,7 +151,7 @@ public final class PacManGames implements GameActionContext, GameLifecycle {
 
     @Override
     public void terminate() {
-        suspendGamePlay();
+        suspendPlaying();
         ui.terminate();
         machine.dispose();
         Logger.info("Application terminated. There is no way back!");
@@ -171,8 +176,16 @@ public final class PacManGames implements GameActionContext, GameLifecycle {
     }
 
     private void simulateAndUpdateCurrentGameScene() {
+        final GameFlow gameFlow = gameContext.flow(); //TODO store elsewhere?
+        gameFlow.setGameContext(gameContext);
+
+        // New simulation step ("frame")
         gameContext.newFrame(clock().currentTick());
-        gameContext.flow().update(); // TODO pass game context?
+
+        // Update game flow
+        gameFlow.update(gameContext);
+
+        // Update current game scene
         ui.gameScenes().optCurrentGameScene().ifPresent(gameScene ->
             Platform.runLater(() -> gameScene.onTick(gameContext)));
     }
@@ -183,7 +196,7 @@ public final class PacManGames implements GameActionContext, GameLifecycle {
 
     private void handleFatalError(Throwable reason) {
         Platform.runLater(() -> {
-            suspendGamePlay();
+            suspendPlaying();
             final String errorMessage = ui.translations().translate("error.oh_no_my_program");
             ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
             Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");

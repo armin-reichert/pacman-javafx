@@ -56,7 +56,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     @Override
     public void handleQuit(GameActionContext actionContext) {
         onDeactivate();
-        gameContext().flow().enterState(GameStateID.GAME_OVER);
+        gameContext().flow().enterState(gameContext(), GameStateID.GAME_OVER);
     }
 
     @Override

@@ -34,13 +34,13 @@ public class ArcadeGameLevelCompleteState extends GameState {
         if (timer().hasExpired()) {
             if (level.isDemoLevel()) {
                 // just in case: if demo level was completed, go back to intro scene
-                flow.enterState(GameStateID.GAME_INTRO);
+                flow.enterState(context, GameStateID.GAME_INTRO);
             }
             else if (cutSceneFollows && flow.cutScenesEnabled()) {
-                flow.enterState(GameStateID.GAME_LEVEL_INTERMISSION);
+                flow.enterState(context, GameStateID.GAME_LEVEL_INTERMISSION);
             }
             else {
-                flow.enterState(GameStateID.GAME_LEVEL_TRANSITION);
+                flow.enterState(context, GameStateID.GAME_LEVEL_TRANSITION);
             }
         }
     }

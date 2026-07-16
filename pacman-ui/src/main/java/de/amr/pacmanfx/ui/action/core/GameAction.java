@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.action.core;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import org.tinylog.Logger;
 
@@ -18,6 +19,10 @@ public abstract class GameAction {
     protected GameAction(GameActionContext actionContext, String id) {
         this.actionContext = actionContext;
         this.id = Validations.requireValidIdentifier(id);
+    }
+
+    public GameContext gameContext() {
+        return actionContext.currentGameContext();
     }
 
     @Override

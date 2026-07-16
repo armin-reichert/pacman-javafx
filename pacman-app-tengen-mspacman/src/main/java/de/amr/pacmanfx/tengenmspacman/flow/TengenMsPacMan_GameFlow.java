@@ -2,6 +2,7 @@ package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.event.GameStateChangeEvent;
 import de.amr.pacmanfx.core.flow.GameFlow;
+import org.tinylog.Logger;
 
 public class TengenMsPacMan_GameFlow extends GameFlow {
 
@@ -10,7 +11,12 @@ public class TengenMsPacMan_GameFlow extends GameFlow {
         for (TengenMsPacMan_GameState gameState : TengenMsPacMan_GameState.values()) {
             addState(gameState.state());
         }
-        addStateChangeListener((oldState, newState) ->
-            context().eventManager().publishGameEvent(new GameStateChangeEvent(oldState, newState)));
+        addStateChangeListener((oldState, newState) -> {
+            if (gameContext != null) {
+                gameContext.eventManager().publishGameEvent(new GameStateChangeEvent(oldState, newState));
+            } else {
+                Logger.error("No game context available when game event is fired");
+            }
+        });
     }
 }

@@ -48,7 +48,7 @@ public class CommonGameLevelPlayingState extends GameState {
         logHuntingStepResult(context.thisFrame().huntingStepResult());
 
         context.cheats().update(level);
-        context.flow().enterState(computeNextState(context));
+        context.flow().enterState(context, computeNextState(context));
     }
 
     private GameStateID computeNextState(GameContext context) {

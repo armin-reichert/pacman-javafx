@@ -63,7 +63,7 @@ public class LevelMediumTestState extends GameState {
             if (level.number() == lastTestedLevelNumber) {
                 // All levels tested, return to intro page
                 eventManager.publishGameEvent(new StopAllSoundsEvent());
-                context.flow().enterState(GameStateID.GAME_INTRO);
+                context.flow().enterState(context, GameStateID.GAME_INTRO);
             }
             else {
                 // Test next level
@@ -75,13 +75,13 @@ public class LevelMediumTestState extends GameState {
         else {
             context.gamePlay().hunt(context);
             if (model.rules().isLevelCompleted(level)) {
-                context.flow().enterState(GameStateID.GAME_INTRO);
+                context.flow().enterState(context, GameStateID.GAME_INTRO);
             }
             else if (context.thisFrame().huntingStepResult().pacKilled()) {
                 triggerTimeout();
             }
             else if (context.thisFrame().huntingStepResult().hasGhostBeenKilled()) {
-                context.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST);
+                context.flow().enterState(context, GameStateID.GAME_LEVEL_EATING_GHOST);
             }
         }
     }

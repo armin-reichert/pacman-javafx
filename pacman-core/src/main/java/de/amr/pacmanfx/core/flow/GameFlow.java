@@ -22,6 +22,8 @@ public class GameFlow extends StateMachine<GameContext> {
 
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
+    protected GameContext gameContext;
+
     public GameFlow(String name) {
         setName(name);
     }
@@ -31,13 +33,17 @@ public class GameFlow extends StateMachine<GameContext> {
         return (GameState) super.state();
     }
 
-    public void enterState(Identifier id) {
-        Objects.requireNonNull(id);
-        enterStateWithName(id.name());
+    public void setGameContext(GameContext gameContext) {
+        this.gameContext = gameContext;
     }
 
-    public void restartState(Identifier stateID) {
-        restartState(stateID.name());
+    public void enterState(GameContext context, Identifier id) {
+        Objects.requireNonNull(id);
+        enterStateWithName(context, id.name());
+    }
+
+    public void restartState(GameContext context, Identifier stateID) {
+        restartState(context, stateID.name());
     }
 
     public Optional<State<GameContext>> optState(Identifier stateID) {

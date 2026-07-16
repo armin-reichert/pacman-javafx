@@ -85,7 +85,7 @@ public class LevelShortTestState extends GameState {
         }
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
-                context.flow().restartState(GameStateID.BOOT);
+                context.flow().restartState(context, GameStateID.BOOT);
             } else {
                 waitForTimeout();
                 context.gamePlay().startNextLevel(context);

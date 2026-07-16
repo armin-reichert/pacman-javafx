@@ -30,7 +30,7 @@ public class CommonEatingGhostState extends GameState {
             level.entities().pac().show();
             level.ghostsInState(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
             level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
-            context.flow().resumePreviousState();
+            context.flow().resumePreviousState(context);
         } else {
             if (timer().tickCount() < 60) {
                 level.ghostsInAnyOfStates(Set.of(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE))

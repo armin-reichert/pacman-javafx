@@ -28,13 +28,13 @@ public class ArcadeGameOrLevelStartingState extends GameState {
         final GameModel model = context.model();
 
         if (model.isPlaying()) {
-            flow.enterState(GameStateID.GAME_LEVEL_CONTINUE);
+            flow.enterState(context, GameStateID.GAME_LEVEL_CONTINUE);
         }
         else if (!context.coinMechanism().isEmpty()) {
-            flow.enterState(GameStateID.GAME_STARTING);
+            flow.enterState(context, GameStateID.GAME_STARTING);
         }
         else {
-            flow.enterState(GameStateID.DEMO_LEVEL_PLAYING);
+            flow.enterState(context, GameStateID.DEMO_LEVEL_PLAYING);
         }
     }
 

@@ -45,26 +45,26 @@ public final class TengenMsPacMan_Actions {
         actionEnterStartScreen = new GameAction(actionContext, "enter_start_screen") {
             @Override
             public void doAction() {
-                actionContext.currentGameContext().flow().enterState(GameStateID.GAME_PREPARATION);
+                gameContext().flow().enterState(gameContext(), GameStateID.GAME_PREPARATION);
             }
         };
 
         actionQuitDemoLevel = new GameAction(actionContext, "quit_demo_level") {
             @Override
             public void doAction() {
-                actionContext.currentGameContext().flow().enterState(GameStateID.GAME_PREPARATION);
+                gameContext().flow().enterState(gameContext(), GameStateID.GAME_PREPARATION);
             }
 
             @Override
             public boolean isEnabled() {
-                return actionContext.currentGameContext().gamePlay().isDemoLevelRunning(actionContext.currentGameContext().model());
+                return gameContext().gamePlay().isDemoLevelRunning(gameContext().model());
             }
         };
 
         actionStartPlaying = new GameAction(actionContext, "start_playing") {
             @Override
             public void doAction() {
-                actionContext.currentGameContext().flow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
+                gameContext().flow().enterState(gameContext(), GameStateID.GAME_OR_LEVEL_STARTING);
             }
         };
 
@@ -99,8 +99,8 @@ public final class TengenMsPacMan_Actions {
         actionTogglePacBooster = new GameAction(actionContext, "toggle_pac_booster") {
             @Override
             public void doAction() {
-                actionContext.currentGameContext().model().optLevel().ifPresent(gameLevel -> {
-                    final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) actionContext.currentGameContext().model();
+                gameContext().model().optLevel().ifPresent(gameLevel -> {
+                    final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) gameContext().model();
                     tengenGame.activatePacBooster(gameLevel.entities().pac(), !tengenGame.isBoosterActive());
                     if (tengenGame.isBoosterActive()) {
                         actionContext.ui().shortMessage("Booster!"); //TODO localize
@@ -110,7 +110,7 @@ public final class TengenMsPacMan_Actions {
 
             @Override
             public boolean isEnabled() {
-                final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) actionContext.currentGameContext().model();
+                final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) gameContext().model();
                 return tengenGame.pacBoosterMode() == PacBooster.USE_A_OR_B && tengenGame.optLevel().isPresent();
             }
         };
