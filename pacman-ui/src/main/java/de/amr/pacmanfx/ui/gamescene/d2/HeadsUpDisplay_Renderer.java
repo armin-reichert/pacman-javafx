@@ -13,9 +13,9 @@ public interface HeadsUpDisplay_Renderer extends Renderer {
      * Draws the Head-Up Display (score, live counter, level counter, coins inserted)
      *
      * @param hud the HUD
-     * @param context the game context
+     * @param gameContext the game context
      * @param scene 2D scene
      * @param tick current tick of the game machine clock
      */
-    void draw(HUDState hud, GameContext context, AbstractGameScene2D scene, long tick);
+    void draw(HUDState hud, GameContext gameContext, AbstractGameScene2D scene, long tick);
 }

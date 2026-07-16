@@ -21,7 +21,7 @@ public class CommonGamePreparationState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext context) {
+    public void onUpdate(GameContext gameContext) {
         // Wait for user interaction (e.g. key press) to start playing
     }
 }

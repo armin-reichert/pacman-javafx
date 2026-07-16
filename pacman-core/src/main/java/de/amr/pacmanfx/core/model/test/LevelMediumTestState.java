@@ -54,47 +54,47 @@ public class LevelMediumTestState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameModel model = context.model();
-        final GameLevel level = model.assertLevel();
-        final GameEventManager eventManager = context.eventManager();
+    public void onUpdate(GameContext gameContext) {
+        final GameModel model = gameContext.model();
+        final GameLevel level = gameContext.assertLevel();
+        final GameEventManager eventManager = gameContext.eventManager();
 
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
                 // All levels tested, return to intro page
                 eventManager.publishGameEvent(new StopAllSoundsEvent());
-                context.flow().enterState(context, GameStateID.GAME_INTRO);
+                gameContext.flow().enterState(gameContext, GameStateID.GAME_INTRO);
             }
             else {
                 // Test next level
-                context.gamePlay().startNextLevel(context);
-                configureLevelForTest(context);
+                gameContext.gamePlay().startNextLevel(gameContext);
+                configureLevelForTest(gameContext);
                 timer().restartSeconds(TEST_DURATION_SEC);
             }
         }
         else {
-            context.gamePlay().hunt(context);
+            gameContext.gamePlay().hunt(gameContext);
             if (model.rules().isLevelCompleted(level)) {
-                context.flow().enterState(context, GameStateID.GAME_INTRO);
+                gameContext.flow().enterState(gameContext, GameStateID.GAME_INTRO);
             }
-            else if (context.thisFrame().huntingStepResult().pacKilled()) {
+            else if (gameContext.thisFrame().huntingStepResult().pacKilled()) {
                 triggerTimeout();
             }
-            else if (context.thisFrame().huntingStepResult().hasGhostBeenKilled()) {
-                context.flow().enterState(context, GameStateID.GAME_LEVEL_EATING_GHOST);
+            else if (gameContext.thisFrame().huntingStepResult().hasGhostBeenKilled()) {
+                gameContext.flow().enterState(gameContext, GameStateID.GAME_LEVEL_EATING_GHOST);
             }
         }
     }
 
     @Override
-    public void onExit(GameContext context) {
-        final GameModel gameModel = context.model();
+    public void onExit(GameContext gameContext) {
+        final GameModel gameModel = gameContext.model();
         gameModel.levelCounter().clear();
     }
 
-    private void configureLevelForTest(GameContext context) {
-        final GameModel model = context.model();
-        final GameLevel level = model.optLevel().orElseThrow();
+    private void configureLevelForTest(GameContext gameContext) {
+        final GameModel model = gameContext.model();
+        final GameLevel level = gameContext.assertLevel();
 
         final Pac pac = level.entities().pac();
         pac.usingAutopilotProperty().unbind();
@@ -108,6 +108,6 @@ public class LevelMediumTestState extends GameState {
 
         model.hudState().show();
 
-        context.eventManager().publishGameEvent(new StopAllSoundsEvent());
+        gameContext.eventManager().publishGameEvent(new StopAllSoundsEvent());
     }
 }

@@ -33,15 +33,15 @@ public class GameStartingState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameModel model = context.model();
+    public void onUpdate(GameContext gameContext) {
+        final GameModel model = gameContext.model();
         final GameLevel level = model.assertLevel();
         final long tick = timer().tickCount();
 
         if (tick == TICK_SHOW_READY) {
-            context.gamePlay().startLevel(context);
+            gameContext.gamePlay().startLevel(gameContext);
             // Note: This event is very important because it triggers the creation of the actor animations!
-            context.eventManager().publishGameEvent(new LevelStartedEvent(level));
+            gameContext.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }
         else if (tick == TICK_SHOW_GUYS) {
             level.entities().pac().show();
@@ -49,7 +49,7 @@ public class GameStartingState extends GameState {
         }
         else if (tick == TICK_START_HUNTING) {
             model.setPlaying(true);
-            context.flow().enterState(context, GameStateID.GAME_LEVEL_PLAYING);
+            gameContext.flow().enterState(gameContext, GameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

@@ -7,4 +7,4 @@ package de.amr.pacmanfx.core.event;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 
-public record GhostStartsReturningHomeEvent(GameContext context, Ghost ghost) implements GameEvent {}
+public record GhostStartsReturningHomeEvent(GameContext gameContext, Ghost ghost) implements GameEvent {}

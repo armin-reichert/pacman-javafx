@@ -18,9 +18,9 @@ public class GameLevelCompleteState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final GameModel model = context.model();
-        context.gamePlay().onLevelCompleted(model.assertLevel());
+    public void onEnter(GameContext gameContext) {
+        final GameModel model = gameContext.model();
+        gameContext.gamePlay().onLevelCompleted(model.assertLevel());
         waitForTimeout(); // Waits for UI to trigger timeout
     }
 

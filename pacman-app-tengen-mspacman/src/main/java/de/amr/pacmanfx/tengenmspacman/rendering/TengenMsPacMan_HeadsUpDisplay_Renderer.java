@@ -50,15 +50,15 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     @Override
-    public void draw(HUDState hud, GameContext context, AbstractGameScene2D scene, long tick) {
+    public void draw(HUDState hud, GameContext gameContext, AbstractGameScene2D scene, long tick) {
         requireNonNull(hud);
-        requireNonNull(context);
+        requireNonNull(gameContext);
         requireNonNull(scene);
 
         if (!hud.isVisible()) return;
         if (!(hud instanceof TengenMsPacMan_HUDState tengenHUD)) return;
 
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
 
         ctx.save();
         ctx.translate(0, scaled(computeOffsetY(scene)));
@@ -66,11 +66,11 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         if (hud.isScoreShown()) {
             // blink frequency = 1Hz (30 ticks on, 30 ticks off)
             final boolean on = tick % 60 < 30;
-            drawScore(context.model().score(), on, arcadeFont8());
+            drawScore(gameContext.model().score(), on, arcadeFont8());
 
-            final Score highScore = context.model().highScore();
+            final Score highScore = gameContext.model().highScore();
             Color color = SCORE_TEXT_COLOR;
-            if (!highScore.isEnabled() && !context.gamePlay().isDemoLevelRunning(context)) {
+            if (!highScore.isEnabled() && !gameContext.gamePlay().isDemoLevelRunning(gameContext)) {
                 color = SCORE_TEXT_COLOR_DISABLED;
             }
             drawHighScore(highScore, arcadeFont8(), color);
@@ -82,7 +82,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             drawLivesCounter(model, tengenHUD, counterY);
         }
 
-        context.model().optLevel().ifPresent(level -> {
+        gameContext.model().optLevel().ifPresent(level -> {
             if (tengenHUD.isLevelCounterShown()) {
                 drawLevelCounter(level, tengenHUD, counterY);
             }

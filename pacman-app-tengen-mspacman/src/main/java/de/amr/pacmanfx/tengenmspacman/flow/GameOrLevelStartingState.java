@@ -18,8 +18,8 @@ public class GameOrLevelStartingState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+    public void onEnter(GameContext gameContext) {
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
         final TengenMsPacMan_HUDState hud = model.hudState();
 
         hud.hideCredit().showScore().showLevelCounter().showLivesCounter().show();
@@ -31,11 +31,11 @@ public class GameOrLevelStartingState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        if (!(context.model() instanceof TengenMsPacMan_GameModel model)) {
-            throw new IllegalStateException("Illegal game model: " + context.model());
+    public void onUpdate(GameContext gameContext) {
+        if (!(gameContext.model() instanceof TengenMsPacMan_GameModel model)) {
+            throw new IllegalStateException("Illegal game model: " + gameContext.model());
         }
-        context.flow().enterState(context, computeNextState(model));
+        gameContext.flow().enterState(gameContext, computeNextState(model));
     }
 
     private GameStateID computeNextState(TengenMsPacMan_GameModel model) {

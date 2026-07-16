@@ -33,10 +33,10 @@ public class GameLevelContinueState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext context) {
+    public void onUpdate(GameContext gameContext) {
         final long tick = timer().tickCount();
         if (tick == TICK_RESUME_HUNTING) {
-            context.flow().enterState(context, GameStateID.GAME_LEVEL_PLAYING);
+            gameContext.flow().enterState(gameContext, GameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

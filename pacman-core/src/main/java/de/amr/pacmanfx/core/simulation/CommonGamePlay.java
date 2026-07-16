@@ -113,17 +113,17 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void startNextLevel(GameContext context) {
-        requireNonNull(context);
+    public void startNextLevel(GameContext gameContext) {
+        requireNonNull(gameContext);
 
-        final GameModel model = context.model();
-        final GameLevel level = context.assertLevel();
-        final GameEventManager eventManager = context.eventManager();
+        final GameModel model = gameContext.model();
+        final GameLevel level = gameContext.assertLevel();
+        final GameEventManager eventManager = gameContext.eventManager();
 
         final int lastLevelNumber = model.rules().lastLevelNumber();
         if (level.number() < lastLevelNumber) {
-            buildNormalLevel(context, level.number() + 1);
-            startLevel(context);
+            buildNormalLevel(gameContext, level.number() + 1);
+            startLevel(gameContext);
             // Note: This event is very important because it triggers the creation of the actor animations!
             eventManager.publishGameEvent(new LevelStartedEvent(level));
         } else {
@@ -228,14 +228,14 @@ public abstract class CommonGamePlay implements GamePlay {
         );
     }
 
-    private void evalGhostsKilled(GameContext context, HuntingStepResult result) {
+    private void evalGhostsKilled(GameContext gameContext, HuntingStepResult result) {
         if (result.detectedPacGhostCollision()) {
             // Frightened ghosts get killed when colliding with Pac
             result.ghostsCollidingWithPac().stream()
                 .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
                 .forEach(result.ghostsKilled()::add);
             // More than one ghost might have been killed in this step
-            result.ghostsKilled().forEach(ghost -> onEatGhost(context, ghost));
+            result.ghostsKilled().forEach(ghost -> onEatGhost(gameContext, ghost));
         }
     }
 
@@ -301,17 +301,17 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void onEatGhost(GameContext context, Ghost eatenGhost) {
-        requireNonNull(context);
+    public void onEatGhost(GameContext gameContext, Ghost eatenGhost) {
+        requireNonNull(gameContext);
         requireNonNull(eatenGhost);
 
-        final GameModel model = context.model();
-        final GameLevel level = context.assertLevel();
-        final GameEventManager eventManager = context.eventManager();
+        final GameModel model = gameContext.model();
+        final GameLevel level = gameContext.assertLevel();
+        final GameEventManager eventManager = gameContext.eventManager();
         final int killedBefore = level.ghostKillChainSize();
         final int points = model.rules().pointsForGhost(killedBefore);
 
-        scorePoints(context, points, level.number());
+        scorePoints(gameContext, points, level.number());
         Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
 
         eatenGhost.setState(GhostState.EATEN);
@@ -456,44 +456,44 @@ public abstract class CommonGamePlay implements GamePlay {
 
     // private
 
-    private void detectCollisions(GameContext context) {
-        detectFoodCollision(context);
-        detectEdibleBonusCollision(context);
-        detectPacGhostCollision(context);
+    private void detectCollisions(GameContext gameContext) {
+        detectFoodCollision(gameContext);
+        detectEdibleBonusCollision(gameContext);
+        detectPacGhostCollision(gameContext);
     }
 
-    private void detectPacGhostCollision(GameContext context) {
-        final GameLevel level = context.assertLevel();
-        final GameModel model = context.model();
+    private void detectPacGhostCollision(GameContext gameContext) {
+        final GameLevel level = gameContext.assertLevel();
+        final GameModel model = gameContext.model();
         final CollisionStrategy strategy = model.rules().getCollisionStrategy();
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
-        context.thisFrame().huntingStepResult().ghostsCollidingWithPac().clear();
+        gameContext.thisFrame().huntingStepResult().ghostsCollidingWithPac().clear();
         ghosts.stream()
             .filter(ghost -> strategy.collide(pac, ghost))
-            .forEach(context.thisFrame().huntingStepResult().ghostsCollidingWithPac()::add);
+            .forEach(gameContext.thisFrame().huntingStepResult().ghostsCollidingWithPac()::add);
     }
 
-    private void detectEdibleBonusCollision(GameContext context) {
-        final GameLevel level = context.assertLevel();
-        final GameModel model = context.model();
+    private void detectEdibleBonusCollision(GameContext gameContext) {
+        final GameLevel level = gameContext.assertLevel();
+        final GameModel model = gameContext.model();
         final CollisionStrategy strategy = model.rules().getCollisionStrategy();
         final Pac pac = level.entities().pac();
         final Bonus bonus = level.entities().optBonus().orElse(null);
-        context.thisFrame().huntingStepResult().setEdibleBonus(null);
+        gameContext.thisFrame().huntingStepResult().setEdibleBonus(null);
         if (bonus != null && bonus.state() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
-            context.thisFrame().huntingStepResult().setEdibleBonus(bonus);
+            gameContext.thisFrame().huntingStepResult().setEdibleBonus(bonus);
         }
     }
 
-    private void detectFoodCollision(GameContext context) {
-        final GameLevel level = context.assertLevel();
+    private void detectFoodCollision(GameContext gameContext) {
+        final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Vector2i pacTile = pac.computeTile();
         if (foodLayer.hasFoodAtTile(pacTile)) {
-            context.thisFrame().huntingStepResult().setFoodFoundTile(pacTile);
-            context.thisFrame().huntingStepResult().setEnergizerFound(foodLayer.isEnergizerTile(pacTile));
+            gameContext.thisFrame().huntingStepResult().setFoodFoundTile(pacTile);
+            gameContext.thisFrame().huntingStepResult().setEnergizerFound(foodLayer.isEnergizerTile(pacTile));
         }
     }
 }

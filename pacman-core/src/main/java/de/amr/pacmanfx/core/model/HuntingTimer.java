@@ -149,17 +149,17 @@ public class HuntingTimer {
     /**
      * Starts the first hunting phase for the given level and fires a game event.
      *
-     * @param context the game context
+     * @param gameContext the game context
      * @param levelNumber the level number
      */
-    public void startFirstPhase(GameContext context, int levelNumber) {
-        requireNonNull(context);
+    public void startFirstPhase(GameContext gameContext, int levelNumber) {
+        requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
-        startPhase(context.model().rules(), levelNumber, 0);
+        startPhase(gameContext.model().rules(), levelNumber, 0);
 
-        context.eventManager().publishGameEvent(new HuntingPhaseStartedEvent(
-            context,
+        gameContext.eventManager().publishGameEvent(new HuntingPhaseStartedEvent(
+            gameContext,
             phaseIndex,
             currentHuntingPhase())
         );

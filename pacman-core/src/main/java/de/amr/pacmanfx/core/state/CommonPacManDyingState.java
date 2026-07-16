@@ -37,9 +37,9 @@ public class CommonPacManDyingState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final GameModel model = context.model();
-        final GameLevel level = context.model().optLevel().orElseThrow();
+    public void onEnter(GameContext gameContext) {
+        final GameModel model = gameContext.model();
+        final GameLevel level = gameContext.assertLevel();
 
         model.gateKeeper().resetCounterAndSetEnabled(true);
 
@@ -57,23 +57,23 @@ public class CommonPacManDyingState extends GameState {
 
         level.entities().ghosts().forEach(ghost -> ghost.onPacKilled(level));
 
-        context.eventManager().publishGameEvent(new StopAllSoundsEvent());
+        gameContext.eventManager().publishGameEvent(new StopAllSoundsEvent());
         waitForTimeout(); // UI triggers timeout
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameModel model = context.model();
-        final GameLevel level = model.optLevel().orElseThrow();
+    public void onUpdate(GameContext gameContext) {
+        final GameModel model = gameContext.model();
+        final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final long tick = timer().tickCount();
 
         if (timer().hasExpired()) {
             if (level.isDemoLevel()) {
-                context.flow().enterState(context, GameStateID.GAME_OVER);
+                gameContext.flow().enterState(gameContext, GameStateID.GAME_OVER);
             } else {
                 model.lives().add(-1);
-                context.flow().enterState(context, model.lives().count() == 0
+                gameContext.flow().enterState(gameContext, model.lives().count() == 0
                     ? GameStateID.GAME_OVER : GameStateID.GAME_OR_LEVEL_STARTING);
             }
         }
@@ -84,18 +84,18 @@ public class CommonPacManDyingState extends GameState {
         }
         else if (tick == animationStartTick) {
             pac.animations().playSelected();
-            context.eventManager().publishGameEvent(new PacDyingEvent(pac));
+            gameContext.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == hidePacTick) {
             pac.hide();
             level.optBonus().ifPresent(Bonus::setInactive); //TODO check this
         }
         else if (tick == pacDeadTick) {
-            context.eventManager().publishGameEvent(new PacDeadEvent(pac));
+            gameContext.eventManager().publishGameEvent(new PacDeadEvent(pac));
         }
         else {
             level.heartbeat().triggerPulse();
-            pac.update(level, context.eventManager());
+            pac.update(level, gameContext.eventManager());
         }
     }
 }

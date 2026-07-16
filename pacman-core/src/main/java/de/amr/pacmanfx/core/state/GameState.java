@@ -40,17 +40,17 @@ public class GameState implements State<GameContext>, Identifier {
     }
 
     @Override
-    public void onEnter(GameContext context) {
+    public void onEnter(GameContext gameContext) {
         Logger.trace("onEnter");
     }
 
     @Override
-    public void onUpdate(GameContext context) {
+    public void onUpdate(GameContext gameContext) {
         Logger.trace("onUpdate");
     }
 
     @Override
-    public void onExit(GameContext context) {
+    public void onExit(GameContext gameContext) {
         Logger.trace("onExit");
     }
 

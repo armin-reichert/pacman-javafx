@@ -46,13 +46,13 @@ public class GameFlowController extends StateMachine<GameContext> {
         this.gameContext = gameContext;
     }
 
-    public void enterState(GameContext context, Identifier id) {
+    public void enterState(GameContext gameContext, Identifier id) {
         Objects.requireNonNull(id);
-        enterStateWithName(context, id.name());
+        enterStateWithName(gameContext, id.name());
     }
 
-    public void restartState(GameContext context, Identifier stateID) {
-        restartState(context, stateID.name());
+    public void restartState(GameContext gameContext, Identifier stateID) {
+        restartState(gameContext, stateID.name());
     }
 
     public Optional<State<GameContext>> optState(Identifier stateID) {

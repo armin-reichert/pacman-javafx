@@ -19,18 +19,18 @@ public class ArcadeGameOverState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final GameModel model = context.model();
-        final GameLevel level = context.model().assertLevel();
+    public void onEnter(GameContext gameContext) {
+        final GameModel model = gameContext.model();
+        final GameLevel level = gameContext.model().assertLevel();
 
-        context.gamePlay().updateHighScore(context);
-        context.gamePlay().showLevelMessage(level, GameLevelMessageType.GAME_OVER);
+        gameContext.gamePlay().updateHighScore(gameContext);
+        gameContext.gamePlay().showLevelMessage(level, GameLevelMessageType.GAME_OVER);
 
         // In case, entering game over state was forced by user:
         model.lives().setCount(0);
         model.setPlaying(false);
 
-        context.cheats().clear();
+        gameContext.cheats().clear();
 
         timer().restartTicks(level.gameOverStateTicks());
     }

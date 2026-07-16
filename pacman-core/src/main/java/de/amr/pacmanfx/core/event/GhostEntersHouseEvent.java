@@ -8,4 +8,4 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.House;
 
-public record GhostEntersHouseEvent(GameContext context, Ghost ghost, House house) implements GameEvent {}
+public record GhostEntersHouseEvent(GameContext gameContext, Ghost ghost, House house) implements GameEvent {}

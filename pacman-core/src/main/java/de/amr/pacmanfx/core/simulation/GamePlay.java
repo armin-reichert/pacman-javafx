@@ -34,9 +34,9 @@ public interface GamePlay {
 
     boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
-    void startLevel(GameContext context);
+    void startLevel(GameContext gameContext);
 
-    void startNextLevel(GameContext context);
+    void startNextLevel(GameContext gameContext);
 
     void showLevelMessage(GameLevel level, GameLevelMessageType type);
 
@@ -50,7 +50,7 @@ public interface GamePlay {
 
     void onEatBonus(GameContext gameContext, Bonus bonus);
 
-    void onEatGhost(GameContext context, Ghost eatenGhost);
+    void onEatGhost(GameContext gameContext, Ghost eatenGhost);
 
     void activateNextBonus(GameContext gameContext);
 

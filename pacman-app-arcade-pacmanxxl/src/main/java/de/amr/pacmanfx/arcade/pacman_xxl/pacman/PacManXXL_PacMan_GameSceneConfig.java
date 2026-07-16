@@ -19,30 +19,29 @@ import static java.util.Objects.requireNonNull;
 
 class PacManXXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    public PacManXXL_PacMan_GameSceneConfig(GameAppContext actionContext) {
-        super(actionContext);
+    public PacManXXL_PacMan_GameSceneConfig(GameAppContext appContext) {
+        super(appContext);
     }
 
     @Override
     protected AbstractGameScene createGameScene(Identifier sceneID) {
-        requireNonNull(actionContext);
         requireNonNull(sceneID);
         return switch (sceneID) {
-            case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene2D(actionContext);
-            case CommonGameSceneID.INTRO_SCENE -> new ArcadePacMan_IntroScene(actionContext);
-            case CommonGameSceneID.START_SCENE -> new ArcadePacMan_StartScene(actionContext);
-            case CommonGameSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D(actionContext);
-            case CommonGameSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(actionContext);
-            case CommonGameSceneID.CUTSCENE_1 -> new ArcadePacMan_CutScene1(actionContext);
-            case CommonGameSceneID.CUTSCENE_2 -> new ArcadePacMan_CutScene2(actionContext);
-            case CommonGameSceneID.CUTSCENE_3 -> new ArcadePacMan_CutScene3(actionContext);
+            case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene2D(appContext);
+            case CommonGameSceneID.INTRO_SCENE -> new ArcadePacMan_IntroScene(appContext);
+            case CommonGameSceneID.START_SCENE -> new ArcadePacMan_StartScene(appContext);
+            case CommonGameSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D(appContext);
+            case CommonGameSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(appContext);
+            case CommonGameSceneID.CUTSCENE_1 -> new ArcadePacMan_CutScene1(appContext);
+            case CommonGameSceneID.CUTSCENE_2 -> new ArcadePacMan_CutScene2(appContext);
+            case CommonGameSceneID.CUTSCENE_3 -> new ArcadePacMan_CutScene3(appContext);
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
     }
 
     @Override
-    protected Identifier determineSceneID(GameContext context) {
-        final State<GameContext> state = context.state();
+    protected Identifier determineSceneID(GameContext gameContext) {
+        final State<GameContext> state = gameContext.state();
 
         if (state instanceof CutScenesTestState testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
@@ -52,7 +51,7 @@ class PacManXXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
             return CommonGameSceneID.BOOT_SCENE;
         }
         if (GameStateID.GAME_LEVEL_INTERMISSION.identifies(state)) {
-            return resolveCutSceneID(context);
+            return resolveCutSceneID(gameContext);
         }
         if (GameStateID.GAME_INTRO.identifies(state)) {
             return CommonGameSceneID.INTRO_SCENE;
@@ -60,6 +59,6 @@ class PacManXXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
         if (GameStateID.GAME_PREPARATION.identifies(state)) {
             return CommonGameSceneID.START_SCENE;
         }
-        return actionContext.ui().viewModel().common3D.view3DEnabledProperty.get() ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
+        return appContext.ui().viewModel().common3D.view3DEnabledProperty.get() ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
     }
 }

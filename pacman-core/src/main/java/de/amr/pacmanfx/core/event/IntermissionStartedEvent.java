@@ -6,4 +6,4 @@ package de.amr.pacmanfx.core.event;
 
 import de.amr.pacmanfx.core.GameContext;
 
-public record IntermissionStartedEvent(GameContext context, int intermissionNumber) implements GameEvent {}
+public record IntermissionStartedEvent(GameContext gameContext, int intermissionNumber) implements GameEvent {}

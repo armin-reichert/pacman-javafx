@@ -23,8 +23,8 @@ public class GameLevelIntermissionState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+    public void onEnter(GameContext gameContext) {
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
         final GameLevel level = model.assertLevel();
         final OptionalInt cutSceneNumber = model.rules().cutSceneNumberAfterLevel(level.number());
         final boolean isLastCutScene = cutSceneNumber.isPresent()
@@ -40,18 +40,18 @@ public class GameLevelIntermissionState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameFlowController flow = context.flow();
-        final GameModel model = context.model();
+    public void onUpdate(GameContext gameContext) {
+        final GameFlowController flow = gameContext.flow();
+        final GameModel model = gameContext.model();
 
         if (timer().hasExpired()) {
-            flow.enterState(context, model.isPlaying() ? GameStateID.GAME_LEVEL_TRANSITION : GameStateID.GAME_INTRO);
+            flow.enterState(gameContext, model.isPlaying() ? GameStateID.GAME_LEVEL_TRANSITION : GameStateID.GAME_INTRO);
         }
     }
 
     @Override
-    public void onExit(GameContext context) {
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) context.model();
+    public void onExit(GameContext gameContext) {
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
         final TengenMsPacMan_HUDState hudState = model.hudState();
 
         if (model.mapCategory() == MapCategory.ARCADE) {

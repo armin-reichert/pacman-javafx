@@ -19,14 +19,14 @@ public class ShowingHallOfFameState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
+    public void onEnter(GameContext gameContext) {
         waitForTimeout();
     }
 
     @Override
-    public void onUpdate(GameContext context) {
+    public void onUpdate(GameContext gameContext) {
         if (timer().hasExpired()) {
-            context.flow().enterState(context, GameStateID.GAME_INTRO);
+            gameContext.flow().enterState(gameContext, GameStateID.GAME_INTRO);
         }
     }
 }

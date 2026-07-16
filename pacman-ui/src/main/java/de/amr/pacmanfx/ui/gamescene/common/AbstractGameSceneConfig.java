@@ -30,11 +30,11 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
         };
     }
 
-    protected final GameAppContext actionContext;
+    protected final GameAppContext appContext;
     protected final Map<Identifier, GameScene> scenesByID = new HashMap<>();
 
-    public AbstractGameSceneConfig(GameAppContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+    public AbstractGameSceneConfig(GameAppContext appContext) {
+        this.appContext = requireNonNull(appContext);
     }
 
     @Override
@@ -45,9 +45,9 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public Identifier resolveCutSceneID(GameContext context) {
-        final GameLevel level = context.model().assertLevel();
-        final OptionalInt cutSceneNumber = context.model().rules().cutSceneNumberAfterLevel(level.number());
+    public Identifier resolveCutSceneID(GameContext gameContext) {
+        final GameLevel level = gameContext.assertLevel();
+        final OptionalInt cutSceneNumber = gameContext.model().rules().cutSceneNumberAfterLevel(level.number());
         if (cutSceneNumber.isEmpty()) {
             throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(level.number()));
         }
@@ -61,9 +61,9 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public final Optional<GameScene> selectGameScene(GameAppContext actionContext, GameModel model) {
-        requireNonNull(actionContext);
-        final Identifier Identifier = determineSceneID(actionContext.currentGameContext());
+    public final Optional<GameScene> selectGameScene(GameAppContext appContext, GameModel model) {
+        requireNonNull(appContext);
+        final Identifier Identifier = determineSceneID(appContext.currentGameContext());
         final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, this::createGameScene);
         return Optional.of(gameScene);
     }
@@ -77,5 +77,5 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     protected abstract GameScene createGameScene(Identifier Identifier);
 
-    protected abstract Identifier determineSceneID(GameContext context);
+    protected abstract Identifier determineSceneID(GameContext gameContext);
 }

@@ -22,8 +22,8 @@ public class CommonGameLevelPlayingState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final GameLevel level = context.model().assertLevel();
+    public void onEnter(GameContext gameContext) {
+        final GameLevel level = gameContext.model().assertLevel();
 
         level.optMessage()
             .filter(message -> message.type() == GameLevelMessageType.READY)
@@ -36,32 +36,32 @@ public class CommonGameLevelPlayingState extends GameState {
         level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
 
         // This call fires a game event!
-        level.huntingTimer().startFirstPhase(context, level.number());
+        level.huntingTimer().startFirstPhase(gameContext, level.number());
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameModel model = context.model();
+    public void onUpdate(GameContext gameContext) {
+        final GameModel model = gameContext.model();
         final GameLevel level = model.assertLevel();
 
-        context.gamePlay().hunt(context);
-        logHuntingStepResult(context.thisFrame().huntingStepResult());
+        gameContext.gamePlay().hunt(gameContext);
+        logHuntingStepResult(gameContext.thisFrame().huntingStepResult());
 
-        context.cheats().update(level);
-        context.flow().enterState(context, computeNextState(context));
+        gameContext.cheats().update(level);
+        gameContext.flow().enterState(gameContext, computeNextState(gameContext));
     }
 
-    private GameStateID computeNextState(GameContext context) {
-        final GameLevel level = context.assertLevel();
-        final GameRules rules = context.model().rules();
+    private GameStateID computeNextState(GameContext gameContext) {
+        final GameLevel level = gameContext.assertLevel();
+        final GameRules rules = gameContext.model().rules();
 
         if (rules.isLevelCompleted(level)) {
             return GameStateID.GAME_LEVEL_COMPLETE;
         }
-        else if (context.thisFrame().huntingStepResult().pacKilled()) {
+        else if (gameContext.thisFrame().huntingStepResult().pacKilled()) {
             return GameStateID.GAME_LEVEL_PACMAN_DYING;
         }
-        else if (context.thisFrame().huntingStepResult().hasGhostBeenKilled()) {
+        else if (gameContext.thisFrame().huntingStepResult().hasGhostBeenKilled()) {
             return GameStateID.GAME_LEVEL_EATING_GHOST;
         }
         return GameStateID.GAME_LEVEL_PLAYING;

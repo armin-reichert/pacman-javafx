@@ -57,7 +57,7 @@ public class ArcadeGameStartingState extends GameState {
     }
 
     @Override
-    public void onExit(GameContext context) {
-        context.coinMechanism().consumeCoin();
+    public void onExit(GameContext gameContext) {
+        gameContext.coinMechanism().consumeCoin();
     }
 }
