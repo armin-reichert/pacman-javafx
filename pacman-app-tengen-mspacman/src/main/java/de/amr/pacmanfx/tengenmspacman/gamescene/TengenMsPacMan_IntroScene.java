@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.simulation.FrameContext;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
@@ -91,7 +92,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
+    public void onTick(FrameContext frame) {
         sceneFlow.update(this);
     }
 

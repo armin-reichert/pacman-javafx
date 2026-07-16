@@ -11,10 +11,10 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameConstants;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.simulation.FrameContext;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
+    public void onTick(FrameContext frame) {
         switch (sceneState) {
             case CLAPPERBOARD -> updateStateClapperboard();
             case CHASED_BY_GHOSTS -> updateStateChasedByGhosts();

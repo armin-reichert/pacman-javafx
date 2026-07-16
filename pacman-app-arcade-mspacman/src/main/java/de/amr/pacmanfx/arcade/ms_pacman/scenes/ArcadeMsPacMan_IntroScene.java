@@ -13,13 +13,13 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.simulation.FrameContext;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
@@ -78,7 +78,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
+    public void onTick(FrameContext frame) {
         sceneFlow.update(this);
     }
 
@@ -209,15 +209,14 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 final GameContext gameContext = scene.appContext().currentGameContext();
-                final GameFlowController gameFlow = gameContext.flow();
                 final boolean canPlay = !gameContext.coinMechanism().isEmpty();
                 scene.marquee.timer().doTick();
                 if (timer.atSecond(2.0) && !canPlay) {
-                    gameFlow.enterState(gameContext, GameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
+                    scene.gameFlow().enterState(gameContext, GameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
                 }
                 //TODO can this happen at all?
                 else if (timer.atSecond(5)) {
-                    gameFlow.enterState(gameContext, GameStateID.GAME_PREPARATION);
+                    scene.gameFlow().enterState(gameContext, GameStateID.GAME_PREPARATION);
                 }
             }
         };

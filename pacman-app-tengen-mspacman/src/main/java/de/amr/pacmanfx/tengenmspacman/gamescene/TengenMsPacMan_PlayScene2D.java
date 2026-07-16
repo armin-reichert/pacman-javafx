@@ -6,13 +6,13 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
+import de.amr.pacmanfx.core.simulation.FrameContext;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
@@ -152,7 +152,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
+    public void onTick(FrameContext frame) {
         gameModel().optLevel().ifPresent(level -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final int numRows = terrain.numRows();

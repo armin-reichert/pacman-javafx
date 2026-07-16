@@ -6,9 +6,9 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.simulation.FrameContext;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
@@ -95,7 +95,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
+    public void onTick(FrameContext frame) {
         final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
         final long gameStateTick = gameState().timer().tickCount();
 
@@ -165,7 +165,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                 }
                 case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(gameVariantConfig, gameStateTick);
                 case 1500 -> optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-                case TICK_EXPIRES -> gameContext.flow().enterState(gameContext, TengenMsPacMan_GameState.GAME_PREPARATION.state());
+                case TICK_EXPIRES -> gameContext().flow().enterState(gameContext(), TengenMsPacMan_GameState.GAME_PREPARATION.state());
             }
         }
     }

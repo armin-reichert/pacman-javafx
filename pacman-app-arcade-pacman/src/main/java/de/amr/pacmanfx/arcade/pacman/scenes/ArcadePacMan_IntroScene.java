@@ -13,10 +13,10 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.simulation.FrameContext;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
@@ -106,7 +106,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
+    public void onTick(FrameContext frame) {
         flow.update(this);
     }
 

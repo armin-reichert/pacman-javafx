@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.simulation.FrameContext;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -65,9 +66,9 @@ public interface GameScene extends GameSceneGameEventHandler, QuitHandler, Dispo
     /**
      * Called every game tick.
      *
-     * @param context the current game context (including context of the current frame)
+     * @param frame the context of the current frame)
      */
-    void onTick(GameContext context);
+    void onTick(FrameContext frame);
 
     /**
      * @return the JavaFX subscene used for this scene.

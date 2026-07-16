@@ -6,6 +6,8 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
@@ -42,6 +44,14 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
      * Hook method called when the game scene becomes inactive.
      */
     protected void onDeactivate() {}
+
+    public GameEventManager eventManager() {
+        return gameContext().eventManager();
+    }
+
+    public GameFlowController gameFlow() {
+        return gameContext().flow();
+    }
 
     // --- Interface "GameScene"
 

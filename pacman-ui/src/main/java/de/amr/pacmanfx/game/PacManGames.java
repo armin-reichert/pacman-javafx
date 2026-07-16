@@ -187,7 +187,7 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
 
         // Update current game scene
         ui.gameScenes().optCurrentGameScene().ifPresent(gameScene ->
-            Platform.runLater(() -> gameScene.onTick(gameContext)));
+            Platform.runLater(() -> gameScene.onTick(gameContext.thisFrame())));
     }
 
     private void renderCurrentView() {
