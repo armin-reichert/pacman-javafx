@@ -15,16 +15,14 @@ import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.world.ArcadeHouseGateKeeper;
-import de.amr.pacmanfx.core.model.world.House;
-import de.amr.pacmanfx.core.model.world.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.score.PropertyFileScore;
 import de.amr.pacmanfx.core.score.Score;
 import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
@@ -155,7 +153,6 @@ public abstract class CommonGamePlay implements GamePlay {
 
         updatePacPowerMode(context, pac);
 
-        final EntityCollisionDetector collisionDetector = new EntityCollisionDetector();
         // If double-check active, do an additional collision check before Pac has moved
         level.entities().forEach(entity -> {
             if (entity != pac) {
@@ -163,11 +160,11 @@ public abstract class CommonGamePlay implements GamePlay {
             }
         });
         if (doubleChecked) {
-            collisionDetector.detectCollisions(context);
+            detectCollisions(context);
         }
         pac.update(level, eventManager);
 
-        collisionDetector.detectCollisions(context);
+        detectCollisions(context);
         evalCollisions(context);
     }
 
@@ -451,6 +448,49 @@ public abstract class CommonGamePlay implements GamePlay {
             }
         } catch (IOException x) {
             Logger.error(x, "Could not update high-score");
+        }
+    }
+
+    // private
+
+    private void detectCollisions(GameContext context) {
+        detectFoodCollision(context);
+        detectEdibleBonusCollision(context);
+        detectPacGhostCollision(context);
+    }
+
+    private void detectPacGhostCollision(GameContext context) {
+        final GameLevel level = context.level();
+        final GameModel model = context.model();
+        final CollisionStrategy strategy = model.rules().getCollisionStrategy();
+        final Pac pac = level.entities().pac();
+        final List<Ghost> ghosts = level.entities().ghosts();
+        context.thisFrame().huntingStepResult().ghostsCollidingWithPac().clear();
+        ghosts.stream()
+            .filter(ghost -> strategy.collide(pac, ghost))
+            .forEach(context.thisFrame().huntingStepResult().ghostsCollidingWithPac()::add);
+    }
+
+    private void detectEdibleBonusCollision(GameContext context) {
+        final GameLevel level = context.level();
+        final GameModel model = context.model();
+        final CollisionStrategy strategy = model.rules().getCollisionStrategy();
+        final Pac pac = level.entities().pac();
+        final Bonus bonus = level.entities().optBonus().orElse(null);
+        context.thisFrame().huntingStepResult().setEdibleBonus(null);
+        if (bonus != null && bonus.state() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
+            context.thisFrame().huntingStepResult().setEdibleBonus(bonus);
+        }
+    }
+
+    private void detectFoodCollision(GameContext context) {
+        final GameLevel level = context.level();
+        final Pac pac = level.entities().pac();
+        final FoodLayer foodLayer = level.worldMap().foodLayer();
+        final Vector2i pacTile = pac.computeTile();
+        if (foodLayer.hasFoodAtTile(pacTile)) {
+            context.thisFrame().huntingStepResult().setFoodFoundTile(pacTile);
+            context.thisFrame().huntingStepResult().setEnergizerFound(foodLayer.isEnergizerTile(pacTile));
         }
     }
 }
