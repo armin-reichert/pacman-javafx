@@ -135,12 +135,12 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
      *
      **/
     @Override
-    public void activateNextBonus(GameContext playContext) {
-        requireNonNull(playContext);
+    public void activateNextBonus(GameContext gameContext) {
+        requireNonNull(gameContext);
 
-        final GameModel model = playContext.model();
-        final GameLevel level = playContext.assertLevel();
-        final GameEventManager eventManager = playContext.eventManager();
+        final GameModel model = gameContext.model();
+        final GameLevel level = gameContext.assertLevel();
+        final GameEventManager eventManager = gameContext.eventManager();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 

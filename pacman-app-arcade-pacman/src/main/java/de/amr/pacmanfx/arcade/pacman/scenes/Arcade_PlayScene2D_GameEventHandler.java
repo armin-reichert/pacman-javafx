@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
@@ -18,7 +19,7 @@ import org.tinylog.Logger;
 public interface Arcade_PlayScene2D_GameEventHandler extends GameSceneGameEventHandler {
 
     @Override
-    public Arcade_PlayScene2D gameScene();
+    Arcade_PlayScene2D gameScene();
 
     @Override
     default void onBonusActivated(BonusActivatedEvent e) {
@@ -43,8 +44,9 @@ public interface Arcade_PlayScene2D_GameEventHandler extends GameSceneGameEventH
 
     @Override
     default void onGameStarted(GameStartedEvent e) {
-        final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameContext().model())
-            || gameContext().state().id() instanceof TestStateID;
+        final GameContext gameContext  = e.gameContext();
+        final boolean silent = gameContext.gamePlay().isDemoLevelRunning(gameContext)
+            || gameContext.state().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }

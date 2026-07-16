@@ -6,4 +6,4 @@ package de.amr.pacmanfx.core.event;
 
 import de.amr.pacmanfx.core.GameContext;
 
-public record GameStartedEvent(GameContext context) implements GameEvent {}
+public record GameStartedEvent(GameContext gameContext) implements GameEvent {}

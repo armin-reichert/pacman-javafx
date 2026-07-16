@@ -112,7 +112,7 @@ public interface PlayScene3D_GameEventHandler extends GameSceneGameEventHandler 
     @Override
     default void onGameStarted(GameStartedEvent event) {
         final State<GameContext> state = gameContext().state();
-        final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameContext().model())
+        final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameContext())
             || (state instanceof GameState gameState && gameState.id() instanceof TestStateID);
 
         if (!silent) {

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.CoinMechanism;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.CreditAddedEvent;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -32,12 +31,11 @@ public final class Arcade_Actions {
             @Override
             public void doAction() {
                 final CoinMechanism coinMechanism = appContext.coinMechanism();
-                final GameContext gameContext = gameContext();
                 appContext.ui().sounds().stopAndDisposeVoice();
                 appContext.ui().sounds().setEnabled(true);
                 coinMechanism.insertCoin();
-                gameContext.eventManager().publishGameEvent(new CreditAddedEvent(1));
-                gameContext.flow().enterState(gameContext, GameStateID.GAME_PREPARATION);
+                gameContext().eventManager().publishGameEvent(new CreditAddedEvent(1));
+                gameFlow().enterState(gameContext(), GameStateID.GAME_PREPARATION);
             }
 
             @Override
@@ -46,7 +44,7 @@ public final class Arcade_Actions {
                     return false;
                 }
                 // In demo level, coin can always be inserted
-                if (gameContext().gamePlay().isDemoLevelRunning(gameContext().model())) {
+                if (gameContext().gamePlay().isDemoLevelRunning(gameContext())) {
                     return true;
                 }
                 final GameState gameState = gameContext().state();

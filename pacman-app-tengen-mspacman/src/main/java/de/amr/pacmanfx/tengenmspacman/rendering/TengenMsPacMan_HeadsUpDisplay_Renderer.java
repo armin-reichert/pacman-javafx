@@ -70,7 +70,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
 
             final Score highScore = context.model().highScore();
             Color color = SCORE_TEXT_COLOR;
-            if (!highScore.isEnabled() && !context.gamePlay().isDemoLevelRunning(context.model())) {
+            if (!highScore.isEnabled() && !context.gamePlay().isDemoLevelRunning(context)) {
                 color = SCORE_TEXT_COLOR_DISABLED;
             }
             drawHighScore(highScore, arcadeFont8(), color);

@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
@@ -47,8 +48,9 @@ public interface GameEventHandlerMixin extends GameSceneGameEventHandler {
 
     @Override
     default void onGameStarted(GameStartedEvent e) {
-        final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameContext().model())
-            || gameContext().state().id() instanceof TestStateID;
+        final GameContext gameContext = e.gameContext();
+        final boolean silent = gameContext.gamePlay().isDemoLevelRunning(gameContext)
+            || gameContext.state().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }

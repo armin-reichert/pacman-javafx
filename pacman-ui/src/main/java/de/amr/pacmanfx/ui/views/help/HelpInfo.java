@@ -26,9 +26,9 @@ import static java.util.Objects.requireNonNull;
 public class HelpInfo {
 
     public static HelpInfo build(GameAppContext actionContext) {
-        final GameContext context = actionContext.currentGameContext();
-        final GameState state = context.state();
-        final boolean demoLevel = context.gamePlay().isDemoLevelRunning(context.model());
+        final GameContext gameContext = actionContext.currentGameContext();
+        final GameState state = gameContext.state();
+        final boolean demoLevel = gameContext.gamePlay().isDemoLevelRunning(gameContext);
 
         final HelpInfo helpInfo = new HelpInfo(actionContext);
         if (GameStateID.GAME_INTRO.identifies(state)) {

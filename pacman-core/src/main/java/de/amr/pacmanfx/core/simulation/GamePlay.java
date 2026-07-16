@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core.simulation;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -27,11 +26,11 @@ public interface GamePlay {
 
     GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel);
 
-    GameLevel buildDemoLevel(GameContext context);
+    GameLevel buildDemoLevel(GameContext gameContext);
 
-    void buildNormalLevel(GameContext context, int levelNumber);
+    void buildNormalLevel(GameContext gameContext, int levelNumber);
 
-    boolean isDemoLevelRunning(GameModel model);
+    boolean isDemoLevelRunning(GameContext gameContext);
 
     boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
@@ -43,27 +42,27 @@ public interface GamePlay {
 
     // Playing level
 
-    void hunt(GameContext context);
+    void hunt(GameContext gameContext);
 
-    void onEatPellet(GameContext context, Vector2i tile);
+    void onEatPellet(GameContext gameContext, Vector2i tile);
 
-    void onEatEnergizer(GameContext context, Vector2i tile);
+    void onEatEnergizer(GameContext gameContext, Vector2i tile);
 
-    void onEatBonus(GameContext context, Bonus bonus);
+    void onEatBonus(GameContext gameContext, Bonus bonus);
 
     void onEatGhost(GameContext context, Ghost eatenGhost);
 
-    void activateNextBonus(GameContext context);
+    void activateNextBonus(GameContext gameContext);
 
-    void startPacPowerMode(GameContext context, Pac pac);
+    void startPacPowerMode(GameContext gameContext, Pac pac);
 
-    void updatePacPowerMode(GameContext context, Pac pac);
+    void updatePacPowerMode(GameContext gameContext, Pac pac);
 
     void onLevelCompleted(GameLevel level);
 
     // Scoring
 
-    void scorePoints(GameContext context, int points, int levelNumber);
+    void scorePoints(GameContext gameContext, int points, int levelNumber);
 
-    void updateHighScore(GameContext context);
+    void updateHighScore(GameContext gameContext);
 }
