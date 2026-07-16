@@ -171,13 +171,13 @@ public abstract class CommonGamePlay implements GamePlay {
         evalCollisions(gameContext);
     }
 
-    private void evalCollisions(GameContext context) {
-        final GameLevel level = context.assertLevel();
-        final HuntingStepResult result = context.thisFrame().huntingStepResult();
-        evalFoodFound(context);
+    private void evalCollisions(GameContext gameContext) {
+        final GameLevel level = gameContext.assertLevel();
+        final HuntingStepResult result = gameContext.thisFrame().huntingStepResult();
+        evalFoodFound(gameContext);
 
         if (result.foundEdibleBonus()) {
-            onEatBonus(context, result.edibleBonus());
+            onEatBonus(gameContext, result.edibleBonus());
         }
 
         evalPacKilled(result, level);
@@ -185,16 +185,16 @@ public abstract class CommonGamePlay implements GamePlay {
             fixPacPositionIfKilledInsidePortal(level);
         }
         else {
-            evalGhostsKilled(context, result);
+            evalGhostsKilled(gameContext, result);
         }
     }
 
-    private void evalFoodFound(GameContext context) {
-        final GameModel model = context.model();
-        final GameLevel level = context.assertLevel();
-        final GameEventManager eventManager = context.eventManager();
+    private void evalFoodFound(GameContext gameContext) {
+        final GameModel model = gameContext.model();
+        final GameLevel level = gameContext.assertLevel();
+        final GameEventManager eventManager = gameContext.eventManager();
         final Pac pac = level.entities().pac();
-        final HuntingStepResult hunting = context.thisFrame().huntingStepResult();
+        final HuntingStepResult hunting = gameContext.thisFrame().huntingStepResult();
 
         if (!hunting.foodFound()) {
             pac.continueStarving();
@@ -207,15 +207,15 @@ public abstract class CommonGamePlay implements GamePlay {
         level.worldMap().foodLayer().markFoodEatenAt(foodTile);
 
         if (hunting.energizerFound()) {
-            onEatEnergizer(context, foodTile);
+            onEatEnergizer(gameContext, foodTile);
         } else {
-            onEatPellet(context, foodTile);
+            onEatPellet(gameContext, foodTile);
         }
 
         eventManager.publishGameEvent(new PacEatsFoodEvent(pac, hunting.energizerFound(), false));
 
         if (model.rules().isBonusAwarded(level)) {
-            activateNextBonus(context);
+            activateNextBonus(gameContext);
         }
     }
 

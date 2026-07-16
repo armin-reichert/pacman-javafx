@@ -22,15 +22,15 @@ import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
 public class EditorActions {
 
-    private final GameAppContext actionContext;
+    private final GameAppContext appContext;
     private final GameAction actionOpenEditor;
 
     private final Set<ActionKeyBinding> bindings;
 
-    public EditorActions(GameAppContext actionContext) {
-        this.actionContext = actionContext;
+    public EditorActions(GameAppContext appContext) {
+        this.appContext = appContext;
 
-        actionOpenEditor = new GameAction(actionContext, "open_editor") {
+        actionOpenEditor = new GameAction(appContext, "open_editor") {
             @Override
             protected void doAction() {
                 openMapEditor().ifPresent(editor -> startEditor(editor));
@@ -48,7 +48,7 @@ public class EditorActions {
      */
     public GameAction createEditMapFileAction(File mapFile) {
 
-        return new GameAction(actionContext, "edit_map_file") {
+        return new GameAction(appContext, "edit_map_file") {
             @Override
             protected void doAction() {
                 openMapEditor().ifPresent(editor -> {
@@ -77,16 +77,16 @@ public class EditorActions {
     // Private
 
     private void startEditor(TileMapEditor editor) {
-        actionContext.lifecycle().suspendPlaying();
+        appContext.lifecycle().suspendPlaying();
         editor.init(GameConstants.CUSTOM_MAP_DIR);
         editor.start();
     }
 
     private Optional<TileMapEditor> openMapEditor() {
-        final EditorView editorView = actionContext.ui().views().assertView(GameViewID.EDITOR, EditorView.class);
-        editorView.ensureEditorCreated(actionContext);
-        if (!actionContext.ui().views().trySelectEditorView(actionContext)) {
-            actionContext.ui().shortMessage("Cannot open the map editor.");
+        final EditorView editorView = appContext.ui().views().assertView(GameViewID.EDITOR, EditorView.class);
+        editorView.ensureEditorCreated(appContext);
+        if (!appContext.ui().views().trySelectEditorView(appContext)) {
+            appContext.ui().shortMessage("Cannot open the map editor.");
             return Optional.empty();
         }
         return Optional.of(editorView.editor());

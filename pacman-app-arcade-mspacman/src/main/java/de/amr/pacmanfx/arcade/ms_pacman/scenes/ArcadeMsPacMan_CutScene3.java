@@ -47,8 +47,8 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     private SceneState sceneState;
     private long sceneTick;
 
-    public ArcadeMsPacMan_CutScene3(GameAppContext actionContext) {
-        super(actionContext);
+    public ArcadeMsPacMan_CutScene3(GameAppContext appContext) {
+        super(appContext);
     }
 
     @Override

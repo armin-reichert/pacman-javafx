@@ -31,7 +31,7 @@ import java.util.Optional;
 //TODO: Clean-up this mess!
 public interface GameVariantConfig extends Disposable {
 
-    void init(GameAppContext actionContext);
+    void init(GameAppContext appContext);
 
     AssetMap assets();
 

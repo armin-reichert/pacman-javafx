@@ -27,8 +27,8 @@ public class Arcade_BootScene2D extends AbstractGameScene2D {
 
     public String[] noise = new String[28*36];
 
-    public Arcade_BootScene2D(GameAppContext actionContext) {
-        super(actionContext);
+    public Arcade_BootScene2D(GameAppContext appContext) {
+        super(appContext);
 
         // Make some noise
         final var rnd = new java.security.SecureRandom();

@@ -35,8 +35,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
 {
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public Arcade_PlayScene2D(GameAppContext actionContext) {
-        super(actionContext);
+    public Arcade_PlayScene2D(GameAppContext appContext) {
+        super(appContext);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     }
 
     @Override
-    public void handleQuit(GameAppContext actionContext) {
+    public void handleQuit(GameAppContext appContext) {
         onDeactivate();
         gameFlow().enterState(gameContext(), GameStateID.GAME_OVER);
     }

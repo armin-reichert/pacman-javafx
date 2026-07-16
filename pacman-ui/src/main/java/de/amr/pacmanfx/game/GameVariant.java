@@ -37,7 +37,7 @@ public record GameVariant(
         );
     }
 
-    public <T> T getExtensionValue(GameAppContext actionContext, Identifier id, Class<T> type) {
+    public <T> T getExtensionValue(GameAppContext appContext, Identifier id, Class<T> type) {
         final Object cached = extensionValues.get(id);
         if (cached != null) {
             return type.cast(cached);
@@ -48,7 +48,7 @@ public record GameVariant(
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Extension with id " + id + " not found"));
 
-        final Object created = ext.creator().apply(actionContext);
+        final Object created = ext.creator().apply(appContext);
         extensionValues.put(id, created);
         return type.cast(created);
     }

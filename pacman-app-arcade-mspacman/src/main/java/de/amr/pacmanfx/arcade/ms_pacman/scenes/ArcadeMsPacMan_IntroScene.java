@@ -56,8 +56,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
     private int numTicksBeforeRising;
 
-    public ArcadeMsPacMan_IntroScene(GameAppContext actionContext) {
-        super(actionContext);
+    public ArcadeMsPacMan_IntroScene(GameAppContext appContext) {
+        super(appContext);
         sceneFlow = new StateMachine<>(List.of(SceneState.values()));
     }
 

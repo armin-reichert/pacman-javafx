@@ -55,8 +55,8 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     public Ghost blinky;
     public SpriteAnimation nailDressAnimation;
 
-    public ArcadePacMan_CutScene2(GameAppContext actionContext) {
-        super(actionContext);
+    public ArcadePacMan_CutScene2(GameAppContext appContext) {
+        super(appContext);
     }
 
     @Override

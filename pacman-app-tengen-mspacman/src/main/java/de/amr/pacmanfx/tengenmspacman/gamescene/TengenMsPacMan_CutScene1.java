@@ -58,8 +58,8 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     private boolean collided;
 
-    public TengenMsPacMan_CutScene1(GameAppContext actionContext) {
-        super(actionContext);
+    public TengenMsPacMan_CutScene1(GameAppContext appContext) {
+        super(appContext);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }

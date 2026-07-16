@@ -39,17 +39,17 @@ public final class TengenMsPacMan_Actions {
     private final Set<ActionKeyBinding> steeringBindings;
     private final Set<ActionKeyBinding> localBindings;
 
-    public TengenMsPacMan_Actions(GameAppContext actionContext) {
-        final Joypad joypad = actionContext.input().joypad();
+    public TengenMsPacMan_Actions(GameAppContext appContext) {
+        final Joypad joypad = appContext.input().joypad();
 
-        actionEnterStartScreen = new GameAction(actionContext, "enter_start_screen") {
+        actionEnterStartScreen = new GameAction(appContext, "enter_start_screen") {
             @Override
             public void doAction() {
                 gameContext().flow().enterState(gameContext(), GameStateID.GAME_PREPARATION);
             }
         };
 
-        actionQuitDemoLevel = new GameAction(actionContext, "quit_demo_level") {
+        actionQuitDemoLevel = new GameAction(appContext, "quit_demo_level") {
             @Override
             public void doAction() {
                 gameContext().flow().enterState(gameContext(), GameStateID.GAME_PREPARATION);
@@ -61,14 +61,14 @@ public final class TengenMsPacMan_Actions {
             }
         };
 
-        actionStartPlaying = new GameAction(actionContext, "start_playing") {
+        actionStartPlaying = new GameAction(appContext, "start_playing") {
             @Override
             public void doAction() {
                 gameContext().flow().enterState(gameContext(), GameStateID.GAME_OR_LEVEL_STARTING);
             }
         };
 
-        actionTogglePlaySceneDisplayMode = new GameAction(actionContext, "toggle_play_scene_display_mode") {
+        actionTogglePlaySceneDisplayMode = new GameAction(appContext, "toggle_play_scene_display_mode") {
             @Override
             public void doAction() {
                 final var uiSettings = appContext.getExtensionValue(
@@ -86,7 +86,7 @@ public final class TengenMsPacMan_Actions {
             }
         };
 
-        actionToggleJoypadBindingsDisplayed = new GameAction(actionContext, "toggle_joypad_bindings_displayed") {
+        actionToggleJoypadBindingsDisplayed = new GameAction(appContext, "toggle_joypad_bindings_displayed") {
             @Override
             public void doAction() {
                 final var uiSettings = appContext.getExtensionValue(
@@ -96,7 +96,7 @@ public final class TengenMsPacMan_Actions {
             }
         };
 
-        actionTogglePacBooster = new GameAction(actionContext, "toggle_pac_booster") {
+        actionTogglePacBooster = new GameAction(appContext, "toggle_pac_booster") {
             @Override
             public void doAction() {
                 gameContext().model().optLevel().ifPresent(gameLevel -> {
@@ -115,14 +115,14 @@ public final class TengenMsPacMan_Actions {
             }
         };
 
-        actionSelectNextJoypadKeyBinding = new GameAction(actionContext, "select_next_joypad_binding") {
+        actionSelectNextJoypadKeyBinding = new GameAction(appContext, "select_next_joypad_binding") {
             @Override
             public void doAction() {
                 appContext.input().joypad().selectNextBinding();
             }
         };
 
-        final SteeringActions steeringActions = actionContext.commonActions().steeringActions();
+        final SteeringActions steeringActions = appContext.commonActions().steeringActions();
         steeringBindings = Set.of(
             new ActionKeyBinding(steeringActions.actionSteer(Direction.UP),    keyForJoypadButton(joypad, JoypadButton.UP),    combine().ctrl().key(KeyCode.UP)),
             new ActionKeyBinding(steeringActions.actionSteer(Direction.DOWN),  keyForJoypadButton(joypad, JoypadButton.DOWN),  combine().ctrl().key(KeyCode.DOWN)),

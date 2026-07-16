@@ -29,8 +29,8 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
     public Ghost ghost;
     public Color shadeOfBlue;
 
-    public TengenMsPacMan_BootScene(GameAppContext actionContext) {
-        super(actionContext);
+    public TengenMsPacMan_BootScene(GameAppContext appContext) {
+        super(appContext);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }

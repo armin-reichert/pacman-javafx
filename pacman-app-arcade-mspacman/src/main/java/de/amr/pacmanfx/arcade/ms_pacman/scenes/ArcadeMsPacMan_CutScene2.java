@@ -36,8 +36,8 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
     public Pac msPacMan;
     public Clapperboard clapperboard;
 
-    public ArcadeMsPacMan_CutScene2(GameAppContext actionContext) {
-        super(actionContext);
+    public ArcadeMsPacMan_CutScene2(GameAppContext appContext) {
+        super(appContext);
     }
 
     @Override

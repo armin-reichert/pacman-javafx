@@ -45,8 +45,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     private List<Long> juniorCreationTimes;
     private Clapperboard clapperboard;
 
-    public TengenMsPacMan_CutScene4(GameAppContext actionContext) {
-        super(actionContext);
+    public TengenMsPacMan_CutScene4(GameAppContext appContext) {
+        super(appContext);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }

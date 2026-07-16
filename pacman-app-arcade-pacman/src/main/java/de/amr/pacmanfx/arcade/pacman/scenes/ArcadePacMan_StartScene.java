@@ -14,8 +14,8 @@ import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
  */
 public class ArcadePacMan_StartScene extends AbstractGameScene2D {
 
-    public ArcadePacMan_StartScene(GameAppContext actionContext) {
-        super(actionContext);
+    public ArcadePacMan_StartScene(GameAppContext appContext) {
+        super(appContext);
     }
 
     @Override

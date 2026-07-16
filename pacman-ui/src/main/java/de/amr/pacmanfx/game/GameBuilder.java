@@ -113,12 +113,12 @@ public class GameBuilder {
         }
     }
 
-    private void addStartPages(GameAppContext actionContext) {
-        final StartPagesView startPagesView = actionContext.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class);
+    private void addStartPages(GameAppContext appContext) {
+        final StartPagesView startPagesView = appContext.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class);
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();
             if (page != null) {
-                startPagesView.addStartPage(actionContext, page);
+                startPagesView.addStartPage(appContext, page);
             } else {
                 error("Start page could not be created using factory: " + factory);
             }

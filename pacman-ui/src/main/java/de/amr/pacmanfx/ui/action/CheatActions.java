@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
@@ -105,21 +104,17 @@ public final class CheatActions {
         actionEnterNextLevel = new GameAction(appContext, "cheat_enter_next_level") {
             @Override
             public void doAction() {
-                final GameContext context = this.gameContext();
-
-                context.cheats().notifyCheatUsed();
-                context.flow().enterState(gameContext(), GameStateID.GAME_LEVEL_COMPLETE);
+                gameContext().cheats().notifyCheatUsed();
+                gameFlow().enterState(gameContext(), GameStateID.GAME_LEVEL_COMPLETE);
             }
 
             @Override
             public boolean isEnabled() {
-                final GameContext context = this.gameContext();
-                final GameState state = context.state();
+                final GameState state = gameContext().state();
                 final GameLevel level = normalLevel(this.appContext).orElse(null);
-
                 return level != null
                     && GameStateID.GAME_LEVEL_PLAYING.identifies(state)
-                    && level.number() < context.model().rules().lastLevelNumber();
+                    && level.number() < gameContext().model().rules().lastLevelNumber();
             }
         };
 

@@ -39,17 +39,17 @@ public final class CommonGameActions {
 
     private final Set<ActionKeyBinding> commonBindings;
 
-    public CommonGameActions(GameAppContext actionContext) {
-        simulationActions = new SimulationActions(actionContext);
-        gameFlowActions = new GameFlowActions(actionContext);
-        steeringActions = new SteeringActions(actionContext);
-        camera3DActions = new Camera3DActions(actionContext);
-        editorActions = new EditorActions(actionContext);
-        cheatActions = new CheatActions(actionContext);
-        sceneTestActions = new TestActions(actionContext);
-        uiSettingsActions = new UISettingsActions(actionContext);
+    public CommonGameActions(GameAppContext appContext) {
+        simulationActions = new SimulationActions(appContext);
+        gameFlowActions = new GameFlowActions(appContext);
+        steeringActions = new SteeringActions(appContext);
+        camera3DActions = new Camera3DActions(appContext);
+        editorActions = new EditorActions(appContext);
+        cheatActions = new CheatActions(appContext);
+        sceneTestActions = new TestActions(appContext);
+        uiSettingsActions = new UISettingsActions(appContext);
 
-        actionToggleCollisionStrategy = new GameAction(actionContext, "toggle_collision_strategy") {
+        actionToggleCollisionStrategy = new GameAction(appContext, "toggle_collision_strategy") {
             @Override
             protected void doAction() {
                 final GameRules rules = appContext.currentGameContext().model().rules();

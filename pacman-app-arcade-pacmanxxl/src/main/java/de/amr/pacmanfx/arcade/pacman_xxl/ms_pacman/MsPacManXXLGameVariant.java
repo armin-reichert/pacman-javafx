@@ -63,7 +63,7 @@ public final class MsPacManXXLGameVariant implements GameVariantConfig, Resource
     private GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
-    private GameAppContext actionContext;
+    private GameAppContext appContext;
 
     public MsPacManXXLGameVariant() {
         textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
@@ -80,17 +80,17 @@ public final class MsPacManXXLGameVariant implements GameVariantConfig, Resource
     }
 
     @Override
-    public void init(GameAppContext actionContext) {
-        this.actionContext = actionContext;
+    public void init(GameAppContext appContext) {
+        this.appContext = appContext;
 
-        gameSceneConfig = new PacManXXL_MsPacMan_GameSceneConfig(actionContext);
+        gameSceneConfig = new PacManXXL_MsPacMan_GameSceneConfig(appContext);
 
         Logger.info("Load assets of UI configuration {}", getClass().getSimpleName());
         loadAssets();
 
         Logger.info("Register sounds and effects of UI configuration {}", getClass().getSimpleName());
-        registerSounds(actionContext.ui().sounds());
-        soundEffects = new GameSoundEffects(actionContext.ui().sounds());
+        registerSounds(appContext.ui().sounds());
+        soundEffects = new GameSoundEffects(appContext.ui().sounds());
         initSoundEffects();
     }
 
@@ -103,9 +103,9 @@ public final class MsPacManXXLGameVariant implements GameVariantConfig, Resource
         Logger.info("Dispose assets of UI configuration {}", getClass().getSimpleName());
         assets().dispose();
 
-        if (actionContext != null) {
+        if (appContext != null) {
             Logger.info("Unregister sounds and effects of UI configuration {}", getClass().getSimpleName());
-            unregisterSounds(actionContext.ui().sounds());
+            unregisterSounds(appContext.ui().sounds());
             soundEffects.dispose();
         }
     }

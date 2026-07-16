@@ -83,8 +83,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     private int ghostIndex;
     private long lastGhostEatenTick;
 
-    public ArcadePacMan_IntroScene(GameAppContext actionContext) {
-        super(actionContext);
+    public ArcadePacMan_IntroScene(GameAppContext appContext) {
+        super(appContext);
         flow = new StateMachine<>(List.of(SceneState.values()));
     }
 

@@ -13,8 +13,8 @@ import org.tinylog.Logger;
 
 public class Arcade_PlayScene3D extends PlayScene3D {
 
-    public Arcade_PlayScene3D(GameAppContext actionContext) {
-        super(actionContext);
+    public Arcade_PlayScene3D(GameAppContext appContext) {
+        super(appContext);
     }
 
     @Override

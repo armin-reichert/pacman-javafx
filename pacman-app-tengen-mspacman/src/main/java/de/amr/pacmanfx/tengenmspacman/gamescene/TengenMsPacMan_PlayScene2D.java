@@ -68,17 +68,17 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public TengenMsPacMan_PlayScene2D(GameAppContext actionContext) {
-        super(actionContext);
+    public TengenMsPacMan_PlayScene2D(GameAppContext appContext) {
+        super(appContext);
 
         dynamicCamera = new PlayScene2DCamera();
         dynamicCamera.scalingProperty().bind(scalingProperty());
 
-        rootPane.backgroundProperty().bind(actionContext.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
+        rootPane.backgroundProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
 
         // Scene size gets bound to parent scene when embedded in game view, initial size doesn't matter.
         subScene = new SubScene(rootPane, 88, 88);
-        subScene.fillProperty().bind(actionContext.ui().viewModel().common2D.canvasBackgroundColorProperty);
+        subScene.fillProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty);
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
 
         final var uiSettings = tengenUISettings();
@@ -173,7 +173,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     @Override
-    public void handleQuit(GameAppContext actionContext) {
+    public void handleQuit(GameAppContext appContext) {
         onDeactivate();
         gameContext().flow().enterState(gameContext(), GameStateID.GAME_OVER);
     }

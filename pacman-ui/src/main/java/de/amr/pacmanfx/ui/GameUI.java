@@ -61,7 +61,7 @@ public class GameUI implements GameEventListener {
     private final GameViewModel viewModel;
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
 
-    private GameAppContext actionContext;
+    private GameAppContext appContext;
 
     public GameUI(Stage stage, int width, int height, GameUISettings settings, DashboardFactory dashboardFactory) {
         viewModel = new GameViewModel();
@@ -107,13 +107,13 @@ public class GameUI implements GameEventListener {
         return viewModel;
     }
 
-    public void setGameActionContext(GameAppContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+    public void setGameActionContext(GameAppContext appContext) {
+        this.appContext = requireNonNull(appContext);
 
-        sounds.setGameActionContext(actionContext);
-        gameScenes.setGameActionContext(actionContext);
-        views.setGameActionContext(actionContext);
-        window.setActionContext(actionContext);
+        sounds.setGameActionContext(appContext);
+        gameScenes.setGameActionContext(appContext);
+        views.setGameActionContext(appContext);
+        window.setActionContext(appContext);
 
         connectKeyboard();
         bindCommonActions();
@@ -181,14 +181,14 @@ public class GameUI implements GameEventListener {
     }
 
     private void connectKeyboard() {
-        final Keyboard keyboard = actionContext.input().keyboard();
+        final Keyboard keyboard = appContext.input().keyboard();
         keyboard.enabledProperty().bind(views.currentViewIDProperty().map(GameUI::isViewAcceptingKeyboardInput));
         keyboard.addStateListener(_ -> handleKeyboardStateChange());
         keyboard.filterKeyEventsFrom(window.mainScene());
     }
 
     private void handleKeyboardStateChange() {
-        final Input input = actionContext.input();
+        final Input input = appContext.input();
         if (input.keyboard().anyNormalKeyPressed()) { // ignore modifier state change
             final GameViewID currentViewID = views.currentViewID();
             if (isViewAcceptingKeyboardInput(currentViewID)) {
@@ -205,7 +205,7 @@ public class GameUI implements GameEventListener {
     }
 
     private void bindCommonActions() {
-        final CommonGameActions actions = actionContext.commonActions();
+        final CommonGameActions actions = appContext.commonActions();
         final Set<ActionKeyBinding> bindings = actions.bindings();
         actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionToggleKeyboardMonitor(), bindings);
         actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionEnterFullScreen(), bindings);

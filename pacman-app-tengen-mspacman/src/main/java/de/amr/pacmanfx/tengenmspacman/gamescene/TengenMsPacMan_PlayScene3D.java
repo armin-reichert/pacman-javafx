@@ -31,8 +31,8 @@ import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
  */
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
-    public TengenMsPacMan_PlayScene3D(GameAppContext actionContext) {
-        super(actionContext);
+    public TengenMsPacMan_PlayScene3D(GameAppContext appContext) {
+        super(appContext);
     }
 
     @Override

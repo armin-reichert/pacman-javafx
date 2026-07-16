@@ -61,8 +61,8 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     private int idleTicks;
     public int initialDelay;
 
-    public TengenMsPacMan_OptionsScene(GameAppContext actionContext) {
-        super(actionContext);
+    public TengenMsPacMan_OptionsScene(GameAppContext appContext) {
+        super(appContext);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }

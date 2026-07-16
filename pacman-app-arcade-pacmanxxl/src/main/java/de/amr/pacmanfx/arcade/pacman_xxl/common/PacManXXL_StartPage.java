@@ -38,7 +38,7 @@ public class PacManXXL_StartPage implements StartPage {
     private final StackPane rootPane;
     private final PacManXXL_OptionMenu menu;
 
-    private GameAppContext actionContext;
+    private GameAppContext appContext;
     private final String title;
 
     public PacManXXL_StartPage() {
@@ -62,8 +62,8 @@ public class PacManXXL_StartPage implements StartPage {
     }
 
     @Override
-    public void setGameActionContext(GameAppContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+    public void setGameActionContext(GameAppContext appContext) {
+        this.appContext = requireNonNull(appContext);
     }
 
     @Override
@@ -71,14 +71,14 @@ public class PacManXXL_StartPage implements StartPage {
         final Keyboard keyboard = input.keyboard();
         if (keyboard.isKeyPressed(KeyCode.E)) {
             pauseProgressTimer();
-            actionContext.commonActions().editorActions().actionOpenEditor().execute();
+            appContext.commonActions().editorActions().actionOpenEditor().execute();
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
             pauseProgressTimer();
-            actionContext.lifecycle().startPlaying();
+            appContext.lifecycle().startPlaying();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
-            actionContext.ui().shortMessage("OK, I shut my mouth");
+            appContext.ui().shortMessage("OK, I shut my mouth");
             stopTalking();
         }
     }
@@ -87,11 +87,11 @@ public class PacManXXL_StartPage implements StartPage {
     public void onEnter() {
         final GameVariantID selectedGameVariantID = menu.meGameVariantID().value();
         switch (selectedGameVariantID) {
-            case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> actionContext.variants().selectVariant(selectedGameVariantID.name());
+            case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> appContext.variants().selectVariant(selectedGameVariantID.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariantID);
         }
-        actionContext.ui().sounds().playVoice(VARIANT_NARRATION);
-        menu.init(actionContext);
+        appContext.ui().sounds().playVoice(VARIANT_NARRATION);
+        menu.init(appContext);
         menu.bind();
         menu.startAnimation();
         Platform.runLater(menu::requestFocus);
@@ -118,10 +118,10 @@ public class PacManXXL_StartPage implements StartPage {
     // Private area
 
     private void pauseProgressTimer() {
-        actionContext.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().pauseProgress();
+        appContext.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().pauseProgress();
     }
 
     private void stopTalking() {
-        actionContext.ui().sounds().stopAndDisposeVoice();
+        appContext.ui().sounds().stopAndDisposeVoice();
     }
 }

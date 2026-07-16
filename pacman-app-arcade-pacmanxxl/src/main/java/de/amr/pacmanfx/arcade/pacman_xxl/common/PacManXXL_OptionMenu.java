@@ -80,14 +80,14 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             meMapOrder.value());
     }
 
-    public void init(GameAppContext actionContext) {
-        this.appContext = requireNonNull(actionContext);
+    public void init(GameAppContext appContext) {
+        this.appContext = requireNonNull(appContext);
 
-        scaling = createScalingValue(actionContext.ui().window().stage().heightProperty());
+        scaling = createScalingValue(appContext.ui().window().stage().heightProperty());
 
-        final GameContext gameContext = actionContext.currentGameContext();
-        final GameVariantConfig variantConfig = actionContext.variants().currentVariant().config();
-        final GameVariantID gameVariantID = GameVariantID.valueOf(actionContext.variants().currentVariantName());
+        final GameContext gameContext = appContext.currentGameContext();
+        final GameVariantConfig variantConfig = appContext.variants().currentVariant().config();
+        final GameVariantID gameVariantID = GameVariantID.valueOf(appContext.variants().currentVariantName());
         final GameModel gameModel = gameContext.model();
 
         if (!(gameModel.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
@@ -99,15 +99,15 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         // Init entries
         meGameVariantID.setValue(gameVariantID);
-        meView3DEnabled.setValue(actionContext.ui().viewModel().common3D.view3DEnabledProperty.get());
+        meView3DEnabled.setValue(appContext.ui().viewModel().common3D.view3DEnabledProperty.get());
         meCutScenesEnabled.setValue(gameContext.flow().cutScenesEnabled());
         meMapOrder.setValue(mapSelector.selectionMode());
         meMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());
 
         logMenuState();
 
-        soundEnabledProperty().bind(actionContext.ui().sounds().muteProperty().not());
-        chaseAnimation.init(variantConfig, canvas, actionContext.ui().sprites().animations());
+        soundEnabledProperty().bind(appContext.ui().sounds().muteProperty().not());
+        chaseAnimation.init(variantConfig, canvas, appContext.ui().sprites().animations());
     }
 
     public void bind() {

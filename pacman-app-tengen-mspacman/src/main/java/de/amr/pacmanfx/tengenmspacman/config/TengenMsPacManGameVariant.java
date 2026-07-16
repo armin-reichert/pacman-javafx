@@ -140,10 +140,10 @@ public class TengenMsPacManGameVariant implements GameVariantConfig {
     }
 
     @Override
-    public void init(GameAppContext actionContext) {
+    public void init(GameAppContext appContext) {
         loadAssets();
-        registerSoundObjects(actionContext.ui().sounds());
-        gameSceneConfig = new GameSceneConfig(actionContext);
+        registerSoundObjects(appContext.ui().sounds());
+        gameSceneConfig = new GameSceneConfig(appContext);
         Logger.info("Initialized Tengen UI configuration {} (loaded assets and sounds)", getClass().getSimpleName());
     }
 

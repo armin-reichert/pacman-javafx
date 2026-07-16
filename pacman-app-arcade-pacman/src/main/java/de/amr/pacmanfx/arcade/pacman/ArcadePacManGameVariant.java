@@ -85,11 +85,11 @@ public class ArcadePacManGameVariant implements GameVariantConfig, ResourceManag
     // GameVariant interface
 
     @Override
-    public void init(GameAppContext actionContext) {
+    public void init(GameAppContext appContext) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
         loadAssets();
-        initSound(actionContext.ui().sounds());
-        gameSceneConfig = new ArcadePacMan_GameSceneConfig(actionContext);
+        initSound(appContext.ui().sounds());
+        gameSceneConfig = new ArcadePacMan_GameSceneConfig(appContext);
     }
 
     @Override

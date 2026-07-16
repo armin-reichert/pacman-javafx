@@ -19,8 +19,8 @@ public class DS_JoypadKeyBindings extends GameDashboardSection {
     }
 
     @Override
-    public void setGameActionContext(GameAppContext actionContext) {
-        final Joypad joypad = actionContext.input().joypad();
+    public void setGameActionContext(GameAppContext appContext) {
+        final Joypad joypad = appContext.input().joypad();
 
         final ResourceManager resourceManager = this::getClass;
 
@@ -47,7 +47,7 @@ public class DS_JoypadKeyBindings extends GameDashboardSection {
         );
 
         // Take dashboard title from Tengen Ms. Pac-Man text bundle
-        final GameVariant tengenGameVariant = actionContext.variants().variant(GameVariantID.TENGEN_MS_PACMAN.name());
+        final GameVariant tengenGameVariant = appContext.variants().variant(GameVariantID.TENGEN_MS_PACMAN.name());
         setText(tengenGameVariant.config().translations().translate("infobox.joypad.title"));
     }
 
