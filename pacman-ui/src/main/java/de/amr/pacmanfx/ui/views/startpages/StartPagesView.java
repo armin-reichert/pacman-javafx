@@ -60,7 +60,7 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void setGameActionContext(GameAppContext appContext) {
+    public void setAppContext(GameAppContext appContext) {
         this.appContext = requireNonNull(appContext);
     }
 

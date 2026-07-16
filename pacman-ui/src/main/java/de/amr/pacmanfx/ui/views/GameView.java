@@ -27,7 +27,7 @@ public interface GameView extends QuitHandler {
         return Optional.empty();
     }
 
-    void setGameActionContext(GameAppContext appContext);
+    void setAppContext(GameAppContext appContext);
 
     void onEnter();
 

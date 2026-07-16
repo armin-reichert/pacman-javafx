@@ -107,7 +107,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     @Override
-    public void setGameActionContext(GameAppContext appContext) {
+    public void setAppContext(GameAppContext appContext) {
         this.appContext = requireNonNull(appContext);
         final GameViewModel settings = appContext.ui().viewModel();
 
