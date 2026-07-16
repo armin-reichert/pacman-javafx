@@ -34,8 +34,10 @@ import static java.util.Objects.requireNonNull;
 public abstract class CommonGamePlay implements GamePlay {
 
     @Override
-    public void resetForNewGame(GameModel model) {
-        requireNonNull(model);
+    public void resetForNewGame(GameContext gameContext) {
+        requireNonNull(gameContext);
+
+        final GameModel model = gameContext.model();
 
         model.lives().setCount(model.lives().initialCount());
         model.score().reset();

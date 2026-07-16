@@ -24,15 +24,15 @@ public class CommonGameBootState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
+    public void onEnter(GameContext gameContext) {
         timer().restartTicks(Timing.EXPIRATION);
-        context.gamePlay().init(context.model());
+        gameContext.gamePlay().init(gameContext);
     }
 
     @Override
-    public void onUpdate(GameContext context) {
+    public void onUpdate(GameContext gameContext) {
         if (timer().hasExpired()) {
-            context.flow().enterState(context, GameStateID.GAME_INTRO);
+            gameContext.flow().enterState(gameContext, GameStateID.GAME_INTRO);
         }
     }
 }

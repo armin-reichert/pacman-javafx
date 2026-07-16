@@ -44,21 +44,21 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Game start
 
     @Override
-    public void init(GameModel model) {
-        requireNonNull(model);
-        model.init();
-        resetForNewGame(model);
+    public void init(GameContext gameContext) {
+        requireNonNull(gameContext);
+        gameContext.model().init();
+        resetForNewGame(gameContext);
     }
 
     @Override
-    public void resetForNewGame(GameModel model) {
-        requireNonNull(model);
+    public void resetForNewGame(GameContext gameContext) {
+        requireNonNull(gameContext);
 
-        if (!(model instanceof TengenMsPacMan_GameModel tengenModel)) {
+        if (!(gameContext.model() instanceof TengenMsPacMan_GameModel tengenModel)) {
             throw new IllegalArgumentException("Illegal model type");
         }
 
-        super.resetForNewGame(model);
+        super.resetForNewGame(gameContext);
         tengenModel.setBoosterActive(false);
     }
 

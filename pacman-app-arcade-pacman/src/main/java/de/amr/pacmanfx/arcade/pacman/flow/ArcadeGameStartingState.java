@@ -24,21 +24,21 @@ public class ArcadeGameStartingState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final GameModel model = context.model();
+    public void onEnter(GameContext gameContext) {
+        final GameModel model = gameContext.model();
 
         model.hudState().hideCredit().showLivesCounter();
 
-        context.gamePlay().resetForNewGame(model);
-        context.gamePlay().buildNormalLevel(context, 1);
+        gameContext.gamePlay().resetForNewGame(gameContext);
+        gameContext.gamePlay().buildNormalLevel(gameContext, 1);
 
-        context.eventManager().publishGameEvent(new GameStartedEvent(context));
+        gameContext.eventManager().publishGameEvent(new GameStartedEvent(gameContext));
     }
 
     @Override
     public void onUpdate(GameContext gameContext) {
         final GameModel model = gameContext.model();
-        final GameLevel level = gameContext.model().assertLevel();
+        final GameLevel level = gameContext.assertLevel();
         final long tick = timer().tickCount();
 
         if (tick == TICK_NEW_GAME_START_LEVEL) {

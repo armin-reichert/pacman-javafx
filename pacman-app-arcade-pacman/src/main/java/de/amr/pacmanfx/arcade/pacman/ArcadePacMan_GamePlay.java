@@ -71,10 +71,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Game start
 
     @Override
-    public void init(GameModel model) {
-        requireNonNull(model);
-        model.init();
-        resetForNewGame(model);
+    public void init(GameContext gameContext) {
+        requireNonNull(gameContext);
+        gameContext.model().init();
+        resetForNewGame(gameContext);
     }
 
     // Level building and level start

@@ -17,9 +17,9 @@ public interface GamePlay {
 
     // Game start
 
-    void init(GameModel model);
+    void init(GameContext gameContext);
 
-    void resetForNewGame(GameModel model);
+    void resetForNewGame(GameContext gameContext);
 
     void prepareLevelForPlaying(GameLevel level);
 

@@ -14,10 +14,10 @@ public class CommonGamePreparationState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final GameModel model = context.model();
+    public void onEnter(GameContext gameContext) {
+        final GameModel model = gameContext.model();
         model.hudState().showCredit().showScore().showLevelCounter().hideLivesCounter().show();
-        context.gamePlay().resetForNewGame(context.model());
+        gameContext.gamePlay().resetForNewGame(gameContext);
     }
 
     @Override
