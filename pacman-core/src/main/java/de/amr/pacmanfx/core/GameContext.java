@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.core.event.GameEventManager;
-import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -22,7 +22,7 @@ public interface GameContext {
 
     GamePlay gamePlay();
 
-    GameFlow flow();
+    GameFlowController flow();
 
     GameEventManager eventManager();
 

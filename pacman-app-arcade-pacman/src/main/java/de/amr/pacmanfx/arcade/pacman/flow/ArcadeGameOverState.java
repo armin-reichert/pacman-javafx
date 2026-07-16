@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
@@ -37,7 +37,7 @@ public class ArcadeGameOverState extends GameState {
 
     @Override
     public void onUpdate(GameContext context) {
-        final GameFlow flow = context.flow();
+        final GameFlowController flow = context.flow();
         if (timer().hasExpired()) {
             final GameLevel level = context.model().assertLevel();
             level.clearMessage();

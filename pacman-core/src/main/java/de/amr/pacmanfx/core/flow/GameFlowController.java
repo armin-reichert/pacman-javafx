@@ -20,13 +20,13 @@ import java.util.Optional;
 /**
  * A game flow implementation using a state machine.
  */
-public class GameFlow extends StateMachine<GameContext> {
+public class GameFlowController extends StateMachine<GameContext> {
 
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
     protected GameContext gameContext;
 
-    public GameFlow(String name) {
+    public GameFlowController(String name) {
         setName(name);
         addStateChangeListener((oldState, newState) -> {
             if (gameContext != null) {

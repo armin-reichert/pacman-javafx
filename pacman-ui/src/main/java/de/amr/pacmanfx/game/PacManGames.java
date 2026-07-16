@@ -6,7 +6,7 @@ package de.amr.pacmanfx.game;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.*;
-import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
@@ -129,7 +129,7 @@ public final class PacManGames implements GameActionContext, GameLifecycle {
 
     @Override
     public void startPlaying() {
-        final GameFlow gameFlow = gameContext.flow();
+        final GameFlowController gameFlow = gameContext.flow();
 
         gameFlow.setGameContext(gameContext);
         gameFlow.restartState(gameContext, GameStateID.BOOT);
@@ -176,7 +176,7 @@ public final class PacManGames implements GameActionContext, GameLifecycle {
     }
 
     private void simulateAndUpdateCurrentGameScene() {
-        final GameFlow gameFlow = gameContext.flow(); //TODO store elsewhere?
+        final GameFlowController gameFlow = gameContext.flow(); //TODO store elsewhere?
         gameFlow.setGameContext(gameContext);
 
         // New simulation step ("frame")

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.state.GameState;
@@ -26,7 +26,7 @@ public class GameLevelCompleteState extends GameState {
 
     @Override
     public void onUpdate(GameContext context) {
-        final GameFlow flow = context.flow();
+        final GameFlowController flow = context.flow();
         final GameModel model = context.model();
         final GameLevel level = model.assertLevel();
         final boolean cutSceneFollows = !level.isDemoLevel()

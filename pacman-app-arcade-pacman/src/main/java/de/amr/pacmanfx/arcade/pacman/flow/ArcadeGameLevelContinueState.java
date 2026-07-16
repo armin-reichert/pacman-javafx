@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameContinuedEvent;
-import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -38,7 +38,7 @@ public class ArcadeGameLevelContinueState extends GameState {
 
     @Override
     public void onUpdate(GameContext context) {
-        final GameFlow flow = context.flow();
+        final GameFlowController flow = context.flow();
         final long tick = timer().tickCount();
 
         if (tick == TICK_CONTINUE_LEVEL) {

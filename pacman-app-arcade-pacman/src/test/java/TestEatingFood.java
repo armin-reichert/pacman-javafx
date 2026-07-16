@@ -3,7 +3,7 @@
  */
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
+import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlowController;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
@@ -12,13 +12,14 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GameEventListener;
 import de.amr.pacmanfx.core.event.GameEventManager;
-import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Elroy;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
+import de.amr.pacmanfx.core.simulation.FrameContext;
 import de.amr.pacmanfx.core.simulation.GamePlay;
 import de.amr.pacmanfx.game.GameBox;
 import org.junit.jupiter.api.BeforeAll;
@@ -34,7 +35,7 @@ public class TestEatingFood {
 
     static class TestContext implements GameContext {
 
-        private final Arcade_GameFlow gameFlow = new Arcade_GameFlow();
+        private final Arcade_GameFlowController gameFlow = new Arcade_GameFlowController();
 
         private final ArcadePacMan_GameModel gameModel = new ArcadePacMan_GameModel();
 
@@ -67,7 +68,7 @@ public class TestEatingFood {
         }
 
         @Override
-        public GameFlow flow() {
+        public GameFlowController flow() {
             return gameFlow;
         }
 
@@ -82,8 +83,22 @@ public class TestEatingFood {
         }
 
         @Override
+        public GameLevel level() {
+            return gameModel.assertLevel();
+        }
+
+        @Override
         public GameEventManager eventManager() {
             return eventManager;
+        }
+
+        @Override
+        public void newFrame(long tick) {
+        }
+
+        @Override
+        public FrameContext thisFrame() {
+            return null;
         }
     }
 
@@ -96,7 +111,7 @@ public class TestEatingFood {
 
     @BeforeEach
     public void createGameLevel() {
-        context.gamePlay().buildNormalLevel(context.createPlayContextWithoutLevel(), 1);
+        context.gamePlay().buildNormalLevel(context, 1);
     }
 
     private void eatNextPellet(GameLevel level) {
@@ -106,7 +121,7 @@ public class TestEatingFood {
             .filter(not(foodLayer::isEnergizerTile))
             .findFirst().ifPresent(pelletTile -> {
                 foodLayer.markFoodEatenAt(pelletTile);
-                context.gamePlay().onEatPellet(context.createPlayContext(), pelletTile);
+                context.gamePlay().onEatPellet(context, pelletTile);
             });
     }
 
@@ -116,7 +131,7 @@ public class TestEatingFood {
             .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                context.gamePlay().onEatEnergizer(context.createPlayContext(), tile);
+                context.gamePlay().onEatEnergizer(context, tile);
             });
     }
 

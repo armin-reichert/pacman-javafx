@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -24,7 +24,7 @@ public class ArcadeGameOrLevelStartingState extends GameState {
 
     @Override
     public void onUpdate(GameContext context) {
-        final GameFlow flow = context.flow();
+        final GameFlowController flow = context.flow();
         final GameModel model = context.model();
 
         if (model.isPlaying()) {

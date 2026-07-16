@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.game;
 
-import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.core.model.test.LevelShortTestState;
@@ -71,7 +71,7 @@ public class GameVariantManager implements ChangeListener<String> {
         final var gameVariant = new GameVariant(cartridge);
 
         //TODO make configurable again if tests should be available
-        final GameFlow flow = gameVariant.gameFlow();
+        final GameFlowController flow = gameVariant.gameFlow();
         flow.addState(new LevelShortTestState());
         flow.addState(new LevelMediumTestState());
         flow.addState(new CutScenesTestState());

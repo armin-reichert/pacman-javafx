@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.event.GameEventManagerImpl;
-import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -65,7 +65,7 @@ public class GameContextImpl implements GameContext {
     }
 
     @Override
-    public GameFlow flow() {
+    public GameFlowController flow() {
         return gameVariant.gameFlow();
     }
 

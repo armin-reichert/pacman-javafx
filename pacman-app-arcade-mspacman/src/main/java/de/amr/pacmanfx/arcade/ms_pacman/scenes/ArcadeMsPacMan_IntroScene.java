@@ -13,7 +13,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
@@ -209,7 +209,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 final GameContext gameContext = scene.actionContext().currentGameContext();
-                final GameFlow gameFlow = gameContext.flow();
+                final GameFlowController gameFlow = gameContext.flow();
                 final boolean canPlay = !gameContext.coinMechanism().isEmpty();
                 scene.marquee.timer().doTick();
                 if (timer.atSecond(2.0) && !canPlay) {

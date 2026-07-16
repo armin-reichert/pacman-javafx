@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.game;
 
 import de.amr.basics.Identifier;
-import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.simulation.GamePlay;
 
@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 public record Cartridge(
     Identifier id,
     Supplier<? extends GamePlay> gamePlayFactory,
-    Supplier<? extends GameFlow> gameFlowFactory,
+    Supplier<? extends GameFlowController> gameFlowFactory,
     Supplier<? extends GameModel> gameModelFactory,
     Supplier<? extends GameVariantConfig> uiConfigFactory,
     Set<GameExtension> gameExtensions)

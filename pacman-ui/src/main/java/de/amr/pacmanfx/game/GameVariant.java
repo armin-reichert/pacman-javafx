@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.game;
 
 import de.amr.basics.Identifier;
-import de.amr.pacmanfx.core.flow.GameFlow;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.DefaultCheatsImpl;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
@@ -18,7 +18,7 @@ import java.util.Set;
 
 public record GameVariant(
     GamePlay gamePlay,
-    GameFlow gameFlow,
+    GameFlowController gameFlow,
     GameModel gameModel,
     GameCheats cheats,
     GameVariantConfig config,

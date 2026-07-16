@@ -2,7 +2,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlow;
+import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameFlowController;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXLGameVariant;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GamePlay;
@@ -17,7 +17,7 @@ public class PacManXXL_PacMan_Cartridge {
     public static final Cartridge CARTRIDGE = new Cartridge(
         GameVariantID.ARCADE_PACMAN_XXL,
         PacManXXL_PacMan_GamePlay::new,
-        Arcade_GameFlow::new,
+        Arcade_GameFlowController::new,
         PacManXXL_PacMan_GameModel::new,
         PacManXXLGameVariant::new,
         Set.of(new GameExtension(Arcade_GameExtensions.ACTIONS, Arcade_Actions::new))
