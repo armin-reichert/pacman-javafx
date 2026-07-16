@@ -25,7 +25,7 @@ public interface GamePlay {
 
     // Level building and level start
 
-    GameLevel createLevel(GameModel model, int levelNumber, boolean demoLevel);
+    GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel);
 
     GameLevel buildDemoLevel(GameContext context);
 

@@ -34,9 +34,11 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
     @Override
-    public GameLevel createLevel(GameModel model, int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
+        requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
+        final GameModel model = gameContext.model();
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
@@ -100,11 +102,11 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     }
 
     @Override
-    public GameLevel buildDemoLevel(GameContext playContext) {
+    public GameLevel buildDemoLevel(GameContext gameContext) {
         final int demoLevelNumber = 1;
 
-        final GameModel model = playContext.model();
-        final GameLevel demoLevel = createLevel(model, demoLevelNumber, true);
+        final GameModel model = gameContext.model();
+        final GameLevel demoLevel = createLevel(gameContext, demoLevelNumber, true);
 
         final Pac pac = demoLevel.entities().pac();
         pac.setImmune(false);

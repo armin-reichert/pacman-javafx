@@ -80,9 +80,11 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
-    public GameLevel createLevel(GameModel model, int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
+        requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
+        final GameModel model = gameContext.model();
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
@@ -148,7 +150,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(gameContext);
 
         final GameModel model = gameContext.model();
-        final GameLevel demoLevel = createLevel(model, 1, true);
+        final GameLevel demoLevel = createLevel(gameContext, 1, true);
 
         final Pac pac = demoLevel.entities().pac();
         pac.setImmune(false);

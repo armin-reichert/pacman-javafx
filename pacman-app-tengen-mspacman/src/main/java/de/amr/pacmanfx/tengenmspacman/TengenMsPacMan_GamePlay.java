@@ -65,8 +65,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
-    public GameLevel createLevel(GameModel gameModel, int levelNumber, boolean demoLevel) {
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameModel;
+    public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
 
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber, model.mapCategory());
         final TerrainLayer terrain = worldMap.terrainLayer();
@@ -119,11 +119,11 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public GameLevel buildDemoLevel(GameContext playContext) {
-        requireNonNull(playContext);
+    public GameLevel buildDemoLevel(GameContext gameContext) {
+        requireNonNull(gameContext);
 
-        final GameModel model = playContext.model();
-        final GameLevel demoLevel = createLevel(model, 1, true);
+        final GameModel model = gameContext.model();
+        final GameLevel demoLevel = createLevel(gameContext, 1, true);
         demoLevel.setGameOverStateTicks(120);
 
         final Pac pac = demoLevel.entities().pac();

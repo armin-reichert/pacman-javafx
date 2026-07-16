@@ -95,14 +95,14 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void buildNormalLevel(GameContext context, int levelNumber) {
-        requireNonNull(context);
+    public void buildNormalLevel(GameContext gameContext, int levelNumber) {
+        requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
-        final GameModel model = context.model();
-        final GameEventManager eventManager = context.eventManager();
+        final GameModel model = gameContext.model();
+        final GameEventManager eventManager = gameContext.eventManager();
 
-        final GameLevel level = createLevel(model, levelNumber, false);
+        final GameLevel level = createLevel(gameContext, levelNumber, false);
 
         model.levelCounter().setEnabled(true);
         model.score().setLevelNumber(levelNumber);
