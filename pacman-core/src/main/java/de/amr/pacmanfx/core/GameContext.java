@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.flow.GameFlow;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.simulation.FrameContext;
 import de.amr.pacmanfx.core.simulation.GamePlay;
 import de.amr.pacmanfx.core.state.GameState;
 
@@ -34,4 +35,8 @@ public interface GameContext {
     GameModel model();
 
     GameLevel level();
+
+    FrameContext thisFrame();
+
+    void newFrame(long tick);
 }

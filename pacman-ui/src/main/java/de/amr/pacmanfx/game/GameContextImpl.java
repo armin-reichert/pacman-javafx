@@ -12,7 +12,9 @@ import de.amr.pacmanfx.core.flow.GameFlow;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.simulation.FrameContext;
 import de.amr.pacmanfx.core.simulation.GamePlay;
+import de.amr.pacmanfx.core.simulation.HuntingStepResult;
 
 import static java.util.Objects.requireNonNull;
 
@@ -26,6 +28,8 @@ public class GameContextImpl implements GameContext {
     private final GameVariant gameVariant;
 
     private final GameEventManager eventManager;
+
+    private FrameContext thisFrame;
 
     public GameContextImpl(CoinMechanism coinMechanism, GameVariant gameVariant) {
         this.coinMechanism = requireNonNull(coinMechanism);
@@ -69,4 +73,16 @@ public class GameContextImpl implements GameContext {
     public GamePlay gamePlay() {
         return gameVariant.gamePlay();
     }
+
+    @Override
+    public FrameContext thisFrame() {
+        return thisFrame;
+    }
+
+    @Override
+    public void newFrame(long tick) {
+        thisFrame = new FrameContextImpl(tick, new HuntingStepResult());
+    }
+
+    record FrameContextImpl(long tick, HuntingStepResult huntingStepResult) implements FrameContext {}
 }
