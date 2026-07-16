@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.simulation.HuntingStepResult;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Context for the currently running game variant.
+ * Context passed to game scenes and game flow state machines for the currently running game variant.
  */
 public class GameContextImpl implements GameContext {
 
@@ -81,8 +81,8 @@ public class GameContextImpl implements GameContext {
 
     @Override
     public void newFrame(long tick) {
-        thisFrame = new FrameContextImpl(tick, new HuntingStepResult());
+        thisFrame = new FrameData(tick, new HuntingStepResult());
     }
 
-    record FrameContextImpl(long tick, HuntingStepResult huntingStepResult) implements FrameContext {}
+    record FrameData(long tick, HuntingStepResult huntingStepResult) implements FrameContext {}
 }

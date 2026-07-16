@@ -110,7 +110,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * levelData.numFlashes()); //TODO correct?
 
-        createAndSetPacMan(model, level);
+        createAndSetPacMan(level);
         createAndSetGhosts(level, house);
 
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
@@ -121,7 +121,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         return level;
     }
 
-    protected void createAndSetPacMan(GameModel model, GameLevel level) {
+    protected void createAndSetPacMan(GameLevel level) {
         final Pac pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.setAutomaticSteering(new RuleBasedPacSteering());
         level.setPac(pacMan);
@@ -144,10 +144,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public GameLevel buildDemoLevel(GameContext playContext) {
-        requireNonNull(playContext);
+    public GameLevel buildDemoLevel(GameContext gameContext) {
+        requireNonNull(gameContext);
 
-        final GameModel model = playContext.model();
+        final GameModel model = gameContext.model();
         final GameLevel demoLevel = createLevel(model, 1, true);
 
         final Pac pac = demoLevel.entities().pac();
@@ -171,11 +171,11 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public void startLevel(GameContext playContext) {
-        requireNonNull(playContext);
+    public void startLevel(GameContext gameContext) {
+        requireNonNull(gameContext);
 
-        final GameModel model = playContext.model();
-        final GameLevel level = playContext.level();
+        final GameModel model = gameContext.model();
+        final GameLevel level = gameContext.level();
 
         level.recordStartTime(System.currentTimeMillis());
         prepareLevelForPlaying(level);
@@ -190,24 +190,24 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Playing level
 
     @Override
-    public void onEatPellet(GameContext playContext, Vector2i tile) {
-        super.onEatPellet(playContext, tile);
-        checkRedGhostCruiseElroyActivation(playContext.level());
+    public void onEatPellet(GameContext gameContext, Vector2i tile) {
+        super.onEatPellet(gameContext, tile);
+        checkRedGhostCruiseElroyActivation(gameContext.level());
     }
 
     @Override
-    public void onEatEnergizer(GameContext playContext, Vector2i tile) {
-        super.onEatEnergizer(playContext, tile);
-        checkRedGhostCruiseElroyActivation(playContext.level());
+    public void onEatEnergizer(GameContext gameContext, Vector2i tile) {
+        super.onEatEnergizer(gameContext, tile);
+        checkRedGhostCruiseElroyActivation(gameContext.level());
     }
 
     @Override
-    public void activateNextBonus(GameContext playContext) {
-        requireNonNull(playContext);
+    public void activateNextBonus(GameContext gameContext) {
+        requireNonNull(gameContext);
 
-        final GameModel model = playContext.model();
-        final GameLevel level = playContext.level();
-        final GameEventManager eventManager = playContext.eventManager();
+        final GameModel model = gameContext.model();
+        final GameLevel level = gameContext.level();
+        final GameEventManager eventManager = gameContext.eventManager();
 
         level.selectNextBonus();
         final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
