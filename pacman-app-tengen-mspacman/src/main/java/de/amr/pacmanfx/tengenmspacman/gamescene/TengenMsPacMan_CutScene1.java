@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
@@ -141,7 +142,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameContext gameContext) {
         clapperboard.tick();
 
         pacMan.move();

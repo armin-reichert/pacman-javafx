@@ -8,6 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimations;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -46,7 +47,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameContext gameContext) {
         if (++sceneTick < ANIMATION_START_TICK) {
             return;
         }

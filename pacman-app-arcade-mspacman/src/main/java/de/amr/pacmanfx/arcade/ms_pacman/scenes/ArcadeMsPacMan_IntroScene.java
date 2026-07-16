@@ -78,7 +78,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameContext gameContext) {
         sceneFlow.update();
     }
 

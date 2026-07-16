@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.state.CommonGameBootState;
 import de.amr.pacmanfx.ui.action.core.GameActionContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -42,7 +43,7 @@ public class Arcade_BootScene2D extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameContext gameContext) {
         switch ((int) gameState().timer().tickCount()) {
             case CommonGameBootState.Timing.HEX_CODES -> sceneState = SceneState.HEX_CODES;
             case CommonGameBootState.Timing.SPRITE_GARBAGE -> sceneState = SceneState.RANDOM_SPRITE_FRAGMENTS;

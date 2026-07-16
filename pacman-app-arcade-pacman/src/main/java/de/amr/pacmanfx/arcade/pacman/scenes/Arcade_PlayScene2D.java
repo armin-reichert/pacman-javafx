@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -44,7 +45,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     }
 
     @Override
-    public void onTick(long tick) {
+    public void onTick(GameContext gameContext) {
         gameContext().model().optLevel().ifPresent(level -> {
             ActorAnimationManager.ensureActorAnimationsCreated(actionContext(), level);
             updateLivesCounter(gameState(), gameModel(), level.entities().pac());

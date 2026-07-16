@@ -171,9 +171,10 @@ public final class PacManGames implements GameActionContext, GameLifecycle {
     }
 
     private void simulateAndUpdateCurrentGameScene() {
-        gameContext.flow().update();
-        Platform.runLater(() -> ui.gameScenes().optCurrentGameScene()
-            .ifPresent(gameScene -> gameScene.onTick(clock().currentTick())));
+        gameContext.newFrame(clock().currentTick());
+        gameContext.flow().update(); // TODO pass game context?
+        ui.gameScenes().optCurrentGameScene().ifPresent(gameScene ->
+            Platform.runLater(() -> gameScene.onTick(gameContext)));
     }
 
     private void renderCurrentView() {

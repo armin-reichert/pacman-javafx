@@ -65,9 +65,9 @@ public interface GameScene extends GameSceneGameEventHandler, QuitHandler, Dispo
     /**
      * Called every game tick.
      *
-     * @param tick the tick count of the global game clock. Note that each game state has its own timer!
+     * @param context the current game context (including context of the current frame)
      */
-    void onTick(long tick);
+    void onTick(GameContext context);
 
     /**
      * @return the JavaFX subscene used for this scene.

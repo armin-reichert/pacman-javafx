@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -238,27 +239,27 @@ public class PlayScene3D extends AbstractGameScene
     }
 
     @Override
-    public void onTick(long tick) {
-        final GameLevel level = gameContext().model().optLevel().orElse(null);
+    public void onTick(GameContext context) {
+        final GameLevel level = context.level();
 
         if (level == null) {
-            Logger.info("Tick {}: Game level not yet created, update ignored", tick);
+            Logger.info("Tick {}: Game level not yet created, update ignored", context.thisFrame().tick());
             return;
         }
 
         if (level3D == null) {
-            Logger.info("Tick {}: Game level 3D not yet created, update ignored", tick);
+            Logger.info("Tick {}: Game level 3D not yet created, update ignored", context.thisFrame().tick());
             return;
         }
 
-        level3D.entities().selectAll().forEach(entity -> entity.update(level, gameContext().eventManager()));
+        level3D.entities().selectAll().forEach(entity -> entity.update(level, context.eventManager()));
 
         perspectiveManager.updatePerspective(level);
         updateHUD3D(level);
 
         optSoundEffects().ifPresent(soundEffects -> {
             soundEffects.setEnabled(!level.isDemoLevel());
-            soundEffects.playAmbientGameLevelSound(gameContext(), level);
+            soundEffects.playAmbientGameLevelSound(context, level);
         });
     }
 
