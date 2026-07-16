@@ -35,7 +35,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     private final ChaseAnimation chaseAnimation;
 
-    private GameAppContext actionContext;
+    private GameAppContext appContext;
 
     private ObservableValue<Double> scaling;
 
@@ -81,7 +81,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     public void init(GameAppContext actionContext) {
-        this.actionContext = requireNonNull(actionContext);
+        this.appContext = requireNonNull(actionContext);
 
         scaling = createScalingValue(actionContext.ui().window().stage().heightProperty());
 
@@ -149,15 +149,15 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldVariantID, GameVariantID newVariantID) {
-        actionContext.variants().selectVariant(newVariantID.name());
+        appContext.variants().selectVariant(newVariantID.name());
     }
 
     private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        actionContext.ui().viewModel().common3D.view3DEnabledProperty.set(newValue);
+        appContext.ui().viewModel().common3D.view3DEnabledProperty.set(newValue);
     }
 
     private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        actionContext.currentGameContext().flow().setCutScenesEnabled(newValue);
+        appContext.currentGameContext().flow().setCutScenesEnabled(newValue);
     }
 
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {
@@ -168,9 +168,9 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         {
             @Override
             public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
-                if (actionContext != null) {
-                    final GameVariantConfig gameVariant = actionContext.variants().variant(newVariant.name()).config();
-                    chaseAnimation.init(gameVariant, canvas, actionContext.ui().sprites().animations());
+                if (appContext != null) {
+                    final GameVariantConfig gameVariant = appContext.variants().variant(newVariant.name()).config();
+                    chaseAnimation.init(gameVariant, canvas, appContext.ui().sprites().animations());
                 }
             }
         };

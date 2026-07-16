@@ -36,13 +36,13 @@ public class ArcadeGameOverState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameFlowController flow = context.flow();
+    public void onUpdate(GameContext gameContext) {
+        final GameFlowController flow = gameContext.flow();
         if (timer().hasExpired()) {
-            final GameLevel level = context.model().assertLevel();
+            final GameLevel level = gameContext.model().assertLevel();
             level.clearMessage();
-            context.cheats().clear();
-            flow.enterState(context, context.coinMechanism().isEmpty()
+            gameContext.cheats().clear();
+            flow.enterState(gameContext, gameContext.coinMechanism().isEmpty()
                 ? GameStateID.GAME_INTRO
                 : GameStateID.GAME_PREPARATION);
         }

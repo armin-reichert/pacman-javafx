@@ -25,29 +25,33 @@ public class GameLevelCompleteState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameFlowController flow = context.flow();
-        final GameModel model = context.model();
-        final GameLevel level = model.assertLevel();
-        final boolean cutSceneFollows = !level.isDemoLevel()
-            && context.model().rules().cutSceneNumberAfterLevel(level.number()).isPresent();
+    public void onUpdate(GameContext gameContext) {
+        final GameFlowController flow = gameContext.flow();
 
-        if (level.isDemoLevel()) {
-            flow.enterState(context, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
+        if (gameContext.level().isDemoLevel()) {
+            flow.enterState(gameContext, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
             return;
         }
 
         if (timer().hasExpired()) {
-            if (level.isDemoLevel()) {
-                // Just in case: if demo level is completed, go back to intro scene
-                flow.enterState(context, GameStateID.GAME_INTRO);
-            }
-            else if (cutSceneFollows && flow.cutScenesEnabled()) {
-                flow.enterState(context, GameStateID.GAME_LEVEL_INTERMISSION);
-            }
-            else {
-                flow.enterState(context, GameStateID.GAME_LEVEL_TRANSITION);
-            }
+            flow.enterState(gameContext, computeNextState(gameContext, flow.cutScenesEnabled()));
+        }
+    }
+
+    private GameStateID computeNextState(GameContext gameContext, boolean cutScenesEnabled) {
+        final GameModel model = gameContext.model();
+        final GameLevel level = gameContext.level();
+        final boolean cutSceneFollows = !level.isDemoLevel()
+            && model.rules().cutSceneNumberAfterLevel(level.number()).isPresent();
+        if (level.isDemoLevel()) {
+            // Just in case: if demo level is completed, go back to intro scene
+            return GameStateID.GAME_INTRO;
+        }
+        else if (cutSceneFollows && cutScenesEnabled) {
+            return GameStateID.GAME_LEVEL_INTERMISSION;
+        }
+        else {
+            return GameStateID.GAME_LEVEL_TRANSITION;
         }
     }
 }

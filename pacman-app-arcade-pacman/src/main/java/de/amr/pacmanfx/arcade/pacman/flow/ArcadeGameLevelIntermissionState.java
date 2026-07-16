@@ -24,12 +24,12 @@ public class ArcadeGameLevelIntermissionState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameFlowController flow = context.flow();
-        final GameModel model = context.model();
+    public void onUpdate(GameContext gameContext) {
+        final GameFlowController gameFlow = gameContext.flow();
+        final GameModel model = gameContext.model();
 
         if (timer().hasExpired()) {
-            flow.enterState(context, model.isPlaying() ? GameStateID.GAME_LEVEL_TRANSITION : GameStateID.GAME_INTRO);
+            gameFlow.enterState(gameContext, model.isPlaying() ? GameStateID.GAME_LEVEL_TRANSITION : GameStateID.GAME_INTRO);
         }
     }
 

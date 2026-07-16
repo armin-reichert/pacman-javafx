@@ -37,15 +37,15 @@ public class ArcadeGameLevelContinueState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameFlowController flow = context.flow();
+    public void onUpdate(GameContext gameContext) {
+        final GameFlowController gameFlow = gameContext.flow();
         final long tick = timer().tickCount();
 
         if (tick == TICK_CONTINUE_LEVEL) {
-            context.eventManager().publishGameEvent(new GameContinuedEvent());
+            gameContext.eventManager().publishGameEvent(new GameContinuedEvent());
         }
         else if (tick == TICK_RESUME_HUNTING) {
-            flow.enterState(context, GameStateID.GAME_LEVEL_PLAYING);
+            gameFlow.enterState(gameContext, GameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

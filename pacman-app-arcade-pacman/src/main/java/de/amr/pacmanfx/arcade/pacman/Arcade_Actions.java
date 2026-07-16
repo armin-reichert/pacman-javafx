@@ -26,27 +26,27 @@ public final class Arcade_Actions {
 
     private final Set<ActionKeyBinding> gameStartActionBindings;
 
-    public Arcade_Actions(GameAppContext actionContext) {
+    public Arcade_Actions(GameAppContext appContext) {
 
-        actionInsertCoin = new GameAction(actionContext, "insert_coin") {
+        actionInsertCoin = new GameAction(appContext, "insert_coin") {
             @Override
             public void doAction() {
-                final CoinMechanism coinMechanism = actionContext.coinMechanism();
-                final GameContext context = this.actionContext.currentGameContext();
-                this.actionContext.ui().sounds().stopAndDisposeVoice();
-                this.actionContext.ui().sounds().setEnabled(true);
+                final CoinMechanism coinMechanism = appContext.coinMechanism();
+                final GameContext gameContext = appContext.currentGameContext();
+                appContext.ui().sounds().stopAndDisposeVoice();
+                appContext.ui().sounds().setEnabled(true);
                 coinMechanism.insertCoin();
-                context.eventManager().publishGameEvent(new CreditAddedEvent(1));
-                context.flow().enterState(context, GameStateID.GAME_PREPARATION);
+                gameContext.eventManager().publishGameEvent(new CreditAddedEvent(1));
+                gameContext.flow().enterState(gameContext, GameStateID.GAME_PREPARATION);
             }
 
             @Override
             public boolean isEnabled() {
-                final CoinMechanism coinMechanism = actionContext.coinMechanism();
+                final CoinMechanism coinMechanism = appContext.coinMechanism();
                 if (coinMechanism.isFull()) {
                     return false;
                 }
-                final GameContext context = this.actionContext.currentGameContext();
+                final GameContext context = appContext.currentGameContext();
                 // In demo level, coin can always be inserted
                 if (context.gamePlay().isDemoLevelRunning(context.model())) {
                     return true;
@@ -56,19 +56,20 @@ public final class Arcade_Actions {
             }
         };
 
-        actionStartPlaying = new GameAction(actionContext, "start_playing") {
+        actionStartPlaying = new GameAction(appContext, "start_playing") {
             @Override
             public void doAction() {
-                actionContext.ui().sounds().stopAndDisposeVoice();
-                actionContext.currentGameContext().flow().enterState(actionContext.currentGameContext(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
+                final GameContext gameContext = appContext.currentGameContext();
+                appContext.ui().sounds().stopAndDisposeVoice();
+                gameContext.flow().enterState(gameContext, Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
             }
 
             @Override
             public boolean isEnabled() {
-                if (actionContext.coinMechanism().isEmpty()) {
+                if (appContext.coinMechanism().isEmpty()) {
                     return false;
                 }
-                final GameState state = actionContext.currentGameContext().state();
+                final GameState state = appContext.currentGameContext().state();
                 return (GameStateID.GAME_INTRO.identifies(state) || GameStateID.GAME_PREPARATION.identifies(state));
             }
         };
