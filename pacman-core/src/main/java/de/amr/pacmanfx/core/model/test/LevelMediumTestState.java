@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.simulation.GamePlay;
-import de.amr.pacmanfx.core.simulation.HuntingStepResult;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 
@@ -60,8 +59,6 @@ public class LevelMediumTestState extends GameState {
         final GameLevel level = model.assertLevel();
         final GameEventManager eventManager = context.eventManager();
 
-        model.clearHuntingStepResult();
-
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
                 // All levels tested, return to intro page
@@ -76,16 +73,14 @@ public class LevelMediumTestState extends GameState {
             }
         }
         else {
-            final HuntingStepResult result = context.gamePlay().hunt(context);
-            model.setHuntingStepResult(result);
-
+            context.gamePlay().hunt(context);
             if (model.rules().isLevelCompleted(level)) {
                 context.flow().enterState(GameStateID.GAME_INTRO);
             }
-            else if (result.pacKilled()) {
+            else if (context.thisFrame().huntingStepResult().pacKilled()) {
                 triggerTimeout();
             }
-            else if (result.hasGhostBeenKilled()) {
+            else if (context.thisFrame().huntingStepResult().hasGhostBeenKilled()) {
                 context.flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST);
             }
         }

@@ -44,24 +44,24 @@ public class CommonGameLevelPlayingState extends GameState {
         final GameModel model = context.model();
         final GameLevel level = model.assertLevel();
 
-        final HuntingStepResult result = context.gamePlay().hunt(context);
-        logHuntingStepResult(result);
-        model.setHuntingStepResult(result);
+        context.gamePlay().hunt(context);
+        logHuntingStepResult(context.thisFrame().huntingStepResult());
 
         context.cheats().update(level);
-
-        context.flow().enterState(computeNextState(result, level));
+        context.flow().enterState(computeNextState(context));
     }
 
-    private GameStateID computeNextState(HuntingStepResult result, GameLevel level) {
-        final GameRules rules = level.gameModel().rules();
+    private GameStateID computeNextState(GameContext context) {
+        final GameLevel level = context.level();
+        final GameRules rules = context.model().rules();
+
         if (rules.isLevelCompleted(level)) {
             return GameStateID.GAME_LEVEL_COMPLETE;
         }
-        else if (result.pacKilled()) {
+        else if (context.thisFrame().huntingStepResult().pacKilled()) {
             return GameStateID.GAME_LEVEL_PACMAN_DYING;
         }
-        else if (result.hasGhostBeenKilled()) {
+        else if (context.thisFrame().huntingStepResult().hasGhostBeenKilled()) {
             return GameStateID.GAME_LEVEL_EATING_GHOST;
         }
         return GameStateID.GAME_LEVEL_PLAYING;

@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.model.world.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import de.amr.pacmanfx.core.score.PropertyFileScore;
 import de.amr.pacmanfx.core.score.Score;
-import de.amr.pacmanfx.core.simulation.HuntingStepResult;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -82,8 +81,6 @@ public abstract class GameModel {
 
     protected final PacManLives lives;
 
-    protected HuntingStepResult huntingStepResult;
-
     // Constructor
 
     protected GameModel() {
@@ -110,18 +107,6 @@ public abstract class GameModel {
 
     public PropertyFileScore highScore() {
         return highScore;
-    }
-
-    public HuntingStepResult huntingStepResult() {
-        return huntingStepResult;
-    }
-
-    public void setHuntingStepResult(HuntingStepResult huntingStepResult) {
-        this.huntingStepResult = huntingStepResult;
-    }
-
-    public void clearHuntingStepResult() {
-        setHuntingStepResult(null);
     }
 
     public LevelCounter levelCounter() {

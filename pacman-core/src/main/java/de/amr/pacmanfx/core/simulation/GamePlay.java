@@ -27,43 +27,43 @@ public interface GamePlay {
 
     GameLevel createLevel(GameModel model, int levelNumber, boolean demoLevel);
 
-    GameLevel buildDemoLevel(GameContext playContext);
+    GameLevel buildDemoLevel(GameContext context);
 
-    void buildNormalLevel(GameContext playContext, int levelNumber);
+    void buildNormalLevel(GameContext context, int levelNumber);
 
     boolean isDemoLevelRunning(GameModel model);
 
     boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
-    void startLevel(GameContext playContext);
+    void startLevel(GameContext context);
 
-    void startNextLevel(GameContext playContext);
+    void startNextLevel(GameContext context);
 
     void showLevelMessage(GameLevel level, GameLevelMessageType type);
 
     // Playing level
 
-    HuntingStepResult hunt(GameContext playContext);
+    void hunt(GameContext context);
 
-    void onEatPellet(GameContext playContext, Vector2i tile);
+    void onEatPellet(GameContext context, Vector2i tile);
 
-    void onEatEnergizer(GameContext playContext, Vector2i tile);
+    void onEatEnergizer(GameContext context, Vector2i tile);
 
-    void onEatBonus(GameContext playContext, Bonus bonus);
+    void onEatBonus(GameContext context, Bonus bonus);
 
-    void onEatGhost(GameContext playContext, Ghost eatenGhost);
+    void onEatGhost(GameContext context, Ghost eatenGhost);
 
-    void activateNextBonus(GameContext playContext);
+    void activateNextBonus(GameContext context);
 
-    void startPacPowerMode(GameContext playContext, Pac pac);
+    void startPacPowerMode(GameContext context, Pac pac);
 
-    void updatePacPowerMode(GameContext playContext, Pac pac);
+    void updatePacPowerMode(GameContext context, Pac pac);
 
     void onLevelCompleted(GameLevel level);
 
     // Scoring
 
-    void scorePoints(GameContext playContext, int points, int levelNumber);
+    void scorePoints(GameContext context, int points, int levelNumber);
 
-    void updateHighScore(GameContext playContext);
+    void updateHighScore(GameContext context);
 }

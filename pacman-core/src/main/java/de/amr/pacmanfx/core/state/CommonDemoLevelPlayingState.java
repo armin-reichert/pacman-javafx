@@ -14,7 +14,6 @@ import de.amr.pacmanfx.core.model.GameRules;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.simulation.HuntingStepResult;
 import org.tinylog.Logger;
 
 public class CommonDemoLevelPlayingState extends GameState {
@@ -38,8 +37,6 @@ public class CommonDemoLevelPlayingState extends GameState {
     public void onUpdate(GameContext context) {
         final GameModel model = context.model();
         final GameLevel level = model.assertLevel();
-
-        model.clearHuntingStepResult();
 
         final long tick = timer().tickCount();
         if (tick == 1) {
@@ -72,21 +69,22 @@ public class CommonDemoLevelPlayingState extends GameState {
             level.huntingTimer().startFirstPhase(context, level.number());
         }
         else if (tick > huntingStartTick) {
-            final HuntingStepResult result = context.gamePlay().hunt(context);
-            model.setHuntingStepResult(result);
-            context.flow().enterState(computeNextState(model.huntingStepResult(), level));
+            context.gamePlay().hunt(context);
+            context.flow().enterState(computeNextState(context));
         }
     }
 
-    private GameStateID computeNextState(HuntingStepResult result, GameLevel level) {
-        final GameRules rules = level.gameModel().rules();
+    private GameStateID computeNextState(GameContext context) {
+        final GameLevel level = context.level();
+        final GameRules rules = context.model().rules();
+
         if (rules.isLevelCompleted(level)) {
             return GameStateID.GAME_INTRO;
         }
-        else if (result.pacKilled()) {
+        else if (context.thisFrame().huntingStepResult().pacKilled()) {
             return GameStateID.GAME_LEVEL_PACMAN_DYING;
         }
-        else if (result.hasGhostBeenKilled()) {
+        else if (context.thisFrame().huntingStepResult().hasGhostBeenKilled()) {
             return GameStateID.GAME_LEVEL_EATING_GHOST;
         }
         return GameStateID.DEMO_LEVEL_PLAYING;

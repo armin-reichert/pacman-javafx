@@ -76,7 +76,7 @@ public interface PlayScene3D_GameEventHandler extends GameSceneGameEventHandler 
             onPacManDying();
         }
         else if (GameStateID.GAME_LEVEL_EATING_GHOST.identifies(newState)) {
-            onGhostsKilled(gameContext().model().huntingStepResult().ghostsKilled());
+            onGhostsKilled(gameContext().thisFrame().huntingStepResult().ghostsKilled());
         }
         else if (GameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
             onLevelComplete();
