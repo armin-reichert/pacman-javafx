@@ -20,7 +20,7 @@ public class Arcade_GameFlow extends GameFlow {
         }
         addStateChangeListener((oldState, newState) -> {
             if (gameContext != null) {
-                gameContext.eventManager().publishGameEvent(new GameStateChangeEvent(oldState, newState));
+                gameContext.eventManager().publishGameEvent(new GameStateChangeEvent(gameContext, oldState, newState));
             } else {
                 Logger.error("No game context existing when game event is fired");
             }
