@@ -148,16 +148,16 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public void startLevel(GameContext playContext) {
-        requireNonNull(playContext);
+    public void startLevel(GameContext gameContext) {
+        requireNonNull(gameContext);
 
-        if (!(playContext.model() instanceof TengenMsPacMan_GameModel tengenModel)) {
+        if (!(gameContext.model() instanceof TengenMsPacMan_GameModel tengenModel)) {
             throw new IllegalArgumentException("Illegal model type");
         }
-        GameLevel level = playContext.assertLevel();
+        GameLevel level = gameContext.assertLevel();
 
         level.recordStartTime(System.currentTimeMillis());
-        prepareLevelForPlaying(level);
+        prepareLevelForPlaying(gameContext);
 
         // In Tengen, actors are shown immediately
         level.entities().pac().show();

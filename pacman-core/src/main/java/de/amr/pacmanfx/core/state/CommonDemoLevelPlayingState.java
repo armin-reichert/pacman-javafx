@@ -34,19 +34,19 @@ public class CommonDemoLevelPlayingState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext context) {
-        final GameModel model = context.model();
+    public void onUpdate(GameContext gameContext) {
+        final GameModel model = gameContext.model();
         final GameLevel level = model.assertLevel();
 
         final long tick = timer().tickCount();
         if (tick == 1) {
-            context.gamePlay().prepareLevelForPlaying(level);
-            context.gamePlay().showLevelMessage(level, GameLevelMessageType.GAME_OVER);
+            gameContext.gamePlay().prepareLevelForPlaying(gameContext);
+            gameContext.gamePlay().showLevelMessage(level, GameLevelMessageType.GAME_OVER);
             model.score().setEnabled(false);
             model.highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
             // Note: This event is very important because it triggers the creation of the actor animations!
-            context.eventManager().publishGameEvent(new LevelStartedEvent(level));
+            gameContext.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }
         else if (tick == 2) {
             // Now, actor animations are available, show them
@@ -66,11 +66,11 @@ public class CommonDemoLevelPlayingState extends GameState {
             level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
 
             // This call fires a game event!
-            level.huntingTimer().startFirstPhase(context, level.number());
+            level.huntingTimer().startFirstPhase(gameContext, level.number());
         }
         else if (tick > huntingStartTick) {
-            context.gamePlay().hunt(context);
-            context.flow().enterState(context, computeNextState(context));
+            gameContext.gamePlay().hunt(gameContext);
+            gameContext.flow().enterState(gameContext, computeNextState(gameContext));
         }
     }
 

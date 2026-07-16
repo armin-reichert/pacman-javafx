@@ -21,7 +21,7 @@ public interface GamePlay {
 
     void resetForNewGame(GameContext gameContext);
 
-    void prepareLevelForPlaying(GameLevel level);
+    void prepareLevelForPlaying(GameContext gameContext);
 
     // Level building and level start
 

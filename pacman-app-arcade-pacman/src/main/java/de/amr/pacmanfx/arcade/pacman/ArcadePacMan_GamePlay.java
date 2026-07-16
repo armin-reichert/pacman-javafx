@@ -178,7 +178,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final GameLevel level = gameContext.assertLevel();
 
         level.recordStartTime(System.currentTimeMillis());
-        prepareLevelForPlaying(level);
+        prepareLevelForPlaying(gameContext);
         showLevelMessage(level, GameLevelMessageType.READY);
         model.levelCounter().update(level.number(), level.bonusSymbolCode(0));
         model.score().setEnabled(true);

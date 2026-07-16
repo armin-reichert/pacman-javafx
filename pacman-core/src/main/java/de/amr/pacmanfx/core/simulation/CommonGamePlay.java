@@ -62,7 +62,8 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void prepareLevelForPlaying(GameLevel level) {
+    public void prepareLevelForPlaying(GameContext gameContext) {
+        final GameLevel level = gameContext.assertLevel();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final House house = terrain.optHouse().orElseThrow();
 

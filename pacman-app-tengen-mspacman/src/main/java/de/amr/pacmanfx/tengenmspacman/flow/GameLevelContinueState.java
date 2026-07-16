@@ -21,15 +21,15 @@ public class GameLevelContinueState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final GameModel model = context.model();
+    public void onEnter(GameContext gameContext) {
+        final GameModel model = gameContext.model();
         final GameLevel level = model.assertLevel();
 
-        context.gamePlay().prepareLevelForPlaying(level);
+        gameContext.gamePlay().prepareLevelForPlaying(gameContext);
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
 
-        context.eventManager().publishGameEvent(new GameContinuedEvent());
+        gameContext.eventManager().publishGameEvent(new GameContinuedEvent());
     }
 
     @Override

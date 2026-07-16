@@ -24,15 +24,15 @@ public class ArcadeGameLevelContinueState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext context) {
-        final GameModel model = context.model();
-        final GameLevel level = context.model().assertLevel();
+    public void onEnter(GameContext gameContext) {
+        final GameModel model = gameContext.model();
+        final GameLevel level = gameContext.assertLevel();
 
-        context.gamePlay().prepareLevelForPlaying(level);
+        gameContext.gamePlay().prepareLevelForPlaying(gameContext);
         level.entities().pac().show();
         level.entities().ghosts().forEach(Ghost::show);
 
-        context.gamePlay().showLevelMessage(level, GameLevelMessageType.READY);
+        gameContext.gamePlay().showLevelMessage(level, GameLevelMessageType.READY);
         model.hudState().hideCredit().showLivesCounter();
     }
 
