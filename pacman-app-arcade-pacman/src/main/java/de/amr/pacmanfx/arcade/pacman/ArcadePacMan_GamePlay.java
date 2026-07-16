@@ -175,7 +175,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(gameContext);
 
         final GameModel model = gameContext.model();
-        final GameLevel level = gameContext.level();
+        final GameLevel level = gameContext.assertLevel();
 
         level.recordStartTime(System.currentTimeMillis());
         prepareLevelForPlaying(level);
@@ -192,13 +192,13 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     @Override
     public void onEatPellet(GameContext gameContext, Vector2i tile) {
         super.onEatPellet(gameContext, tile);
-        checkRedGhostCruiseElroyActivation(gameContext.level());
+        checkRedGhostCruiseElroyActivation(gameContext.assertLevel());
     }
 
     @Override
     public void onEatEnergizer(GameContext gameContext, Vector2i tile) {
         super.onEatEnergizer(gameContext, tile);
-        checkRedGhostCruiseElroyActivation(gameContext.level());
+        checkRedGhostCruiseElroyActivation(gameContext.assertLevel());
     }
 
     @Override
@@ -206,7 +206,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(gameContext);
 
         final GameModel model = gameContext.model();
-        final GameLevel level = gameContext.level();
+        final GameLevel level = gameContext.assertLevel();
         final GameEventManager eventManager = gameContext.eventManager();
 
         level.selectNextBonus();

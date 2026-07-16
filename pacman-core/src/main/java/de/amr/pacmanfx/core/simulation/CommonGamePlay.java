@@ -114,7 +114,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(context);
 
         final GameModel model = context.model();
-        final GameLevel level = context.level();
+        final GameLevel level = context.assertLevel();
         final GameEventManager eventManager = context.eventManager();
 
         final int lastLevelNumber = model.rules().lastLevelNumber();
@@ -138,7 +138,7 @@ public abstract class CommonGamePlay implements GamePlay {
     @Override
     public void hunt(GameContext context) {
         final GameModel model = context.model();
-        final GameLevel level = context.level();
+        final GameLevel level = context.assertLevel();
         final GameEventManager eventManager = context.eventManager();
         final Pac pac = level.entities().pac();
         final ArcadeHouseGateKeeper gateKeeper = model.gateKeeper();
@@ -169,7 +169,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void evalCollisions(GameContext context) {
-        final GameLevel level = context.level();
+        final GameLevel level = context.assertLevel();
         final HuntingStepResult result = context.thisFrame().huntingStepResult();
         evalFoodFound(context);
 
@@ -188,7 +188,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void evalFoodFound(GameContext context) {
         final GameModel model = context.model();
-        final GameLevel level = context.level();
+        final GameLevel level = context.assertLevel();
         final GameEventManager eventManager = context.eventManager();
         final Pac pac = level.entities().pac();
         final HuntingStepResult hunting = context.thisFrame().huntingStepResult();
@@ -257,7 +257,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(tile);
 
         final GameModel model = context.model();
-        final GameLevel level = context.level();
+        final GameLevel level = context.assertLevel();
 
         scorePoints(context, model.rules().pointsForPellet(), level.number());
         model.gateKeeper().registerFoodEaten(level);
@@ -270,7 +270,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(tile);
 
         final GameModel model = context.model();
-        final GameLevel level = context.level();
+        final GameLevel level = context.assertLevel();
         final Pac pac = level.entities().pac();
 
         scorePoints(context, model.rules().pointsForEnergizer(), level.number());
@@ -286,7 +286,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(bonus);
 
         final GameModel model = context.model();
-        final GameLevel level = context.level();
+        final GameLevel level = context.assertLevel();
         final GameEventManager eventManager = context.eventManager();
 
         bonus.showEatenForSeconds(model.rules().eatenBonusDisplaySeconds());
@@ -303,7 +303,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(eatenGhost);
 
         final GameModel model = context.model();
-        final GameLevel level = context.level();
+        final GameLevel level = context.assertLevel();
         final GameEventManager eventManager = context.eventManager();
         final int killedBefore = level.ghostKillChainSize();
         final int points = model.rules().pointsForGhost(killedBefore);
@@ -357,7 +357,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(context);
         requireNonNull(pac);
 
-        final GameLevel level = context.level();
+        final GameLevel level = context.assertLevel();
         final GameEventManager eventManager = context.eventManager();
 
         level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
@@ -378,7 +378,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(context);
         requireNonNull(pac);
 
-        final GameLevel level = context.level();
+        final GameLevel level = context.assertLevel();
         final GameEventManager eventManager = context.eventManager();
         if (pac.powerTimer().isRunning()) {
             pac.powerTimer().doTick();
@@ -460,7 +460,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void detectPacGhostCollision(GameContext context) {
-        final GameLevel level = context.level();
+        final GameLevel level = context.assertLevel();
         final GameModel model = context.model();
         final CollisionStrategy strategy = model.rules().getCollisionStrategy();
         final Pac pac = level.entities().pac();
@@ -472,7 +472,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void detectEdibleBonusCollision(GameContext context) {
-        final GameLevel level = context.level();
+        final GameLevel level = context.assertLevel();
         final GameModel model = context.model();
         final CollisionStrategy strategy = model.rules().getCollisionStrategy();
         final Pac pac = level.entities().pac();
@@ -484,7 +484,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void detectFoodCollision(GameContext context) {
-        final GameLevel level = context.level();
+        final GameLevel level = context.assertLevel();
         final Pac pac = level.entities().pac();
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Vector2i pacTile = pac.computeTile();

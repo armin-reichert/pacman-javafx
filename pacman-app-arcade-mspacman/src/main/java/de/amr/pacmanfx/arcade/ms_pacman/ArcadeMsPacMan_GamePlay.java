@@ -137,7 +137,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(playContext);
 
         final GameModel model = playContext.model();
-        final GameLevel level = playContext.level();
+        final GameLevel level = playContext.assertLevel();
         final GameEventManager eventManager = playContext.eventManager();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();

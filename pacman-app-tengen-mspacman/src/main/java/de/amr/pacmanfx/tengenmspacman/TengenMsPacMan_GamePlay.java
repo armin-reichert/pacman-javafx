@@ -154,7 +154,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         if (!(playContext.model() instanceof TengenMsPacMan_GameModel tengenModel)) {
             throw new IllegalArgumentException("Illegal model type");
         }
-        GameLevel level = playContext.level();
+        GameLevel level = playContext.assertLevel();
 
         level.recordStartTime(System.currentTimeMillis());
         prepareLevelForPlaying(level);
@@ -180,7 +180,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     @Override
     public void activateNextBonus(GameContext playContext) {
         final GameModel model = playContext.model();
-        final GameLevel level = playContext.level();
+        final GameLevel level = playContext.assertLevel();
         final GameEventManager eventManager = playContext.eventManager();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 

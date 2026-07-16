@@ -28,7 +28,7 @@ public class GameLevelCompleteState extends GameState {
     public void onUpdate(GameContext gameContext) {
         final GameFlowController flow = gameContext.flow();
 
-        if (gameContext.level().isDemoLevel()) {
+        if (gameContext.assertLevel().isDemoLevel()) {
             flow.enterState(gameContext, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
             return;
         }
@@ -40,7 +40,7 @@ public class GameLevelCompleteState extends GameState {
 
     private GameStateID computeNextState(GameContext gameContext, boolean cutScenesEnabled) {
         final GameModel model = gameContext.model();
-        final GameLevel level = gameContext.level();
+        final GameLevel level = gameContext.assertLevel();
         final boolean cutSceneFollows = !level.isDemoLevel()
             && model.rules().cutSceneNumberAfterLevel(level.number()).isPresent();
         if (level.isDemoLevel()) {

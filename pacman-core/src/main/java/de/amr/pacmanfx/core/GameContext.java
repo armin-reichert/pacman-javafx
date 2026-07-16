@@ -13,6 +13,8 @@ import de.amr.pacmanfx.core.simulation.FrameContext;
 import de.amr.pacmanfx.core.simulation.GamePlay;
 import de.amr.pacmanfx.core.state.GameState;
 
+import java.util.Optional;
+
 /**
  * Facade giving access to non UI related classes.
  */
@@ -34,7 +36,9 @@ public interface GameContext {
 
     GameModel model();
 
-    GameLevel level();
+    Optional<GameLevel> optLevel();
+
+    GameLevel assertLevel();
 
     FrameContext thisFrame();
 

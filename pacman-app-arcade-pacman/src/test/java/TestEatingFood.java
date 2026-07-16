@@ -27,6 +27,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static de.amr.pacmanfx.core.model.GameModel.RED_GHOST_SHADOW;
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.*;
@@ -83,7 +85,12 @@ public class TestEatingFood {
         }
 
         @Override
-        public GameLevel level() {
+        public Optional<GameLevel> optLevel() {
+            return gameModel.optLevel();
+        }
+
+        @Override
+        public GameLevel assertLevel() {
             return gameModel.assertLevel();
         }
 

@@ -240,7 +240,7 @@ public class PlayScene3D extends AbstractGameScene
 
     @Override
     public void onTick(FrameContext frame) {
-        final GameLevel level = gameContext().level();
+        final GameLevel level = gameContext().assertLevel();
 
         if (level == null) {
             Logger.info("Tick {}: Game level not yet created, update ignored", frame.tick());

@@ -16,6 +16,8 @@ import de.amr.pacmanfx.core.simulation.FrameContext;
 import de.amr.pacmanfx.core.simulation.GamePlay;
 import de.amr.pacmanfx.core.simulation.HuntingStepResult;
 
+import java.util.Optional;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -60,8 +62,13 @@ public class GameContextImpl implements GameContext {
     }
 
     @Override
-    public GameLevel level() {
-        return model().optLevel().orElse(null);
+    public Optional<GameLevel> optLevel() {
+        return model().optLevel();
+    }
+
+    @Override
+    public GameLevel assertLevel() {
+        return model().assertLevel();
     }
 
     @Override

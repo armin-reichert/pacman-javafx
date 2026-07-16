@@ -75,7 +75,7 @@ public class CommonDemoLevelPlayingState extends GameState {
     }
 
     private GameStateID computeNextState(GameContext context) {
-        final GameLevel level = context.level();
+        final GameLevel level = context.assertLevel();
         final GameRules rules = context.model().rules();
 
         if (rules.isLevelCompleted(level)) {

@@ -32,12 +32,12 @@ public class ArcadeGameLevelCompleteState extends GameState {
     }
 
     private GameStateID computeNextState(GameContext gameContext, boolean cutScenesEnabled) {
-        if (gameContext.level().isDemoLevel()) {
+        if (gameContext.assertLevel().isDemoLevel()) {
             // just in case: if demo level was completed, go back to intro scene
             return GameStateID.GAME_INTRO;
         }
-        final boolean cutSceneFollows = !gameContext.level().isDemoLevel()
-            && gameContext.model().rules().cutSceneNumberAfterLevel(gameContext.level().number()).isPresent();
+        final boolean cutSceneFollows = !gameContext.assertLevel().isDemoLevel()
+            && gameContext.model().rules().cutSceneNumberAfterLevel(gameContext.assertLevel().number()).isPresent();
         if (cutSceneFollows && cutScenesEnabled) {
             return GameStateID.GAME_LEVEL_INTERMISSION;
         }
