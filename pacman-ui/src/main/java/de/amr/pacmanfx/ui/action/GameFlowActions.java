@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -62,7 +61,7 @@ public class GameFlowActions {
 
                 appContext.lifecycle().suspendPlaying();
                 appContext.clock().start();
-                gameFlow().restartState(gameContext(), GameStateID.GAME_INTRO);
+                gameFlow().restartState(GameStateID.GAME_INTRO);
             }
         };
 

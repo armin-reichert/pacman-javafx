@@ -286,7 +286,7 @@ public class PlayScene3D extends AbstractGameScene
     @Override
     public void handleQuit(GameAppContext appContext) {
         onDeactivate();
-        gameContext().flow().enterState(gameContext(), GameStateID.GAME_OVER);
+        gameContext().flow().enterState(GameStateID.GAME_OVER);
     }
 
     // Other stuff

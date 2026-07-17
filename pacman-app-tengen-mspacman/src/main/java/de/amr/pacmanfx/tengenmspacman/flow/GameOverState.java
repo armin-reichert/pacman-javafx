@@ -50,7 +50,7 @@ public class GameOverState extends GameState {
                 ? TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME
                 : model.canContinueOnGameOver() ? GameStateID.GAME_PREPARATION : GameStateID.GAME_INTRO;
 
-            gameContext.flow().enterState(gameContext, nextStateID);
+            gameContext.flow().enterState(nextStateID);
         }
     }
 }

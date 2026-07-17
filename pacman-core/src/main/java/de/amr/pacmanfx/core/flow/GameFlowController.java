@@ -14,8 +14,9 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
-import java.util.Objects;
 import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * A game flow implementation using a state machine.
@@ -43,15 +44,15 @@ public class GameFlowController extends StateMachine<GameContext> {
     }
 
     public void setGameContext(GameContext gameContext) {
-        this.gameContext = gameContext;
+        this.gameContext = requireNonNull(gameContext);
     }
 
-    public void enterState(GameContext gameContext, Identifier id) {
-        Objects.requireNonNull(id);
+    public void enterState(Identifier id) {
+        requireNonNull(id);
         enterStateWithName(gameContext, id.name());
     }
 
-    public void restartState(GameContext gameContext, Identifier stateID) {
+    public void restartState(Identifier stateID) {
         restartState(gameContext, stateID.name());
     }
 

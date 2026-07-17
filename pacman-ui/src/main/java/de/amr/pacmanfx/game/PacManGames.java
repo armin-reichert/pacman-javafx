@@ -131,7 +131,7 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
     public void startPlaying() {
         final GameFlowController gameFlow = gameContext.flow();
         gameFlow.setGameContext(gameContext);
-        gameFlow.restartState(gameContext, GameStateID.BOOT);
+        gameFlow.restartState(GameStateID.BOOT);
         clock().start();
         ui.views().selectGamePlayView();
     }

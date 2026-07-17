@@ -42,7 +42,7 @@ public class ArcadeGameOverState extends GameState {
             final GameLevel level = gameContext.model().assertLevel();
             level.clearMessage();
             gameContext.cheats().clear();
-            flow.enterState(gameContext, gameContext.coinMechanism().isEmpty()
+            flow.enterState(gameContext.coinMechanism().isEmpty()
                 ? GameStateID.GAME_INTRO
                 : GameStateID.GAME_PREPARATION);
         }

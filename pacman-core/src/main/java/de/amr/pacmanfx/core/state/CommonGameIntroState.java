@@ -22,7 +22,7 @@ public class CommonGameIntroState extends GameState {
     @Override
     public void onUpdate(GameContext gameContext) {
         if (timer().hasExpired()) {
-            gameContext.flow().enterState(gameContext, GameStateID.GAME_OR_LEVEL_STARTING);
+            gameContext.flow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
         }
     }
 }

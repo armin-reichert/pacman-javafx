@@ -35,7 +35,7 @@ public final class Arcade_Actions {
                 appContext.ui().sounds().setEnabled(true);
                 coinMechanism.insertCoin();
                 gameContext().eventManager().publishGameEvent(new CreditAddedEvent(1));
-                gameFlow().enterState(gameContext(), GameStateID.GAME_PREPARATION);
+                gameFlow().enterState(GameStateID.GAME_PREPARATION);
             }
 
             @Override

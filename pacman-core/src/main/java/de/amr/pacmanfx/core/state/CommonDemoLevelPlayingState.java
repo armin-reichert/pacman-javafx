@@ -70,7 +70,7 @@ public class CommonDemoLevelPlayingState extends GameState {
         }
         else if (tick > huntingStartTick) {
             gameContext.gamePlay().hunt(gameContext);
-            gameContext.flow().enterState(gameContext, computeNextState(gameContext));
+            gameContext.flow().enterState(computeNextState(gameContext));
         }
     }
 

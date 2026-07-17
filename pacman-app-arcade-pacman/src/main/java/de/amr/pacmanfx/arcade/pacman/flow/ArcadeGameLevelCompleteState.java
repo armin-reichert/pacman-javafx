@@ -27,7 +27,7 @@ public class ArcadeGameLevelCompleteState extends GameState {
     public void onUpdate(GameContext gameContext) {
         final GameFlowController gameFlow = gameContext.flow();
         if (timer().hasExpired()) {
-            gameFlow.enterState(gameContext, computeNextState(gameContext, gameFlow.cutScenesEnabled()));
+            gameFlow.enterState(computeNextState(gameContext, gameFlow.cutScenesEnabled()));
         }
     }
 
