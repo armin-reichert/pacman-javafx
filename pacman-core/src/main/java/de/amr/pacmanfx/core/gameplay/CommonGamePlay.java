@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.simulation;
+package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
