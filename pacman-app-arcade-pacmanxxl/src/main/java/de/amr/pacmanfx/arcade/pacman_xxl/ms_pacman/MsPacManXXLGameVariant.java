@@ -12,10 +12,12 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacManGameVariant;
+import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -48,6 +50,14 @@ import java.util.ResourceBundle;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
 public final class MsPacManXXLGameVariant implements GameVariantConfig, ResourceManager {
+
+    public static GameFlowController createGameFlow() {
+        final var gameFlow = new GameFlowController("Arcade Ms. Pac-Man Game Flow");
+        for (Arcade_GameState gameState : Arcade_GameState.values()) {
+            gameFlow.addState(gameState.state());
+        }
+        return gameFlow;
+    }
 
     private static final ResourceManager ARCADE_RES = () -> ArcadeMsPacManGameVariant.class;
 

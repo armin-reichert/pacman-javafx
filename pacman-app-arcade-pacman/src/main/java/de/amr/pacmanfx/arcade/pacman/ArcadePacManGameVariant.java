@@ -6,9 +6,11 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.Validations;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
@@ -51,6 +53,14 @@ import static java.util.Objects.requireNonNull;
  * The Arcade Pac‑Man game variant.
  */
 public class ArcadePacManGameVariant implements GameVariantConfig, ResourceManager {
+
+    public static GameFlowController createGameFlow() {
+        final var gameFlow = new GameFlowController("Arcade Pac-Man Game Flow");
+        for (Arcade_GameState gameState : Arcade_GameState.values()) {
+            gameFlow.addState(gameState.state());
+        }
+        return gameFlow;
+    }
 
     public static final WorldSettings WORLD_CONFIG = JsonConfigLoader.load(
         GameUI.class.getResource("/de/amr/pacmanfx/ui/world.json"), WorldSettings.class);

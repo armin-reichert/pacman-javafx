@@ -6,8 +6,10 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacManGameVariant;
+import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
@@ -43,6 +45,14 @@ import java.util.ResourceBundle;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
 public final class PacManXXLGameVariant implements GameVariantConfig, ResourceManager {
+
+    public static GameFlowController createGameFlow() {
+        final var gameFlow = new GameFlowController("Arcade Pac-Man XXL Game Flow");
+        for (Arcade_GameState gameState : Arcade_GameState.values()) {
+            gameFlow.addState(gameState.state());
+        }
+        return gameFlow;
+    }
 
     private static final ResourceManager ARCADE_PACMAN_RES = () -> ArcadePacManGameVariant.class;
 
