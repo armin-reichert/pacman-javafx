@@ -178,7 +178,7 @@ public class TengenMsPacMan_GameRules implements GameRules {
     }
 
     @Override
-    public OptionalInt cutSceneNumberAfterLevel(int levelNumber) {
+    public OptionalInt cutSceneAfterLevel(int levelNumber) {
         final Integer cutSceneNumber = CUT_SCENE_NUMBER_AFTER_LEVEL_NUMBER.get(levelNumber);
         return cutSceneNumber != null
             ? OptionalInt.of(cutSceneNumber)

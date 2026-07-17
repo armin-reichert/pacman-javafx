@@ -18,7 +18,7 @@ public class GameStartingState extends GameState {
 
     static final short TICK_SHOW_READY = 10;
     static final short TICK_SHOW_GUYS = 70;
-    static final short TICK_START_HUNTING = 250;
+    static final short TICK_START_PLAYING = 250;
 
     public GameStartingState() {
         super(GameStateID.GAME_STARTING);
@@ -26,7 +26,7 @@ public class GameStartingState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
+        final var model = (TengenMsPacMan_GameModel) gameContext.model();
         gameContext.gamePlay().resetForNewGame(gameContext);
         gameContext.gamePlay().buildNormalLevel(gameContext, model.startLevelNumber());
         gameContext.eventManager().publishGameEvent(new GameStartedEvent(gameContext));
@@ -35,7 +35,7 @@ public class GameStartingState extends GameState {
     @Override
     public void onUpdate(GameContext gameContext) {
         final GameModel model = gameContext.model();
-        final GameLevel level = model.assertLevel();
+        final GameLevel level = gameContext.assertLevel();
         final long tick = timer().tickCount();
 
         if (tick == TICK_SHOW_READY) {
@@ -47,7 +47,7 @@ public class GameStartingState extends GameState {
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
         }
-        else if (tick == TICK_START_HUNTING) {
+        else if (tick == TICK_START_PLAYING) {
             model.setPlaying(true);
             gameContext.flow().enterState(GameStateID.GAME_LEVEL_PLAYING);
         }

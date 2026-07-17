@@ -25,16 +25,15 @@ public class GameLevelIntermissionState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
-        final GameLevel level = model.assertLevel();
-        final OptionalInt cutSceneNumber = model.rules().cutSceneNumberAfterLevel(level.number());
+        final GameLevel level = gameContext.assertLevel();
+        final OptionalInt cutSceneNumber = model.rules().cutSceneAfterLevel(level.number());
         final boolean isLastCutScene = cutSceneNumber.isPresent()
             && cutSceneNumber.getAsInt() == model.rules().lastCutSceneNumber();
-        final var hudState = model.hudState();
 
         if (isLastCutScene) {
-            hudState.hide();
+            model.hudState().hide();
         } else {
-            hudState.hideGameOptions().hideScore().showLevelCounter().hideLivesCounter().show();
+            model.hudState().hideGameOptions().hideScore().showLevelCounter().hideLivesCounter().show();
         }
         waitForTimeout();
     }
@@ -52,13 +51,11 @@ public class GameLevelIntermissionState extends GameState {
     @Override
     public void onExit(GameContext gameContext) {
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
-        final TengenMsPacMan_HUDState hudState = model.hudState();
-
         if (model.mapCategory() == MapCategory.ARCADE) {
-            hudState.hide();
+            model.hudState().hide();
         }
         else {
-            hudState.showGameOptions().showScore().showLevelCounter().hideLivesCounter().show();
+            model.hudState().showGameOptions().showScore().showLevelCounter().hideLivesCounter().show();
         }
     }
 }

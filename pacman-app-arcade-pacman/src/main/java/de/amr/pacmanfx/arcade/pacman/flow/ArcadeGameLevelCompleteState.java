@@ -37,7 +37,7 @@ public class ArcadeGameLevelCompleteState extends GameState {
             return GameStateID.GAME_INTRO;
         }
         final boolean cutSceneFollows = !gameContext.assertLevel().isDemoLevel()
-            && gameContext.model().rules().cutSceneNumberAfterLevel(gameContext.assertLevel().number()).isPresent();
+            && gameContext.model().rules().cutSceneAfterLevel(gameContext.assertLevel().number()).isPresent();
         if (cutSceneFollows && cutScenesEnabled) {
             return GameStateID.GAME_LEVEL_INTERMISSION;
         }

@@ -9,8 +9,8 @@ import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 
 /**
- * Corresponds to the screen showing the people that have contributed to the game. Here, a seconds
- * screen with the contributors to the remake has been added.
+ * Corresponds to the screen showing the people that have contributed to the game. Here, a second
+ * screen with the contributors to the remake is shown too.
  */
 public class ShowingHallOfFameState extends GameState {
 

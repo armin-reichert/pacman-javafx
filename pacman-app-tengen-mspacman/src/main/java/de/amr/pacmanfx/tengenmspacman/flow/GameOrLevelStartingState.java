@@ -8,7 +8,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import org.tinylog.Logger;
 
 public class GameOrLevelStartingState extends GameState {
@@ -20,13 +19,11 @@ public class GameOrLevelStartingState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
-        final TengenMsPacMan_HUDState hud = model.hudState();
 
-        hud.hideCredit().showScore().showLevelCounter().showLivesCounter().show();
+        model.hudState().hideCredit().showScore().showLevelCounter().showLivesCounter().show();
 
         // The rules vary between map categories so update the rules here:
         model.rules().setCurrentMapCategory(model.mapCategory());
-
         Logger.info("Using game rules for map category {}", model.rules().currentMapCategory());
     }
 

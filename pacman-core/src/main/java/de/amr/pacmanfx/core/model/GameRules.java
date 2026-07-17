@@ -52,7 +52,11 @@ public interface GameRules {
 
     boolean isExtraLifeAwarded(int oldScore, int newScore);
 
-    OptionalInt cutSceneNumberAfterLevel(int levelNumber);
+    /**
+     * @param levelNumber level number
+     * @return (optional) number (1,2,...) of cut scene to be played after this level
+     */
+    OptionalInt cutSceneAfterLevel(int levelNumber);
 
     int lastCutSceneNumber();
 

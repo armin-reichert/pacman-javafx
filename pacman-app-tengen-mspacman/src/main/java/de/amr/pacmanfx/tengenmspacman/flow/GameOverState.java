@@ -23,11 +23,11 @@ public class GameOverState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final GameModel model = gameContext.model();
-        final GameLevel level = model.assertLevel();
+        final GameLevel level = gameContext.assertLevel();
         final TengenMsPacMan_GamePlay game = (TengenMsPacMan_GamePlay) gameContext.gamePlay();
 
-        model.setPlaying(false);
         model.setLifeCount(0); // Needed if state entry was triggered by user interaction
+        model.setPlaying(false);
 
         game.updateHighScore(gameContext);
         game.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
@@ -41,7 +41,7 @@ public class GameOverState extends GameState {
     @Override
     public void onUpdate(GameContext gameContext) {
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
-        final GameLevel level = model.assertLevel();
+        final GameLevel level = gameContext.assertLevel();
 
         if (timer().hasExpired()) {
             level.clearMessage();

@@ -294,7 +294,7 @@ public interface PlayScene3D_GameEventHandler extends GameSceneGameEventHandler 
         final GameLevel3D level3D = assertLevel3D();
         final GameLevel level = gameContext().model().assertLevel();
         final boolean cutSceneFollows = !level.isDemoLevel()
-            && gameContext().model().rules().cutSceneNumberAfterLevel(level.number()).isPresent();
+            && gameContext().model().rules().cutSceneAfterLevel(level.number()).isPresent();
         final GameViewModel viewModel = appContext().ui().viewModel();
 
         gameScene().scoreOpacity.set(0);
