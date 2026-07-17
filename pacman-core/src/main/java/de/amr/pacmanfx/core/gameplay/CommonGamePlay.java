@@ -39,7 +39,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameModel model = gameContext.model();
 
-        model.lives().setCount(model.lives().initialCount());
+        model.setLifeCount(model.initialLifeCount());
         model.score().reset();
 
         final PropertyFileScore highScore = model.highScore();
@@ -415,7 +415,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final int newScore = oldScore + points;
 
         if (model.rules().isExtraLifeAwarded(oldScore, newScore)) {
-            model.lives().add(1);
+            model.addLives(1);
             eventManager.publishGameEvent(new SpecialScoreEvent(newScore));
         }
 

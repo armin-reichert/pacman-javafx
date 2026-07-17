@@ -27,7 +27,7 @@ public class GameOverState extends GameState {
         final TengenMsPacMan_GamePlay game = (TengenMsPacMan_GamePlay) gameContext.gamePlay();
 
         model.setPlaying(false);
-        model.lives().setCount(0); // Needed if state entry was triggered by user interaction
+        model.setLifeCount(0); // Needed if state entry was triggered by user interaction
 
         game.updateHighScore(gameContext);
         game.showLevelMessage(level, GameLevelMessageType.GAME_OVER);

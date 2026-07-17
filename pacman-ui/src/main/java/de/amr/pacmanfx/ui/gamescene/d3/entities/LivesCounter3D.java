@@ -160,10 +160,7 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
         final Pac pac = level.entities().pac();
 
         // Show remaining lives in counter
-        int lifeCount = gameModel.lives().count() - 1;
-
-        //TODO fixme
-        //final GameState gameState = gameContext.state();
+        int lifeCount = gameModel.lifeCount() - 1;
 
         // While the game starts and Pac-Man is not yet visible in maze, show one more:
         if (!gameModel.isPlaying() && !pac.isVisible()) {

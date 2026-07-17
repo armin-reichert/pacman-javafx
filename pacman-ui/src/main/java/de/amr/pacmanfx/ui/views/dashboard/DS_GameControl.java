@@ -50,7 +50,7 @@ public class DS_GameControl extends GameDashboardSection {
         addDynamicInfo("Collision Mode", fnGameRulesInfo(appContext, rules -> rules.getCollisionStrategy().name()));
         cbCollisionCheckedTwice  = checkBox("Collision Check 2x");
 
-        setAction(choiceBoxInitialLives, () -> appContext.currentGameContext().model().lives().setInitialCount(choiceBoxInitialLives.getValue()));
+        setAction(choiceBoxInitialLives, () -> appContext.currentGameContext().model().setInitialLifeCount(choiceBoxInitialLives.getValue()));
 
         //TODO Here we would need to access the Arcade-specific action to start the game
 //        setGameAction(buttonGroupLevelActions[GAME_LEVEL_START],       actionToStartTheGamePlay);
@@ -72,7 +72,7 @@ public class DS_GameControl extends GameDashboardSection {
         final GameModel model = gameContext.model();
         final GameState state = gameContext.state();
 
-        choiceBoxInitialLives.setValue(model.lives().initialCount());
+        choiceBoxInitialLives.setValue(model.initialLifeCount());
         choiceBoxInitialLives.setDisable(!GameStateID.GAME_INTRO.identifies(state));
 
         final boolean creditDisabled = !state.isOneOf(GameStateID.GAME_INTRO, GameStateID.GAME_PREPARATION);

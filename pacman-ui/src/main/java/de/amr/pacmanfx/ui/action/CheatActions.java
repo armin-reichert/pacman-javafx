@@ -45,10 +45,10 @@ public final class CheatActions {
             @Override
             public void doAction() {
                 final GameModel model = gameContext().model();
-                model.lives().add(3);
+                model.addLives(3);
                 gameContext().cheats().notifyCheatUsed();
 
-                final String msg = appContext.ui().translations().translate("flash.cheat_add_lives", model.lives().count());
+                final String msg = appContext.ui().translations().translate("flash.cheat_add_lives", model.lifeCount());
                 appContext.ui().shortMessage(msg);
             }
 
