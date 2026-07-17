@@ -39,7 +39,7 @@ public class GameContextImpl implements GameContext {
     public GameContextImpl(CoinMechanism coinMechanism, GameVariant gameVariant) {
         this.coinMechanism = requireNonNull(coinMechanism);
         this.gameVariant = requireNonNull(gameVariant);
-        this.hudState = new HUDState(); //TODO Tengen?
+        this.hudState = new HUDState();
         this.eventManager = new GameEventManagerImpl();
     }
 
