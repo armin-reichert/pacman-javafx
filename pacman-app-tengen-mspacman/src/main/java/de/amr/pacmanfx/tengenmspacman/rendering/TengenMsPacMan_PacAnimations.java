@@ -46,6 +46,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
             case ArcadePacMan_AnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSprites(SpriteID.MS_PAC_MUNCHING))
+                .frameTicks(2)
                 .repeated()
                 .build(container);
 
