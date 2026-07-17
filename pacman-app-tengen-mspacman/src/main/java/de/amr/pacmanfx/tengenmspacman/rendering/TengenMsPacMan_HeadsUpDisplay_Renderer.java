@@ -149,9 +149,9 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         drawSprite(spriteSheet().findSprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
         final int tens = number / 10, ones = number % 10;
         if (tens > 0) {
-            drawSprite(spriteSheet().digitSprite(tens), x + 2, y + 2, true);
+            drawSprite(spriteSheet().findDigitSprite(tens), x + 2, y + 2, true);
         }
-        drawSprite(spriteSheet().digitSprite(ones), x + 10, y + 2, true);
+        drawSprite(spriteSheet().findDigitSprite(ones), x + 10, y + 2, true);
     }
 
     public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {

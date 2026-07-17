@@ -32,7 +32,7 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     private static final int[] BONUS_W  = {16, 15, 16, 18, 18, 20, 18, 18, 18, 18, 18, 18, 18, 18};
     private static final int[] BONUS_DY = {3, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    public RectShort digitSprite(int digit) {
+    public RectShort findDigitSprite(int digit) {
         return findSprite(switch (digit) {
             case 0 -> SpriteID.DIGIT_0;
             case 1 -> SpriteID.DIGIT_1;
