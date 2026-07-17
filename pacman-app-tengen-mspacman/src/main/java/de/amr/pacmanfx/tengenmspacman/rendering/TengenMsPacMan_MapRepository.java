@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
 import java.util.List;

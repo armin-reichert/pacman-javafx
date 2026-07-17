@@ -8,7 +8,7 @@ import de.amr.basics.Identifier;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ResourceManager;
-import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;

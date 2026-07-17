@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.core.model.world.WorldMapParseException;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
-import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_MapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.rendering.NonArcadeMapsSpriteSheet;
 import org.tinylog.Logger;

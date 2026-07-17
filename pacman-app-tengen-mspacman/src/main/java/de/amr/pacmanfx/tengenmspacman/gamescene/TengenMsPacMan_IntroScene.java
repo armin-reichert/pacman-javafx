@@ -29,8 +29,8 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.NES_SCREEN_HEIGHT;
-import static de.amr.pacmanfx.tengenmspacman.config.TengenMsPacManGameVariant.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant.NES_SCREEN_HEIGHT;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant.NES_SCREEN_WIDTH;
 
 public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 

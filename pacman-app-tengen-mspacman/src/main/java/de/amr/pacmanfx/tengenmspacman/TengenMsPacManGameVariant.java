@@ -2,11 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.tengenmspacman.config;
+package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.MapColorScheme;
@@ -14,9 +15,8 @@ import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Factory3D;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ResourceManager;
+import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
+import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.gamescene.*;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
@@ -44,6 +44,14 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class TengenMsPacManGameVariant implements GameVariantConfig {
+
+    public static GameFlowController createGameFlow() {
+        final var gameFlow = new GameFlowController("Tengen Ms. Pac-Man Game Flow");
+        for (TengenMsPacMan_GameState gameState : TengenMsPacMan_GameState.values()) {
+            gameFlow.addState(gameState.state());
+        }
+        return gameFlow;
+    }
 
     // Local resources are stored inside main resource folder subdirectories named after package name of this class
     private static final ResourceManager LOCAL_RESOURCES = TengenMsPacMan_ResourceManager.instance();
