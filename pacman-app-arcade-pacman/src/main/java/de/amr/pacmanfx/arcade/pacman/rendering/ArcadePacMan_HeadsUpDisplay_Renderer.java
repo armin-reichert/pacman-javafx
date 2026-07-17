@@ -59,7 +59,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
         }
 
         if (hud.isLevelCounterShown()) {
-            final RectShort[] bonusSymbolSprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
+            final RectShort[] bonusSymbolSprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
             final float y = scene.unscaledHeight() - tilesPx(2) + 2;
             float x = scene.unscaledWidth() - tilesPx(4);
             for (int symbolCode : gameContext.model().levelCounter().symbolCodes()) {
@@ -69,7 +69,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer extends BaseRenderer implement
         }
 
         if (hud.isLivesCounterShown()) {
-            final RectShort livesCounterSprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+            final RectShort livesCounterSprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
             final float x = tilesPx(2);
             final float y = scene.unscaledHeight() - tilesPx(2);
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {

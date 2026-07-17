@@ -212,19 +212,19 @@ public final class MsPacManXXLGameVariant implements GameVariantConfig, Resource
 
     @Override
     public Image killedGhostPointsImage(int killedIndex) {
-        final RectShort[] numberSprites = spriteSheet().sprites(SpriteID.GHOST_NUMBERS);
+        final RectShort[] numberSprites = spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
         return spriteSheet().image(numberSprites[killedIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(int symbolCode) {
-        final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
+        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
         return spriteSheet().image(sprites[symbolCode]);
     }
 
     @Override
     public Image bonusValueImage(int symbolCode) {
-        final RectShort[] sprites = spriteSheet().sprites(SpriteID.BONUS_VALUES);
+        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_VALUES);
         return spriteSheet().image(sprites[symbolCode]);
     }
 

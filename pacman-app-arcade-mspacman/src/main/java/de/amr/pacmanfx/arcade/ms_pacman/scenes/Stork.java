@@ -33,7 +33,7 @@ public class Stork extends Actor {
         protected SpriteAnimation createAnimation(Identifier animationID) {
             if (animationID.equals(ArcadeMsPacMan_AnimationID.STORK_FLYING)) {
                 return new SpriteAnimationBuilder()
-                    .sprites(spriteSheet.sprites(SpriteID.STORK))
+                    .sprites(spriteSheet.findSprites(SpriteID.STORK))
                     .frameTicks(8)
                     .repeated()
                     .build(container);

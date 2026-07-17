@@ -49,7 +49,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
                 ctx.fillText("Scene timer %d".formatted(introScene.flow.state().timer().tickCount()), 0, scaled(5 * WorldMap.TS));
             }
         });
-        energizerSprite = spriteSheet().sprite(SpriteID.ENERGIZER);
+        energizerSprite = spriteSheet().findSprite(SpriteID.ENERGIZER);
         setImageSmoothing(true);
     }
 
@@ -92,7 +92,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
         for (byte p = GameModel.RED_GHOST_SHADOW; p <= GameModel.ORANGE_GHOST_POKEY; ++p) {
             int offsetY = 3 * p * WorldMap.TS;
             if (introScene.ghostImageVisible[p]) {
-                RectShort sprite = spriteSheet().sprites(GALLERY_GHOSTS)[p];
+                RectShort sprite = spriteSheet().findSprites(GALLERY_GHOSTS)[p];
                 drawSpriteCentered(sprite, WorldMap.TS * 5, y + offsetY - WorldMap.HTS);
             }
             if (introScene.ghostCharacterVisible[p]) {

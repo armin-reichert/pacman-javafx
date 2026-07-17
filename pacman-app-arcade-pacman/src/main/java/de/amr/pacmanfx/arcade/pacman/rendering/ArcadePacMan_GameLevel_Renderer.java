@@ -56,7 +56,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
                     ctx.drawImage(brightMapImage, 0, emptySpaceOverMazePixels);
                 }
             } else {
-                drawSprite(spriteSheet().sprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMazePixels, false);
+                drawSprite(spriteSheet().findSprite(SpriteID.MAP_EMPTY), 0, emptySpaceOverMazePixels, false);
             }
             if (info.getBoolean(CommonRenderInfoKey.MAP_FLASHING)) {
                 // Hide ghost house doors while flashing
@@ -72,7 +72,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
             }
         }
         else {
-            drawSprite(spriteSheet().sprite(SpriteID.MAP_FULL), 0, emptySpaceOverMazePixels, false);
+            drawSprite(spriteSheet().findSprite(SpriteID.MAP_FULL), 0, emptySpaceOverMazePixels, false);
             // Over-paint eaten food tiles
             final FoodLayer foodLayer = level.worldMap().foodLayer();
             foodLayer.tiles()

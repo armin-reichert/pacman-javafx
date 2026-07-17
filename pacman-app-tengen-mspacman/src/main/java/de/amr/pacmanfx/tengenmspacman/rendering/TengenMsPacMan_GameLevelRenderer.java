@@ -219,7 +219,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         final int mapNumber = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
         if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
             final int spriteIndex = strangeMap15AnimationFrame(tick);
-            info.put(CommonRenderInfoKey.MAZE_SPRITE, NonArcadeMapsSpriteSheet.instance().sprites(MAP32_ANIMATED)[spriteIndex]);
+            info.put(CommonRenderInfoKey.MAZE_SPRITE, NonArcadeMapsSpriteSheet.instance().findSprites(MAP32_ANIMATED)[spriteIndex]);
         } else {
             info.put(CommonRenderInfoKey.MAZE_SPRITE, imageSet.mapImage().sprite());
         }

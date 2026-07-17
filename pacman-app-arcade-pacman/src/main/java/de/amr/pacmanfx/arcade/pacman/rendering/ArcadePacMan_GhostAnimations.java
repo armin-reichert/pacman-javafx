@@ -41,13 +41,13 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
                 .build(container);
 
             case ArcadePacMan_AnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet().sprites(SpriteID.GHOST_FRIGHTENED))
+                .sprites(spriteSheet().findSprites(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(8)
                 .repeated()
                 .build(container);
 
             case ArcadePacMan_AnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet().sprites(SpriteID.GHOST_FLASHING))
+                .sprites(spriteSheet().findSprites(SpriteID.GHOST_FLASHING))
                 .frameTicks(7)
                 .repeated()
                 .build(container);
@@ -57,24 +57,24 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
                 .build(container);
 
             case ArcadePacMan_AnimationID.GHOST_POINTS -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet().sprites(SpriteID.GHOST_NUMBERS))
+                .sprites(spriteSheet().findSprites(SpriteID.GHOST_NUMBERS))
                 .initiallyStopped()
                 .build(container);
 
             case ArcadePacMan_AnimationID.BLINKY_DAMAGED -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_DAMAGED))
+                .sprites(spriteSheet().findSprites(SpriteID.RED_GHOST_DAMAGED))
                 .initiallyStopped()
                 .build(container);
 
             case ArcadePacMan_AnimationID.BLINKY_DRESS_PATCHED -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_PATCHED))
+                .sprites(spriteSheet().findSprites(SpriteID.RED_GHOST_PATCHED))
                 .frameTicks(4)
                 .repeated()
                 .initiallyStopped()
                 .build(container);
 
             case ArcadePacMan_AnimationID.BLINKY_NAKED -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet().sprites(SpriteID.RED_GHOST_NAKED))
+                .sprites(spriteSheet().findSprites(SpriteID.RED_GHOST_NAKED))
                 .frameTicks(4)
                 .repeated()
                 .build(container);

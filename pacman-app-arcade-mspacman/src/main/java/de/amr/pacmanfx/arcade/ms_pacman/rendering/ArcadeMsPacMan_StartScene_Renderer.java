@@ -50,7 +50,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
         ctx.fillText("ADDITIONAL    AT 10000", STS*2, STS*25);
         ctx.setFont(arcadeFont6());
         ctx.fillText("PTS", STS*25, STS*25);
-        drawSprite(spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL), tilesPx(13), tilesPx(23) + 1, true);
+        drawSprite(spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL), tilesPx(13), tilesPx(23) + 1, true);
         copyrightRenderer.drawCopyright(copyrightImage, tilesPx(6), tilesPx(28));
         if (scene.appContext().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(scene, tick);

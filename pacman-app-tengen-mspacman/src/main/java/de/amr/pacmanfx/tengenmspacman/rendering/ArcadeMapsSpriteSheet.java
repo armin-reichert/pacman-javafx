@@ -13,6 +13,8 @@ import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
+import static de.amr.basics.math.RectShort.sprite;
+
 public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSpriteSheet.MapID> {
 
     private static class LazyThreadSafeSingletonHolder {
@@ -32,7 +34,7 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
     private static final int MAP_SPRITE_HEIGHT = 31 * WorldMap.TS;
 
     private static RectShort spriteAtCell(int row, int col) {
-        return RectShort.of(col * MAP_SPRITE_WIDTH, row * MAP_SPRITE_HEIGHT, MAP_SPRITE_WIDTH, MAP_SPRITE_HEIGHT);
+        return sprite(col * MAP_SPRITE_WIDTH, row * MAP_SPRITE_HEIGHT, MAP_SPRITE_WIDTH, MAP_SPRITE_HEIGHT);
     }
 
     private Image image;
@@ -61,12 +63,12 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
     }
 
     @Override
-    public RectShort sprite(MapID id) {
+    public RectShort findSprite(MapID id) {
         return spriteMap.sprite(id);
     }
 
     @Override
-    public RectShort[] sprites(MapID id) {
+    public RectShort[] findSprites(MapID id) {
         return spriteMap.spriteSequence(id);
     }
 }

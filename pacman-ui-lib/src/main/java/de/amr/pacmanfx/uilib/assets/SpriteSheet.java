@@ -24,13 +24,13 @@ public interface SpriteSheet<ID extends Identifier> {
      * @param id a sprite ID
      * @return the rectangular area in the sprite sheet where this sprite is located
      */
-    RectShort sprite(ID id);
+    RectShort findSprite(ID id);
 
     /**
      * @param id a sprite sequence ID
      * @return array of rectangular sprite sheet areas where sprites are located
      */
-    RectShort[] sprites(ID id);
+    RectShort[] findSprites(ID id);
 
     /**
      * @param x      x-coordinate of rectangular area
@@ -58,6 +58,6 @@ public interface SpriteSheet<ID extends Identifier> {
      * @return image cropped from sprite sheet for given sprite
      */
     default Image image(ID id) {
-        return image(sprite(id));
+        return image(findSprite(id));
     }
 }

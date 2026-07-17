@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 
 import java.util.stream.IntStream;
 
+import static de.amr.basics.math.RectShort.sprite;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
 
 public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
@@ -39,20 +40,20 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         image = moduleResources.loadImage(SPRITESHEET_PNG);
 
         spriteMap.add(FULL_MAPS,
-            RectShort.of(0, 0, 224, 248),
-            RectShort.of(0, 248, 224, 248),
-            RectShort.of(0, 2 * 248, 224, 248),
-            RectShort.of(0, 3 * 248, 224, 248),
-            RectShort.of(0, 4 * 248, 224, 248),
-            RectShort.of(0, 5 * 248, 224, 248)
+            sprite(0, 0, 224, 248),
+            sprite(0, 248, 224, 248),
+            sprite(0, 2 * 248, 224, 248),
+            sprite(0, 3 * 248, 224, 248),
+            sprite(0, 4 * 248, 224, 248),
+            sprite(0, 5 * 248, 224, 248)
         );
         spriteMap.add(EMPTY_MAPS,
-            RectShort.of(228, 0, 224, 248),
-            RectShort.of(228, 248, 224, 248),
-            RectShort.of(228, 2 * 248, 224, 248),
-            RectShort.of(228, 3 * 248, 224, 248),
-            RectShort.of(228, 4 * 248, 224, 248),
-            RectShort.of(228, 5 * 248, 224, 248)
+            sprite(228, 0, 224, 248),
+            sprite(228, 248, 224, 248),
+            sprite(228, 2 * 248, 224, 248),
+            sprite(228, 3 * 248, 224, 248),
+            sprite(228, 4 * 248, 224, 248),
+            sprite(228, 5 * 248, 224, 248)
         );
         spriteMap.add(MS_PACMAN_FULL, fullMsPacMan());
         spriteMap.add(MS_PACMAN_MUNCHING_RIGHT, makeMsPacManMunchingSpriteSeq(0));
@@ -90,15 +91,15 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         spriteMap.add(BONUS_SYMBOLS, tilesRightOf(3, 0, 7));
         spriteMap.add(BONUS_VALUES, tilesRightOf(3, 1, 7));
         spriteMap.add(LIVES_COUNTER_SYMBOL, tile(1, 0));
-        spriteMap.add(STORK, RectShort.of(489, 176, 32, 16), RectShort.of(521, 176, 32, 16));
+        spriteMap.add(STORK, sprite(489, 176, 32, 16), sprite(521, 176, 32, 16));
         spriteMap.add(CLAPPERBOARD,
-            RectShort.of(456, 208, 32, 32),  // open
-            RectShort.of(488, 208, 32, 32),  // middle
-            RectShort.of(520, 208, 32, 32)   // closed
+            sprite(456, 208, 32, 32),  // open
+            sprite(488, 208, 32, 32),  // middle
+            sprite(520, 208, 32, 32)   // closed
         );
         spriteMap.add(HEART, tile(2, 10));
-        spriteMap.add(BLUE_BAG, RectShort.of(488, 199, 8, 8));
-        spriteMap.add(JUNIOR_PAC, RectShort.of(509, 200, 8, 8));
+        spriteMap.add(BLUE_BAG, sprite(488, 199, 8, 8));
+        spriteMap.add(JUNIOR_PAC, sprite(509, 200, 8, 8));
 
         spriteMap.checkCompleteness();
     }
@@ -109,12 +110,12 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     }
 
     @Override
-    public RectShort sprite(SpriteID id) {
+    public RectShort findSprite(SpriteID id) {
         return spriteMap.sprite(id);
     }
 
     @Override
-    public RectShort[] sprites(SpriteID id) {
+    public RectShort[] findSprites(SpriteID id) {
         return spriteMap.spriteSequence(id);
     }
 
@@ -122,15 +123,15 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     public RectShort[] msPacManMunchingSprites(Direction dir) {
         return switch (dir) {
-            case RIGHT -> sprites(SpriteID.MS_PACMAN_MUNCHING_RIGHT);
-            case LEFT  -> sprites(SpriteID.MS_PACMAN_MUNCHING_LEFT);
-            case UP    -> sprites(SpriteID.MS_PACMAN_MUNCHING_UP);
-            case DOWN  -> sprites(SpriteID.MS_PACMAN_MUNCHING_DOWN);
+            case RIGHT -> findSprites(SpriteID.MS_PACMAN_MUNCHING_RIGHT);
+            case LEFT  -> findSprites(SpriteID.MS_PACMAN_MUNCHING_LEFT);
+            case UP    -> findSprites(SpriteID.MS_PACMAN_MUNCHING_UP);
+            case DOWN  -> findSprites(SpriteID.MS_PACMAN_MUNCHING_DOWN);
         };
     }
 
     public RectShort[] mrPacManMunchingSprites(Direction dir) {
-        return sprites(switch (dir) {
+        return findSprites(switch (dir) {
             case RIGHT -> SpriteID.MR_PACMAN_MUNCHING_RIGHT;
             case LEFT  -> SpriteID.MR_PACMAN_MUNCHING_LEFT;
             case UP    -> SpriteID.MR_PACMAN_MUNCHING_UP;
@@ -139,7 +140,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     }
 
     public RectShort[] ghostNormalSprites(byte personality, Direction dir) {
-        return sprites(switch (personality) {
+        return findSprites(switch (personality) {
             case GameModel.RED_GHOST_SHADOW -> switch (dir) {
                 case RIGHT -> RED_GHOST_RIGHT;
                 case LEFT -> RED_GHOST_LEFT;
@@ -169,7 +170,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     }
 
     public RectShort ghostEyesSprite(Direction dir) {
-        return sprite(switch (dir) {
+        return findSprite(switch (dir) {
             case RIGHT -> GHOST_EYES_RIGHT;
             case LEFT  -> GHOST_EYES_LEFT;
             case UP    -> GHOST_EYES_UP;
@@ -180,7 +181,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     // private methods
 
     private RectShort tile(int tileX, int tileY) {
-        return RectShort.of(SPRITE_START_X + 16 * tileX, 16 * tileY, 16, 16);
+        return sprite(SPRITE_START_X + 16 * tileX, 16 * tileY, 16, 16);
     }
 
     private RectShort[] tilesRightOf(int tileX, int tileY, int numTiles) {

@@ -36,7 +36,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
         return switch (animationID) {
             case ArcadePacMan_AnimationID.PAC_FULL -> new SpriteAnimationBuilder()
-                .singleSprite(spriteSheet.sprite(SpriteID.MS_PAC_FULL))
+                .singleSprite(spriteSheet.findSprite(SpriteID.MS_PAC_FULL))
                 .build(container);
 
             case ArcadePacMan_AnimationID.PAC_DYING -> new SpriteAnimationBuilder()
@@ -45,51 +45,51 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
                 .build(container);
 
             case ArcadePacMan_AnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.sprites(SpriteID.MS_PAC_MUNCHING))
+                .sprites(spriteSheet.findSprites(SpriteID.MS_PAC_MUNCHING))
                 .repeated()
                 .build(container);
 
             case MS_PAC_MAN_BOOSTER -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.sprites(SpriteID.MS_PAC_MUNCHING_BOOSTER))
+                .sprites(spriteSheet.findSprites(SpriteID.MS_PAC_MUNCHING_BOOSTER))
                 .repeated()
                 .build(container);
 
             case MS_PAC_MAN_WAVING_HAND -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.sprites(SpriteID.MS_PAC_WAVING_HAND))
+                .sprites(spriteSheet.findSprites(SpriteID.MS_PAC_WAVING_HAND))
                 .frameTicks(8)
                 .repeated()
                 .build(container);
 
             case MS_PAC_MAN_TURNING_AWAY -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.sprites(SpriteID.MS_PAC_TURNING_AWAY))
+                .sprites(spriteSheet.findSprites(SpriteID.MS_PAC_TURNING_AWAY))
                 .frameTicks(15)
                 .build(container);
 
             case MR_PAC_MAN_MUNCHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.sprites(SpriteID.MR_PAC_MUNCHING))
+                .sprites(spriteSheet.findSprites(SpriteID.MR_PAC_MUNCHING))
                 .frameTicks(2)
                 .repeated()
                 .build(container);
 
             case ANIM_PAC_MAN_BOOSTER -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.sprites(SpriteID.MR_PAC_MUNCHING_BOOSTER))
+                .sprites(spriteSheet.findSprites(SpriteID.MR_PAC_MUNCHING_BOOSTER))
                 .frameTicks(2)
                 .repeated()
                 .build(container);
 
             case MR_PAC_MAN_WAVING_HAND -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.sprites(SpriteID.MR_PAC_WAVING_HAND))
+                .sprites(spriteSheet.findSprites(SpriteID.MR_PAC_WAVING_HAND))
                 .frameTicks(8)
                 .repeated()
                 .build(container);
 
             case MR_PAC_MAN_TURNING_AWAY -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.sprites(SpriteID.MR_PAC_TURNING_AWAY))
+                .sprites(spriteSheet.findSprites(SpriteID.MR_PAC_TURNING_AWAY))
                 .frameTicks(15)
                 .build(container);
 
             case ANIM_JUNIOR -> new SpriteAnimationBuilder()
-                .singleSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC))
+                .singleSprite(spriteSheet.findSprite(SpriteID.JUNIOR_PAC))
                 .initiallyStopped()
                 .build(container);
 
@@ -105,7 +105,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     //TODO rethink this
     public static RectShort[] pacDyingSprites(SpriteSheet<SpriteID> spriteSheet) {
         final var sprites = new RectShort[11];
-        final RectShort mouthOpen = spriteSheet.sprites(SpriteID.MS_PAC_MUNCHING)[0];
+        final RectShort mouthOpen = spriteSheet.findSprites(SpriteID.MS_PAC_MUNCHING)[0];
         Arrays.fill(sprites, mouthOpen);
         return sprites;
     }

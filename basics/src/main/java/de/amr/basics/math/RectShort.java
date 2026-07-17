@@ -16,7 +16,7 @@ import static de.amr.basics.math.Vector2f.vec2_float;
 public record RectShort(short x, short y, short width, short height) {
 
     /** Sprite Zero, no sugar! */
-    public static RectShort NULL_RECTANGLE = RectShort.of(0, 0, 0, 0);
+    public static RectShort NULL_RECTANGLE = RectShort.sprite(0, 0, 0, 0);
 
     private static short checkNonNegativeShort(int value, String messageFormat) {
         if (value < 0 || value > Short.MAX_VALUE) {
@@ -25,7 +25,7 @@ public record RectShort(short x, short y, short width, short height) {
         return (short) value;
     }
 
-    public static RectShort of(int x, int y, int width, int height) {
+    public static RectShort sprite(int x, int y, int width, int height) {
         return new RectShort(
             checkNonNegativeShort(x,      "Illegal sprite x-position: %d"),
             checkNonNegativeShort(y,      "Illegal sprite y-position: %d"),

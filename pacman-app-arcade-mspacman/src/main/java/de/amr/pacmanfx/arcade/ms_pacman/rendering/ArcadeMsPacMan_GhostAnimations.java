@@ -43,13 +43,13 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
                 .build(container);
 
             case ArcadePacMan_AnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet().sprites(GHOST_FRIGHTENED))
+                .sprites(spriteSheet().findSprites(GHOST_FRIGHTENED))
                 .frameTicks(8)
                 .repeated()
                 .build(container);
 
             case ArcadePacMan_AnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet().sprites(GHOST_FLASHING))
+                .sprites(spriteSheet().findSprites(GHOST_FLASHING))
                 .frameTicks(7)
                 .repeated()
                 .build(container);
@@ -59,7 +59,7 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
                 .build(container);
 
             case ArcadePacMan_AnimationID.GHOST_POINTS -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet().sprites(GHOST_NUMBERS))
+                .sprites(spriteSheet().findSprites(GHOST_NUMBERS))
                 .initiallyStopped()
                 .build(container);
 

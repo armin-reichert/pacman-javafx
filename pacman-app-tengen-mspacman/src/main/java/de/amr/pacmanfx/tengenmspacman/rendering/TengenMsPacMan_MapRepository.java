@@ -87,7 +87,7 @@ public class TengenMsPacMan_MapRepository {
             default -> throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
         };
 
-        final RectShort sprite = ArcadeMapsSpriteSheet.instance().sprite(mapID);
+        final RectShort sprite = ArcadeMapsSpriteSheet.instance().findSprite(mapID);
         final var coloredMaze = new ColorSchemedImage(ArcadeMapsSpriteSheet.instance().sourceImage(), sprite, colorScheme);
 
         //TODO: Handle case when color scheme is already black & white
@@ -125,7 +125,7 @@ public class TengenMsPacMan_MapRepository {
 
         return MapColoringService.instance().createMapImageSet(
             MapCategory.MINI, mapID,
-            NonArcadeMapsSpriteSheet.instance(), NonArcadeMapsSpriteSheet.instance().sprite(mapID),
+            NonArcadeMapsSpriteSheet.instance(), NonArcadeMapsSpriteSheet.instance().findSprite(mapID),
             originalColorScheme, requestedColorScheme,
             randomFlashColors, flashCount
         );
@@ -166,7 +166,7 @@ public class TengenMsPacMan_MapRepository {
 
         return MapColoringService.instance().createMapImageSet(
             MapCategory.BIG, mapID,
-            NonArcadeMapsSpriteSheet.instance(), NonArcadeMapsSpriteSheet.instance().sprite(mapID),
+            NonArcadeMapsSpriteSheet.instance(), NonArcadeMapsSpriteSheet.instance().findSprite(mapID),
             originalColorScheme, requestedColorScheme,
             randomFlashColors, flashCount
         );
@@ -179,8 +179,8 @@ public class TengenMsPacMan_MapRepository {
         boolean randomFlashColors) {
 
         final RectShort mazeSprite = mapID == NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED
-            ? NonArcadeMapsSpriteSheet.instance().sprites(mapID)[0]
-            : NonArcadeMapsSpriteSheet.instance().sprite(mapID);
+            ? NonArcadeMapsSpriteSheet.instance().findSprites(mapID)[0]
+            : NonArcadeMapsSpriteSheet.instance().findSprite(mapID);
 
         final NES_MapColorScheme original = colorSchemeOfNonArcadeMap(mapID);
         final NES_MapColorScheme requested = optionalRandomColorScheme == null ? original : optionalRandomColorScheme;

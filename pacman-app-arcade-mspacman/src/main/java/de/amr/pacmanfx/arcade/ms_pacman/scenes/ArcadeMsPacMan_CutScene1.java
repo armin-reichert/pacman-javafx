@@ -87,7 +87,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         pinky = gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
 
         heart = new Actor();
-        heart.setAnimations(singleSpriteAnimation(spriteSheet.sprite(SpriteID.HEART)));
+        heart.setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.setPosition(tilesPx(3), tilesPx(10));

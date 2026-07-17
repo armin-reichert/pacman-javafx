@@ -33,7 +33,7 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
         return switch (animationID) {
             case ArcadePacMan_AnimationID.PAC_FULL -> new SpriteAnimationBuilder()
-                .singleSprite(spriteSheet.sprite(SpriteID.MS_PACMAN_FULL))
+                .singleSprite(spriteSheet.findSprite(SpriteID.MS_PACMAN_FULL))
                 .build(container);
 
             case ArcadePacMan_AnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
@@ -42,12 +42,12 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
                 .build(container);
 
             case ArcadePacMan_AnimationID.PAC_DYING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet().sprites(SpriteID.MS_PACMAN_DYING))
+                .sprites(spriteSheet().findSprites(SpriteID.MS_PACMAN_DYING))
                 .frameTicks(8)
                 .build(container);
 
             case ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.sprites(SpriteID.MR_PACMAN_MUNCHING_LEFT))
+                .sprites(spriteSheet.findSprites(SpriteID.MR_PACMAN_MUNCHING_LEFT))
                 .frameTicks(2)
                 .repeated()
                 .build(container);

@@ -62,7 +62,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
                 if (!introScene.dark) {
                     boolean blinkingOn = stateTick % 60 < 30;
                     fillText("TENGEN PRESENTS", shadeOfBlue(stateTick), introScene.presentsText.x(), introScene.presentsText.y());
-                    drawSprite(spriteSheet().sprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * WorldMap.TS, MARQUEE_Y, true);
+                    drawSprite(spriteSheet().findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * WorldMap.TS, MARQUEE_Y, true);
                     if (blinkingOn) fillText("PRESS START", NES_Palette.color(0x20), 11 * WorldMap.TS, MARQUEE_Y + 9 * WorldMap.TS);
                     fillText("MS PAC-MAN TM NAMCO LTD", NES_Palette.color(0x25), 6 * WorldMap.TS, MARQUEE_Y + 15 * WorldMap.TS);
                     fillText("©1990 TENGEN INC",        NES_Palette.color(0x25), 8 * WorldMap.TS, MARQUEE_Y + 16 * WorldMap.TS);

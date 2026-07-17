@@ -5,12 +5,13 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.Identifier;
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ResourceManager;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
+import static de.amr.basics.math.RectShort.sprite;
 import static de.amr.pacmanfx.core.model.world.WorldMap.TS;
 
 /**
@@ -64,7 +65,7 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
             for (int col = 0; col < 8; ++col) {
                 if (number != 32) {
                     final MapID id = ids[number - 1];
-                    spriteMap.add(id, RectShort.of(col * mapWidth, yPos[row], mapWidth, mapHeights[row][col]));
+                    spriteMap.add(id, sprite(col * mapWidth, yPos[row], mapWidth, mapHeights[row][col]));
                 }
                 ++number;
             }
@@ -72,18 +73,18 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
 
         // Maze #32 (last in STRANGE level) has 3 animation frames
         spriteMap.add(MapID.MAP32_ANIMATED,
-            RectShort.of(1568,  840, mapWidth, 31 * TS),
-            RectShort.of(1568, 1088, mapWidth, 31 * TS),
-            RectShort.of(1568, 1336, mapWidth, 31 * TS));
+            sprite(1568,  840, mapWidth, 31 * TS),
+            sprite(1568, 1088, mapWidth, 31 * TS),
+            sprite(1568, 1336, mapWidth, 31 * TS));
 
         // row=3, col=8:  Maze #33 is BIG
-        spriteMap.add(MapID.MAP33_BIG, RectShort.of(8 * mapWidth, yPos[3], mapWidth, mapHeights[3][8]));
+        spriteMap.add(MapID.MAP33_BIG, sprite(8 * mapWidth, yPos[3], mapWidth, mapHeights[3][8]));
 
         // row=4: 4 MINI mazes
-        spriteMap.add(MapID.MAP34_MINI, RectShort.of(           0, yPos[4], mapWidth, mapHeights[4][0]));
-        spriteMap.add(MapID.MAP35_MINI, RectShort.of(    mapWidth, yPos[4], mapWidth, mapHeights[4][1]));
-        spriteMap.add(MapID.MAP36_MINI, RectShort.of(2 * mapWidth, yPos[4], mapWidth, mapHeights[4][2]));
-        spriteMap.add(MapID.MAP37_MINI, RectShort.of(3 * mapWidth, yPos[4], mapWidth, mapHeights[4][3]));
+        spriteMap.add(MapID.MAP34_MINI, sprite(           0, yPos[4], mapWidth, mapHeights[4][0]));
+        spriteMap.add(MapID.MAP35_MINI, sprite(    mapWidth, yPos[4], mapWidth, mapHeights[4][1]));
+        spriteMap.add(MapID.MAP36_MINI, sprite(2 * mapWidth, yPos[4], mapWidth, mapHeights[4][2]));
+        spriteMap.add(MapID.MAP37_MINI, sprite(3 * mapWidth, yPos[4], mapWidth, mapHeights[4][3]));
 
         spriteMap.checkCompleteness();
     }
@@ -97,12 +98,12 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
     }
 
     @Override
-    public RectShort sprite(MapID id) {
+    public RectShort findSprite(MapID id) {
         return spriteMap.sprite(id);
     }
 
     @Override
-    public RectShort[] sprites(MapID id) {
+    public RectShort[] findSprites(MapID id) {
         return spriteMap.spriteSequence(id);
     }
 }

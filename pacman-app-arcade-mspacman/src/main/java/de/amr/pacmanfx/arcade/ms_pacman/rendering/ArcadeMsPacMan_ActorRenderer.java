@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
@@ -43,22 +44,27 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        final SpriteAnimationAccessor animationManager = ghost.animations();
-        if (animationManager.isSelected(ArcadePacMan_AnimationID.GHOST_NORMAL)) {
+        final SpriteAnimationAccessor animations = ghost.animations();
+        RectShort sprite;
+        if (animations.isSelected(ArcadePacMan_AnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
-            return spriteOrDefault(sprites, animationManager.currentFrame());
+            sprite = spriteOrDefault(sprites, animations.currentFrame());
         }
-        else if (animationManager.isSelected(ArcadePacMan_AnimationID.GHOST_EYES)) {
-            return spriteSheet().ghostEyesSprite(ghost.wishDir());
+        else if (animations.isSelected(ArcadePacMan_AnimationID.GHOST_EYES)) {
+            sprite = spriteSheet().ghostEyesSprite(ghost.wishDir());
         }
         else {
-            return animationManager.currentSprite();
+            sprite = animations.currentSprite();
         }
+        if (sprite == null) {
+            throw new IllegalStateException("Could not determine Pac sprite");
+        }
+        return sprite;
     }
 
     private RectShort computePacSprite(Pac pac) {
         final SpriteAnimationAccessor animations = pac.animations();
-        RectShort sprite = null;
+        RectShort sprite;
         if (animations.isSelected(ArcadePacMan_AnimationID.PAC_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.moveDir());
             sprite = spriteOrDefault(sprites, animations.currentFrame());
@@ -77,8 +83,8 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
-        final RectShort[] sprites = spriteSheet().sprites(SpriteID.CLAPPERBOARD);
-        final int spriteIndex = clapperboard.state(); //TODO decouple
+        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.CLAPPERBOARD);
+        final int spriteIndex = clapperboard.state(); //TODO decouple state and index in sprite sheet
         if (0 <= spriteIndex && spriteIndex < sprites.length) {
             final RectShort sprite = sprites[spriteIndex];
             drawSpriteCentered(sprite, clapperboard.computeCenter());
@@ -96,8 +102,8 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     // TODO decouple symbol code from sprite index
     private RectShort computeBonusSprite(Bonus bonus) {
         return switch (bonus.state()) {
-            case EDIBLE -> spriteOrDefault(spriteSheet().sprites(SpriteID.BONUS_SYMBOLS), bonus.symbolCode());
-            case EATEN ->  spriteOrDefault(spriteSheet().sprites(SpriteID.BONUS_VALUES), bonus.symbolCode());
+            case EDIBLE -> spriteOrDefault(spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS), bonus.symbolCode());
+            case EATEN ->  spriteOrDefault(spriteSheet().findSprites(SpriteID.BONUS_VALUES), bonus.symbolCode());
             case INACTIVE -> RectShort.NULL_RECTANGLE;
         };
     }

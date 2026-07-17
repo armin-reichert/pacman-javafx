@@ -37,13 +37,13 @@ public class Bag extends Actor {
             return switch (animationID) {
                 case ArcadeMsPacMan_AnimationID.JUNIOR ->
                     new SpriteAnimationBuilder()
-                        .singleSprite(spriteSheet.sprite(JUNIOR_PAC))
+                        .singleSprite(spriteSheet.findSprite(JUNIOR_PAC))
                         .initiallyStopped()
                         .build(container);
 
                 case ArcadeMsPacMan_AnimationID.BAG ->
                     new SpriteAnimationBuilder()
-                        .singleSprite(spriteSheet.sprite(BLUE_BAG))
+                        .singleSprite(spriteSheet.findSprite(BLUE_BAG))
                         .initiallyStopped()
                         .build(container);
 

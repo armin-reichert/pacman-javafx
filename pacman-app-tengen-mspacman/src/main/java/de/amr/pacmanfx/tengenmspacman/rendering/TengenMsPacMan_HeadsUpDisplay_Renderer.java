@@ -118,7 +118,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     private void drawLivesCounter(GameModel game, TengenMsPacMan_HUDState hud, float y) {
-        final RectShort symbolSprite = spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+        final RectShort symbolSprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < hud.visibleLifeCount(); ++i) {
             drawSprite(symbolSprite, tilesPx(4 + i * 2), y, true);
         }
@@ -128,7 +128,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     private void drawLevelCounter(GameLevel level, TengenMsPacMan_HUDState hud, float y) {
-        final RectShort[] symbolSprites = spriteSheet().sprites(SpriteID.BONUS_SYMBOLS);
+        final RectShort[] symbolSprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
         float x = LEVEL_COUNTER_POS_RIGHT - tilesPx(2);
         // symbols are drawn from right to left!
         for (int symbolCode : level.gameModel().levelCounter().symbolCodes()) {
@@ -146,7 +146,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     // These methods are also used by the 3D scene, so make them public:
 
     public void drawLevelNumberBox(int number, double x, double y) {
-        drawSprite(spriteSheet().sprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
+        drawSprite(spriteSheet().findSprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
         final int tens = number / 10, ones = number % 10;
         if (tens > 0) {
             drawSprite(spriteSheet().digitSprite(tens), x + 2, y + 2, true);
@@ -156,20 +156,20 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
 
     public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {
         final RectShort categorySprite = switch (category) {
-            case BIG     -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_BIG);
-            case MINI    -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_MINI);
-            case STRANGE -> spriteSheet().sprite(SpriteID.INFO_CATEGORY_STRANGE);
+            case BIG     -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_BIG);
+            case MINI    -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_MINI);
+            case STRANGE -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> RectShort.NULL_RECTANGLE;
         };
         final RectShort difficultySprite = switch (difficulty) {
-            case EASY   -> spriteSheet().sprite(SpriteID.INFO_DIFFICULTY_EASY);
-            case HARD   -> spriteSheet().sprite(SpriteID.INFO_DIFFICULTY_HARD);
-            case CRAZY  -> spriteSheet().sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
+            case EASY   -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_EASY);
+            case HARD   -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_HARD);
+            case CRAZY  -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> RectShort.NULL_RECTANGLE;
         };
-        drawSpriteCentered(spriteSheet().sprite(SpriteID.INFO_FRAME), centerX, y);
+        drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_FRAME), centerX, y);
         if (booster != PacBooster.OFF) {
-            drawSpriteCentered(spriteSheet().sprite(SpriteID.INFO_BOOSTER), centerX - tilesPx(5.5f), y);
+            drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_BOOSTER), centerX - tilesPx(5.5f), y);
         }
         drawSpriteCentered(difficultySprite, centerX, y);
         drawSpriteCentered(categorySprite, centerX + tilesPx(4.5f), y);

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import static de.amr.basics.math.RectShort.sprite;
+
 /**
  * Recolors maze images from source NES color schemes to target schemes.
  * Generates flashing maze variants (single black/white or multiple random colors)
@@ -124,7 +126,7 @@ public class MapColoringService {
         );
         final var coloredMapImage = new ColorSchemedImage(
             recoloredMapImage,
-            RectShort.of(0, 0, mapSprite.width(), mapSprite.height()),
+            sprite(0, 0, mapSprite.width(), mapSprite.height()),
             targetColorScheme);
         Logger.info("{} map ({}) recolored to {}", mapCategory, mapID, targetColorScheme);
         return coloredMapImage;

@@ -129,7 +129,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         pinky.setSpeed(0);
 
         heart = new Actor();
-        heart.setAnimations(singleSpriteAnimation(spriteSheet.sprite(SpriteID.HEART)));
+        heart.setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
 
         collided = false;
 

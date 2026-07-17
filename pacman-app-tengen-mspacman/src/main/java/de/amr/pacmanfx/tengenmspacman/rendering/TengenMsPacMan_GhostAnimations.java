@@ -50,13 +50,13 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
                 .build(container);
 
             case ArcadePacMan_AnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.sprites(SpriteID.GHOST_FRIGHTENED))
+                .sprites(spriteSheet.findSprites(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(FRIGHTENED_TICKS)
                 .repeated()
                 .build(container);
 
             case ArcadePacMan_AnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.sprites(SpriteID.GHOST_FLASHING))
+                .sprites(spriteSheet.findSprites(SpriteID.GHOST_FLASHING))
                 .frameTicks(FLASHING_TICKS)
                 .repeated()
                 .build(container);
@@ -66,7 +66,7 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
                 .build(container);
 
             case ArcadePacMan_AnimationID.GHOST_POINTS -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.sprites(SpriteID.GHOST_NUMBERS))
+                .sprites(spriteSheet.findSprites(SpriteID.GHOST_NUMBERS))
                 .initiallyStopped()
                 .build(container);
 

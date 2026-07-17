@@ -8,18 +8,20 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
+import static de.amr.basics.math.RectShort.sprite;
+
 public class ArcadeSprites {
 
     private static final ResourceManager RESOURCE_MANAGER = () -> ArcadeSprites.class;
 
     public static final Image SPRITE_SHEET = RESOURCE_MANAGER.loadImage("/de/amr/pacmanfx/mapeditor/graphics/pacman_spritesheet.png");
 
-    public static final RectShort PAC_MAN      = RectShort.of(473,  16, 14, 14);
-    public static final RectShort RED_GHOST    = RectShort.of(505,  65, 14, 14);
-    public static final RectShort PINK_GHOST   = RectShort.of(553,  81, 14, 14);
-    public static final RectShort CYAN_GHOST   = RectShort.of(521,  97, 14, 14);
-    public static final RectShort ORANGE_GHOST = RectShort.of(521, 113, 14, 14);
-    public static final RectShort STRAWBERRY   = RectShort.of(505,  49, 14, 14);
+    public static final RectShort PAC_MAN      = sprite(473,  16, 14, 14);
+    public static final RectShort RED_GHOST    = sprite(505,  65, 14, 14);
+    public static final RectShort PINK_GHOST   = sprite(553,  81, 14, 14);
+    public static final RectShort CYAN_GHOST   = sprite(521,  97, 14, 14);
+    public static final RectShort ORANGE_GHOST = sprite(521, 113, 14, 14);
+    public static final RectShort STRAWBERRY   = sprite(505,  49, 14, 14);
 
     // These are the colors from the first Ms. Pac-Man level
     public static final Color MS_PACMAN_COLOR_FOOD        = Color.valueOf("#dedeff");

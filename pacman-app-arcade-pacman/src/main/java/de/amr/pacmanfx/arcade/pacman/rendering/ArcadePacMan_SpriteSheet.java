@@ -14,6 +14,8 @@ import javafx.scene.image.Image;
 
 import java.util.stream.IntStream;
 
+import static de.amr.basics.math.RectShort.sprite;
+
 public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     private static class LazyThreadSafeSingletonHolder {
@@ -39,39 +41,39 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         image = moduleResources.loadImage(SPRITESHEET_PNG);
 
         // -- Map images
-        spriteMap.add(SpriteID.MAP_FULL, RectShort.of(0, 0, 224, 248));
-        spriteMap.add(SpriteID.MAP_EMPTY, RectShort.of(228, 0, 224, 248));
+        spriteMap.add(SpriteID.MAP_FULL, sprite(0, 0, 224, 248));
+        spriteMap.add(SpriteID.MAP_EMPTY, sprite(228, 0, 224, 248));
 
         // -- Eaten ghost values
         spriteMap.add(SpriteID.GHOST_NUMBERS,
-            RectShort.of(456, 133, 15, 7),  // 200
-            RectShort.of(472, 133, 15, 7),  // 400
-            RectShort.of(488, 133, 15, 7),  // 800
-            RectShort.of(504, 133, 16, 7)   // 1600
+            sprite(456, 133, 15, 7),  // 200
+            sprite(472, 133, 15, 7),  // 400
+            sprite(488, 133, 15, 7),  // 800
+            sprite(504, 133, 16, 7)   // 1600
         );
 
         // Energizer
-        spriteMap.add(SpriteID.ENERGIZER, RectShort.of(8, 24, 8, 8));
+        spriteMap.add(SpriteID.ENERGIZER, sprite(8, 24, 8, 8));
 
         // -- 8 bonus symbols ("fruits")
         spriteMap.add(SpriteID.BONUS_SYMBOLS,
             IntStream.range(0, 8)
-                .mapToObj(i -> clipSpriteRect(RASTER_SIZE * (2 + i), 49, 14, 14))
+                .mapToObj(i -> clipSprite(RASTER_SIZE * (2 + i), 49, 14, 14))
                 .toArray(RectShort[]::new));
 
         // -- Bonus value numbers
         spriteMap.add(SpriteID.BONUS_VALUES,
-            RectShort.of(457, 148, 14, 7), //  100
-            RectShort.of(472, 148, 15, 7), //  300
-            RectShort.of(488, 148, 15, 7), //  500
-            RectShort.of(504, 148, 15, 7), //  700
-            RectShort.of(520, 148, 18, 7), // 1000
-            RectShort.of(518, 164, 20, 7), // 2000
-            RectShort.of(518, 180, 20, 7), // 3000
-            RectShort.of(518, 196, 20, 7)  // 5000
+            sprite(457, 148, 14, 7), //  100
+            sprite(472, 148, 15, 7), //  300
+            sprite(488, 148, 15, 7), //  500
+            sprite(504, 148, 15, 7), //  700
+            sprite(520, 148, 18, 7), // 1000
+            sprite(518, 164, 20, 7), // 2000
+            sprite(518, 180, 20, 7), // 3000
+            sprite(518, 196, 20, 7)  // 5000
         );
 
-        spriteMap.add(SpriteID.LIVES_COUNTER_SYMBOL, clipSpriteRect(129, 15, 16, 16));
+        spriteMap.add(SpriteID.LIVES_COUNTER_SYMBOL, clipSprite(129, 15, 16, 16));
 
         // -- Pac-Man sprites
 
@@ -84,9 +86,9 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         spriteMap.add(SpriteID.PACMAN_DYING, makePacManDyingSpriteSeq());
 
         spriteMap.add(SpriteID.PACMAN_BIG,
-            RectShort.of(488, 16, 32, 32),
-            RectShort.of(520, 16, 32, 32),
-            RectShort.of(552, 16, 33, 32)
+            sprite(488, 16, 32, 32),
+            sprite(520, 16, 32, 32),
+            sprite(552, 16, 33, 32)
         );
 
         // -- Ghost sprites
@@ -125,12 +127,12 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         // -- Cut scenes sprites
         spriteMap.add(SpriteID.RED_GHOST_STRETCHED, clipSpriteTiles(8, 6, 5));
 
-        spriteMap.add(SpriteID.RED_GHOST_DAMAGED, RectShort.of(585, 113, 14, 14), RectShort.of(601, 113, 14, 14));
-        spriteMap.add(SpriteID.RED_GHOST_PATCHED, RectShort.of(617, 113, 14, 14), RectShort.of(633, 113, 14, 14));
+        spriteMap.add(SpriteID.RED_GHOST_DAMAGED, sprite(585, 113, 14, 14), sprite(601, 113, 14, 14));
+        spriteMap.add(SpriteID.RED_GHOST_PATCHED, sprite(617, 113, 14, 14), sprite(633, 113, 14, 14));
 
         spriteMap.add(SpriteID.RED_GHOST_NAKED,
-            clipSpriteRect(RASTER_SIZE * 8, RASTER_SIZE * 8, RASTER_SIZE * 2, RASTER_SIZE),
-            clipSpriteRect(RASTER_SIZE * 10, RASTER_SIZE * 8, RASTER_SIZE * 2, RASTER_SIZE)
+            clipSprite(RASTER_SIZE * 8, RASTER_SIZE * 8, RASTER_SIZE * 2, RASTER_SIZE),
+            clipSprite(RASTER_SIZE * 10, RASTER_SIZE * 8, RASTER_SIZE * 2, RASTER_SIZE)
         );
 
         spriteMap.checkCompleteness();
@@ -142,12 +144,12 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     }
 
     @Override
-    public RectShort sprite(SpriteID id) {
+    public RectShort findSprite(SpriteID id) {
         return spriteMap.sprite(id);
     }
 
     @Override
-    public RectShort[] sprites(SpriteID id) {
+    public RectShort[] findSprites(SpriteID id) {
         return spriteMap.spriteSequence(id);
     }
 
@@ -155,15 +157,15 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     public RectShort[] pacMunchingSprites(Direction dir) {
         return switch (dir) {
-            case RIGHT -> sprites(SpriteID.PACMAN_MUNCHING_RIGHT);
-            case LEFT  -> sprites(SpriteID.PACMAN_MUNCHING_LEFT);
-            case UP    -> sprites(SpriteID.PACMAN_MUNCHING_UP);
-            case DOWN  -> sprites(SpriteID.PACMAN_MUNCHING_DOWN);
+            case RIGHT -> findSprites(SpriteID.PACMAN_MUNCHING_RIGHT);
+            case LEFT  -> findSprites(SpriteID.PACMAN_MUNCHING_LEFT);
+            case UP    -> findSprites(SpriteID.PACMAN_MUNCHING_UP);
+            case DOWN  -> findSprites(SpriteID.PACMAN_MUNCHING_DOWN);
         };
     }
 
     public RectShort[] ghostNormalSprites(byte personality, Direction dir) {
-        return sprites(switch (personality) {
+        return findSprites(switch (personality) {
             case GameModel.RED_GHOST_SHADOW -> switch (dir) {
                 case RIGHT -> SpriteID.RED_GHOST_RIGHT;
                 case LEFT ->  SpriteID.RED_GHOST_LEFT;
@@ -194,21 +196,21 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     public RectShort ghostEyesSprite(Direction dir) {
         return switch (dir) {
-            case RIGHT -> sprite(SpriteID.GHOST_EYES_RIGHT);
-            case LEFT  -> sprite(SpriteID.GHOST_EYES_LEFT);
-            case UP    -> sprite(SpriteID.GHOST_EYES_UP);
-            case DOWN  -> sprite(SpriteID.GHOST_EYES_DOWN);
+            case RIGHT -> findSprite(SpriteID.GHOST_EYES_RIGHT);
+            case LEFT  -> findSprite(SpriteID.GHOST_EYES_LEFT);
+            case UP    -> findSprite(SpriteID.GHOST_EYES_UP);
+            case DOWN  -> findSprite(SpriteID.GHOST_EYES_DOWN);
         };
     }
 
     // private methods
 
-    private RectShort clipSpriteRect(int x, int y, int w, int h) {
-        return RectShort.of(HORIZONTAL_SPLIT_X + x, y, w, h);
+    private RectShort clipSprite(int x, int y, int w, int h) {
+        return sprite(HORIZONTAL_SPLIT_X + x, y, w, h);
     }
 
     private RectShort clipSpriteTile(int tileX, int tileY) {
-        return clipSpriteRect(RASTER_SIZE * tileX, RASTER_SIZE * tileY, RASTER_SIZE, RASTER_SIZE);
+        return clipSprite(RASTER_SIZE * tileX, RASTER_SIZE * tileY, RASTER_SIZE, RASTER_SIZE);
     }
 
     private RectShort[] clipSpriteTiles(int startTileX, int startTileY, int count) {
@@ -220,20 +222,20 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     private RectShort pacFullSprite() {
         final int margin = 1;
         final int size = 14; // SQUARE_SIZE - 2 * margin
-        return clipSpriteRect(2 * RASTER_SIZE + margin, margin, size, size);
+        return clipSprite(2 * RASTER_SIZE + margin, margin, size, size);
     }
 
     private RectShort[] makePacManMunchingSpriteSeq(int dir) {
         final int margin = 1;
         final int size = 14; // SQUARE_SIZE - 2 * margin
         // Note: the close mouth sprite is only available at row 0
-        final RectShort closed = clipSpriteRect(2 * RASTER_SIZE + margin, margin, size, size);
-        final RectShort wide   = clipSpriteRect(margin, dir * RASTER_SIZE + margin, size, size);
-        final RectShort middle = clipSpriteRect(RASTER_SIZE + margin, dir * RASTER_SIZE + margin, size, size);
+        final RectShort closed = clipSprite(2 * RASTER_SIZE + margin, margin, size, size);
+        final RectShort wide   = clipSprite(margin, dir * RASTER_SIZE + margin, size, size);
+        final RectShort middle = clipSprite(RASTER_SIZE + margin, dir * RASTER_SIZE + margin, size, size);
         return new RectShort[] {closed, closed, middle, middle, wide, wide, middle, middle};
     }
 
     private RectShort[] makePacManDyingSpriteSeq() {
-        return IntStream.range(0, 11).mapToObj(i -> RectShort.of(504 + i * 16, 1, 15, i == 10 ? 15 : 14)).toArray(RectShort[]::new);
+        return IntStream.range(0, 11).mapToObj(i -> sprite(504 + i * 16, 1, 15, i == 10 ? 15 : 14)).toArray(RectShort[]::new);
     }
 }

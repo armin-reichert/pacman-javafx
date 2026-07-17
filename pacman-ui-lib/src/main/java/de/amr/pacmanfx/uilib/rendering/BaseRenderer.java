@@ -20,6 +20,9 @@ import javafx.scene.text.TextAlignment;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Base renderer class providing support for scaling, background color and common font drawing.
+ */
 public class BaseRenderer implements Renderer {
 
     public static final Font ARCADE_FONT;
