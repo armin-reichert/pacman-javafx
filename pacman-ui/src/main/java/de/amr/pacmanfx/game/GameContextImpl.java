@@ -40,8 +40,6 @@ public class GameContextImpl implements GameContext {
         this.coinMechanism = requireNonNull(coinMechanism);
         this.gameVariant = requireNonNull(gameVariant);
         this.hudState = new HUDState(); //TODO Tengen?
-        //TODO rethink this
-        hudState.creditProperty().bind(coinMechanism().numCoinsProperty());
         this.eventManager = new GameEventManagerImpl();
     }
 

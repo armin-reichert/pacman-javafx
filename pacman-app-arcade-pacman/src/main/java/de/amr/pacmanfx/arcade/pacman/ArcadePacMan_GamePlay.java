@@ -76,6 +76,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         gameContext.model().init();
         resetForNewGame(gameContext);
         gameContext.hudState().hide();
+        gameContext.hudState().creditProperty().bind(gameContext.coinMechanism().numCoinsProperty());
     }
 
     // Level building and level start
