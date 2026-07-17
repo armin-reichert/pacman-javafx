@@ -107,7 +107,7 @@ public class GameUI implements GameEventListener {
         return viewModel;
     }
 
-    public void setGameActionContext(GameAppContext appContext) {
+    public void setAppContext(GameAppContext appContext) {
         this.appContext = requireNonNull(appContext);
 
         sounds.setGameActionContext(appContext);

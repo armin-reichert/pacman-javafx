@@ -27,14 +27,14 @@ import static java.util.Objects.requireNonNull;
 public final class PacManGames implements GameAppContext, GameLifecycle {
 
     /**
-     * High score file for game variant XYZ is stored as "highscore-xyz.xml" inside user home directory.
+     * High score file for game variant "YYZ" is stored as "highscore-yyz.xml" inside user home directory.
      *
-     * @param variantName name of the game variant e.g. MS_PACMAN
+     * @param variantName name of the game variant e.g. "MS_PACMAN"
      * @return high score file name for this game variant
      */
     public static File highScoreFile(String variantName) {
         requireNonNull(variantName);
-        final String fileName = "highscore-%s.xml".formatted(variantName).toLowerCase();
+        final String fileName = "highscore-%s.xml".formatted(variantName.toLowerCase());
         return new File(GameConstants.USER_HOME_DIR, fileName);
     }
 
@@ -57,7 +57,7 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
 
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
-        ui.setGameActionContext(this);
+        ui.setAppContext(this);
     }
 
     public void selectGameVariantAndShow(GameVariantID variantID) {
@@ -78,16 +78,11 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
         this.gameContext = gameContext;
     }
 
-    // GameActionContext
+    // GameAppContext
 
     @Override
     public GameLifecycle lifecycle() {
         return this;
-    }
-
-    @Override
-    public DirectoryWatchdog watchdog() {
-        return machine.watchdog();
     }
 
     @Override
@@ -121,6 +116,11 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
     }
 
     @Override
+    public DirectoryWatchdog watchdog() {
+        return machine.watchdog();
+    }
+
+    @Override
     public GameUI ui() {
         return ui;
     }
@@ -130,11 +130,9 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
     @Override
     public void startPlaying() {
         final GameFlowController gameFlow = gameContext.flow();
-
         gameFlow.setGameContext(gameContext);
         gameFlow.restartState(gameContext, GameStateID.BOOT);
         clock().start();
-
         ui.views().selectGamePlayView();
     }
 
