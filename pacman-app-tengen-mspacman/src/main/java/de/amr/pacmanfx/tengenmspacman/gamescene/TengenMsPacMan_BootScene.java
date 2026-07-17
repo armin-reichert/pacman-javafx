@@ -4,11 +4,11 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;

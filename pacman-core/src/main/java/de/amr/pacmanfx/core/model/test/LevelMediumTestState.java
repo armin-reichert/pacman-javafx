@@ -7,11 +7,11 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.event.LevelStartedEvent;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
+import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 
