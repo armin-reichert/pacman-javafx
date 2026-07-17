@@ -68,8 +68,8 @@ public final class TerrainLayer extends WorldMapLayer {
         this.house = house;
     }
 
-    public House house() {
-        return house;
+    public House assertHouse() {
+        return optHouse().orElseThrow();
     }
 
     public Optional<House> optHouse() {

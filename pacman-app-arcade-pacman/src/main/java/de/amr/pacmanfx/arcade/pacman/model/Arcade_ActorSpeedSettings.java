@@ -40,7 +40,7 @@ public class Arcade_ActorSpeedSettings implements ActorSpeedSettings {
     public float ghostSpeed(GameLevel level, Ghost ghost) {
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final boolean insideHouse = terrain.house().isVisitedBy(ghost);
+        final boolean insideHouse = terrain.assertHouse().isVisitedBy(ghost);
         final boolean tunnelSlowdown = terrain.isTunnel(ghost.computeTile());
         return switch (ghost.state()) {
             case LOCKED -> insideHouse ? 0.5f : 0;

@@ -187,11 +187,7 @@ public final class ArcadeHouseGateKeeper {
     public void registerFoodEaten(GameLevel level) {
         requireNonNull(level);
 
-        final House house = level.worldMap().terrainLayer().house();
-        if (house == null) {
-            Logger.error("Cannot register eaten food without house");
-            return;
-        }
+        final House house = level.worldMap().terrainLayer().assertHouse();
 
         if (globalCounterEnabled) {
             if (level.ghost(GameModel.ORANGE_GHOST_POKEY).state() == GhostState.LOCKED && globalCounterValue == 32) {
@@ -213,11 +209,7 @@ public final class ArcadeHouseGateKeeper {
     public void unlockGhostIfPossible(GameLevel level) {
         requireNonNull(level);
 
-        final House house = level.worldMap().terrainLayer().house();
-        if (house == null) {
-            Logger.error("Cannot unlock ghost without house");
-            return;
-        }
+        final House house = level.worldMap().terrainLayer().assertHouse();
 
         final Ghost blinky = level.ghost(GameModel.RED_GHOST_SHADOW);
         if (blinky.state() == GhostState.LOCKED) {

@@ -62,7 +62,7 @@ public class TengenMsPacMan_ActorSpeedSettings implements ActorSpeedSettings {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final Vector2i tile = ghost.computeTile();
         final GhostState state = ghost.state();
-        final boolean insideHouse = terrain.house().isVisitedBy(ghost);
+        final boolean insideHouse = terrain.assertHouse().isVisitedBy(ghost);
         final boolean tunnelSlowdown = terrain.isTunnel(tile);
         return switch (state) {
             case LOCKED -> insideHouse ? 0.5f : 0;

@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
         createAndSetMsPacMan(model, level);
-        createAndSetGhosts(level, terrain.house());
+        createAndSetGhosts(level, terrain.assertHouse());
 
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));

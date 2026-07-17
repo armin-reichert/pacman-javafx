@@ -448,7 +448,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             }
         );
 
-        final House house = level.worldMap().terrainLayer().house();
+        final House house = level.worldMap().terrainLayer().assertHouse();
 
         animationRegistry.register(AnimationID.PARTICLES, new ParticlesAnimation3D(
             house,
