@@ -31,9 +31,10 @@ public class GameFlowController extends StateMachine<GameContext> {
         setName(name);
         addStateChangeListener((oldState, newState) -> {
             if (gameContext != null) {
-                gameContext.eventManager().publishGameEvent(new GameStateChangeEvent(gameContext, oldState, newState));
+                gameContext.eventManager().publishGameEvent(
+                    new GameStateChangeEvent(gameContext, oldState, newState));
             } else {
-                Logger.error("No game context available when game event is fired");
+                Logger.error("No game context available when state change should get published");
             }
         });
     }
