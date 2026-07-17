@@ -18,8 +18,7 @@ public class ArcadeGameLevelIntermissionState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        final GameModel model = gameContext.model();
-        model.hudState().hideCredit().hideScore().showLevelCounter().hideLivesCounter().show();
+        gameContext.model().hudState().hideCredit().hideScore().showLevelCounter().hideLivesCounter().show();
         waitForTimeout();
     }
 
@@ -27,7 +26,6 @@ public class ArcadeGameLevelIntermissionState extends GameState {
     public void onUpdate(GameContext gameContext) {
         final GameFlowController gameFlow = gameContext.flow();
         final GameModel model = gameContext.model();
-
         if (timer().hasExpired()) {
             gameFlow.enterState(model.isPlaying() ? GameStateID.GAME_LEVEL_TRANSITION : GameStateID.GAME_INTRO);
         }
@@ -35,7 +33,6 @@ public class ArcadeGameLevelIntermissionState extends GameState {
 
     @Override
     public void onExit(GameContext gameContext) {
-        final GameModel model = gameContext.model();
-        model.hudState().hideCredit().showScore().showLevelCounter().showLivesCounter().show();
+        gameContext.model().hudState().hideCredit().showScore().showLevelCounter().showLivesCounter().show();
     }
 }

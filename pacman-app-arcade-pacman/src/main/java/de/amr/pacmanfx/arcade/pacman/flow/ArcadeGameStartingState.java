@@ -17,7 +17,7 @@ public class ArcadeGameStartingState extends GameState {
 
     static final int TICK_NEW_GAME_START_LEVEL = 2;
     static final int TICK_NEW_GAME_SHOW_GUYS = 60;
-    static final int TICK_NEW_GAME_START_HUNTING = 240;
+    static final int TICK_NEW_GAME_START_PLAYING = 240;
 
     public ArcadeGameStartingState() {
         super(GameStateID.GAME_STARTING);
@@ -25,13 +25,9 @@ public class ArcadeGameStartingState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        final GameModel model = gameContext.model();
-
-        model.hudState().hideCredit().showLivesCounter();
-
+        gameContext.model().hudState().hideCredit().showLivesCounter();
         gameContext.gamePlay().resetForNewGame(gameContext);
         gameContext.gamePlay().buildNormalLevel(gameContext, 1);
-
         gameContext.eventManager().publishGameEvent(new GameStartedEvent(gameContext));
     }
 
@@ -50,7 +46,7 @@ public class ArcadeGameStartingState extends GameState {
             level.entities().pac().show();
             level.entities().ghosts().forEach(Ghost::show);
         }
-        else if (tick == TICK_NEW_GAME_START_HUNTING) {
+        else if (tick == TICK_NEW_GAME_START_PLAYING) {
             model.setPlaying(true);
             gameContext.flow().enterState(GameStateID.GAME_LEVEL_PLAYING);
         }

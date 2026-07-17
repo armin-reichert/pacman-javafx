@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 
@@ -18,8 +19,7 @@ public class ArcadeGameLevelCompleteState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        final GameModel model = gameContext.model();
-        gameContext.gamePlay().onLevelCompleted(model.assertLevel());
+        gameContext.gamePlay().onLevelCompleted(gameContext.assertLevel());
         waitForTimeout(); // UI triggers timeout
     }
 
@@ -32,12 +32,12 @@ public class ArcadeGameLevelCompleteState extends GameState {
     }
 
     private GameStateID computeNextState(GameContext gameContext, boolean cutScenesEnabled) {
-        if (gameContext.assertLevel().isDemoLevel()) {
+        final GameLevel level = gameContext.assertLevel();
+        if (level.isDemoLevel()) {
             // just in case: if demo level was completed, go back to intro scene
             return GameStateID.GAME_INTRO;
         }
-        final boolean cutSceneFollows = !gameContext.assertLevel().isDemoLevel()
-            && gameContext.model().rules().cutSceneAfterLevel(gameContext.assertLevel().number()).isPresent();
+        final boolean cutSceneFollows = gameContext.model().rules().cutSceneAfterLevel(level.number()).isPresent();
         if (cutSceneFollows && cutScenesEnabled) {
             return GameStateID.GAME_LEVEL_INTERMISSION;
         }
