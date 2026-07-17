@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
@@ -245,16 +245,16 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     @Override
     public void render() {
+        final GameContext gameContext = appContext.currentGameContext();
         final long tick = appContext.clock().currentTick();
         // Render current 2D game scene
         final GameScene gameScene = appContext.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
-            final GameModel gameModel = appContext.currentGameContext().model();
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D, tick);
             }
             if (hudRenderer != null) {
-                hudRenderer.draw(gameModel.hudState(), appContext.currentGameContext(), gameScene2D, tick);
+                hudRenderer.draw(gameContext.hudState(), gameContext, gameScene2D, tick);
             }
         }
 

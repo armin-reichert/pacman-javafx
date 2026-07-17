@@ -75,6 +75,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(gameContext);
         gameContext.model().init();
         resetForNewGame(gameContext);
+        gameContext.hudState().hide();
     }
 
     // Level building and level start

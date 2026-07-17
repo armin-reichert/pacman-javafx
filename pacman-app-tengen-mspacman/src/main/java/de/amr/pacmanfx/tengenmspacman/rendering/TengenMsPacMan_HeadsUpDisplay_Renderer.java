@@ -5,7 +5,6 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.score.Score;
@@ -56,7 +55,6 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         requireNonNull(scene);
 
         if (!hud.isVisible()) return;
-        if (!(hud instanceof TengenMsPacMan_HUDState tengenHUD)) return;
 
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
 
@@ -79,16 +77,16 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         final int counterY = scene.unscaledHeight() - TS;
 
         if (hud.isLivesCounterShown()) {
-            drawLivesCounter(model, tengenHUD, counterY);
+            drawLivesCounter(gameContext, counterY);
         }
 
         gameContext.model().optLevel().ifPresent(level -> {
-            if (tengenHUD.isLevelCounterShown()) {
-                drawLevelCounter(level, tengenHUD, counterY);
+            if (hud.isLevelCounterShown()) {
+                drawLevelCounter(level, hud, counterY);
             }
         });
 
-        if (tengenHUD.gameOptionsVisible()) {
+        if (hud.gameOptionsVisible()) {
             drawGameOptions(model.mapCategory(), model.difficulty(), model.pacBoosterMode(), tilesPx(16), tilesPx(2.5f));
         }
 
@@ -117,17 +115,22 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         fillText("%6d".formatted(score.points()), color, font, tilesPx(13), tilesPx(2));
     }
 
-    private void drawLivesCounter(GameModel game, TengenMsPacMan_HUDState hud, float y) {
+    private void drawLivesCounter(GameContext gameContext, float y) {
         final RectShort symbolSprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
-        for (int i = 0; i < hud.visibleLifeCount(); ++i) {
+        for (int i = 0; i < gameContext.hudState().visibleLifeCount(); ++i) {
             drawSprite(symbolSprite, tilesPx(4 + i * 2), y, true);
         }
-        if (game.lifeCount() > game.hudState().maxLivesShown()) {
-            fillText("(%d)".formatted(game.lifeCount()), NES_Palette.color(0x28), totalLivesFont.get(), tilesPx(14), y + TS);
+        if (gameContext.model().lifeCount() > gameContext.hudState().maxLivesShown()) {
+            fillText(
+                "(%d)".formatted(gameContext.model().lifeCount()),
+                NES_Palette.color(0x28),
+                totalLivesFont.get(),
+                tilesPx(14),
+                y + TS);
         }
     }
 
-    private void drawLevelCounter(GameLevel level, TengenMsPacMan_HUDState hud, float y) {
+    private void drawLevelCounter(GameLevel level, HUDState hud, float y) {
         final RectShort[] symbolSprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
         float x = LEVEL_COUNTER_POS_RIGHT - tilesPx(2);
         // symbols are drawn from right to left!

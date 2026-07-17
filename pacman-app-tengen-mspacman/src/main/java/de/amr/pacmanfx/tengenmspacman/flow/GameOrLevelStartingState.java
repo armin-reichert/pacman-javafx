@@ -20,8 +20,7 @@ public class GameOrLevelStartingState extends GameState {
     public void onEnter(GameContext gameContext) {
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
 
-        model.hudState().hideCredit().showScore().showLevelCounter().showLivesCounter().show();
-
+        gameContext.hudState().hideCredit().showScore().showLevelCounter().showLivesCounter().show();
         // The rules vary between map categories so update the rules here:
         model.rules().setCurrentMapCategory(model.mapCategory());
         Logger.info("Using game rules for map category {}", model.rules().currentMapCategory());

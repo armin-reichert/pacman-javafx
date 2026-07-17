@@ -124,8 +124,6 @@ public abstract class GameModel {
         return gateKeeper;
     }
 
-    public abstract HUDState hudState();
-
     public PropertyFileScore highScore() {
         return highScore;
     }

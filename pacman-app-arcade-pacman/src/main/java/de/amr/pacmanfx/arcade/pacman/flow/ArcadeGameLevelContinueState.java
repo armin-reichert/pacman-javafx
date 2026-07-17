@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameContinuedEvent;
 import de.amr.pacmanfx.core.flow.GameFlowController;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
@@ -25,7 +24,6 @@ public class ArcadeGameLevelContinueState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
 
         gameContext.gamePlay().prepareLevelForPlaying(gameContext);
@@ -33,7 +31,7 @@ public class ArcadeGameLevelContinueState extends GameState {
         level.entities().ghosts().forEach(Ghost::show);
 
         gameContext.gamePlay().showLevelMessage(level, GameLevelMessageType.READY);
-        model.hudState().hideCredit().showLivesCounter();
+        gameContext.hudState().hideCredit().showLivesCounter();
     }
 
     @Override

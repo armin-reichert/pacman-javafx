@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameRules;
-import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.actors.Elroy;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.ArcadeHouseGateKeeper;
@@ -24,8 +23,6 @@ public class ArcadePacMan_GameModel extends GameModel {
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
 
     public static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
-
-    protected final HUDState hudState = new HUDState();
 
     protected final ArcadeHouseGateKeeper gateKeeper = new ArcadeHouseGateKeeper();
 
@@ -49,12 +46,6 @@ public class ArcadePacMan_GameModel extends GameModel {
     public void init() {
         mapSelector().loadMapPrototypes();
         setInitialLifeCount(3);
-        hudState().hide();
-    }
-
-    @Override
-    public HUDState hudState() {
-        return hudState;
     }
 
     @Override

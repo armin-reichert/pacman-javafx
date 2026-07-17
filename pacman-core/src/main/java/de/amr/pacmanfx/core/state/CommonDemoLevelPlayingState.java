@@ -29,7 +29,7 @@ public class CommonDemoLevelPlayingState extends GameState {
     public void onEnter(GameContext gameContext) {
         final GameModel model = gameContext.model();
         model.setLevel(gameContext.gamePlay().buildDemoLevel(gameContext));
-        model.hudState().showCredit().hideLivesCounter();
+        gameContext.hudState().showCredit().hideLivesCounter();
         gameContext.eventManager().publishGameEvent(new LevelCreatedEvent(model.assertLevel()));
     }
 

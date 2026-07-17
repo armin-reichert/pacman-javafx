@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameRules;
-import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.actors.Elroy;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
@@ -28,8 +27,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameModel extends GameModel {
 
-    protected final HUDState hudState;
-
     protected ArcadeMsPacMan_GameRules rules;
 
     public ArcadeMsPacMan_GameModel() {
@@ -38,7 +35,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     public ArcadeMsPacMan_GameModel(WorldMapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
-        hudState = new HUDState();
         rules = new ArcadeMsPacMan_GameRules();
         levelCounter = new ArcadeMsPacMan_LevelCounter();
         configureGateKeeper();
@@ -48,12 +44,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     public void init() {
         mapSelector().loadMapPrototypes();
         setInitialLifeCount(3);
-        hudState().hide();
-    }
-
-    @Override
-    public HUDState hudState() {
-        return hudState;
     }
 
     @Override

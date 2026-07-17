@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 
 import java.util.OptionalInt;
 
@@ -31,9 +30,14 @@ public class GameLevelIntermissionState extends GameState {
             && cutSceneNumber.getAsInt() == model.rules().lastCutSceneNumber();
 
         if (isLastCutScene) {
-            model.hudState().hide();
+            gameContext.hudState().hide();
         } else {
-            model.hudState().hideGameOptions().hideScore().showLevelCounter().hideLivesCounter().show();
+            gameContext.hudState()
+                .hideGameOptions()
+                .hideScore()
+                .showLevelCounter()
+                .hideLivesCounter()
+                .show();
         }
         waitForTimeout();
     }
@@ -52,10 +56,15 @@ public class GameLevelIntermissionState extends GameState {
     public void onExit(GameContext gameContext) {
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
         if (model.mapCategory() == MapCategory.ARCADE) {
-            model.hudState().hide();
+            gameContext.hudState().hide();
         }
         else {
-            model.hudState().showGameOptions().showScore().showLevelCounter().hideLivesCounter().show();
+            gameContext.hudState()
+                .showGameOptions()
+                .showScore()
+                .showLevelCounter()
+                .hideLivesCounter()
+                .show();
         }
     }
 }

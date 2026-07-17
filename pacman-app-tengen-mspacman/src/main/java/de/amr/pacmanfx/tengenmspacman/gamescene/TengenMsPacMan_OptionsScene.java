@@ -69,8 +69,8 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final TengenMsPacMan_GameModel gameModel = tengenGameModel();
-        gameModel.hudState().hide();
+        final TengenMsPacMan_GameModel model = tengenGameModel();
+        gameContext().hudState().hide();
 
         final var actions = appContext().getExtensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
@@ -81,7 +81,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
         actionBindings().registerAllBindings(appContext().commonActions().sceneTestActions().bindings());
 
         selectedOption.set(OPTION_PAC_BOOSTER);
-        gameModel.setCanStartNewGame(true);
+        model.setCanStartNewGame(true);
 
         idleTicks = 0;
         initialDelay = INITIAL_DELAY;

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -21,7 +22,6 @@ import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_HUDState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -118,7 +118,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
 
     @Override
     public void onEnteredFrom3DScene() {
-        gameModel().hudState().showLevelCounter().showLivesCounter().show();
+        gameContext().hudState().showLevelCounter().showLivesCounter().show();
         gameModel().optLevel().ifPresent(this::acceptGameLevel);
     }
 
@@ -132,7 +132,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
 
     @Override
     public void onActivate() {
-        final TengenMsPacMan_HUDState hud = gameModel().hudState();
+        final HUDState hud = gameContext().hudState();
         hud.showScore().showLevelCounter().showLivesCounter().show();
         if (gameModel().allOptionsHaveDefaultValue()) {
             hud.hideGameOptions();
@@ -277,14 +277,14 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     private void updateHUD(GameLevel level) {
-        final TengenMsPacMan_HUDState hud = gameModel().hudState();
+        final HUDState hud = gameContext().hudState();
 
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         final boolean oneExtra = GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameState())
             && !level.entities().pac().isVisible();
         final int displayed = oneExtra ? gameModel().lifeCount() : gameModel().lifeCount() - 1;
 
-        final int visibleLives = Math.clamp(displayed, 0, gameModel().hudState().maxLivesShown());
+        final int visibleLives = Math.clamp(displayed, 0, hud.maxLivesShown());
         hud.setLivesCount(visibleLives);
         if (gameModel().mapCategory() == MapCategory.ARCADE) {
             hud.hideLevelNumber();

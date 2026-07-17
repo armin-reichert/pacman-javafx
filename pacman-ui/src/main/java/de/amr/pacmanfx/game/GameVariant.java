@@ -6,10 +6,10 @@ package de.amr.pacmanfx.game;
 
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.flow.GameFlowController;
+import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.DefaultCheatsImpl;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 
 import java.util.HashMap;

@@ -14,6 +14,7 @@ public class HUDState {
     public final BooleanProperty visible = new SimpleBooleanProperty(true);
 
     public final IntegerProperty credit = new SimpleIntegerProperty(0);
+
     public final BooleanProperty creditShown = new SimpleBooleanProperty(false);
 
     public final BooleanProperty levelCounterShown = new SimpleBooleanProperty(true);
@@ -23,6 +24,42 @@ public class HUDState {
     public final BooleanProperty scoreShown = new SimpleBooleanProperty(true);
 
     private int livesCount;
+
+    //TODO this is Tengen specific
+
+    public final BooleanProperty levelNumberVisible = new SimpleBooleanProperty();
+
+    public final BooleanProperty gameOptionsVisible = new SimpleBooleanProperty();
+
+    public HUDState showGameOptions() {
+        gameOptionsVisible.set(true);
+        return this;
+    }
+
+    public HUDState hideGameOptions() {
+        gameOptionsVisible.set(false);
+        return this;
+    }
+
+    public boolean gameOptionsVisible() {
+        return gameOptionsVisible.get();
+    }
+
+    public HUDState showLevelNumber() {
+        levelNumberVisible.set(true);
+        return this;
+    }
+
+    public HUDState hideLevelNumber() {
+        levelNumberVisible.set(false);
+        return this;
+    }
+
+    public boolean isLevelNumberVisible() {
+        return levelNumberVisible.get();
+    }
+
+    // End of Tengen-specific part
 
     public HUDState() {}
 

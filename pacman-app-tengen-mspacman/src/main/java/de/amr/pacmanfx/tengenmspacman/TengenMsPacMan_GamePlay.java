@@ -48,6 +48,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         requireNonNull(gameContext);
         gameContext.model().init();
         resetForNewGame(gameContext);
+        gameContext.hudState().hide();
     }
 
     @Override

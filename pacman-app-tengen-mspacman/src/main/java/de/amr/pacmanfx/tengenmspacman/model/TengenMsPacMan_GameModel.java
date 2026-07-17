@@ -39,8 +39,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     // --- End static
 
-    private final TengenMsPacMan_HUDState hudState;
-
     private final TengenMsPacMan_GameRules rules;
 
     private MapCategory mapCategory;
@@ -58,7 +56,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel() {
-        hudState =  new TengenMsPacMan_HUDState();
         mapSelector = new TengenMsPacMan_MapSelector();
         levelCounter = new TengenMsPacMan_LevelCounter();
         rules = new TengenMsPacMan_GameRules();
@@ -156,17 +153,11 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void init() {
         mapSelector().loadMapPrototypes();
         setInitialLifeCount(3);
-        hudState().hide();
         setPacBoosterMode(DEFAULT_PAC_BOOSTER);
         setDifficulty(DEFAULT_DIFFICULTY);
         setMapCategory(DEFAULT_MAP_CATEGORY);
         setStartLevelNumber(DEFAULT_START_LEVEL);
         setNumContinues(DEFAULT_NUM_CONTINUES);
-    }
-
-    @Override
-    public TengenMsPacMan_HUDState hudState() {
-        return hudState;
     }
 
     @Override

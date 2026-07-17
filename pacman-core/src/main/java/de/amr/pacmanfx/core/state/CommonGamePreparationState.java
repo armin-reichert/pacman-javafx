@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.state;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
 
 public class CommonGamePreparationState extends GameState {
 
@@ -15,8 +14,7 @@ public class CommonGamePreparationState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        final GameModel model = gameContext.model();
-        model.hudState().showCredit().showScore().showLevelCounter().hideLivesCounter().show();
+        gameContext.hudState().showCredit().showScore().showLevelCounter().hideLivesCounter().show();
         gameContext.gamePlay().resetForNewGame(gameContext);
     }
 

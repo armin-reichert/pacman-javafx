@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 
@@ -17,7 +16,7 @@ public class ArcadeGameOrLevelStartingState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        gameContext.model().hudState().showScore().showLevelCounter().show();
+        gameContext.hudState().showScore().showLevelCounter().show();
     }
 
     @Override

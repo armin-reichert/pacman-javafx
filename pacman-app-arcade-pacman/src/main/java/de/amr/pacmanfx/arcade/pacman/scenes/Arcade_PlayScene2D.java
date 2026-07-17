@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
-import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -48,7 +47,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     public void onTick(FrameContext frame) {
         gameContext().model().optLevel().ifPresent(level -> {
             ActorAnimationManager.ensureActorAnimationsCreated(appContext(), level);
-            updateLivesCounter(gameState(), gameModel(), level.entities().pac());
+            updateLivesCounter(level.entities().pac());
             optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(gameContext(), level));
         });
     }
@@ -133,10 +132,11 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     }
 
     // While Pac-Man is not yet visible on game/level start, an additional lives symbol more is shown in the counter
-    private void updateLivesCounter(GameState state, GameModel model, Pac pac) {
-        final boolean oneMore = GameStateID.GAME_OR_LEVEL_STARTING.identifies(state) && !pac.isVisible();
+    private void updateLivesCounter(Pac pac) {
+        final GameModel model = gameContext().model();
+        final boolean oneMore = GameStateID.GAME_OR_LEVEL_STARTING.identifies(gameContext().state()) && !pac.isVisible();
         final int livesToDisplay = model.lifeCount() - 1 + (oneMore ? 1 : 0);
-        final int livesDisplayed = Math.clamp(livesToDisplay, 0, model.hudState().maxLivesShown());
-        model.hudState().setLivesCount(livesDisplayed);
+        final int livesDisplayed = Math.clamp(livesToDisplay, 0, gameContext().hudState().maxLivesShown());
+        gameContext().hudState().setLivesCount(livesDisplayed);
     }
 }

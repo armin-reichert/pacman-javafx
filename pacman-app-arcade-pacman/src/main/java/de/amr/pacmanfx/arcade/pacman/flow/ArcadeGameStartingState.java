@@ -25,7 +25,7 @@ public class ArcadeGameStartingState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        gameContext.model().hudState().hideCredit().showLivesCounter();
+        gameContext.hudState().hideCredit().showLivesCounter();
         gameContext.gamePlay().resetForNewGame(gameContext);
         gameContext.gamePlay().buildNormalLevel(gameContext, 1);
         gameContext.eventManager().publishGameEvent(new GameStartedEvent(gameContext));

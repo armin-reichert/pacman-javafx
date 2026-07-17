@@ -18,7 +18,7 @@ public class ArcadeGameLevelIntermissionState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        gameContext.model().hudState().hideCredit().hideScore().showLevelCounter().hideLivesCounter().show();
+        gameContext.hudState().hideCredit().hideScore().showLevelCounter().hideLivesCounter().show();
         waitForTimeout();
     }
 
@@ -33,6 +33,6 @@ public class ArcadeGameLevelIntermissionState extends GameState {
 
     @Override
     public void onExit(GameContext gameContext) {
-        gameContext.model().hudState().hideCredit().showScore().showLevelCounter().showLivesCounter().show();
+        gameContext.hudState().hideCredit().showScore().showLevelCounter().showLivesCounter().show();
     }
 }

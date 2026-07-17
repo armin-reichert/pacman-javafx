@@ -66,7 +66,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends GameSceneGameEventH
             completedAnimation.play();
         }
         else if (GameStateID.GAME_OVER.identifies(newState)) {
-            gameContext().model().hudState().showCredit();
+            gameContext().hudState().showCredit();
             optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
         }
     }

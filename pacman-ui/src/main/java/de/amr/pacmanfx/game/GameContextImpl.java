@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.event.GameEventManagerImpl;
 import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
@@ -31,14 +32,17 @@ public class GameContextImpl implements GameContext {
 
     private final GameEventManager eventManager;
 
+    private final HUDState hudState;
+
     private FrameContext thisFrame;
 
     public GameContextImpl(CoinMechanism coinMechanism, GameVariant gameVariant) {
         this.coinMechanism = requireNonNull(coinMechanism);
         this.gameVariant = requireNonNull(gameVariant);
-        this.eventManager = new GameEventManagerImpl();
+        this.hudState = new HUDState(); //TODO Tengen?
         //TODO rethink this
-        model().hudState().creditProperty().bind(coinMechanism().numCoinsProperty());
+        hudState.creditProperty().bind(coinMechanism().numCoinsProperty());
+        this.eventManager = new GameEventManagerImpl();
     }
 
     @Override
@@ -79,6 +83,11 @@ public class GameContextImpl implements GameContext {
     @Override
     public GamePlay gamePlay() {
         return gameVariant.gamePlay();
+    }
+
+    @Override
+    public HUDState hudState() {
+        return hudState;
     }
 
     @Override
