@@ -12,13 +12,13 @@ import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.world.*;
-import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.steering.RouteBasedSteering;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 
@@ -185,8 +185,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         model.levelCounter().update(level.number(), level.bonusSymbolCode(0));
         model.score().setEnabled(true);
 
-        //TODO
-        //context.cheats().update(level);
+        gameContext.cheats().update(level);
     }
 
     // Playing level
