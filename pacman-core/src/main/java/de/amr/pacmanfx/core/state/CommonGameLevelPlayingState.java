@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameRules;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.simulation.HuntingStepResult;
+import de.amr.pacmanfx.core.gameplay.HuntingStepResult;
 import org.tinylog.Logger;
 
 import java.util.List;

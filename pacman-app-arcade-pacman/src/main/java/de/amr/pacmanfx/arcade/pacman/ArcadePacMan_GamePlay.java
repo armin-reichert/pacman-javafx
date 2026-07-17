@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.world.*;
-import de.amr.pacmanfx.core.simulation.CommonGamePlay;
+import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.steering.RouteBasedSteering;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 
