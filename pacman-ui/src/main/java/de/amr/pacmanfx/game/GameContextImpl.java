@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gameplay.HuntingStepResult;
+import de.amr.pacmanfx.core.state.GameState;
 
 import java.util.Optional;
 
@@ -86,6 +87,11 @@ public class GameContextImpl implements GameContext {
     @Override
     public HUDState hudState() {
         return hudState;
+    }
+
+    @Override
+    public GameState state() {
+        return flow().state();
     }
 
     @Override
