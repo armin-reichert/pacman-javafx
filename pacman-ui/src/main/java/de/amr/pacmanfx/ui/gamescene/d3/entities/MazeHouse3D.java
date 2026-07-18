@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelEntity;
 import de.amr.pacmanfx.core.model.world.ArcadeHouse;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.ui.config.world.House3DSettings;
+import de.amr.pacmanfx.ui.settings.world.House3DSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.world.ArcadeHouse3D;
 import javafx.beans.property.DoubleProperty;

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.model;
 
-import de.amr.pacmanfx.ui.config.ui.MiniViewSettings;
+import de.amr.pacmanfx.ui.settings.ui.MiniViewSettings;
 import javafx.beans.property.*;
 
 public class MiniViewModel {

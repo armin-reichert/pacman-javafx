@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.config.world;
+package de.amr.pacmanfx.ui.settings.world;
 
 public record House3DSettings(
     float baseHeight,

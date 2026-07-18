@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.model;
 
 import de.amr.basics.math.Vector3f;
-import de.amr.pacmanfx.ui.config.ui.Common3DSettings;
+import de.amr.pacmanfx.ui.settings.ui.Common3DSettings;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.AttractionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;

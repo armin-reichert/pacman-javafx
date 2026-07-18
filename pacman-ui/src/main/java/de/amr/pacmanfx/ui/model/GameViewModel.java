@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.model;
 
-import de.amr.pacmanfx.ui.config.ui.GameUISettings;
+import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import javafx.beans.property.*;
 import javafx.util.Duration;
 

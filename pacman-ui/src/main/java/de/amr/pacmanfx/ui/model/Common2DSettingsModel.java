@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.model;
 
 
-import de.amr.pacmanfx.ui.config.ui.Common2DSettings;
+import de.amr.pacmanfx.ui.settings.ui.Common2DSettings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;

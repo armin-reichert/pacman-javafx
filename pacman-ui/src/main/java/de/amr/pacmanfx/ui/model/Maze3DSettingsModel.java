@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.model;
 
-import de.amr.pacmanfx.ui.config.world.Maze3DSettings;
+import de.amr.pacmanfx.ui.settings.world.Maze3DSettings;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 

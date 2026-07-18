@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.config.ui;
+package de.amr.pacmanfx.ui.settings.ui;
 
 import java.util.List;
 
