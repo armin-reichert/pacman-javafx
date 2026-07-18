@@ -70,9 +70,6 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig, Resour
         initSound(appContext.ui().sounds());
         gameSceneConfig = new ArcadePacMan_GameSceneConfig(appContext);
         renderConfig = new ArcadePacMan_RenderConfig(assets);
-
-        //TODO rethink this
-        assets.register("maze.bright", renderConfig.createBrightEmptyMap());
     }
 
     @Override

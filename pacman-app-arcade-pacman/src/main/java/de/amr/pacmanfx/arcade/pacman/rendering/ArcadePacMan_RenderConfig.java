@@ -50,6 +50,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
 
     public ArcadePacMan_RenderConfig(AssetMap assets) {
         this.assets = assets;
+        assets.register("maze.bright", createBrightEmptyMap());
     }
 
     public Image createBrightEmptyMap() {
