@@ -187,7 +187,7 @@ public class ArcadePacManGameVariant implements GameVariantConfig, ResourceManag
     }
 
     @Override
-    public Ghost createAnimatedGhost(SpriteAnimationContainer animationSet, byte personality) {
+    public Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality) {
         final Ghost ghost = switch (personality) {
             case GameModel.RED_GHOST_SHADOW -> GhostFactory.createRedGhostShadow("Blinky");
             case GameModel.PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky");
@@ -195,26 +195,26 @@ public class ArcadePacManGameVariant implements GameVariantConfig, ResourceManag
             case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);
         };
-        ghost.setAnimations(createGhostAnimations(animationSet, personality));
+        ghost.setAnimations(createGhostAnimations(container, personality));
         ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer animationSet, byte personality) {
+    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, byte personality) {
         Validations.requireValidGhostPersonality(personality);
-        return new ArcadePacMan_GhostAnimations(animationSet, personality);
+        return new ArcadePacMan_GhostAnimations(container, personality);
     }
 
     @Override
-    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationContainer animationSet) {
-        return new ArcadePacMan_PacAnimations(animationSet, spriteSheet());
+    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationContainer container) {
+        return new ArcadePacMan_PacAnimations(container, spriteSheet());
     }
 
     @Override
-    public Image killedGhostPointsImage(int killedIndex) {
+    public Image killedGhostPointsImage(int killedGhostIndex) {
         final RectShort[] numberSprites = spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
-        return spriteSheet().image(numberSprites[killedIndex]);
+        return spriteSheet().image(numberSprites[killedGhostIndex]);
     }
 
     @Override

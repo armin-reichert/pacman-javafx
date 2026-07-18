@@ -47,6 +47,8 @@ public interface GameVariantConfig extends Disposable {
 
     WorldSettings worldSettings();
 
+    Image killedGhostPointsImage(int killedGhostIndex);
+
     Image bonusSymbolImage(int symbolCode);
 
     Image bonusValueImage(int symbolCode);
@@ -61,11 +63,9 @@ public interface GameVariantConfig extends Disposable {
 
     ActorRenderer createActorRenderer(Canvas canvas);
 
-    Ghost createAnimatedGhost(SpriteAnimationContainer animationSet, byte personality);
+    Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality);
 
-    SpriteAnimationAccessor createGhostAnimations(SpriteAnimationContainer animationSet, byte personality);
+    SpriteAnimationAccessor createGhostAnimations(SpriteAnimationContainer container, byte personality);
 
-    SpriteAnimationAccessor createPacAnimations(SpriteAnimationContainer animationSet);
-
-    Image killedGhostPointsImage(int killedIndex);
+    SpriteAnimationAccessor createPacAnimations(SpriteAnimationContainer container);
 }

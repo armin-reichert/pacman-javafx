@@ -225,9 +225,9 @@ public class TengenMsPacManGameVariant implements GameVariantConfig {
     }
 
     @Override
-    public Image killedGhostPointsImage(int killedIndex) {
+    public Image killedGhostPointsImage(int killedGhostIndex) {
         final RectShort[] numberSprites = spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
-        return spriteSheet().image(numberSprites[killedIndex]);
+        return spriteSheet().image(numberSprites[killedGhostIndex]);
     }
 
     @Override
@@ -252,21 +252,21 @@ public class TengenMsPacManGameVariant implements GameVariantConfig {
     }
 
     @Override
-    public Ghost createAnimatedGhost(SpriteAnimationContainer animationSet, byte personality) {
+    public Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality) {
         final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(animationSet, personality));
+        ghost.setAnimations(createGhostAnimations(container, personality));
         ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public TengenMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer animationSet, byte personality) {
-        return new TengenMsPacMan_GhostAnimations(animationSet, personality);
+    public TengenMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, byte personality) {
+        return new TengenMsPacMan_GhostAnimations(container, personality);
     }
 
     @Override
-    public TengenMsPacMan_PacAnimations createPacAnimations(SpriteAnimationContainer animationSet) {
-        return new TengenMsPacMan_PacAnimations(animationSet);
+    public TengenMsPacMan_PacAnimations createPacAnimations(SpriteAnimationContainer container) {
+        return new TengenMsPacMan_PacAnimations(container);
     }
 
     // Helpers

@@ -188,28 +188,28 @@ public class ArcadeMsPacManGameVariant implements GameVariantConfig, ResourceMan
         return actorRenderer;
     }
 
-    public Ghost createAnimatedGhost(SpriteAnimationContainer animationSet, byte personality) {
+    public Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality) {
         final Ghost ghost = ArcadeMsPacMan_ActorFactory.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(animationSet, personality));
+        ghost.setAnimations(createGhostAnimations(container, personality));
         ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
     }
 
     @Override
-    public ArcadeMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer animationSet, byte personality) {
+    public ArcadeMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, byte personality) {
         requireValidGhostPersonality(personality);
-        return new ArcadeMsPacMan_GhostAnimations(animationSet, personality);
+        return new ArcadeMsPacMan_GhostAnimations(container, personality);
     }
 
     @Override
-    public ArcadeMsPacMan_PacAnimations createPacAnimations(SpriteAnimationContainer animationSet) {
-        return new ArcadeMsPacMan_PacAnimations(animationSet);
+    public ArcadeMsPacMan_PacAnimations createPacAnimations(SpriteAnimationContainer container) {
+        return new ArcadeMsPacMan_PacAnimations(container);
     }
 
     @Override
-    public Image killedGhostPointsImage(int killedIndex) {
+    public Image killedGhostPointsImage(int killedGhostIndex) {
         final RectShort[] numberSprites = spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
-        return spriteSheet().image(numberSprites[killedIndex]);
+        return spriteSheet().image(numberSprites[killedGhostIndex]);
     }
 
     @Override
