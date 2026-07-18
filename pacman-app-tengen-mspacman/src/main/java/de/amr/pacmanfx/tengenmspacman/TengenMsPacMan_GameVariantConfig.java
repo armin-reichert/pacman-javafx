@@ -4,23 +4,15 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.flow.GameFlowController;
-import de.amr.pacmanfx.core.model.world.MapColorScheme;
-import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.gamescene.GameSceneConfig;
-import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
-import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
-import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -29,13 +21,10 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
-import javafx.scene.image.Image;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 

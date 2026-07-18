@@ -154,5 +154,4 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
         final RectShort sprite = spriteSheet().findSprites(SpriteID.BONUS_VALUES)[spriteIndex];
         return spriteSheet().image(sprite);
     }
-
 }

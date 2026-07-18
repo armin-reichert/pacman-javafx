@@ -3,9 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_RenderConfig;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.flow.GameFlowController;
@@ -21,7 +19,6 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
-import javafx.scene.image.Image;
 import org.tinylog.Logger;
 
 import java.util.Optional;

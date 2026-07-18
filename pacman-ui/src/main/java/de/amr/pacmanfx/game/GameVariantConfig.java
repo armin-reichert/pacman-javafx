@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
-import javafx.scene.image.Image;
 
 import java.util.Optional;
 

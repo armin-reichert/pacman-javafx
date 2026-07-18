@@ -4,19 +4,13 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
-import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_Factory3D;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameVariantConfig;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.flow.GameFlowController;
-import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -26,7 +20,6 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
-import javafx.scene.image.Image;
 import org.tinylog.Logger;
 
 import java.util.Optional;
