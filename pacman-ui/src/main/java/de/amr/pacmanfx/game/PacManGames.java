@@ -177,15 +177,9 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
         final GameFlowController gameFlow = gameContext.flow(); //TODO store elsewhere?
         gameFlow.setGameContext(gameContext);
 
-        // New simulation step ("frame")
         gameContext.newFrame(clock().currentTick());
-
-        // Update game flow
         gameFlow.update(gameContext);
-
-        // Update current game scene
-        ui.gameScenes().optCurrentGameScene().ifPresent(gameScene ->
-            Platform.runLater(() -> gameScene.onTick(gameContext.thisFrame())));
+        ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameContext.thisFrame()));
     }
 
     private void renderCurrentView() {
