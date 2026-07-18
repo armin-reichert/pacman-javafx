@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
@@ -152,5 +151,23 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
         ghost.setAnimations(createGhostAnimations(container, personality));
         ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
         return ghost;
+    }
+
+    @Override
+    public Image bonusSymbolImage(int symbolCode) {
+        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
+        return spriteSheet().image(sprites[symbolCode]);
+    }
+
+    @Override
+    public Image bonusValueImage(int symbolCode) {
+        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_VALUES);
+        return spriteSheet().image(sprites[symbolCode]);
+    }
+
+    @Override
+    public Image killedGhostPointsImage(int killedGhostIndex) {
+        final RectShort[] numberSprites = spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
+        return spriteSheet().image(numberSprites[killedGhostIndex]);
     }
 }

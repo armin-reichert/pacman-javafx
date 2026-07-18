@@ -116,26 +116,8 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig, Resour
     }
 
     @Override
-    public Image killedGhostPointsImage(int killedGhostIndex) {
-        final RectShort[] numberSprites = renderConfig.spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
-        return renderConfig.spriteSheet().image(numberSprites[killedGhostIndex]);
-    }
-
-    @Override
     public Optional<GameSoundEffects> optSoundEffects() {
         return Optional.ofNullable(soundEffects);
-    }
-
-    @Override
-    public Image bonusSymbolImage(int symbolCode) {
-        final RectShort[] sprites = renderConfig.spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
-        return renderConfig.spriteSheet().image(sprites[symbolCode]);
-    }
-
-    @Override
-    public Image bonusValueImage(int symbolCode) {
-        final RectShort[] sprites = renderConfig.spriteSheet().findSprites(SpriteID.BONUS_VALUES);
-        return renderConfig.spriteSheet().image(sprites[symbolCode]);
     }
 
     // private

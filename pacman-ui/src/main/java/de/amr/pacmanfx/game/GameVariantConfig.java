@@ -5,8 +5,6 @@
 package de.amr.pacmanfx.game;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
@@ -18,7 +16,6 @@ import javafx.scene.image.Image;
 
 import java.util.Optional;
 
-//TODO: Clean-up this mess!
 public interface GameVariantConfig extends Disposable {
 
     GameVariantRenderConfig renderConfig();
@@ -36,11 +33,4 @@ public interface GameVariantConfig extends Disposable {
     GameSceneConfig gameSceneConfig();
 
     WorldSettings worldSettings();
-
-    Image killedGhostPointsImage(int killedGhostIndex);
-
-    Image bonusSymbolImage(int symbolCode);
-
-    Image bonusValueImage(int symbolCode);
-
 }

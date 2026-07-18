@@ -18,6 +18,7 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 
 public interface GameVariantRenderConfig {
 
@@ -40,4 +41,11 @@ public interface GameVariantRenderConfig {
     SpriteAnimationAccessor createGhostAnimations(SpriteAnimationContainer container, byte personality);
 
     SpriteAnimationAccessor createPacAnimations(SpriteAnimationContainer container);
+
+    Image killedGhostPointsImage(int killedGhostIndex);
+
+    Image bonusSymbolImage(int symbolCode);
+
+    Image bonusValueImage(int symbolCode);
 }
+

@@ -55,35 +55,6 @@ public class TengenMsPacMan_GameVariantConfig implements GameVariantConfig {
     private static final WorldSettings WORLD_CONFIG = TengenJsonConfigLoader.load(
         TengenMsPacMan_GameVariantConfig.class.getResource("/de/amr/pacmanfx/tengenmspacman/world.json"), WorldSettings.class);
 
-    // Note: Order of bonus symbols in spritesheet is not 1:1 with order of bonus values!
-    // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
-    private static final Map<BonusSymbol, Integer> BONUS_VALUE_SPRITE_INDEX = new EnumMap<>(BonusSymbol.class);
-    static {
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.CHERRY,      0); // "100"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.STRAWBERRY,  1); // "200"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.ORANGE,      2); // "500"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.PRETZEL,     3); // "700"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.APPLE,       4); // "1000"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.PEAR,        5); // "2000"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.BANANA,      8); // 6 -> 8 ("5000")
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.MILK,        6); // 7 -> 6 ("3000")
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.ICE_CREAM,   7); // 8 -> 7 ("4000")
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.HIGH_HEELS,  9); // "6000"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.STAR,       10); // "7000"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.HAND,       11); // "8000"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.RING,       12); // "9000"
-        BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.FLOWER,     13); // "TEN!000"
-
-    }
-
-    public static int bonusValueSpriteIndex(int bonusSymbolCode) {
-        if (bonusSymbolCode < 0 || bonusSymbolCode >= BonusSymbol.values().length) {
-            throw new IllegalArgumentException("Illegal bonus symbol code: " + bonusSymbolCode);
-        }
-        final BonusSymbol symbol = BonusSymbol.values()[bonusSymbolCode];
-        return BONUS_VALUE_SPRITE_INDEX.getOrDefault(symbol, bonusSymbolCode);
-    }
-
     /** Path inside resources folder where map files (.world) are stored. */
     public static final String MAPS_FOLDER = "/de/amr/pacmanfx/tengenmspacman/maps/";
 
@@ -188,25 +159,6 @@ public class TengenMsPacMan_GameVariantConfig implements GameVariantConfig {
     @Override
     public WorldSettings worldSettings() {
         return WORLD_CONFIG;
-    }
-
-    @Override
-    public Image killedGhostPointsImage(int killedGhostIndex) {
-        final RectShort[] numberSprites = renderConfig.spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
-        return renderConfig.spriteSheet().image(numberSprites[killedGhostIndex]);
-    }
-
-    @Override
-    public Image bonusSymbolImage(int symbolCode) {
-        final RectShort[] symbolSprites = renderConfig.spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
-        return renderConfig.spriteSheet().image(symbolSprites[symbolCode]);
-    }
-
-    @Override
-    public Image bonusValueImage(int symbolCode) {
-        final int spriteIndex = bonusValueSpriteIndex(symbolCode);
-        final RectShort sprite = renderConfig.spriteSheet().findSprites(SpriteID.BONUS_VALUES)[spriteIndex];
-        return renderConfig.spriteSheet().image(sprite);
     }
 
     // Helpers

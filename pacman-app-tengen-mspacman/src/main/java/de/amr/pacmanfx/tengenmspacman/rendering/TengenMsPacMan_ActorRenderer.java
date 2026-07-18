@@ -19,7 +19,6 @@ import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.bonusValueSpriteIndex;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRendererMixin, ActorRenderer {
@@ -105,7 +104,8 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         return switch (bonus.state()) {
             case EDIBLE -> spriteOrDefault(spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS), bonus.symbolCode());
             // Note: sprite sheet has bonus values in wrong order!
-            case EATEN -> spriteOrDefault(spriteSheet().findSprites(SpriteID.BONUS_VALUES), bonusValueSpriteIndex(bonus.symbolCode()));
+            case EATEN -> spriteOrDefault(spriteSheet().findSprites(SpriteID.BONUS_VALUES),
+                TengenMsPacMan_RenderConfig.bonusValueSpriteIndex(bonus.symbolCode()));
             case INACTIVE -> RectShort.NULL_RECTANGLE;
         };
     }

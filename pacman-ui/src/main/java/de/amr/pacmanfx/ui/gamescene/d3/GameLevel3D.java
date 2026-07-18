@@ -108,21 +108,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             return ghosts3D;
         }
 
-        public LivesCounter3D livesCounter3D() {
-            return livesCounter3D;
-        }
-
-        public LevelCounter3D levelCounter3D() {
-            return levelCounter3D;
-        }
-
-        public Map<Vector2i, Energizer3D> energizer3DByTile() {
-            return energizer3DByTile;
-        }
-
-        public Map<Vector2i, Pellet3D> pellet3DByTile() {
-            return pellet3DByTile;
-        }
     }
 
     // Access to game model
@@ -159,7 +144,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createMaze3D();
         createFood3D();
         createPac3D();
-        createGhosts3D(gameContext);
+        createGhosts3D();
         createLevelCounter3D();
         createLivesCounter3D();
         createMessageManager();
@@ -210,10 +195,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public Maze3D maze3D() {
         return maze3D;
-    }
-
-    public GameVariantConfig gameVariant() {
-        return gameVariant;
     }
 
     public AnimationRegistry animationRegistry() {
@@ -346,8 +327,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private Bonus3D createBonus3D(Bonus bonus) {
         final Bonus3DSettings config = gameVariant.worldSettings().bonus();
         final Bonus3D bonus3D = new Bonus3D(animationRegistry, bonus,
-            gameVariant.bonusSymbolImage(bonus.symbolCode()), config.symbolWidth(),
-            gameVariant.bonusValueImage(bonus.symbolCode()),  config.pointsWidth());
+            gameVariant.renderConfig().bonusSymbolImage(bonus.symbolCode()), config.symbolWidth(),
+            gameVariant.renderConfig().bonusValueImage(bonus.symbolCode()),  config.pointsWidth());
         entitySet.add(bonus3D);
         return bonus3D;
     }
@@ -359,7 +340,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         entitySet.add(entitySet.pac3D);
     }
 
-    private void createGhosts3D(GameContext gameContext) {
+    private void createGhosts3D() {
         final List<GhostSettings> ghostConfigs = gameVariant.worldSettings().ghosts();
         entitySet.ghosts3D = Stream.of(GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
             .map(level::ghost)

@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 
+import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
@@ -25,6 +26,7 @@ import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 
 public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
 
@@ -108,5 +110,23 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationContainer container) {
         return new ArcadePacMan_PacAnimations(container, spriteSheet());
+    }
+
+    @Override
+    public Image killedGhostPointsImage(int killedGhostIndex) {
+        final RectShort[] numberSprites = spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
+        return spriteSheet().image(numberSprites[killedGhostIndex]);
+    }
+
+    @Override
+    public Image bonusSymbolImage(int symbolCode) {
+        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
+        return spriteSheet().image(sprites[symbolCode]);
+    }
+
+    @Override
+    public Image bonusValueImage(int symbolCode) {
+        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_VALUES);
+        return spriteSheet().image(sprites[symbolCode]);
     }
 }
