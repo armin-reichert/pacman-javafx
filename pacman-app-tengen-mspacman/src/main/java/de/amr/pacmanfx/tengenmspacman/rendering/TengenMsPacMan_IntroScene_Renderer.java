@@ -21,7 +21,6 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.shadeOfBlue;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.MARQUEE_X;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.MARQUEE_Y;
 import static java.util.Objects.requireNonNull;
@@ -63,7 +62,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             case SceneState.WAITING_FOR_START -> {
                 if (!introScene.dark) {
                     boolean blinkingOn = stateTick % 60 < 30;
-                    fillText("TENGEN PRESENTS", shadeOfBlue(stateTick), introScene.presentsText.x(), introScene.presentsText.y());
+                    fillText("TENGEN PRESENTS", TengenMsPacMan_RenderConfig.shadeOfBlue(stateTick), introScene.presentsText.x(), introScene.presentsText.y());
                     drawSprite(spriteSheet().findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * WorldMap.TS, MARQUEE_Y, true);
                     if (blinkingOn) fillText("PRESS START", NES_Palette.color(0x20), 11 * WorldMap.TS, MARQUEE_Y + 9 * WorldMap.TS);
                     fillText("MS PAC-MAN TM NAMCO LTD", NES_Palette.color(0x25), 6 * WorldMap.TS, MARQUEE_Y + 15 * WorldMap.TS);

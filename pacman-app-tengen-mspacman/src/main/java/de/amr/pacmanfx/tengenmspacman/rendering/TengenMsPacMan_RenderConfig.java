@@ -28,6 +28,7 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -61,6 +62,19 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
         final BonusSymbol symbol = BonusSymbol.values()[bonusSymbolCode];
         return BONUS_VALUE_SPRITE_INDEX.getOrDefault(symbol, bonusSymbolCode);
     }
+
+    /** Shades of blue sequence used by animation. */
+    private static final Color[] SHADES_OF_BLUE = {
+        NES_Palette.color(0x01), NES_Palette.color(0x11), NES_Palette.color(0x21), NES_Palette.color(0x31)
+    };
+
+    /**
+     * Blue color, changing from dark to brighter blue. Cycles through NES palette indices 0x01, 0x11, 0x21, 0x31 each 16 ticks.
+     */
+    public static Color shadeOfBlue(long tick) {
+        return SHADES_OF_BLUE[(int) (tick % 64) / 16];
+    }
+
 
     private final AssetMap assets;
 

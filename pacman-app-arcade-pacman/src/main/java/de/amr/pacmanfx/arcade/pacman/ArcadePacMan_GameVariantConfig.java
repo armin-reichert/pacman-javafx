@@ -65,8 +65,13 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig {
     @Override
     public void init(GameAppContext appContext) {
         Logger.info("Init UI configuration {}", getClass().getSimpleName());
-        loadAssets();
+
+        assets.clear();
+        assets.register("app_icon", RM.loadImage("graphics/icons/pacman.png"));
+        assets.register("color.game_over_message", ARCADE_RED);
+
         initSound(appContext.ui().sounds());
+
         gameSceneConfig = new ArcadePacMan_GameSceneConfig(appContext);
         renderConfig = new ArcadePacMan_RenderConfig(assets);
     }
@@ -114,12 +119,6 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig {
     }
 
     // private
-
-    private void loadAssets() {
-        assets.clear();
-        assets.register("app_icon", RM.loadImage("graphics/icons/pacman.png"));
-        assets.register("color.game_over_message", ARCADE_RED);
-    }
 
     private void initSound(SoundManager soundManager) {
         soundManager.setAudioClip    (PacManGameSoundID.BONUS_EATEN,      RM.url("sound/eat_fruit.mp3"));
