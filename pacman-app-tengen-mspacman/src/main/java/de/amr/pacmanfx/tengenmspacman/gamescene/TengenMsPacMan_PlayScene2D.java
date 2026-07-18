@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.state.GameStateID;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
@@ -313,18 +313,18 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     private void ensureActorAnimationsCreated(GameLevel level) {
-        final GameVariantConfig config = appContext().variants().currentVariant().config();
+        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer animationContainer = appContext().ui().sprites().animations();
 
         final Pac pac = level.entities().pac();
         if (pac.animations().isEmpty()) {
-            pac.setAnimations(config.createPacAnimations(animationContainer));
+            pac.setAnimations(renderConfig.createPacAnimations(animationContainer));
             resetPacAnimation(pac);
         }
 
         level.entities().ghosts().forEach(ghost -> {
             if (ghost.animations().isEmpty()) {
-                ghost.setAnimations(config.createGhostAnimations(animationContainer, ghost.personality()));
+                ghost.setAnimations(renderConfig.createGhostAnimations(animationContainer, ghost.personality()));
                 resetGhostAnimation(ghost);
             }
         });

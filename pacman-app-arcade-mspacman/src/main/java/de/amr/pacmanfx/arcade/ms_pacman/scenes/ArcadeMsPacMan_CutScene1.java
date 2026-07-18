@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -72,19 +72,19 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
+        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
-        final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) gameVariantConfig.spriteSheet();
+        final var spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
+        pacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
+        msPacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
-        inky = gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
+        inky = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
 
-        pinky = gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
+        pinky = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
 
         heart = new Actor();
         heart.setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));

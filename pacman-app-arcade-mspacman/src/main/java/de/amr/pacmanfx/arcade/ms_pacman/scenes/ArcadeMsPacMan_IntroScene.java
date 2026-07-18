@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameStateID;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -83,8 +83,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
-        final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
+        final GameVariantRenderConfig gameVariantConfig = appContext().variants().currentVariant().config().renderConfig();
+        final SpriteAnimationContainer container = appContext().ui().sprites().animations();
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);
@@ -96,15 +96,15 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setSpeed(ACTOR_SPEED);
         msPacMan.setVisible(true);
-        msPacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
+        msPacMan.setAnimations(gameVariantConfig.createPacAnimations(container));
         msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
         msPacMan.animations().playSelected();
 
         ghosts = List.of(
-            gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.RED_GHOST_SHADOW),
-            gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY),
-            gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL),
-            gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.ORANGE_GHOST_POKEY)
+            gameVariantConfig.createAnimatedGhost(container, GameModel.RED_GHOST_SHADOW),
+            gameVariantConfig.createAnimatedGhost(container, GameModel.PINK_GHOST_SPEEDY),
+            gameVariantConfig.createAnimatedGhost(container, GameModel.CYAN_GHOST_BASHFUL),
+            gameVariantConfig.createAnimatedGhost(container, GameModel.ORANGE_GHOST_POKEY)
         );
 
         for (Ghost ghost : ghosts) {

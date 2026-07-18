@@ -4,6 +4,9 @@
 
 package de.amr.pacmanfx.game;
 
+import de.amr.basics.spriteanim.SpriteAnimationAccessor;
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
@@ -23,4 +26,10 @@ public interface GameVariantRenderConfig {
     HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene2D gameScene2D, Canvas canvas);
 
     ActorRenderer createActorRenderer(Canvas canvas);
+
+    Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality);
+
+    SpriteAnimationAccessor createGhostAnimations(SpriteAnimationContainer container, byte personality);
+
+    SpriteAnimationAccessor createPacAnimations(SpriteAnimationContainer container);
 }

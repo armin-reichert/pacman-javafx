@@ -6,10 +6,11 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapSelectionMode;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.core.model.world.WorldMapSelector;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
@@ -83,31 +84,33 @@ public class XXL_OptionMenu extends OptionMenu {
     public void init(GameAppContext appContext) {
         this.appContext = requireNonNull(appContext);
 
-        scaling = createScalingValue(appContext.ui().window().stage().heightProperty());
-
+        final GameUI ui = appContext.ui();
+        final GameVariantRenderConfig renderConfig = appContext.variants().currentVariant().config().renderConfig();
         final GameContext gameContext = appContext.currentGameContext();
-        final GameVariantConfig variantConfig = appContext.variants().currentVariant().config();
         final GameVariantID gameVariantID = GameVariantID.valueOf(appContext.variants().currentVariantName());
-        final GameModel gameModel = gameContext.model();
+        final WorldMapSelector worldMapSelector = gameContext.model().mapSelector();
 
-        if (!(gameModel.mapSelector() instanceof XXL_MapSelector mapSelector)) {
-            final String errorMsg = "Expected XXL map selector but found %s".formatted(gameModel.mapSelector().getClass().getSimpleName());
-            Logger.error(errorMsg);
-            throw new IllegalStateException(errorMsg);
+        if (!(worldMapSelector instanceof XXL_MapSelector mapSelector)) {
+            final String message = "Expected XXL map selector but found %s"
+                .formatted(worldMapSelector.getClass().getSimpleName());
+            Logger.error(message);
+            throw new IllegalStateException(message);
         }
         mapSelector.loadMapPrototypes();
 
+        scaling = createScalingValue(ui.window().stage().heightProperty());
+
         // Init entries
         meGameVariantID.setValue(gameVariantID);
-        meView3DEnabled.setValue(appContext.ui().viewModel().common3D.view3DEnabledProperty.get());
+        meView3DEnabled.setValue(ui.viewModel().common3D.view3DEnabledProperty.get());
         meCutScenesEnabled.setValue(gameContext.flow().cutScenesEnabled());
         meMapOrder.setValue(mapSelector.selectionMode());
         meMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());
 
         logMenuState();
 
-        soundEnabledProperty().bind(appContext.ui().sounds().muteProperty().not());
-        chaseAnimation.init(variantConfig, canvas, appContext.ui().sprites().animations());
+        soundEnabledProperty().bind(ui.sounds().muteProperty().not());
+        chaseAnimation.init(renderConfig, canvas, ui.sprites().animations());
     }
 
     public void bind() {
@@ -169,8 +172,8 @@ public class XXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
                 if (appContext != null) {
-                    final GameVariantConfig gameVariant = appContext.variants().variant(newVariant.name()).config();
-                    chaseAnimation.init(gameVariant, canvas, appContext.ui().sprites().animations());
+                    final GameVariantRenderConfig renderConfig = appContext.variants().variant(newVariant.name()).config().renderConfig();
+                    chaseAnimation.init(renderConfig, canvas, appContext.ui().sprites().animations());
                 }
             }
         };

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -78,15 +78,16 @@ class XXL_ChaseAnimation {
         timeline.stop();
     }
 
-    public void init(GameVariantConfig gameVariant, Canvas canvas, SpriteAnimationContainer spriteAnimationContainer) {
-        requireNonNull(gameVariant);
+    public void init(GameVariantRenderConfig renderConfig, Canvas canvas, SpriteAnimationContainer container) {
+        requireNonNull(renderConfig);
         requireNonNull(canvas);
+        requireNonNull(container);
 
-        actorRenderer = gameVariant.renderConfig().createActorRenderer(canvas);
+        actorRenderer = renderConfig.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         pac = ArcadePacMan_ActorFactory.createPacMan();
-        pac.setAnimations(gameVariant.createPacAnimations(spriteAnimationContainer));
+        pac.setAnimations(renderConfig.createPacAnimations(container));
         pac.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
         pac.animations().playSelected();
         pac.setX(numTilesX * WorldMap.TS);
@@ -96,10 +97,10 @@ class XXL_ChaseAnimation {
         pac.setVisible(true);
 
         ghosts = List.of(
-            gameVariant.createAnimatedGhost(spriteAnimationContainer, GameModel.RED_GHOST_SHADOW),
-            gameVariant.createAnimatedGhost(spriteAnimationContainer, GameModel.PINK_GHOST_SPEEDY),
-            gameVariant.createAnimatedGhost(spriteAnimationContainer, GameModel.CYAN_GHOST_BASHFUL),
-            gameVariant.createAnimatedGhost(spriteAnimationContainer, GameModel.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(container, GameModel.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(container, GameModel.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(container, GameModel.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(container, GameModel.ORANGE_GHOST_POKEY)
         );
         for (Ghost ghost : ghosts) {
             ghost.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);

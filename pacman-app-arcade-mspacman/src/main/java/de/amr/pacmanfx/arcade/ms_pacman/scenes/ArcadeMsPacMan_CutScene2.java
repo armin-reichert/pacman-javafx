@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -57,12 +57,12 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
+        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
+        pacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
+        msPacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.setPosition(tilesPx(3), tilesPx(10));
         clapperboard.startAnimation();

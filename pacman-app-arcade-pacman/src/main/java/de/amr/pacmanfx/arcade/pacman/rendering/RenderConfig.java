@@ -4,7 +4,13 @@
 
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
+import de.amr.pacmanfx.core.Validations;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -72,5 +78,30 @@ public class RenderConfig implements GameVariantRenderConfig {
         final var actorRenderer = new ArcadePacMan_ActorRenderer(canvas);
         actorRenderer.setImageSmoothing(true);
         return actorRenderer;
+    }
+
+    @Override
+    public Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality) {
+        final Ghost ghost = switch (personality) {
+            case GameModel.RED_GHOST_SHADOW -> GhostFactory.createRedGhostShadow("Blinky");
+            case GameModel.PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky");
+            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
+            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
+            default -> throw new IllegalArgumentException("Unknown personality: " + personality);
+        };
+        ghost.setAnimations(createGhostAnimations(container, personality));
+        ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        return ghost;
+    }
+
+    @Override
+    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, byte personality) {
+        Validations.requireValidGhostPersonality(personality);
+        return new ArcadePacMan_GhostAnimations(container, personality);
+    }
+
+    @Override
+    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationContainer container) {
+        return new ArcadePacMan_PacAnimations(container, spriteSheet);
     }
 }

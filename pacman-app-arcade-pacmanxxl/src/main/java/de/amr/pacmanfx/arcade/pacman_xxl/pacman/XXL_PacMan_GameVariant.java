@@ -4,18 +4,11 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacManGameVariant;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimations;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimations;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.flow.GameFlowController;
-import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
@@ -165,30 +158,6 @@ public final class XXL_PacMan_GameVariant implements GameVariantConfig, Resource
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
         return ArcadePacMan_SpriteSheet.instance();
-    }
-
-    @Override
-    public Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality) {
-        final Ghost ghost = switch (personality) {
-            case GameModel.RED_GHOST_SHADOW -> GhostFactory.createRedGhostShadow("Blinky");
-            case GameModel.PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky");
-            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
-            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
-            default -> throw new IllegalArgumentException("Unknown personality: " + personality);
-        };
-        ghost.setAnimations(createGhostAnimations(container, personality));
-        ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-        return ghost;
-    }
-
-    @Override
-    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, byte personality) {
-        return new ArcadePacMan_GhostAnimations(container, personality);
-    }
-
-    @Override
-    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationContainer container) {
-        return new ArcadePacMan_PacAnimations(container, spriteSheet());
     }
 
     @Override

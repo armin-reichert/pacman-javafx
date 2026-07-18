@@ -5,9 +5,6 @@
 package de.amr.pacmanfx.game;
 
 import de.amr.basics.Disposable;
-import de.amr.basics.spriteanim.SpriteAnimationAccessor;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -50,10 +47,4 @@ public interface GameVariantConfig extends Disposable {
     Image bonusValueImage(int symbolCode);
 
     WorldMapColorScheme colorScheme(WorldMap worldMap);
-
-    Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality);
-
-    SpriteAnimationAccessor createGhostAnimations(SpriteAnimationContainer container, byte personality);
-
-    SpriteAnimationAccessor createPacAnimations(SpriteAnimationContainer container);
 }

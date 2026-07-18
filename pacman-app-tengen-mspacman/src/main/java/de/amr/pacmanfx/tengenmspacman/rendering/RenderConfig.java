@@ -5,8 +5,14 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 
+import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.*;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_GhostAnimations;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacAnimations;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -55,5 +61,23 @@ public class RenderConfig implements GameVariantRenderConfig {
     @Override
     public TengenMsPacMan_ActorRenderer createActorRenderer(Canvas canvas) {
         return new TengenMsPacMan_ActorRenderer(canvas);
+    }
+
+    @Override
+    public Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality) {
+        final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
+        ghost.setAnimations(createGhostAnimations(container, personality));
+        ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        return ghost;
+    }
+
+    @Override
+    public TengenMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, byte personality) {
+        return new TengenMsPacMan_GhostAnimations(container, personality);
+    }
+
+    @Override
+    public TengenMsPacMan_PacAnimations createPacAnimations(SpriteAnimationContainer container) {
+        return new TengenMsPacMan_PacAnimations(container);
     }
 }

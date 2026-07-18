@@ -229,24 +229,6 @@ public class TengenMsPacManGameVariant implements GameVariantConfig {
         return GlobalAssets.enhanceContrast(worldSettings(), colorScheme);
     }
 
-    @Override
-    public Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality) {
-        final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(container, personality));
-        ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-        return ghost;
-    }
-
-    @Override
-    public TengenMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, byte personality) {
-        return new TengenMsPacMan_GhostAnimations(container, personality);
-    }
-
-    @Override
-    public TengenMsPacMan_PacAnimations createPacAnimations(SpriteAnimationContainer container) {
-        return new TengenMsPacMan_PacAnimations(container);
-    }
-
     // Helpers
 
     private void loadAssets() {

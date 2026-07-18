@@ -4,15 +4,13 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_MapSelector;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.RenderConfig;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacManGameVariant;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.flow.GameFlowController;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
@@ -38,7 +36,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
@@ -142,30 +139,6 @@ public class ArcadeMsPacManGameVariant implements GameVariantConfig, ResourceMan
             ArcadeMsPacMan_MapSelector.MAP_COLOR_SCHEMES[index]);
     }
 
-    public Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality) {
-        final Ghost ghost = ArcadeMsPacMan_ActorFactory.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(container, personality));
-        ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-        return ghost;
-    }
-
-    @Override
-    public ArcadeMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, byte personality) {
-        requireValidGhostPersonality(personality);
-        return new ArcadeMsPacMan_GhostAnimations(container, personality);
-    }
-
-    @Override
-    public ArcadeMsPacMan_PacAnimations createPacAnimations(SpriteAnimationContainer container) {
-        return new ArcadeMsPacMan_PacAnimations(container);
-    }
-
-    @Override
-    public Image killedGhostPointsImage(int killedGhostIndex) {
-        final RectShort[] numberSprites = spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
-        return spriteSheet().image(numberSprites[killedGhostIndex]);
-    }
-
     @Override
     public Image bonusSymbolImage(int symbolCode) {
         final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
@@ -176,6 +149,12 @@ public class ArcadeMsPacManGameVariant implements GameVariantConfig, ResourceMan
     public Image bonusValueImage(int symbolCode) {
         final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_VALUES);
         return spriteSheet().image(sprites[symbolCode]);
+    }
+
+    @Override
+    public Image killedGhostPointsImage(int killedGhostIndex) {
+        final RectShort[] numberSprites = spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
+        return spriteSheet().image(numberSprites[killedGhostIndex]);
     }
 
     // Private

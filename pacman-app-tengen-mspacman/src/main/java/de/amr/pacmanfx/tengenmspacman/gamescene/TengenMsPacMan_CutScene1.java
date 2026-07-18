@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
@@ -90,7 +90,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
+        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
@@ -105,24 +105,24 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
+        msPacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
         msPacMan.setSpeed(0);
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
+        pacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
         pacMan.setSpeed(0);
 
-        inky = gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
+        inky = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
         inky.setPosition(LEFT_BORDER, UPPER_LANE);
         inky.setSpeed(0);
 
-        pinky = gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
+        pinky = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(RIGHT_BORDER, LOWER_LANE);

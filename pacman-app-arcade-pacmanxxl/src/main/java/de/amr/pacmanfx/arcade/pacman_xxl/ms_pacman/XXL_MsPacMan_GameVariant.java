@@ -5,19 +5,13 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacManGameVariant;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_Factory3D;
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GhostAnimations;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimations;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacManGameVariant;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.flow.GameFlowController;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
@@ -33,7 +27,6 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 import javafx.scene.image.Image;
 import org.tinylog.Logger;
 
@@ -154,24 +147,6 @@ public final class XXL_MsPacMan_GameVariant implements GameVariantConfig, Resour
         return GlobalAssets.enhanceContrast(
             worldSettings(),
             worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME));
-    }
-
-    @Override
-    public Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality) {
-        final Ghost ghost = ArcadeMsPacMan_ActorFactory.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(container, personality));
-        ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-        return ghost;
-    }
-
-    @Override
-    public SpriteAnimationMap<SpriteID> createGhostAnimations(SpriteAnimationContainer container, byte personality) {
-        return new ArcadeMsPacMan_GhostAnimations(container, personality);
-    }
-
-    @Override
-    public SpriteAnimationMap<SpriteID> createPacAnimations(SpriteAnimationContainer container) {
-        return new ArcadeMsPacMan_PacAnimations(container);
     }
 
     @Override

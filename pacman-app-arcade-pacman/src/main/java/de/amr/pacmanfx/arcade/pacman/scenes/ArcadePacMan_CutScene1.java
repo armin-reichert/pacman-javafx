@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -38,11 +38,11 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
     
     @Override
     public void onActivate() {
-        final SpriteAnimationContainer spriteAnimationContainer = appContext().ui().sprites().animations();
+        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
+        final SpriteAnimationContainer container = appContext().ui().sprites().animations();
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        GameVariantConfig variantConfig = appContext().variants().currentVariant().config();
-        pacMan.setAnimations(variantConfig.createPacAnimations(spriteAnimationContainer));
-        blinky = variantConfig.createAnimatedGhost(spriteAnimationContainer, RED_GHOST_SHADOW);
+        pacMan.setAnimations(renderConfig.createPacAnimations(container));
+        blinky = renderConfig.createAnimatedGhost(container, RED_GHOST_SHADOW);
         sceneTick = -1;
     }
 

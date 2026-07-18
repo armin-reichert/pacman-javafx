@@ -9,22 +9,22 @@ import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 
 public class ActorAnimationManager {
 
     public static void ensureActorAnimationsCreated(GameAppContext appContext, GameLevel level) {
-        final GameVariantConfig config = appContext.variants().currentVariant().config();
+        final GameVariantRenderConfig renderConfig = appContext.variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer animationContainer = appContext.ui().sprites().animations();
         final Pac pac = level.entities().pac();
         if (pac.animations().isEmpty()) {
-            pac.setAnimations(config.createPacAnimations(animationContainer));
+            pac.setAnimations(renderConfig.createPacAnimations(animationContainer));
             resetPacAnimation(pac);
         }
         level.entities().ghosts().forEach(ghost -> {
             if (ghost.animations().isEmpty()) {
-                ghost.setAnimations(config.createGhostAnimations(animationContainer, ghost.personality()));
+                ghost.setAnimations(renderConfig.createGhostAnimations(animationContainer, ghost.personality()));
                 resetGhostAnimation(ghost);
             }
         });

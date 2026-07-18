@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
@@ -64,21 +65,20 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
+        final GameVariantConfig variantConfig = appContext().variants().currentVariant().config();
 
         gameContext().hudState().hide();
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) gameVariantConfig.spriteSheet();
+        spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-        final var actions = appContext().getExtensionValue(
-            TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = appContext().getExtensionValue(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
         actionBindings().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
 
-        final List<GhostSettings> ghostConfigs = gameVariantConfig.worldSettings().ghosts();
+        final List<GhostSettings> ghostSettings = variantConfig.worldSettings().ghosts();
         ghostColors = Stream.of(GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
-            .map(personality -> ghostConfigs.get(personality).colors().normal().dressColor())
+            .map(personality -> ghostSettings.get(personality).colors().normal().dressColor())
             .toArray(Color[]::new);
 
         marquee = new Marquee();
@@ -120,13 +120,13 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameVariantConfig gameVariantConfig = scene.appContext().variants().currentVariant().config();
-                final SpriteAnimationContainer spriteAnimationContainer = scene.appContext().ui().sprites().animations();
+                final GameVariantRenderConfig renderConfig = scene.appContext().variants().currentVariant().config().renderConfig();
+                final SpriteAnimationContainer spriteAnimations = scene.appContext().ui().sprites().animations();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
                 scene.msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-                scene.msPacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimationContainer));
+                scene.msPacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
                 scene.msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
                 scene.msPacMan.animations().playSelected();
                 scene.msPacMan.setPosition(WorldMap.TS * 33, ACTOR_Y);
@@ -135,10 +135,10 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 scene.msPacMan.setVisible(true);
 
                 scene.ghosts = List.of(
-                    gameVariantConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.RED_GHOST_SHADOW),
-                    gameVariantConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.CYAN_GHOST_BASHFUL),
-                    gameVariantConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.PINK_GHOST_SPEEDY),
-                    gameVariantConfig.createAnimatedGhost(spriteAnimationContainer, GameModel.ORANGE_GHOST_POKEY)
+                    renderConfig.createAnimatedGhost(spriteAnimations, GameModel.RED_GHOST_SHADOW),
+                    renderConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL),
+                    renderConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY),
+                    renderConfig.createAnimatedGhost(spriteAnimations, GameModel.ORANGE_GHOST_POKEY)
                 );
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(WorldMap.TS * 33, ACTOR_Y);

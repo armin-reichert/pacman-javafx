@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameStateID;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -111,18 +111,18 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
+        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
 
         blinking = new Pulse(10, Pulse.State.ON);
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimations));
+        pacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
-        ghosts[0] = gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.RED_GHOST_SHADOW);
-        ghosts[1] = gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
-        ghosts[2] = gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
-        ghosts[3] = gameVariantConfig.createAnimatedGhost(spriteAnimations, GameModel.ORANGE_GHOST_POKEY);
+        ghosts[0] = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.RED_GHOST_SHADOW);
+        ghosts[1] = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
+        ghosts[2] = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
+        ghosts[3] = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.ORANGE_GHOST_POKEY);
 
         Arrays.fill(ghostImageVisible, false);
         Arrays.fill(ghostNicknameVisible, false);

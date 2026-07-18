@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -61,14 +61,14 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
+        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimationContainer = appContext().ui().sprites().animations();
         final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(gameVariantConfig.createPacAnimations(spriteAnimationContainer));
+        pacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimationContainer));
 
-        blinky = gameVariantConfig.createAnimatedGhost(spriteAnimationContainer, RED_GHOST_SHADOW);
+        blinky = renderConfig.createAnimatedGhost(spriteAnimationContainer, RED_GHOST_SHADOW);
 
         nailDressAnimation = new SpriteAnimationBuilder()
             .sprites(spriteSheet.findSprites(SpriteID.RED_GHOST_STRETCHED))
