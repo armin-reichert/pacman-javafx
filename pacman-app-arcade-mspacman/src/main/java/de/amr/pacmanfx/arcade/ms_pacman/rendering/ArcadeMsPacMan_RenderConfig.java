@@ -56,9 +56,10 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     public ArcadeMsPacMan_RenderConfig(AssetMap assets) {
         this.assets = assets;
+        createBrightMazeImages();
     }
 
-    public void createBrightMazeImages() {
+    private void createBrightMazeImages() {
         for (int i = 0; i < MAP_COLOR_SCHEMES.length; ++i) {
             assets.register("maze.bright.%d".formatted(i), createBrightMazeImage(i));
         }
