@@ -24,4 +24,5 @@ open module de.amr.pacmanfx.tengenmspacman {
     exports de.amr.pacmanfx.tengenmspacman.flow;
     exports de.amr.pacmanfx.tengenmspacman.config;
     exports de.amr.pacmanfx.tengenmspacman.dashboard;
+    exports de.amr.pacmanfx.tengenmspacman.sprites;
 }

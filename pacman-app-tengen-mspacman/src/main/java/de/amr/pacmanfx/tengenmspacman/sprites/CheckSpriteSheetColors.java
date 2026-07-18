@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.tengenmspacman.rendering;
+package de.amr.pacmanfx.tengenmspacman.sprites;
 
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;

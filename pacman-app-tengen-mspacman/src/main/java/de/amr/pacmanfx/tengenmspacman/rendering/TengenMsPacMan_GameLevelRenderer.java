@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
+import de.amr.pacmanfx.tengenmspacman.sprites.*;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -21,7 +22,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.READY_MESSAGE_TEXT;
-import static de.amr.pacmanfx.tengenmspacman.rendering.NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED;
+import static de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -208,7 +209,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     private void configureHighlightedMapRenderInfo(RenderInfo info, WorldMap worldMap, int flashingIndex) {
         final MapImageSet imageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
         final int i = Math.clamp(flashingIndex, 0, imageSet.flashingMapImages().size() - 1);
-        final ColorSchemedImage flashingMapImage = imageSet.flashingMapImages().get(i);
+        final ColorSchemedMapSprite flashingMapImage = imageSet.flashingMapImages().get(i);
         info.put(CommonRenderInfoKey.MAZE_IMAGE, flashingMapImage.spriteSheetImage());
         info.put(CommonRenderInfoKey.MAZE_SPRITE, flashingMapImage.sprite());
     }

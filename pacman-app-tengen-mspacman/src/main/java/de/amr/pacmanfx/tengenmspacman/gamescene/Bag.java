@@ -9,8 +9,8 @@ import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.ArcadeMsPacMan_AnimationID;
-import de.amr.pacmanfx.tengenmspacman.rendering.SpriteID;
-import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 public class Bag extends Actor {

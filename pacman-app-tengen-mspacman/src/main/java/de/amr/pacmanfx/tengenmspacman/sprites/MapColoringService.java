@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.tengenmspacman.rendering;
+package de.amr.pacmanfx.tengenmspacman.sprites;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
@@ -24,15 +24,15 @@ import static de.amr.basics.math.RectShort.sprite;
  */
 public class MapColoringService {
 
-    private static class LazyThreadSafeSingletonHolder {
+    private static class SingletonHolder {
         static MapColoringService SINGLETON = new MapColoringService();
     }
 
-    public static MapColoringService instance() { return LazyThreadSafeSingletonHolder.SINGLETON; }
+    public static MapColoringService instance() { return SingletonHolder.SINGLETON; }
 
     private MapColoringService() {}
 
-    public ColorSchemedImage recolorMapImage(
+    public ColorSchemedMapSprite recolorMapImage(
         MapCategory mapCategory,
         Object mapID,
         SpriteSheet<?> spriteSheet,
@@ -41,14 +41,14 @@ public class MapColoringService {
         NES_MapColorScheme targetColorScheme)
     {
         return targetColorScheme.equals(sourceColorScheme)
-            ? new ColorSchemedImage(spriteSheet.sourceImage(), mapSprite, sourceColorScheme)
+            ? new ColorSchemedMapSprite(spriteSheet.sourceImage(), mapSprite, sourceColorScheme)
             : computeRecoloredMapImage(
                 mapCategory, mapID,
                 spriteSheet, mapSprite,
                 sourceColorScheme, targetColorScheme);
     }
 
-    public List<ColorSchemedImage> createFlashingMapImages(
+    public List<ColorSchemedMapSprite> createFlashingMapImages(
         MapCategory mapCategory, Object mapID,
         SpriteSheet<?> spriteSheet,
         RectShort mapSprite,
@@ -57,11 +57,11 @@ public class MapColoringService {
         boolean multipleFlashColors,
         int flashCount)
     {
-        final var flashingMapImages = new ArrayList<ColorSchemedImage>();
+        final var flashingMapImages = new ArrayList<ColorSchemedMapSprite>();
         if (multipleFlashColors) {
             final List<NES_MapColorScheme> randomColorSchemes = randomColorSchemesOtherThan(flashCount, targetColorScheme);
             for (NES_MapColorScheme randomColorScheme : randomColorSchemes) {
-                final ColorSchemedImage maze = computeRecoloredMapImage(
+                final ColorSchemedMapSprite maze = computeRecoloredMapImage(
                     mapCategory, mapID,
                     spriteSheet, mapSprite,
                     sourceColorScheme, randomColorScheme
@@ -69,7 +69,7 @@ public class MapColoringService {
                 flashingMapImages.add(maze);
             }
         } else {
-            final ColorSchemedImage blackWhiteMapImage = computeRecoloredMapImage(
+            final ColorSchemedMapSprite blackWhiteMapImage = computeRecoloredMapImage(
                 mapCategory, mapID,
                 spriteSheet, mapSprite,
                 sourceColorScheme, NES_MapColorScheme._0F_20_0F_BLACK_WHITE_BLACK
@@ -91,12 +91,12 @@ public class MapColoringService {
         boolean multipleFlashColors,
         int flashCount)
     {
-        final ColorSchemedImage recoloredMapImage = recolorMapImage(
+        final ColorSchemedMapSprite recoloredMapImage = recolorMapImage(
             mapCategory, mapID,
             spriteSheet, mapSprite,
             sourceColorScheme, targetColorScheme
         );
-        final List<ColorSchemedImage> flashingMapImages = createFlashingMapImages(
+        final List<ColorSchemedMapSprite> flashingMapImages = createFlashingMapImages(
             mapCategory, mapID,
             spriteSheet, mapSprite,
             sourceColorScheme, targetColorScheme,
@@ -105,7 +105,7 @@ public class MapColoringService {
         return new MapImageSet(recoloredMapImage, flashingMapImages);
     }
 
-    private ColorSchemedImage computeRecoloredMapImage(
+    private ColorSchemedMapSprite computeRecoloredMapImage(
         MapCategory mapCategory,
         Object mapID,
         SpriteSheet<?> spriteSheet,
@@ -124,7 +124,7 @@ public class MapColoringService {
             Color.valueOf(targetColorScheme.wallStroke()),
             Color.valueOf(targetColorScheme.pellet())
         );
-        final var coloredMapImage = new ColorSchemedImage(
+        final var coloredMapImage = new ColorSchemedMapSprite(
             recoloredMapImage,
             sprite(0, 0, mapSprite.width(), mapSprite.height()),
             targetColorScheme);

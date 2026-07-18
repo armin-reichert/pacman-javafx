@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.tengenmspacman.rendering;
+package de.amr.pacmanfx.tengenmspacman.sprites;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
@@ -15,7 +15,7 @@ import javafx.scene.image.Image;
 import java.util.stream.IntStream;
 
 import static de.amr.basics.math.RectShort.sprite;
-import static de.amr.pacmanfx.tengenmspacman.rendering.SpriteID.*;
+import static de.amr.pacmanfx.tengenmspacman.sprites.SpriteID.*;
 
 public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 

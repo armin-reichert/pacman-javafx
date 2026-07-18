@@ -1,9 +1,10 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.tengenmspacman.rendering;
+package de.amr.pacmanfx.tengenmspacman.sprites;
 
 import de.amr.basics.math.RandomNumberSupport;import de.amr.pacmanfx.core.model.world.MapColorScheme;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 
 /**
  * The color schemes used in the Tengen Ms. Pac-Man maps. That was quite some work to figure these out.

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.tengenmspacman.rendering;
+package de.amr.pacmanfx.tengenmspacman.sprites;
 
 import de.amr.basics.Identifier;
 import de.amr.basics.math.RectShort;
@@ -14,7 +14,7 @@ import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import java.util.Arrays;
 
-import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID.*;
+import static de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID.*;
 
 public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 

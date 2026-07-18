@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.tengenmspacman.rendering;
+package de.amr.pacmanfx.tengenmspacman.sprites;
 
 import de.amr.basics.Disposable;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * @param mapImage the image used when playing the level
  * @param flashingMapImages the images used for the flashing animation at the end of the level
  */
-public record MapImageSet(ColorSchemedImage mapImage, List<ColorSchemedImage> flashingMapImages) implements Disposable {
+public record MapImageSet(ColorSchemedMapSprite mapImage, List<ColorSchemedMapSprite> flashingMapImages) implements Disposable {
 
     @Override
     public void dispose() {

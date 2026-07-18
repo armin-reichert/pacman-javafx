@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.tengenmspacman.rendering;
+package de.amr.pacmanfx.tengenmspacman.sprites;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -12,7 +12,7 @@ import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.tengenmspacman.rendering.NES_MapColorScheme.*;
+import static de.amr.pacmanfx.tengenmspacman.sprites.NES_MapColorScheme.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -88,10 +88,10 @@ public class TengenMsPacMan_MapRepository {
         };
 
         final RectShort sprite = ArcadeMapsSpriteSheet.instance().findSprite(mapID);
-        final var coloredMaze = new ColorSchemedImage(ArcadeMapsSpriteSheet.instance().sourceImage(), sprite, colorScheme);
+        final var coloredMaze = new ColorSchemedMapSprite(ArcadeMapsSpriteSheet.instance().sourceImage(), sprite, colorScheme);
 
         //TODO: Handle case when color scheme is already black & white
-        final List<ColorSchemedImage> flashingMazes = MapColoringService.instance().createFlashingMapImages(
+        final List<ColorSchemedMapSprite> flashingMazes = MapColoringService.instance().createFlashingMapImages(
             MapCategory.ARCADE, mapID,
             ArcadeMapsSpriteSheet.instance(), sprite,
             colorScheme, NES_MapColorScheme._0F_20_0F_BLACK_WHITE_BLACK,
