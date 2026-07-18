@@ -8,7 +8,6 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameRules;
 import de.amr.pacmanfx.core.model.actors.Elroy;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.world.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import org.tinylog.Logger;
 
@@ -23,8 +22,6 @@ public class ArcadePacMan_GameModel extends GameModel {
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
 
     public static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
-
-    protected final ArcadeHouseGateKeeper gateKeeper = new ArcadeHouseGateKeeper();
 
     protected ArcadePacMan_GameRules rules;
 
