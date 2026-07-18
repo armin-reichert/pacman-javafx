@@ -4,18 +4,13 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_RenderConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.flow.GameFlowController;
-import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
-import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
@@ -23,21 +18,16 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.UfxImages;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
-import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GameVariantConfig implements GameVariantConfig, ResourceManager {
 
@@ -79,7 +69,7 @@ public class ArcadeMsPacMan_GameVariantConfig implements GameVariantConfig, Reso
         renderConfig = new ArcadeMsPacMan_RenderConfig(assets);
 
         //TODO rethink this
-        createBrightMazeImages();
+        renderConfig.createBrightMazeImages();
     }
 
     @Override
@@ -124,15 +114,6 @@ public class ArcadeMsPacMan_GameVariantConfig implements GameVariantConfig, Reso
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
         return Optional.ofNullable(soundEffects);
-    }
-
-    @Override
-    public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        requireNonNull(worldMap);
-        final int index = worldMap.getConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX);
-        return GlobalAssets.enhanceContrast(
-            worldSettings(),
-            ArcadeMsPacMan_MapSelector.MAP_COLOR_SCHEMES[index]);
     }
 
     @Override
@@ -186,21 +167,4 @@ public class ArcadeMsPacMan_GameVariantConfig implements GameVariantConfig, Reso
         soundEffects.setSirenVolume(0.33f);
     }
 
-    private void createBrightMazeImages() {
-        for (int i = 0; i < ArcadeMsPacMan_MapSelector.MAP_COLOR_SCHEMES.length; ++i) {
-            assets.register("maze.bright.%d".formatted(i), createBrightMazeImage(i));
-        }
-    }
-
-    // Creates the maze image used in the flash animation at the end of each level
-    private Image createBrightMazeImage(int index) {
-        final RectShort mazeSprite = renderConfig.spriteSheet().findSprites(SpriteID.EMPTY_MAPS)[index];
-        final Image mazeImage = renderConfig.spriteSheet().image(mazeSprite);
-        final WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.MAP_COLOR_SCHEMES[index];
-        final Map<Color, Color> colorChanges = Map.of(
-            Color.valueOf(colorScheme.wallStroke()), ARCADE_WHITE,
-            Color.valueOf(colorScheme.door()), Color.TRANSPARENT
-        );
-        return UfxImages.recolorImage(mazeImage, colorChanges);
-    }
 }

@@ -148,13 +148,6 @@ public final class XXL_PacMan_GameVariantConfig implements GameVariantConfig, Re
     }
 
     @Override
-    public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        return GlobalAssets.enhanceContrast(
-            worldSettings(),
-            worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME));
-    }
-
-    @Override
     public Optional<GameSoundEffects> optSoundEffects() {
         return Optional.ofNullable(soundEffects);
     }

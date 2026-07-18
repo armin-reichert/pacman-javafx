@@ -209,14 +209,6 @@ public class TengenMsPacMan_GameVariantConfig implements GameVariantConfig {
         return renderConfig.spriteSheet().image(sprite);
     }
 
-    @Override
-    public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        final MapColorScheme scheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
-        final WorldMapColorScheme colorScheme = new WorldMapColorScheme(
-            scheme.wallFill(), scheme.wallStroke(), scheme.door(), scheme.pellet());
-        return GlobalAssets.enhanceContrast(worldSettings(), colorScheme);
-    }
-
     // Helpers
 
     private void loadAssets() {

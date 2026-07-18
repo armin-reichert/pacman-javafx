@@ -43,5 +43,4 @@ public interface GameVariantConfig extends Disposable {
 
     Image bonusValueImage(int symbolCode);
 
-    WorldMapColorScheme colorScheme(WorldMap worldMap);
 }

@@ -20,16 +20,6 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
     private static final int PROTOTYPES_COUNT = 4;
     private static final String PROTOTYPES_PATH = "/de/amr/pacmanfx/arcade/ms_pacman/maps/mspacman_%d.world";
 
-    /** Colors used by the six Ms. Pac-Man Arcade maps. */
-    public static final WorldMapColorScheme[] MAP_COLOR_SCHEMES = {
-        new WorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff"),
-        new WorldMapColorScheme("47b7ff", "dedeff", "fcb5ff", "ffff00"),
-        new WorldMapColorScheme("de9751", "dedeff", "fcb5ff", "ff0000"),
-        new WorldMapColorScheme("2121ff", "ffb751", "fcb5ff", "dedeff"),
-        new WorldMapColorScheme("ffb7ff", "ffff00", "fcb5ff", "00ffff"),
-        new WorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff")
-    };
-
     private List<WorldMap> mapPrototypes = List.of();
 
     @Override

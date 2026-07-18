@@ -7,9 +7,12 @@ package de.amr.pacmanfx.game;
 import de.amr.basics.spriteanim.SpriteAnimationAccessor;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -21,6 +24,8 @@ public interface GameVariantRenderConfig {
     AssetMap assets();
 
     SpriteSheet<?> spriteSheet();
+
+    WorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings);
 
     GameLevelRenderer createGameLevelRenderer(Canvas canvas);
 

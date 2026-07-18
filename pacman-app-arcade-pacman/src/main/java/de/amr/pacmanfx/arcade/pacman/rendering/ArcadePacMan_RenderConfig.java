@@ -11,18 +11,37 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostFactory;
+import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.settings.world.WorldSettings;
+import de.amr.pacmanfx.uilib.UfxImages;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
+import java.util.Map;
+
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
+
+    private static final WorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new WorldMapColorScheme(
+        ARCADE_BLACK.toString(), ARCADE_BLUE.toString(), ARCADE_PINK.toString(), ARCADE_ROSE.toString()
+    );
+
+    private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
+        Color.valueOf(WORLD_MAP_COLOR_SCHEME.wallStroke()), ARCADE_WHITE,   // wall color change
+        Color.valueOf(WORLD_MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
+    );
 
     private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(400, 0, 256, 160);
 
@@ -30,6 +49,10 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
 
     public ArcadePacMan_RenderConfig(AssetMap assets) {
         this.assets = assets;
+    }
+
+    public Image createBrightEmptyMap() {
+        return UfxImages.recolorImage(spriteSheet().image(SpriteID.MAP_EMPTY), BRIGHT_MAZE_COLOR_CHANGES);
     }
 
     @Override
@@ -40,6 +63,12 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
         return ArcadePacMan_SpriteSheet.instance();
+    }
+
+    @Override
+    public WorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings) {
+        requireNonNull(worldMap);
+        return GlobalAssets.enhanceContrast(worldSettings, WORLD_MAP_COLOR_SCHEME);
     }
 
     @Override

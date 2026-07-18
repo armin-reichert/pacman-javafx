@@ -9,12 +9,9 @@ import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.flow.GameFlowController;
-import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
@@ -23,20 +20,16 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.JsonConfigLoader;
-import de.amr.pacmanfx.uilib.UfxImages;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
-import static java.util.Objects.requireNonNull;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
 /**
  * The Arcade Pac‑Man game variant.
@@ -53,15 +46,6 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig, Resour
 
     public static final WorldSettings WORLD_CONFIG = JsonConfigLoader.load(
         GameUI.class.getResource("/de/amr/pacmanfx/ui/world.json"), WorldSettings.class);
-
-    public static final WorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new WorldMapColorScheme(
-        ARCADE_BLACK.toString(), ARCADE_BLUE.toString(), ARCADE_PINK.toString(), ARCADE_ROSE.toString()
-    );
-
-    private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
-        Color.valueOf(WORLD_MAP_COLOR_SCHEME.wallStroke()), ARCADE_WHITE,   // wall color change
-        Color.valueOf(WORLD_MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
-    );
 
     private final ResourceBundle textBundle;
     private final AssetMap assets = new AssetMap();
@@ -91,10 +75,7 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig, Resour
         renderConfig = new ArcadePacMan_RenderConfig(assets);
 
         //TODO rethink this
-        assets.register("maze.bright", UfxImages.recolorImage(
-            renderConfig.spriteSheet().image(SpriteID.MAP_EMPTY),
-            BRIGHT_MAZE_COLOR_CHANGES)
-        );
+        assets.register("maze.bright", renderConfig.createBrightEmptyMap());
     }
 
     @Override
@@ -132,12 +113,6 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig, Resour
     @Override
     public WorldSettings worldSettings() {
         return WORLD_CONFIG;
-    }
-
-    @Override
-    public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        requireNonNull(worldMap);
-        return GlobalAssets.enhanceContrast(worldSettings(), WORLD_MAP_COLOR_SCHEME);
     }
 
     @Override

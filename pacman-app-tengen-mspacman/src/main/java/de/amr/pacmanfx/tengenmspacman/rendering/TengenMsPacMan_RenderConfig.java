@@ -8,14 +8,20 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.world.MapColorScheme;
+import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.*;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_GhostAnimations;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacAnimations;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import javafx.scene.canvas.Canvas;
 
@@ -35,6 +41,14 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public AssetMap assets() {
         return assets;
+    }
+
+    @Override
+    public WorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings) {
+        final MapColorScheme scheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+        final WorldMapColorScheme colorScheme = new WorldMapColorScheme(
+            scheme.wallFill(), scheme.wallStroke(), scheme.door(), scheme.pellet());
+        return GlobalAssets.enhanceContrast(worldSettings, colorScheme);
     }
 
     @Override

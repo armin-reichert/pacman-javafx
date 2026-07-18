@@ -137,13 +137,6 @@ public final class XXL_MsPacMan_GameVariantConfig implements GameVariantConfig, 
     }
 
     @Override
-    public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        return GlobalAssets.enhanceContrast(
-            worldSettings(),
-            worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME));
-    }
-
-    @Override
     public Image killedGhostPointsImage(int killedGhostIndex) {
         final RectShort[] numberSprites = renderConfig.spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
         return renderConfig.spriteSheet().image(numberSprites[killedGhostIndex]);
