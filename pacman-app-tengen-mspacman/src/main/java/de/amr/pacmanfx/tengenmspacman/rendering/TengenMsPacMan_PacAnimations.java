@@ -15,24 +15,15 @@ import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 import java.util.Arrays;
 
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_AnimationID.*;
-import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationContainer container;
-
     public TengenMsPacMan_PacAnimations(SpriteAnimationContainer container) {
         super(TengenMsPacMan_SpriteSheet.instance());
-        this.container = requireNonNull(container);
+        factory = id -> createAnimation(id, container);
     }
 
-    @Override
-    public SpriteAnimationContainer container() {
-        return container;
-    }
-
-    @Override
-    protected SpriteAnimation createAnimation(Identifier animationID) {
+    private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
             case ArcadePacMan_AnimationID.PAC_FULL -> new SpriteAnimationBuilder()

@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
-import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
@@ -20,18 +19,12 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
     public static final int FLASHING_TICKS = 7;  // TODO check this in emulator
 
-    private final SpriteAnimationContainer container;
     private final byte personality;
 
     public TengenMsPacMan_GhostAnimations(SpriteAnimationContainer container, byte personality) {
         super(TengenMsPacMan_SpriteSheet.instance());
-        this.container = requireNonNull(container);
         this.personality = requireValidGhostPersonality(personality);
-    }
-
-    @Override
-    public SpriteAnimationContainer container() {
-        return container;
+        factory = id -> createAnimation(id, container);
     }
 
     @Override
@@ -39,8 +32,7 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
         return (TengenMsPacMan_SpriteSheet) spriteSheet;
     }
 
-    @Override
-    protected SpriteAnimation createAnimation(Identifier animationID) {
+    private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
             case ArcadePacMan_AnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()

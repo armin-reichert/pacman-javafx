@@ -13,27 +13,18 @@ import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
 import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
-import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationContainer container;
     private final byte personality;
 
     public ArcadeMsPacMan_GhostAnimations(SpriteAnimationContainer container, byte personality) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
-
-        this.container = requireNonNull(container);
         this.personality = requireValidGhostPersonality(personality);
+        factory = id -> createAnimation(id, container);
     }
 
-    @Override
-    public SpriteAnimationContainer container() {
-        return container;
-    }
-
-    @Override
-    protected SpriteAnimation createAnimation(Identifier animationID) {
+    private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
             case ArcadePacMan_AnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()

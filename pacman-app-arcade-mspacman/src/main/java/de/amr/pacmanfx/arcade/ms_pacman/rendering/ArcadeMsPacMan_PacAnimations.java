@@ -12,24 +12,14 @@ import de.amr.pacmanfx.core.model.actors.ArcadeMsPacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
-import static java.util.Objects.requireNonNull;
-
 public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
-
-    private final SpriteAnimationContainer container;
 
     public ArcadeMsPacMan_PacAnimations(SpriteAnimationContainer container) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
-        this.container = requireNonNull(container);
+        factory = id -> createAnimation(id, container);
     }
 
-    @Override
-    public SpriteAnimationContainer container() {
-        return container;
-    }
-
-    @Override
-    protected SpriteAnimation createAnimation(Identifier animationID) {
+    private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
             case ArcadePacMan_AnimationID.PAC_FULL -> new SpriteAnimationBuilder()

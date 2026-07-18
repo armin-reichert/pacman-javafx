@@ -24,8 +24,6 @@ public interface SpriteAnimationAccessor {
         return new SingleSpriteAnimationAccessor(sprite);
     }
 
-    SpriteAnimationContainer container();
-
     default boolean isEmpty() {
         return this == EMPTY_SPRITE_ANIMATION_ACCESSOR;
     }

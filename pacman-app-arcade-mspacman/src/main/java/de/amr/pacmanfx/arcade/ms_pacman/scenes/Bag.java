@@ -20,20 +20,12 @@ public class Bag extends Actor {
 
     public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationContainer container;
-
         public BagAnimations(SpriteAnimationContainer container) {
             super(ArcadeMsPacMan_SpriteSheet.instance());
-            this.container = container;
+            factory = id -> createAnimation(id, container);
         }
 
-        @Override
-        public SpriteAnimationContainer container() {
-            return container;
-        }
-
-        @Override
-        protected SpriteAnimation createAnimation(Identifier animationID) {
+        private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
             return switch (animationID) {
                 case ArcadeMsPacMan_AnimationID.JUNIOR ->
                     new SpriteAnimationBuilder()

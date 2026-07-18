@@ -16,22 +16,15 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
-    private final SpriteAnimationContainer container;
     private final byte personality;
 
     public ArcadePacMan_GhostAnimations(SpriteAnimationContainer container, byte personality) {
         super(ArcadePacMan_SpriteSheet.instance());
-        this.container = requireNonNull(container);
         this.personality = requireValidGhostPersonality(personality);
+        factory = id -> createAnimation(id, container);
     }
 
-    @Override
-    public SpriteAnimationContainer container() {
-        return container;
-    }
-
-    @Override
-    public SpriteAnimation createAnimation(Identifier animationID) {
+    private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
             case ArcadePacMan_AnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()

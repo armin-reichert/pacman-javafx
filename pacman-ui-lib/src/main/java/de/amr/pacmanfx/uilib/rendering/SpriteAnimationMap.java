@@ -12,6 +12,7 @@ import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 
@@ -25,12 +26,15 @@ public abstract class SpriteAnimationMap<ID extends Identifier> implements Sprit
     protected final SpriteSheet<ID> spriteSheet;
     protected final Map<Identifier, SpriteAnimation> animationsByID = new HashMap<>();
     protected Identifier selectedAnimationID;
+    protected Function<Identifier, SpriteAnimation> factory;
 
     public SpriteAnimationMap(SpriteSheet<ID> spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
     }
 
-    protected abstract SpriteAnimation createAnimation(Identifier animationID);
+    public void setFactory(Function<Identifier, SpriteAnimation> factory) {
+        this.factory = factory;
+    }
 
     public SpriteSheet<ID> spriteSheet() { return spriteSheet; }
 
@@ -53,7 +57,7 @@ public abstract class SpriteAnimationMap<ID extends Identifier> implements Sprit
     @Override
     public SpriteAnimation animation(Identifier animationID) {
         if (!animationsByID.containsKey(animationID)) {
-            SpriteAnimation spriteAnimation = createAnimation(animationID);
+            SpriteAnimation spriteAnimation = factory.apply(animationID);
             animationsByID.put(animationID, spriteAnimation);
         }
         return animationsByID.get(animationID);

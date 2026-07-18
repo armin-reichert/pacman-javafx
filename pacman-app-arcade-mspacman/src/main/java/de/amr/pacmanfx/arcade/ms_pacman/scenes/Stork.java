@@ -17,20 +17,12 @@ public class Stork extends Actor {
 
     public static class StorkAnimations extends SpriteAnimationMap<SpriteID> {
 
-        private final SpriteAnimationContainer container;
-
         public StorkAnimations(SpriteAnimationContainer container) {
             super(ArcadeMsPacMan_SpriteSheet.instance());
-            this.container = container;
+            factory = id -> createAnimation(id, container);
         }
 
-        @Override
-        public SpriteAnimationContainer container() {
-            return container;
-        }
-
-        @Override
-        protected SpriteAnimation createAnimation(Identifier animationID) {
+        private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
             if (animationID.equals(ArcadeMsPacMan_AnimationID.STORK_FLYING)) {
                 return new SpriteAnimationBuilder()
                     .sprites(spriteSheet.findSprites(SpriteID.STORK))
