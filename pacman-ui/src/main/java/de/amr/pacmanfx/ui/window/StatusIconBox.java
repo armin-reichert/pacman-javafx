@@ -83,7 +83,7 @@ public class StatusIconBox implements Disposable {
 
         // Visibility of "autopilot", "cheated" and "immune" is bound to *current game model*'s cheat object!
         final ChangeListener<String> variantChangeHandler = (_, _, variantName) -> {
-            final GameModel gameModel = appContext.variants().variant(variantName).gameModel();
+            final GameModel gameModel = appContext.variants().gameVariantByName(variantName).gameModel();
             final GameCheats cheats = appContext.currentGameContext().cheats();
 
             iconAutopilot.visibleProperty().unbind();

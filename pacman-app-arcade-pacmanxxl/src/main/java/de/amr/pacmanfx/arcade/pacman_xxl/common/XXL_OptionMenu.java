@@ -172,7 +172,7 @@ public class XXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
                 if (appContext != null) {
-                    final GameVariantRenderConfig renderConfig = appContext.variants().variant(newVariant.name()).config().renderConfig();
+                    final GameVariantRenderConfig renderConfig = appContext.variants().gameVariantByName(newVariant.name()).config().renderConfig();
                     chaseAnimation.init(renderConfig, canvas, appContext.ui().sprites().animations());
                 }
             }

@@ -22,7 +22,6 @@ import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -94,11 +93,20 @@ public class TengenMsPacMan_GameVariantConfig implements GameVariantConfig {
 
     @Override
     public void init(GameAppContext appContext) {
-        loadAssets();
-        registerSoundObjects(appContext.ui().sounds());
+        Logger.info("Initialize Tengen UI configuration {}", getClass().getSimpleName());
+
         gameSceneConfig = new GameSceneConfig(appContext);
+
+        assets.addAsset("app_icon",                         RM.loadImage("graphics/icons/mspacman.png"));
+        assets.addAsset("startpage.image1",                 RM.loadImage("graphics/flyer-page-1.png"));
+        assets.addAsset("startpage.image2",                 RM.loadImage("graphics/flyer-page-2.png"));
+        assets.addAsset("color.game_over_message",          NES_Palette.color(0x11));
+        assets.addAsset("color.ready_message",              NES_Palette.color(0x28));
         renderConfig = new TengenMsPacMan_RenderConfig(assets);
-        Logger.info("Initialized Tengen UI configuration {} (loaded assets and sounds)", getClass().getSimpleName());
+        renderConfig.addAssets();
+        assets.freeze();
+
+        registerSoundObjects(appContext.ui().sounds());
     }
 
     @Override
@@ -139,15 +147,6 @@ public class TengenMsPacMan_GameVariantConfig implements GameVariantConfig {
     }
 
     // Helpers
-
-    private void loadAssets() {
-        assets.clear();
-        assets.register("app_icon",                         RM.loadImage("graphics/icons/mspacman.png"));
-        assets.register("startpage.image1",                 RM.loadImage("graphics/flyer-page-1.png"));
-        assets.register("startpage.image2",                 RM.loadImage("graphics/flyer-page-2.png"));
-        assets.register("color.game_over_message",          NES_Palette.color(0x11));
-        assets.register("color.ready_message",              NES_Palette.color(0x28));
-    }
 
     private void registerSoundObjects(SoundManager soundManager) {
         soundManager.setMediaPlayer (PacManGameSoundID.BONUS_ACTIVE,                RM.url("sound/fruitbounce.wav"));

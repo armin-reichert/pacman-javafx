@@ -21,30 +21,29 @@ import static java.util.Objects.requireNonNull;
  */
 public class AssetMap implements Disposable {
 
+    private boolean frozen;
     private final Map<String, Object> assetsByID = new HashMap<>();
 
     @Override
     public void dispose() {
         assetsByID.clear();
+        frozen = false;
     }
 
-    public void register(String key, Object asset) {
+    public void addAsset(String key, Object asset) {
         requireNonNull(key);
         requireNonNull(asset);
+        if (frozen) {
+            throw new IllegalStateException("Cannot add asset with key '%s': asset map is frozen!".formatted(key));
+        }
         assetsByID.put(key, asset);
     }
 
-    public void unregister(String key) {
-        requireNonNull(key);
-        assetsByID.remove(key);
-    }
-
-    public void clear() {
-        assetsByID.clear();
-    }
-
-    public int numAssets() {
-        return assetsByID.size();
+    /**
+     * Prevents further modification of this assets map until the complete map is disposed.
+     */
+    public void freeze() {
+        frozen = true;
     }
 
     /**

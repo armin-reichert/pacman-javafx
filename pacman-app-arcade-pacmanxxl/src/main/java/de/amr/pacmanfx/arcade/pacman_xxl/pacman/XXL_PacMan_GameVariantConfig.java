@@ -71,14 +71,17 @@ public final class XXL_PacMan_GameVariantConfig implements GameVariantConfig {
     public void init(GameAppContext appContext) {
         this.appContext = appContext;
 
-        Logger.info("Load assets of UI configuration {}", getClass().getSimpleName());
-        loadAssets();
-
         gameSceneConfig = new XXL_PacMan_GameSceneConfig(appContext);
+
+        assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/pacman.png"));
+        assets.addAsset("color.game_over_message", ARCADE_RED);
         renderConfig = new XXL_PacMan_RenderConfig(assets);
+        renderConfig.addAssets();
+        assets.freeze();
 
         Logger.info("Register sounds and effects of UI configuration {}", getClass().getSimpleName());
         registerSounds(appContext.ui().sounds());
+
         soundEffects = new GameSoundEffects(appContext.ui().sounds());
         initSoundEffects();
     }
@@ -130,12 +133,6 @@ public final class XXL_PacMan_GameVariantConfig implements GameVariantConfig {
     }
 
     // -----
-
-    private void loadAssets() {
-        assets.clear();
-        assets.register("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/pacman.png"));
-        assets.register("color.game_over_message", ARCADE_RED);
-    }
 
     private void registerSounds(SoundManager sounds) {
         sounds.setAudioClip    (PacManGameSoundID.BONUS_EATEN,           ARCADE_PACMAN_RM.url("sound/eat_fruit.mp3"));

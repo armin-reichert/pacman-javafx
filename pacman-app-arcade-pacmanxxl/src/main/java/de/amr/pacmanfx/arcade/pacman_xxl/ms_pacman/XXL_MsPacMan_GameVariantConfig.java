@@ -65,11 +65,14 @@ public final class XXL_MsPacMan_GameVariantConfig implements GameVariantConfig {
     public void init(GameAppContext appContext) {
         this.appContext = requireNonNull(appContext);
 
-        Logger.info("Load assets of UI configuration {}", getClass().getSimpleName());
-        loadAssets();
-
         gameSceneConfig = new XXL_MsPacMan_GameSceneConfig(appContext);
+
+        assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
+        assets.addAsset("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
+        assets.addAsset("color.game_over_message", ARCADE_RED);
         renderConfig = new XXL_MsPacMan_RenderConfig(assets);
+        renderConfig.addAssets();
+        assets.freeze();
 
         Logger.info("Register sounds and effects of UI configuration {}", getClass().getSimpleName());
         registerSounds(appContext.ui().sounds());
@@ -124,14 +127,6 @@ public final class XXL_MsPacMan_GameVariantConfig implements GameVariantConfig {
     }
 
     // -----
-
-    private void loadAssets() {
-        assets.clear();
-
-        assets.register("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
-        assets.register("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
-        assets.register("color.game_over_message", ARCADE_RED);
-    }
 
     private void registerSounds(SoundManager soundManager) {
         soundManager.setMediaPlayer (PacManGameSoundID.BONUS_ACTIVE,          ARCADE_RM.url("sound/Fruit_Bounce.mp3"));

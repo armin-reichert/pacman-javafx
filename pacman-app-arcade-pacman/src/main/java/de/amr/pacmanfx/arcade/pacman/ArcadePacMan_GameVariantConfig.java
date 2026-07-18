@@ -64,16 +64,15 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig {
 
     @Override
     public void init(GameAppContext appContext) {
-        Logger.info("Init UI configuration {}", getClass().getSimpleName());
+        gameSceneConfig = new ArcadePacMan_GameSceneConfig(appContext);
 
-        assets.clear();
-        assets.register("app_icon", RM.loadImage("graphics/icons/pacman.png"));
-        assets.register("color.game_over_message", ARCADE_RED);
+        assets.addAsset("app_icon", RM.loadImage("graphics/icons/pacman.png"));
+        assets.addAsset("color.game_over_message", ARCADE_RED);
+        renderConfig = new ArcadePacMan_RenderConfig(assets);
+        renderConfig.addAssets();
+        assets.freeze();
 
         initSound(appContext.ui().sounds());
-
-        gameSceneConfig = new ArcadePacMan_GameSceneConfig(appContext);
-        renderConfig = new ArcadePacMan_RenderConfig(assets);
     }
 
     @Override
