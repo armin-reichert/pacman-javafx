@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.RenderConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacManGameVariant;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -40,7 +40,7 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacManGameVariant implements GameVariantConfig, ResourceManager {
+public class ArcadeMsPacMan_GameVariantConfig implements GameVariantConfig, ResourceManager {
 
     public static GameFlowController createGameFlow() {
         final var gameFlow = new GameFlowController("Arcade Ms. Pac-Man Game Flow");
@@ -52,7 +52,7 @@ public class ArcadeMsPacManGameVariant implements GameVariantConfig, ResourceMan
 
     @Override
     public Class<?> resourceRootClass() {
-        return ArcadeMsPacManGameVariant.class;
+        return ArcadeMsPacMan_GameVariantConfig.class;
     }
 
     private final ResourceBundle textBundle;
@@ -62,7 +62,7 @@ public class ArcadeMsPacManGameVariant implements GameVariantConfig, ResourceMan
     private GameVariantRenderConfig renderConfig;
     private GameSoundEffects soundEffects;
 
-    public ArcadeMsPacManGameVariant() {
+    public ArcadeMsPacMan_GameVariantConfig() {
         textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts");
     }
 
@@ -122,7 +122,7 @@ public class ArcadeMsPacManGameVariant implements GameVariantConfig, ResourceMan
 
     @Override
     public WorldSettings worldSettings() {
-        return ArcadePacManGameVariant.WORLD_CONFIG;
+        return ArcadePacMan_GameVariantConfig.WORLD_CONFIG;
     }
 
     @Override

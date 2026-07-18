@@ -21,7 +21,7 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant.shadeOfBlue;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.shadeOfBlue;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.MARQUEE_X;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.MARQUEE_Y;
 import static java.util.Objects.requireNonNull;

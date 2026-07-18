@@ -9,7 +9,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.world.*;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant.MapConfigKey;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.*;
 import de.amr.pacmanfx.uilib.assets.AssetMap;

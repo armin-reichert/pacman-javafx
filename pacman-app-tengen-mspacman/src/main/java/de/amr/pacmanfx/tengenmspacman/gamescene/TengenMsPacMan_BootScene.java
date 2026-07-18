@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant.*;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.*;
 
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.

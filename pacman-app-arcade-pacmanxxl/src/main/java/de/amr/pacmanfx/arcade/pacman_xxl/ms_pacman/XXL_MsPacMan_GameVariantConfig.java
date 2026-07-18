@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacManGameVariant;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_Factory3D;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacManGameVariant;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static java.util.Objects.requireNonNull;
 
-public final class XXL_MsPacMan_GameVariant implements GameVariantConfig, ResourceManager {
+public final class XXL_MsPacMan_GameVariantConfig implements GameVariantConfig, ResourceManager {
 
     public static GameFlowController createGameFlow() {
         final var gameFlow = new GameFlowController("Arcade Ms. Pac-Man Game Flow");
@@ -46,7 +46,7 @@ public final class XXL_MsPacMan_GameVariant implements GameVariantConfig, Resour
         return gameFlow;
     }
 
-    private static final ResourceManager ARCADE_RES = () -> ArcadeMsPacManGameVariant.class;
+    private static final ResourceManager ARCADE_RES = () -> ArcadeMsPacMan_GameVariantConfig.class;
 
     private static final String XXL_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
     private static final String XXL_PKG = "de.amr.pacmanfx.arcade.pacman_xxl.";
@@ -61,7 +61,7 @@ public final class XXL_MsPacMan_GameVariant implements GameVariantConfig, Resour
 
     private GameAppContext appContext;
 
-    public XXL_MsPacMan_GameVariant() {
+    public XXL_MsPacMan_GameVariantConfig() {
         textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
     }
 
@@ -129,7 +129,7 @@ public final class XXL_MsPacMan_GameVariant implements GameVariantConfig, Resour
 
     @Override
     public WorldSettings worldSettings() {
-        return ArcadePacManGameVariant.WORLD_CONFIG;
+        return ArcadePacMan_GameVariantConfig.WORLD_CONFIG;
     }
 
     @Override

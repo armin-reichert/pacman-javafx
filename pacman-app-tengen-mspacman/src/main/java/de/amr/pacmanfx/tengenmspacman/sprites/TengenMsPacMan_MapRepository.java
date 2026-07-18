@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.sprites;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
 import java.util.List;
@@ -42,11 +42,11 @@ public class TengenMsPacMan_MapRepository {
     public MapImageSet createMapImageSet(WorldMap worldMap, int flashCount) {
         requireNonNull(worldMap);
 
-        final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacManGameVariant.MapConfigKey.MAP_CATEGORY);
+        final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_GameVariantConfig.MapConfigKey.MAP_CATEGORY);
         final int mapNumber           = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
         final NES_MapColorScheme reqColorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
         // for randomly colored maps (levels 28-31, non-ARCADE maps), multiple random flash colors appear
-        final boolean randomFlashColors = worldMap.getConfigValue(TengenMsPacManGameVariant.MapConfigKey.MULTIPLE_FLASH_COLORS);
+        final boolean randomFlashColors = worldMap.getConfigValue(TengenMsPacMan_GameVariantConfig.MapConfigKey.MULTIPLE_FLASH_COLORS);
 
         return switch (mapCategory) {
 
@@ -57,7 +57,7 @@ public class TengenMsPacMan_MapRepository {
             case BIG     -> bigMapImageSet(mapNumber, reqColorScheme, flashCount, randomFlashColors);
 
             case STRANGE -> strangeMapImageSet(
-                worldMap.getConfigValue(TengenMsPacManGameVariant.MapConfigKey.MAP_ID), // set by map selector!
+                worldMap.getConfigValue(TengenMsPacMan_GameVariantConfig.MapConfigKey.MAP_ID), // set by map selector!
                 randomFlashColors ? reqColorScheme : null,
                 flashCount,
                 randomFlashColors);

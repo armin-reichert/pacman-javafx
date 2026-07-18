@@ -19,7 +19,7 @@ import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant.bonusValueSpriteIndex;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.bonusValueSpriteIndex;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRendererMixin, ActorRenderer {

@@ -28,7 +28,7 @@ import java.util.List;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.core.model.world.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant.*;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.*;
 
 public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 

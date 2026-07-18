@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.core.model.world.WorldMapParseException;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.sprites.NES_MapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet;
 import org.tinylog.Logger;
@@ -31,10 +31,10 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     private record PrototypeConfig(String path, int numMaps) {}
 
     private static final Map<MapCategory, PrototypeConfig> PROTOTYPE_CONFIG_MAP = Map.of(
-        ARCADE,  new PrototypeConfig(TengenMsPacManGameVariant.MAPS_FOLDER + "arcade%d.world", 4),
-        MINI,    new PrototypeConfig(TengenMsPacManGameVariant.MAPS_FOLDER + "mini%d.world", 6),
-        BIG,     new PrototypeConfig(TengenMsPacManGameVariant.MAPS_FOLDER + "big%02d.world", 11),
-        STRANGE, new PrototypeConfig(TengenMsPacManGameVariant.MAPS_FOLDER + "strange%02d.world", 15)
+        ARCADE,  new PrototypeConfig(TengenMsPacMan_GameVariantConfig.MAPS_FOLDER + "arcade%d.world", 4),
+        MINI,    new PrototypeConfig(TengenMsPacMan_GameVariantConfig.MAPS_FOLDER + "mini%d.world", 6),
+        BIG,     new PrototypeConfig(TengenMsPacMan_GameVariantConfig.MAPS_FOLDER + "big%02d.world", 11),
+        STRANGE, new PrototypeConfig(TengenMsPacMan_GameVariantConfig.MAPS_FOLDER + "strange%02d.world", 15)
     );
 
     private final Map<MapCategory, List<WorldMap>> mapPrototypes = new EnumMap<>(MapCategory.class);
@@ -69,7 +69,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
                 final WorldMap strangeMap = configuredStrangeMap(levelNumber);
                 // Store maze ID in map properties to make renderer happy
                 final var mapID = NonArcadeMapsSpriteSheet.MapID.values()[levelNumber - 1];
-                strangeMap.setConfigValue(TengenMsPacManGameVariant.MapConfigKey.MAP_ID, mapID);
+                strangeMap.setConfigValue(TengenMsPacMan_GameVariantConfig.MapConfigKey.MAP_ID, mapID);
                 yield strangeMap;
             }
         };
@@ -93,15 +93,15 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     private WorldMap configuredMap(MapCategory category, int number, NES_MapColorScheme nesColorScheme) {
         final var worldMap = new WorldMap(mapPrototypes.get(category).get(number - 1));
         worldMap.setConfigValue(WorldMapConfigKey.MAP_NUMBER, number);
-        worldMap.setConfigValue(TengenMsPacManGameVariant.MapConfigKey.MAP_CATEGORY, category);
+        worldMap.setConfigValue(TengenMsPacMan_GameVariantConfig.MapConfigKey.MAP_CATEGORY, category);
         worldMap.setConfigValue(WorldMapConfigKey.COLOR_SCHEME, nesColorScheme);
-        worldMap.setConfigValue(TengenMsPacManGameVariant.MapConfigKey.MULTIPLE_FLASH_COLORS, false);
+        worldMap.setConfigValue(TengenMsPacMan_GameVariantConfig.MapConfigKey.MULTIPLE_FLASH_COLORS, false);
         return worldMap;
     }
 
     private WorldMap randomlyConfiguredMap(MapCategory category, int number) {
         final WorldMap worldMap = configuredMap(category, number, NES_MapColorScheme.randomScheme());
-        worldMap.setConfigValue(TengenMsPacManGameVariant.MapConfigKey.MULTIPLE_FLASH_COLORS, true);
+        worldMap.setConfigValue(TengenMsPacMan_GameVariantConfig.MapConfigKey.MULTIPLE_FLASH_COLORS, true);
         return worldMap;
     }
 

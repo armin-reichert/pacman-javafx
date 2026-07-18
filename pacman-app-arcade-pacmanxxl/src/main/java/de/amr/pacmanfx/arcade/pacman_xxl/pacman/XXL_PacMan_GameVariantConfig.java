@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacManGameVariant;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
@@ -34,7 +34,7 @@ import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
-public final class XXL_PacMan_GameVariant implements GameVariantConfig, ResourceManager {
+public final class XXL_PacMan_GameVariantConfig implements GameVariantConfig, ResourceManager {
 
     public static GameFlowController createGameFlow() {
         final var gameFlow = new GameFlowController("Arcade Pac-Man XXL Game Flow");
@@ -44,7 +44,7 @@ public final class XXL_PacMan_GameVariant implements GameVariantConfig, Resource
         return gameFlow;
     }
 
-    private static final ResourceManager ARCADE_PACMAN_RES = () -> ArcadePacManGameVariant.class;
+    private static final ResourceManager ARCADE_PACMAN_RES = () -> ArcadePacMan_GameVariantConfig.class;
 
     private static final String XXL_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
     private static final String XXL_PKG = "de.amr.pacmanfx.arcade.pacman_xxl.";
@@ -59,7 +59,7 @@ public final class XXL_PacMan_GameVariant implements GameVariantConfig, Resource
 
     private GameAppContext appContext;
 
-    public XXL_PacMan_GameVariant() {
+    public XXL_PacMan_GameVariantConfig() {
         textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman");
     }
 
@@ -127,7 +127,7 @@ public final class XXL_PacMan_GameVariant implements GameVariantConfig, Resource
 
     @Override
     public WorldSettings worldSettings() {
-        return ArcadePacManGameVariant.WORLD_CONFIG;
+        return ArcadePacMan_GameVariantConfig.WORLD_CONFIG;
     }
 
     @Override

@@ -6,10 +6,7 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.flow.GameFlowController;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
-import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.MapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
@@ -20,12 +17,9 @@ import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.RenderConfig;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_GhostAnimations;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacAnimations;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -46,7 +40,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class TengenMsPacManGameVariant implements GameVariantConfig {
+public class TengenMsPacMan_GameVariantConfig implements GameVariantConfig {
 
     public static GameFlowController createGameFlow() {
         final var gameFlow = new GameFlowController("Tengen Ms. Pac-Man Game Flow");
@@ -60,7 +54,7 @@ public class TengenMsPacManGameVariant implements GameVariantConfig {
     private static final ResourceManager LOCAL_RESOURCES = TengenMsPacMan_ResourceManager.instance();
 
     private static final WorldSettings WORLD_CONFIG = TengenJsonConfigLoader.load(
-        TengenMsPacManGameVariant.class.getResource("/de/amr/pacmanfx/tengenmspacman/world.json"), WorldSettings.class);
+        TengenMsPacMan_GameVariantConfig.class.getResource("/de/amr/pacmanfx/tengenmspacman/world.json"), WorldSettings.class);
 
     // Note: Order of bonus symbols in spritesheet is not 1:1 with order of bonus values!
     // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
@@ -141,7 +135,7 @@ public class TengenMsPacManGameVariant implements GameVariantConfig {
     private GameVariantRenderConfig renderConfig;
     private GameSoundEffects soundEffects;
 
-    public TengenMsPacManGameVariant() {
+    public TengenMsPacMan_GameVariantConfig() {
         textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
         Logger.info("Created Tengen UI configuration {}:", getClass().getSimpleName());
     }
