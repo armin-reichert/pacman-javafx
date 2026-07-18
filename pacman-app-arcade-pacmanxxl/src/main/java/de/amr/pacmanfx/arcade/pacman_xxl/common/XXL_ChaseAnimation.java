@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Simple chasing animation used in XXL menu.
  */
-class ChaseAnimation {
+class XXL_ChaseAnimation {
 
     enum ChasingState {GHOSTS_CHASING_PAC, PAC_CHASING_GHOSTS}
 
@@ -55,7 +55,7 @@ class ChaseAnimation {
     record Collision(Ghost ghost, long time) {}
     private final List<Collision> collisions = new ArrayList<>();
 
-    public ChaseAnimation(int numTilesX) {
+    public XXL_ChaseAnimation(int numTilesX) {
         this.numTilesX = numTilesX;
         timeline = new Timeline(new KeyFrame(FRAME_TIME, _ -> update()));
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -82,7 +82,7 @@ class ChaseAnimation {
         requireNonNull(gameVariant);
         requireNonNull(canvas);
 
-        actorRenderer = gameVariant.createActorRenderer(canvas);
+        actorRenderer = gameVariant.renderConfig().createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         pac = ArcadePacMan_ActorFactory.createPacMan();

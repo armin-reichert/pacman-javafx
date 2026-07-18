@@ -26,20 +26,20 @@ import static de.amr.pacmanfx.core.GameVariantID.ARCADE_PACMAN_XXL;
 import static de.amr.pacmanfx.core.model.world.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_OptionMenu extends OptionMenu {
+public class XXL_OptionMenu extends OptionMenu {
 
     private final OptionMenuEntry<GameVariantID> meGameVariantID;
     private final OptionMenuEntry<Boolean> meView3DEnabled;
     private final OptionMenuEntry<Boolean> meCutScenesEnabled;
     private final OptionMenuEntry<WorldMapSelectionMode> meMapOrder;
 
-    private final ChaseAnimation chaseAnimation;
+    private final XXL_ChaseAnimation chaseAnimation;
 
     private GameAppContext appContext;
 
     private ObservableValue<Double> scaling;
 
-    public PacManXXL_OptionMenu(OptionMenuSettings settings) {
+    public XXL_OptionMenu(OptionMenuSettings settings) {
         super(settings);
 
         setTitle("Pac-Man XXL");
@@ -60,7 +60,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         addEntry(meCutScenesEnabled);
         addEntry(meMapOrder);
 
-        chaseAnimation = new ChaseAnimation(settings.numTilesX());
+        chaseAnimation = new XXL_ChaseAnimation(settings.numTilesX());
         chaseAnimation.setY((settings.numTilesY() - 12) * WorldMap.TS);
         chaseAnimation.scalingProperty().bind(scalingProperty());
     }
@@ -90,7 +90,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         final GameVariantID gameVariantID = GameVariantID.valueOf(appContext.variants().currentVariantName());
         final GameModel gameModel = gameContext.model();
 
-        if (!(gameModel.mapSelector() instanceof PacManXXL_MapSelector mapSelector)) {
+        if (!(gameModel.mapSelector() instanceof XXL_MapSelector mapSelector)) {
             final String errorMsg = "Expected XXL map selector but found %s".formatted(gameModel.mapSelector().getClass().getSimpleName());
             Logger.error(errorMsg);
             throw new IllegalStateException(errorMsg);

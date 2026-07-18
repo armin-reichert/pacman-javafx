@@ -7,8 +7,10 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacManGameVariant;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
-import de.amr.pacmanfx.arcade.pacman.rendering.*;
-import de.amr.pacmanfx.arcade.pacman.scenes.*;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimations;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimations;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
+import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
@@ -18,24 +20,19 @@ import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
+import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import org.tinylog.Logger;
 
@@ -44,7 +41,7 @@ import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
-public final class PacManXXLGameVariant implements GameVariantConfig, ResourceManager {
+public final class XXL_PacMan_GameVariant implements GameVariantConfig, ResourceManager {
 
     public static GameFlowController createGameFlow() {
         final var gameFlow = new GameFlowController("Arcade Pac-Man XXL Game Flow");
@@ -59,18 +56,17 @@ public final class PacManXXLGameVariant implements GameVariantConfig, ResourceMa
     private static final String XXL_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
     private static final String XXL_PKG = "de.amr.pacmanfx.arcade.pacman_xxl.";
 
-    private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(400, 0, 256, 160);
-
     private final ResourceBundle textBundle;
     private final AssetMap assets = new AssetMap();
     private final Factory3D factory3D = new DefaultFactory3D();
 
     private GameSceneConfig gameSceneConfig;
+    private GameVariantRenderConfig renderConfig;
     private GameSoundEffects soundEffects;
 
     private GameAppContext appContext;
 
-    public PacManXXLGameVariant() {
+    public XXL_PacMan_GameVariant() {
         textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman");
     }
 
@@ -88,10 +84,11 @@ public final class PacManXXLGameVariant implements GameVariantConfig, ResourceMa
     public void init(GameAppContext appContext) {
         this.appContext = appContext;
 
-        gameSceneConfig = new PacManXXL_PacMan_GameSceneConfig(appContext);
-
         Logger.info("Load assets of UI configuration {}", getClass().getSimpleName());
         loadAssets();
+
+        gameSceneConfig = new XXL_PacMan_GameSceneConfig(appContext);
+        renderConfig = new XXL_PacMan_RenderConfig(assets);
 
         Logger.info("Register sounds and effects of UI configuration {}", getClass().getSimpleName());
         registerSounds(appContext.ui().sounds());
@@ -121,6 +118,11 @@ public final class PacManXXLGameVariant implements GameVariantConfig, ResourceMa
     }
 
     @Override
+    public GameVariantRenderConfig renderConfig() {
+        return renderConfig;
+    }
+
+    @Override
     public AssetMap assets() {
         return assets;
     }
@@ -133,41 +135,6 @@ public final class PacManXXLGameVariant implements GameVariantConfig, ResourceMa
     @Override
     public WorldSettings worldSettings() {
         return ArcadePacManGameVariant.WORLD_CONFIG;
-    }
-
-    @Override
-    public PacManXXL_PacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
-        return new PacManXXL_PacMan_GameLevelRenderer(canvas);
-    }
-
-    @Override
-    public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene2D gameScene2D, Canvas canvas) {
-        final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D      ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
-            case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, gameScene2D, canvas);
-            case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene2D, canvas);
-            case Arcade_PlayScene2D      ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet());
-            case ArcadePacMan_CutScene1  ignored -> new ArcadePacMan_CutScene1_Renderer(gameScene2D, canvas);
-            case ArcadePacMan_CutScene2  ignored -> new ArcadePacMan_CutScene2_Renderer(gameScene2D, canvas);
-            case ArcadePacMan_CutScene3  ignored -> new ArcadePacMan_CutScene3_Renderer(gameScene2D, canvas);
-            default -> throw new IllegalStateException("Unexpected value: " + gameScene2D);
-        };
-        return gameScene2D.configureRenderer(renderer);
-    }
-
-    @Override
-    public HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene2D gameScene2D, Canvas canvas) {
-        final var hudRenderer = new ArcadePacMan_HeadsUpDisplay_Renderer(canvas);
-        hudRenderer.setImageSmoothing(true);
-        gameScene2D.configureRenderer(hudRenderer);
-        return hudRenderer;
-    }
-
-    @Override
-    public ActorRenderer createActorRenderer(Canvas canvas) {
-        final var actorRenderer = new ArcadePacMan_ActorRenderer(canvas);
-        actorRenderer.setImageSmoothing(true);
-        return actorRenderer;
     }
 
     @Override

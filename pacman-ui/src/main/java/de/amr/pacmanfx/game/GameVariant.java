@@ -16,25 +16,51 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public record GameVariant(
-    GamePlay gamePlay,
-    GameFlowController gameFlow,
-    GameModel gameModel,
-    GameCheats cheats,
-    GameVariantConfig config,
-    Set<GameExtension> extensions,
-    Map<Identifier, Object> extensionValues)
-{
+public class GameVariant {
+    private final GamePlay gamePlay;
+    private final GameFlowController gameFlow;
+    private final GameModel gameModel;
+    private final GameCheats cheats;
+    private final GameVariantConfig config;
+    private final Set<GameExtension> extensions;
+    private final Map<Identifier, Object> extensionValues;
+
     public GameVariant(Cartridge cartridge) {
-        this(
-            cartridge.gamePlayFactory().get(),
-            cartridge.gameFlowFactory().get(),
-            cartridge.gameModelFactory().get(),
-            new DefaultCheatsImpl(),
-            cartridge.uiConfigFactory().get(),
-            cartridge.gameExtensions(),
-            new HashMap<>()
-        );
+        gamePlay = cartridge.gamePlayFactory().get();
+        gameFlow = cartridge.gameFlowFactory().get();
+        gameModel = cartridge.gameModelFactory().get();
+        cheats = new DefaultCheatsImpl();
+        config = cartridge.uiConfigFactory().get();
+        extensions = cartridge.gameExtensions();
+        extensionValues = new HashMap<>();
+    }
+
+    public GamePlay gamePlay() {
+        return gamePlay;
+    }
+
+    public GameFlowController gameFlow() {
+        return gameFlow;
+    }
+
+    public GameModel gameModel() {
+        return gameModel;
+    }
+
+    public GameCheats cheats() {
+        return cheats;
+    }
+
+    public GameVariantConfig config() {
+        return config;
+    }
+
+    public Set<GameExtension> extensions() {
+        return extensions;
+    }
+
+    public Map<Identifier, Object> extensionValues() {
+        return extensionValues;
     }
 
     public <T> T getExtensionValue(GameAppContext appContext, Identifier id, Class<T> type) {

@@ -2,23 +2,23 @@ package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
-import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.MsPacManXXLGameVariant;
-import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GamePlay;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameVariant;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GamePlay;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.Cartridge;
 import de.amr.pacmanfx.game.GameExtension;
 
 import java.util.Set;
 
-public class PacManXXL_MsPacMan_Cartridge {
+public class XXL_MsPacMan_Cartridge {
 
     public static final Cartridge CARTRIDGE = new Cartridge(
         GameVariantID.ARCADE_MS_PACMAN_XXL,
-        PacManXXL_MsPacMan_GamePlay::new,
-        MsPacManXXLGameVariant::createGameFlow,
-        PacManXXL_MsPacMan_GameModel::new,
-        MsPacManXXLGameVariant::new,
+        XXL_MsPacMan_GamePlay::new,
+        XXL_MsPacMan_GameVariant::createGameFlow,
+        XXL_MsPacMan_GameModel::new,
+        XXL_MsPacMan_GameVariant::new,
         Set.of(new GameExtension(Arcade_GameExtensions.ACTIONS, Arcade_Actions::new))
     );
 }

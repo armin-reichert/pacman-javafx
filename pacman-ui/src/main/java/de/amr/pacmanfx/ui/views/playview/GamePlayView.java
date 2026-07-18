@@ -8,10 +8,10 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
@@ -21,6 +21,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.model.GameViewModel;
+import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
@@ -292,11 +293,11 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void updateGameSceneRenderers(AbstractGameScene2D gameScene2D) {
-        final GameVariantConfig gameVariantConfig = appContext.variants().currentVariant().config();
+        final GameVariantRenderConfig renderConfig = appContext.variants().currentVariant().config().renderConfig();
         if (gameScene2D.canvas() != null) {
-            sceneRenderer = gameVariantConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
+            sceneRenderer = renderConfig.createGameSceneRenderer(gameScene2D, gameScene2D.canvas());
             setFontSmoothing(appContext.ui().viewModel().common2D.fontSmoothingOnProperty.get());
-            hudRenderer = gameVariantConfig.createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
+            hudRenderer = renderConfig.createHUDRenderer(gameScene2D, gameScene2D.canvas()); // may return null!
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
         }
@@ -397,8 +398,8 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     private void showMiniPlayView(GameLevel level) {
-        final GameVariantConfig config = appContext.variants().currentVariant().config();
-        miniPlaySceneView.setVariantConfig(config);
+        final GameVariantRenderConfig renderConfig = appContext.variants().currentVariant().config().renderConfig();
+        miniPlaySceneView.setRenderConfig(renderConfig);
         miniPlaySceneView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
         miniPlaySceneView.slideIn();
     }

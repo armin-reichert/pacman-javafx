@@ -15,12 +15,14 @@ import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
-import de.amr.pacmanfx.tengenmspacman.gamescene.*;
+import de.amr.pacmanfx.tengenmspacman.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
-import de.amr.pacmanfx.tengenmspacman.rendering.*;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
+import de.amr.pacmanfx.tengenmspacman.rendering.RenderConfig;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_GhostAnimations;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacAnimations;
@@ -28,15 +30,12 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -139,6 +138,7 @@ public class TengenMsPacManGameVariant implements GameVariantConfig {
     private final AssetMap assets = new AssetMap();
     private final TengenMsPacMan_Factory3D factory3D = new TengenMsPacMan_Factory3D();
     private GameSceneConfig gameSceneConfig;
+    private GameVariantRenderConfig renderConfig;
     private GameSoundEffects soundEffects;
 
     public TengenMsPacManGameVariant() {
@@ -156,6 +156,7 @@ public class TengenMsPacManGameVariant implements GameVariantConfig {
         loadAssets();
         registerSoundObjects(appContext.ui().sounds());
         gameSceneConfig = new GameSceneConfig(appContext);
+        renderConfig = new RenderConfig(assets);
         Logger.info("Initialized Tengen UI configuration {} (loaded assets and sounds)", getClass().getSimpleName());
     }
 
@@ -167,8 +168,13 @@ public class TengenMsPacManGameVariant implements GameVariantConfig {
     }
 
     @Override
-    public de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig gameSceneConfig() {
+    public GameSceneConfig gameSceneConfig() {
         return gameSceneConfig;
+    }
+
+    @Override
+    public GameVariantRenderConfig renderConfig() {
+        return renderConfig;
     }
 
     @Override
@@ -194,38 +200,6 @@ public class TengenMsPacManGameVariant implements GameVariantConfig {
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
         return TengenMsPacMan_SpriteSheet.instance();
-    }
-
-    @Override
-    public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene2D gameScene2D, Canvas canvas) {
-        final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case TengenMsPacMan_BootScene    ignored -> new TengenMsPacMan_BootScene_Renderer(this, gameScene2D, canvas);
-            case TengenMsPacMan_IntroScene   ignored -> new TengenMsPacMan_IntroScene_Renderer(this, gameScene2D, canvas);
-            case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(gameScene2D, canvas);
-            case TengenMsPacMan_PlayScene2D  ignored -> new TengenMsPacMan_PlayScene2D_Renderer(this, gameScene2D, canvas);
-            case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(gameScene2D, canvas);
-            case TengenMsPacMan_CutScene1    ignored -> new TengenMsPacMan_CutScene1_Renderer(this, gameScene2D, canvas);
-            case TengenMsPacMan_CutScene2    ignored -> new TengenMsPacMan_CutScene2_Renderer(this, gameScene2D, canvas);
-            case TengenMsPacMan_CutScene3    ignored -> new TengenMsPacMan_CutScene3_Renderer(this, gameScene2D, canvas);
-            case TengenMsPacMan_CutScene4    ignored -> new TengenMsPacMan_CutScene4_Renderer(this, gameScene2D, canvas);
-            default -> throw new IllegalStateException("Unexpected value: " + gameScene2D);
-        };
-        return gameScene2D.configureRenderer(renderer);
-    }
-
-    @Override
-    public TengenMsPacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
-        return new TengenMsPacMan_GameLevelRenderer(canvas, this);
-    }
-
-    @Override
-    public TengenMsPacMan_HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene2D gameScene2D, Canvas canvas) {
-        return gameScene2D.configureRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas));
-    }
-
-    @Override
-    public TengenMsPacMan_ActorRenderer createActorRenderer(Canvas canvas) {
-        return new TengenMsPacMan_ActorRenderer(canvas);
     }
 
     @Override

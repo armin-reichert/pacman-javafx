@@ -11,25 +11,21 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
+import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
 import java.util.Optional;
 
 //TODO: Clean-up this mess!
 public interface GameVariantConfig extends Disposable {
+
+    GameVariantRenderConfig renderConfig();
 
     void init(GameAppContext appContext);
 
@@ -54,14 +50,6 @@ public interface GameVariantConfig extends Disposable {
     Image bonusValueImage(int symbolCode);
 
     WorldMapColorScheme colorScheme(WorldMap worldMap);
-
-    GameLevelRenderer createGameLevelRenderer(Canvas canvas);
-
-    GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene2D gameScene2D, Canvas canvas);
-
-    HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene2D gameScene2D, Canvas canvas);
-
-    ActorRenderer createActorRenderer(Canvas canvas);
 
     Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality);
 

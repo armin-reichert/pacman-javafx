@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -41,9 +41,9 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
 
-        final GameVariantConfig gameVariantConfig = scene.appContext().variants().currentVariant().config();
-        levelRenderer = scene.configureRenderer(gameVariantConfig.createGameLevelRenderer(canvas));
-        actorRenderer = scene.configureRenderer(gameVariantConfig.createActorRenderer(canvas));
+        final GameVariantRenderConfig renderConfig = scene.appContext().variants().currentVariant().config().renderConfig();
+        levelRenderer = scene.configureRenderer(renderConfig.createGameLevelRenderer(canvas));
+        actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(canvas));
         debugRenderer = scene.configureRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(canvas));
     }
 

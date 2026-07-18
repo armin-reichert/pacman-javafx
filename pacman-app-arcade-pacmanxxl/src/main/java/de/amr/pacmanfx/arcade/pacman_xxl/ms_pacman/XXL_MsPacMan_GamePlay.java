@@ -13,13 +13,13 @@ import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 
-public class PacManXXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
+public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
 
     private static final int[] DEMO_LEVEL_NUMBERS = { 1, 3, 6, 10, 14, 18 };
 
     @Override
     public GameLevel buildDemoLevel(GameContext gameContext) {
-        final PacManXXL_MsPacMan_GameModel xxlModel = (PacManXXL_MsPacMan_GameModel) gameContext.model();
+        final XXL_MsPacMan_GameModel xxlModel = (XXL_MsPacMan_GameModel) gameContext.model();
 
         xxlModel.mapSelector().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 

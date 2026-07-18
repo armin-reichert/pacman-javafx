@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
-import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_MapSelector;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 
@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.model.world.FoodLayer;
  * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>) and the possibility to
  * play custom maps.
  */
-public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
+public class XXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
     private static ArcadePacMan_GameRules createRules() {
         return new ArcadePacMan_GameRules() {
@@ -30,13 +30,13 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         };
     }
 
-    public PacManXXL_PacMan_GameModel() {
-        mapSelector = PacManXXL_MapSelector.instance();
+    public XXL_PacMan_GameModel() {
+        mapSelector = XXL_MapSelector.instance();
         rules = createRules();
     }
 
     @Override
-    public PacManXXL_MapSelector mapSelector() {
-        return (PacManXXL_MapSelector) mapSelector;
+    public XXL_MapSelector mapSelector() {
+        return (XXL_MapSelector) mapSelector;
     }
 }

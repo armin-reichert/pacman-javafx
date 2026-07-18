@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
-import de.amr.pacmanfx.arcade.pacman_xxl.pacman.PacManXXLGameVariant;
+import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_GameVariant;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.input.Input;
@@ -28,27 +28,27 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
  */
-public class PacManXXL_StartPage implements StartPage {
+public class XXL_StartPage implements StartPage {
 
     static final String ROOT_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
-    static final ResourceManager RM = () -> PacManXXLGameVariant.class;
+    static final ResourceManager RM = () -> XXL_PacMan_GameVariant.class;
     static final Image WALLPAPER_IMAGE = RM.loadImage(ROOT_PATH + "graphics/screenshot.png");
     static final Media VARIANT_NARRATION = RM.loadMedia(ROOT_PATH + "sound/game-description.mp3");
 
     private final StackPane rootPane;
-    private final PacManXXL_OptionMenu menu;
+    private final XXL_OptionMenu menu;
 
     private GameAppContext appContext;
     private final String title;
 
-    public PacManXXL_StartPage() {
+    public XXL_StartPage() {
         title = "Pac-Man XXL games"; // TODO localize
 
         final OptionMenuSettings menuSettings = JsonConfigLoader.load(
             getClass().getResource("/de/amr/pacmanfx/arcade/pacman_xxl/option-menu.json"),
             OptionMenuSettings.class
         );
-        menu = new PacManXXL_OptionMenu(menuSettings);
+        menu = new XXL_OptionMenu(menuSettings);
 
         rootPane = new StackPane(menu.rootPane());
         rootPane.setBackground(Ufx.createWallpaper(WALLPAPER_IMAGE));

@@ -24,13 +24,13 @@ import java.util.Optional;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventListener {
+public class XXL_MapSelector implements WorldMapSelector, PathWatchEventListener {
 
     private static class LazyThreadSafeSingletonHolder {
-        static final PacManXXL_MapSelector SINGLETON = new PacManXXL_MapSelector();
+        static final XXL_MapSelector SINGLETON = new XXL_MapSelector();
     }
 
-    public static PacManXXL_MapSelector instance() {
+    public static XXL_MapSelector instance() {
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
@@ -49,7 +49,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
     private final List<WorldMap> builtinMaps = new ArrayList<>();
     private WorldMapSelectionMode selectionMode;
 
-    private PacManXXL_MapSelector() {
+    private XXL_MapSelector() {
         this.selectionMode = WorldMapSelectionMode.CUSTOM_MAPS_FIRST;
         addJuniorPacMapPrototypesIfEmptyDir();
     }
@@ -200,7 +200,7 @@ public class PacManXXL_MapSelector implements WorldMapSelector, PathWatchEventLi
             for (int i = 1; i <= 15; ++i) {
                 final String mapName = "Jr. Pac-Man %02d.world".formatted(i);
                 final String path = "/de/amr/pacmanfx/arcade/pacman_xxl/maps/junior_pacman/" + mapName;
-                final URL url = PacManXXL_MapSelector.class.getResource(path);
+                final URL url = XXL_MapSelector.class.getResource(path);
                 if (url != null) {
                     final File targetFile = new File(GameConstants.CUSTOM_MAP_DIR, mapName);
                     WorldMap.fromURL(url).ifPresentOrElse(worldMap -> {

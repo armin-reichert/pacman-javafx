@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -38,9 +38,9 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     private final BaseDebugInfoRenderer debugRenderer;
     private final RectShort energizerSprite;
 
-    public ArcadePacMan_IntroScene_Renderer(GameVariantConfig gameVariant, AbstractGameScene2D scene, Canvas canvas) {
+    public ArcadePacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
-        actorRenderer = scene.configureRenderer((ArcadePacMan_ActorRenderer) gameVariant.createActorRenderer(canvas));
+        actorRenderer = scene.configureRenderer((ArcadePacMan_ActorRenderer) renderConfig.createActorRenderer(canvas));
         debugRenderer = scene.configureRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override
             public void draw(AbstractGameScene2D scene, long tick) {

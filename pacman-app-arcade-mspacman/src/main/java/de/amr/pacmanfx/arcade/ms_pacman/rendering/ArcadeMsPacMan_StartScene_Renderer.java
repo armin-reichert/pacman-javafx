@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -24,11 +24,10 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
 
     private final Image copyrightImage;
 
-    public ArcadeMsPacMan_StartScene_Renderer(GameVariantConfig gameVariant, AbstractGameScene2D scene, Canvas canvas) {
+    public ArcadeMsPacMan_StartScene_Renderer(GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
 
-        copyrightImage = gameVariant.assets().image("logo.midway");
-
+        copyrightImage = renderConfig.assets().image("logo.midway");
         copyrightRenderer = scene.configureRenderer(new CopyrightRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }

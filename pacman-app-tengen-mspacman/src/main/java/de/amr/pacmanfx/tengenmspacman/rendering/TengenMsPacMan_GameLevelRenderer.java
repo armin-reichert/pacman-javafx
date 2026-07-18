@@ -9,10 +9,10 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.world.*;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManGameVariant.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.*;
+import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -37,11 +37,12 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         return (int) (phase < 3 ? phase : 1);
     }
 
-    private final TengenMsPacManGameVariant gameVariant;
+    //TODO pass render config instead?
+    private final AssetMap assets;
 
-    public TengenMsPacMan_GameLevelRenderer(Canvas canvas, TengenMsPacManGameVariant gameVariant) {
+    public TengenMsPacMan_GameLevelRenderer(AssetMap assets, Canvas canvas) {
         super(canvas);
-        this.gameVariant = requireNonNull(gameVariant);
+        this.assets = assets;
     }
 
     @Override
@@ -146,12 +147,12 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         final NES_MapColorScheme colorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
         final Color color = level.isDemoLevel()
             ? Color.valueOf(colorScheme.wallStroke())
-            : gameVariant.assets().color("color.game_over_message");
+            : assets.color("color.game_over_message");
         fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), message.x(), message.y());
     }
 
     private void drawReadyMessage(GameLevelMessage message) {
-        fillTextCentered(READY_MESSAGE_TEXT, gameVariant.assets().color("color.ready_message"), arcadeFont8(), message.x(), message.y());
+        fillTextCentered(READY_MESSAGE_TEXT, assets.color("color.ready_message"), arcadeFont8(), message.x(), message.y());
     }
 
     public void drawDoor(WorldMap worldMap) {

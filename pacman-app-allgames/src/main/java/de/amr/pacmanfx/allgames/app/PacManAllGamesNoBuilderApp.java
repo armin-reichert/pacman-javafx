@@ -9,10 +9,10 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.app.ArcadeMsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.app.ArcadePacMan_Cartridge;
-import de.amr.pacmanfx.arcade.pacman_xxl.app.PacManXXL_MsPacMan_Cartridge;
-import de.amr.pacmanfx.arcade.pacman_xxl.app.PacManXXL_PacMan_Cartridge;
-import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_MapSelector;
-import de.amr.pacmanfx.arcade.pacman_xxl.common.PacManXXL_StartPage;
+import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_MsPacMan_Cartridge;
+import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_PacMan_Cartridge;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_MapSelector;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.PacManGames;
@@ -46,9 +46,9 @@ public class PacManAllGamesNoBuilderApp extends Application {
             ArcadeMsPacMan_Cartridge.CARTRIDGE,
             TengenMsPacMan_Cartridge.CARTRIDGE,
             null,
-            PacManXXL_PacMan_Cartridge.CARTRIDGE,
+            XXL_PacMan_Cartridge.CARTRIDGE,
             null,
-            PacManXXL_MsPacMan_Cartridge.CARTRIDGE
+            XXL_MsPacMan_Cartridge.CARTRIDGE
         );
         game = new PacManGames();
 
@@ -63,9 +63,9 @@ public class PacManAllGamesNoBuilderApp extends Application {
         startPages.addStartPage(game, new ArcadePacMan_StartPage());
         startPages.addStartPage(game, new ArcadeMsPacMan_StartPage());
         startPages.addStartPage(game, new TengenMsPacMan_StartPage());
-        startPages.addStartPage(game, new PacManXXL_StartPage());
+        startPages.addStartPage(game, new XXL_StartPage());
 
-        game.watchdog().addEventListener(PacManXXL_MapSelector.instance());
+        game.watchdog().addEventListener(XXL_MapSelector.instance());
 
         game.setUI(ui);
         game.selectGameVariantAndShow(GameVariantID.ARCADE_PACMAN);

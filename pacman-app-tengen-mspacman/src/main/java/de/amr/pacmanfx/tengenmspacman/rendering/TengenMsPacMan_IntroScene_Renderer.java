@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene;
@@ -32,11 +32,11 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     private final ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public TengenMsPacMan_IntroScene_Renderer(GameVariantConfig gameVariant, AbstractGameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
-        requireNonNull(gameVariant);
+        requireNonNull(renderConfig);
         requireNonNull(scene);
-        actorRenderer = scene.configureRenderer(gameVariant.createActorRenderer(canvas));
+        actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 
