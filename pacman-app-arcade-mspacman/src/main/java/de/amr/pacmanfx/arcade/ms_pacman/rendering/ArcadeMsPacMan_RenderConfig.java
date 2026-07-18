@@ -26,15 +26,19 @@ import javafx.scene.canvas.Canvas;
 import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
 import static java.util.Objects.requireNonNull;
 
-public class RenderConfig implements GameVariantRenderConfig {
+public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(380, 0, 204, 208);
 
-    private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
     private final AssetMap assets;
 
-    public RenderConfig(AssetMap assets) {
+    public ArcadeMsPacMan_RenderConfig(AssetMap assets) {
         this.assets = assets;
+    }
+
+    @Override
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
+        return ArcadeMsPacMan_SpriteSheet.instance();
     }
 
     @Override
@@ -47,10 +51,10 @@ public class RenderConfig implements GameVariantRenderConfig {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet, BOOT_SCENE_SPRITES);
+            case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
             case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(this, gameScene2D, canvas);
             case ArcadeMsPacMan_StartScene ignored -> new ArcadeMsPacMan_StartScene_Renderer(this, gameScene2D, canvas);
-            case Arcade_PlayScene2D ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet);
+            case Arcade_PlayScene2D ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet());
             case ArcadeMsPacMan_CutScene1 ignored -> new ArcadeMsPacMan_CutScene1_Renderer(this, gameScene2D, canvas);
             case ArcadeMsPacMan_CutScene2 ignored -> new ArcadeMsPacMan_CutScene2_Renderer(this, gameScene2D, canvas);
             case ArcadeMsPacMan_CutScene3 ignored -> new ArcadeMsPacMan_CutScene3_Renderer(this, gameScene2D, canvas);

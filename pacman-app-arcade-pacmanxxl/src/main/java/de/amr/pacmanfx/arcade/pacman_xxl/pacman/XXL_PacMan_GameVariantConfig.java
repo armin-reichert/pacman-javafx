@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -54,7 +53,7 @@ public final class XXL_PacMan_GameVariantConfig implements GameVariantConfig, Re
     private final Factory3D factory3D = new DefaultFactory3D();
 
     private GameSceneConfig gameSceneConfig;
-    private GameVariantRenderConfig renderConfig;
+    private XXL_PacMan_RenderConfig renderConfig;
     private GameSoundEffects soundEffects;
 
     private GameAppContext appContext;
@@ -132,20 +131,20 @@ public final class XXL_PacMan_GameVariantConfig implements GameVariantConfig, Re
 
     @Override
     public Image killedGhostPointsImage(int killedGhostIndex) {
-        final RectShort[] numberSprites = spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
-        return spriteSheet().image(numberSprites[killedGhostIndex]);
+        final RectShort[] numberSprites = renderConfig.spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
+        return renderConfig.spriteSheet().image(numberSprites[killedGhostIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(int symbolCode) {
-        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
-        return spriteSheet().image(sprites[symbolCode]);
+        final RectShort[] sprites = renderConfig.spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
+        return renderConfig.spriteSheet().image(sprites[symbolCode]);
     }
 
     @Override
     public Image bonusValueImage(int symbolCode) {
-        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_VALUES);
-        return spriteSheet().image(sprites[symbolCode]);
+        final RectShort[] sprites = renderConfig.spriteSheet().findSprites(SpriteID.BONUS_VALUES);
+        return renderConfig.spriteSheet().image(sprites[symbolCode]);
     }
 
     @Override
@@ -153,11 +152,6 @@ public final class XXL_PacMan_GameVariantConfig implements GameVariantConfig, Re
         return GlobalAssets.enhanceContrast(
             worldSettings(),
             worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME));
-    }
-
-    @Override
-    public ArcadePacMan_SpriteSheet spriteSheet() {
-        return ArcadePacMan_SpriteSheet.instance();
     }
 
     @Override

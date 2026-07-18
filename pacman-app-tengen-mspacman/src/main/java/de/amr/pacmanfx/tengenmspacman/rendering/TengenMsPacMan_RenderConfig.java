@@ -13,17 +13,23 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.*;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_GhostAnimations;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacAnimations;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import javafx.scene.canvas.Canvas;
 
-public class RenderConfig implements GameVariantRenderConfig {
+public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     private final AssetMap assets;
 
-    public RenderConfig(AssetMap assets) {
+    public TengenMsPacMan_RenderConfig(AssetMap assets) {
         this.assets = assets;
+    }
+
+    @Override
+    public TengenMsPacMan_SpriteSheet spriteSheet() {
+        return TengenMsPacMan_SpriteSheet.instance();
     }
 
     @Override

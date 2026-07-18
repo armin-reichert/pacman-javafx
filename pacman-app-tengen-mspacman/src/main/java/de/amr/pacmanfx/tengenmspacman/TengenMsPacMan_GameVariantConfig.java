@@ -18,9 +18,8 @@ import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.gamescene.GameSceneConfig;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.tengenmspacman.rendering.RenderConfig;
+import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -132,7 +131,7 @@ public class TengenMsPacMan_GameVariantConfig implements GameVariantConfig {
     private final AssetMap assets = new AssetMap();
     private final TengenMsPacMan_Factory3D factory3D = new TengenMsPacMan_Factory3D();
     private GameSceneConfig gameSceneConfig;
-    private GameVariantRenderConfig renderConfig;
+    private TengenMsPacMan_RenderConfig renderConfig;
     private GameSoundEffects soundEffects;
 
     public TengenMsPacMan_GameVariantConfig() {
@@ -150,7 +149,7 @@ public class TengenMsPacMan_GameVariantConfig implements GameVariantConfig {
         loadAssets();
         registerSoundObjects(appContext.ui().sounds());
         gameSceneConfig = new GameSceneConfig(appContext);
-        renderConfig = new RenderConfig(assets);
+        renderConfig = new TengenMsPacMan_RenderConfig(assets);
         Logger.info("Initialized Tengen UI configuration {} (loaded assets and sounds)", getClass().getSimpleName());
     }
 
@@ -192,27 +191,22 @@ public class TengenMsPacMan_GameVariantConfig implements GameVariantConfig {
     }
 
     @Override
-    public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return TengenMsPacMan_SpriteSheet.instance();
-    }
-
-    @Override
     public Image killedGhostPointsImage(int killedGhostIndex) {
-        final RectShort[] numberSprites = spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
-        return spriteSheet().image(numberSprites[killedGhostIndex]);
+        final RectShort[] numberSprites = renderConfig.spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
+        return renderConfig.spriteSheet().image(numberSprites[killedGhostIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(int symbolCode) {
-        final RectShort[] symbolSprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
-        return spriteSheet().image(symbolSprites[symbolCode]);
+        final RectShort[] symbolSprites = renderConfig.spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
+        return renderConfig.spriteSheet().image(symbolSprites[symbolCode]);
     }
 
     @Override
     public Image bonusValueImage(int symbolCode) {
         final int spriteIndex = bonusValueSpriteIndex(symbolCode);
-        final RectShort sprite = spriteSheet().findSprites(SpriteID.BONUS_VALUES)[spriteIndex];
-        return spriteSheet().image(sprite);
+        final RectShort sprite = renderConfig.spriteSheet().findSprites(SpriteID.BONUS_VALUES)[spriteIndex];
+        return renderConfig.spriteSheet().image(sprite);
     }
 
     @Override

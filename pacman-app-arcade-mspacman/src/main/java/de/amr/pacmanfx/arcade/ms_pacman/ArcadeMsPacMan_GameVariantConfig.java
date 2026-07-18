@@ -5,8 +5,7 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_MapSelector;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.RenderConfig;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_RenderConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
@@ -59,7 +58,7 @@ public class ArcadeMsPacMan_GameVariantConfig implements GameVariantConfig, Reso
     private final AssetMap assets = new AssetMap();
     private final Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
     private GameSceneConfig gameSceneConfig;
-    private GameVariantRenderConfig renderConfig;
+    private ArcadeMsPacMan_RenderConfig renderConfig;
     private GameSoundEffects soundEffects;
 
     public ArcadeMsPacMan_GameVariantConfig() {
@@ -77,7 +76,10 @@ public class ArcadeMsPacMan_GameVariantConfig implements GameVariantConfig, Reso
         loadAssets();
         initSound(appContext.ui().sounds());
         gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig(appContext);
-        renderConfig = new RenderConfig(assets);
+        renderConfig = new ArcadeMsPacMan_RenderConfig(assets);
+
+        //TODO rethink this
+        createBrightMazeImages();
     }
 
     @Override
@@ -111,13 +113,7 @@ public class ArcadeMsPacMan_GameVariantConfig implements GameVariantConfig, Reso
         assets.clear();
         assets.register("app_icon", loadImage("graphics/icons/mspacman.png"));
         assets.register("logo.midway", loadImage("graphics/midway_logo.png"));
-        createBrightMazeImages();
         assets.register("color.game_over_message", ARCADE_RED);
-    }
-
-    @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return ArcadeMsPacMan_SpriteSheet.instance();
     }
 
     @Override
@@ -141,20 +137,20 @@ public class ArcadeMsPacMan_GameVariantConfig implements GameVariantConfig, Reso
 
     @Override
     public Image bonusSymbolImage(int symbolCode) {
-        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
-        return spriteSheet().image(sprites[symbolCode]);
+        final RectShort[] sprites = renderConfig.spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
+        return renderConfig.spriteSheet().image(sprites[symbolCode]);
     }
 
     @Override
     public Image bonusValueImage(int symbolCode) {
-        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_VALUES);
-        return spriteSheet().image(sprites[symbolCode]);
+        final RectShort[] sprites = renderConfig.spriteSheet().findSprites(SpriteID.BONUS_VALUES);
+        return renderConfig.spriteSheet().image(sprites[symbolCode]);
     }
 
     @Override
     public Image killedGhostPointsImage(int killedGhostIndex) {
-        final RectShort[] numberSprites = spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
-        return spriteSheet().image(numberSprites[killedGhostIndex]);
+        final RectShort[] numberSprites = renderConfig.spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
+        return renderConfig.spriteSheet().image(numberSprites[killedGhostIndex]);
     }
 
     // Private
@@ -198,8 +194,8 @@ public class ArcadeMsPacMan_GameVariantConfig implements GameVariantConfig, Reso
 
     // Creates the maze image used in the flash animation at the end of each level
     private Image createBrightMazeImage(int index) {
-        final RectShort mazeSprite = spriteSheet().findSprites(SpriteID.EMPTY_MAPS)[index];
-        final Image mazeImage = spriteSheet().image(mazeSprite);
+        final RectShort mazeSprite = renderConfig.spriteSheet().findSprites(SpriteID.EMPTY_MAPS)[index];
+        final Image mazeImage = renderConfig.spriteSheet().image(mazeSprite);
         final WorldMapColorScheme colorScheme = ArcadeMsPacMan_MapSelector.MAP_COLOR_SCHEMES[index];
         final Map<Color, Color> colorChanges = Map.of(
             Color.valueOf(colorScheme.wallStroke()), ARCADE_WHITE,

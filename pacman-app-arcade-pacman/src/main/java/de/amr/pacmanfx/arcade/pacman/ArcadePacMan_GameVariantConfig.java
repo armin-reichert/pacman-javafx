@@ -6,7 +6,8 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
-import de.amr.pacmanfx.arcade.pacman.rendering.*;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
+import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
@@ -66,7 +67,7 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig, Resour
     private final AssetMap assets = new AssetMap();
     private final Factory3D factory3D = new ArcadePacMan_Factory3D();
 
-    private GameVariantRenderConfig renderConfig;
+    private ArcadePacMan_RenderConfig renderConfig;
     private GameSceneConfig gameSceneConfig;
     private GameSoundEffects soundEffects;
 
@@ -87,7 +88,13 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig, Resour
         loadAssets();
         initSound(appContext.ui().sounds());
         gameSceneConfig = new ArcadePacMan_GameSceneConfig(appContext);
-        renderConfig = new RenderConfig(assets);
+        renderConfig = new ArcadePacMan_RenderConfig(assets);
+
+        //TODO rethink this
+        assets.register("maze.bright", UfxImages.recolorImage(
+            renderConfig.spriteSheet().image(SpriteID.MAP_EMPTY),
+            BRIGHT_MAZE_COLOR_CHANGES)
+        );
     }
 
     @Override
@@ -118,11 +125,6 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig, Resour
     }
 
     @Override
-    public ArcadePacMan_SpriteSheet spriteSheet() {
-        return ArcadePacMan_SpriteSheet.instance();
-    }
-
-    @Override
     public TranslationManager translations() {
         return () -> textBundle;
     }
@@ -140,8 +142,8 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig, Resour
 
     @Override
     public Image killedGhostPointsImage(int killedGhostIndex) {
-        final RectShort[] numberSprites = spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
-        return spriteSheet().image(numberSprites[killedGhostIndex]);
+        final RectShort[] numberSprites = renderConfig.spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
+        return renderConfig.spriteSheet().image(numberSprites[killedGhostIndex]);
     }
 
     @Override
@@ -151,14 +153,14 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig, Resour
 
     @Override
     public Image bonusSymbolImage(int symbolCode) {
-        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
-        return spriteSheet().image(sprites[symbolCode]);
+        final RectShort[] sprites = renderConfig.spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
+        return renderConfig.spriteSheet().image(sprites[symbolCode]);
     }
 
     @Override
     public Image bonusValueImage(int symbolCode) {
-        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_VALUES);
-        return spriteSheet().image(sprites[symbolCode]);
+        final RectShort[] sprites = renderConfig.spriteSheet().findSprites(SpriteID.BONUS_VALUES);
+        return renderConfig.spriteSheet().image(sprites[symbolCode]);
     }
 
     // private
@@ -167,7 +169,6 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig, Resour
         assets.clear();
         assets.register("app_icon", loadImage("graphics/icons/pacman.png"));
         assets.register("color.game_over_message", ARCADE_RED);
-        assets.register("maze.bright", UfxImages.recolorImage(spriteSheet().image(SpriteID.MAP_EMPTY), BRIGHT_MAZE_COLOR_CHANGES));
     }
 
     private void initSound(SoundManager soundManager) {

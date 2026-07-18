@@ -13,7 +13,6 @@ import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.image.Image;
 
@@ -35,8 +34,6 @@ public interface GameVariantConfig extends Disposable {
     Optional<GameSoundEffects> optSoundEffects();
 
     GameSceneConfig gameSceneConfig();
-
-    SpriteSheet<?> spriteSheet();
 
     WorldSettings worldSettings();
 

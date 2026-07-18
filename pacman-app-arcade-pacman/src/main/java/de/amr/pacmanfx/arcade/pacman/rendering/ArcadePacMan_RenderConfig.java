@@ -22,16 +22,14 @@ import javafx.scene.canvas.Canvas;
 
 import static java.util.Objects.requireNonNull;
 
-public class RenderConfig implements GameVariantRenderConfig {
+public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
 
     private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(400, 0, 256, 160);
 
     private final AssetMap assets;
-    private final ArcadePacMan_SpriteSheet spriteSheet;
 
-    public RenderConfig(AssetMap assets) {
+    public ArcadePacMan_RenderConfig(AssetMap assets) {
         this.assets = assets;
-        this.spriteSheet = ArcadePacMan_SpriteSheet.instance();
     }
 
     @Override
@@ -40,14 +38,19 @@ public class RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
+    public ArcadePacMan_SpriteSheet spriteSheet() {
+        return ArcadePacMan_SpriteSheet.instance();
+    }
+
+    @Override
     public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene2D gameScene2D, Canvas canvas) {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet, BOOT_SCENE_SPRITES);
+            case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, gameScene2D, canvas);
             case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene2D, canvas);
-            case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet);
+            case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet());
             case ArcadePacMan_CutScene1 ignored  -> new ArcadePacMan_CutScene1_Renderer(gameScene2D, canvas);
             case ArcadePacMan_CutScene2 ignored  -> new ArcadePacMan_CutScene2_Renderer(gameScene2D, canvas);
             case ArcadePacMan_CutScene3 ignored  -> new ArcadePacMan_CutScene3_Renderer(gameScene2D, canvas);
@@ -102,6 +105,6 @@ public class RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationContainer container) {
-        return new ArcadePacMan_PacAnimations(container, spriteSheet);
+        return new ArcadePacMan_PacAnimations(container, spriteSheet());
     }
 }

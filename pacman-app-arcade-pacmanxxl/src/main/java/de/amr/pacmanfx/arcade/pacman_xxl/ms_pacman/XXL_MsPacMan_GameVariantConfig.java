@@ -5,9 +5,8 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_Factory3D;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
@@ -56,7 +55,7 @@ public final class XXL_MsPacMan_GameVariantConfig implements GameVariantConfig, 
     private final ArcadeMsPacMan_Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
 
     private GameSceneConfig gameSceneConfig;
-    private GameVariantRenderConfig renderConfig;
+    private XXL_MsPacMan_RenderConfig renderConfig;
     private GameSoundEffects soundEffects;
 
     private GameAppContext appContext;
@@ -133,11 +132,6 @@ public final class XXL_MsPacMan_GameVariantConfig implements GameVariantConfig, 
     }
 
     @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return ArcadeMsPacMan_SpriteSheet.instance();
-    }
-
-    @Override
     public Optional<GameSoundEffects> optSoundEffects() {
         return Optional.ofNullable(soundEffects);
     }
@@ -151,20 +145,20 @@ public final class XXL_MsPacMan_GameVariantConfig implements GameVariantConfig, 
 
     @Override
     public Image killedGhostPointsImage(int killedGhostIndex) {
-        final RectShort[] numberSprites = spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
-        return spriteSheet().image(numberSprites[killedGhostIndex]);
+        final RectShort[] numberSprites = renderConfig.spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
+        return renderConfig.spriteSheet().image(numberSprites[killedGhostIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(int symbolCode) {
-        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
-        return spriteSheet().image(sprites[symbolCode]);
+        final RectShort[] sprites = renderConfig.spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
+        return renderConfig.spriteSheet().image(sprites[symbolCode]);
     }
 
     @Override
     public Image bonusValueImage(int symbolCode) {
-        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_VALUES);
-        return spriteSheet().image(sprites[symbolCode]);
+        final RectShort[] sprites = renderConfig.spriteSheet().findSprites(SpriteID.BONUS_VALUES);
+        return renderConfig.spriteSheet().image(sprites[symbolCode]);
     }
 
     // -----

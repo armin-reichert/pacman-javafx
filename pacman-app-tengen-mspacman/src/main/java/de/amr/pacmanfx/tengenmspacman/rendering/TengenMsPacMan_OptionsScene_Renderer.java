@@ -118,7 +118,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         fillText(String.valueOf(gameModel.startLevelNumber()), NES_WHITE, COL_VALUE, y);
         final int numContinues = gameModel.numContinues();
         if (numContinues < 4) {
-            var spriteSheet = (TengenMsPacMan_SpriteSheet) gameVariantConfig.spriteSheet();
+            var spriteSheet = (TengenMsPacMan_SpriteSheet) gameVariantConfig.renderConfig().spriteSheet();
             RectShort continuesSprite = spriteSheet.findSprite(switch (numContinues) {
                 case 0 -> SpriteID.CONTINUES_0;
                 case 1 -> SpriteID.CONTINUES_1;

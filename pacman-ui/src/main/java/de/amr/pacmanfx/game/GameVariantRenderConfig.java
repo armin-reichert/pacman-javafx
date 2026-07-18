@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.scene.canvas.Canvas;
@@ -18,6 +19,8 @@ import javafx.scene.canvas.Canvas;
 public interface GameVariantRenderConfig {
 
     AssetMap assets();
+
+    SpriteSheet<?> spriteSheet();
 
     GameLevelRenderer createGameLevelRenderer(Canvas canvas);
 
