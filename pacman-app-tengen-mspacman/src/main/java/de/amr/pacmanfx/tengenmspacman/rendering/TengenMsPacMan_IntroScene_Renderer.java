@@ -44,12 +44,16 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     private final ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
+    private final TengenMsPacMan_UISettings uiSettings;
+
     public TengenMsPacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
         requireNonNull(renderConfig);
         requireNonNull(scene);
         actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
+        uiSettings = scene.appContext().getExtensionValue(
+            TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 
     @Override
@@ -100,8 +104,8 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
                 if (intro.ghostIndex == 0) {
                     fillText(WITH, NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
-                Ghost currentGhost = intro.ghosts.get(intro.ghostIndex);
-                Color ghostColor = intro.ghostColors[currentGhost.personality()];
+                final Ghost currentGhost = intro.ghosts.get(intro.ghostIndex);
+                final Color ghostColor = intro.ghostColors[currentGhost.personality()];
                 fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
                 intro.ghosts.forEach(actorRenderer::drawActor);
             }
@@ -117,9 +121,6 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
 
             default -> {}
         }
-
-        final var uiSettings = scene.appContext().getExtensionValue(
-            TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
         if (uiSettings.joypadBindingsDisplayed.get()) {
             drawJoypadKeyBinding(scene.input().joypad().currentKeyBinding());
