@@ -7,6 +7,10 @@ package de.amr.pacmanfx.game;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.flow.GameFlowController;
+import de.amr.pacmanfx.core.model.test.CutScenesTestState;
+import de.amr.pacmanfx.core.model.test.LevelMediumTestState;
+import de.amr.pacmanfx.core.model.test.LevelShortTestState;
+import de.amr.pacmanfx.core.score.PropertyFileScore;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
@@ -14,10 +18,16 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
@@ -40,7 +50,7 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
 
     private final GameBox machine;
 
-    private final GameVariantManager variantManager;
+    private final GameVariantManagerImpl variantManager;
 
     private final CommonGameActions actions;
 
@@ -50,7 +60,7 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
 
     public PacManGames() {
         machine = GameBox.instance();
-        variantManager = new GameVariantManager(this);
+        variantManager = new GameVariantManagerImpl();
         actions = new CommonGameActions(this);
         configureClock();
     }
@@ -210,5 +220,86 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
             ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
             Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
         });
+    }
+
+    private class GameVariantManagerImpl implements GameVariantManager, ChangeListener<String> {
+
+        private final Map<String, GameVariant> variantsByName = new HashMap<>();
+
+        private final StringProperty variantName = new SimpleStringProperty();
+
+        public GameVariantManagerImpl() {
+            variantName.addListener(this);
+        }
+
+        public StringProperty variantNameProperty() {
+            return variantName;
+        }
+
+        @Override
+        public void addVariantNameListener(ChangeListener<String> listener) {
+            requireNonNull(listener);
+            variantName.addListener(listener);
+        }
+
+        @Override
+        public String currentVariantName() {
+            return variantName.get();
+        }
+
+        @Override
+        public GameVariant currentVariant() {
+            return gameVariantByName(currentVariantName());
+        }
+
+        @Override
+        public GameVariant gameVariantByName(String gameVariantName) {
+            requireNonNull(gameVariantName);
+            return variantsByName.computeIfAbsent(gameVariantName, this::createGameVariant);
+        }
+
+        @Override
+        public boolean isVariantRegistered(String variantName) {
+            requireNonNull(variantName);
+            return variantsByName.containsKey(variantName);
+        }
+
+        @Override
+        public void selectVariant(String gameVariantName) {
+            requireNonNull(gameVariantName);
+            if (machine.containsCartridgeWithName(gameVariantName)) {
+                this.variantName.set(gameVariantName);
+            } else throw new IllegalArgumentException("Game with name '" + gameVariantName + "' not found");
+        }
+
+        private GameVariant createGameVariant(String variantName) {
+            final Cartridge cartridge = machine.cartridgeByName(variantName);
+            final var gameVariant = new GameVariant(cartridge);
+
+            //TODO make configurable again if tests should be available
+            final GameFlowController flow = gameVariant.gameFlow();
+            flow.addState(new LevelShortTestState());
+            flow.addState(new LevelMediumTestState());
+            flow.addState(new CutScenesTestState());
+
+            gameVariant.gameModel().setHighScore(
+                new PropertyFileScore(PacManGames.highScoreFile(variantName)));
+
+            return gameVariant;
+        }
+
+        @Override
+        public void changed(ObservableValue<? extends String> observable, String oldVariantName, String newVariantName) {
+            Logger.info("Game variant name change: {} -> {}", oldVariantName, newVariantName);
+
+            if (oldVariantName != null) {
+                exitGameVariant(gameVariantByName(oldVariantName));
+                Logger.info(">>> Game variant '{}' exited", oldVariantName);
+            }
+            if (newVariantName != null) {
+                enterGameVariant(gameVariantByName(newVariantName));
+                Logger.info("<<< Game variant '{}' entered", newVariantName);
+            }
+        }
     }
 }
