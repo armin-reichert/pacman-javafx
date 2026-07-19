@@ -16,10 +16,12 @@ import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.actors.Elroy;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
+import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.game.GameBox;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +38,7 @@ public class TestEatingFood {
 
     static class TestContext implements GameContext {
 
-        private final Arcade_GameFlowController gameFlow = new Arcade_GameFlowController();
+        private final GameFlowController gameFlow = new GameFlowController("Test game flow");
 
         private final ArcadePacMan_GameModel gameModel = new ArcadePacMan_GameModel();
 
@@ -71,6 +73,16 @@ public class TestEatingFood {
         @Override
         public GameFlowController flow() {
             return gameFlow;
+        }
+
+        @Override
+        public GameState state() {
+            return flow().state();
+        }
+
+        @Override
+        public HUDState hudState() {
+            return null;
         }
 
         @Override
