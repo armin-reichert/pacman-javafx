@@ -17,6 +17,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.ui.GameUI;
 
 import java.util.Optional;
 
@@ -37,9 +38,9 @@ public class GameContextImpl implements GameContext {
 
     private FrameContext thisFrame;
 
-    public GameContextImpl(CoinMechanism coinMechanism, GameVariant gameVariant) {
-        this.coinMechanism = requireNonNull(coinMechanism);
+    public GameContextImpl(GameVariant gameVariant, CoinMechanism coinMechanism) {
         this.gameVariant = requireNonNull(gameVariant);
+        this.coinMechanism = requireNonNull(coinMechanism);
         this.hudState = new HUDState();
         this.eventManager = new GameEventManagerImpl();
     }

@@ -74,6 +74,23 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
         Platform.runLater(this::startBackgroundServices);
     }
 
+    public void enterGameVariant(GameVariant gameVariant) {
+        requireNonNull(gameVariant);
+        gameContext = new GameContextImpl(gameVariant, machine.coinMechanism());
+        //TODO rethink this
+        ui.viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
+        gameVariant.config().init(this);
+        gameContext.eventManager().addGameEventSubscriber(ui);
+    }
+
+    public void exitGameVariant(GameVariant gameVariant) {
+        requireNonNull(gameVariant);
+        gameVariant.config().dispose();
+        ui.sounds().dispose();
+        gameContext.eventManager().removeGameEventSubscriber(ui);
+        gameContext = null;
+    }
+
     public void setGameContext(GameContext gameContext) {
         this.gameContext = gameContext;
     }

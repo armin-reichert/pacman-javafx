@@ -62,9 +62,9 @@ public class GameVariantManager implements ChangeListener<String> {
         return variantsByName.computeIfAbsent(gameVariantName, this::createGameVariant);
     }
 
-    public boolean isVariantRegistered(String gameVariantName) {
-        requireNonNull(gameVariantName);
-        return variantsByName.containsKey(gameVariantName);
+    public boolean isVariantRegistered(String variantName) {
+        requireNonNull(variantName);
+        return variantsByName.containsKey(variantName);
     }
 
     private GameVariant createGameVariant(String variantName) {
@@ -88,33 +88,13 @@ public class GameVariantManager implements ChangeListener<String> {
         Logger.info("Game variant name change: {} -> {}", oldVariantName, newVariantName);
 
         if (oldVariantName != null) {
-            exitGameVariant(oldVariantName, gameVariantByName(oldVariantName));
+            gameImpl.exitGameVariant(gameVariantByName(oldVariantName));
+            Logger.info(">>> Game variant '{}' exited", oldVariantName);
         }
         if (newVariantName != null) {
-            enterGameVariant(newVariantName, gameVariantByName(newVariantName));
+            gameImpl.enterGameVariant(gameVariantByName(newVariantName));
+            Logger.info("<<< Game variant '{}' entered", newVariantName);
         }
-    }
-
-    private void enterGameVariant(String variantName, GameVariant gameVariant) {
-        gameVariant.config().init(gameImpl);
-        Logger.info("<<<<<<<<<<<<<<<<<<<< Game variant '{}' initialized", variantName);
-
-        //TODO rethink this
-        gameImpl.ui().viewModel().maze3D.init(gameVariant.config().worldSettings().maze());
-
-        final var gameContext = new GameContextImpl(gameImpl.coinMechanism(), gameVariant);
-        gameContext.eventManager().addGameEventSubscriber(gameImpl.ui());
-        gameImpl.setGameContext(gameContext);
-    }
-
-    private void exitGameVariant(String variantName, GameVariant gameVariant) {
-        gameImpl.ui().sounds().dispose();
-
-        gameVariant.config().dispose();
-        Logger.info(">>>>>>>>>>>>>>>>>>>> Game variant '{}' disposed", variantName);
-
-        gameImpl.currentGameContext().eventManager().removeGameEventSubscriber(gameImpl.ui());
-        gameImpl.setGameContext(null);
     }
 
     private GameBox machine() {
