@@ -37,7 +37,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     @Override
-    public void setGameActionContext(GameAppContext appContext) {
+    public void setGameAppContext(GameAppContext appContext) {
 
         addDynamicInfo("Game State",  () -> appContext.currentGameContext().state().name());
 

@@ -26,7 +26,7 @@ public class DS_General extends GameDashboardSection {
     }
 
     @Override
-    public void setGameActionContext(GameAppContext appContext) {
+    public void setGameAppContext(GameAppContext appContext) {
         final GameViewModel viewModel = appContext.ui().viewModel();
         final GameClock gameClock = appContext.clock();
 

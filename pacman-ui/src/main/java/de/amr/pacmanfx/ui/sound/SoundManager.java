@@ -40,7 +40,7 @@ public class SoundManager implements Disposable {
 
     public SoundManager() {}
 
-    public void setGameActionContext(GameAppContext appContext) {
+    public void setGameAppContext(GameAppContext appContext) {
         this.appContext = requireNonNull(appContext);
     }
 

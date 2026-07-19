@@ -39,7 +39,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void setGameActionContext(GameAppContext appContext) {
+    public void setGameAppContext(GameAppContext appContext) {
         final GameViewModel viewModel = appContext.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");

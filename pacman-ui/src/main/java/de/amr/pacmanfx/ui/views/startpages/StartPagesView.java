@@ -106,7 +106,7 @@ public class StartPagesView implements GameView {
         }
         pages.add(startPage);
         carousel.getItems().add(startPage.rootPane());
-        startPage.setGameActionContext(appContext);
+        startPage.setGameAppContext(appContext);
     }
 
     // Private area

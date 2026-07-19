@@ -25,7 +25,7 @@ public final class GameViewManager {
 
     public GameViewManager() {}
 
-    public void setGameActionContext(GameAppContext appContext) {
+    public void setGameAppContext(GameAppContext appContext) {
         requireNonNull(appContext);
 
         currentViewIDProperty().addListener((_, oldID, newID) -> {

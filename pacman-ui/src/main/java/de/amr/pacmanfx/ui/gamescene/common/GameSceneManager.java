@@ -36,7 +36,7 @@ public class GameSceneManager {
         });
     }
 
-    public void setGameActionContext(GameAppContext appContext) {
+    public void setGameAppContext(GameAppContext appContext) {
         this.appContext = requireNonNull(appContext);
     }
 

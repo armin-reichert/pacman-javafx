@@ -119,7 +119,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
             }
         });
 
-        miniPlaySceneView.setActionContext(appContext);
+        miniPlaySceneView.setGameAppContext(appContext);
 
         pausedIcon.visibleProperty().bind(appContext.clock().updatesDisabledProperty());
 

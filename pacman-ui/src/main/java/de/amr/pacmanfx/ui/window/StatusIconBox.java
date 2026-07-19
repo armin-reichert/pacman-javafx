@@ -65,7 +65,7 @@ public class StatusIconBox implements Disposable {
         return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
     }
 
-    public void setGameActionContext(GameAppContext appContext) {
+    public void setGameAppContext(GameAppContext appContext) {
         final TranslationManager translations = appContext.ui().translations();
 
         setTooltip(iconMuted, translations.translate("status_icon.muted"));

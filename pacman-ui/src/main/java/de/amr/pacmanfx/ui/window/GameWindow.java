@@ -44,8 +44,8 @@ public class GameWindow {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
-    public void setActionContext(GameAppContext appContext) {
-        mainScene.setGameActionContext(appContext);
+    public void setGameAppContext(GameAppContext appContext) {
+        mainScene.setGameAppContext(appContext);
 
         titleBinding = createStageTitleBinding(appContext);
         stage.titleProperty().bind(titleBinding);

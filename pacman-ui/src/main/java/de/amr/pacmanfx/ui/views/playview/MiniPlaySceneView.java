@@ -75,7 +75,7 @@ public class MiniPlaySceneView {
         return rootPane;
     }
 
-    public void setActionContext(GameAppContext appContext) {
+    public void setGameAppContext(GameAppContext appContext) {
         this.appContext = requireNonNull(appContext);
 
         rootPane.backgroundProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));

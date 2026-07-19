@@ -34,7 +34,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         return this;
     }
 
-    public void setGameActionContext(GameAppContext appContext) {}
+    public void setGameAppContext(GameAppContext appContext) {}
 
     public void update(GameAppContext appContext) {
         dynamicInfoTexts.forEach(DynamicInfoText::update);

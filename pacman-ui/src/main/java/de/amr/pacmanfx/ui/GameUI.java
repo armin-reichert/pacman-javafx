@@ -110,10 +110,10 @@ public class GameUI implements GameEventListener {
     public void setAppContext(GameAppContext appContext) {
         this.appContext = requireNonNull(appContext);
 
-        sounds.setGameActionContext(appContext);
-        gameScenes.setGameActionContext(appContext);
-        views.setGameActionContext(appContext);
-        window.setActionContext(appContext);
+        sounds.setGameAppContext(appContext);
+        gameScenes.setGameAppContext(appContext);
+        views.setGameAppContext(appContext);
+        window.setGameAppContext(appContext);
 
         connectKeyboard();
         bindCommonActions();
