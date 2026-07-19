@@ -77,7 +77,7 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
         //TODO rethink this
         ui.views().selectStartPagesView();
         ui.views().startPagesView().rootPane().setSelectedIndex(0);
-        ui.views().gamePlayView().dashboard().setGameActionContext(this);
+        ui.views().gamePlayView().dashboard().setAppContext(this);
 
         ui.window().show(this);
 

@@ -21,7 +21,7 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
         setId("game-dashboard");
     }
 
-    public void setGameActionContext(GameAppContext appContext) {
+    public void setAppContext(GameAppContext appContext) {
         requireNonNull(appContext);
         sections().forEach(section -> section.setGameActionContext(appContext));
     }
