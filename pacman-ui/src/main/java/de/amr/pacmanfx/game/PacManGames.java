@@ -308,15 +308,15 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
 
         @Override
         public void changed(ObservableValue<? extends String> observable, String oldVariantName, String newVariantName) {
-            Logger.info("Game variant name change: {} -> {}", oldVariantName, newVariantName);
+            Logger.info("Game variant name: {} -> {}", oldVariantName, newVariantName);
 
             if (oldVariantName != null) {
+                Logger.info("<<< Exit Game variant '{}'", oldVariantName);
                 exitGameVariant(gameVariantByName(oldVariantName));
-                Logger.info(">>> Game variant '{}' exited", oldVariantName);
             }
             if (newVariantName != null) {
+                Logger.info(">>> Enter game variant '{}'", newVariantName);
                 enterGameVariant(gameVariantByName(newVariantName));
-                Logger.info("<<< Game variant '{}' entered", newVariantName);
             }
         }
     }

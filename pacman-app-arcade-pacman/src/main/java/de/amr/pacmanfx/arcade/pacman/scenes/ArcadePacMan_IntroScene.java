@@ -101,7 +101,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     @Override
     public void onDeactivate() {
         blinking.stop();
-        appContext().ui().sounds().stopAndDisposeVoice();
+        appContext().ui().sounds().stopVoiceAndDisposeVoicePlayer();
         actionBindings().dispose();
     }
 

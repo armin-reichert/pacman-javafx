@@ -59,7 +59,7 @@ class XXL_ChaseAnimation {
         this.numTilesX = numTilesX;
         timeline = new Timeline(new KeyFrame(FRAME_TIME, _ -> update()));
         timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.statusProperty().addListener((_,_,newStatus) -> Logger.info("Chase animation {}", newStatus));
+        timeline.statusProperty().addListener((_,_,newStatus) -> Logger.debug("Chase animation {}", newStatus));
     }
 
     public FloatProperty scalingProperty() {
@@ -165,7 +165,7 @@ class XXL_ChaseAnimation {
                     final var collision = new Collision(ghost, System.currentTimeMillis());
                     collisions.add(collision);
                     ghost.animations().selectAndSetFrame(ArcadePacMan_AnimationID.GHOST_POINTS, i);
-                    Logger.info("Collision: {}", collision);
+                    Logger.debug("Collision: {}", collision);
                     break;
                 }
             }

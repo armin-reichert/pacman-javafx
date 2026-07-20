@@ -156,22 +156,22 @@ public class ArcadeMsPacMan_GameVariantConfig implements GameVariantConfig {
     // Private
 
     private void loadSounds() {
-        sounds.setMediaPlayer(PacManGameSoundID.BONUS_ACTIVE, RM.url("sound/Fruit_Bounce.mp3"));
-        sounds.setAudioClip(PacManGameSoundID.BONUS_EATEN, RM.url("sound/Fruit.mp3"));
-        sounds.setAudioClip(PacManGameSoundID.COIN_INSERTED, RM.url("sound/credit.wav"));
-        sounds.setAudioClip(PacManGameSoundID.EXTRA_LIFE, RM.url("sound/ExtraLife.mp3"));
-        sounds.setMediaPlayer(PacManGameSoundID.GAME_OVER, RM.url("sound/game-over.mp3"));
-        sounds.setMediaPlayer(PacManGameSoundID.GAME_READY, RM.url("sound/Start.mp3"));
-        sounds.setAudioClip(PacManGameSoundID.GHOST_EATEN, RM.url("sound/Ghost.mp3"));
-        sounds.setMediaPlayer(PacManGameSoundID.GHOST_RETURNS, RM.url("sound/GhostEyes.mp3"));
-        sounds.setMediaPlayer(PacManGameSoundID.INTERMISSION_1, RM.url("sound/Act_1_They_Meet.mp3"));
-        sounds.setMediaPlayer(PacManGameSoundID.INTERMISSION_2, RM.url("sound/Act_2_The_Chase.mp3"));
-        sounds.setMediaPlayer(PacManGameSoundID.INTERMISSION_3, RM.url("sound/Act_3_Junior.mp3"));
-        sounds.setAudioClip(PacManGameSoundID.LEVEL_CHANGED, RM.url("sound/sweep.mp3"));
-        sounds.setMediaPlayer(PacManGameSoundID.LEVEL_COMPLETE, RM.url("sound/level-complete.mp3"));
-        sounds.setMediaPlayer(PacManGameSoundID.PAC_MAN_DEATH, RM.url("sound/Died.mp3"));
-        sounds.setAudioClip(PacManGameSoundID.PAC_MAN_MUNCHING, RM.url("sound/munch.wav"));
-        sounds.setMediaPlayer(PacManGameSoundID.PAC_MAN_POWER, RM.url("sound/ScaredGhost.mp3"));
+        sounds.addMediaPlayer(PacManGameSoundID.BONUS_ACTIVE, RM.url("sound/Fruit_Bounce.mp3"));
+        sounds.addAudioClip(PacManGameSoundID.BONUS_EATEN, RM.url("sound/Fruit.mp3"));
+        sounds.addAudioClip(PacManGameSoundID.COIN_INSERTED, RM.url("sound/credit.wav"));
+        sounds.addAudioClip(PacManGameSoundID.EXTRA_LIFE, RM.url("sound/ExtraLife.mp3"));
+        sounds.addMediaPlayer(PacManGameSoundID.GAME_OVER, RM.url("sound/game-over.mp3"));
+        sounds.addMediaPlayer(PacManGameSoundID.GAME_READY, RM.url("sound/Start.mp3"));
+        sounds.addAudioClip(PacManGameSoundID.GHOST_EATEN, RM.url("sound/Ghost.mp3"));
+        sounds.addMediaPlayer(PacManGameSoundID.GHOST_RETURNS, RM.url("sound/GhostEyes.mp3"));
+        sounds.addMediaPlayer(PacManGameSoundID.INTERMISSION_1, RM.url("sound/Act_1_They_Meet.mp3"));
+        sounds.addMediaPlayer(PacManGameSoundID.INTERMISSION_2, RM.url("sound/Act_2_The_Chase.mp3"));
+        sounds.addMediaPlayer(PacManGameSoundID.INTERMISSION_3, RM.url("sound/Act_3_Junior.mp3"));
+        sounds.addAudioClip(PacManGameSoundID.LEVEL_CHANGED, RM.url("sound/sweep.mp3"));
+        sounds.addMediaPlayer(PacManGameSoundID.LEVEL_COMPLETE, RM.url("sound/level-complete.mp3"));
+        sounds.addMediaPlayer(PacManGameSoundID.PAC_MAN_DEATH, RM.url("sound/Died.mp3"));
+        sounds.addAudioClip(PacManGameSoundID.PAC_MAN_MUNCHING, RM.url("sound/munch.wav"));
+        sounds.addMediaPlayer(PacManGameSoundID.PAC_MAN_POWER, RM.url("sound/ScaredGhost.mp3"));
 
         soundEffects = new GameSoundEffects(sounds);
 

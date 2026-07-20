@@ -98,7 +98,7 @@ public class FlyerStartPage implements StartPage {
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
             if (appContext != null) {
-                appContext.ui().sounds().stopAndDisposeVoice();
+                appContext.ui().sounds().stopVoiceAndDisposeVoicePlayer();
                 appContext.ui().shortMessage(appContext.ui().translations().translate("flash.shut_up"));
             }
         }
@@ -150,7 +150,7 @@ public class FlyerStartPage implements StartPage {
     }
 
     public void stopTalking() {
-        appContext.ui().sounds().stopAndDisposeVoice();
+        appContext.ui().sounds().stopVoiceAndDisposeVoicePlayer();
     }
 
     protected GameStartButton createStartButton() {

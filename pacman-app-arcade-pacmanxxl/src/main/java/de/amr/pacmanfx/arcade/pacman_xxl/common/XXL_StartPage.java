@@ -122,6 +122,6 @@ public class XXL_StartPage implements StartPage {
     }
 
     private void stopTalking() {
-        appContext.ui().sounds().stopAndDisposeVoice();
+        appContext.ui().sounds().stopVoiceAndDisposeVoicePlayer();
     }
 }

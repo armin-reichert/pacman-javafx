@@ -187,7 +187,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             case 2 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_2;
             default -> throw new IllegalArgumentException();
         };
-        appContext().ui().sounds().loop(soundID);
+        appContext().ui().sounds().playLoop(soundID);
 
         Logger.info("Junior spawned at tick {}", tick);
     }

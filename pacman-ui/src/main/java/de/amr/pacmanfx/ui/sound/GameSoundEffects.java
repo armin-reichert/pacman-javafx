@@ -90,7 +90,7 @@ public class GameSoundEffects implements Disposable {
      * Starts looping the bonus active sound.
      */
     public void playBonusActiveSound() {
-        soundManager.loop(PacManGameSoundID.BONUS_ACTIVE);
+        soundManager.playLoop(PacManGameSoundID.BONUS_ACTIVE);
     }
 
     /**
@@ -154,7 +154,7 @@ public class GameSoundEffects implements Disposable {
      */
     public void playGhostReturningToHouseSound() {
         if (!soundManager.isPlaying(PacManGameSoundID.GHOST_RETURNS)) {
-            soundManager.loop(PacManGameSoundID.GHOST_RETURNS);
+            soundManager.playLoop(PacManGameSoundID.GHOST_RETURNS);
         }
     }
 
@@ -226,7 +226,7 @@ public class GameSoundEffects implements Disposable {
      */
     public void playPacPowerSound() {
         stopSiren();
-        soundManager.loop(PacManGameSoundID.PAC_MAN_POWER);
+        soundManager.playLoop(PacManGameSoundID.PAC_MAN_POWER);
     }
 
     /**
