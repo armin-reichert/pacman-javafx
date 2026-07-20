@@ -28,6 +28,17 @@ public class SoundManager implements Disposable {
 
     public record MediaPlayerResource(MediaPlayer player) implements SoundResource {}
 
+    public record SoundEntry(Class<? extends SoundResource> type, SoundID id, URL url) {
+
+        public static SoundEntry AudioClip(SoundID id, URL url) {
+            return new SoundEntry(AudioClipResource.class, id, url);
+        }
+
+        public static SoundEntry MediaPlayer(SoundID id, URL url) {
+            return new SoundEntry(MediaPlayerResource.class, id, url);
+        }
+    }
+
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
 
     private final BooleanProperty muteProperty = new SimpleBooleanProperty(false);
@@ -78,6 +89,20 @@ public class SoundManager implements Disposable {
             stopAndDisposeVoice();
         }
         Logger.info("{} sound objects removed", numEntries);
+    }
+
+    public void add(SoundEntry entry) {
+        requireNonNull(entry);
+        if (entry.type() == AudioClipResource.class) {
+            setAudioClip(entry.id(), entry.url());
+        } else if (entry.type() == MediaPlayerResource.class) {
+            setMediaPlayer(entry.id(), entry.url());
+        }
+    }
+
+    public void remove(SoundEntry entry) {
+        requireNonNull(entry);
+        unregisterSound(entry.id());
     }
 
     public void setAudioClip(SoundID soundID, URL url) {

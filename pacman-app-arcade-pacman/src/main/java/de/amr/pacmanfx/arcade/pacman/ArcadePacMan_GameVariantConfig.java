@@ -43,7 +43,7 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig {
         return gameFlow;
     }
 
-    public static final WorldSettings WORLD_CONFIG = JsonConfigLoader.load(
+    public static final WorldSettings WORLD_SETTINGS = JsonConfigLoader.load(
         GameUI.class.getResource("/de/amr/pacmanfx/ui/world.json"), WorldSettings.class);
 
     private final TranslationManager translations;
@@ -109,7 +109,7 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig {
 
     @Override
     public WorldSettings worldSettings() {
-        return WORLD_CONFIG;
+        return WORLD_SETTINGS;
     }
 
     @Override

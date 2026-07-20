@@ -107,7 +107,7 @@ public class ArcadeMsPacMan_GameVariantConfig implements GameVariantConfig {
 
     @Override
     public WorldSettings worldSettings() {
-        return ArcadePacMan_GameVariantConfig.WORLD_CONFIG;
+        return ArcadePacMan_GameVariantConfig.WORLD_SETTINGS;
     }
 
     @Override
