@@ -69,25 +69,20 @@ public final class XXL_MsPacMan_GameVariantConfig implements GameVariantConfig {
         return gameFlow;
     }
 
-    private SoundManager sounds;
-
     private final TranslationManager translations;
     private final AssetMap assets;
     private final ArcadeMsPacMan_Factory3D factory3D;
 
     private XXL_MsPacMan_GameSceneConfig gameSceneConfig;
     private XXL_MsPacMan_RenderConfig renderConfig;
+
+    private SoundManager sounds;
     private GameSoundEffects soundEffects;
 
     public XXL_MsPacMan_GameVariantConfig() {
         translations = () -> ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
         assets = new AssetMap();
         factory3D = new ArcadeMsPacMan_Factory3D();
-    }
-
-    @Override
-    public TranslationManager translations() {
-        return translations;
     }
 
     @Override
@@ -107,7 +102,6 @@ public final class XXL_MsPacMan_GameVariantConfig implements GameVariantConfig {
         renderConfig.addAssets();
 
         assets.freeze();
-
     }
 
     @Override
@@ -127,16 +121,6 @@ public final class XXL_MsPacMan_GameVariantConfig implements GameVariantConfig {
     }
 
     @Override
-    public GameSceneConfig gameSceneConfig() {
-        return gameSceneConfig;
-    }
-
-    @Override
-    public GameVariantRenderConfig renderConfig() {
-        return renderConfig;
-    }
-
-    @Override
     public AssetMap assets() {
         return assets;
     }
@@ -147,13 +131,28 @@ public final class XXL_MsPacMan_GameVariantConfig implements GameVariantConfig {
     }
 
     @Override
-    public WorldSettings worldSettings() {
-        return ArcadePacMan_GameVariantConfig.WORLD_SETTINGS;
+    public GameSceneConfig gameSceneConfig() {
+        return gameSceneConfig;
     }
 
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
         return Optional.ofNullable(soundEffects);
+    }
+
+    @Override
+    public GameVariantRenderConfig renderConfig() {
+        return renderConfig;
+    }
+
+    @Override
+    public TranslationManager translations() {
+        return translations;
+    }
+
+    @Override
+    public WorldSettings worldSettings() {
+        return ArcadePacMan_GameVariantConfig.WORLD_SETTINGS;
     }
 
     // private
