@@ -19,13 +19,13 @@ import java.nio.charset.StandardCharsets;
 
 import static java.util.Objects.requireNonNull;
 
-public class JsonConfigLoader {
+public class JsonLoader {
 
     public static <T> T load(URL url, Class<T> configClass) {
         requireNonNull(url);
         requireNonNull(configClass);
         try {
-            return new JsonConfigLoader().loadJSON(url, configClass);
+            return new JsonLoader().loadJSON(url, configClass);
         } catch (IOException e) {
             throw new RuntimeException("Error loading JSON file from URL '%s'".formatted(url), e);
         }
@@ -33,7 +33,7 @@ public class JsonConfigLoader {
 
     protected final Gson parser;
 
-    public JsonConfigLoader() {
+    public JsonLoader() {
         parser = createParser();
     }
 

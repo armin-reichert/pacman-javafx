@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
-import de.amr.pacmanfx.uilib.JsonConfigLoader;
+import de.amr.pacmanfx.uilib.JsonLoader;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuSettings;
@@ -44,7 +44,7 @@ public class XXL_StartPage implements StartPage {
     public XXL_StartPage() {
         title = "Pac-Man XXL games"; // TODO localize
 
-        final OptionMenuSettings menuSettings = JsonConfigLoader.load(
+        final OptionMenuSettings menuSettings = JsonLoader.load(
             getClass().getResource("/de/amr/pacmanfx/arcade/pacman_xxl/option-menu.json"),
             OptionMenuSettings.class
         );

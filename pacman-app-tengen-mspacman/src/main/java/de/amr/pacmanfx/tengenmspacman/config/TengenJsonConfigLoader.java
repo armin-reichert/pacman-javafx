@@ -10,7 +10,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.uilib.JsonConfigLoader;
+import de.amr.pacmanfx.uilib.JsonLoader;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
  * Adds support for color specifications of the form <code>nes(0xhh)</code> which references
  * a color from the NES palette.
  */
-public class TengenJsonConfigLoader extends JsonConfigLoader {
+public class TengenJsonConfigLoader extends JsonLoader {
 
     private static final Pattern NES_COLOR_PATTERN = Pattern.compile("^nes\\(0x([0-9A-Fa-f]{2})\\)$");
 

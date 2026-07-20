@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.views.startpages;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.uilib.JsonConfigLoader;
+import de.amr.pacmanfx.uilib.JsonLoader;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -46,7 +46,7 @@ public class FlyerStartPage implements StartPage {
         requireNonNull(configURL);
         final ResourceManager resourceManager = this::getClass;
 
-        var config = JsonConfigLoader.load(configURL, Config.class);
+        var config = JsonLoader.load(configURL, Config.class);
         init(config.gameVariant());
 
         setTitle(config.title());

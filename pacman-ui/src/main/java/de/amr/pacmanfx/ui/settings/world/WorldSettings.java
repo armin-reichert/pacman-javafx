@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.settings.world;
 
-import de.amr.pacmanfx.uilib.JsonConfigLoader;
+import de.amr.pacmanfx.uilib.JsonLoader;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
 import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
 
@@ -22,7 +22,6 @@ public record WorldSettings(
     Pellet3DSettings pellet,
     Energizer3DSettings energizer)
 {
-    public static final WorldSettings
-        DEFAULT_SETTINGS = JsonConfigLoader.load(
+    public static final WorldSettings DEFAULT_SETTINGS = JsonLoader.load(
         WorldSettings.class.getResource("/de/amr/pacmanfx/ui/settings/world/world.json"), WorldSettings.class);
 }
