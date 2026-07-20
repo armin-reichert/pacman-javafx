@@ -10,9 +10,6 @@ import de.amr.basics.fsm.StateChangeListener;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.GameStateChangeEvent;
 import de.amr.pacmanfx.core.flow.GameFlowController;
-import de.amr.pacmanfx.core.model.test.CutScenesTestState;
-import de.amr.pacmanfx.core.model.test.LevelMediumTestState;
-import de.amr.pacmanfx.core.model.test.LevelShortTestState;
 import de.amr.pacmanfx.core.score.PropertyFileScore;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GameUI;
@@ -273,7 +270,8 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
         @Override
         public GameVariant gameVariantByName(String gameVariantName) {
             requireNonNull(gameVariantName);
-            return variantsByName.computeIfAbsent(gameVariantName, this::createGameVariant);
+            final boolean testStatesIncluded = ui().viewModel().testStatesIncludedProperty.get();
+            return variantsByName.computeIfAbsent(gameVariantName, name -> createGameVariant(name, testStatesIncluded));
         }
 
         @Override
@@ -290,19 +288,13 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
             } else throw new IllegalArgumentException("Game with name '" + gameVariantName + "' not found");
         }
 
-        private GameVariant createGameVariant(String variantName) {
+        private GameVariant createGameVariant(String variantName, boolean testStatesIncluded) {
             final Cartridge cartridge = machine.cartridgeByName(variantName);
             final var gameVariant = new GameVariant(cartridge);
-
-            //TODO make configurable again if tests should be available
-            final GameFlowController flow = gameVariant.gameFlow();
-            flow.addState(new LevelShortTestState());
-            flow.addState(new LevelMediumTestState());
-            flow.addState(new CutScenesTestState());
-
-            gameVariant.gameModel().setHighScore(
-                new PropertyFileScore(PacManGames.highScoreFile(variantName)));
-
+            if (testStatesIncluded) {
+                gameVariant.gameFlow().addTestStates();
+            }
+            gameVariant.gameModel().setHighScore(new PropertyFileScore(PacManGames.highScoreFile(variantName)));
             return gameVariant;
         }
 

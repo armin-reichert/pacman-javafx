@@ -1,6 +1,7 @@
 {
   "flashMessageDuration": 1.5,
   "debugModeOn": false,
+  "testStatesIncluded": false,
   "keyboardMonitorOn": false,
   "muted": false,
 

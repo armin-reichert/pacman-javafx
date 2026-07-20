@@ -8,6 +8,9 @@ import de.amr.basics.Identifier;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.test.CutScenesTestState;
+import de.amr.pacmanfx.core.model.test.LevelMediumTestState;
+import de.amr.pacmanfx.core.model.test.LevelShortTestState;
 import de.amr.pacmanfx.core.state.GameState;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -27,6 +30,12 @@ public class GameFlowController extends StateMachine<GameContext> {
 
     public GameFlowController(String name) {
         setName(name);
+    }
+
+    public void addTestStates() {
+        addState(new LevelShortTestState());
+        addState(new LevelMediumTestState());
+        addState(new CutScenesTestState());
     }
 
     @Override
