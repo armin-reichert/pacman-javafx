@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.JsonLoader;
@@ -12,6 +13,7 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
+import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -37,34 +39,27 @@ public class FlyerStartPage implements StartPage {
         String[] images
     ) {}
 
+    protected final Config config;
     protected final StackPane rootPane = new StackPane();
     protected final Flyer flyer = new Flyer();
     protected String title;
     protected String gameVariantName;
     protected GameStartButton startButton;
     protected GameAppContext appContext;
-    protected Media voice;
+
+    protected GameScene gameScene;
+    protected Animation delayedVoice;
 
     public FlyerStartPage(URL configURL) {
         requireNonNull(configURL);
-        final ResourceManager resourceManager = this::getClass;
-
-        var config = JsonLoader.load(configURL, Config.class);
+        config = JsonLoader.load(configURL, Config.class);
         init(config.gameVariant());
 
         setTitle(config.title());
-        setVoice(resourceManager.loadMedia(config.voice()));
-        flyer.setImages(
-            Stream.of(config.images()).map(resourceManager::loadImage).toArray(Image[]::new)
-        );
-    }
 
-    public FlyerStartPage(String variantName, String title, Media voiceMedia, Image... images) {
-        init(variantName);
-
-        setTitle(title);
-        setVoice(voiceMedia);
-        flyer.setImages(images);
+        final ResourceManager resourceManager = this::getClass; // load relative to subclass!
+        createDelayedVoice(resourceManager);
+        flyer.setImages(Stream.of(config.images()).map(resourceManager::loadImage).toArray(Image[]::new));
     }
 
     private void init(String gameVariantName) {
@@ -116,13 +111,20 @@ public class FlyerStartPage implements StartPage {
     public void onEnter() {
         appContext.variants().selectVariant(gameVariantName);
         flyer.selectPage(0);
-        talk(TALK_DELAY_SEC);
+        if (delayedVoice == null) {
+            createDelayedVoice(this::getClass);
+        }
+        delayedVoice.play();
         Platform.runLater(startButton::requestFocus);
     }
 
     @Override
     public void onExit() {
-        stopTalking();
+        if (delayedVoice != null) {
+            delayedVoice.stop();
+            delayedVoice = null;
+        }
+        appContext.ui().sounds().stopVoiceAndDisposeVoicePlayer();
     }
 
     @Override
@@ -139,18 +141,9 @@ public class FlyerStartPage implements StartPage {
         this.title = title;
     }
 
-    public void setVoice(Media voice) {
-        this.voice = requireNonNull(voice);
-    }
-
-    public void talk(float delaySec) {
-        if (voice != null) {
-            Ufx.pauseSecThen(delaySec, () -> appContext.ui().sounds().playVoice(voice)).play();
-        }
-    }
-
-    public void stopTalking() {
-        appContext.ui().sounds().stopVoiceAndDisposeVoicePlayer();
+    private void createDelayedVoice(ResourceManager resourceManager) {
+        final Media voiceMedia = resourceManager.loadMedia(config.voice());
+        delayedVoice = Ufx.pauseSecThen(TALK_DELAY_SEC, () -> appContext.ui().sounds().playVoice(voiceMedia));
     }
 
     protected GameStartButton createStartButton() {
