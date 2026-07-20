@@ -8,6 +8,7 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.JsonLoader;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -26,6 +27,8 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 
 public class FlyerStartPage implements StartPage {
+
+    public static final float TALK_DELAY_SEC = 1.0f;
 
     public record Config(
         String gameVariant,
@@ -113,7 +116,7 @@ public class FlyerStartPage implements StartPage {
     public void onEnter() {
         appContext.variants().selectVariant(gameVariantName);
         flyer.selectPage(0);
-        talk();
+        talk(TALK_DELAY_SEC);
         Platform.runLater(startButton::requestFocus);
     }
 
@@ -140,12 +143,11 @@ public class FlyerStartPage implements StartPage {
         this.voice = requireNonNull(voice);
     }
 
-    public void talk() {
+    public void talk(float delaySec) {
         if (voice != null) {
-            appContext.ui().sounds().playVoice(voice);
+            Ufx.pauseSecThen(delaySec, () -> appContext.ui().sounds().playVoice(voice)).play();
         }
     }
-
 
     public void stopTalking() {
         appContext.ui().sounds().stopAndDisposeVoice();
