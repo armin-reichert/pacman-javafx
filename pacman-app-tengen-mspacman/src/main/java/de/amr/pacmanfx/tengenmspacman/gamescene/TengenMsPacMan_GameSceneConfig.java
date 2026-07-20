@@ -16,9 +16,9 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameSceneConfig extends AbstractGameSceneConfig {
+public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    public GameSceneConfig(GameAppContext appContext) {
+    public TengenMsPacMan_GameSceneConfig(GameAppContext appContext) {
         super(appContext);
     }
 

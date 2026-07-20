@@ -30,11 +30,11 @@ public class SoundManager implements Disposable {
 
     public record SoundEntry(Class<? extends SoundResource> type, SoundID id, URL url) {
 
-        public static SoundEntry AudioClip(SoundID id, URL url) {
+        public static SoundEntry audioClip(SoundID id, URL url) {
             return new SoundEntry(AudioClipResource.class, id, url);
         }
 
-        public static SoundEntry MediaPlayer(SoundID id, URL url) {
+        public static SoundEntry mediaPlayer(SoundID id, URL url) {
             return new SoundEntry(MediaPlayerResource.class, id, url);
         }
     }
