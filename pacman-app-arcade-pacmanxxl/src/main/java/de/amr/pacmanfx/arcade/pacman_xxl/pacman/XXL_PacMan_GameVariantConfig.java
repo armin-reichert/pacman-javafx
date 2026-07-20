@@ -21,7 +21,10 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
@@ -150,7 +153,7 @@ public final class XXL_PacMan_GameVariantConfig implements GameVariantConfig {
 
     @Override
     public WorldSettings worldSettings() {
-        return ArcadePacMan_GameVariantConfig.WORLD_SETTINGS;
+        return WorldSettings.DEFAULT_SETTINGS;
     }
 
     // private

@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_RenderConfig;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.game.GameVariantConfig;
@@ -151,7 +150,7 @@ public class ArcadeMsPacMan_GameVariantConfig implements GameVariantConfig {
 
     @Override
     public WorldSettings worldSettings() {
-        return ArcadePacMan_GameVariantConfig.WORLD_SETTINGS;
+        return WorldSettings.DEFAULT_SETTINGS;
     }
 
     // Private

@@ -9,7 +9,6 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
@@ -17,7 +16,6 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.JsonConfigLoader;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -65,9 +63,6 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig {
         audioClip   (PacManGameSoundID.PAC_MAN_MUNCHING, RM.url("sound/munch.wav")),
         mediaPlayer (PacManGameSoundID.PAC_MAN_POWER,    RM.url("sound/ghost-turn-to-blue.mp3"))
     );
-
-    public static final WorldSettings WORLD_SETTINGS = JsonConfigLoader.load(
-        GameUI.class.getResource("/de/amr/pacmanfx/ui/world.json"), WorldSettings.class);
 
     private final TranslationManager translations;
     private final AssetMap assets;
@@ -153,7 +148,7 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig {
 
     @Override
     public WorldSettings worldSettings() {
-        return WORLD_SETTINGS;
+        return WorldSettings.DEFAULT_SETTINGS;
     }
 
     // private

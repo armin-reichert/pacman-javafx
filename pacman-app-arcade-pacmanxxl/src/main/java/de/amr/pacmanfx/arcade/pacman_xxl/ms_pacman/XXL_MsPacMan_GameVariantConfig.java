@@ -152,7 +152,7 @@ public final class XXL_MsPacMan_GameVariantConfig implements GameVariantConfig {
 
     @Override
     public WorldSettings worldSettings() {
-        return ArcadePacMan_GameVariantConfig.WORLD_SETTINGS;
+        return WorldSettings.DEFAULT_SETTINGS;
     }
 
     // private
