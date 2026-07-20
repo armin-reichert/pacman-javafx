@@ -26,8 +26,6 @@ public class GameFlowController extends StateMachine<GameContext> {
 
     private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
 
-    protected GameContext gameContext;
-
     public GameFlowController(String name) {
         setName(name);
     }
@@ -43,16 +41,12 @@ public class GameFlowController extends StateMachine<GameContext> {
         return (GameState) super.state();
     }
 
-    public void setGameContext(GameContext gameContext) {
-        this.gameContext = requireNonNull(gameContext);
-    }
-
-    public void enterState(Identifier id) {
+    public void enterState(GameContext gameContext, Identifier id) {
         requireNonNull(id);
         enterStateWithName(gameContext, id.name());
     }
 
-    public void restartState(Identifier stateID) {
+    public void restartState(GameContext gameContext, Identifier stateID) {
         restartState(gameContext, stateID.name());
     }
 

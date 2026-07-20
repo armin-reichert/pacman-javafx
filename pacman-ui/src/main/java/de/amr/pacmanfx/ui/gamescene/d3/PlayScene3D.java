@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
@@ -285,9 +286,10 @@ public class PlayScene3D extends AbstractGameScene
 
     @Override
     public void handleQuit(GameAppContext appContext) {
+        final GameContext gameContext = gameContext();
         onDeactivate();
         appContext.ui().sounds().setEnabled(false);
-        gameContext().flow().enterState(GameStateID.GAME_OVER);
+        gameFlow().enterState(gameContext, GameStateID.GAME_OVER);
     }
 
     // Other stuff

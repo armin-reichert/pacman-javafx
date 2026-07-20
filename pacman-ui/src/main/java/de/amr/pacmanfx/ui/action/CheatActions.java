@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
@@ -79,9 +80,10 @@ public final class CheatActions {
         actionKillGhosts = new GameAction(appContext, "cheat_kill_ghosts") {
             @Override
             public void doAction() {
-                final GameLevel level = gameContext().assertLevel();
+                final GameContext gameContext = gameContext();
+                final GameLevel level = gameContext.assertLevel();
 
-                gameContext().cheats().notifyCheatUsed();
+                gameContext.cheats().notifyCheatUsed();
 
                 final List<Ghost> killableGhosts = level.entities().ghosts().stream()
                     .filter(ghost -> GhostState.FRIGHTENED == ghost.state() || GhostState.HUNTING_PAC == ghost.state())
@@ -89,8 +91,8 @@ public final class CheatActions {
 
                 if (!killableGhosts.isEmpty()) {
                     level.clearGhostKillChain(); // start again with lowest number for killing ghost
-                    killableGhosts.forEach(ghost -> gameContext().gamePlay().onEatGhost(gameContext(), ghost));
-                    gameContext().flow().enterState(GameStateID.GAME_LEVEL_EATING_GHOST);
+                    killableGhosts.forEach(ghost -> gameContext.gamePlay().onEatGhost(gameContext, ghost));
+                    gameContext.flow().enterState(gameContext, GameStateID.GAME_LEVEL_EATING_GHOST);
                 }
             }
 
@@ -104,8 +106,9 @@ public final class CheatActions {
         actionEnterNextLevel = new GameAction(appContext, "cheat_enter_next_level") {
             @Override
             public void doAction() {
-                gameContext().cheats().notifyCheatUsed();
-                gameFlow().enterState(GameStateID.GAME_LEVEL_COMPLETE);
+                final GameContext gameContext = gameContext();
+                gameContext.cheats().notifyCheatUsed();
+                gameFlow().enterState(gameContext, GameStateID.GAME_LEVEL_COMPLETE);
             }
 
             @Override

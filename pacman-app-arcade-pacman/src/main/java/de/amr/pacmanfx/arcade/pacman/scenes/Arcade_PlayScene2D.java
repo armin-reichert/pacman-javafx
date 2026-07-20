@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -54,10 +55,11 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
 
     @Override
     public void handleQuit(GameAppContext appContext) {
+        final GameContext gameContext = gameContext();
         onDeactivate();
         // Avoid game over sound being played
         appContext.ui().sounds().setEnabled(false);
-        gameFlow().enterState(GameStateID.GAME_OVER);
+        gameFlow().enterState(gameContext, GameStateID.GAME_OVER);
     }
 
     @Override

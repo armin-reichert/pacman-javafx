@@ -31,7 +31,7 @@ public class GameOrLevelStartingState extends GameState {
         if (!(gameContext.model() instanceof TengenMsPacMan_GameModel model)) {
             throw new IllegalStateException("Illegal game model: " + gameContext.model());
         }
-        gameContext.flow().enterState(computeNextState(model));
+        gameContext.flow().enterState(gameContext, computeNextState(model));
     }
 
     private GameStateID computeNextState(TengenMsPacMan_GameModel model) {

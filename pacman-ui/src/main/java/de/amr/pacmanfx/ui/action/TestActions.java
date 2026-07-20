@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -28,7 +29,8 @@ public class TestActions {
         actionTestCutScenes = new GameAction(appContext, "test_cut_scenes") {
             @Override
             public void doAction() {
-                gameFlow().enterState(TestStateID.CUT_SCENE_TEST);
+                final GameContext gameContext = gameContext();
+                gameFlow().enterState(gameContext, TestStateID.CUT_SCENE_TEST);
                 appContext.ui().shortMessage("Cut scenes test"); //TODO localize
             }
 
@@ -41,7 +43,8 @@ public class TestActions {
         actionTestLevelShort = new GameAction(appContext, "short_level_test") {
             @Override
             public void doAction() {
-                gameFlow().restartState(TestStateID.LEVEL_TEST_S);
+                final GameContext gameContext = gameContext();
+                gameFlow().restartState(gameContext, TestStateID.LEVEL_TEST_S);
                 appContext.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
             }
 
@@ -54,7 +57,8 @@ public class TestActions {
         actionTestLevelMedium = new GameAction(appContext, "medium_level_test") {
             @Override
             public void doAction() {
-                gameFlow().restartState(TestStateID.LEVEL_TEST_M);
+                final GameContext gameContext = gameContext();
+                gameFlow().restartState(gameContext, TestStateID.LEVEL_TEST_M);
                 appContext.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
             }
 

@@ -173,8 +173,7 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
     @Override
     public void startPlaying() {
         final GameFlowController gameFlow = gameContext.flow();
-        gameFlow.setGameContext(gameContext);
-        gameFlow.restartState(GameStateID.BOOT);
+        gameFlow.restartState(gameContext, GameStateID.BOOT);
         clock().start();
         ui.views().selectGamePlayView();
     }
@@ -218,7 +217,6 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
 
     private void simulateAndUpdateCurrentGameScene() {
         final GameFlowController gameFlow = gameContext.flow(); //TODO store elsewhere?
-        gameFlow.setGameContext(gameContext);
         gameContext.newFrame(clock().currentTick());
         gameFlow.update(gameContext);
         ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameContext.thisFrame()));

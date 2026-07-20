@@ -70,10 +70,10 @@ public class CommonPacManDyingState extends GameState {
 
         if (timer().hasExpired()) {
             if (level.isDemoLevel()) {
-                gameContext.flow().enterState(GameStateID.GAME_OVER);
+                gameContext.flow().enterState(gameContext, GameStateID.GAME_OVER);
             } else {
                 model.addLives(-1);
-                gameContext.flow().enterState(model.lifeCount() == 0
+                gameContext.flow().enterState(gameContext, model.lifeCount() == 0
                     ? GameStateID.GAME_OVER : GameStateID.GAME_OR_LEVEL_STARTING);
             }
         }

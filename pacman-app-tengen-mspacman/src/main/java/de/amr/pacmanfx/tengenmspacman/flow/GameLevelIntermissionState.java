@@ -48,7 +48,7 @@ public class GameLevelIntermissionState extends GameState {
         final GameModel model = gameContext.model();
 
         if (timer().hasExpired()) {
-            flow.enterState(model.isPlaying() ? GameStateID.GAME_LEVEL_TRANSITION : GameStateID.GAME_INTRO);
+            flow.enterState(gameContext, model.isPlaying() ? GameStateID.GAME_LEVEL_TRANSITION : GameStateID.GAME_INTRO);
         }
     }
 

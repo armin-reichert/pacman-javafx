@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -53,15 +54,16 @@ public class GameFlowActions {
         actionRestartIntro = new GameAction(appContext, "restart_intro") {
             @Override
             protected void doAction() {
-                final GameState gameState = gameContext().state();
+                final GameContext gameContext = gameContext();
+                final GameState gameState = gameContext.state();
 
                 if (gameState.id() instanceof TestStateID) {
-                    gameState.onExit(gameContext());
+                    gameState.onExit(gameContext);
                 }
 
                 appContext.lifecycle().suspendPlaying();
                 appContext.clock().start();
-                gameFlow().restartState(GameStateID.GAME_INTRO);
+                gameFlow().restartState(gameContext, GameStateID.GAME_INTRO);
             }
         };
 

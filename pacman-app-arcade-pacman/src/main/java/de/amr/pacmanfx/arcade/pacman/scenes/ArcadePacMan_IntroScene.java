@@ -13,6 +13,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
@@ -352,9 +353,11 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
+                final GameContext gameContext = scene.gameContext();
+
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.ghosts[GameModel.ORANGE_GHOST_POKEY].hide();
-                    scene.gameFlow().enterState(GameStateID.GAME_OR_LEVEL_STARTING);
+                    scene.gameFlow().enterState(gameContext, GameStateID.GAME_OR_LEVEL_STARTING);
                 }
             }
         };

@@ -26,7 +26,7 @@ public class ShowingHallOfFameState extends GameState {
     @Override
     public void onUpdate(GameContext gameContext) {
         if (timer().hasExpired()) {
-            gameContext.flow().enterState(GameStateID.GAME_INTRO);
+            gameContext.flow().enterState(gameContext, GameStateID.GAME_INTRO);
         }
     }
 }

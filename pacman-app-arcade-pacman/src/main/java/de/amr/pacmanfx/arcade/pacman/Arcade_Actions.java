@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.CoinMechanism;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.CreditAddedEvent;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -30,12 +31,13 @@ public final class Arcade_Actions {
         actionInsertCoin = new GameAction(appContext, "insert_coin") {
             @Override
             public void doAction() {
+                final GameContext gameContext = gameContext();
                 final CoinMechanism coinMechanism = appContext.coinMechanism();
                 appContext.ui().sounds().stopVoiceAndDisposeVoicePlayer();
                 appContext.ui().sounds().setEnabled(true);
                 coinMechanism.insertCoin();
-                gameContext().eventManager().publishGameEvent(new CreditAddedEvent(1));
-                gameFlow().enterState(GameStateID.GAME_PREPARATION);
+                gameContext.eventManager().publishGameEvent(new CreditAddedEvent(1));
+                gameFlow().enterState(gameContext, GameStateID.GAME_PREPARATION);
             }
 
             @Override
