@@ -38,12 +38,12 @@ import static java.util.Objects.requireNonNull;
 
 public class GameUI implements GameEventListener {
 
-    public static final String DEFAULT_SETTINGS_PATH = "/de/amr/pacmanfx/ui/ui.json";
+    public static final String DEFAULT_UI_SETTINGS_PATH = "/de/amr/pacmanfx/ui/ui.json";
 
     private static GameUISettings loadDefaultSettings() {
-        final URL url = GameUI.class.getResource(DEFAULT_SETTINGS_PATH);
+        final URL url = GameUI.class.getResource(DEFAULT_UI_SETTINGS_PATH);
         if (url == null) {
-            throw new IllegalArgumentException("Could not load default UI settings file from path '%s'".formatted(DEFAULT_SETTINGS_PATH));
+            throw new IllegalArgumentException("Could not load default UI settings file from path '%s'".formatted(DEFAULT_UI_SETTINGS_PATH));
         }
         final var settings = JsonLoader.load(url, GameUISettings.class);
         Logger.info("Default UI settings loaded, URL={}", url);
