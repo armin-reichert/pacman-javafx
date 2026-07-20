@@ -38,26 +38,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_GameVariantConfig implements GameVariantConfig {
 
-    private final static ResourceManager RM = () -> ArcadePacMan_GameVariantConfig.class;
-
-    private static final List<SoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
-        audioClip(PacManGameSoundID.BONUS_EATEN,      RM.url("sound/eat_fruit.mp3")),
-        audioClip(PacManGameSoundID.COIN_INSERTED,    RM.url("sound/credit.wav")),
-        audioClip(PacManGameSoundID.EXTRA_LIFE,       RM.url("sound/extend.mp3")),
-        audioClip(PacManGameSoundID.GAME_OVER,        RM.url("sound/common/game-over.mp3")),
-        mediaPlayer(PacManGameSoundID.GAME_READY,       RM.url("sound/game_start.mp3")),
-        audioClip(PacManGameSoundID.GHOST_EATEN,      RM.url("sound/eat_ghost.mp3")),
-        mediaPlayer(PacManGameSoundID.GHOST_RETURNS,    RM.url("sound/retreating.mp3")),
-        mediaPlayer(PacManGameSoundID.INTERMISSION_1,   RM.url("sound/intermission.mp3")),
-        mediaPlayer(PacManGameSoundID.INTERMISSION_2,   RM.url("sound/intermission.mp3")),
-        mediaPlayer(PacManGameSoundID.INTERMISSION_3,   RM.url("sound/intermission.mp3")),
-        audioClip(PacManGameSoundID.LEVEL_CHANGED,    RM.url("sound/common/sweep.mp3")),
-        mediaPlayer(PacManGameSoundID.LEVEL_COMPLETE,   RM.url("sound/common/level-complete.mp3")),
-        mediaPlayer(PacManGameSoundID.PAC_MAN_DEATH,    RM.url("sound/pacman_death.wav")),
-        audioClip(PacManGameSoundID.PAC_MAN_MUNCHING, RM.url("sound/munch.wav")),
-        mediaPlayer(PacManGameSoundID.PAC_MAN_POWER,    RM.url("sound/ghost-turn-to-blue.mp3"))
-    );
-
     public static GameFlowController createGameFlow() {
         final var gameFlow = new GameFlowController("Arcade Pac-Man Game Flow");
         for (Arcade_GameState gameState : Arcade_GameState.values()) {
@@ -65,6 +45,26 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig {
         }
         return gameFlow;
     }
+
+    private final static ResourceManager RM = () -> ArcadePacMan_GameVariantConfig.class;
+
+    private static final List<SoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
+        audioClip   (PacManGameSoundID.BONUS_EATEN,      RM.url("sound/eat_fruit.mp3")),
+        audioClip   (PacManGameSoundID.COIN_INSERTED,    RM.url("sound/credit.wav")),
+        audioClip   (PacManGameSoundID.EXTRA_LIFE,       RM.url("sound/extend.mp3")),
+        audioClip   (PacManGameSoundID.GAME_OVER,        RM.url("sound/common/game-over.mp3")),
+        mediaPlayer (PacManGameSoundID.GAME_READY,       RM.url("sound/game_start.mp3")),
+        audioClip   (PacManGameSoundID.GHOST_EATEN,      RM.url("sound/eat_ghost.mp3")),
+        mediaPlayer (PacManGameSoundID.GHOST_RETURNS,    RM.url("sound/retreating.mp3")),
+        mediaPlayer (PacManGameSoundID.INTERMISSION_1,   RM.url("sound/intermission.mp3")),
+        mediaPlayer (PacManGameSoundID.INTERMISSION_2,   RM.url("sound/intermission.mp3")),
+        mediaPlayer (PacManGameSoundID.INTERMISSION_3,   RM.url("sound/intermission.mp3")),
+        audioClip   (PacManGameSoundID.LEVEL_CHANGED,    RM.url("sound/common/sweep.mp3")),
+        mediaPlayer (PacManGameSoundID.LEVEL_COMPLETE,   RM.url("sound/common/level-complete.mp3")),
+        mediaPlayer (PacManGameSoundID.PAC_MAN_DEATH,    RM.url("sound/pacman_death.wav")),
+        audioClip   (PacManGameSoundID.PAC_MAN_MUNCHING, RM.url("sound/munch.wav")),
+        mediaPlayer (PacManGameSoundID.PAC_MAN_POWER,    RM.url("sound/ghost-turn-to-blue.mp3"))
+    );
 
     public static final WorldSettings WORLD_SETTINGS = JsonConfigLoader.load(
         GameUI.class.getResource("/de/amr/pacmanfx/ui/world.json"), WorldSettings.class);
