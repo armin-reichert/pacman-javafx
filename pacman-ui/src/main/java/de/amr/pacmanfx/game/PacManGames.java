@@ -36,6 +36,13 @@ import static java.util.Objects.requireNonNull;
  */
 public final class PacManGames implements GameAppContext, GameLifecycle {
 
+    private record StateChangeToGameEventAdapter(GameContext gameContext) implements StateChangeListener<State<GameContext>> {
+        @Override
+        public void onStateChange(State<GameContext> oldState, State<GameContext> newState) {
+            gameContext.eventManager().publishGameEvent(new GameStateChangeEvent(gameContext, oldState, newState));
+        }
+    }
+
     /**
      * High score file for game variant "YYZ" is stored as "highscore-yyz.xml" inside user home directory.
      *
@@ -57,6 +64,8 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
     private GameUI ui;
 
     private GameContext gameContext;
+
+    private StateChangeToGameEventAdapter gameEventAdapter;
 
     public PacManGames() {
         machine = GameBox.instance();
@@ -84,15 +93,6 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
         Platform.runLater(this::startBackgroundServices);
     }
 
-    private record StateChangeToGameEventMapper(GameContext gameContext) implements StateChangeListener<State<GameContext>> {
-        @Override
-            public void onStateChange(State<GameContext> oldState, State<GameContext> newState) {
-                gameContext.eventManager().publishGameEvent(new GameStateChangeEvent(gameContext, oldState, newState));
-        }
-    }
-
-    private StateChangeToGameEventMapper eventMapper;
-
     public void enterGameVariant(GameVariant gameVariant) {
         requireNonNull(gameVariant);
 
@@ -104,8 +104,8 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
         gameContext = new GameContextImpl(gameVariant, machine.coinMechanism());
         gameContext.eventManager().addGameEventSubscriber(ui);
 
-        eventMapper = new StateChangeToGameEventMapper(gameContext);
-        gameContext.flow().addStateChangeListener(eventMapper);
+        gameEventAdapter = new StateChangeToGameEventAdapter(gameContext);
+        gameContext.flow().addStateChangeListener(gameEventAdapter);
     }
 
     public void exitGameVariant(GameVariant gameVariant) {
@@ -113,7 +113,7 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
         gameVariant.config().dispose();
         ui.sounds().dispose();
         gameContext.eventManager().removeGameEventSubscriber(ui);
-        gameContext.flow().removeStateChangeListener(eventMapper);
+        gameContext.flow().removeStateChangeListener(gameEventAdapter);
         gameContext = null;
     }
 
