@@ -5,7 +5,10 @@
 package de.amr.pacmanfx.game;
 
 import de.amr.basics.filesystem.DirectoryWatchdog;
+import de.amr.basics.fsm.State;
+import de.amr.basics.fsm.StateChangeListener;
 import de.amr.pacmanfx.core.*;
+import de.amr.pacmanfx.core.event.GameStateChangeEvent;
 import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.LevelMediumTestState;
@@ -84,6 +87,15 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
         Platform.runLater(this::startBackgroundServices);
     }
 
+    private record StateChangeToGameEventMapper(GameContext gameContext) implements StateChangeListener<State<GameContext>> {
+        @Override
+            public void onStateChange(State<GameContext> oldState, State<GameContext> newState) {
+                gameContext.eventManager().publishGameEvent(new GameStateChangeEvent(gameContext, oldState, newState));
+        }
+    }
+
+    private StateChangeToGameEventMapper eventMapper;
+
     public void enterGameVariant(GameVariant gameVariant) {
         requireNonNull(gameVariant);
 
@@ -94,6 +106,9 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
 
         gameContext = new GameContextImpl(gameVariant, machine.coinMechanism());
         gameContext.eventManager().addGameEventSubscriber(ui);
+
+        eventMapper = new StateChangeToGameEventMapper(gameContext);
+        gameContext.flow().addStateChangeListener(eventMapper);
     }
 
     public void exitGameVariant(GameVariant gameVariant) {
@@ -101,6 +116,7 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
         gameVariant.config().dispose();
         ui.sounds().dispose();
         gameContext.eventManager().removeGameEventSubscriber(ui);
+        gameContext.flow().removeStateChangeListener(eventMapper);
         gameContext = null;
     }
 
@@ -206,7 +222,6 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
     private void simulateAndUpdateCurrentGameScene() {
         final GameFlowController gameFlow = gameContext.flow(); //TODO store elsewhere?
         gameFlow.setGameContext(gameContext);
-
         gameContext.newFrame(clock().currentTick());
         gameFlow.update(gameContext);
         ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameContext.thisFrame()));
