@@ -112,7 +112,7 @@ public final class XXL_MsPacMan_GameVariantConfig implements GameVariantConfig {
         gameSceneConfig.dispose();
 
         Logger.info("Dispose assets");
-        assets().dispose();
+        assets.dispose();
 
         Logger.info("Unload sounds");
         if (sounds != null) {
