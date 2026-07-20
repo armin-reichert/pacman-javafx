@@ -39,7 +39,7 @@ public final class PacManGames implements GameAppContext, GameLifecycle {
     private record StateChangeToGameEventAdapter(GameContext gameContext) implements StateChangeListener<State<GameContext>> {
         @Override
         public void onStateChange(State<GameContext> oldState, State<GameContext> newState) {
-            gameContext.eventManager().publishGameEvent(new GameStateChangeEvent(gameContext, oldState, newState));
+            gameContext.eventManager().publishGameEvent(new GameStateChangeEvent(oldState, newState));
         }
     }
 
