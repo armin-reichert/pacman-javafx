@@ -41,6 +41,8 @@ public class Voice {
         delayedReplay.stop();
         if (mediaPlayer != null) {
             mediaPlayer.stop();
+            mediaPlayer.muteProperty().unbind();
+            mediaPlayer.dispose();
             mediaPlayer = null;
         }
     }
