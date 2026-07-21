@@ -47,14 +47,14 @@ public final class GlobalAssets {
         private final Font font;
     }
 
-    public enum Voice {
+    public enum VoiceID {
         AUTOPILOT_ON       ("sound/voice/autopilot-on.mp3"),
         AUTOPILOT_OFF      ("sound/voice/autopilot-off.mp3"),
         IMMUNITY_ON        ("sound/voice/immunity-on.mp3"),
         IMMUNITY_OFF       ("sound/voice/immunity-off.mp3"),
         EXPLAIN_GAME_START ("sound/voice/press-key.mp3");
 
-        Voice(String path) {
+        VoiceID(String path) {
             media = RES_MGR.loadMedia(path);
         }
 

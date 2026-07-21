@@ -134,7 +134,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         lastGhostEatenTick = 0;
         numGhostsEaten = 0;
 
-        appContext().ui().sounds().voice().playAfterSec(1, GlobalAssets.Voice.EXPLAIN_GAME_START.media());
+        appContext().ui().sounds().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
     }
 
     private void startChasingPacMan() {

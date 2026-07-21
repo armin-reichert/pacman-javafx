@@ -260,7 +260,7 @@ public final class CheatActions {
         cheats.pacUsingAutopilotProperty().set(auto);
 
         final String message = ui.translations().translate(auto ? "flash.autopilot_on" : "flash.autopilot_off");
-        final Media voice = auto ? GlobalAssets.Voice.AUTOPILOT_ON.media() : GlobalAssets.Voice.AUTOPILOT_OFF.media();
+        final Media voice = auto ? GlobalAssets.VoiceID.AUTOPILOT_ON.media() : GlobalAssets.VoiceID.AUTOPILOT_OFF.media();
 
         ui.shortMessage(message);
         ui.sounds().voice().playAfterSec(1, voice);
@@ -273,7 +273,7 @@ public final class CheatActions {
         cheats.pacImmuneProperty().set(immune);
 
         final String message = ui.translations().translate(immune ? "flash.player_immunity_on" : "flash.player_immunity_off");
-        final Media voice = immune ? GlobalAssets.Voice.IMMUNITY_ON.media() : GlobalAssets.Voice.IMMUNITY_OFF.media();
+        final Media voice = immune ? GlobalAssets.VoiceID.IMMUNITY_ON.media() : GlobalAssets.VoiceID.IMMUNITY_OFF.media();
 
         ui.shortMessage(message);
         ui.sounds().voice().playAfterSec(1, voice);
