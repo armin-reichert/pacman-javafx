@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games collection.
  */
-public final class PacManGameCollection implements GameAppContext, GameLifecycle, StateChangeListener<State<GameContext>> {
+public final class PacManGameCollection implements GameAppContext, GameLifecycle {
 
     /**
      * High score file for game variant "YYZ" is stored as "highscore-yyz.xml" inside user home directory.
@@ -53,6 +53,8 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     private final GameVariantManagerImpl variantManager;
 
     private final CommonGameActions actions;
+
+    private final StateChangeEventConverter changeEventConverter = new StateChangeEventConverter();
 
     private GameUI ui;
 
@@ -95,7 +97,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         gameContext = new GameContextImpl(gameVariant, machine.coinMechanism());
         gameContext.eventManager().addGameEventSubscriber(ui);
 
-        gameContext.flow().addStateChangeListener(this);
+        gameContext.flow().addStateChangeListener(changeEventConverter);
     }
 
     public void exitGameVariant(GameVariant gameVariant) {
@@ -103,21 +105,12 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         gameVariant.config().dispose();
         ui.sounds().dispose();
         gameContext.eventManager().removeGameEventSubscriber(ui);
-        gameContext.flow().removeStateChangeListener(this);
+        gameContext.flow().removeStateChangeListener(changeEventConverter);
         gameContext = null;
     }
 
     public void setGameContext(GameContext gameContext) {
         this.gameContext = gameContext;
-    }
-
-    // StateChangeListener
-
-    @Override
-    public void onStateChange(State<GameContext> oldState, State<GameContext> newState) {
-        // A state change event from the current game flow state machine is converted
-        // into a game event and published such that UI components (views, game scenes) can handle them.
-        gameContext.eventManager().publishGameEvent(new GameStateChangeEvent(oldState, newState));
     }
 
     // GameAppContext
@@ -232,6 +225,18 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
             ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
             Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
         });
+    }
+
+    /**
+     * A state change event from the current game flow state machine is converted
+     * into a game event and published such that UI components (views, game scenes) can handle them.
+     */
+    private class StateChangeEventConverter implements StateChangeListener<State<GameContext>> {
+
+        @Override
+        public void onStateChange(State<GameContext> oldState, State<GameContext> newState) {
+            gameContext.eventManager().publishGameEvent(new GameStateChangeEvent(oldState, newState));
+        }
     }
 
     private class GameVariantManagerImpl implements GameVariantManager, ChangeListener<String> {
