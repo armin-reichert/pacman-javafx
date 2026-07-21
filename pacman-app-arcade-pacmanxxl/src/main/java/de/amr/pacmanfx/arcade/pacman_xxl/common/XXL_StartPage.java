@@ -90,7 +90,7 @@ public class XXL_StartPage implements StartPage {
             case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> appContext.variants().selectVariant(selectedGameVariantID.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariantID);
         }
-        appContext.ui().sounds().playVoice(VARIANT_NARRATION);
+        appContext.ui().sounds().voice().playAfterSec(1, VARIANT_NARRATION);
         menu.init(appContext);
         menu.bind();
         menu.startAnimation();
@@ -122,6 +122,6 @@ public class XXL_StartPage implements StartPage {
     }
 
     private void stopTalking() {
-        appContext.ui().sounds().stopVoiceAndDisposeVoicePlayer();
+        appContext.ui().sounds().voice().stop();
     }
 }

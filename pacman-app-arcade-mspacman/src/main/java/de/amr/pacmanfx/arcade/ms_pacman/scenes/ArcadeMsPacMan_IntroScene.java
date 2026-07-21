@@ -73,7 +73,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onDeactivate() {
-        appContext().ui().sounds().stopVoiceAndDisposeVoicePlayer();
+        appContext().ui().sounds().voice().stop();
         actionBindings().dispose();
     }
 
@@ -121,7 +121,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         presentedGhostPersonality = GameModel.RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        appContext().ui().sounds().playVoice(GlobalAssets.Voice.EXPLAIN_GAME_START.media());
+        appContext().ui().sounds().voice().playAfterSec(1, GlobalAssets.Voice.EXPLAIN_GAME_START.media());
     }
 
     // Scene flow state machine

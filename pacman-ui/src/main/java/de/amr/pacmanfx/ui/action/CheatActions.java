@@ -13,11 +13,13 @@ import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.scene.input.KeyCode;
+import javafx.scene.media.Media;
 
 import java.util.List;
 import java.util.Optional;
@@ -253,18 +255,28 @@ public final class CheatActions {
 
     private void setAutopilot(GameAppContext appContext, boolean auto) {
         final GameCheats cheats = appContext.currentGameContext().cheats();
+        final GameUI ui = appContext.ui();
+
         cheats.pacUsingAutopilotProperty().set(auto);
 
-        appContext.ui().shortMessage(appContext.ui().translations().translate(auto ? "flash.autopilot_on" : "flash.autopilot_off"));
-        appContext.ui().sounds().playVoice(auto ? GlobalAssets.Voice.AUTOPILOT_ON.media() : GlobalAssets.Voice.AUTOPILOT_OFF.media());
+        final String message = ui.translations().translate(auto ? "flash.autopilot_on" : "flash.autopilot_off");
+        final Media voice = auto ? GlobalAssets.Voice.AUTOPILOT_ON.media() : GlobalAssets.Voice.AUTOPILOT_OFF.media();
+
+        ui.shortMessage(message);
+        ui.sounds().voice().playAfterSec(1, voice);
     }
 
     private void setPacImmune(GameAppContext appContext, boolean immune) {
         final GameCheats cheats = appContext.currentGameContext().cheats();
+        final GameUI ui = appContext.ui();
+
         cheats.pacImmuneProperty().set(immune);
 
-        appContext.ui().shortMessage(appContext.ui().translations().translate(immune ? "flash.player_immunity_on" : "flash.player_immunity_off"));
-        appContext.ui().sounds().playVoice(immune ? GlobalAssets.Voice.IMMUNITY_ON.media() : GlobalAssets.Voice.IMMUNITY_OFF.media());
+        final String message = ui.translations().translate(immune ? "flash.player_immunity_on" : "flash.player_immunity_off");
+        final Media voice = immune ? GlobalAssets.Voice.IMMUNITY_ON.media() : GlobalAssets.Voice.IMMUNITY_OFF.media();
+
+        ui.shortMessage(message);
+        ui.sounds().voice().playAfterSec(1, voice);
     }
 
     private Optional<GameLevel> normalLevel(GameAppContext appContext) {

@@ -26,7 +26,7 @@ public class ArcadePacMan_StartScene extends AbstractGameScene2D {
 
     @Override
     public void onDeactivate() {
-        appContext().ui().sounds().stopVoiceAndDisposeVoicePlayer();
+        appContext().ui().sounds().voice().stop();
         actionBindings().dispose();
     }
 

@@ -1,9 +1,11 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.sound;
 
 import de.amr.basics.Disposable;
+import de.amr.pacmanfx.uilib.widgets.Voice;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -38,49 +40,29 @@ public class SoundManager implements Disposable {
         }
     }
 
-    private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty enabled = new SimpleBooleanProperty(true);
 
-    private final BooleanProperty muteProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty mute = new SimpleBooleanProperty(false);
 
     private final Map<SoundID, SoundResource> soundMap = new HashMap<>();
 
-    private MediaPlayer voicePlayer;
+    private final Voice voice = new Voice();
 
-    public SoundManager() {}
-
-    public void playVoice(Media voiceMedia) {
-        requireNonNull(voiceMedia);
-        if (voicePlayer != null && voicePlayer.getMedia().equals(voiceMedia) && voicePlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-            Logger.warn("Requested voice {} is already playing", voiceMedia);
-            return;
-        }
-        stopVoiceAndDisposeVoicePlayer();
-        createVoicePlayer(voiceMedia);
-        voicePlayer.play();
+    public SoundManager() {
+        voice.muteProperty().bind(Bindings.createBooleanBinding(
+            () -> mute.get() || !enabled.get(),
+            mute, enabled
+        ));
     }
 
-    private void createVoicePlayer(Media voiceMedia) {
-        voicePlayer = new MediaPlayer(voiceMedia);
-        voicePlayer.muteProperty().bind(muteProperty);
-        voicePlayer.setOnError(() -> Logger.error("Voice playback error: {}", voicePlayer.getError()));
-    }
-
-    public void stopVoiceAndDisposeVoicePlayer() {
-        if (voicePlayer != null) {
-            voicePlayer.stop();
-            voicePlayer.muteProperty().unbind();
-            voicePlayer.dispose();
-            voicePlayer = null;
-        }
+    public Voice voice() {
+        return voice;
     }
 
     @Override
     public void dispose() {
         stopAll();
-        enabledProperty.unbind();
-        if (voicePlayer != null) {
-            stopVoiceAndDisposeVoicePlayer();
-        }
+        enabled.unbind();
         soundMap.clear();
     }
 
@@ -124,23 +106,23 @@ public class SoundManager implements Disposable {
     }
 
     public BooleanProperty enabledProperty() {
-        return enabledProperty;
+        return enabled;
     }
 
     public boolean isEnabled() {
-        return enabledProperty.get();
+        return enabled.get();
     }
 
     public void setEnabled(boolean enabled) {
-        enabledProperty.set(enabled);
+        this.enabled.set(enabled);
     }
 
     public BooleanProperty muteProperty() {
-        return muteProperty;
+        return mute;
     }
 
     public boolean isMute() {
-        return muteProperty.get();
+        return mute.get();
     }
 
     public void playLoop(SoundID soundID) {

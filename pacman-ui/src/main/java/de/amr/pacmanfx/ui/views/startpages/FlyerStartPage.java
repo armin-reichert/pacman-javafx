@@ -9,11 +9,9 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.JsonLoader;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
-import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -30,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 
 public class FlyerStartPage implements StartPage {
 
-    public static final float TALK_DELAY_SEC = 1.0f;
+    public static final float VOICE_DELAY_SEC = 1.0f;
 
     public record Config(
         String gameVariant,
@@ -48,7 +46,8 @@ public class FlyerStartPage implements StartPage {
     protected GameAppContext appContext;
 
     protected GameScene gameScene;
-    protected Animation delayedVoice;
+
+    private final Media voiceMedia;
 
     public FlyerStartPage(URL configURL) {
         requireNonNull(configURL);
@@ -58,8 +57,9 @@ public class FlyerStartPage implements StartPage {
         setTitle(config.title());
 
         final ResourceManager resourceManager = this::getClass; // load relative to subclass!
-        createDelayedVoice(resourceManager);
         flyer.setImages(Stream.of(config.images()).map(resourceManager::loadImage).toArray(Image[]::new));
+
+        voiceMedia = resourceManager.loadMedia(config.voice());
     }
 
     private void init(String gameVariantName) {
@@ -93,7 +93,7 @@ public class FlyerStartPage implements StartPage {
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
             if (appContext != null) {
-                appContext.ui().sounds().stopVoiceAndDisposeVoicePlayer();
+                appContext.ui().sounds().voice().stop();
                 appContext.ui().shortMessage(appContext.ui().translations().translate("flash.shut_up"));
             }
         }
@@ -111,20 +111,13 @@ public class FlyerStartPage implements StartPage {
     public void onEnter() {
         appContext.variants().selectVariant(gameVariantName);
         flyer.selectPage(0);
-        if (delayedVoice == null) {
-            createDelayedVoice(this::getClass);
-        }
-        delayedVoice.play();
+        appContext.ui().sounds().voice().playAfterSec(VOICE_DELAY_SEC, voiceMedia);
         Platform.runLater(startButton::requestFocus);
     }
 
     @Override
     public void onExit() {
-        if (delayedVoice != null) {
-            delayedVoice.stop();
-            delayedVoice = null;
-        }
-        appContext.ui().sounds().stopVoiceAndDisposeVoicePlayer();
+        appContext.ui().sounds().voice().stop();
     }
 
     @Override
@@ -139,11 +132,6 @@ public class FlyerStartPage implements StartPage {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    private void createDelayedVoice(ResourceManager resourceManager) {
-        final Media voiceMedia = resourceManager.loadMedia(config.voice());
-        delayedVoice = Ufx.pauseSecThen(TALK_DELAY_SEC, () -> appContext.ui().sounds().playVoice(voiceMedia));
     }
 
     protected GameStartButton createStartButton() {
