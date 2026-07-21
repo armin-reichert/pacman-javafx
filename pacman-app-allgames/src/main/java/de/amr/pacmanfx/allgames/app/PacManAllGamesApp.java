@@ -14,7 +14,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.GameBuilder;
-import de.amr.pacmanfx.game.PacManGames;
+import de.amr.pacmanfx.game.PacManGameCollection;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 
 public class PacManAllGamesApp extends Application {
 
-    private PacManGames game;
+    private PacManGameCollection game;
     private boolean includeTests;
 
     @Override
