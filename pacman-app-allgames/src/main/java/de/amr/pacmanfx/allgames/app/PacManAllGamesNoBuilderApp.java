@@ -68,7 +68,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
         game.watchdog().addEventListener(XXL_MapSelector.instance());
 
         game.setUI(ui);
-        game.selectGameVariantAndShow(GameVariantID.ARCADE_PACMAN);
+        game.showGameVariant(GameVariantID.ARCADE_PACMAN);
 
         // This must happen *after* UI has been set!
         startPages.rootPane().setSelectedIndex(0);

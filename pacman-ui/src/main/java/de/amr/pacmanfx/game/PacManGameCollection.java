@@ -52,9 +52,9 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     private final GameVariantManagerImpl variantManager;
 
-    private final CommonGameActions actions;
+    private final StateChangeEventConverter changeEventConverter;
 
-    private final StateChangeEventConverter changeEventConverter = new StateChangeEventConverter();
+    private final CommonGameActions actions;
 
     private GameUI ui;
 
@@ -63,6 +63,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     public PacManGameCollection() {
         machine = GameBox.instance();
         variantManager = new GameVariantManagerImpl();
+        changeEventConverter = new StateChangeEventConverter();
         actions = new CommonGameActions(this);
         configureClock();
     }
@@ -72,7 +73,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         ui.setAppContext(this);
     }
 
-    public void selectGameVariantAndShow(GameVariantID variantID) {
+    public void showGameVariant(GameVariantID variantID) {
         requireNonNull(variantID);
         variantManager.selectVariant(variantID.name());
 

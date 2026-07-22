@@ -26,7 +26,9 @@ public class ArcadePacMan_App extends Application {
             .build()
             .orElse(null);
 
-        if (game != null) game.selectGameVariantAndShow(GameVariantID.ARCADE_PACMAN);
+        if (game != null) {
+            game.showGameVariant(GameVariantID.ARCADE_PACMAN);
+        }
     }
 
     @Override
