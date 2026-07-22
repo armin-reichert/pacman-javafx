@@ -147,6 +147,10 @@ public class GameUI implements GameEventListener {
         window.mainScene().flashMessageManager().clearMessage();
     }
 
+    public void setFullScreenMode(boolean fullScreen) {
+        window.stage().setFullScreen(fullScreen);
+    }
+
     @Override
     public void onGameEvent(GameEvent gameEvent) {
         boolean forceGameSceneReload = false;

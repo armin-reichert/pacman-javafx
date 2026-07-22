@@ -38,7 +38,7 @@ public class UISettingsActions {
         actionEnterFullScreen = new GameAction(appContext, "enter_fullscreen") {
             @Override
             protected void doAction() {
-                appContext.ui().window().stage().setFullScreen(true);
+                appContext.ui().setFullScreenMode(true);
             }
         };
 
