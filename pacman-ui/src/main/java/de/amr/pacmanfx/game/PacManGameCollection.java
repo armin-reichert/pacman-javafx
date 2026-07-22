@@ -9,7 +9,6 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateChangeListener;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.event.GameStateChangeEvent;
-import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.score.PropertyFileScore;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GameUI;
@@ -22,7 +21,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -50,6 +48,8 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     private final GameBox machine;
 
+    private final GameSimulation simulation = new GameSimulation(this);
+
     private final GameVariantManagerImpl variantManager;
 
     private final StateChangeEventConverter changeEventConverter;
@@ -65,7 +65,6 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         variantManager = new GameVariantManagerImpl();
         changeEventConverter = new StateChangeEventConverter();
         actions = new CommonGameActions(this);
-        configureClock();
     }
 
     public void setUI(GameUI ui) {
@@ -165,10 +164,9 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     @Override
     public void startPlaying() {
-        final GameFlowController gameFlow = gameContext.flow();
-        gameFlow.restartState(gameContext, GameStateID.BOOT);
-        clock().start();
+        gameContext.flow().restartState(gameContext, GameStateID.BOOT);
         ui.views().selectGamePlayView();
+        simulation.start();
     }
 
     @Override
@@ -178,8 +176,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
             ui.gameScenes().currentGameSceneProperty().set(null);
         });
         ui.sounds().stopAll();
-        clock().stop();
-        clock().setTargetFrameRate(GameConstants.SIMULATION_FPS);
+        simulation.stop();
     }
 
     @Override
@@ -200,32 +197,6 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
         //noinspection ResultOfMethodCallIgnored
         PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
-    }
-
-    private void configureClock() {
-        clock().setUpdateAction(this::simulateAndUpdateCurrentGameScene);
-        clock().setPermanentAction(this::renderCurrentView);
-        clock().setErrorHandler(this::handleFatalError);
-    }
-
-    private void simulateAndUpdateCurrentGameScene() {
-        final GameFlowController gameFlow = gameContext.flow(); //TODO store elsewhere?
-        gameContext.newFrame(clock().currentTick());
-        gameFlow.update(gameContext);
-        ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameContext.thisFrame()));
-    }
-
-    private void renderCurrentView() {
-        Platform.runLater(() -> ui.views().assertCurrentView().render());
-    }
-
-    private void handleFatalError(Throwable reason) {
-        Platform.runLater(() -> {
-            suspendPlaying();
-            final String errorMessage = ui.translations().translate("error.oh_no_my_program");
-            ui.shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
-            Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
-        });
     }
 
     /**
