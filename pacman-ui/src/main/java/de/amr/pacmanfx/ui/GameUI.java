@@ -11,12 +11,12 @@ import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.model.GameViewModel;
+import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
@@ -60,8 +60,6 @@ public class GameUI implements GameEventListener {
     private final SpriteAnimationManager sprites;
     private final GameViewModel viewModel;
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
-
-    private GameAppContext appContext;
 
     public GameUI(Stage stage, int width, int height, GameUISettings settings, DashboardFactory dashboardFactory) {
         viewModel = new GameViewModel();
@@ -108,14 +106,12 @@ public class GameUI implements GameEventListener {
     }
 
     public void setAppContext(GameAppContext appContext) {
-        this.appContext = requireNonNull(appContext);
-
         gameScenes.setGameAppContext(appContext);
         views.setGameAppContext(appContext);
         window.setGameAppContext(appContext);
 
-        connectKeyboard();
-        bindCommonActions();
+        connectKeyboard(appContext);
+        bindCommonActions(appContext);
     }
 
     public void terminate() {
@@ -179,15 +175,14 @@ public class GameUI implements GameEventListener {
         return views;
     }
 
-    private void connectKeyboard() {
+    private void connectKeyboard(GameAppContext appContext) {
         final Keyboard keyboard = appContext.input().keyboard();
         keyboard.enabledProperty().bind(views.currentViewIDProperty().map(GameUI::isViewAcceptingKeyboardInput));
-        keyboard.addStateListener(_ -> handleKeyboardStateChange());
+        keyboard.addStateListener(_ -> handleKeyboardStateChange(appContext.input()));
         keyboard.filterKeyEventsFrom(window.mainScene());
     }
 
-    private void handleKeyboardStateChange() {
-        final Input input = appContext.input();
+    private void handleKeyboardStateChange(Input input) {
         if (input.keyboard().anyNormalKeyPressed()) { // ignore modifier state change
             final GameViewID currentViewID = views.currentViewID();
             if (isViewAcceptingKeyboardInput(currentViewID)) {
@@ -203,7 +198,7 @@ public class GameUI implements GameEventListener {
         return viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY;
     }
 
-    private void bindCommonActions() {
+    private void bindCommonActions(GameAppContext appContext) {
         final CommonGameActions actions = appContext.commonActions();
         final Set<ActionKeyBinding> bindings = actions.bindings();
         actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionToggleKeyboardMonitor(), bindings);
