@@ -13,14 +13,13 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.model.GameViewModel;
 
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    public TengenMsPacMan_GameSceneConfig(GameAppContext appContext) {
-        super(appContext);
-    }
+    public TengenMsPacMan_GameSceneConfig() {}
 
     @Override
     public boolean sceneDecorationRequested(GameScene gameScene) {
@@ -29,7 +28,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected GameScene createGameScene(Identifier sceneID) {
+    protected GameScene createGameScene(GameAppContext appContext, Identifier sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
             case CommonGameSceneID.BOOT_SCENE -> new TengenMsPacMan_BootScene(appContext);
@@ -47,7 +46,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected Identifier determineSceneID(GameContext gameContext) {
+    protected Identifier determineSceneID(GameViewModel viewModel, GameContext gameContext) {
         final State<GameContext> state = gameContext.state();
 
         if (state instanceof CutScenesTestState testState) {
@@ -69,6 +68,6 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
         if (TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME.identifies(state)) {
             return TengenSceneID.HALL_OF_FAME;
         }
-        return appContext.ui().viewModel().common3D.view3DEnabledProperty.get() ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
+        return viewModel.common3D.view3DEnabledProperty.get() ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
     }
 }

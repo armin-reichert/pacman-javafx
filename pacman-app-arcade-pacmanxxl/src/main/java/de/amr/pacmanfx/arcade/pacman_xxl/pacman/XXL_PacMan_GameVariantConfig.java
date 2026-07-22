@@ -91,7 +91,7 @@ public final class XXL_PacMan_GameVariantConfig implements GameVariantConfig {
     public void init(GameAppContext appContext) {
         requireNonNull(appContext);
 
-        gameSceneConfig = new XXL_PacMan_GameSceneConfig(appContext);
+        gameSceneConfig = new XXL_PacMan_GameSceneConfig();
 
         sounds = appContext.ui().sounds();
         loadSounds();

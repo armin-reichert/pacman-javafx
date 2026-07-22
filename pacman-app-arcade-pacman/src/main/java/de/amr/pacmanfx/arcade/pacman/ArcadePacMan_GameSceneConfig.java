@@ -13,17 +13,17 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
+import de.amr.pacmanfx.ui.model.GameViewModel;
 
 import static java.util.Objects.requireNonNull;
 
 class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    public ArcadePacMan_GameSceneConfig(GameAppContext appContext) {
-        super(appContext);
-    }
+    public ArcadePacMan_GameSceneConfig() {}
 
     @Override
-    protected AbstractGameScene createGameScene(Identifier sceneID) {
+    protected AbstractGameScene createGameScene(GameAppContext appContext, Identifier sceneID) {
+        requireNonNull(appContext);
         requireNonNull(sceneID);
         return switch (sceneID) {
             case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene2D(appContext);
@@ -39,7 +39,8 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected Identifier determineSceneID(GameContext gameContext) {
+    protected Identifier determineSceneID(GameViewModel viewModel, GameContext gameContext) {
+        requireNonNull(gameContext);
         final State<GameContext> state = gameContext.state();
         if (state instanceof CutScenesTestState testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
@@ -56,6 +57,6 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
         if (GameStateID.GAME_PREPARATION.identifies(state)) {
             return CommonGameSceneID.START_SCENE;
         }
-        return appContext.ui().viewModel().common3D.view3DEnabledProperty.get() ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
+        return viewModel.common3D.view3DEnabledProperty.get() ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
     }
 }

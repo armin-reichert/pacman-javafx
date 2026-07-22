@@ -86,7 +86,7 @@ public class ArcadePacMan_GameVariantConfig implements GameVariantConfig {
     public void init(GameAppContext appContext) {
         requireNonNull(appContext);
 
-        gameSceneConfig = new ArcadePacMan_GameSceneConfig(appContext);
+        gameSceneConfig = new ArcadePacMan_GameSceneConfig();
 
         sounds = appContext.ui().sounds();
         loadSounds();

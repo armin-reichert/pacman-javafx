@@ -124,16 +124,16 @@ public class TengenMsPacMan_GameVariantConfig implements GameVariantConfig {
     public void init(GameAppContext appContext) {
         requireNonNull(appContext);
         
-        gameSceneConfig = new TengenMsPacMan_GameSceneConfig(appContext);
+        gameSceneConfig = new TengenMsPacMan_GameSceneConfig();
 
         sounds = appContext.ui().sounds();
         loadSounds();
         
-        assets.addAsset("app_icon",                         RM.loadImage("graphics/icons/mspacman.png"));
-        assets.addAsset("startpage.image1",                 RM.loadImage("graphics/flyer-page-1.png"));
-        assets.addAsset("startpage.image2",                 RM.loadImage("graphics/flyer-page-2.png"));
-        assets.addAsset("color.game_over_message",          NES_Palette.color(0x11));
-        assets.addAsset("color.ready_message",              NES_Palette.color(0x28));
+        assets.addAsset("app_icon",                RM.loadImage("graphics/icons/mspacman.png"));
+        assets.addAsset("startpage.image1",        RM.loadImage("graphics/flyer-page-1.png"));
+        assets.addAsset("startpage.image2",        RM.loadImage("graphics/flyer-page-2.png"));
+        assets.addAsset("color.game_over_message", NES_Palette.color(0x11));
+        assets.addAsset("color.ready_message",     NES_Palette.color(0x28));
 
         renderConfig = new TengenMsPacMan_RenderConfig(assets);
         renderConfig.addAssets();

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.model.GameViewModel;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -30,12 +31,13 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
         };
     }
 
-    protected final GameAppContext appContext;
     protected final Map<Identifier, GameScene> scenesByID = new HashMap<>();
 
-    public AbstractGameSceneConfig(GameAppContext appContext) {
-        this.appContext = requireNonNull(appContext);
-    }
+    public AbstractGameSceneConfig() {}
+
+    protected abstract GameScene createGameScene(GameAppContext appContext, Identifier Identifier);
+
+    protected abstract Identifier determineSceneID(GameViewModel viewModel, GameContext gameContext);
 
     @Override
     public void dispose() {
@@ -63,8 +65,8 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     @Override
     public final Optional<GameScene> selectGameScene(GameAppContext appContext, GameModel model) {
         requireNonNull(appContext);
-        final Identifier Identifier = determineSceneID(appContext.currentGameContext());
-        final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, this::createGameScene);
+        final Identifier Identifier = determineSceneID(appContext.ui().viewModel(), appContext.currentGameContext());
+        final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, id -> createGameScene(appContext, id));
         return Optional.of(gameScene);
     }
 
@@ -74,8 +76,4 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
         requireNonNull(Identifier);
         return scenesByID.get(Identifier) == gameScene;
     }
-
-    protected abstract GameScene createGameScene(Identifier Identifier);
-
-    protected abstract Identifier determineSceneID(GameContext gameContext);
 }
