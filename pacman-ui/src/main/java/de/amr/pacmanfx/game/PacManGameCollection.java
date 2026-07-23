@@ -203,7 +203,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
      * A state change event from the current game flow state machine is converted
      * into a game event and published such that UI components (views, game scenes) can handle them.
      */
-    private class StateChangeEventConverter implements StateChangeListener<State<GameContext>> {
+    private class StateChangeEventConverter implements StateChangeListener<GameContext> {
 
         @Override
         public void onStateChange(State<GameContext> oldState, State<GameContext> newState) {
@@ -262,16 +262,6 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
             } else throw new IllegalArgumentException("Game with name '" + gameVariantName + "' not found");
         }
 
-        private GameVariant createGameVariant(String variantName, boolean testStatesIncluded) {
-            final Cartridge cartridge = machine.cartridgeByName(variantName);
-            final var gameVariant = new GameVariant(cartridge);
-            if (testStatesIncluded) {
-                gameVariant.gameFlow().addTestStates();
-            }
-            gameVariant.gameModel().setHighScore(new PropertyFileScore(PacManGameCollection.highScoreFile(variantName)));
-            return gameVariant;
-        }
-
         @Override
         public void changed(ObservableValue<? extends String> observable, String oldVariantName, String newVariantName) {
             Logger.info("Game variant name: {} -> {}", oldVariantName, newVariantName);
@@ -285,5 +275,16 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
                 enterGameVariant(gameVariantByName(newVariantName));
             }
         }
+
+        private GameVariant createGameVariant(String variantName, boolean testStatesIncluded) {
+            final Cartridge cartridge = machine.cartridgeByName(variantName);
+            final var gameVariant = new GameVariant(cartridge);
+            if (testStatesIncluded) {
+                gameVariant.gameFlow().addTestStates();
+            }
+            gameVariant.gameModel().setHighScore(new PropertyFileScore(PacManGameCollection.highScoreFile(variantName)));
+            return gameVariant;
+        }
+
     }
 }

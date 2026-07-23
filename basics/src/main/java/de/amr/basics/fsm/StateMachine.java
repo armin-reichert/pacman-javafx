@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 public class StateMachine<C> {
 
     protected final Set<State<C>> states = new HashSet<>();
-    protected final Set<StateChangeListener<State<C>>> stateChangeListeners = new HashSet<>(5);
+    protected final Set<StateChangeListener<C>> stateChangeListeners = new HashSet<>(5);
     protected String name = getClass().getSimpleName();
     protected State<C> state;
     protected State<C> previousState;
@@ -106,7 +106,7 @@ public class StateMachine<C> {
      *
      * @param listener a state change listener
      */
-    public void addStateChangeListener(StateChangeListener<State<C>> listener) {
+    public void addStateChangeListener(StateChangeListener<C> listener) {
         requireNonNull(listener);
         final boolean added = stateChangeListeners.add(listener);
         if (!added) {
@@ -119,7 +119,7 @@ public class StateMachine<C> {
      *
      * @param listener a state change listener
      */
-    public void removeStateChangeListener(StateChangeListener<State<C>> listener) {
+    public void removeStateChangeListener(StateChangeListener<C> listener) {
         requireNonNull(listener);
         stateChangeListeners.remove(listener);
     }
