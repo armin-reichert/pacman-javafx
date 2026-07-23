@@ -9,6 +9,8 @@ import javafx.beans.property.*;
 
 public class MiniViewSettingsVM {
 
+    public final IntegerProperty minHeightProperty;
+    public final IntegerProperty maxHeightProperty;
     public final IntegerProperty heightProperty;
     public final BooleanProperty activeProperty;
     public final IntegerProperty opacityPercentageProperty;
@@ -16,6 +18,8 @@ public class MiniViewSettingsVM {
     public final FloatProperty slideOutSecondsProperty;
 
     public MiniViewSettingsVM() {
+        this.minHeightProperty = new SimpleIntegerProperty();
+        this.maxHeightProperty = new SimpleIntegerProperty();
         this.heightProperty = new SimpleIntegerProperty();
         this.activeProperty = new SimpleBooleanProperty();
         this.opacityPercentageProperty = new SimpleIntegerProperty();
@@ -24,6 +28,8 @@ public class MiniViewSettingsVM {
     }
 
     public void init(MiniViewSettings settings) {
+        minHeightProperty.set(settings.minHeight());
+        maxHeightProperty.set(settings.maxHeight());
         heightProperty.set(settings.height());
         activeProperty.set(settings.active());
         opacityPercentageProperty.set(settings.opacityPercentage());

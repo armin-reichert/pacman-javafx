@@ -23,10 +23,6 @@ import javafx.scene.shape.DrawMode;
  */
 public class DS_3DSettings extends GameDashboardSection {
 
-    //TODO move to JSON settings file and get from view model
-    private static final int MINI_VIEW_MIN_HEIGHT = 280;
-    private static final int MINI_VIEW_MAX_HEIGHT = 600;
-
     private CheckBox cbUsePlayScene3D;
     private ChoiceBox<PerspectiveID> comboPerspectives;
     private CheckBox cbMiniViewVisible;
@@ -66,7 +62,8 @@ public class DS_3DSettings extends GameDashboardSection {
 
         sliderMiniViewHeight = slider(
             " - Height",
-            MINI_VIEW_MIN_HEIGHT, MINI_VIEW_MAX_HEIGHT,
+            vm.miniView.minHeightProperty.get(),
+            vm.miniView.maxHeightProperty.get(),
             vm.miniView.heightProperty.get(),
             false, false);
 
