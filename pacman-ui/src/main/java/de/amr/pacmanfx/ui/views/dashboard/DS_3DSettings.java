@@ -10,6 +10,8 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.model.GameViewModel;
+import de.amr.pacmanfx.ui.views.playview.MiniPlaySceneView;
+import javafx.scene.Camera;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -21,13 +23,14 @@ import javafx.scene.shape.DrawMode;
  */
 public class DS_3DSettings extends GameDashboardSection {
 
+    //TODO move to JSON settings file and get from view model
     private static final int MINI_VIEW_MIN_HEIGHT = 280;
     private static final int MINI_VIEW_MAX_HEIGHT = 600;
 
     private CheckBox cbUsePlayScene3D;
     private ChoiceBox<PerspectiveID> comboPerspectives;
     private CheckBox cbMiniViewVisible;
-    private Slider sliderMiniViewSceneHeight;
+    private Slider sliderMiniViewHeight;
     private Slider sliderMiniViewOpacityPercentage;
     private Slider sliderWallHeight;
     private Slider sliderWallOpacity;
@@ -39,108 +42,113 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void setGameAppContext(GameAppContext appContext) {
-        final GameViewModel viewModel = appContext.ui().viewModel();
+    public void setGameAppContext(GameAppContext app) {
+        final GameViewModel vm = app.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
+
         comboPerspectives = choiceBox("Perspective", PerspectiveID.values());
-        colorPicker("Light Color", viewModel.maze3D.lightColorProperty);
-        colorPicker("Floor Color", viewModel.maze3D.floorColorProperty);
-        addDynamicInfo("Camera",         () -> subSceneCameraInfo(appContext.optCurrentGameScene().orElse(null)));
-        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(appContext.optCurrentGameScene().orElse(null)));
-        addDynamicInfo("Scene Size",     () -> sceneSizeInfo(
-            appContext.optCurrentGameScene().orElse(null),
-            appContext.currentGameContext().optLevel().orElse(null)
+
+        colorPicker("Light Color", vm.maze3D.lightColorProperty);
+
+        colorPicker("Floor Color", vm.maze3D.floorColorProperty);
+
+        addDynamicInfo("Camera", () -> subSceneCameraInfo(currentSubSceneFX(app)));
+
+        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(currentSubSceneFX(app)));
+
+        addDynamicInfo("Scene Size", () -> sceneSizeInfo(
+            app.optCurrentGameScene().orElse(null),
+            app.currentGameContext().optLevel().orElse(null)
         ));
 
-        cbMiniViewVisible = checkBox("Mini View", viewModel.miniView.activeProperty);
+        cbMiniViewVisible = checkBox("Mini View", vm.miniView.activeProperty);
 
-        sliderMiniViewSceneHeight = slider(
+        sliderMiniViewHeight = slider(
             " - Height",
             MINI_VIEW_MIN_HEIGHT, MINI_VIEW_MAX_HEIGHT,
-            viewModel.miniView.heightProperty.get(),
+            vm.miniView.heightProperty.get(),
             false, false);
 
         sliderMiniViewOpacityPercentage = slider(
             " - Opacity",
             0, 100,
-            viewModel.miniView.opacityPercentageProperty.get(),
+            vm.miniView.opacityPercentageProperty.get(),
             false, false);
 
         sliderWallHeight = slider(
             "Wall Height",
             0, 16,
-            viewModel.maze3D.wallHeightProperty.get(),
+            vm.maze3D.wallHeightProperty.get(),
             false, false);
 
         sliderWallOpacity = slider(
             "Wall Opacity",
             0, 1,
-            viewModel.maze3D.wallOpacityProperty.get(),
+            vm.maze3D.wallOpacityProperty.get(),
             false, false);
 
-        cbAxesVisible = checkBox("Show Axes", viewModel.common3D.axesVisibleProperty);
+        cbAxesVisible = checkBox("Show Axes", vm.common3D.axesVisibleProperty);
+
         cbWireframeMode = checkBox("Wireframe Mode");
 
-        setTooltip(sliderMiniViewSceneHeight, sliderMiniViewSceneHeight.valueProperty(), "%.0f px");
+        setTooltip(sliderMiniViewHeight, sliderMiniViewHeight.valueProperty(), "%.0f px");
         setTooltip(sliderMiniViewOpacityPercentage, sliderMiniViewOpacityPercentage.valueProperty(), "%.0f %%");
 
         setTooltip(sliderWallHeight, sliderWallHeight.valueProperty(), "%.0f px");
         setTooltip(sliderWallOpacity, sliderWallOpacity.valueProperty().multiply(100), "%.0f %%");
 
-        editPropertyWithSlider(sliderMiniViewSceneHeight,       viewModel.miniView.heightProperty);
-        editPropertyWithSlider(sliderMiniViewOpacityPercentage, viewModel.miniView.opacityPercentageProperty);
-        editPropertyWithSlider(sliderWallHeight,                viewModel.maze3D.wallHeightProperty);
-        editPropertyWithSlider(sliderWallOpacity,               viewModel.maze3D.wallOpacityProperty);
-        editPropertyWithChoiceBox(comboPerspectives,               viewModel.common3D.cameraPerspectiveIdProperty);
+        editPropertyWithSlider(sliderMiniViewHeight,            vm.miniView.heightProperty);
+        editPropertyWithSlider(sliderMiniViewOpacityPercentage, vm.miniView.opacityPercentageProperty);
+        editPropertyWithSlider(sliderWallHeight,                vm.maze3D.wallHeightProperty);
+        editPropertyWithSlider(sliderWallOpacity,               vm.maze3D.wallOpacityProperty);
+        editPropertyWithChoiceBox(comboPerspectives,            vm.common3D.cameraPerspectiveIdProperty);
 
-        cbUsePlayScene3D.setOnAction(_ -> appContext.commonActions().uiSettingsActions().actionTogglePlayScene2D3D().execute());
-        cbWireframeMode.setOnAction(_ -> appContext.commonActions().camera3DActions().actionToggleDrawMode().execute());
+        cbUsePlayScene3D.setOnAction(_ -> app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D().execute());
+        cbWireframeMode .setOnAction(_ -> app.commonActions().camera3DActions().actionToggleDrawMode().execute());
     }
 
     @Override
     public void update(GameAppContext appContext) {
         super.update(appContext);
 
-        final GameViewModel viewModel = appContext.ui().viewModel();
+        final GameViewModel vm = appContext.ui().viewModel();
+        final MiniPlaySceneView miniView = appContext.ui().views().gamePlayView().miniPlaySceneView();
 
-        comboPerspectives.setValue(viewModel.common3D.cameraPerspectiveIdProperty.get());
+        comboPerspectives.setValue(vm.common3D.cameraPerspectiveIdProperty.get());
 
-        sliderMiniViewSceneHeight.setDisable(appContext.ui().views().gamePlayView().miniPlaySceneView().isMoving());
+        cbUsePlayScene3D.setSelected(vm.common3D.view3DEnabledProperty.get());
+        cbAxesVisible   .setSelected(vm.common3D.axesVisibleProperty.get());
+        cbWireframeMode .setSelected(vm.common3D.drawModeProperty.get() == DrawMode.LINE);
 
-        cbUsePlayScene3D.setSelected(viewModel.common3D.view3DEnabledProperty.get());
-
-        cbMiniViewVisible.setSelected(viewModel.miniView.activeProperty.getValue());
-
-        comboPerspectives.setValue(viewModel.common3D.cameraPerspectiveIdProperty.get());
-
-        cbAxesVisible.setSelected(viewModel.common3D.axesVisibleProperty.get());
-
-        cbWireframeMode.setSelected(viewModel.common3D.drawModeProperty.get() == DrawMode.LINE);
+        // Mini view
+        cbMiniViewVisible.setSelected(vm.miniView.activeProperty.getValue());
+        sliderMiniViewHeight.setDisable(miniView.isMoving());
     }
 
-    private String subSceneSizeInfo(GameScene gameScene) {
-        if (gameScene == null) {
+    private static SubScene currentSubSceneFX(GameAppContext app) {
+        return app.optCurrentGameScene().flatMap(GameScene::optSubSceneFX).orElse(null);
+    }
+
+    private static String subSceneSizeInfo(SubScene subScene) {
+        return subScene != null
+            ? "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight())
+            : NO_INFO;
+    }
+
+    private static String subSceneCameraInfo(SubScene subScene) {
+        if (subScene == null) {
             return NO_INFO;
         }
-        return gameScene.optSubSceneFX()
-            .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
-            .orElse(NO_INFO);
+        final Camera camera = subScene.getCamera();
+        return "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
+            camera.getRotate(),
+            camera.getTranslateX(),
+            camera.getTranslateY(),
+            camera.getTranslateZ());
     }
 
-    private String subSceneCameraInfo(GameScene gameScene) {
-        if (gameScene == null) return NO_INFO;
-
-        return gameScene.optSubSceneFX().map(SubScene::getCamera)
-            .map(camera -> "rot=%.0f x=%.0f y=%.0f z=%.0f".formatted(
-                camera.getRotate(),
-                camera.getTranslateX(),
-                camera.getTranslateY(),
-                camera.getTranslateZ()))
-            .orElse(NO_INFO);
-    }
-
-    private String sceneSizeInfo(GameScene gameScene, GameLevel level) {
+    private static String sceneSizeInfo(GameScene gameScene, GameLevel level) {
         if (gameScene == null) return NO_INFO;
 
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
