@@ -54,7 +54,7 @@ public class DS_3DSettings extends GameDashboardSection {
         addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(currentSubSceneFX(app)));
 
         addDynamicInfo("Scene Size", () -> sceneSizeInfo(
-            app.optCurrentGameScene().orElse(null),
+            app.ui().gameScenes().optCurrentGameScene().orElse(null),
             app.currentGameContext().optLevel().orElse(null)
         ));
 
@@ -124,7 +124,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     private static SubScene currentSubSceneFX(GameAppContext app) {
-        return app.optCurrentGameScene().flatMap(GameScene::optSubSceneFX).orElse(null);
+        return app.ui().gameScenes().optCurrentGameScene().flatMap(GameScene::optSubSceneFX).orElse(null);
     }
 
     private static String subSceneSizeInfo(SubScene subScene) {

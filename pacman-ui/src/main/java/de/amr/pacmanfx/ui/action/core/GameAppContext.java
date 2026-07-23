@@ -12,10 +12,7 @@ import de.amr.pacmanfx.game.GameLifecycle;
 import de.amr.pacmanfx.game.GameVariantManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.input.Input;
-
-import java.util.Optional;
 
 public interface GameAppContext {
 
@@ -28,10 +25,6 @@ public interface GameAppContext {
     GameVariantManager variants();
 
     GameUI ui();
-
-    default Optional<GameScene> optCurrentGameScene() {
-        return ui().gameScenes().optCurrentGameScene();
-    }
 
     Input input();
 
