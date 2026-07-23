@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -48,7 +48,10 @@ public class DS_3DSettings extends GameDashboardSection {
         colorPicker("Floor Color", viewModel.maze3D.floorColorProperty);
         addDynamicInfo("Camera",         () -> subSceneCameraInfo(appContext.optCurrentGameScene().orElse(null)));
         addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(appContext.optCurrentGameScene().orElse(null)));
-        addDynamicInfo("Scene Size",     () -> sceneSizeInfo(appContext));
+        addDynamicInfo("Scene Size",     () -> sceneSizeInfo(
+            appContext.optCurrentGameScene().orElse(null),
+            appContext.currentGameContext().optLevel().orElse(null)
+        ));
 
         cbMiniViewVisible = checkBox("Mini View", viewModel.miniView.activeProperty);
 
@@ -137,20 +140,17 @@ public class DS_3DSettings extends GameDashboardSection {
             .orElse(NO_INFO);
     }
 
-    private String sceneSizeInfo(GameAppContext appContext) {
-        final GameModel model = appContext.currentGameContext().model();
-        final GameScene scene = appContext.optCurrentGameScene().orElse(null);
+    private String sceneSizeInfo(GameScene gameScene, GameLevel level) {
+        if (gameScene == null) return NO_INFO;
 
-        if (scene == null) return NO_INFO;
-
-        if (scene instanceof AbstractGameScene2D gameScene2D) {
+        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
             return "%dx%d (scaled: %.0fx%.0f)".formatted(
                 gameScene2D.unscaledWidth(), gameScene2D.unscaledHeight(),
                 gameScene2D.scaledWidth(), gameScene2D.scaledHeight());
         }
 
-        if (model.optLevel().isPresent()) {
-            final WorldMap worldMap = model.assertLevel().worldMap();
+        if (level != null) {
+            final WorldMap worldMap = level.worldMap();
             return "%dx%d (map size px)".formatted(worldMap.numCols() * WorldMap.TS, worldMap.numRows() * WorldMap.TS);
         }
 
