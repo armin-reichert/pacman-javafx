@@ -37,7 +37,6 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.window;
     exports de.amr.pacmanfx.ui.gamescene.common;
     exports de.amr.pacmanfx.ui.action.core;
-    exports de.amr.pacmanfx.ui.model;
     exports de.amr.pacmanfx.ui.settings.ui;
     exports de.amr.pacmanfx.ui.settings.world;
     exports de.amr.pacmanfx.game;
