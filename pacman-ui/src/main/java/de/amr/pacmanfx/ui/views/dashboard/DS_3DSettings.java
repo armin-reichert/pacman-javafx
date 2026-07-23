@@ -46,8 +46,8 @@ public class DS_3DSettings extends GameDashboardSection {
         comboPerspectives = choiceBox("Perspective", PerspectiveID.values());
         colorPicker("Light Color", viewModel.maze3D.lightColorProperty);
         colorPicker("Floor Color", viewModel.maze3D.floorColorProperty);
-        addDynamicInfo("Camera",         () -> subSceneCameraInfo(appContext));
-        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(appContext));
+        addDynamicInfo("Camera",         () -> subSceneCameraInfo(appContext.optCurrentGameScene().orElse(null)));
+        addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(appContext.optCurrentGameScene().orElse(null)));
         addDynamicInfo("Scene Size",     () -> sceneSizeInfo(appContext));
 
         cbMiniViewVisible = checkBox("Mini View", viewModel.miniView.activeProperty);
@@ -116,16 +116,16 @@ public class DS_3DSettings extends GameDashboardSection {
         cbWireframeMode.setSelected(viewModel.common3D.drawModeProperty.get() == DrawMode.LINE);
     }
 
-    private String subSceneSizeInfo(GameAppContext appContext) {
-        return appContext.optCurrentGameScene()
-            .flatMap(GameScene::optSubSceneFX)
+    private String subSceneSizeInfo(GameScene gameScene) {
+        if (gameScene == null) {
+            return NO_INFO;
+        }
+        return gameScene.optSubSceneFX()
             .map(subScene -> "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight()))
             .orElse(NO_INFO);
     }
 
-    private String subSceneCameraInfo(GameAppContext appContext) {
-        final GameScene gameScene = appContext.optCurrentGameScene().orElse(null);
-
+    private String subSceneCameraInfo(GameScene gameScene) {
         if (gameScene == null) return NO_INFO;
 
         return gameScene.optSubSceneFX().map(SubScene::getCamera)
