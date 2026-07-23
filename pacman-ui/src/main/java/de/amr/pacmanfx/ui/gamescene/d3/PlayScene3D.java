@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.vm.Common3DSettingsVM;
+import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
@@ -185,7 +185,7 @@ public class PlayScene3D extends AbstractGameScene
         decorate(level3D);
         level3DEmbedder.getChildren().setAll(level3D);
 
-        level3D.createAnimations(Common3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG);
+        level3D.createAnimations(Game3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG);
         level3D.entities().selectAll().forEach(entity -> entity.init(level));
         level3D.startLivesCounterTrackingPac();
 
@@ -210,7 +210,7 @@ public class PlayScene3D extends AbstractGameScene
 
     @Override
     public void onActivate() {
-        final Common3DSettingsVM settings3D = appContext().ui().viewModel().common3D;
+        final Game3DSettingsVM settings3D = appContext().ui().viewModel().common3D;
         perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIdProperty);
         settings3D.drawModeProperty.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);

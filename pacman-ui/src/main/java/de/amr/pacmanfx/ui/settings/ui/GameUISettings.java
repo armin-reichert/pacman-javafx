@@ -14,6 +14,6 @@ public record GameUISettings(
     boolean muted,
     List<DashboardSectionSettings> dashboard,
     MiniViewSettings miniView,
-    Common2DSettings common2D,
-    Common3DSettings common3D)
+    Game2DSettings common2D,
+    Game3DSettings common3D)
 {}

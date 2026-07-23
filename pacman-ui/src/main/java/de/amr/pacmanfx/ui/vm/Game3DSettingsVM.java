@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.vm;
 
 import de.amr.basics.math.Vector3f;
-import de.amr.pacmanfx.ui.settings.ui.Common3DSettings;
+import de.amr.pacmanfx.ui.settings.ui.Game3DSettings;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.AttractionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;
@@ -17,7 +17,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.shape.DrawMode;
 
-public class Common3DSettingsVM {
+public class Game3DSettingsVM {
 
     public static final ParticlesAnimationConfig DEFAULT_PARTICLE_ANIMATION_CONFIG = new ParticlesAnimationConfig(
         new ExplosionConfig(
@@ -43,14 +43,14 @@ public class Common3DSettingsVM {
     /* Whether 3D rendering is enabled at all. */
     public final BooleanProperty view3DEnabledProperty;
 
-    public Common3DSettingsVM() {
+    public Game3DSettingsVM() {
         axesVisibleProperty = new SimpleBooleanProperty();
         cameraPerspectiveIdProperty = new SimpleObjectProperty<>();
         drawModeProperty = new SimpleObjectProperty<>();
         view3DEnabledProperty = new SimpleBooleanProperty();
     }
 
-    public void init(Common3DSettings settings) {
+    public void init(Game3DSettings settings) {
         axesVisibleProperty.set(settings.axesVisible());
         cameraPerspectiveIdProperty.set(settings.cameraPerspectiveId());
         drawModeProperty.set(settings.drawMode());

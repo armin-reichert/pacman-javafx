@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
-import de.amr.pacmanfx.ui.vm.Common3DSettingsVM;
+import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.ui.vm.Maze3DSettingsVM;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -315,7 +315,7 @@ public interface PlayScene3D_GameEventHandler extends GameSceneGameEventHandler 
 
     private void playLevelEndAnimation(
         AnimationRegistry animationRegistry,
-        Common3DSettingsVM settings3D,
+        Game3DSettingsVM settings3D,
         Maze3DSettingsVM maze3DSettings,
         Maze3D maze3D,
         boolean cutSceneFollows)
@@ -366,7 +366,7 @@ public interface PlayScene3D_GameEventHandler extends GameSceneGameEventHandler 
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 
-    private void handleTestState(Common3DSettingsVM globals3D) {
+    private void handleTestState(Game3DSettingsVM globals3D) {
         gameScene().optGameLevel3D().ifPresent(level3D -> {
             gameScene().replaceGameLevel3D(level3D.level());
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level3D.level().number());

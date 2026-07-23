@@ -18,8 +18,8 @@ public class GameUISettingsVM {
     public final IntegerProperty numSimulationStepsProperty;
 
     public final MiniViewSettingsVM miniView;
-    public final Common2DSettingsVM common2D;
-    public final Common3DSettingsVM common3D;
+    public final Game2DSettingsVM common2D;
+    public final Game3DSettingsVM common3D;
     public final Maze3DSettingsVM maze3D;
 
     public GameUISettingsVM() {
@@ -31,8 +31,8 @@ public class GameUISettingsVM {
         numSimulationStepsProperty = new SimpleIntegerProperty(1);
 
         miniView = new MiniViewSettingsVM();
-        common2D = new Common2DSettingsVM();
-        common3D = new Common3DSettingsVM();
+        common2D = new Game2DSettingsVM();
+        common3D = new Game3DSettingsVM();
         maze3D = new Maze3DSettingsVM();
     }
 
