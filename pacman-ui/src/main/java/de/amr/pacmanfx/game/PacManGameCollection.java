@@ -49,8 +49,6 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         return new File(GameConstants.USER_HOME_DIR, fileName);
     }
 
-    private final GameBox machine;
-
     private final GameVariantManagerImpl variantManager;
 
     private final StateChangeEventConverter changeEventConverter;
@@ -62,7 +60,6 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     private GameContext gameContext;
 
     public PacManGameCollection() {
-        machine = GameBox.instance();
         variantManager = new GameVariantManagerImpl();
         changeEventConverter = new StateChangeEventConverter();
         actions = new CommonGameActions(this);
@@ -95,7 +92,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         config.init(this);
         ui.viewModel().maze3D.init(config.worldSettings().maze());
 
-        gameContext = new GameContextImpl(gameVariant, machine.coinMechanism());
+        gameContext = new GameContextImpl(gameVariant, gameBox().coinMechanism());
         gameContext.eventManager().addGameEventSubscriber(ui);
 
         gameContext.flow().addStateChangeListener(changeEventConverter);
@@ -138,17 +135,17 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     @Override
     public GameClock clock() {
-        return machine.clock();
+        return gameBox().clock();
     }
 
     @Override
     public Input input() {
-        return machine.input();
+        return gameBox().input();
     }
 
     @Override
     public DirectoryWatchdog watchdog() {
-        return machine.watchdog();
+        return gameBox().watchdog();
     }
 
     @Override
@@ -179,11 +176,15 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     public void terminate() {
         suspendPlaying();
         ui.terminate();
-        machine.dispose();
+        gameBox().dispose();
         Logger.info("Application terminated. There is no way back!");
     }
 
     // Private area, no trespassing!
+
+    private GameBox gameBox() {
+        return GameBox.instance();
+    }
 
     private void startBackgroundServices() {
         watchdog().startWatching();
@@ -253,7 +254,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         @Override
         public void selectVariant(String gameVariantName) {
             requireNonNull(gameVariantName);
-            if (machine.containsCartridgeWithName(gameVariantName)) {
+            if (gameBox().containsCartridgeWithName(gameVariantName)) {
                 this.variantName.set(gameVariantName);
             } else throw new IllegalArgumentException("Game with name '" + gameVariantName + "' not found");
         }
@@ -273,7 +274,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         }
 
         private GameVariant createGameVariant(String variantName, boolean testStatesIncluded) {
-            final Cartridge cartridge = machine.cartridgeByName(variantName);
+            final Cartridge cartridge = gameBox().cartridgeByName(variantName);
             final var gameVariant = new GameVariant(cartridge);
             if (testStatesIncluded) {
                 gameVariant.gameFlow().addTestStates();
