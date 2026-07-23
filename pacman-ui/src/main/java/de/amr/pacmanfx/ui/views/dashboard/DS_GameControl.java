@@ -40,7 +40,7 @@ public class DS_GameControl extends GameDashboardSection {
 
     @Override
     public void setGameAppContext(GameAppContext appContext) {
-        final CoinMechanism coinMechanism = appContext.coinMechanism();
+        final CoinMechanism coinMechanism = appContext.currentGameContext().coinMechanism();
         final CommonGameActions actions = appContext.commonActions();
 
         spinnerCredit            = intSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());

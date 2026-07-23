@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.action.core;
 
 import de.amr.basics.Identifier;
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.game.GameLifecycle;
@@ -37,8 +36,6 @@ public interface GameAppContext {
     Input input();
 
     GameClock clock();
-
-    CoinMechanism coinMechanism();
 
     DirectoryWatchdog watchdog();
 

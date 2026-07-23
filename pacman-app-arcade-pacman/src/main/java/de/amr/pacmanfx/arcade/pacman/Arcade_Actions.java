@@ -32,7 +32,7 @@ public final class Arcade_Actions {
             @Override
             public void doAction() {
                 final GameContext gameContext = gameContext();
-                final CoinMechanism coinMechanism = appContext.coinMechanism();
+                final CoinMechanism coinMechanism = appContext.currentGameContext().coinMechanism();
                 appContext.ui().sounds().voice().stop();
                 appContext.ui().sounds().setEnabled(true);
                 coinMechanism.insertCoin();

@@ -7,7 +7,10 @@ package de.amr.pacmanfx.game;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateChangeListener;
-import de.amr.pacmanfx.core.*;
+import de.amr.pacmanfx.core.GameClock;
+import de.amr.pacmanfx.core.GameConstants;
+import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.event.GameStateChangeEvent;
 import de.amr.pacmanfx.core.score.PropertyFileScore;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -138,11 +141,6 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     @Override
     public GameClock clock() {
         return machine.clock();
-    }
-
-    @Override
-    public CoinMechanism coinMechanism() {
-        return machine.coinMechanism();
     }
 
     @Override
