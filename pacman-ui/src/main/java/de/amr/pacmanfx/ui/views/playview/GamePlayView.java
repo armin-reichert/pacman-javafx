@@ -20,7 +20,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.ui.model.GameViewModel;
+import de.amr.pacmanfx.ui.model.GameUISettingsVM;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
@@ -110,7 +110,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     @Override
     public void setAppContext(GameAppContext appContext) {
         this.appContext = requireNonNull(appContext);
-        final GameViewModel settings = appContext.ui().viewModel();
+        final GameUISettingsVM settings = appContext.ui().viewModel();
 
         rootPane.setOnContextMenuRequested(this);
         appContext.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {

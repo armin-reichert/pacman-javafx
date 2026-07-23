@@ -26,7 +26,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationCon
 import de.amr.pacmanfx.ui.gamescene.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
-import de.amr.pacmanfx.ui.model.GameViewModel;
+import de.amr.pacmanfx.ui.model.GameUISettingsVM;
 import de.amr.pacmanfx.ui.settings.world.Bonus3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
@@ -115,7 +115,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final GameVariantConfig gameVariant;
 
-    private final GameViewModel viewModel;
+    private final GameUISettingsVM viewModel;
 
     private final EntitySet entitySet = new EntitySet();
 
@@ -131,7 +131,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private MessageManager3D messageManager;
 
     public GameLevel3D(
-        GameViewModel viewModel,
+        GameUISettingsVM viewModel,
         GameContext gameContext,
         GameLevel level,
         GameVariantConfig gameVariant

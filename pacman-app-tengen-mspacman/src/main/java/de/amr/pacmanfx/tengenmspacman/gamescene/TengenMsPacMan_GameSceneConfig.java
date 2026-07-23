@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.model.GameViewModel;
+import de.amr.pacmanfx.ui.model.GameUISettingsVM;
 
 import static java.util.Objects.requireNonNull;
 
@@ -46,7 +46,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected Identifier determineSceneID(GameViewModel viewModel, GameContext gameContext) {
+    protected Identifier determineSceneID(GameUISettingsVM viewModel, GameContext gameContext) {
         final State<GameContext> state = gameContext.state();
 
         if (state instanceof CutScenesTestState testState) {

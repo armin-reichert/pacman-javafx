@@ -21,8 +21,8 @@ import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
-import de.amr.pacmanfx.ui.model.GameViewModel;
+import de.amr.pacmanfx.ui.model.Common3DSettingsVM;
+import de.amr.pacmanfx.ui.model.GameUISettingsVM;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -76,7 +76,7 @@ public class PlayScene3D extends AbstractGameScene
 
         textPicker = new RandomTextPicker(appContext.ui().translations().textBundle(), "game.over");
 
-        final GameViewModel viewModel = appContext.ui().viewModel();
+        final GameUISettingsVM viewModel = appContext.ui().viewModel();
 
         perspectiveManager = new PerspectiveManager(camera);
         final var coordinateSystem = new CoordinateSystem();
@@ -179,13 +179,13 @@ public class PlayScene3D extends AbstractGameScene
             Logger.info("Old 3D game level is disposed...");
             level3D.dispose();
         }
-        final GameViewModel viewModel = appContext().ui().viewModel();
+        final GameUISettingsVM viewModel = appContext().ui().viewModel();
 
         level3D = new GameLevel3D(viewModel, gameContext(), level, appContext().variants().currentVariant().config());
         decorate(level3D);
         level3DEmbedder.getChildren().setAll(level3D);
 
-        level3D.createAnimations(Common3DSettingsModel.DEFAULT_PARTICLE_ANIMATION_CONFIG);
+        level3D.createAnimations(Common3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG);
         level3D.entities().selectAll().forEach(entity -> entity.init(level));
         level3D.startLivesCounterTrackingPac();
 
@@ -210,7 +210,7 @@ public class PlayScene3D extends AbstractGameScene
 
     @Override
     public void onActivate() {
-        final Common3DSettingsModel settings3D = appContext().ui().viewModel().common3D;
+        final Common3DSettingsVM settings3D = appContext().ui().viewModel().common3D;
         perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIdProperty);
         settings3D.drawModeProperty.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);

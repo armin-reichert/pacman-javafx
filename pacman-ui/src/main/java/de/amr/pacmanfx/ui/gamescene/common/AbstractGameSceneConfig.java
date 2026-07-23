@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.model.GameViewModel;
+import de.amr.pacmanfx.ui.model.GameUISettingsVM;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -37,7 +37,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     protected abstract GameScene createGameScene(GameAppContext appContext, Identifier Identifier);
 
-    protected abstract Identifier determineSceneID(GameViewModel viewModel, GameContext gameContext);
+    protected abstract Identifier determineSceneID(GameUISettingsVM viewModel, GameContext gameContext);
 
     @Override
     public void dispose() {

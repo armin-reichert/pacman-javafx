@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.model;
 import de.amr.pacmanfx.ui.settings.ui.MiniViewSettings;
 import javafx.beans.property.*;
 
-public class MiniViewModel {
+public class MiniViewSettingsVM {
 
     public final IntegerProperty heightProperty;
     public final BooleanProperty activeProperty;
@@ -15,7 +15,7 @@ public class MiniViewModel {
     public final FloatProperty slideInSecondsProperty;
     public final FloatProperty slideOutSecondsProperty;
 
-    public MiniViewModel() {
+    public MiniViewSettingsVM() {
         this.heightProperty = new SimpleIntegerProperty();
         this.activeProperty = new SimpleBooleanProperty();
         this.opacityPercentageProperty = new SimpleIntegerProperty();

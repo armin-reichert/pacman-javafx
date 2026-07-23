@@ -12,13 +12,13 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 
-public class Common2DSettingsModel {
+public class Common2DSettingsVM {
 
     public ObjectProperty<Color> canvasBackgroundColorProperty;
 
     public BooleanProperty fontSmoothingOnProperty;
 
-    public Common2DSettingsModel() {
+    public Common2DSettingsVM() {
         canvasBackgroundColorProperty = new SimpleObjectProperty<>();
         fontSmoothingOnProperty = new SimpleBooleanProperty();
     }

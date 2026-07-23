@@ -8,7 +8,7 @@ import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import javafx.beans.property.*;
 import javafx.util.Duration;
 
-public class GameViewModel {
+public class GameUISettingsVM {
 
     public final ObjectProperty<Duration> flashMessageDurationProperty;
     public final BooleanProperty testStatesIncludedProperty;
@@ -17,12 +17,12 @@ public class GameViewModel {
     public final BooleanProperty mutedProperty;
     public final IntegerProperty numSimulationStepsProperty;
 
-    public final MiniViewModel miniView;
-    public final Common2DSettingsModel common2D;
-    public final Common3DSettingsModel common3D;
-    public final Maze3DSettingsModel maze3D;
+    public final MiniViewSettingsVM miniView;
+    public final Common2DSettingsVM common2D;
+    public final Common3DSettingsVM common3D;
+    public final Maze3DSettingsVM maze3D;
 
-    public GameViewModel() {
+    public GameUISettingsVM() {
         flashMessageDurationProperty = new SimpleObjectProperty<>();
         testStatesIncludedProperty = new SimpleBooleanProperty();
         debugModeOnProperty = new SimpleBooleanProperty();
@@ -30,10 +30,10 @@ public class GameViewModel {
         mutedProperty = new SimpleBooleanProperty();
         numSimulationStepsProperty = new SimpleIntegerProperty(1);
 
-        miniView = new MiniViewModel();
-        common2D = new Common2DSettingsModel();
-        common3D = new Common3DSettingsModel();
-        maze3D = new Maze3DSettingsModel();
+        miniView = new MiniViewSettingsVM();
+        common2D = new Common2DSettingsVM();
+        common3D = new Common3DSettingsVM();
+        maze3D = new Maze3DSettingsVM();
     }
 
     public void init(GameUISettings settings) {

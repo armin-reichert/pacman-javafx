@@ -24,6 +24,8 @@
   ],
 
   "miniView": {
+    "minHeight": 280,
+    "maxHeight": 600,
     "height": 400,
     "active": false,
     "opacityPercentage": 69,

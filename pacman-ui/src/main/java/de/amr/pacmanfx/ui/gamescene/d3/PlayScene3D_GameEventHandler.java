@@ -19,9 +19,9 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
-import de.amr.pacmanfx.ui.model.Common3DSettingsModel;
-import de.amr.pacmanfx.ui.model.GameViewModel;
-import de.amr.pacmanfx.ui.model.Maze3DSettingsModel;
+import de.amr.pacmanfx.ui.model.Common3DSettingsVM;
+import de.amr.pacmanfx.ui.model.GameUISettingsVM;
+import de.amr.pacmanfx.ui.model.Maze3DSettingsVM;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -295,7 +295,7 @@ public interface PlayScene3D_GameEventHandler extends GameSceneGameEventHandler 
         final GameLevel level = gameContext().model().assertLevel();
         final boolean cutSceneFollows = !level.isDemoLevel()
             && gameContext().model().rules().cutSceneAfterLevel(level.number()).isPresent();
-        final GameViewModel viewModel = appContext().ui().viewModel();
+        final GameUISettingsVM viewModel = appContext().ui().viewModel();
 
         gameScene().scoreOpacity.set(0);
 
@@ -315,8 +315,8 @@ public interface PlayScene3D_GameEventHandler extends GameSceneGameEventHandler 
 
     private void playLevelEndAnimation(
         AnimationRegistry animationRegistry,
-        Common3DSettingsModel settings3D,
-        Maze3DSettingsModel maze3DSettings,
+        Common3DSettingsVM settings3D,
+        Maze3DSettingsVM maze3DSettings,
         Maze3D maze3D,
         boolean cutSceneFollows)
     {
@@ -366,7 +366,7 @@ public interface PlayScene3D_GameEventHandler extends GameSceneGameEventHandler 
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 
-    private void handleTestState(Common3DSettingsModel globals3D) {
+    private void handleTestState(Common3DSettingsVM globals3D) {
         gameScene().optGameLevel3D().ifPresent(level3D -> {
             gameScene().replaceGameLevel3D(level3D.level());
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level3D.level().number());

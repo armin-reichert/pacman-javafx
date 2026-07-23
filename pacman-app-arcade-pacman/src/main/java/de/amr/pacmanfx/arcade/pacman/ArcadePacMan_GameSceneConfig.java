@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.model.GameViewModel;
+import de.amr.pacmanfx.ui.model.GameUISettingsVM;
 
 import static java.util.Objects.requireNonNull;
 
@@ -39,7 +39,7 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected Identifier determineSceneID(GameViewModel viewModel, GameContext gameContext) {
+    protected Identifier determineSceneID(GameUISettingsVM viewModel, GameContext gameContext) {
         requireNonNull(gameContext);
         final State<GameContext> state = gameContext.state();
         if (state instanceof CutScenesTestState testState) {

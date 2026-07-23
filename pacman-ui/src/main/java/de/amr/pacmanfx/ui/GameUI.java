@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.model.GameViewModel;
+import de.amr.pacmanfx.ui.model.GameUISettingsVM;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -58,11 +58,11 @@ public class GameUI implements GameEventListener {
     private final TranslationManager translations;
     private final SoundManager sounds;
     private final SpriteAnimationManager sprites;
-    private final GameViewModel viewModel;
+    private final GameUISettingsVM viewModel;
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
 
     public GameUI(Stage stage, int width, int height, GameUISettings settings, DashboardFactory dashboardFactory) {
-        viewModel = new GameViewModel();
+        viewModel = new GameUISettingsVM();
         viewModel.init(settings);
 
         sprites = new SpriteAnimationManager();
@@ -101,7 +101,7 @@ public class GameUI implements GameEventListener {
         return sprites;
     }
 
-    public GameViewModel viewModel() {
+    public GameUISettingsVM viewModel() {
         return viewModel;
     }
 
