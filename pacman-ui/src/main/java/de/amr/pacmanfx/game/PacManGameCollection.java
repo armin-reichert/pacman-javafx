@@ -51,8 +51,6 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     private final GameBox machine;
 
-    private final GameSimulation simulation = new GameSimulation(this);
-
     private final GameVariantManagerImpl variantManager;
 
     private final StateChangeEventConverter changeEventConverter;
@@ -164,7 +162,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     public void startPlaying() {
         gameContext.flow().restartState(gameContext, GameStateID.BOOT);
         ui.views().selectGamePlayView();
-        simulation.start();
+        GameSimulation.start(this);
     }
 
     @Override
@@ -174,7 +172,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
             ui.gameScenes().currentGameSceneProperty().set(null);
         });
         ui.sounds().stopAll();
-        simulation.stop();
+        GameSimulation.stop(this);
     }
 
     @Override
@@ -283,6 +281,5 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
             gameVariant.gameModel().setHighScore(new PropertyFileScore(PacManGameCollection.highScoreFile(variantName)));
             return gameVariant;
         }
-
     }
 }
