@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.model;
+package de.amr.pacmanfx.ui.vm;
 
 import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.ui.settings.ui.Common3DSettings;

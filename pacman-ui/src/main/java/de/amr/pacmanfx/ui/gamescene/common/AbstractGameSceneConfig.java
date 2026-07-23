@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.model.GameUISettingsVM;
+import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import org.tinylog.Logger;
 
 import java.util.HashMap;

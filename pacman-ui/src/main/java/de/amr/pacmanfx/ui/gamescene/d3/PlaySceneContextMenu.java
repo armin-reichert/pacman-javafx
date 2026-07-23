@@ -7,7 +7,7 @@ import de.amr.basics.Disposable;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
-import de.amr.pacmanfx.ui.model.Common3DSettingsVM;
+import de.amr.pacmanfx.ui.vm.Common3DSettingsVM;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ContextMenu;

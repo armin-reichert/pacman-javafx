@@ -41,4 +41,5 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.settings.ui;
     exports de.amr.pacmanfx.ui.settings.world;
     exports de.amr.pacmanfx.game;
+    exports de.amr.pacmanfx.ui.vm;
 }
