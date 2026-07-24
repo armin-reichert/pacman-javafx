@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.core.rules;
 
-import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
