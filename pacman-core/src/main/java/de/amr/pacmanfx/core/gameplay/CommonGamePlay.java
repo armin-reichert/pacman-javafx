@@ -173,7 +173,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void evalCollisions(GameContext gameContext) {
         final GameLevel level = gameContext.assertLevel();
-        final HuntingStepResult result = gameContext.thisFrame().huntingStepResult();
+        final HuntingStepResult result = gameContext.thisFrame().huntingStep();
         evalFoodFound(gameContext);
 
         if (result.foundEdibleBonus()) {
@@ -194,7 +194,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameLevel level = gameContext.assertLevel();
         final GameEventManager eventManager = gameContext.eventManager();
         final Pac pac = level.entities().pac();
-        final HuntingStepResult hunting = gameContext.thisFrame().huntingStepResult();
+        final HuntingStepResult hunting = gameContext.thisFrame().huntingStep();
 
         if (!hunting.foodFound()) {
             pac.continueStarving();
@@ -468,10 +468,10 @@ public abstract class CommonGamePlay implements GamePlay {
         final CollisionStrategy strategy = model.rules().getCollisionStrategy();
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
-        gameContext.thisFrame().huntingStepResult().ghostsCollidingWithPac().clear();
+        gameContext.thisFrame().huntingStep().ghostsCollidingWithPac().clear();
         ghosts.stream()
             .filter(ghost -> strategy.collide(pac, ghost))
-            .forEach(gameContext.thisFrame().huntingStepResult().ghostsCollidingWithPac()::add);
+            .forEach(gameContext.thisFrame().huntingStep().ghostsCollidingWithPac()::add);
     }
 
     private void detectEdibleBonusCollision(GameContext gameContext) {
@@ -480,9 +480,9 @@ public abstract class CommonGamePlay implements GamePlay {
         final CollisionStrategy strategy = model.rules().getCollisionStrategy();
         final Pac pac = level.entities().pac();
         final Bonus bonus = level.entities().optBonus().orElse(null);
-        gameContext.thisFrame().huntingStepResult().setEdibleBonus(null);
+        gameContext.thisFrame().huntingStep().setEdibleBonus(null);
         if (bonus != null && bonus.state() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
-            gameContext.thisFrame().huntingStepResult().setEdibleBonus(bonus);
+            gameContext.thisFrame().huntingStep().setEdibleBonus(bonus);
         }
     }
 
@@ -492,8 +492,8 @@ public abstract class CommonGamePlay implements GamePlay {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Vector2i pacTile = pac.computeTile();
         if (foodLayer.hasFoodAtTile(pacTile)) {
-            gameContext.thisFrame().huntingStepResult().setFoodFoundTile(pacTile);
-            gameContext.thisFrame().huntingStepResult().setEnergizerFound(foodLayer.isEnergizerTile(pacTile));
+            gameContext.thisFrame().huntingStep().setFoodFoundTile(pacTile);
+            gameContext.thisFrame().huntingStep().setEnergizerFound(foodLayer.isEnergizerTile(pacTile));
         }
     }
 }

@@ -77,10 +77,10 @@ public class LevelMediumTestState extends GameState {
             if (model.rules().isLevelCompleted(level)) {
                 gameContext.flow().enterState(gameContext, GameStateID.GAME_INTRO);
             }
-            else if (gameContext.thisFrame().huntingStepResult().pacKilled()) {
+            else if (gameContext.thisFrame().huntingStep().pacKilled()) {
                 triggerTimeout();
             }
-            else if (gameContext.thisFrame().huntingStepResult().hasGhostBeenKilled()) {
+            else if (gameContext.thisFrame().huntingStep().hasGhostBeenKilled()) {
                 gameContext.flow().enterState(gameContext, GameStateID.GAME_LEVEL_EATING_GHOST);
             }
         }
@@ -93,7 +93,6 @@ public class LevelMediumTestState extends GameState {
     }
 
     private void configureLevelForTest(GameContext gameContext) {
-        final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
 
         final Pac pac = level.entities().pac();

@@ -5,9 +5,4 @@
 package de.amr.pacmanfx.core.gameplay;
 
 
-public interface FrameContext {
-
-    long tick();
-
-    HuntingStepResult huntingStepResult();
-}
+public record FrameContext(long tick, HuntingStepResult huntingStep) {}

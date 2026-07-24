@@ -101,8 +101,6 @@ public class GameContextImpl implements GameContext {
 
     @Override
     public void newFrame(long tick) {
-        thisFrame = new FrameData(tick, new HuntingStepResult());
+        thisFrame = new FrameContext(tick, new HuntingStepResult());
     }
-
-    record FrameData(long tick, HuntingStepResult huntingStepResult) implements FrameContext {}
 }
