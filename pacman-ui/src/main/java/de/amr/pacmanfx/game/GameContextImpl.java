@@ -65,16 +65,6 @@ public class GameContextImpl implements GameContext {
     }
 
     @Override
-    public Optional<GameLevel> optLevel() {
-        return model().optLevel();
-    }
-
-    @Override
-    public GameLevel assertLevel() {
-        return model().assertLevel();
-    }
-
-    @Override
     public GameFlowController flow() {
         return gameVariant.gameFlow();
     }
@@ -95,12 +85,22 @@ public class GameContextImpl implements GameContext {
     }
 
     @Override
+    public Optional<GameLevel> optLevel() {
+        return model().optLevel();
+    }
+
+    @Override
+    public GameLevel assertLevel() {
+        return model().assertLevel();
+    }
+
+    @Override
     public FrameContext thisFrame() {
         return thisFrame;
     }
 
     @Override
-    public void newFrame(long tick) {
+    public void newFrameContext(long tick) {
         thisFrame = new FrameContext(tick, new HuntingStepResult());
     }
 }

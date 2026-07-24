@@ -43,5 +43,5 @@ public interface GameContext {
 
     FrameContext thisFrame();
 
-    void newFrame(long tick);
+    void newFrameContext(long tick);
 }

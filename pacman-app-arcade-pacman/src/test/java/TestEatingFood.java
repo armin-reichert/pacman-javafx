@@ -111,7 +111,7 @@ public class TestEatingFood {
         }
 
         @Override
-        public void newFrame(long tick) {
+        public void newFrameContext(long tick) {
         }
 
         @Override
