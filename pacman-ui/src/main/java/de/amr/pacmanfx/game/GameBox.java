@@ -79,15 +79,15 @@ public class GameBox implements Disposable {
             if (cartridge == null) {
                 Logger.error("NULL cartridge detected! Are you kidding me?");
             } else {
-                if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(cartridge.name()).matches()) {
+                if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(cartridge.id().name()).matches()) {
                     throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
-                        .formatted(cartridge.name(), GameConstants.GAME_VARIANT_NAME_PATTERN));
+                        .formatted(cartridge.id().name(), GameConstants.GAME_VARIANT_NAME_PATTERN));
                 }
                 final boolean added = cartridges.add(cartridge);
                 if (added) {
-                    Logger.info("Cartridge {} inserted into machine", cartridge.name());
+                    Logger.info("Cartridge {} inserted into machine", cartridge.id().name());
                 } else {
-                    Logger.info("Cartridge {} already inserted", cartridge.name());
+                    Logger.info("Cartridge {} already inserted", cartridge.id().name());
                 }
             }
         }
@@ -112,7 +112,7 @@ public class GameBox implements Disposable {
     // other stuff
 
     private Optional<Cartridge> findCartridgeByName(String name) {
-        return cartridges.stream().filter(cartridge -> cartridge.name().equals(name)).findFirst();
+        return cartridges.stream().filter(cartridge -> cartridge.id().name().equals(name)).findFirst();
     }
 
     private boolean validateUserDirs() {

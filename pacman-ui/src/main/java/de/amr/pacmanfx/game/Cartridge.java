@@ -18,11 +18,4 @@ public record Cartridge(
     Supplier<? extends GameFlowController> gameFlowFactory,
     Supplier<? extends GameModel> gameModelFactory,
     Supplier<? extends GameVariantConfig> uiConfigFactory,
-    Set<GameExtension> gameExtensions)
-    implements Identifier
-{
-    @Override
-    public String name() {
-        return id.name();
-    }
-}
+    Set<GameExtension> gameExtensions) {}
