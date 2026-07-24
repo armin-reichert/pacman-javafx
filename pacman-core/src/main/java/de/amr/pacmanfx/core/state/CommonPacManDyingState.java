@@ -43,7 +43,7 @@ public class CommonPacManDyingState extends GameState {
 
         model.gateKeeper().resetCounterAndSetEnabled(true);
 
-        level.huntingTimer().stop();
+        level.huntingRules().stop();
 
         level.entities().optBonus().ifPresent(Bonus::setInactive);
 

@@ -66,7 +66,7 @@ public final class TengenMsPacMan_ActorFactory {
     private static Ghost modifyShadowBehavior(Ghost ghost) {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
-            final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
+            final boolean firstScatterPhase = level.huntingRules().phaseIndex() == 0;
             final boolean takeRandomDir = ghost.isNewTileEntered() && terrain.isIntersection(ghost.computeTile());
             if (firstScatterPhase && takeRandomDir) {
                 selectRandomWishDir(ghost, level);
@@ -74,7 +74,7 @@ public final class TengenMsPacMan_ActorFactory {
                 ghost.tryMovingOrTeleporting(level);
             } else {
                 // Normal behavior of red ghost
-                final boolean chase = level.huntingTimer().isChasing() || ghost.elroy().enabled();
+                final boolean chase = level.huntingRules().isChasing() || ghost.elroy().enabled();
                 final Vector2i targetTile = chase
                     ? ghost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(ghost.personality());
@@ -88,14 +88,14 @@ public final class TengenMsPacMan_ActorFactory {
     private static Ghost modifyAmbushBehavior(Ghost ghost) {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
-            final boolean firstScatterPhase = level.huntingTimer().phaseIndex() == 0;
+            final boolean firstScatterPhase = level.huntingRules().phaseIndex() == 0;
             final boolean takeRandomDir = ghost.isNewTileEntered() && terrain.isIntersection(ghost.computeTile());
             if (firstScatterPhase && takeRandomDir) {
                 selectRandomWishDir(ghost, level);
                 ghost.setSpeed(speed);
                 ghost.tryMovingOrTeleporting(level);
             } else {
-                final boolean chase = level.huntingTimer().isChasing();
+                final boolean chase = level.huntingRules().isChasing();
                 final Vector2i targetTile = chase
                     ? ghost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(ghost.personality());

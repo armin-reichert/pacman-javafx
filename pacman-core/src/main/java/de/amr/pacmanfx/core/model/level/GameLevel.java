@@ -6,12 +6,12 @@ package de.amr.pacmanfx.core.model.level;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.rules.HuntingRules;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -81,11 +81,12 @@ public class GameLevel {
     private final int number; // 1=first level
     private final WorldMap worldMap;
     private final EntitySetWithCache entities = new EntitySetWithCache();
-    private final HuntingTimer huntingTimer;
     private final Pulse heartbeat;
     private final List<Ghost> ghostKillChain = new ArrayList<>();
     private final int[] bonusSymbolCodes = new int[2];
     private final int numFlashes;
+
+    private final HuntingRules huntingRules;
 
     private byte currentBonusIndex; // -1=no bonus, 0=first, 1=second
     private GameLevelMessage message;
@@ -96,16 +97,17 @@ public class GameLevel {
     private float pacPowerSeconds;
     private float pacPowerFadingSeconds;
 
-    public GameLevel(GameModel gameModel, int number, WorldMap worldMap, HuntingTimer huntingTimer, int numFlashes) {
+    public GameLevel(GameModel gameModel, int number, WorldMap worldMap, HuntingRules huntingRules, int numFlashes) {
         this.gameModel = requireNonNull(gameModel);
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
-        this.huntingTimer = requireNonNull(huntingTimer);
+        this.huntingRules = requireNonNull(huntingRules);
         this.numFlashes = requireNonNegativeInt(numFlashes);
 
         heartbeat = new Pulse(10, Pulse.State.OFF);
         currentBonusIndex = -1;
-        huntingTimer.reset();
+
+        huntingRules.reset();
     }
 
     /**
@@ -176,8 +178,8 @@ public class GameLevel {
     /**
      * @return the timer controlling the hunting phases (scattering and chasing).
      */
-    public HuntingTimer huntingTimer() {
-        return huntingTimer;
+    public HuntingRules huntingRules() {
+        return huntingRules;
     }
 
     /**

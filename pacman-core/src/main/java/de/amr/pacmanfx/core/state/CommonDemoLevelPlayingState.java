@@ -66,7 +66,7 @@ public class CommonDemoLevelPlayingState extends GameState {
             level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
 
             // This call fires a game event!
-            level.huntingTimer().startFirstPhase(gameContext, level.number());
+            level.huntingRules().startFirstPhase(gameContext, level.number());
         }
         else if (tick > huntingStartTick) {
             gameContext.gamePlay().hunt(gameContext);

@@ -5,12 +5,12 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.MovingActor;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.rules.HuntingRules;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -71,8 +71,8 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
             final String gameStateText = state.name() + " (Tick %d)".formatted(state.timer().tickCount());
             String huntingPhaseText = "";
             if (GameStateID.GAME_LEVEL_PLAYING.identifies(state)) {
-                final HuntingTimer huntingTimer = level.huntingTimer();
-                huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.currentHuntingPhase(), huntingTimer.tickCount());
+                final HuntingRules huntingRules = level.huntingRules();
+                huntingPhaseText = " %s (Tick %d)".formatted(huntingRules.currentHuntingPhase(), huntingRules.tickCount());
             }
             ctx.setFill(debugTextFill);
             ctx.setStroke(debugTextStroke);

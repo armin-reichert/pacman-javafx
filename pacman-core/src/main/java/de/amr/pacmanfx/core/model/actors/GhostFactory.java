@@ -17,7 +17,7 @@ public class GhostFactory {
 
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             ghost.setSpeed(speed);
-            final boolean chase = level.huntingTimer().isChasing()
+            final boolean chase = level.huntingRules().isChasing()
                 || ghost.elroy().enabled();
             final Vector2i targetTile = chase
                 ? ghost.chasingTargetTileStrategy().apply(level)

@@ -51,7 +51,7 @@ public class ArcadeMsPacMan_ActorFactory {
                 redGhost.tryMovingOrTeleporting(level);
                 return;
             }
-            final boolean takeRandomDir = level.huntingTimer().phaseIndex() == 0
+            final boolean takeRandomDir = level.huntingRules().phaseIndex() == 0
                 && redGhost.isNewTileEntered()
                 && terrain.isIntersection(tile);
             if (takeRandomDir) {
@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_ActorFactory {
                 redGhost.tryMovingOrTeleporting(level);
             } else {
                 // Normal behavior of red ghost
-                final boolean chase = level.huntingTimer().isChasing() || redGhost.elroy().enabled();
+                final boolean chase = level.huntingRules().isChasing() || redGhost.elroy().enabled();
                 final Vector2i targetTile = chase
                     ? redGhost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(redGhost.personality());
@@ -81,7 +81,7 @@ public class ArcadeMsPacMan_ActorFactory {
                 pinkGhost.tryMovingOrTeleporting(level);
                 return;
             }
-            final boolean takeRandomDir = level.huntingTimer().phaseIndex() == 0
+            final boolean takeRandomDir = level.huntingRules().phaseIndex() == 0
                 && pinkGhost.isNewTileEntered()
                 && terrain.isIntersection(tile);
             if (takeRandomDir) {
@@ -89,7 +89,7 @@ public class ArcadeMsPacMan_ActorFactory {
                 pinkGhost.setSpeed(speed);
                 pinkGhost.tryMovingOrTeleporting(level);
             } else {
-                final boolean chase = level.huntingTimer().isChasing();
+                final boolean chase = level.huntingRules().isChasing();
                 final Vector2i targetTile = chase
                     ? pinkGhost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(pinkGhost.personality());

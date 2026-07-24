@@ -8,15 +8,15 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.HuntingPhase;
-import de.amr.pacmanfx.core.model.HuntingTimer;
-import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.model.world.MapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
+import de.amr.pacmanfx.core.rules.ActorSpeedRules;
+import de.amr.pacmanfx.core.rules.HuntingPhase;
+import de.amr.pacmanfx.core.rules.HuntingRules;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.scene.paint.Color;
@@ -82,8 +82,8 @@ public class DS_GameInfo extends GameDashboardSection {
         );
 
         addDynamicInfo("Hunting Phase",  fnGameLevelInfo(appContext, this::fmtHuntingPhase));
-        addDynamicInfo("-Running",       fnGameLevelInfo(appContext, level -> fmtHuntingTicksRunning(level.huntingTimer())));
-        addDynamicInfo("-Remaining",     fnGameLevelInfo(appContext, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
+        addDynamicInfo("-Running",       fnGameLevelInfo(appContext, level -> fmtHuntingTicksRunning(level.huntingRules())));
+        addDynamicInfo("-Remaining",     fnGameLevelInfo(appContext, level -> fmtHuntingTicksRemaining(level.huntingRules())));
         addDynamicInfo("Collision mode", fnGameRulesInfo(appContext, rules -> fmtCollisionMode(rules.actorCollisionRules().getCollisionStrategy())));
         addDynamicInfo("Pac-Man speed",  supplyGameLevelSpeedInfo(appContext, this::fmtPacNormalSpeed));
         addDynamicInfo("- empowered",    supplyGameLevelSpeedInfo(appContext, this::fmtPacSpeedPowered));
@@ -125,14 +125,14 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     private String fmtHuntingPhase(GameLevel level) {
-        HuntingTimer timer = level.huntingTimer();
+        final HuntingRules huntingRules = level.huntingRules();
         return "%s #%d%s (%s)".formatted(
-            timer.currentHuntingPhase().name(),
-            timer.currentHuntingPhase() == HuntingPhase.CHASING
-                ? timer.currentChasingPhaseIndex().orElse(42)
-                : timer.currentScatterPhaseIndex().orElse(42),
-            timer.isStopped() ? " STOPPED" : "",
-            formatDurationAsSeconds(timer.durationTicks())
+            huntingRules.currentHuntingPhase().name(),
+            huntingRules.currentHuntingPhase() == HuntingPhase.CHASING
+                ? huntingRules.currentChasingPhaseIndex().orElse(42)
+                : huntingRules.currentScatterPhaseIndex().orElse(42),
+            huntingRules.isStopped() ? " STOPPED" : "",
+            formatDurationAsSeconds(huntingRules.durationTicks())
         );
     }
 
@@ -143,12 +143,12 @@ public class DS_GameInfo extends GameDashboardSection {
         return "%.2f sec".formatted(duration / (float) GameConstants.SIMULATION_FPS);
     }
 
-    private String fmtHuntingTicksRunning(HuntingTimer timer) {
-        return "%d".formatted(timer.tickCount());
+    private String fmtHuntingTicksRunning(HuntingRules huntingRules) {
+        return "%d".formatted(huntingRules.tickCount());
     }
 
-    private String fmtHuntingTicksRemaining(HuntingTimer timer) {
-        return "%d".formatted(timer.remainingTicksOfCurrentPhase());
+    private String fmtHuntingTicksRemaining(HuntingRules huntingRules) {
+        return "%d".formatted(huntingRules.remainingTicksOfCurrentPhase());
     }
 
     private String fmtPelletCount(GameLevel level) {

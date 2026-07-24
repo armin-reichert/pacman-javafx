@@ -148,7 +148,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final boolean doubleChecked = model.rules().actorCollisionRules().isCollisionDoubleChecked();
 
         level.heartbeat().triggerPulse();
-        level.huntingTimer().update(model.rules(), level.number());
+        level.huntingRules().update(model.rules(), level.number());
 
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(level);
@@ -329,7 +329,7 @@ public abstract class CommonGamePlay implements GamePlay {
     public void onLevelCompleted(GameLevel level) {
         requireNonNull(level);
 
-        level.huntingTimer().stop();
+        level.huntingRules().stop();
         Logger.info("Hunting timer stopped.");
 
         level.heartbeat().setStartState(Pulse.State.OFF);
@@ -366,7 +366,7 @@ public abstract class CommonGamePlay implements GamePlay {
         level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
         final float powerSeconds = level.pacPowerSeconds();
         if (powerSeconds > 0) {
-            level.huntingTimer().stop();
+            level.huntingRules().stop();
             Logger.debug("Hunting stopped (Pac-Man got power)");
             final long powerTicks = TickTimer.secToTicks(powerSeconds);
             pac.powerTimer().restartTicks(powerTicks);
@@ -391,7 +391,7 @@ public abstract class CommonGamePlay implements GamePlay {
                 pac.powerTimer().stop();
                 pac.powerTimer().reset(0);
                 level.clearGhostKillChain();
-                level.huntingTimer().start();
+                level.huntingRules().start();
                 level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
                 eventManager.publishGameEvent(new PacLostPowerEvent(pac));
             }
