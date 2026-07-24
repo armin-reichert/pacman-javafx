@@ -9,14 +9,14 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 
 public class ArcadePacMan_ScoringRules implements ScoringRules {
 
+    private static final byte[] GHOST_POINT_FACTORS = { 2, 4, 8, 16 };
+
     @Override
     public int pointsForGhost(int killedBefore) {
-        return switch (killedBefore) {
-            case 0 -> 200;
-            case 1 -> 400;
-            case 2 -> 800;
-            default -> 1600;
-        };
+        if (killedBefore < 0 || killedBefore > GHOST_POINT_FACTORS.length) {
+            throw new IllegalArgumentException("killedBefore index is out of range: " + killedBefore);
+        }
+        return GHOST_POINT_FACTORS[killedBefore] * 100;
     }
 
     @Override
@@ -54,5 +54,4 @@ public class ArcadePacMan_ScoringRules implements ScoringRules {
     public boolean isExtraLifeAwarded(int oldScore, int newScore) {
         return ScoringRules.crossedScoreLine(oldScore, newScore, 10_000);
     }
-
 }

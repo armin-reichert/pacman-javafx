@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ScoringRules;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
