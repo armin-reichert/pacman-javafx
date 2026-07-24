@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.model.GameRules;
-import de.amr.pacmanfx.core.model.actors.ActorSpeedSettings;
+import de.amr.pacmanfx.core.model.actors.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import javafx.beans.property.BooleanProperty;
@@ -72,15 +72,15 @@ public class ArcadePacMan_GameRules implements GameRules {
         return collisionStrategy;
     }
 
-    protected ActorSpeedSettings actorSpeedSettings = new Arcade_ActorSpeedSettings();
+    protected ActorSpeedRules actorSpeedRules = new Arcade_ActorSpeedRules();
 
     protected ArcadePacMan_ScoringRules scoringRules = new ArcadePacMan_ScoringRules();
 
     public ArcadePacMan_GameRules() {}
 
     @Override
-    public ActorSpeedSettings actorSpeedControl() {
-        return actorSpeedSettings;
+    public ActorSpeedRules actorSpeedControl() {
+        return actorSpeedRules;
     }
 
     @Override

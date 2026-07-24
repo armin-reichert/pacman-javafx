@@ -56,7 +56,7 @@ public class TengenMsPacMan_GameRules implements GameRules {
         return collisionStrategy;
     }
 
-    private final TengenMsPacMan_ActorSpeedSettings actorSpeedControl = new TengenMsPacMan_ActorSpeedSettings();
+    private final TengenMsPacMan_ActorSpeedRules actorSpeedControl = new TengenMsPacMan_ActorSpeedRules();
 
     private final TengenMsPacMan_ScoringRules scoringRules = new TengenMsPacMan_ScoringRules();
 
@@ -79,7 +79,7 @@ public class TengenMsPacMan_GameRules implements GameRules {
     }
 
     @Override
-    public TengenMsPacMan_ActorSpeedSettings actorSpeedControl() {
+    public TengenMsPacMan_ActorSpeedRules actorSpeedControl() {
         return actorSpeedControl;
     }
 

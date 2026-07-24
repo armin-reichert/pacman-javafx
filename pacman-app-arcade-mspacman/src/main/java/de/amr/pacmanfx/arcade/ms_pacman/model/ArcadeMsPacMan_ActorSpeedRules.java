@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_ActorSpeedSettings;
+import de.amr.pacmanfx.arcade.pacman.model.Arcade_ActorSpeedRules;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
 // In levels 3..., ghosts do not slow down in tunnel anymore!
-public class ArcadeMsPacMan_ActorSpeedSettings extends Arcade_ActorSpeedSettings {
+public class ArcadeMsPacMan_ActorSpeedRules extends Arcade_ActorSpeedRules {
 
     @Override
     public float ghostSpeed(GameLevel level, Ghost ghost) {

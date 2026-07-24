@@ -13,7 +13,7 @@ import static de.amr.basics.math.RandomNumberSupport.randomInt;
 public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
 
     public ArcadeMsPacMan_GameRules() {
-        actorSpeedSettings = new ArcadeMsPacMan_ActorSpeedSettings();
+        actorSpeedRules = new ArcadeMsPacMan_ActorSpeedRules();
     }
 
     /**

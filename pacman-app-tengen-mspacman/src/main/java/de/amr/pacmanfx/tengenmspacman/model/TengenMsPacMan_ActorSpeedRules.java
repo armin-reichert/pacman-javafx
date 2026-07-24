@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.ActorSpeedSettings;
+import de.amr.pacmanfx.core.model.actors.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -17,11 +17,11 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.core.Validations.inClosedRange;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_ActorSpeedSettings implements ActorSpeedSettings {
+public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
 
     private Difficulty difficulty;
 
-    public TengenMsPacMan_ActorSpeedSettings() {
+    public TengenMsPacMan_ActorSpeedRules() {
         difficulty = Difficulty.NORMAL;
     }
 
