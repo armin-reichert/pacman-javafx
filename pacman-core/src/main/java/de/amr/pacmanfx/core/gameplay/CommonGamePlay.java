@@ -145,7 +145,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameEventManager eventManager = gameContext.eventManager();
         final Pac pac = level.entities().pac();
         final ArcadeHouseGateKeeper gateKeeper = model.gateKeeper();
-        final boolean doubleChecked = model.rules().collisionDoubleCheckedProperty().get();
+        final boolean doubleChecked = model.rules().actorCollisionRules().isCollisionDoubleChecked();
 
         level.heartbeat().triggerPulse();
         level.huntingTimer().update(model.rules(), level.number());
@@ -465,7 +465,7 @@ public abstract class CommonGamePlay implements GamePlay {
     private void detectPacGhostCollision(GameContext gameContext) {
         final GameLevel level = gameContext.assertLevel();
         final GameModel model = gameContext.model();
-        final CollisionStrategy strategy = model.rules().getCollisionStrategy();
+        final CollisionStrategy strategy = model.rules().actorCollisionRules().getCollisionStrategy();
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
         gameContext.thisFrame().huntingStep().ghostsCollidingWithPac().clear();
@@ -477,7 +477,7 @@ public abstract class CommonGamePlay implements GamePlay {
     private void detectEdibleBonusCollision(GameContext gameContext) {
         final GameLevel level = gameContext.assertLevel();
         final GameModel model = gameContext.model();
-        final CollisionStrategy strategy = model.rules().getCollisionStrategy();
+        final CollisionStrategy strategy = model.rules().actorCollisionRules().getCollisionStrategy();
         final Pac pac = level.entities().pac();
         final Bonus bonus = level.entities().optBonus().orElse(null);
         gameContext.thisFrame().huntingStep().setEdibleBonus(null);

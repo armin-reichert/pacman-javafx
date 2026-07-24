@@ -72,7 +72,7 @@ public class Ghost extends MovingActor {
 
     @Override
     public void update(GameLevel level, GameEventManager eventManager) {
-        final float speed = level.gameModel().rules().actorSpeedControl().ghostSpeed(level, this);
+        final float speed = level.gameModel().rules().actorSpeedRules().ghostSpeed(level, this);
         switch (state()) {
             case LOCKED         -> updateStateLocked(level, speed);
             case LEAVING_HOUSE  -> updateStateLeavingHouse(level, speed);

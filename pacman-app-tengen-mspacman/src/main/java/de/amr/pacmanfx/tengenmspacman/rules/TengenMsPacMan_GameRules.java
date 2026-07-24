@@ -2,16 +2,17 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.tengenmspacman.model;
+package de.amr.pacmanfx.tengenmspacman.rules;
 
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import javafx.beans.property.BooleanProperty;
+import de.amr.pacmanfx.core.rules.ActorCollisionRules;
+import de.amr.pacmanfx.core.rules.GameRules;
+import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
+import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.Map;
@@ -44,42 +45,25 @@ public class TengenMsPacMan_GameRules implements GameRules {
         LAST_LEVEL_NUMBER, 4
     );
 
-    private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
-
-    private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(CollisionStrategy.CENTER_DISTANCE);
-
-    public BooleanProperty collisionDoubleCheckedProperty() {
-        return collisionDoubleChecked;
-    }
-
-    public ObjectProperty<CollisionStrategy> collisionStrategyProperty() {
-        return collisionStrategy;
-    }
-
+    private final ActorCollisionRules actorCollisionRules = new ActorCollisionRules();
     private final TengenMsPacMan_ActorSpeedRules actorSpeedControl = new TengenMsPacMan_ActorSpeedRules();
-
     private final TengenMsPacMan_ScoringRules scoringRules = new TengenMsPacMan_ScoringRules();
 
     private final ObjectProperty<MapCategory> mapCategory = new SimpleObjectProperty<>(MapCategory.ARCADE);
 
-    public void setMapCategory(MapCategory category) {
-        mapCategory.set(category);
-    }
-
-    public MapCategory mapCategory() {
-        return mapCategory.get();
-    }
-
-    public ObjectProperty<MapCategory> mapCategoryProperty() {
-        return mapCategory;
-    }
-
     public TengenMsPacMan_GameRules() {
+        actorCollisionRules.collisionStrategyProperty().set(CollisionStrategy.CENTER_DISTANCE);
+        actorCollisionRules.collisionDoubleCheckedProperty().set(true);
         scoringRules.mapCategoryProperty().bind(mapCategory);
     }
 
     @Override
-    public TengenMsPacMan_ActorSpeedRules actorSpeedControl() {
+    public ActorCollisionRules actorCollisionRules() {
+        return actorCollisionRules;
+    }
+
+    @Override
+    public TengenMsPacMan_ActorSpeedRules actorSpeedRules() {
         return actorSpeedControl;
     }
 
@@ -110,7 +94,6 @@ public class TengenMsPacMan_GameRules implements GameRules {
         return levelNumber - 1 <= lastSymbolCode ? levelNumber - 1 : randomInt(0, lastSymbolCode + 1);
     }
 
-
     @Override
     public float eatenBonusDisplaySeconds() {
         return 2;
@@ -127,6 +110,18 @@ public class TengenMsPacMan_GameRules implements GameRules {
     @Override
     public int lastCutSceneNumber() {
         return 4;
+    }
+
+    public void setMapCategory(MapCategory category) {
+        mapCategory.set(category);
+    }
+
+    public MapCategory mapCategory() {
+        return mapCategory.get();
+    }
+
+    public ObjectProperty<MapCategory> mapCategoryProperty() {
+        return mapCategory;
     }
 
     // Hunting

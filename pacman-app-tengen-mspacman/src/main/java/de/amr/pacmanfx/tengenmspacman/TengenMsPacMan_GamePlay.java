@@ -20,6 +20,7 @@ import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.model.*;
+import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -223,7 +224,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
         final Bonus bonus = new Bonus(symbolCode, model.rules().scoringRules().pointsForBonus(symbolCode));
         bonus.setMazeRoute(route, leftToRight);
-        bonus.showEdibleAndStartWandering(model.rules().actorSpeedControl().bonusSpeed(level));
+        bonus.showEdibleAndStartWandering(model.rules().actorSpeedRules().bonusSpeed(level));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);

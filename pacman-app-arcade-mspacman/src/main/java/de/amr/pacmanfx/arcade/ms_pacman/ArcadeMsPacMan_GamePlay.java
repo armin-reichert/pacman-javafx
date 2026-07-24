@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
+import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.BonusActivatedEvent;
@@ -164,7 +164,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             bonus.showEdibleForSeconds(randomFloat(9, 10));
         } else {
             computeBonusRoute(bonus, terrain, house);
-            bonus.showEdibleAndStartWandering(model.rules().actorSpeedControl().bonusSpeed(level));
+            bonus.showEdibleAndStartWandering(model.rules().actorSpeedRules().bonusSpeed(level));
         }
 
         level.setBonus(bonus);

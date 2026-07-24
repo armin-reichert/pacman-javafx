@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ScoringRules;
+import de.amr.pacmanfx.arcade.ms_pacman.rules.ArcadeMsPacMan_ScoringRules;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 

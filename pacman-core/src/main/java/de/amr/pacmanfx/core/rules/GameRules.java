@@ -4,26 +4,17 @@
 
 package de.amr.pacmanfx.core.rules;
 
-import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 
 import java.util.OptionalInt;
 
 public interface GameRules {
 
-    ActorSpeedRules actorSpeedControl();
+    ActorCollisionRules actorCollisionRules();
+
+    ActorSpeedRules actorSpeedRules();
 
     ScoringRules scoringRules();
-
-    ObjectProperty<CollisionStrategy> collisionStrategyProperty();
-
-    default CollisionStrategy getCollisionStrategy() {
-        return collisionStrategyProperty().get();
-    }
-
-    BooleanProperty collisionDoubleCheckedProperty();
 
     boolean isLevelCompleted(GameLevel level);
 

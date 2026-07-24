@@ -2,10 +2,10 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.ms_pacman.model;
+package de.amr.pacmanfx.arcade.ms_pacman.rules;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
+import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.Validations;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;

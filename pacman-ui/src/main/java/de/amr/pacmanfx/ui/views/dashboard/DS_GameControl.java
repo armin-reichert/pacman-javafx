@@ -47,7 +47,7 @@ public class DS_GameControl extends GameDashboardSection {
         choiceBoxInitialLives    = choiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = buttonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = buttonList("Cut Scenes Test", List.of("Start", "Quit"));
-        addDynamicInfo("Collision Mode", fnGameRulesInfo(appContext, rules -> rules.getCollisionStrategy().name()));
+        addDynamicInfo("Collision Mode", fnGameRulesInfo(appContext, rules -> rules.actorCollisionRules().getCollisionStrategy().name()));
         cbCollisionCheckedTwice  = checkBox("Collision Check 2x");
 
         setAction(choiceBoxInitialLives, () -> appContext.currentGameContext().model().setInitialLifeCount(choiceBoxInitialLives.getValue()));
@@ -61,7 +61,8 @@ public class DS_GameControl extends GameDashboardSection {
         setGameAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
-            appContext.currentGameContext().model().rules().collisionDoubleCheckedProperty().set(cbCollisionCheckedTwice.isSelected()));
+            appContext.currentGameContext().model().rules().actorCollisionRules().collisionDoubleCheckedProperty()
+                .set(cbCollisionCheckedTwice.isSelected()));
     }
 
     @Override
@@ -86,7 +87,7 @@ public class DS_GameControl extends GameDashboardSection {
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !GameStateID.GAME_INTRO.identifies(state));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(state instanceof CutScenesTestState));
 
-        cbCollisionCheckedTwice.setSelected(gameContext.model().rules().collisionDoubleCheckedProperty().get());
+        cbCollisionCheckedTwice.setSelected(gameContext.model().rules().actorCollisionRules().isCollisionDoubleChecked());
     }
 
     private boolean canStartLevel(GameAppContext appContext, GameState gameState) {

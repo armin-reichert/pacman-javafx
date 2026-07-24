@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
+import de.amr.pacmanfx.core.rules.ActorCollisionRules;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -52,7 +52,7 @@ public final class CommonGameActions {
         actionToggleCollisionStrategy = new GameAction(appContext, "toggle_collision_strategy") {
             @Override
             protected void doAction() {
-                final GameRules rules = gameContext().model().rules();
+                final ActorCollisionRules rules = gameContext().model().rules().actorCollisionRules();
                 Ufx.toggleProperty(rules.collisionStrategyProperty(), CollisionStrategy.SAME_TILE, CollisionStrategy.CENTER_DISTANCE);
                 final CollisionStrategy strategy = rules.getCollisionStrategy();
                 if (strategy == CollisionStrategy.SAME_TILE) {

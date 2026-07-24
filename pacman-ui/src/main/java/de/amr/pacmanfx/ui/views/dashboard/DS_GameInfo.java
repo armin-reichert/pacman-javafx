@@ -84,7 +84,7 @@ public class DS_GameInfo extends GameDashboardSection {
         addDynamicInfo("Hunting Phase",  fnGameLevelInfo(appContext, this::fmtHuntingPhase));
         addDynamicInfo("-Running",       fnGameLevelInfo(appContext, level -> fmtHuntingTicksRunning(level.huntingTimer())));
         addDynamicInfo("-Remaining",     fnGameLevelInfo(appContext, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
-        addDynamicInfo("Collision mode", fnGameRulesInfo(appContext, rules -> fmtCollisionMode(rules.getCollisionStrategy())));
+        addDynamicInfo("Collision mode", fnGameRulesInfo(appContext, rules -> fmtCollisionMode(rules.actorCollisionRules().getCollisionStrategy())));
         addDynamicInfo("Pac-Man speed",  supplyGameLevelSpeedInfo(appContext, this::fmtPacNormalSpeed));
         addDynamicInfo("- empowered",    supplyGameLevelSpeedInfo(appContext, this::fmtPacSpeedPowered));
         addDynamicInfo("Power Duration", fnGameLevelInfo(appContext, this::fmtPacPowerTime));
@@ -100,7 +100,7 @@ public class DS_GameInfo extends GameDashboardSection {
         BiFunction<GameLevel, ActorSpeedRules, String> fnInfo) {
         return () -> {
             final GameModel model = appContext.currentGameContext().model();
-            final ActorSpeedRules speedControl = model.rules().actorSpeedControl();
+            final ActorSpeedRules speedControl = model.rules().actorSpeedRules();
             return model.optLevel().map(level -> fnInfo.apply(level, speedControl)).orElse(NO_INFO);
         };
     }

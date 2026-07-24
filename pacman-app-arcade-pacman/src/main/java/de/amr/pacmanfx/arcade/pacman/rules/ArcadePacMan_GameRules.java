@@ -2,17 +2,16 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.pacman.model;
+package de.amr.pacmanfx.arcade.pacman.rules;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.rules.GameRules;
-import de.amr.pacmanfx.core.rules.ActorSpeedRules;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ScoringRules;
+import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import de.amr.pacmanfx.core.rules.ActorCollisionRules;
+import de.amr.pacmanfx.core.rules.ActorSpeedRules;
+import de.amr.pacmanfx.core.rules.GameRules;
 
 import java.util.Map;
 import java.util.OptionalInt;
@@ -60,26 +59,28 @@ public class ArcadePacMan_GameRules implements GameRules {
         17, 3
     );
 
-    private final BooleanProperty collisionDoubleChecked = new SimpleBooleanProperty(true);
 
-    private final ObjectProperty<CollisionStrategy> collisionStrategy = new SimpleObjectProperty<>(CollisionStrategy.SAME_TILE);
+    protected ActorCollisionRules actorCollisionRules;
 
-    public BooleanProperty collisionDoubleCheckedProperty() {
-        return collisionDoubleChecked;
+    protected ActorSpeedRules actorSpeedRules;
+
+    protected ArcadePacMan_ScoringRules scoringRules;
+
+    public ArcadePacMan_GameRules() {
+        actorCollisionRules = new ActorCollisionRules();
+        actorCollisionRules.collisionStrategyProperty().set(CollisionStrategy.SAME_TILE);
+        actorCollisionRules.collisionDoubleCheckedProperty().set(true);
+        actorSpeedRules = new Arcade_ActorSpeedRules();
+        scoringRules = new ArcadePacMan_ScoringRules();
     }
-
-    public ObjectProperty<CollisionStrategy> collisionStrategyProperty() {
-        return collisionStrategy;
-    }
-
-    protected ActorSpeedRules actorSpeedRules = new Arcade_ActorSpeedRules();
-
-    protected ArcadePacMan_ScoringRules scoringRules = new ArcadePacMan_ScoringRules();
-
-    public ArcadePacMan_GameRules() {}
 
     @Override
-    public ActorSpeedRules actorSpeedControl() {
+    public ActorCollisionRules actorCollisionRules() {
+        return actorCollisionRules;
+    }
+
+    @Override
+    public ActorSpeedRules actorSpeedRules() {
         return actorSpeedRules;
     }
 

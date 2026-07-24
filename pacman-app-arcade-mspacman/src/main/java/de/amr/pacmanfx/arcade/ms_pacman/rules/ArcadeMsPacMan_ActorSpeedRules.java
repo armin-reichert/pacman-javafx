@@ -2,9 +2,9 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.ms_pacman.model;
+package de.amr.pacmanfx.arcade.ms_pacman.rules;
 
-import de.amr.pacmanfx.arcade.pacman.model.Arcade_ActorSpeedRules;
+import de.amr.pacmanfx.arcade.pacman.rules.Arcade_ActorSpeedRules;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 

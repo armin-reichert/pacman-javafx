@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 
 import static java.util.Objects.requireNonNull;
@@ -98,7 +99,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = requireNonNull(difficulty);
-        rules().actorSpeedControl().setDifficulty(difficulty);
+        rules().actorSpeedRules().setDifficulty(difficulty);
     }
 
     public Difficulty difficulty() {

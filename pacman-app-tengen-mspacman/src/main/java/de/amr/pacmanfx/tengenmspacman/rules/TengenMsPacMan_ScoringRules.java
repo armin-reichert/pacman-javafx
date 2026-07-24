@@ -2,10 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.tengenmspacman.model;
+package de.amr.pacmanfx.tengenmspacman.rules;
 
 import de.amr.pacmanfx.core.rules.ScoringRules;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
+import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
