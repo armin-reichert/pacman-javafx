@@ -20,7 +20,7 @@ import javafx.scene.input.ScrollEvent;
 
 import java.util.Optional;
 
-public interface GameScene extends GameSceneGameEventHandler, QuitHandler, Disposable {
+public interface GameScene extends QuitHandler, Disposable {
 
     Input input();
 
@@ -84,9 +84,4 @@ public interface GameScene extends GameSceneGameEventHandler, QuitHandler, Dispo
      * @return optional context menu contributed by this scene
      */
     Optional<ContextMenu> optContextMenu();
-
-    @Override
-    default GameScene gameScene() {
-        return this;
-    }
 }

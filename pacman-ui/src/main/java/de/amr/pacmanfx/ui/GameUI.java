@@ -15,7 +15,6 @@ import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -24,6 +23,7 @@ import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
+import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.ui.window.GameWindow;
 import de.amr.pacmanfx.uilib.JsonLoader;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -165,7 +165,11 @@ public class GameUI implements GameEventListener {
             default -> {}
         }
         gameScenes.updateGameSceneAndForceReload(forceGameSceneReload);
-        gameScenes.optCurrentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
+        gameScenes.optCurrentGameScene().ifPresent(gameScene -> {
+            if (gameScene instanceof GameEventListener eventHandler) {
+                eventHandler.onGameEvent(gameEvent);
+            }
+        });
     }
 
     // private

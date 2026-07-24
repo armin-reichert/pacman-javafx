@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Abstract base class for all game scenes (2D and 3D).
  */
-public abstract class AbstractGameScene implements GameScene, Disposable {
+public abstract class AbstractGameScene implements GameScene, GameSceneGameEventHandler, Disposable {
 
     private final GameAppContext appContext;
 
@@ -121,5 +121,12 @@ public abstract class AbstractGameScene implements GameScene, Disposable {
     public void handleQuit(GameAppContext ac) {
         Logger.info("Game scene {} quit", getClass().getSimpleName());
         onDeactivate();
+    }
+
+    // --- Interface GameSceneGameEventHandler
+
+    @Override
+    public GameScene gameScene() {
+        return this;
     }
 }
