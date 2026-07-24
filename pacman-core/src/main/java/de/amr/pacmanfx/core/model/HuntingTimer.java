@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class HuntingTimer extends TickTimer implements HuntingRules {
 
-    private enum HuntingPhaseEvent { BEGINS, ENDS }
+    private enum HuntingPhaseEvent {PHASE_START, PHASE_END}
 
     private final int numPhases;
 
@@ -48,7 +48,7 @@ public class HuntingTimer extends TickTimer implements HuntingRules {
         requireValidPhaseIndex(index);
         if (phaseIndex != index) {
             phaseIndex = index;
-            logPhase(phaseIndex, HuntingPhaseEvent.BEGINS);
+            logPhase(phaseIndex, HuntingPhaseEvent.PHASE_START);
             phaseChangeCallback.accept(phaseIndex);
         }
     }
@@ -73,9 +73,10 @@ public class HuntingTimer extends TickTimer implements HuntingRules {
 
     @Override
     public void update(GameRules rules, int levelNumber) {
+        requireNonNull(rules);
         requireValidLevelNumber(levelNumber);
         if (hasExpired()) {
-            logPhase(phaseIndex, HuntingPhaseEvent.ENDS);
+            logPhase(phaseIndex, HuntingPhaseEvent.PHASE_END);
             int nextPhaseIndex = requireValidPhaseIndex(phaseIndex + 1);
             startPhase(rules, levelNumber, nextPhaseIndex);
         } else {
@@ -113,10 +114,6 @@ public class HuntingTimer extends TickTimer implements HuntingRules {
         return phase(phaseIndex);
     }
 
-    private HuntingPhase phase(int phase) {
-        return isEven(phase) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING;
-    }
-
     @Override
     public boolean isChasing() {
         return currentHuntingPhase() == HuntingPhase.CHASING;
@@ -129,10 +126,14 @@ public class HuntingTimer extends TickTimer implements HuntingRules {
 
     // private
 
+    private HuntingPhase phase(int phase) {
+        return isEven(phase) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING;
+    }
+
     private void logPhase(int index, HuntingPhaseEvent event) {
         final String eventText = switch (event) {
-            case BEGINS -> "begins:";
-            case ENDS   -> "ends:  ";
+            case PHASE_START -> "begins:";
+            case PHASE_END -> "ends:  ";
         };
         Logger.info("Hunting phase {} {} {}, {} ticks / {} seconds). {}",
             index,
