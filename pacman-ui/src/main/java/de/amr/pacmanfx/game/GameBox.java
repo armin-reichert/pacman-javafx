@@ -49,7 +49,7 @@ public class GameBox implements Disposable {
             throw new IllegalStateException("GameBox: User directory validation failed");
         }
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
-        watchdog = new DirectoryWatchdog(de.amr.pacmanfx.core.GameConstants.CUSTOM_MAP_DIR);
+        watchdog = new DirectoryWatchdog(GameConstants.CUSTOM_MAP_DIR);
     }
 
     @Override
@@ -116,8 +116,8 @@ public class GameBox implements Disposable {
     }
 
     private boolean validateUserDirs() {
-        return dirExistsAndIsWritable(de.amr.pacmanfx.core.GameConstants.USER_HOME_DIR, "Game root directory")
-            && dirExistsAndIsWritable(de.amr.pacmanfx.core.GameConstants.CUSTOM_MAP_DIR, "Custom maps directory");
+        return dirExistsAndIsWritable(GameConstants.USER_HOME_DIR, "Game root directory")
+            && dirExistsAndIsWritable(GameConstants.CUSTOM_MAP_DIR, "Custom maps directory");
     }
 
     private static boolean dirExistsAndIsWritable(File dir, String description) {
