@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.core.model.level.GameLevel;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 
@@ -15,12 +14,6 @@ public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
 
     public ArcadeMsPacMan_GameRules() {
         actorSpeedSettings = new ArcadeMsPacMan_ActorSpeedSettings();
-    }
-
-    @Override
-    public boolean isBonusAwarded(GameLevel level) {
-        final int pelletEaten = level.worldMap().foodLayer().eatenFoodCount();
-        return pelletEaten == 64 || pelletEaten == 176;
     }
 
     /**
@@ -62,20 +55,6 @@ public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
         if (coin < 240) return 4; // 4/32
         if (coin < 280) return 5; // 4/32
         else            return 6; // 4/32
-    }
-
-    @Override
-    public int pointsForBonus(int symbolCode) {
-        return switch (symbolCode) {
-            case 0 -> 100;  // cherries
-            case 1 -> 200;  // strawberry
-            case 2 -> 500;  // orange
-            case 3 -> 700;  // pretzel
-            case 4 -> 1000; // apple
-            case 5 -> 2000; // pear
-            case 6 -> 5000; // banana
-            default -> throw new IllegalArgumentException("Invalid symbol code: " + symbolCode);
-        };
     }
 
     // Hunting

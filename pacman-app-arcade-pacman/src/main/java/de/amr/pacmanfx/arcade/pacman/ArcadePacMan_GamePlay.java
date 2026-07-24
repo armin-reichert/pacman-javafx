@@ -214,7 +214,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         level.selectNextBonus();
         final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final Bonus bonus = new Bonus(bonusSymbolCode, model.rules().pointsForBonus(bonusSymbolCode));
+        final Bonus bonus = new Bonus(bonusSymbolCode, model.rules().scoringRules().pointsForBonus(bonusSymbolCode));
         final Vector2i bonusTile = level.worldMap().terrainLayer()
             .getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameModel.DEFAULT_BONUS_TILE);
         bonus.setPosition(WorldMap.halfTileRightOf(bonusTile));

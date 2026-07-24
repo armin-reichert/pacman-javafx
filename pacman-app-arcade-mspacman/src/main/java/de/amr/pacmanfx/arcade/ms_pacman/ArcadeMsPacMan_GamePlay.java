@@ -68,7 +68,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
-        createAndSetMsPacMan(model, level);
+        createAndSetMsPacMan(level);
         createAndSetGhosts(level, terrain.assertHouse());
 
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
@@ -81,7 +81,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         return level;
     }
 
-    protected void createAndSetMsPacMan(GameModel model, GameLevel level) {
+    protected void createAndSetMsPacMan(GameLevel level) {
         final Pac msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAutomaticSteering(new RuleBasedPacSteering());
         level.setPac(msPacMan);
@@ -157,7 +157,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         level.selectNextBonus();
         final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final var bonus = new Bonus(bonusSymbolCode, model.rules().pointsForBonus(bonusSymbolCode));
+        final var bonus = new Bonus(bonusSymbolCode, model.rules().scoringRules().pointsForBonus(bonusSymbolCode));
         if (terrain.horizontalPortals().isEmpty()) {
             final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.setPosition(WorldMap.halfTileRightOf(bonusTile));

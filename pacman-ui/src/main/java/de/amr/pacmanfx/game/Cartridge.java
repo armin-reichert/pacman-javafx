@@ -18,4 +18,5 @@ public record Cartridge(
     Supplier<? extends GameFlowController> gameFlowFactory,
     Supplier<? extends GameModel> gameModelFactory,
     Supplier<? extends GameVariantConfig> uiConfigFactory,
-    Set<GameExtension> gameExtensions) {}
+    Set<GameExtension> gameExtensions
+) {}

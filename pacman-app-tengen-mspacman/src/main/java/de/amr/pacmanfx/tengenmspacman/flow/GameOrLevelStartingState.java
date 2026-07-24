@@ -22,8 +22,8 @@ public class GameOrLevelStartingState extends GameState {
 
         gameContext.hudState().hideCredit().showScore().showLevelCounter().showLivesCounter().show();
         // The rules vary between map categories so update the rules here:
-        model.rules().setCurrentMapCategory(model.mapCategory());
-        Logger.info("Using game rules for map category {}", model.rules().currentMapCategory());
+        model.rules().setMapCategory(model.mapCategory());
+        Logger.info("Using game rules for map category {}", model.rules().mapCategory());
     }
 
     @Override

@@ -16,6 +16,8 @@ public interface GameRules {
 
     ActorSpeedSettings actorSpeedControl();
 
+    ScoringRules scoringRules();
+
     ObjectProperty<CollisionStrategy> collisionStrategyProperty();
 
     default CollisionStrategy getCollisionStrategy() {
@@ -28,29 +30,17 @@ public interface GameRules {
 
     int lastLevelNumber();
 
-    int pointsForGhost(int killedBefore);
-
-    int pointsForPellet();
-
     default int restingTicksForPellet() {
         return 0;
     }
-
-    int pointsForEnergizer();
 
     default int restingTicksForEnergizer() {
         return 0;
     }
 
-    boolean isBonusAwarded(GameLevel level);
-
     int selectBonusSymbolCode(int levelNumber, int bonusIndex);
 
-    int pointsForBonus(int symbolCode);
-
     float eatenBonusDisplaySeconds();
-
-    boolean isExtraLifeAwarded(int oldScore, int newScore);
 
     /**
      * @param levelNumber level number
@@ -70,10 +60,4 @@ public interface GameRules {
      * @return Duration (number of ticks) of phase.
      */
     long huntingPhaseDuration(int levelNumber, int phaseIndex);
-
-    // Helper
-
-    default boolean crossedScoreLine(int oldScore, int newScore, int scoreLine) {
-        return oldScore < scoreLine && newScore >= scoreLine;
-    }
 }

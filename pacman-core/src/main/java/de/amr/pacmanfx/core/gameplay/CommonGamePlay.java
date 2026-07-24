@@ -214,7 +214,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         eventManager.publishGameEvent(new PacEatsFoodEvent(pac, hunting.energizerFound(), false));
 
-        if (model.rules().isBonusAwarded(level)) {
+        if (model.rules().scoringRules().isBonusAwarded(level)) {
             activateNextBonus(gameContext);
         }
     }
@@ -262,7 +262,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
 
-        scorePoints(gameContext, model.rules().pointsForPellet(), level.number());
+        scorePoints(gameContext, model.rules().scoringRules().pointsForPellet(), level.number());
         model.gateKeeper().registerFoodEaten(level);
         level.entities().pac().setRestingTicks(model.rules().restingTicksForPellet());
     }
@@ -276,7 +276,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
 
-        scorePoints(gameContext, model.rules().pointsForEnergizer(), level.number());
+        scorePoints(gameContext, model.rules().scoringRules().pointsForEnergizer(), level.number());
         model.gateKeeper().registerFoodEaten(level);
         pac.setRestingTicks(model.rules().restingTicksForEnergizer());
         level.clearGhostKillChain();
@@ -309,7 +309,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameLevel level = gameContext.assertLevel();
         final GameEventManager eventManager = gameContext.eventManager();
         final int killedBefore = level.ghostKillChainSize();
-        final int points = model.rules().pointsForGhost(killedBefore);
+        final int points = model.rules().scoringRules().pointsForGhost(killedBefore);
 
         scorePoints(gameContext, points, level.number());
         Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
@@ -414,7 +414,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final int oldScore = model.score().points();
         final int newScore = oldScore + points;
 
-        if (model.rules().isExtraLifeAwarded(oldScore, newScore)) {
+        if (model.rules().scoringRules().isExtraLifeAwarded(oldScore, newScore)) {
             model.addLives(1);
             eventManager.publishGameEvent(new SpecialScoreEvent(newScore));
         }

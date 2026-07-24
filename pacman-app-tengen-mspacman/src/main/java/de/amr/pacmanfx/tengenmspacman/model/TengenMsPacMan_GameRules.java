@@ -14,7 +14,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.OptionalInt;
 
@@ -32,24 +31,6 @@ public class TengenMsPacMan_GameRules implements GameRules {
         0x18, 0x40, 0x20, 0x1C, 0x18, 0x20, 0x1C, 0x18, // levels 9-16
         0x00, 0x18, 0x20                                // levels 17, 18, then 19+
     };
-
-    public static final EnumMap<BonusSymbol, Integer> BONUS_POINTS = new EnumMap<>(BonusSymbol.class);
-    static {
-        BONUS_POINTS.put(BonusSymbol.CHERRY,       100);
-        BONUS_POINTS.put(BonusSymbol.STRAWBERRY,   200);
-        BONUS_POINTS.put(BonusSymbol.ORANGE,       500);
-        BONUS_POINTS.put(BonusSymbol.PRETZEL,      700);
-        BONUS_POINTS.put(BonusSymbol.APPLE,       1000);
-        BONUS_POINTS.put(BonusSymbol.PEAR,        2000);
-        BONUS_POINTS.put(BonusSymbol.BANANA,      5000); // Note!
-        BONUS_POINTS.put(BonusSymbol.MILK,        3000); // Note!
-        BONUS_POINTS.put(BonusSymbol.ICE_CREAM,   4000); // Note!
-        BONUS_POINTS.put(BonusSymbol.HIGH_HEELS,  6000);
-        BONUS_POINTS.put(BonusSymbol.STAR,        7000);
-        BONUS_POINTS.put(BonusSymbol.HAND,        8000);
-        BONUS_POINTS.put(BonusSymbol.RING,        9000);
-        BONUS_POINTS.put(BonusSymbol.FLOWER,     10000);
-    }
 
     public static final int FIRST_LEVEL = 1;
     public static final int LAST_LEVEL_NUMBER = 32;
@@ -77,21 +58,34 @@ public class TengenMsPacMan_GameRules implements GameRules {
 
     private final TengenMsPacMan_ActorSpeedSettings actorSpeedControl = new TengenMsPacMan_ActorSpeedSettings();
 
-    private MapCategory currentMapCategory = MapCategory.ARCADE;
+    private final TengenMsPacMan_ScoringRules scoringRules = new TengenMsPacMan_ScoringRules();
 
-    public TengenMsPacMan_GameRules() {}
+    private final ObjectProperty<MapCategory> mapCategory = new SimpleObjectProperty<>(MapCategory.ARCADE);
 
-    public void setCurrentMapCategory(MapCategory currentMapCategory) {
-        this.currentMapCategory = currentMapCategory;
+    public void setMapCategory(MapCategory category) {
+        mapCategory.set(category);
     }
 
-    public MapCategory currentMapCategory() {
-        return currentMapCategory;
+    public MapCategory mapCategory() {
+        return mapCategory.get();
+    }
+
+    public ObjectProperty<MapCategory> mapCategoryProperty() {
+        return mapCategory;
+    }
+
+    public TengenMsPacMan_GameRules() {
+        scoringRules.mapCategoryProperty().bind(mapCategory);
     }
 
     @Override
     public TengenMsPacMan_ActorSpeedSettings actorSpeedControl() {
         return actorSpeedControl;
+    }
+
+    @Override
+    public TengenMsPacMan_ScoringRules scoringRules() {
+        return scoringRules;
     }
 
     @Override
@@ -104,77 +98,22 @@ public class TengenMsPacMan_GameRules implements GameRules {
         return LAST_LEVEL_NUMBER;
     }
 
-    @Override
-    public int pointsForGhost(int killedBefore) {
-        return switch (killedBefore) {
-            case 0 -> 200;
-            case 1 -> 400;
-            case 2 -> 800;
-            default -> 1600;
-        };
-    }
-
-    @Override
-    public int pointsForPellet() {
-        return 10;
-    }
-
-    @Override
-    public int pointsForEnergizer() {
-        return 50;
-    }
-
-    @Override
-    public boolean isBonusAwarded(GameLevel level) {
-        int eatenFoodCount = level.worldMap().foodLayer().eatenFoodCount();
-        return eatenFoodCount == 64 || eatenFoodCount == 176;
-    }
 
     // TODO: I have no idea yet how Tengen Ms. Pac-Man exactly implemented this.
     //       What I know is that the "strange" maps use an extended set of bonus symbols.
     @Override
     public int selectBonusSymbolCode(int levelNumber, int bonusIndex) {
-
-        final int lastSymbolCode = currentMapCategory == MapCategory.STRANGE
+        final int lastSymbolCode = mapCategory() == MapCategory.STRANGE
             ? BonusSymbol.FLOWER.ordinal()
             : BonusSymbol.BANANA.ordinal();
 
         return levelNumber - 1 <= lastSymbolCode ? levelNumber - 1 : randomInt(0, lastSymbolCode + 1);
     }
 
-    @Override
-    public int pointsForBonus(int symbolCode) {
-        final BonusSymbol symbol = BonusSymbol.values()[symbolCode];
-        return BONUS_POINTS.get(symbol);
-    }
 
     @Override
     public float eatenBonusDisplaySeconds() {
         return 2;
-    }
-
-    /*
-     * See https://tcrf.net/Ms._Pac-Man_(NES,_Tengen):
-     *
-     * Humorously, instead of adding a check to disable multiple extra lives,
-     * the "Arcade" maze set sets the remaining 3 extra life scores to over 970,000 points,
-     * a score normally unachievable without cheat codes, since all maze sets end after 32 stages.
-     * This was most likely done to simulate the Arcade game only giving one extra life per game.
-     */
-    @Override
-    public boolean isExtraLifeAwarded(int oldScore, int newScore) {
-        if (currentMapCategory == MapCategory.ARCADE) {
-            return crossedScoreLine(oldScore, newScore, 10_000)
-                || crossedScoreLine(oldScore, newScore, 970_000)
-                || crossedScoreLine(oldScore, newScore, 980_000)
-                || crossedScoreLine(oldScore, newScore, 990_000);
-        }
-        else {
-            return crossedScoreLine(oldScore, newScore, 10_000)
-                || crossedScoreLine(oldScore, newScore, 50_000)
-                || crossedScoreLine(oldScore, newScore, 100_000)
-                || crossedScoreLine(oldScore, newScore, 300_000);
-        }
     }
 
     @Override
