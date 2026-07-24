@@ -34,19 +34,10 @@ public class XXL_MapSelector implements WorldMapSelector, PathWatchEventListener
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
-    public static final WorldMapColorScheme[] WORLD_MAP_COLOR_SCHEMES = {
-        new WorldMapColorScheme("#359c9c", "#85e2ff", "#fcb5ff", "#feb8ae"),
-        new WorldMapColorScheme("#c2b853", "#ffeace", "#fcb5ff", "#feb8ae"),
-        new WorldMapColorScheme("#86669c", "#f6c4e0", "#fcb5ff", "#feb8ae"),
-        new WorldMapColorScheme("#ed0a04", "#f0b4cd", "#fcb5ff", "#feb8ae"),
-        new WorldMapColorScheme("#2067c1", "#65e5bb", "#fcb5ff", "#feb8ae"),
-        new WorldMapColorScheme("#c55994", "#f760c0", "#fcb5ff", "#feb8ae"),
-        new WorldMapColorScheme("#12bc76", "#ade672", "#fcb5ff", "#feb8ae"),
-        new WorldMapColorScheme("#5036d9", "#5f8bcf", "#fcb5ff", "#feb8ae")
-    };
-
     private final ObservableList<WorldMap> customMaps = FXCollections.observableArrayList();
     private final List<WorldMap> builtinMaps = new ArrayList<>();
+    private final List<WorldMapColorScheme> builtInMapColorSchemes = new ArrayList<>();
+
     private WorldMapSelectionMode selectionMode;
 
     private XXL_MapSelector() {
@@ -143,9 +134,12 @@ public class XXL_MapSelector implements WorldMapSelector, PathWatchEventListener
     public void loadMapPrototypes() {
         if (builtinMaps.isEmpty()) {
             try {
-                final List<WorldMap> predefinedMaps = WorldMapSelector.loadMaps(getClass(),
+                final List<WorldMap> masonicMaps = WorldMapSelector.loadMaps(getClass(),
                     "/de/amr/pacmanfx/arcade/pacman_xxl/maps/masonic_%d.world", 8);
-                builtinMaps.addAll(predefinedMaps);
+                for (WorldMap worldMap : masonicMaps) {
+                    builtInMapColorSchemes.add(WorldMapSelector.extractColorScheme(worldMap));
+                }
+                builtinMaps.addAll(masonicMaps);
                 loadCustomMaps();
             } catch (IOException x) {
                 Logger.error("Could not open world map");
@@ -181,7 +175,7 @@ public class XXL_MapSelector implements WorldMapSelector, PathWatchEventListener
 
         // If selected map is a built-in map, use a random color scheme to get variation
         final WorldMapColorScheme colorScheme = builtinMaps.contains(prototype)
-            ? WORLD_MAP_COLOR_SCHEMES[randomInt(0, WORLD_MAP_COLOR_SCHEMES.length)]
+            ? builtInMapColorSchemes.get(randomInt(0, builtInMapColorSchemes.size()))
             : WorldMapSelector.extractColorScheme(prototype);
         worldMap.setConfigValue(WorldMapConfigKey.COLOR_SCHEME, colorScheme);
         Logger.info("Map selected (mode {}): {}", selectionMode, worldMap.url());

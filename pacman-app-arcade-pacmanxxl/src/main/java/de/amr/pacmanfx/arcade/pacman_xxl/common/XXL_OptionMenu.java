@@ -140,6 +140,10 @@ public class XXL_OptionMenu extends OptionMenu {
         return meGameVariantID;
     }
 
+    public WorldMapSelectionMode selectedMapSelectionMode() {
+        return meMapOrder.value();
+    }
+
     // Private
 
     private ObservableValue<Double> createScalingValue(ReadOnlyDoubleProperty stageHeightProperty) {
@@ -205,6 +209,7 @@ public class XXL_OptionMenu extends OptionMenu {
             WorldMapSelectionMode.ALL_RANDOM,
             WorldMapSelectionMode.NO_CUSTOM_MAPS),
             WorldMapSelectionMode.CUSTOM_MAPS_FIRST);
+
         entry.setValueFormatter(order -> {
             if (!entry.isEnabled()) {
                 return "NO CUSTOM MAPS!";
@@ -217,5 +222,4 @@ public class XXL_OptionMenu extends OptionMenu {
         });
         return entry;
     }
-
 }

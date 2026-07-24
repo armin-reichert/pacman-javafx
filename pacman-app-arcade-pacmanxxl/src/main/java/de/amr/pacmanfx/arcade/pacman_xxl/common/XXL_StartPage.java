@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_GameVariantConfig;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.core.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -22,6 +23,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
+import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -32,20 +34,23 @@ public class XXL_StartPage implements StartPage {
 
     static final String ROOT_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
     static final ResourceManager RM = () -> XXL_PacMan_GameVariantConfig.class;
+
+    static final String XXL_OPTION_MENU_JSON = "/de/amr/pacmanfx/arcade/pacman_xxl/option-menu.json";
+
     static final Image WALLPAPER_IMAGE = RM.loadImage(ROOT_PATH + "graphics/screenshot.png");
     static final Media VARIANT_NARRATION = RM.loadMedia(ROOT_PATH + "sound/game-description.mp3");
 
     private final StackPane rootPane;
     private final XXL_OptionMenu menu;
+    private final String title;
 
     private GameAppContext appContext;
-    private final String title;
 
     public XXL_StartPage() {
         title = "Pac-Man XXL games"; // TODO localize
 
         final OptionMenuSettings menuSettings = JsonLoader.load(
-            getClass().getResource("/de/amr/pacmanfx/arcade/pacman_xxl/option-menu.json"),
+            getClass().getResource(XXL_OPTION_MENU_JSON),
             OptionMenuSettings.class
         );
         menu = new XXL_OptionMenu(menuSettings);
@@ -75,6 +80,9 @@ public class XXL_StartPage implements StartPage {
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
             pauseProgressTimer();
+            final WorldMapSelectionMode mode = menu.selectedMapSelectionMode();
+            XXL_MapSelector.instance().setSelectionMode(mode);
+            Logger.info("Using map selection mode: {}", mode);
             appContext.lifecycle().startPlaying();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
