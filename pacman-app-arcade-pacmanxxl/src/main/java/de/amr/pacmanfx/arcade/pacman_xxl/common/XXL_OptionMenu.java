@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
+import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -85,14 +86,15 @@ public class XXL_OptionMenu extends OptionMenu {
         this.appContext = requireNonNull(appContext);
 
         final GameUI ui = appContext.ui();
-        final GameVariantRenderConfig renderConfig = appContext.variants().currentVariant().config().renderConfig();
+        final GameVariant variant = appContext.variants().currentVariant();
+        final GameVariantID variantID = GameVariantID.valueOf(appContext.variants().currentVariantName());
+        final GameVariantRenderConfig renderConfig = variant.config().renderConfig();
         final GameContext gameContext = appContext.currentGameContext();
-        final GameVariantID gameVariantID = GameVariantID.valueOf(appContext.variants().currentVariantName());
         final WorldMapSelector worldMapSelector = gameContext.model().mapSelector();
 
         if (!(worldMapSelector instanceof XXL_MapSelector mapSelector)) {
-            final String message = "Expected XXL map selector but found %s"
-                .formatted(worldMapSelector.getClass().getSimpleName());
+            final String message = "Expected XXL map selector but found %s".formatted(
+                worldMapSelector.getClass().getSimpleName());
             Logger.error(message);
             throw new IllegalStateException(message);
         }
@@ -101,7 +103,7 @@ public class XXL_OptionMenu extends OptionMenu {
         scaling = createScalingValue(ui.window().stage().heightProperty());
 
         // Init entries
-        meGameVariantID.setValue(gameVariantID);
+        meGameVariantID.setValue(variantID);
         meView3DEnabled.setValue(ui.viewModel().common3D.view3DEnabledProperty.get());
         meCutScenesEnabled.setValue(gameContext.flow().cutScenesEnabled());
         meMapOrder.setValue(mapSelector.selectionMode());
@@ -204,11 +206,13 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private OptionMenuEntry<WorldMapSelectionMode> createMapOrderEntry() {
-        final var entry = new OptionMenuEntry<>("MAP ORDER", List.of(
+        final List<WorldMapSelectionMode> options = List.of(
             WorldMapSelectionMode.CUSTOM_MAPS_FIRST,
             WorldMapSelectionMode.ALL_RANDOM,
-            WorldMapSelectionMode.NO_CUSTOM_MAPS),
-            WorldMapSelectionMode.CUSTOM_MAPS_FIRST);
+            WorldMapSelectionMode.NO_CUSTOM_MAPS
+        );
+
+        final var entry = new OptionMenuEntry<>("MAP ORDER", options, WorldMapSelectionMode.CUSTOM_MAPS_FIRST);
 
         entry.setValueFormatter(order -> {
             if (!entry.isEnabled()) {
@@ -216,8 +220,8 @@ public class XXL_OptionMenu extends OptionMenu {
             }
             return switch (order) {
                 case CUSTOM_MAPS_FIRST -> "CUSTOM MAPS FIRST";
-                case ALL_RANDOM -> "RANDOM ORDER";
-                case NO_CUSTOM_MAPS -> "NO CUSTOM MAPS";
+                case ALL_RANDOM        -> "RANDOM ORDER";
+                case NO_CUSTOM_MAPS    -> "NO CUSTOM MAPS";
             };
         });
         return entry;
