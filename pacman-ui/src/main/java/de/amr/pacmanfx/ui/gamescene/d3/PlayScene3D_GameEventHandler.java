@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneGameEventHandler;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -45,13 +45,22 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
 
-public interface PlayScene3D_GameEventHandler extends GameSceneGameEventHandler {
+public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     double PELLET_EATING_DELAY_SEC = 0.05;
 
+    GameAppContext appContext();
+
+    default Optional<GameSoundEffects> optSoundEffects() {
+        return appContext().variants().currentVariant().config().optSoundEffects();
+    }
+
+    default GameContext gameContext() {
+        return appContext().currentGameContext();
+    }
+
     RandomTextPicker textPicker();
     
-    @Override
     PlayScene3D gameScene();
 
     @Override

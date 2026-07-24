@@ -10,16 +10,27 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneGameEventHandler;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import org.tinylog.Logger;
 
-public interface Arcade_PlayScene2D_GameEventHandler extends GameSceneGameEventHandler {
+import java.util.Optional;
 
-    @Override
-    Arcade_PlayScene2D gameScene();
+public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventListener {
+
+    Arcade_PlayScene2D playScene();
+
+    GameAppContext appContext();
+
+    default Optional<GameSoundEffects> optSoundEffects() {
+        return appContext().variants().currentVariant().config().optSoundEffects();
+    }
+
+    default GameContext gameContext() {
+        return appContext().currentGameContext();
+    }
 
     @Override
     default void onBonusActivated(BonusActivatedEvent e) {
@@ -62,7 +73,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends GameSceneGameEventH
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
             final var completedAnimation = new LevelCompletedAnimation(level, () -> gameContext().state().triggerTimeout());
-            gameScene().setLevelCompletedAnimation(completedAnimation);
+            playScene().setLevelCompletedAnimation(completedAnimation);
             completedAnimation.play();
         }
         else if (GameStateID.GAME_OVER.identifies(newState)) {
@@ -78,7 +89,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends GameSceneGameEventH
 
     @Override
     default void onLevelCreated(LevelCreatedEvent e) {
-        gameScene().acceptGameLevel(e.level());
+        playScene().acceptGameLevel(e.level());
     }
 
     @Override

@@ -40,7 +40,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     }
 
     @Override
-    public Arcade_PlayScene2D gameScene() {
+    public Arcade_PlayScene2D playScene() {
         return this;
     }
 

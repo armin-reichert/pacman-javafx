@@ -11,13 +11,24 @@ import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneGameEventHandler;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import org.tinylog.Logger;
 
-public interface GameEventHandlerMixin extends GameSceneGameEventHandler {
+import java.util.Optional;
 
-    @Override
+public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameEventListener {
+
+    GameAppContext appContext();
+
+    default Optional<GameSoundEffects> optSoundEffects() {
+        return appContext().variants().currentVariant().config().optSoundEffects();
+    }
+
+    default GameContext gameContext() {
+        return appContext().currentGameContext();
+    }
+
     TengenMsPacMan_PlayScene2D gameScene();
 
     @Override

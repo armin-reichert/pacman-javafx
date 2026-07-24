@@ -6,7 +6,10 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.event.CreditAddedEvent;
+import de.amr.pacmanfx.core.event.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.state.GameState;
@@ -25,7 +28,8 @@ import static java.util.Objects.requireNonNull;
 /**
  * Abstract base class for all game scenes (2D and 3D).
  */
-public abstract class AbstractGameScene implements GameScene, GameSceneGameEventHandler, Disposable {
+public abstract class AbstractGameScene
+    implements GameScene, DefaultGameEventListener, Disposable {
 
     private final GameAppContext appContext;
 
@@ -123,10 +127,16 @@ public abstract class AbstractGameScene implements GameScene, GameSceneGameEvent
         onDeactivate();
     }
 
-    // --- Interface GameSceneGameEventHandler
+    // --- Interface DefaultGameEventListener
 
     @Override
-    public GameScene gameScene() {
-        return this;
+    public void onCreditAdded(CreditAddedEvent e) {
+        optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
     }
+
+    @Override
+    public void onStopAllSounds(StopAllSoundsEvent event) {
+        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+    }
+
 }

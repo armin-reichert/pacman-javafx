@@ -57,7 +57,7 @@ import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default to accommodate to NES screen size.
  */
 public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
-    implements GameEventHandlerMixin
+    implements TengenMsPacMan_PlayScene2DGameEventHandler
 {
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SCREEN_HEIGHT);
 
