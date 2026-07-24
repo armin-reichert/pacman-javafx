@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.model.GameRules;
-import de.amr.pacmanfx.core.model.actors.ActorSpeedRules;
+import de.amr.pacmanfx.core.rules.GameRules;
+import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import javafx.beans.property.BooleanProperty;

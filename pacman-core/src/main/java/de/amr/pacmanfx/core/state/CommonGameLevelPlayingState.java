@@ -8,7 +8,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gameplay.HuntingStepResult;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.GameRules;
+import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import org.tinylog.Logger;

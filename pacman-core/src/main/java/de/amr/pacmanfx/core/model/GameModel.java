@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.LevelCounter;
 import de.amr.pacmanfx.core.model.world.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
+import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.score.PropertyFileScore;
 import de.amr.pacmanfx.core.score.Score;
 import javafx.beans.property.BooleanProperty;

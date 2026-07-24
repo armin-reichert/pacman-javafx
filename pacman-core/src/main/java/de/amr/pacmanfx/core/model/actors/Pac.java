@@ -8,6 +8,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
+import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

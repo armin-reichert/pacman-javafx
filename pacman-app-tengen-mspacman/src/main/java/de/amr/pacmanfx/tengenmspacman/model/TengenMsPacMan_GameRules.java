@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.core.model.GameRules;
+import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import javafx.beans.property.BooleanProperty;

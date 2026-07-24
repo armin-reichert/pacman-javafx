@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.ActorSpeedRules;
+import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;

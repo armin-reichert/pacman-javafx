@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.HuntingPhase;
 import de.amr.pacmanfx.core.model.HuntingTimer;
-import de.amr.pacmanfx.core.model.actors.ActorSpeedRules;
+import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;

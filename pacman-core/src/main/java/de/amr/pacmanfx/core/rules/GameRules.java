@@ -2,9 +2,8 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model;
+package de.amr.pacmanfx.core.rules;
 
-import de.amr.pacmanfx.core.model.actors.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.actors.CollisionStrategy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import javafx.beans.property.BooleanProperty;

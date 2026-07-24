@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.LevelCreatedEvent;
 import de.amr.pacmanfx.core.event.LevelStartedEvent;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.GameRules;
+import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;

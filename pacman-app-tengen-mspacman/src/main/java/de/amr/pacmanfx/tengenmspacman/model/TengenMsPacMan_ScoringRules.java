@@ -4,14 +4,14 @@
 
 package de.amr.pacmanfx.tengenmspacman.model;
 
-import de.amr.pacmanfx.core.model.ScoringRules;
+import de.amr.pacmanfx.core.rules.ScoringRules;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.EnumMap;
 
-import static de.amr.pacmanfx.core.model.ScoringRules.crossedScoreLine;
+import static de.amr.pacmanfx.core.rules.ScoringRules.crossedScoreLine;
 
 public class TengenMsPacMan_ScoringRules implements ScoringRules {
 
