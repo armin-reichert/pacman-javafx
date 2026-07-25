@@ -10,6 +10,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.Position;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -69,6 +70,7 @@ public class Ghost extends Actor {
         super(name);
         this.personality = Validations.requireValidGhostPersonality(personality);
 
+        registerComponent(Movement.class, new Movement());
         registerComponent(WorldMovement.class, new WorldMovement());
 
         worldMovement().corneringSpeedDelta = -1.25f;

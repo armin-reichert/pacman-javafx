@@ -10,6 +10,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.event.BonusExpiredEvent;
+import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -45,6 +46,7 @@ public class Bonus extends Actor {
     public Bonus(int symbolCode, int points) {
         super("Bonus-symbol:%d-points:%d".formatted(symbolCode, points));
 
+        registerComponent(Movement.class, new Movement());
         registerComponent(WorldMovement.class, new WorldMovement());
 
         this.symbolCode = Validations.requireNonNegativeInt(symbolCode);

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
@@ -48,6 +49,7 @@ public class Bag extends Actor {
 
     public Bag(SpriteAnimationContainer container) {
         super("Birkin");
+        registerComponent(Movement.class, new Movement());
         animations = new BagAnimations(container);
     }
 

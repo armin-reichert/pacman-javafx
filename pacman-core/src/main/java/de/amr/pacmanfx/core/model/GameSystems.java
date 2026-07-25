@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.core.model;
 
-import de.amr.pacmanfx.core.model.component.MovementSystem;
-import de.amr.pacmanfx.core.model.component.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.MovementSystem;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 
 public final class GameSystems {
 

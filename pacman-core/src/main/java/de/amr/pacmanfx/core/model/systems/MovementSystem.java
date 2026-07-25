@@ -1,6 +1,8 @@
-package de.amr.pacmanfx.core.model.component;
+package de.amr.pacmanfx.core.model.systems;
 
 import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.component.Movement;
+import de.amr.pacmanfx.core.model.component.Position;
 
 public class MovementSystem {
 

@@ -33,7 +33,6 @@ public class Actor implements GameEntity {
     public Actor(String name) {
         this.name = requireNonNull(name);
         registerComponent(Position.class, new Position());
-        registerComponent(Movement.class, new Movement());
         registerComponent(Visibility.class, new Visibility(false));
     }
 

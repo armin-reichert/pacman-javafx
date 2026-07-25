@@ -1,10 +1,13 @@
-package de.amr.pacmanfx.core.model.component;
+package de.amr.pacmanfx.core.model.systems;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.component.Movement;
+import de.amr.pacmanfx.core.model.component.Position;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
