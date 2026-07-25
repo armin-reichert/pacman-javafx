@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.world;
 import de.amr.basics.Identifier;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -251,14 +252,15 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
      *   <li>Opens the doors when a ghost approaches the entry</li>
      * </ul>
      */
-    public void update(GameLevel gameLevel) {
-        boolean accessRequested = gameLevel
+    public void update(GameContext gameContext) {
+        final GameLevel level = gameContext.assertLevel();
+        boolean accessRequested = level
             .ghostsInAnyOfStates(Set.of(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
             .anyMatch(Ghost::isVisible);
         light.lightOnProperty().set(accessRequested);
 
-        gameLevel.worldMap().terrainLayer().optHouse().ifPresent(house -> {
-            boolean ghostNearHouseEntry = gameLevel
+        level.worldMap().terrainLayer().optHouse().ifPresent(house -> {
+            boolean ghostNearHouseEntry = level
                 .ghostsInAnyOfStates(Set.of(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
                 .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= doorSensitivity)
                 .anyMatch(Ghost::isVisible);

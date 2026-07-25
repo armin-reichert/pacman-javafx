@@ -36,7 +36,7 @@ public final class GameSimulation {
         gameContext.newFrameContext(appContext.clock().currentTick());
         gameContext.flow().update(gameContext);
 
-        appContext.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameContext.thisFrame()));
+        appContext.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameContext));
     }
 
     private static void renderCurrentView(GameAppContext appContext) {

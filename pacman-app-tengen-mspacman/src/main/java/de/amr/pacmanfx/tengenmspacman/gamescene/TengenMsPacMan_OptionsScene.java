@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
-import de.amr.pacmanfx.core.gameplay.FrameContext;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
@@ -88,7 +88,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(FrameContext frame) {
+    public void onTick(GameContext gameContext) {
         if (initialDelay > 0) {
             --initialDelay;
             return;

@@ -5,9 +5,8 @@
 package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.core.event.GameEventManager;
-import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.level.GameLevelEntity;
+import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.level.GameEntity;
 import de.amr.pacmanfx.core.model.world.ArcadeHouse;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.settings.world.House3DSettings;
@@ -20,7 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-public class MazeHouse3D implements GameLevelEntity, Disposable {
+public class MazeHouse3D implements GameEntity, Disposable {
 
     /** The 3D model of the ghost house. */
     private final ArcadeHouse3D arcadeHouse3D;
@@ -92,11 +91,8 @@ public class MazeHouse3D implements GameLevelEntity, Disposable {
     }
 
     @Override
-    public void init(GameLevel level) {}
-
-    @Override
-    public void update(GameLevel level, GameEventManager eventManager) {
-        arcadeHouse3D.update(level);
+    public void update(GameContext gameContext) {
+        arcadeHouse3D.update(gameContext);
     }
 
     /**

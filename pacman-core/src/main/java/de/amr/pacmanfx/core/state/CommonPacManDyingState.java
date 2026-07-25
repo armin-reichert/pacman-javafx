@@ -95,7 +95,7 @@ public class CommonPacManDyingState extends GameState {
         }
         else {
             level.heartbeat().triggerPulse();
-            pac.update(level, gameContext.eventManager());
+            pac.update(gameContext);
         }
     }
 }

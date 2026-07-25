@@ -5,7 +5,7 @@ package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
@@ -150,10 +150,7 @@ public class Pac extends MovingActor {
     }
 
     @Override
-    public void init(GameLevel level) {}
-
-    @Override
-    public void update(GameLevel level, GameEventManager eventManager) {
+    public void update(GameContext gameContext) {
 
         if (isDead() || restingTicks == REST_FOREVER) {
             return;
@@ -164,12 +161,17 @@ public class Pac extends MovingActor {
             return;
         }
 
+        final GameLevel level = gameContext.assertLevel();
+        final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
+
         if (isUsingAutopilot()) {
             automaticSteering.steer(this, level);
         }
 
-        final ActorSpeedRules speedControl = level.gameModel().rules().actorSpeedRules();
-        setSpeed(powerTimer.isRunning() ? speedControl.pacSpeedWhenHasPower(level) : speedControl.pacSpeed(level));
+        setSpeed(powerTimer.isRunning()
+            ? speedRules.pacSpeedWhenHasPower(level)
+            : speedRules.pacSpeed(level));
+
         tryMovingOrTeleporting(level);
 
         if (moveInfo.moved) {

@@ -8,7 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.level.GameLevelEntity;
+import de.amr.pacmanfx.core.model.level.GameEntity;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import javafx.beans.property.ObjectProperty;
@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base class for all actors which know how to move through a level's world.
  */
-public abstract class MovingActor extends Actor implements GameLevelEntity {
+public abstract class MovingActor extends Actor implements GameEntity {
 
     public static final Direction DEFAULT_MOVE_DIR = RIGHT;
     public static final Direction DEFAULT_WISH_DIR = RIGHT;

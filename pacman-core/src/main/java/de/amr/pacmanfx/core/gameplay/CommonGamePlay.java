@@ -143,7 +143,6 @@ public abstract class CommonGamePlay implements GamePlay {
     public void hunt(GameContext gameContext) {
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
-        final GameEventManager eventManager = gameContext.eventManager();
         final Pac pac = level.entities().pac();
         final ArcadeHouseGateKeeper gateKeeper = model.gateKeeper();
         final boolean doubleChecked = model.rules().actorCollisionRules().isCollisionDoubleChecked();
@@ -160,13 +159,13 @@ public abstract class CommonGamePlay implements GamePlay {
         // If double-check active, do an additional collision check before Pac has moved
         level.entities().forEach(entity -> {
             if (entity != pac) {
-                entity.update(level, eventManager);
+                entity.update(gameContext);
             }
         });
         if (doubleChecked) {
             detectCollisions(gameContext);
         }
-        pac.update(level, eventManager);
+        pac.update(gameContext);
 
         detectCollisions(gameContext);
         evalCollisions(gameContext);

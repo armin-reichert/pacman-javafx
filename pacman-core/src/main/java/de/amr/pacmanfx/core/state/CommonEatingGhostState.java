@@ -34,7 +34,7 @@ public class CommonEatingGhostState extends GameState {
         } else {
             if (timer().tickCount() < 60) {
                 level.ghostsInAnyOfStates(Set.of(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE))
-                    .forEach(ghost -> ghost.update(level, gameContext.eventManager()));
+                    .forEach(ghost -> ghost.update(gameContext));
                 level.heartbeat().triggerPulse();
             }
         }

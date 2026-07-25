@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -151,12 +150,12 @@ public class PlayScene3D extends AbstractGameScene
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
     }
 
-    public void initPac3D(Pac3D pac3D, GameLevel level) {
+    public void initPac3D(Pac3D pac3D, GameContext gameContext) {
         requireNonNull(pac3D);
-        requireNonNull(level);
+        requireNonNull(gameScene());
 
-        pac3D.init(level);
-        pac3D.update(level, gameContext().eventManager());
+        pac3D.init(gameContext);
+        pac3D.update(gameContext);
     }
 
     public void initFood3D(GameLevel level, boolean startEnergizerPumping) {
@@ -172,8 +171,8 @@ public class PlayScene3D extends AbstractGameScene
         });
     }
 
-    public void replaceGameLevel3D(GameLevel level) {
-        requireNonNull(level);
+    public void replaceGameLevel3D(GameContext gameContext) {
+        requireNonNull(gameContext);
 
         if (level3D != null) {
             Logger.info("Old 3D game level is disposed...");
@@ -181,12 +180,12 @@ public class PlayScene3D extends AbstractGameScene
         }
         final GameUISettingsVM viewModel = appContext().ui().viewModel();
 
-        level3D = new GameLevel3D(viewModel, gameContext(), level, appContext().variants().currentVariant().config());
+        level3D = new GameLevel3D(viewModel, gameContext, gameContext.assertLevel(), appContext().variants().currentVariant().config());
         decorate(level3D);
         level3DEmbedder.getChildren().setAll(level3D);
 
         level3D.createAnimations(Game3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG);
-        level3D.entities().selectAll().forEach(entity -> entity.init(level));
+        level3D.entities().selectAll().forEach(entity -> entity.init(gameContext));
         level3D.startLivesCounterTrackingPac();
 
         Logger.info("New 3D game level created");
@@ -240,20 +239,20 @@ public class PlayScene3D extends AbstractGameScene
     }
 
     @Override
-    public void onTick(FrameContext frame) {
+    public void onTick(GameContext gameContext) {
         final GameLevel level = gameContext().assertLevel();
 
         if (level == null) {
-            Logger.info("Tick {}: Game level not yet created, update ignored", frame.tick());
+            Logger.info("Tick {}: Game level not yet created, update ignored", gameContext.thisFrame().tick());
             return;
         }
 
         if (level3D == null) {
-            Logger.info("Tick {}: Game level 3D not yet created, update ignored", frame.tick());
+            Logger.info("Tick {}: Game level 3D not yet created, update ignored", gameContext.thisFrame().tick());
             return;
         }
 
-        level3D.entities().selectAll().forEach(entity -> entity.update(level, eventManager()));
+        level3D.entities().selectAll().forEach(entity -> entity.update(gameContext()));
 
         perspectiveManager.updatePerspective(level);
         updateHUD3D(level);

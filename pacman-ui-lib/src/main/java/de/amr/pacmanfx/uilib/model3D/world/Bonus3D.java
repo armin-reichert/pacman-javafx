@@ -5,11 +5,10 @@ package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.basics.Identifier;
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.BonusState;
-import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.level.GameLevelEntity;
+import de.amr.pacmanfx.core.model.level.GameEntity;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -37,7 +36,7 @@ import static java.util.Objects.requireNonNull;
  * on each of its faces. When eaten, the bonus symbol is replaced by the points earned for eating the bonus.
  * For a moving bonus, the rotating cube moves through the world and rotates towards its current move direction.</p>
  */
-public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
+public class Bonus3D implements GameEntity, DisposableGraphicsObject {
 
     public enum AnimationID implements Identifier {
         BONUS_EDIBLE,
@@ -94,14 +93,12 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
     }
 
     @Override
-    public void init(GameLevel level) {}
-
-    @Override
-    public void update(GameLevel level, GameEventManager eventManager) {
+    public void update(GameContext gameContext) {
         switch (bonus.state()) {
             case INACTIVE, EATEN -> {}
             case EDIBLE -> {
-                updatePosition(level);
+                final WorldMap worldMap = gameContext.assertLevel().worldMap();
+                updatePosition(worldMap);
                 rollingAnimation.update();
             }
         }
@@ -165,13 +162,13 @@ public class Bonus3D implements GameLevelEntity, DisposableGraphicsObject {
         shape3D.setVisible(false);
     }
 
-    private void updatePosition(GameLevel level) {
+    private void updatePosition(WorldMap worldMap) {
         final Vector2f center = bonus.computeCenter();
         translate.setX(center.x());
         translate.setY(center.y());
         translate.setZ(-WorldMap.HTS);
 
-        boolean outsideWorld = center.x() < WorldMap.HTS || center.x() > level.worldMap().numCols() * WorldMap.TS - WorldMap.HTS;
+        boolean outsideWorld = center.x() < WorldMap.HTS || center.x() > worldMap.numCols() * WorldMap.TS - WorldMap.HTS;
         root.setVisible(bonus.state() == BonusState.EDIBLE && !outsideWorld);
     }
 }

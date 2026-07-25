@@ -3,14 +3,13 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
-import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.level.GameLevelEntity;
-import de.amr.pacmanfx.ui.settings.world.WorldSettings;
+import de.amr.pacmanfx.core.model.level.GameEntity;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;
+import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import javafx.beans.property.*;
@@ -30,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays for each remaining live a Pac-Man sitting on a pillar tracking the Pac-Man in the maze.
  */
-public class LivesCounter3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
+public class LivesCounter3D extends Group implements GameEntity, DisposableGraphicsObject {
 
     private final ObjectProperty<Color> pillarColor = new SimpleObjectProperty<>(Color.grayRgb(200));
     private final ObjectProperty<PhongMaterial> pillarMaterial = new SimpleObjectProperty<>(new PhongMaterial());
@@ -152,18 +151,15 @@ public class LivesCounter3D extends Group implements GameLevelEntity, Disposable
     }
 
     @Override
-    public void init(GameLevel level) {}
-
-    @Override
-    public void update(GameLevel level, GameEventManager eventManager) {
-        final GameModel gameModel = level.gameModel();
-        final Pac pac = level.entities().pac();
+    public void update(GameContext gameContext) {
+        final GameModel model = gameContext.model();
+        final Pac pac = gameContext.assertLevel().entities().pac();
 
         // Show remaining lives in counter
-        int lifeCount = gameModel.lifeCount() - 1;
+        int lifeCount = model.lifeCount() - 1;
 
         // While the game starts and Pac-Man is not yet visible in maze, show one more:
-        if (!gameModel.isPlaying() && !pac.isVisible()) {
+        if (!model.isPlaying() && !pac.isVisible()) {
             lifeCount += 1;
         }
 

@@ -5,9 +5,8 @@
 package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
 import de.amr.basics.Identifier;
-import de.amr.pacmanfx.core.event.GameEventManager;
-import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.level.GameLevelEntity;
+import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.level.GameEntity;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.settings.world.LevelCounter3DSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -31,7 +30,7 @@ import java.util.List;
 import static de.amr.pacmanfx.core.model.world.WorldMap.HTS;
 import static java.util.Objects.requireNonNull;
 
-public class LevelCounter3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
+public class LevelCounter3D extends Group implements GameEntity, DisposableGraphicsObject {
 
     public enum AnimationID implements Identifier {
         LEVEL_COUNTER_SPINNING
@@ -46,10 +45,10 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
     }
 
     @Override
-    public void init(GameLevel level) {
+    public void init(GameContext gameContext) {
         final LevelCounter3DSettings config = gameVariant.worldSettings().levelCounter();
         final float cubeSize = config.symbolSize();
-        final List<Integer> symbolCodes = level.gameModel().levelCounter().symbolCodes();
+        final List<Integer> symbolCodes = gameContext.model().levelCounter().symbolCodes();
         getChildren().clear();
         for (int i = 0; i < symbolCodes.size(); ++i) {
             final Integer symbolCode = symbolCodes.get(i);
@@ -90,9 +89,6 @@ public class LevelCounter3D extends Group implements GameLevelEntity, Disposable
 
         return spinningAnimation;
     }
-
-    @Override
-    public void update(GameLevel level, GameEventManager eventManager) {}
 
     @Override
     public void dispose() {

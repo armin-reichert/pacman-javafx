@@ -7,8 +7,8 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.House;
@@ -68,10 +68,8 @@ public class Ghost extends MovingActor {
     }
 
     @Override
-    public void init(GameLevel level) {}
-
-    @Override
-    public void update(GameLevel level, GameEventManager eventManager) {
+    public void update(GameContext gameContext) {
+        final GameLevel level = gameContext.assertLevel();
         final float speed = level.gameModel().rules().actorSpeedRules().ghostSpeed(level, this);
         switch (state()) {
             case LOCKED         -> updateStateLocked(level, speed);

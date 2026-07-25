@@ -144,7 +144,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createMaze3D();
         createFood3D();
         createPac3D();
-        createGhosts3D();
+        createGhosts3D(gameContext);
         createLevelCounter3D();
         createLivesCounter3D();
         createMessageManager();
@@ -340,14 +340,18 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         entitySet.add(entitySet.pac3D);
     }
 
-    private void createGhosts3D() {
+    private void createGhosts3D(GameContext gameContext) {
         final List<GhostSettings> ghostConfigs = gameVariant.worldSettings().ghosts();
-        entitySet.ghosts3D = Stream.of(GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
+        entitySet.ghosts3D = Stream.of(
+                GameModel.RED_GHOST_SHADOW,
+                GameModel.PINK_GHOST_SPEEDY,
+                GameModel.CYAN_GHOST_BASHFUL,
+                GameModel.ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .map(ghost -> {
                 final Ghost3D ghost3D = createGhost3D(ghostConfigs.get(ghost.personality()), ghost);
                 ghost3D.drawModeProperty().bind(viewModel.common3D.drawModeProperty);
-                ghost3D.init(level);
+                ghost3D.init(gameContext);
                 return ghost3D;
             }).toList();
 

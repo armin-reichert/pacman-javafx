@@ -5,10 +5,9 @@
 package de.amr.pacmanfx.uilib.model3D.ghost;
 
 import de.amr.basics.Identifier;
-import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.level.GameLevelEntity;
+import de.amr.pacmanfx.core.model.level.GameEntity;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
@@ -33,7 +32,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Represents the 3D appearance of a ghost.
  */
-public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphicsObject {
+public class Ghost3D extends Group implements GameEntity, DisposableGraphicsObject {
 
     public enum AnimationID implements Identifier {
         BRAKING, DRESS, FLASHING;
@@ -82,17 +81,17 @@ public class Ghost3D extends Group implements GameLevelEntity, DisposableGraphic
     }
 
     @Override
-    public void init(GameLevel level) {
+    public void init(GameContext gameContext) {
         assertControllersAssigned();
-        transformController.init(this, level.worldMap());
+        transformController.init(this, gameContext.assertLevel().worldMap());
         appearanceController.init(this);
     }
 
     @Override
-    public void update(GameLevel level, GameEventManager eventManager) {
+    public void update(GameContext gameContext) {
         assertControllersAssigned();
-        transformController.update(this, level.worldMap());
-        appearanceController.update(this, level);
+        transformController.update(this, gameContext.assertLevel().worldMap());
+        appearanceController.update(this, gameContext.assertLevel());
     }
 
     @Override

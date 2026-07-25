@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Identifier;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantConfig;
@@ -54,7 +55,8 @@ public class GameSceneManager {
 
     public void updateGameSceneAndForceReload(boolean forceReload) {
         final GameVariantConfig variantConfig = appContext.variants().currentVariant().config();
-        final GameModel model = appContext.currentGameContext().model();
+        final GameContext gameContext = appContext.currentGameContext();
+        final GameModel model = gameContext.model();
 
         final GameScene currentGameScene = optCurrentGameScene().orElse(null);
         final GameScene nextGameScene = variantConfig.gameSceneConfig().selectGameScene(appContext, model).orElse(null);
@@ -73,7 +75,7 @@ public class GameSceneManager {
         appContext.ui().views().gamePlayView().replaceGameScene(currentGameScene, nextGameScene);
 
         //TODO rethink this
-        model.optLevel().ifPresent(level -> handle2D3DSwitch(variantConfig, level, currentGameScene, nextGameScene));
+        model.optLevel().ifPresent(_ -> handle2D3DSwitch(variantConfig, gameContext, currentGameScene, nextGameScene));
 
         currentGameSceneProperty().set(nextGameScene);
     }
@@ -110,13 +112,13 @@ public class GameSceneManager {
 
     private void handle2D3DSwitch(
         GameVariantConfig variantConfig,
-        GameLevel level,
+        GameContext gameContext,
         GameScene currentGameScene,
         GameScene nextGameScene)
     {
         final GameSceneSwitchType switchType = identifySwitchType(currentGameScene, nextGameScene);
         switch (switchType) {
-            case FROM_2D_TO_3D -> switchPlaySceneTo3D(variantConfig, level, currentGameScene, nextGameScene);
+            case FROM_2D_TO_3D -> switchPlaySceneTo3D(variantConfig, gameContext, currentGameScene, nextGameScene);
             case FROM_3D_TO_2D -> switchPlaySceneTo2D(currentGameScene, nextGameScene);
             case NONE -> {}
             default -> throw new IllegalArgumentException("Illegal scene switch type: " + switchType);
@@ -125,7 +127,7 @@ public class GameSceneManager {
 
     private void switchPlaySceneTo3D(
         GameVariantConfig variantConfig,
-        GameLevel level,
+        GameContext gameContext,
         GameScene currentGameScene,
         GameScene nextGameScene)
     {
@@ -134,14 +136,15 @@ public class GameSceneManager {
                 .formatted(nextGameScene.getClass().getSimpleName()));
         }
 
-        playScene3D.replaceGameLevel3D(level);
+        final GameLevel level = gameContext.assertLevel();
+        playScene3D.replaceGameLevel3D(gameContext);
         playScene3D.updateHUD3D(level);
         playScene3D.replaceActionBindings(level);
         playScene3D.initFood3D(level, true);
 
         final GameLevel3D level3D = playScene3D.optGameLevel3D().orElseThrow();
         final Pac3D pac3D = level3D.entities().pac3D();
-        playScene3D.initPac3D(pac3D, level);
+        playScene3D.initPac3D(pac3D, gameContext);
         level3D.startLivesCounterTrackingPac();
 
         if (level.entities().pac().powerTimer().isRunning()) {
