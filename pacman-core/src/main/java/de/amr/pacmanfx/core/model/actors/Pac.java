@@ -43,7 +43,7 @@ public class Pac extends Actor {
      */
     public Pac(String name) {
         super(name);
-        addComponent(WorldMovement.class, new WorldMovement());
+        registerComponent(WorldMovement.class, new WorldMovement());
     }
 
     public WorldMovement worldMovement() {

@@ -45,7 +45,7 @@ public class Bonus extends Actor {
     public Bonus(int symbolCode, int points) {
         super("Bonus-symbol:%d-points:%d".formatted(symbolCode, points));
 
-        addComponent(WorldMovement.class, new WorldMovement());
+        registerComponent(WorldMovement.class, new WorldMovement());
 
         this.symbolCode = Validations.requireNonNegativeInt(symbolCode);
         this.points = Validations.requireNonNegativeInt(points);

@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Actor implements GameEntity {
 
-    private final Map<Class<?>, EntityComponent> components = new HashMap<>();
+    private final Map<Class<? extends EntityComponent>, EntityComponent> components = new HashMap<>();
 
     public SpriteAnimationAccess animations = SpriteAnimationAccess.emptyAnimation();
 
@@ -35,27 +35,27 @@ public class Actor implements GameEntity {
 
     public Actor(String name) {
         this.name = requireNonNull(name);
-        addComponent(Position.class, new Position());
-        addComponent(Movement.class, new Movement());
-        addComponent(Visibility.class, new Visibility(false));
+        registerComponent(Position.class, new Position());
+        registerComponent(Movement.class, new Movement());
+        registerComponent(Visibility.class, new Visibility(false));
     }
 
-    public <T extends EntityComponent> void addComponent(Class<T> type, T component) {
+    public <T extends EntityComponent> void registerComponent(Class<T> type, T component) {
         requireNonNull(type);
         requireNonNull(component);
         if (components.containsKey(type)) {
-            throw new IllegalArgumentException("Component %s already added to this actor".formatted(component));
+            throw new IllegalArgumentException("Component for class %s is already registered".formatted(type.getSimpleName()));
         }
         components.put(type, component);
     }
 
     public <T extends EntityComponent> T component(Class<T> componentClass) {
         requireNonNull(componentClass);
-        final EntityComponent component =  components.get(componentClass);
-        if (componentClass.isInstance(component)) {
-            return componentClass.cast(component);
+        final EntityComponent component = components.get(componentClass);
+        if (component == null) {
+            throw new IllegalArgumentException("No component found for class %s".formatted(componentClass.getSimpleName()));
         }
-        throw new IllegalArgumentException("No component found for type " + componentClass);
+        return componentClass.cast(component);
     }
 
     /**

@@ -70,7 +70,7 @@ public class Ghost extends Actor {
         super(name);
         this.personality = Validations.requireValidGhostPersonality(personality);
 
-        addComponent(WorldMovement.class, new WorldMovement());
+        registerComponent(WorldMovement.class, new WorldMovement());
 
         worldMovement().corneringSpeedDelta = -1.25f;
     }
