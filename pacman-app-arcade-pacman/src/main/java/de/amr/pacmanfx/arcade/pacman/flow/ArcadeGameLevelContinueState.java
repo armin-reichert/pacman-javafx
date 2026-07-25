@@ -26,8 +26,8 @@ public class ArcadeGameLevelContinueState extends GameState {
         final GameLevel level = gameContext.assertLevel();
 
         gameContext.gamePlay().prepareLevelForPlaying(gameContext);
-        level.entities().pac().visibility.show();
-        level.entities().ghosts().forEach(ghost -> ghost.visibility.show());
+        level.entities().pac().visibility().show();
+        level.entities().ghosts().forEach(ghost -> ghost.visibility().show());
 
         gameContext.gamePlay().showLevelMessage(level, GameLevelMessageType.READY);
         gameContext.hudState().hideCredit().showLivesCounter();

@@ -106,7 +106,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
                 level.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
-                    .forEach(ghost -> ghost.worldMovement.requestTurnBack());
+                    .forEach(ghost -> ghost.worldMovement().requestTurnBack());
             }
         });
         level.setDemoLevel(demoLevel);
@@ -217,7 +217,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final Bonus bonus = new Bonus(bonusSymbolCode, model.rules().scoringRules().pointsForBonus(bonusSymbolCode));
         final Vector2i bonusTile = level.worldMap().terrainLayer()
             .getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameModel.DEFAULT_BONUS_TILE);
-        bonus.position.set(WorldMap.halfTileRightOf(bonusTile));
+        bonus.position().set(WorldMap.halfTileRightOf(bonusTile));
         bonus.showEdibleForSeconds(randomFloat(9, 10));
         level.setBonus(bonus);
 

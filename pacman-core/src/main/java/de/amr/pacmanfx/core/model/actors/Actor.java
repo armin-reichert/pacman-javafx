@@ -6,12 +6,13 @@ package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
-import de.amr.pacmanfx.core.model.component.Movement;
-import de.amr.pacmanfx.core.model.component.Position;
-import de.amr.pacmanfx.core.model.component.Visibility;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
+import de.amr.pacmanfx.core.model.component.*;
 import de.amr.pacmanfx.core.model.level.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Base class for all game actors like Pac-Man, the ghosts and the bonus entities.
@@ -22,11 +23,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
  */
 public class Actor implements GameEntity {
 
-    // These components will be stored in a map
-    public final Position position = new Position();
-    public final Movement movement = new Movement();
-    public final Visibility visibility = new Visibility(false);
-    public final WorldMovement worldMovement = new WorldMovement();
+    private final Map<Class<?>, EntityComponent> components = new HashMap<>();
 
     public SpriteAnimationAccess animations = SpriteAnimationAccess.emptyAnimation();
 
@@ -34,6 +31,25 @@ public class Actor implements GameEntity {
 
     public Actor(String name) {
         this.name = name;
+        addComponent(Position.class, new Position());
+        addComponent(Movement.class, new Movement());
+        addComponent(Visibility.class, new Visibility(false));
+    }
+
+    public <T extends EntityComponent> void addComponent(Class<T> type, T component) {
+        Objects.requireNonNull(component);
+        if (components.containsKey(type)) {
+            throw new IllegalArgumentException("Component %s already added to this actor".formatted(component));
+        }
+        components.put(type, component);
+    }
+
+    public <T extends EntityComponent> T component(Class<T> componentClass) {
+        final EntityComponent component =  components.get(componentClass);
+        if (componentClass.isInstance(component)) {
+            return componentClass.cast(component);
+        }
+        throw new IllegalArgumentException("No component found for type " + componentClass);
     }
 
     /**
@@ -41,6 +57,18 @@ public class Actor implements GameEntity {
      */
     public final String name() {
         return name;
+    }
+
+    public Position position() {
+        return component(Position.class);
+    }
+
+    public Movement movement() {
+        return component(Movement.class);
+    }
+
+    public Visibility visibility() {
+        return component(Visibility.class);
     }
 
     /**
@@ -64,9 +92,8 @@ public class Actor implements GameEntity {
      * Note: actor is invisible by default!
      */
     public void reset() {
-        position.reset();
-        movement.reset();
-        visibility.reset();
+        components.values().forEach(EntityComponent::reset);
+        //TODO
         WorldMovement.SYSTEM.reset(this);
     }
 }

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.component.Movement;
+import de.amr.pacmanfx.core.model.component.Position;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.House;
@@ -69,7 +70,13 @@ public class Ghost extends Actor {
         super(name);
         this.personality = Validations.requireValidGhostPersonality(personality);
 
-        worldMovement.corneringSpeedDelta = -1.25f;
+        addComponent(WorldMovement.class, new WorldMovement());
+
+        worldMovement().corneringSpeedDelta = -1.25f;
+    }
+
+    public WorldMovement worldMovement() {
+        return component(WorldMovement.class);
     }
 
     public Vector2i tile() {
@@ -153,13 +160,9 @@ public class Ghost extends Actor {
         return "Ghost{" +
                 "name=" + name() +
                 ", state=" + (state != null ? state() : DEFAULT_STATE) +
-                ", visible=" + visibility.isVisible() +
-                ", x=" + position.x +
-                ", y=" + position.y +
-                ", velocityX=" + movement.velX +
-                ", velocityY=" + movement.velY +
-                ", accelerationX=" + movement.accX +
-                ", accelerationY=" + movement.accY +
+                ", visibility=" + visibility() +
+                ", position" + position() +
+                ", movement" + movement() +
                 ", elroy" + elroy +
                 '}';
     }
@@ -192,8 +195,8 @@ public class Ghost extends Actor {
         final Vector2i tile = WorldMovement.SYSTEM.computeTile(this);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
-        final boolean stuck = !worldMovement.info.moved;
-        if ((worldMovement.newTileEntered || stuck) && !teleporting) {
+        final boolean stuck = !worldMovement().info.moved;
+        if ((worldMovement().newTileEntered || stuck) && !teleporting) {
             final Direction dir = computeRoamingDirection(level, tile);
             WorldMovement.SYSTEM.setWishDir(this, dir);
             Logger.debug("Ghost {} takes random wish direction {}", name, dir);
@@ -205,10 +208,10 @@ public class Ghost extends Actor {
     private Direction computeRoamingDirection(GameLevel level, Vector2i currentTile) {
         Direction dir = pseudoRandomDirection();
         int turns = 0;
-        while (dir == worldMovement.moveDir().opposite() || !canAccessTile(level, currentTile.plus(dir.vector()))) {
+        while (dir == worldMovement().moveDir().opposite() || !canAccessTile(level, currentTile.plus(dir.vector()))) {
             dir = dir.nextClockwise();
             if (++turns > 4) {
-                return worldMovement.moveDir().opposite();  // avoid endless loop
+                return worldMovement().moveDir().opposite();  // avoid endless loop
             }
         }
         return dir;
@@ -248,7 +251,7 @@ public class Ghost extends Actor {
 
     @Override
     public boolean canTurnBack() {
-        return worldMovement.newTileEntered && inAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.FRIGHTENED));
+        return worldMovement().newTileEntered && inAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.FRIGHTENED));
     }
 
     // Here begins the state machine part
@@ -311,14 +314,14 @@ public class Ghost extends Actor {
         if (home.isVisitedBy(this)) {
             final float minY = (home.minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
             final float maxY = (home.maxTile().y() - 1) * WorldMap.TS - WorldMap.HTS;
-            if (position.y <= minY) {
+            if (position().y <= minY) {
                 setMoveDir(DOWN);
                 setWishDir(DOWN);
-            } else if (position.y >= maxY) {
+            } else if (position().y >= maxY) {
                 setMoveDir(UP);
                 setWishDir(UP);
             }
-            position.setY(Math.clamp(position.y, minY, maxY));
+            position().setY(Math.clamp(position().y, minY, maxY));
             WorldMovement.SYSTEM.setSpeed(this, speed);
             Movement.SYSTEM.moveAccelerated(this);
         } else {
@@ -342,21 +345,21 @@ public class Ghost extends Actor {
      */
     private void updateStateLeavingHouse(GameLevel level, float speed) {
         final Vector2f houseEntryPosition = home.entryPosition();
-        if (position.y <= houseEntryPosition.y()) {
+        if (position().y <= houseEntryPosition.y()) {
             // outside at house entry
-            position.setY(houseEntryPosition.y());
+            position().setY(houseEntryPosition.y());
             setMoveDir(LEFT);
             setWishDir(LEFT);
-            worldMovement.newTileEntered = false; // don't change direction until new tile is entered by moving
+            worldMovement().newTileEntered = false; // don't change direction until new tile is entered by moving
             setState(isInDanger(level) ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
         }
         else {
             // still inside house
-            final float centerX = position.x + WorldMap.HTS;
+            final float centerX = position().x + WorldMap.HTS;
             final float houseCenterX = home.center().x();
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
                 // align horizontally and raise
-                position.setX(houseCenterX - WorldMap.HTS);
+                position().setX(houseCenterX - WorldMap.HTS);
                 setMoveDir(UP);
                 setWishDir(UP);
             } else {
@@ -443,15 +446,15 @@ public class Ghost extends Actor {
     private void updateStateReturningToHouse(GameLevel level, float speed) {
         final Vector2f houseEntry = home.entryPosition();
         //TODO
-        final Vector2f positionVec =  position.asVector2f();
+        final Vector2f positionVec =  position().asVector2f();
         if (positionVec.roughlyEquals(houseEntry, speed, 0)) {
-            position.set(houseEntry.x(), houseEntry.y());
+            position().set(houseEntry.x(), houseEntry.y());
             setMoveDir(DOWN);
             setWishDir(DOWN);
             setState(GhostState.ENTERING_HOUSE);
         } else {
             WorldMovement.SYSTEM.setSpeed(this, speed);
-            worldMovement.setTargetTile(home.leftDoorTile());
+            worldMovement().setTargetTile(home.leftDoorTile());
             WorldMovement.SYSTEM.navigateTowardsTarget(this, level);
             WorldMovement.SYSTEM.tryMovingOrTeleporting(this, level);
         }
@@ -464,6 +467,8 @@ public class Ghost extends Actor {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     private void updateStateEnteringHouse(GameLevel ignored, float speed) {
+        final Position position = position();
+
         final Vector2f revivalPosition = WorldMap.halfTileRightOf(home.ghostRevivalTile(personality()));
         //TODO
         final Vector2f positionVec = position.asVector2f();

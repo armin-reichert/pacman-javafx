@@ -43,8 +43,8 @@ public class GameStartingState extends GameState {
             gameContext.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }
         else if (tick == TICK_SHOW_GUYS) {
-            level.entities().pac().visibility.show();
-            level.entities().ghosts().forEach(ghost -> ghost.visibility.show());
+            level.entities().pac().visibility().show();
+            level.entities().ghosts().forEach(ghost -> ghost.visibility().show());
         }
         else if (tick == TICK_START_PLAYING) {
             model.setPlaying(true);

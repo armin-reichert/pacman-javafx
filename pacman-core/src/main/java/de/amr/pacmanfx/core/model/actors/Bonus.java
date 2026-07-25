@@ -45,16 +45,21 @@ public class Bonus extends Actor {
     public Bonus(int symbolCode, int points) {
         super("Bonus-symbol:%d-points:%d".formatted(symbolCode, points));
 
+        addComponent(WorldMovement.class, new WorldMovement());
+
         this.symbolCode = Validations.requireNonNegativeInt(symbolCode);
         this.points = Validations.requireNonNegativeInt(points);
         jumpingAnimation = new Pulse(PULSE_CHANGE_TICKS, Pulse.State.OFF);
 
         reset();
-
-        worldMovement.canTeleport = false; // override default value (true)
+        worldMovement().canTeleport = false; // override default value (true)
 
         // initial state
         setInactive();
+    }
+
+    public WorldMovement worldMovement() {
+        return component(WorldMovement.class);
     }
 
     public Vector2i tile() {
@@ -76,19 +81,15 @@ public class Bonus extends Actor {
     public void setInactive() {
         state = BonusState.INACTIVE;
         timer.restartIndefinitely();
-
         WorldMovement.SYSTEM.setSpeed(this, 0);
-
         jumpingAnimation.reset();
-
-        visibility.hide();
+        visibility().hide();
     }
 
     public void showEdibleForSeconds(float seconds) {
         state = BonusState.EDIBLE;
         timer.restartSeconds(seconds);
-
-        visibility.show();
+        visibility().show();
     }
 
     public void showEdibleAndStartWandering(float speed) {
@@ -96,11 +97,11 @@ public class Bonus extends Actor {
         timer.restartIndefinitely();
 
         WorldMovement.SYSTEM.setSpeed(this, speed);
-        worldMovement.setTargetTile(null);
+        worldMovement().setTargetTile(null);
 
         jumpingAnimation.restart();
 
-        visibility.show();
+        visibility().show();
     }
 
     public void setMazeRoute(List<Vector2i> waypoints, boolean leftToRight) {
@@ -127,7 +128,7 @@ public class Bonus extends Actor {
 
         jumpingAnimation.stop();
 
-        visibility.show();
+        visibility().show();
     }
 
     @Override
@@ -136,7 +137,7 @@ public class Bonus extends Actor {
         switch (state) {
             case EDIBLE -> {
                 boolean edibleStateOver;
-                if (movement.velX == 0 && movement.velY == 0) {
+                if (movement().velX == 0 && movement().velY == 0) {
                     edibleStateOver = timer.hasExpired();
                 }
                 else {
@@ -175,9 +176,9 @@ public class Bonus extends Actor {
     private void jump() {
         jumpingAnimation.triggerPulse();
         if (jumpingAnimation.pulseTriggered()) {
-            float pixels = worldMovement.moveDir().isVertical() ? 3.0f : 2.0f;
+            float pixels = worldMovement().moveDir().isVertical() ? 3.0f : 2.0f;
             float dy = jumpingAnimation.state() == Pulse.State.ON ? -pixels : pixels;
-            position.y += dy;
+            position().y += dy;
         }
     }
 

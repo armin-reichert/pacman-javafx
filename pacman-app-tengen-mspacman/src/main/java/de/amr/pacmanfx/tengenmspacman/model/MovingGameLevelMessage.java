@@ -27,18 +27,18 @@ public class MovingGameLevelMessage extends GameLevelMessage {
         super(messageType);
         this.startPosition = requireNonNull(startPosition);
         this.delayTicks = delayTicks;
-        position.set(startPosition);
+        position().set(startPosition);
     }
 
     public void startMovement(float rightEdge, double messageTextWidth) {
         width = (float) messageTextWidth;
         wrapX = rightEdge + 0.5f * width;
-        movement.setVelocity(1, 0);
+        movement().setVelocity(1, 0);
         playing = true;
     }
 
     public void stopMovement() {
-        movement.setVelocity(0,0);
+        movement().setVelocity(0,0);
         playing = false;
     }
 
@@ -51,12 +51,12 @@ public class MovingGameLevelMessage extends GameLevelMessage {
         }
         Movement.SYSTEM.moveAccelerated(this);
         if (wrapped) {
-            if (position.x >= startPosition.x()) {
-                position.set(startPosition);
+            if (position().x >= startPosition.x()) {
+                position().set(startPosition);
                 stopMovement();
             }
-        } else if (position.x > wrapX) {
-            position.setX(-0.5 * width);
+        } else if (position().x > wrapX) {
+            position().setX(-0.5 * width);
             wrapped = true;
         }
     }

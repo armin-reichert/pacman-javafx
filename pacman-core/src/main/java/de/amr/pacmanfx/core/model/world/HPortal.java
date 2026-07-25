@@ -39,7 +39,7 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
     }
 
     public boolean tryTeleporting(Actor actor) {
-        final WorldMovement mazeMovement = actor.worldMovement;
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         final Vector2i actorTile = WorldMovement.SYSTEM.computeTile(actor);
         final float offsetX = WorldMovement.SYSTEM.computeOffsetX(actor);
@@ -49,7 +49,7 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         }
         final Vector2i leftWrappingTile = leftBorderEntryTile().minus(depth, 0);
         final Vector2i rightWrappingTile = rightBorderEntryTile().plus(depth, 0);
-        switch (mazeMovement.moveDir()) {
+        switch (worldMovement.moveDir()) {
             case LEFT -> {
                 if (actorTile.equals(leftWrappingTile) && offsetX == 0) {
                     WorldMovement.SYSTEM.placeAtTile(actor, rightWrappingTile.x(), rightWrappingTile.y(), -1, 0);
@@ -64,7 +64,7 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
                     return true;
                 }
             }
-            default -> throw new IllegalStateException("Actor moving %s cannot be teleported horizontally".formatted(mazeMovement.moveDir()));
+            default -> throw new IllegalStateException("Actor moving %s cannot be teleported horizontally".formatted(worldMovement.moveDir()));
         }
         return false;
     }

@@ -35,7 +35,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     @Override
     public void drawActor(Actor actor) {
         requireNonNull(actor);
-        if (!actor.visibility.isVisible()) return;
+        if (!actor.visibility().isVisible()) return;
         final Vector2f center = WorldMovement.SYSTEM.computeCenter(actor);
         switch (actor) {
             case Pac pac                   -> drawSpriteCentered(computePacSprite(pac),     center);
@@ -50,11 +50,11 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         final SpriteAnimationAccess animations = ghost.animations;
         RectShort sprite;
         if (animations.isSelected(CommonAnimationID.GHOST_NORMAL)) {
-            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldMovement.wishDir());
+            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldMovement().wishDir());
             sprite = spriteOrDefault(sprites, animations.currentFrame());
         }
         else if (animations.isSelected(CommonAnimationID.GHOST_EYES)) {
-            sprite = spriteSheet().ghostEyesSprite(ghost.worldMovement.wishDir());
+            sprite = spriteSheet().ghostEyesSprite(ghost.worldMovement().wishDir());
         }
         else {
             sprite = animations.currentSprite();
@@ -68,11 +68,11 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private RectShort computePacSprite(Pac pac) {
         RectShort sprite;
         if (pac.animations.isSelected(CommonAnimationID.PAC_MUNCHING)) {
-            final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.worldMovement.moveDir());
+            final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.worldMovement().moveDir());
             sprite = spriteOrDefault(sprites, pac.animations.currentFrame());
         }
         else if (pac.animations.isSelected(CommonAnimationID.MR_PAC_MAN_MUNCHING)) {
-            final RectShort[] sprites = spriteSheet().mrPacManMunchingSprites(pac.worldMovement.moveDir());
+            final RectShort[] sprites = spriteSheet().mrPacManMunchingSprites(pac.worldMovement().moveDir());
             sprite = spriteOrDefault(sprites, pac.animations.currentFrame());
         }
         else {
@@ -91,9 +91,9 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             final RectShort sprite = sprites[spriteIndex];
             drawSpriteCentered(sprite, WorldMovement.SYSTEM.computeCenter(clapperboard));
             // Draw number and title
-            final double numberX = scaled(clapperboard.position.x + sprite.width() - 25);
-            final double textX = scaled(clapperboard.position.x + sprite.width());
-            final double y = scaled(clapperboard.position.y + 18);
+            final double numberX = scaled(clapperboard.position().x + sprite.width() - 25);
+            final double textX = scaled(clapperboard.position().x + sprite.width());
+            final double y = scaled(clapperboard.position().y + 18);
             ctx.setFont(clapperboard.font());
             ctx.setFill(ARCADE_WHITE);
             ctx.fillText(clapperboard.number(), numberX, y);

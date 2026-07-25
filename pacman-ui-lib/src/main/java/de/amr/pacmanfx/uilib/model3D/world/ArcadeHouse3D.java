@@ -255,14 +255,14 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         final GameLevel level = gameContext.assertLevel();
         boolean accessRequested = level
             .ghostsInAnyOfStates(Set.of(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
-            .anyMatch(ghost -> ghost.visibility.isVisible());
+            .anyMatch(ghost -> ghost.visibility().isVisible());
         light.lightOnProperty().set(accessRequested);
 
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> {
             boolean ghostNearHouseEntry = level
                 .ghostsInAnyOfStates(Set.of(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
-                .filter(ghost -> ghost.position.asVector2f().euclideanDist(house.entryPosition()) <= doorSensitivity)
-                .anyMatch(ghost -> ghost.visibility.isVisible());
+                .filter(ghost -> ghost.position().asVector2f().euclideanDist(house.entryPosition()) <= doorSensitivity)
+                .anyMatch(ghost -> ghost.visibility().isVisible());
             doorsOpenProperty.set(ghostNearHouseEntry);
         });
     }

@@ -53,7 +53,7 @@ public class ArcadeMsPacMan_ActorFactory {
                 return;
             }
             final boolean takeRandomDir = level.huntingRules().phaseIndex() == 0
-                && redGhost.worldMovement.isNewTileEntered()
+                && redGhost.worldMovement().isNewTileEntered()
                 && terrain.isIntersection(tile);
             if (takeRandomDir) {
                 selectRandomWishDir(redGhost, level);
@@ -83,7 +83,7 @@ public class ArcadeMsPacMan_ActorFactory {
                 return;
             }
             final boolean takeRandomDir = level.huntingRules().phaseIndex() == 0
-                && pinkGhost.worldMovement.isNewTileEntered()
+                && pinkGhost.worldMovement().isNewTileEntered()
                 && terrain.isIntersection(tile);
             if (takeRandomDir) {
                 selectRandomWishDir(pinkGhost, level);
@@ -104,7 +104,7 @@ public class ArcadeMsPacMan_ActorFactory {
     private static void selectRandomWishDir(Ghost ghost, GameLevel level) {
         for (final Direction dir : Direction.shuffled()) {
             final Vector2i neighbor = ghost.tile().plus(dir.vector());
-            final boolean acceptable = dir != ghost.worldMovement.moveDir().opposite() && ghost.canAccessTile(level, neighbor);
+            final boolean acceptable = dir != ghost.worldMovement().moveDir().opposite() && ghost.canAccessTile(level, neighbor);
             if (acceptable) {
                 ghost.setWishDir(dir);
                 Logger.debug("{} selects random wish direction {}", ghost.name(), dir);

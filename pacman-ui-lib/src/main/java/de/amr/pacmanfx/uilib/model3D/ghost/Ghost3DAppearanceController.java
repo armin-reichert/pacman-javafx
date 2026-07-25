@@ -49,7 +49,7 @@ public class Ghost3DAppearanceController {
 
     private void brakeIfTunnelEntered(Ghost3D ghost3D) {
         final Ghost ghost = ghost3D.ghost();
-        if (ghost.worldMovement.info.tunnelEntered) {
+        if (ghost.worldMovement().info.tunnelEntered) {
             ghost3D.animations().animation(Ghost3D.AnimationID.BRAKING.key(ghost)).playFromStart();
         }
     }

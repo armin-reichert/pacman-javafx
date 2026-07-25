@@ -35,7 +35,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     @Override
     public void drawActor(Actor actor) {
         requireNonNull(actor);
-        if (!actor.visibility.isVisible()) return;
+        if (!actor.visibility().isVisible()) return;
 
         final Vector2f center = WorldMovement.SYSTEM.computeCenter(actor);
         switch (actor) {
@@ -50,11 +50,11 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private RectShort computeGhostSprite(Ghost ghost) {
         if (ghost.animations.isSelected(CommonAnimationID.GHOST_NORMAL)) {
-            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldMovement.wishDir());
+            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldMovement().wishDir());
             return spriteOrDefault(sprites, ghost.animations.currentFrame());
         }
         if (ghost.animations.isSelected(CommonAnimationID.GHOST_EYES)) {
-            return spriteSheet().ghostEyesSprite(ghost.worldMovement.wishDir());
+            return spriteSheet().ghostEyesSprite(ghost.worldMovement().wishDir());
         }
         else {
             return ghost.animations.currentSprite();
@@ -63,7 +63,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private FacingSprite computePacSprite(Pac pac) {
         final int frame = pac.animations.currentFrame();
-        final Direction dir = pac.worldMovement.moveDir();
+        final Direction dir = pac.worldMovement().moveDir();
         return switch (pac.animations.selectedAnimationID()) {
             case null -> throw new IllegalStateException("Could not determine Pac-sprite, no animation selected");
             case CommonAnimationID.PAC_DYING    -> computePacDyingSprite(pac);
@@ -74,7 +74,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING -> facingSprite(SpriteID.MR_PAC_MUNCHING, frame, dir);
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_TURNING_AWAY -> facingSprite(SpriteID.MR_PAC_TURNING_AWAY, frame, dir);
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_WAVING_HAND -> facingSprite(SpriteID.MR_PAC_WAVING_HAND, frame, dir);
-            default -> new FacingSprite(pac.animations.currentSprite(), pac.worldMovement.moveDir());
+            default -> new FacingSprite(pac.animations.currentSprite(), pac.worldMovement().moveDir());
         };
     }
 
@@ -111,7 +111,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private void drawClapperBoard(Clapperboard clapperboard) {
         clapperboard.sprite().ifPresent(sprite -> {
-            double numberX = clapperboard.position.x + 8, numberY = clapperboard.position.y + 18; // baseline
+            double numberX = clapperboard.position().x + 8, numberY = clapperboard.position().y + 18; // baseline
             drawSpriteCentered(sprite, WorldMovement.SYSTEM.computeCenter(clapperboard));
             // over-paint number from sprite sheet
             ctx.save();
@@ -124,7 +124,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             ctx.setFill(NES_Palette.color(0x20));
             ctx.fillText(String.valueOf(clapperboard.number()), scaled(numberX), scaled(numberY));
             if (clapperboard.isTextVisible()) {
-                double textX = clapperboard.position.x + sprite.width(), textY = clapperboard.position.y + 2;
+                double textX = clapperboard.position().x + sprite.width(), textY = clapperboard.position().y + 2;
                 ctx.fillText(clapperboard.text(), scaled(textX), scaled(textY));
             }
         });
@@ -135,7 +135,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         if (stork.isBagReleasedFromBeak()) {
             // Sprite sheet has no stork without bag under its beak so we over-paint the bag
             ctx.setFill(backgroundColor());
-            ctx.fillRect(scaled(stork.position.x - 13), scaled(stork.position.y + 3), scaled(8), scaled(10));
+            ctx.fillRect(scaled(stork.position().x - 13), scaled(stork.position().y + 3), scaled(8), scaled(10));
         }
     }
 

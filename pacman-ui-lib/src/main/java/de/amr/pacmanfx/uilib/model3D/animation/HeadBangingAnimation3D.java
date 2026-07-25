@@ -66,7 +66,7 @@ public class HeadBangingAnimation3D extends Pac3DMovementAnimation {
         if (pac.isParalyzed()) {
             pause();
         } else {
-            Point3D axis = pac.worldMovement.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+            Point3D axis = pac.worldMovement().moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
             if (!axis.equals(rotateTransition.getAxis())) {
                 stop();
                 rotateTransition.setAxis(axis);

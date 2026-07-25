@@ -15,7 +15,7 @@ import static java.util.Objects.requireNonNull;
 public class WorldMovementSystem {
 
     public void reset(Actor actor) {
-        final WorldMovement worldMovement = actor.worldMovement;
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         worldMovement.info.clear();
         if (worldMovement.moveDir != null) {
@@ -33,12 +33,14 @@ public class WorldMovementSystem {
     }
 
     public Vector2f computeCenter(Actor actor) {
-        return new Vector2f(actor.position.x + WorldMap.HTS, actor.position.y + WorldMap.HTS);
+        final Position position = actor.position();
+        return new Vector2f(position.x + WorldMap.HTS, position.y + WorldMap.HTS);
     }
 
     public Vector2i computeTile(Actor actor) {
-        final float cx = actor.position.x + WorldMap.HTS;
-        final float cy = actor.position.y + WorldMap.HTS;
+        final Position position = actor.position();
+        final float cx = position.x + WorldMap.HTS;
+        final float cy = position.y + WorldMap.HTS;
         return WorldMap.computeTileAt(cx, cy);
     }
 
@@ -46,18 +48,19 @@ public class WorldMovementSystem {
      * @return x-offset inside current tile: (0, 0) if centered, range: [-4, +4)
      */
     public float computeOffsetX(Actor actor) {
+        final Position position = actor.position();
         final Vector2i tile = computeTile(actor);
-        return actor.position.x - tile.x() * WorldMap.TS;
+        return position.x - tile.x() * WorldMap.TS;
     }
 
     /**
      * @return y-offset inside current tile: (0, 0) if centered, range: [-4, +4)
      */
     public float computeOffsetY(Actor actor) {
+        final Position position = actor.position();
         final Vector2i tile = computeTile(actor);
-        return actor.position.y - tile.y() * WorldMap.TS;
+        return position.y - tile.y() * WorldMap.TS;
     }
-
 
     /**
      * Sets the move direction and updates the velocity vector.
@@ -66,8 +69,8 @@ public class WorldMovementSystem {
      */
     public void setMoveDir(Actor actor, Direction dir) {
         requireNonNull(dir);
-        final Movement movement = actor.movement;
-        final WorldMovement worldMovement = actor.worldMovement;
+        final Movement movement = actor.movement();
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         if (worldMovement.moveDir == null && dir.equals(WorldMovement.DEFAULT_MOVE_DIR)) return;
         worldMovement.moveDirProperty().set(dir);
@@ -82,7 +85,7 @@ public class WorldMovementSystem {
      */
     public void setWishDir(Actor actor, Direction dir) {
         requireNonNull(dir);
-        final WorldMovement worldMovement = actor.worldMovement;
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         if (worldMovement.wishDir == null && dir.equals(WorldMovement.DEFAULT_WISH_DIR)) return;
         worldMovement.wishDirProperty().set(dir);
@@ -98,8 +101,8 @@ public class WorldMovementSystem {
      * @param oy y-offset inside tile
      */
     public void placeAtTile(Actor actor, int tx, int ty, float ox, float oy) {
-        final Position position = actor.position;
-        final WorldMovement worldMovement = actor.worldMovement;
+        final Position position = actor.position();
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         final Vector2i prevTile = computeTile(actor);
         position.setX(tx * WorldMap.TS + ox);
@@ -132,7 +135,7 @@ public class WorldMovementSystem {
      * @return the tile located the given number of tiles towards the current move direction of the actor.
      */
     public Vector2i tilesAhead(Actor actor, int numTiles) {
-        final WorldMovement worldMovement = actor.worldMovement;
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         return computeTile(actor).plus(worldMovement.moveDir().vector().scaled(numTiles));
     }
@@ -143,7 +146,7 @@ public class WorldMovementSystem {
      * Overflow bug: In case the actor looks UP, additional {@code numTiles} tiles are added towards LEFT.
      */
     public Vector2i tilesAheadWithOverflowBug(Actor actor, int numTiles) {
-        final WorldMovement worldMovement = actor.worldMovement;
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         Vector2i ahead = tilesAhead(actor, numTiles);
         if (worldMovement.moveDir() == UP) {
@@ -153,8 +156,8 @@ public class WorldMovementSystem {
     }
 
     public void setSpeed(Actor actor, float speed) {
-        final Movement movement = actor.movement;
-        final WorldMovement worldMovement = actor.worldMovement;
+        final Movement movement = actor.movement();
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         if (speed < 0) {
             throw new IllegalArgumentException("Speed must not be negative but is: " + speed);
@@ -164,7 +167,7 @@ public class WorldMovementSystem {
 
     public void navigateTowardsTarget(Actor actor, GameLevel level) {
         requireNonNull(level);
-        final WorldMovement worldMovement = actor.worldMovement;
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         if (!worldMovement.newTileEntered && worldMovement.info.moved || worldMovement.targetTile() == null) {
             return; // we don't need no navigation, dim dit didit didit...
@@ -201,7 +204,7 @@ public class WorldMovementSystem {
      */
     public void tryMovingTowardsTargetTile(Actor actor, GameLevel level, Vector2i targetTile) {
         requireNonNull(level);
-        final WorldMovement worldMovement = actor.worldMovement;
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         if (targetTile != null) {
             worldMovement.setTargetTile(targetTile);
@@ -220,7 +223,7 @@ public class WorldMovementSystem {
      */
     public void tryMovingOrTeleporting(Actor actor, GameLevel level) {
         requireNonNull(level);
-        final WorldMovement worldMovement = actor.worldMovement;
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         worldMovement.info.clear();
         if (worldMovement.canTeleport) {
@@ -243,7 +246,7 @@ public class WorldMovementSystem {
     }
 
     private boolean tryTeleporting(Actor actor, TerrainLayer terrain) {
-        final WorldMovement worldMovement = actor.worldMovement;
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         if (worldMovement.moveDir().isHorizontal()) {
             return terrain.horizontalPortals().stream()
@@ -256,8 +259,8 @@ public class WorldMovementSystem {
     }
 
     private void tryMovingTowards(Actor actor, GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
-        final Movement movement = actor.movement;
-        final WorldMovement worldMovement = actor.worldMovement;
+        final Movement movement = actor.movement();
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         final Vector2f newVelocity = dir.vector().scaled(movement.computeSpeed());
         final Vector2f touchPosition = computeCenter(actor).plus(dir.vector().scaled((float) WorldMap.HTS)).plus(newVelocity);

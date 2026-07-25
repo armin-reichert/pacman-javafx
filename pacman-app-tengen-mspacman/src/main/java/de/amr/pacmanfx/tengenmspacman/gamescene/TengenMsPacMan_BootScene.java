@@ -43,7 +43,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
     public void onActivate() {
         actionBindings().dispose();
         movingText = new Actor("MovingText");
-        movingText.position.set(tilesPx(9), unscaledHeight()); // lower border of screen
+        movingText.position().set(tilesPx(9), unscaledHeight()); // lower border of screen
         ghost = appContext().variants().currentVariant().config().renderConfig().createAnimatedGhost(
             appContext().ui().sprites().animations(), GameModel.RED_GHOST_SHADOW);
     }
@@ -57,24 +57,24 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
             case   7 -> gray(true);
             case  12 -> gray(false);
             case  21 -> {
-                movingText.movement.setVelocity(0, -WorldMap.HTS);
-                movingText.visibility.show();
+                movingText.movement().setVelocity(0, -WorldMap.HTS);
+                movingText.visibility().show();
             }
             case  55 -> {
-                movingText.position.set(tilesPx(9), tilesPx(13));
-                movingText.movement.setVelocity(0, 0);
+                movingText.position().set(tilesPx(9), tilesPx(13));
+                movingText.movement().setVelocity(0, 0);
             }
             case 113 -> {
-                ghost.position.set(unscaledWidth() - WorldMap.TS, GHOST_Y);
+                ghost.position().set(unscaledWidth() - WorldMap.TS, GHOST_Y);
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
                 WorldMovement.SYSTEM.setSpeed(ghost, WorldMap.TS);
-                ghost.visibility.show();
+                ghost.visibility().show();
             }
-            case 181 -> movingText.movement.setVelocity(0, WorldMap.TS);
+            case 181 -> movingText.movement().setVelocity(0, WorldMap.TS);
             case 203 -> {
-                movingText.visibility.hide();
-                ghost.visibility.hide();
+                movingText.visibility().hide();
+                ghost.visibility().hide();
             }
             case 204 -> gray(true);
             case 214 -> gray(false);

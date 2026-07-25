@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -108,10 +109,12 @@ public class PlayScene2DCamera extends ParallelCamera {
     }
 
     private void updateTrackingMode(double mapHeightPixels, Actor movingActor) {
-        double relY = movingActor.position.y / mapHeightPixels;
-        if (relY < 0.5 || relY < 0.6 && movingActor.worldMovement.moveDir() == Direction.UP) {
+        final WorldMovement worldMovement = movingActor.component(WorldMovement.class);
+
+        double relY = movingActor.position().y / mapHeightPixels;
+        if (relY < 0.5 || relY < 0.6 && worldMovement.moveDir() == Direction.UP) {
             setTargetToTop();
-        } else if (relY > 0.5 || relY > 0.4 && movingActor.worldMovement.moveDir() == Direction.DOWN) {
+        } else if (relY > 0.5 || relY > 0.4 && worldMovement.moveDir() == Direction.DOWN) {
             setTargetToBottom();
         }
         move();

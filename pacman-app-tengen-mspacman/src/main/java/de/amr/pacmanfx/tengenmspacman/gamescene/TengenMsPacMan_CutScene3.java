@@ -86,8 +86,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
             joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(3, "JUNIOR");
-        clapperboard.position.set(3 * WorldMap.TS, 10 * WorldMap.TS);
-        clapperboard.visibility.show();
+        clapperboard.position().set(3 * WorldMap.TS, 10 * WorldMap.TS);
+        clapperboard.visibility().show();
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
@@ -116,41 +116,41 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
             switch ((int) gameStateTick) {
                 case 130 -> {
                     pacMan.setMoveDir(Direction.RIGHT);
-                    pacMan.position.set(WorldMap.TS * 3, GROUND_Y - 4);
+                    pacMan.position().set(WorldMap.TS * 3, GROUND_Y - 4);
                     pacMan.setSpeed(0);
                     pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations.stopSelected();
-                    pacMan.visibility.show();
+                    pacMan.visibility().show();
 
                     msPacMan.setMoveDir(Direction.RIGHT);
-                    msPacMan.position.set(WorldMap.TS * 5, GROUND_Y - 4);
+                    msPacMan.position().set(WorldMap.TS * 5, GROUND_Y - 4);
                     msPacMan.setSpeed(0);
                     msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations.stopSelected();
-                    msPacMan.visibility.show();
+                    msPacMan.visibility().show();
 
-                    stork.position.set(RIGHT_BORDER, WorldMap.TS * 7);
-                    stork.movement.setVelocity(-0.8f, 0);
+                    stork.position().set(RIGHT_BORDER, WorldMap.TS * 7);
+                    stork.movement().setVelocity(-0.8f, 0);
                     stork.setBagReleasedFromBeak(false);
                     stork.animations.select(CommonAnimationID.STORK_FLYING);
                     stork.animations.playSelected();
-                    stork.visibility.show();
+                    stork.visibility().show();
                 }
                 case 240 -> {
                     // stork releases bag, bag starts falling
-                    stork.movement.setVelocity(-1f, 0); // faster, no bag to carry!
+                    stork.movement().setVelocity(-1f, 0); // faster, no bag to carry!
                     stork.setBagReleasedFromBeak(true);
-                    flyingBag.position.set(stork.position.x - 15, stork.position.y + 8);
-                    flyingBag.movement.setVelocity(-0.5f, 0);
-                    flyingBag.movement.setAcceleration(0, 0.1f);
-                    flyingBag.visibility.show();
+                    flyingBag.position().set(stork.position().x - 15, stork.position().y + 8);
+                    flyingBag.movement().setVelocity(-0.5f, 0);
+                    flyingBag.movement().setAcceleration(0, 0.1f);
+                    flyingBag.visibility().show();
                 }
                 case 320 -> // reaches ground, starts bouncing
-                    flyingBag.movement.setVelX(-0.5f);
+                    flyingBag.movement().setVelX(-0.5f);
                 case 380 -> {
                     flyingBag.setOpen(true);
-                    flyingBag.movement.setVelocity(0, 0);
-                    flyingBag.movement.setAcceleration(0, 0);
+                    flyingBag.movement().setVelocity(0, 0);
+                    flyingBag.movement().setAcceleration(0, 0);
                 }
                 case 640 -> darkness = true;
                 case TICK_EXPIRES -> gameState().triggerTimeout();
@@ -161,9 +161,9 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         Movement.SYSTEM.moveAccelerated(stork);
         if (!flyingBag.isOpen()) {
             Movement.SYSTEM.moveAccelerated(flyingBag);
-            if (flyingBag.position.y > GROUND_Y) {
-                flyingBag.position.setY(GROUND_Y);
-                flyingBag.movement.setVelocity(0.9f * flyingBag.movement.velX, -0.3f * flyingBag.movement.velY);
+            if (flyingBag.position().y > GROUND_Y) {
+                flyingBag.position().setY(GROUND_Y);
+                flyingBag.movement().setVelocity(0.9f * flyingBag.movement().velX, -0.3f * flyingBag.movement().velY);
             }
         }
     }

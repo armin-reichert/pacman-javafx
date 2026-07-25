@@ -43,6 +43,11 @@ public class Pac extends Actor {
      */
     public Pac(String name) {
         super(name);
+        addComponent(WorldMovement.class, new WorldMovement());
+    }
+
+    public WorldMovement worldMovement() {
+        return component(WorldMovement.class);
     }
 
     public Vector2i tile() {
@@ -69,13 +74,9 @@ public class Pac extends Actor {
             ", dead=" + isDead() +
             ", restingTime=" + restingTicks +
             ", starvingTime=" + starvingTicks +
-            ", visible=" + visibility.isVisible() +
-            ", x=" + position.x +
-            ", y=" + position.y +
-            ", velocityX=" + movement.velX +
-            ", velocityY=" + movement.velY +
-            ", accelerationX=" + movement.accX +
-            ", accelerationY=" + movement.accY +
+            ", visible=" + visibility() +
+            ", position=" + position() +
+            ", movement=" + movement() +
             '}';
     }
 
@@ -85,7 +86,7 @@ public class Pac extends Actor {
 
     @Override
     public boolean canTurnBack() {
-        return worldMovement.newTileEntered;
+        return worldMovement().newTileEntered;
     }
 
     @Override
@@ -109,7 +110,7 @@ public class Pac extends Actor {
         setDead(false);
         restingTicks = 0;
         starvingTicks = 0;
-        worldMovement.corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
+        worldMovement().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
         animations.select(CommonAnimationID.PAC_MUNCHING);
     }
 
@@ -193,7 +194,7 @@ public class Pac extends Actor {
 
         WorldMovement.SYSTEM.tryMovingOrTeleporting(this, level);
 
-        if (worldMovement.info.moved) {
+        if (worldMovement().info.moved) {
             animations.playSelected();
         } else {
             animations.stopSelected();
@@ -232,8 +233,8 @@ public class Pac extends Actor {
      * or if he is resting for an indefinite time.
      */
     public boolean isParalyzed() {
-        return (movement.velX == 0 && movement.velY == 0)
-            || !worldMovement.info.moved
+        return (movement().velX == 0 && movement().velY == 0)
+            || !worldMovement().info.moved
             || restingTicks == REST_FOREVER;
     }
 }

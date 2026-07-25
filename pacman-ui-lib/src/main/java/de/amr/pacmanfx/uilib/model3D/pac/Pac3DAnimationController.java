@@ -53,7 +53,7 @@ public class Pac3DAnimationController {
     private void updatePowerLight(Pac pac, PointLight powerLight) {
         if (powerLight == null) return;
         final TickTimer powerTimer = pac.powerTimer();
-        if (powerTimer.isRunning() && pac.visibility.isVisible() && !pac.isDead()) {
+        if (powerTimer.isRunning() && pac.visibility().isVisible() && !pac.isDead()) {
             powerLight.setLightOn(true);
             final long remainingTicks = powerTimer.remainingTicks();
             final float maxRange = (remainingTicks / (float) powerTimer.durationTicks()) * 60 + 30;

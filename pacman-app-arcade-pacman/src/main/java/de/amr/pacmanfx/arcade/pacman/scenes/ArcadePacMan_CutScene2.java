@@ -112,13 +112,13 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void endTheShow() {
-        blinky.visibility.hide();
+        blinky.visibility().hide();
         gameState().triggerTimeout();
     }
 
     private void dressRaptures() {
         setDressState(NailDressState.RAPTURED);
-        blinky.position.x -= 4;
+        blinky.position().x -= 4;
         blinky.animations.select(CommonAnimationID.BLINKY_DAMAGED);
     }
 
@@ -139,7 +139,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         WorldMovement.SYSTEM.setSpeed(blinky, 1.25f);
         blinky.animations.select(CommonAnimationID.GHOST_NORMAL);
         blinky.animations.playSelected();
-        blinky.visibility.show();
+        blinky.visibility().show();
     }
 
     private void pacManStartsRunning() {
@@ -148,7 +148,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         WorldMovement.SYSTEM.setSpeed(pacMan, 1.15f);
         pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations.playSelected();
-        pacMan.visibility.show();
+        pacMan.visibility().show();
     }
 
     private void setDressState(NailDressState state) {

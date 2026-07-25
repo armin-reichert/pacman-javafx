@@ -71,7 +71,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final Pac pac = level.entities().pac();
         pac.reset(); // initially invisible!
-        pac.position.set(terrain.pacStartPosition());
+        pac.position().set(terrain.pacStartPosition());
         pac.setMoveDir(Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
         pac.powerTimer().resetToIndefiniteDuration();
@@ -79,7 +79,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
-            ghost.position.set(ghost.startPosition());
+            ghost.position().set(ghost.startPosition());
             final Direction direction = house.ghostStartDirection(ghost.personality());
             ghost.setMoveDir(direction);
             ghost.setWishDir(direction);
@@ -136,7 +136,7 @@ public abstract class CommonGamePlay implements GamePlay {
     @Override
     public void showLevelMessage(GameLevel level, GameLevelMessageType type) {
         final var message = new GameLevelMessage(type);
-        message.position.set(level.worldMap().terrainLayer().messageCenterPosition());
+        message.position().set(level.worldMap().terrainLayer().messageCenterPosition());
         level.setMessage(message);
     }
 
@@ -245,10 +245,10 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         terrain.hPortalContainingTile(pac.tile()).ifPresent(hPortal -> {
-            if (pac.worldMovement.moveDir() == Direction.LEFT) {
-                pac.position.setX(hPortal.rightBorderEntryTile().x() * WorldMap.TS + WorldMap.HTS);
-            } else if (pac.worldMovement.moveDir() == Direction.RIGHT) {
-                pac.position.setX(hPortal.leftBorderEntryTile().x() * WorldMap.TS - WorldMap.HTS);
+            if (pac.worldMovement().moveDir() == Direction.LEFT) {
+                pac.position().setX(hPortal.rightBorderEntryTile().x() * WorldMap.TS + WorldMap.HTS);
+            } else if (pac.worldMovement().moveDir() == Direction.RIGHT) {
+                pac.position().setX(hPortal.leftBorderEntryTile().x() * WorldMap.TS - WorldMap.HTS);
             }
             // Not sure if colliding ghosts should also be moved back to visible area
             Logger.info("Detected collision while teleporting, moved Pac-Man back into world");
@@ -320,7 +320,7 @@ public abstract class CommonGamePlay implements GamePlay {
         eatenGhost.animations.selectAndSetFrame(CommonAnimationID.GHOST_POINTS, killedBefore);
 
         level.addToGhostKillChain(eatenGhost);
-        level.entities().pac().visibility.hide();
+        level.entities().pac().visibility().hide();
         level.entities().ghosts().forEach(g -> g.animations.stopSelected());
 
         eventManager.publishGameEvent(new GhostEatenEvent(eatenGhost));
@@ -365,7 +365,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameEventManager eventManager = gameContext.eventManager();
 
         level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(
-            ghost -> ghost.worldMovement.requestTurnBack());
+            ghost -> ghost.worldMovement().requestTurnBack());
         final float powerSeconds = level.pacPowerSeconds();
         if (powerSeconds > 0) {
             level.huntingRules().stop();

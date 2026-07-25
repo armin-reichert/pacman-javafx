@@ -38,7 +38,7 @@ public class RouteBasedSteering implements Steering {
 
     @Override
     public void steer(Actor actor, GameLevel level) {
-        final WorldMovement mazeMovement = actor.worldMovement;
+        final WorldMovement mazeMovement = actor.component(WorldMovement.class);
 
         if (targetIndex == route.size()) {
             routeTraversed = true;
@@ -55,7 +55,7 @@ public class RouteBasedSteering implements Steering {
     }
 
     private void selectNextTargetTile(GameLevel level, Actor actor) {
-        final WorldMovement mazeMovement = actor.worldMovement;
+        final WorldMovement mazeMovement = actor.component(WorldMovement.class);
 
         ++targetIndex;
         if (targetIndex < route.size()) {

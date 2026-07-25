@@ -79,7 +79,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         bag.setOpen(false);
 
         clapperboard = new Clapperboard("3", "JUNIOR");
-        clapperboard.position.set(tilesPx(3), tilesPx(10));
+        clapperboard.position().set(tilesPx(3), tilesPx(10));
         clapperboard.startAnimation();
     }
 
@@ -139,27 +139,27 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
     private void enterDeliverJuniorState(SceneState newState) {
         pacMan.setMoveDir(Direction.RIGHT);
-        pacMan.position.set(TS * 3, GROUND_Y - 4);
+        pacMan.position().set(TS * 3, GROUND_Y - 4);
         pacMan.animations.select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
         pacMan.animations.stopSelected();
-        pacMan.visibility.show();
+        pacMan.visibility().show();
 
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.position.set(TS * 5, GROUND_Y - 4);
+        msPacMan.position().set(TS * 5, GROUND_Y - 4);
         msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         msPacMan.animations.stopSelected();
-        msPacMan.visibility.show();
+        msPacMan.visibility().show();
 
-        stork.position.set(TS * 30, TS * 12);
-        stork.movement.setVelocity(-0.8f, 0);
-        stork.visibility.show();
+        stork.position().set(TS * 30, TS * 12);
+        stork.movement().setVelocity(-0.8f, 0);
+        stork.visibility().show();
         stork.animations.select(CommonAnimationID.STORK_FLYING);
         stork.animations.playSelected();
 
-        bag.position.set(stork.position.x - 14, stork.position.y + 3);
-        bag.movement.setVelX(stork.movement.velX);
-        bag.movement.setAcceleration(0, 0);
-        bag.visibility.show();
+        bag.position().set(stork.position().x - 14, stork.position().y + 3);
+        bag.movement().setVelX(stork.movement().velX);
+        bag.movement().setAcceleration(0, 0);
+        bag.visibility().show();
         bag.setOpen(false);
 
         bagReleased = false;
@@ -170,24 +170,24 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
     private void updateDeliverJuniorState() {
         // release bag from beak when stork reaches tile 20
-        if (stork.position.x <= 20 * WorldMap.TS && !bagReleased) {
-            bag.movement.setAcceleration(0, 0.04f); // set y-gravity to let bag fall to ground
-            stork.movement.setVelocity(-1, 0); // fly faster without heavy bag
+        if (stork.position().x <= 20 * WorldMap.TS && !bagReleased) {
+            bag.movement().setAcceleration(0, 0.04f); // set y-gravity to let bag fall to ground
+            stork.movement().setVelocity(-1, 0); // fly faster without heavy bag
             bagReleased = true;
         }
 
         if (!bag.isOpen()) {
             Movement.SYSTEM.moveAccelerated(bag);
-            if (bag.position.y >= GROUND_Y) {
+            if (bag.position().y >= GROUND_Y) {
                 ++numBagBounces;
                 if (numBagBounces < 3) {
-                    bag.movement.setVelocity(-0.2f, -1.0f / numBagBounces); // add upwards velocity to bounce
-                    bag.position.setY(GROUND_Y);
+                    bag.movement().setVelocity(-0.2f, -1.0f / numBagBounces); // add upwards velocity to bounce
+                    bag.position().setY(GROUND_Y);
                 } else {
                     bag.setOpen(true);
-                    bag.position.setY(GROUND_Y);
-                    bag.movement.setVelocity(0, 0);
-                    bag.movement.setAcceleration(0, 0);
+                    bag.position().setY(GROUND_Y);
+                    bag.movement().setVelocity(0, 0);
+                    bag.movement().setAcceleration(0, 0);
                     Logger.info("Delivery of Junior at tick {}", sceneTick);            }
             }
         }

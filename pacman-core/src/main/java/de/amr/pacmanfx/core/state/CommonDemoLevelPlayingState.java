@@ -49,8 +49,8 @@ public class CommonDemoLevelPlayingState extends GameState {
         }
         else if (tick == 2) {
             // Now, actor animations are available, show them
-            level.entities().pac().visibility.show();
-            level.entities().ghosts().forEach(ghost -> ghost.visibility.show());
+            level.entities().pac().visibility().show();
+            level.entities().ghosts().forEach(ghost -> ghost.visibility().show());
         }
         else if (tick == huntingStartTick) {
             // Clear "READY!" message. "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared!

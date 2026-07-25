@@ -29,7 +29,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     @Override
     public void drawActor(Actor actor) {
         requireNonNull(actor);
-        if (!actor.visibility.isVisible()) return;
+        if (!actor.visibility().isVisible()) return;
         drawSpriteCentered(computeSprite(actor), WorldMovement.SYSTEM.computeCenter(actor));
     }
 
@@ -45,7 +45,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     private RectShort computePacSprite(Pac pac) {
         final SpriteAnimationAccess animationManager = pac.animations;
         if (animationManager.isSelected(CommonAnimationID.PAC_MUNCHING)) {
-            final RectShort[] sprites = spriteSheet().pacMunchingSprites(pac.worldMovement.moveDir());
+            final RectShort[] sprites = spriteSheet().pacMunchingSprites(pac.worldMovement().moveDir());
             return spriteOrDefault(sprites, animationManager.currentFrame());
         }
         else {
@@ -56,11 +56,11 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     private RectShort computeGhostSprite(Ghost ghost) {
         final SpriteAnimationAccess animationManager = ghost.animations;
         if (animationManager.isSelected(CommonAnimationID.GHOST_NORMAL)) {
-            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldMovement.wishDir());
+            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldMovement().wishDir());
             return spriteOrDefault(sprites, animationManager.currentFrame());
         }
         else if (animationManager.isSelected(CommonAnimationID.GHOST_EYES)) {
-            return spriteSheet().ghostEyesSprite(ghost.worldMovement.wishDir());
+            return spriteSheet().ghostEyesSprite(ghost.worldMovement().wishDir());
         }
         else {
             return animationManager.currentSprite();

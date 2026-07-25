@@ -38,7 +38,7 @@ public class GhostBrakeAnimation3D extends ManagedAnimation {
     public void playFromStart() {
         var rotateTransition = (RotateTransition) animationFX();
         rotateTransition.stop();
-        rotateTransition.setByAngle(ghostAppearance3D.ghost().worldMovement.moveDir() == Direction.LEFT ? -35 : 35);
+        rotateTransition.setByAngle(ghostAppearance3D.ghost().worldMovement().moveDir() == Direction.LEFT ? -35 : 35);
         rotateTransition.playFromStart();
     }
 
@@ -46,7 +46,7 @@ public class GhostBrakeAnimation3D extends ManagedAnimation {
     public void playOrContinue() {
         var rotateTransition = (RotateTransition) animationFX();
         rotateTransition.stop();
-        rotateTransition.setByAngle(ghostAppearance3D.ghost().worldMovement.moveDir() == Direction.LEFT ? -35 : 35);
+        rotateTransition.setByAngle(ghostAppearance3D.ghost().worldMovement().moveDir() == Direction.LEFT ? -35 : 35);
         rotateTransition.play();
     }
 

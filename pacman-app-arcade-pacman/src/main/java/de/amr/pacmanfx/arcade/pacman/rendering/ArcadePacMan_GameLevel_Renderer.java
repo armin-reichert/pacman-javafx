@@ -89,8 +89,8 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
 
     protected void drawLevelMessage(GameLevelMessage msg) {
         switch (msg.type()) {
-            case GAME_OVER -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), msg.position.x, msg.position.y);
-            case READY -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), msg.position.x, msg.position.y);
+            case GAME_OVER -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), msg.position().x, msg.position().y);
+            case READY -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), msg.position().x, msg.position().y);
         }
     }
 }

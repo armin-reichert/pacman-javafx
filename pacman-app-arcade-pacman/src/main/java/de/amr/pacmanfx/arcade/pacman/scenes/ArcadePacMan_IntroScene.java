@@ -144,19 +144,19 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     private void startChasingPacMan() {
         blinking.start();
-        pacMan.position.set(WorldMap.TS * 28, WorldMap.TS * 20);
+        pacMan.position().set(WorldMap.TS * 28, WorldMap.TS * 20);
         pacMan.setMoveDir(Direction.LEFT);
         WorldMovement.SYSTEM.setSpeed(pacMan, CHASING_SPEED);
         pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations.playSelected();
-        pacMan.visibility.show();
+        pacMan.visibility().show();
         for (Ghost ghost : ghosts) {
             ghost.setState(GhostState.HUNTING_PAC);
             ghost.setMoveDir(Direction.LEFT);
             ghost.setWishDir(Direction.LEFT);
             WorldMovement.SYSTEM.setSpeed(ghost, CHASING_SPEED);
-            ghost.position.set(pacMan.position.x + 16 * ghost.personality() + 18, pacMan.position.y);
-            ghost.visibility.show();
+            ghost.position().set(pacMan.position().x + 16 * ghost.personality() + 18, pacMan.position().y);
+            ghost.visibility().show();
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
             ghost.animations.playSelected();
         }
@@ -174,12 +174,12 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         final Ghost pinkGhost = ghosts[GameModel.PINK_GHOST_SPEEDY];
         final Ghost cyanGhost = ghosts[GameModel.CYAN_GHOST_BASHFUL];
         if (tick_0_to_5 == 2) {
-            pinkGhost.position.setX(pinkGhost.position.x + 0.5);
-            cyanGhost.position.setX(cyanGhost.position.x - 0.5);
+            pinkGhost.position().setX(pinkGhost.position().x + 0.5);
+            cyanGhost.position().setX(cyanGhost.position().x - 0.5);
         }
         else if (tick_0_to_5 == 5) {
-            pinkGhost.position.setX(pinkGhost.position.x - 0.5);
-            cyanGhost.position.setX(cyanGhost.position.x + 0.5);
+            pinkGhost.position().setX(pinkGhost.position().x - 0.5);
+            cyanGhost.position().setX(cyanGhost.position().x + 0.5);
         }
     }
 
@@ -220,7 +220,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     private void eatGhostAndStopChasing(Ghost victim, long tick) {
         victim.setState(EATEN);
         victim.animations.selectAndSetFrame(CommonAnimationID.GHOST_POINTS, numGhostsEaten++);
-        pacMan.visibility.hide();
+        pacMan.visibility().hide();
         WorldMovement.SYSTEM.setSpeed(pacMan, 0);
         for (Ghost ghost : ghosts) {
             WorldMovement.SYSTEM.setSpeed(ghost, 0);
@@ -230,13 +230,13 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void continueChasing() {
-        pacMan.visibility.show();
+        pacMan.visibility().show();
         WorldMovement.SYSTEM.setSpeed(pacMan, CHASING_SPEED);
         for (Ghost ghost : ghosts) {
             if (ghost.state() == EATEN) {
-                ghost.visibility.hide();
+                ghost.visibility().hide();
             } else {
-                ghost.visibility.show();
+                ghost.visibility().show();
                 WorldMovement.SYSTEM.setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
                 ghost.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
                 ghost.animations.playSelected();
@@ -305,7 +305,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
                 timer.restartTicks(TICK_CHASING_PAC_MAN_END);
-                scene.pacMan.visibility.hide();
+                scene.pacMan.visibility().hide();
             }
 
             @Override
@@ -342,7 +342,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 final long tick = timer.tickCount();
                 if (tick == TICK_CHASING_GHOSTS_END) {
-                    scene.pacMan.visibility.hide();
+                    scene.pacMan.visibility().hide();
                     scene.flow.enterState(scene, WAIT_FOR_DEMO_LEVEL);
                 } else {
                     scene.chaseGhosts(tick);
@@ -361,7 +361,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
                 final GameContext gameContext = scene.gameContext();
 
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
-                    scene.ghosts[GameModel.ORANGE_GHOST_POKEY].visibility.hide();
+                    scene.ghosts[GameModel.ORANGE_GHOST_POKEY].visibility().hide();
                     scene.gameFlow().enterState(gameContext, GameStateID.GAME_OR_LEVEL_STARTING);
                 }
             }

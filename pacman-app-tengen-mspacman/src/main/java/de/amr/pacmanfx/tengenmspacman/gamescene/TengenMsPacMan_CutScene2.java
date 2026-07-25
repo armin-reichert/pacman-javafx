@@ -71,8 +71,8 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
             joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(2, "THE CHASE");
-        clapperboard.position.set(3 * WorldMap.TS, 10 * WorldMap.TS);
-        clapperboard.visibility.show();
+        clapperboard.position().set(3 * WorldMap.TS, 10 * WorldMap.TS);
+        clapperboard.visibility().show();
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
@@ -95,59 +95,59 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {
                 case 270 -> {
-                    msPacMan.position.set(LEFT_BORDER, UPPER_LANE);
+                    msPacMan.position().set(LEFT_BORDER, UPPER_LANE);
                     msPacMan.setMoveDir(Direction.RIGHT);
                     msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations.playSelected();
                     msPacMan.setSpeed(2.0f);
-                    msPacMan.visibility.show();
+                    msPacMan.visibility().show();
                 }
                 case 320 -> {
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations.playSelected();
-                    pacMan.position.set(LEFT_BORDER, UPPER_LANE);
+                    pacMan.position().set(LEFT_BORDER, UPPER_LANE);
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setSpeed(2.0f);
-                    pacMan.visibility.show();
+                    pacMan.visibility().show();
                 }
                 case 520 -> {
-                    pacMan.position.set(RIGHT_BORDER, LOWER_LANE);
+                    pacMan.position().set(RIGHT_BORDER, LOWER_LANE);
                     pacMan.setMoveDir(Direction.LEFT);
                     pacMan.setSpeed(2.0f);
                 }
                 case 570 -> {
-                    msPacMan.position.set(RIGHT_BORDER, LOWER_LANE);
+                    msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
                     msPacMan.setMoveDir(Direction.LEFT);
                     msPacMan.setSpeed(2.0f);
                 }
                 case 780 -> {
-                    msPacMan.position.set(LEFT_BORDER, MIDDLE_LANE);
+                    msPacMan.position().set(LEFT_BORDER, MIDDLE_LANE);
                     msPacMan.setMoveDir(Direction.RIGHT);
                     msPacMan.setSpeed(2.0f);
                 }
                 case 830 -> {
-                    pacMan.position.set(LEFT_BORDER, MIDDLE_LANE);
+                    pacMan.position().set(LEFT_BORDER, MIDDLE_LANE);
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setSpeed(2.0f);
                 }
                 case 1040 -> {
-                    pacMan.position.set(RIGHT_BORDER, UPPER_LANE);
+                    pacMan.position().set(RIGHT_BORDER, UPPER_LANE);
                     pacMan.setMoveDir(Direction.LEFT);
                     pacMan.setSpeed(4.0f); //TODO correct?
                 }
                 case 1055 -> {
-                    msPacMan.position.set(RIGHT_BORDER, UPPER_LANE);
+                    msPacMan.position().set(RIGHT_BORDER, UPPER_LANE);
                     msPacMan.setMoveDir(Direction.LEFT);
                     msPacMan.setSpeed(4.0f);
                 }
                 case 1105 -> {
-                    msPacMan.position.set(LEFT_BORDER, LOWER_LANE);
+                    msPacMan.position().set(LEFT_BORDER, LOWER_LANE);
                     msPacMan.setMoveDir(Direction.RIGHT);
                     msPacMan.setSpeed(4.0f);
                 }
                 case 1120 -> {
-                    pacMan.position.set(LEFT_BORDER, LOWER_LANE);
+                    pacMan.position().set(LEFT_BORDER, LOWER_LANE);
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setSpeed(4.0f);
                 }

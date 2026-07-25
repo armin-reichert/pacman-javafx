@@ -66,7 +66,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
         clapperboard = new Clapperboard("2", "THE CHASE");
-        clapperboard.position.set(tilesPx(3), tilesPx(10));
+        clapperboard.position().set(tilesPx(3), tilesPx(10));
         clapperboard.startAnimation();
     }
 
@@ -105,49 +105,49 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
 
     private void updateStateChasing() {
         if (sceneTimer.atSecond(4.5)) {
-            pacMan.position.set(TS * (-2), UPPER_Y);
+            pacMan.position().set(TS * (-2), UPPER_Y);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(2.0f);
-            pacMan.visibility.show();
+            pacMan.visibility().show();
 
-            msPacMan.position.set(TS * (-8), UPPER_Y);
+            msPacMan.position().set(TS * (-8), UPPER_Y);
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setSpeed(2.0f);
-            msPacMan.visibility.show();
+            msPacMan.visibility().show();
         }
         else if (sceneTimer.atSecond(9)) {
-            pacMan.position.set(TS * 36, LOWER_Y);
+            pacMan.position().set(TS * 36, LOWER_Y);
             pacMan.setMoveDir(Direction.LEFT);
             pacMan.setSpeed(2.0f);
 
-            msPacMan.position.set(TS * 30, LOWER_Y);
+            msPacMan.position().set(TS * 30, LOWER_Y);
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setSpeed(2.0f);
         }
         else if (sceneTimer.atSecond(13.5)) {
-            pacMan.position.set(TS * (-2), MIDDLE_Y);
+            pacMan.position().set(TS * (-2), MIDDLE_Y);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(2.0f);
 
-            msPacMan.position.set(TS * (-8), MIDDLE_Y);
+            msPacMan.position().set(TS * (-8), MIDDLE_Y);
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setSpeed(2.0f);
         }
         else if (sceneTimer.atSecond(17.5)) {
-            pacMan.position.set(TS * 42, UPPER_Y);
+            pacMan.position().set(TS * 42, UPPER_Y);
             pacMan.setMoveDir(Direction.LEFT);
             pacMan.setSpeed(4.0f);
 
-            msPacMan.position.set(TS * 30, UPPER_Y);
+            msPacMan.position().set(TS * 30, UPPER_Y);
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setSpeed(4.0f);
         }
         else if (sceneTimer.atSecond(18.5)) {
-            pacMan.position.set(TS * (-2), LOWER_Y);
+            pacMan.position().set(TS * (-2), LOWER_Y);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(4.0f);
 
-            msPacMan.position.set(TS * (-14), LOWER_Y);
+            msPacMan.position().set(TS * (-14), LOWER_Y);
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setSpeed(4.0f);
         }

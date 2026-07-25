@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             if (newPhaseIndex > 0) {
                 level.ghostsInAnyOfStates(Set.of(
                     GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
-                    .forEach(ghost -> ghost.worldMovement.requestTurnBack());
+                    .forEach(ghost -> ghost.worldMovement().requestTurnBack());
             }
         });
 
@@ -160,7 +160,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final var bonus = new Bonus(bonusSymbolCode, model.rules().scoringRules().pointsForBonus(bonusSymbolCode));
         if (terrain.horizontalPortals().isEmpty()) {
             final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
-            bonus.position.set(WorldMap.halfTileRightOf(bonusTile));
+            bonus.position().set(WorldMap.halfTileRightOf(bonusTile));
             bonus.showEdibleForSeconds(randomFloat(9, 10));
         } else {
             computeBonusRoute(bonus, terrain, house);

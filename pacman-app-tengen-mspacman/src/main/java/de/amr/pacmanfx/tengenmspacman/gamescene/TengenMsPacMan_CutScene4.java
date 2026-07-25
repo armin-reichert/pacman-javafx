@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.Movement;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
@@ -76,8 +75,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
 
         clapperboard = new Clapperboard(4, "THE END");
-        clapperboard.position.set(tilesPx(3), tilesPx(10));
-        clapperboard.visibility.show();
+        clapperboard.position().set(tilesPx(3), tilesPx(10));
+        clapperboard.visibility().show();
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
@@ -115,18 +114,18 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             switch (eventTick) {
                 case 130 -> {
                     pacMan.setMoveDir(Direction.RIGHT);
-                    pacMan.position.set(LEFT_BORDER, LOWER_LANE);
+                    pacMan.position().set(LEFT_BORDER, LOWER_LANE);
                     pacMan.setSpeed(1f);
                     pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations.playSelected();
-                    pacMan.visibility.show();
+                    pacMan.visibility().show();
 
                     msPacMan.setMoveDir(Direction.LEFT);
-                    msPacMan.position.set(RIGHT_BORDER, LOWER_LANE);
+                    msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
                     msPacMan.setSpeed(1f);
                     msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations.playSelected();
-                    msPacMan.visibility.show();
+                    msPacMan.visibility().show();
                 }
                 case 230 -> {
                     pacMan.setSpeed(0);
@@ -163,8 +162,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     msPacMan.setMoveDir(Direction.UP);
                 }
                 case 720 -> {
-                    pacMan.visibility.hide();
-                    msPacMan.visibility.hide();
+                    pacMan.visibility().hide();
+                    msPacMan.visibility().hide();
                 }
                 case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(renderConfig, gameStateTick);
                 case 1500 -> optSoundEffects().ifPresent(GameSoundEffects::stopAll);
@@ -177,12 +176,12 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
         final Pac junior = TengenMsPacMan_ActorFactory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
-        junior.position.set((float) randomX, unscaledHeight() - 4 * TS);
+        junior.position().set((float) randomX, unscaledHeight() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
         junior.animations = renderConfig.createPacAnimations(spriteAnimations);
         junior.animations.select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
-        junior.visibility.show();
+        junior.visibility().show();
         juniors.add(junior);
         juniorCreationTimes.add(tick);
 
@@ -204,16 +203,16 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             computeNewMoveDir(junior);
         }
         Movement.SYSTEM.moveAccelerated(junior);
-        if (junior.position.x > unscaledWidth()) {
-            junior.position.setX(0);
+        if (junior.position().x > unscaledWidth()) {
+            junior.position().setX(0);
         }
-        if (junior.position.x < 0) {
-            junior.position.setX(unscaledWidth());
+        if (junior.position().x < 0) {
+            junior.position().setX(unscaledWidth());
         }
     }
 
     private void computeNewMoveDir(Pac junior) {
-        Direction oldMoveDir = junior.worldMovement.moveDir();
+        Direction oldMoveDir = junior.worldMovement().moveDir();
         List<Direction> possibleDirs = new ArrayList<>(List.of(Direction.values()));
         possibleDirs.remove(oldMoveDir.opposite());
         List<Direction> dirsByMinCenterDist = possibleDirs.stream().sorted(

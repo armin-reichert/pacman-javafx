@@ -78,7 +78,7 @@ public class CommonPacManDyingState extends GameState {
             }
         }
         else if (tick == hideGhostsTick) {
-            level.entities().ghosts().forEach(ghost -> ghost.visibility.hide());
+            level.entities().ghosts().forEach(ghost -> ghost.visibility().hide());
             pac.animations.select(CommonAnimationID.PAC_DYING);
             pac.animations.resetSelected();
         }
@@ -87,7 +87,7 @@ public class CommonPacManDyingState extends GameState {
             gameContext.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == hidePacTick) {
-            pac.visibility.hide();
+            pac.visibility().hide();
             level.optBonus().ifPresent(Bonus::setInactive); //TODO check this
         }
         else if (tick == pacDeadTick) {

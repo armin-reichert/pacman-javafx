@@ -69,6 +69,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     private String actorLocationText(GameLevel level, Actor actor) {
         if (actor == null) return NO_INFO;
 
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
         final Vector2i tile = WorldMovement.SYSTEM.computeTile(actor);
         final float offsetX = WorldMovement.SYSTEM.computeOffsetX(actor);
         final float offsetY = WorldMovement.SYSTEM.computeOffsetY(actor);
@@ -76,17 +77,19 @@ public class DS_ActorInfo extends GameDashboardSection {
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
             tile.x(), tile.y(),
             offsetX, offsetY,
-            actor.worldMovement.isNewTileEntered() ? " NEW" : "");
+            worldMovement.isNewTileEntered() ? " NEW" : "");
     }
 
-    private String actorMovementText(GameLevel level, Actor movingActor) {
-        if (movingActor == null) return NO_INFO;
-        var speed = movingActor.movement.computeSpeed() * GameConstants.SIMULATION_FPS;
-        var blocked = !movingActor.worldMovement.info.moved;
-        var reverseText = movingActor.worldMovement.turnBackRequested() ? "REV!" : "";
+    private String actorMovementText(GameLevel level, Actor actor) {
+        if (actor == null) return NO_INFO;
+
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        var speed = actor.movement().computeSpeed() * GameConstants.SIMULATION_FPS;
+        var blocked = !worldMovement.info.moved;
+        var reverseText = worldMovement.turnBackRequested() ? "REV!" : "";
         return blocked
             ? "BLOCKED!"
-            : "%.2fpx/s %s (%s)%s".formatted(speed, movingActor.worldMovement.moveDir(), movingActor.worldMovement.wishDir(), reverseText);
+            : "%.2fpx/s %s (%s)%s".formatted(speed, worldMovement.moveDir(), worldMovement.wishDir(), reverseText);
     }
 
     private Supplier<String> supplyPacPowerText(GameAppContext appContext) {

@@ -23,8 +23,8 @@ public class GameLevelContinueState extends GameState {
         final GameLevel level = gameContext.assertLevel();
 
         gameContext.gamePlay().prepareLevelForPlaying(gameContext);
-        level.entities().pac().visibility.show();
-        level.entities().ghosts().forEach(ghost -> ghost.visibility.show());
+        level.entities().pac().visibility().show();
+        level.entities().ghosts().forEach(ghost -> ghost.visibility().show());
 
         gameContext.eventManager().publishGameEvent(new GameContinuedEvent());
     }
