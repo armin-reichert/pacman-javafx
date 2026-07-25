@@ -35,8 +35,8 @@ public class StalkingPlayerPerspective implements Perspective<GameLevel> {
         double speedX = 0.04;
         double speedY = 0.04;
         double worldWidth = level.worldMap().numCols() * WorldMap.TS;
-        double targetX = Math.clamp(pac.x(), 40, worldWidth - 40);
-        double targetY = pac.y() + 100;
+        double targetX = Math.clamp(pac.position.x, 40, worldWidth - 40);
+        double targetY = pac.position.y + 100;
         camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));
         camera.setTranslateY(lerp(camera.getTranslateY(), targetY, speedY));
         camera.setTranslateZ(-40);

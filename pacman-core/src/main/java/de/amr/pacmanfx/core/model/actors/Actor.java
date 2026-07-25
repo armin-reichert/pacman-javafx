@@ -6,11 +6,10 @@ package de.amr.pacmanfx.core.model.actors;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationAccessor;
+import de.amr.pacmanfx.core.model.PositionComponent;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Base class for all game actors like Pac-Man, the ghosts and the bonus entities.
@@ -22,10 +21,9 @@ public class Actor {
 
     public static final boolean DEFAULT_VISIBILITY = false;
 
-    private BooleanProperty visible;
+    public final PositionComponent position = new PositionComponent();
 
-    private float x;
-    private float y;
+    private BooleanProperty visible;
 
     private float velX;
     private float velY;
@@ -38,7 +36,10 @@ public class Actor {
      */
     public void reset() {
         setVisible(DEFAULT_VISIBILITY);
-        x = y = 0;
+
+        position.x = 0;
+        position.y = 0;
+
         velX = velY = 0;
         accX = accY = 0;
     }
@@ -65,37 +66,6 @@ public class Actor {
 
     public void hide() {
         setVisible(false);
-    }
-
-    public final void setX(double x) {
-        this.x = (float) x;
-    }
-
-    public float x() {
-        return x;
-    }
-
-    public final void setY(double y) {
-        this.y = (float) y;
-    }
-
-    public float y() {
-        return y;
-    }
-
-    public Vector2f position() {
-        return new Vector2f(x, y);
-    }
-
-    public final void setPosition(double x, double y) {
-        this.x = (float) x;
-        this.y = (float) y;
-    }
-
-    public final void setPosition(Vector2f position) {
-        requireNonNull(position);
-        setX(position.x());
-        setY(position.y());
     }
 
     public float velX() {
@@ -150,8 +120,8 @@ public class Actor {
      * by the current acceleration.
      */
     public void move() {
-        x += velX;
-        y += velY;
+        position.x += velX;
+        position.y += velY;
         velX += accX;
         velY += accY;
     }
@@ -163,7 +133,8 @@ public class Actor {
      *
      * @return the center position of the actor
      */
-    public Vector2f computeCenter() { return new Vector2f(x + WorldMap.HTS, y + WorldMap.HTS); }
+    public Vector2f computeCenter() {
+        return new Vector2f(position.x + WorldMap.HTS, position.y + WorldMap.HTS); }
 
     /**
      * In Pac-Man games, the current tile coordinate of an actor is defined as the tile containing the
@@ -172,8 +143,8 @@ public class Actor {
      * @return the tile coordinate containing the {@link #computeCenter()} position of the actor.
      */
     public Vector2i computeTile() {
-        final float cx = x + WorldMap.HTS;
-        final float cy = y + WorldMap.HTS;
+        final float cx = position.x + WorldMap.HTS;
+        final float cy = position.y + WorldMap.HTS;
         return WorldMap.computeTileAt(cx, cy);
     }
 
@@ -182,7 +153,7 @@ public class Actor {
      */
     public float computeOffsetX() {
         final Vector2i tile = computeTile();
-        return x - tile.x() * WorldMap.TS;
+        return position.x - tile.x() * WorldMap.TS;
     }
 
     /**
@@ -190,7 +161,7 @@ public class Actor {
      */
     public float computeOffsetY() {
         final Vector2i tile = computeTile();
-        return y - tile.y() * WorldMap.TS;
+        return position.y - tile.y() * WorldMap.TS;
     }
 
     protected SpriteAnimationAccessor animations = SpriteAnimationAccessor.emptyAnimation();

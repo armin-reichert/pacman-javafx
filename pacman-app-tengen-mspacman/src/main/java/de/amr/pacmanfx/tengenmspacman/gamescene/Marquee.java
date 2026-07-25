@@ -33,7 +33,7 @@ public class Marquee extends Actor {
     }
 
     public void draw(GraphicsContext ctx) {
-        double xMin = x(), xMax = xMin + 132, yMin = y(), yMax = yMin + 60;
+        double xMin = position.x, xMax = xMin + 132, yMin = position.y, yMax = yMin + 60;
         for (int i = 0; i < NUM_BULBS; ++i) {
             boolean on = bulbOn.get(i);
             ctx.setFill(NES_Palette.color(on ? 0x20 : 0x15));

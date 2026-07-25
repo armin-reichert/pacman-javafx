@@ -56,7 +56,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
             String immune = pac.isImmune() ? "immune" : "";
             String text = "%s\n%s".formatted(autopilot, immune).trim();
             ctx.setFont(debugTextFont);
-            ctx.fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
+            ctx.fillText(text, scaled(pac.position.x - 4), scaled(pac.position.y + 16));
         }
         if (movingActor.animations() instanceof SpriteAnimationMap<?> spriteAnimations) {
             Object animationID = spriteAnimations.selectedAnimationID();
@@ -74,7 +74,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
     private void drawAnimationInfo(Actor actor, SpriteAnimationMap<?> spriteAnimationMap, Object selectedID) {
         ctx.save();
         String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().frame());
-        double x = scaled(actor.x() - 4), y = scaled(actor.y() - 4);
+        double x = scaled(actor.position.x - 4), y = scaled(actor.position.y - 4);
         ctx.setFill(debugTextFill);
         ctx.fillText(text, x, y);
         ctx.restore();

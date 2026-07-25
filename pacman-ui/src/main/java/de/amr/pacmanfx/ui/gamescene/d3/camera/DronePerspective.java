@@ -61,8 +61,8 @@ public class DronePerspective implements Perspective<GameLevel> {
 
     @Override
     public void update(GameLevel level) {
-        double x = lerp(camera.getTranslateX(), level.entities().pac().x(), speed);
-        double y = lerp(camera.getTranslateY(), level.entities().pac().y(), speed);
+        double x = lerp(camera.getTranslateX(), level.entities().pac().position.x, speed);
+        double y = lerp(camera.getTranslateY(), level.entities().pac().position.y, speed);
         camera.setTranslateX(x);
         camera.setTranslateY(y);
     }

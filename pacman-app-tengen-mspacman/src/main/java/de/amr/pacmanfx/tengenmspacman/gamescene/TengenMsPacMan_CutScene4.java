@@ -73,7 +73,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
 
         clapperboard = new Clapperboard(4, "THE END");
-        clapperboard.setPosition(tilesPx(3), tilesPx(10));
+        clapperboard.position.set(tilesPx(3), tilesPx(10));
         clapperboard.setVisible(true);
         clapperboard.startAnimation();
 
@@ -112,14 +112,14 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             switch (eventTick) {
                 case 130 -> {
                     pacMan.setMoveDir(Direction.RIGHT);
-                    pacMan.setPosition(LEFT_BORDER, LOWER_LANE);
+                    pacMan.position.set(LEFT_BORDER, LOWER_LANE);
                     pacMan.setSpeed(1f);
                     pacMan.animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations().playSelected();
                     pacMan.show();
 
                     msPacMan.setMoveDir(Direction.LEFT);
-                    msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
+                    msPacMan.position.set(RIGHT_BORDER, LOWER_LANE);
                     msPacMan.setSpeed(1f);
                     msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations().playSelected();
@@ -173,7 +173,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     private void spawnJunior(GameVariantRenderConfig renderConfig, long tick) {
         var junior = TengenMsPacMan_ActorFactory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
-        junior.setPosition((float) randomX, unscaledHeight() - 4 * TS);
+        junior.position.set((float) randomX, unscaledHeight() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
         junior.setAnimations(renderConfig.createPacAnimations(appContext().ui().sprites().animations()));
@@ -200,11 +200,11 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             computeNewMoveDir(junior);
         }
         junior.move();
-        if (junior.x() > unscaledWidth()) {
-            junior.setX(0);
+        if (junior.position.x > unscaledWidth()) {
+            junior.position.setX(0);
         }
-        if (junior.x() < 0) {
-            junior.setX(unscaledWidth());
+        if (junior.position.x < 0) {
+            junior.position.setX(unscaledWidth());
         }
     }
 

@@ -82,7 +82,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             case SceneState.WAITING_FOR_START -> {
                 if (!intro.dark) {
                     final boolean bright = stateTick % 60 < 30; // 0.5s dark, 0.5s bright
-                    fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick), intro.presents.x(), intro.presents.y());
+                    fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick), intro.presents.position.x, intro.presents.position.y);
                     drawSprite(spriteSheet().findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * TS, MARQUEE_Y, true);
                     if (bright) {
                         fillText(PRESS_START, NES_Palette.color(0x20), 11 * TS, MARQUEE_Y + 9 * TS);

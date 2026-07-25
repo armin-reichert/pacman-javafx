@@ -83,8 +83,8 @@ public abstract class MovingActor extends Actor implements GameEntity {
     public String toString() {
         return "MovingActor{" +
             "visible=" + isVisible() +
-            ", x=" + x() +
-            ", y=" + y() +
+            ", x=" + position.x +
+            ", y=" + position.y +
             ", velocityX=" + velX() +
             ", velocityY=" + velY() +
             ", accelerationX=" + accX() +
@@ -161,8 +161,8 @@ public abstract class MovingActor extends Actor implements GameEntity {
      */
     public void placeAtTile(int tx, int ty, float ox, float oy) {
         var prevTile = computeTile();
-        setX(tx * WorldMap.TS + ox);
-        setY(ty * WorldMap.TS + oy);
+        position.setX(tx * WorldMap.TS + ox);
+        position.setY(ty * WorldMap.TS + oy);
         newTileEntered = !computeTile().equals(prevTile);
     }
 

@@ -41,7 +41,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
     public void onActivate() {
         actionBindings().dispose();
         movingText = new Actor();
-        movingText.setPosition(tilesPx(9), unscaledHeight()); // lower border of screen
+        movingText.position.set(tilesPx(9), unscaledHeight()); // lower border of screen
         ghost = appContext().variants().currentVariant().config().renderConfig().createAnimatedGhost(
             appContext().ui().sprites().animations(), GameModel.RED_GHOST_SHADOW);
     }
@@ -59,11 +59,11 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
                 movingText.show();
             }
             case  55 -> {
-                movingText.setPosition(tilesPx(9), tilesPx(13));
+                movingText.position.set(tilesPx(9), tilesPx(13));
                 movingText.setVelocity(0, 0);
             }
             case 113 -> {
-                ghost.setPosition(unscaledWidth() - WorldMap.TS, GHOST_Y);
+                ghost.position.set(unscaledWidth() - WorldMap.TS, GHOST_Y);
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
                 ghost.setSpeed(WorldMap.TS);

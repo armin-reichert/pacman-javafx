@@ -100,32 +100,32 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
             joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(1, "THEY MEET");
-        clapperboard.setPosition(3 * WorldMap.TS, 10 * WorldMap.TS);
+        clapperboard.position.set(3 * WorldMap.TS, 10 * WorldMap.TS);
         clapperboard.show();
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         msPacMan.setMoveDir(Direction.LEFT);
-        msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
+        msPacMan.position.set(RIGHT_BORDER, LOWER_LANE);
         msPacMan.setSpeed(0);
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
         pacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         pacMan.setMoveDir(Direction.RIGHT);
-        pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
+        pacMan.position.set(LEFT_BORDER, UPPER_LANE);
         pacMan.setSpeed(0);
 
         inky = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
-        inky.setPosition(LEFT_BORDER, UPPER_LANE);
+        inky.position.set(LEFT_BORDER, UPPER_LANE);
         inky.setSpeed(0);
 
         pinky = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
-        pinky.setPosition(RIGHT_BORDER, LOWER_LANE);
+        pinky.position.set(RIGHT_BORDER, LOWER_LANE);
         pinky.setSpeed(0);
 
         heart = new Actor();
@@ -151,11 +151,11 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         pinky.move();
 
         if (collided) {
-            if (inky.y() > MIDDLE_LANE) {
-                inky.setY(MIDDLE_LANE);
+            if (inky.position.y > MIDDLE_LANE) {
+                inky.position.setY(MIDDLE_LANE);
             }
-            if (pinky.y() > MIDDLE_LANE) {
-                pinky.setY(MIDDLE_LANE);
+            if (pinky.position.y > MIDDLE_LANE) {
+                pinky.position.setY(MIDDLE_LANE);
             }
         }
 
@@ -185,17 +185,17 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                     pinky.show();
                 }
                 case 400 -> {
-                    msPacMan.setPosition(LEFT_BORDER, MIDDLE_LANE);
+                    msPacMan.position.set(LEFT_BORDER, MIDDLE_LANE);
                     msPacMan.setMoveDir(Direction.RIGHT);
 
-                    pacMan.setPosition(RIGHT_BORDER, MIDDLE_LANE);
+                    pacMan.position.set(RIGHT_BORDER, MIDDLE_LANE);
                     pacMan.setMoveDir(Direction.LEFT);
 
-                    pinky.setPosition(msPacMan.x() - WorldMap.TS * 11, msPacMan.y());
+                    pinky.position.set(msPacMan.position.x - WorldMap.TS * 11, msPacMan.position.y);
                     pinky.setMoveDir(Direction.RIGHT);
                     pinky.setWishDir(Direction.RIGHT);
 
-                    inky.setPosition(pacMan.x() + WorldMap.TS * 11, pacMan.y());
+                    inky.position.set(pacMan.position.x + WorldMap.TS * 11, pacMan.position.y);
                     inky.setMoveDir(Direction.LEFT);
                     inky.setWishDir(Direction.LEFT);
                 }
@@ -233,7 +233,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                     msPacMan.animations().resetSelected();
                 }
                 case 560 -> {
-                    heart.setPosition(0.5f * (pacMan.x() + msPacMan.x()), pacMan.y() - tilesPx(2));
+                    heart.position.set(0.5f * (pacMan.position.x + msPacMan.position.x), pacMan.position.y - tilesPx(2));
                     heart.show();
                 }
                 case 760 -> {

@@ -164,7 +164,7 @@ public class Bonus extends MovingActor {
         if (jumpingAnimation.pulseTriggered()) {
             float pixels = moveDir().isVertical() ? 3.0f : 2.0f;
             float dy = jumpingAnimation.state() == Pulse.State.ON ? -pixels : pixels;
-            setY(y() + dy);
+            position.y += dy;
         }
     }
 

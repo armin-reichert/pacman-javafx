@@ -137,8 +137,8 @@ public class Ghost extends MovingActor {
                 "name=" + name() +
                 ", state=" + (state != null ? state() : DEFAULT_STATE) +
                 ", visible=" + isVisible() +
-                ", x=" + x() +
-                ", y=" + y() +
+                ", x=" + position.x +
+                ", y=" + position.y +
                 ", velocityX=" + velX() +
                 ", velocityY=" + velY() +
                 ", accelerationX=" + accX() +
@@ -298,14 +298,14 @@ public class Ghost extends MovingActor {
         if (home.isVisitedBy(this)) {
             final float minY = (home.minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
             final float maxY = (home.maxTile().y() - 1) * WorldMap.TS - WorldMap.HTS;
-            if (y() <= minY) {
+            if (position.y <= minY) {
                 setMoveDir(DOWN);
                 setWishDir(DOWN);
-            } else if (y() >= maxY) {
+            } else if (position.y >= maxY) {
                 setMoveDir(UP);
                 setWishDir(UP);
             }
-            setY(Math.clamp(y(), minY, maxY));
+            position.setY(Math.clamp(position.y, minY, maxY));
             setSpeed(speed);
             move();
         } else {
@@ -329,9 +329,9 @@ public class Ghost extends MovingActor {
      */
     private void updateStateLeavingHouse(GameLevel level, float speed) {
         final Vector2f houseEntryPosition = home.entryPosition();
-        if (y() <= houseEntryPosition.y()) {
+        if (position.y <= houseEntryPosition.y()) {
             // outside at house entry
-            setY(houseEntryPosition.y());
+            position.setY(houseEntryPosition.y());
             setMoveDir(LEFT);
             setWishDir(LEFT);
             newTileEntered = false; // don't change direction until new tile is entered by moving
@@ -339,11 +339,11 @@ public class Ghost extends MovingActor {
         }
         else {
             // still inside house
-            final float centerX = x() + WorldMap.HTS;
+            final float centerX = position.x + WorldMap.HTS;
             final float houseCenterX = home.center().x();
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
                 // align horizontally and raise
-                setX(houseCenterX - WorldMap.HTS);
+                position.setX(houseCenterX - WorldMap.HTS);
                 setMoveDir(UP);
                 setWishDir(UP);
             } else {
@@ -376,7 +376,7 @@ public class Ghost extends MovingActor {
      * @param level the game level this ghost lives in
      */
     private void updateStateHuntingPac(GameLevel level, float speed) {
-        // The specific hunting behaviour is defined by the game variant. For example, in Ms. Pac-Man,
+        // The specific hunting behavior is defined by the game variant. For example, in Ms. Pac-Man,
         // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
         hunt(level, speed);
     }
@@ -429,10 +429,9 @@ public class Ghost extends MovingActor {
     private void updateStateReturningToHouse(GameLevel level, float speed) {
         final Vector2f houseEntry = home.entryPosition();
         //TODO
-        final Vector2f position = new Vector2f(x(), y());
-        if (position.roughlyEquals(houseEntry, speed, 0)) {
-            setX(houseEntry.x());
-            setY(houseEntry.y());
+        final Vector2f positionVec =  position.asVector2f();
+        if (positionVec.roughlyEquals(houseEntry, speed, 0)) {
+            position.set(houseEntry.x(), houseEntry.y());
             setMoveDir(DOWN);
             setWishDir(DOWN);
             setState(GhostState.ENTERING_HOUSE);
@@ -453,22 +452,21 @@ public class Ghost extends MovingActor {
     private void updateStateEnteringHouse(GameLevel ignored, float speed) {
         final Vector2f revivalPosition = WorldMap.halfTileRightOf(home.ghostRevivalTile(personality()));
         //TODO
-        final Vector2f position = new Vector2f(x(), y());
-        if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
-            setX(revivalPosition.x());
-            setY(revivalPosition.y());
+        final Vector2f positionVec = position.asVector2f();
+        if (positionVec.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
+            position.set(revivalPosition.x(), revivalPosition.y());
             setMoveDir(UP);
             setWishDir(UP);
             setState(GhostState.LOCKED);
             return;
         }
-        if (position.y() < revivalPosition.y()) {
+        if (position.y < revivalPosition.y()) {
             setMoveDir(DOWN);
             setWishDir(DOWN);
-        } else if (position.x() > revivalPosition.x()) {
+        } else if (position.x > revivalPosition.x()) {
             setMoveDir(LEFT);
             setWishDir(LEFT);
-        } else if (position.x() < revivalPosition.x()) {
+        } else if (position.x < revivalPosition.x()) {
             setMoveDir(RIGHT);
             setWishDir(RIGHT);
         }

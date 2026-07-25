@@ -99,8 +99,8 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
     protected void drawGameLevelMessage(GameLevelMessage msg) {
         switch (msg.type()) {
-            case GameLevelMessageType.GAME_OVER -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), msg.x(), msg.y());
-            case GameLevelMessageType.READY -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), msg.x(), msg.y());
+            case GameLevelMessageType.GAME_OVER -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), msg.position.x, msg.position.y);
+            case GameLevelMessageType.READY -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), msg.position.x, msg.position.y);
         }
     }
 }

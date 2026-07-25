@@ -108,7 +108,7 @@ public class PlayScene2DCamera extends ParallelCamera {
     }
 
     private void updateTrackingMode(double mapHeightPixels, MovingActor movingActor) {
-        double relY = movingActor.y() / mapHeightPixels;
+        double relY = movingActor.position.y / mapHeightPixels;
         if (relY < 0.5 || relY < 0.6 && movingActor.moveDir() == Direction.UP) {
             setTargetToTop();
         } else if (relY > 0.5 || relY > 0.4 && movingActor.moveDir() == Direction.DOWN) {

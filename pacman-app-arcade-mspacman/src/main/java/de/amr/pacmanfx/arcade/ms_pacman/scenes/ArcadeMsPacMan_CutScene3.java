@@ -78,7 +78,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         bag.setOpen(false);
 
         clapperboard = new Clapperboard("3", "JUNIOR");
-        clapperboard.setPosition(tilesPx(3), tilesPx(10));
+        clapperboard.position.set(tilesPx(3), tilesPx(10));
         clapperboard.startAnimation();
     }
 
@@ -138,24 +138,24 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
     private void enterDeliverJuniorState(SceneState newState) {
         pacMan.setMoveDir(Direction.RIGHT);
-        pacMan.setPosition(TS * 3, GROUND_Y - 4);
+        pacMan.position.set(TS * 3, GROUND_Y - 4);
         pacMan.animations().select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
         pacMan.animations().stopSelected();
         pacMan.show();
 
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.setPosition(TS * 5, GROUND_Y - 4);
+        msPacMan.position.set(TS * 5, GROUND_Y - 4);
         msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
         msPacMan.animations().stopSelected();
         msPacMan.show();
 
-        stork.setPosition(TS * 30, TS * 12);
+        stork.position.set(TS * 30, TS * 12);
         stork.setVelocity(-0.8f, 0);
         stork.show();
         stork.animations().select(CommonAnimationID.STORK_FLYING);
         stork.animations().playSelected();
 
-        bag.setPosition(stork.x() - 14, stork.y() + 3);
+        bag.position.set(stork.position.x - 14, stork.position.y + 3);
         bag.setVelX(stork.velX());
         bag.setAcceleration(0, 0);
         bag.show();
@@ -169,7 +169,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
     private void updateDeliverJuniorState() {
         // release bag from beak when stork reaches tile 20
-        if (stork.x() <= 20 * WorldMap.TS && !bagReleased) {
+        if (stork.position.x <= 20 * WorldMap.TS && !bagReleased) {
             bag.setAcceleration(0, 0.04f); // set y-gravity to let bag fall to ground
             stork.setVelocity(-1, 0); // fly faster without heavy bag
             bagReleased = true;
@@ -177,14 +177,14 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         if (!bag.isOpen()) {
             bag.move();
-            if (bag.y() >= GROUND_Y) {
+            if (bag.position.y >= GROUND_Y) {
                 ++numBagBounces;
                 if (numBagBounces < 3) {
                     bag.setVelocity(-0.2f, -1.0f / numBagBounces); // add upwards velocity to bounce
-                    bag.setY(GROUND_Y);
+                    bag.position.setY(GROUND_Y);
                 } else {
                     bag.setOpen(true);
-                    bag.setY(GROUND_Y);
+                    bag.position.setY(GROUND_Y);
                     bag.setVelocity(0, 0);
                     bag.setAcceleration(0, 0);
                     Logger.info("Delivery of Junior at tick {}", sceneTick);            }

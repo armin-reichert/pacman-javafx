@@ -148,11 +148,11 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         final Color color = level.isDemoLevel()
             ? Color.valueOf(colorScheme.wallStroke())
             : assets.color("color.game_over_message");
-        fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), message.x(), message.y());
+        fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), message.position.x, message.position.y);
     }
 
     private void drawReadyMessage(GameLevelMessage message) {
-        fillTextCentered(READY_MESSAGE_TEXT, assets.color("color.ready_message"), arcadeFont8(), message.x(), message.y());
+        fillTextCentered(READY_MESSAGE_TEXT, assets.color("color.ready_message"), arcadeFont8(), message.position.x, message.position.y);
     }
 
     public void drawDoor(WorldMap worldMap) {

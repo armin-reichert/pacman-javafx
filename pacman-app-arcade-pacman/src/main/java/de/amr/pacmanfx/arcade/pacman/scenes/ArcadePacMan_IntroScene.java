@@ -142,7 +142,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     private void startChasingPacMan() {
         blinking.start();
-        pacMan.setPosition(WorldMap.TS * 28, WorldMap.TS * 20);
+        pacMan.position.set(WorldMap.TS * 28, WorldMap.TS * 20);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(CHASING_SPEED);
         pacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
@@ -153,7 +153,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             ghost.setMoveDir(Direction.LEFT);
             ghost.setWishDir(Direction.LEFT);
             ghost.setSpeed(CHASING_SPEED);
-            ghost.setPosition(pacMan.x() + 16 * ghost.personality() + 18, pacMan.y());
+            ghost.position.set(pacMan.position.x + 16 * ghost.personality() + 18, pacMan.position.y);
             ghost.show();
             ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
             ghost.animations().playSelected();
@@ -172,12 +172,12 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         final Ghost pinkGhost = ghosts[GameModel.PINK_GHOST_SPEEDY];
         final Ghost cyanGhost = ghosts[GameModel.CYAN_GHOST_BASHFUL];
         if (tick_0_to_5 == 2) {
-            pinkGhost.setX(pinkGhost.x() + 0.5);
-            cyanGhost.setX(cyanGhost.x() - 0.5);
+            pinkGhost.position.setX(pinkGhost.position.x + 0.5);
+            cyanGhost.position.setX(cyanGhost.position.x - 0.5);
         }
         else if (tick_0_to_5 == 5) {
-            pinkGhost.setX(pinkGhost.x() - 0.5);
-            cyanGhost.setX(cyanGhost.x() + 0.5);
+            pinkGhost.position.setX(pinkGhost.position.x - 0.5);
+            cyanGhost.position.setX(cyanGhost.position.x + 0.5);
         }
     }
 

@@ -262,7 +262,7 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> {
             boolean ghostNearHouseEntry = level
                 .ghostsInAnyOfStates(Set.of(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
-                .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= doorSensitivity)
+                .filter(ghost -> ghost.position.asVector2f().euclideanDist(house.entryPosition()) <= doorSensitivity)
                 .anyMatch(Ghost::isVisible);
             doorsOpenProperty.set(ghostNearHouseEntry);
         });

@@ -116,7 +116,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
 
     private void dressRaptures() {
         setDressState(NailDressState.RAPTURED);
-        blinky.setX(blinky.x() - 4);
+        blinky.position.x -= 4;
         blinky.animations().select(CommonAnimationID.BLINKY_DAMAGED);
     }
 

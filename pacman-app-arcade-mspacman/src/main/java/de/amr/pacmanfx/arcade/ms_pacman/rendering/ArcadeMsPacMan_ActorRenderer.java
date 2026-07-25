@@ -89,9 +89,9 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             final RectShort sprite = sprites[spriteIndex];
             drawSpriteCentered(sprite, clapperboard.computeCenter());
             // Draw number and title
-            final double numberX = scaled(clapperboard.x() + sprite.width() - 25);
-            final double textX = scaled(clapperboard.x() + sprite.width());
-            final double y = scaled(clapperboard.y() + 18);
+            final double numberX = scaled(clapperboard.position.x + sprite.width() - 25);
+            final double textX = scaled(clapperboard.position.x + sprite.width());
+            final double y = scaled(clapperboard.position.y + 18);
             ctx.setFont(clapperboard.font());
             ctx.setFill(ARCADE_WHITE);
             ctx.fillText(clapperboard.number(), numberX, y);

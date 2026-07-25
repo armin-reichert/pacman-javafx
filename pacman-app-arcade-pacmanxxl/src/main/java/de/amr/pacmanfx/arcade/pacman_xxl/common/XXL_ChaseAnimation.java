@@ -90,7 +90,7 @@ class XXL_ChaseAnimation {
         pac.setAnimations(renderConfig.createPacAnimations(container));
         pac.animations().select(CommonAnimationID.PAC_MUNCHING);
         pac.animations().playSelected();
-        pac.setX(numTilesX * WorldMap.TS);
+        pac.position.setX(numTilesX * WorldMap.TS);
         pac.setMoveDir(Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
         pac.setSpeed(PAC_FLEEING_SPEED);
@@ -103,7 +103,7 @@ class XXL_ChaseAnimation {
             renderConfig.createAnimatedGhost(container, GameModel.ORANGE_GHOST_POKEY)
         );
         for (Ghost ghost : ghosts) {
-            ghost.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
+            ghost.position.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
             ghost.setMoveDir(Direction.LEFT);
             ghost.setWishDir(Direction.LEFT);
             ghost.setSpeed(GHOST_CHASE_SPEED);
@@ -134,15 +134,15 @@ class XXL_ChaseAnimation {
     private void pacManChasesGhosts() {
         moveActors();
         // If ghosts and Pac leave screen at right border, ghosts start chasing Pac moving left
-        if (pac.x() > (numTilesX + 14) * WorldMap.TS) {
+        if (pac.position.x > (numTilesX + 14) * WorldMap.TS) {
             pac.setMoveDir(Direction.LEFT);
             pac.setWishDir(Direction.LEFT);
-            pac.setX(numTilesX * WorldMap.TS);
+            pac.position.setX(numTilesX * WorldMap.TS);
             for (Ghost ghost : ghosts) {
                 ghost.setVisible(true);
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
-                ghost.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * 2 * WorldMap.TS);
+                ghost.position.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * 2 * WorldMap.TS);
                 ghost.setSpeed(1.05f);
                 ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
                 ghost.animations().playSelected();
@@ -173,18 +173,18 @@ class XXL_ChaseAnimation {
     }
 
     private static boolean colliding(Actor either, Actor other) {
-        return Math.abs(either.x() - other.x()) < 1;
+        return Math.abs(either.position.x - other.position.x) < 1;
     }
 
     private void ghostsChasePacMan() {
         moveActors();
-        if (ghosts.getLast().x() < -4 * WorldMap.TS) { // ghosts left screen on the left side
+        if (ghosts.getLast().position.x < -4 * WorldMap.TS) { // ghosts left screen on the left side
             pac.setMoveDir(Direction.RIGHT);
             pac.setWishDir(Direction.RIGHT);
-            pac.setX(-(numTilesX - 6) * WorldMap.TS);
+            pac.position.setX(-(numTilesX - 6) * WorldMap.TS);
             for (Ghost ghost : ghosts) {
                 ghost.setVisible(true);
-                ghost.setX(pac.x() + 22 * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
+                ghost.position.setX(pac.position.x + 22 * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
                 ghost.setMoveDir(Direction.RIGHT);
                 ghost.setWishDir(Direction.RIGHT);
                 ghost.setSpeed(0.58f);
