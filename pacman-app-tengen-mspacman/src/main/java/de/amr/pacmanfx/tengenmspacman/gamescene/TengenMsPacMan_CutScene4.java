@@ -78,10 +78,10 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
 
         juniors = new ArrayList<>();
         juniorCreationTimes = new ArrayList<>();
@@ -114,44 +114,44 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.position.set(LEFT_BORDER, LOWER_LANE);
                     pacMan.setSpeed(1f);
-                    pacMan.animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.animations().playSelected();
+                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.animations.playSelected();
                     pacMan.visibility.show();
 
                     msPacMan.setMoveDir(Direction.LEFT);
                     msPacMan.position.set(RIGHT_BORDER, LOWER_LANE);
                     msPacMan.setSpeed(1f);
-                    msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
-                    msPacMan.animations().playSelected();
+                    msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
+                    msPacMan.animations.playSelected();
                     msPacMan.visibility.show();
                 }
                 case 230 -> {
                     pacMan.setSpeed(0);
-                    pacMan.animations().stopSelected();
-                    pacMan.animations().resetSelected();
+                    pacMan.animations.stopSelected();
+                    pacMan.animations.resetSelected();
                     msPacMan.setSpeed(0);
-                    msPacMan.animations().stopSelected();
-                    msPacMan.animations().resetSelected();
+                    msPacMan.animations.stopSelected();
+                    msPacMan.animations.resetSelected();
                 }
                 case 400 -> {
-                    pacMan.animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.animations().playSelected();
-                    msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
-                    msPacMan.animations().playSelected();
+                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.animations.playSelected();
+                    msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
+                    msPacMan.animations.playSelected();
                 }
                 case 520 -> {
-                    pacMan.animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_WAVING_HAND);
-                    msPacMan.animations().select(TengenMsPacMan_AnimationID.MS_PAC_MAN_WAVING_HAND);
+                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_WAVING_HAND);
+                    msPacMan.animations.select(TengenMsPacMan_AnimationID.MS_PAC_MAN_WAVING_HAND);
                 }
                 case 527 -> {
-                    pacMan.animations().playSelected();
-                    msPacMan.animations().playSelected();
+                    pacMan.animations.playSelected();
+                    msPacMan.animations.playSelected();
                 }
                 case 648 -> {
-                    pacMan.animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_TURNING_AWAY);
-                    pacMan.animations().playSelected();
-                    msPacMan.animations().select(TengenMsPacMan_AnimationID.MS_PAC_MAN_TURNING_AWAY);
-                    msPacMan.animations().playSelected();
+                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_TURNING_AWAY);
+                    pacMan.animations.playSelected();
+                    msPacMan.animations.select(TengenMsPacMan_AnimationID.MS_PAC_MAN_TURNING_AWAY);
+                    msPacMan.animations.playSelected();
                 }
                 case 650 -> {
                     pacMan.setSpeed(1.5f); // TODO not sure
@@ -171,13 +171,14 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private void spawnJunior(GameVariantRenderConfig renderConfig, long tick) {
-        var junior = TengenMsPacMan_ActorFactory.createPacMan();
+        final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
+        final Pac junior = TengenMsPacMan_ActorFactory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         junior.position.set((float) randomX, unscaledHeight() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(renderConfig.createPacAnimations(appContext().ui().sprites().animations()));
-        junior.animations().select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
+        junior.animations = renderConfig.createPacAnimations(spriteAnimations);
+        junior.animations.select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
         junior.visibility.show();
         juniors.add(junior);
         juniorCreationTimes.add(tick);

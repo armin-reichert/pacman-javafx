@@ -61,8 +61,8 @@ public class CommonDemoLevelPlayingState extends GameState {
             level.heartbeat().setStartState(Pulse.State.ON);
             level.heartbeat().restart();
 
-            level.entities().pac().animations().playSelected();
-            level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
+            level.entities().pac().animations.playSelected();
+            level.entities().ghosts().forEach(ghost -> ghost.animations.playSelected());
 
             // This call fires a game event!
             level.huntingRules().startFirstPhase(gameContext, level.number());

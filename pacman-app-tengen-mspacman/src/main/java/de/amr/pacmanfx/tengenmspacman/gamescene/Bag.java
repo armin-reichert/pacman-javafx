@@ -43,7 +43,7 @@ public class Bag extends Actor {
     private boolean open;
 
     public Bag(SpriteAnimationContainer container) {
-        setAnimations(new BagAnimations(container));
+        animations = new BagAnimations(container);
         setOpen(false);
     }
 

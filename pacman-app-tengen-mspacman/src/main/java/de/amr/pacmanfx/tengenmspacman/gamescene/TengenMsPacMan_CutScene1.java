@@ -23,7 +23,7 @@ import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
-import static de.amr.basics.spriteanim.SpriteAnimationAccessor.singleSpriteAnimation;
+import static de.amr.basics.spriteanim.SpriteAnimationAccess.singleSpriteAnimation;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.NES_SCREEN_WIDTH;
@@ -105,13 +105,13 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.position.set(RIGHT_BORDER, LOWER_LANE);
         msPacMan.setSpeed(0);
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.position.set(LEFT_BORDER, UPPER_LANE);
         pacMan.setSpeed(0);
@@ -129,7 +129,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         pinky.setSpeed(0);
 
         heart = new Actor();
-        heart.setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
+        heart.animations = singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART));
 
         collided = false;
 
@@ -164,24 +164,24 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
             switch ((int) gameStateTick) {
                 case 130 -> {
                     pacMan.setSpeed(SPEED_CHASING);
-                    pacMan.animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.animations().playSelected();
+                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.animations.playSelected();
                     pacMan.visibility.show();
 
                     msPacMan.setSpeed(SPEED_CHASING);
-                    msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
-                    msPacMan.animations().playSelected();
+                    msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
+                    msPacMan.animations.playSelected();
                     msPacMan.visibility.show();
                 }
                 case 160 -> {
                     inky.setSpeed(SPEED_CHASING);
-                    inky.animations().select(CommonAnimationID.GHOST_NORMAL);
-                    inky.animations().playSelected();
+                    inky.animations.select(CommonAnimationID.GHOST_NORMAL);
+                    inky.animations.playSelected();
                     inky.visibility.show();
 
                     pinky.setSpeed(SPEED_CHASING);
-                    pinky.animations().select(CommonAnimationID.GHOST_NORMAL);
-                    pinky.animations().playSelected();
+                    pinky.animations.select(CommonAnimationID.GHOST_NORMAL);
+                    pinky.animations.playSelected();
                     pinky.visibility.show();
                 }
                 case 400 -> {
@@ -229,8 +229,8 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                     msPacMan.setMoveDir(Direction.RIGHT);
                 }
                 case 545 -> {
-                    pacMan.animations().resetSelected();
-                    msPacMan.animations().resetSelected();
+                    pacMan.animations.resetSelected();
+                    msPacMan.animations.resetSelected();
                 }
                 case 560 -> {
                     heart.position.set(0.5f * (pacMan.position.x + msPacMan.position.x), pacMan.position.y - tilesPx(2));

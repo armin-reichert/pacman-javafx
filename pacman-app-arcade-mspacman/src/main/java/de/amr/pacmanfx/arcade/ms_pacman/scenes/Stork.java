@@ -35,6 +35,6 @@ public class Stork extends Actor {
     }
 
     public Stork(SpriteAnimationContainer animationSet) {
-        setAnimations(new StorkAnimations(animationSet));
+        animations = new StorkAnimations(animationSet);
     }
 }

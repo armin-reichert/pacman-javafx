@@ -23,7 +23,7 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
-import static de.amr.basics.spriteanim.SpriteAnimationAccessor.singleSpriteAnimation;
+import static de.amr.basics.spriteanim.SpriteAnimationAccess.singleSpriteAnimation;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
 
 /**
@@ -80,17 +80,17 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         final var spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
 
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
 
         inky = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
 
         pinky = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
 
         heart = new Actor();
-        heart.setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
+        heart.animations = singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART));
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.position.set(tilesPx(3), tilesPx(10));
@@ -123,31 +123,31 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.position.set(WorldMap.TS * (-2), UPPER_Y);
         pacMan.setSpeed(SPEED_PAC_CHASING);
-        pacMan.animations().select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
-        pacMan.animations().playSelected();
+        pacMan.animations.select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
+        pacMan.animations.playSelected();
         pacMan.visibility.show();
 
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
         inky.position.set(pacMan.position.x - 6 * WorldMap.TS, pacMan.position.y);
         inky.setSpeed(SPEED_GHOST_CHASING);
-        inky.animations().select(CommonAnimationID.GHOST_NORMAL);
-        inky.animations().playSelected();
+        inky.animations.select(CommonAnimationID.GHOST_NORMAL);
+        inky.animations.playSelected();
         inky.visibility.show();
 
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.position.set(WorldMap.TS * 30, LOWER_Y);
         msPacMan.setSpeed(SPEED_PAC_CHASING);
-        msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
-        msPacMan.animations().playSelected();
+        msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
+        msPacMan.animations.playSelected();
         msPacMan.visibility.show();
 
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.position.set(msPacMan.position.x + 6 * WorldMap.TS, msPacMan.position.y);
         pinky.setSpeed(SPEED_GHOST_CHASING);
-        pinky.animations().select(CommonAnimationID.GHOST_NORMAL);
-        pinky.animations().playSelected();
+        pinky.animations.select(CommonAnimationID.GHOST_NORMAL);
+        pinky.animations.playSelected();
         pinky.visibility.show();
 
         setState(SceneState.CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
@@ -233,13 +233,13 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     private void enterStateInHeaven() {
         pacMan.setSpeed(0);
         pacMan.setMoveDir(Direction.LEFT);
-        pacMan.animations().stopSelected();
-        pacMan.animations().resetSelected();
+        pacMan.animations.stopSelected();
+        pacMan.animations.resetSelected();
 
         msPacMan.setSpeed(0);
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.animations().stopSelected();
-        msPacMan.animations().resetSelected();
+        msPacMan.animations.stopSelected();
+        msPacMan.animations.resetSelected();
 
         inky.visibility.hide();
         pinky.visibility.hide();

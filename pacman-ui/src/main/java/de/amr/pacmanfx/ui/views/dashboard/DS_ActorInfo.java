@@ -108,8 +108,8 @@ public class DS_ActorInfo extends GameDashboardSection {
     private Supplier<String> supplyPacAnimationText(GameAppContext appContext) {
         return () -> appContext.currentGameContext().model().optLevel().map(level -> {
             final Pac pac = level.entities().pac();
-            if (pac.animations() instanceof SpriteAnimationMap<?> sam && sam.selectedAnimationID() != null) {
-                return "%s:%d".formatted(sam.selectedAnimationID(), pac.animations().currentFrame());
+            if (pac.animations instanceof SpriteAnimationMap<?> sam && sam.selectedAnimationID() != null) {
+                return "%s:%d".formatted(sam.selectedAnimationID(), pac.animations.currentFrame());
             }
             return NO_INFO;
         }).orElse(NO_INFO);
@@ -130,9 +130,9 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private String ghostAnimationText(GameLevel level, Ghost ghost) {
-        if (ghost.animations() instanceof SpriteAnimationMap<?> spriteAnimations) {
+        if (ghost.animations instanceof SpriteAnimationMap<?> spriteAnimations) {
             return spriteAnimations.selectedAnimationID() != null
-                ? "%s:%d".formatted(spriteAnimations.selectedAnimationID(), ghost.animations().currentFrame())
+                ? "%s:%d".formatted(spriteAnimations.selectedAnimationID(), ghost.animations.currentFrame())
                 : NO_INFO;
         }
         return NO_INFO;

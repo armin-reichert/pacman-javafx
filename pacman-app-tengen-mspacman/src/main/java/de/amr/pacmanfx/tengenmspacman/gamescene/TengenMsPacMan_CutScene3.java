@@ -90,10 +90,10 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
 
         stork = new Stork(spriteAnimations);
         flyingBag = new Bag(spriteAnimations);
@@ -117,22 +117,22 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.position.set(WorldMap.TS * 3, GROUND_Y - 4);
                     pacMan.setSpeed(0);
-                    pacMan.animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.animations().stopSelected();
+                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.animations.stopSelected();
                     pacMan.visibility.show();
 
                     msPacMan.setMoveDir(Direction.RIGHT);
                     msPacMan.position.set(WorldMap.TS * 5, GROUND_Y - 4);
                     msPacMan.setSpeed(0);
-                    msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
-                    msPacMan.animations().stopSelected();
+                    msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
+                    msPacMan.animations.stopSelected();
                     msPacMan.visibility.show();
 
                     stork.position.set(RIGHT_BORDER, WorldMap.TS * 7);
                     stork.movement.setVelocity(-0.8f, 0);
                     stork.setBagReleasedFromBeak(false);
-                    stork.animations().select(CommonAnimationID.STORK_FLYING);
-                    stork.animations().playSelected();
+                    stork.animations.select(CommonAnimationID.STORK_FLYING);
+                    stork.animations.playSelected();
                     stork.visibility.show();
                 }
                 case 240 -> {

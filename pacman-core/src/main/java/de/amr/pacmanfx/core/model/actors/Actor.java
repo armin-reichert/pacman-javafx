@@ -6,18 +6,17 @@ package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.spriteanim.SpriteAnimationAccessor;
+import de.amr.basics.spriteanim.SpriteAnimationAccess;
 import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.Position;
 import de.amr.pacmanfx.core.model.component.Visibility;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 
 /**
  * Base class for all game actors like Pac-Man, the ghosts and the bonus entities.
  * <p>
- * Each actor has a position, movement and visibility component.
+ * Each actor has a position, movement and visibility component and access to sprite animations
+ * in a UI independent way.
  * </p>
  */
 public class Actor {
@@ -26,10 +25,11 @@ public class Actor {
     public final Movement movement = new Movement();
     public final Visibility visibility = new Visibility(false);
 
-    protected SpriteAnimationAccessor animations = SpriteAnimationAccessor.emptyAnimation();
+    public SpriteAnimationAccess animations = SpriteAnimationAccess.emptyAnimation();
 
     /**
-     * Resets all properties of this actor thingy to their default state. Note: actor is invisible by default!
+     * Resets this actor's components (position, movement, visibility) to their default values.
+     * Note: actor is invisible by default!
      */
     public void reset() {
         position.x = 0;
@@ -88,14 +88,5 @@ public class Actor {
     public float computeOffsetY() {
         final Vector2i tile = computeTile();
         return position.y - tile.y() * WorldMap.TS;
-    }
-
-
-    public void setAnimations(SpriteAnimationAccessor animations) {
-        this.animations = animations;
-    }
-
-    public SpriteAnimationAccessor animations() {
-        return animations;
     }
 }

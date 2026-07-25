@@ -85,7 +85,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     public void activatePacBooster(Pac pac, boolean active) {
         requireNonNull(pac);
-        pac.animations().select(active ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonAnimationID.PAC_MUNCHING);
+        pac.animations.select(active ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonAnimationID.PAC_MUNCHING);
         boosterActive = active;
     }
 

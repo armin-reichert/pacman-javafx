@@ -59,9 +59,9 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.position.set(tilesPx(3), tilesPx(10));
         clapperboard.startAnimation();
@@ -90,12 +90,12 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
 
     private void enterStateChasing() {
         pacMan.setMoveDir(Direction.RIGHT);
-        pacMan.animations().select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
-        pacMan.animations().playSelected();
+        pacMan.animations.select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
+        pacMan.animations.playSelected();
 
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
-        msPacMan.animations().playSelected();
+        msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
+        msPacMan.animations.playSelected();
 
         setSceneState(SceneState.CHASING, TickTimer.INDEFINITE);
     }

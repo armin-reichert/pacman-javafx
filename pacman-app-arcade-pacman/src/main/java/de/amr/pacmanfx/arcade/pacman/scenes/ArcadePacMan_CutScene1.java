@@ -41,7 +41,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer container = appContext().ui().sprites().animations();
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(renderConfig.createPacAnimations(container));
+        pacMan.animations = renderConfig.createPacAnimations(container);
         blinky = renderConfig.createAnimatedGhost(container, RED_GHOST_SHADOW);
         sceneTick = -1;
     }
@@ -73,8 +73,8 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
     private void startBigPacManChasingBlinky() {
         pacMan.placeAtTile(-3, 18, 0, 6.5f);
         pacMan.setMoveDir(Direction.RIGHT);
-        pacMan.animations().select(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
-        pacMan.animations().playSelected();
+        pacMan.animations.select(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
+        pacMan.animations.playSelected();
     }
 
     private void startBlinkyEscapingPacMan() {
@@ -82,24 +82,24 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         blinky.setMoveDir(Direction.RIGHT);
         blinky.setWishDir(Direction.RIGHT);
         blinky.setSpeed(0.75f);
-        blinky.animations().select(CommonAnimationID.GHOST_FRIGHTENED);
-        blinky.animations().playSelected();
+        blinky.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
+        blinky.animations.playSelected();
     }
 
     private void startBlinkyChasingPacMan() {
         pacMan.placeAtTile(29, 20);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(1.25f);
-        pacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
-        pacMan.animations().playSelected();
+        pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
+        pacMan.animations.playSelected();
         pacMan.visibility.show();
 
         blinky.placeAtTile(32, 20);
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
         blinky.setSpeed(1.3f);
-        blinky.animations().select(CommonAnimationID.GHOST_NORMAL);
-        blinky.animations().playSelected();
+        blinky.animations.select(CommonAnimationID.GHOST_NORMAL);
+        blinky.animations.playSelected();
         blinky.visibility.show();
     }
 }

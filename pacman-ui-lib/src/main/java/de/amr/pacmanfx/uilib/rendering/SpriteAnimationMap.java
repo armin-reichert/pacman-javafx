@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.rendering;
 import de.amr.basics.Identifier;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimation;
-import de.amr.basics.spriteanim.SpriteAnimationAccessor;
+import de.amr.basics.spriteanim.SpriteAnimationAccess;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import org.tinylog.Logger;
 
@@ -21,7 +21,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <ID> Sprite animation ID type
  */
-public abstract class SpriteAnimationMap<ID extends Identifier> implements SpriteAnimationAccessor {
+public abstract class SpriteAnimationMap<ID extends Identifier> implements SpriteAnimationAccess {
 
     protected final SpriteSheet<ID> spriteSheet;
     protected final Map<Identifier, SpriteAnimation> animationsByID = new HashMap<>();

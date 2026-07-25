@@ -67,10 +67,10 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
 
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
 
         stork = new Stork(spriteAnimations);
 
@@ -139,21 +139,21 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     private void enterDeliverJuniorState(SceneState newState) {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.position.set(TS * 3, GROUND_Y - 4);
-        pacMan.animations().select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
-        pacMan.animations().stopSelected();
+        pacMan.animations.select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
+        pacMan.animations.stopSelected();
         pacMan.visibility.show();
 
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.position.set(TS * 5, GROUND_Y - 4);
-        msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
-        msPacMan.animations().stopSelected();
+        msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
+        msPacMan.animations.stopSelected();
         msPacMan.visibility.show();
 
         stork.position.set(TS * 30, TS * 12);
         stork.movement.setVelocity(-0.8f, 0);
         stork.visibility.show();
-        stork.animations().select(CommonAnimationID.STORK_FLYING);
-        stork.animations().playSelected();
+        stork.animations.select(CommonAnimationID.STORK_FLYING);
+        stork.animations.playSelected();
 
         bag.position.set(stork.position.x - 14, stork.position.y + 3);
         bag.movement.setVelX(stork.movement.velX);

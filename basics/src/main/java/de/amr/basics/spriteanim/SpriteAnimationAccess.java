@@ -12,16 +12,16 @@ import static java.util.Objects.requireNonNull;
 /**
  * Facade for accessing animations.
  */
-public interface SpriteAnimationAccessor {
+public interface SpriteAnimationAccess {
 
-    SpriteAnimationAccessor EMPTY_SPRITE_ANIMATION_ACCESSOR = new EmptySpriteAnimationAccessor();
+    SpriteAnimationAccess EMPTY_SPRITE_ANIMATION_ACCESSOR = new EmptySpriteAnimationAccess();
 
-    static SpriteAnimationAccessor emptyAnimation() {
+    static SpriteAnimationAccess emptyAnimation() {
         return EMPTY_SPRITE_ANIMATION_ACCESSOR;
     }
 
-    static SpriteAnimationAccessor singleSpriteAnimation(RectShort sprite) {
-        return new SingleSpriteAnimationAccessor(sprite);
+    static SpriteAnimationAccess singleSpriteAnimation(RectShort sprite) {
+        return new SingleSpriteAnimationAccess(sprite);
     }
 
     default boolean isEmpty() {

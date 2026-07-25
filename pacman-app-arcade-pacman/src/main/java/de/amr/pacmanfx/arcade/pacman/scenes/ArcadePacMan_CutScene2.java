@@ -66,7 +66,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimationContainer));
+        pacMan.animations = renderConfig.createPacAnimations(spriteAnimationContainer);
 
         blinky = renderConfig.createAnimatedGhost(spriteAnimationContainer, RED_GHOST_SHADOW);
 
@@ -117,12 +117,12 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     private void dressRaptures() {
         setDressState(NailDressState.RAPTURED);
         blinky.position.x -= 4;
-        blinky.animations().select(CommonAnimationID.BLINKY_DAMAGED);
+        blinky.animations.select(CommonAnimationID.BLINKY_DAMAGED);
     }
 
     private void blinkyStopsMoving() {
         blinky.setSpeed(0);
-        blinky.animations().stopSelected();
+        blinky.animations.stopSelected();
     }
 
     private void blinkyGetsCaughtOnNail() {
@@ -135,8 +135,8 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
         blinky.setSpeed(1.25f);
-        blinky.animations().select(CommonAnimationID.GHOST_NORMAL);
-        blinky.animations().playSelected();
+        blinky.animations.select(CommonAnimationID.GHOST_NORMAL);
+        blinky.animations.playSelected();
         blinky.visibility.show();
     }
 
@@ -144,8 +144,8 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         pacMan.placeAtTile(28, 20);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(1.15f);
-        pacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
-        pacMan.animations().playSelected();
+        pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
+        pacMan.animations.playSelected();
         pacMan.visibility.show();
     }
 
@@ -154,6 +154,6 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private SpriteAnimation blinkyAnimation(Identifier animationID) {
-        return (SpriteAnimation) blinky.animations().animation(animationID);
+        return (SpriteAnimation) blinky.animations.animation(animationID);
     }
 }

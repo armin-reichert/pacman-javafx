@@ -318,14 +318,14 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         final SpriteAnimationContainer animationContainer = appContext().ui().sprites().animations();
 
         final Pac pac = level.entities().pac();
-        if (pac.animations().isEmpty()) {
-            pac.setAnimations(renderConfig.createPacAnimations(animationContainer));
+        if (pac.animations.isEmpty()) {
+            pac.animations = renderConfig.createPacAnimations(animationContainer);
             resetPacAnimation(pac);
         }
 
         level.entities().ghosts().forEach(ghost -> {
-            if (ghost.animations().isEmpty()) {
-                ghost.setAnimations(renderConfig.createGhostAnimations(animationContainer, ghost.personality()));
+            if (ghost.animations.isEmpty()) {
+                ghost.animations = renderConfig.createGhostAnimations(animationContainer, ghost.personality());
                 resetGhostAnimation(ghost);
             }
         });
@@ -337,14 +337,14 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     private void resetPacAnimation(Pac pac) {
-        pac.animations().select(gameModel().isBoosterActive()
+        pac.animations.select(gameModel().isBoosterActive()
             ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
             : CommonAnimationID.PAC_MUNCHING);
-        pac.animations().resetSelected();
+        pac.animations.resetSelected();
     }
 
     private void resetGhostAnimation(Ghost ghost) {
-        ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
-        ghost.animations().resetSelected();
+        ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
+        ghost.animations.resetSelected();
     }
 }

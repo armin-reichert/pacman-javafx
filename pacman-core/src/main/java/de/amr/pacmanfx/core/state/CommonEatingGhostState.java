@@ -29,7 +29,7 @@ public class CommonEatingGhostState extends GameState {
         if (timer().hasExpired()) {
             level.entities().pac().visibility.show();
             level.ghostsInState(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-            level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
+            level.entities().ghosts().forEach(ghost -> ghost.animations.playSelected());
             gameContext.flow().resumePreviousState(gameContext);
         } else {
             if (timer().tickCount() < 60) {

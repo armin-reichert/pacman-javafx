@@ -125,9 +125,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 timer.restartTicks(TickTimer.INDEFINITE);
 
                 scene.msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-                scene.msPacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
-                scene.msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
-                scene.msPacMan.animations().playSelected();
+                scene.msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+                scene.msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
+                scene.msPacMan.animations.playSelected();
                 scene.msPacMan.position.set(WorldMap.TS * 33, ACTOR_Y);
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(SPEED);
@@ -146,7 +146,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                     ghost.setSpeed(SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.visibility.show();
-                    ghost.animations().playSelected();
+                    ghost.animations.playSelected();
                 }
                 scene.ghostIndex = 0;
             }
@@ -228,7 +228,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 scene.msPacMan.move();
                 if (scene.msPacMan.position.x <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);
-                    scene.msPacMan.animations().resetSelected();
+                    scene.msPacMan.animations.resetSelected();
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options

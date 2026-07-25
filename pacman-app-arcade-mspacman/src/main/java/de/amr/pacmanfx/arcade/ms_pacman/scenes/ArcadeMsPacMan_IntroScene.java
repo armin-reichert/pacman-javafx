@@ -82,7 +82,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantRenderConfig gameVariantConfig = appContext().variants().currentVariant().config().renderConfig();
+        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer container = appContext().ui().sprites().animations();
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
@@ -95,15 +95,15 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setSpeed(ACTOR_SPEED);
         msPacMan.visibility.show();
-        msPacMan.setAnimations(gameVariantConfig.createPacAnimations(container));
-        msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
-        msPacMan.animations().playSelected();
+        msPacMan.animations = renderConfig.createPacAnimations(container);
+        msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
+        msPacMan.animations.playSelected();
 
         ghosts = List.of(
-            gameVariantConfig.createAnimatedGhost(container, GameModel.RED_GHOST_SHADOW),
-            gameVariantConfig.createAnimatedGhost(container, GameModel.PINK_GHOST_SPEEDY),
-            gameVariantConfig.createAnimatedGhost(container, GameModel.CYAN_GHOST_BASHFUL),
-            gameVariantConfig.createAnimatedGhost(container, GameModel.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(container, GameModel.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(container, GameModel.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(container, GameModel.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(container, GameModel.ORANGE_GHOST_POKEY)
         );
 
         for (Ghost ghost : ghosts) {
@@ -113,8 +113,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             ghost.setSpeed(ACTOR_SPEED);
             ghost.setState(GhostState.HUNTING_PAC);
             ghost.visibility.show();
-            ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
-            ghost.animations().playSelected();
+            ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
+            ghost.animations.playSelected();
         }
 
         presentedGhostPersonality = GameModel.RED_GHOST_SHADOW;
@@ -179,8 +179,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                     }
                     else if (ghost.position.y <= endPositionY) {
                         ghost.setSpeed(0);
-                        ghost.animations().stopSelected();
-                        ghost.animations().resetSelected();
+                        ghost.animations.stopSelected();
+                        ghost.animations.resetSelected();
                         return true;
                     }
                     else {
@@ -198,7 +198,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                 scene.msPacMan.move();
                 if (scene.msPacMan.position.x <= STOP_X_MS_PACMAN) {
                     scene.msPacMan.setSpeed(0);
-                    scene.msPacMan.animations().resetSelected();
+                    scene.msPacMan.animations.resetSelected();
                     scene.sceneFlow.enterState(scene, READY_TO_PLAY);
                 }
             }

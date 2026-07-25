@@ -127,8 +127,8 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
             case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);
         };
-        ghost.setAnimations(createGhostAnimations(container, personality));
-        ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
+        ghost.animations = createGhostAnimations(container, personality);
+        ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
         return ghost;
     }
 

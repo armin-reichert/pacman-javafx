@@ -135,8 +135,8 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality) {
         final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
-        ghost.setAnimations(createGhostAnimations(container, personality));
-        ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
+        ghost.animations = createGhostAnimations(container, personality);
+        ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
         return ghost;
     }
 
