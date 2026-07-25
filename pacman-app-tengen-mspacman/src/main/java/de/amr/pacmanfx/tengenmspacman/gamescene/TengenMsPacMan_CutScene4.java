@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
@@ -121,7 +121,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     msPacMan.setMoveDir(Direction.LEFT);
                     msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
                     msPacMan.setSpeed(1f);
-                    msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+                    msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations().playSelected();
                     msPacMan.show();
                 }
@@ -136,7 +136,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                 case 400 -> {
                     pacMan.animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations().playSelected();
-                    msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+                    msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations().playSelected();
                 }
                 case 520 -> {

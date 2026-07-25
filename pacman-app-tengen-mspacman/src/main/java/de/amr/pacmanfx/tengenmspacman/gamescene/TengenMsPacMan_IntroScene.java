@@ -127,7 +127,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
                 scene.msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
                 scene.msPacMan.setAnimations(renderConfig.createPacAnimations(spriteAnimations));
-                scene.msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+                scene.msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
                 scene.msPacMan.animations().playSelected();
                 scene.msPacMan.setPosition(WorldMap.TS * 33, ACTOR_Y);
                 scene.msPacMan.setMoveDir(Direction.LEFT);

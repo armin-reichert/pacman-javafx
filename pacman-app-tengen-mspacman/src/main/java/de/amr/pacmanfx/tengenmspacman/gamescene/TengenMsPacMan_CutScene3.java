@@ -6,8 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
-import de.amr.pacmanfx.core.model.actors.ArcadeMsPacMan_AnimationID;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -125,14 +124,14 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     msPacMan.setMoveDir(Direction.RIGHT);
                     msPacMan.setPosition(WorldMap.TS * 5, GROUND_Y - 4);
                     msPacMan.setSpeed(0);
-                    msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+                    msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations().stopSelected();
                     msPacMan.show();
 
                     stork.setPosition(RIGHT_BORDER, WorldMap.TS * 7);
                     stork.setVelocity(-0.8f, 0);
                     stork.setBagReleasedFromBeak(false);
-                    stork.animations().select(ArcadeMsPacMan_AnimationID.STORK_FLYING);
+                    stork.animations().select(CommonAnimationID.STORK_FLYING);
                     stork.animations().playSelected();
                     stork.show();
                 }

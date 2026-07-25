@@ -13,7 +13,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -101,7 +101,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void blinkyInspectsDamagedDress() {
-        blinkyAnimation(ArcadePacMan_AnimationID.BLINKY_DAMAGED).advanceFrame();
+        blinkyAnimation(CommonAnimationID.BLINKY_DAMAGED).advanceFrame();
     }
 
     private void startTheShow() {
@@ -117,7 +117,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     private void dressRaptures() {
         setDressState(NailDressState.RAPTURED);
         blinky.setX(blinky.x() - 4);
-        blinky.animations().select(ArcadePacMan_AnimationID.BLINKY_DAMAGED);
+        blinky.animations().select(CommonAnimationID.BLINKY_DAMAGED);
     }
 
     private void blinkyStopsMoving() {
@@ -127,7 +127,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
 
     private void blinkyGetsCaughtOnNail() {
         blinky.setSpeed(0.09f);
-        blinkyAnimation(ArcadePacMan_AnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
+        blinkyAnimation(CommonAnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
     }
 
     private void blinkyStartsRunning() {
@@ -135,7 +135,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
         blinky.setSpeed(1.25f);
-        blinky.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        blinky.animations().select(CommonAnimationID.GHOST_NORMAL);
         blinky.animations().playSelected();
         blinky.show();
     }
@@ -144,7 +144,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         pacMan.placeAtTile(28, 20);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(1.15f);
-        pacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations().playSelected();
         pacMan.show();
     }

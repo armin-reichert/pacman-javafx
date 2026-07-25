@@ -143,7 +143,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         pacMan.setPosition(WorldMap.TS * 28, WorldMap.TS * 20);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(CHASING_SPEED);
-        pacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations().playSelected();
         pacMan.show();
         for (Ghost ghost : ghosts) {
@@ -153,7 +153,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             ghost.setSpeed(CHASING_SPEED);
             ghost.setPosition(pacMan.x() + 16 * ghost.personality() + 18, pacMan.y());
             ghost.show();
-            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
             ghost.animations().playSelected();
         }
     }
@@ -191,7 +191,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void turnCardsRestartPacMan() {
-        pacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations().playSelected();
         pacMan.setSpeed(CHASING_SPEED);
     }
@@ -215,7 +215,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     private void eatGhostAndStopChasing(Ghost victim, long tick) {
         victim.setState(EATEN);
-        victim.animations().selectAndSetFrame(ArcadePacMan_AnimationID.GHOST_POINTS, numGhostsEaten++);
+        victim.animations().selectAndSetFrame(CommonAnimationID.GHOST_POINTS, numGhostsEaten++);
         pacMan.hide();
         pacMan.setSpeed(0);
         for (Ghost ghost : ghosts) {
@@ -234,7 +234,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             } else {
                 ghost.show();
                 ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
-                ghost.animations().select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
+                ghost.animations().select(CommonAnimationID.GHOST_FRIGHTENED);
                 ghost.animations().playSelected();
             }
         }

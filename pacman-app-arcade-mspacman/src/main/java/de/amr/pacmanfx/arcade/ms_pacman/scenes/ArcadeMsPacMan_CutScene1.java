@@ -120,7 +120,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(WorldMap.TS * (-2), UPPER_Y);
         pacMan.setSpeed(SPEED_PAC_CHASING);
-        pacMan.animations().select(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+        pacMan.animations().select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
         pacMan.animations().playSelected();
         pacMan.show();
 
@@ -128,14 +128,14 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         inky.setWishDir(Direction.RIGHT);
         inky.setPosition(pacMan.x() - 6 * WorldMap.TS, pacMan.y());
         inky.setSpeed(SPEED_GHOST_CHASING);
-        inky.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        inky.animations().select(CommonAnimationID.GHOST_NORMAL);
         inky.animations().playSelected();
         inky.show();
 
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(WorldMap.TS * 30, LOWER_Y);
         msPacMan.setSpeed(SPEED_PAC_CHASING);
-        msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
         msPacMan.animations().playSelected();
         msPacMan.show();
 
@@ -143,7 +143,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(msPacMan.x() + 6 * WorldMap.TS, msPacMan.y());
         pinky.setSpeed(SPEED_GHOST_CHASING);
-        pinky.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        pinky.animations().select(CommonAnimationID.GHOST_NORMAL);
         pinky.animations().playSelected();
         pinky.show();
 

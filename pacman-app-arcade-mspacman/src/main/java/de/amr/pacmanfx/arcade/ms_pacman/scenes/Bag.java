@@ -10,7 +10,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.actors.ArcadeMsPacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
@@ -27,13 +27,13 @@ public class Bag extends Actor {
 
         private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
             return switch (animationID) {
-                case ArcadeMsPacMan_AnimationID.JUNIOR ->
+                case CommonAnimationID.JUNIOR ->
                     new SpriteAnimationBuilder()
                         .singleSprite(spriteSheet.findSprite(JUNIOR_PAC))
                         .initiallyStopped()
                         .build(container);
 
-                case ArcadeMsPacMan_AnimationID.BAG ->
+                case CommonAnimationID.BAG ->
                     new SpriteAnimationBuilder()
                         .singleSprite(spriteSheet.findSprite(BLUE_BAG))
                         .initiallyStopped()
@@ -52,7 +52,7 @@ public class Bag extends Actor {
 
     public void setOpen(boolean open) {
         this.open = open;
-        animations.select(open ? ArcadeMsPacMan_AnimationID.JUNIOR : ArcadeMsPacMan_AnimationID.BAG);
+        animations.select(open ? CommonAnimationID.JUNIOR : CommonAnimationID.BAG);
     }
 
     public boolean isOpen() {

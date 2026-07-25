@@ -49,11 +49,11 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private RectShort computeGhostSprite(Ghost ghost) {
         final SpriteAnimationAccessor animations = ghost.animations();
-        if (animations.isSelected(ArcadePacMan_AnimationID.GHOST_NORMAL)) {
+        if (animations.isSelected(CommonAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
             return spriteOrDefault(sprites, animations.currentFrame());
         }
-        if (animations.isSelected(ArcadePacMan_AnimationID.GHOST_EYES)) {
+        if (animations.isSelected(CommonAnimationID.GHOST_EYES)) {
             return spriteSheet().ghostEyesSprite(ghost.wishDir());
         }
         else {
@@ -67,8 +67,8 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         final Direction dir = pac.moveDir();
         return switch (animationManager.selectedAnimationID()) {
             case null -> throw new IllegalStateException("Could not determine Pac-sprite, no animation selected");
-            case ArcadePacMan_AnimationID.PAC_DYING    -> computePacDyingSprite(pac);
-            case ArcadePacMan_AnimationID.PAC_MUNCHING -> facingSprite(SpriteID.MS_PAC_MUNCHING, frame, dir);
+            case CommonAnimationID.PAC_DYING    -> computePacDyingSprite(pac);
+            case CommonAnimationID.PAC_MUNCHING -> facingSprite(SpriteID.MS_PAC_MUNCHING, frame, dir);
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER -> facingSprite(SpriteID.MS_PAC_MUNCHING_BOOSTER, frame, dir);
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_TURNING_AWAY -> facingSprite(SpriteID.MS_PAC_TURNING_AWAY, frame, dir);
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_WAVING_HAND -> facingSprite(SpriteID.MS_PAC_WAVING_HAND, frame, dir);
@@ -85,7 +85,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     // Dying animation is realized by providing a sprite facing to the corresponding direction for each animation frame
     private FacingSprite computePacDyingSprite(Pac pac) {
-        final var dyingAnimation = pac.animations().animation(ArcadePacMan_AnimationID.PAC_DYING);
+        final var dyingAnimation = pac.animations().animation(CommonAnimationID.PAC_DYING);
         if (dyingAnimation instanceof SpriteAnimation spriteAnimation) {
             final Direction facingDir = switch (spriteAnimation.frame()) {
                 case 0, 4, 8  -> Direction.DOWN;

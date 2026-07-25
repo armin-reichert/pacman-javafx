@@ -15,7 +15,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -97,7 +97,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         msPacMan.setSpeed(ACTOR_SPEED);
         msPacMan.setVisible(true);
         msPacMan.setAnimations(gameVariantConfig.createPacAnimations(container));
-        msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
         msPacMan.animations().playSelected();
 
         ghosts = List.of(
@@ -114,7 +114,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             ghost.setSpeed(ACTOR_SPEED);
             ghost.setState(GhostState.HUNTING_PAC);
             ghost.setVisible(true);
-            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
             ghost.animations().playSelected();
         }
 

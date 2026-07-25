@@ -280,10 +280,10 @@ public class Ghost extends MovingActor {
 
         // "onEntry" action:
         switch (newState) {
-            case LOCKED, HUNTING_PAC -> animations.select(ArcadePacMan_AnimationID.GHOST_NORMAL);
-            case ENTERING_HOUSE, RETURNING_HOME -> animations.select(ArcadePacMan_AnimationID.GHOST_EYES);
+            case LOCKED, HUNTING_PAC -> animations.select(CommonAnimationID.GHOST_NORMAL);
+            case ENTERING_HOUSE, RETURNING_HOME -> animations.select(CommonAnimationID.GHOST_EYES);
             case FRIGHTENED -> {
-                animations.select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
+                animations.select(CommonAnimationID.GHOST_FRIGHTENED);
                 animations.playSelected();
             }
             case EATEN -> {}
@@ -316,7 +316,7 @@ public class Ghost extends MovingActor {
         if (isInDanger(level)) {
             playFrightenedAnimation(level, level.entities().pac());
         } else {
-            animations.select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            animations.select(CommonAnimationID.GHOST_NORMAL);
         }
     }
 
@@ -358,7 +358,7 @@ public class Ghost extends MovingActor {
             if (isInDanger(level)) {
                 playFrightenedAnimation(level, level.entities().pac());
             } else {
-                animations.select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+                animations.select(CommonAnimationID.GHOST_NORMAL);
             }
         }
     }
@@ -405,10 +405,10 @@ public class Ghost extends MovingActor {
 
     private void playFrightenedAnimation(GameLevel level, Pac pac) {
         if (pac.isPowerFadingStarting(level)) {
-            animations.select(ArcadePacMan_AnimationID.GHOST_FLASHING);
+            animations.select(CommonAnimationID.GHOST_FLASHING);
             animations.playSelected();
         } else if (!pac.isPowerFading(level)) {
-            animations.select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
+            animations.select(CommonAnimationID.GHOST_FRIGHTENED);
             animations.playSelected();
         }
     }

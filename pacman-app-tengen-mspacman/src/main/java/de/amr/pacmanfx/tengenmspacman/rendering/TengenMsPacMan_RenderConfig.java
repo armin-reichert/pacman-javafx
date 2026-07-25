@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.MapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -136,7 +136,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     public Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality) {
         final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
         ghost.setAnimations(createGhostAnimations(container, personality));
-        ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
         return ghost;
     }
 

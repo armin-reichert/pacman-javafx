@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.HuntingTimer;
+import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -96,7 +96,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
                 case 270 -> {
                     msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
                     msPacMan.setMoveDir(Direction.RIGHT);
-                    msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+                    msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations().playSelected();
                     msPacMan.setSpeed(2.0f);
                     msPacMan.show();

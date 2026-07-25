@@ -10,7 +10,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -98,7 +98,7 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);
         };
         ghost.setAnimations(createGhostAnimations(container, personality));
-        ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
         return ghost;
     }
 

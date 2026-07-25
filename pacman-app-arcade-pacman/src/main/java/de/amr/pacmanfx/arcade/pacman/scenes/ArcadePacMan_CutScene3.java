@@ -8,7 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -71,7 +71,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         blinky.placeAtTile(-1, 20);
         blinky.setMoveDir(Direction.RIGHT);
         blinky.setWishDir(Direction.RIGHT);
-        blinky.animations().select(ArcadePacMan_AnimationID.BLINKY_NAKED);
+        blinky.animations().select(CommonAnimationID.BLINKY_NAKED);
         blinky.animations().playSelected();
     }
 
@@ -80,7 +80,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(1.25f);
         pacMan.show();
-        pacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations().playSelected();
 
         blinky.placeAtTile(35, 20);
@@ -88,7 +88,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         blinky.setWishDir(Direction.LEFT);
         blinky.setSpeed(1.25f);
         blinky.show();
-        blinky.animations().select(ArcadePacMan_AnimationID.BLINKY_DRESS_PATCHED);
+        blinky.animations().select(CommonAnimationID.BLINKY_PATCHED);
         blinky.animations().playSelected();
     }
 }

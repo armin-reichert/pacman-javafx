@@ -9,7 +9,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimations;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -82,7 +82,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         blinky.setMoveDir(Direction.RIGHT);
         blinky.setWishDir(Direction.RIGHT);
         blinky.setSpeed(0.75f);
-        blinky.animations().select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
+        blinky.animations().select(CommonAnimationID.GHOST_FRIGHTENED);
         blinky.animations().playSelected();
     }
 
@@ -90,7 +90,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         pacMan.placeAtTile(29, 20);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(1.25f);
-        pacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations().playSelected();
         pacMan.show();
 
@@ -98,7 +98,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
         blinky.setSpeed(1.3f);
-        blinky.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        blinky.animations().select(CommonAnimationID.GHOST_NORMAL);
         blinky.animations().playSelected();
         blinky.show();
     }

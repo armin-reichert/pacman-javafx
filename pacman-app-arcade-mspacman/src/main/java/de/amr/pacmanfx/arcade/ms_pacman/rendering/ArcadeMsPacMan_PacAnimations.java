@@ -8,8 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.model.actors.ArcadeMsPacMan_AnimationID;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
@@ -22,21 +21,21 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
-            case ArcadePacMan_AnimationID.PAC_FULL -> new SpriteAnimationBuilder()
+            case CommonAnimationID.PAC_FULL -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.MS_PACMAN_FULL))
                 .build(container);
 
-            case ArcadePacMan_AnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
+            case CommonAnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().msPacManMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build(container);
 
-            case ArcadePacMan_AnimationID.PAC_DYING -> new SpriteAnimationBuilder()
+            case CommonAnimationID.PAC_DYING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().findSprites(SpriteID.MS_PACMAN_DYING))
                 .frameTicks(8)
                 .build(container);
 
-            case ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING -> new SpriteAnimationBuilder()
+            case CommonAnimationID.MR_PAC_MAN_MUNCHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSprites(SpriteID.MR_PACMAN_MUNCHING_LEFT))
                 .frameTicks(2)
                 .repeated()

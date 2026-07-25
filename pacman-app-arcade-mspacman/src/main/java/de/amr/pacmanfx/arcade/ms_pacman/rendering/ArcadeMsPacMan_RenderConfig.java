@@ -12,7 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
@@ -149,7 +149,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     public Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality) {
         final Ghost ghost = ArcadeMsPacMan_ActorFactory.createGhost(personality);
         ghost.setAnimations(createGhostAnimations(container, personality));
-        ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
         return ghost;
     }
 

@@ -46,11 +46,11 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private RectShort computeGhostSprite(Ghost ghost) {
         final SpriteAnimationAccessor animations = ghost.animations();
         RectShort sprite;
-        if (animations.isSelected(ArcadePacMan_AnimationID.GHOST_NORMAL)) {
+        if (animations.isSelected(CommonAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
             sprite = spriteOrDefault(sprites, animations.currentFrame());
         }
-        else if (animations.isSelected(ArcadePacMan_AnimationID.GHOST_EYES)) {
+        else if (animations.isSelected(CommonAnimationID.GHOST_EYES)) {
             sprite = spriteSheet().ghostEyesSprite(ghost.wishDir());
         }
         else {
@@ -65,11 +65,11 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private RectShort computePacSprite(Pac pac) {
         final SpriteAnimationAccessor animations = pac.animations();
         RectShort sprite;
-        if (animations.isSelected(ArcadePacMan_AnimationID.PAC_MUNCHING)) {
+        if (animations.isSelected(CommonAnimationID.PAC_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.moveDir());
             sprite = spriteOrDefault(sprites, animations.currentFrame());
         }
-        else if (animations.isSelected(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING)) {
+        else if (animations.isSelected(CommonAnimationID.MR_PAC_MAN_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().mrPacManMunchingSprites(pac.moveDir());
             sprite = spriteOrDefault(sprites, animations.currentFrame());
         }

@@ -317,7 +317,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         eatenGhost.setState(GhostState.EATEN);
         // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
-        eatenGhost.animations().selectAndSetFrame(ArcadePacMan_AnimationID.GHOST_POINTS, killedBefore);
+        eatenGhost.animations().selectAndSetFrame(CommonAnimationID.GHOST_POINTS, killedBefore);
 
         level.addToGhostKillChain(eatenGhost);
         level.entities().pac().hide();
@@ -341,7 +341,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final Pac pac = level.entities().pac();
         pac.animations().stopSelected();
-        pac.animations().select(ArcadePacMan_AnimationID.PAC_FULL);
+        pac.animations().select(CommonAnimationID.PAC_FULL);
         pac.setSpeed(0);
         pac.powerTimer().stop();
         pac.powerTimer().reset(0);
@@ -350,7 +350,7 @@ public abstract class CommonGamePlay implements GamePlay {
         level.entities().ghosts().forEach(ghost -> {
             ghost.animations().stopSelected();
             //TODO check in emulator if ghost animation is reset to normal
-            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
             ghost.setSpeed(0);
         });
         level.optBonus().ifPresent(Bonus::setInactive);

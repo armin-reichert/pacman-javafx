@@ -8,7 +8,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -88,7 +88,7 @@ class XXL_ChaseAnimation {
 
         pac = ArcadePacMan_ActorFactory.createPacMan();
         pac.setAnimations(renderConfig.createPacAnimations(container));
-        pac.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pac.animations().select(CommonAnimationID.PAC_MUNCHING);
         pac.animations().playSelected();
         pac.setX(numTilesX * WorldMap.TS);
         pac.setMoveDir(Direction.LEFT);
@@ -108,7 +108,7 @@ class XXL_ChaseAnimation {
             ghost.setWishDir(Direction.LEFT);
             ghost.setSpeed(GHOST_CHASE_SPEED);
             ghost.setVisible(true);
-            ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+            ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
             ghost.animations().playSelected();
         }
 
@@ -144,7 +144,7 @@ class XXL_ChaseAnimation {
                 ghost.setWishDir(Direction.LEFT);
                 ghost.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * 2 * WorldMap.TS);
                 ghost.setSpeed(1.05f);
-                ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+                ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
                 ghost.animations().playSelected();
             }
             state = ChasingState.GHOSTS_CHASING_PAC;
@@ -164,7 +164,7 @@ class XXL_ChaseAnimation {
                 if (colliding(pac, ghost) && collisions.stream().noneMatch(collision -> collision.ghost() == ghost)) {
                     final var collision = new Collision(ghost, System.currentTimeMillis());
                     collisions.add(collision);
-                    ghost.animations().selectAndSetFrame(ArcadePacMan_AnimationID.GHOST_POINTS, i);
+                    ghost.animations().selectAndSetFrame(CommonAnimationID.GHOST_POINTS, i);
                     Logger.debug("Collision: {}", collision);
                     break;
                 }
@@ -188,7 +188,7 @@ class XXL_ChaseAnimation {
                 ghost.setMoveDir(Direction.RIGHT);
                 ghost.setWishDir(Direction.RIGHT);
                 ghost.setSpeed(0.58f);
-                ghost.animations().select(ArcadePacMan_AnimationID.GHOST_FRIGHTENED);
+                ghost.animations().select(CommonAnimationID.GHOST_FRIGHTENED);
                 ghost.animations().playSelected();
             }
             // Let Pac-Man chase the ghosts from left to right side of the screen

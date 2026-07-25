@@ -8,8 +8,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
-import de.amr.pacmanfx.core.model.actors.ArcadeMsPacMan_AnimationID;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -140,20 +139,20 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     private void enterDeliverJuniorState(SceneState newState) {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * 3, GROUND_Y - 4);
-        pacMan.animations().select(ArcadeMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+        pacMan.animations().select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
         pacMan.animations().stopSelected();
         pacMan.show();
 
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.setPosition(TS * 5, GROUND_Y - 4);
-        msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
         msPacMan.animations().stopSelected();
         msPacMan.show();
 
         stork.setPosition(TS * 30, TS * 12);
         stork.setVelocity(-0.8f, 0);
         stork.show();
-        stork.animations().select(ArcadeMsPacMan_AnimationID.STORK_FLYING);
+        stork.animations().select(CommonAnimationID.STORK_FLYING);
         stork.animations().playSelected();
 
         bag.setPosition(stork.x() - 14, stork.y() + 3);

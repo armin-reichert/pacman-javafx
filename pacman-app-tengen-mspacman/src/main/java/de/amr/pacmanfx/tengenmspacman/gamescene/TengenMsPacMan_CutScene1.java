@@ -8,7 +8,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -169,18 +169,18 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                     pacMan.show();
 
                     msPacMan.setSpeed(SPEED_CHASING);
-                    msPacMan.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+                    msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations().playSelected();
                     msPacMan.show();
                 }
                 case 160 -> {
                     inky.setSpeed(SPEED_CHASING);
-                    inky.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+                    inky.animations().select(CommonAnimationID.GHOST_NORMAL);
                     inky.animations().playSelected();
                     inky.show();
 
                     pinky.setSpeed(SPEED_CHASING);
-                    pinky.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+                    pinky.animations().select(CommonAnimationID.GHOST_NORMAL);
                     pinky.animations().playSelected();
                     pinky.show();
                 }

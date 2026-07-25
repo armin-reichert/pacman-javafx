@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.model.actors.ArcadePacMan_AnimationID;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -37,12 +37,12 @@ public class ActorAnimationManager {
     }
 
     public static void resetPacAnimation(Pac pac) {
-        pac.animations().select(ArcadePacMan_AnimationID.PAC_MUNCHING);
+        pac.animations().select(CommonAnimationID.PAC_MUNCHING);
         pac.animations().resetSelected();
     }
 
     public static void resetGhostAnimation(Ghost ghost) {
-        ghost.animations().select(ArcadePacMan_AnimationID.GHOST_NORMAL);
+        ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
         ghost.animations().resetSelected();
     }
 }
