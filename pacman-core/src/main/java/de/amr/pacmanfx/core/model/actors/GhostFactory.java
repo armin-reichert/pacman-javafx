@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
@@ -16,13 +17,13 @@ public class GhostFactory {
         final Ghost ghost = new Ghost(GameModel.RED_GHOST_SHADOW, name);
 
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
-            Actor.SYSTEMS.worldMovement.setSpeed(ghost, speed);
+            GameContext.SYSTEMS.worldMovement.setSpeed(ghost, speed);
             final boolean chase = level.huntingRules().isChasing()
                 || ghost.elroy().enabled();
             final Vector2i targetTile = chase
                 ? ghost.chasingTargetTileStrategy().apply(level)
                 : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
-            Actor.SYSTEMS.worldMovement.tryMovingTowardsTargetTile(ghost, level, targetTile);
+            GameContext.SYSTEMS.worldMovement.tryMovingTowardsTargetTile(ghost, level, targetTile);
         });
 
         ghost.setChasingTargetTileStrategy(level -> level.entities().pac().tile());
@@ -36,7 +37,7 @@ public class GhostFactory {
 
         ghost.setChasingTargetTileStrategy(level -> {
             final Pac pac = level.entities().pac();
-            return Actor.SYSTEMS.worldMovement.tilesAheadWithOverflowBug(pac, 4);
+            return GameContext.SYSTEMS.worldMovement.tilesAheadWithOverflowBug(pac, 4);
         });
 
         ghost.reset();
@@ -48,7 +49,7 @@ public class GhostFactory {
 
         ghost.setChasingTargetTileStrategy(level -> {
             final Pac pac = level.entities().pac();
-            return Actor.SYSTEMS.worldMovement.tilesAheadWithOverflowBug(pac, 2)
+            return GameContext.SYSTEMS.worldMovement.tilesAheadWithOverflowBug(pac, 2)
                 .scaled(2)
                 .minus(level.ghost(RED_GHOST_SHADOW).tile());
         });

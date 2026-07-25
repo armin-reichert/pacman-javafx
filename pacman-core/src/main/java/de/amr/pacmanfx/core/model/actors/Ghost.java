@@ -57,12 +57,12 @@ public class Ghost extends Actor {
         requireNonNull(level);
         requireNonNull(speed);
 
-        Actor.SYSTEMS.worldMovement.setSpeed(this, speed);
+        GameContext.SYSTEMS.worldMovement.setSpeed(this, speed);
 
         final Vector2i targetTile = level.huntingRules().isChasing()
             ? chasingTargetTileStrategy.apply(level)
             : level.worldMap().terrainLayer().ghostScatterTile(personality());
-        Actor.SYSTEMS.worldMovement.tryMovingTowardsTargetTile(this, level, targetTile);
+        GameContext.SYSTEMS.worldMovement.tryMovingTowardsTargetTile(this, level, targetTile);
     };
 
     public Ghost(byte personality, String name) {
@@ -79,15 +79,15 @@ public class Ghost extends Actor {
     }
 
     public Vector2i tile() {
-        return Actor.SYSTEMS.worldMovement.computeTile(this);
+        return GameContext.SYSTEMS.worldMovement.computeTile(this);
     }
 
     public void setMoveDir(Direction dir) {
-        Actor.SYSTEMS.worldMovement.setMoveDir(this, dir);
+        GameContext.SYSTEMS.worldMovement.setMoveDir(this, dir);
     }
 
     public void setWishDir(Direction dir) {
-        Actor.SYSTEMS.worldMovement.setWishDir(this, dir);
+        GameContext.SYSTEMS.worldMovement.setWishDir(this, dir);
     }
 
     @Override
@@ -191,16 +191,16 @@ public class Ghost extends Actor {
     public void roam(GameLevel level) {
         requireNonNull(level);
 
-        final Vector2i tile = Actor.SYSTEMS.worldMovement.computeTile(this);
+        final Vector2i tile = GameContext.SYSTEMS.worldMovement.computeTile(this);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
         final boolean stuck = !worldMovement().info.moved;
         if ((worldMovement().isNewTileEntered() || stuck) && !teleporting) {
             final Direction dir = computeRoamingDirection(level, tile);
-            Actor.SYSTEMS.worldMovement.setWishDir(this, dir);
+            GameContext.SYSTEMS.worldMovement.setWishDir(this, dir);
             Logger.debug("Ghost {} takes random wish direction {}", name, dir);
         }
-        Actor.SYSTEMS.worldMovement.tryMovingOrTeleporting(this, level);
+        GameContext.SYSTEMS.worldMovement.tryMovingOrTeleporting(this, level);
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
@@ -231,7 +231,7 @@ public class Ghost extends Actor {
         if (terrainLayer.outOfBounds(tile)) {
             return terrainLayer.isTileInPortalSpace(tile);
         }
-        final Vector2i myTile = Actor.SYSTEMS.worldMovement.computeTile(this);
+        final Vector2i myTile = GameContext.SYSTEMS.worldMovement.computeTile(this);
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below
         // TODO: this is game-specific and does not belong here
         if (specialTerrainTiles.contains(tile)
@@ -322,10 +322,10 @@ public class Ghost extends Actor {
                 setWishDir(UP);
             }
             position().setY(Math.clamp(position().y, minY, maxY));
-            Actor.SYSTEMS.worldMovement.setSpeed(this, speed);
-            Actor.SYSTEMS.movement.moveAccelerated(this);
+            GameContext.SYSTEMS.worldMovement.setSpeed(this, speed);
+            GameContext.SYSTEMS.movement.moveAccelerated(this);
         } else {
-            Actor.SYSTEMS.worldMovement.setSpeed(this, 0);
+            GameContext.SYSTEMS.worldMovement.setSpeed(this, 0);
         }
         if (isInDanger(level)) {
             playFrightenedAnimation(level, level.entities().pac());
@@ -367,8 +367,8 @@ public class Ghost extends Actor {
                 setMoveDir(centerX < houseCenterX ? RIGHT : LEFT);
                 setWishDir(centerX < houseCenterX ? RIGHT : LEFT);
             }
-            Actor.SYSTEMS.worldMovement.setSpeed(this, speed);
-            Actor.SYSTEMS.movement.moveAccelerated(this);
+            GameContext.SYSTEMS.worldMovement.setSpeed(this, speed);
+            GameContext.SYSTEMS.movement.moveAccelerated(this);
 
             if (isInDanger(level)) {
                 playFrightenedAnimation(level, level.entities().pac());
@@ -413,7 +413,7 @@ public class Ghost extends Actor {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameLevel level, float speed) {
-        Actor.SYSTEMS.worldMovement.setSpeed(this, speed);
+        GameContext.SYSTEMS.worldMovement.setSpeed(this, speed);
         roam(level);
         playFrightenedAnimation(level, level.entities().pac());
     }
@@ -453,10 +453,10 @@ public class Ghost extends Actor {
             setWishDir(DOWN);
             setState(GhostState.ENTERING_HOUSE);
         } else {
-            Actor.SYSTEMS.worldMovement.setSpeed(this, speed);
+            GameContext.SYSTEMS.worldMovement.setSpeed(this, speed);
             worldMovement().setTargetTile(home.leftDoorTile());
-            Actor.SYSTEMS.worldMovement.navigateTowardsTarget(this, level);
-            Actor.SYSTEMS.worldMovement.tryMovingOrTeleporting(this, level);
+            GameContext.SYSTEMS.worldMovement.navigateTowardsTarget(this, level);
+            GameContext.SYSTEMS.worldMovement.tryMovingOrTeleporting(this, level);
         }
     }
 
@@ -490,7 +490,7 @@ public class Ghost extends Actor {
             setWishDir(RIGHT);
         }
 
-        Actor.SYSTEMS.worldMovement.setSpeed(this, speed);
-        Actor.SYSTEMS.movement.moveAccelerated(this);
+        GameContext.SYSTEMS.worldMovement.setSpeed(this, speed);
+        GameContext.SYSTEMS.movement.moveAccelerated(this);
     }
 }

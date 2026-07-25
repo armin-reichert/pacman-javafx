@@ -143,7 +143,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                     ghost.position().set(WorldMap.TS * 33, ACTOR_Y);
                     ghost.setMoveDir(Direction.LEFT);
                     ghost.setWishDir(Direction.LEFT);
-                    Actor.SYSTEMS.worldMovement.setSpeed(ghost, SPEED);
+                    GameContext.SYSTEMS.worldMovement.setSpeed(ghost, SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.visibility().show();
                     ghost.animations.playSelected();
@@ -189,7 +189,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                         ghost.setWishDir(Direction.UP);
                         scene.waitBeforeRising = 2;
                     } else {
-                        Actor.SYSTEMS.movement.moveAccelerated(ghost);
+                        GameContext.SYSTEMS.movement.moveAccelerated(ghost);
                         Logger.debug("{} moves {} x={}", ghost.name(), ghost.worldMovement().moveDir(), ghost.position().x);
                     }
                 }
@@ -199,13 +199,13 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                         scene.waitBeforeRising--;
                     }
                     else if (ghost.position().y <= endPositionY) {
-                        Actor.SYSTEMS.worldMovement.setSpeed(ghost, 0);
+                        GameContext.SYSTEMS.worldMovement.setSpeed(ghost, 0);
                         ghost.setMoveDir(Direction.RIGHT);
                         ghost.setWishDir(Direction.RIGHT);
                         return true;
                     }
                     else {
-                        Actor.SYSTEMS.movement.moveAccelerated(ghost);
+                        GameContext.SYSTEMS.movement.moveAccelerated(ghost);
                         Logger.debug("{} moves {}", ghost.name(), ghost.worldMovement().moveDir());
                     }
                 }
@@ -225,7 +225,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
                 scene.marquee.update(timer.tickCount());
 
-                Actor.SYSTEMS.movement.moveAccelerated(scene.msPacMan);
+                GameContext.SYSTEMS.movement.moveAccelerated(scene.msPacMan);
                 if (scene.msPacMan.position().x <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);
                     scene.msPacMan.animations.resetSelected();

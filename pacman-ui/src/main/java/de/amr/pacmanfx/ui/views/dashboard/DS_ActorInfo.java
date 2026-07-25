@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
@@ -70,9 +71,9 @@ public class DS_ActorInfo extends GameDashboardSection {
         if (actor == null) return NO_INFO;
 
         final WorldMovement worldMovement = actor.component(WorldMovement.class);
-        final Vector2i tile = Actor.SYSTEMS.worldMovement.computeTile(actor);
-        final float offsetX = Actor.SYSTEMS.worldMovement.computeOffsetX(actor);
-        final float offsetY = Actor.SYSTEMS.worldMovement.computeOffsetY(actor);
+        final Vector2i tile = GameContext.SYSTEMS.worldMovement.computeTile(actor);
+        final float offsetX = GameContext.SYSTEMS.worldMovement.computeOffsetX(actor);
+        final float offsetY = GameContext.SYSTEMS.worldMovement.computeOffsetY(actor);
 
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
             tile.x(), tile.y(),

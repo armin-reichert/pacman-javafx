@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -158,9 +157,9 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         }
 
         clapperboard.tick();
-        Actor.SYSTEMS.movement.moveAccelerated(stork);
+        GameContext.SYSTEMS.movement.moveAccelerated(stork);
         if (!flyingBag.isOpen()) {
-            Actor.SYSTEMS.movement.moveAccelerated(flyingBag);
+            GameContext.SYSTEMS.movement.moveAccelerated(flyingBag);
             if (flyingBag.position().y > GROUND_Y) {
                 flyingBag.position().setY(GROUND_Y);
                 flyingBag.movement().setVelocity(0.9f * flyingBag.movement().velX, -0.3f * flyingBag.movement().velY);

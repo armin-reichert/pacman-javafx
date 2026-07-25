@@ -66,7 +66,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
                 ghost.position().set(unscaledWidth() - WorldMap.TS, GHOST_Y);
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
-                Actor.SYSTEMS.worldMovement.setSpeed(ghost, WorldMap.TS);
+                GameContext.SYSTEMS.worldMovement.setSpeed(ghost, WorldMap.TS);
                 ghost.visibility().show();
             }
             case 181 -> movingText.movement().setVelocity(0, WorldMap.TS);
@@ -82,8 +82,8 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
             }
         }
         shadeOfBlue = TengenMsPacMan_RenderConfig.shadeOfBlue(t);
-        Actor.SYSTEMS.movement.moveAccelerated(ghost);
-        Actor.SYSTEMS.movement.moveAccelerated(movingText);
+        GameContext.SYSTEMS.movement.moveAccelerated(ghost);
+        GameContext.SYSTEMS.movement.moveAccelerated(movingText);
     }
 
     private void gray(boolean b)  { gray = b; }

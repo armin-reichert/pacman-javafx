@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.core.model.world;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import org.tinylog.Logger;
@@ -41,8 +42,8 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
     public boolean tryTeleporting(Actor actor) {
         final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
-        final Vector2i actorTile = Actor.SYSTEMS.worldMovement.computeTile(actor);
-        final float offsetX = Actor.SYSTEMS.worldMovement.computeOffsetX(actor);
+        final Vector2i actorTile = GameContext.SYSTEMS.worldMovement.computeTile(actor);
+        final float offsetX = GameContext.SYSTEMS.worldMovement.computeOffsetX(actor);
 
         if (actorTile.y() != leftBorderEntryTile().y()) {
             return false;
@@ -52,14 +53,14 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         switch (worldMovement.moveDir()) {
             case LEFT -> {
                 if (actorTile.equals(leftWrappingTile) && offsetX == 0) {
-                    Actor.SYSTEMS.worldMovement.placeAtTile(actor, rightWrappingTile.x(), rightWrappingTile.y(), -1, 0);
+                    GameContext.SYSTEMS.worldMovement.placeAtTile(actor, rightWrappingTile.x(), rightWrappingTile.y(), -1, 0);
                     Logger.info("{} teleported from {} to {}", actor.name(), actorTile, rightWrappingTile);
                     return true;
                 }
             }
             case RIGHT -> {
                 if (actorTile.equals(rightWrappingTile) && offsetX == 0) {
-                    Actor.SYSTEMS.worldMovement.placeAtTile(actor, leftWrappingTile.x(), leftWrappingTile.y(), 1, 0);
+                    GameContext.SYSTEMS.worldMovement.placeAtTile(actor, leftWrappingTile.x(), leftWrappingTile.y(), 1, 0);
                     Logger.info("{} teleported from {} to {}", actor.name(), actorTile, leftWrappingTile);
                     return true;
                 }

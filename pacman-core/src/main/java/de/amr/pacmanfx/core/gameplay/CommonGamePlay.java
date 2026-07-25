@@ -341,7 +341,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         pac.animations.stopSelected();
         pac.animations.select(CommonAnimationID.PAC_FULL);
-        Actor.SYSTEMS.worldMovement.setSpeed(pac, 0);
+        GameContext.SYSTEMS.worldMovement.setSpeed(pac, 0);
         pac.powerTimer().stop();
         pac.powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero.");
@@ -350,7 +350,7 @@ public abstract class CommonGamePlay implements GamePlay {
             ghost.animations.stopSelected();
             //TODO check in emulator if ghost animation is reset to normal
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
-            Actor.SYSTEMS.worldMovement.setSpeed(ghost, 0);
+            GameContext.SYSTEMS.worldMovement.setSpeed(ghost, 0);
         });
         level.optBonus().ifPresent(Bonus::setInactive);
     }

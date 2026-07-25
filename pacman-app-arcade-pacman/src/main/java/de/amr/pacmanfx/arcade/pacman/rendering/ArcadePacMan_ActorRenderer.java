@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -29,7 +30,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     public void drawActor(Actor actor) {
         requireNonNull(actor);
         if (!actor.visibility().isVisible()) return;
-        drawSpriteCentered(computeSprite(actor), Actor.SYSTEMS.worldMovement.computeCenter(actor));
+        drawSpriteCentered(computeSprite(actor), GameContext.SYSTEMS.worldMovement.computeCenter(actor));
     }
 
     private RectShort computeSprite(Actor actor) {

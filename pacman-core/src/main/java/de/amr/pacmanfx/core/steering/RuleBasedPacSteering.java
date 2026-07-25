@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.steering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -115,7 +116,7 @@ public class RuleBasedPacSteering implements Steering {
                 Logger.trace("Detected ghost {} ahead, escape direction is {}", data.hunterAhead.name(), escapeDir);
             }
             if (escapeDir != null) {
-                Actor.SYSTEMS.worldMovement.setWishDir(pac, escapeDir);
+                GameContext.SYSTEMS.worldMovement.setWishDir(pac, escapeDir);
             }
             return;
         }
@@ -137,7 +138,7 @@ public class RuleBasedPacSteering implements Steering {
             worldMovement.setTargetTile(findTileFarthestFromGhosts(level, pac, findNearestFoodTiles(level)));
         }
         worldMovement.optTargetTile().ifPresent(_ -> {
-            Actor.SYSTEMS.worldMovement.navigateTowardsTarget(pac, level);
+            GameContext.SYSTEMS.worldMovement.navigateTowardsTarget(pac, level);
             Logger.trace("Navigated towards {}, moveDir={} wishDir={}", worldMovement.targetTile(), worldMovement.moveDir(), worldMovement.wishDir());
         });
     }

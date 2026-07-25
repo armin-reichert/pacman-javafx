@@ -24,9 +24,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class Actor implements GameEntity {
 
-    //TODO temp solution
-    public static final ComponentSystems SYSTEMS = new ComponentSystems();
-
     private final Map<Class<? extends EntityComponent>, EntityComponent> components = new HashMap<>();
 
     public SpriteAnimationAccess animations = SpriteAnimationAccess.emptyAnimation();

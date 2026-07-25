@@ -8,7 +8,6 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -177,7 +176,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         }
 
         if (!bag.isOpen()) {
-            Actor.SYSTEMS.movement.moveAccelerated(bag);
+            GameContext.SYSTEMS.movement.moveAccelerated(bag);
             if (bag.position().y >= GROUND_Y) {
                 ++numBagBounces;
                 if (numBagBounces < 3) {
@@ -192,6 +191,6 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
             }
         }
 
-        Actor.SYSTEMS.movement.moveAccelerated(stork);
+        GameContext.SYSTEMS.movement.moveAccelerated(stork);
     }
 }

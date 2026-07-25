@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.event.PacDeadEvent;
 import de.amr.pacmanfx.core.event.PacDyingEvent;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -51,7 +50,7 @@ public class CommonPacManDyingState extends GameState {
         pac.animations.stopSelected();
         pac.powerTimer().stop();
         pac.powerTimer().reset(0);
-        Actor.SYSTEMS.worldMovement.setSpeed(pac, 0);
+        GameContext.SYSTEMS.worldMovement.setSpeed(pac, 0);
         pac.setDead(true);
         Logger.info("Pac power timer stopped and reset to zero.");
 

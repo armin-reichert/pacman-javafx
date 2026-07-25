@@ -9,7 +9,6 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimations;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -66,39 +65,39 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
             gameState().triggerTimeout();
         }
         if (sceneTick >= ANIMATION_START_TICK) {
-            Actor.SYSTEMS.movement.moveAccelerated(pacMan);
-            Actor.SYSTEMS.movement.moveAccelerated(blinky);
+            GameContext.SYSTEMS.movement.moveAccelerated(pacMan);
+            GameContext.SYSTEMS.movement.moveAccelerated(blinky);
         }
     }
 
     private void startBigPacManChasingBlinky() {
-        Actor.SYSTEMS.worldMovement.placeAtTile(pacMan, -3, 18, 0, 6.5f);
+        GameContext.SYSTEMS.worldMovement.placeAtTile(pacMan, -3, 18, 0, 6.5f);
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.animations.select(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
         pacMan.animations.playSelected();
     }
 
     private void startBlinkyEscapingPacMan() {
-        Actor.SYSTEMS.worldMovement.placeAtTile(blinky, -2, 20, 4, 0);
+        GameContext.SYSTEMS.worldMovement.placeAtTile(blinky, -2, 20, 4, 0);
         blinky.setMoveDir(Direction.RIGHT);
         blinky.setWishDir(Direction.RIGHT);
-        Actor.SYSTEMS.worldMovement.setSpeed(blinky, 0.75f);
+        GameContext.SYSTEMS.worldMovement.setSpeed(blinky, 0.75f);
         blinky.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
         blinky.animations.playSelected();
     }
 
     private void startBlinkyChasingPacMan() {
-        Actor.SYSTEMS.worldMovement.placeAtTile(pacMan, 29, 20);
+        GameContext.SYSTEMS.worldMovement.placeAtTile(pacMan, 29, 20);
         pacMan.setMoveDir(Direction.LEFT);
-        Actor.SYSTEMS.worldMovement.setSpeed(pacMan, 1.25f);
+        GameContext.SYSTEMS.worldMovement.setSpeed(pacMan, 1.25f);
         pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations.playSelected();
         pacMan.visibility().show();
 
-        Actor.SYSTEMS.worldMovement.placeAtTile(blinky, 32, 20);
+        GameContext.SYSTEMS.worldMovement.placeAtTile(blinky, 32, 20);
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
-        Actor.SYSTEMS.worldMovement.setSpeed(blinky, 1.3f);
+        GameContext.SYSTEMS.worldMovement.setSpeed(blinky, 1.3f);
         blinky.animations.select(CommonAnimationID.GHOST_NORMAL);
         blinky.animations.playSelected();
         blinky.visibility().show();

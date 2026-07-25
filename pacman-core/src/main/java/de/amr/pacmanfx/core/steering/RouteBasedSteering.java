@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.core.steering;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -46,11 +47,11 @@ public class RouteBasedSteering implements Steering {
         else if (mazeMovement.optTargetTile().isEmpty()) {
             mazeMovement.setTargetTile(route.get(targetIndex));
         }
-        else if (Actor.SYSTEMS.worldMovement.computeTile(actor).equals(route.get(targetIndex))) {
+        else if (GameContext.SYSTEMS.worldMovement.computeTile(actor).equals(route.get(targetIndex))) {
             selectNextTargetTile(level, actor);
         }
         else {
-            Actor.SYSTEMS.worldMovement.navigateTowardsTarget(actor, level);
+            GameContext.SYSTEMS.worldMovement.navigateTowardsTarget(actor, level);
         }
     }
 
@@ -61,7 +62,7 @@ public class RouteBasedSteering implements Steering {
         if (targetIndex < route.size()) {
             mazeMovement.setTargetTile(route.get(targetIndex));
             // The next line is important!
-            Actor.SYSTEMS.worldMovement.navigateTowardsTarget(actor, level);
+            GameContext.SYSTEMS.worldMovement.navigateTowardsTarget(actor, level);
         }
     }
 }

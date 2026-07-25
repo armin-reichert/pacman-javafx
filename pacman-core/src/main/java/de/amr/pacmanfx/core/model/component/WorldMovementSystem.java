@@ -3,6 +3,7 @@ package de.amr.pacmanfx.core.model.component;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -273,11 +274,11 @@ public class WorldMovementSystem {
             Vector2f cornerVelocity = newVelocity.plus(dir.vector().scaled(worldMovement.corneringSpeedDelta));
             Logger.trace("{} velocity around corner: {}", actor.name(), cornerVelocity.length());
             movement.setVelocity(cornerVelocity.x(), cornerVelocity.y());
-            Actor.SYSTEMS.movement.moveAccelerated(actor);
+            GameContext.SYSTEMS.movement.moveAccelerated(actor);
             movement.setVelocity(newVelocity.x(), newVelocity.y());
         } else {
             movement.setVelocity(newVelocity.x(), newVelocity.y());
-            Actor.SYSTEMS.movement.moveAccelerated(actor);
+            GameContext.SYSTEMS.movement.moveAccelerated(actor);
         }
 
         final Vector2i tileAfterMoving = computeTile(actor);
