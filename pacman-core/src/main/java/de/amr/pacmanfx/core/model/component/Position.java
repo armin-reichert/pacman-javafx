@@ -11,6 +11,12 @@ public final class Position implements EntityComponent {
     public float x;
     public float y;
 
+    @Override
+    public void reset() {
+        x = 0f;
+        y = 0f;
+    }
+
     public void setX(double x) {
         this.x = (float) x;
     }

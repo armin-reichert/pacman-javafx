@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -59,8 +60,8 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
             case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked();
             case TICK_ANIMATION_ENDS       -> gameState().triggerTimeout();
         }
-        pacMan.move();
-        blinky.move();
+        Movement.SYSTEM.moveAccelerated(pacMan);
+        Movement.SYSTEM.moveAccelerated(blinky);
     }
 
     private void startAnimation() {

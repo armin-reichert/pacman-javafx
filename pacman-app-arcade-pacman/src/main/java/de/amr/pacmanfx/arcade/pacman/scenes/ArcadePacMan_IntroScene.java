@@ -19,6 +19,7 @@ import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
@@ -163,9 +164,9 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     private void chasePacMan(long tick) {
         blinking.triggerPulse();
-        pacMan.move();
+        Movement.SYSTEM.moveAccelerated(pacMan);
         for (Ghost ghost : ghosts) {
-            ghost.move();
+            Movement.SYSTEM.moveAccelerated(ghost);
         }
 
         // "shaking" effect
@@ -201,8 +202,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     private void chaseGhosts(long tick) {
         blinking.triggerPulse();
-        pacMan.move();
-        for (Ghost ghost : ghosts) { ghost.move(); }
+        Movement.SYSTEM.moveAccelerated(pacMan);
+        for (Ghost ghost : ghosts) { Movement.SYSTEM.moveAccelerated(ghost); }
         edibleGhost().ifPresent(victim -> eatGhostAndStopChasing(victim, tick));
         if (tick == lastGhostEatenTick + GHOST_EATING_TICKS) {
             continueChasing();

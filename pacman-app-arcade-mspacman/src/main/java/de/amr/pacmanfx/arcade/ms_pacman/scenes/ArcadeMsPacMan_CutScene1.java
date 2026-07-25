@@ -17,12 +17,15 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
+
+import java.util.List;
 
 import static de.amr.basics.spriteanim.SpriteAnimationAccess.singleSpriteAnimation;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
@@ -159,10 +162,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
             enterStateComingTogether();
         }
         else {
-            pacMan.move();
-            msPacMan.move();
-            inky.move();
-            pinky.move();
+            List.of(pacMan, msPacMan, inky, pinky).forEach(Movement.SYSTEM::moveAccelerated);
         }
     }
 
@@ -214,10 +214,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         }
 
         else {
-            pacMan.move();
-            msPacMan.move();
-            inky.move();
-            pinky.move();
+            List.of(pacMan, msPacMan, inky, pinky).forEach(Movement.SYSTEM::moveAccelerated);
 
             // Collision with ground?
             if (inky.position.y > MIDDLE_Y) {

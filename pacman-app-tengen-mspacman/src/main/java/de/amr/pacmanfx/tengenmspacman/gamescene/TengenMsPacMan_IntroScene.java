@@ -11,6 +11,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
@@ -190,7 +191,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                         ghost.setWishDir(Direction.UP);
                         scene.waitBeforeRising = 2;
                     } else {
-                        ghost.move();
+                        Movement.SYSTEM.moveAccelerated(ghost);
                         Logger.debug("{} moves {} x={}", ghost.name(), ghost.worldMovement.moveDir(), ghost.position.x);
                     }
                 }
@@ -206,7 +207,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                         return true;
                     }
                     else {
-                        ghost.move();
+                        Movement.SYSTEM.moveAccelerated(ghost);
                         Logger.debug("{} moves {}", ghost.name(), ghost.worldMovement.moveDir());
                     }
                 }
@@ -226,7 +227,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
                 scene.marquee.update(timer.tickCount());
 
-                scene.msPacMan.move();
+                Movement.SYSTEM.moveAccelerated(scene.msPacMan);
                 if (scene.msPacMan.position.x <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);
                     scene.msPacMan.animations.resetSelected();

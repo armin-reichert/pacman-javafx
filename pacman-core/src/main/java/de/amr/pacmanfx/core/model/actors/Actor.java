@@ -7,10 +7,10 @@ package de.amr.pacmanfx.core.model.actors;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.Position;
 import de.amr.pacmanfx.core.model.component.Visibility;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -61,32 +61,15 @@ public class Actor implements GameEntity {
         return false;
     }
 
-
     /**
      * Resets this actor's components (position, movement, visibility) to their default values.
      * Note: actor is invisible by default!
      */
     public void reset() {
-        position.x = 0;
-        position.y = 0;
-
-        movement.velX = 0;
-        movement.velY = 0;
-        movement.accX = 0;
-        movement.accY = 0;
-
+        position.reset();
+        movement.reset();
+        visibility.reset();
         WorldMovement.SYSTEM.reset(this);
-
-        visibility.set(false);
-    }
-
-    /**
-     * An accelerated movement.
-     * Changes the position of this actor by the current velocity vector and then increases the velocity
-     * by the current acceleration.
-     */
-    public void move() {
-        movement.move(position);
     }
 
     /**

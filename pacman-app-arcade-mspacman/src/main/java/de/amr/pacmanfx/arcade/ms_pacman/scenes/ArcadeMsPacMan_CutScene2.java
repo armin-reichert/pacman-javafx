@@ -11,10 +11,13 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
+
+import java.util.List;
 
 import static de.amr.pacmanfx.core.model.world.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
@@ -152,8 +155,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
             gameState().triggerTimeout();
         }
         else {
-            pacMan.move();
-            msPacMan.move();
+            List.of(pacMan, msPacMan).forEach(Movement.SYSTEM::moveAccelerated);
         }
     }
 }

@@ -6,11 +6,22 @@ package de.amr.pacmanfx.core.model.component;
 
 public class Movement implements EntityComponent {
 
+    //TODO move to game context or wherever
+    public static final MovementSystem SYSTEM = new MovementSystem();
+
     public float velX;
     public float velY;
 
     public float accX;
     public float accY;
+
+    @Override
+    public void reset() {
+        velX = 0;
+        velY = 0;
+        accX = 0;
+        accY = 0;
+    }
 
     public final void setVelX(double velX) {
         this.velX = (float) velX;
@@ -40,12 +51,5 @@ public class Movement implements EntityComponent {
     public final void setAcceleration(double ax, double ay) {
         this.accX = (float) ax;
         this.accY = (float) ay;
-    }
-
-    public void move(Position position) {
-        position.x += velX;
-        position.y += velY;
-        velX += accX;
-        velY += accY;
     }
 }

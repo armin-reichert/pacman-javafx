@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameState;
@@ -83,8 +84,8 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
             }
         }
         shadeOfBlue = TengenMsPacMan_RenderConfig.shadeOfBlue(t);
-        ghost.move();
-        movingText.move();
+        Movement.SYSTEM.moveAccelerated(ghost);
+        Movement.SYSTEM.moveAccelerated(movingText);
     }
 
     private void gray(boolean b)  { gray = b; }

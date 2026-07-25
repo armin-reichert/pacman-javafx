@@ -10,6 +10,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.House;
@@ -314,7 +315,7 @@ public class Ghost extends Actor {
             }
             position.setY(Math.clamp(position.y, minY, maxY));
             WorldMovement.SYSTEM.setSpeed(this, speed);
-            move();
+            Movement.SYSTEM.moveAccelerated(this);
         } else {
             WorldMovement.SYSTEM.setSpeed(this, 0);
         }
@@ -359,7 +360,8 @@ public class Ghost extends Actor {
                 setWishDir(centerX < houseCenterX ? RIGHT : LEFT);
             }
             WorldMovement.SYSTEM.setSpeed(this, speed);
-            move();
+            Movement.SYSTEM.moveAccelerated(this);
+
             if (isInDanger(level)) {
                 playFrightenedAnimation(level, level.entities().pac());
             } else {
@@ -477,7 +479,8 @@ public class Ghost extends Actor {
             setMoveDir(RIGHT);
             setWishDir(RIGHT);
         }
+
         WorldMovement.SYSTEM.setSpeed(this, speed);
-        move();
+        Movement.SYSTEM.moveAccelerated(this);
     }
 }

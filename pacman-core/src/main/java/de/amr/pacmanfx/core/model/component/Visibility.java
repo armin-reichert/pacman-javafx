@@ -17,6 +17,11 @@ public class Visibility implements EntityComponent {
         this.defaultVisibility = defaultVisibility;
     }
 
+    @Override
+    public void reset() {
+        visibleProperty().set(defaultVisibility);
+    }
+
     public BooleanProperty visibleProperty() {
         if (visible == null) {
             visible = new SimpleBooleanProperty(defaultVisibility);

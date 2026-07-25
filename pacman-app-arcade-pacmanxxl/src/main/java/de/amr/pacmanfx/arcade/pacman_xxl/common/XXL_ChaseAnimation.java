@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -126,9 +127,9 @@ class XXL_ChaseAnimation {
     }
 
     private void moveActors() {
-        pac.move();
+        Movement.SYSTEM.moveAccelerated(pac);
         for (Ghost ghost : ghosts) {
-            ghost.move();
+            Movement.SYSTEM.moveAccelerated(ghost);
         }
     }
 

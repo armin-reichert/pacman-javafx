@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -97,8 +98,8 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
             case TICK_BLINK_INSPECTS_DAMAGE  -> blinkyInspectsDamagedDress();
             case TICK_ANIMATION_ENDS         -> endTheShow();
         }
-        pacMan.move();
-        blinky.move();
+        Movement.SYSTEM.moveAccelerated(pacMan);
+        Movement.SYSTEM.moveAccelerated(blinky);
     }
 
     private void blinkyInspectsDamagedDress() {

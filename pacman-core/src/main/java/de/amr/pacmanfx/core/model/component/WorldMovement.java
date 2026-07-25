@@ -36,10 +36,20 @@ public class WorldMovement implements EntityComponent {
     //TODO this is just a primitive way to provide cornering speed differences
     public float corneringSpeedDelta;
 
-    //TODO
+    //TODO: store in frame context?
     public final WorldMovementInfo info = new WorldMovementInfo();
 
     public WorldMovement() {
+    }
+
+    @Override
+    public void reset() {
+        moveDirProperty().setValue(DEFAULT_MOVE_DIR);
+        wishDirProperty().setValue(DEFAULT_WISH_DIR);
+        targetTileProperty().setValue(DEFAULT_TARGET_TILE);
+        newTileEntered = false;
+        turnBackRequested = false;
+        canTeleport = DEFAULT_CAN_TELEPORT;
     }
 
     @Override

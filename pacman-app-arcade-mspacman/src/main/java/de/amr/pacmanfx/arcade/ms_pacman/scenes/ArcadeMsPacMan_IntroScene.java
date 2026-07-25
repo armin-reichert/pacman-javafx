@@ -18,6 +18,7 @@ import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -170,7 +171,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                         ghost.setWishDir(Direction.UP);
                         scene.numTicksBeforeRising = 2;
                     } else {
-                        ghost.move();
+                        Movement.SYSTEM.moveAccelerated(ghost);
                     }
                 }
                 else if (ghost.worldMovement.moveDir() == Direction.UP) {
@@ -185,7 +186,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                         return true;
                     }
                     else {
-                        ghost.move();
+                        Movement.SYSTEM.moveAccelerated(ghost);
                     }
                 }
                 return false;
@@ -196,7 +197,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marquee.timer().doTick();
-                scene.msPacMan.move();
+                Movement.SYSTEM.moveAccelerated(scene.msPacMan);
                 if (scene.msPacMan.position.x <= STOP_X_MS_PACMAN) {
                     WorldMovement.SYSTEM.setSpeed(scene.msPacMan, 0);
                     scene.msPacMan.animations.resetSelected();
