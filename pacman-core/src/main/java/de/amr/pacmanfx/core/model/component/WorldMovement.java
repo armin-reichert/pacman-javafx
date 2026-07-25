@@ -50,6 +50,7 @@ public class WorldMovement implements EntityComponent {
         newTileEntered = false;
         turnBackRequested = false;
         canTeleport = DEFAULT_CAN_TELEPORT;
+        info.clear();
     }
 
     @Override

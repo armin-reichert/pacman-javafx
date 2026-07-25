@@ -14,24 +14,6 @@ import static java.util.Objects.requireNonNull;
 
 public class WorldMovementSystem {
 
-    public void reset(Actor actor) {
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
-
-        worldMovement.info.clear();
-        if (worldMovement.moveDir != null) {
-            setMoveDir(actor, WorldMovement.DEFAULT_MOVE_DIR);  // updates velocity vector!
-        }
-        if (worldMovement.wishDir != null) {
-            setWishDir(actor, WorldMovement.DEFAULT_WISH_DIR);
-        }
-        if (worldMovement.targetTile != null) {
-            worldMovement.setTargetTile(WorldMovement.DEFAULT_TARGET_TILE);
-        }
-        worldMovement.canTeleport = WorldMovement.DEFAULT_CAN_TELEPORT;
-        worldMovement.newTileEntered = true;
-        worldMovement.turnBackRequested = false;
-    }
-
     public Vector2f computeCenter(Actor actor) {
         final Position position = actor.position();
         return new Vector2f(position.x + WorldMap.HTS, position.y + WorldMap.HTS);

@@ -6,13 +6,17 @@ package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
-import de.amr.pacmanfx.core.model.component.*;
+import de.amr.pacmanfx.core.model.component.EntityComponent;
+import de.amr.pacmanfx.core.model.component.Movement;
+import de.amr.pacmanfx.core.model.component.Position;
+import de.amr.pacmanfx.core.model.component.Visibility;
 import de.amr.pacmanfx.core.model.level.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Base class for all game actors like Pac-Man, the ghosts and the bonus entities.
@@ -30,14 +34,15 @@ public class Actor implements GameEntity {
     protected String name;
 
     public Actor(String name) {
-        this.name = name;
+        this.name = requireNonNull(name);
         addComponent(Position.class, new Position());
         addComponent(Movement.class, new Movement());
         addComponent(Visibility.class, new Visibility(false));
     }
 
     public <T extends EntityComponent> void addComponent(Class<T> type, T component) {
-        Objects.requireNonNull(component);
+        requireNonNull(type);
+        requireNonNull(component);
         if (components.containsKey(type)) {
             throw new IllegalArgumentException("Component %s already added to this actor".formatted(component));
         }
@@ -45,6 +50,7 @@ public class Actor implements GameEntity {
     }
 
     public <T extends EntityComponent> T component(Class<T> componentClass) {
+        requireNonNull(componentClass);
         final EntityComponent component =  components.get(componentClass);
         if (componentClass.isInstance(component)) {
             return componentClass.cast(component);
@@ -93,7 +99,5 @@ public class Actor implements GameEntity {
      */
     public void reset() {
         components.values().forEach(EntityComponent::reset);
-        //TODO
-        WorldMovement.SYSTEM.reset(this);
     }
 }
