@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.event.GameStateChangeEvent;
+import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.score.PropertyFileScore;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.GameUI;
@@ -279,7 +280,14 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
             if (testStatesIncluded) {
                 gameVariant.gameFlow().addTestStates();
             }
-            gameVariant.gameModel().setHighScore(new PropertyFileScore(PacManGameCollection.highScoreFile(variantName)));
+            final GameModel model = gameVariant.gameModel();
+            final PropertyFileScore highScore = new PropertyFileScore(PacManGameCollection.highScoreFile(variantName));
+            model.setHighScore(highScore);
+            gameVariant.cheats().cheatUsedProperty().addListener((_, _, cheated) -> {
+                if (cheated) {
+                    highScore.setEnabled(false);
+                }
+            });
             return gameVariant;
         }
     }

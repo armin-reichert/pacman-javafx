@@ -4,18 +4,22 @@
 
 package de.amr.pacmanfx.core.model;
 
+import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.score.Score;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
-public abstract class GameCheats {
+public class GameCheats {
 
     private final BooleanProperty cheatUsed = new SimpleBooleanProperty(false);
 
     private final BooleanProperty pacImmune = new SimpleBooleanProperty(false);
 
     private final BooleanProperty pacUsingAutopilot = new SimpleBooleanProperty(false);
+
+    public GameCheats() {}
 
     public BooleanProperty cheatUsedProperty() {
         return cheatUsed;
@@ -41,23 +45,21 @@ public abstract class GameCheats {
         return pacUsingAutopilot;
     }
 
-    protected GameCheats() {
-        cheatUsedProperty().addListener((_, _, cheated) -> {
-            if (cheated) {
-                handleCheatDetected();
-            }
-        });
-    }
-
     public void clear() {
         cheatUsedProperty().set(false);
         pacImmuneProperty().set(false);
         pacUsingAutopilotProperty().set(false);
     }
 
-    public void handleCheatDetected() {
-        Logger.info("Cheat detected!");
+    public void update(GameLevel level) {
+        if (level.isDemoLevel() || !level.gameModel().isPlaying()) {
+            return;
+        }
+        final Pac pac = level.entities().pac();
+        pac.immuneProperty().set(isPacImmune());
+        pac.usingAutopilotProperty().set(isPacUsingAutopilot());
+        if (isPacImmune() || isPacUsingAutopilot()) {
+            notifyCheatUsed();
+        }
     }
-
-    public abstract void update(GameLevel level);
 }
