@@ -83,7 +83,7 @@ public final class HuntingStepResult {
     public List<String> asText() {
         var lines = new ArrayList<String>();
         for (Ghost ghost : ghostsCollidingWithPac()) {
-            lines.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghost.computeTile(), ghost.state()));
+            lines.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghost.tile(), ghost.state()));
         }
         if (energizerFound()) {
             lines.add("Energizer found at " + foodFoundTile());
@@ -92,7 +92,7 @@ public final class HuntingStepResult {
             lines.add("Bonus eaten: " + edibleBonus());
         }
         for (Ghost ghost : ghostsKilled()) {
-            lines.add("%s killed at %s".formatted(ghost.name(), ghost.computeTile()));
+            lines.add("%s killed at %s".formatted(ghost.name(), ghost.tile()));
         }
         return lines;
     }

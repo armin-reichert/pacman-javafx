@@ -46,7 +46,7 @@ public class RouteBasedSteering implements Steering {
         else if (mazeMovement.optTargetTile().isEmpty()) {
             mazeMovement.setTargetTile(route.get(targetIndex));
         }
-        else if (actor.computeTile().equals(route.get(targetIndex))) {
+        else if (WorldMovement.SYSTEM.computeTile(actor).equals(route.get(targetIndex))) {
             selectNextTargetTile(level, actor);
         }
         else {

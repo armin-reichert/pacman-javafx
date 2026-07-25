@@ -45,6 +45,10 @@ public class Pac extends Actor {
         super(name);
     }
 
+    public Vector2i tile() {
+        return WorldMovement.SYSTEM.computeTile(this);
+    }
+
     public void setMoveDir(Direction dir) {
         WorldMovement.SYSTEM.setMoveDir(this, dir);
     }

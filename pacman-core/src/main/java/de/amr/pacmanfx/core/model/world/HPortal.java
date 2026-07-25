@@ -41,8 +41,9 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
     public boolean tryTeleporting(Actor actor) {
         final WorldMovement mazeMovement = actor.worldMovement;
 
-        final Vector2i actorTile = actor.computeTile();
-        final float offsetX = actor.computeOffsetX();
+        final Vector2i actorTile = WorldMovement.SYSTEM.computeTile(actor);
+        final float offsetX = WorldMovement.SYSTEM.computeOffsetX(actor);
+
         if (actorTile.y() != leftBorderEntryTile().y()) {
             return false;
         }

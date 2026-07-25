@@ -7,6 +7,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -79,16 +80,16 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         ctx.restore();
     }
 
-    private void drawDirectionIndicator(Actor movingActor) {
+    private void drawDirectionIndicator(Actor actor) {
         ctx.save();
-        Vector2f center = movingActor.computeCenter();
-        Vector2f arrowHead = center.plus(movingActor.worldMovement.wishDir().vector().scaled(12f)).scaled(scaling());
+        Vector2f center = WorldMovement.SYSTEM.computeCenter(actor);
+        Vector2f arrowHead = center.plus(actor.worldMovement.wishDir().vector().scaled(12f)).scaled(scaling());
         Vector2f guyCenter = center.scaled(scaling());
         double radius = scaled(2), diameter = 2 * radius;
         ctx.setStroke(Color.WHITE);
         ctx.setLineWidth(0.5);
         ctx.strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-        ctx.setFill(movingActor.worldMovement.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+        ctx.setFill(actor.worldMovement.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
         ctx.fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
         ctx.restore();
     }

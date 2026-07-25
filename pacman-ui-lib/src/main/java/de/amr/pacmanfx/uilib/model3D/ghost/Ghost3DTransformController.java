@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.ghost;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 
 public class Ghost3DTransformController {
@@ -18,7 +19,7 @@ public class Ghost3DTransformController {
 
     public void update(Ghost3D ghost3D, WorldMap worldMap) {
         final Ghost ghost = ghost3D.ghost();
-        final Vector2f center = ghost.computeCenter();
+        final Vector2f center = WorldMovement.SYSTEM.computeCenter(ghost);
 
         ghost3D.setTranslateX(center.x());
         ghost3D.setTranslateY(center.y());

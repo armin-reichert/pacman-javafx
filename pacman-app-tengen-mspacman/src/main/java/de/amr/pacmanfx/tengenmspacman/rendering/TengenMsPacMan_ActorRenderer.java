@@ -8,6 +8,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.tengenmspacman.gamescene.Clapperboard;
 import de.amr.pacmanfx.tengenmspacman.gamescene.Stork;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
@@ -36,13 +37,14 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         requireNonNull(actor);
         if (!actor.visibility.isVisible()) return;
 
+        final Vector2f center = WorldMovement.SYSTEM.computeCenter(actor);
         switch (actor) {
-            case Bonus bonus -> drawSpriteCentered(computeBonusSprite(bonus), bonus.computeCenter());
-            case Ghost ghost -> drawSpriteCentered(computeGhostSprite(ghost), ghost.computeCenter());
-            case Pac pac -> drawFacingSpriteCentered(computePacSprite(pac), pac.computeCenter());
+            case Bonus bonus -> drawSpriteCentered(computeBonusSprite(bonus), center);
+            case Ghost ghost -> drawSpriteCentered(computeGhostSprite(ghost), center);
+            case Pac pac -> drawFacingSpriteCentered(computePacSprite(pac), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Stork stork -> drawStork(stork);
-            default -> drawSpriteCentered(actor.animations.currentSprite(), actor.computeCenter());
+            default -> drawSpriteCentered(actor.animations.currentSprite(), center);
         }
     }
 
@@ -110,7 +112,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private void drawClapperBoard(Clapperboard clapperboard) {
         clapperboard.sprite().ifPresent(sprite -> {
             double numberX = clapperboard.position.x + 8, numberY = clapperboard.position.y + 18; // baseline
-            drawSpriteCentered(sprite, clapperboard.computeCenter());
+            drawSpriteCentered(sprite, WorldMovement.SYSTEM.computeCenter(clapperboard));
             // over-paint number from sprite sheet
             ctx.save();
             ctx.scale(scaling(), scaling());
@@ -129,7 +131,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawStork(Stork stork) {
-        drawSpriteCentered(stork.animations.currentSprite(), stork.computeCenter());
+        drawSpriteCentered(stork.animations.currentSprite(), WorldMovement.SYSTEM.computeCenter(stork));
         if (stork.isBagReleasedFromBeak()) {
             // Sprite sheet has no stork without bag under its beak so we over-paint the bag
             ctx.setFill(backgroundColor());

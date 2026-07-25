@@ -244,7 +244,7 @@ public abstract class CommonGamePlay implements GamePlay {
     private void fixPacPositionIfKilledInsidePortal(GameLevel level) {
         final Pac pac = level.entities().pac();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        terrain.hPortalContainingTile(pac.computeTile()).ifPresent(hPortal -> {
+        terrain.hPortalContainingTile(pac.tile()).ifPresent(hPortal -> {
             if (pac.worldMovement.moveDir() == Direction.LEFT) {
                 pac.position.setX(hPortal.rightBorderEntryTile().x() * WorldMap.TS + WorldMap.HTS);
             } else if (pac.worldMovement.moveDir() == Direction.RIGHT) {
@@ -313,7 +313,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final int points = model.rules().scoringRules().pointsForGhost(killedBefore);
 
         scorePoints(gameContext, points, level.number());
-        Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.computeTile());
+        Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.tile());
 
         eatenGhost.setState(GhostState.EATEN);
         // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
@@ -492,7 +492,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final FoodLayer foodLayer = level.worldMap().foodLayer();
-        final Vector2i pacTile = pac.computeTile();
+        final Vector2i pacTile = pac.tile();
         if (foodLayer.hasFoodAtTile(pacTile)) {
             gameContext.thisFrame().huntingStep().setFoodFoundTile(pacTile);
             gameContext.thisFrame().huntingStep().setEnergizerFound(foodLayer.isEnergizerTile(pacTile));

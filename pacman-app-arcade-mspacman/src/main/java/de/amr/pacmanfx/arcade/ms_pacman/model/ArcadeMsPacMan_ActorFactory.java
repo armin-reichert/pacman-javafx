@@ -45,7 +45,7 @@ public class ArcadeMsPacMan_ActorFactory {
     private static Ghost modifyShadowBehavior(Ghost redGhost) {
         redGhost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
-            final Vector2i tile = redGhost.computeTile();
+            final Vector2i tile = redGhost.tile();
             final boolean teleporting = terrain.isTileInPortalSpace(tile);
             if (teleporting) {
                 WorldMovement.SYSTEM.setSpeed(redGhost, speed);
@@ -75,7 +75,7 @@ public class ArcadeMsPacMan_ActorFactory {
     private static Ghost modifyAmbushBehavior(Ghost pinkGhost) {
         pinkGhost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
-            final Vector2i tile = pinkGhost.computeTile();
+            final Vector2i tile = pinkGhost.tile();
             final boolean teleporting = terrain.isTileInPortalSpace(tile);
             if (teleporting) {
                 WorldMovement.SYSTEM.setSpeed(pinkGhost, speed);
@@ -103,7 +103,7 @@ public class ArcadeMsPacMan_ActorFactory {
 
     private static void selectRandomWishDir(Ghost ghost, GameLevel level) {
         for (final Direction dir : Direction.shuffled()) {
-            final Vector2i neighbor = ghost.computeTile().plus(dir.vector());
+            final Vector2i neighbor = ghost.tile().plus(dir.vector());
             final boolean acceptable = dir != ghost.worldMovement.moveDir().opposite() && ghost.canAccessTile(level, neighbor);
             if (acceptable) {
                 ghost.setWishDir(dir);

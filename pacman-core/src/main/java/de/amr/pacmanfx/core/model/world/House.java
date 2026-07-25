@@ -7,6 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.model.world.WorldMap.HTS;
@@ -64,7 +65,9 @@ public interface House {
      * @return tells if the given actor is located inside the house
      */
     default boolean isVisitedBy(Actor actor) {
-        return contains(requireNonNull(actor).computeTile());
+        requireNonNull(actor);
+        final Vector2i actorTile = WorldMovement.SYSTEM.computeTile(actor);
+        return contains(actorTile);
     }
 
     default Vector2f center() {

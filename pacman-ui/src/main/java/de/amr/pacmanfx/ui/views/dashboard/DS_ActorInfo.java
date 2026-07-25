@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
@@ -68,9 +69,9 @@ public class DS_ActorInfo extends GameDashboardSection {
     private String actorLocationText(GameLevel level, Actor actor) {
         if (actor == null) return NO_INFO;
 
-        final Vector2i tile = actor.computeTile();
-        final float offsetX = actor.computeOffsetX();
-        final float offsetY = actor.computeOffsetY();
+        final Vector2i tile = WorldMovement.SYSTEM.computeTile(actor);
+        final float offsetX = WorldMovement.SYSTEM.computeOffsetX(actor);
+        final float offsetY = WorldMovement.SYSTEM.computeOffsetY(actor);
 
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
             tile.x(), tile.y(),

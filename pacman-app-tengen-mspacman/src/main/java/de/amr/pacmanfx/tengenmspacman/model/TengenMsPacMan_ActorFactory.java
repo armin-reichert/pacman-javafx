@@ -68,7 +68,7 @@ public final class TengenMsPacMan_ActorFactory {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final boolean firstScatterPhase = level.huntingRules().phaseIndex() == 0;
-            final boolean takeRandomDir = ghost.worldMovement.isNewTileEntered() && terrain.isIntersection(ghost.computeTile());
+            final boolean takeRandomDir = ghost.worldMovement.isNewTileEntered() && terrain.isIntersection(ghost.tile());
             if (firstScatterPhase && takeRandomDir) {
                 selectRandomWishDir(ghost, level);
                 WorldMovement.SYSTEM.setSpeed(ghost, speed);
@@ -90,7 +90,7 @@ public final class TengenMsPacMan_ActorFactory {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final boolean firstScatterPhase = level.huntingRules().phaseIndex() == 0;
-            final boolean takeRandomDir = ghost.worldMovement.isNewTileEntered() && terrain.isIntersection(ghost.computeTile());
+            final boolean takeRandomDir = ghost.worldMovement.isNewTileEntered() && terrain.isIntersection(ghost.tile());
             if (firstScatterPhase && takeRandomDir) {
                 selectRandomWishDir(ghost, level);
                 WorldMovement.SYSTEM.setSpeed(ghost, speed);
@@ -108,7 +108,7 @@ public final class TengenMsPacMan_ActorFactory {
     }
 
     private static void selectRandomWishDir(Ghost ghost, GameLevel level) {
-        final Vector2i tile = ghost.computeTile();
+        final Vector2i tile = ghost.tile();
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         if (teleporting) {
             return;
@@ -127,7 +127,7 @@ public final class TengenMsPacMan_ActorFactory {
     }
 
     private static boolean isAcceptableWishDir(GameLevel level, Ghost ghost, Direction dir) {
-        final Vector2i neighborTile = ghost.computeTile().plus(dir.vector());
+        final Vector2i neighborTile = ghost.tile().plus(dir.vector());
         return dir != ghost.worldMovement.moveDir().opposite() && ghost.canAccessTile(level, neighborTile);
     }
 }

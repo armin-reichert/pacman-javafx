@@ -57,6 +57,10 @@ public class Bonus extends Actor {
         setInactive();
     }
 
+    public Vector2i tile() {
+        return WorldMovement.SYSTEM.computeTile(this);
+    }
+
     public BonusState state() {
         return state;
     }
@@ -156,8 +160,9 @@ public class Bonus extends Actor {
 
     private boolean wanderMaze(GameLevel level) {
         routeNavigation.steer(this, level);
+        final Vector2i tile = WorldMovement.SYSTEM.computeTile(this);
         boolean mazeExitReached = routeNavigation.isRouteTraversed()
-            || level.worldMap().terrainLayer().isTileInPortalSpace(computeTile());
+            || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         if (!mazeExitReached) {
             WorldMovement.SYSTEM.navigateTowardsTarget(this, level);
             WorldMovement.SYSTEM.tryMovingOrTeleporting(this, level);

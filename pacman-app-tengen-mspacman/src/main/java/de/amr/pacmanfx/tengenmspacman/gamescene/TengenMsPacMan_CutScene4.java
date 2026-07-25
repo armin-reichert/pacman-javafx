@@ -5,11 +5,13 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.Movement;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
@@ -223,8 +225,9 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private int compareBySmallestDistToSceneCenter(Pac junior, Direction dir1, Direction dir2) {
-        Vector2f pos1 = junior.computeTile().plus(dir1.vector()).scaled(TS).toVector2f();
-        Vector2f pos2 = junior.computeTile().plus(dir2.vector()).scaled(TS).toVector2f();
+        Vector2i tile = junior.tile();
+        Vector2f pos1 = tile.plus(dir1.vector()).scaled(TS).toVector2f();
+        Vector2f pos2 = tile.plus(dir2.vector()).scaled(TS).toVector2f();
         Vector2f center = new Vector2f(0.5f * unscaledWidth(), 0.5f * unscaledHeight());
         return Double.compare(pos1.euclideanDist(center), pos2.euclideanDist(center));
     }

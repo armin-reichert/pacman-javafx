@@ -26,7 +26,7 @@ public class GhostFactory {
             WorldMovement.SYSTEM.tryMovingTowardsTargetTile(ghost, level, targetTile);
         });
 
-        ghost.setChasingTargetTileStrategy(level -> level.entities().pac().computeTile());
+        ghost.setChasingTargetTileStrategy(level -> level.entities().pac().tile());
 
         ghost.reset();
         return ghost;
@@ -51,7 +51,7 @@ public class GhostFactory {
             final Pac pac = level.entities().pac();
             return WorldMovement.SYSTEM.tilesAheadWithOverflowBug(pac, 2)
                 .scaled(2)
-                .minus(level.ghost(RED_GHOST_SHADOW).computeTile());
+                .minus(level.ghost(RED_GHOST_SHADOW).tile());
         });
         ghost.reset();
         return ghost;
@@ -61,9 +61,9 @@ public class GhostFactory {
         final Ghost ghost = new Ghost(GameModel.ORANGE_GHOST_POKEY, name);
 
         ghost.setChasingTargetTileStrategy(level ->
-            ghost.computeTile().euclideanDist(level.entities().pac().computeTile()) < 8
+            ghost.tile().euclideanDist(level.entities().pac().tile()) < 8
             ? level.worldMap().terrainLayer().ghostScatterTile(ghost.personality())
-            : level.entities().pac().computeTile()
+            : level.entities().pac().tile()
         );
 
         ghost.reset();

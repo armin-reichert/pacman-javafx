@@ -42,7 +42,7 @@ public class Arcade_ActorSpeedRules implements ActorSpeedRules {
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final boolean insideHouse = terrain.assertHouse().isVisitedBy(ghost);
-        final boolean tunnelSlowdown = terrain.isTunnel(ghost.computeTile());
+        final boolean tunnelSlowdown = terrain.isTunnel(ghost.tile());
         return switch (ghost.state()) {
             case LOCKED -> insideHouse ? 0.5f : 0;
             case LEAVING_HOUSE -> 0.5f;

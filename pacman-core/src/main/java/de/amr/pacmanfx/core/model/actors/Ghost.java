@@ -72,6 +72,10 @@ public class Ghost extends Actor {
         worldMovement.corneringSpeedDelta = -1.25f;
     }
 
+    public Vector2i tile() {
+        return WorldMovement.SYSTEM.computeTile(this);
+    }
+
     public void setMoveDir(Direction dir) {
         WorldMovement.SYSTEM.setMoveDir(this, dir);
     }
@@ -185,7 +189,7 @@ public class Ghost extends Actor {
     public void roam(GameLevel level) {
         requireNonNull(level);
 
-        final Vector2i tile = computeTile();
+        final Vector2i tile = WorldMovement.SYSTEM.computeTile(this);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
         final boolean stuck = !worldMovement.info.moved;
@@ -225,12 +229,13 @@ public class Ghost extends Actor {
         if (terrainLayer.outOfBounds(tile)) {
             return terrainLayer.isTileInPortalSpace(tile);
         }
+        final Vector2i myTile = WorldMovement.SYSTEM.computeTile(this);
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below
         // TODO: this is game-specific and does not belong here
         if (specialTerrainTiles.contains(tile)
                 && state() == GhostState.HUNTING_PAC
                 && terrainLayer.content(tile) == TerrainTile.ONE_WAY_DOWN.$
-                && tile.equals(computeTile().plus(UP.vector()))
+                && tile.equals(myTile.plus(UP.vector()))
         ) {
             Logger.debug("Hunting {} cannot move up to special tile {}", name(), tile);
             return false;
