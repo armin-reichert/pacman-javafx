@@ -6,6 +6,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -47,25 +48,25 @@ public class ArcadeMsPacMan_ActorFactory {
             final Vector2i tile = redGhost.computeTile();
             final boolean teleporting = terrain.isTileInPortalSpace(tile);
             if (teleporting) {
-                redGhost.setSpeed(speed);
-                redGhost.tryMovingOrTeleporting(level);
+                WorldMovement.SYSTEM.setSpeed(redGhost, speed);
+                WorldMovement.SYSTEM.tryMovingOrTeleporting(redGhost, level);
                 return;
             }
             final boolean takeRandomDir = level.huntingRules().phaseIndex() == 0
-                && redGhost.isNewTileEntered()
+                && redGhost.worldMovement.isNewTileEntered()
                 && terrain.isIntersection(tile);
             if (takeRandomDir) {
                 selectRandomWishDir(redGhost, level);
-                redGhost.setSpeed(speed);
-                redGhost.tryMovingOrTeleporting(level);
+                WorldMovement.SYSTEM.setSpeed(redGhost, speed);
+                WorldMovement.SYSTEM.tryMovingOrTeleporting(redGhost, level);
             } else {
                 // Normal behavior of red ghost
                 final boolean chase = level.huntingRules().isChasing() || redGhost.elroy().enabled();
                 final Vector2i targetTile = chase
                     ? redGhost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(redGhost.personality());
-                redGhost.setSpeed(speed);
-                redGhost.tryMovingTowardsTargetTile(level, targetTile);
+                WorldMovement.SYSTEM.setSpeed(redGhost, speed);
+                WorldMovement.SYSTEM.tryMovingTowardsTargetTile(redGhost, level, targetTile);
             }
         });
         return redGhost;
@@ -77,24 +78,24 @@ public class ArcadeMsPacMan_ActorFactory {
             final Vector2i tile = pinkGhost.computeTile();
             final boolean teleporting = terrain.isTileInPortalSpace(tile);
             if (teleporting) {
-                pinkGhost.setSpeed(speed);
-                pinkGhost.tryMovingOrTeleporting(level);
+                WorldMovement.SYSTEM.setSpeed(pinkGhost, speed);
+                WorldMovement.SYSTEM.tryMovingOrTeleporting(pinkGhost, level);
                 return;
             }
             final boolean takeRandomDir = level.huntingRules().phaseIndex() == 0
-                && pinkGhost.isNewTileEntered()
+                && pinkGhost.worldMovement.isNewTileEntered()
                 && terrain.isIntersection(tile);
             if (takeRandomDir) {
                 selectRandomWishDir(pinkGhost, level);
-                pinkGhost.setSpeed(speed);
-                pinkGhost.tryMovingOrTeleporting(level);
+                WorldMovement.SYSTEM.setSpeed(pinkGhost, speed);
+                WorldMovement.SYSTEM.tryMovingOrTeleporting(pinkGhost, level);
             } else {
                 final boolean chase = level.huntingRules().isChasing();
                 final Vector2i targetTile = chase
                     ? pinkGhost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(pinkGhost.personality());
-                pinkGhost.setSpeed(speed);
-                pinkGhost.tryMovingTowardsTargetTile(level, targetTile);
+                WorldMovement.SYSTEM.setSpeed(pinkGhost, speed);
+                WorldMovement.SYSTEM.tryMovingTowardsTargetTile(pinkGhost, level, targetTile);
             }
         });
         return pinkGhost;
@@ -103,7 +104,7 @@ public class ArcadeMsPacMan_ActorFactory {
     private static void selectRandomWishDir(Ghost ghost, GameLevel level) {
         for (final Direction dir : Direction.shuffled()) {
             final Vector2i neighbor = ghost.computeTile().plus(dir.vector());
-            final boolean acceptable = dir != ghost.moveDir().opposite() && ghost.canAccessTile(level, neighbor);
+            final boolean acceptable = dir != ghost.worldMovement.moveDir().opposite() && ghost.canAccessTile(level, neighbor);
             if (acceptable) {
                 ghost.setWishDir(dir);
                 Logger.debug("{} selects random wish direction {}", ghost.name(), dir);

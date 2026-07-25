@@ -4,7 +4,8 @@
 package de.amr.pacmanfx.core.steering;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.actors.MovingActor;
+import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
 import java.util.List;
@@ -36,27 +37,31 @@ public class RouteBasedSteering implements Steering {
     }
 
     @Override
-    public void steer(MovingActor actor, GameLevel level) {
+    public void steer(Actor actor, GameLevel level) {
+        final WorldMovement mazeMovement = actor.worldMovement;
+
         if (targetIndex == route.size()) {
             routeTraversed = true;
         }
-        else if (actor.optTargetTile().isEmpty()) {
-            actor.setTargetTile(route.get(targetIndex));
+        else if (mazeMovement.optTargetTile().isEmpty()) {
+            mazeMovement.setTargetTile(route.get(targetIndex));
         }
         else if (actor.computeTile().equals(route.get(targetIndex))) {
             selectNextTargetTile(level, actor);
         }
         else {
-            actor.navigateTowardsTarget(level);
+            WorldMovement.SYSTEM.navigateTowardsTarget(actor, level);
         }
     }
 
-    private void selectNextTargetTile(GameLevel level, MovingActor actor) {
+    private void selectNextTargetTile(GameLevel level, Actor actor) {
+        final WorldMovement mazeMovement = actor.worldMovement;
+
         ++targetIndex;
         if (targetIndex < route.size()) {
-            actor.setTargetTile(route.get(targetIndex));
+            mazeMovement.setTargetTile(route.get(targetIndex));
             // The next line is important!
-            actor.navigateTowardsTarget(level);
+            WorldMovement.SYSTEM.navigateTowardsTarget(actor, level);
         }
     }
 }

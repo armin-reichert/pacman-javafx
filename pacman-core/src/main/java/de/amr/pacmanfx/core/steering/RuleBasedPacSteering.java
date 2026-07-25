@@ -7,6 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -65,8 +66,10 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     @Override
-    public void steer(MovingActor actor, GameLevel level) {
-        if (actor.moveInfo().moved && !actor.isNewTileEntered()) {
+    public void steer(Actor actor, GameLevel level) {
+        final WorldMovement mazeMovement = actor.worldMovement;
+
+        if (mazeMovement.info.moved && !mazeMovement.isNewTileEntered()) {
             return;
         }
         var data = collectData(level);
@@ -99,41 +102,43 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private void takeAction(GameLevel level, CollectedData data) {
-        var pac = level.entities().pac();
+        final Pac pac = level.entities().pac();
+        final WorldMovement mazeMovement = pac.worldMovement;
+
         if (data.hunterAhead != null) {
             Direction escapeDir;
             if (data.hunterBehind != null) {
-                escapeDir = findEscapeDirectionExcluding(level, EnumSet.of(pac.moveDir(), pac.moveDir().opposite()));
+                escapeDir = findEscapeDirectionExcluding(level, EnumSet.of(mazeMovement.moveDir(), mazeMovement.moveDir().opposite()));
                 Logger.trace("Detected ghost {} behind, escape direction is {}", data.hunterAhead.name(), escapeDir);
             } else {
-                escapeDir = findEscapeDirectionExcluding(level, EnumSet.of(pac.moveDir()));
+                escapeDir = findEscapeDirectionExcluding(level, EnumSet.of(mazeMovement.moveDir()));
                 Logger.trace("Detected ghost {} ahead, escape direction is {}", data.hunterAhead.name(), escapeDir);
             }
             if (escapeDir != null) {
-                pac.setWishDir(escapeDir);
+                WorldMovement.SYSTEM.setWishDir(pac, escapeDir);
             }
             return;
         }
 
         // when not escaping ghost, keep move direction at least until next intersection
-        if (pac.moveInfo().moved && !level.worldMap().terrainLayer().isIntersection(pac.computeTile()))
+        if (mazeMovement.info.moved && !level.worldMap().terrainLayer().isIntersection(pac.computeTile()))
             return;
 
         if (!data.frightenedGhosts.isEmpty() && pac.powerTimer().remainingTicks() >= GameConstants.SIMULATION_FPS) {
             Ghost prey = data.frightenedGhosts.getFirst();
             Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(),
                 prey.computeTile().manhattanDist(pac.computeTile()));
-            pac.setTargetTile(prey.computeTile());
+            mazeMovement.setTargetTile(prey.computeTile());
         } else if (isEdibleBonusNearPac(level, pac)) {
             Logger.trace("Active bonus detected, get it!");
-            level.optBonus().ifPresent(bonus -> pac.setTargetTile(
+            level.optBonus().ifPresent(bonus -> mazeMovement.setTargetTile(
                 WorldMap.computeTileAt(bonus.position.x, bonus.position.y)));
         } else {
-            pac.setTargetTile(findTileFarthestFromGhosts(level, pac, findNearestFoodTiles(level)));
+            mazeMovement.setTargetTile(findTileFarthestFromGhosts(level, pac, findNearestFoodTiles(level)));
         }
-        pac.optTargetTile().ifPresent(_ -> {
-            pac.navigateTowardsTarget(level);
-            Logger.trace("Navigated towards {}, moveDir={} wishDir={}", pac.targetTile(), pac.moveDir(), pac.wishDir());
+        mazeMovement.optTargetTile().ifPresent(_ -> {
+            WorldMovement.SYSTEM.navigateTowardsTarget(pac, level);
+            Logger.trace("Navigated towards {}, moveDir={} wishDir={}", mazeMovement.targetTile(), mazeMovement.moveDir(), mazeMovement.wishDir());
         });
     }
 
@@ -148,20 +153,22 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private Ghost findHuntingGhostAhead(GameLevel level) {
-        var pac = level.entities().pac();
-        Vector2i pacManTile = pac.computeTile();
+        final Pac pac = level.entities().pac();
+        final WorldMovement mazeMovement = pac.worldMovement;
+        final Vector2i pacManTile = pac.computeTile();
+
         boolean energizerFound = false;
         FoodLayer foodLayer = level.worldMap().foodLayer();
         for (int i = 1; i <= CollectedData.MAX_GHOST_AHEAD_DETECTION_DIST; ++i) {
-            Vector2i ahead = pacManTile.plus(pac.moveDir().vector().scaled(i));
+            Vector2i ahead = pacManTile.plus(mazeMovement.moveDir().vector().scaled(i));
             if (!pac.canAccessTile(level, ahead)) {
                 break;
             }
             if (foodLayer.isEnergizerTile(ahead) && !foodLayer.hasEatenFoodAtTile(ahead)) {
                 energizerFound = true;
             }
-            var aheadLeft = ahead.plus(pac.moveDir().nextCounterClockwise().vector());
-            var aheadRight = ahead.plus(pac.moveDir().nextClockwise().vector());
+            var aheadLeft = ahead.plus(mazeMovement.moveDir().nextCounterClockwise().vector());
+            var aheadRight = ahead.plus(mazeMovement.moveDir().nextClockwise().vector());
             Iterable<Ghost> huntingGhosts = level.ghostsInState(GhostState.HUNTING_PAC)::iterator;
             for (var ghost : huntingGhosts) {
                 if (ghost.computeTile().equals(ahead) || ghost.computeTile().equals(aheadLeft) || ghost.computeTile().equals(aheadRight)) {
@@ -177,9 +184,11 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private Ghost findHuntingGhostBehind(GameLevel level, Pac pac) {
-        var pacManTile = pac.computeTile();
+        final WorldMovement mazeMovement = pac.worldMovement;
+        final Vector2i pacManTile = pac.computeTile();
+
         for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {
-            var behind = pacManTile.plus(pac.moveDir().opposite().vector().scaled(i));
+            var behind = pacManTile.plus(mazeMovement.moveDir().opposite().vector().scaled(i));
             if (!pac.canAccessTile(level, behind)) {
                 break;
             }

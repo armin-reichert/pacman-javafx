@@ -4,7 +4,8 @@
 package de.amr.pacmanfx.core.model.world;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.actors.MovingActor;
+import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import org.tinylog.Logger;
 
 /**
@@ -37,7 +38,9 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         return leftBorderEntryTile.y();
     }
 
-    public boolean tryTeleporting(MovingActor actor) {
+    public boolean tryTeleporting(Actor actor) {
+        final WorldMovement mazeMovement = actor.worldMovement;
+
         final Vector2i actorTile = actor.computeTile();
         final float offsetX = actor.computeOffsetX();
         if (actorTile.y() != leftBorderEntryTile().y()) {
@@ -45,22 +48,22 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         }
         final Vector2i leftWrappingTile = leftBorderEntryTile().minus(depth, 0);
         final Vector2i rightWrappingTile = rightBorderEntryTile().plus(depth, 0);
-        switch (actor.moveDir()) {
+        switch (mazeMovement.moveDir()) {
             case LEFT -> {
                 if (actorTile.equals(leftWrappingTile) && offsetX == 0) {
-                    actor.placeAtTile(rightWrappingTile.x(), rightWrappingTile.y(), -1, 0);
+                    WorldMovement.SYSTEM.placeAtTile(actor, rightWrappingTile.x(), rightWrappingTile.y(), -1, 0);
                     Logger.info("{} teleported from {} to {}", actor.name(), actorTile, rightWrappingTile);
                     return true;
                 }
             }
             case RIGHT -> {
                 if (actorTile.equals(rightWrappingTile) && offsetX == 0) {
-                    actor.placeAtTile(leftWrappingTile.x(), leftWrappingTile.y(), 1, 0);
+                    WorldMovement.SYSTEM.placeAtTile(actor, leftWrappingTile.x(), leftWrappingTile.y(), 1, 0);
                     Logger.info("{} teleported from {} to {}", actor.name(), actorTile, leftWrappingTile);
                     return true;
                 }
             }
-            default -> throw new IllegalStateException("Actor moving %s cannot be teleported horizontally".formatted(actor.moveDir()));
+            default -> throw new IllegalStateException("Actor moving %s cannot be teleported horizontally".formatted(mazeMovement.moveDir()));
         }
         return false;
     }

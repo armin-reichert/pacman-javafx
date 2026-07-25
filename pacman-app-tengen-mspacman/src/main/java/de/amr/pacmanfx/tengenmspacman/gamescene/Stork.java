@@ -39,6 +39,7 @@ public class Stork extends Actor {
     private boolean bagReleasedFromBeak;
 
     public Stork(SpriteAnimationContainer container) {
+        super("Beatrix");
         animations = new StorkAnimations(container);
     }
 

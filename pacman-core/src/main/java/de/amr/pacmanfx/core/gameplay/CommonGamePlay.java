@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
@@ -244,9 +245,9 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         terrain.hPortalContainingTile(pac.computeTile()).ifPresent(hPortal -> {
-            if (pac.moveDir() == Direction.LEFT) {
+            if (pac.worldMovement.moveDir() == Direction.LEFT) {
                 pac.position.setX(hPortal.rightBorderEntryTile().x() * WorldMap.TS + WorldMap.HTS);
-            } else if (pac.moveDir() == Direction.RIGHT) {
+            } else if (pac.worldMovement.moveDir() == Direction.RIGHT) {
                 pac.position.setX(hPortal.leftBorderEntryTile().x() * WorldMap.TS - WorldMap.HTS);
             }
             // Not sure if colliding ghosts should also be moved back to visible area
@@ -341,7 +342,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         pac.animations.stopSelected();
         pac.animations.select(CommonAnimationID.PAC_FULL);
-        pac.setSpeed(0);
+        WorldMovement.SYSTEM.setSpeed(pac, 0);
         pac.powerTimer().stop();
         pac.powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero.");
@@ -350,7 +351,7 @@ public abstract class CommonGamePlay implements GamePlay {
             ghost.animations.stopSelected();
             //TODO check in emulator if ghost animation is reset to normal
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
-            ghost.setSpeed(0);
+            WorldMovement.SYSTEM.setSpeed(ghost, 0);
         });
         level.optBonus().ifPresent(Bonus::setInactive);
     }
@@ -363,7 +364,8 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameLevel level = gameContext.assertLevel();
         final GameEventManager eventManager = gameContext.eventManager();
 
-        level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(MovingActor::requestTurnBack);
+        level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(
+            ghost -> ghost.worldMovement.requestTurnBack());
         final float powerSeconds = level.pacPowerSeconds();
         if (powerSeconds > 0) {
             level.huntingRules().stop();

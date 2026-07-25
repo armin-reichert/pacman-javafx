@@ -84,7 +84,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
                 level.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
-                    .forEach(Ghost::requestTurnBack);
+                    .forEach(ghost -> ghost.worldMovement.requestTurnBack());
             }
         });
 

@@ -18,6 +18,10 @@ public class Marquee extends Actor {
     private final BitSet bulbOn = new BitSet(NUM_BULBS);
     private long marqueeProgress;
 
+    public Marquee() {
+        super("Marquee");
+    }
+
     public DoubleProperty scalingProperty() {
         return scaling;
     }

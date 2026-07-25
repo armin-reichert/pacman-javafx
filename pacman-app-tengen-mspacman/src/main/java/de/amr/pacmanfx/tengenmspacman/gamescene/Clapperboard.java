@@ -28,6 +28,7 @@ public class Clapperboard extends Actor {
     private boolean running;
 
     public Clapperboard(int number, String text) {
+        super("Clapperboard");
         this.number = number;
         this.text = requireNonNull(text);
     }

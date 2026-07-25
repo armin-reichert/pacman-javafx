@@ -10,6 +10,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.event.BonusExpiredEvent;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.steering.RouteBasedSteering;
@@ -27,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  * <p>
  * TODO: That's not exactly the original Ms. Pac-Man behaviour with predefined "fruit paths".
  */
-public class Bonus extends MovingActor {
+public class Bonus extends Actor {
 
     private static final int PULSE_CHANGE_TICKS = 10;
 
@@ -43,12 +44,14 @@ public class Bonus extends MovingActor {
 
     public Bonus(int symbolCode, int points) {
         super("Bonus-symbol:%d-points:%d".formatted(symbolCode, points));
+
         this.symbolCode = Validations.requireNonNegativeInt(symbolCode);
         this.points = Validations.requireNonNegativeInt(points);
         jumpingAnimation = new Pulse(PULSE_CHANGE_TICKS, Pulse.State.OFF);
 
         reset();
-        canTeleport = false; // override default value (true)
+
+        worldMovement.canTeleport = false; // override default value (true)
 
         // initial state
         setInactive();
@@ -70,7 +73,8 @@ public class Bonus extends MovingActor {
         state = BonusState.INACTIVE;
         timer.restartIndefinitely();
 
-        setSpeed(0);
+        WorldMovement.SYSTEM.setSpeed(this, 0);
+
         jumpingAnimation.reset();
 
         visibility.hide();
@@ -87,8 +91,9 @@ public class Bonus extends MovingActor {
         state = BonusState.EDIBLE;
         timer.restartIndefinitely();
 
-        setSpeed(speed);
-        setTargetTile(null);
+        WorldMovement.SYSTEM.setSpeed(this, speed);
+        worldMovement.setTargetTile(null);
+
         jumpingAnimation.restart();
 
         visibility.show();
@@ -102,9 +107,11 @@ public class Bonus extends MovingActor {
         }
         final var route = new ArrayList<>(waypoints);
         final Vector2i first = route.removeFirst();
-        placeAtTile(first);
-        setMoveDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
-        setWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
+
+        WorldMovement.SYSTEM.placeAtTile(this, first);
+        WorldMovement.SYSTEM.setMoveDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
+        WorldMovement.SYSTEM.setWishDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
+
         routeNavigation = new RouteBasedSteering(route);
     }
 
@@ -112,7 +119,8 @@ public class Bonus extends MovingActor {
         state = BonusState.EATEN;
         timer.restartSeconds(seconds);
 
-        setSpeed(0);
+        WorldMovement.SYSTEM.setSpeed(this, 0);
+
         jumpingAnimation.stop();
 
         visibility.show();
@@ -151,8 +159,8 @@ public class Bonus extends MovingActor {
         boolean mazeExitReached = routeNavigation.isRouteTraversed()
             || level.worldMap().terrainLayer().isTileInPortalSpace(computeTile());
         if (!mazeExitReached) {
-            navigateTowardsTarget(level);
-            tryMovingOrTeleporting(level);
+            WorldMovement.SYSTEM.navigateTowardsTarget(this, level);
+            WorldMovement.SYSTEM.tryMovingOrTeleporting(this, level);
             jump();
         }
         return mazeExitReached;
@@ -162,7 +170,7 @@ public class Bonus extends MovingActor {
     private void jump() {
         jumpingAnimation.triggerPulse();
         if (jumpingAnimation.pulseTriggered()) {
-            float pixels = moveDir().isVertical() ? 3.0f : 2.0f;
+            float pixels = worldMovement.moveDir().isVertical() ? 3.0f : 2.0f;
             float dy = jumpingAnimation.state() == Pulse.State.ON ? -pixels : pixels;
             position.y += dy;
         }

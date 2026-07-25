@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -67,19 +68,19 @@ public final class TengenMsPacMan_ActorFactory {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final boolean firstScatterPhase = level.huntingRules().phaseIndex() == 0;
-            final boolean takeRandomDir = ghost.isNewTileEntered() && terrain.isIntersection(ghost.computeTile());
+            final boolean takeRandomDir = ghost.worldMovement.isNewTileEntered() && terrain.isIntersection(ghost.computeTile());
             if (firstScatterPhase && takeRandomDir) {
                 selectRandomWishDir(ghost, level);
-                ghost.setSpeed(speed);
-                ghost.tryMovingOrTeleporting(level);
+                WorldMovement.SYSTEM.setSpeed(ghost, speed);
+                WorldMovement.SYSTEM.tryMovingOrTeleporting(ghost, level);
             } else {
                 // Normal behavior of red ghost
                 final boolean chase = level.huntingRules().isChasing() || ghost.elroy().enabled();
                 final Vector2i targetTile = chase
                     ? ghost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(ghost.personality());
-                ghost.setSpeed(speed);
-                ghost.tryMovingTowardsTargetTile(level, targetTile);
+                WorldMovement.SYSTEM.setSpeed(ghost, speed);
+                WorldMovement.SYSTEM.tryMovingTowardsTargetTile(ghost, level, targetTile);
             }
         });
         return ghost;
@@ -89,18 +90,18 @@ public final class TengenMsPacMan_ActorFactory {
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final boolean firstScatterPhase = level.huntingRules().phaseIndex() == 0;
-            final boolean takeRandomDir = ghost.isNewTileEntered() && terrain.isIntersection(ghost.computeTile());
+            final boolean takeRandomDir = ghost.worldMovement.isNewTileEntered() && terrain.isIntersection(ghost.computeTile());
             if (firstScatterPhase && takeRandomDir) {
                 selectRandomWishDir(ghost, level);
-                ghost.setSpeed(speed);
-                ghost.tryMovingOrTeleporting(level);
+                WorldMovement.SYSTEM.setSpeed(ghost, speed);
+                WorldMovement.SYSTEM.tryMovingOrTeleporting(ghost, level);
             } else {
                 final boolean chase = level.huntingRules().isChasing();
                 final Vector2i targetTile = chase
                     ? ghost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(ghost.personality());
-                ghost.setSpeed(speed);
-                ghost.tryMovingTowardsTargetTile(level, targetTile);
+                WorldMovement.SYSTEM.setSpeed(ghost, speed);
+                WorldMovement.SYSTEM.tryMovingTowardsTargetTile(ghost, level, targetTile);
             }
         });
         return ghost;
@@ -127,6 +128,6 @@ public final class TengenMsPacMan_ActorFactory {
 
     private static boolean isAcceptableWishDir(GameLevel level, Ghost ghost, Direction dir) {
         final Vector2i neighborTile = ghost.computeTile().plus(dir.vector());
-        return dir != ghost.moveDir().opposite() && ghost.canAccessTile(level, neighborTile);
+        return dir != ghost.worldMovement.moveDir().opposite() && ghost.canAccessTile(level, neighborTile);
     }
 }

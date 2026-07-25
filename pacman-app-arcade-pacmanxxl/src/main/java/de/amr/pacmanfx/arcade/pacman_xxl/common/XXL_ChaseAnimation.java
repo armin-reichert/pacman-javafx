@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -106,7 +107,7 @@ class XXL_ChaseAnimation {
             ghost.position.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
             ghost.setMoveDir(Direction.LEFT);
             ghost.setWishDir(Direction.LEFT);
-            ghost.setSpeed(GHOST_CHASE_SPEED);
+            WorldMovement.SYSTEM.setSpeed(ghost, GHOST_CHASE_SPEED);
             ghost.visibility.show();
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
             ghost.animations.playSelected();
@@ -143,7 +144,7 @@ class XXL_ChaseAnimation {
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
                 ghost.position.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * 2 * WorldMap.TS);
-                ghost.setSpeed(1.05f);
+                WorldMovement.SYSTEM.setSpeed(ghost, 1.05f);
                 ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
                 ghost.animations.playSelected();
             }
@@ -187,7 +188,7 @@ class XXL_ChaseAnimation {
                 ghost.position.setX(pac.position.x + 22 * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
                 ghost.setMoveDir(Direction.RIGHT);
                 ghost.setWishDir(Direction.RIGHT);
-                ghost.setSpeed(0.58f);
+                WorldMovement.SYSTEM.setSpeed(ghost, 0.58f);
                 ghost.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
                 ghost.animations.playSelected();
             }

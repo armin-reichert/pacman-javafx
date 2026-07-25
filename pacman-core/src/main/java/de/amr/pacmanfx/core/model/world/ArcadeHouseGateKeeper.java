@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import org.tinylog.Logger;
 
@@ -16,7 +17,6 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
-import static de.amr.basics.math.Direction.LEFT;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -215,13 +215,13 @@ public final class ArcadeHouseGateKeeper {
         if (blinky.state() == GhostState.LOCKED) {
             if (house.isVisitedBy(blinky)) {
                 // Leave house immediately again after being eaten
-                blinky.setMoveDir(Direction.UP);
-                blinky.setWishDir(Direction.UP);
+                WorldMovement.SYSTEM.setMoveDir(blinky, Direction.UP);
+                WorldMovement.SYSTEM.setWishDir(blinky, Direction.UP);
                 blinky.setState(GhostState.LEAVING_HOUSE);
             } else {
                 // Start hunting towards west direction
-                blinky.setMoveDir(LEFT);
-                blinky.setWishDir(LEFT);
+                WorldMovement.SYSTEM.setMoveDir(blinky, Direction.LEFT);
+                WorldMovement.SYSTEM.setWishDir(blinky, Direction.LEFT);
                 blinky.setState(GhostState.HUNTING_PAC);
             }
         }
@@ -230,8 +230,8 @@ public final class ArcadeHouseGateKeeper {
             .filter(ghost -> ghost.state() == GhostState.LOCKED)
             .findFirst()
             .ifPresent(prisoner -> checkReleaseOfGhost(level, prisoner).ifPresent(_ -> {
-                prisoner.setMoveDir(Direction.UP);
-                prisoner.setWishDir(Direction.UP);
+                WorldMovement.SYSTEM.setMoveDir(prisoner, Direction.UP);
+                WorldMovement.SYSTEM.setWishDir(prisoner, Direction.UP);
                 prisoner.setState(GhostState.LEAVING_HOUSE);
                 onGhostReleased.accept(level, prisoner);
             }));

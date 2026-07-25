@@ -11,6 +11,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -84,7 +85,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         marquee.position.set(MARQUEE_X, MARQUEE_Y);
         marquee.scalingProperty().bind(scalingProperty());
 
-        presents = new Actor();
+        presents = new Actor("Presents");
         presents.position.set(9 * WorldMap.TS, MARQUEE_Y - WorldMap.TS);
 
         flow.restartState(this, SceneState.WAITING_FOR_START);
@@ -143,7 +144,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                     ghost.position.set(WorldMap.TS * 33, ACTOR_Y);
                     ghost.setMoveDir(Direction.LEFT);
                     ghost.setWishDir(Direction.LEFT);
-                    ghost.setSpeed(SPEED);
+                    WorldMovement.SYSTEM.setSpeed(ghost, SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.visibility.show();
                     ghost.animations.playSelected();
@@ -182,7 +183,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
                 Ghost ghost = scene.ghosts.get(scene.ghostIndex);
-                if (ghost.moveDir() == Direction.LEFT) {
+                if (ghost.worldMovement.moveDir() == Direction.LEFT) {
                     if (ghost.position.x <= GHOST_STOP_X) {
                         ghost.position.setX(GHOST_STOP_X);
                         ghost.setMoveDir(Direction.UP);
@@ -190,23 +191,23 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                         scene.waitBeforeRising = 2;
                     } else {
                         ghost.move();
-                        Logger.debug("{} moves {} x={}", ghost.name(), ghost.moveDir(), ghost.position.x);
+                        Logger.debug("{} moves {} x={}", ghost.name(), ghost.worldMovement.moveDir(), ghost.position.x);
                     }
                 }
-                else if (ghost.moveDir() == Direction.UP) {
+                else if (ghost.worldMovement.moveDir() == Direction.UP) {
                     int endPositionY = MARQUEE_Y + scene.ghostIndex * 16;
                     if (scene.waitBeforeRising > 0) {
                         scene.waitBeforeRising--;
                     }
                     else if (ghost.position.y <= endPositionY) {
-                        ghost.setSpeed(0);
+                        WorldMovement.SYSTEM.setSpeed(ghost, 0);
                         ghost.setMoveDir(Direction.RIGHT);
                         ghost.setWishDir(Direction.RIGHT);
                         return true;
                     }
                     else {
                         ghost.move();
-                        Logger.debug("{} moves {}", ghost.name(), ghost.moveDir());
+                        Logger.debug("{} moves {}", ghost.name(), ghost.worldMovement.moveDir());
                     }
                 }
                 return false;

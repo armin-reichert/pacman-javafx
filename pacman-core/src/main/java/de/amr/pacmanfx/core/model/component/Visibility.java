@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.model.component;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-public class Visibility {
+public class Visibility implements EntityComponent {
 
     private final boolean defaultVisibility;
 

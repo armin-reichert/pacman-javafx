@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.core.model.actors;
 
-public class MoveInfo {
+public class WorldMovementInfo {
     public boolean moved;
     public boolean tunnelEntered;
     public boolean tunnelLeft;

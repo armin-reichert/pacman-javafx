@@ -3,9 +3,11 @@
  */
 package de.amr.pacmanfx.core.model.actors;
 
+import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
@@ -18,7 +20,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base class for Pac-Man / Ms. Pac-Man.
  */
-public class Pac extends MovingActor {
+public class Pac extends Actor {
 
     public static final byte REST_FOREVER = -1;
 
@@ -31,6 +33,7 @@ public class Pac extends MovingActor {
     private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
 
     private long restingTicks;
+
     private long starvingTicks;
 
     private Steering automaticSteering;
@@ -40,6 +43,18 @@ public class Pac extends MovingActor {
      */
     public Pac(String name) {
         super(name);
+    }
+
+    public void setMoveDir(Direction dir) {
+        WorldMovement.SYSTEM.setMoveDir(this, dir);
+    }
+
+    public void setWishDir(Direction dir) {
+        WorldMovement.SYSTEM.setWishDir(this, dir);
+    }
+
+    public void setSpeed(float speed) {
+        WorldMovement.SYSTEM.setSpeed(this, speed);
     }
 
     @Override
@@ -66,7 +81,7 @@ public class Pac extends MovingActor {
 
     @Override
     public boolean canTurnBack() {
-        return newTileEntered;
+        return worldMovement.newTileEntered;
     }
 
     @Override
@@ -90,7 +105,7 @@ public class Pac extends MovingActor {
         setDead(false);
         restingTicks = 0;
         starvingTicks = 0;
-        corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
+        worldMovement.corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
         animations.select(CommonAnimationID.PAC_MUNCHING);
     }
 
@@ -168,13 +183,13 @@ public class Pac extends MovingActor {
             automaticSteering.steer(this, level);
         }
 
-        setSpeed(powerTimer.isRunning()
+        WorldMovement.SYSTEM.setSpeed(this, powerTimer.isRunning()
             ? speedRules.pacSpeedWhenHasPower(level)
             : speedRules.pacSpeed(level));
 
-        tryMovingOrTeleporting(level);
+        WorldMovement.SYSTEM.tryMovingOrTeleporting(this, level);
 
-        if (moveInfo.moved) {
+        if (worldMovement.info.moved) {
             animations.playSelected();
         } else {
             animations.stopSelected();
@@ -214,7 +229,7 @@ public class Pac extends MovingActor {
      */
     public boolean isParalyzed() {
         return (movement.velX == 0 && movement.velY == 0)
-            || !moveInfo.moved
+            || !worldMovement.info.moved
             || restingTicks == REST_FOREVER;
     }
 }

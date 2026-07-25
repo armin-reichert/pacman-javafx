@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -121,29 +122,29 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void blinkyStopsMoving() {
-        blinky.setSpeed(0);
+        WorldMovement.SYSTEM.setSpeed(blinky, 0);
         blinky.animations.stopSelected();
     }
 
     private void blinkyGetsCaughtOnNail() {
-        blinky.setSpeed(0.09f);
+        WorldMovement.SYSTEM.setSpeed(blinky, 0.09f);
         blinkyAnimation(CommonAnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
     }
 
     private void blinkyStartsRunning() {
-        blinky.placeAtTile(28, 20, -3, 0);
+        WorldMovement.SYSTEM.placeAtTile(blinky, 28, 20, -3, 0);
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
-        blinky.setSpeed(1.25f);
+        WorldMovement.SYSTEM.setSpeed(blinky, 1.25f);
         blinky.animations.select(CommonAnimationID.GHOST_NORMAL);
         blinky.animations.playSelected();
         blinky.visibility.show();
     }
 
     private void pacManStartsRunning() {
-        pacMan.placeAtTile(28, 20);
+        WorldMovement.SYSTEM.placeAtTile(pacMan, 28, 20);
         pacMan.setMoveDir(Direction.LEFT);
-        pacMan.setSpeed(1.15f);
+        WorldMovement.SYSTEM.setSpeed(pacMan, 1.15f);
         pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations.playSelected();
         pacMan.visibility.show();

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.actors.MovingActor;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameState;
@@ -46,7 +45,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         drawTileGrid(scene.unscaledWidth(), scene.unscaledHeight(), Color.LIGHTGRAY);
     }
 
-    public void drawMovingActorInfo(MovingActor movingActor) {
+    public void drawMovingActorInfo(Actor movingActor) {
         if (!movingActor.visibility.isVisible()) {
             return;
         }
@@ -64,7 +63,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
                 ctx.setFont(debugTextFont);
                 drawAnimationInfo(movingActor, spriteAnimations, animationID);
             }
-            if (movingActor.wishDir() != null) {
+            if (movingActor.worldMovement.wishDir() != null) {
                 drawDirectionIndicator(movingActor);
             }
 
@@ -80,16 +79,16 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         ctx.restore();
     }
 
-    private void drawDirectionIndicator(MovingActor movingActor) {
+    private void drawDirectionIndicator(Actor movingActor) {
         ctx.save();
         Vector2f center = movingActor.computeCenter();
-        Vector2f arrowHead = center.plus(movingActor.wishDir().vector().scaled(12f)).scaled(scaling());
+        Vector2f arrowHead = center.plus(movingActor.worldMovement.wishDir().vector().scaled(12f)).scaled(scaling());
         Vector2f guyCenter = center.scaled(scaling());
         double radius = scaled(2), diameter = 2 * radius;
         ctx.setStroke(Color.WHITE);
         ctx.setLineWidth(0.5);
         ctx.strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-        ctx.setFill(movingActor.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+        ctx.setFill(movingActor.worldMovement.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
         ctx.fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
         ctx.restore();
     }

@@ -13,10 +13,12 @@ public class GameLevelMessage extends Actor {
     private final GameLevelMessageType type;
 
     public GameLevelMessage(GameLevelMessageType type) {
+        super("GameLevelMessage");
         this.type = requireNonNull(type);
     }
 
     public GameLevelMessage(GameLevelMessageType type, Vector2f pos) {
+        super("GameLevelMessage");
         this.type = requireNonNull(type);
         position.set(pos);
     }

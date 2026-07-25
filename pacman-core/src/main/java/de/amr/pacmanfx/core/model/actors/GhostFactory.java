@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
 import static de.amr.pacmanfx.core.model.GameModel.RED_GHOST_SHADOW;
@@ -16,13 +17,13 @@ public class GhostFactory {
         final Ghost ghost = new Ghost(GameModel.RED_GHOST_SHADOW, name);
 
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
-            ghost.setSpeed(speed);
+            WorldMovement.SYSTEM.setSpeed(ghost, speed);
             final boolean chase = level.huntingRules().isChasing()
                 || ghost.elroy().enabled();
             final Vector2i targetTile = chase
                 ? ghost.chasingTargetTileStrategy().apply(level)
                 : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
-            ghost.tryMovingTowardsTargetTile(level, targetTile);
+            WorldMovement.SYSTEM.tryMovingTowardsTargetTile(ghost, level, targetTile);
         });
 
         ghost.setChasingTargetTileStrategy(level -> level.entities().pac().computeTile());
@@ -34,7 +35,10 @@ public class GhostFactory {
     public static Ghost createPinkGhostAmbusher(String name) {
         final Ghost ghost = new Ghost(GameModel.PINK_GHOST_SPEEDY, name);
 
-        ghost.setChasingTargetTileStrategy(level -> level.entities().pac().tilesAheadWithOverflowBug(4));
+        ghost.setChasingTargetTileStrategy(level -> {
+            final Pac pac = level.entities().pac();
+            return WorldMovement.SYSTEM.tilesAheadWithOverflowBug(pac, 4);
+        });
 
         ghost.reset();
         return ghost;
@@ -43,11 +47,12 @@ public class GhostFactory {
     public static Ghost createCyanGhostBashful(String name) {
         final Ghost ghost = new Ghost(GameModel.CYAN_GHOST_BASHFUL, name);
 
-        ghost.setChasingTargetTileStrategy(level ->
-            level.entities().pac().tilesAheadWithOverflowBug(2)
+        ghost.setChasingTargetTileStrategy(level -> {
+            final Pac pac = level.entities().pac();
+            return WorldMovement.SYSTEM.tilesAheadWithOverflowBug(pac, 2)
                 .scaled(2)
-                .minus(level.ghost(RED_GHOST_SHADOW).computeTile()));
-
+                .minus(level.ghost(RED_GHOST_SHADOW).computeTile());
+        });
         ghost.reset();
         return ghost;
     }

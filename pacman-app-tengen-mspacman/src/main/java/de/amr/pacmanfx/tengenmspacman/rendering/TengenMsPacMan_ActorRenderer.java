@@ -48,11 +48,11 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private RectShort computeGhostSprite(Ghost ghost) {
         if (ghost.animations.isSelected(CommonAnimationID.GHOST_NORMAL)) {
-            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir());
+            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldMovement.wishDir());
             return spriteOrDefault(sprites, ghost.animations.currentFrame());
         }
         if (ghost.animations.isSelected(CommonAnimationID.GHOST_EYES)) {
-            return spriteSheet().ghostEyesSprite(ghost.wishDir());
+            return spriteSheet().ghostEyesSprite(ghost.worldMovement.wishDir());
         }
         else {
             return ghost.animations.currentSprite();
@@ -61,7 +61,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private FacingSprite computePacSprite(Pac pac) {
         final int frame = pac.animations.currentFrame();
-        final Direction dir = pac.moveDir();
+        final Direction dir = pac.worldMovement.moveDir();
         return switch (pac.animations.selectedAnimationID()) {
             case null -> throw new IllegalStateException("Could not determine Pac-sprite, no animation selected");
             case CommonAnimationID.PAC_DYING    -> computePacDyingSprite(pac);
@@ -72,7 +72,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING -> facingSprite(SpriteID.MR_PAC_MUNCHING, frame, dir);
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_TURNING_AWAY -> facingSprite(SpriteID.MR_PAC_TURNING_AWAY, frame, dir);
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_WAVING_HAND -> facingSprite(SpriteID.MR_PAC_WAVING_HAND, frame, dir);
-            default -> new FacingSprite(pac.animations.currentSprite(), pac.moveDir());
+            default -> new FacingSprite(pac.animations.currentSprite(), pac.worldMovement.moveDir());
         };
     }
 

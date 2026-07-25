@@ -7,9 +7,9 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
-import de.amr.pacmanfx.core.model.actors.MovingActor;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -65,7 +65,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         };
     }
 
-    private String actorLocationText(GameLevel level, MovingActor actor) {
+    private String actorLocationText(GameLevel level, Actor actor) {
         if (actor == null) return NO_INFO;
 
         final Vector2i tile = actor.computeTile();
@@ -75,17 +75,17 @@ public class DS_ActorInfo extends GameDashboardSection {
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
             tile.x(), tile.y(),
             offsetX, offsetY,
-            actor.isNewTileEntered() ? " NEW" : "");
+            actor.worldMovement.isNewTileEntered() ? " NEW" : "");
     }
 
-    private String actorMovementText(GameLevel level, MovingActor movingActor) {
+    private String actorMovementText(GameLevel level, Actor movingActor) {
         if (movingActor == null) return NO_INFO;
         var speed = movingActor.movement.computeSpeed() * GameConstants.SIMULATION_FPS;
-        var blocked = !movingActor.moveInfo().moved;
-        var reverseText = movingActor.turnBackRequested() ? "REV!" : "";
+        var blocked = !movingActor.worldMovement.info.moved;
+        var reverseText = movingActor.worldMovement.turnBackRequested() ? "REV!" : "";
         return blocked
             ? "BLOCKED!"
-            : "%.2fpx/s %s (%s)%s".formatted(speed, movingActor.moveDir(), movingActor.wishDir(), reverseText);
+            : "%.2fpx/s %s (%s)%s".formatted(speed, movingActor.worldMovement.moveDir(), movingActor.worldMovement.wishDir(), reverseText);
     }
 
     private Supplier<String> supplyPacPowerText(GameAppContext appContext) {

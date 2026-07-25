@@ -25,6 +25,7 @@ public class Clapperboard extends Actor {
     private byte state;
 
     public Clapperboard(String number, String text) {
+        super("Clapperboard");
         this.number = number;
         this.text = text;
         this.state = CLOSED;

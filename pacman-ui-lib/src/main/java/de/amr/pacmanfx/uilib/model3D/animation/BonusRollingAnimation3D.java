@@ -16,7 +16,7 @@ public class BonusRollingAnimation3D {
     }
 
     public void update() {
-        switch (bonus3D.bonus().moveDir()) {
+        switch (bonus3D.bonus().worldMovement.moveDir()) {
             case UP -> {
                 addRotX(-ANGLE_DELTA);
                 bonus3D.rotateY().setAngle(0);

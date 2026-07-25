@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.component;
 
 import de.amr.basics.math.Vector2f;
 
-public final class Position {
+public final class Position implements EntityComponent {
 
     public float x;
     public float y;

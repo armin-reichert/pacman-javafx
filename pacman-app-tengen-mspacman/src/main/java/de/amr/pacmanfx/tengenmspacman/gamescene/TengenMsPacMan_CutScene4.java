@@ -210,7 +210,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private void computeNewMoveDir(Pac junior) {
-        Direction oldMoveDir = junior.moveDir();
+        Direction oldMoveDir = junior.worldMovement.moveDir();
         List<Direction> possibleDirs = new ArrayList<>(List.of(Direction.values()));
         possibleDirs.remove(oldMoveDir.opposite());
         List<Direction> dirsByMinCenterDist = possibleDirs.stream().sorted(

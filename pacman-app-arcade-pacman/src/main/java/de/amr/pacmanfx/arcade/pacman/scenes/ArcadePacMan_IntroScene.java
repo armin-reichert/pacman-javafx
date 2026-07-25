@@ -19,6 +19,7 @@ import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -144,7 +145,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         blinking.start();
         pacMan.position.set(WorldMap.TS * 28, WorldMap.TS * 20);
         pacMan.setMoveDir(Direction.LEFT);
-        pacMan.setSpeed(CHASING_SPEED);
+        WorldMovement.SYSTEM.setSpeed(pacMan, CHASING_SPEED);
         pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations.playSelected();
         pacMan.visibility.show();
@@ -152,7 +153,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             ghost.setState(GhostState.HUNTING_PAC);
             ghost.setMoveDir(Direction.LEFT);
             ghost.setWishDir(Direction.LEFT);
-            ghost.setSpeed(CHASING_SPEED);
+            WorldMovement.SYSTEM.setSpeed(ghost, CHASING_SPEED);
             ghost.position.set(pacMan.position.x + 16 * ghost.personality() + 18, pacMan.position.y);
             ghost.visibility.show();
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
@@ -182,20 +183,20 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void turnCardsStopPacMan() {
-        pacMan.setSpeed(0);
+        WorldMovement.SYSTEM.setSpeed(pacMan, 0);
         pacMan.animations.stopSelected();
         for (Ghost ghost : ghosts) {
             ghost.setState(FRIGHTENED);
             ghost.setMoveDir(Direction.RIGHT);
             ghost.setWishDir(Direction.RIGHT);
-            ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
+            WorldMovement.SYSTEM.setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
         }
     }
 
     private void turnCardsRestartPacMan() {
         pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations.playSelected();
-        pacMan.setSpeed(CHASING_SPEED);
+        WorldMovement.SYSTEM.setSpeed(pacMan, CHASING_SPEED);
     }
 
     private void chaseGhosts(long tick) {
@@ -219,9 +220,9 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         victim.setState(EATEN);
         victim.animations.selectAndSetFrame(CommonAnimationID.GHOST_POINTS, numGhostsEaten++);
         pacMan.visibility.hide();
-        pacMan.setSpeed(0);
+        WorldMovement.SYSTEM.setSpeed(pacMan, 0);
         for (Ghost ghost : ghosts) {
-            ghost.setSpeed(0);
+            WorldMovement.SYSTEM.setSpeed(ghost, 0);
             ghost.animations.stopSelected();
         }
         lastGhostEatenTick = tick;
@@ -229,13 +230,13 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     private void continueChasing() {
         pacMan.visibility.show();
-        pacMan.setSpeed(CHASING_SPEED);
+        WorldMovement.SYSTEM.setSpeed(pacMan, CHASING_SPEED);
         for (Ghost ghost : ghosts) {
             if (ghost.state() == EATEN) {
                 ghost.visibility.hide();
             } else {
                 ghost.visibility.show();
-                ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
+                WorldMovement.SYSTEM.setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
                 ghost.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
                 ghost.animations.playSelected();
             }
@@ -332,7 +333,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
                 timer.restartTicks(TICK_CHASING_GHOSTS_END);
                 scene.lastGhostEatenTick = timer.tickCount();
                 scene.pacMan.setMoveDir(Direction.RIGHT);
-                scene.pacMan.setSpeed(CHASING_SPEED);
+                WorldMovement.SYSTEM.setSpeed(scene.pacMan, CHASING_SPEED);
                 scene.numGhostsEaten = 0;
             }
 

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.model.component;
 
-public class Movement {
+public class Movement implements EntityComponent {
 
     public float velX;
     public float velY;

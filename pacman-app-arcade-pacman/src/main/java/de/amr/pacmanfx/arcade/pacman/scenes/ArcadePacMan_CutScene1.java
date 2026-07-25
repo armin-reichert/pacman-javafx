@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -71,33 +72,33 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void startBigPacManChasingBlinky() {
-        pacMan.placeAtTile(-3, 18, 0, 6.5f);
+        WorldMovement.SYSTEM.placeAtTile(pacMan, -3, 18, 0, 6.5f);
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.animations.select(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
         pacMan.animations.playSelected();
     }
 
     private void startBlinkyEscapingPacMan() {
-        blinky.placeAtTile(-2, 20, 4, 0);
+        WorldMovement.SYSTEM.placeAtTile(blinky, -2, 20, 4, 0);
         blinky.setMoveDir(Direction.RIGHT);
         blinky.setWishDir(Direction.RIGHT);
-        blinky.setSpeed(0.75f);
+        WorldMovement.SYSTEM.setSpeed(blinky, 0.75f);
         blinky.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
         blinky.animations.playSelected();
     }
 
     private void startBlinkyChasingPacMan() {
-        pacMan.placeAtTile(29, 20);
+        WorldMovement.SYSTEM.placeAtTile(pacMan, 29, 20);
         pacMan.setMoveDir(Direction.LEFT);
-        pacMan.setSpeed(1.25f);
+        WorldMovement.SYSTEM.setSpeed(pacMan, 1.25f);
         pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations.playSelected();
         pacMan.visibility.show();
 
-        blinky.placeAtTile(32, 20);
+        WorldMovement.SYSTEM.placeAtTile(blinky, 32, 20);
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
-        blinky.setSpeed(1.3f);
+        WorldMovement.SYSTEM.setSpeed(blinky, 1.3f);
         blinky.animations.select(CommonAnimationID.GHOST_NORMAL);
         blinky.animations.playSelected();
         blinky.visibility.show();

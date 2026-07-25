@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
@@ -40,7 +41,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
     @Override
     public void onActivate() {
         actionBindings().dispose();
-        movingText = new Actor();
+        movingText = new Actor("MovingText");
         movingText.position.set(tilesPx(9), unscaledHeight()); // lower border of screen
         ghost = appContext().variants().currentVariant().config().renderConfig().createAnimatedGhost(
             appContext().ui().sprites().animations(), GameModel.RED_GHOST_SHADOW);
@@ -66,7 +67,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
                 ghost.position.set(unscaledWidth() - WorldMap.TS, GHOST_Y);
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
-                ghost.setSpeed(WorldMap.TS);
+                WorldMovement.SYSTEM.setSpeed(ghost, WorldMap.TS);
                 ghost.visibility.show();
             }
             case 181 -> movingText.movement.setVelocity(0, WorldMap.TS);

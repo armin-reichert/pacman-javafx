@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.actors.MovingActor;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -80,10 +79,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
             ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, tilesPx(8));
 
             updateActorDrawingOrder(level);
-            actorsInZOrder.stream()
-                .filter(MovingActor.class::isInstance)
-                .map(MovingActor.class::cast)
-                .forEach(this::drawMovingActorInfo);
+            actorsInZOrder.forEach(this::drawMovingActorInfo);
         });
     }
 

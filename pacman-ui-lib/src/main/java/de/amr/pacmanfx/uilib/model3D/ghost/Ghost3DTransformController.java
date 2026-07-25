@@ -24,7 +24,7 @@ public class Ghost3DTransformController {
         ghost3D.setTranslateY(center.y());
         ghost3D.setTranslateZ(-0.5 * ghost3D.getBoundsInParent().getDepth());
 
-        ghost3D.facingRotate().setAngle(switch (ghost.wishDir()) {
+        ghost3D.facingRotate().setAngle(switch (ghost.worldMovement.wishDir()) {
             case LEFT  -> 0;
             case UP    -> 90;
             case RIGHT -> 180;
