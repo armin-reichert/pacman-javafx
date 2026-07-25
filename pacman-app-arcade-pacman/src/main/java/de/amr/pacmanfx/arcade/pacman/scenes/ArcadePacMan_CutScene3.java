@@ -8,11 +8,10 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.Movement;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -60,8 +59,8 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
             case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked();
             case TICK_ANIMATION_ENDS       -> gameState().triggerTimeout();
         }
-        Movement.SYSTEM.moveAccelerated(pacMan);
-        Movement.SYSTEM.moveAccelerated(blinky);
+        Actor.SYSTEMS.movement.moveAccelerated(pacMan);
+        Actor.SYSTEMS.movement.moveAccelerated(blinky);
     }
 
     private void startAnimation() {
@@ -70,7 +69,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     private void startBlinkyRunningNaked() {
-        WorldMovement.SYSTEM.placeAtTile(blinky, -1, 20);
+        Actor.SYSTEMS.worldMovement.placeAtTile(blinky, -1, 20);
         blinky.setMoveDir(Direction.RIGHT);
         blinky.setWishDir(Direction.RIGHT);
         blinky.animations.select(CommonAnimationID.BLINKY_NAKED);
@@ -78,17 +77,17 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     private void startBlinkyChasingPacMan() {
-        WorldMovement.SYSTEM.placeAtTile(pacMan, 29, 20);
+        Actor.SYSTEMS.worldMovement.placeAtTile(pacMan, 29, 20);
         pacMan.setMoveDir(Direction.LEFT);
-        WorldMovement.SYSTEM.setSpeed(pacMan, 1.25f);
+        Actor.SYSTEMS.worldMovement.setSpeed(pacMan, 1.25f);
         pacMan.visibility().show();
         pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations.playSelected();
 
-        WorldMovement.SYSTEM.placeAtTile(blinky, 35, 20);
+        Actor.SYSTEMS.worldMovement.placeAtTile(blinky, 35, 20);
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
-        WorldMovement.SYSTEM.setSpeed(blinky, 1.25f);
+        Actor.SYSTEMS.worldMovement.setSpeed(blinky, 1.25f);
         blinky.visibility().show();
         blinky.animations.select(CommonAnimationID.BLINKY_PATCHED);
         blinky.animations.playSelected();

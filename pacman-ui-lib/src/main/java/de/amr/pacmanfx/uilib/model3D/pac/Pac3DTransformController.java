@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.uilib.model3D.pac;
 
 import de.amr.basics.math.Vector2f;
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 
 
@@ -22,7 +22,7 @@ public class Pac3DTransformController {
 
     public void update(Pac3D pac3D, WorldMap worldMap) {
         final Pac pac = pac3D.pac();
-        final Vector2f center = WorldMovement.SYSTEM.computeCenter(pac);
+        final Vector2f center = Actor.SYSTEMS.worldMovement.computeCenter(pac);
 
         pac3D.setTranslateX(center.x());
         pac3D.setTranslateY(center.y());

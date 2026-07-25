@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
@@ -342,7 +341,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         pac.animations.stopSelected();
         pac.animations.select(CommonAnimationID.PAC_FULL);
-        WorldMovement.SYSTEM.setSpeed(pac, 0);
+        Actor.SYSTEMS.worldMovement.setSpeed(pac, 0);
         pac.powerTimer().stop();
         pac.powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero.");
@@ -351,7 +350,7 @@ public abstract class CommonGamePlay implements GamePlay {
             ghost.animations.stopSelected();
             //TODO check in emulator if ghost animation is reset to normal
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
-            WorldMovement.SYSTEM.setSpeed(ghost, 0);
+            Actor.SYSTEMS.worldMovement.setSpeed(ghost, 0);
         });
         level.optBonus().ifPresent(Bonus::setInactive);
     }

@@ -9,9 +9,9 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -155,7 +155,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
             gameState().triggerTimeout();
         }
         else {
-            List.of(pacMan, msPacMan).forEach(Movement.SYSTEM::moveAccelerated);
+            List.of(pacMan, msPacMan).forEach(Actor.SYSTEMS.movement::moveAccelerated);
         }
     }
 }

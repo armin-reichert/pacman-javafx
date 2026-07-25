@@ -11,8 +11,6 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
-import de.amr.pacmanfx.core.model.component.Movement;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -145,7 +143,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                     ghost.position().set(WorldMap.TS * 33, ACTOR_Y);
                     ghost.setMoveDir(Direction.LEFT);
                     ghost.setWishDir(Direction.LEFT);
-                    WorldMovement.SYSTEM.setSpeed(ghost, SPEED);
+                    Actor.SYSTEMS.worldMovement.setSpeed(ghost, SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.visibility().show();
                     ghost.animations.playSelected();
@@ -191,7 +189,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                         ghost.setWishDir(Direction.UP);
                         scene.waitBeforeRising = 2;
                     } else {
-                        Movement.SYSTEM.moveAccelerated(ghost);
+                        Actor.SYSTEMS.movement.moveAccelerated(ghost);
                         Logger.debug("{} moves {} x={}", ghost.name(), ghost.worldMovement().moveDir(), ghost.position().x);
                     }
                 }
@@ -201,13 +199,13 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                         scene.waitBeforeRising--;
                     }
                     else if (ghost.position().y <= endPositionY) {
-                        WorldMovement.SYSTEM.setSpeed(ghost, 0);
+                        Actor.SYSTEMS.worldMovement.setSpeed(ghost, 0);
                         ghost.setMoveDir(Direction.RIGHT);
                         ghost.setWishDir(Direction.RIGHT);
                         return true;
                     }
                     else {
-                        Movement.SYSTEM.moveAccelerated(ghost);
+                        Actor.SYSTEMS.movement.moveAccelerated(ghost);
                         Logger.debug("{} moves {}", ghost.name(), ghost.worldMovement().moveDir());
                     }
                 }
@@ -227,7 +225,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
                 scene.marquee.update(timer.tickCount());
 
-                Movement.SYSTEM.moveAccelerated(scene.msPacMan);
+                Actor.SYSTEMS.movement.moveAccelerated(scene.msPacMan);
                 if (scene.msPacMan.position().x <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);
                     scene.msPacMan.animations.resetSelected();

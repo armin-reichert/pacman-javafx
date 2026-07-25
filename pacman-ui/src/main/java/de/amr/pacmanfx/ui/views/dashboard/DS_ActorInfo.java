@@ -70,9 +70,9 @@ public class DS_ActorInfo extends GameDashboardSection {
         if (actor == null) return NO_INFO;
 
         final WorldMovement worldMovement = actor.component(WorldMovement.class);
-        final Vector2i tile = WorldMovement.SYSTEM.computeTile(actor);
-        final float offsetX = WorldMovement.SYSTEM.computeOffsetX(actor);
-        final float offsetY = WorldMovement.SYSTEM.computeOffsetY(actor);
+        final Vector2i tile = Actor.SYSTEMS.worldMovement.computeTile(actor);
+        final float offsetX = Actor.SYSTEMS.worldMovement.computeOffsetX(actor);
+        final float offsetY = Actor.SYSTEMS.worldMovement.computeOffsetY(actor);
 
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
             tile.x(), tile.y(),

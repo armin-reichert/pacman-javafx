@@ -9,7 +9,6 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.core.model.actors.*;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
@@ -36,7 +35,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     public void drawActor(Actor actor) {
         requireNonNull(actor);
         if (!actor.visibility().isVisible()) return;
-        final Vector2f center = WorldMovement.SYSTEM.computeCenter(actor);
+        final Vector2f center = Actor.SYSTEMS.worldMovement.computeCenter(actor);
         switch (actor) {
             case Pac pac                   -> drawSpriteCentered(computePacSprite(pac),     center);
             case Ghost ghost               -> drawSpriteCentered(computeGhostSprite(ghost), center);
@@ -89,7 +88,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         final int spriteIndex = clapperboard.state(); //TODO decouple state and index in sprite sheet
         if (0 <= spriteIndex && spriteIndex < sprites.length) {
             final RectShort sprite = sprites[spriteIndex];
-            drawSpriteCentered(sprite, WorldMovement.SYSTEM.computeCenter(clapperboard));
+            drawSpriteCentered(sprite, Actor.SYSTEMS.worldMovement.computeCenter(clapperboard));
             // Draw number and title
             final double numberX = scaled(clapperboard.position().x + sprite.width() - 25);
             final double textX = scaled(clapperboard.position().x + sprite.width());

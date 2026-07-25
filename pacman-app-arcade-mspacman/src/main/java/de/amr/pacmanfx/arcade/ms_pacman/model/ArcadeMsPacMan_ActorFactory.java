@@ -3,10 +3,10 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -48,8 +48,8 @@ public class ArcadeMsPacMan_ActorFactory {
             final Vector2i tile = redGhost.tile();
             final boolean teleporting = terrain.isTileInPortalSpace(tile);
             if (teleporting) {
-                WorldMovement.SYSTEM.setSpeed(redGhost, speed);
-                WorldMovement.SYSTEM.tryMovingOrTeleporting(redGhost, level);
+                Actor.SYSTEMS.worldMovement.setSpeed(redGhost, speed);
+                Actor.SYSTEMS.worldMovement.tryMovingOrTeleporting(redGhost, level);
                 return;
             }
             final boolean takeRandomDir = level.huntingRules().phaseIndex() == 0
@@ -57,16 +57,16 @@ public class ArcadeMsPacMan_ActorFactory {
                 && terrain.isIntersection(tile);
             if (takeRandomDir) {
                 selectRandomWishDir(redGhost, level);
-                WorldMovement.SYSTEM.setSpeed(redGhost, speed);
-                WorldMovement.SYSTEM.tryMovingOrTeleporting(redGhost, level);
+                Actor.SYSTEMS.worldMovement.setSpeed(redGhost, speed);
+                Actor.SYSTEMS.worldMovement.tryMovingOrTeleporting(redGhost, level);
             } else {
                 // Normal behavior of red ghost
                 final boolean chase = level.huntingRules().isChasing() || redGhost.elroy().enabled();
                 final Vector2i targetTile = chase
                     ? redGhost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(redGhost.personality());
-                WorldMovement.SYSTEM.setSpeed(redGhost, speed);
-                WorldMovement.SYSTEM.tryMovingTowardsTargetTile(redGhost, level, targetTile);
+                Actor.SYSTEMS.worldMovement.setSpeed(redGhost, speed);
+                Actor.SYSTEMS.worldMovement.tryMovingTowardsTargetTile(redGhost, level, targetTile);
             }
         });
         return redGhost;
@@ -78,8 +78,8 @@ public class ArcadeMsPacMan_ActorFactory {
             final Vector2i tile = pinkGhost.tile();
             final boolean teleporting = terrain.isTileInPortalSpace(tile);
             if (teleporting) {
-                WorldMovement.SYSTEM.setSpeed(pinkGhost, speed);
-                WorldMovement.SYSTEM.tryMovingOrTeleporting(pinkGhost, level);
+                Actor.SYSTEMS.worldMovement.setSpeed(pinkGhost, speed);
+                Actor.SYSTEMS.worldMovement.tryMovingOrTeleporting(pinkGhost, level);
                 return;
             }
             final boolean takeRandomDir = level.huntingRules().phaseIndex() == 0
@@ -87,15 +87,15 @@ public class ArcadeMsPacMan_ActorFactory {
                 && terrain.isIntersection(tile);
             if (takeRandomDir) {
                 selectRandomWishDir(pinkGhost, level);
-                WorldMovement.SYSTEM.setSpeed(pinkGhost, speed);
-                WorldMovement.SYSTEM.tryMovingOrTeleporting(pinkGhost, level);
+                Actor.SYSTEMS.worldMovement.setSpeed(pinkGhost, speed);
+                Actor.SYSTEMS.worldMovement.tryMovingOrTeleporting(pinkGhost, level);
             } else {
                 final boolean chase = level.huntingRules().isChasing();
                 final Vector2i targetTile = chase
                     ? pinkGhost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(pinkGhost.personality());
-                WorldMovement.SYSTEM.setSpeed(pinkGhost, speed);
-                WorldMovement.SYSTEM.tryMovingTowardsTargetTile(pinkGhost, level, targetTile);
+                Actor.SYSTEMS.worldMovement.setSpeed(pinkGhost, speed);
+                Actor.SYSTEMS.worldMovement.tryMovingTowardsTargetTile(pinkGhost, level, targetTile);
             }
         });
         return pinkGhost;

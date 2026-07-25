@@ -8,8 +8,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.Movement;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
@@ -68,7 +66,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
                 ghost.position().set(unscaledWidth() - WorldMap.TS, GHOST_Y);
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
-                WorldMovement.SYSTEM.setSpeed(ghost, WorldMap.TS);
+                Actor.SYSTEMS.worldMovement.setSpeed(ghost, WorldMap.TS);
                 ghost.visibility().show();
             }
             case 181 -> movingText.movement().setVelocity(0, WorldMap.TS);
@@ -84,8 +82,8 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
             }
         }
         shadeOfBlue = TengenMsPacMan_RenderConfig.shadeOfBlue(t);
-        Movement.SYSTEM.moveAccelerated(ghost);
-        Movement.SYSTEM.moveAccelerated(movingText);
+        Actor.SYSTEMS.movement.moveAccelerated(ghost);
+        Actor.SYSTEMS.movement.moveAccelerated(movingText);
     }
 
     private void gray(boolean b)  { gray = b; }

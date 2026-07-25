@@ -11,8 +11,6 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.Movement;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
@@ -124,13 +122,13 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
         inky.position().set(LEFT_BORDER, UPPER_LANE);
-        WorldMovement.SYSTEM.setSpeed(inky, 0);
+        Actor.SYSTEMS.worldMovement.setSpeed(inky, 0);
 
         pinky = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.position().set(RIGHT_BORDER, LOWER_LANE);
-        WorldMovement.SYSTEM.setSpeed(pinky, 0);
+        Actor.SYSTEMS.worldMovement.setSpeed(pinky, 0);
 
         heart = new Actor("Heart");
         heart.animations = singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART));
@@ -149,7 +147,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
     public void onTick(GameContext gameContext) {
         clapperboard.tick();
 
-        List.of(pacMan, msPacMan, inky, pinky).forEach(Movement.SYSTEM::moveAccelerated);
+        List.of(pacMan, msPacMan, inky, pinky).forEach(Actor.SYSTEMS.movement::moveAccelerated);
 
         if (collided) {
             if (inky.position().y > MIDDLE_LANE) {
@@ -175,12 +173,12 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                     msPacMan.visibility().show();
                 }
                 case 160 -> {
-                    WorldMovement.SYSTEM.setSpeed(inky, SPEED_CHASING);
+                    Actor.SYSTEMS.worldMovement.setSpeed(inky, SPEED_CHASING);
                     inky.animations.select(CommonAnimationID.GHOST_NORMAL);
                     inky.animations.playSelected();
                     inky.visibility().show();
 
-                    WorldMovement.SYSTEM.setSpeed(pinky, SPEED_CHASING);
+                    Actor.SYSTEMS.worldMovement.setSpeed(pinky, SPEED_CHASING);
                     pinky.animations.select(CommonAnimationID.GHOST_NORMAL);
                     pinky.animations.playSelected();
                     pinky.visibility().show();
@@ -211,13 +209,13 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
                     inky.setMoveDir(Direction.RIGHT);
                     inky.setWishDir(Direction.RIGHT);
-                    WorldMovement.SYSTEM.setSpeed(inky, SPEED_AFTER_COLLISION);
+                    Actor.SYSTEMS.worldMovement.setSpeed(inky, SPEED_AFTER_COLLISION);
                     inky.movement().velY -= 2.0f;
                     inky.movement().setAcceleration(0, 0.4f);
 
                     pinky.setMoveDir(Direction.LEFT);
                     pinky.setWishDir(Direction.LEFT);
-                    WorldMovement.SYSTEM.setSpeed(pinky, SPEED_AFTER_COLLISION);
+                    Actor.SYSTEMS.worldMovement.setSpeed(pinky, SPEED_AFTER_COLLISION);
                     pinky.movement().velY -= 2.0f;
                     pinky.movement().setAcceleration(0, 0.4f);
                 }

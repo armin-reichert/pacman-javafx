@@ -6,9 +6,6 @@ package de.amr.pacmanfx.core.model.component;
 
 public class Movement implements EntityComponent {
 
-    //TODO move to game context or wherever
-    public static final MovementSystem SYSTEM = new MovementSystem();
-
     public float velX;
     public float velY;
 

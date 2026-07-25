@@ -51,19 +51,19 @@ public class Pac extends Actor {
     }
 
     public Vector2i tile() {
-        return WorldMovement.SYSTEM.computeTile(this);
+        return Actor.SYSTEMS.worldMovement.computeTile(this);
     }
 
     public void setMoveDir(Direction dir) {
-        WorldMovement.SYSTEM.setMoveDir(this, dir);
+        Actor.SYSTEMS.worldMovement.setMoveDir(this, dir);
     }
 
     public void setWishDir(Direction dir) {
-        WorldMovement.SYSTEM.setWishDir(this, dir);
+        Actor.SYSTEMS.worldMovement.setWishDir(this, dir);
     }
 
     public void setSpeed(float speed) {
-        WorldMovement.SYSTEM.setSpeed(this, speed);
+        Actor.SYSTEMS.worldMovement.setSpeed(this, speed);
     }
 
     @Override
@@ -188,11 +188,11 @@ public class Pac extends Actor {
             automaticSteering.steer(this, level);
         }
 
-        WorldMovement.SYSTEM.setSpeed(this, powerTimer.isRunning()
+        Actor.SYSTEMS.worldMovement.setSpeed(this, powerTimer.isRunning()
             ? speedRules.pacSpeedWhenHasPower(level)
             : speedRules.pacSpeed(level));
 
-        WorldMovement.SYSTEM.tryMovingOrTeleporting(this, level);
+        Actor.SYSTEMS.worldMovement.tryMovingOrTeleporting(this, level);
 
         if (worldMovement().info.moved) {
             animations.playSelected();

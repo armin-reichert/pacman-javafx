@@ -6,9 +6,9 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
@@ -154,8 +154,8 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
                 case 1380 -> gameState().triggerTimeout();
             }
 
-            Movement.SYSTEM.moveAccelerated(pacMan);
-            Movement.SYSTEM.moveAccelerated(msPacMan);
+            Actor.SYSTEMS.movement.moveAccelerated(pacMan);
+            Actor.SYSTEMS.movement.moveAccelerated(msPacMan);
             clapperboard.tick();
         }
     }

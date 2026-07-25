@@ -63,7 +63,7 @@ public class Bonus extends Actor {
     }
 
     public Vector2i tile() {
-        return WorldMovement.SYSTEM.computeTile(this);
+        return Actor.SYSTEMS.worldMovement.computeTile(this);
     }
 
     public BonusState state() {
@@ -81,7 +81,7 @@ public class Bonus extends Actor {
     public void setInactive() {
         state = BonusState.INACTIVE;
         timer.restartIndefinitely();
-        WorldMovement.SYSTEM.setSpeed(this, 0);
+        Actor.SYSTEMS.worldMovement.setSpeed(this, 0);
         jumpingAnimation.reset();
         visibility().hide();
     }
@@ -96,7 +96,7 @@ public class Bonus extends Actor {
         state = BonusState.EDIBLE;
         timer.restartIndefinitely();
 
-        WorldMovement.SYSTEM.setSpeed(this, speed);
+        Actor.SYSTEMS.worldMovement.setSpeed(this, speed);
         worldMovement().setTargetTile(null);
 
         jumpingAnimation.restart();
@@ -113,9 +113,9 @@ public class Bonus extends Actor {
         final var route = new ArrayList<>(waypoints);
         final Vector2i first = route.removeFirst();
 
-        WorldMovement.SYSTEM.placeAtTile(this, first);
-        WorldMovement.SYSTEM.setMoveDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
-        WorldMovement.SYSTEM.setWishDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
+        Actor.SYSTEMS.worldMovement.placeAtTile(this, first);
+        Actor.SYSTEMS.worldMovement.setMoveDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
+        Actor.SYSTEMS.worldMovement.setWishDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
 
         routeNavigation = new RouteBasedSteering(route);
     }
@@ -124,7 +124,7 @@ public class Bonus extends Actor {
         state = BonusState.EATEN;
         timer.restartSeconds(seconds);
 
-        WorldMovement.SYSTEM.setSpeed(this, 0);
+        Actor.SYSTEMS.worldMovement.setSpeed(this, 0);
 
         jumpingAnimation.stop();
 
@@ -161,12 +161,12 @@ public class Bonus extends Actor {
 
     private boolean wanderMaze(GameLevel level) {
         routeNavigation.steer(this, level);
-        final Vector2i tile = WorldMovement.SYSTEM.computeTile(this);
+        final Vector2i tile = Actor.SYSTEMS.worldMovement.computeTile(this);
         boolean mazeExitReached = routeNavigation.isRouteTraversed()
             || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         if (!mazeExitReached) {
-            WorldMovement.SYSTEM.navigateTowardsTarget(this, level);
-            WorldMovement.SYSTEM.tryMovingOrTeleporting(this, level);
+            Actor.SYSTEMS.worldMovement.navigateTowardsTarget(this, level);
+            Actor.SYSTEMS.worldMovement.tryMovingOrTeleporting(this, level);
             jump();
         }
         return mazeExitReached;

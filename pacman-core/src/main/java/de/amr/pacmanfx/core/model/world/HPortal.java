@@ -41,8 +41,8 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
     public boolean tryTeleporting(Actor actor) {
         final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
-        final Vector2i actorTile = WorldMovement.SYSTEM.computeTile(actor);
-        final float offsetX = WorldMovement.SYSTEM.computeOffsetX(actor);
+        final Vector2i actorTile = Actor.SYSTEMS.worldMovement.computeTile(actor);
+        final float offsetX = Actor.SYSTEMS.worldMovement.computeOffsetX(actor);
 
         if (actorTile.y() != leftBorderEntryTile().y()) {
             return false;
@@ -52,14 +52,14 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         switch (worldMovement.moveDir()) {
             case LEFT -> {
                 if (actorTile.equals(leftWrappingTile) && offsetX == 0) {
-                    WorldMovement.SYSTEM.placeAtTile(actor, rightWrappingTile.x(), rightWrappingTile.y(), -1, 0);
+                    Actor.SYSTEMS.worldMovement.placeAtTile(actor, rightWrappingTile.x(), rightWrappingTile.y(), -1, 0);
                     Logger.info("{} teleported from {} to {}", actor.name(), actorTile, rightWrappingTile);
                     return true;
                 }
             }
             case RIGHT -> {
                 if (actorTile.equals(rightWrappingTile) && offsetX == 0) {
-                    WorldMovement.SYSTEM.placeAtTile(actor, leftWrappingTile.x(), leftWrappingTile.y(), 1, 0);
+                    Actor.SYSTEMS.worldMovement.placeAtTile(actor, leftWrappingTile.x(), leftWrappingTile.y(), 1, 0);
                     Logger.info("{} teleported from {} to {}", actor.name(), actorTile, leftWrappingTile);
                     return true;
                 }

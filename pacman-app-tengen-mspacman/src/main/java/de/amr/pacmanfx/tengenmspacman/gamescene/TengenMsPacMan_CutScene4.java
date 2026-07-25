@@ -8,9 +8,9 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
@@ -103,8 +103,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
         clapperboard.tick();
 
-        Movement.SYSTEM.moveAccelerated(pacMan);
-        Movement.SYSTEM.moveAccelerated(msPacMan);
+        Actor.SYSTEMS.movement.moveAccelerated(pacMan);
+        Actor.SYSTEMS.movement.moveAccelerated(msPacMan);
         for (int i = 0; i < juniors.size(); ++i) {
             updateJunior(gameStateTick, i);
         }
@@ -202,7 +202,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         if (lifeTime> 0 && lifeTime % 10 == 0) {
             computeNewMoveDir(junior);
         }
-        Movement.SYSTEM.moveAccelerated(junior);
+        Actor.SYSTEMS.movement.moveAccelerated(junior);
         if (junior.position().x > unscaledWidth()) {
             junior.position().setX(0);
         }

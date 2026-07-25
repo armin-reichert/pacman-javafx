@@ -14,9 +14,6 @@ import static de.amr.basics.math.Direction.RIGHT;
 
 public class WorldMovement implements EntityComponent {
 
-    //TODO create systems in game context...
-    public static final WorldMovementSystem SYSTEM = new WorldMovementSystem();
-
     public static final Direction DEFAULT_MOVE_DIR = RIGHT;
     public static final Direction DEFAULT_WISH_DIR = RIGHT;
     public static final Vector2i DEFAULT_TARGET_TILE = null;

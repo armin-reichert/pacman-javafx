@@ -11,8 +11,6 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.Movement;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -108,7 +106,7 @@ class XXL_ChaseAnimation {
             ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
             ghost.setMoveDir(Direction.LEFT);
             ghost.setWishDir(Direction.LEFT);
-            WorldMovement.SYSTEM.setSpeed(ghost, GHOST_CHASE_SPEED);
+            Actor.SYSTEMS.worldMovement.setSpeed(ghost, GHOST_CHASE_SPEED);
             ghost.visibility().show();
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
             ghost.animations.playSelected();
@@ -127,9 +125,9 @@ class XXL_ChaseAnimation {
     }
 
     private void moveActors() {
-        Movement.SYSTEM.moveAccelerated(pac);
+        Actor.SYSTEMS.movement.moveAccelerated(pac);
         for (Ghost ghost : ghosts) {
-            Movement.SYSTEM.moveAccelerated(ghost);
+            Actor.SYSTEMS.movement.moveAccelerated(ghost);
         }
     }
 
@@ -145,7 +143,7 @@ class XXL_ChaseAnimation {
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
                 ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * 2 * WorldMap.TS);
-                WorldMovement.SYSTEM.setSpeed(ghost, 1.05f);
+                Actor.SYSTEMS.worldMovement.setSpeed(ghost, 1.05f);
                 ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
                 ghost.animations.playSelected();
             }
@@ -189,7 +187,7 @@ class XXL_ChaseAnimation {
                 ghost.position().setX(pac.position().x + 22 * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
                 ghost.setMoveDir(Direction.RIGHT);
                 ghost.setWishDir(Direction.RIGHT);
-                WorldMovement.SYSTEM.setSpeed(ghost, 0.58f);
+                Actor.SYSTEMS.worldMovement.setSpeed(ghost, 0.58f);
                 ghost.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
                 ghost.animations.playSelected();
             }

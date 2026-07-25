@@ -6,10 +6,7 @@ package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
-import de.amr.pacmanfx.core.model.component.EntityComponent;
-import de.amr.pacmanfx.core.model.component.Movement;
-import de.amr.pacmanfx.core.model.component.Position;
-import de.amr.pacmanfx.core.model.component.Visibility;
+import de.amr.pacmanfx.core.model.component.*;
 import de.amr.pacmanfx.core.model.level.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
@@ -26,6 +23,9 @@ import static java.util.Objects.requireNonNull;
  * </p>
  */
 public class Actor implements GameEntity {
+
+    //TODO temp solution
+    public static final ComponentSystems SYSTEMS = new ComponentSystems();
 
     private final Map<Class<? extends EntityComponent>, EntityComponent> components = new HashMap<>();
 

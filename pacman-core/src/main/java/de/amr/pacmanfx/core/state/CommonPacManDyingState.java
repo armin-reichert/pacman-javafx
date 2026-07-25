@@ -9,10 +9,10 @@ import de.amr.pacmanfx.core.event.PacDeadEvent;
 import de.amr.pacmanfx.core.event.PacDyingEvent;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import org.tinylog.Logger;
 
@@ -51,7 +51,7 @@ public class CommonPacManDyingState extends GameState {
         pac.animations.stopSelected();
         pac.powerTimer().stop();
         pac.powerTimer().reset(0);
-        WorldMovement.SYSTEM.setSpeed(pac, 0);
+        Actor.SYSTEMS.worldMovement.setSpeed(pac, 0);
         pac.setDead(true);
         Logger.info("Pac power timer stopped and reset to zero.");
 

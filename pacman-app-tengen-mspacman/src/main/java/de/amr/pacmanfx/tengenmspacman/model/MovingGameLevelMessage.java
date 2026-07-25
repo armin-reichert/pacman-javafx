@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.model.component.Movement;
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 
@@ -49,7 +49,7 @@ public class MovingGameLevelMessage extends GameLevelMessage {
             --delayTicks;
             return;
         }
-        Movement.SYSTEM.moveAccelerated(this);
+        Actor.SYSTEMS.movement.moveAccelerated(this);
         if (wrapped) {
             if (position().x >= startPosition.x()) {
                 position().set(startPosition);

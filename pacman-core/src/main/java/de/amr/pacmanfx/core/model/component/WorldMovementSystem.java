@@ -273,11 +273,11 @@ public class WorldMovementSystem {
             Vector2f cornerVelocity = newVelocity.plus(dir.vector().scaled(worldMovement.corneringSpeedDelta));
             Logger.trace("{} velocity around corner: {}", actor.name(), cornerVelocity.length());
             movement.setVelocity(cornerVelocity.x(), cornerVelocity.y());
-            Movement.SYSTEM.moveAccelerated(actor);
+            Actor.SYSTEMS.movement.moveAccelerated(actor);
             movement.setVelocity(newVelocity.x(), newVelocity.y());
         } else {
             movement.setVelocity(newVelocity.x(), newVelocity.y());
-            Movement.SYSTEM.moveAccelerated(actor);
+            Actor.SYSTEMS.movement.moveAccelerated(actor);
         }
 
         final Vector2i tileAfterMoving = computeTile(actor);
