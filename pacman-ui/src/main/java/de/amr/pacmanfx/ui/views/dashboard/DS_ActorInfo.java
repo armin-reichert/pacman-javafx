@@ -86,7 +86,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         final WorldMovement worldMovement = actor.component(WorldMovement.class);
         var speed = actor.movement().computeSpeed() * GameConstants.SIMULATION_FPS;
         var blocked = !worldMovement.info.moved;
-        var reverseText = worldMovement.turnBackRequested() ? "REV!" : "";
+        var reverseText = worldMovement.isTurnBackRequested() ? "REV!" : "";
         return blocked
             ? "BLOCKED!"
             : "%.2fpx/s %s (%s)%s".formatted(speed, worldMovement.moveDir(), worldMovement.wishDir(), reverseText);

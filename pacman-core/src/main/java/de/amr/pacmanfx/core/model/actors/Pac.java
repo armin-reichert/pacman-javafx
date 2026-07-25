@@ -86,7 +86,7 @@ public class Pac extends Actor {
 
     @Override
     public boolean canTurnBack() {
-        return worldMovement().newTileEntered;
+        return worldMovement().isNewTileEntered();
     }
 
     @Override

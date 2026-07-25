@@ -196,7 +196,7 @@ public class Ghost extends Actor {
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
         final boolean stuck = !worldMovement().info.moved;
-        if ((worldMovement().newTileEntered || stuck) && !teleporting) {
+        if ((worldMovement().isNewTileEntered() || stuck) && !teleporting) {
             final Direction dir = computeRoamingDirection(level, tile);
             WorldMovement.SYSTEM.setWishDir(this, dir);
             Logger.debug("Ghost {} takes random wish direction {}", name, dir);
@@ -251,7 +251,8 @@ public class Ghost extends Actor {
 
     @Override
     public boolean canTurnBack() {
-        return worldMovement().newTileEntered && inAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.FRIGHTENED));
+        return worldMovement().isNewTileEntered()
+            && inAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.FRIGHTENED));
     }
 
     // Here begins the state machine part
@@ -350,7 +351,7 @@ public class Ghost extends Actor {
             position().setY(houseEntryPosition.y());
             setMoveDir(LEFT);
             setWishDir(LEFT);
-            worldMovement().newTileEntered = false; // don't change direction until new tile is entered by moving
+            worldMovement().setNewTileEntered(false); // don't change direction until new tile is entered by moving
             setState(isInDanger(level) ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
         }
         else {

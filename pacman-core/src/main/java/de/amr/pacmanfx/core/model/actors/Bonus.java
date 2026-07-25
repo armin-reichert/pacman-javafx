@@ -52,7 +52,7 @@ public class Bonus extends Actor {
         jumpingAnimation = new Pulse(PULSE_CHANGE_TICKS, Pulse.State.OFF);
 
         reset();
-        worldMovement().canTeleport = false; // override default value (true)
+        worldMovement().setCanTeleport(false); // override default value (true)
 
         // initial state
         setInactive();

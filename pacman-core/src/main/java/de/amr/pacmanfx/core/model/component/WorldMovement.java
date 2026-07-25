@@ -25,13 +25,13 @@ public class WorldMovement implements EntityComponent {
     /** Order in which directions are selected when navigation decision is met. */
     public static final List<Direction> NAVIGATION_ORDER = List.of(Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT);
 
-    public ObjectProperty<Direction> moveDir;
-    public ObjectProperty<Direction> wishDir;
-    public ObjectProperty<Vector2i> targetTile;
+    private ObjectProperty<Direction> moveDir;
+    private ObjectProperty<Direction> wishDir;
+    private ObjectProperty<Vector2i> targetTile;
 
-    public boolean newTileEntered;
-    public boolean turnBackRequested;
-    public boolean canTeleport = DEFAULT_CAN_TELEPORT;
+    private boolean newTileEntered;
+    private boolean turnBackRequested;
+    private boolean canTeleport = DEFAULT_CAN_TELEPORT;
 
     //TODO this is just a primitive way to provide cornering speed differences
     public float corneringSpeedDelta;
@@ -39,8 +39,7 @@ public class WorldMovement implements EntityComponent {
     //TODO: store in frame context?
     public final WorldMovementInfo info = new WorldMovementInfo();
 
-    public WorldMovement() {
-    }
+    public WorldMovement() {}
 
     @Override
     public void reset() {
@@ -129,11 +128,27 @@ public class WorldMovement implements EntityComponent {
         return newTileEntered;
     }
 
+    public void setNewTileEntered(boolean newTileEntered) {
+        this.newTileEntered = newTileEntered;
+    }
+
+    public void setCanTeleport(boolean canTeleport) {
+        this.canTeleport = canTeleport;
+    }
+
+    public boolean canTeleport() {
+        return canTeleport;
+    }
+
     /**
      * @return {@code true} if the ghost should revert its direction at the next occasion
      */
-    public boolean turnBackRequested() {
+    public boolean isTurnBackRequested() {
         return turnBackRequested;
+    }
+
+    public void clearTurnBackRequested() {
+        turnBackRequested = false;
     }
 
     /**

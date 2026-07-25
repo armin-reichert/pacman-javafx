@@ -54,7 +54,7 @@ public class WorldMovementSystem {
         final Movement movement = actor.movement();
         final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
-        if (worldMovement.moveDir == null && dir.equals(WorldMovement.DEFAULT_MOVE_DIR)) return;
+        if (worldMovement.moveDir() == null && dir.equals(WorldMovement.DEFAULT_MOVE_DIR)) return;
         worldMovement.moveDirProperty().set(dir);
         double speed = movement.computeSpeed();
         movement.setVelocity(dir.vector().x() * speed, dir.vector().y() * speed);
@@ -69,7 +69,7 @@ public class WorldMovementSystem {
         requireNonNull(dir);
         final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
-        if (worldMovement.wishDir == null && dir.equals(WorldMovement.DEFAULT_WISH_DIR)) return;
+        if (worldMovement.wishDir() == null && dir.equals(WorldMovement.DEFAULT_WISH_DIR)) return;
         worldMovement.wishDirProperty().set(dir);
     }
 
@@ -90,7 +90,7 @@ public class WorldMovementSystem {
         position.setX(tx * WorldMap.TS + ox);
         position.setY(ty * WorldMap.TS + oy);
 
-        worldMovement.newTileEntered = !computeTile(actor).equals(prevTile);
+        worldMovement.setNewTileEntered(!computeTile(actor).equals(prevTile));
     }
 
     /**
@@ -151,7 +151,7 @@ public class WorldMovementSystem {
         requireNonNull(level);
         final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
-        if (!worldMovement.newTileEntered && worldMovement.info.moved || worldMovement.targetTile() == null) {
+        if (!worldMovement.isNewTileEntered() && worldMovement.info.moved || worldMovement.targetTile() == null) {
             return; // we don't need no navigation, dim dit didit didit...
         }
 
@@ -208,16 +208,16 @@ public class WorldMovementSystem {
         final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         worldMovement.info.clear();
-        if (worldMovement.canTeleport) {
+        if (worldMovement.canTeleport()) {
             worldMovement.info.teleported = tryTeleporting(actor, level.worldMap().terrainLayer());
             if (worldMovement.info.teleported) {
                 return;
             }
         }
-        if (worldMovement.turnBackRequested && actor.canTurnBack()) {
+        if (worldMovement.isTurnBackRequested() && actor.canTurnBack()) {
             setWishDir(actor, worldMovement.moveDir().opposite());
             Logger.trace("{}: turned back at tile {}", actor.name(), computeTile(actor));
-            worldMovement.turnBackRequested = false;
+            worldMovement.clearTurnBackRequested();
         }
         tryMovingTowards(actor, level, computeTile(actor), worldMovement.wishDir());
         if (worldMovement.info.moved) {
@@ -281,7 +281,7 @@ public class WorldMovementSystem {
         }
 
         final Vector2i tileAfterMoving = computeTile(actor);
-        worldMovement.newTileEntered = !tileBeforeMoving.equals(tileAfterMoving);
+        worldMovement.setNewTileEntered(!tileBeforeMoving.equals(tileAfterMoving));
 
         worldMovement.info.moved = true;
         TerrainLayer terrainLayer = level.worldMap().terrainLayer();
