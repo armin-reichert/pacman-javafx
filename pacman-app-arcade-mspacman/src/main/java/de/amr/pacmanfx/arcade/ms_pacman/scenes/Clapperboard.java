@@ -50,7 +50,7 @@ public class Clapperboard extends Actor {
         tick = 0;
         state = WIDE_OPEN;
         running = true;
-        show();
+        visibility.show();
     }
 
     public void tick() {
@@ -60,7 +60,7 @@ public class Clapperboard extends Actor {
                 case 54 -> state = CLOSED;
                 case 59 -> state = WIDE_OPEN;
                 case 88 -> {
-                    hide();
+                    visibility.hide();
                     running = false;
                 }
             }

@@ -141,24 +141,24 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         pacMan.position.set(TS * 3, GROUND_Y - 4);
         pacMan.animations().select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
         pacMan.animations().stopSelected();
-        pacMan.show();
+        pacMan.visibility.show();
 
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.position.set(TS * 5, GROUND_Y - 4);
         msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
         msPacMan.animations().stopSelected();
-        msPacMan.show();
+        msPacMan.visibility.show();
 
         stork.position.set(TS * 30, TS * 12);
         stork.movement.setVelocity(-0.8f, 0);
-        stork.show();
+        stork.visibility.show();
         stork.animations().select(CommonAnimationID.STORK_FLYING);
         stork.animations().playSelected();
 
         bag.position.set(stork.position.x - 14, stork.position.y + 3);
         bag.movement.setVelX(stork.movement.velX);
         bag.movement.setAcceleration(0, 0);
-        bag.show();
+        bag.visibility.show();
         bag.setOpen(false);
 
         bagReleased = false;

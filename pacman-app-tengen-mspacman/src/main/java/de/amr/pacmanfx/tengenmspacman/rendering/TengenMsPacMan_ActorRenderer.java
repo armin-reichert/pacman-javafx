@@ -35,7 +35,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     @Override
     public void drawActor(Actor actor) {
         requireNonNull(actor);
-        if (!actor.isVisible()) return;
+        if (!actor.visibility.isVisible()) return;
 
         switch (actor) {
             case Bonus bonus -> drawSpriteCentered(computeBonusSprite(bonus), bonus.computeCenter());

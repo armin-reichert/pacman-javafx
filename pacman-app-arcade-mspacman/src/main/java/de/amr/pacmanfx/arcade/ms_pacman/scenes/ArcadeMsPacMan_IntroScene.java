@@ -94,7 +94,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         msPacMan.position.set(WorldMap.TS * 31, WorldMap.TS * 20);
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setSpeed(ACTOR_SPEED);
-        msPacMan.setVisible(true);
+        msPacMan.visibility.show();
         msPacMan.setAnimations(gameVariantConfig.createPacAnimations(container));
         msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
         msPacMan.animations().playSelected();
@@ -112,7 +112,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             ghost.setWishDir(Direction.LEFT);
             ghost.setSpeed(ACTOR_SPEED);
             ghost.setState(GhostState.HUNTING_PAC);
-            ghost.setVisible(true);
+            ghost.visibility.show();
             ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
             ghost.animations().playSelected();
         }

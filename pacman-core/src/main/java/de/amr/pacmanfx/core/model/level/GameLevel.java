@@ -186,8 +186,8 @@ public class GameLevel {
      * Makes Pac-Man and the ghosts invisible.
      */
     public void hidePacAndGhosts() {
-        entities.pac().hide();
-        entities.ghosts().forEach(Ghost::hide);
+        entities.pac().visibility.hide();
+        entities.ghosts().forEach(ghost -> ghost.visibility.hide());
     }
 
     // Ghost kill chain

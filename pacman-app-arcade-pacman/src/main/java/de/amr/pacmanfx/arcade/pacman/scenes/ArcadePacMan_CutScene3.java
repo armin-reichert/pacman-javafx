@@ -79,7 +79,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         pacMan.placeAtTile(29, 20);
         pacMan.setMoveDir(Direction.LEFT);
         pacMan.setSpeed(1.25f);
-        pacMan.show();
+        pacMan.visibility.show();
         pacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations().playSelected();
 
@@ -87,7 +87,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
         blinky.setSpeed(1.25f);
-        blinky.show();
+        blinky.visibility.show();
         blinky.animations().select(CommonAnimationID.BLINKY_PATCHED);
         blinky.animations().playSelected();
     }

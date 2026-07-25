@@ -136,7 +136,7 @@ public class Ghost extends MovingActor {
         return "Ghost{" +
                 "name=" + name() +
                 ", state=" + (state != null ? state() : DEFAULT_STATE) +
-                ", visible=" + isVisible() +
+                ", visible=" + visibility.isVisible() +
                 ", x=" + position.x +
                 ", y=" + position.y +
                 ", velocityX=" + movement.velX +

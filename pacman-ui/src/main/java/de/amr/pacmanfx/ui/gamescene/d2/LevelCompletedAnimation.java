@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d2;
 
-import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -152,6 +151,6 @@ public class LevelCompletedAnimation {
     }
 
     private void hideGhosts() {
-        level.entities().ghosts().forEach(Ghost::hide);
+        level.entities().ghosts().forEach(ghost -> ghost.visibility.hide());
     }
 }

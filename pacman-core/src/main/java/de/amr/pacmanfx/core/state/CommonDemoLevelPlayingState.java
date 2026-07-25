@@ -10,10 +10,9 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.LevelCreatedEvent;
 import de.amr.pacmanfx.core.event.LevelStartedEvent;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.rules.GameRules;
-import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.rules.GameRules;
 import org.tinylog.Logger;
 
 public class CommonDemoLevelPlayingState extends GameState {
@@ -50,8 +49,8 @@ public class CommonDemoLevelPlayingState extends GameState {
         }
         else if (tick == 2) {
             // Now, actor animations are available, show them
-            level.entities().pac().show();
-            level.entities().ghosts().forEach(Ghost::show);
+            level.entities().pac().visibility.show();
+            level.entities().ghosts().forEach(ghost -> ghost.visibility.show());
         }
         else if (tick == huntingStartTick) {
             // Clear "READY!" message. "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared!

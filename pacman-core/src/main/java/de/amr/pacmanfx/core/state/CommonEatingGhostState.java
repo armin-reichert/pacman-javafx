@@ -27,7 +27,7 @@ public class CommonEatingGhostState extends GameState {
         final GameModel model = gameContext.model();
         final GameLevel level = model.optLevel().orElseThrow();
         if (timer().hasExpired()) {
-            level.entities().pac().show();
+            level.entities().pac().visibility.show();
             level.ghostsInState(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
             level.entities().ghosts().forEach(ghost -> ghost.animations().playSelected());
             gameContext.flow().resumePreviousState(gameContext);

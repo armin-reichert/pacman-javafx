@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
-import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
@@ -70,9 +69,9 @@ public class LevelCompletedAnimation extends ManagedAnimation {
         final Maze3D maze3D = level3D.maze3D();
         final Point3D rotationAxis = chance(0.5) ? Rotate.X_AXIS : Rotate.Z_AXIS;
         return new SequentialTransition(
-            pauseSecThen(0.5, () -> level.entities().ghosts().forEach(Ghost::hide)),
+            pauseSecThen(0.5, () -> level.entities().ghosts().forEach(ghost -> ghost.visibility.hide())),
             createMazeWallsSwingingAnimation(maze3D, level.numFlashes()),
-            pauseSecThen(0.5, () -> level.entities().pac().hide()),
+            pauseSecThen(0.5, () -> level.entities().pac().visibility.hide()),
             pauseSec(0.5),
             levelRotation(rotationAxis),
             pauseSecThen(0.5, () -> level3D.optSoundEffects().ifPresent(GameSoundEffects::playLevelCompleteSound)),

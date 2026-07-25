@@ -8,7 +8,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameStartedEvent;
 import de.amr.pacmanfx.core.event.LevelStartedEvent;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -43,8 +42,8 @@ public class ArcadeGameStartingState extends GameState {
             gameContext.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }
         else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
-            level.entities().pac().show();
-            level.entities().ghosts().forEach(Ghost::show);
+            level.entities().pac().visibility.show();
+            level.entities().ghosts().forEach(ghost -> ghost.visibility.show());
         }
         else if (tick == TICK_NEW_GAME_START_PLAYING) {
             model.setPlaying(true);

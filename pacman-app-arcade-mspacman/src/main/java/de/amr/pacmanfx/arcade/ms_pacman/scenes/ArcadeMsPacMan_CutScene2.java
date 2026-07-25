@@ -105,12 +105,12 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
             pacMan.position.set(TS * (-2), UPPER_Y);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(2.0f);
-            pacMan.show();
+            pacMan.visibility.show();
 
             msPacMan.position.set(TS * (-8), UPPER_Y);
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setSpeed(2.0f);
-            msPacMan.show();
+            msPacMan.visibility.show();
         }
         else if (sceneTimer.atSecond(9)) {
             pacMan.position.set(TS * 36, LOWER_Y);

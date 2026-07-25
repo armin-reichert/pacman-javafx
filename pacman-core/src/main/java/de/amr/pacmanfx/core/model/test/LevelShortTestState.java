@@ -8,7 +8,6 @@ import de.amr.pacmanfx.core.event.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.LevelStartedEvent;
 import de.amr.pacmanfx.core.event.TestStartedEvent;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.state.GameState;
@@ -33,8 +32,8 @@ public class LevelShortTestState extends GameState {
         gameContext.gamePlay().buildNormalLevel(gameContext, 1);
         gameContext.gamePlay().startLevel(gameContext);
         final GameLevel level = model.optLevel().orElseThrow();
-        level.entities().pac().show();
-        level.entities().ghosts().forEach(Ghost::show);
+        level.entities().pac().visibility.show();
+        level.entities().ghosts().forEach(ghost -> ghost.visibility.show());
 
         waitForTimeout();
         // Note: This event is very important because it triggers the creation of the actor animations!
@@ -48,8 +47,8 @@ public class LevelShortTestState extends GameState {
         final float START = 1.0f;
         if (timer().atSecond(START)) {
             gameContext.gamePlay().prepareLevelForPlaying(gameContext);
-            level.entities().pac().show();
-            level.entities().ghosts().forEach(Ghost::show);
+            level.entities().pac().visibility.show();
+            level.entities().ghosts().forEach(ghost -> ghost.visibility.show());
             gameContext.gamePlay().showLevelMessage(level, GameLevelMessageType.READY);
             gameContext.hudState().hideCredit().showLivesCounter();
 

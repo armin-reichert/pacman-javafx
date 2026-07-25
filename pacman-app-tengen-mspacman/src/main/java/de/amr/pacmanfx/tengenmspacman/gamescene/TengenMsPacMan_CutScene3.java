@@ -86,7 +86,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         clapperboard = new Clapperboard(3, "JUNIOR");
         clapperboard.position.set(3 * WorldMap.TS, 10 * WorldMap.TS);
-        clapperboard.show();
+        clapperboard.visibility.show();
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
@@ -119,21 +119,21 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     pacMan.setSpeed(0);
                     pacMan.animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations().stopSelected();
-                    pacMan.show();
+                    pacMan.visibility.show();
 
                     msPacMan.setMoveDir(Direction.RIGHT);
                     msPacMan.position.set(WorldMap.TS * 5, GROUND_Y - 4);
                     msPacMan.setSpeed(0);
                     msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations().stopSelected();
-                    msPacMan.show();
+                    msPacMan.visibility.show();
 
                     stork.position.set(RIGHT_BORDER, WorldMap.TS * 7);
                     stork.movement.setVelocity(-0.8f, 0);
                     stork.setBagReleasedFromBeak(false);
                     stork.animations().select(CommonAnimationID.STORK_FLYING);
                     stork.animations().playSelected();
-                    stork.show();
+                    stork.visibility.show();
                 }
                 case 240 -> {
                     // stork releases bag, bag starts falling
@@ -142,7 +142,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     flyingBag.position.set(stork.position.x - 15, stork.position.y + 8);
                     flyingBag.movement.setVelocity(-0.5f, 0);
                     flyingBag.movement.setAcceleration(0, 0.1f);
-                    flyingBag.show();
+                    flyingBag.visibility.show();
                 }
                 case 320 -> // reaches ground, starts bouncing
                     flyingBag.movement.setVelX(-0.5f);

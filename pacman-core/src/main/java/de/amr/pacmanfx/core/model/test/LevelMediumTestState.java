@@ -99,14 +99,15 @@ public class LevelMediumTestState extends GameState {
         pac.usingAutopilotProperty().unbind();
         pac.setUsingAutopilot(true);
         pac.animations().playSelected();
-        pac.show();
+        pac.visibility.show();
 
         final List<Ghost> ghosts = level.entities().ghosts();
-        ghosts.forEach(ghost -> ghost.animations().playSelected());
-        ghosts.forEach(Ghost::show);
+        ghosts.forEach(ghost -> {
+            ghost.visibility.show();
+            ghost.animations().playSelected();
+        });
 
         gameContext.hudState().show();
-
         gameContext.eventManager().publishGameEvent(new StopAllSoundsEvent());
     }
 }

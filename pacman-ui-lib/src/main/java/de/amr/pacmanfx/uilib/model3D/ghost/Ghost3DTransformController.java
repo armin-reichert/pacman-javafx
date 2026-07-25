@@ -32,6 +32,6 @@ public class Ghost3DTransformController {
         });
 
         final boolean outside = center.x() < WorldMap.HTS || center.x() > WorldMap.TS * worldMap.numCols() - WorldMap.HTS;
-        ghost3D.setVisible(ghost.isVisible() && !outside);
+        ghost3D.setVisible(ghost.visibility.isVisible() && !outside);
     }
 }

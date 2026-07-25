@@ -47,7 +47,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
     }
 
     public void drawMovingActorInfo(MovingActor movingActor) {
-        if (!movingActor.isVisible()) {
+        if (!movingActor.visibility.isVisible()) {
             return;
         }
         ctx.setFill(Color.FORESTGREEN);

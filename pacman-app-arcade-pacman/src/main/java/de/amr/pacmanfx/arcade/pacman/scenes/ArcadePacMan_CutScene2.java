@@ -110,7 +110,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void endTheShow() {
-        blinky.setVisible(false);
+        blinky.visibility.hide();
         gameState().triggerTimeout();
     }
 
@@ -137,7 +137,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         blinky.setSpeed(1.25f);
         blinky.animations().select(CommonAnimationID.GHOST_NORMAL);
         blinky.animations().playSelected();
-        blinky.show();
+        blinky.visibility.show();
     }
 
     private void pacManStartsRunning() {
@@ -146,7 +146,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         pacMan.setSpeed(1.15f);
         pacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations().playSelected();
-        pacMan.show();
+        pacMan.visibility.show();
     }
 
     private void setDressState(NailDressState state) {

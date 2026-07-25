@@ -34,6 +34,6 @@ public class Pac3DTransformController {
         });
 
         final boolean outside = center.x() < WorldMap.HTS || center.x() > WorldMap.TS * worldMap.numCols() - WorldMap.HTS;
-        pac3D.setVisible(pac.isVisible() && !outside);
+        pac3D.setVisible(pac.visibility.isVisible() && !outside);
     }
 }

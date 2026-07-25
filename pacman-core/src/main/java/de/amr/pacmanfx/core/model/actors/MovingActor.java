@@ -82,7 +82,7 @@ public abstract class MovingActor extends Actor implements GameEntity {
     @Override
     public String toString() {
         return "MovingActor{" +
-            "visible=" + isVisible() +
+            "visible=" + visibility.isVisible() +
             ", x=" + position.x +
             ", y=" + position.y +
             ", velocityX=" + movement.velX +

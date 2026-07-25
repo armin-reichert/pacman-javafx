@@ -125,7 +125,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         pacMan.setSpeed(SPEED_PAC_CHASING);
         pacMan.animations().select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
         pacMan.animations().playSelected();
-        pacMan.show();
+        pacMan.visibility.show();
 
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
@@ -133,14 +133,14 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         inky.setSpeed(SPEED_GHOST_CHASING);
         inky.animations().select(CommonAnimationID.GHOST_NORMAL);
         inky.animations().playSelected();
-        inky.show();
+        inky.visibility.show();
 
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.position.set(WorldMap.TS * 30, LOWER_Y);
         msPacMan.setSpeed(SPEED_PAC_CHASING);
         msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
         msPacMan.animations().playSelected();
-        msPacMan.show();
+        msPacMan.visibility.show();
 
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
@@ -148,7 +148,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         pinky.setSpeed(SPEED_GHOST_CHASING);
         pinky.animations().select(CommonAnimationID.GHOST_NORMAL);
         pinky.animations().playSelected();
-        pinky.show();
+        pinky.visibility.show();
 
         setState(SceneState.CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
     }
@@ -241,11 +241,11 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         msPacMan.animations().stopSelected();
         msPacMan.animations().resetSelected();
 
-        inky.hide();
-        pinky.hide();
+        inky.visibility.hide();
+        pinky.visibility.hide();
 
         heart.position.set((pacMan.position.x + msPacMan.position.x) * 0.5f, pacMan.position.y - WorldMap.TS * 2);
-        heart.show();
+        heart.visibility.show();
 
         setState(SceneState.IN_HEAVEN, 3L * GameConstants.SIMULATION_FPS);
     }

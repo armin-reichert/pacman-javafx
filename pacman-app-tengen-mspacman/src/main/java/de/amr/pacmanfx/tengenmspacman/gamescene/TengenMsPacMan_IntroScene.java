@@ -131,7 +131,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 scene.msPacMan.position.set(WorldMap.TS * 33, ACTOR_Y);
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(SPEED);
-                scene.msPacMan.setVisible(true);
+                scene.msPacMan.visibility.show();
 
                 scene.ghosts = List.of(
                     renderConfig.createAnimatedGhost(spriteAnimations, GameModel.RED_GHOST_SHADOW),
@@ -145,7 +145,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                     ghost.setWishDir(Direction.LEFT);
                     ghost.setSpeed(SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
-                    ghost.setVisible(true);
+                    ghost.visibility.show();
                     ghost.animations().playSelected();
                 }
                 scene.ghostIndex = 0;

@@ -7,7 +7,6 @@ import de.amr.basics.Identifier;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.ArcadeHouse;
@@ -256,14 +255,14 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         final GameLevel level = gameContext.assertLevel();
         boolean accessRequested = level
             .ghostsInAnyOfStates(Set.of(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
-            .anyMatch(Ghost::isVisible);
+            .anyMatch(ghost -> ghost.visibility.isVisible());
         light.lightOnProperty().set(accessRequested);
 
         level.worldMap().terrainLayer().optHouse().ifPresent(house -> {
             boolean ghostNearHouseEntry = level
                 .ghostsInAnyOfStates(Set.of(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
                 .filter(ghost -> ghost.position.asVector2f().euclideanDist(house.entryPosition()) <= doorSensitivity)
-                .anyMatch(Ghost::isVisible);
+                .anyMatch(ghost -> ghost.visibility.isVisible());
             doorsOpenProperty.set(ghostNearHouseEntry);
         });
     }

@@ -159,7 +159,7 @@ public class LivesCounter3D extends Group implements GameEntity, DisposableGraph
         int lifeCount = model.lifeCount() - 1;
 
         // While the game starts and Pac-Man is not yet visible in maze, show one more:
-        if (!model.isPlaying() && !pac.isVisible()) {
+        if (!model.isPlaying() && !pac.visibility.isVisible()) {
             lifeCount += 1;
         }
 

@@ -71,7 +71,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
 
         clapperboard = new Clapperboard(2, "THE CHASE");
         clapperboard.position.set(3 * WorldMap.TS, 10 * WorldMap.TS);
-        clapperboard.show();
+        clapperboard.visibility.show();
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
@@ -99,7 +99,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
                     msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations().playSelected();
                     msPacMan.setSpeed(2.0f);
-                    msPacMan.show();
+                    msPacMan.visibility.show();
                 }
                 case 320 -> {
                     pacMan.setMoveDir(Direction.RIGHT);
@@ -108,7 +108,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
                     pacMan.position.set(LEFT_BORDER, UPPER_LANE);
                     pacMan.setMoveDir(Direction.RIGHT);
                     pacMan.setSpeed(2.0f);
-                    pacMan.show();
+                    pacMan.visibility.show();
                 }
                 case 520 -> {
                     pacMan.position.set(RIGHT_BORDER, LOWER_LANE);

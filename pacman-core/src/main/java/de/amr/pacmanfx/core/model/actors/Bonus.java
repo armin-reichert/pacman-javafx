@@ -73,14 +73,14 @@ public class Bonus extends MovingActor {
         setSpeed(0);
         jumpingAnimation.reset();
 
-        hide();
+        visibility.hide();
     }
 
     public void showEdibleForSeconds(float seconds) {
         state = BonusState.EDIBLE;
         timer.restartSeconds(seconds);
 
-        show();
+        visibility.show();
     }
 
     public void showEdibleAndStartWandering(float speed) {
@@ -91,7 +91,7 @@ public class Bonus extends MovingActor {
         setTargetTile(null);
         jumpingAnimation.restart();
 
-        show();
+        visibility.show();
     }
 
     public void setMazeRoute(List<Vector2i> waypoints, boolean leftToRight) {
@@ -115,7 +115,7 @@ public class Bonus extends MovingActor {
         setSpeed(0);
         jumpingAnimation.stop();
 
-        show();
+        visibility.show();
     }
 
     @Override

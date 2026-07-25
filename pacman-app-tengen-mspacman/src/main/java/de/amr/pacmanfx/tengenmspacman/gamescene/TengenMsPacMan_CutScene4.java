@@ -74,7 +74,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
         clapperboard = new Clapperboard(4, "THE END");
         clapperboard.position.set(tilesPx(3), tilesPx(10));
-        clapperboard.setVisible(true);
+        clapperboard.visibility.show();
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
@@ -116,14 +116,14 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     pacMan.setSpeed(1f);
                     pacMan.animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations().playSelected();
-                    pacMan.show();
+                    pacMan.visibility.show();
 
                     msPacMan.setMoveDir(Direction.LEFT);
                     msPacMan.position.set(RIGHT_BORDER, LOWER_LANE);
                     msPacMan.setSpeed(1f);
                     msPacMan.animations().select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations().playSelected();
-                    msPacMan.show();
+                    msPacMan.visibility.show();
                 }
                 case 230 -> {
                     pacMan.setSpeed(0);
@@ -160,8 +160,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     msPacMan.setMoveDir(Direction.UP);
                 }
                 case 720 -> {
-                    pacMan.hide();
-                    msPacMan.hide();
+                    pacMan.visibility.hide();
+                    msPacMan.visibility.hide();
                 }
                 case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(renderConfig, gameStateTick);
                 case 1500 -> optSoundEffects().ifPresent(GameSoundEffects::stopAll);
@@ -178,7 +178,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         junior.setSpeed(2);
         junior.setAnimations(renderConfig.createPacAnimations(appContext().ui().sprites().animations()));
         junior.animations().select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
-        junior.show();
+        junior.visibility.show();
         juniors.add(junior);
         juniorCreationTimes.add(tick);
 

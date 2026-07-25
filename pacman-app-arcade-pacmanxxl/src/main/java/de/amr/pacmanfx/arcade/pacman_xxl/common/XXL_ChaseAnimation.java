@@ -94,7 +94,7 @@ class XXL_ChaseAnimation {
         pac.setMoveDir(Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
         pac.setSpeed(PAC_FLEEING_SPEED);
-        pac.setVisible(true);
+        pac.visibility.show();
 
         ghosts = List.of(
             renderConfig.createAnimatedGhost(container, GameModel.RED_GHOST_SHADOW),
@@ -107,7 +107,7 @@ class XXL_ChaseAnimation {
             ghost.setMoveDir(Direction.LEFT);
             ghost.setWishDir(Direction.LEFT);
             ghost.setSpeed(GHOST_CHASE_SPEED);
-            ghost.setVisible(true);
+            ghost.visibility.show();
             ghost.animations().select(CommonAnimationID.GHOST_NORMAL);
             ghost.animations().playSelected();
         }
@@ -139,7 +139,7 @@ class XXL_ChaseAnimation {
             pac.setWishDir(Direction.LEFT);
             pac.position.setX(numTilesX * WorldMap.TS);
             for (Ghost ghost : ghosts) {
-                ghost.setVisible(true);
+                ghost.visibility.show();
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
                 ghost.position.setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * 2 * WorldMap.TS);
@@ -155,7 +155,7 @@ class XXL_ChaseAnimation {
                 final Collision collision = collisions.get(i);
                 if (now - collision.time() >= 1000) {
                     collisions.remove(collision);
-                    collision.ghost.hide();
+                    collision.ghost.visibility.hide();
                 }
             }
             // Collision check
@@ -183,7 +183,7 @@ class XXL_ChaseAnimation {
             pac.setWishDir(Direction.RIGHT);
             pac.position.setX(-(numTilesX - 6) * WorldMap.TS);
             for (Ghost ghost : ghosts) {
-                ghost.setVisible(true);
+                ghost.visibility.show();
                 ghost.position.setX(pac.position.x + 22 * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
                 ghost.setMoveDir(Direction.RIGHT);
                 ghost.setWishDir(Direction.RIGHT);
