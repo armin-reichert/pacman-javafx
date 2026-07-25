@@ -211,14 +211,14 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                     inky.setMoveDir(Direction.RIGHT);
                     inky.setWishDir(Direction.RIGHT);
                     inky.setSpeed(SPEED_AFTER_COLLISION);
-                    inky.setVelY(inky.velY() - 2.0f);
-                    inky.setAcceleration(0, 0.4f);
+                    inky.movement.velY -= 2.0f;
+                    inky.movement.setAcceleration(0, 0.4f);
 
                     pinky.setMoveDir(Direction.LEFT);
                     pinky.setWishDir(Direction.LEFT);
                     pinky.setSpeed(SPEED_AFTER_COLLISION);
-                    pinky.setVelY(pinky.velY() - 2.0f);
-                    pinky.setAcceleration(0, 0.4f);
+                    pinky.movement.velY -= 2.0f;
+                    pinky.movement.setAcceleration(0, 0.4f);
                 }
                 case 530 -> {
                     inky.hide();

@@ -32,12 +32,12 @@ public class MovingGameLevelMessage extends GameLevelMessage {
     public void startMovement(float rightEdge, double messageTextWidth) {
         width = (float) messageTextWidth;
         wrapX = rightEdge + 0.5f * width;
-        setVelocity(1, 0);
+        movement.setVelocity(1, 0);
         playing = true;
     }
 
     public void stopMovement() {
-        setVelocity(0,0);
+        movement.setVelocity(0,0);
         playing = false;
     }
 

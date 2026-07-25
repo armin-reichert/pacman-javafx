@@ -80,7 +80,7 @@ public class DS_ActorInfo extends GameDashboardSection {
 
     private String actorMovementText(GameLevel level, MovingActor movingActor) {
         if (movingActor == null) return NO_INFO;
-        var speed = movingActor.computeSpeed() * GameConstants.SIMULATION_FPS;
+        var speed = movingActor.movement.computeSpeed() * GameConstants.SIMULATION_FPS;
         var blocked = !movingActor.moveInfo().moved;
         var reverseText = movingActor.turnBackRequested() ? "REV!" : "";
         return blocked

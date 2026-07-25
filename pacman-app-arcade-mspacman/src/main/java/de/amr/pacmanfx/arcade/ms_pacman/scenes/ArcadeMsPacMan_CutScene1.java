@@ -202,14 +202,14 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
             inky.setMoveDir(Direction.RIGHT);
             inky.setWishDir(Direction.RIGHT);
             inky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
-            inky.setVelY(inky.velY() - 2.0f);
-            inky.setAcceleration(0, 0.4f);
+            inky.movement.velY -= 2.0f;
+            inky.movement.setAcceleration(0, 0.4f);
 
             pinky.setMoveDir(Direction.LEFT);
             pinky.setWishDir(Direction.LEFT);
             pinky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
-            pinky.setVelY(pinky.velY() - 2.0f);
-            pinky.setAcceleration(0, 0.4f);
+            pinky.movement.velY -= 2.0f;
+            pinky.movement.setAcceleration(0, 0.4f);
         }
 
         else {
@@ -221,11 +221,11 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
             // Collision with ground?
             if (inky.position.y > MIDDLE_Y) {
                 inky.position.setY(MIDDLE_Y);
-                inky.setAcceleration(0, 0);
+                inky.movement.setAcceleration(0, 0);
             }
             if (pinky.position.y > MIDDLE_Y) {
                 pinky.position.setY(MIDDLE_Y);
-                pinky.setAcceleration(0, 0);
+                pinky.movement.setAcceleration(0, 0);
             }
         }
     }

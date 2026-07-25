@@ -124,7 +124,7 @@ public class Bonus extends MovingActor {
         switch (state) {
             case EDIBLE -> {
                 boolean edibleStateOver;
-                if (velX() == 0 && velY() == 0) {
+                if (movement.velX == 0 && movement.velY == 0) {
                     edibleStateOver = timer.hasExpired();
                 }
                 else {

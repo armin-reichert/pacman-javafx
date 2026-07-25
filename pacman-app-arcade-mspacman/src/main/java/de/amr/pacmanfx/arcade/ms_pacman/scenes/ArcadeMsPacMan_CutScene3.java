@@ -150,14 +150,14 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         msPacMan.show();
 
         stork.position.set(TS * 30, TS * 12);
-        stork.setVelocity(-0.8f, 0);
+        stork.movement.setVelocity(-0.8f, 0);
         stork.show();
         stork.animations().select(CommonAnimationID.STORK_FLYING);
         stork.animations().playSelected();
 
         bag.position.set(stork.position.x - 14, stork.position.y + 3);
-        bag.setVelX(stork.velX());
-        bag.setAcceleration(0, 0);
+        bag.movement.setVelX(stork.movement.velX);
+        bag.movement.setAcceleration(0, 0);
         bag.show();
         bag.setOpen(false);
 
@@ -170,8 +170,8 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     private void updateDeliverJuniorState() {
         // release bag from beak when stork reaches tile 20
         if (stork.position.x <= 20 * WorldMap.TS && !bagReleased) {
-            bag.setAcceleration(0, 0.04f); // set y-gravity to let bag fall to ground
-            stork.setVelocity(-1, 0); // fly faster without heavy bag
+            bag.movement.setAcceleration(0, 0.04f); // set y-gravity to let bag fall to ground
+            stork.movement.setVelocity(-1, 0); // fly faster without heavy bag
             bagReleased = true;
         }
 
@@ -180,13 +180,13 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
             if (bag.position.y >= GROUND_Y) {
                 ++numBagBounces;
                 if (numBagBounces < 3) {
-                    bag.setVelocity(-0.2f, -1.0f / numBagBounces); // add upwards velocity to bounce
+                    bag.movement.setVelocity(-0.2f, -1.0f / numBagBounces); // add upwards velocity to bounce
                     bag.position.setY(GROUND_Y);
                 } else {
                     bag.setOpen(true);
                     bag.position.setY(GROUND_Y);
-                    bag.setVelocity(0, 0);
-                    bag.setAcceleration(0, 0);
+                    bag.movement.setVelocity(0, 0);
+                    bag.movement.setAcceleration(0, 0);
                     Logger.info("Delivery of Junior at tick {}", sceneTick);            }
             }
         }

@@ -6,7 +6,8 @@ package de.amr.pacmanfx.core.model.actors;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationAccessor;
-import de.amr.pacmanfx.core.model.PositionComponent;
+import de.amr.pacmanfx.core.model.Movement;
+import de.amr.pacmanfx.core.model.Position;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,15 +22,10 @@ public class Actor {
 
     public static final boolean DEFAULT_VISIBILITY = false;
 
-    public final PositionComponent position = new PositionComponent();
+    public final Position position = new Position();
+    public final Movement movement = new Movement();
 
     private BooleanProperty visible;
-
-    private float velX;
-    private float velY;
-
-    private float accX;
-    private float accY;
 
     /**
      * Resets all properties of this actor thingy to their default state. Note: actor is invisible by default!
@@ -40,8 +36,10 @@ public class Actor {
         position.x = 0;
         position.y = 0;
 
-        velX = velY = 0;
-        accX = accY = 0;
+        movement.velX = 0;
+        movement.velY = 0;
+        movement.accX = 0;
+        movement.accY = 0;
     }
 
     public BooleanProperty visibleProperty() {
@@ -68,62 +66,13 @@ public class Actor {
         setVisible(false);
     }
 
-    public float velX() {
-        return velX;
-    }
-
-    public final void setVelX(double velX) {
-        this.velX = (float) velX;
-    }
-
-    public float velY() {
-        return velY;
-    }
-
-    public final void setVelY(double velY) {
-        this.velY = (float) velY;
-    }
-
-    public final void setVelocity(double vx, double vy) {
-        this.velX = (float) vx;
-        this.velY = (float) vy;
-    }
-
-    public double computeSpeed() {
-        return Math.hypot(velX, velY);
-    }
-
-    public float accX() {
-        return accX;
-    }
-
-    public final void setAccX(float accX) {
-        this.accX = accX;
-    }
-
-    public float accY() {
-        return accY;
-    }
-
-    public final void setAccY(float accY) {
-        this.accY = accY;
-    }
-
-    public final void setAcceleration(float ax, float ay) {
-        this.accX = ax;
-        this.accY = ay;
-    }
-
     /**
      * An accelerated movement.
      * Changes the position of this actor by the current velocity vector and then increases the velocity
      * by the current acceleration.
      */
     public void move() {
-        position.x += velX;
-        position.y += velY;
-        velX += accX;
-        velY += accY;
+        movement.move(position);
     }
 
     /**

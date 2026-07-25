@@ -85,10 +85,10 @@ public abstract class MovingActor extends Actor implements GameEntity {
             "visible=" + isVisible() +
             ", x=" + position.x +
             ", y=" + position.y +
-            ", velocityX=" + velX() +
-            ", velocityY=" + velY() +
-            ", accelerationX=" + accX() +
-            ", accelerationY=" + accY() +
+            ", velocityX=" + movement.velX +
+            ", velocityY=" + movement.velY +
+            ", accelerationX=" + movement.accX +
+            ", accelerationY=" + movement.accY +
             ", moveDir=" + moveDir() +
             ", wishDir=" + wishDir() +
             ", targetTile=" + targetTile() +
@@ -199,8 +199,8 @@ public abstract class MovingActor extends Actor implements GameEntity {
         requireNonNull(dir);
         if (moveDir == null && dir.equals(DEFAULT_MOVE_DIR)) return;
         moveDirProperty().set(dir);
-        double speed = computeSpeed();
-        setVelocity(dir.vector().x() * speed, dir.vector().y() * speed);
+        double speed = movement.computeSpeed();
+        movement.setVelocity(dir.vector().x() * speed, dir.vector().y() * speed);
     }
 
     /**
@@ -280,7 +280,7 @@ public abstract class MovingActor extends Actor implements GameEntity {
         if (speed < 0) {
             throw new IllegalArgumentException("Speed must not be negative but is: " + speed);
         }
-        setVelocity(moveDir().vector().x() * speed, moveDir().vector().y() * speed);
+        movement.setVelocity(moveDir().vector().x() * speed, moveDir().vector().y() * speed);
     }
 
     public boolean isNewTileEntered() {
@@ -374,7 +374,7 @@ public abstract class MovingActor extends Actor implements GameEntity {
     }
 
     private void tryMovingTowards(GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
-        final Vector2f newVelocity = dir.vector().scaled(computeSpeed());
+        final Vector2f newVelocity = dir.vector().scaled(movement.computeSpeed());
         final Vector2f touchPosition = computeCenter().plus(dir.vector().scaled((float) WorldMap.HTS)).plus(newVelocity);
         final Vector2i touchedTile = WorldMap.computeTileAt(touchPosition);
         final boolean turn = dir.vector().isOrthogonalTo(moveDir().vector());
@@ -402,11 +402,11 @@ public abstract class MovingActor extends Actor implements GameEntity {
         if (turn && corneringSpeedDelta != 0) {
             Vector2f cornerVelocity = newVelocity.plus(dir.vector().scaled(corneringSpeedDelta));
             Logger.trace("{} velocity around corner: {}", name(), cornerVelocity.length());
-            setVelocity(cornerVelocity.x(), cornerVelocity.y());
+            movement.setVelocity(cornerVelocity.x(), cornerVelocity.y());
             move();
-            setVelocity(newVelocity.x(), newVelocity.y());
+            movement.setVelocity(newVelocity.x(), newVelocity.y());
         } else {
-            setVelocity(newVelocity.x(), newVelocity.y());
+            movement.setVelocity(newVelocity.x(), newVelocity.y());
             move();
         }
 

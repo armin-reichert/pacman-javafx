@@ -129,7 +129,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     msPacMan.show();
 
                     stork.position.set(RIGHT_BORDER, WorldMap.TS * 7);
-                    stork.setVelocity(-0.8f, 0);
+                    stork.movement.setVelocity(-0.8f, 0);
                     stork.setBagReleasedFromBeak(false);
                     stork.animations().select(CommonAnimationID.STORK_FLYING);
                     stork.animations().playSelected();
@@ -137,19 +137,19 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                 }
                 case 240 -> {
                     // stork releases bag, bag starts falling
-                    stork.setVelocity(-1f, 0); // faster, no bag to carry!
+                    stork.movement.setVelocity(-1f, 0); // faster, no bag to carry!
                     stork.setBagReleasedFromBeak(true);
                     flyingBag.position.set(stork.position.x - 15, stork.position.y + 8);
-                    flyingBag.setVelocity(-0.5f, 0);
-                    flyingBag.setAcceleration(0, 0.1f);
+                    flyingBag.movement.setVelocity(-0.5f, 0);
+                    flyingBag.movement.setAcceleration(0, 0.1f);
                     flyingBag.show();
                 }
                 case 320 -> // reaches ground, starts bouncing
-                    flyingBag.setVelX(-0.5f);
+                    flyingBag.movement.setVelX(-0.5f);
                 case 380 -> {
                     flyingBag.setOpen(true);
-                    flyingBag.setVelocity(0, 0);
-                    flyingBag.setAcceleration(0, 0);
+                    flyingBag.movement.setVelocity(0, 0);
+                    flyingBag.movement.setAcceleration(0, 0);
                 }
                 case 640 -> darkness = true;
                 case TICK_EXPIRES -> gameState().triggerTimeout();
@@ -162,7 +162,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
             flyingBag.move();
             if (flyingBag.position.y > GROUND_Y) {
                 flyingBag.position.setY(GROUND_Y);
-                flyingBag.setVelocity(0.9f * flyingBag.velX(), -0.3f * flyingBag.velY());
+                flyingBag.movement.setVelocity(0.9f * flyingBag.movement.velX, -0.3f * flyingBag.movement.velY);
             }
         }
     }
