@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.level;
 
 import de.amr.basics.QuerySet;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.gameplay.UpdatableEntity;
+import de.amr.pacmanfx.core.model.UpdatableEntity;
 
 import static java.util.Objects.requireNonNull;
 

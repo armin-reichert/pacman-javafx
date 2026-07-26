@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.gameplay.UpdatableEntity;
+import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.world.ArcadeHouse;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.settings.world.House3DSettings;

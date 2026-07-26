@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.model.level;
 
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.gameplay.UpdatableEntity;
+import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.world.WorldMap;
