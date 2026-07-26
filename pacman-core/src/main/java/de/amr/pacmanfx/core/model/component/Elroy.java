@@ -1,18 +1,20 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.core.model.actors;
+
+package de.amr.pacmanfx.core.model.component;
 
 import static java.util.Objects.requireNonNull;
 
-public class Elroy {
+public class Elroy implements EntityComponent {
 
     public enum Boost { NONE, MEDIUM, LARGE }
 
     private boolean enabled;
     private Boost boost;
 
-    public void clear() {
+    @Override
+    public void reset() {
         enabled = false;
         boost = Boost.NONE;
     }

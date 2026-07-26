@@ -9,12 +9,9 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.component.GhostWorldMovementPolicy;
-import de.amr.pacmanfx.core.model.component.Movement;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
-import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
+import de.amr.pacmanfx.core.model.UpdatableEntity;
+import de.amr.pacmanfx.core.model.component.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
@@ -48,9 +45,6 @@ public class Ghost extends Actor implements UpdatableEntity {
     private Vector2f startPosition;
     private House home;
 
-    // Only used by red ghost in Arcade Pac-Man
-    private final Elroy elroy = new Elroy();
-
     private Function<GameLevel, Vector2i> chasingTargetTileStrategy = _ -> null;
 
     /**
@@ -77,6 +71,9 @@ public class Ghost extends Actor implements UpdatableEntity {
         registerComponent(Movement.class, new Movement());
         registerComponent(WorldMovement.class, new WorldMovement());
         registerComponent(WorldMovementPolicy.class, new GhostWorldMovementPolicy());
+        if (personality == GameModel.RED_GHOST_SHADOW) {
+            registerComponent(Elroy.class, new Elroy());
+        }
 
         this.name = requireNonNull(name);
         this.personality = Validations.requireValidGhostPersonality(personality);
@@ -107,7 +104,6 @@ public class Ghost extends Actor implements UpdatableEntity {
     @Override
     public void reset() {
         super.reset();
-        elroy().clear();
     }
 
     public void setHuntingStrategy(BiConsumer<GameContext, Float> huntingStrategy) {
@@ -155,8 +151,6 @@ public class Ghost extends Actor implements UpdatableEntity {
         return startPosition;
     }
 
-    public Elroy elroy() { return elroy; }
-
     @Override
     public String toString() {
         return "Ghost{" +
@@ -165,7 +159,6 @@ public class Ghost extends Actor implements UpdatableEntity {
                 ", visibility=" + visibility() +
                 ", position" + position() +
                 ", movement" + movement() +
-                ", elroy" + elroy +
                 '}';
     }
 
@@ -178,7 +171,9 @@ public class Ghost extends Actor implements UpdatableEntity {
      * @param ignored the game level where this happens
      */
     public void onPacKilled(GameLevel ignored) {
-        elroy.setEnabled(false);
+        if (hasComponent(Elroy.class)) {
+            assertComponent(Elroy.class).setEnabled(false);
+        }
     }
 
     /**

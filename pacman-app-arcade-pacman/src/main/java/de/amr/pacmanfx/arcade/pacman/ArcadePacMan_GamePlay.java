@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.component.Elroy;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.*;
@@ -232,9 +233,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
             final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();
             if (uneatenFoodCount == data.numDotsLeftElroy1()) {
-                redGhost.elroy().setBoost(Elroy.Boost.MEDIUM);
+                redGhost.assertComponent(Elroy.class).setBoost(Elroy.Boost.MEDIUM);
             } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
-                redGhost.elroy().setBoost(Elroy.Boost.LARGE);
+                redGhost.assertComponent(Elroy.class).setBoost(Elroy.Boost.LARGE);
             }
         } else {
             throw new IllegalStateException("Red ghost not existing in this level");

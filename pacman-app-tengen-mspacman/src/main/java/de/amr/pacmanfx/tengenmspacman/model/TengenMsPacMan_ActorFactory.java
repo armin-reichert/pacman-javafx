@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.Elroy;
 import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
@@ -66,7 +67,6 @@ public final class TengenMsPacMan_ActorFactory {
         return ghost;
     }
 
-
     private static Ghost modifyShadowBehavior(Ghost ghost) {
         ghost.setHuntingStrategy((GameContext gameContext, Float speed) -> {
             final GameLevel level = gameContext.assertLevel();
@@ -82,7 +82,7 @@ public final class TengenMsPacMan_ActorFactory {
                 worldMovementSystem.tryMovingOrTeleporting(ghost, gameContext);
             } else {
                 // Normal behavior of red ghost
-                final boolean chase = level.huntingRules().isChasing() || ghost.elroy().enabled();
+                final boolean chase = level.huntingRules().isChasing() || ghost.assertComponent(Elroy.class).enabled();
                 final Vector2i targetTile = chase
                     ? ghost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(ghost.personality());

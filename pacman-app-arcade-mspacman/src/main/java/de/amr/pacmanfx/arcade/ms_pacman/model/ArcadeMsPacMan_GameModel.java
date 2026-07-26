@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 import de.amr.pacmanfx.arcade.ms_pacman.rules.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.rules.GameRules;
-import de.amr.pacmanfx.core.model.actors.Elroy;
+import de.amr.pacmanfx.core.model.component.Elroy;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import org.tinylog.Logger;
@@ -63,10 +63,11 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         gateKeeper.setOnGhostReleased((level, releasedPrisoner) -> {
             if (releasedPrisoner.personality() == ORANGE_GHOST_POKEY) {
                 final Ghost blinky = level.ghost(RED_GHOST_SHADOW);
-                if (blinky.elroy().boost() != Elroy.Boost.NONE && !blinky.elroy().enabled()) {
-                    blinky.elroy().setEnabled(true);
+                final Elroy elroy = blinky.assertComponent(Elroy.class);
+                if (elroy.boost() != Elroy.Boost.NONE && !elroy.enabled()) {
+                    elroy.setEnabled(true);
                     Logger.debug("Re-enabled {}'s Elroy state ({}). Reason; ({} got released):",
-                        blinky.name(), blinky.elroy(), releasedPrisoner.name());
+                        blinky.name(), elroy, releasedPrisoner.name());
                 }
             }
         });

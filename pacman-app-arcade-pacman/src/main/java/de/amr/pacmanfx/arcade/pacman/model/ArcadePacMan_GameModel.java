@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.rules.GameRules;
-import de.amr.pacmanfx.core.model.actors.Elroy;
+import de.amr.pacmanfx.core.model.component.Elroy;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import org.tinylog.Logger;
@@ -62,8 +62,9 @@ public class ArcadePacMan_GameModel extends GameModel {
         gateKeeper.setOnGhostReleased((level, prisoner) -> {
             if (prisoner.personality() == ORANGE_GHOST_POKEY) {
                 final Ghost redGhost = level.ghost(RED_GHOST_SHADOW);
-                if (redGhost.elroy().boost() != Elroy.Boost.NONE && !redGhost.elroy().enabled()) {
-                    redGhost.elroy().setEnabled(true);
+                final Elroy elroy = redGhost.assertComponent(Elroy.class);
+                if (elroy.boost() != Elroy.Boost.NONE && !elroy.enabled()) {
+                    elroy.setEnabled(true);
                     Logger.debug("Re-enabled {}'s Cruise Elroy mode because {} is released:", redGhost.name(), prisoner.name());
                 }
             }
