@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
@@ -14,6 +15,7 @@ import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
@@ -71,13 +73,14 @@ public class DS_ActorInfo extends GameDashboardSection {
         if (actor == null) return NO_INFO;
 
         final WorldMovement worldMovement = actor.component(WorldMovement.class);
-        final Vector2i tile = GameContext.SYSTEMS.worldMovement.computeTile(actor);
-        final float offsetX = GameContext.SYSTEMS.worldMovement.computeOffsetX(actor);
-        final float offsetY = GameContext.SYSTEMS.worldMovement.computeOffsetY(actor);
+        final WorldMovementSystem worldMovementSystem = GameContext.SYSTEMS.worldMovement;
+
+        final Vector2i tile = worldMovementSystem.computeTile(actor);
+        final Vector2f tileOffset = worldMovementSystem.computeTileOffset(actor);
 
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
             tile.x(), tile.y(),
-            offsetX, offsetY,
+            tileOffset.x(), tileOffset.y(),
             worldMovement.isNewTileEntered() ? " NEW" : "");
     }
 
@@ -85,6 +88,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         if (actor == null) return NO_INFO;
 
         final WorldMovement worldMovement = actor.component(WorldMovement.class);
+
         var speed = actor.movement().computeSpeed() * GameConstants.SIMULATION_FPS;
         var blocked = !worldMovement.info.moved;
         var reverseText = worldMovement.isTurnBackRequested() ? "REV!" : "";
@@ -120,8 +124,10 @@ public class DS_ActorInfo extends GameDashboardSection {
         }).orElse(NO_INFO);
     }
 
-    private Supplier<String> supplyGhostText(GameAppContext appContext,
-                                             BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
+    private Supplier<String> supplyGhostText(
+        GameAppContext appContext,
+        BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
+
         return fnGameLevelInfo(appContext, level -> {
             if (!level.entities().ghosts().isEmpty()) {
                 return infoSupplier.apply(level, level.ghost(personality));
@@ -131,7 +137,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private String ghostNameAndStateText(GameLevel level, Ghost ghost) {
-        return String.format("%s (%s)", ghost.name(), ghostStateText(level, ghost));
+        return "%s (%s)".formatted(ghost.name(), ghostStateText(level, ghost));
     }
 
     private String ghostAnimationText(GameLevel level, Ghost ghost) {

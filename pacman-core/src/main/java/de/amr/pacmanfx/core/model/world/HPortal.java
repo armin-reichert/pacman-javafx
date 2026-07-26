@@ -7,7 +7,10 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import org.tinylog.Logger;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * A horizontal portal connects two border tiles on the left and right map border. Traveling through the portal
@@ -25,6 +28,8 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
     }
 
     public boolean contains(Vector2i tile) {
+        requireNonNull(tile);
+
         for (int numTiles = 1; numTiles <= depth; ++numTiles) {
             Vector2i leftPortalTile = leftBorderEntryTile.minus(numTiles, 0);
             Vector2i rightPortalTile = rightBorderEntryTile.plus(numTiles, 0);
@@ -40,10 +45,13 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
     }
 
     public boolean tryTeleporting(Actor actor) {
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        requireNonNull(actor);
 
-        final Vector2i actorTile = GameContext.SYSTEMS.worldMovement.computeTile(actor);
-        final float offsetX = GameContext.SYSTEMS.worldMovement.computeOffsetX(actor);
+        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovementSystem worldMovementSystem = GameContext.SYSTEMS.worldMovement;
+
+        final Vector2i actorTile = worldMovementSystem.computeTile(actor);
+        final float offsetX = worldMovementSystem.computeTileOffset(actor).x();
 
         if (actorTile.y() != leftBorderEntryTile().y()) {
             return false;
@@ -53,14 +61,14 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         switch (worldMovement.moveDir()) {
             case LEFT -> {
                 if (actorTile.equals(leftWrappingTile) && offsetX == 0) {
-                    GameContext.SYSTEMS.worldMovement.placeAtTile(actor, rightWrappingTile.x(), rightWrappingTile.y(), -1, 0);
+                    worldMovementSystem.placeAtTile(actor, rightWrappingTile.x(), rightWrappingTile.y(), -1, 0);
                     Logger.info("{} teleported from {} to {}", actor.name(), actorTile, rightWrappingTile);
                     return true;
                 }
             }
             case RIGHT -> {
                 if (actorTile.equals(rightWrappingTile) && offsetX == 0) {
-                    GameContext.SYSTEMS.worldMovement.placeAtTile(actor, leftWrappingTile.x(), leftWrappingTile.y(), 1, 0);
+                    worldMovementSystem.placeAtTile(actor, leftWrappingTile.x(), leftWrappingTile.y(), 1, 0);
                     Logger.info("{} teleported from {} to {}", actor.name(), actorTile, leftWrappingTile);
                     return true;
                 }
