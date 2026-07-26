@@ -2,7 +2,6 @@ package de.amr.pacmanfx.core.model.component;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.actors.WorldMovementInfo;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
