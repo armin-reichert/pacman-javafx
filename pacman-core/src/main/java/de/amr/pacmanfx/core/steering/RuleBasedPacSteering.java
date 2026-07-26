@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
+import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -68,7 +69,7 @@ public class RuleBasedPacSteering implements Steering {
 
     @Override
     public void steer(Actor actor, GameLevel level) {
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         if (worldMovement.info.moved && !worldMovement.isNewTileEntered()) {
             return;
@@ -155,22 +156,25 @@ public class RuleBasedPacSteering implements Steering {
 
     private Ghost findHuntingGhostAhead(GameLevel level) {
         final Pac pac = level.entities().pac();
+
         final WorldMovement worldMovement = pac.worldMovement();
+        final WorldMovementPolicy worldMovementPolicy = pac.assertComponent(WorldMovementPolicy.class);
+
         final Vector2i pacManTile = pac.tile();
 
         boolean energizerFound = false;
         FoodLayer foodLayer = level.worldMap().foodLayer();
         for (int i = 1; i <= CollectedData.MAX_GHOST_AHEAD_DETECTION_DIST; ++i) {
             Vector2i ahead = pacManTile.plus(worldMovement.moveDir().vector().scaled(i));
-            if (!pac.canAccessTile(level, ahead)) {
+            if (!worldMovementPolicy.canAccessTile(level, ahead)) {
                 break;
             }
             if (foodLayer.isEnergizerTile(ahead) && !foodLayer.hasEatenFoodAtTile(ahead)) {
                 energizerFound = true;
             }
-            var aheadLeft = ahead.plus(worldMovement.moveDir().nextCounterClockwise().vector());
-            var aheadRight = ahead.plus(worldMovement.moveDir().nextClockwise().vector());
-            Iterable<Ghost> huntingGhosts = level.ghostsInState(GhostState.HUNTING_PAC)::iterator;
+            final Vector2i aheadLeft = ahead.plus(worldMovement.moveDir().nextCounterClockwise().vector());
+            final Vector2i aheadRight = ahead.plus(worldMovement.moveDir().nextClockwise().vector());
+            final List<Ghost> huntingGhosts = level.ghostsInState(GhostState.HUNTING_PAC).toList();
             for (var ghost : huntingGhosts) {
                 if (ghost.tile().equals(ahead) || ghost.tile().equals(aheadLeft) || ghost.tile().equals(aheadRight)) {
                     if (energizerFound) {
@@ -186,11 +190,13 @@ public class RuleBasedPacSteering implements Steering {
 
     private Ghost findHuntingGhostBehind(GameLevel level, Pac pac) {
         final WorldMovement worldMovement = pac.worldMovement();
+        final WorldMovementPolicy worldMovementPolicy = pac.assertComponent(WorldMovementPolicy.class);
+
         final Vector2i pacManTile = pac.tile();
 
         for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {
             var behind = pacManTile.plus(worldMovement.moveDir().opposite().vector().scaled(i));
-            if (!pac.canAccessTile(level, behind)) {
+            if (!worldMovementPolicy.canAccessTile(level, behind)) {
                 break;
             }
             Iterable<Ghost> huntingGhosts = level.ghostsInState(GhostState.HUNTING_PAC)::iterator;
@@ -205,14 +211,17 @@ public class RuleBasedPacSteering implements Steering {
 
     private Direction findEscapeDirectionExcluding(GameLevel level, Collection<Direction> forbidden) {
         var pac = level.entities().pac();
-        Vector2i pacManTile = pac.tile();
-        List<Direction> escapes = new ArrayList<>(4);
+
+        final WorldMovementPolicy worldMovementPolicy = pac.assertComponent(WorldMovementPolicy.class);
+
+        final Vector2i pacManTile = pac.tile();
+        final List<Direction> escapes = new ArrayList<>(4);
         for (Direction dir : Direction.shuffled()) {
             if (forbidden.contains(dir)) {
                 continue;
             }
             Vector2i neighbor = pacManTile.plus(dir.vector());
-            if (pac.canAccessTile(level, neighbor)) {
+            if (worldMovementPolicy.canAccessTile(level, neighbor)) {
                 escapes.add(dir);
             }
         }

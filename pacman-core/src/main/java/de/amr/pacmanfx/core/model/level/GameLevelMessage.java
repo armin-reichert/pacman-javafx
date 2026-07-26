@@ -5,7 +5,6 @@ package de.amr.pacmanfx.core.model.level;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.component.Movement;
 
 import static java.util.Objects.requireNonNull;
 
@@ -14,12 +13,12 @@ public class GameLevelMessage extends Actor {
     private final GameLevelMessageType type;
 
     public GameLevelMessage(GameLevelMessageType type) {
-        super("GameLevelMessage");
+        this.name = "GameLevelMessage";
         this.type = requireNonNull(type);
     }
 
     public GameLevelMessage(GameLevelMessageType type, Vector2f pos) {
-        super("GameLevelMessage");
+        this.name = "GameLevelMessage";
         this.type = requireNonNull(type);
         position().set(pos);
     }

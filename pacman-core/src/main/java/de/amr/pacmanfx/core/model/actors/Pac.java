@@ -9,6 +9,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
+import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
@@ -21,7 +22,34 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base class for Pac-Man / Ms. Pac-Man.
  */
-public class Pac extends Actor implements WorldMover {
+public class Pac extends Actor {
+
+    class PacManWorldMovementPolicy implements WorldMovementPolicy {
+
+        @Override
+        public void reset() {
+        }
+
+        @Override
+        public boolean canTurnBack() {
+            return worldMovement().isNewTileEntered();
+        }
+
+        @Override
+        public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
+            requireNonNull(gameLevel);
+            requireNonNull(tile);
+            final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+            // Portal tiles are the only tiles outside the world that can be accessed
+            if (terrain.outOfBounds(tile)) {
+                return terrain.isTileInPortalSpace(tile);
+            }
+            if (terrain.optHouse().isPresent() && terrain.optHouse().get().contains(tile)) {
+                return false; // Schieb ab, Alter!
+            }
+            return !terrain.isTileBlocked(tile);
+        }
+    }
 
     public static final byte REST_FOREVER = -1;
 
@@ -43,13 +71,15 @@ public class Pac extends Actor implements WorldMover {
      * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.
      */
     public Pac(String name) {
-        super(name);
         registerComponent(Movement.class, new Movement());
         registerComponent(WorldMovement.class, new WorldMovement());
+        registerComponent(WorldMovementPolicy.class, new PacManWorldMovementPolicy());
+
+        this.name = requireNonNull(name);
     }
 
     public WorldMovement worldMovement() {
-        return component(WorldMovement.class);
+        return assertComponent(WorldMovement.class);
     }
 
     public Vector2i tile() {
@@ -219,27 +249,4 @@ public class Pac extends Actor implements WorldMover {
             || !worldMovement().info.moved
             || restingTicks == REST_FOREVER;
     }
-
-    // WorldMover interface
-
-    @Override
-    public boolean canTurnBack() {
-        return worldMovement().isNewTileEntered();
-    }
-
-    @Override
-    public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
-        requireNonNull(gameLevel);
-        requireNonNull(tile);
-        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
-        // Portal tiles are the only tiles outside the world that can be accessed
-        if (terrain.outOfBounds(tile)) {
-            return terrain.isTileInPortalSpace(tile);
-        }
-        if (terrain.optHouse().isPresent() && terrain.optHouse().get().contains(tile)) {
-            return false; // Schieb ab, Alter!
-        }
-        return !terrain.isTileBlocked(tile);
-    }
-
 }

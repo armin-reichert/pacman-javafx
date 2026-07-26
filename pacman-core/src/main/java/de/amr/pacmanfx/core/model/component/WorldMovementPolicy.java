@@ -2,13 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.actors;
+package de.amr.pacmanfx.core.model.component;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
-public interface WorldMover {
-
+public interface WorldMovementPolicy extends EntityComponent {
     /**
      * @param level the game level we are in (not null)
      * @param tile some tile inside or outside the world

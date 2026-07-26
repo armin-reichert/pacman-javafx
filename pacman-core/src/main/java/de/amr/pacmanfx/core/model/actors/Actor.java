@@ -31,10 +31,11 @@ public class Actor implements GameEntity {
 
     protected String name;
 
-    public Actor(String name) {
-        this.name = requireNonNull(name);
+    public Actor() {
         registerComponent(Position.class, new Position());
         registerComponent(Visibility.class, new Visibility(false));
+
+        name = getClass().getSimpleName() + "#" + hashCode();
     }
 
     public <T extends EntityComponent> void registerComponent(Class<T> type, T component) {
@@ -46,7 +47,7 @@ public class Actor implements GameEntity {
         components.put(type, component);
     }
 
-    public <T extends EntityComponent> T component(Class<T> componentClass) {
+    public <T extends EntityComponent> T assertComponent(Class<T> componentClass) {
         requireNonNull(componentClass);
         final EntityComponent component = components.get(componentClass);
         if (component == null) {
@@ -55,16 +56,22 @@ public class Actor implements GameEntity {
         return componentClass.cast(component);
     }
 
+    public <T extends EntityComponent> boolean hasComponent(Class<T> componentClass) {
+        requireNonNull(componentClass);
+        return components.get(componentClass) != null;
+    }
+
+
     public final Position position() {
-        return component(Position.class);
+        return assertComponent(Position.class);
     }
 
     public final Movement movement() {
-        return component(Movement.class);
+        return assertComponent(Movement.class);
     }
 
     public final Visibility visibility() {
-        return component(Visibility.class);
+        return assertComponent(Visibility.class);
     }
 
     /**

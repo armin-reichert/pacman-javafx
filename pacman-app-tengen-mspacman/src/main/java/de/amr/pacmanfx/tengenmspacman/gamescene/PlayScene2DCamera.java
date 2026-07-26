@@ -109,7 +109,7 @@ public class PlayScene2DCamera extends ParallelCamera {
     }
 
     private void updateTrackingMode(double mapHeightPixels, Actor movingActor) {
-        final WorldMovement worldMovement = movingActor.component(WorldMovement.class);
+        final WorldMovement worldMovement = movingActor.assertComponent(WorldMovement.class);
 
         double relY = movingActor.position().y / mapHeightPixels;
         if (relY < 0.5 || relY < 0.6 && worldMovement.moveDir() == Direction.UP) {

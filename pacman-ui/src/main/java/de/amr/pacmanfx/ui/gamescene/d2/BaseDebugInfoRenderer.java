@@ -52,7 +52,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
             return;
         }
 
-        final WorldMovement worldMovement = movingActor.component(WorldMovement.class);
+        final WorldMovement worldMovement = movingActor.assertComponent(WorldMovement.class);
 
         ctx.setFill(Color.FORESTGREEN);
         if (movingActor instanceof Pac pac) {
@@ -84,7 +84,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
     }
 
     private void drawDirectionIndicator(Actor actor) {
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         ctx.save();
         Vector2f center = GameContext.SYSTEMS.worldMovement.computeCenter(actor);

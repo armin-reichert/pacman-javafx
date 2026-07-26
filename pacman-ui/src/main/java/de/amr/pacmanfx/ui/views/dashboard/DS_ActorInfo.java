@@ -72,7 +72,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     private String actorLocationText(GameLevel level, Actor actor) {
         if (actor == null) return NO_INFO;
 
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
         final WorldMovementSystem worldMovementSystem = GameContext.SYSTEMS.worldMovement;
 
         final Vector2i tile = worldMovementSystem.computeTile(actor);
@@ -87,7 +87,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     private String actorMovementText(GameLevel level, Actor actor) {
         if (actor == null) return NO_INFO;
 
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         var speed = actor.movement().computeSpeed() * GameConstants.SIMULATION_FPS;
         var blocked = !worldMovement.info.moved;

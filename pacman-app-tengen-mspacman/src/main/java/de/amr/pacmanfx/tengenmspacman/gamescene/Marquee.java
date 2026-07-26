@@ -19,7 +19,6 @@ public class Marquee extends Actor {
     private long marqueeProgress;
 
     public Marquee() {
-        super("Marquee");
     }
 
     public DoubleProperty scalingProperty() {

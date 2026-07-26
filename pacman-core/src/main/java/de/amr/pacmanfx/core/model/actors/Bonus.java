@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.event.BonusExpiredEvent;
 import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
+import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.steering.RouteBasedSteering;
@@ -29,11 +30,36 @@ import static java.util.Objects.requireNonNull;
  * <p>
  * TODO: That's not exactly the original Ms. Pac-Man behaviour with predefined "fruit paths".
  */
-public class Bonus extends Actor implements WorldMover {
+public class Bonus extends Actor {
 
     private static final int PULSE_CHANGE_TICKS = 10;
 
-    private final TickTimer timer = new TickTimer("Bonus-Timer");
+    static class BonusWorldMovementPolicy implements WorldMovementPolicy {
+
+        @Override
+        public void reset() {}
+
+        @Override
+        public boolean canTurnBack() {
+            return false;
+        }
+
+        @Override
+        public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
+            requireNonNull(gameLevel);
+            requireNonNull(tile);
+            final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+            if (terrain.outOfBounds(tile)) {
+                return terrain.isTileInPortalSpace(tile);
+            }
+            if (terrain.optHouse().isPresent() && terrain.optHouse().get().contains(tile)) {
+                return false;
+            }
+            return !terrain.isTileBlocked(tile);
+        }
+    }
+
+    private final TickTimer timer;
     private final int symbolCode;
     private final int points;
 
@@ -44,24 +70,25 @@ public class Bonus extends Actor implements WorldMover {
     private RouteBasedSteering routeNavigation;
 
     public Bonus(int symbolCode, int points) {
-        super("Bonus-symbol:%d-points:%d".formatted(symbolCode, points));
-
         registerComponent(Movement.class, new Movement());
         registerComponent(WorldMovement.class, new WorldMovement());
+        registerComponent(WorldMovementPolicy.class, new BonusWorldMovementPolicy());
 
+        this.name = "Bonus-symbol:%d-points:%d".formatted(symbolCode, points);
         this.symbolCode = Validations.requireNonNegativeInt(symbolCode);
         this.points = Validations.requireNonNegativeInt(points);
-        jumpingAnimation = new Pulse(PULSE_CHANGE_TICKS, Pulse.State.OFF);
+        this.timer = new TickTimer("Bonus-Timer");
+
+        this.jumpingAnimation = new Pulse(PULSE_CHANGE_TICKS, Pulse.State.OFF);
 
         reset();
         worldMovement().setCanTeleport(false); // override default value (true)
 
-        // initial state
         setInactive();
     }
 
     public WorldMovement worldMovement() {
-        return component(WorldMovement.class);
+        return assertComponent(WorldMovement.class);
     }
 
     public Vector2i tile() {
@@ -188,26 +215,5 @@ public class Bonus extends Actor implements WorldMover {
     public String toString() {
         return "Bonus{symbol=%s, points=%d, ticksRemaining=%d, state=%s, animation=%s}"
             .formatted(symbolCode, points, timer.remainingTicks(), state, jumpingAnimation);
-    }
-
-    // WorldMover interface
-
-    @Override
-    public boolean canTurnBack() {
-        return false;
-    }
-
-    @Override
-    public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
-        requireNonNull(gameLevel);
-        requireNonNull(tile);
-        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
-        if (terrain.outOfBounds(tile)) {
-            return terrain.isTileInPortalSpace(tile);
-        }
-        if (terrain.optHouse().isPresent() && terrain.optHouse().get().contains(tile)) {
-            return false;
-        }
-        return !terrain.isTileBlocked(tile);
     }
 }

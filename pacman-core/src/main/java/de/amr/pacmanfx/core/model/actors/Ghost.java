@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.Position;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
+import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -35,9 +36,45 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common ghost base class. The specific ghosts differ in their hunting behavior and their look.
  */
-public class Ghost extends Actor implements WorldMover {
+public class Ghost extends Actor {
 
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
+
+    class GhostWorldMovementPolicy implements WorldMovementPolicy {
+
+        @Override
+        public void reset() {}
+
+        @Override
+        public boolean canAccessTile(GameLevel level, Vector2i tile) {
+            final TerrainLayer terrainLayer = level.worldMap().terrainLayer();
+            // Portal tiles are the only tiles outside the world map that can be accessed
+            if (terrainLayer.outOfBounds(tile)) {
+                return terrainLayer.isTileInPortalSpace(tile);
+            }
+            final Vector2i myTile = GameContext.SYSTEMS.worldMovement.computeTile(Ghost.this);
+            // Hunting ghosts cannot enter some tiles in Pac-Man game from below
+            // TODO: this is game-specific and does not belong here
+            if (specialTerrainTiles.contains(tile)
+                && state() == GhostState.HUNTING_PAC
+                && terrainLayer.content(tile) == TerrainTile.ONE_WAY_DOWN.$
+                && tile.equals(myTile.plus(UP.vector()))
+            ) {
+                Logger.debug("Hunting {} cannot move up to special tile {}", name(), tile);
+                return false;
+            }
+            if (home != null && home.isDoorAt(tile)) {
+                return inAnyOfStates(Set.of(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE));
+            }
+            return !terrainLayer.isTileBlocked(tile);
+        }
+
+        @Override
+        public boolean canTurnBack() {
+            return worldMovement().isNewTileEntered()
+                && inAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.FRIGHTENED));
+        }
+    }
 
     private final byte personality;
     private ObjectProperty<GhostState> state;
@@ -67,17 +104,18 @@ public class Ghost extends Actor implements WorldMover {
     };
 
     public Ghost(byte personality, String name) {
-        super(name);
-        this.personality = Validations.requireValidGhostPersonality(personality);
-
         registerComponent(Movement.class, new Movement());
         registerComponent(WorldMovement.class, new WorldMovement());
+        registerComponent(WorldMovementPolicy.class, new GhostWorldMovementPolicy());
+
+        this.name = requireNonNull(name);
+        this.personality = Validations.requireValidGhostPersonality(personality);
 
         worldMovement().corneringSpeedDelta = -1.25f;
     }
 
     public WorldMovement worldMovement() {
-        return component(WorldMovement.class);
+        return assertComponent(WorldMovement.class);
     }
 
     public Vector2i tile() {
@@ -207,9 +245,11 @@ public class Ghost extends Actor implements WorldMover {
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
     private Direction computeRoamingDirection(GameLevel level, Vector2i currentTile) {
+        final WorldMovementPolicy policy = assertComponent(WorldMovementPolicy.class);
+
         Direction dir = pseudoRandomDirection();
         int turns = 0;
-        while (dir == worldMovement().moveDir().opposite() || !canAccessTile(level, currentTile.plus(dir.vector()))) {
+        while (dir == worldMovement().moveDir().opposite() || !policy.canAccessTile(level, currentTile.plus(dir.vector()))) {
             dir = dir.nextClockwise();
             if (++turns > 4) {
                 return worldMovement().moveDir().opposite();  // avoid endless loop
@@ -226,37 +266,6 @@ public class Ghost extends Actor implements WorldMover {
         return LEFT;
     }
 
-    // WorldMover interface
-
-    @Override
-    public boolean canAccessTile(GameLevel level, Vector2i tile) {
-        final TerrainLayer terrainLayer = level.worldMap().terrainLayer();
-        // Portal tiles are the only tiles outside the world map that can be accessed
-        if (terrainLayer.outOfBounds(tile)) {
-            return terrainLayer.isTileInPortalSpace(tile);
-        }
-        final Vector2i myTile = GameContext.SYSTEMS.worldMovement.computeTile(this);
-        // Hunting ghosts cannot enter some tiles in Pac-Man game from below
-        // TODO: this is game-specific and does not belong here
-        if (specialTerrainTiles.contains(tile)
-                && state() == GhostState.HUNTING_PAC
-                && terrainLayer.content(tile) == TerrainTile.ONE_WAY_DOWN.$
-                && tile.equals(myTile.plus(UP.vector()))
-        ) {
-            Logger.debug("Hunting {} cannot move up to special tile {}", name(), tile);
-            return false;
-        }
-        if (home != null && home.isDoorAt(tile)) {
-            return inAnyOfStates(Set.of(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE));
-        }
-        return !terrainLayer.isTileBlocked(tile);
-    }
-
-    @Override
-    public boolean canTurnBack() {
-        return worldMovement().isNewTileEntered()
-            && inAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.FRIGHTENED));
-    }
 
     // Here begins the state machine part
 

@@ -7,6 +7,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -102,9 +103,12 @@ public class ArcadeMsPacMan_ActorFactory {
     }
 
     private static void selectRandomWishDir(Ghost ghost, GameLevel level) {
+        final WorldMovementPolicy worldMovementPolicy = ghost.assertComponent(WorldMovementPolicy.class);
+
         for (final Direction dir : Direction.shuffled()) {
             final Vector2i neighbor = ghost.tile().plus(dir.vector());
-            final boolean acceptable = dir != ghost.worldMovement().moveDir().opposite() && ghost.canAccessTile(level, neighbor);
+            final boolean acceptable = dir != ghost.worldMovement().moveDir().opposite()
+                && worldMovementPolicy.canAccessTile(level, neighbor);
             if (acceptable) {
                 ghost.setWishDir(dir);
                 Logger.debug("{} selects random wish direction {}", ghost.name(), dir);

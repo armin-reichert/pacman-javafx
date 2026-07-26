@@ -84,7 +84,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         marquee.position().set(MARQUEE_X, MARQUEE_Y);
         marquee.scalingProperty().bind(scalingProperty());
 
-        presents = new Actor("Presents");
+        presents = new Actor();
         presents.position().set(9 * WorldMap.TS, MARQUEE_Y - WorldMap.TS);
 
         flow.restartState(this, SceneState.WAITING_FOR_START);

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -127,7 +128,9 @@ public final class TengenMsPacMan_ActorFactory {
     }
 
     private static boolean isAcceptableWishDir(GameLevel level, Ghost ghost, Direction dir) {
+        final WorldMovementPolicy worldMovementPolicy = ghost.assertComponent(WorldMovementPolicy.class);
+
         final Vector2i neighborTile = ghost.tile().plus(dir.vector());
-        return dir != ghost.worldMovement().moveDir().opposite() && ghost.canAccessTile(level, neighborTile);
+        return dir != ghost.worldMovement().moveDir().opposite() && worldMovementPolicy.canAccessTile(level, neighborTile);
     }
 }

@@ -47,7 +47,7 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
     public boolean tryTeleporting(Actor actor) {
         requireNonNull(actor);
 
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
         final WorldMovementSystem worldMovementSystem = GameContext.SYSTEMS.worldMovement;
 
         final Vector2i actorTile = worldMovementSystem.computeTile(actor);

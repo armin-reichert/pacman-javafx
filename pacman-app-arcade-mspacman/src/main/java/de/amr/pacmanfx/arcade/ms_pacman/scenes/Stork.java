@@ -36,8 +36,9 @@ public class Stork extends Actor {
     }
 
     public Stork(SpriteAnimationContainer animationSet) {
-        super("Beatrix");
         registerComponent(Movement.class, new Movement());
+
+        name = "Beatrix von";
         animations = new StorkAnimations(animationSet);
     }
 }

@@ -5,10 +5,10 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.actors.WorldMover;
 import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.Position;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
+import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -53,7 +53,7 @@ public class WorldMovementSystem {
         requireNonNull(dir);
 
         final Movement movement = actor.movement();
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         if (worldMovement.moveDir() == null && dir.equals(WorldMovement.DEFAULT_MOVE_DIR)) return;
         worldMovement.moveDirProperty().set(dir);
@@ -70,7 +70,7 @@ public class WorldMovementSystem {
         requireNonNull(actor);
         requireNonNull(dir);
 
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         if (worldMovement.wishDir() == null && dir.equals(WorldMovement.DEFAULT_WISH_DIR)) return;
         worldMovement.wishDirProperty().set(dir);
@@ -89,7 +89,7 @@ public class WorldMovementSystem {
         requireNonNull(actor);
 
         final Position position = actor.position();
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         final Vector2i prevTile = computeTile(actor);
         position.setX(tx * WorldMap.TS + ox);
@@ -123,7 +123,7 @@ public class WorldMovementSystem {
      */
     public Vector2i tilesAhead(Actor actor, int numTiles) {
         requireNonNull(actor);
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         return computeTile(actor).plus(worldMovement.moveDir().vector().scaled(numTiles));
     }
@@ -136,7 +136,7 @@ public class WorldMovementSystem {
     public Vector2i tilesAheadWithOverflowBug(Actor actor, int numTiles) {
         requireNonNull(actor);
 
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         Vector2i ahead = tilesAhead(actor, numTiles);
         if (worldMovement.moveDir() == UP) {
@@ -149,7 +149,7 @@ public class WorldMovementSystem {
         requireNonNull(actor);
 
         final Movement movement = actor.movement();
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         if (speed < 0) {
             throw new IllegalArgumentException("Speed must not be negative but is: " + speed);
@@ -161,11 +161,8 @@ public class WorldMovementSystem {
         requireNonNull(actor);
         requireNonNull(level);
 
-        if (!(actor instanceof WorldMover worldMover)) {
-            throw new IllegalArgumentException("Actor (%s) is no world mover!".formatted(actor.getClass()));
-        }
-
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
+        final WorldMovementPolicy worldMovementPolicy = actor.assertComponent(WorldMovementPolicy.class);
 
         if (!worldMovement.isNewTileEntered() && worldMovement.info.moved || worldMovement.targetTile() == null) {
             return; // we don't need no navigation, dim dit didit didit...
@@ -182,7 +179,7 @@ public class WorldMovementSystem {
                 continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
             final Vector2i neighborTile = currentTile.plus(dir.vector());
-            if (worldMover.canAccessTile(level, neighborTile)) {
+            if (worldMovementPolicy.canAccessTile(level, neighborTile)) {
                 double dist = neighborTile.euclideanDist(worldMovement.targetTile());
                 if (dist < minDistToTarget) {
                     minDistToTarget = dist;
@@ -204,7 +201,7 @@ public class WorldMovementSystem {
         requireNonNull(actor);
         requireNonNull(level);
 
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         if (targetTile != null) {
             worldMovement.setTargetTile(targetTile);
@@ -223,12 +220,10 @@ public class WorldMovementSystem {
      */
     public void tryMovingOrTeleporting(Actor actor, GameLevel level) {
         requireNonNull(actor);
-        if (!(actor instanceof WorldMover worldMover)) {
-            throw new IllegalArgumentException("Actor (%s) is no world mover!".formatted(actor.getClass()));
-        }
         requireNonNull(level);
 
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
+        final WorldMovementPolicy worldMovementPolicy = actor.assertComponent(WorldMovementPolicy.class);
 
         worldMovement.info.clear();
         if (worldMovement.canTeleport()) {
@@ -237,7 +232,7 @@ public class WorldMovementSystem {
                 return;
             }
         }
-        if (worldMovement.isTurnBackRequested() && worldMover.canTurnBack()) {
+        if (worldMovement.isTurnBackRequested() && worldMovementPolicy.canTurnBack()) {
             setWishDir(actor, worldMovement.moveDir().opposite());
             Logger.trace("{}: turned back at tile {}", actor.name(), computeTile(actor));
             worldMovement.clearTurnBackRequested();
@@ -251,7 +246,7 @@ public class WorldMovementSystem {
     }
 
     private boolean tryTeleporting(Actor actor, TerrainLayer terrain) {
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         if (worldMovement.moveDir().isHorizontal()) {
             return terrain.horizontalPortals().stream()
@@ -264,19 +259,18 @@ public class WorldMovementSystem {
     }
 
     private void tryMovingTowards(Actor actor, GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
-        if (!(actor instanceof WorldMover worldMover)) {
-            throw new IllegalArgumentException("Actor (%s) is no world mover!".formatted(actor.getClass()));
-        }
-
         final Movement movement = actor.movement();
-        final WorldMovement worldMovement = actor.component(WorldMovement.class);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
+        final WorldMovementPolicy worldMovementPolicy = actor.assertComponent(WorldMovementPolicy.class);
+
+        final MovementSystem movementSystem = GameContext.SYSTEMS.movement;
 
         final Vector2f newVelocity = dir.vector().scaled(movement.computeSpeed());
         final Vector2f touchPosition = computeCenter(actor).plus(dir.vector().scaled((float) WorldMap.HTS)).plus(newVelocity);
         final Vector2i touchedTile = WorldMap.computeTileAt(touchPosition);
         final boolean turn = dir.vector().isOrthogonalTo(worldMovement.moveDir().vector());
 
-        if (!worldMover.canAccessTile(level, touchedTile)) {
+        if (!worldMovementPolicy.canAccessTile(level, touchedTile)) {
             if (!turn) {
                 placeAtTile(actor, computeTile(actor)); // adjust over tile (would move forward against wall)
             }
@@ -300,11 +294,12 @@ public class WorldMovementSystem {
             final Vector2f cornerVelocity = newVelocity.plus(dir.vector().scaled(worldMovement.corneringSpeedDelta));
             Logger.trace("{} velocity around corner: {}", actor.name(), cornerVelocity.length());
             movement.setVelocity(cornerVelocity.x(), cornerVelocity.y());
-            GameContext.SYSTEMS.movement.moveAccelerated(actor);
+            movementSystem.moveAccelerated(actor);
+            // Reset velocity after moving
             movement.setVelocity(newVelocity.x(), newVelocity.y());
         } else {
             movement.setVelocity(newVelocity.x(), newVelocity.y());
-            GameContext.SYSTEMS.movement.moveAccelerated(actor);
+            movementSystem.moveAccelerated(actor);
         }
 
         final Vector2i tileAfterMoving = computeTile(actor);
@@ -313,9 +308,11 @@ public class WorldMovementSystem {
         worldMovement.info.moved = true;
 
         final TerrainLayer terrainLayer = level.worldMap().terrainLayer();
+
         worldMovement.info.tunnelEntered = terrainLayer.isTunnel(tileAfterMoving)
             && !terrainLayer.isTunnel(tileBeforeMoving)
             && !terrainLayer.isTileInPortalSpace(tileBeforeMoving);
+
         worldMovement.info.tunnelLeft = !terrainLayer.isTunnel(tileAfterMoving)
             && terrainLayer.isTunnel(tileBeforeMoving)
             && !terrainLayer.isTileInPortalSpace(tileAfterMoving);

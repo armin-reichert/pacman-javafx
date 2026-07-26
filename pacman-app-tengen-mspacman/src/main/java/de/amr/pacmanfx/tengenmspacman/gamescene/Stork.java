@@ -40,8 +40,9 @@ public class Stork extends Actor {
     private boolean bagReleasedFromBeak;
 
     public Stork(SpriteAnimationContainer container) {
-        super("Beatrix");
         registerComponent(Movement.class, new Movement());
+
+        name = "Beatrix von";
         animations = new StorkAnimations(container);
     }
 

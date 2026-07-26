@@ -44,8 +44,9 @@ public class Bag extends Actor {
     private boolean open;
 
     public Bag(SpriteAnimationContainer container) {
-        super("Birkin");
         registerComponent(Movement.class, new Movement());
+
+        name = "Birkin";
         animations = new BagAnimations(container);
         setOpen(false);
     }
