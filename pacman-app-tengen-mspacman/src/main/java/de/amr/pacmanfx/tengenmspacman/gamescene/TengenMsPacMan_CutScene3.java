@@ -117,17 +117,21 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {
                 case 130 -> {
-                    worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
                     pacMan.position().set(WorldMap.TS * 3, GROUND_Y - 4);
                     pacMan.visibility().show();
-                    pacMan.setSpeed(0);
+
+                    worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
+                    worldMovementSystem.setSpeed(pacMan, 0);
+
                     pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations.stopSelected();
 
                     msPacMan.position().set(WorldMap.TS * 5, GROUND_Y - 4);
                     msPacMan.visibility().show();
-                    msPacMan.setSpeed(0);
+
                     worldMovementSystem.setMoveDir(msPacMan, Direction.RIGHT);
+                    worldMovementSystem.setSpeed(msPacMan, 0);
+
                     msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations.stopSelected();
 

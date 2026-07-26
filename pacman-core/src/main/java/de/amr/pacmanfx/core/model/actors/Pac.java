@@ -85,10 +85,6 @@ public class Pac extends Actor {
         return GameContext.SYSTEMS.worldMovementSystem.computeTile(this);
     }
 
-    public void setSpeed(float speed) {
-        GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, speed);
-    }
-
     @Override
     public String toString() {
         return "Pac{" +

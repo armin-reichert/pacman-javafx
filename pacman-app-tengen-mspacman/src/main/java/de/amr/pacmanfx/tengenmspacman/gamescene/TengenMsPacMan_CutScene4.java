@@ -117,31 +117,37 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             final short eventTick = (short) gameStateTick;
             switch (eventTick) {
                 case 130 -> {
-                    worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
                     pacMan.position().set(LEFT_BORDER, LOWER_LANE);
-                    pacMan.setSpeed(1f);
-                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.animations.playSelected();
                     pacMan.visibility().show();
 
-                    worldMovementSystem.setMoveDir(msPacMan, Direction.LEFT);
+                    worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
+                    worldMovementSystem.setSpeed(pacMan, 1f);
+
+                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.animations.playSelected();
+
                     msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
-                    msPacMan.setSpeed(1f);
+                    msPacMan.visibility().show();
+
+                    worldMovementSystem.setMoveDir(msPacMan, Direction.LEFT);
+                    worldMovementSystem.setSpeed(msPacMan, 1f);
+
                     msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations.playSelected();
-                    msPacMan.visibility().show();
                 }
                 case 230 -> {
-                    pacMan.setSpeed(0);
+                    worldMovementSystem.setSpeed(pacMan, 0);
                     pacMan.animations.stopSelected();
                     pacMan.animations.resetSelected();
-                    msPacMan.setSpeed(0);
+
+                    worldMovementSystem.setSpeed(msPacMan, 0);
                     msPacMan.animations.stopSelected();
                     msPacMan.animations.resetSelected();
                 }
                 case 400 -> {
                     pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations.playSelected();
+
                     msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations.playSelected();
                 }
@@ -160,9 +166,10 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     msPacMan.animations.playSelected();
                 }
                 case 650 -> {
-                    pacMan.setSpeed(1.5f); // TODO not sure
+                    worldMovementSystem.setSpeed(pacMan, 1.5f); // TODO not sure
                     worldMovementSystem.setMoveDir(pacMan, Direction.UP);
-                    msPacMan.setSpeed(1.5f); // TODO not sure
+
+                    worldMovementSystem.setSpeed(msPacMan, 1.5f); // TODO not sure
                     worldMovementSystem.setMoveDir(msPacMan, Direction.UP);
                 }
                 case 720 -> {
@@ -179,12 +186,14 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     private void spawnJunior(WorldMovementSystem worldMovementSystem, GameVariantRenderConfig renderConfig, long tick) {
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
 
-        final Pac junior = TengenMsPacMan_ActorFactory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
+
+        final Pac junior = TengenMsPacMan_ActorFactory.createPacMan();
         junior.position().set((float) randomX, unscaledHeight() - 4 * TS);
         junior.visibility().show();
         worldMovementSystem.setMoveDir(junior, Direction.UP);
-        junior.setSpeed(2);
+        worldMovementSystem.setSpeed(junior, 2);
+
         junior.animations = renderConfig.createPacAnimations(spriteAnimations);
         junior.animations.select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
 

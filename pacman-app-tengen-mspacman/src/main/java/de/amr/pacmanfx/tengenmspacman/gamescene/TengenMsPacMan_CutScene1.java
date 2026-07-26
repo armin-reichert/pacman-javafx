@@ -111,15 +111,15 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
-        worldMovementSystem.setMoveDir(msPacMan, Direction.LEFT);
         msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
-        msPacMan.setSpeed(0);
+        worldMovementSystem.setMoveDir(msPacMan, Direction.LEFT);
+        worldMovementSystem.setSpeed(msPacMan, 0);
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
         pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
-        worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
         pacMan.position().set(LEFT_BORDER, UPPER_LANE);
-        pacMan.setSpeed(0);
+        worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
+        worldMovementSystem.setSpeed(pacMan, 0);
 
         inky = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
         inky.setMoveDir(Direction.RIGHT);
@@ -168,12 +168,12 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {
                 case 130 -> {
-                    pacMan.setSpeed(SPEED_CHASING);
+                    worldMovementSystem.setSpeed(pacMan, SPEED_CHASING);
                     pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations.playSelected();
                     pacMan.visibility().show();
 
-                    msPacMan.setSpeed(SPEED_CHASING);
+                    worldMovementSystem.setSpeed(msPacMan, SPEED_CHASING);
                     msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations.playSelected();
                     msPacMan.visibility().show();
@@ -204,12 +204,10 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                     inky.setMoveDir(Direction.LEFT);
                     inky.setWishDir(Direction.LEFT);
                 }
-                case 454 -> {
-                    worldMovementSystem.setMoveDir(pacMan, Direction.UP);
-                    pacMan.setSpeed(SPEED_RISING);
-                    worldMovementSystem.setMoveDir(msPacMan, Direction.UP);
-                    msPacMan.setSpeed(SPEED_RISING);
-                }
+                case 454 -> List.of(pacMan, msPacMan).forEach(pac -> {
+                    worldMovementSystem.setMoveDir(pac, Direction.UP);
+                    worldMovementSystem.setSpeed(pac, SPEED_RISING);
+                });
                 case 498 -> {
                     collided = true;
 
@@ -228,9 +226,9 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                 case 530 -> {
                     inky.visibility().hide();
                     pinky.visibility().hide();
-                    pacMan.setSpeed(0);
+                    worldMovementSystem.setSpeed(pacMan, 0);
                     worldMovementSystem.setMoveDir(pacMan, Direction.LEFT);
-                    msPacMan.setSpeed(0);
+                    worldMovementSystem.setSpeed(msPacMan, 0);
                     worldMovementSystem.setMoveDir(msPacMan, Direction.RIGHT);
                 }
                 case 545 -> {

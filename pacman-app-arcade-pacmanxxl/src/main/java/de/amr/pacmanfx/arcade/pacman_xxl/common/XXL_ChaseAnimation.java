@@ -100,7 +100,7 @@ class XXL_ChaseAnimation {
         pac.position().setX(numTilesX * WorldMap.TS);
         worldMovementSystem.setMoveDir(pac, Direction.LEFT);
         worldMovementSystem.setWishDir(pac, Direction.LEFT);
-        pac.setSpeed(PAC_FLEEING_SPEED);
+        worldMovementSystem.setSpeed(pac, PAC_FLEEING_SPEED);
         pac.visibility().show();
 
         ghosts = List.of(
