@@ -119,7 +119,7 @@ public class Pac3D extends Group implements GameEntity, DisposableGraphicsObject
     @Override
     public void init(GameContext gameContext) {
         requireNonNull(gameContext);
-        transformController.init(this, gameContext.assertLevel().worldMap());
+        transformController.init(this, gameContext);
         animationController.init(this);
         setPowerMode(false);
     }
@@ -127,7 +127,7 @@ public class Pac3D extends Group implements GameEntity, DisposableGraphicsObject
     @Override
     public void update(GameContext gameContext) {
         requireNonNull(gameContext);
-        transformController.update(this, gameContext.assertLevel().worldMap());
+        transformController.update(this, gameContext);
         animationController.update(this);
     }
 }

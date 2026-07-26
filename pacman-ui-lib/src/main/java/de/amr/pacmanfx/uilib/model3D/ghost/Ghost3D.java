@@ -83,14 +83,14 @@ public class Ghost3D extends Group implements GameEntity, DisposableGraphicsObje
     @Override
     public void init(GameContext gameContext) {
         assertControllersAssigned();
-        transformController.init(this, gameContext.assertLevel().worldMap());
+        transformController.init(this, gameContext);
         appearanceController.init(this);
     }
 
     @Override
     public void update(GameContext gameContext) {
         assertControllersAssigned();
-        transformController.update(this, gameContext.assertLevel().worldMap());
+        transformController.update(this, gameContext);
         appearanceController.update(this, gameContext.assertLevel());
     }
 
