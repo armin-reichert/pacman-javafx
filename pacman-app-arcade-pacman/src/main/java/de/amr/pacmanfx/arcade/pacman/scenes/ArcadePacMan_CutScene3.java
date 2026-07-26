@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.systems.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -44,7 +45,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         final SpriteAnimationContainer container = appContext().ui().sprites().animations();
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.animations = renderConfig.createPacAnimations(container);
-        blinky = renderConfig.createAnimatedGhost(container, RED_GHOST_SHADOW);
+        blinky = renderConfig.createAnimatedGhost(gameContext(), container, RED_GHOST_SHADOW);
         sceneTick = -1;
     }
 
@@ -54,14 +55,15 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         if (sceneTick < TICK_ANIMATION_START) {
             return;
         }
+        final MovementSystem movementSystem = gameContext.systems().movementSystem;
         final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         switch (sceneTick) {
             case TICK_ANIMATION_START      -> startAnimation(worldMovementSystem);
-            case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked();
+            case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked(worldMovementSystem);
             case TICK_ANIMATION_ENDS       -> gameState().triggerTimeout();
         }
-        GameContext.SYSTEMS.movementSystem.moveAccelerated(pacMan);
-        GameContext.SYSTEMS.movementSystem.moveAccelerated(blinky);
+        movementSystem.moveAccelerated(pacMan);
+        movementSystem.moveAccelerated(blinky);
     }
 
     private void startAnimation(WorldMovementSystem worldMovementSystem) {
@@ -69,10 +71,10 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         startBlinkyChasingPacMan(worldMovementSystem);
     }
 
-    private void startBlinkyRunningNaked() {
-        GameContext.SYSTEMS.worldMovementSystem.placeAtTile(blinky, -1, 20);
-        blinky.setMoveDir(Direction.RIGHT);
-        blinky.setWishDir(Direction.RIGHT);
+    private void startBlinkyRunningNaked(WorldMovementSystem worldMovementSystem) {
+        worldMovementSystem.placeAtTile(blinky, -1, 20);
+        worldMovementSystem.setMoveDir(blinky, Direction.RIGHT);
+        worldMovementSystem.setWishDir(blinky, Direction.RIGHT);
         blinky.animations.select(CommonAnimationID.BLINKY_NAKED);
         blinky.animations.playSelected();
     }
@@ -88,8 +90,8 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         pacMan.animations.playSelected();
 
         worldMovementSystem.placeAtTile(blinky, 35, 20);
-        blinky.setMoveDir(Direction.LEFT);
-        blinky.setWishDir(Direction.LEFT);
+        worldMovementSystem.setMoveDir(blinky, Direction.LEFT);
+        worldMovementSystem.setWishDir(blinky, Direction.LEFT);
         worldMovementSystem.setSpeed(blinky, 1.25f);
 
         blinky.visibility().show();

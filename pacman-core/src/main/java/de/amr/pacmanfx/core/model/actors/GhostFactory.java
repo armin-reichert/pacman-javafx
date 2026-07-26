@@ -8,63 +8,67 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 
 import static de.amr.pacmanfx.core.model.GameModel.RED_GHOST_SHADOW;
 
 public class GhostFactory {
 
-    public static Ghost createRedGhostShadow(String name) {
+    public static Ghost createRedGhostShadow(String name, WorldMovementSystem worldMovementSystem) {
         final Ghost ghost = new Ghost(GameModel.RED_GHOST_SHADOW, name);
 
-        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
-            GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, speed);
-            final boolean chase = level.huntingRules().isChasing()
-                || ghost.elroy().enabled();
+        ghost.setHuntingStrategy((GameContext gameContext, Float speed) -> {
+            final GameLevel level = gameContext.assertLevel();
+
+            worldMovementSystem.setSpeed(ghost, speed);
+
+            final boolean chase = level.huntingRules().isChasing() || ghost.elroy().enabled();
+
             final Vector2i targetTile = chase
                 ? ghost.chasingTargetTileStrategy().apply(level)
                 : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
-            GameContext.SYSTEMS.worldMovementSystem.tryMovingTowardsTargetTile(ghost, level, targetTile);
+
+            worldMovementSystem.tryMovingTowardsTargetTile(ghost, gameContext, targetTile);
         });
 
-        ghost.setChasingTargetTileStrategy(level -> level.entities().pac().tile());
+        ghost.setChasingTargetTileStrategy(level -> worldMovementSystem.computeTile(level.entities().pac()));
 
         ghost.reset();
         return ghost;
     }
 
-    public static Ghost createPinkGhostAmbusher(String name) {
+    public static Ghost createPinkGhostAmbusher(String name, WorldMovementSystem worldMovementSystem) {
         final Ghost ghost = new Ghost(GameModel.PINK_GHOST_SPEEDY, name);
 
         ghost.setChasingTargetTileStrategy(level -> {
             final Pac pac = level.entities().pac();
-            return GameContext.SYSTEMS.worldMovementSystem.tilesAheadWithOverflowBug(pac, 4);
+            return worldMovementSystem.tilesAheadWithOverflowBug(pac, 4);
         });
 
         ghost.reset();
         return ghost;
     }
 
-    public static Ghost createCyanGhostBashful(String name) {
+    public static Ghost createCyanGhostBashful(String name, WorldMovementSystem worldMovementSystem) {
         final Ghost ghost = new Ghost(GameModel.CYAN_GHOST_BASHFUL, name);
-
         ghost.setChasingTargetTileStrategy(level -> {
             final Pac pac = level.entities().pac();
-            return GameContext.SYSTEMS.worldMovementSystem.tilesAheadWithOverflowBug(pac, 2)
-                .scaled(2)
-                .minus(level.ghost(RED_GHOST_SHADOW).tile());
+            final Vector2i blinkyTile = worldMovementSystem.computeTile(level.ghost(RED_GHOST_SHADOW));
+            return worldMovementSystem.tilesAheadWithOverflowBug(pac, 2).scaled(2).minus(blinkyTile);
         });
         ghost.reset();
         return ghost;
     }
 
-    public static Ghost createOrangeGhostPokey(String name) {
+    public static Ghost createOrangeGhostPokey(String name, WorldMovementSystem worldMovementSystem) {
         final Ghost ghost = new Ghost(GameModel.ORANGE_GHOST_POKEY, name);
 
-        ghost.setChasingTargetTileStrategy(level ->
-            ghost.tile().euclideanDist(level.entities().pac().tile()) < 8
-            ? level.worldMap().terrainLayer().ghostScatterTile(ghost.personality())
-            : level.entities().pac().tile()
-        );
+        ghost.setChasingTargetTileStrategy(level -> {
+            final Vector2i pacTile = worldMovementSystem.computeTile(level.entities().pac());
+            final Vector2i ghostTile = worldMovementSystem.computeTile(ghost);
+            final Vector2i ghostScatterTile = level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
+            return ghostTile.euclideanDist(pacTile) < 8 ? ghostScatterTile : pacTile;
+        });
 
         ghost.reset();
         return ghost;

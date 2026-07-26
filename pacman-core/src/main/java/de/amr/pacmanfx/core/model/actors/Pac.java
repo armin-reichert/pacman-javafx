@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.steering.Steering;
@@ -35,10 +36,13 @@ public class Pac extends Actor {
         }
 
         @Override
-        public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
-            requireNonNull(gameLevel);
+        public boolean canAccessTile(GameContext gameContext, Vector2i tile) {
+            requireNonNull(gameContext);
             requireNonNull(tile);
-            final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+
+            final GameLevel level = gameContext.assertLevel();
+            final TerrainLayer terrain = level.worldMap().terrainLayer();
+
             // Portal tiles are the only tiles outside the world that can be accessed
             if (terrain.outOfBounds(tile)) {
                 return terrain.isTileInPortalSpace(tile);
@@ -79,10 +83,6 @@ public class Pac extends Actor {
 
     public WorldMovement worldMovement() {
         return assertComponent(WorldMovement.class);
-    }
-
-    public Vector2i tile() {
-        return GameContext.SYSTEMS.worldMovementSystem.computeTile(this);
     }
 
     @Override
@@ -180,18 +180,19 @@ public class Pac extends Actor {
             return;
         }
 
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         final GameLevel level = gameContext.assertLevel();
         final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
 
         if (isUsingAutopilot()) {
-            automaticSteering.steer(this, level);
+            automaticSteering.steer(this, gameContext);
         }
 
-        GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, powerTimer.isRunning()
+        worldMovementSystem.setSpeed(this, powerTimer.isRunning()
             ? speedRules.pacSpeedWhenHasPower(level)
             : speedRules.pacSpeed(level));
 
-        GameContext.SYSTEMS.worldMovementSystem.tryMovingOrTeleporting(this, level);
+        worldMovementSystem.tryMovingOrTeleporting(this, gameContext);
 
         if (worldMovement().info.moved) {
             animations.playSelected();

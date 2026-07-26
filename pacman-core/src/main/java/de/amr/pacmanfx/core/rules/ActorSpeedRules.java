@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.rules;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
@@ -20,11 +21,11 @@ public interface ActorSpeedRules {
     /**
      * Returns the speed of the given ghost for the given level.
      *
-     * @param level the current level
+     * @param gameContext the game context (asserts level)
      * @param ghost the ghost whose speed is requested
      * @return the ghost's speed multiplier
      */
-    float ghostSpeed(GameLevel level, Ghost ghost);
+    float ghostSpeed(GameContext gameContext, Ghost ghost);
 
     /**
      * Returns the ghost's speed while attacking.

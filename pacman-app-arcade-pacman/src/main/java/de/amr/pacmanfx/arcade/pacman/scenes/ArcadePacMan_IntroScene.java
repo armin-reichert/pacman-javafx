@@ -125,10 +125,10 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
 
-        ghosts[0] = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.RED_GHOST_SHADOW);
-        ghosts[1] = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
-        ghosts[2] = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
-        ghosts[3] = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.ORANGE_GHOST_POKEY);
+        ghosts[0] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.RED_GHOST_SHADOW);
+        ghosts[1] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
+        ghosts[2] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
+        ghosts[3] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.ORANGE_GHOST_POKEY);
 
         Arrays.fill(ghostImageVisible, false);
         Arrays.fill(ghostNicknameVisible, false);
@@ -154,8 +154,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         pacMan.visibility().show();
         for (Ghost ghost : ghosts) {
             ghost.setState(GhostState.HUNTING_PAC);
-            ghost.setMoveDir(Direction.LEFT);
-            ghost.setWishDir(Direction.LEFT);
+            worldMovementSystem.setMoveDir(ghost, Direction.LEFT);
+            worldMovementSystem.setWishDir(ghost, Direction.LEFT);
             worldMovementSystem.setSpeed(ghost, CHASING_SPEED);
             ghost.position().set(pacMan.position().x + 16 * ghost.personality() + 18, pacMan.position().y);
             ghost.visibility().show();
@@ -190,8 +190,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         pacMan.animations.stopSelected();
         for (Ghost ghost : ghosts) {
             ghost.setState(FRIGHTENED);
-            ghost.setMoveDir(Direction.RIGHT);
-            ghost.setWishDir(Direction.RIGHT);
+            worldMovementSystem.setMoveDir(ghost, Direction.RIGHT);
+            worldMovementSystem.setWishDir(ghost, Direction.RIGHT);
             worldMovementSystem.setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
         }
     }

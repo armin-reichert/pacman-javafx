@@ -18,7 +18,7 @@ public class ArcadeGameLevelCompleteState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        gameContext.gamePlay().onLevelCompleted(gameContext.assertLevel());
+        gameContext.gamePlay().onLevelCompleted(gameContext);
         waitForTimeout(); // UI triggers timeout
     }
 

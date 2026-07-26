@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.event.PacDeadEvent;
 import de.amr.pacmanfx.core.event.PacDyingEvent;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -44,7 +43,7 @@ public class CommonPacManDyingState extends GameState {
 
         level.huntingRules().stop();
 
-        level.entities().optBonus().ifPresent(Bonus::setInactive);
+        level.entities().optBonus().ifPresent(bonus -> bonus.setInactive(gameContext));
 
         final Pac pac = level.entities().pac();
         pac.animations.stopSelected();
@@ -87,7 +86,7 @@ public class CommonPacManDyingState extends GameState {
         }
         else if (tick == hidePacTick) {
             pac.visibility().hide();
-            level.optBonus().ifPresent(Bonus::setInactive); //TODO check this
+            level.optBonus().ifPresent(bonus -> bonus.setInactive(gameContext)); //TODO check this
         }
         else if (tick == pacDeadTick) {
             gameContext.eventManager().publishGameEvent(new PacDeadEvent(pac));

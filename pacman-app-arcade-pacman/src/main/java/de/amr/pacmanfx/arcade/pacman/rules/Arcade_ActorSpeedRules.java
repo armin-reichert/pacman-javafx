@@ -5,7 +5,9 @@
 package de.amr.pacmanfx.arcade.pacman.rules;
 
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -38,11 +40,13 @@ public class Arcade_ActorSpeedRules implements ActorSpeedRules {
     }
 
     @Override
-    public float ghostSpeed(GameLevel level, Ghost ghost) {
+    public float ghostSpeed(GameContext gameContext, Ghost ghost) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final GameLevel level = gameContext.assertLevel();
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final boolean insideHouse = terrain.assertHouse().isVisitedBy(ghost);
-        final boolean tunnelSlowdown = terrain.isTunnel(ghost.tile());
+        final boolean tunnelSlowdown = terrain.isTunnel(worldMovementSystem.computeTile(ghost));
         return switch (ghost.state()) {
             case LOCKED -> insideHouse ? 0.5f : 0;
             case LEAVING_HOUSE -> 0.5f;

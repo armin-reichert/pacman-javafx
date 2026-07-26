@@ -83,8 +83,8 @@ public abstract class CommonGamePlay implements GamePlay {
             ghost.reset(); // initially invisible!
             ghost.position().set(ghost.startPosition());
             final Direction direction = house.ghostStartDirection(ghost.personality());
-            ghost.setMoveDir(direction);
-            ghost.setWishDir(direction);
+            worldMovementSystem.setMoveDir(ghost, direction);
+            worldMovementSystem.setWishDir(ghost, direction);
             ghost.setState(GhostState.LOCKED);
             ghost.animations.resetSelected();
         });
@@ -185,7 +185,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         evalPacKilled(result, level);
         if (result.pacKilled()) {
-            fixPacPositionIfKilledInsidePortal(level);
+            fixPacPositionIfKilledInsidePortal(gameContext);
         }
         else {
             evalGhostsKilled(gameContext, result);
@@ -243,10 +243,15 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     // If collision happened while teleporting (horizontally), move collided actors into visible world
-    private void fixPacPositionIfKilledInsidePortal(GameLevel level) {
+    private void fixPacPositionIfKilledInsidePortal(GameContext gameContext) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+
+        final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
+        final Vector2i pacTile = worldMovementSystem.computeTile(pac);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        terrain.hPortalContainingTile(pac.tile()).ifPresent(hPortal -> {
+
+        terrain.hPortalContainingTile(pacTile).ifPresent(hPortal -> {
             if (pac.worldMovement().moveDir() == Direction.LEFT) {
                 pac.position().setX(hPortal.rightBorderEntryTile().x() * WorldMap.TS + WorldMap.HTS);
             } else if (pac.worldMovement().moveDir() == Direction.RIGHT) {
@@ -295,7 +300,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameLevel level = gameContext.assertLevel();
         final GameEventManager eventManager = gameContext.eventManager();
 
-        bonus.showEatenForSeconds(model.rules().eatenBonusDisplaySeconds());
+        bonus.showEatenForSeconds(gameContext, model.rules().eatenBonusDisplaySeconds());
 
         scorePoints(gameContext, bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
@@ -315,7 +320,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final int points = model.rules().scoringRules().pointsForGhost(killedBefore);
 
         scorePoints(gameContext, points, level.number());
-        Logger.info("Scored {} points for killing {} at tile {}", points, eatenGhost.name(), eatenGhost.tile());
+        Logger.info("Scored {} points for killing {}", points, eatenGhost.name());
 
         eatenGhost.setState(GhostState.EATEN);
         // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
@@ -329,8 +334,11 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void onLevelCompleted(GameLevel level) {
-        requireNonNull(level);
+    public void onLevelCompleted(GameContext gameContext) {
+        requireNonNull(gameContext);
+
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final GameLevel level = gameContext.assertLevel();
 
         level.huntingRules().stop();
         Logger.info("Hunting timer stopped.");
@@ -344,7 +352,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         pac.animations.stopSelected();
         pac.animations.select(CommonAnimationID.PAC_FULL);
-        GameContext.SYSTEMS.worldMovementSystem.setSpeed(pac, 0);
+        worldMovementSystem.setSpeed(pac, 0);
         pac.powerTimer().stop();
         pac.powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero.");
@@ -353,9 +361,9 @@ public abstract class CommonGamePlay implements GamePlay {
             ghost.animations.stopSelected();
             //TODO check in emulator if ghost animation is reset to normal
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
-            GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, 0);
+            worldMovementSystem.setSpeed(ghost, 0);
         });
-        level.optBonus().ifPresent(Bonus::setInactive);
+        level.optBonus().ifPresent(bonus -> bonus.setInactive(gameContext));
     }
 
     @Override
@@ -491,10 +499,11 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void detectFoodCollision(GameContext gameContext) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final FoodLayer foodLayer = level.worldMap().foodLayer();
-        final Vector2i pacTile = pac.tile();
+        final Vector2i pacTile = worldMovementSystem.computeTile(pac);
         if (foodLayer.hasFoodAtTile(pacTile)) {
             gameContext.thisFrame().huntingStep().setFoodFoundTile(pacTile);
             gameContext.thisFrame().huntingStep().setEnergizerFound(foodLayer.isEnergizerTile(pacTile));

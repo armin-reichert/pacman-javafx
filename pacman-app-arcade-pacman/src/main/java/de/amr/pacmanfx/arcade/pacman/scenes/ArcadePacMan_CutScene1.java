@@ -43,7 +43,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         final SpriteAnimationContainer container = appContext().ui().sprites().animations();
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.animations = renderConfig.createPacAnimations(container);
-        blinky = renderConfig.createAnimatedGhost(container, RED_GHOST_SHADOW);
+        blinky = renderConfig.createAnimatedGhost(gameContext(), container, RED_GHOST_SHADOW);
         sceneTick = -1;
     }
 
@@ -82,8 +82,8 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
 
     private void startBlinkyEscapingPacMan(WorldMovementSystem worldMovementSystem) {
         worldMovementSystem.placeAtTile(blinky, -2, 20, 4, 0);
-        blinky.setMoveDir(Direction.RIGHT);
-        blinky.setWishDir(Direction.RIGHT);
+        worldMovementSystem.setMoveDir(blinky, Direction.RIGHT);
+        worldMovementSystem.setWishDir(blinky, Direction.RIGHT);
 
         worldMovementSystem.setSpeed(blinky, 0.75f);
         blinky.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
@@ -99,8 +99,8 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         pacMan.visibility().show();
 
         worldMovementSystem.placeAtTile(blinky, 32, 20);
-        blinky.setMoveDir(Direction.LEFT);
-        blinky.setWishDir(Direction.LEFT);
+        worldMovementSystem.setMoveDir(blinky, Direction.LEFT);
+        worldMovementSystem.setWishDir(blinky, Direction.LEFT);
         worldMovementSystem.setSpeed(blinky, 1.3f);
         blinky.animations.select(CommonAnimationID.GHOST_NORMAL);
         blinky.animations.playSelected();

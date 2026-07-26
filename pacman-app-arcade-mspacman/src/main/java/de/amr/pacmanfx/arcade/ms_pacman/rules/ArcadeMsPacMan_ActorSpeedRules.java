@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rules;
 
 import de.amr.pacmanfx.arcade.pacman.rules.Arcade_ActorSpeedRules;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
@@ -12,14 +13,15 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 public class ArcadeMsPacMan_ActorSpeedRules extends Arcade_ActorSpeedRules {
 
     @Override
-    public float ghostSpeed(GameLevel level, Ghost ghost) {
+    public float ghostSpeed(GameContext gameContext, Ghost ghost) {
+        final GameLevel level = gameContext.assertLevel();
         if (level.number() <= 2) {
-            return super.ghostSpeed(level, ghost);
+            return super.ghostSpeed(gameContext, ghost);
         }
         return switch (ghost.state()) {
             case HUNTING_PAC   -> ghostSpeedAttacking(level, ghost); // no tunnel slowdown
             case FRIGHTENED    -> ghostSpeedFrightened(level); // no tunnel slowdown
-            default            -> super.ghostSpeed(level, ghost);
+            default            -> super.ghostSpeed(gameContext, ghost);
         };
     }
 }

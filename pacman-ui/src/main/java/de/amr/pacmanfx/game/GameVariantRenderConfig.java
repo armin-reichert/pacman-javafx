@@ -6,6 +6,7 @@ package de.amr.pacmanfx.game;
 
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
@@ -38,7 +39,7 @@ public interface GameVariantRenderConfig {
 
     ActorRenderer createActorRenderer(Canvas canvas);
 
-    Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality);
+    Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, byte personality);
 
     SpriteAnimationAccess createGhostAnimations(SpriteAnimationContainer container, byte personality);
 

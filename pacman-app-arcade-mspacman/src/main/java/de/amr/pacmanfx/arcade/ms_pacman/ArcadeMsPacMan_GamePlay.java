@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
         createAndSetMsPacMan(level);
-        createAndSetGhosts(level, terrain.assertHouse());
+        createAndSetGhosts(gameContext, level, terrain.assertHouse());
 
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
@@ -87,16 +87,19 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setPac(msPacMan);
     }
 
-    protected void createAndSetGhosts(GameLevel level, House house) {
+    protected void createAndSetGhosts(GameContext gameContext, GameLevel level, House house) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         level.setGhosts(
-            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.RED_GHOST_SHADOW,
-                terrain, house,   WorldMapPropertyName.POS_GHOST_1_RED),
-            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.PINK_GHOST_SPEEDY,
-                terrain, house,  WorldMapPropertyName.POS_GHOST_2_PINK),
-            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.CYAN_GHOST_BASHFUL,
+            ArcadeMsPacMan_ActorFactory.createGhost(gameContext, GameModel.RED_GHOST_SHADOW,
+                terrain, house, WorldMapPropertyName.POS_GHOST_1_RED),
+
+            ArcadeMsPacMan_ActorFactory.createGhost(gameContext, GameModel.PINK_GHOST_SPEEDY,
+                terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK),
+
+            ArcadeMsPacMan_ActorFactory.createGhost(gameContext, GameModel.CYAN_GHOST_BASHFUL,
                 terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN),
-            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.ORANGE_GHOST_POKEY,
+
+            ArcadeMsPacMan_ActorFactory.createGhost(gameContext, GameModel.ORANGE_GHOST_POKEY,
                 terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE)
         );
     }
@@ -163,8 +166,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             bonus.position().set(WorldMap.halfTileRightOf(bonusTile));
             bonus.showEdibleForSeconds(randomFloat(9, 10));
         } else {
-            computeBonusRoute(bonus, terrain, house);
-            bonus.showEdibleAndStartWandering(model.rules().actorSpeedRules().bonusSpeed(level));
+            computeBonusRoute(gameContext, bonus, terrain, house);
+            bonus.showEdibleAndStartWandering(gameContext, model.rules().actorSpeedRules().bonusSpeed(level));
         }
 
         level.setBonus(bonus);
@@ -179,7 +182,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
     // ------------------------------------------------
 
-    private void computeBonusRoute(Bonus bonus, TerrainLayer terrain, House house) {
+    private void computeBonusRoute(GameContext gameContext, Bonus bonus, TerrainLayer terrain, House house) {
         final List<HPortal> portals = terrain.horizontalPortals();
         if (portals.isEmpty()) {
             Logger.error("Moving bonus cannot be activated, game level does not contain any portals");
@@ -217,7 +220,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         final List<Vector2i> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).toList();
 
-        bonus.setMazeRoute(route, leftToRight);
+        bonus.setMazeRoute(gameContext, route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
     }
 }

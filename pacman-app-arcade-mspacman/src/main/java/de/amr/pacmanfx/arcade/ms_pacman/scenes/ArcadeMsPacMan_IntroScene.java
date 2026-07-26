@@ -103,16 +103,16 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         msPacMan.animations.playSelected();
 
         ghosts = List.of(
-            renderConfig.createAnimatedGhost(container, GameModel.RED_GHOST_SHADOW),
-            renderConfig.createAnimatedGhost(container, GameModel.PINK_GHOST_SPEEDY),
-            renderConfig.createAnimatedGhost(container, GameModel.CYAN_GHOST_BASHFUL),
-            renderConfig.createAnimatedGhost(container, GameModel.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(gameContext(), container, GameModel.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(gameContext(), container, GameModel.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(gameContext(), container, GameModel.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(gameContext(), container, GameModel.ORANGE_GHOST_POKEY)
         );
 
         for (Ghost ghost : ghosts) {
             ghost.position().set(WorldMap.TS * 33.5f, WorldMap.TS * 20);
-            ghost.setMoveDir(Direction.LEFT);
-            ghost.setWishDir(Direction.LEFT);
+            worldMovementSystem.setMoveDir(ghost, Direction.LEFT);
+            worldMovementSystem.setWishDir(ghost, Direction.LEFT);
             worldMovementSystem.setSpeed(ghost, ACTOR_SPEED);
             ghost.setState(GhostState.HUNTING_PAC);
             ghost.visibility().show();
@@ -171,8 +171,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                 if (ghost.worldMovement().moveDir() == Direction.LEFT) {
                     if (ghost.position().x <= STOP_X_GHOST) {
                         ghost.position().setX(STOP_X_GHOST);
-                        ghost.setMoveDir(Direction.UP);
-                        ghost.setWishDir(Direction.UP);
+                        worldMovementSystem.setMoveDir(ghost, Direction.UP);
+                        worldMovementSystem.setWishDir(ghost, Direction.UP);
                         scene.numTicksBeforeRising = 2;
                     } else {
                         movementSystem.moveAccelerated(ghost);

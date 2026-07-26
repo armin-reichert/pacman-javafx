@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -115,7 +116,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.setPacPowerFadingSeconds(0.5f * levelData.numFlashes()); //TODO correct?
 
         createAndSetPacMan(level);
-        createAndSetGhosts(level, house);
+        createAndSetGhosts(gameContext, level, house);
 
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
@@ -131,7 +132,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.setPac(pacMan);
     }
 
-    protected void createAndSetGhosts(GameLevel level, House house) {
+    protected void createAndSetGhosts(GameContext gameContext, GameLevel level, House house) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         // Special tiles where attacking ghosts cannot move up
@@ -140,10 +142,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             .collect(Collectors.toUnmodifiableSet());
 
         level.setGhosts(
-            createGhost(GameModel.RED_GHOST_SHADOW,   terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles),
-            createGhost(GameModel.PINK_GHOST_SPEEDY,  terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles),
-            createGhost(GameModel.CYAN_GHOST_BASHFUL, terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles),
-            createGhost(GameModel.ORANGE_GHOST_POKEY, terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles)
+            createGhost(worldMovementSystem, GameModel.RED_GHOST_SHADOW,   terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles),
+            createGhost(worldMovementSystem, GameModel.PINK_GHOST_SPEEDY,  terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles),
+            createGhost(worldMovementSystem, GameModel.CYAN_GHOST_BASHFUL, terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles),
+            createGhost(worldMovementSystem, GameModel.ORANGE_GHOST_POKEY, terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles)
         );
     }
 

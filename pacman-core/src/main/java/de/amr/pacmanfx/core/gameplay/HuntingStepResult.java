@@ -7,6 +7,8 @@ package de.amr.pacmanfx.core.gameplay;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.component.Position;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -83,7 +85,8 @@ public final class HuntingStepResult {
     public List<String> asText() {
         var lines = new ArrayList<String>();
         for (Ghost ghost : ghostsCollidingWithPac()) {
-            lines.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghost.tile(), ghost.state()));
+            final Vector2i ghostTile = computeTile(ghost.position());
+            lines.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghostTile, ghost.state()));
         }
         if (energizerFound()) {
             lines.add("Energizer found at " + foodFoundTile());
@@ -92,8 +95,15 @@ public final class HuntingStepResult {
             lines.add("Bonus eaten: " + edibleBonus());
         }
         for (Ghost ghost : ghostsKilled()) {
-            lines.add("%s killed at %s".formatted(ghost.name(), ghost.tile()));
+            final Vector2i ghostTile = computeTile(ghost.position());
+            lines.add("%s killed at %s".formatted(ghost.name(), ghostTile));
         }
         return lines;
+    }
+
+    private Vector2i computeTile(Position position) {
+        final float cx = position.x + WorldMap.HTS;
+        final float cy = position.y + WorldMap.HTS;
+        return WorldMap.computeTileAt(cx, cy);
     }
 }

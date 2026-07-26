@@ -239,7 +239,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private int compareBySmallestDistToSceneCenter(Pac junior, Direction dir1, Direction dir2) {
-        Vector2i tile = junior.tile();
+        final WorldMovementSystem worldMovementSystem = gameContext().systems().worldMovementSystem;
+        Vector2i tile = worldMovementSystem.computeTile(junior);
         Vector2f pos1 = tile.plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = tile.plus(dir2.vector()).scaled(TS).toVector2f();
         Vector2f center = new Vector2f(0.5f * unscaledWidth(), 0.5f * unscaledHeight());

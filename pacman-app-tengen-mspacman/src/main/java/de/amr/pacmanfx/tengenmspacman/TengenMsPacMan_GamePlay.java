@@ -98,7 +98,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
 
         setMsPacMan(model, level);
-        setGhosts(level, house);
+        setGhosts(gameContext, level, house);
 
         //TODO not sure about this:
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
@@ -223,8 +223,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
         final Bonus bonus = new Bonus(symbolCode, model.rules().scoringRules().pointsForBonus(symbolCode));
-        bonus.setMazeRoute(route, leftToRight);
-        bonus.showEdibleAndStartWandering(model.rules().actorSpeedRules().bonusSpeed(level));
+        bonus.setMazeRoute(gameContext, route, leftToRight);
+        bonus.showEdibleAndStartWandering(gameContext, model.rules().actorSpeedRules().bonusSpeed(level));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
@@ -240,13 +240,13 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.setPac(msPacMan);
     }
 
-    private void setGhosts(GameLevel level, House house) {
+    private void setGhosts(GameContext gameContext, GameLevel level, House house) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         level.setGhosts(
-            TengenMsPacMan_ActorFactory.createGhost(GameModel.RED_GHOST_SHADOW,   house, terrain, WorldMapPropertyName.POS_GHOST_1_RED),
-            TengenMsPacMan_ActorFactory.createGhost(GameModel.PINK_GHOST_SPEEDY,  house, terrain, WorldMapPropertyName.POS_GHOST_2_PINK),
-            TengenMsPacMan_ActorFactory.createGhost(GameModel.CYAN_GHOST_BASHFUL, house, terrain, WorldMapPropertyName.POS_GHOST_3_CYAN),
-            TengenMsPacMan_ActorFactory.createGhost(GameModel.ORANGE_GHOST_POKEY, house, terrain, WorldMapPropertyName.POS_GHOST_4_ORANGE)
+            TengenMsPacMan_ActorFactory.createGhost(gameContext, GameModel.RED_GHOST_SHADOW,   house, terrain, WorldMapPropertyName.POS_GHOST_1_RED),
+            TengenMsPacMan_ActorFactory.createGhost(gameContext, GameModel.PINK_GHOST_SPEEDY,  house, terrain, WorldMapPropertyName.POS_GHOST_2_PINK),
+            TengenMsPacMan_ActorFactory.createGhost(gameContext, GameModel.CYAN_GHOST_BASHFUL, house, terrain, WorldMapPropertyName.POS_GHOST_3_CYAN),
+            TengenMsPacMan_ActorFactory.createGhost(gameContext, GameModel.ORANGE_GHOST_POKEY, house, terrain, WorldMapPropertyName.POS_GHOST_4_ORANGE)
         );
     }
 }

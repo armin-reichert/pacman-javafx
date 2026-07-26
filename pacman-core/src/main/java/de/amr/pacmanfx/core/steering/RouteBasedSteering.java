@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
-import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 
 import java.util.List;
 
@@ -38,31 +38,33 @@ public class RouteBasedSteering implements Steering {
     }
 
     @Override
-    public void steer(Actor actor, GameLevel level) {
-        final WorldMovement mazeMovement = actor.assertComponent(WorldMovement.class);
+    public void steer(Actor actor, GameContext gameContext) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         if (targetIndex == route.size()) {
             routeTraversed = true;
         }
-        else if (mazeMovement.optTargetTile().isEmpty()) {
-            mazeMovement.setTargetTile(route.get(targetIndex));
+        else if (worldMovement.optTargetTile().isEmpty()) {
+            worldMovement.setTargetTile(route.get(targetIndex));
         }
-        else if (GameContext.SYSTEMS.worldMovementSystem.computeTile(actor).equals(route.get(targetIndex))) {
-            selectNextTargetTile(level, actor);
+        else if (worldMovementSystem.computeTile(actor).equals(route.get(targetIndex))) {
+            selectNextTargetTile(gameContext, actor);
         }
         else {
-            GameContext.SYSTEMS.worldMovementSystem.navigateTowardsTarget(actor, level);
+            worldMovementSystem.navigateTowardsTarget(actor, gameContext);
         }
     }
 
-    private void selectNextTargetTile(GameLevel level, Actor actor) {
-        final WorldMovement mazeMovement = actor.assertComponent(WorldMovement.class);
+    private void selectNextTargetTile(GameContext gameContext, Actor actor) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         ++targetIndex;
         if (targetIndex < route.size()) {
-            mazeMovement.setTargetTile(route.get(targetIndex));
+            worldMovement.setTargetTile(route.get(targetIndex));
             // The next line is important!
-            GameContext.SYSTEMS.worldMovementSystem.navigateTowardsTarget(actor, level);
+            worldMovementSystem.navigateTowardsTarget(actor, gameContext);
         }
     }
 }

@@ -5,13 +5,15 @@
 package de.amr.pacmanfx.tengenmspacman.rules;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
+import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
@@ -60,13 +62,15 @@ public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
     }
 
     @Override
-    public float ghostSpeed(GameLevel level, Ghost ghost) {
+    public float ghostSpeed(GameContext gameContext, Ghost ghost) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final GameLevel level = gameContext.assertLevel();
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final Vector2i tile = ghost.tile();
+        final Vector2i ghostTile = worldMovementSystem.computeTile(ghost);
         final GhostState state = ghost.state();
         final boolean insideHouse = terrain.assertHouse().isVisitedBy(ghost);
-        final boolean tunnelSlowdown = terrain.isTunnel(tile);
+        final boolean tunnelSlowdown = terrain.isTunnel(ghostTile);
         return switch (state) {
             case LOCKED -> insideHouse ? 0.5f : 0;
             case LEAVING_HOUSE -> 0.5f;

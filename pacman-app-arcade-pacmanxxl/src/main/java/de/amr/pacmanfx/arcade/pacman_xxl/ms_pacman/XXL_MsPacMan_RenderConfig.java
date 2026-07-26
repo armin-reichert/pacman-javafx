@@ -13,6 +13,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -92,8 +93,8 @@ public class XXL_MsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Ghost createAnimatedGhost(SpriteAnimationContainer container, byte personality) {
-        final Ghost ghost = ArcadeMsPacMan_ActorFactory.createGhost(personality);
+    public Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, byte personality) {
+        final Ghost ghost = ArcadeMsPacMan_ActorFactory.createGhost(gameContext, personality);
         ghost.animations = createGhostAnimations(container, personality);
         ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
         return ghost;

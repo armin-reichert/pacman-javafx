@@ -157,9 +157,9 @@ public class WorldMovementSystem {
         movement.setVelocity(worldMovement.moveDir().vector().x() * speed, worldMovement.moveDir().vector().y() * speed);
     }
 
-    public void navigateTowardsTarget(Actor actor, GameLevel level) {
+    public void navigateTowardsTarget(Actor actor, GameContext gameContext) {
         requireNonNull(actor);
-        requireNonNull(level);
+        requireNonNull(gameContext);
 
         final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
         final WorldMovementPolicy worldMovementPolicy = actor.assertComponent(WorldMovementPolicy.class);
@@ -168,6 +168,7 @@ public class WorldMovementSystem {
             return; // we don't need no navigation, dim dit didit didit...
         }
 
+        final GameLevel level = gameContext.assertLevel();
         final Vector2i currentTile = computeTile(actor);
         if (level.worldMap().terrainLayer().isTileInPortalSpace(currentTile)) {
             return;
@@ -179,7 +180,7 @@ public class WorldMovementSystem {
                 continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
             final Vector2i neighborTile = currentTile.plus(dir.vector());
-            if (worldMovementPolicy.canAccessTile(level, neighborTile)) {
+            if (worldMovementPolicy.canAccessTile(gameContext, neighborTile)) {
                 double dist = neighborTile.euclideanDist(worldMovement.targetTile());
                 if (dist < minDistToTarget) {
                     minDistToTarget = dist;
@@ -194,19 +195,20 @@ public class WorldMovementSystem {
     /**
      * Lets an actor move towards the given target tile.
      *
-     * @param level      the game level we are in
-     * @param targetTile target tile this actor tries to reach
+     * @param actor         the actor
+     * @param gameContext   the game context (asserts level exists)
+     * @param targetTile    target tile this actor tries to reach
      */
-    public void tryMovingTowardsTargetTile(Actor actor, GameLevel level, Vector2i targetTile) {
+    public void tryMovingTowardsTargetTile(Actor actor, GameContext gameContext, Vector2i targetTile) {
         requireNonNull(actor);
-        requireNonNull(level);
+        requireNonNull(gameContext);
 
         final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         if (targetTile != null) {
             worldMovement.setTargetTile(targetTile);
-            navigateTowardsTarget(actor, level);
-            tryMovingOrTeleporting(actor, level);
+            navigateTowardsTarget(actor, gameContext);
+            tryMovingOrTeleporting(actor, gameContext);
         }
     }
 
@@ -215,15 +217,14 @@ public class WorldMovementSystem {
      * <p>
      * First checks if the actor can be teleported, then if the actor can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
-     *
-     * @param level the game level we are in
      */
-    public void tryMovingOrTeleporting(Actor actor, GameLevel level) {
+    public void tryMovingOrTeleporting(Actor actor, GameContext gameContext) {
         requireNonNull(actor);
-        requireNonNull(level);
+        requireNonNull(gameContext);
 
         final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
         final WorldMovementPolicy worldMovementPolicy = actor.assertComponent(WorldMovementPolicy.class);
+        final GameLevel level = gameContext.assertLevel();
 
         worldMovement.info.clear();
         if (worldMovement.canTeleport()) {
@@ -237,11 +238,11 @@ public class WorldMovementSystem {
             Logger.trace("{}: turned back at tile {}", actor.name(), computeTile(actor));
             worldMovement.clearTurnBackRequested();
         }
-        tryMovingTowards(actor, level, computeTile(actor), worldMovement.wishDir());
+        tryMovingTowards(actor, gameContext, computeTile(actor), worldMovement.wishDir());
         if (worldMovement.info.moved) {
             setMoveDir(actor, worldMovement.wishDir());
         } else {
-            tryMovingTowards(actor, level, computeTile(actor), worldMovement.moveDir());
+            tryMovingTowards(actor, gameContext, computeTile(actor), worldMovement.moveDir());
         }
     }
 
@@ -258,7 +259,7 @@ public class WorldMovementSystem {
         return false; // no vertical teleporting yet
     }
 
-    private void tryMovingTowards(Actor actor, GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
+    private void tryMovingTowards(Actor actor, GameContext gameContext, Vector2i tileBeforeMoving, Direction dir) {
         final Movement movement = actor.movement();
         final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
         final WorldMovementPolicy worldMovementPolicy = actor.assertComponent(WorldMovementPolicy.class);
@@ -270,7 +271,8 @@ public class WorldMovementSystem {
         final Vector2i touchedTile = WorldMap.computeTileAt(touchPosition);
         final boolean turn = dir.vector().isOrthogonalTo(worldMovement.moveDir().vector());
 
-        if (!worldMovementPolicy.canAccessTile(level, touchedTile)) {
+        final GameLevel level = gameContext.assertLevel();
+        if (!worldMovementPolicy.canAccessTile(gameContext, touchedTile)) {
             if (!turn) {
                 placeAtTile(actor, computeTile(actor)); // adjust over tile (would move forward against wall)
             }

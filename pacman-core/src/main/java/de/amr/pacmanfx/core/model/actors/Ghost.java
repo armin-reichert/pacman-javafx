@@ -11,14 +11,16 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.component.Movement;
-import de.amr.pacmanfx.core.model.component.Position;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.MovementSystem;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.TerrainTile;
 import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -46,13 +48,16 @@ public class Ghost extends Actor {
         public void reset() {}
 
         @Override
-        public boolean canAccessTile(GameLevel level, Vector2i tile) {
+        public boolean canAccessTile(GameContext gameContext, Vector2i tile) {
+            final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+            final GameLevel level = gameContext.assertLevel();
             final TerrainLayer terrainLayer = level.worldMap().terrainLayer();
+
             // Portal tiles are the only tiles outside the world map that can be accessed
             if (terrainLayer.outOfBounds(tile)) {
                 return terrainLayer.isTileInPortalSpace(tile);
             }
-            final Vector2i myTile = GameContext.SYSTEMS.worldMovementSystem.computeTile(Ghost.this);
+            final Vector2i myTile = worldMovementSystem.computeTile(Ghost.this);
             // Hunting ghosts cannot enter some tiles in Pac-Man game from below
             // TODO: this is game-specific and does not belong here
             if (specialTerrainTiles.contains(tile)
@@ -91,16 +96,20 @@ public class Ghost extends Actor {
      * Default hunting behavior is to retreat towards the scatter tile in scatter phase
      * and to go towards current target tile in chasing phase.
      */
-    private BiConsumer<GameLevel, Float> huntingStrategy = (GameLevel level, Float speed) -> {
-        requireNonNull(level);
+    private BiConsumer<GameContext, Float> huntingStrategy = (gameContext, speed) -> {
+        requireNonNull(gameContext);
         requireNonNull(speed);
 
-        GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, speed);
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final GameLevel level = gameContext.assertLevel();
+        
+        worldMovementSystem.setSpeed(this, speed);
 
         final Vector2i targetTile = level.huntingRules().isChasing()
             ? chasingTargetTileStrategy.apply(level)
             : level.worldMap().terrainLayer().ghostScatterTile(personality());
-        GameContext.SYSTEMS.worldMovementSystem.tryMovingTowardsTargetTile(this, level, targetTile);
+
+        worldMovementSystem.tryMovingTowardsTargetTile(this, gameContext, targetTile);
     };
 
     public Ghost(byte personality, String name) {
@@ -118,30 +127,19 @@ public class Ghost extends Actor {
         return assertComponent(WorldMovement.class);
     }
 
-    public Vector2i tile() {
-        return GameContext.SYSTEMS.worldMovementSystem.computeTile(this);
-    }
-
-    public void setMoveDir(Direction dir) {
-        GameContext.SYSTEMS.worldMovementSystem.setMoveDir(this, dir);
-    }
-
-    public void setWishDir(Direction dir) {
-        GameContext.SYSTEMS.worldMovementSystem.setWishDir(this, dir);
-    }
-
     @Override
     public void update(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
-        final float speed = level.gameModel().rules().actorSpeedRules().ghostSpeed(level, this);
+        //TODO simplify!
+        final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
+        final float speed = speedRules.ghostSpeed(gameContext, this);
         switch (state()) {
-            case LOCKED         -> updateStateLocked(level, speed);
-            case LEAVING_HOUSE  -> updateStateLeavingHouse(level, speed);
-            case HUNTING_PAC    -> updateStateHuntingPac(level, speed);
-            case FRIGHTENED     -> updateStateFrightened(level, speed);
+            case LOCKED         -> updateStateLocked(gameContext, speed);
+            case LEAVING_HOUSE  -> updateStateLeavingHouse(gameContext, speed);
+            case HUNTING_PAC    -> updateStateHuntingPac(gameContext, speed);
+            case FRIGHTENED     -> updateStateFrightened(gameContext, speed);
             case EATEN          -> updateStateEaten();
-            case RETURNING_HOME -> updateStateReturningToHouse(level, speed);
-            case ENTERING_HOUSE -> updateStateEnteringHouse(level, speed);
+            case RETURNING_HOME -> updateStateReturningToHouse(gameContext, speed);
+            case ENTERING_HOUSE -> updateStateEnteringHouse(gameContext, speed);
         }
     }
 
@@ -151,7 +149,7 @@ public class Ghost extends Actor {
         elroy().clear();
     }
 
-    public void setHuntingStrategy(BiConsumer<GameLevel, Float> huntingStrategy) {
+    public void setHuntingStrategy(BiConsumer<GameContext, Float> huntingStrategy) {
         this.huntingStrategy = requireNonNull(huntingStrategy);
     }
 
@@ -206,8 +204,8 @@ public class Ghost extends Actor {
                 '}';
     }
 
-    public void hunt(GameLevel level, float speed) {
-        huntingStrategy.accept(level, speed);
+    public void hunt(GameContext gameContext, float speed) {
+        huntingStrategy.accept(gameContext, speed);
     }
 
     /**
@@ -228,28 +226,31 @@ public class Ghost extends Actor {
             Roam if you want to, without anything but the love we feel!
      </cite>
      */
-    public void roam(GameLevel level) {
-        requireNonNull(level);
+    public void roam(GameContext gameContext) {
+        requireNonNull(gameContext);
 
-        final Vector2i tile = GameContext.SYSTEMS.worldMovementSystem.computeTile(this);
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final GameLevel level = gameContext.assertLevel();
+
+        final Vector2i tile = worldMovementSystem.computeTile(this);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
         final boolean stuck = !worldMovement().info.moved;
         if ((worldMovement().isNewTileEntered() || stuck) && !teleporting) {
-            final Direction dir = computeRoamingDirection(level, tile);
-            GameContext.SYSTEMS.worldMovementSystem.setWishDir(this, dir);
+            final Direction dir = computeRoamingDirection(gameContext, tile);
+            worldMovementSystem.setWishDir(this, dir);
             Logger.debug("Ghost {} takes random wish direction {}", name, dir);
         }
-        GameContext.SYSTEMS.worldMovementSystem.tryMovingOrTeleporting(this, level);
+        worldMovementSystem.tryMovingOrTeleporting(this, gameContext);
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
-    private Direction computeRoamingDirection(GameLevel level, Vector2i currentTile) {
+    private Direction computeRoamingDirection(GameContext gameContext, Vector2i currentTile) {
         final WorldMovementPolicy policy = assertComponent(WorldMovementPolicy.class);
 
         Direction dir = pseudoRandomDirection();
         int turns = 0;
-        while (dir == worldMovement().moveDir().opposite() || !policy.canAccessTile(level, currentTile.plus(dir.vector()))) {
+        while (dir == worldMovement().moveDir().opposite() || !policy.canAccessTile(gameContext, currentTile.plus(dir.vector()))) {
             dir = dir.nextClockwise();
             if (++turns > 4) {
                 return worldMovement().moveDir().opposite();  // avoid endless loop
@@ -323,24 +324,28 @@ public class Ghost extends Actor {
      * In locked state, ghosts inside the house are bouncing up and down. They become blue when Pac-Man gets power
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
-    private void updateStateLocked(GameLevel level, float speed) {
+    private void updateStateLocked(GameContext gameContext, float speed) {
+        final MovementSystem movementSystem = gameContext.systems().movementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+
         if (home.isVisitedBy(this)) {
             final float minY = (home.minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
             final float maxY = (home.maxTile().y() - 1) * WorldMap.TS - WorldMap.HTS;
             if (position().y <= minY) {
-                setMoveDir(DOWN);
-                setWishDir(DOWN);
+                worldMovementSystem.setMoveDir(this, DOWN);
+                worldMovementSystem.setWishDir(this, DOWN);
             } else if (position().y >= maxY) {
-                setMoveDir(UP);
-                setWishDir(UP);
+                worldMovementSystem.setMoveDir(this, UP);
+                worldMovementSystem.setWishDir(this, UP);
             }
             position().setY(Math.clamp(position().y, minY, maxY));
-            GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, speed);
-            GameContext.SYSTEMS.movementSystem.moveAccelerated(this);
+            worldMovementSystem.setSpeed(this, speed);
+            movementSystem.moveAccelerated(this);
         } else {
-            GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, 0);
+            worldMovementSystem.setSpeed(this, 0);
         }
-        if (isInDanger(level)) {
+        if (isInDanger(gameContext)) {
+            final GameLevel level = gameContext.assertLevel();
             playFrightenedAnimation(level, level.entities().pac());
         } else {
             animations.select(CommonAnimationID.GHOST_NORMAL);
@@ -356,15 +361,19 @@ public class Ghost extends Actor {
      * <p>
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
-    private void updateStateLeavingHouse(GameLevel level, float speed) {
+    private void updateStateLeavingHouse(GameContext gameContext, float speed) {
+        final MovementSystem movementSystem = gameContext.systems().movementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final GameLevel level = gameContext.assertLevel();
+
         final Vector2f houseEntryPosition = home.entryPosition();
         if (position().y <= houseEntryPosition.y()) {
             // outside at house entry
             position().setY(houseEntryPosition.y());
-            setMoveDir(LEFT);
-            setWishDir(LEFT);
+            worldMovementSystem.setMoveDir(this, LEFT);
+            worldMovementSystem.setWishDir(this, LEFT);
             worldMovement().setNewTileEntered(false); // don't change direction until new tile is entered by moving
-            setState(isInDanger(level) ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
+            setState(isInDanger(gameContext) ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
         }
         else {
             // still inside house
@@ -373,17 +382,17 @@ public class Ghost extends Actor {
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
                 // align horizontally and raise
                 position().setX(houseCenterX - WorldMap.HTS);
-                setMoveDir(UP);
-                setWishDir(UP);
+                worldMovementSystem.setMoveDir(this, UP);
+                worldMovementSystem.setWishDir(this, UP);
             } else {
                 // move sidewards until center axis is reached
-                setMoveDir(centerX < houseCenterX ? RIGHT : LEFT);
-                setWishDir(centerX < houseCenterX ? RIGHT : LEFT);
+                worldMovementSystem.setMoveDir(this, centerX < houseCenterX ? RIGHT : LEFT);
+                worldMovementSystem.setWishDir(this, centerX < houseCenterX ? RIGHT : LEFT);
             }
-            GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, speed);
-            GameContext.SYSTEMS.movementSystem.moveAccelerated(this);
+            worldMovementSystem.setSpeed(this, speed);
+            movementSystem.moveAccelerated(this);
 
-            if (isInDanger(level)) {
+            if (isInDanger(gameContext)) {
                 playFrightenedAnimation(level, level.entities().pac());
             } else {
                 animations.select(CommonAnimationID.GHOST_NORMAL);
@@ -391,7 +400,8 @@ public class Ghost extends Actor {
         }
     }
 
-    private boolean isInDanger(GameLevel level) {
+    private boolean isInDanger(GameContext gameContext) {
+        final GameLevel level = gameContext.assertLevel();
         return level.entities().pac().powerTimer().isRunning() && !level.isInGhostKilledChain(this);
     }
 
@@ -403,12 +413,11 @@ public class Ghost extends Actor {
      * start chasing Pac-Man according to their character ("Shadow", "Speedy", "Bashful", "Pokey"). The last hunting phase
      * is an "infinite" chasing phase.
      * <p>
-     * @param level the game level this ghost lives in
      */
-    private void updateStateHuntingPac(GameLevel level, float speed) {
+    private void updateStateHuntingPac(GameContext gameContext, float speed) {
         // The specific hunting behavior is defined by the game variant. For example, in Ms. Pac-Man,
         // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-        hunt(level, speed);
+        hunt(gameContext, speed);
     }
 
     // --- FRIGHTENED ---
@@ -425,9 +434,12 @@ public class Ghost extends Actor {
      *
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
-    private void updateStateFrightened(GameLevel level, float speed) {
-        GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, speed);
-        roam(level);
+    private void updateStateFrightened(GameContext gameContext, float speed) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final GameLevel level = gameContext.assertLevel();
+
+        worldMovementSystem.setSpeed(this, speed);
+        roam(gameContext);
         playFrightenedAnimation(level, level.entities().pac());
     }
 
@@ -456,20 +468,22 @@ public class Ghost extends Actor {
      * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
      * to the ghost house to be revived. Hallelujah!
      */
-    private void updateStateReturningToHouse(GameLevel level, float speed) {
+    private void updateStateReturningToHouse(GameContext gameContext, float speed) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+
         final Vector2f houseEntry = home.entryPosition();
         //TODO
         final Vector2f positionVec =  position().asVector2f();
         if (positionVec.roughlyEquals(houseEntry, speed, 0)) {
             position().set(houseEntry.x(), houseEntry.y());
-            setMoveDir(DOWN);
-            setWishDir(DOWN);
+            worldMovementSystem.setMoveDir(this, DOWN);
+            worldMovementSystem.setWishDir(this, DOWN);
             setState(GhostState.ENTERING_HOUSE);
         } else {
-            GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, speed);
             worldMovement().setTargetTile(home.leftDoorTile());
-            GameContext.SYSTEMS.worldMovementSystem.navigateTowardsTarget(this, level);
-            GameContext.SYSTEMS.worldMovementSystem.tryMovingOrTeleporting(this, level);
+            worldMovementSystem.setSpeed(this, speed);
+            worldMovementSystem.navigateTowardsTarget(this, gameContext);
+            worldMovementSystem.tryMovingOrTeleporting(this, gameContext);
         }
     }
 
@@ -479,31 +493,33 @@ public class Ghost extends Actor {
      * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
-    private void updateStateEnteringHouse(GameLevel ignored, float speed) {
-        final Position position = position();
+    private void updateStateEnteringHouse(GameContext gameContext, float speed) {
+        final MovementSystem movementSystem = gameContext.systems().movementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
 
         final Vector2f revivalPosition = WorldMap.halfTileRightOf(home.ghostRevivalTile(personality()));
-        //TODO
-        final Vector2f positionVec = position.asVector2f();
+        final Vector2f positionVec = position().asVector2f();
         if (positionVec.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
-            position.set(revivalPosition.x(), revivalPosition.y());
-            setMoveDir(UP);
-            setWishDir(UP);
+            position().set(revivalPosition.x(), revivalPosition.y());
+            worldMovementSystem.setMoveDir(this, UP);
+            worldMovementSystem.setWishDir(this, UP);
             setState(GhostState.LOCKED);
             return;
         }
-        if (position.y < revivalPosition.y()) {
-            setMoveDir(DOWN);
-            setWishDir(DOWN);
-        } else if (position.x > revivalPosition.x()) {
-            setMoveDir(LEFT);
-            setWishDir(LEFT);
-        } else if (position.x < revivalPosition.x()) {
-            setMoveDir(RIGHT);
-            setWishDir(RIGHT);
+        if (position().y < revivalPosition.y()) {
+            worldMovementSystem.setMoveDir(this, DOWN);
+            worldMovementSystem.setWishDir(this, DOWN);
+        }
+        else if (position().x > revivalPosition.x()) {
+            worldMovementSystem.setMoveDir(this, LEFT);
+            worldMovementSystem.setWishDir(this, LEFT);
+        }
+        else if (position().x < revivalPosition.x()) {
+            worldMovementSystem.setMoveDir(this, RIGHT);
+            worldMovementSystem.setWishDir(this, RIGHT);
         }
 
-        GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, speed);
-        GameContext.SYSTEMS.movementSystem.moveAccelerated(this);
+        worldMovementSystem.setSpeed(this, speed);
+        movementSystem.moveAccelerated(this);
     }
 }

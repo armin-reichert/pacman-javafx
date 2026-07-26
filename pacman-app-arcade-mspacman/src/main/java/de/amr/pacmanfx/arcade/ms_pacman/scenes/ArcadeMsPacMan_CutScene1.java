@@ -92,9 +92,9 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
 
-        inky = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
+        inky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
 
-        pinky = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
+        pinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
 
         heart = new Actor();
         heart.animations = singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART));
@@ -140,8 +140,8 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         inky.visibility().show();
 
         worldMovementSystem.setSpeed(inky, SPEED_GHOST_CHASING);
-        inky.setMoveDir(Direction.RIGHT);
-        inky.setWishDir(Direction.RIGHT);
+        worldMovementSystem.setMoveDir(inky, Direction.RIGHT);
+        worldMovementSystem.setWishDir(inky, Direction.RIGHT);
 
         inky.animations.select(CommonAnimationID.GHOST_NORMAL);
         inky.animations.playSelected();
@@ -158,8 +158,8 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         pinky.position().set(msPacMan.position().x + 6 * WorldMap.TS, msPacMan.position().y);
         pinky.visibility().show();
 
-        pinky.setMoveDir(Direction.LEFT);
-        pinky.setWishDir(Direction.LEFT);
+        worldMovementSystem.setMoveDir(pinky, Direction.LEFT);
+        worldMovementSystem.setWishDir(pinky, Direction.LEFT);
         worldMovementSystem.setSpeed(pinky, SPEED_GHOST_CHASING);
 
         pinky.animations.select(CommonAnimationID.GHOST_NORMAL);
@@ -182,15 +182,15 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         worldMovementSystem.setMoveDir(msPacMan, Direction.RIGHT);
 
         pinky.position().set(msPacMan.position().x - 5 * WorldMap.TS, msPacMan.position().y);
-        pinky.setMoveDir(Direction.RIGHT);
-        pinky.setWishDir(Direction.RIGHT);
+        worldMovementSystem.setMoveDir(pinky, Direction.RIGHT);
+        worldMovementSystem.setWishDir(pinky, Direction.RIGHT);
 
         pacMan.position().set(WorldMap.TS * 31, MIDDLE_Y);
         worldMovementSystem.setMoveDir(pacMan, Direction.LEFT);
 
         inky.position().set(pacMan.position().x + 5 * WorldMap.TS, pacMan.position().y);
-        inky.setMoveDir(Direction.LEFT);
-        inky.setWishDir(Direction.LEFT);
+        worldMovementSystem.setMoveDir(inky, Direction.LEFT);
+        worldMovementSystem.setWishDir(inky, Direction.LEFT);
 
         setState(SceneState.COMING_TOGETHER, TickTimer.INDEFINITE);
     }
@@ -211,14 +211,14 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
 
         // Inky and Pinky collide?
         else if (inky.worldMovement().moveDir() == Direction.LEFT && inky.position().x - pinky.position().x < WorldMap.TS * 2) {
-            inky.setMoveDir(Direction.RIGHT);
-            inky.setWishDir(Direction.RIGHT);
+            worldMovementSystem.setMoveDir(inky, Direction.RIGHT);
+            worldMovementSystem.setWishDir(inky, Direction.RIGHT);
             worldMovementSystem.setSpeed(inky, SPEED_GHOST_AFTER_COLLISION);
             inky.movement().velY -= 2.0f;
             inky.movement().setAcceleration(0, 0.4f);
 
-            pinky.setMoveDir(Direction.LEFT);
-            pinky.setWishDir(Direction.LEFT);
+            worldMovementSystem.setMoveDir(pinky, Direction.LEFT);
+            worldMovementSystem.setWishDir(pinky, Direction.LEFT);
             worldMovementSystem.setSpeed(pinky, SPEED_GHOST_AFTER_COLLISION);
             pinky.movement().velY -= 2.0f;
             pinky.movement().setAcceleration(0, 0.4f);

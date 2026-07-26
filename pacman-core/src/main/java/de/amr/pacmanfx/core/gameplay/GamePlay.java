@@ -58,7 +58,7 @@ public interface GamePlay {
 
     void updatePacPowerMode(GameContext gameContext, Pac pac);
 
-    void onLevelCompleted(GameLevel level);
+    void onLevelCompleted(GameContext gameContext);
 
     // Scoring
 

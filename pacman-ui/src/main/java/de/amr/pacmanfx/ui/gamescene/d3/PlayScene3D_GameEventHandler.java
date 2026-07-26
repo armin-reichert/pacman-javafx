@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -164,7 +165,8 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         if (event.allPellets()) {
             level3D.pellets3D().map(Pellet3D::shape).forEach(shape -> level3D.getChildren().remove(shape));
         } else {
-            final Vector2i tile = event.pac().tile();
+            final WorldMovementSystem worldMovementSystem = gameContext().systems().worldMovementSystem;
+            final Vector2i tile = worldMovementSystem.computeTile(event.pac());
             if (event.energizer()) {
                 level3D.energizer3DAt(tile).ifPresent(energizer3D -> {
                     energizer3D.stopPumping();

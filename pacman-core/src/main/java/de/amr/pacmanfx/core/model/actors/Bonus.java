@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.steering.RouteBasedSteering;
 import org.tinylog.Logger;
@@ -45,10 +46,12 @@ public class Bonus extends Actor {
         }
 
         @Override
-        public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
-            requireNonNull(gameLevel);
+        public boolean canAccessTile(GameContext gameContext, Vector2i tile) {
+            requireNonNull(gameContext);
             requireNonNull(tile);
-            final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+
+            final GameLevel level = gameContext.assertLevel();
+            final TerrainLayer terrain = level.worldMap().terrainLayer();
             if (terrain.outOfBounds(tile)) {
                 return terrain.isTileInPortalSpace(tile);
             }
@@ -83,16 +86,10 @@ public class Bonus extends Actor {
 
         reset();
         worldMovement().setCanTeleport(false); // override default value (true)
-
-        setInactive();
     }
 
     public WorldMovement worldMovement() {
         return assertComponent(WorldMovement.class);
-    }
-
-    public Vector2i tile() {
-        return GameContext.SYSTEMS.worldMovementSystem.computeTile(this);
     }
 
     public BonusState state() {
@@ -107,33 +104,40 @@ public class Bonus extends Actor {
         return points;
     }
 
-    public void setInactive() {
+    public void setInactive(GameContext gameContext) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+
+        visibility().hide();
+        worldMovementSystem.setSpeed(this, 0);
+
+        jumpingAnimation.reset();
+
         state = BonusState.INACTIVE;
         timer.restartIndefinitely();
-        GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, 0);
-        jumpingAnimation.reset();
-        visibility().hide();
     }
 
     public void showEdibleForSeconds(float seconds) {
+        visibility().show();
+
         state = BonusState.EDIBLE;
         timer.restartSeconds(seconds);
-        visibility().show();
     }
 
-    public void showEdibleAndStartWandering(float speed) {
-        state = BonusState.EDIBLE;
-        timer.restartIndefinitely();
+    public void showEdibleAndStartWandering(GameContext gameContext, float speed) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
 
-        GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, speed);
+        visibility().show();
+
+        worldMovementSystem.setSpeed(this, speed);
         worldMovement().setTargetTile(null);
 
         jumpingAnimation.restart();
 
-        visibility().show();
+        state = BonusState.EDIBLE;
+        timer.restartIndefinitely();
     }
 
-    public void setMazeRoute(List<Vector2i> waypoints, boolean leftToRight) {
+    public void setMazeRoute(GameContext gameContext, List<Vector2i> waypoints, boolean leftToRight) {
         requireNonNull(waypoints);
         if (waypoints.isEmpty()) {
             Logger.error("Bonus route must not be empty");
@@ -142,22 +146,25 @@ public class Bonus extends Actor {
         final var route = new ArrayList<>(waypoints);
         final Vector2i first = route.removeFirst();
 
-        GameContext.SYSTEMS.worldMovementSystem.placeAtTile(this, first);
-        GameContext.SYSTEMS.worldMovementSystem.setMoveDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
-        GameContext.SYSTEMS.worldMovementSystem.setWishDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+
+        worldMovementSystem.placeAtTile(this, first);
+        worldMovementSystem.setMoveDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
+        worldMovementSystem.setWishDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
 
         routeNavigation = new RouteBasedSteering(route);
     }
 
-    public void showEatenForSeconds(float seconds) {
-        state = BonusState.EATEN;
-        timer.restartSeconds(seconds);
+    public void showEatenForSeconds(GameContext gameContext, float seconds) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
 
-        GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, 0);
+        visibility().show();
+        worldMovementSystem.setSpeed(this, 0);
 
         jumpingAnimation.stop();
 
-        visibility().show();
+        state = BonusState.EATEN;
+        timer.restartSeconds(seconds);
     }
 
     @Override
@@ -170,17 +177,17 @@ public class Bonus extends Actor {
                     edibleStateOver = timer.hasExpired();
                 }
                 else {
-                    boolean mazeExitReached = wanderMaze(gameContext.assertLevel());
+                    boolean mazeExitReached = wanderMaze(gameContext);
                     edibleStateOver = mazeExitReached || timer.hasExpired();
                 }
                 if (edibleStateOver) {
-                    setInactive();
+                    setInactive(gameContext);
                     gameContext.eventManager().publishGameEvent(new BonusExpiredEvent(this));
                 }
             }
             case EATEN -> {
                 if (timer.hasExpired()) {
-                    setInactive();
+                    setInactive(gameContext);
                     gameContext.eventManager().publishGameEvent(new BonusExpiredEvent(this));
                 }
             }
@@ -188,14 +195,17 @@ public class Bonus extends Actor {
         }
     }
 
-    private boolean wanderMaze(GameLevel level) {
-        routeNavigation.steer(this, level);
-        final Vector2i tile = GameContext.SYSTEMS.worldMovementSystem.computeTile(this);
-        boolean mazeExitReached = routeNavigation.isRouteTraversed()
-            || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
+    private boolean wanderMaze(GameContext gameContext) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final GameLevel level = gameContext.assertLevel();
+
+        routeNavigation.steer(this, gameContext);
+
+        final Vector2i tile = worldMovementSystem.computeTile(this);
+        boolean mazeExitReached = routeNavigation.isRouteTraversed() || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         if (!mazeExitReached) {
-            GameContext.SYSTEMS.worldMovementSystem.navigateTowardsTarget(this, level);
-            GameContext.SYSTEMS.worldMovementSystem.tryMovingOrTeleporting(this, level);
+            worldMovementSystem.navigateTowardsTarget(this, gameContext);
+            worldMovementSystem.tryMovingOrTeleporting(this, gameContext);
             jump();
         }
         return mazeExitReached;

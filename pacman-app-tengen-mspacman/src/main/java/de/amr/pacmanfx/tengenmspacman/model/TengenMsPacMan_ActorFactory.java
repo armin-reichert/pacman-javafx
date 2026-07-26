@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -42,18 +43,19 @@ public final class TengenMsPacMan_ActorFactory {
      * I use the same behavior here, however I do not know what the real Tengen implementation does.
      * </p>
      */
-    public static Ghost createGhost(byte personality) {
+    public static Ghost createGhost(GameContext gameContext, byte personality) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         return switch (personality) {
-            case GameModel.RED_GHOST_SHADOW   -> modifyShadowBehavior(GhostFactory.createRedGhostShadow("Blinky"));
-            case GameModel.PINK_GHOST_SPEEDY  -> modifyAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky"));
-            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
-            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue");
+            case GameModel.RED_GHOST_SHADOW   -> modifyShadowBehavior(GhostFactory.createRedGhostShadow("Blinky", worldMovementSystem));
+            case GameModel.PINK_GHOST_SPEEDY  -> modifyAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky", worldMovementSystem));
+            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky", worldMovementSystem);
+            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue", worldMovementSystem);
             default -> throw new IllegalArgumentException();
         };
     }
 
-    public static Ghost createGhost(byte personality, House house, TerrainLayer terrain, String startTileProperty) {
-        final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(personality);
+    public static Ghost createGhost(GameContext gameContext, byte personality, House house, TerrainLayer terrain, String startTileProperty) {
+        final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(gameContext, personality);
         ghost.setHome(house);
         if (ghost.personality() == GameModel.RED_GHOST_SHADOW) {
             ghost.setStartPosition(WorldMap.halfTileRightOf(terrain.getTileProperty(startTileProperty)));
@@ -66,59 +68,70 @@ public final class TengenMsPacMan_ActorFactory {
 
 
     private static Ghost modifyShadowBehavior(Ghost ghost) {
-        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
+        ghost.setHuntingStrategy((GameContext gameContext, Float speed) -> {
+            final GameLevel level = gameContext.assertLevel();
+            final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+            final Vector2i ghostTile = worldMovementSystem.computeTile(ghost);
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final boolean firstScatterPhase = level.huntingRules().phaseIndex() == 0;
-            final boolean takeRandomDir = ghost.worldMovement().isNewTileEntered() && terrain.isIntersection(ghost.tile());
+            final boolean takeRandomDir = ghost.worldMovement().isNewTileEntered() && terrain.isIntersection(ghostTile);
+
             if (firstScatterPhase && takeRandomDir) {
-                selectRandomWishDir(ghost, level);
-                GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, speed);
-                GameContext.SYSTEMS.worldMovementSystem.tryMovingOrTeleporting(ghost, level);
+                selectRandomWishDir(ghost, gameContext);
+                worldMovementSystem.setSpeed(ghost, speed);
+                worldMovementSystem.tryMovingOrTeleporting(ghost, gameContext);
             } else {
                 // Normal behavior of red ghost
                 final boolean chase = level.huntingRules().isChasing() || ghost.elroy().enabled();
                 final Vector2i targetTile = chase
                     ? ghost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(ghost.personality());
-                GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, speed);
-                GameContext.SYSTEMS.worldMovementSystem.tryMovingTowardsTargetTile(ghost, level, targetTile);
+                worldMovementSystem.setSpeed(ghost, speed);
+                worldMovementSystem.tryMovingTowardsTargetTile(ghost, gameContext, targetTile);
             }
         });
         return ghost;
     }
 
     private static Ghost modifyAmbushBehavior(Ghost ghost) {
-        ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
+        ghost.setHuntingStrategy((GameContext gameContext, Float speed) -> {
+            final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+            final GameLevel level = gameContext.assertLevel();
+            final Vector2i ghostTile = worldMovementSystem.computeTile(ghost);
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final boolean firstScatterPhase = level.huntingRules().phaseIndex() == 0;
-            final boolean takeRandomDir = ghost.worldMovement().isNewTileEntered() && terrain.isIntersection(ghost.tile());
+            final boolean takeRandomDir = ghost.worldMovement().isNewTileEntered() && terrain.isIntersection(ghostTile);
+
             if (firstScatterPhase && takeRandomDir) {
-                selectRandomWishDir(ghost, level);
-                GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, speed);
-                GameContext.SYSTEMS.worldMovementSystem.tryMovingOrTeleporting(ghost, level);
+                selectRandomWishDir(ghost, gameContext);
+                worldMovementSystem.setSpeed(ghost, speed);
+                worldMovementSystem.tryMovingOrTeleporting(ghost, gameContext);
             } else {
                 final boolean chase = level.huntingRules().isChasing();
                 final Vector2i targetTile = chase
                     ? ghost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(ghost.personality());
-                GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, speed);
-                GameContext.SYSTEMS.worldMovementSystem.tryMovingTowardsTargetTile(ghost, level, targetTile);
+                worldMovementSystem.setSpeed(ghost, speed);
+                worldMovementSystem.tryMovingTowardsTargetTile(ghost, gameContext, targetTile);
             }
         });
         return ghost;
     }
 
-    private static void selectRandomWishDir(Ghost ghost, GameLevel level) {
-        final Vector2i tile = ghost.tile();
-        final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
+    private static void selectRandomWishDir(Ghost ghost, GameContext gameContext) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final GameLevel level = gameContext.assertLevel();
+        final Vector2i ghostTile = worldMovementSystem.computeTile(ghost);
+        final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(ghostTile);
+
         if (teleporting) {
             return;
         }
         int dirsTried = 0;
         Direction dir = Direction.random();
         while (++dirsTried <= 4) {
-            if (isAcceptableWishDir(level, ghost, dir)) {
-                ghost.setWishDir(dir);
+            if (isAcceptableWishDir(gameContext, ghost, dir)) {
+                worldMovementSystem.setWishDir(ghost, dir);
                 Logger.debug("{} selects random wish direction {}", ghost.name(), dir);
                 break;
             }
@@ -127,10 +140,12 @@ public final class TengenMsPacMan_ActorFactory {
         }
     }
 
-    private static boolean isAcceptableWishDir(GameLevel level, Ghost ghost, Direction dir) {
-        final WorldMovementPolicy worldMovementPolicy = ghost.assertComponent(WorldMovementPolicy.class);
+    private static boolean isAcceptableWishDir(GameContext gameContext, Ghost ghost, Direction dir) {
+        final WorldMovementPolicy policy = ghost.assertComponent(WorldMovementPolicy.class);
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
 
-        final Vector2i neighborTile = ghost.tile().plus(dir.vector());
-        return dir != ghost.worldMovement().moveDir().opposite() && worldMovementPolicy.canAccessTile(level, neighborTile);
+        final Vector2i ghostTile = worldMovementSystem.computeTile(ghost);
+        final Vector2i neighborTile = ghostTile.plus(dir.vector());
+        return dir != ghost.worldMovement().moveDir().opposite() && policy.canAccessTile(gameContext, neighborTile);
     }
 }

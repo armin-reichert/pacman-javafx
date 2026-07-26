@@ -64,7 +64,7 @@ public class LevelShortTestState extends GameState {
         }
         else if (timer().atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
-                bonus.showEatenForSeconds(2);
+                bonus.showEatenForSeconds(gameContext, 2);
                 gameContext.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
             });
         }
@@ -73,14 +73,14 @@ public class LevelShortTestState extends GameState {
         }
         else if (timer().atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {
-                bonus.showEatenForSeconds(2);
+                bonus.showEatenForSeconds(gameContext, 2);
                 gameContext.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
             });
         }
         else if (timer().atSecond(START + 9)) {
             level.hidePacAndGhosts();
             level.heartbeat().stop();
-            gameContext.gamePlay().onLevelCompleted(level);
+            gameContext.gamePlay().onLevelCompleted(gameContext);
         }
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {

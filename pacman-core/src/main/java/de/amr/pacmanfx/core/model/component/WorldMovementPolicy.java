@@ -5,15 +5,16 @@
 package de.amr.pacmanfx.core.model.component;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.GameContext;
 
 public interface WorldMovementPolicy extends EntityComponent {
+
     /**
-     * @param level the game level we are in (not null)
+     * @param gameContext the game context, asserts that level exists!
      * @param tile some tile inside or outside the world
      * @return if this actor can access the given tile in its game context
      */
-    boolean canAccessTile(GameLevel level, Vector2i tile);
+    boolean canAccessTile(GameContext gameContext, Vector2i tile);
 
     /**
      * @return {@code true} if this actor can reverse ist direction in its current state

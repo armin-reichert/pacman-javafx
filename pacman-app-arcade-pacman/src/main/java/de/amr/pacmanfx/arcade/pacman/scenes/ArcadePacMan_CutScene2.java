@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.systems.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -69,7 +70,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.animations = renderConfig.createPacAnimations(spriteAnimationContainer);
 
-        blinky = renderConfig.createAnimatedGhost(spriteAnimationContainer, RED_GHOST_SHADOW);
+        blinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimationContainer, RED_GHOST_SHADOW);
 
         nailDressAnimation = new SpriteAnimationBuilder()
             .sprites(spriteSheet.findSprites(SpriteID.RED_GHOST_STRETCHED))
@@ -84,22 +85,23 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         if (++sceneTick < TICK_ANIMATION_START) {
             return;
         }
+        final MovementSystem movementSystem = gameContext.systems().movementSystem;
         final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         switch (sceneTick) {
             case TICK_ANIMATION_START        -> startTheShow();
             case TICK_PAC_MAN_STARTS_RUNNING -> pacManStartsRunning(worldMovementSystem);
-            case TICK_BLINKY_STARTS_RUNNING  -> blinkyStartsRunning();
-            case TICK_BLINKY_GETS_CAUGHT     -> blinkyGetsCaughtOnNail();
+            case TICK_BLINKY_STARTS_RUNNING  -> blinkyStartsRunning(worldMovementSystem);
+            case TICK_BLINKY_GETS_CAUGHT     -> blinkyGetsCaughtOnNail(worldMovementSystem);
             case TICK_DRESS_STRETCHED_SMALL  -> setDressState(STRETCHED_SMALL);
             case TICK_DRESS_STRETCHED_MEDIUM -> setDressState(STRETCHED_MEDIUM);
             case TICK_DRESS_STRETCHED_LARGE  -> setDressState(STRETCHED_LARGE);
-            case TICK_BLINKY_STOPS_MOVING    -> blinkyStopsMoving();
+            case TICK_BLINKY_STOPS_MOVING    -> blinkyStopsMoving(worldMovementSystem);
             case TICK_DRESS_RAPTURES         -> dressRaptures();
             case TICK_BLINK_INSPECTS_DAMAGE  -> blinkyInspectsDamagedDress();
             case TICK_ANIMATION_ENDS         -> endTheShow();
         }
-        GameContext.SYSTEMS.movementSystem.moveAccelerated(pacMan);
-        GameContext.SYSTEMS.movementSystem.moveAccelerated(blinky);
+        movementSystem.moveAccelerated(pacMan);
+        movementSystem.moveAccelerated(blinky);
     }
 
     private void blinkyInspectsDamagedDress() {
@@ -122,21 +124,21 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         blinky.animations.select(CommonAnimationID.BLINKY_DAMAGED);
     }
 
-    private void blinkyStopsMoving() {
-        GameContext.SYSTEMS.worldMovementSystem.setSpeed(blinky, 0);
+    private void blinkyStopsMoving(WorldMovementSystem worldMovementSystem) {
+        worldMovementSystem.setSpeed(blinky, 0);
         blinky.animations.stopSelected();
     }
 
-    private void blinkyGetsCaughtOnNail() {
-        GameContext.SYSTEMS.worldMovementSystem.setSpeed(blinky, 0.09f);
+    private void blinkyGetsCaughtOnNail(WorldMovementSystem worldMovementSystem) {
+        worldMovementSystem.setSpeed(blinky, 0.09f);
         blinkyAnimation(CommonAnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
     }
 
-    private void blinkyStartsRunning() {
-        GameContext.SYSTEMS.worldMovementSystem.placeAtTile(blinky, 28, 20, -3, 0);
-        blinky.setMoveDir(Direction.LEFT);
-        blinky.setWishDir(Direction.LEFT);
-        GameContext.SYSTEMS.worldMovementSystem.setSpeed(blinky, 1.25f);
+    private void blinkyStartsRunning(WorldMovementSystem worldMovementSystem) {
+        worldMovementSystem.placeAtTile(blinky, 28, 20, -3, 0);
+        worldMovementSystem.setMoveDir(blinky, Direction.LEFT);
+        worldMovementSystem.setWishDir(blinky, Direction.LEFT);
+        worldMovementSystem.setSpeed(blinky, 1.25f);
         blinky.animations.select(CommonAnimationID.GHOST_NORMAL);
         blinky.animations.playSelected();
         blinky.visibility().show();

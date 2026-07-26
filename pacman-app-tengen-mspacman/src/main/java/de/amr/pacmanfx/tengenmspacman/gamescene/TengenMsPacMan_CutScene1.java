@@ -95,6 +95,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
     @Override
     public void onActivate() {
         final WorldMovementSystem worldMovementSystem = gameContext().systems().worldMovementSystem;
+
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
         final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
@@ -121,15 +122,15 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
         worldMovementSystem.setSpeed(pacMan, 0);
 
-        inky = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
-        inky.setMoveDir(Direction.RIGHT);
-        inky.setWishDir(Direction.RIGHT);
+        inky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
+        worldMovementSystem.setMoveDir(inky, Direction.RIGHT);
+        worldMovementSystem.setWishDir(inky, Direction.RIGHT);
         inky.position().set(LEFT_BORDER, UPPER_LANE);
         worldMovementSystem.setSpeed(inky, 0);
 
-        pinky = renderConfig.createAnimatedGhost(spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
-        pinky.setMoveDir(Direction.LEFT);
-        pinky.setWishDir(Direction.LEFT);
+        pinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
+        worldMovementSystem.setMoveDir(pinky, Direction.LEFT);
+        worldMovementSystem.setWishDir(pinky, Direction.LEFT);
         pinky.position().set(RIGHT_BORDER, LOWER_LANE);
         worldMovementSystem.setSpeed(pinky, 0);
 
@@ -197,12 +198,12 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                     worldMovementSystem.setMoveDir(pacMan, Direction.LEFT);
 
                     pinky.position().set(msPacMan.position().x - WorldMap.TS * 11, msPacMan.position().y);
-                    pinky.setMoveDir(Direction.RIGHT);
-                    pinky.setWishDir(Direction.RIGHT);
+                    worldMovementSystem.setMoveDir(pinky, Direction.RIGHT);
+                    worldMovementSystem.setWishDir(pinky, Direction.RIGHT);
 
                     inky.position().set(pacMan.position().x + WorldMap.TS * 11, pacMan.position().y);
-                    inky.setMoveDir(Direction.LEFT);
-                    inky.setWishDir(Direction.LEFT);
+                    worldMovementSystem.setMoveDir(inky, Direction.LEFT);
+                    worldMovementSystem.setWishDir(inky, Direction.LEFT);
                 }
                 case 454 -> List.of(pacMan, msPacMan).forEach(pac -> {
                     worldMovementSystem.setMoveDir(pac, Direction.UP);
@@ -211,14 +212,14 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                 case 498 -> {
                     collided = true;
 
-                    inky.setMoveDir(Direction.RIGHT);
-                    inky.setWishDir(Direction.RIGHT);
+                    worldMovementSystem.setMoveDir(inky, Direction.RIGHT);
+                    worldMovementSystem.setWishDir(inky, Direction.RIGHT);
                     worldMovementSystem.setSpeed(inky, SPEED_AFTER_COLLISION);
                     inky.movement().velY -= 2.0f;
                     inky.movement().setAcceleration(0, 0.4f);
 
-                    pinky.setMoveDir(Direction.LEFT);
-                    pinky.setWishDir(Direction.LEFT);
+                    worldMovementSystem.setMoveDir(pinky, Direction.LEFT);
+                    worldMovementSystem.setWishDir(pinky, Direction.LEFT);
                     worldMovementSystem.setSpeed(pinky, SPEED_AFTER_COLLISION);
                     pinky.movement().velY -= 2.0f;
                     pinky.movement().setAcceleration(0, 0.4f);
