@@ -50,14 +50,15 @@ public class WorldMovement implements EntityComponent {
 
     @Override
     public String toString() {
-        return "MazeMovement{" +
-            ", moveDir=" + moveDir() +
+        return "WorldMovement{" +
+            "moveDir=" + moveDir() +
             ", wishDir=" + wishDir() +
             ", targetTile=" + targetTile() +
             ", newTileEntered=" + newTileEntered +
             ", turnBackRequested=" + turnBackRequested +
             ", canTeleport=" + canTeleport +
-            ", corneringSpeedDelta" + corneringSpeedDelta +
+            ", corneringSpeedDelta=" + corneringSpeedDelta +
+            ", info=" + info +
             '}';
     }
 

@@ -46,4 +46,11 @@ public class Visibility implements EntityComponent {
         set(false);
     }
 
+    @Override
+    public String toString() {
+        return "Visibility{" +
+            "defaultVisibility=" + defaultVisibility +
+            ", visible=" + isVisible() +
+            '}';
+    }
 }

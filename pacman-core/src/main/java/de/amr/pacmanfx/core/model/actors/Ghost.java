@@ -101,11 +101,6 @@ public class Ghost extends Actor implements UpdatableEntity {
         }
     }
 
-    @Override
-    public void reset() {
-        super.reset();
-    }
-
     public void setHuntingStrategy(BiConsumer<GameContext, Float> huntingStrategy) {
         this.huntingStrategy = requireNonNull(huntingStrategy);
     }
@@ -154,12 +149,12 @@ public class Ghost extends Actor implements UpdatableEntity {
     @Override
     public String toString() {
         return "Ghost{" +
-                "name=" + name() +
-                ", state=" + (state != null ? state() : DEFAULT_STATE) +
-                ", visibility=" + visibility() +
-                ", position" + position() +
-                ", movement" + movement() +
-                '}';
+            "personality=" + personality +
+            ", state=" + state() +
+            ", specialTerrainTiles=" + specialTerrainTiles +
+            ", startPosition=" + startPosition +
+            super.toString() +
+            '}';
     }
 
     public void hunt(GameContext gameContext, float speed) {

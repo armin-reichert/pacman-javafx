@@ -49,4 +49,14 @@ public class Movement implements EntityComponent {
         this.accX = (float) ax;
         this.accY = (float) ay;
     }
+
+    @Override
+    public String toString() {
+        return "Movement{" +
+            "velX=" + velX +
+            ", velY=" + velY +
+            ", accX=" + accX +
+            ", accY=" + accY +
+            '}';
+    }
 }

@@ -87,4 +87,13 @@ public class Actor {
     public void reset() {
         components.values().forEach(EntityComponent::reset);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (var component : components.values()) {
+            builder.append("{").append(component).append("}\n");
+        }
+        return builder.toString();
+    }
 }

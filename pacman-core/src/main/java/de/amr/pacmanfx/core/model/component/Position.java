@@ -6,6 +6,8 @@ package de.amr.pacmanfx.core.model.component;
 
 import de.amr.basics.math.Vector2f;
 
+import java.util.StringJoiner;
+
 public final class Position implements EntityComponent {
 
     public float x;
@@ -37,5 +39,13 @@ public final class Position implements EntityComponent {
 
     public Vector2f asVector2f() {
         return new Vector2f(x, y);
+    }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+            "x=" + x +
+            ", y=" + y +
+            '}';
     }
 }
