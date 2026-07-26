@@ -75,7 +75,7 @@ public abstract class CommonGamePlay implements GamePlay {
         pac.reset(); // initially invisible!
         pac.position().set(terrain.pacStartPosition());
         worldMovementSystem.setMoveDir(pac, Direction.LEFT);
-        pac.setWishDir(Direction.LEFT);
+        worldMovementSystem.setWishDir(pac, Direction.LEFT);
         pac.powerTimer().resetToIndefiniteDuration();
         pac.animations.resetSelected();
 

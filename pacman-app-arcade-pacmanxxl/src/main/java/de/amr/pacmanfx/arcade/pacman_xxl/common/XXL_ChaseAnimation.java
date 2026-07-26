@@ -99,7 +99,7 @@ class XXL_ChaseAnimation {
         pac.animations.playSelected();
         pac.position().setX(numTilesX * WorldMap.TS);
         worldMovementSystem.setMoveDir(pac, Direction.LEFT);
-        pac.setWishDir(Direction.LEFT);
+        worldMovementSystem.setWishDir(pac, Direction.LEFT);
         pac.setSpeed(PAC_FLEEING_SPEED);
         pac.visibility().show();
 
@@ -143,7 +143,7 @@ class XXL_ChaseAnimation {
         // If ghosts and Pac leave screen at right border, ghosts start chasing Pac moving left
         if (pac.position().x > (numTilesX + 14) * WorldMap.TS) {
             worldMovementSystem.setMoveDir(pac, Direction.LEFT);
-            pac.setWishDir(Direction.LEFT);
+            worldMovementSystem.setWishDir(pac, Direction.LEFT);
             pac.position().setX(numTilesX * WorldMap.TS);
             for (Ghost ghost : ghosts) {
                 ghost.visibility().show();
@@ -187,7 +187,7 @@ class XXL_ChaseAnimation {
         moveActors();
         if (ghosts.getLast().position().x < -4 * WorldMap.TS) { // ghosts left screen on the left side
             worldMovementSystem.setMoveDir(pac, Direction.RIGHT);
-            pac.setWishDir(Direction.RIGHT);
+            worldMovementSystem.setWishDir(pac, Direction.RIGHT);
             pac.position().setX(-(numTilesX - 6) * WorldMap.TS);
             for (Ghost ghost : ghosts) {
                 ghost.visibility().show();

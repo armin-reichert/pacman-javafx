@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.core.model.actors;
 
-import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
@@ -84,10 +83,6 @@ public class Pac extends Actor {
 
     public Vector2i tile() {
         return GameContext.SYSTEMS.worldMovementSystem.computeTile(this);
-    }
-
-    public void setWishDir(Direction dir) {
-        GameContext.SYSTEMS.worldMovementSystem.setWishDir(this, dir);
     }
 
     public void setSpeed(float speed) {
