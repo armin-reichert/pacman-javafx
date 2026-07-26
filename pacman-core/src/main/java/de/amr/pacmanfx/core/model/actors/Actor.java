@@ -61,15 +61,15 @@ public class Actor implements GameEntity {
         return name;
     }
 
-    public Position position() {
+    public final Position position() {
         return component(Position.class);
     }
 
-    public Movement movement() {
+    public final Movement movement() {
         return component(Movement.class);
     }
 
-    public Visibility visibility() {
+    public final Visibility visibility() {
         return component(Visibility.class);
     }
 
