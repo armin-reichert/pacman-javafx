@@ -96,8 +96,8 @@ public class LevelMediumTestState extends GameState {
         final GameLevel level = gameContext.assertLevel();
 
         final Pac pac = level.entities().pac();
-        pac.usingAutopilotProperty().unbind();
-        pac.setUsingAutopilot(true);
+        pac.pacCheats().usingAutopilotProperty().unbind();
+        pac.pacCheats().setUsingAutopilot(true);
         pac.animations.playSelected();
         pac.visibility().show();
 

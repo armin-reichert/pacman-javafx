@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.basics.math.Vector2i;
@@ -8,6 +9,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.Movement;
+import de.amr.pacmanfx.core.model.component.PacCheats;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -25,19 +27,20 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pac extends Actor implements UpdatableEntity {
 
-    class PacManWorldMovementPolicy implements WorldMovementPolicy {
+    public static class PacManWorldMovementPolicy implements WorldMovementPolicy {
 
         @Override
         public void reset() {
         }
 
         @Override
-        public boolean canTurnBack() {
-            return worldMovement().isNewTileEntered();
+        public boolean canTurnBack(Actor actor) {
+            final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
+            return worldMovement.isNewTileEntered();
         }
 
         @Override
-        public boolean canAccessTile(GameContext gameContext, Vector2i tile) {
+        public boolean canAccessTile(GameContext gameContext, Actor actor, Vector2i tile) {
             requireNonNull(gameContext);
             requireNonNull(tile);
 
@@ -61,9 +64,6 @@ public class Pac extends Actor implements UpdatableEntity {
 
     private final BooleanProperty dead = new SimpleBooleanProperty(false);
 
-    private final BooleanProperty immune = new SimpleBooleanProperty(false);
-
-    private final BooleanProperty usingAutopilot = new SimpleBooleanProperty(false);
 
     private long restingTicks;
 
@@ -78,6 +78,7 @@ public class Pac extends Actor implements UpdatableEntity {
         registerComponent(Movement.class, new Movement());
         registerComponent(WorldMovement.class, new WorldMovement());
         registerComponent(WorldMovementPolicy.class, new PacManWorldMovementPolicy());
+        registerComponent(PacCheats.class, new PacCheats());
 
         this.name = requireNonNull(name);
     }
@@ -86,11 +87,13 @@ public class Pac extends Actor implements UpdatableEntity {
         return assertComponent(WorldMovement.class);
     }
 
+    public PacCheats pacCheats() {
+        return assertComponent(PacCheats.class);
+    }
+
     @Override
     public String toString() {
         return "Pac{" +
-            "immune=" + isImmune() +
-            ", autopilot=" + isUsingAutopilot() +
             ", dead=" + isDead() +
             ", restingTime=" + restingTicks +
             ", starvingTime=" + starvingTicks +
@@ -107,6 +110,7 @@ public class Pac extends Actor implements UpdatableEntity {
     @Override
     public void reset() {
         super.reset();
+
         setDead(false);
         restingTicks = 0;
         starvingTicks = 0;
@@ -128,30 +132,6 @@ public class Pac extends Actor implements UpdatableEntity {
 
     public void setDead(boolean dead) {
         deadProperty().set(dead);
-    }
-
-    public BooleanProperty immuneProperty() {
-        return immune;
-    }
-
-    public boolean isImmune() {
-        return immune.get();
-    }
-
-    public void setImmune(boolean value) {
-        immuneProperty().set(value);
-    }
-
-    public BooleanProperty usingAutopilotProperty() {
-        return usingAutopilot;
-    }
-
-    public boolean isUsingAutopilot() {
-        return usingAutopilot.get();
-    }
-
-    public void setUsingAutopilot(boolean value) {
-        usingAutopilotProperty().set(value);
     }
 
     public TickTimer powerTimer() {
@@ -182,10 +162,11 @@ public class Pac extends Actor implements UpdatableEntity {
         }
 
         final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+
         final GameLevel level = gameContext.assertLevel();
         final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
 
-        if (isUsingAutopilot()) {
+        if (pacCheats().isUsingAutopilot()) {
             automaticSteering.steer(this, gameContext);
         }
 

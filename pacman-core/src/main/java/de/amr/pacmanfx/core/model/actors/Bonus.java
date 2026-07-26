@@ -11,12 +11,12 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.event.BonusExpiredEvent;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
+import de.amr.pacmanfx.core.model.component.BonusWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
-import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.steering.RouteBasedSteering;
 import org.tinylog.Logger;
 
@@ -35,33 +35,6 @@ import static java.util.Objects.requireNonNull;
 public class Bonus extends Actor implements UpdatableEntity {
 
     private static final int PULSE_CHANGE_TICKS = 10;
-
-    static class BonusWorldMovementPolicy implements WorldMovementPolicy {
-
-        @Override
-        public void reset() {}
-
-        @Override
-        public boolean canTurnBack() {
-            return false;
-        }
-
-        @Override
-        public boolean canAccessTile(GameContext gameContext, Vector2i tile) {
-            requireNonNull(gameContext);
-            requireNonNull(tile);
-
-            final GameLevel level = gameContext.assertLevel();
-            final TerrainLayer terrain = level.worldMap().terrainLayer();
-            if (terrain.outOfBounds(tile)) {
-                return terrain.isTileInPortalSpace(tile);
-            }
-            if (terrain.optHouse().isPresent() && terrain.optHouse().get().contains(tile)) {
-                return false;
-            }
-            return !terrain.isTileBlocked(tile);
-        }
-    }
 
     private final TickTimer timer;
     private final int symbolCode;
@@ -202,7 +175,7 @@ public class Bonus extends Actor implements UpdatableEntity {
 
         routeNavigation.steer(this, gameContext);
 
-        final Vector2i tile = worldMovementSystem.computeTile(this);
+        final Vector2i tile = WorldMovementSystem.computeTile(this);
         boolean mazeExitReached = routeNavigation.isRouteTraversed() || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         if (!mazeExitReached) {
             worldMovementSystem.navigateTowardsTarget(this, gameContext);

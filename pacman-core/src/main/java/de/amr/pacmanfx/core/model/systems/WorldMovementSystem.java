@@ -180,7 +180,7 @@ public class WorldMovementSystem {
                 continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
             final Vector2i neighborTile = currentTile.plus(dir.vector());
-            if (worldMovementPolicy.canAccessTile(gameContext, neighborTile)) {
+            if (worldMovementPolicy.canAccessTile(gameContext, actor, neighborTile)) {
                 double dist = neighborTile.euclideanDist(worldMovement.targetTile());
                 if (dist < minDistToTarget) {
                     minDistToTarget = dist;
@@ -233,7 +233,7 @@ public class WorldMovementSystem {
                 return;
             }
         }
-        if (worldMovement.isTurnBackRequested() && worldMovementPolicy.canTurnBack()) {
+        if (worldMovement.isTurnBackRequested() && worldMovementPolicy.canTurnBack(actor)) {
             setWishDir(actor, worldMovement.moveDir().opposite());
             Logger.trace("{}: turned back at tile {}", actor.name(), computeTile(actor));
             worldMovement.clearTurnBackRequested();
@@ -272,7 +272,7 @@ public class WorldMovementSystem {
         final boolean turn = dir.vector().isOrthogonalTo(worldMovement.moveDir().vector());
 
         final GameLevel level = gameContext.assertLevel();
-        if (!worldMovementPolicy.canAccessTile(gameContext, touchedTile)) {
+        if (!worldMovementPolicy.canAccessTile(gameContext, actor, touchedTile)) {
             if (!turn) {
                 placeAtTile(actor, computeTile(actor)); // adjust over tile (would move forward against wall)
             }

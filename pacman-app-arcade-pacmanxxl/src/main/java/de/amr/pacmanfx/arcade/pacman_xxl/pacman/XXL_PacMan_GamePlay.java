@@ -29,8 +29,8 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         final GameLevel level = createLevel(gameContext, levelNumber, true);
 
         final Pac pac = level.entities().pac();
-        pac.setImmune(false);
-        pac.setUsingAutopilot(true);
+        pac.pacCheats().setImmune(false);
+        pac.pacCheats().setUsingAutopilot(true);
 
         // Demo level map could be a custom map, so use generic auto-steering that also can cope with dead-ends:
         final var demoLevelSteering = new RuleBasedPacSteering();

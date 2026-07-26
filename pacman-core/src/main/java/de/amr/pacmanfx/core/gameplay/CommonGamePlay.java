@@ -223,7 +223,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void evalPacKilled(HuntingStepResult result, GameLevel level) {
-        if (level.isDemoLevel() && isPacSafeInDemoLevel(level) || level.entities().pac().isImmune()) {
+        if (level.isDemoLevel() && isPacSafeInDemoLevel(level) || level.entities().pac().pacCheats().isImmune()) {
             return;
         }
         result.setPacKilled(
@@ -244,11 +244,9 @@ public abstract class CommonGamePlay implements GamePlay {
 
     // If collision happened while teleporting (horizontally), move collided actors into visible world
     private void fixPacPositionIfKilledInsidePortal(GameContext gameContext) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
-
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
-        final Vector2i pacTile = worldMovementSystem.computeTile(pac);
+        final Vector2i pacTile = WorldMovementSystem.computeTile(pac);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         terrain.hPortalContainingTile(pacTile).ifPresent(hPortal -> {
@@ -499,11 +497,10 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void detectFoodCollision(GameContext gameContext) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final FoodLayer foodLayer = level.worldMap().foodLayer();
-        final Vector2i pacTile = worldMovementSystem.computeTile(pac);
+        final Vector2i pacTile = WorldMovementSystem.computeTile(pac);
         if (foodLayer.hasFoodAtTile(pacTile)) {
             gameContext.thisFrame().huntingStep().setFoodFoundTile(pacTile);
             gameContext.thisFrame().huntingStep().setEnergizerFound(foodLayer.isEnergizerTile(pacTile));

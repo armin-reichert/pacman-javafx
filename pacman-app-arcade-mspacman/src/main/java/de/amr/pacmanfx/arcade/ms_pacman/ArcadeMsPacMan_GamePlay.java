@@ -112,8 +112,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final GameLevel demoLevel = createLevel(gameContext, demoLevelNumber, true);
 
         final Pac pac = demoLevel.entities().pac();
-        pac.setImmune(false);
-        pac.setUsingAutopilot(true);
+        pac.pacCheats().setImmune(false);
+        pac.pacCheats().setUsingAutopilot(true);
 
         final var demoLevelSteering = new RuleBasedPacSteering();
         pac.setAutomaticSteering(demoLevelSteering);

@@ -6,10 +6,8 @@ package de.amr.pacmanfx.core.model;
 
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.score.Score;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import org.tinylog.Logger;
 
 public class GameCheats {
 
@@ -56,8 +54,8 @@ public class GameCheats {
             return;
         }
         final Pac pac = level.entities().pac();
-        pac.immuneProperty().set(isPacImmune());
-        pac.usingAutopilotProperty().set(isPacUsingAutopilot());
+        pac.pacCheats().immuneProperty().set(isPacImmune());
+        pac.pacCheats().usingAutopilotProperty().set(isPacUsingAutopilot());
         if (isPacImmune() || isPacUsingAutopilot()) {
             notifyCheatUsed();
         }

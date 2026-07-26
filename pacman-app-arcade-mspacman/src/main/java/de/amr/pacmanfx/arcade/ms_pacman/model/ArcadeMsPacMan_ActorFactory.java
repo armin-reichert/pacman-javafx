@@ -131,7 +131,7 @@ public class ArcadeMsPacMan_ActorFactory {
         for (final Direction dir : Direction.shuffled()) {
             final Vector2i neighbor = ghostTile.plus(dir.vector());
             final boolean acceptable = dir != ghost.worldMovement().moveDir().opposite()
-                && policy.canAccessTile(gameContext, neighbor);
+                && policy.canAccessTile(gameContext, ghost, neighbor);
             if (acceptable) {
                 worldMovementSystem.setWishDir(ghost, dir);
                 Logger.debug("{} selects random wish direction {}", ghost.name(), dir);

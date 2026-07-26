@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.component.GhostWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
@@ -18,8 +19,6 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.House;
-import de.amr.pacmanfx.core.model.world.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.TerrainTile;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import javafx.beans.property.ObjectProperty;
@@ -42,45 +41,6 @@ import static java.util.Objects.requireNonNull;
 public class Ghost extends Actor implements UpdatableEntity {
 
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
-
-    class GhostWorldMovementPolicy implements WorldMovementPolicy {
-
-        @Override
-        public void reset() {}
-
-        @Override
-        public boolean canAccessTile(GameContext gameContext, Vector2i tile) {
-            final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
-            final GameLevel level = gameContext.assertLevel();
-            final TerrainLayer terrainLayer = level.worldMap().terrainLayer();
-
-            // Portal tiles are the only tiles outside the world map that can be accessed
-            if (terrainLayer.outOfBounds(tile)) {
-                return terrainLayer.isTileInPortalSpace(tile);
-            }
-            final Vector2i myTile = worldMovementSystem.computeTile(Ghost.this);
-            // Hunting ghosts cannot enter some tiles in Pac-Man game from below
-            // TODO: this is game-specific and does not belong here
-            if (specialTerrainTiles.contains(tile)
-                && state() == GhostState.HUNTING_PAC
-                && terrainLayer.content(tile) == TerrainTile.ONE_WAY_DOWN.$
-                && tile.equals(myTile.plus(UP.vector()))
-            ) {
-                Logger.debug("Hunting {} cannot move up to special tile {}", name(), tile);
-                return false;
-            }
-            if (home != null && home.isDoorAt(tile)) {
-                return inAnyOfStates(Set.of(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE));
-            }
-            return !terrainLayer.isTileBlocked(tile);
-        }
-
-        @Override
-        public boolean canTurnBack() {
-            return worldMovement().isNewTileEntered()
-                && inAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.FRIGHTENED));
-        }
-    }
 
     private final byte personality;
     private ObjectProperty<GhostState> state;
@@ -162,6 +122,10 @@ public class Ghost extends Actor implements UpdatableEntity {
         this.chasingTargetTileStrategy = requireNonNull(chasingTargetTileStrategy);
     }
 
+    public House home() {
+        return home;
+    }
+
     public void setHome(House home) {
         this.home = home;
     }
@@ -233,7 +197,7 @@ public class Ghost extends Actor implements UpdatableEntity {
         final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         final GameLevel level = gameContext.assertLevel();
 
-        final Vector2i tile = worldMovementSystem.computeTile(this);
+        final Vector2i tile = WorldMovementSystem.computeTile(this);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
         final boolean stuck = !worldMovement().info.moved;
@@ -251,7 +215,8 @@ public class Ghost extends Actor implements UpdatableEntity {
 
         Direction dir = pseudoRandomDirection();
         int turns = 0;
-        while (dir == worldMovement().moveDir().opposite() || !policy.canAccessTile(gameContext, currentTile.plus(dir.vector()))) {
+        while (dir == worldMovement().moveDir().opposite()
+            || !policy.canAccessTile(gameContext, this, currentTile.plus(dir.vector()))) {
             dir = dir.nextClockwise();
             if (++turns > 4) {
                 return worldMovement().moveDir().opposite();  // avoid endless loop

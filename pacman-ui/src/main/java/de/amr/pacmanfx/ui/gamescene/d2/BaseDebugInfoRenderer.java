@@ -5,7 +5,6 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
@@ -57,8 +56,8 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
 
         ctx.setFill(Color.FORESTGREEN);
         if (movingActor instanceof Pac pac) {
-            String autopilot = pac.isUsingAutopilot() ? "autopilot" : "";
-            String immune = pac.isImmune() ? "immune" : "";
+            String autopilot = pac.pacCheats().isUsingAutopilot() ? "autopilot" : "";
+            String immune = pac.pacCheats().isImmune() ? "immune" : "";
             String text = "%s\n%s".formatted(autopilot, immune).trim();
             ctx.setFont(debugTextFont);
             ctx.fillText(text, scaled(pac.position().x - 4), scaled(pac.position().y + 16));
