@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  * <p>
  * TODO: That's not exactly the original Ms. Pac-Man behaviour with predefined "fruit paths".
  */
-public class Bonus extends Actor {
+public class Bonus extends Actor implements WorldMover {
 
     private static final int PULSE_CHANGE_TICKS = 10;
 
@@ -188,6 +188,13 @@ public class Bonus extends Actor {
     public String toString() {
         return "Bonus{symbol=%s, points=%d, ticksRemaining=%d, state=%s, animation=%s}"
             .formatted(symbolCode, points, timer.remainingTicks(), state, jumpingAnimation);
+    }
+
+    // WorldMover interface
+
+    @Override
+    public boolean canTurnBack() {
+        return false;
     }
 
     @Override

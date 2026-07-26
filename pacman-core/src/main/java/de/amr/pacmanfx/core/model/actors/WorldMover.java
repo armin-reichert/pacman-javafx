@@ -1,0 +1,23 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.core.model.actors;
+
+import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+
+public interface WorldMover {
+
+    /**
+     * @param level the game level we are in (not null)
+     * @param tile some tile inside or outside the world
+     * @return if this actor can access the given tile in its game context
+     */
+    boolean canAccessTile(GameLevel level, Vector2i tile);
+
+    /**
+     * @return {@code true} if this actor can reverse ist direction in its current state
+     */
+    boolean canTurnBack();
+}

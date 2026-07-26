@@ -5,6 +5,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.WorldMover;
 import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.Position;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
@@ -152,7 +153,12 @@ public class WorldMovementSystem {
     }
 
     public void navigateTowardsTarget(Actor actor, GameLevel level) {
+        requireNonNull(actor);
         requireNonNull(level);
+
+        if (!(actor instanceof WorldMover worldMover)) {
+            throw new IllegalArgumentException("Actor (%s) is no world mover!".formatted(actor.getClass()));
+        }
         final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
         if (!worldMovement.isNewTileEntered() && worldMovement.info.moved || worldMovement.targetTile() == null) {
@@ -170,7 +176,7 @@ public class WorldMovementSystem {
                 continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
             final Vector2i neighborTile = currentTile.plus(dir.vector());
-            if (actor.canAccessTile(level, neighborTile)) {
+            if (worldMover.canAccessTile(level, neighborTile)) {
                 double dist = neighborTile.euclideanDist(worldMovement.targetTile());
                 if (dist < minDistToTarget) {
                     minDistToTarget = dist;
@@ -208,6 +214,10 @@ public class WorldMovementSystem {
      * @param level the game level we are in
      */
     public void tryMovingOrTeleporting(Actor actor, GameLevel level) {
+        requireNonNull(actor);
+        if (!(actor instanceof WorldMover worldMover)) {
+            throw new IllegalArgumentException("Actor (%s) is no world mover!".formatted(actor.getClass()));
+        }
         requireNonNull(level);
         final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
@@ -218,7 +228,7 @@ public class WorldMovementSystem {
                 return;
             }
         }
-        if (worldMovement.isTurnBackRequested() && actor.canTurnBack()) {
+        if (worldMovement.isTurnBackRequested() && worldMover.canTurnBack()) {
             setWishDir(actor, worldMovement.moveDir().opposite());
             Logger.trace("{}: turned back at tile {}", actor.name(), computeTile(actor));
             worldMovement.clearTurnBackRequested();
@@ -245,6 +255,10 @@ public class WorldMovementSystem {
     }
 
     private void tryMovingTowards(Actor actor, GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
+        requireNonNull(actor);
+        if (!(actor instanceof WorldMover worldMover)) {
+            throw new IllegalArgumentException("Actor (%s) is no world mover!".formatted(actor.getClass()));
+        }
         final Movement movement = actor.movement();
         final WorldMovement worldMovement = actor.component(WorldMovement.class);
 
@@ -253,7 +267,7 @@ public class WorldMovementSystem {
         final Vector2i touchedTile = WorldMap.computeTileAt(touchPosition);
         final boolean turn = dir.vector().isOrthogonalTo(worldMovement.moveDir().vector());
 
-        if (!actor.canAccessTile(level, touchedTile)) {
+        if (!worldMover.canAccessTile(level, touchedTile)) {
             if (!turn) {
                 placeAtTile(actor, computeTile(actor)); // adjust over tile (would move forward against wall)
             }

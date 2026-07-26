@@ -4,11 +4,12 @@
 
 package de.amr.pacmanfx.core.model.actors;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
-import de.amr.pacmanfx.core.model.component.*;
+import de.amr.pacmanfx.core.model.component.EntityComponent;
+import de.amr.pacmanfx.core.model.component.Movement;
+import de.amr.pacmanfx.core.model.component.Position;
+import de.amr.pacmanfx.core.model.component.Visibility;
 import de.amr.pacmanfx.core.model.level.GameEntity;
-import de.amr.pacmanfx.core.model.level.GameLevel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,22 +72,6 @@ public class Actor implements GameEntity {
 
     public final Visibility visibility() {
         return component(Visibility.class);
-    }
-
-    /**
-     * @param level the game level we are in (not null)
-     * @param tile some tile inside or outside the world
-     * @return if this actor can access the given tile in its game context
-     */
-    public boolean canAccessTile(GameLevel level, Vector2i tile) {
-        return true;
-    }
-
-    /**
-     * @return {@code true} if this actor can reverse ist direction in its current state
-     */
-    public boolean canTurnBack() {
-        return false;
     }
 
     /**

@@ -21,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base class for Pac-Man / Ms. Pac-Man.
  */
-public class Pac extends Actor {
+public class Pac extends Actor implements WorldMover {
 
     public static final byte REST_FOREVER = -1;
 
@@ -84,26 +84,6 @@ public class Pac extends Actor {
 
     public void setAutomaticSteering(Steering steering) {
         automaticSteering = requireNonNull(steering);
-    }
-
-    @Override
-    public boolean canTurnBack() {
-        return worldMovement().isNewTileEntered();
-    }
-
-    @Override
-    public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
-        requireNonNull(gameLevel);
-        requireNonNull(tile);
-        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
-        // Portal tiles are the only tiles outside the world that can be accessed
-        if (terrain.outOfBounds(tile)) {
-            return terrain.isTileInPortalSpace(tile);
-        }
-        if (terrain.optHouse().isPresent() && terrain.optHouse().get().contains(tile)) {
-            return false; // Schieb ab, Alter!
-        }
-        return !terrain.isTileBlocked(tile);
     }
 
     @Override
@@ -239,4 +219,27 @@ public class Pac extends Actor {
             || !worldMovement().info.moved
             || restingTicks == REST_FOREVER;
     }
+
+    // WorldMover interface
+
+    @Override
+    public boolean canTurnBack() {
+        return worldMovement().isNewTileEntered();
+    }
+
+    @Override
+    public boolean canAccessTile(GameLevel gameLevel, Vector2i tile) {
+        requireNonNull(gameLevel);
+        requireNonNull(tile);
+        final TerrainLayer terrain = gameLevel.worldMap().terrainLayer();
+        // Portal tiles are the only tiles outside the world that can be accessed
+        if (terrain.outOfBounds(tile)) {
+            return terrain.isTileInPortalSpace(tile);
+        }
+        if (terrain.optHouse().isPresent() && terrain.optHouse().get().contains(tile)) {
+            return false; // Schieb ab, Alter!
+        }
+        return !terrain.isTileBlocked(tile);
+    }
+
 }

@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common ghost base class. The specific ghosts differ in their hunting behavior and their look.
  */
-public class Ghost extends Actor {
+public class Ghost extends Actor implements WorldMover {
 
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
 
@@ -225,6 +225,8 @@ public class Ghost extends Actor {
         if (rnd < 163 + 252 + 285) return DOWN;
         return LEFT;
     }
+
+    // WorldMover interface
 
     @Override
     public boolean canAccessTile(GameLevel level, Vector2i tile) {
