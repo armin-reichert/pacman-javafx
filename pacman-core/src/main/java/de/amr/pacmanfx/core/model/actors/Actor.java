@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.Position;
 import de.amr.pacmanfx.core.model.component.Visibility;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
