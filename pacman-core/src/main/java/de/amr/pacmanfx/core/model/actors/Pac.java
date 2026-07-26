@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.model.actors;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.gameplay.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
@@ -22,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base class for Pac-Man / Ms. Pac-Man.
  */
-public class Pac extends Actor {
+public class Pac extends Actor implements UpdatableEntity {
 
     class PacManWorldMovementPolicy implements WorldMovementPolicy {
 

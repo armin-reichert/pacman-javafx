@@ -9,6 +9,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
+import de.amr.pacmanfx.core.gameplay.UpdatableEntity;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
@@ -38,7 +39,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common ghost base class. The specific ghosts differ in their hunting behavior and their look.
  */
-public class Ghost extends Actor {
+public class Ghost extends Actor implements UpdatableEntity {
 
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
 

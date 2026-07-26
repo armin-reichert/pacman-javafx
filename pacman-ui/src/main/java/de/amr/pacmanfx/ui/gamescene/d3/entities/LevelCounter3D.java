@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.level.GameEntity;
+import de.amr.pacmanfx.core.gameplay.UpdatableEntity;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.settings.world.LevelCounter3DSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -30,7 +30,7 @@ import java.util.List;
 import static de.amr.pacmanfx.core.model.world.WorldMap.HTS;
 import static java.util.Objects.requireNonNull;
 
-public class LevelCounter3D extends Group implements GameEntity, DisposableGraphicsObject {
+public class LevelCounter3D extends Group implements UpdatableEntity, DisposableGraphicsObject {
 
     public enum AnimationID implements Identifier {
         LEVEL_COUNTER_SPINNING

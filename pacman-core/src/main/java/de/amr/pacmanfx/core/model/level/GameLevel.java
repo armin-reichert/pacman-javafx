@@ -5,11 +5,9 @@
 package de.amr.pacmanfx.core.model.level;
 
 import de.amr.basics.timer.Pulse;
+import de.amr.pacmanfx.core.gameplay.UpdatableEntity;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.Bonus;
-import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.GhostState;
-import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.rules.HuntingRules;
 
@@ -25,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 public class GameLevel {
 
     // This is just an experimental class for a general entity set with cache
-    public static class EntitySetWithCache implements Iterable<GameEntity> {
+    public static class EntitySetWithCache implements Iterable<UpdatableEntity> {
 
         private final GameLevelEntitySet entitySet = new GameLevelEntitySet();
 
@@ -33,18 +31,18 @@ public class GameLevel {
         private List<Ghost> cachedGhosts;
         private Bonus cachedBonus;
 
-        private void maybeInvalidateCache(GameEntity entity) {
+        private void maybeInvalidateCache(UpdatableEntity entity) {
             if (entity instanceof Pac) cachedPac = null;
             if (entity instanceof Ghost) cachedGhosts = null;
             if (entity instanceof Bonus) cachedBonus = null;
         }
 
-        public void add(GameEntity entity) {
+        public void add(UpdatableEntity entity) {
             entitySet.add(entity);
             maybeInvalidateCache(entity);
         }
 
-        public void remove(GameEntity entity) {
+        public void remove(UpdatableEntity entity) {
             entitySet.remove(entity);
             maybeInvalidateCache(entity);
         }
@@ -72,7 +70,7 @@ public class GameLevel {
         }
 
         @Override
-        public Iterator<GameEntity> iterator() {
+        public Iterator<UpdatableEntity> iterator() {
             return entitySet.iterator();
         }
     }

@@ -6,10 +6,11 @@ package de.amr.pacmanfx.core.model.level;
 
 import de.amr.basics.QuerySet;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.gameplay.UpdatableEntity;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameLevelEntitySet extends QuerySet<GameEntity> {
+public class GameLevelEntitySet extends QuerySet<UpdatableEntity> {
 
     public void init(GameContext gameContext) {
         requireNonNull(gameContext);

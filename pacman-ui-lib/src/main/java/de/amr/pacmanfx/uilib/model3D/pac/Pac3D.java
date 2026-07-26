@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.model3D.pac;
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.level.GameEntity;
+import de.amr.pacmanfx.core.gameplay.UpdatableEntity;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * (Ms.) Pac-Man 3D representations.
  */
-public class Pac3D extends Group implements GameEntity, DisposableGraphicsObject {
+public class Pac3D extends Group implements UpdatableEntity, DisposableGraphicsObject {
 
     public enum AnimationID implements Identifier {
         CHEWING,

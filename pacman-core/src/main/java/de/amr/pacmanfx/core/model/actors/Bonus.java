@@ -10,6 +10,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.event.BonusExpiredEvent;
+import de.amr.pacmanfx.core.gameplay.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
@@ -31,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  * <p>
  * TODO: That's not exactly the original Ms. Pac-Man behaviour with predefined "fruit paths".
  */
-public class Bonus extends Actor {
+public class Bonus extends Actor implements UpdatableEntity {
 
     private static final int PULSE_CHANGE_TICKS = 10;
 

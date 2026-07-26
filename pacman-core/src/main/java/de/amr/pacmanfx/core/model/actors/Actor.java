@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.model.component.EntityComponent;
 import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.Position;
 import de.amr.pacmanfx.core.model.component.Visibility;
-import de.amr.pacmanfx.core.model.level.GameEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +22,7 @@ import static java.util.Objects.requireNonNull;
  * in a UI independent way.
  * </p>
  */
-public class Actor implements GameEntity {
+public class Actor {
 
     private final Map<Class<? extends EntityComponent>, EntityComponent> components = new HashMap<>();
 

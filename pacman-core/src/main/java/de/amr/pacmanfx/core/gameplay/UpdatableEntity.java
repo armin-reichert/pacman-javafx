@@ -2,11 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.level;
+package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.pacmanfx.core.GameContext;
 
-public interface GameEntity {
+public interface UpdatableEntity {
 
     default void init(GameContext gameContext) {}
 
