@@ -55,13 +55,6 @@ public class Actor implements GameEntity {
         return componentClass.cast(component);
     }
 
-    /**
-     * @return readable name, used in UI and logging
-     */
-    public final String name() {
-        return name;
-    }
-
     public final Position position() {
         return component(Position.class);
     }
@@ -72,6 +65,13 @@ public class Actor implements GameEntity {
 
     public final Visibility visibility() {
         return component(Visibility.class);
+    }
+
+    /**
+     * @return readable name, used in UI and logging
+     */
+    public final String name() {
+        return name;
     }
 
     /**
