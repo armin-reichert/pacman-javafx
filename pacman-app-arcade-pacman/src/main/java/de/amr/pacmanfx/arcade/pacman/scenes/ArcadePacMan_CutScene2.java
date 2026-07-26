@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -83,9 +84,10 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         if (++sceneTick < TICK_ANIMATION_START) {
             return;
         }
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         switch (sceneTick) {
             case TICK_ANIMATION_START        -> startTheShow();
-            case TICK_PAC_MAN_STARTS_RUNNING -> pacManStartsRunning();
+            case TICK_PAC_MAN_STARTS_RUNNING -> pacManStartsRunning(worldMovementSystem);
             case TICK_BLINKY_STARTS_RUNNING  -> blinkyStartsRunning();
             case TICK_BLINKY_GETS_CAUGHT     -> blinkyGetsCaughtOnNail();
             case TICK_DRESS_STRETCHED_SMALL  -> setDressState(STRETCHED_SMALL);
@@ -96,8 +98,8 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
             case TICK_BLINK_INSPECTS_DAMAGE  -> blinkyInspectsDamagedDress();
             case TICK_ANIMATION_ENDS         -> endTheShow();
         }
-        GameContext.SYSTEMS.movement.moveAccelerated(pacMan);
-        GameContext.SYSTEMS.movement.moveAccelerated(blinky);
+        GameContext.SYSTEMS.movementSystem.moveAccelerated(pacMan);
+        GameContext.SYSTEMS.movementSystem.moveAccelerated(blinky);
     }
 
     private void blinkyInspectsDamagedDress() {
@@ -121,31 +123,33 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void blinkyStopsMoving() {
-        GameContext.SYSTEMS.worldMovement.setSpeed(blinky, 0);
+        GameContext.SYSTEMS.worldMovementSystem.setSpeed(blinky, 0);
         blinky.animations.stopSelected();
     }
 
     private void blinkyGetsCaughtOnNail() {
-        GameContext.SYSTEMS.worldMovement.setSpeed(blinky, 0.09f);
+        GameContext.SYSTEMS.worldMovementSystem.setSpeed(blinky, 0.09f);
         blinkyAnimation(CommonAnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
     }
 
     private void blinkyStartsRunning() {
-        GameContext.SYSTEMS.worldMovement.placeAtTile(blinky, 28, 20, -3, 0);
+        GameContext.SYSTEMS.worldMovementSystem.placeAtTile(blinky, 28, 20, -3, 0);
         blinky.setMoveDir(Direction.LEFT);
         blinky.setWishDir(Direction.LEFT);
-        GameContext.SYSTEMS.worldMovement.setSpeed(blinky, 1.25f);
+        GameContext.SYSTEMS.worldMovementSystem.setSpeed(blinky, 1.25f);
         blinky.animations.select(CommonAnimationID.GHOST_NORMAL);
         blinky.animations.playSelected();
         blinky.visibility().show();
     }
 
-    private void pacManStartsRunning() {
-        GameContext.SYSTEMS.worldMovement.placeAtTile(pacMan, 28, 20);
-        pacMan.setMoveDir(Direction.LEFT);
-        GameContext.SYSTEMS.worldMovement.setSpeed(pacMan, 1.15f);
+    private void pacManStartsRunning(WorldMovementSystem worldMovementSystem) {
+        worldMovementSystem.placeAtTile(pacMan, 28, 20);
+        worldMovementSystem.setMoveDir(pacMan, Direction.LEFT);
+        worldMovementSystem.setSpeed(pacMan, 1.15f);
+
         pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations.playSelected();
+
         pacMan.visibility().show();
     }
 

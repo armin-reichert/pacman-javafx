@@ -5,6 +5,6 @@ import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 
 public final class GameSystems {
 
-    public final MovementSystem movement =  new MovementSystem();
-    public final WorldMovementSystem worldMovement = new WorldMovementSystem();
+    public final MovementSystem movementSystem =  new MovementSystem();
+    public final WorldMovementSystem worldMovementSystem = new WorldMovementSystem();
 }

@@ -36,7 +36,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     public void drawActor(Actor actor) {
         requireNonNull(actor);
         if (!actor.visibility().isVisible()) return;
-        final Vector2f center = GameContext.SYSTEMS.worldMovement.computeCenter(actor);
+        final Vector2f center = GameContext.SYSTEMS.worldMovementSystem.computeCenter(actor);
         switch (actor) {
             case Pac pac                   -> drawSpriteCentered(computePacSprite(pac),     center);
             case Ghost ghost               -> drawSpriteCentered(computeGhostSprite(ghost), center);
@@ -89,7 +89,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         final int spriteIndex = clapperboard.state(); //TODO decouple state and index in sprite sheet
         if (0 <= spriteIndex && spriteIndex < sprites.length) {
             final RectShort sprite = sprites[spriteIndex];
-            drawSpriteCentered(sprite, GameContext.SYSTEMS.worldMovement.computeCenter(clapperboard));
+            drawSpriteCentered(sprite, GameContext.SYSTEMS.worldMovementSystem.computeCenter(clapperboard));
             // Draw number and title
             final double numberX = scaled(clapperboard.position().x + sprite.width() - 25);
             final double textX = scaled(clapperboard.position().x + sprite.width());

@@ -263,7 +263,7 @@ public class WorldMovementSystem {
         final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
         final WorldMovementPolicy worldMovementPolicy = actor.assertComponent(WorldMovementPolicy.class);
 
-        final MovementSystem movementSystem = GameContext.SYSTEMS.movement;
+        final MovementSystem movementSystem = GameContext.SYSTEMS.movementSystem;
 
         final Vector2f newVelocity = dir.vector().scaled(movement.computeSpeed());
         final Vector2f touchPosition = computeCenter(actor).plus(dir.vector().scaled((float) WorldMap.HTS)).plus(newVelocity);

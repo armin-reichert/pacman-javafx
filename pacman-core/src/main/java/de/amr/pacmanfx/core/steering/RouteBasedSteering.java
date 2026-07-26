@@ -47,11 +47,11 @@ public class RouteBasedSteering implements Steering {
         else if (mazeMovement.optTargetTile().isEmpty()) {
             mazeMovement.setTargetTile(route.get(targetIndex));
         }
-        else if (GameContext.SYSTEMS.worldMovement.computeTile(actor).equals(route.get(targetIndex))) {
+        else if (GameContext.SYSTEMS.worldMovementSystem.computeTile(actor).equals(route.get(targetIndex))) {
             selectNextTargetTile(level, actor);
         }
         else {
-            GameContext.SYSTEMS.worldMovement.navigateTowardsTarget(actor, level);
+            GameContext.SYSTEMS.worldMovementSystem.navigateTowardsTarget(actor, level);
         }
     }
 
@@ -62,7 +62,7 @@ public class RouteBasedSteering implements Steering {
         if (targetIndex < route.size()) {
             mazeMovement.setTargetTile(route.get(targetIndex));
             // The next line is important!
-            GameContext.SYSTEMS.worldMovement.navigateTowardsTarget(actor, level);
+            GameContext.SYSTEMS.worldMovementSystem.navigateTowardsTarget(actor, level);
         }
     }
 }

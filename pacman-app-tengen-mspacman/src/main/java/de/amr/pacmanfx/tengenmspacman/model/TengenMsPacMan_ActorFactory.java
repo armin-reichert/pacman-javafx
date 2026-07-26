@@ -72,16 +72,16 @@ public final class TengenMsPacMan_ActorFactory {
             final boolean takeRandomDir = ghost.worldMovement().isNewTileEntered() && terrain.isIntersection(ghost.tile());
             if (firstScatterPhase && takeRandomDir) {
                 selectRandomWishDir(ghost, level);
-                GameContext.SYSTEMS.worldMovement.setSpeed(ghost, speed);
-                GameContext.SYSTEMS.worldMovement.tryMovingOrTeleporting(ghost, level);
+                GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, speed);
+                GameContext.SYSTEMS.worldMovementSystem.tryMovingOrTeleporting(ghost, level);
             } else {
                 // Normal behavior of red ghost
                 final boolean chase = level.huntingRules().isChasing() || ghost.elroy().enabled();
                 final Vector2i targetTile = chase
                     ? ghost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(ghost.personality());
-                GameContext.SYSTEMS.worldMovement.setSpeed(ghost, speed);
-                GameContext.SYSTEMS.worldMovement.tryMovingTowardsTargetTile(ghost, level, targetTile);
+                GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, speed);
+                GameContext.SYSTEMS.worldMovementSystem.tryMovingTowardsTargetTile(ghost, level, targetTile);
             }
         });
         return ghost;
@@ -94,15 +94,15 @@ public final class TengenMsPacMan_ActorFactory {
             final boolean takeRandomDir = ghost.worldMovement().isNewTileEntered() && terrain.isIntersection(ghost.tile());
             if (firstScatterPhase && takeRandomDir) {
                 selectRandomWishDir(ghost, level);
-                GameContext.SYSTEMS.worldMovement.setSpeed(ghost, speed);
-                GameContext.SYSTEMS.worldMovement.tryMovingOrTeleporting(ghost, level);
+                GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, speed);
+                GameContext.SYSTEMS.worldMovementSystem.tryMovingOrTeleporting(ghost, level);
             } else {
                 final boolean chase = level.huntingRules().isChasing();
                 final Vector2i targetTile = chase
                     ? ghost.chasingTargetTileStrategy().apply(level)
                     : terrain.ghostScatterTile(ghost.personality());
-                GameContext.SYSTEMS.worldMovement.setSpeed(ghost, speed);
-                GameContext.SYSTEMS.worldMovement.tryMovingTowardsTargetTile(ghost, level, targetTile);
+                GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, speed);
+                GameContext.SYSTEMS.worldMovementSystem.tryMovingTowardsTargetTile(ghost, level, targetTile);
             }
         });
         return ghost;

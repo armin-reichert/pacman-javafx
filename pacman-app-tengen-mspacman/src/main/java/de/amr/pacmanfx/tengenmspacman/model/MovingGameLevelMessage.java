@@ -51,7 +51,7 @@ public class MovingGameLevelMessage extends GameLevelMessage {
             --delayTicks;
             return;
         }
-        GameContext.SYSTEMS.movement.moveAccelerated(this);
+        GameContext.SYSTEMS.movementSystem.moveAccelerated(this);
         if (wrapped) {
             if (position().x >= startPosition.x()) {
                 position().set(startPosition);

@@ -17,13 +17,13 @@ public class GhostFactory {
         final Ghost ghost = new Ghost(GameModel.RED_GHOST_SHADOW, name);
 
         ghost.setHuntingStrategy((GameLevel level, Float speed) -> {
-            GameContext.SYSTEMS.worldMovement.setSpeed(ghost, speed);
+            GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, speed);
             final boolean chase = level.huntingRules().isChasing()
                 || ghost.elroy().enabled();
             final Vector2i targetTile = chase
                 ? ghost.chasingTargetTileStrategy().apply(level)
                 : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
-            GameContext.SYSTEMS.worldMovement.tryMovingTowardsTargetTile(ghost, level, targetTile);
+            GameContext.SYSTEMS.worldMovementSystem.tryMovingTowardsTargetTile(ghost, level, targetTile);
         });
 
         ghost.setChasingTargetTileStrategy(level -> level.entities().pac().tile());
@@ -37,7 +37,7 @@ public class GhostFactory {
 
         ghost.setChasingTargetTileStrategy(level -> {
             final Pac pac = level.entities().pac();
-            return GameContext.SYSTEMS.worldMovement.tilesAheadWithOverflowBug(pac, 4);
+            return GameContext.SYSTEMS.worldMovementSystem.tilesAheadWithOverflowBug(pac, 4);
         });
 
         ghost.reset();
@@ -49,7 +49,7 @@ public class GhostFactory {
 
         ghost.setChasingTargetTileStrategy(level -> {
             final Pac pac = level.entities().pac();
-            return GameContext.SYSTEMS.worldMovement.tilesAheadWithOverflowBug(pac, 2)
+            return GameContext.SYSTEMS.worldMovementSystem.tilesAheadWithOverflowBug(pac, 2)
                 .scaled(2)
                 .minus(level.ghost(RED_GHOST_SHADOW).tile());
         });

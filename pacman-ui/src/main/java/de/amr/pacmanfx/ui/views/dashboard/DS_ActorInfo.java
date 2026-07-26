@@ -73,7 +73,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         if (actor == null) return NO_INFO;
 
         final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
-        final WorldMovementSystem worldMovementSystem = GameContext.SYSTEMS.worldMovement;
+        final WorldMovementSystem worldMovementSystem = GameContext.SYSTEMS.worldMovementSystem;
 
         final Vector2i tile = worldMovementSystem.computeTile(actor);
         final Vector2f tileOffset = worldMovementSystem.computeTileOffset(actor);

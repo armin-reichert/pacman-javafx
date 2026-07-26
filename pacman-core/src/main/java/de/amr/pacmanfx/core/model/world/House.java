@@ -66,7 +66,7 @@ public interface House {
      */
     default boolean isVisitedBy(Actor actor) {
         requireNonNull(actor);
-        final Vector2i actorTile = GameContext.SYSTEMS.worldMovement.computeTile(actor);
+        final Vector2i actorTile = GameContext.SYSTEMS.worldMovementSystem.computeTile(actor);
         return contains(actorTile);
     }
 

@@ -10,6 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -105,10 +106,10 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     private void updateSceneState() {
+        final WorldMovementSystem worldMovementSystem = gameContext().systems().worldMovementSystem;
         switch (sceneState) {
-
             case CLAPPERBOARD -> transition(SceneState.DELIVER_JUNIOR)
-                .ifPresentOrElse(this::enterDeliverJuniorState, this::updateClapperboardState);
+                .ifPresentOrElse(state -> enterDeliverJuniorState(worldMovementSystem, state), this::updateClapperboardState);
 
             case DELIVER_JUNIOR -> transition(SceneState.END)
                 .ifPresentOrElse(this::changeState, this::updateDeliverJuniorState);
@@ -136,29 +137,32 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
     // State DELIVER_JUNIOR
 
-    private void enterDeliverJuniorState(SceneState newState) {
-        pacMan.setMoveDir(Direction.RIGHT);
+    private void enterDeliverJuniorState(WorldMovementSystem worldMovementSystem, SceneState newState) {
         pacMan.position().set(TS * 3, GROUND_Y - 4);
+        pacMan.visibility().show();
+        worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
+
         pacMan.animations.select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
         pacMan.animations.stopSelected();
-        pacMan.visibility().show();
 
-        msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.position().set(TS * 5, GROUND_Y - 4);
+        msPacMan.visibility().show();
+        worldMovementSystem.setMoveDir(msPacMan, Direction.RIGHT);
+
         msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         msPacMan.animations.stopSelected();
-        msPacMan.visibility().show();
 
         stork.position().set(TS * 30, TS * 12);
-        stork.movement().setVelocity(-0.8f, 0);
         stork.visibility().show();
+        stork.movement().setVelocity(-0.8f, 0);
+
         stork.animations.select(CommonAnimationID.STORK_FLYING);
         stork.animations.playSelected();
 
         bag.position().set(stork.position().x - 14, stork.position().y + 3);
+        bag.visibility().show();
         bag.movement().setVelX(stork.movement().velX);
         bag.movement().setAcceleration(0, 0);
-        bag.visibility().show();
         bag.setOpen(false);
 
         bagReleased = false;
@@ -176,7 +180,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         }
 
         if (!bag.isOpen()) {
-            GameContext.SYSTEMS.movement.moveAccelerated(bag);
+            GameContext.SYSTEMS.movementSystem.moveAccelerated(bag);
             if (bag.position().y >= GROUND_Y) {
                 ++numBagBounces;
                 if (numBagBounces < 3) {
@@ -191,6 +195,6 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
             }
         }
 
-        GameContext.SYSTEMS.movement.moveAccelerated(stork);
+        GameContext.SYSTEMS.movementSystem.moveAccelerated(stork);
     }
 }

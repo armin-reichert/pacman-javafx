@@ -11,6 +11,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -119,6 +120,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
+                final WorldMovementSystem worldMovementSystem = scene.gameContext().systems().worldMovementSystem;
                 final GameVariantRenderConfig renderConfig = scene.appContext().variants().currentVariant().config().renderConfig();
                 final SpriteAnimationContainer spriteAnimations = scene.appContext().ui().sprites().animations();
 
@@ -129,7 +131,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 scene.msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
                 scene.msPacMan.animations.playSelected();
                 scene.msPacMan.position().set(WorldMap.TS * 33, ACTOR_Y);
-                scene.msPacMan.setMoveDir(Direction.LEFT);
+                worldMovementSystem.setMoveDir(scene.msPacMan, Direction.LEFT);
                 scene.msPacMan.setSpeed(SPEED);
                 scene.msPacMan.visibility().show();
 
@@ -143,7 +145,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                     ghost.position().set(WorldMap.TS * 33, ACTOR_Y);
                     ghost.setMoveDir(Direction.LEFT);
                     ghost.setWishDir(Direction.LEFT);
-                    GameContext.SYSTEMS.worldMovement.setSpeed(ghost, SPEED);
+                    GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.visibility().show();
                     ghost.animations.playSelected();
@@ -189,7 +191,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                         ghost.setWishDir(Direction.UP);
                         scene.waitBeforeRising = 2;
                     } else {
-                        GameContext.SYSTEMS.movement.moveAccelerated(ghost);
+                        GameContext.SYSTEMS.movementSystem.moveAccelerated(ghost);
                         Logger.debug("{} moves {} x={}", ghost.name(), ghost.worldMovement().moveDir(), ghost.position().x);
                     }
                 }
@@ -199,13 +201,13 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                         scene.waitBeforeRising--;
                     }
                     else if (ghost.position().y <= endPositionY) {
-                        GameContext.SYSTEMS.worldMovement.setSpeed(ghost, 0);
+                        GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, 0);
                         ghost.setMoveDir(Direction.RIGHT);
                         ghost.setWishDir(Direction.RIGHT);
                         return true;
                     }
                     else {
-                        GameContext.SYSTEMS.movement.moveAccelerated(ghost);
+                        GameContext.SYSTEMS.movementSystem.moveAccelerated(ghost);
                         Logger.debug("{} moves {}", ghost.name(), ghost.worldMovement().moveDir());
                     }
                 }
@@ -225,7 +227,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
                 scene.marquee.update(timer.tickCount());
 
-                GameContext.SYSTEMS.movement.moveAccelerated(scene.msPacMan);
+                GameContext.SYSTEMS.movementSystem.moveAccelerated(scene.msPacMan);
                 if (scene.msPacMan.position().x <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);
                     scene.msPacMan.animations.resetSelected();

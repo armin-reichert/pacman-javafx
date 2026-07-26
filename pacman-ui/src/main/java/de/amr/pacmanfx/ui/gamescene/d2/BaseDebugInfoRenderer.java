@@ -87,7 +87,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         ctx.save();
-        Vector2f center = GameContext.SYSTEMS.worldMovement.computeCenter(actor);
+        Vector2f center = GameContext.SYSTEMS.worldMovementSystem.computeCenter(actor);
         Vector2f arrowHead = center.plus(worldMovement.wishDir().vector().scaled(12f)).scaled(scaling());
         Vector2f guyCenter = center.scaled(scaling());
         double radius = scaled(2), diameter = 2 * radius;

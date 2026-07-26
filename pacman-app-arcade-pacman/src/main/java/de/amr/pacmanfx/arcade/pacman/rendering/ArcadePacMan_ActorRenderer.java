@@ -30,7 +30,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     public void drawActor(Actor actor) {
         requireNonNull(actor);
         if (!actor.visibility().isVisible()) return;
-        drawSpriteCentered(computeSprite(actor), GameContext.SYSTEMS.worldMovement.computeCenter(actor));
+        drawSpriteCentered(computeSprite(actor), GameContext.SYSTEMS.worldMovementSystem.computeCenter(actor));
     }
 
     private RectShort computeSprite(Actor actor) {

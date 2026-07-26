@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.score.PropertyFileScore;
@@ -64,6 +65,8 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public void prepareLevelForPlaying(GameContext gameContext) {
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+
         final GameLevel level = gameContext.assertLevel();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final House house = terrain.optHouse().orElseThrow();
@@ -71,7 +74,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         pac.reset(); // initially invisible!
         pac.position().set(terrain.pacStartPosition());
-        pac.setMoveDir(Direction.LEFT);
+        worldMovementSystem.setMoveDir(pac, Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
         pac.powerTimer().resetToIndefiniteDuration();
         pac.animations.resetSelected();
@@ -341,7 +344,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         pac.animations.stopSelected();
         pac.animations.select(CommonAnimationID.PAC_FULL);
-        GameContext.SYSTEMS.worldMovement.setSpeed(pac, 0);
+        GameContext.SYSTEMS.worldMovementSystem.setSpeed(pac, 0);
         pac.powerTimer().stop();
         pac.powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero.");
@@ -350,7 +353,7 @@ public abstract class CommonGamePlay implements GamePlay {
             ghost.animations.stopSelected();
             //TODO check in emulator if ghost animation is reset to normal
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
-            GameContext.SYSTEMS.worldMovement.setSpeed(ghost, 0);
+            GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, 0);
         });
         level.optBonus().ifPresent(Bonus::setInactive);
     }

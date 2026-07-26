@@ -19,7 +19,7 @@ public class Ghost3DTransformController {
 
     public void update(Ghost3D ghost3D, GameContext gameContext) {
         final Ghost ghost = ghost3D.ghost();
-        final Vector2f center = GameContext.SYSTEMS.worldMovement.computeCenter(ghost);
+        final Vector2f center = GameContext.SYSTEMS.worldMovementSystem.computeCenter(ghost);
 
         ghost3D.setTranslateX(center.x());
         ghost3D.setTranslateY(center.y());

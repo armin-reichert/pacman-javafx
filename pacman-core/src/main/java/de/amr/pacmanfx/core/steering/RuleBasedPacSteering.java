@@ -117,7 +117,7 @@ public class RuleBasedPacSteering implements Steering {
                 Logger.trace("Detected ghost {} ahead, escape direction is {}", data.hunterAhead.name(), escapeDir);
             }
             if (escapeDir != null) {
-                GameContext.SYSTEMS.worldMovement.setWishDir(pac, escapeDir);
+                GameContext.SYSTEMS.worldMovementSystem.setWishDir(pac, escapeDir);
             }
             return;
         }
@@ -139,7 +139,7 @@ public class RuleBasedPacSteering implements Steering {
             worldMovement.setTargetTile(findTileFarthestFromGhosts(level, pac, findNearestFoodTiles(level)));
         }
         worldMovement.optTargetTile().ifPresent(_ -> {
-            GameContext.SYSTEMS.worldMovement.navigateTowardsTarget(pac, level);
+            GameContext.SYSTEMS.worldMovementSystem.navigateTowardsTarget(pac, level);
             Logger.trace("Navigated towards {}, moveDir={} wishDir={}", worldMovement.targetTile(), worldMovement.moveDir(), worldMovement.wishDir());
         });
     }

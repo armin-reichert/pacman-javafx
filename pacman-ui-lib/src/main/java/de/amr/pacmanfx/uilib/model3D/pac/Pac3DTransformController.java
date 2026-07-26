@@ -22,7 +22,7 @@ public class Pac3DTransformController {
 
     public void update(Pac3D pac3D, GameContext gameContext) {
         final Pac pac = pac3D.pac();
-        final Vector2f center = GameContext.SYSTEMS.worldMovement.computeCenter(pac);
+        final Vector2f center = GameContext.SYSTEMS.worldMovementSystem.computeCenter(pac);
 
         pac3D.setTranslateX(center.x());
         pac3D.setTranslateY(center.y());

@@ -163,7 +163,7 @@ public class Bonus3D implements GameEntity, DisposableGraphicsObject {
     }
 
     private void updatePosition(WorldMap worldMap) {
-        final Vector2f center = GameContext.SYSTEMS.worldMovement.computeCenter(bonus);
+        final Vector2f center = GameContext.SYSTEMS.worldMovementSystem.computeCenter(bonus);
         translate.setX(center.x());
         translate.setY(center.y());
         translate.setZ(-WorldMap.HTS);

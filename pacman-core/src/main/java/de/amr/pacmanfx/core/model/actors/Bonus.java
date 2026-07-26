@@ -92,7 +92,7 @@ public class Bonus extends Actor {
     }
 
     public Vector2i tile() {
-        return GameContext.SYSTEMS.worldMovement.computeTile(this);
+        return GameContext.SYSTEMS.worldMovementSystem.computeTile(this);
     }
 
     public BonusState state() {
@@ -110,7 +110,7 @@ public class Bonus extends Actor {
     public void setInactive() {
         state = BonusState.INACTIVE;
         timer.restartIndefinitely();
-        GameContext.SYSTEMS.worldMovement.setSpeed(this, 0);
+        GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, 0);
         jumpingAnimation.reset();
         visibility().hide();
     }
@@ -125,7 +125,7 @@ public class Bonus extends Actor {
         state = BonusState.EDIBLE;
         timer.restartIndefinitely();
 
-        GameContext.SYSTEMS.worldMovement.setSpeed(this, speed);
+        GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, speed);
         worldMovement().setTargetTile(null);
 
         jumpingAnimation.restart();
@@ -142,9 +142,9 @@ public class Bonus extends Actor {
         final var route = new ArrayList<>(waypoints);
         final Vector2i first = route.removeFirst();
 
-        GameContext.SYSTEMS.worldMovement.placeAtTile(this, first);
-        GameContext.SYSTEMS.worldMovement.setMoveDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
-        GameContext.SYSTEMS.worldMovement.setWishDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
+        GameContext.SYSTEMS.worldMovementSystem.placeAtTile(this, first);
+        GameContext.SYSTEMS.worldMovementSystem.setMoveDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
+        GameContext.SYSTEMS.worldMovementSystem.setWishDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
 
         routeNavigation = new RouteBasedSteering(route);
     }
@@ -153,7 +153,7 @@ public class Bonus extends Actor {
         state = BonusState.EATEN;
         timer.restartSeconds(seconds);
 
-        GameContext.SYSTEMS.worldMovement.setSpeed(this, 0);
+        GameContext.SYSTEMS.worldMovementSystem.setSpeed(this, 0);
 
         jumpingAnimation.stop();
 
@@ -190,12 +190,12 @@ public class Bonus extends Actor {
 
     private boolean wanderMaze(GameLevel level) {
         routeNavigation.steer(this, level);
-        final Vector2i tile = GameContext.SYSTEMS.worldMovement.computeTile(this);
+        final Vector2i tile = GameContext.SYSTEMS.worldMovementSystem.computeTile(this);
         boolean mazeExitReached = routeNavigation.isRouteTraversed()
             || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         if (!mazeExitReached) {
-            GameContext.SYSTEMS.worldMovement.navigateTowardsTarget(this, level);
-            GameContext.SYSTEMS.worldMovement.tryMovingOrTeleporting(this, level);
+            GameContext.SYSTEMS.worldMovementSystem.navigateTowardsTarget(this, level);
+            GameContext.SYSTEMS.worldMovementSystem.tryMovingOrTeleporting(this, level);
             jump();
         }
         return mazeExitReached;

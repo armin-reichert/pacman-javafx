@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -58,7 +59,7 @@ class XXL_ChaseAnimation {
 
     public XXL_ChaseAnimation(int numTilesX) {
         this.numTilesX = numTilesX;
-        timeline = new Timeline(new KeyFrame(FRAME_TIME, _ -> update()));
+        timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.statusProperty().addListener((_,_,newStatus) -> Logger.debug("Chase animation {}", newStatus));
     }
@@ -79,10 +80,15 @@ class XXL_ChaseAnimation {
         timeline.stop();
     }
 
-    public void init(GameVariantRenderConfig renderConfig, Canvas canvas, SpriteAnimationContainer container) {
+    public void init(GameContext gameContext, GameVariantRenderConfig renderConfig, Canvas canvas, SpriteAnimationContainer container) {
+        requireNonNull(gameContext);
         requireNonNull(renderConfig);
         requireNonNull(canvas);
         requireNonNull(container);
+
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+
+        timeline.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update(worldMovementSystem)));
 
         actorRenderer = renderConfig.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
@@ -92,7 +98,7 @@ class XXL_ChaseAnimation {
         pac.animations.select(CommonAnimationID.PAC_MUNCHING);
         pac.animations.playSelected();
         pac.position().setX(numTilesX * WorldMap.TS);
-        pac.setMoveDir(Direction.LEFT);
+        worldMovementSystem.setMoveDir(pac, Direction.LEFT);
         pac.setWishDir(Direction.LEFT);
         pac.setSpeed(PAC_FLEEING_SPEED);
         pac.visibility().show();
@@ -107,7 +113,7 @@ class XXL_ChaseAnimation {
             ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
             ghost.setMoveDir(Direction.LEFT);
             ghost.setWishDir(Direction.LEFT);
-            GameContext.SYSTEMS.worldMovement.setSpeed(ghost, GHOST_CHASE_SPEED);
+            GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, GHOST_CHASE_SPEED);
             ghost.visibility().show();
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
             ghost.animations.playSelected();
@@ -118,25 +124,25 @@ class XXL_ChaseAnimation {
         state = ChasingState.GHOSTS_CHASING_PAC;
     }
 
-    private void update() {
+    private void update(WorldMovementSystem worldMovementSystem) {
         switch (state) {
-            case GHOSTS_CHASING_PAC -> ghostsChasePacMan();
-            case PAC_CHASING_GHOSTS -> pacManChasesGhosts();
+            case GHOSTS_CHASING_PAC -> ghostsChasePacMan(worldMovementSystem);
+            case PAC_CHASING_GHOSTS -> pacManChasesGhosts(worldMovementSystem);
         }
     }
 
     private void moveActors() {
-        GameContext.SYSTEMS.movement.moveAccelerated(pac);
+        GameContext.SYSTEMS.movementSystem.moveAccelerated(pac);
         for (Ghost ghost : ghosts) {
-            GameContext.SYSTEMS.movement.moveAccelerated(ghost);
+            GameContext.SYSTEMS.movementSystem.moveAccelerated(ghost);
         }
     }
 
-    private void pacManChasesGhosts() {
+    private void pacManChasesGhosts(WorldMovementSystem worldMovementSystem) {
         moveActors();
         // If ghosts and Pac leave screen at right border, ghosts start chasing Pac moving left
         if (pac.position().x > (numTilesX + 14) * WorldMap.TS) {
-            pac.setMoveDir(Direction.LEFT);
+            worldMovementSystem.setMoveDir(pac, Direction.LEFT);
             pac.setWishDir(Direction.LEFT);
             pac.position().setX(numTilesX * WorldMap.TS);
             for (Ghost ghost : ghosts) {
@@ -144,7 +150,7 @@ class XXL_ChaseAnimation {
                 ghost.setMoveDir(Direction.LEFT);
                 ghost.setWishDir(Direction.LEFT);
                 ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * 2 * WorldMap.TS);
-                GameContext.SYSTEMS.worldMovement.setSpeed(ghost, 1.05f);
+                GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, 1.05f);
                 ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
                 ghost.animations.playSelected();
             }
@@ -177,10 +183,10 @@ class XXL_ChaseAnimation {
         return Math.abs(either.position().x - other.position().x) < 1;
     }
 
-    private void ghostsChasePacMan() {
+    private void ghostsChasePacMan(WorldMovementSystem worldMovementSystem) {
         moveActors();
         if (ghosts.getLast().position().x < -4 * WorldMap.TS) { // ghosts left screen on the left side
-            pac.setMoveDir(Direction.RIGHT);
+            worldMovementSystem.setMoveDir(pac, Direction.RIGHT);
             pac.setWishDir(Direction.RIGHT);
             pac.position().setX(-(numTilesX - 6) * WorldMap.TS);
             for (Ghost ghost : ghosts) {
@@ -188,7 +194,7 @@ class XXL_ChaseAnimation {
                 ghost.position().setX(pac.position().x + 22 * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
                 ghost.setMoveDir(Direction.RIGHT);
                 ghost.setWishDir(Direction.RIGHT);
-                GameContext.SYSTEMS.worldMovement.setSpeed(ghost, 0.58f);
+                GameContext.SYSTEMS.worldMovementSystem.setSpeed(ghost, 0.58f);
                 ghost.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
                 ghost.animations.playSelected();
             }

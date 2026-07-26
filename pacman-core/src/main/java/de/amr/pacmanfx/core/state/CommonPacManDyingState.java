@@ -50,7 +50,7 @@ public class CommonPacManDyingState extends GameState {
         pac.animations.stopSelected();
         pac.powerTimer().stop();
         pac.powerTimer().reset(0);
-        GameContext.SYSTEMS.worldMovement.setSpeed(pac, 0);
+        GameContext.SYSTEMS.worldMovementSystem.setSpeed(pac, 0);
         pac.setDead(true);
         Logger.info("Pac power timer stopped and reset to zero.");
 

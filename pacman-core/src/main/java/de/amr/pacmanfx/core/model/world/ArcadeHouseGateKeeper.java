@@ -215,13 +215,13 @@ public final class ArcadeHouseGateKeeper {
         if (blinky.state() == GhostState.LOCKED) {
             if (house.isVisitedBy(blinky)) {
                 // Leave house immediately again after being eaten
-                GameContext.SYSTEMS.worldMovement.setMoveDir(blinky, Direction.UP);
-                GameContext.SYSTEMS.worldMovement.setWishDir(blinky, Direction.UP);
+                GameContext.SYSTEMS.worldMovementSystem.setMoveDir(blinky, Direction.UP);
+                GameContext.SYSTEMS.worldMovementSystem.setWishDir(blinky, Direction.UP);
                 blinky.setState(GhostState.LEAVING_HOUSE);
             } else {
                 // Start hunting towards west direction
-                GameContext.SYSTEMS.worldMovement.setMoveDir(blinky, Direction.LEFT);
-                GameContext.SYSTEMS.worldMovement.setWishDir(blinky, Direction.LEFT);
+                GameContext.SYSTEMS.worldMovementSystem.setMoveDir(blinky, Direction.LEFT);
+                GameContext.SYSTEMS.worldMovementSystem.setWishDir(blinky, Direction.LEFT);
                 blinky.setState(GhostState.HUNTING_PAC);
             }
         }
@@ -230,8 +230,8 @@ public final class ArcadeHouseGateKeeper {
             .filter(ghost -> ghost.state() == GhostState.LOCKED)
             .findFirst()
             .ifPresent(prisoner -> checkReleaseOfGhost(level, prisoner).ifPresent(_ -> {
-                GameContext.SYSTEMS.worldMovement.setMoveDir(prisoner, Direction.UP);
-                GameContext.SYSTEMS.worldMovement.setWishDir(prisoner, Direction.UP);
+                GameContext.SYSTEMS.worldMovementSystem.setMoveDir(prisoner, Direction.UP);
+                GameContext.SYSTEMS.worldMovementSystem.setWishDir(prisoner, Direction.UP);
                 prisoner.setState(GhostState.LEAVING_HOUSE);
                 onGhostReleased.accept(level, prisoner);
             }));

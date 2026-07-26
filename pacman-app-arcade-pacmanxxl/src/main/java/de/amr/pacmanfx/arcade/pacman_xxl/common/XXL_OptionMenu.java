@@ -112,7 +112,7 @@ public class XXL_OptionMenu extends OptionMenu {
         logMenuState();
 
         soundEnabledProperty().bind(ui.sounds().muteProperty().not());
-        chaseAnimation.init(renderConfig, canvas, ui.sprites().animations());
+        chaseAnimation.init(gameContext, renderConfig, canvas, ui.sprites().animations());
     }
 
     public void bind() {
@@ -178,8 +178,9 @@ public class XXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
                 if (appContext != null) {
+                    final GameContext gameContext = appContext.currentGameContext();
                     final GameVariantRenderConfig renderConfig = appContext.variants().gameVariantByName(newVariant.name()).config().renderConfig();
-                    chaseAnimation.init(renderConfig, canvas, appContext.ui().sprites().animations());
+                    chaseAnimation.init(gameContext, renderConfig, canvas, appContext.ui().sprites().animations());
                 }
             }
         };

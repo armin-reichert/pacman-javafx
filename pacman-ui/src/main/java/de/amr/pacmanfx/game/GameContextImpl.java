@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameContextImpl implements GameContext {
 
-    private final GameSystems systems;
+    private final GameSystems systems = GameContext.SYSTEMS; //TODO temporary solution
 
     private final CoinMechanism coinMechanism;
 
@@ -41,7 +41,6 @@ public class GameContextImpl implements GameContext {
     private FrameContext thisFrame;
 
     public GameContextImpl(GameVariant gameVariant, CoinMechanism coinMechanism) {
-        this.systems = new GameSystems();
         this.gameVariant = requireNonNull(gameVariant);
         this.coinMechanism = requireNonNull(coinMechanism);
         this.hudState = new HUDState();
