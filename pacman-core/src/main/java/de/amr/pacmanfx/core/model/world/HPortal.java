@@ -44,14 +44,15 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         return leftBorderEntryTile.y();
     }
 
-    public boolean tryTeleporting(Actor actor) {
+    public boolean tryTeleporting(GameContext gameContext, Actor actor) {
+        requireNonNull(gameContext);
         requireNonNull(actor);
 
         final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
-        final WorldMovementSystem worldMovementSystem = GameContext.SYSTEMS.worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
 
-        final Vector2i actorTile = worldMovementSystem.computeTile(actor);
-        final float offsetX = worldMovementSystem.computeTileOffset(actor).x();
+        final Vector2i actorTile = WorldMovementSystem.computeTile(actor);
+        final float offsetX = WorldMovementSystem.computeTileOffset(actor).x();
 
         if (actorTile.y() != leftBorderEntryTile().y()) {
             return false;

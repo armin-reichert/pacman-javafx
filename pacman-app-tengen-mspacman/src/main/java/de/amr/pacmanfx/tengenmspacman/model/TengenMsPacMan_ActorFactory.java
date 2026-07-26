@@ -49,7 +49,7 @@ public final class TengenMsPacMan_ActorFactory {
             case GameModel.RED_GHOST_SHADOW   -> modifyShadowBehavior(GhostFactory.createRedGhostShadow("Blinky", worldMovementSystem));
             case GameModel.PINK_GHOST_SPEEDY  -> modifyAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky", worldMovementSystem));
             case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky", worldMovementSystem);
-            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue", worldMovementSystem);
+            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue");
             default -> throw new IllegalArgumentException();
         };
     }
@@ -71,7 +71,7 @@ public final class TengenMsPacMan_ActorFactory {
         ghost.setHuntingStrategy((GameContext gameContext, Float speed) -> {
             final GameLevel level = gameContext.assertLevel();
             final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
-            final Vector2i ghostTile = worldMovementSystem.computeTile(ghost);
+            final Vector2i ghostTile = WorldMovementSystem.computeTile(ghost);
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final boolean firstScatterPhase = level.huntingRules().phaseIndex() == 0;
             final boolean takeRandomDir = ghost.worldMovement().isNewTileEntered() && terrain.isIntersection(ghostTile);
@@ -97,7 +97,7 @@ public final class TengenMsPacMan_ActorFactory {
         ghost.setHuntingStrategy((GameContext gameContext, Float speed) -> {
             final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
             final GameLevel level = gameContext.assertLevel();
-            final Vector2i ghostTile = worldMovementSystem.computeTile(ghost);
+            final Vector2i ghostTile = WorldMovementSystem.computeTile(ghost);
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final boolean firstScatterPhase = level.huntingRules().phaseIndex() == 0;
             final boolean takeRandomDir = ghost.worldMovement().isNewTileEntered() && terrain.isIntersection(ghostTile);
@@ -121,7 +121,7 @@ public final class TengenMsPacMan_ActorFactory {
     private static void selectRandomWishDir(Ghost ghost, GameContext gameContext) {
         final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         final GameLevel level = gameContext.assertLevel();
-        final Vector2i ghostTile = worldMovementSystem.computeTile(ghost);
+        final Vector2i ghostTile = WorldMovementSystem.computeTile(ghost);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(ghostTile);
 
         if (teleporting) {
@@ -142,9 +142,8 @@ public final class TengenMsPacMan_ActorFactory {
 
     private static boolean isAcceptableWishDir(GameContext gameContext, Ghost ghost, Direction dir) {
         final WorldMovementPolicy policy = ghost.assertComponent(WorldMovementPolicy.class);
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
 
-        final Vector2i ghostTile = worldMovementSystem.computeTile(ghost);
+        final Vector2i ghostTile = WorldMovementSystem.computeTile(ghost);
         final Vector2i neighborTile = ghostTile.plus(dir.vector());
         return dir != ghost.worldMovement().moveDir().opposite() && policy.canAccessTile(gameContext, neighborTile);
     }

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.BonusState;
 import de.amr.pacmanfx.core.gameplay.UpdatableEntity;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -163,7 +164,7 @@ public class Bonus3D implements UpdatableEntity, DisposableGraphicsObject {
     }
 
     private void updatePosition(WorldMap worldMap) {
-        final Vector2f center = GameContext.SYSTEMS.worldMovementSystem.computeCenter(bonus);
+        final Vector2f center = WorldMovementSystem.computeCenter(bonus);
         translate.setX(center.x());
         translate.setY(center.y());
         translate.setZ(-WorldMap.HTS);

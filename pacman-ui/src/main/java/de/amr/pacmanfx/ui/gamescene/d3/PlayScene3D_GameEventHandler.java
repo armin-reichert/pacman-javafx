@@ -166,7 +166,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             level3D.pellets3D().map(Pellet3D::shape).forEach(shape -> level3D.getChildren().remove(shape));
         } else {
             final WorldMovementSystem worldMovementSystem = gameContext().systems().worldMovementSystem;
-            final Vector2i tile = worldMovementSystem.computeTile(event.pac());
+            final Vector2i tile = WorldMovementSystem.computeTile(event.pac());
             if (event.energizer()) {
                 level3D.energizer3DAt(tile).ifPresent(energizer3D -> {
                     energizer3D.stopPumping();

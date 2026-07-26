@@ -37,7 +37,7 @@ public class ArcadePacMan_ActorFactory {
             case GameModel.RED_GHOST_SHADOW   -> GhostFactory.createRedGhostShadow("Blinky", worldMovementSystem);
             case GameModel.PINK_GHOST_SPEEDY  -> GhostFactory.createPinkGhostAmbusher("Pinky", worldMovementSystem);
             case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky", worldMovementSystem);
-            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde", worldMovementSystem);
+            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);
         };
         ghost.setHome(house);

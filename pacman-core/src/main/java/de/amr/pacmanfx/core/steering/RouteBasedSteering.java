@@ -48,7 +48,7 @@ public class RouteBasedSteering implements Steering {
         else if (worldMovement.optTargetTile().isEmpty()) {
             worldMovement.setTargetTile(route.get(targetIndex));
         }
-        else if (worldMovementSystem.computeTile(actor).equals(route.get(targetIndex))) {
+        else if (WorldMovementSystem.computeTile(actor).equals(route.get(targetIndex))) {
             selectNextTargetTile(gameContext, actor);
         }
         else {

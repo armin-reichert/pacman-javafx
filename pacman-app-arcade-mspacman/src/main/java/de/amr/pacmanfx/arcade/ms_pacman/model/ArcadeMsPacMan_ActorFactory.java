@@ -38,7 +38,7 @@ public class ArcadeMsPacMan_ActorFactory {
 
             case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky", worldMovementSystem);
 
-            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue", worldMovementSystem);
+            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue");
 
             default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(personality));
         };
@@ -57,7 +57,7 @@ public class ArcadeMsPacMan_ActorFactory {
             final GameLevel level = gameContext.assertLevel();
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             
-            final Vector2i redGhostTile = worldMovementSystem.computeTile(redGhost);
+            final Vector2i redGhostTile = WorldMovementSystem.computeTile(redGhost);
             final boolean teleporting = terrain.isTileInPortalSpace(redGhostTile);
 
             if (teleporting) {
@@ -93,7 +93,7 @@ public class ArcadeMsPacMan_ActorFactory {
             final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
             final GameLevel level = gameContext.assertLevel();
             final TerrainLayer terrain = level.worldMap().terrainLayer();
-            final Vector2i pinkGhostTile = worldMovementSystem.computeTile(pinkGhost);
+            final Vector2i pinkGhostTile = WorldMovementSystem.computeTile(pinkGhost);
             final boolean teleporting = terrain.isTileInPortalSpace(pinkGhostTile);
 
             if (teleporting) {
@@ -126,7 +126,7 @@ public class ArcadeMsPacMan_ActorFactory {
     private static void selectRandomWishDir(Ghost ghost, GameContext gameContext) {
         final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         final WorldMovementPolicy policy = ghost.assertComponent(WorldMovementPolicy.class);
-        final Vector2i ghostTile = worldMovementSystem.computeTile(ghost);
+        final Vector2i ghostTile = WorldMovementSystem.computeTile(ghost);
         
         for (final Direction dir : Direction.shuffled()) {
             final Vector2i neighbor = ghostTile.plus(dir.vector());

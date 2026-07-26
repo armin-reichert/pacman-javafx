@@ -19,13 +19,13 @@ import static java.util.Objects.requireNonNull;
 
 public class WorldMovementSystem {
 
-    public Vector2f computeCenter(Actor actor) {
+    public static Vector2f computeCenter(Actor actor) {
         requireNonNull(actor);
         final Position position = actor.position();
         return new Vector2f(position.x + WorldMap.HTS, position.y + WorldMap.HTS);
     }
 
-    public Vector2i computeTile(Actor actor) {
+    public static Vector2i computeTile(Actor actor) {
         requireNonNull(actor);
         final Position position = actor.position();
         final float cx = position.x + WorldMap.HTS;
@@ -36,7 +36,7 @@ public class WorldMovementSystem {
     /**
      * @return offset of actor position relative to current tile: (0, 0) if centered, range: [-4, +4)
      */
-    public Vector2f computeTileOffset(Actor actor) {
+    public static Vector2f computeTileOffset(Actor actor) {
         requireNonNull(actor);
         final Position position = actor.position();
         final Vector2i tile = computeTile(actor);
@@ -228,7 +228,7 @@ public class WorldMovementSystem {
 
         worldMovement.info.clear();
         if (worldMovement.canTeleport()) {
-            worldMovement.info.teleported = tryTeleporting(actor, level.worldMap().terrainLayer());
+            worldMovement.info.teleported = tryTeleporting(gameContext, actor, level.worldMap().terrainLayer());
             if (worldMovement.info.teleported) {
                 return;
             }
@@ -246,14 +246,14 @@ public class WorldMovementSystem {
         }
     }
 
-    private boolean tryTeleporting(Actor actor, TerrainLayer terrain) {
+    private boolean tryTeleporting(GameContext gameContext, Actor actor, TerrainLayer terrain) {
         final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         if (worldMovement.moveDir().isHorizontal()) {
             return terrain.horizontalPortals().stream()
                 .filter(portal -> portal.tileY() == computeTile(actor).y())
                 .findFirst()
-                .map(portal -> portal.tryTeleporting(actor))
+                .map(portal -> portal.tryTeleporting(gameContext, actor))
                 .orElse(false);
         }
         return false; // no vertical teleporting yet

@@ -8,6 +8,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.model.world.WorldMap.HTS;
@@ -66,7 +67,7 @@ public interface House {
      */
     default boolean isVisitedBy(Actor actor) {
         requireNonNull(actor);
-        final Vector2i actorTile = GameContext.SYSTEMS.worldMovementSystem.computeTile(actor);
+        final Vector2i actorTile = WorldMovementSystem.computeTile(actor);
         return contains(actorTile);
     }
 

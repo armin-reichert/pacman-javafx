@@ -31,7 +31,7 @@ public class GhostFactory {
             worldMovementSystem.tryMovingTowardsTargetTile(ghost, gameContext, targetTile);
         });
 
-        ghost.setChasingTargetTileStrategy(level -> worldMovementSystem.computeTile(level.entities().pac()));
+        ghost.setChasingTargetTileStrategy(level -> WorldMovementSystem.computeTile(level.entities().pac()));
 
         ghost.reset();
         return ghost;
@@ -53,19 +53,19 @@ public class GhostFactory {
         final Ghost ghost = new Ghost(GameModel.CYAN_GHOST_BASHFUL, name);
         ghost.setChasingTargetTileStrategy(level -> {
             final Pac pac = level.entities().pac();
-            final Vector2i blinkyTile = worldMovementSystem.computeTile(level.ghost(RED_GHOST_SHADOW));
+            final Vector2i blinkyTile = WorldMovementSystem.computeTile(level.ghost(RED_GHOST_SHADOW));
             return worldMovementSystem.tilesAheadWithOverflowBug(pac, 2).scaled(2).minus(blinkyTile);
         });
         ghost.reset();
         return ghost;
     }
 
-    public static Ghost createOrangeGhostPokey(String name, WorldMovementSystem worldMovementSystem) {
+    public static Ghost createOrangeGhostPokey(String name) {
         final Ghost ghost = new Ghost(GameModel.ORANGE_GHOST_POKEY, name);
 
         ghost.setChasingTargetTileStrategy(level -> {
-            final Vector2i pacTile = worldMovementSystem.computeTile(level.entities().pac());
-            final Vector2i ghostTile = worldMovementSystem.computeTile(ghost);
+            final Vector2i pacTile = WorldMovementSystem.computeTile(level.entities().pac());
+            final Vector2i ghostTile = WorldMovementSystem.computeTile(ghost);
             final Vector2i ghostScatterTile = level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
             return ghostTile.euclideanDist(pacTile) < 8 ? ghostScatterTile : pacTile;
         });
