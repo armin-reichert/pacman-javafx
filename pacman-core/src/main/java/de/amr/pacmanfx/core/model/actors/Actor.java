@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.component.Position;
 import de.amr.pacmanfx.core.model.component.Visibility;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
@@ -24,7 +25,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Actor {
 
-    private final Map<Class<? extends EntityComponent>, EntityComponent> components = new HashMap<>();
+    private final Map<Class<? extends EntityComponent>, EntityComponent> components = new LinkedHashMap<>();
 
     public SpriteAnimationAccess animations = SpriteAnimationAccess.emptyAnimation();
 
