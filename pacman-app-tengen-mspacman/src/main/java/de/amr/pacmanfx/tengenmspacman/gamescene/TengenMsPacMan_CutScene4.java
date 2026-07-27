@@ -99,18 +99,18 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        final MovementSystem movementSystem = gameContext.systems().movementSystem;
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final MovementSystem motor = gameContext.systems().movementSystem;
+        final WorldMovementSystem navigator = gameContext.systems().worldMovementSystem;
         
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final long gameStateTick = gameState().timer().tickCount();
 
         clapperboard.tick();
 
-        movementSystem.moveAccelerated(pacMan);
-        movementSystem.moveAccelerated(msPacMan);
+        motor.moveAccelerated(pacMan);
+        motor.moveAccelerated(msPacMan);
         for (int i = 0; i < juniors.size(); ++i) {
-            updateJunior(movementSystem, worldMovementSystem, gameStateTick, i);
+            updateJunior(motor, navigator, gameStateTick, i);
         }
 
         if (gameStateTick <= TICK_EXPIRES) {
@@ -120,8 +120,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     pacMan.position().set(LEFT_BORDER, LOWER_LANE);
                     pacMan.visibility().show();
 
-                    worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
-                    worldMovementSystem.setSpeed(pacMan, 1f);
+                    navigator.setMoveDir(pacMan, Direction.RIGHT);
+                    navigator.setSpeed(pacMan, 1f);
 
                     pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations.playSelected();
@@ -129,18 +129,18 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
                     msPacMan.visibility().show();
 
-                    worldMovementSystem.setMoveDir(msPacMan, Direction.LEFT);
-                    worldMovementSystem.setSpeed(msPacMan, 1f);
+                    navigator.setMoveDir(msPacMan, Direction.LEFT);
+                    navigator.setSpeed(msPacMan, 1f);
 
                     msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations.playSelected();
                 }
                 case 230 -> {
-                    worldMovementSystem.setSpeed(pacMan, 0);
+                    navigator.setSpeed(pacMan, 0);
                     pacMan.animations.stopSelected();
                     pacMan.animations.resetSelected();
 
-                    worldMovementSystem.setSpeed(msPacMan, 0);
+                    navigator.setSpeed(msPacMan, 0);
                     msPacMan.animations.stopSelected();
                     msPacMan.animations.resetSelected();
                 }
@@ -166,17 +166,17 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     msPacMan.animations.playSelected();
                 }
                 case 650 -> {
-                    worldMovementSystem.setSpeed(pacMan, 1.5f); // TODO not sure
-                    worldMovementSystem.setMoveDir(pacMan, Direction.UP);
+                    navigator.setSpeed(pacMan, 1.5f); // TODO not sure
+                    navigator.setMoveDir(pacMan, Direction.UP);
 
-                    worldMovementSystem.setSpeed(msPacMan, 1.5f); // TODO not sure
-                    worldMovementSystem.setMoveDir(msPacMan, Direction.UP);
+                    navigator.setSpeed(msPacMan, 1.5f); // TODO not sure
+                    navigator.setMoveDir(msPacMan, Direction.UP);
                 }
                 case 720 -> {
                     pacMan.visibility().hide();
                     msPacMan.visibility().hide();
                 }
-                case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(worldMovementSystem, renderConfig, gameStateTick);
+                case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(navigator, renderConfig, gameStateTick);
                 case 1500 -> optSoundEffects().ifPresent(GameSoundEffects::stopAll);
                 case TICK_EXPIRES -> gameContext().flow().enterState(gameContext(), TengenMsPacMan_GameState.GAME_PREPARATION.state());
             }

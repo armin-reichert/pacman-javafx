@@ -85,23 +85,24 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         if (++sceneTick < TICK_ANIMATION_START) {
             return;
         }
-        final MovementSystem movementSystem = gameContext.systems().movementSystem;
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final MovementSystem motor = gameContext.systems().movementSystem;
+        final WorldMovementSystem navigator = gameContext.systems().worldMovementSystem;
+
         switch (sceneTick) {
             case TICK_ANIMATION_START        -> startTheShow();
-            case TICK_PAC_MAN_STARTS_RUNNING -> pacManStartsRunning(worldMovementSystem);
-            case TICK_BLINKY_STARTS_RUNNING  -> blinkyStartsRunning(worldMovementSystem);
-            case TICK_BLINKY_GETS_CAUGHT     -> blinkyGetsCaughtOnNail(worldMovementSystem);
+            case TICK_PAC_MAN_STARTS_RUNNING -> pacManStartsRunning(navigator);
+            case TICK_BLINKY_STARTS_RUNNING  -> blinkyStartsRunning(navigator);
+            case TICK_BLINKY_GETS_CAUGHT     -> blinkyGetsCaughtOnNail(navigator);
             case TICK_DRESS_STRETCHED_SMALL  -> setDressState(STRETCHED_SMALL);
             case TICK_DRESS_STRETCHED_MEDIUM -> setDressState(STRETCHED_MEDIUM);
             case TICK_DRESS_STRETCHED_LARGE  -> setDressState(STRETCHED_LARGE);
-            case TICK_BLINKY_STOPS_MOVING    -> blinkyStopsMoving(worldMovementSystem);
+            case TICK_BLINKY_STOPS_MOVING    -> blinkyStopsMoving(navigator);
             case TICK_DRESS_RAPTURES         -> dressRaptures();
             case TICK_BLINK_INSPECTS_DAMAGE  -> blinkyInspectsDamagedDress();
             case TICK_ANIMATION_ENDS         -> endTheShow();
         }
-        movementSystem.moveAccelerated(pacMan);
-        movementSystem.moveAccelerated(blinky);
+        motor.moveAccelerated(pacMan);
+        motor.moveAccelerated(blinky);
     }
 
     private void blinkyInspectsDamagedDress() {

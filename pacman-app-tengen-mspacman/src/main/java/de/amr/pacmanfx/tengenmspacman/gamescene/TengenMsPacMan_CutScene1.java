@@ -149,12 +149,12 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        final MovementSystem movementSystem = gameContext.systems().movementSystem;
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final MovementSystem motor = gameContext.systems().movementSystem;
+        final WorldMovementSystem navigator = gameContext.systems().worldMovementSystem;
 
         clapperboard.tick();
 
-        List.of(pacMan, msPacMan, inky, pinky).forEach(movementSystem::moveAccelerated);
+        List.of(pacMan, msPacMan, inky, pinky).forEach(motor::moveAccelerated);
 
         if (collided) {
             if (inky.position().y > MIDDLE_LANE) {
@@ -169,68 +169,68 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {
                 case 130 -> {
-                    worldMovementSystem.setSpeed(pacMan, SPEED_CHASING);
+                    navigator.setSpeed(pacMan, SPEED_CHASING);
                     pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations.playSelected();
                     pacMan.visibility().show();
 
-                    worldMovementSystem.setSpeed(msPacMan, SPEED_CHASING);
+                    navigator.setSpeed(msPacMan, SPEED_CHASING);
                     msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations.playSelected();
                     msPacMan.visibility().show();
                 }
                 case 160 -> {
-                    worldMovementSystem.setSpeed(inky, SPEED_CHASING);
+                    navigator.setSpeed(inky, SPEED_CHASING);
                     inky.animations.select(CommonAnimationID.GHOST_NORMAL);
                     inky.animations.playSelected();
                     inky.visibility().show();
 
-                    worldMovementSystem.setSpeed(pinky, SPEED_CHASING);
+                    navigator.setSpeed(pinky, SPEED_CHASING);
                     pinky.animations.select(CommonAnimationID.GHOST_NORMAL);
                     pinky.animations.playSelected();
                     pinky.visibility().show();
                 }
                 case 400 -> {
                     msPacMan.position().set(LEFT_BORDER, MIDDLE_LANE);
-                    worldMovementSystem.setMoveDir(msPacMan, Direction.RIGHT);
+                    navigator.setMoveDir(msPacMan, Direction.RIGHT);
 
                     pacMan.position().set(RIGHT_BORDER, MIDDLE_LANE);
-                    worldMovementSystem.setMoveDir(pacMan, Direction.LEFT);
+                    navigator.setMoveDir(pacMan, Direction.LEFT);
 
                     pinky.position().set(msPacMan.position().x - WorldMap.TS * 11, msPacMan.position().y);
-                    worldMovementSystem.setMoveDir(pinky, Direction.RIGHT);
-                    worldMovementSystem.setWishDir(pinky, Direction.RIGHT);
+                    navigator.setMoveDir(pinky, Direction.RIGHT);
+                    navigator.setWishDir(pinky, Direction.RIGHT);
 
                     inky.position().set(pacMan.position().x + WorldMap.TS * 11, pacMan.position().y);
-                    worldMovementSystem.setMoveDir(inky, Direction.LEFT);
-                    worldMovementSystem.setWishDir(inky, Direction.LEFT);
+                    navigator.setMoveDir(inky, Direction.LEFT);
+                    navigator.setWishDir(inky, Direction.LEFT);
                 }
                 case 454 -> List.of(pacMan, msPacMan).forEach(pac -> {
-                    worldMovementSystem.setMoveDir(pac, Direction.UP);
-                    worldMovementSystem.setSpeed(pac, SPEED_RISING);
+                    navigator.setMoveDir(pac, Direction.UP);
+                    navigator.setSpeed(pac, SPEED_RISING);
                 });
                 case 498 -> {
                     collided = true;
 
-                    worldMovementSystem.setMoveDir(inky, Direction.RIGHT);
-                    worldMovementSystem.setWishDir(inky, Direction.RIGHT);
-                    worldMovementSystem.setSpeed(inky, SPEED_AFTER_COLLISION);
+                    navigator.setMoveDir(inky, Direction.RIGHT);
+                    navigator.setWishDir(inky, Direction.RIGHT);
+                    navigator.setSpeed(inky, SPEED_AFTER_COLLISION);
                     inky.movement().velY -= 2.0f;
                     inky.movement().setAcceleration(0, 0.4f);
 
-                    worldMovementSystem.setMoveDir(pinky, Direction.LEFT);
-                    worldMovementSystem.setWishDir(pinky, Direction.LEFT);
-                    worldMovementSystem.setSpeed(pinky, SPEED_AFTER_COLLISION);
+                    navigator.setMoveDir(pinky, Direction.LEFT);
+                    navigator.setWishDir(pinky, Direction.LEFT);
+                    navigator.setSpeed(pinky, SPEED_AFTER_COLLISION);
                     pinky.movement().velY -= 2.0f;
                     pinky.movement().setAcceleration(0, 0.4f);
                 }
                 case 530 -> {
                     inky.visibility().hide();
                     pinky.visibility().hide();
-                    worldMovementSystem.setSpeed(pacMan, 0);
-                    worldMovementSystem.setMoveDir(pacMan, Direction.LEFT);
-                    worldMovementSystem.setSpeed(msPacMan, 0);
-                    worldMovementSystem.setMoveDir(msPacMan, Direction.RIGHT);
+                    navigator.setSpeed(pacMan, 0);
+                    navigator.setMoveDir(pacMan, Direction.LEFT);
+                    navigator.setSpeed(msPacMan, 0);
+                    navigator.setMoveDir(msPacMan, Direction.RIGHT);
                 }
                 case 545 -> {
                     pacMan.animations.resetSelected();

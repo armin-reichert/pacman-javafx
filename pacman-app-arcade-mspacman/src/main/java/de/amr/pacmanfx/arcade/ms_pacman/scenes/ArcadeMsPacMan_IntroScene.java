@@ -164,18 +164,18 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             }
 
             boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
-                final MovementSystem movementSystem = scene.gameContext().systems().movementSystem;
-                final WorldMovementSystem worldMovementSystem = scene.gameContext().systems().worldMovementSystem;
+                final MovementSystem motor = scene.gameContext().systems().movementSystem;
+                final WorldMovementSystem navigator = scene.gameContext().systems().worldMovementSystem;
 
                 final Ghost ghost = scene.ghosts.get(scene.presentedGhostPersonality);
                 if (ghost.worldMovement().moveDir() == Direction.LEFT) {
                     if (ghost.position().x <= STOP_X_GHOST) {
                         ghost.position().setX(STOP_X_GHOST);
-                        worldMovementSystem.setMoveDir(ghost, Direction.UP);
-                        worldMovementSystem.setWishDir(ghost, Direction.UP);
+                        navigator.setMoveDir(ghost, Direction.UP);
+                        navigator.setWishDir(ghost, Direction.UP);
                         scene.numTicksBeforeRising = 2;
                     } else {
-                        movementSystem.moveAccelerated(ghost);
+                        motor.moveAccelerated(ghost);
                     }
                 }
                 else if (ghost.worldMovement().moveDir() == Direction.UP) {
@@ -184,13 +184,13 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                         scene.numTicksBeforeRising--;
                     }
                     else if (ghost.position().y <= endPositionY) {
-                        worldMovementSystem.setSpeed(ghost, 0);
+                        navigator.setSpeed(ghost, 0);
                         ghost.animations.stopSelected();
                         ghost.animations.resetSelected();
                         return true;
                     }
                     else {
-                        movementSystem.moveAccelerated(ghost);
+                        motor.moveAccelerated(ghost);
                     }
                 }
                 return false;
@@ -200,13 +200,13 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         MS_PACMAN_MARCHING_IN {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final MovementSystem movementSystem = scene.gameContext().systems().movementSystem;
-                final WorldMovementSystem worldMovementSystem = scene.gameContext().systems().worldMovementSystem;
+                final MovementSystem motor = scene.gameContext().systems().movementSystem;
+                final WorldMovementSystem navigator = scene.gameContext().systems().worldMovementSystem;
 
                 scene.marquee.timer().doTick();
-                movementSystem.moveAccelerated(scene.msPacMan);
+                motor.moveAccelerated(scene.msPacMan);
                 if (scene.msPacMan.position().x <= STOP_X_MS_PACMAN) {
-                    worldMovementSystem.setSpeed(scene.msPacMan, 0);
+                    navigator.setSpeed(scene.msPacMan, 0);
                     scene.msPacMan.animations.resetSelected();
                     scene.sceneFlow.enterState(scene, READY_TO_PLAY);
                 }

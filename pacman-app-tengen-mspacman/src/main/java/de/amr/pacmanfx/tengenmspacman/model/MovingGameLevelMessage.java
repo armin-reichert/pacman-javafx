@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 
 import static java.util.Objects.requireNonNull;
 
@@ -44,14 +45,16 @@ public class MovingGameLevelMessage extends GameLevelMessage {
         playing = false;
     }
 
-    public void updateMovement() {
+    public void updateMovement(GameContext gameContext) {
         if (!playing) return;
 
         if (delayTicks > 0) {
             --delayTicks;
             return;
         }
-        GameContext.SYSTEMS.movementSystem.moveAccelerated(this);
+
+        final MovementSystem motor = gameContext.systems().movementSystem;
+        motor.moveAccelerated(this);
         if (wrapped) {
             if (position().x >= startPosition.x()) {
                 position().set(startPosition);

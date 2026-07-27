@@ -260,11 +260,11 @@ public class WorldMovementSystem {
     }
 
     private void tryMovingTowards(Actor actor, GameContext gameContext, Vector2i tileBeforeMoving, Direction dir) {
-        final Movement movement = actor.movement();
-        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
+        final MovementSystem motor = gameContext.systems().movementSystem;
         final WorldMovementPolicy worldMovementPolicy = actor.assertComponent(WorldMovementPolicy.class);
 
-        final MovementSystem movementSystem = GameContext.SYSTEMS.movementSystem;
+        final Movement movement = actor.movement();
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         final Vector2f newVelocity = dir.vector().scaled(movement.computeSpeed());
         final Vector2f touchPosition = computeCenter(actor).plus(dir.vector().scaled((float) WorldMap.HTS)).plus(newVelocity);
@@ -296,12 +296,12 @@ public class WorldMovementSystem {
             final Vector2f cornerVelocity = newVelocity.plus(dir.vector().scaled(worldMovement.corneringSpeedDelta));
             Logger.trace("{} velocity around corner: {}", actor.name(), cornerVelocity.length());
             movement.setVelocity(cornerVelocity.x(), cornerVelocity.y());
-            movementSystem.moveAccelerated(actor);
+            motor.moveAccelerated(actor);
             // Reset velocity after moving
             movement.setVelocity(newVelocity.x(), newVelocity.y());
         } else {
             movement.setVelocity(newVelocity.x(), newVelocity.y());
-            movementSystem.moveAccelerated(actor);
+            motor.moveAccelerated(actor);
         }
 
         final Vector2i tileAfterMoving = computeTile(actor);

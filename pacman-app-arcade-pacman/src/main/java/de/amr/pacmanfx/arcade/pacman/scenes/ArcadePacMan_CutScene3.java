@@ -55,44 +55,46 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         if (sceneTick < TICK_ANIMATION_START) {
             return;
         }
-        final MovementSystem movementSystem = gameContext.systems().movementSystem;
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+
+        final MovementSystem motor = gameContext.systems().movementSystem;
+        final WorldMovementSystem navigator = gameContext.systems().worldMovementSystem;
+
         switch (sceneTick) {
-            case TICK_ANIMATION_START      -> startAnimation(worldMovementSystem);
-            case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked(worldMovementSystem);
+            case TICK_ANIMATION_START      -> startAnimation(navigator);
+            case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked(navigator);
             case TICK_ANIMATION_ENDS       -> gameState().triggerTimeout();
         }
-        movementSystem.moveAccelerated(pacMan);
-        movementSystem.moveAccelerated(blinky);
+        motor.moveAccelerated(pacMan);
+        motor.moveAccelerated(blinky);
     }
 
-    private void startAnimation(WorldMovementSystem worldMovementSystem) {
+    private void startAnimation(WorldMovementSystem navigator) {
         appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_3, 2);
-        startBlinkyChasingPacMan(worldMovementSystem);
+        startBlinkyChasingPacMan(navigator);
     }
 
-    private void startBlinkyRunningNaked(WorldMovementSystem worldMovementSystem) {
-        worldMovementSystem.placeAtTile(blinky, -1, 20);
-        worldMovementSystem.setMoveDir(blinky, Direction.RIGHT);
-        worldMovementSystem.setWishDir(blinky, Direction.RIGHT);
+    private void startBlinkyRunningNaked(WorldMovementSystem navigator) {
+        navigator.placeAtTile(blinky, -1, 20);
+        navigator.setMoveDir(blinky, Direction.RIGHT);
+        navigator.setWishDir(blinky, Direction.RIGHT);
         blinky.animations.select(CommonAnimationID.BLINKY_NAKED);
         blinky.animations.playSelected();
     }
 
-    private void startBlinkyChasingPacMan(WorldMovementSystem worldMovementSystem) {
-        worldMovementSystem.placeAtTile(pacMan, 29, 20);
-        worldMovementSystem.setMoveDir(pacMan, Direction.LEFT);
-        worldMovementSystem.setSpeed(pacMan, 1.25f);
+    private void startBlinkyChasingPacMan(WorldMovementSystem navigator) {
+        navigator.placeAtTile(pacMan, 29, 20);
+        navigator.setMoveDir(pacMan, Direction.LEFT);
+        navigator.setSpeed(pacMan, 1.25f);
 
         pacMan.visibility().show();
 
         pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations.playSelected();
 
-        worldMovementSystem.placeAtTile(blinky, 35, 20);
-        worldMovementSystem.setMoveDir(blinky, Direction.LEFT);
-        worldMovementSystem.setWishDir(blinky, Direction.LEFT);
-        worldMovementSystem.setSpeed(blinky, 1.25f);
+        navigator.placeAtTile(blinky, 35, 20);
+        navigator.setMoveDir(blinky, Direction.LEFT);
+        navigator.setWishDir(blinky, Direction.LEFT);
+        navigator.setSpeed(blinky, 1.25f);
 
         blinky.visibility().show();
 

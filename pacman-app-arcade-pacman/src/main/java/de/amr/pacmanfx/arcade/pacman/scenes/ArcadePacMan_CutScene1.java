@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -52,56 +53,59 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         if (++sceneTick < ANIMATION_START_TICK) {
             return;
         }
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        
+        final MovementSystem motor =  gameContext.systems().movementSystem;
+        final WorldMovementSystem navigator = gameContext.systems().worldMovementSystem;
+        
         if (sceneTick == ANIMATION_START_TICK) {
             appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_1, 2);
-            startBlinkyChasingPacMan(worldMovementSystem);
+            startBlinkyChasingPacMan(navigator);
         }
         else if (sceneTick == ANIMATION_START_TICK + 260) {
-            startBlinkyEscapingPacMan(worldMovementSystem);
+            startBlinkyEscapingPacMan(navigator);
         }
         else if (sceneTick == ANIMATION_START_TICK + 400) {
-            startBigPacManChasingBlinky(worldMovementSystem);
+            startBigPacManChasingBlinky(navigator);
         }
         else if (sceneTick == ANIMATION_START_TICK + 632) {
             gameState().triggerTimeout();
         }
         if (sceneTick >= ANIMATION_START_TICK) {
-            GameContext.SYSTEMS.movementSystem.moveAccelerated(pacMan);
-            GameContext.SYSTEMS.movementSystem.moveAccelerated(blinky);
+            motor.moveAccelerated(pacMan);
+            motor.moveAccelerated(blinky);
         }
     }
 
-    private void startBigPacManChasingBlinky(WorldMovementSystem worldMovementSystem) {
-        worldMovementSystem.placeAtTile(pacMan, -3, 18, 0, 6.5f);
-        worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
+    private void startBigPacManChasingBlinky(WorldMovementSystem navigator) {
+        navigator.placeAtTile(pacMan, -3, 18, 0, 6.5f);
+        navigator.setMoveDir(pacMan, Direction.RIGHT);
 
         pacMan.animations.select(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
         pacMan.animations.playSelected();
     }
 
-    private void startBlinkyEscapingPacMan(WorldMovementSystem worldMovementSystem) {
-        worldMovementSystem.placeAtTile(blinky, -2, 20, 4, 0);
-        worldMovementSystem.setMoveDir(blinky, Direction.RIGHT);
-        worldMovementSystem.setWishDir(blinky, Direction.RIGHT);
+    private void startBlinkyEscapingPacMan(WorldMovementSystem navigator) {
+        navigator.placeAtTile(blinky, -2, 20, 4, 0);
+        navigator.setMoveDir(blinky, Direction.RIGHT);
+        navigator.setWishDir(blinky, Direction.RIGHT);
 
-        worldMovementSystem.setSpeed(blinky, 0.75f);
+        navigator.setSpeed(blinky, 0.75f);
         blinky.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
         blinky.animations.playSelected();
     }
 
-    private void startBlinkyChasingPacMan(WorldMovementSystem worldMovementSystem) {
-        worldMovementSystem.placeAtTile(pacMan, 29, 20);
-        worldMovementSystem.setMoveDir(pacMan, Direction.LEFT);
-        worldMovementSystem.setSpeed(pacMan, 1.25f);
+    private void startBlinkyChasingPacMan(WorldMovementSystem navigator) {
+        navigator.placeAtTile(pacMan, 29, 20);
+        navigator.setMoveDir(pacMan, Direction.LEFT);
+        navigator.setSpeed(pacMan, 1.25f);
         pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations.playSelected();
         pacMan.visibility().show();
 
-        worldMovementSystem.placeAtTile(blinky, 32, 20);
-        worldMovementSystem.setMoveDir(blinky, Direction.LEFT);
-        worldMovementSystem.setWishDir(blinky, Direction.LEFT);
-        worldMovementSystem.setSpeed(blinky, 1.3f);
+        navigator.placeAtTile(blinky, 32, 20);
+        navigator.setMoveDir(blinky, Direction.LEFT);
+        navigator.setWishDir(blinky, Direction.LEFT);
+        navigator.setSpeed(blinky, 1.3f);
         blinky.animations.select(CommonAnimationID.GHOST_NORMAL);
         blinky.animations.playSelected();
         blinky.visibility().show();

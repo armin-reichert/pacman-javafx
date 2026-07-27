@@ -296,7 +296,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
 
     private void updateLevelMessage(GameLevel level) {
         if (level.optMessage().isPresent() && level.optMessage().get() instanceof MovingGameLevelMessage message) {
-            message.updateMovement();
+            message.updateMovement(gameContext());
         }
     }
 

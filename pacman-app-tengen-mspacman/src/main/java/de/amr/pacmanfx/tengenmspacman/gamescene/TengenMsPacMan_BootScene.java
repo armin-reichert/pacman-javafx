@@ -54,8 +54,8 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        final MovementSystem movementSystem = gameContext.systems().movementSystem;
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final MovementSystem motor = gameContext.systems().movementSystem;
+        final WorldMovementSystem navigator = gameContext.systems().worldMovementSystem;
 
         final GameState gameState = gameState();
         final int t = (int) gameState.timer().tickCount();
@@ -73,9 +73,9 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
             }
             case 113 -> {
                 ghost.position().set(unscaledWidth() - WorldMap.TS, GHOST_Y);
-                worldMovementSystem.setMoveDir(ghost, Direction.LEFT);
-                worldMovementSystem.setWishDir(ghost, Direction.LEFT);
-                worldMovementSystem.setSpeed(ghost, WorldMap.TS);
+                navigator.setMoveDir(ghost, Direction.LEFT);
+                navigator.setWishDir(ghost, Direction.LEFT);
+                navigator.setSpeed(ghost, WorldMap.TS);
                 ghost.visibility().show();
             }
             case 181 -> movingText.movement().setVelocity(0, WorldMap.TS);
@@ -91,8 +91,8 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
             }
         }
         shadeOfBlue = TengenMsPacMan_RenderConfig.shadeOfBlue(t);
-        movementSystem.moveAccelerated(ghost);
-        movementSystem.moveAccelerated(movingText);
+        motor.moveAccelerated(ghost);
+        motor.moveAccelerated(movingText);
     }
 
     private void gray(boolean b)  { gray = b; }

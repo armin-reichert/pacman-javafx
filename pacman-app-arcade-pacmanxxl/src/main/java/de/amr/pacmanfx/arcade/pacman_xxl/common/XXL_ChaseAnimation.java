@@ -87,10 +87,10 @@ class XXL_ChaseAnimation {
         requireNonNull(canvas);
         requireNonNull(container);
 
-        final MovementSystem movementSystem = gameContext.systems().movementSystem;
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final MovementSystem motor = gameContext.systems().movementSystem;
+        final WorldMovementSystem navigator = gameContext.systems().worldMovementSystem;
 
-        timeline.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update(movementSystem, worldMovementSystem)));
+        timeline.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update(motor, navigator)));
 
         actorRenderer = renderConfig.createActorRenderer(canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
@@ -100,9 +100,9 @@ class XXL_ChaseAnimation {
         pac.animations.select(CommonAnimationID.PAC_MUNCHING);
         pac.animations.playSelected();
         pac.position().setX(numTilesX * WorldMap.TS);
-        worldMovementSystem.setMoveDir(pac, Direction.LEFT);
-        worldMovementSystem.setWishDir(pac, Direction.LEFT);
-        worldMovementSystem.setSpeed(pac, PAC_FLEEING_SPEED);
+        navigator.setMoveDir(pac, Direction.LEFT);
+        navigator.setWishDir(pac, Direction.LEFT);
+        navigator.setSpeed(pac, PAC_FLEEING_SPEED);
         pac.visibility().show();
 
         ghosts = List.of(
@@ -113,9 +113,9 @@ class XXL_ChaseAnimation {
         );
         for (Ghost ghost : ghosts) {
             ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
-            worldMovementSystem.setMoveDir(ghost, Direction.LEFT);
-            worldMovementSystem.setWishDir(ghost, Direction.LEFT);
-            worldMovementSystem.setSpeed(ghost, GHOST_CHASE_SPEED);
+            navigator.setMoveDir(ghost, Direction.LEFT);
+            navigator.setWishDir(ghost, Direction.LEFT);
+            navigator.setSpeed(ghost, GHOST_CHASE_SPEED);
             ghost.visibility().show();
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
             ghost.animations.playSelected();

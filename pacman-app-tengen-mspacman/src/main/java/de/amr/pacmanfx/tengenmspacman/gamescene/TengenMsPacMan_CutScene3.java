@@ -8,6 +8,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -111,7 +112,9 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final MovementSystem motor = gameContext.systems().movementSystem;
+        final WorldMovementSystem navigator = gameContext.systems().worldMovementSystem;
+
         final long gameStateTick = gameState().timer().tickCount();
 
         if (gameStateTick <= TICK_EXPIRES) {
@@ -120,8 +123,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     pacMan.position().set(WorldMap.TS * 3, GROUND_Y - 4);
                     pacMan.visibility().show();
 
-                    worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
-                    worldMovementSystem.setSpeed(pacMan, 0);
+                    navigator.setMoveDir(pacMan, Direction.RIGHT);
+                    navigator.setSpeed(pacMan, 0);
 
                     pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     pacMan.animations.stopSelected();
@@ -129,8 +132,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     msPacMan.position().set(WorldMap.TS * 5, GROUND_Y - 4);
                     msPacMan.visibility().show();
 
-                    worldMovementSystem.setMoveDir(msPacMan, Direction.RIGHT);
-                    worldMovementSystem.setSpeed(msPacMan, 0);
+                    navigator.setMoveDir(msPacMan, Direction.RIGHT);
+                    navigator.setSpeed(msPacMan, 0);
 
                     msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
                     msPacMan.animations.stopSelected();
@@ -164,9 +167,9 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         }
 
         clapperboard.tick();
-        GameContext.SYSTEMS.movementSystem.moveAccelerated(stork);
+        motor.moveAccelerated(stork);
         if (!flyingBag.isOpen()) {
-            GameContext.SYSTEMS.movementSystem.moveAccelerated(flyingBag);
+            motor.moveAccelerated(flyingBag);
             if (flyingBag.position().y > GROUND_Y) {
                 flyingBag.position().setY(GROUND_Y);
                 flyingBag.movement().setVelocity(0.9f * flyingBag.movement().velX, -0.3f * flyingBag.movement().velY);

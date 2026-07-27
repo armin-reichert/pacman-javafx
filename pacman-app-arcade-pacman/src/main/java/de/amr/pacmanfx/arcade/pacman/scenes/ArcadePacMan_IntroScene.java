@@ -165,10 +165,11 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void chasePacMan(long tick) {
+        final MovementSystem motor = gameContext().systems().movementSystem;
         blinking.triggerPulse();
-        GameContext.SYSTEMS.movementSystem.moveAccelerated(pacMan);
+        motor.moveAccelerated(pacMan);
         for (Ghost ghost : ghosts) {
-            GameContext.SYSTEMS.movementSystem.moveAccelerated(ghost);
+            motor.moveAccelerated(ghost);
         }
 
         // "shaking" effect
@@ -346,15 +347,15 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final MovementSystem movementSystem = scene.gameContext().systems().movementSystem;
-                final WorldMovementSystem worldMovementSystem = scene.gameContext().systems().worldMovementSystem;
+                final MovementSystem motor = scene.gameContext().systems().movementSystem;
+                final WorldMovementSystem navigator = scene.gameContext().systems().worldMovementSystem;
 
                 final long tick = timer.tickCount();
                 if (tick == TICK_CHASING_GHOSTS_END) {
                     scene.pacMan.visibility().hide();
                     scene.flow.enterState(scene, WAIT_FOR_DEMO_LEVEL);
                 } else {
-                    scene.chaseGhosts(movementSystem, worldMovementSystem, tick);
+                    scene.chaseGhosts(motor, navigator, tick);
                 }
             }
         },
