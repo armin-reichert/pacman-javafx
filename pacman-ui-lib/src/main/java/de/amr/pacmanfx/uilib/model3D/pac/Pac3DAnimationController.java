@@ -26,21 +26,18 @@ public class Pac3DAnimationController {
         final Pac pac = level.entities().pac();
         final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
 
-        if (pac.state() == Pac.State.WALKING || pac.state() == Pac.State.STUCK) {
-            pac3D.powerLight().ifPresent(powerLight -> updatePowerLight(pacPowerSystem, pac, powerLight));
+        final boolean lighted = pac.state() != Pac.State.DEAD;
+        if (lighted) {
+            pac3D.powerLight().ifPresent(light -> updatePowerLight(pacPowerSystem, pac, light));
+        }
 
-            animations.optAnimation(Pac3D.AnimationID.MOVING).ifPresent(movementAnimation -> {
-                movementAnimation.playOrContinue();
-                animations.optAnimation(Pac3D.AnimationID.MOVING, Pac3DMovementAnimation.class).ifPresent(movement -> movement.update(pac));
+        final boolean walking = pac.state() == Pac.State.WALKING && !pac.gotStuck();
+        if (walking) {
+            animations.optAnimation(Pac3D.AnimationID.MOVING, Pac3DMovementAnimation.class).ifPresent(walkingAnimation -> {
+                walkingAnimation.playOrContinue();
+                walkingAnimation.update(pac);
             });
-
-            animations.optAnimation(Pac3D.AnimationID.CHEWING).ifPresent(chewingAnimation -> {
-                if (pac.state() == Pac.State.STUCK) {
-                    chewingAnimation.stop();
-                } else {
-                    chewingAnimation.playOrContinue();
-                }
-            });
+            animations.optAnimation(Pac3D.AnimationID.CHEWING).ifPresent(ManagedAnimation::playOrContinue);
         }
         else {
             animations.optAnimation(Pac3D.AnimationID.MOVING).ifPresent(ManagedAnimation::stop);

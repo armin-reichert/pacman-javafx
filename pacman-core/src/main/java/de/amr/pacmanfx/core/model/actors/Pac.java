@@ -21,7 +21,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pac extends Actor implements UpdatableEntity {
 
-    public enum State { WALKING, STUCK, DEAD }
+    /** The walking dead. */
+    public enum State { WALKING, DEAD }
 
     private State state;
 
@@ -40,7 +41,7 @@ public class Pac extends Actor implements UpdatableEntity {
         registerComponent(PacPower.class, new PacPower());
         registerComponent(PacCheats.class, new PacCheats());
 
-        state = State.STUCK;
+        state = State.WALKING;
     }
 
     public WorldMovement worldMovement() {
@@ -82,7 +83,7 @@ public class Pac extends Actor implements UpdatableEntity {
     public void reset() {
         super.reset();
 
-        state = State.STUCK;
+        state = State.WALKING;
         worldMovement().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
         animations.select(CommonAnimationID.PAC_MUNCHING);
     }
@@ -129,21 +130,22 @@ public class Pac extends Actor implements UpdatableEntity {
         else {
             animations.stopSelected();
         }
-
-        if (gotStuck()) {
-            state = State.STUCK;
-        } else {
-            state = State.WALKING;
-        }
     }
 
     /**
      * @return {@code true} if Pac-Man has run against a wall and could not move, its speed is zero
      * or if he is resting for an indefinite time.
      */
-    private boolean gotStuck() {
-        return (movement().velX == 0 && movement().velY == 0)
-            || !worldMovement().info.moved
+    public boolean gotStuck() {
+        return hasNoVelocity() || didNotMoveThroughWorld()
             || digestion().restingTicks() == PacDigestion.REST_FOREVER;
+    }
+
+    private boolean hasNoVelocity() {
+        return movement().velX == 0 && movement().velY == 0;
+    }
+
+    private boolean didNotMoveThroughWorld() {
+        return !worldMovement().info.moved;
     }
 }
