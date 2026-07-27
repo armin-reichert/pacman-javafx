@@ -40,6 +40,6 @@ public class PacCheats implements EntityComponent {
     @Override
     public void reset() {
         immune.set(false);
-        usingAutopilot.set(false);
+        //usingAutopilot.set(false);
     }
 }
