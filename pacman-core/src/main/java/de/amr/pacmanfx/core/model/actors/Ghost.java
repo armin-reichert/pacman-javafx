@@ -60,16 +60,16 @@ public class Ghost extends Actor implements UpdatableEntity {
     };
 
     public Ghost(byte personality, String name) {
+        this.name = requireNonNull(name);
+        this.personality = Validations.requireValidGhostPersonality(personality);
+
         registerComponent(Movement.class, new Movement());
         registerComponent(WorldMovement.class, new WorldMovement());
         registerComponent(WorldMovementPolicy.class, new GhostWorldMovementPolicy());
+        registerComponent(GhostStateMachine.class, new GhostStateMachine());
         if (personality == GameModel.RED_GHOST_SHADOW) {
             registerComponent(Elroy.class, new Elroy());
         }
-        registerComponent(GhostStateMachine.class, new GhostStateMachine());
-
-        this.name = requireNonNull(name);
-        this.personality = Validations.requireValidGhostPersonality(personality);
 
         worldMovement().corneringSpeedDelta = -1.25f;
     }
