@@ -22,9 +22,6 @@ import java.util.Optional;
  */
 public interface GameContext {
 
-    //TODO temporary solution
-    GameSystems SYSTEMS = new GameSystems();
-
     GameSystems systems();
 
     CoinMechanism coinMechanism();

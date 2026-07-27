@@ -39,6 +39,8 @@ public class TestEatingFood {
 
     static class TestContext implements GameContext {
 
+        private final GameSystems systems =  new GameSystems();
+
         private final GameFlowController gameFlow = new GameFlowController("Test game flow");
 
         private final ArcadePacMan_GameModel gameModel = new ArcadePacMan_GameModel();
@@ -63,7 +65,7 @@ public class TestEatingFood {
 
         @Override
         public GameSystems systems() {
-            return GameContext.SYSTEMS;
+            return systems;
         }
 
         @Override
