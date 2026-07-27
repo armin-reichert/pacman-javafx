@@ -2,12 +2,16 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.actors;
+package de.amr.pacmanfx.core.model.component.ghost;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.EntityComponent;
-import de.amr.pacmanfx.core.model.component.Position;
+import de.amr.pacmanfx.core.model.component.common.Position;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.PacPowerSystem;

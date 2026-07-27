@@ -2,11 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component;
+package de.amr.pacmanfx.core.model.component.world;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.component.EntityComponent;
 
 public interface WorldMovementPolicy extends EntityComponent {
 

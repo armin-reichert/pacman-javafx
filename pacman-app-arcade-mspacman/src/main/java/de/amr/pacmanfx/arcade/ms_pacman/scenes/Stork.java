@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
-import de.amr.pacmanfx.core.model.component.Movement;
+import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 public class Stork extends Actor {

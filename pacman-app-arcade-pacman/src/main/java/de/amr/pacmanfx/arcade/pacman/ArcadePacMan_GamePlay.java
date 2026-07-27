@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.component.Elroy;
+import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.*;

@@ -6,9 +6,9 @@ package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
 import de.amr.pacmanfx.core.model.component.EntityComponent;
-import de.amr.pacmanfx.core.model.component.Movement;
-import de.amr.pacmanfx.core.model.component.Position;
-import de.amr.pacmanfx.core.model.component.Visibility;
+import de.amr.pacmanfx.core.model.component.common.Movement;
+import de.amr.pacmanfx.core.model.component.common.Position;
+import de.amr.pacmanfx.core.model.component.common.Visibility;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

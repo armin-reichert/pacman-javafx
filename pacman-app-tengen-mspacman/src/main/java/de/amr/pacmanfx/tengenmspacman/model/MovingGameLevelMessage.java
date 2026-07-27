@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.component.Movement;
+import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 

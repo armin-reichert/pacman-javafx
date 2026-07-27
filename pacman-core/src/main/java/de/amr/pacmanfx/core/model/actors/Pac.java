@@ -6,7 +6,13 @@ package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.model.component.*;
+import de.amr.pacmanfx.core.model.component.common.Movement;
+import de.amr.pacmanfx.core.model.component.pac.PacCheats;
+import de.amr.pacmanfx.core.model.component.pac.PacDigestion;
+import de.amr.pacmanfx.core.model.component.pac.PacManWorldMovementPolicy;
+import de.amr.pacmanfx.core.model.component.pac.PacPower;
+import de.amr.pacmanfx.core.model.component.world.WorldMovement;
+import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.systems.PacPowerSystem;

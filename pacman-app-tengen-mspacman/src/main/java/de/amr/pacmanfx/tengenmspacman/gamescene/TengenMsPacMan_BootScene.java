@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.Movement;
+import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.systems.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;

@@ -2,8 +2,9 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component;
+package de.amr.pacmanfx.core.model.component.common;
 
+import de.amr.pacmanfx.core.model.component.EntityComponent;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 

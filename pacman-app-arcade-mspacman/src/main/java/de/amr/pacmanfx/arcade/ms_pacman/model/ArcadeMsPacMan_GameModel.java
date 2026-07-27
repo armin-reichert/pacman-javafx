@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 import de.amr.pacmanfx.arcade.ms_pacman.rules.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.rules.GameRules;
-import de.amr.pacmanfx.core.model.component.Elroy;
+import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import org.tinylog.Logger;

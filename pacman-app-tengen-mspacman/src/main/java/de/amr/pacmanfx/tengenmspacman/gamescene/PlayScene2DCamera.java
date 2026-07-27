@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.component.WorldMovement;
+import de.amr.pacmanfx.core.model.component.world.WorldMovement;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;

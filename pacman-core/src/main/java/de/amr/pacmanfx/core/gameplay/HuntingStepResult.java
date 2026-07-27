@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.gameplay;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.Position;
+import de.amr.pacmanfx.core.model.component.common.Position;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 
 import java.util.ArrayList;

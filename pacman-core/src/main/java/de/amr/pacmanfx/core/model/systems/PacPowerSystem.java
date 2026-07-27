@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.event.PacLostPowerEvent;
 import de.amr.pacmanfx.core.event.PacPowerFadesEvent;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.PacPower;
+import de.amr.pacmanfx.core.model.component.pac.PacPower;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import org.tinylog.Logger;
 
