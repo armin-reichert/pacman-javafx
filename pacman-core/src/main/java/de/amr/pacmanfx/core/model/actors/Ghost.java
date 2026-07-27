@@ -17,6 +17,7 @@ import de.amr.pacmanfx.core.model.component.world.WorldMovement;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostStateMachine;
+import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.world.House;
 
 import java.util.Collection;
@@ -132,6 +133,20 @@ public class Ghost extends Actor implements UpdatableEntity {
     public void onPacKilled(GameLevel ignored) {
         if (hasComponent(Elroy.class)) {
             assertComponent(Elroy.class).setEnabled(false);
+        }
+    }
+
+    public void playFrightenedAnimation(GameContext gameContext) {
+        final GameLevel level = gameContext.assertLevel();
+        final Pac pac = level.entities().pac();
+        final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
+        if (powerSystem.isPowerStartingFading(level, pac)) {
+            animations.select(CommonAnimationID.GHOST_FLASHING);
+            animations.playSelected();
+        }
+        else if (!powerSystem.isPowerFading(level, pac)) {
+            animations.select(CommonAnimationID.GHOST_FRIGHTENED);
+            animations.playSelected();
         }
     }
 }

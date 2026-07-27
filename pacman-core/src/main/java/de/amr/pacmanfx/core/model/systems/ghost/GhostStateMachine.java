@@ -9,20 +9,13 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
-import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.common.Position;
-import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.RandomWorldMovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
-import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
-import de.amr.pacmanfx.core.model.world.House;
-import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import org.tinylog.Logger;
 
-import static de.amr.basics.math.Direction.*;
-import static de.amr.pacmanfx.core.Validations.differsAtMost;
+import static de.amr.basics.math.Direction.DOWN;
 import static java.util.Objects.requireNonNull;
 
 public class GhostStateMachine {
@@ -67,102 +60,16 @@ public class GhostStateMachine {
 
     // --- LOCKED ---
 
-    /**
-     * In locked state, ghosts inside the house are bouncing up and down. They become blue when Pac-Man gets power
-     * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
-     */
     private void updateStateLocked(GameContext gameContext, Ghost ghost, float speed) {
-        final MovementSystem movementSystem = gameContext.systems().movementSystem;
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
-
-        final House house = ghost.house();
-        final Position position = ghost.position();
-        
-        if (house.isVisitedBy(ghost)) {
-            // locked inside house: jumping
-            final float minY = (house.minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
-            final float maxY = (house.maxTile().y() - 1) * WorldMap.TS - WorldMap.HTS;
-            if (position.y <= minY) {
-                worldMovementSystem.setMoveDir(ghost, DOWN);
-                worldMovementSystem.setWishDir(ghost, DOWN);
-            }
-            else if (position.y >= maxY) {
-                worldMovementSystem.setMoveDir(ghost, UP);
-                worldMovementSystem.setWishDir(ghost, UP);
-            }
-            position.setY(Math.clamp(position.y, minY, maxY));
-            worldMovementSystem.setSpeed(ghost, speed);
-            movementSystem.moveAccelerated(ghost);
-        }
-        else {
-            // locked outside of house: standing still
-            worldMovementSystem.setSpeed(ghost, 0);
-        }
-
-        final GameLevel level = gameContext.assertLevel();
-        final Pac pac = level.entities().pac();
-        if (isThreatenedByPac(gameContext, ghost, pac)) {
-            playFrightenedAnimation(gameContext, ghost);
-        } else {
-            ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
-        }
+        final GhostHouseAccessSystem ghostHouseAccessSystem = gameContext.systems().ghostHouseAccessSystem;
+        ghostHouseAccessSystem.stayInHouse(gameContext, ghost, speed);
     }
 
     // --- LEAVING_HOUSE ---
 
-    /**
-     * When a ghost leaves the house, he follows a specific route from his home/revival position to the house exit.
-     * In the Arcade versions of Pac-Man and Ms.Pac-Man, the ghost first moves towards the vertical center of the house
-     * and then raises up until he has passed the door on top of the house.
-     * <p>
-     * The ghost speed is slower than outside, but I do not know the exact value.
-     */
     private void updateStateLeavingHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final MovementSystem movementSystem = gameContext.systems().movementSystem;
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
-        final GameLevel level = gameContext.assertLevel();
-        final Pac pac = level.entities().pac();
-
-        final Position position = ghost.position();
-        final Vector2f houseEntryPosition = ghost.house().entryPosition();
-        if (position.y <= houseEntryPosition.y()) {
-            // outside at house entry
-            position.setY(houseEntryPosition.y());
-            worldMovementSystem.setMoveDir(ghost, LEFT);
-            worldMovementSystem.setWishDir(ghost, LEFT);
-            ghost.worldMovement().setNewTileEntered(false); // don't change direction until new tile is entered by moving
-            setState(ghost, isThreatenedByPac(gameContext, ghost, pac) ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
-        }
-        else {
-            // still inside house
-            final float centerX = position.x + WorldMap.HTS;
-            final float houseCenterX = ghost.house().center().x();
-            if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
-                // align horizontally and raise
-                position.setX(houseCenterX - WorldMap.HTS);
-                worldMovementSystem.setMoveDir(ghost, UP);
-                worldMovementSystem.setWishDir(ghost, UP);
-            } else {
-                // move sidewards until center axis is reached
-                worldMovementSystem.setMoveDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
-                worldMovementSystem.setWishDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
-            }
-            worldMovementSystem.setSpeed(ghost, speed);
-
-            movementSystem.moveAccelerated(ghost);
-
-            if (isThreatenedByPac(gameContext, ghost, pac)) {
-                playFrightenedAnimation(gameContext, ghost);
-            } else {
-                ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
-            }
-        }
-    }
-
-    private boolean isThreatenedByPac(GameContext gameContext, Ghost ghost, Pac pac) {
-        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
-        final GameLevel level = gameContext.assertLevel();
-        return pacPowerSystem.isPowerActive(pac) && !level.isInGhostKilledChain(ghost);
+        final GhostHouseAccessSystem ghostHouseAccessSystem = gameContext.systems().ghostHouseAccessSystem;
+        ghostHouseAccessSystem.leaveHouse(gameContext, ghost, speed);
     }
 
     // --- HUNTING_PAC ---
@@ -198,21 +105,7 @@ public class GhostStateMachine {
     private void updateStateFrightened(GameContext gameContext, Ghost ghost, float speed) {
         final RandomWorldMovementSystem randomWorldMovementSystem = gameContext.systems().randomWorldMovementSystem;
         randomWorldMovementSystem.roam(gameContext, ghost, speed);
-        playFrightenedAnimation(gameContext, ghost);
-    }
-
-    private void playFrightenedAnimation(GameContext gameContext, Ghost ghost) {
-        final GameLevel level = gameContext.assertLevel();
-        final Pac pac = level.entities().pac();
-        final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
-        if (powerSystem.isPowerStartingFading(level, pac)) {
-            ghost.animations.select(CommonAnimationID.GHOST_FLASHING);
-            ghost.animations.playSelected();
-        }
-        else if (!powerSystem.isPowerFading(level, pac)) {
-            ghost.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
-            ghost.animations.playSelected();
-        }
+        ghost.playFrightenedAnimation(gameContext);
     }
 
     // --- EATEN ---
@@ -253,38 +146,8 @@ public class GhostStateMachine {
 
     // --- ENTERING_HOUSE ---
 
-    /**
-     * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
-     * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
-     */
     private void updateStateEnteringHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final MovementSystem movementSystem = gameContext.systems().movementSystem;
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
-
-        final Position position = ghost.position();
-        final Vector2f revivalPosition = WorldMap.halfTileRightOf(ghost.house().ghostRevivalTile(ghost.personality()));
-        final Vector2f positionVec = position.asVector2f();
-        if (positionVec.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
-            position.set(revivalPosition.x(), revivalPosition.y());
-            worldMovementSystem.setMoveDir(ghost, UP);
-            worldMovementSystem.setWishDir(ghost, UP);
-            setState(ghost, GhostState.LOCKED);
-            return;
-        }
-        if (position.y < revivalPosition.y()) {
-            worldMovementSystem.setMoveDir(ghost, DOWN);
-            worldMovementSystem.setWishDir(ghost, DOWN);
-        }
-        else if (position.x > revivalPosition.x()) {
-            worldMovementSystem.setMoveDir(ghost, LEFT);
-            worldMovementSystem.setWishDir(ghost, LEFT);
-        }
-        else if (position.x < revivalPosition.x()) {
-            worldMovementSystem.setMoveDir(ghost, RIGHT);
-            worldMovementSystem.setWishDir(ghost, RIGHT);
-        }
-        worldMovementSystem.setSpeed(ghost, speed);
-
-        movementSystem.moveAccelerated(ghost);
+        final GhostHouseAccessSystem ghostHouseAccessSystem = gameContext.systems().ghostHouseAccessSystem;
+        ghostHouseAccessSystem.enterHouse(gameContext, ghost, speed);
     }
 }
