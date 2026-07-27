@@ -11,11 +11,12 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
-import de.amr.pacmanfx.core.model.component.ghost.GhostStateMachine;
+import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
 import de.amr.pacmanfx.core.model.component.ghost.GhostWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.world.WorldMovement;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.ghost.GhostStateMachine;
 import de.amr.pacmanfx.core.model.world.House;
 
 import java.util.Collection;
@@ -42,8 +43,7 @@ public class Ghost extends Actor implements UpdatableEntity {
         registerComponent(Movement.class, new Movement());
         registerComponent(WorldMovement.class, new WorldMovement());
         registerComponent(WorldMovementPolicy.class, new GhostWorldMovementPolicy());
-        registerComponent(GhostStateMachine.class, new GhostStateMachine());
-
+        registerComponent(GhostStateComponent.class, new GhostStateComponent());
         //TODO call this in the actor factories of the different game variants
         if (personality == GameModel.RED_GHOST_SHADOW) {
             registerComponent(Elroy.class, new Elroy());
@@ -66,12 +66,12 @@ public class Ghost extends Actor implements UpdatableEntity {
     }
 
     public GhostState state() {
-        return assertComponent(GhostStateMachine.class).state();
+        return assertComponent(GhostStateComponent.class).state();
     }
 
     public void setState(GhostState state) {
         requireNonNull(state);
-        assertComponent(GhostStateMachine.class).setState(this, state);
+        assertComponent(GhostStateComponent.class).setState(state);
     }
 
     /**
@@ -110,14 +110,15 @@ public class Ghost extends Actor implements UpdatableEntity {
 
     @Override
     public void update(GameContext gameContext) {
-        assertComponent(GhostStateMachine.class).update(gameContext, this);
+        final GhostStateMachine stateMachine = gameContext.systems().ghostStateMachine;
+        stateMachine.update(gameContext, this);
     }
 
     @Override
     public String toString() {
         return "Ghost{" +
             "personality=" + personality +
-            ", state=" + assertComponent(GhostStateMachine.class).state() +
+            ", state=" + state() +
             ", specialTerrainTiles=" + specialTerrainTiles +
             ", startPosition=" + startPosition +
             super.toString() +

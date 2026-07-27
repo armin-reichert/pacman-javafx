@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component.ghost;
+package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
@@ -10,38 +10,29 @@ import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.EntityComponent;
 import de.amr.pacmanfx.core.model.component.common.Position;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.RandomWorldMovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
-import de.amr.pacmanfx.core.model.systems.ghost.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
 import static de.amr.basics.math.Direction.*;
 import static de.amr.pacmanfx.core.Validations.differsAtMost;
 import static java.util.Objects.requireNonNull;
 
-public class GhostStateMachine implements EntityComponent {
+public class GhostStateMachine {
 
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
 
-    private ObjectProperty<GhostState> state;
-
-    @Override
-    public void reset() {}
-    
     public void update(GameContext gameContext, Ghost ghost) {
         final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
         final float speed = speedRules.ghostSpeed(gameContext, ghost);
-        switch (state()) {
+        switch (ghost.state()) {
             case LOCKED         -> updateStateLocked(gameContext, ghost, speed);
             case LEAVING_HOUSE  -> updateStateLeavingHouse(gameContext, ghost, speed);
             case HUNTING_PAC    -> updateStateHuntingPac(gameContext, ghost, speed);
@@ -52,20 +43,6 @@ public class GhostStateMachine implements EntityComponent {
         }
     }
 
-    public ObjectProperty<GhostState> stateProperty() {
-        if (state == null) {
-            state = new SimpleObjectProperty<>(DEFAULT_STATE);
-        }
-        return state;
-    }
-
-    /**
-     * The current state of ghost ghost.
-     */
-    public GhostState state() {
-        return state != null ? stateProperty().get() : DEFAULT_STATE;
-    }
-
     /**
      * Changes the state of the ghost.
      *
@@ -73,12 +50,12 @@ public class GhostStateMachine implements EntityComponent {
      */
     public void setState(Ghost ghost, GhostState newState) {
         requireNonNull(newState);
-        if (state() == newState) {
+        if (ghost.state() == newState) {
             Logger.debug("{} is already in state {}", ghost.name(), newState);
         }
-        stateProperty().set(newState);
+        ghost.setState(newState);
 
-        // "onEntry" action:
+        // Execute "onEntry" action for the new state
         switch (newState) {
             case LOCKED, HUNTING_PAC -> ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
             case ENTERING_HOUSE, RETURNING_HOME -> ghost.animations.select(CommonAnimationID.GHOST_EYES);

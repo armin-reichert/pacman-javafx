@@ -17,6 +17,8 @@ public final class GameSystems {
 
     public final RandomWorldMovementSystem randomWorldMovementSystem = new RandomWorldMovementSystem();
 
+    public final GhostStateMachine ghostStateMachine = new GhostStateMachine();
+
     public final GhostHuntingStrategy pokeyHuntingStrategy = new PokeyHuntingStrategy();
     public final GhostHuntingStrategy bashfulHuntingStrategy = new BashfulHuntingStrategy();
     public final GhostHuntingStrategy shadowHuntingStrategy = new ShadowHuntingStrategy();
