@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     // Helpers
 
     private void configureGateKeeper() {
-        gateKeeper.setOnGhostReleased((level, releasedPrisoner) -> {
+        gateKeeper.setGhostReleasedCallback((level, releasedPrisoner) -> {
             if (releasedPrisoner.personality() == ORANGE_GHOST_POKEY) {
                 final Ghost blinky = level.ghost(RED_GHOST_SHADOW);
                 final Elroy elroy = blinky.assertComponent(Elroy.class);

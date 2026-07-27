@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.systems.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
@@ -22,13 +23,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pac extends Actor implements UpdatableEntity {
 
-    public static final byte REST_FOREVER = -1;
-
     private final BooleanProperty dead = new SimpleBooleanProperty(false);
-
-    private long restingTicks;
-
-    private long starvingTicks;
 
     private Steering automaticSteering;
 
@@ -41,13 +36,17 @@ public class Pac extends Actor implements UpdatableEntity {
         registerComponent(Movement.class, new Movement());
         registerComponent(WorldMovement.class, new WorldMovement());
         registerComponent(WorldMovementPolicy.class, new PacManWorldMovementPolicy());
+        registerComponent(PacDigestion.class, new PacDigestion());
         registerComponent(PacPower.class, new PacPower());
         registerComponent(PacCheats.class, new PacCheats());
-
     }
 
     public WorldMovement worldMovement() {
         return assertComponent(WorldMovement.class);
+    }
+
+    public PacDigestion digestion() {
+        return assertComponent(PacDigestion.class);
     }
 
     public PacPower power() {
@@ -62,11 +61,10 @@ public class Pac extends Actor implements UpdatableEntity {
     public String toString() {
         return "Pac{" +
             ", dead=" + isDead() +
-            ", restingTime=" + restingTicks +
-            ", starvingTime=" + starvingTicks +
             ", visible=" + visibility() +
             ", position=" + position() +
             ", movement=" + movement() +
+            ", digestion=" + digestion() +
             '}';
     }
 
@@ -79,12 +77,7 @@ public class Pac extends Actor implements UpdatableEntity {
         super.reset();
 
         setDead(false);
-
-        restingTicks = 0;
-        starvingTicks = 0;
-
         worldMovement().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
-
         animations.select(CommonAnimationID.PAC_MUNCHING);
     }
 
@@ -106,21 +99,20 @@ public class Pac extends Actor implements UpdatableEntity {
 
     @Override
     public void update(GameContext gameContext) {
-
-        if (isDead() || restingTicks == REST_FOREVER) {
-            return;
-        }
-
-        if (restingTicks > 0) {
-            restingTicks -= 1;
-            return;
-        }
-
         final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final PacDigestionSystem digestionSystem = gameContext.systems().pacDigestionSystem;
         final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
         final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
-
         final GameLevel level = gameContext.assertLevel();
+
+        if (isDead() || digestion().restingTicks() == PacDigestion.REST_FOREVER) {
+            return;
+        }
+
+        digestionSystem.update(this);
+        if (digestionSystem.isResting(this)) {
+            return;
+        }
 
         if (cheats().isUsingAutopilot()) {
             automaticSteering.steer(this, gameContext);
@@ -141,39 +133,12 @@ public class Pac extends Actor implements UpdatableEntity {
     }
 
     /**
-     * @return number of ticks Pac is resting
-     */
-    public long restingTicks() { return restingTicks; }
-
-    /**
-     * Sets the number of ticks Pac-Man is resting.
-     *
-     * @param ticks number of ticks
-     */
-    public void setRestingTicks(int ticks) {
-        restingTicks = ticks;
-    }
-
-    /**
-     *  @return number of ticks passed since a pellet or an energizer has been eaten.
-     */
-    public long starvingTicks() { return starvingTicks; }
-
-    public void continueStarving() {
-        ++starvingTicks;
-    }
-
-    public void endStarving() {
-        starvingTicks = 0;
-    }
-
-    /**
      * @return {@code true} if Pac-Man has run against a wall and could not move, its speed is zero
      * or if he is resting for an indefinite time.
      */
     public boolean isParalyzed() {
         return (movement().velX == 0 && movement().velY == 0)
             || !worldMovement().info.moved
-            || restingTicks == REST_FOREVER;
+            || digestion().restingTicks() == PacDigestion.REST_FOREVER;
     }
 }

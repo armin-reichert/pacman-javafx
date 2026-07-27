@@ -10,6 +10,8 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.PacDigestionSystem;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import org.tinylog.Logger;
 
 import java.util.Arrays;
@@ -113,7 +115,7 @@ public final class ArcadeHouseGateKeeper {
     private static final byte NO_LIMIT = -1;
     private static final byte[] GLOBAL_LIMITS = new byte[] {NO_LIMIT, 7, 17, NO_LIMIT};
 
-    private BiConsumer<GameLevel, Ghost> onGhostReleased =
+    private BiConsumer<GameLevel, Ghost> ghostReleasedCallback =
         (level, ghost) -> Logger.info("Game Level #{}: {} released", level.number(), ghost.name());
 
     private int          pacStarvingLimit;
@@ -122,11 +124,10 @@ public final class ArcadeHouseGateKeeper {
     private int          globalCounterValue;
     private boolean      globalCounterEnabled;
 
-    public ArcadeHouseGateKeeper() {
-    }
+    public ArcadeHouseGateKeeper() {}
 
-    public void setOnGhostReleased(BiConsumer<GameLevel, Ghost> handler) {
-        this.onGhostReleased = handler;
+    public void setGhostReleasedCallback(BiConsumer<GameLevel, Ghost> callback) {
+        this.ghostReleasedCallback = requireNonNull(callback);
     }
 
     public void reset() {
@@ -152,11 +153,11 @@ public final class ArcadeHouseGateKeeper {
     }
 
     /**
-     * @param level the game level
+     * @param gameContext the game context (assumes level exists)
      * @param prisoner the ghost to possibly get released
      * @return description why ghost has been released or {@link Optional#empty()} if ghost is not released
      */
-    private Optional<String> checkReleaseOfGhost(GameLevel level, Ghost prisoner) {
+    private Optional<String> checkReleaseOfGhost(GameContext gameContext, Ghost prisoner) {
         final byte personality = prisoner.personality();
         if (personality == GameModel.RED_GHOST_SHADOW) {
             return Optional.of("Red ghost gets released unconditionally");
@@ -169,10 +170,13 @@ public final class ArcadeHouseGateKeeper {
         if (globalCounterEnabled && GLOBAL_LIMITS[personality] != NO_LIMIT && globalCounterValue >= GLOBAL_LIMITS[personality]) {
             return Optional.of(String.format("Global dot counter reached limit (%d)", GLOBAL_LIMITS[personality]));
         }
+
         // check Pac-Man starving ticks
+        final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
-        if (pac.starvingTicks() >= pacStarvingLimit) {
-            pac.endStarving();
+        final PacDigestionSystem digestionSystem = gameContext.systems().pacDigestionSystem;
+        if (pac.digestion().starvingTicks() >= pacStarvingLimit) {
+            digestionSystem.endStarving(pac);
             return Optional.of(String.format("%s reached starving limit (%d ticks)", pac.name(), pacStarvingLimit));
         }
         return Optional.empty();
@@ -206,22 +210,24 @@ public final class ArcadeHouseGateKeeper {
         }
     }
 
-    public void unlockGhostIfPossible(GameLevel level) {
-        requireNonNull(level);
+    public void unlockGhostIfPossible(GameContext gameContext) {
+        requireNonNull(gameContext);
 
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final GameLevel level = gameContext.assertLevel();
         final House house = level.worldMap().terrainLayer().assertHouse();
-
         final Ghost blinky = level.ghost(GameModel.RED_GHOST_SHADOW);
+
         if (blinky.state() == GhostState.LOCKED) {
             if (house.isVisitedBy(blinky)) {
                 // Leave house immediately again after being eaten
-                GameContext.SYSTEMS.worldMovementSystem.setMoveDir(blinky, Direction.UP);
-                GameContext.SYSTEMS.worldMovementSystem.setWishDir(blinky, Direction.UP);
+                worldMovementSystem.setMoveDir(blinky, Direction.UP);
+                worldMovementSystem.setWishDir(blinky, Direction.UP);
                 blinky.setState(GhostState.LEAVING_HOUSE);
             } else {
                 // Start hunting towards west direction
-                GameContext.SYSTEMS.worldMovementSystem.setMoveDir(blinky, Direction.LEFT);
-                GameContext.SYSTEMS.worldMovementSystem.setWishDir(blinky, Direction.LEFT);
+                worldMovementSystem.setMoveDir(blinky, Direction.LEFT);
+                worldMovementSystem.setWishDir(blinky, Direction.LEFT);
                 blinky.setState(GhostState.HUNTING_PAC);
             }
         }
@@ -229,11 +235,11 @@ public final class ArcadeHouseGateKeeper {
             .map(level::ghost)
             .filter(ghost -> ghost.state() == GhostState.LOCKED)
             .findFirst()
-            .ifPresent(prisoner -> checkReleaseOfGhost(level, prisoner).ifPresent(_ -> {
-                GameContext.SYSTEMS.worldMovementSystem.setMoveDir(prisoner, Direction.UP);
-                GameContext.SYSTEMS.worldMovementSystem.setWishDir(prisoner, Direction.UP);
+            .ifPresent(prisoner -> checkReleaseOfGhost(gameContext, prisoner).ifPresent(_ -> {
+                worldMovementSystem.setMoveDir(prisoner, Direction.UP);
+                worldMovementSystem.setWishDir(prisoner, Direction.UP);
                 prisoner.setState(GhostState.LEAVING_HOUSE);
-                onGhostReleased.accept(level, prisoner);
+                ghostReleasedCallback.accept(level, prisoner);
             }));
     }
 }

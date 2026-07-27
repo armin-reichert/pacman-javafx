@@ -8,7 +8,6 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 
@@ -53,10 +52,6 @@ public interface GamePlay {
     void onEatGhost(GameContext gameContext, Ghost eatenGhost);
 
     void activateNextBonus(GameContext gameContext);
-
-    void startPacPowerMode(GameContext gameContext, Pac pac);
-
-    void updatePacPowerMode(GameContext gameContext, Pac pac);
 
     void onLevelCompleted(GameContext gameContext);
 

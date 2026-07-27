@@ -59,7 +59,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     // helpers
 
     protected void configureGateKeeper() {
-        gateKeeper.setOnGhostReleased((level, prisoner) -> {
+        gateKeeper.setGhostReleasedCallback((level, prisoner) -> {
             if (prisoner.personality() == ORANGE_GHOST_POKEY) {
                 final Ghost redGhost = level.ghost(RED_GHOST_SHADOW);
                 final Elroy elroy = redGhost.assertComponent(Elroy.class);

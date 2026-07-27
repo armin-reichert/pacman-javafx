@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.systems.PacPowerSystem;
+import de.amr.pacmanfx.core.model.systems.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
@@ -153,10 +153,10 @@ public abstract class CommonGamePlay implements GamePlay {
         level.huntingRules().update(model.rules(), level.number());
 
         if (gateKeeper != null) {
-            gateKeeper.unlockGhostIfPossible(level);
+            gateKeeper.unlockGhostIfPossible(gameContext);
         }
 
-        updatePacPowerMode(gameContext, pac);
+        gameContext.systems().pacPowerSystem.update(gameContext, pac);
 
         // If double-check active, do an additional collision check before Pac has moved
         level.entities().forEach(entity -> {
@@ -164,6 +164,7 @@ public abstract class CommonGamePlay implements GamePlay {
                 entity.update(gameContext);
             }
         });
+
         if (doubleChecked) {
             detectCollisions(gameContext);
         }
@@ -176,7 +177,8 @@ public abstract class CommonGamePlay implements GamePlay {
     private void evalCollisions(GameContext gameContext) {
         final GameLevel level = gameContext.assertLevel();
         final HuntingStepResult result = gameContext.thisFrame().huntingStep();
-        evalFoodFound(gameContext);
+
+        checkFoodFound(gameContext);
 
         if (result.foundEdibleBonus()) {
             onEatBonus(gameContext, result.edibleBonus());
@@ -191,33 +193,28 @@ public abstract class CommonGamePlay implements GamePlay {
         }
     }
 
-    private void evalFoodFound(GameContext gameContext) {
-        final GameModel model = gameContext.model();
+    private void checkFoodFound(GameContext gameContext) {
+        final HuntingStepResult huntingResult = gameContext.thisFrame().huntingStep();
         final GameLevel level = gameContext.assertLevel();
-        final GameEventManager eventManager = gameContext.eventManager();
         final Pac pac = level.entities().pac();
-        final HuntingStepResult hunting = gameContext.thisFrame().huntingStep();
+        final PacDigestionSystem pacDigestionSystem = gameContext.systems().pacDigestionSystem;
 
-        if (!hunting.foodFound()) {
-            pac.continueStarving();
-            return;
+        if (huntingResult.foodFound()) {
+            pacDigestionSystem.endStarving(pac);
+            final Vector2i foodTile = huntingResult.foodFoundTile();
+            level.worldMap().foodLayer().markFoodEatenAt(foodTile);
+            if (huntingResult.energizerFound()) {
+                onEatEnergizer(gameContext, foodTile);
+            } else {
+                onEatPellet(gameContext, foodTile);
+            }
+            if (gameContext.model().rules().scoringRules().isBonusAwarded(level)) {
+                activateNextBonus(gameContext);
+            }
+            gameContext.eventManager().publishGameEvent(new PacEatsFoodEvent(pac, huntingResult.energizerFound(), false));
         }
-
-        pac.endStarving();
-
-        final Vector2i foodTile = hunting.foodFoundTile();
-        level.worldMap().foodLayer().markFoodEatenAt(foodTile);
-
-        if (hunting.energizerFound()) {
-            onEatEnergizer(gameContext, foodTile);
-        } else {
-            onEatPellet(gameContext, foodTile);
-        }
-
-        eventManager.publishGameEvent(new PacEatsFoodEvent(pac, hunting.energizerFound(), false));
-
-        if (model.rules().scoringRules().isBonusAwarded(level)) {
-            activateNextBonus(gameContext);
+        else {
+            pacDigestionSystem.starve(pac);
         }
     }
 
@@ -264,12 +261,14 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(gameContext);
         requireNonNull(tile);
 
+        final PacDigestionSystem pacDigestionSystem = gameContext.systems().pacDigestionSystem;
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
+        final Pac pac = level.entities().pac();
 
         scorePoints(gameContext, model.rules().scoringRules().pointsForPellet(), level.number());
         model.gateKeeper().registerFoodEaten(level);
-        level.entities().pac().setRestingTicks(model.rules().restingTicksForPellet());
+        pacDigestionSystem.onPacEatsPellet(gameContext, pac);
     }
 
     @Override
@@ -280,12 +279,14 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
+        final PacDigestionSystem pacDigestionSystem = gameContext.systems().pacDigestionSystem;
 
         scorePoints(gameContext, model.rules().scoringRules().pointsForEnergizer(), level.number());
         model.gateKeeper().registerFoodEaten(level);
-        pac.setRestingTicks(model.rules().restingTicksForEnergizer());
+        pacDigestionSystem.onPacEatsEnergizer(gameContext, pac);
         level.clearGhostKillChain();
-        startPacPowerMode(gameContext, pac);
+
+        gameContext.systems().pacPowerSystem.start(gameContext, pac);
     }
 
     @Override
@@ -360,24 +361,6 @@ public abstract class CommonGamePlay implements GamePlay {
         });
 
         level.optBonus().ifPresent(bonus -> bonus.setInactive(gameContext));
-    }
-
-    @Override
-    public void startPacPowerMode(GameContext gameContext, Pac pac) {
-        requireNonNull(gameContext);
-        requireNonNull(pac);
-
-        final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
-        powerSystem.start(gameContext, pac);
-    }
-
-    @Override
-    public void updatePacPowerMode(GameContext gameContext, Pac pac) {
-        requireNonNull(gameContext);
-        requireNonNull(pac);
-
-        final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
-        powerSystem.update(gameContext, pac);
     }
 
     // Scoring
