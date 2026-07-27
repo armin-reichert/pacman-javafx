@@ -12,9 +12,7 @@ import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.common.Movement;
-import de.amr.pacmanfx.core.model.component.ghost.Elroy;
-import de.amr.pacmanfx.core.model.component.ghost.GhostStateMachine;
-import de.amr.pacmanfx.core.model.component.ghost.GhostWorldMovementPolicy;
+import de.amr.pacmanfx.core.model.component.ghost.*;
 import de.amr.pacmanfx.core.model.component.world.WorldMovement;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -72,6 +70,17 @@ public class Ghost extends Actor implements UpdatableEntity {
         registerComponent(WorldMovement.class, new WorldMovement());
         registerComponent(WorldMovementPolicy.class, new GhostWorldMovementPolicy());
         registerComponent(GhostStateMachine.class, new GhostStateMachine());
+
+        //TODO call this in the actor factories of the different game variants
+        registerComponent(GhostHuntingStrategy.class, switch (personality) {
+            case GameModel.RED_GHOST_SHADOW -> new ShadowHuntingStrategy();
+            case GameModel.PINK_GHOST_SPEEDY -> new SpeedyHuntingStrategy();
+            case GameModel.CYAN_GHOST_BASHFUL-> new BashfulHuntingStrategy();
+            case GameModel.ORANGE_GHOST_POKEY -> new AttackRetreatIfNearHuntingStrategy();
+            default -> throw new IllegalStateException("Unexpected value: " + personality);
+        });
+
+        //TODO call this in the actor factories of the different game variants
         if (personality == GameModel.RED_GHOST_SHADOW) {
             registerComponent(Elroy.class, new Elroy());
         }
