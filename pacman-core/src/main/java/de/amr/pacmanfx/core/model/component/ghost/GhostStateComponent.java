@@ -7,10 +7,12 @@ import static java.util.Objects.requireNonNull;
 
 public class GhostStateComponent implements EntityComponent {
 
+    public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
+
     private GhostState state;
 
     public GhostStateComponent() {
-        state = GhostState.LOCKED;
+        state = DEFAULT_STATE;
     }
 
     public GhostState state() {
@@ -23,6 +25,6 @@ public class GhostStateComponent implements EntityComponent {
 
     @Override
     public void reset() {
-        state = GhostState.LOCKED;
+        state = DEFAULT_STATE;
     }
 }

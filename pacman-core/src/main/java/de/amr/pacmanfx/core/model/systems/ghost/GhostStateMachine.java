@@ -27,8 +27,6 @@ import static java.util.Objects.requireNonNull;
 
 public class GhostStateMachine {
 
-    public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
-
     public void update(GameContext gameContext, Ghost ghost) {
         final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
         final float speed = speedRules.ghostSpeed(gameContext, ghost);
