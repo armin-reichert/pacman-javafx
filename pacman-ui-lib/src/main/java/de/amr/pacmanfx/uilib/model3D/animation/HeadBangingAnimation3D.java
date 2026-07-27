@@ -63,7 +63,7 @@ public class HeadBangingAnimation3D extends Pac3DMovementAnimation {
 
     public void update(Pac pac) {
         final var rotateTransition = (RotateTransition) animationFX();
-        final boolean animate = pac.state() == Pac.State.WALKING && !pac.gotStuck();
+        final boolean animate = pac.state() == Pac.State.ACTIVE && !pac.gotStuck();
         if (animate) {
             final Point3D axis = pac.worldMovement().moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
             if (!axis.equals(rotateTransition.getAxis())) {

@@ -75,7 +75,7 @@ public class HipSwayingAnimation3D extends Pac3DMovementAnimation {
     }
 
     public void update(Pac pac) {
-        final boolean animate = pac.state() == Pac.State.WALKING && !pac.gotStuck();
+        final boolean animate = pac.state() == Pac.State.ACTIVE && !pac.gotStuck();
         if (animate) {
             playOrContinue();
         } else {

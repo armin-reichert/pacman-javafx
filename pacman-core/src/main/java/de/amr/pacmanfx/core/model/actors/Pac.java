@@ -21,8 +21,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pac extends Actor implements UpdatableEntity {
 
-    /** The walking dead. */
-    public enum State { WALKING, DEAD }
+    public enum State {ACTIVE, DEAD }
 
     private State state;
 
@@ -41,7 +40,7 @@ public class Pac extends Actor implements UpdatableEntity {
         registerComponent(PacPower.class, new PacPower());
         registerComponent(PacCheats.class, new PacCheats());
 
-        state = State.WALKING;
+        state = State.ACTIVE;
     }
 
     public WorldMovement worldMovement() {
@@ -83,7 +82,7 @@ public class Pac extends Actor implements UpdatableEntity {
     public void reset() {
         super.reset();
 
-        state = State.WALKING;
+        state = State.ACTIVE;
         worldMovement().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
         animations.select(CommonAnimationID.PAC_MUNCHING);
     }
