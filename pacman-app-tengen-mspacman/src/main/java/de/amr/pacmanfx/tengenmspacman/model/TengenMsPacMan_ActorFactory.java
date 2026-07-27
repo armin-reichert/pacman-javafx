@@ -129,7 +129,7 @@ public final class TengenMsPacMan_ActorFactory {
     }
 
     private static void selectRandomWishDir(Ghost ghost, GameContext gameContext) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
         final Vector2i ghostTile = WorldMovementSystem.computeTile(ghost);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(ghostTile);
@@ -141,7 +141,7 @@ public final class TengenMsPacMan_ActorFactory {
         Direction dir = Direction.random();
         while (++dirsTried <= 4) {
             if (isAcceptableWishDir(gameContext, ghost, dir)) {
-                worldMovementSystem.setWishDir(ghost, dir);
+                navigator.setWishDir(ghost, dir);
                 Logger.debug("{} selects random wish direction {}", ghost.name(), dir);
                 break;
             }

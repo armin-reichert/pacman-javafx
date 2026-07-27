@@ -107,10 +107,11 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     private void updateSceneState() {
-        final WorldMovementSystem worldMovementSystem = gameContext().systems().navigator;
+        final WorldMovementSystem navigator = gameContext().systems().navigator;
+
         switch (sceneState) {
             case CLAPPERBOARD -> transition(SceneState.DELIVER_JUNIOR)
-                .ifPresentOrElse(state -> enterDeliverJuniorState(worldMovementSystem, state), this::updateClapperboardState);
+                .ifPresentOrElse(state -> enterDeliverJuniorState(navigator, state), this::updateClapperboardState);
 
             case DELIVER_JUNIOR -> transition(SceneState.END)
                 .ifPresentOrElse(this::changeState, this::updateDeliverJuniorState);
@@ -138,17 +139,17 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
     // State DELIVER_JUNIOR
 
-    private void enterDeliverJuniorState(WorldMovementSystem worldMovementSystem, SceneState newState) {
+    private void enterDeliverJuniorState(WorldMovementSystem navigator, SceneState newState) {
         pacMan.position().set(TS * 3, GROUND_Y - 4);
         pacMan.visibility().show();
-        worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
+        navigator.setMoveDir(pacMan, Direction.RIGHT);
 
         pacMan.animations.select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
         pacMan.animations.stopSelected();
 
         msPacMan.position().set(TS * 5, GROUND_Y - 4);
         msPacMan.visibility().show();
-        worldMovementSystem.setMoveDir(msPacMan, Direction.RIGHT);
+        navigator.setMoveDir(msPacMan, Direction.RIGHT);
 
         msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         msPacMan.animations.stopSelected();

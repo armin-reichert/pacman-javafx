@@ -30,7 +30,7 @@ public class RandomWorldMovementSystem {
         requireNonNull(actor);
 
         final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
 
         final Vector2i tile = WorldMovementSystem.computeTile(actor);
@@ -39,11 +39,11 @@ public class RandomWorldMovementSystem {
         final boolean stuck = !worldMovement.info.moved;
         if ((worldMovement.isNewTileEntered() || stuck) && !teleporting) {
             final Direction dir = computeRoamingDirection(gameContext, actor, tile);
-            worldMovementSystem.setWishDir(actor, dir);
+            navigator.setWishDir(actor, dir);
             Logger.debug("Ghost {} takes random wish direction {}", actor.name(), dir);
         }
-        worldMovementSystem.setSpeed(actor, speed);
-        worldMovementSystem.tryMovingOrTeleporting(actor, gameContext);
+        navigator.setSpeed(actor, speed);
+        navigator.tryMovingOrTeleporting(actor, gameContext);
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way

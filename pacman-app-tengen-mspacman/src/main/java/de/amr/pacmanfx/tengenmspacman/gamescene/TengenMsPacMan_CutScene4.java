@@ -183,7 +183,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         }
     }
 
-    private void spawnJunior(WorldMovementSystem worldMovementSystem, GameVariantRenderConfig renderConfig, long tick) {
+    private void spawnJunior(WorldMovementSystem navigator, GameVariantRenderConfig renderConfig, long tick) {
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
 
         double randomX = 8 * TS + (8 * TS) * Math.random();
@@ -191,8 +191,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         final Pac junior = TengenMsPacMan_ActorFactory.createPacMan();
         junior.position().set((float) randomX, unscaledHeight() - 4 * TS);
         junior.visibility().show();
-        worldMovementSystem.setMoveDir(junior, Direction.UP);
-        worldMovementSystem.setSpeed(junior, 2);
+        navigator.setMoveDir(junior, Direction.UP);
+        navigator.setSpeed(junior, 2);
 
         junior.animations = renderConfig.createPacAnimations(spriteAnimations);
         junior.animations.select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
@@ -210,14 +210,14 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         Logger.info("Junior spawned at tick {}", tick);
     }
 
-    private void updateJunior(MovementSystem movementSystem, WorldMovementSystem worldMovementSystem, long tick, int index) {
+    private void updateJunior(MovementSystem motor, WorldMovementSystem navigator, long tick, int index) {
         Pac junior = juniors.get(index);
         long creationTime = juniorCreationTimes.get(index);
         long lifeTime = tick - creationTime;
         if (lifeTime> 0 && lifeTime % 10 == 0) {
-            computeNewMoveDir(worldMovementSystem, junior);
+            computeNewMoveDir(navigator, junior);
         }
-        movementSystem.moveAccelerated(junior);
+        motor.moveAccelerated(junior);
         if (junior.position().x > unscaledWidth()) {
             junior.position().setX(0);
         }
@@ -226,7 +226,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         }
     }
 
-    private void computeNewMoveDir(WorldMovementSystem worldMovementSystem, Pac junior) {
+    private void computeNewMoveDir(WorldMovementSystem navigator, Pac junior) {
         Direction oldMoveDir = junior.worldMovement().moveDir();
         List<Direction> possibleDirs = new ArrayList<>(List.of(Direction.values()));
         possibleDirs.remove(oldMoveDir.opposite());
@@ -235,12 +235,11 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         Direction bestDir = dirsByMinCenterDist.getFirst();
         Direction randomDir = possibleDirs.get(randomInt(0, possibleDirs.size()));
         boolean chooseBestDir = randomInt(0, 100) < 40;
-        worldMovementSystem.setMoveDir(junior, chooseBestDir ? bestDir : randomDir);
+        navigator.setMoveDir(junior, chooseBestDir ? bestDir : randomDir);
     }
 
     private int compareBySmallestDistToSceneCenter(Pac junior, Direction dir1, Direction dir2) {
-        final WorldMovementSystem worldMovementSystem = gameContext().systems().navigator;
-        Vector2i tile = worldMovementSystem.computeTile(junior);
+        Vector2i tile = WorldMovementSystem.computeTile(junior);
         Vector2f pos1 = tile.plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = tile.plus(dir2.vector()).scaled(TS).toVector2f();
         Vector2f center = new Vector2f(0.5f * unscaledWidth(), 0.5f * unscaledHeight());

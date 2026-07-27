@@ -11,15 +11,15 @@ public class ShadowHuntingStrategy implements GhostHuntingStrategy {
 
     @Override
     public void hunt(GameContext gameContext, Ghost ghost, float speed) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
 
-        worldMovementSystem.setSpeed(ghost, speed);
+        navigator.setSpeed(ghost, speed);
         final boolean chase = level.huntingRules().isChasing() || ghost.assertComponent(Elroy.class).enabled();
         final Vector2i targetTile = chase
             ? computeChasingTargetTile(gameContext)
             : computeScatterTile(gameContext, ghost);
-        worldMovementSystem.tryMovingTowardsTargetTile(ghost, gameContext, targetTile);
+        navigator.tryMovingTowardsTargetTile(ghost, gameContext, targetTile);
     }
 
     private Vector2i computeChasingTargetTile(GameContext gameContext) {

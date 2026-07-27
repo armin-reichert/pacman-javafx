@@ -88,7 +88,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer container = appContext().ui().sprites().animations();
 
-        final WorldMovementSystem worldMovementSystem = gameContext().systems().navigator;
+        final WorldMovementSystem navigator = gameContext().systems().navigator;
         final GhostStateSystem ghostStateSystem = gameContext().systems().ghostStateSystem;
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
@@ -98,8 +98,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.position().set(WorldMap.TS * 31, WorldMap.TS * 20);
-        worldMovementSystem.setMoveDir(msPacMan, Direction.LEFT);
-        worldMovementSystem.setSpeed(msPacMan, ACTOR_SPEED);
+        navigator.setMoveDir(msPacMan, Direction.LEFT);
+        navigator.setSpeed(msPacMan, ACTOR_SPEED);
         msPacMan.visibility().show();
         msPacMan.animations = renderConfig.createPacAnimations(container);
         msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
@@ -114,9 +114,9 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
         for (Ghost ghost : ghosts) {
             ghost.position().set(WorldMap.TS * 33.5f, WorldMap.TS * 20);
-            worldMovementSystem.setMoveDir(ghost, Direction.LEFT);
-            worldMovementSystem.setWishDir(ghost, Direction.LEFT);
-            worldMovementSystem.setSpeed(ghost, ACTOR_SPEED);
+            navigator.setMoveDir(ghost, Direction.LEFT);
+            navigator.setWishDir(ghost, Direction.LEFT);
+            navigator.setSpeed(ghost, ACTOR_SPEED);
             ghostStateSystem.changeState(ghost, GhostState.HUNTING_PAC);
             ghost.visibility().show();
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);

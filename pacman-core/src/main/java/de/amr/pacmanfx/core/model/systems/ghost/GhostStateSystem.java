@@ -106,8 +106,8 @@ public class GhostStateSystem {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameContext gameContext, Ghost ghost, float speed) {
-        final RandomWorldMovementSystem randomWorldMovementSystem = gameContext.systems().randomWorldMovementSystem;
-        randomWorldMovementSystem.roam(gameContext, ghost, speed);
+        final RandomWorldMovementSystem randomNavigator = gameContext.systems().randomWorldMovementSystem;
+        randomNavigator.roam(gameContext, ghost, speed);
         ghost.playFrightenedAnimation(gameContext);
     }
 

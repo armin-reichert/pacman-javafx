@@ -86,21 +86,21 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
         sceneTimer.start();
     }
 
-    private void updateStateClapperboard(WorldMovementSystem worldMovementSystem) {
+    private void updateStateClapperboard(WorldMovementSystem navigator) {
         clapperboard.tick();
         if (sceneTimer.hasExpired()) {
             appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
-            enterStateChasing(worldMovementSystem);
+            enterStateChasing(navigator);
         }
     }
 
-    private void enterStateChasing(WorldMovementSystem worldMovementSystem) {
-        worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
+    private void enterStateChasing(WorldMovementSystem navigator) {
+        navigator.setMoveDir(pacMan, Direction.RIGHT);
 
         pacMan.animations.select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
         pacMan.animations.playSelected();
 
-        worldMovementSystem.setMoveDir(msPacMan, Direction.RIGHT);
+        navigator.setMoveDir(msPacMan, Direction.RIGHT);
 
         msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         msPacMan.animations.playSelected();

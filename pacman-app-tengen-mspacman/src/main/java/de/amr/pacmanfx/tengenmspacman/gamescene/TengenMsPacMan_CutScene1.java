@@ -94,7 +94,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final WorldMovementSystem worldMovementSystem = gameContext().systems().navigator;
+        final WorldMovementSystem navigator = gameContext().systems().navigator;
 
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
@@ -113,26 +113,26 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
         msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
-        worldMovementSystem.setMoveDir(msPacMan, Direction.LEFT);
-        worldMovementSystem.setSpeed(msPacMan, 0);
+        navigator.setMoveDir(msPacMan, Direction.LEFT);
+        navigator.setSpeed(msPacMan, 0);
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
         pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
         pacMan.position().set(LEFT_BORDER, UPPER_LANE);
-        worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
-        worldMovementSystem.setSpeed(pacMan, 0);
+        navigator.setMoveDir(pacMan, Direction.RIGHT);
+        navigator.setSpeed(pacMan, 0);
 
         inky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
-        worldMovementSystem.setMoveDir(inky, Direction.RIGHT);
-        worldMovementSystem.setWishDir(inky, Direction.RIGHT);
+        navigator.setMoveDir(inky, Direction.RIGHT);
+        navigator.setWishDir(inky, Direction.RIGHT);
         inky.position().set(LEFT_BORDER, UPPER_LANE);
-        worldMovementSystem.setSpeed(inky, 0);
+        navigator.setSpeed(inky, 0);
 
         pinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
-        worldMovementSystem.setMoveDir(pinky, Direction.LEFT);
-        worldMovementSystem.setWishDir(pinky, Direction.LEFT);
+        navigator.setMoveDir(pinky, Direction.LEFT);
+        navigator.setWishDir(pinky, Direction.LEFT);
         pinky.position().set(RIGHT_BORDER, LOWER_LANE);
-        worldMovementSystem.setSpeed(pinky, 0);
+        navigator.setSpeed(pinky, 0);
 
         heart = new Actor();
         heart.animations = singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART));

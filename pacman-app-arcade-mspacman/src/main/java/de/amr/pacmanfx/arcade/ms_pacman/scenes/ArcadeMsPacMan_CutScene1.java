@@ -68,13 +68,13 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        final MovementSystem movementSystem = gameContext.systems().motor;
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final MovementSystem motor = gameContext.systems().motor;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         switch (sceneState) {
-            case CLAPPERBOARD -> updateStateClapperboard(worldMovementSystem);
-            case CHASED_BY_GHOSTS -> updateStateChasedByGhosts(movementSystem, worldMovementSystem);
-            case COMING_TOGETHER -> updateStateComingTogether(movementSystem, worldMovementSystem);
+            case CLAPPERBOARD -> updateStateClapperboard(navigator);
+            case CHASED_BY_GHOSTS -> updateStateChasedByGhosts(motor, navigator);
+            case COMING_TOGETHER -> updateStateComingTogether(motor, navigator);
             case IN_HEAVEN -> updateStateInHeaven();
             default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
         }
@@ -117,21 +117,21 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sceneTimer.start();
     }
 
-    private void updateStateClapperboard(WorldMovementSystem worldMovementSystem) {
+    private void updateStateClapperboard(WorldMovementSystem navigator) {
         clapperboard.tick();
         if (sceneTimer.atSecond(1)) {
             appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
         } else if (sceneTimer.hasExpired()) {
-            enterStateChasedByGhosts(worldMovementSystem);
+            enterStateChasedByGhosts(navigator);
         }
     }
 
-    private void enterStateChasedByGhosts(WorldMovementSystem worldMovementSystem) {
+    private void enterStateChasedByGhosts(WorldMovementSystem navigator) {
         pacMan.position().set(WorldMap.TS * (-2), UPPER_Y);
         pacMan.visibility().show();
 
-        worldMovementSystem.setMoveDir(pacMan, Direction.RIGHT);
-        worldMovementSystem.setSpeed(pacMan, SPEED_PAC_CHASING);
+        navigator.setMoveDir(pacMan, Direction.RIGHT);
+        navigator.setSpeed(pacMan, SPEED_PAC_CHASING);
 
         pacMan.animations.select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
         pacMan.animations.playSelected();
@@ -139,9 +139,9 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         inky.position().set(pacMan.position().x - 6 * WorldMap.TS, pacMan.position().y);
         inky.visibility().show();
 
-        worldMovementSystem.setSpeed(inky, SPEED_GHOST_CHASING);
-        worldMovementSystem.setMoveDir(inky, Direction.RIGHT);
-        worldMovementSystem.setWishDir(inky, Direction.RIGHT);
+        navigator.setSpeed(inky, SPEED_GHOST_CHASING);
+        navigator.setMoveDir(inky, Direction.RIGHT);
+        navigator.setWishDir(inky, Direction.RIGHT);
 
         inky.animations.select(CommonAnimationID.GHOST_NORMAL);
         inky.animations.playSelected();
@@ -149,8 +149,8 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         msPacMan.position().set(WorldMap.TS * 30, LOWER_Y);
         msPacMan.visibility().show();
 
-        worldMovementSystem.setMoveDir(msPacMan, Direction.LEFT);
-        worldMovementSystem.setSpeed(msPacMan, SPEED_PAC_CHASING);
+        navigator.setMoveDir(msPacMan, Direction.LEFT);
+        navigator.setSpeed(msPacMan, SPEED_PAC_CHASING);
 
         msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         msPacMan.animations.playSelected();
@@ -158,9 +158,9 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         pinky.position().set(msPacMan.position().x + 6 * WorldMap.TS, msPacMan.position().y);
         pinky.visibility().show();
 
-        worldMovementSystem.setMoveDir(pinky, Direction.LEFT);
-        worldMovementSystem.setWishDir(pinky, Direction.LEFT);
-        worldMovementSystem.setSpeed(pinky, SPEED_GHOST_CHASING);
+        navigator.setMoveDir(pinky, Direction.LEFT);
+        navigator.setWishDir(pinky, Direction.LEFT);
+        navigator.setSpeed(pinky, SPEED_GHOST_CHASING);
 
         pinky.animations.select(CommonAnimationID.GHOST_NORMAL);
         pinky.animations.playSelected();
@@ -168,64 +168,64 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         setState(SceneState.CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
     }
 
-    private void updateStateChasedByGhosts(MovementSystem movementSystem, WorldMovementSystem worldMovementSystem) {
+    private void updateStateChasedByGhosts(MovementSystem motor, WorldMovementSystem navigator) {
         if (inky.position().x > WorldMap.TS * 30) {
-            enterStateComingTogether(worldMovementSystem);
+            enterStateComingTogether(navigator);
         }
         else {
-            List.of(pacMan, msPacMan, inky, pinky).forEach(movementSystem::moveAccelerated);
+            List.of(pacMan, msPacMan, inky, pinky).forEach(motor::moveAccelerated);
         }
     }
 
-    private void enterStateComingTogether(WorldMovementSystem worldMovementSystem) {
+    private void enterStateComingTogether(WorldMovementSystem navigator) {
         msPacMan.position().set(WorldMap.TS * (-3), MIDDLE_Y);
-        worldMovementSystem.setMoveDir(msPacMan, Direction.RIGHT);
+        navigator.setMoveDir(msPacMan, Direction.RIGHT);
 
         pinky.position().set(msPacMan.position().x - 5 * WorldMap.TS, msPacMan.position().y);
-        worldMovementSystem.setMoveDir(pinky, Direction.RIGHT);
-        worldMovementSystem.setWishDir(pinky, Direction.RIGHT);
+        navigator.setMoveDir(pinky, Direction.RIGHT);
+        navigator.setWishDir(pinky, Direction.RIGHT);
 
         pacMan.position().set(WorldMap.TS * 31, MIDDLE_Y);
-        worldMovementSystem.setMoveDir(pacMan, Direction.LEFT);
+        navigator.setMoveDir(pacMan, Direction.LEFT);
 
         inky.position().set(pacMan.position().x + 5 * WorldMap.TS, pacMan.position().y);
-        worldMovementSystem.setMoveDir(inky, Direction.LEFT);
-        worldMovementSystem.setWishDir(inky, Direction.LEFT);
+        navigator.setMoveDir(inky, Direction.LEFT);
+        navigator.setWishDir(inky, Direction.LEFT);
 
         setState(SceneState.COMING_TOGETHER, TickTimer.INDEFINITE);
     }
 
-    private void updateStateComingTogether(MovementSystem movementSystem, WorldMovementSystem worldMovementSystem) {
+    private void updateStateComingTogether(MovementSystem motor, WorldMovementSystem navigator) {
         // Pac-Man and Ms. Pac-Man reach end position?
         if (pacMan.worldMovement().moveDir() == Direction.UP && pacMan.position().y < UPPER_Y) {
-            enterStateInHeaven(worldMovementSystem);
+            enterStateInHeaven(navigator);
         }
 
         // Pac-Man and Ms. Pac-Man meet?
         else if (pacMan.worldMovement().moveDir() == Direction.LEFT && pacMan.position().x - msPacMan.position().x < WorldMap.TS * 2) {
-            worldMovementSystem.setMoveDir(pacMan, Direction.UP);
-            worldMovementSystem.setSpeed(pacMan, SPEED_RISING);
-            worldMovementSystem.setMoveDir(msPacMan, Direction.UP);
-            worldMovementSystem.setSpeed(msPacMan, SPEED_RISING);
+            navigator.setMoveDir(pacMan, Direction.UP);
+            navigator.setSpeed(pacMan, SPEED_RISING);
+            navigator.setMoveDir(msPacMan, Direction.UP);
+            navigator.setSpeed(msPacMan, SPEED_RISING);
         }
 
         // Inky and Pinky collide?
         else if (inky.worldMovement().moveDir() == Direction.LEFT && inky.position().x - pinky.position().x < WorldMap.TS * 2) {
-            worldMovementSystem.setMoveDir(inky, Direction.RIGHT);
-            worldMovementSystem.setWishDir(inky, Direction.RIGHT);
-            worldMovementSystem.setSpeed(inky, SPEED_GHOST_AFTER_COLLISION);
+            navigator.setMoveDir(inky, Direction.RIGHT);
+            navigator.setWishDir(inky, Direction.RIGHT);
+            navigator.setSpeed(inky, SPEED_GHOST_AFTER_COLLISION);
             inky.movement().velY -= 2.0f;
             inky.movement().setAcceleration(0, 0.4f);
 
-            worldMovementSystem.setMoveDir(pinky, Direction.LEFT);
-            worldMovementSystem.setWishDir(pinky, Direction.LEFT);
-            worldMovementSystem.setSpeed(pinky, SPEED_GHOST_AFTER_COLLISION);
+            navigator.setMoveDir(pinky, Direction.LEFT);
+            navigator.setWishDir(pinky, Direction.LEFT);
+            navigator.setSpeed(pinky, SPEED_GHOST_AFTER_COLLISION);
             pinky.movement().velY -= 2.0f;
             pinky.movement().setAcceleration(0, 0.4f);
         }
 
         else {
-            List.of(pacMan, msPacMan, inky, pinky).forEach(movementSystem::moveAccelerated);
+            List.of(pacMan, msPacMan, inky, pinky).forEach(motor::moveAccelerated);
 
             // Collision with ground?
             if (inky.position().y > MIDDLE_Y) {
@@ -239,15 +239,15 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         }
     }
 
-    private void enterStateInHeaven(WorldMovementSystem worldMovementSystem) {
-        worldMovementSystem.setSpeed(pacMan, 0);
-        worldMovementSystem.setMoveDir(pacMan, Direction.LEFT);
+    private void enterStateInHeaven(WorldMovementSystem navigator) {
+        navigator.setSpeed(pacMan, 0);
+        navigator.setMoveDir(pacMan, Direction.LEFT);
 
         pacMan.animations.stopSelected();
         pacMan.animations.resetSelected();
 
-        worldMovementSystem.setSpeed(msPacMan, 0);
-        worldMovementSystem.setMoveDir(msPacMan, Direction.RIGHT);
+        navigator.setSpeed(msPacMan, 0);
+        navigator.setMoveDir(msPacMan, Direction.RIGHT);
 
         msPacMan.animations.stopSelected();
         msPacMan.animations.resetSelected();

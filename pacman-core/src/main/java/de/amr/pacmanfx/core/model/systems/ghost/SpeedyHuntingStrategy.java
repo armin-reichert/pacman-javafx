@@ -11,7 +11,7 @@ public class SpeedyHuntingStrategy implements GhostHuntingStrategy{
 
     @Override
     public void hunt(GameContext gameContext, Ghost ghost, float speed) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
 
         final boolean chase = level.huntingRules().isChasing();
@@ -19,8 +19,8 @@ public class SpeedyHuntingStrategy implements GhostHuntingStrategy{
             ? computeChasingTargetTile(gameContext)
             : computeScatterTile(gameContext, ghost);
 
-        worldMovementSystem.setSpeed(ghost, speed);
-        worldMovementSystem.tryMovingTowardsTargetTile(ghost, gameContext, targetTile);
+        navigator.setSpeed(ghost, speed);
+        navigator.tryMovingTowardsTargetTile(ghost, gameContext, targetTile);
     }
 
     private Vector2i computeChasingTargetTile(GameContext gameContext) {

@@ -115,7 +115,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private void takeAction(GameContext gameContext, CollectedData data) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
@@ -132,7 +132,7 @@ public class RuleBasedPacSteering implements Steering {
                 Logger.trace("Detected ghost {} ahead, escape direction is {}", data.hunterAhead.name(), escapeDir);
             }
             if (escapeDir != null) {
-                worldMovementSystem.setWishDir(pac, escapeDir);
+                navigator.setWishDir(pac, escapeDir);
             }
             return;
         }
@@ -158,7 +158,7 @@ public class RuleBasedPacSteering implements Steering {
             worldMovement.setTargetTile(findTileFarthestFromGhosts(gameContext, pac, findNearestFoodTiles(gameContext)));
         }
         worldMovement.optTargetTile().ifPresent(_ -> {
-            worldMovementSystem.navigateTowardsTarget(pac, gameContext);
+            navigator.navigateTowardsTarget(pac, gameContext);
             Logger.trace("Navigated towards {}, moveDir={} wishDir={}",
                 worldMovement.targetTile(), worldMovement.moveDir(), worldMovement.wishDir());
         });

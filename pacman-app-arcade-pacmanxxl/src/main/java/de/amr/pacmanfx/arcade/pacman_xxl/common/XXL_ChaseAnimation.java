@@ -126,10 +126,10 @@ class XXL_ChaseAnimation {
         state = ChasingState.GHOSTS_CHASING_PAC;
     }
 
-    private void update(MovementSystem movementSystem, WorldMovementSystem worldMovementSystem) {
+    private void update(MovementSystem movementSystem, WorldMovementSystem navigator) {
         switch (state) {
-            case GHOSTS_CHASING_PAC -> ghostsChasePacMan(movementSystem, worldMovementSystem);
-            case PAC_CHASING_GHOSTS -> pacManChasesGhosts(movementSystem, worldMovementSystem);
+            case GHOSTS_CHASING_PAC -> ghostsChasePacMan(movementSystem, navigator);
+            case PAC_CHASING_GHOSTS -> pacManChasesGhosts(movementSystem, navigator);
         }
     }
 
@@ -140,19 +140,19 @@ class XXL_ChaseAnimation {
         }
     }
 
-    private void pacManChasesGhosts(MovementSystem movementSystem, WorldMovementSystem worldMovementSystem) {
+    private void pacManChasesGhosts(MovementSystem movementSystem, WorldMovementSystem navigator) {
         moveActors(movementSystem);
         // If ghosts and Pac leave screen at right border, ghosts start chasing Pac moving left
         if (pac.position().x > (numTilesX + 14) * WorldMap.TS) {
-            worldMovementSystem.setMoveDir(pac, Direction.LEFT);
-            worldMovementSystem.setWishDir(pac, Direction.LEFT);
+            navigator.setMoveDir(pac, Direction.LEFT);
+            navigator.setWishDir(pac, Direction.LEFT);
             pac.position().setX(numTilesX * WorldMap.TS);
             for (Ghost ghost : ghosts) {
                 ghost.visibility().show();
-                worldMovementSystem.setMoveDir(ghost, Direction.LEFT);
-                worldMovementSystem.setWishDir(ghost, Direction.LEFT);
+                navigator.setMoveDir(ghost, Direction.LEFT);
+                navigator.setWishDir(ghost, Direction.LEFT);
                 ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * 2 * WorldMap.TS);
-                worldMovementSystem.setSpeed(ghost, 1.05f);
+                navigator.setSpeed(ghost, 1.05f);
                 ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
                 ghost.animations.playSelected();
             }
@@ -185,18 +185,18 @@ class XXL_ChaseAnimation {
         return Math.abs(either.position().x - other.position().x) < 1;
     }
 
-    private void ghostsChasePacMan(MovementSystem movementSystem, WorldMovementSystem worldMovementSystem) {
-        moveActors(movementSystem);
+    private void ghostsChasePacMan(MovementSystem motor, WorldMovementSystem navigator) {
+        moveActors(motor);
         if (ghosts.getLast().position().x < -4 * WorldMap.TS) { // ghosts left screen on the left side
-            worldMovementSystem.setMoveDir(pac, Direction.RIGHT);
-            worldMovementSystem.setWishDir(pac, Direction.RIGHT);
+            navigator.setMoveDir(pac, Direction.RIGHT);
+            navigator.setWishDir(pac, Direction.RIGHT);
             pac.position().setX(-(numTilesX - 6) * WorldMap.TS);
             for (Ghost ghost : ghosts) {
                 ghost.visibility().show();
                 ghost.position().setX(pac.position().x + 22 * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
-                worldMovementSystem.setMoveDir(ghost, Direction.RIGHT);
-                worldMovementSystem.setWishDir(ghost, Direction.RIGHT);
-                worldMovementSystem.setSpeed(ghost, 0.58f);
+                navigator.setMoveDir(ghost, Direction.RIGHT);
+                navigator.setWishDir(ghost, Direction.RIGHT);
+                navigator.setSpeed(ghost, 0.58f);
                 ghost.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
                 ghost.animations.playSelected();
             }

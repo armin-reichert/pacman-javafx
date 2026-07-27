@@ -66,7 +66,7 @@ public abstract class CommonGamePlay implements GamePlay {
     @Override
     public void prepareLevelForPlaying(GameContext gameContext) {
         final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         final GameLevel level = gameContext.assertLevel();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
@@ -75,8 +75,8 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         pac.reset(); // initially invisible!
         pac.position().set(terrain.pacStartPosition());
-        worldMovementSystem.setMoveDir(pac, Direction.LEFT);
-        worldMovementSystem.setWishDir(pac, Direction.LEFT);
+        navigator.setMoveDir(pac, Direction.LEFT);
+        navigator.setWishDir(pac, Direction.LEFT);
         pac.power().timer().resetToIndefiniteDuration();
         pac.animations.resetSelected();
 
@@ -84,8 +84,8 @@ public abstract class CommonGamePlay implements GamePlay {
             ghost.reset(); // initially invisible!
             ghost.position().set(ghost.startPosition());
             final Direction direction = house.ghostStartDirection(ghost.personality());
-            worldMovementSystem.setMoveDir(ghost, direction);
-            worldMovementSystem.setWishDir(ghost, direction);
+            navigator.setMoveDir(ghost, direction);
+            navigator.setWishDir(ghost, direction);
             ghostStateSystem.changeState(ghost, GhostState.LOCKED);
             ghost.animations.resetSelected();
         });
@@ -339,7 +339,7 @@ public abstract class CommonGamePlay implements GamePlay {
     public void onLevelCompleted(GameContext gameContext) {
         requireNonNull(gameContext);
 
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
 
         level.huntingRules().stop();
@@ -352,13 +352,13 @@ public abstract class CommonGamePlay implements GamePlay {
         level.worldMap().foodLayer().eatAll();
 
         final Pac pac = level.entities().pac();
-        worldMovementSystem.setSpeed(pac, 0);
+        navigator.setSpeed(pac, 0);
         pac.power().reset();
         pac.animations.stopSelected();
         pac.animations.select(CommonAnimationID.PAC_FULL);
 
         level.entities().ghosts().forEach(ghost -> {
-            worldMovementSystem.setSpeed(ghost, 0);
+            navigator.setSpeed(ghost, 0);
             //TODO check in emulator if ghost animation is reset to normal
             ghost.animations.stopSelected();
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);

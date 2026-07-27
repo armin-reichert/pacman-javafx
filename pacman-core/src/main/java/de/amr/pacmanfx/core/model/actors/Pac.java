@@ -103,9 +103,10 @@ public class Pac extends Actor implements UpdatableEntity {
 
     @Override
     public void update(GameContext gameContext) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
         final PacDigestionSystem digestionSystem = gameContext.systems().pacDigestionSystem;
         final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
+
         final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
         final GameLevel level = gameContext.assertLevel();
 
@@ -126,8 +127,8 @@ public class Pac extends Actor implements UpdatableEntity {
             ? speedRules.pacSpeedWhenHasPower(level)
             : speedRules.pacSpeed(level);
 
-        worldMovementSystem.setSpeed(this, speed);
-        worldMovementSystem.tryMovingOrTeleporting(this, gameContext);
+        navigator.setSpeed(this, speed);
+        navigator.tryMovingOrTeleporting(this, gameContext);
 
         if (worldMovement().info.moved) {
             animations.playSelected();

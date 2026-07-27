@@ -125,30 +125,30 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         blinky.animations.select(CommonAnimationID.BLINKY_DAMAGED);
     }
 
-    private void blinkyStopsMoving(WorldMovementSystem worldMovementSystem) {
-        worldMovementSystem.setSpeed(blinky, 0);
+    private void blinkyStopsMoving(WorldMovementSystem navigator) {
+        navigator.setSpeed(blinky, 0);
         blinky.animations.stopSelected();
     }
 
-    private void blinkyGetsCaughtOnNail(WorldMovementSystem worldMovementSystem) {
-        worldMovementSystem.setSpeed(blinky, 0.09f);
+    private void blinkyGetsCaughtOnNail(WorldMovementSystem navigator) {
+        navigator.setSpeed(blinky, 0.09f);
         blinkyAnimation(CommonAnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
     }
 
-    private void blinkyStartsRunning(WorldMovementSystem worldMovementSystem) {
-        worldMovementSystem.placeAtTile(blinky, 28, 20, -3, 0);
-        worldMovementSystem.setMoveDir(blinky, Direction.LEFT);
-        worldMovementSystem.setWishDir(blinky, Direction.LEFT);
-        worldMovementSystem.setSpeed(blinky, 1.25f);
+    private void blinkyStartsRunning(WorldMovementSystem navigator) {
+        navigator.placeAtTile(blinky, 28, 20, -3, 0);
+        navigator.setMoveDir(blinky, Direction.LEFT);
+        navigator.setWishDir(blinky, Direction.LEFT);
+        navigator.setSpeed(blinky, 1.25f);
         blinky.animations.select(CommonAnimationID.GHOST_NORMAL);
         blinky.animations.playSelected();
         blinky.visibility().show();
     }
 
-    private void pacManStartsRunning(WorldMovementSystem worldMovementSystem) {
-        worldMovementSystem.placeAtTile(pacMan, 28, 20);
-        worldMovementSystem.setMoveDir(pacMan, Direction.LEFT);
-        worldMovementSystem.setSpeed(pacMan, 1.15f);
+    private void pacManStartsRunning(WorldMovementSystem navigator) {
+        navigator.placeAtTile(pacMan, 28, 20);
+        navigator.setMoveDir(pacMan, Direction.LEFT);
+        navigator.setSpeed(pacMan, 1.15f);
 
         pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations.playSelected();

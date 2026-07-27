@@ -41,7 +41,7 @@ public class CommonPacManDyingState extends GameState {
     public void onEnter(GameContext gameContext) {
         requireNonNull(gameContext);
 
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
         final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
 
         final GameLevel level = gameContext.assertLevel();
@@ -54,7 +54,7 @@ public class CommonPacManDyingState extends GameState {
         level.entities().optBonus().ifPresent(bonus -> bonus.setInactive(gameContext));
 
         // Pac-Man stops moving and is prepared for "dying" animation
-        worldMovementSystem.setSpeed(pac, 0);
+        navigator.setSpeed(pac, 0);
         pacPowerSystem.reset(pac);
         pac.setState(Pac.State.DEAD);
         pac.animations.stopSelected();

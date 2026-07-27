@@ -165,7 +165,7 @@ public class GhostHouseAccessSystem {
 
     public void reachHouse(GameContext gameContext, Ghost ghost, float speed) {
         final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         final Position position = ghost.position();
         final Vector2f houseEntry = ghost.house().entryPosition();
@@ -173,16 +173,16 @@ public class GhostHouseAccessSystem {
         final Vector2f positionVec =  position.asVector2f();
         if (positionVec.roughlyEquals(houseEntry, speed, 0)) {
             position.set(houseEntry.x(), houseEntry.y());
-            worldMovementSystem.setMoveDir(ghost, DOWN);
-            worldMovementSystem.setWishDir(ghost, DOWN);
+            navigator.setMoveDir(ghost, DOWN);
+            navigator.setWishDir(ghost, DOWN);
             //TODO check if this should be done here
             ghostStateSystem.changeState(ghost, GhostState.ENTERING_HOUSE);
         } else {
             //TODO use system method
             ghost.worldMovement().setTargetTile(ghost.house().leftDoorTile());
-            worldMovementSystem.setSpeed(ghost, speed);
-            worldMovementSystem.navigateTowardsTarget(ghost, gameContext);
-            worldMovementSystem.tryMovingOrTeleporting(ghost, gameContext);
+            navigator.setSpeed(ghost, speed);
+            navigator.navigateTowardsTarget(ghost, gameContext);
+            navigator.tryMovingOrTeleporting(ghost, gameContext);
         }
     }
 }

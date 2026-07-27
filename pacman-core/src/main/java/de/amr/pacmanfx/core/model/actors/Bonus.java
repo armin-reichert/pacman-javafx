@@ -79,10 +79,10 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     public void setInactive(GameContext gameContext) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         visibility().hide();
-        worldMovementSystem.setSpeed(this, 0);
+        navigator.setSpeed(this, 0);
 
         jumpingAnimation.reset();
 
@@ -98,11 +98,11 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     public void showEdibleAndStartWandering(GameContext gameContext, float speed) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         visibility().show();
 
-        worldMovementSystem.setSpeed(this, speed);
+        navigator.setSpeed(this, speed);
         worldMovement().setTargetTile(null);
 
         jumpingAnimation.restart();
@@ -120,20 +120,20 @@ public class Bonus extends Actor implements UpdatableEntity {
         final var route = new ArrayList<>(waypoints);
         final Vector2i first = route.removeFirst();
 
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
 
-        worldMovementSystem.placeAtTile(this, first);
-        worldMovementSystem.setMoveDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
-        worldMovementSystem.setWishDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
+        navigator.placeAtTile(this, first);
+        navigator.setMoveDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
+        navigator.setWishDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
 
         routeNavigation = new RouteBasedSteering(route);
     }
 
     public void showEatenForSeconds(GameContext gameContext, float seconds) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         visibility().show();
-        worldMovementSystem.setSpeed(this, 0);
+        navigator.setSpeed(this, 0);
 
         jumpingAnimation.stop();
 
@@ -170,7 +170,7 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     private boolean wanderMaze(GameContext gameContext) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
 
         routeNavigation.steer(this, gameContext);
@@ -178,8 +178,8 @@ public class Bonus extends Actor implements UpdatableEntity {
         final Vector2i tile = WorldMovementSystem.computeTile(this);
         boolean mazeExitReached = routeNavigation.isRouteTraversed() || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         if (!mazeExitReached) {
-            worldMovementSystem.navigateTowardsTarget(this, gameContext);
-            worldMovementSystem.tryMovingOrTeleporting(this, gameContext);
+            navigator.navigateTowardsTarget(this, gameContext);
+            navigator.tryMovingOrTeleporting(this, gameContext);
             jump();
         }
         return mazeExitReached;

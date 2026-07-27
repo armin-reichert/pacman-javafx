@@ -144,21 +144,21 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void startChasingPacMan(GameContext gameContext) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
         final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
 
         blinking.start();
         pacMan.position().set(WorldMap.TS * 28, WorldMap.TS * 20);
-        worldMovementSystem.setMoveDir(pacMan, Direction.LEFT);
-        worldMovementSystem.setSpeed(pacMan, CHASING_SPEED);
+        navigator.setMoveDir(pacMan, Direction.LEFT);
+        navigator.setSpeed(pacMan, CHASING_SPEED);
         pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
         pacMan.animations.playSelected();
         pacMan.visibility().show();
         for (Ghost ghost : ghosts) {
             ghostStateSystem.changeState(ghost, GhostState.HUNTING_PAC);
-            worldMovementSystem.setMoveDir(ghost, Direction.LEFT);
-            worldMovementSystem.setWishDir(ghost, Direction.LEFT);
-            worldMovementSystem.setSpeed(ghost, CHASING_SPEED);
+            navigator.setMoveDir(ghost, Direction.LEFT);
+            navigator.setWishDir(ghost, Direction.LEFT);
+            navigator.setSpeed(ghost, CHASING_SPEED);
             ghost.position().set(pacMan.position().x + 16 * ghost.personality() + 18, pacMan.position().y);
             ghost.visibility().show();
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);

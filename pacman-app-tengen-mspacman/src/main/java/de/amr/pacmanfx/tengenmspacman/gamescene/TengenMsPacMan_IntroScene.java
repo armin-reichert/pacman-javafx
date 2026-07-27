@@ -122,7 +122,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final WorldMovementSystem worldMovementSystem = scene.gameContext().systems().navigator;
+                final WorldMovementSystem navigator = scene.gameContext().systems().navigator;
                 final GhostStateSystem ghostStateSystem = scene.gameContext().systems().ghostStateSystem;
 
                 final GameVariantRenderConfig renderConfig = scene.appContext().variants().currentVariant().config().renderConfig();
@@ -133,8 +133,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 scene.msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
                 scene.msPacMan.position().set(WorldMap.TS * 33, ACTOR_Y);
                 scene.msPacMan.visibility().show();
-                worldMovementSystem.setMoveDir(scene.msPacMan, Direction.LEFT);
-                worldMovementSystem.setSpeed(scene.msPacMan, SPEED);
+                navigator.setMoveDir(scene.msPacMan, Direction.LEFT);
+                navigator.setSpeed(scene.msPacMan, SPEED);
 
                 scene.msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
                 scene.msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
@@ -148,9 +148,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 );
                 for (Ghost ghost : scene.ghosts) {
                     ghost.position().set(WorldMap.TS * 33, ACTOR_Y);
-                    worldMovementSystem.setMoveDir(ghost, Direction.LEFT);
-                    worldMovementSystem.setWishDir(ghost, Direction.LEFT);
-                    worldMovementSystem.setSpeed(ghost, SPEED);
+                    navigator.setMoveDir(ghost, Direction.LEFT);
+                    navigator.setWishDir(ghost, Direction.LEFT);
+                    navigator.setSpeed(ghost, SPEED);
                     ghostStateSystem.changeState(ghost, GhostState.HUNTING_PAC);
                     ghost.visibility().show();
                     ghost.animations.playSelected();
