@@ -44,7 +44,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
             Logger.debug("Hunting {} cannot move up to special tile {}", actor.name(), tile);
             return false;
         }
-        if (ghost.home() != null && ghost.home().isDoorAt(tile)) {
+        if (ghost.house() != null && ghost.house().isDoorAt(tile)) {
             return ghost.inAnyOfStates(Set.of(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE));
         }
         return !terrainLayer.isTileBlocked(tile);

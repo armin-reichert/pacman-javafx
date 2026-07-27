@@ -8,6 +8,7 @@ module de.amr.pacmanfx.core {
     requires org.tinylog.api;
     requires javafx.base;
     requires java.desktop;
+    requires java.security.jgss;
 
     exports de.amr.pacmanfx.core.event;
     exports de.amr.pacmanfx.core.model;
