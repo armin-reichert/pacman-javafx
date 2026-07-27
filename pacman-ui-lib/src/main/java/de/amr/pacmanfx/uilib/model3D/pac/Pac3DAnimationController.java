@@ -26,7 +26,7 @@ public class Pac3DAnimationController {
         final Pac pac = level.entities().pac();
         final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
 
-        if (pac.isAlive()) {
+        if (pac.state() == Pac.State.WALKING || pac.state() == Pac.State.STUCK) {
             pac3D.powerLight().ifPresent(powerLight -> updatePowerLight(pacPowerSystem, pac, powerLight));
 
             animations.optAnimation(Pac3D.AnimationID.MOVING).ifPresent(movementAnimation -> {
@@ -35,7 +35,7 @@ public class Pac3DAnimationController {
             });
 
             animations.optAnimation(Pac3D.AnimationID.CHEWING).ifPresent(chewingAnimation -> {
-                if (pac.isParalyzed()) {
+                if (pac.state() == Pac.State.STUCK) {
                     chewingAnimation.stop();
                 } else {
                     chewingAnimation.playOrContinue();
@@ -63,7 +63,7 @@ public class Pac3DAnimationController {
         final long powerTicksRemaining = pacPowerSystem.powerTicksRemaining(pac);
         final long powerTicksTotal = pacPowerSystem.powerTicksTotal(pac);
 
-        if (powerActive && pac.visibility().isVisible() && !pac.isDead()) {
+        if (powerActive && pac.visibility().isVisible() && pac.state() != Pac.State.DEAD) {
             powerLight.setLightOn(true);
             final float maxRange = (powerTicksRemaining / (float) powerTicksTotal) * 60 + 30;
             powerLight.setMaxRange(maxRange);

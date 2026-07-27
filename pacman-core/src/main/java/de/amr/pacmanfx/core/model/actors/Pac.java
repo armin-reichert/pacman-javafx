@@ -21,7 +21,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pac extends Actor implements UpdatableEntity {
 
-    private boolean dead = false;
+    public enum State { WALKING, STUCK, DEAD }
+
+    private State state;
 
     private Steering automaticSteering;
 
@@ -37,6 +39,8 @@ public class Pac extends Actor implements UpdatableEntity {
         registerComponent(PacDigestion.class, new PacDigestion());
         registerComponent(PacPower.class, new PacPower());
         registerComponent(PacCheats.class, new PacCheats());
+
+        state = State.STUCK;
     }
 
     public WorldMovement worldMovement() {
@@ -59,7 +63,7 @@ public class Pac extends Actor implements UpdatableEntity {
     public String toString() {
         return "Pac{" +
             "name=" + name +
-            ", dead=" + dead +
+            ", state=" + state +
             ", visible=" + visibility() +
             ", position=" + position() +
             ", movement=" + movement() +
@@ -78,21 +82,17 @@ public class Pac extends Actor implements UpdatableEntity {
     public void reset() {
         super.reset();
 
-        setDead(false);
+        state = State.STUCK;
         worldMovement().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
         animations.select(CommonAnimationID.PAC_MUNCHING);
     }
 
-    public boolean isDead() {
-        return dead;
+    public State state() {
+        return state;
     }
 
-    public boolean isAlive() {
-        return !dead; // Not sure if the opposite of being dead is being alive ;-)
-    }
-
-    public void setDead(boolean dead) {
-        this.dead = dead;
+    public void setState(State state) {
+        this.state = requireNonNull(state);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class Pac extends Actor implements UpdatableEntity {
         final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
         final GameLevel level = gameContext.assertLevel();
 
-        if (isDead() || digestion().restingTicks() == PacDigestion.REST_FOREVER) {
+        if (state == State.DEAD || digestion().restingTicks() == PacDigestion.REST_FOREVER) {
             return;
         }
 
@@ -125,8 +125,15 @@ public class Pac extends Actor implements UpdatableEntity {
 
         if (worldMovement().info.moved) {
             animations.playSelected();
-        } else {
+        }
+        else {
             animations.stopSelected();
+        }
+
+        if (gotStuck()) {
+            state = State.STUCK;
+        } else {
+            state = State.WALKING;
         }
     }
 
@@ -134,7 +141,7 @@ public class Pac extends Actor implements UpdatableEntity {
      * @return {@code true} if Pac-Man has run against a wall and could not move, its speed is zero
      * or if he is resting for an indefinite time.
      */
-    public boolean isParalyzed() {
+    private boolean gotStuck() {
         return (movement().velX == 0 && movement().velY == 0)
             || !worldMovement().info.moved
             || digestion().restingTicks() == PacDigestion.REST_FOREVER;
