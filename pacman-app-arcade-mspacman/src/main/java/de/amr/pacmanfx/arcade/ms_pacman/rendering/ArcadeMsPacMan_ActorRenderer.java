@@ -9,6 +9,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -42,12 +43,12 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Ghost ghost               -> drawSpriteCentered(computeGhostSprite(ghost), center);
             case Bonus bonus               -> drawSpriteCentered(computeBonusSprite(bonus), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default                        -> drawSpriteCentered(actor.animations.currentSprite(), center);
+            default                        -> drawSpriteCentered(actor.assertComponent(SpriteAnim.class).animations().currentSprite(), center);
         }
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        final SpriteAnimationAccess animations = ghost.animations;
+        final SpriteAnimationAccess animations = ghost.assertComponent(SpriteAnim.class).animations();
         RectShort sprite;
         if (animations.isSelected(CommonAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldMovement().wishDir());
@@ -67,16 +68,16 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private RectShort computePacSprite(Pac pac) {
         RectShort sprite;
-        if (pac.animations.isSelected(CommonAnimationID.PAC_MUNCHING)) {
+        if (pac.assertComponent(SpriteAnim.class).animations().isSelected(CommonAnimationID.PAC_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.worldMovement().moveDir());
-            sprite = spriteOrDefault(sprites, pac.animations.currentFrame());
+            sprite = spriteOrDefault(sprites, pac.assertComponent(SpriteAnim.class).animations().currentFrame());
         }
-        else if (pac.animations.isSelected(CommonAnimationID.MR_PAC_MAN_MUNCHING)) {
+        else if (pac.assertComponent(SpriteAnim.class).animations().isSelected(CommonAnimationID.MR_PAC_MAN_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().mrPacManMunchingSprites(pac.worldMovement().moveDir());
-            sprite = spriteOrDefault(sprites, pac.animations.currentFrame());
+            sprite = spriteOrDefault(sprites, pac.assertComponent(SpriteAnim.class).animations().currentFrame());
         }
         else {
-            sprite = pac.animations.currentSprite();
+            sprite = pac.assertComponent(SpriteAnim.class).animations().currentSprite();
         }
         if (sprite == null) {
             throw new IllegalStateException("Could not determine Pac sprite");

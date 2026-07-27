@@ -24,11 +24,12 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.state;
     exports de.amr.pacmanfx.core.rules;
     exports de.amr.pacmanfx.core.model.component;
+    exports de.amr.pacmanfx.core.model.component.bonus;
+    exports de.amr.pacmanfx.core.model.component.common;
     exports de.amr.pacmanfx.core.model.component.ghost;
     exports de.amr.pacmanfx.core.model.component.pac;
-    exports de.amr.pacmanfx.core.model.component.common;
     exports de.amr.pacmanfx.core.model.component.world;
-    exports de.amr.pacmanfx.core.model.component.bonus;
+    exports de.amr.pacmanfx.core.model.component.spriteanim;
     exports de.amr.pacmanfx.core.model.systems.ghost;
     exports de.amr.pacmanfx.core.model.systems.pac;
     exports de.amr.pacmanfx.core.model.systems.common;

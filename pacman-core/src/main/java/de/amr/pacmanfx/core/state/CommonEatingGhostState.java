@@ -7,6 +7,7 @@ package de.amr.pacmanfx.core.state;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
 
@@ -33,7 +34,7 @@ public class CommonEatingGhostState extends GameState {
         if (timer().hasExpired()) {
             level.entities().pac().visibility().show();
             level.ghostsInState(GhostState.EATEN).forEach(ghost -> ghostStateSystem.changeState(ghost, GhostState.RETURNING_HOME));
-            level.entities().ghosts().forEach(ghost -> ghost.animations.playSelected());
+            level.entities().ghosts().forEach(ghost -> ghost.assertComponent(SpriteAnim.class).animations().playSelected());
             gameContext.flow().resumePreviousState(gameContext);
         } else {
             if (timer().tickCount() < 60) {

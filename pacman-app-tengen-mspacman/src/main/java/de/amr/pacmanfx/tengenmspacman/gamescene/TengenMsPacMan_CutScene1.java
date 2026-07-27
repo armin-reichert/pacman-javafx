@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -111,13 +112,13 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setMoveDir(msPacMan, Direction.LEFT);
         navigator.setSpeed(msPacMan, 0);
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         pacMan.position().set(LEFT_BORDER, UPPER_LANE);
         navigator.setMoveDir(pacMan, Direction.RIGHT);
         navigator.setSpeed(pacMan, 0);
@@ -135,7 +136,8 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         navigator.setSpeed(pinky, 0);
 
         heart = new Actor();
-        heart.animations = singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART));
+        heart.registerComponent(SpriteAnim.class, new SpriteAnim());
+        heart.assertComponent(SpriteAnim.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
 
         collided = false;
 
@@ -170,24 +172,24 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
             switch ((int) gameStateTick) {
                 case 130 -> {
                     navigator.setSpeed(pacMan, SPEED_CHASING);
-                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.animations.playSelected();
+                    pacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
                     pacMan.visibility().show();
 
                     navigator.setSpeed(msPacMan, SPEED_CHASING);
-                    msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
-                    msPacMan.animations.playSelected();
+                    msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+                    msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
                     msPacMan.visibility().show();
                 }
                 case 160 -> {
                     navigator.setSpeed(inky, SPEED_CHASING);
-                    inky.animations.select(CommonAnimationID.GHOST_NORMAL);
-                    inky.animations.playSelected();
+                    inky.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
+                    inky.assertComponent(SpriteAnim.class).animations().playSelected();
                     inky.visibility().show();
 
                     navigator.setSpeed(pinky, SPEED_CHASING);
-                    pinky.animations.select(CommonAnimationID.GHOST_NORMAL);
-                    pinky.animations.playSelected();
+                    pinky.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
+                    pinky.assertComponent(SpriteAnim.class).animations().playSelected();
                     pinky.visibility().show();
                 }
                 case 400 -> {
@@ -233,8 +235,8 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                     navigator.setMoveDir(msPacMan, Direction.RIGHT);
                 }
                 case 545 -> {
-                    pacMan.animations.resetSelected();
-                    msPacMan.animations.resetSelected();
+                    pacMan.assertComponent(SpriteAnim.class).animations().resetSelected();
+                    msPacMan.assertComponent(SpriteAnim.class).animations().resetSelected();
                 }
                 case 560 -> {
                     heart.position().set(0.5f * (pacMan.position().x + msPacMan.position().x), pacMan.position().y - tilesPx(2));

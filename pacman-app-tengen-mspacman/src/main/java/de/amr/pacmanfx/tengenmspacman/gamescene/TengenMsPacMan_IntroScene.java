@@ -11,6 +11,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
@@ -136,9 +137,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 navigator.setMoveDir(scene.msPacMan, Direction.LEFT);
                 navigator.setSpeed(scene.msPacMan, SPEED);
 
-                scene.msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
-                scene.msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
-                scene.msPacMan.animations.playSelected();
+                scene.msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+                scene.msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+                scene.msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
 
                 scene.ghosts = List.of(
                     renderConfig.createAnimatedGhost(scene.gameContext(), spriteAnimations, GameModel.RED_GHOST_SHADOW),
@@ -153,7 +154,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                     navigator.setSpeed(ghost, SPEED);
                     ghostStateSystem.changeState(ghost, GhostState.HUNTING_PAC);
                     ghost.visibility().show();
-                    ghost.animations.playSelected();
+                    ghost.assertComponent(SpriteAnim.class).animations().playSelected();
                 }
                 scene.ghostIndex = 0;
             }
@@ -240,7 +241,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 motor.moveAccelerated(scene.msPacMan);
                 if (scene.msPacMan.position().x <= MS_PAC_MAN_STOP_X) {
                     navigator.setSpeed(scene.msPacMan, 0);
-                    scene.msPacMan.animations.resetSelected();
+                    scene.msPacMan.assertComponent(SpriteAnim.class).animations().resetSelected();
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options

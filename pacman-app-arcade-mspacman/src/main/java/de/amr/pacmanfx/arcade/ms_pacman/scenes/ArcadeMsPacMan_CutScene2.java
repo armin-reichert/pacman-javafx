@@ -11,6 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -65,9 +66,9 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.position().set(tilesPx(3), tilesPx(10));
         clapperboard.startAnimation();
@@ -97,13 +98,13 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
     private void enterStateChasing(WorldMovementSystem navigator) {
         navigator.setMoveDir(pacMan, Direction.RIGHT);
 
-        pacMan.animations.select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
-        pacMan.animations.playSelected();
+        pacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
+        pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
 
         navigator.setMoveDir(msPacMan, Direction.RIGHT);
 
-        msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
-        msPacMan.animations.playSelected();
+        msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+        msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
 
         setSceneState(SceneState.CHASING, TickTimer.INDEFINITE);
     }

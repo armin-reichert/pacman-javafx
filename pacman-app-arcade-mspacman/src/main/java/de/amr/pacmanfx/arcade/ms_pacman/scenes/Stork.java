@@ -12,6 +12,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.component.common.Movement;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 public class Stork extends Actor {
@@ -36,9 +37,9 @@ public class Stork extends Actor {
     }
 
     public Stork(SpriteAnimationContainer animationSet) {
-        registerComponent(Movement.class, new Movement());
-
         name = "Beatrix von";
-        animations = new StorkAnimations(animationSet);
+        registerComponent(Movement.class, new Movement());
+        registerComponent(SpriteAnim.class, new SpriteAnim());
+        assertComponent(SpriteAnim.class).setAnimations(new StorkAnimations(animationSet));
     }
 }

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -318,14 +319,15 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         final SpriteAnimationContainer animationContainer = appContext().ui().sprites().animations();
 
         final Pac pac = level.entities().pac();
-        if (pac.animations.isEmpty()) {
-            pac.animations = renderConfig.createPacAnimations(animationContainer);
+        if (pac.assertComponent(SpriteAnim.class).animations().isEmpty()) {
+            pac.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(animationContainer));
             resetPacAnimation(pac);
         }
 
         level.entities().ghosts().forEach(ghost -> {
-            if (ghost.animations.isEmpty()) {
-                ghost.animations = renderConfig.createGhostAnimations(animationContainer, ghost.personality());
+            if (ghost.assertComponent(SpriteAnim.class).animations().isEmpty()) {
+                ghost.assertComponent(SpriteAnim.class).setAnimations(
+                    renderConfig.createGhostAnimations(animationContainer, ghost.personality()));
                 resetGhostAnimation(ghost);
             }
         });
@@ -337,14 +339,14 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     private void resetPacAnimation(Pac pac) {
-        pac.animations.select(gameModel().isBoosterActive()
+        pac.assertComponent(SpriteAnim.class).animations().select(gameModel().isBoosterActive()
             ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
             : CommonAnimationID.PAC_MUNCHING);
-        pac.animations.resetSelected();
+        pac.assertComponent(SpriteAnim.class).animations().resetSelected();
     }
 
     private void resetGhostAnimation(Ghost ghost) {
-        ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
-        ghost.animations.resetSelected();
+        ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
+        ghost.assertComponent(SpriteAnim.class).animations().resetSelected();
     }
 }

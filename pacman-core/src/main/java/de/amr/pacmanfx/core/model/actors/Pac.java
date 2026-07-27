@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.component.pac.PacCheats;
 import de.amr.pacmanfx.core.model.component.pac.PacDigestion;
 import de.amr.pacmanfx.core.model.component.pac.PacManWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.pac.PacPower;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.component.world.WorldMovement;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -45,6 +46,7 @@ public class Pac extends Actor implements UpdatableEntity {
         registerComponent(PacDigestion.class, new PacDigestion());
         registerComponent(PacPower.class, new PacPower());
         registerComponent(PacCheats.class, new PacCheats());
+        registerComponent(SpriteAnim.class, new SpriteAnim());
 
         state = State.ACTIVE;
     }
@@ -90,7 +92,8 @@ public class Pac extends Actor implements UpdatableEntity {
 
         state = State.ACTIVE;
         worldMovement().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
-        animations.select(CommonAnimationID.PAC_MUNCHING);
+
+        assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
     }
 
     public State state() {
@@ -106,6 +109,8 @@ public class Pac extends Actor implements UpdatableEntity {
         final WorldMovementSystem navigator = gameContext.systems().navigator;
         final PacDigestionSystem digestionSystem = gameContext.systems().pacDigestionSystem;
         final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
+
+        final SpriteAnim spriteAnim = assertComponent(SpriteAnim.class);
 
         final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
         final GameLevel level = gameContext.assertLevel();
@@ -131,10 +136,10 @@ public class Pac extends Actor implements UpdatableEntity {
         navigator.tryMovingOrTeleporting(this, gameContext);
 
         if (worldMovement().info.moved) {
-            animations.playSelected();
+            spriteAnim.animations().playSelected();
         }
         else {
-            animations.stopSelected();
+            spriteAnim.animations().stopSelected();
         }
     }
 

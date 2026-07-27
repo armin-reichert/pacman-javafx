@@ -8,6 +8,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.tengenmspacman.gamescene.Clapperboard;
 import de.amr.pacmanfx.tengenmspacman.gamescene.Stork;
@@ -44,27 +45,27 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Pac pac -> drawFacingSpriteCentered(computePacSprite(pac), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Stork stork -> drawStork(stork);
-            default -> drawSpriteCentered(actor.animations.currentSprite(), center);
+            default -> drawSpriteCentered(actor.assertComponent(SpriteAnim.class).animations().currentSprite(), center);
         }
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        if (ghost.animations.isSelected(CommonAnimationID.GHOST_NORMAL)) {
+        if (ghost.assertComponent(SpriteAnim.class).animations().isSelected(CommonAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldMovement().wishDir());
-            return spriteOrDefault(sprites, ghost.animations.currentFrame());
+            return spriteOrDefault(sprites, ghost.assertComponent(SpriteAnim.class).animations().currentFrame());
         }
-        if (ghost.animations.isSelected(CommonAnimationID.GHOST_EYES)) {
+        if (ghost.assertComponent(SpriteAnim.class).animations().isSelected(CommonAnimationID.GHOST_EYES)) {
             return spriteSheet().ghostEyesSprite(ghost.worldMovement().wishDir());
         }
         else {
-            return ghost.animations.currentSprite();
+            return ghost.assertComponent(SpriteAnim.class).animations().currentSprite();
         }
     }
 
     private FacingSprite computePacSprite(Pac pac) {
-        final int frame = pac.animations.currentFrame();
+        final int frame = pac.assertComponent(SpriteAnim.class).animations().currentFrame();
         final Direction dir = pac.worldMovement().moveDir();
-        return switch (pac.animations.selectedAnimationID()) {
+        return switch (pac.assertComponent(SpriteAnim.class).animations().selectedAnimationID()) {
             case null -> throw new IllegalStateException("Could not determine Pac-sprite, no animation selected");
             case CommonAnimationID.PAC_DYING    -> computePacDyingSprite(pac);
             case CommonAnimationID.PAC_MUNCHING -> facingSprite(SpriteID.MS_PAC_MUNCHING, frame, dir);
@@ -74,7 +75,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING -> facingSprite(SpriteID.MR_PAC_MUNCHING, frame, dir);
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_TURNING_AWAY -> facingSprite(SpriteID.MR_PAC_TURNING_AWAY, frame, dir);
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_WAVING_HAND -> facingSprite(SpriteID.MR_PAC_WAVING_HAND, frame, dir);
-            default -> new FacingSprite(pac.animations.currentSprite(), pac.worldMovement().moveDir());
+            default -> new FacingSprite(pac.assertComponent(SpriteAnim.class).animations().currentSprite(), pac.worldMovement().moveDir());
         };
     }
 
@@ -84,7 +85,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     // Dying animation is realized by providing a sprite facing to the corresponding direction for each animation frame
     private FacingSprite computePacDyingSprite(Pac pac) {
-        final var dyingAnimation = pac.animations.animation(CommonAnimationID.PAC_DYING);
+        final var dyingAnimation = pac.assertComponent(SpriteAnim.class).animations().animation(CommonAnimationID.PAC_DYING);
         if (dyingAnimation instanceof SpriteAnimation spriteAnimation) {
             final Direction facingDir = switch (spriteAnimation.frame()) {
                 case 0, 4, 8  -> Direction.DOWN;
@@ -131,7 +132,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawStork(Stork stork) {
-        drawSpriteCentered(stork.animations.currentSprite(), WorldMovementSystem.computeCenter(stork));
+        drawSpriteCentered(stork.assertComponent(SpriteAnim.class).animations().currentSprite(), WorldMovementSystem.computeCenter(stork));
         if (stork.isBagReleasedFromBeak()) {
             // Sprite sheet has no stork without bag under its beak so we over-paint the bag
             ctx.setFill(backgroundColor());

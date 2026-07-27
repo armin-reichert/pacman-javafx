@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
 import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -38,12 +39,12 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
             case Pac pac -> computePacSprite(pac);
             case Ghost ghost -> computeGhostSprite(ghost);
             case Bonus bonus -> computeBonusSprite(bonus);
-            default -> actor.animations.currentSprite();
+            default -> actor.assertComponent(SpriteAnim.class).animations().currentSprite();
         };
     }
 
     private RectShort computePacSprite(Pac pac) {
-        final SpriteAnimationAccess animationManager = pac.animations;
+        final SpriteAnimationAccess animationManager = pac.assertComponent(SpriteAnim.class).animations();
         if (animationManager.isSelected(CommonAnimationID.PAC_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().pacMunchingSprites(pac.worldMovement().moveDir());
             return spriteOrDefault(sprites, animationManager.currentFrame());
@@ -54,7 +55,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        final SpriteAnimationAccess animationManager = ghost.animations;
+        final SpriteAnimationAccess animationManager = ghost.assertComponent(SpriteAnim.class).animations();
         if (animationManager.isSelected(CommonAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldMovement().wishDir());
             return spriteOrDefault(sprites, animationManager.currentFrame());

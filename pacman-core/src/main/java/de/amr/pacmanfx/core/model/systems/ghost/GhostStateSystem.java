@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -42,18 +43,19 @@ public class GhostStateSystem {
         ghost.assertComponent(GhostStateComponent.class).setState(newState);
 
         // Execute "onEntry" action for the new state
+        final SpriteAnim spriteAnim = ghost.assertComponent(SpriteAnim.class);
         switch (newState) {
             case LOCKED, HUNTING_PAC -> {
-                ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
-                ghost.animations.playSelected();
+                spriteAnim.animations().select(CommonAnimationID.GHOST_NORMAL);
+                spriteAnim.animations().playSelected();
             }
             case ENTERING_HOUSE, RETURNING_HOME -> {
-                ghost.animations.select(CommonAnimationID.GHOST_EYES);
-                ghost.animations.playSelected();
+                spriteAnim.animations().select(CommonAnimationID.GHOST_EYES);
+                spriteAnim.animations().playSelected();
             }
             case FRIGHTENED -> {
-                ghost.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
-                ghost.animations.playSelected();
+                spriteAnim.animations().select(CommonAnimationID.GHOST_FRIGHTENED);
+                spriteAnim.animations().playSelected();
             }
             case EATEN -> {}
         }

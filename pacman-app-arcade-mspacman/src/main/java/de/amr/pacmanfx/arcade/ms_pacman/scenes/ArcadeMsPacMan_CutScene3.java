@@ -10,6 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -69,10 +70,10 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         stork = new Stork(spriteAnimations);
 
@@ -144,22 +145,22 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         pacMan.visibility().show();
         navigator.setMoveDir(pacMan, Direction.RIGHT);
 
-        pacMan.animations.select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
-        pacMan.animations.stopSelected();
+        pacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
+        pacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
 
         msPacMan.position().set(TS * 5, GROUND_Y - 4);
         msPacMan.visibility().show();
         navigator.setMoveDir(msPacMan, Direction.RIGHT);
 
-        msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
-        msPacMan.animations.stopSelected();
+        msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+        msPacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
 
         stork.position().set(TS * 30, TS * 12);
         stork.visibility().show();
         stork.movement().setVelocity(-0.8f, 0);
 
-        stork.animations.select(CommonAnimationID.STORK_FLYING);
-        stork.animations.playSelected();
+        stork.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.STORK_FLYING);
+        stork.assertComponent(SpriteAnim.class).animations().playSelected();
 
         bag.position().set(stork.position().x - 14, stork.position().y + 3);
         bag.visibility().show();

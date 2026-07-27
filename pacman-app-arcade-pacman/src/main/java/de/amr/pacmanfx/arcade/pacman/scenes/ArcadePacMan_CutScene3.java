@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -44,7 +45,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer container = appContext().ui().sprites().animations();
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.animations = renderConfig.createPacAnimations(container);
+        pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(container));
         blinky = renderConfig.createAnimatedGhost(gameContext(), container, RED_GHOST_SHADOW);
         sceneTick = -1;
     }
@@ -77,8 +78,8 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         navigator.placeAtTile(blinky, -1, 20);
         navigator.setMoveDir(blinky, Direction.RIGHT);
         navigator.setWishDir(blinky, Direction.RIGHT);
-        blinky.animations.select(CommonAnimationID.BLINKY_NAKED);
-        blinky.animations.playSelected();
+        blinky.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.BLINKY_NAKED);
+        blinky.assertComponent(SpriteAnim.class).animations().playSelected();
     }
 
     private void startBlinkyChasingPacMan(WorldMovementSystem navigator) {
@@ -88,8 +89,8 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
 
         pacMan.visibility().show();
 
-        pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
-        pacMan.animations.playSelected();
+        pacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+        pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
 
         navigator.placeAtTile(blinky, 35, 20);
         navigator.setMoveDir(blinky, Direction.LEFT);
@@ -98,7 +99,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
 
         blinky.visibility().show();
 
-        blinky.animations.select(CommonAnimationID.BLINKY_PATCHED);
-        blinky.animations.playSelected();
+        blinky.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.BLINKY_PATCHED);
+        blinky.assertComponent(SpriteAnim.class).animations().playSelected();
     }
 }

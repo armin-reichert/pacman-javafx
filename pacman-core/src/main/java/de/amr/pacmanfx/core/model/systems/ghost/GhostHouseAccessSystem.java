@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.common.Position;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
@@ -62,7 +63,7 @@ public class GhostHouseAccessSystem {
         if (isThreatenedByPac(gameContext, ghost, pac)) {
             ghost.playFrightenedAnimation(gameContext);
         } else {
-            ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
+            ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
         }
 
     }
@@ -116,7 +117,7 @@ public class GhostHouseAccessSystem {
             if (isThreatenedByPac(gameContext, ghost, pac)) {
                 ghost.playFrightenedAnimation(gameContext);
             } else {
-                ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
+                ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
             }
         }
     }

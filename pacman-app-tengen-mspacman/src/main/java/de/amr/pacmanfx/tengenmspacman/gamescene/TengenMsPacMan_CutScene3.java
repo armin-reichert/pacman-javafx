@@ -8,6 +8,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -92,10 +93,10 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         stork = new Stork(spriteAnimations);
         flyingBag = new Bag(spriteAnimations);
@@ -126,8 +127,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     navigator.setMoveDir(pacMan, Direction.RIGHT);
                     navigator.setSpeed(pacMan, 0);
 
-                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.animations.stopSelected();
+                    pacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
 
                     msPacMan.position().set(WorldMap.TS * 5, GROUND_Y - 4);
                     msPacMan.visibility().show();
@@ -135,14 +136,14 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     navigator.setMoveDir(msPacMan, Direction.RIGHT);
                     navigator.setSpeed(msPacMan, 0);
 
-                    msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
-                    msPacMan.animations.stopSelected();
+                    msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+                    msPacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
 
                     stork.position().set(RIGHT_BORDER, WorldMap.TS * 7);
                     stork.visibility().show();
                     stork.movement().setVelocity(-0.8f, 0);
-                    stork.animations.select(CommonAnimationID.STORK_FLYING);
-                    stork.animations.playSelected();
+                    stork.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.STORK_FLYING);
+                    stork.assertComponent(SpriteAnim.class).animations().playSelected();
                     stork.setBagReleasedFromBeak(false);
                 }
                 case 240 -> {

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
@@ -57,7 +58,7 @@ public class CommonPacManDyingState extends GameState {
         navigator.setSpeed(pac, 0);
         pacPowerSystem.reset(pac);
         pac.setState(Pac.State.DEAD);
-        pac.animations.stopSelected();
+        pac.assertComponent(SpriteAnim.class).animations().stopSelected();
 
         waitForTimeout();
 
@@ -82,11 +83,11 @@ public class CommonPacManDyingState extends GameState {
         }
         else if (tick == hideGhostsTick) {
             level.entities().ghosts().forEach(ghost -> ghost.visibility().hide());
-            pac.animations.select(CommonAnimationID.PAC_DYING);
-            pac.animations.resetSelected();
+            pac.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_DYING);
+            pac.assertComponent(SpriteAnim.class).animations().resetSelected();
         }
         else if (tick == animationStartTick) {
-            pac.animations.playSelected();
+            pac.assertComponent(SpriteAnim.class).animations().playSelected();
             gameContext.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == hidePacTick) {

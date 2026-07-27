@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -98,13 +99,13 @@ public class LevelMediumTestState extends GameState {
         final Pac pac = level.entities().pac();
         pac.cheats().usingAutopilotProperty().unbind();
         pac.cheats().setUsingAutopilot(true);
-        pac.animations.playSelected();
+        pac.assertComponent(SpriteAnim.class).animations().playSelected();
         pac.visibility().show();
 
         final List<Ghost> ghosts = level.entities().ghosts();
         ghosts.forEach(ghost -> {
             ghost.visibility().show();
-            ghost.animations.playSelected();
+            ghost.assertComponent(SpriteAnim.class).animations().playSelected();
         });
 
         gameContext.hudState().show();

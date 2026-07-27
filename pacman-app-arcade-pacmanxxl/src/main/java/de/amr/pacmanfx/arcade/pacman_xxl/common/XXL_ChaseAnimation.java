@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -96,9 +97,9 @@ class XXL_ChaseAnimation {
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         pac = ArcadePacMan_ActorFactory.createPacMan();
-        pac.animations = renderConfig.createPacAnimations(container);
-        pac.animations.select(CommonAnimationID.PAC_MUNCHING);
-        pac.animations.playSelected();
+        pac.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(container));
+        pac.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+        pac.assertComponent(SpriteAnim.class).animations().playSelected();
         pac.position().setX(numTilesX * WorldMap.TS);
         navigator.setMoveDir(pac, Direction.LEFT);
         navigator.setWishDir(pac, Direction.LEFT);
@@ -117,8 +118,8 @@ class XXL_ChaseAnimation {
             navigator.setWishDir(ghost, Direction.LEFT);
             navigator.setSpeed(ghost, GHOST_CHASE_SPEED);
             ghost.visibility().show();
-            ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
-            ghost.animations.playSelected();
+            ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
+            ghost.assertComponent(SpriteAnim.class).animations().playSelected();
         }
 
         collisions.clear();
@@ -153,8 +154,8 @@ class XXL_ChaseAnimation {
                 navigator.setWishDir(ghost, Direction.LEFT);
                 ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * 2 * WorldMap.TS);
                 navigator.setSpeed(ghost, 1.05f);
-                ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
-                ghost.animations.playSelected();
+                ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
+                ghost.assertComponent(SpriteAnim.class).animations().playSelected();
             }
             state = ChasingState.GHOSTS_CHASING_PAC;
         }
@@ -173,7 +174,7 @@ class XXL_ChaseAnimation {
                 if (colliding(pac, ghost) && collisions.stream().noneMatch(collision -> collision.ghost() == ghost)) {
                     final var collision = new Collision(ghost, System.currentTimeMillis());
                     collisions.add(collision);
-                    ghost.animations.selectAndSetFrame(CommonAnimationID.GHOST_POINTS, i);
+                    ghost.assertComponent(SpriteAnim.class).animations().selectAndSetFrame(CommonAnimationID.GHOST_POINTS, i);
                     Logger.debug("Collision: {}", collision);
                     break;
                 }
@@ -197,8 +198,8 @@ class XXL_ChaseAnimation {
                 navigator.setMoveDir(ghost, Direction.RIGHT);
                 navigator.setWishDir(ghost, Direction.RIGHT);
                 navigator.setSpeed(ghost, 0.58f);
-                ghost.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
-                ghost.animations.playSelected();
+                ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_FRIGHTENED);
+                ghost.assertComponent(SpriteAnim.class).animations().playSelected();
             }
             // Let Pac-Man chase the ghosts from left to right side of the screen
             state = ChasingState.PAC_CHASING_GHOSTS;

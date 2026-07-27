@@ -8,6 +8,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -18,13 +19,14 @@ public class ActorAnimationManager {
         final GameVariantRenderConfig renderConfig = appContext.variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer animationContainer = appContext.ui().sprites().animations();
         final Pac pac = level.entities().pac();
-        if (pac.animations.isEmpty()) {
-            pac.animations = renderConfig.createPacAnimations(animationContainer);
+        if (pac.assertComponent(SpriteAnim.class).animations().isEmpty()) {
+            pac.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(animationContainer));
             resetPacAnimation(pac);
         }
         level.entities().ghosts().forEach(ghost -> {
-            if (ghost.animations.isEmpty()) {
-                ghost.animations = renderConfig.createGhostAnimations(animationContainer, ghost.personality());
+            if (ghost.assertComponent(SpriteAnim.class).animations().isEmpty()) {
+                ghost.assertComponent(SpriteAnim.class).setAnimations(
+                    renderConfig.createGhostAnimations(animationContainer, ghost.personality()));
                 resetGhostAnimation(ghost);
             }
         });
@@ -37,12 +39,12 @@ public class ActorAnimationManager {
     }
 
     public static void resetPacAnimation(Pac pac) {
-        pac.animations.select(CommonAnimationID.PAC_MUNCHING);
-        pac.animations.resetSelected();
+        pac.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+        pac.assertComponent(SpriteAnim.class).animations().resetSelected();
     }
 
     public static void resetGhostAnimation(Ghost ghost) {
-        ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
-        ghost.animations.resetSelected();
+        ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
+        ghost.assertComponent(SpriteAnim.class).animations().resetSelected();
     }
 }

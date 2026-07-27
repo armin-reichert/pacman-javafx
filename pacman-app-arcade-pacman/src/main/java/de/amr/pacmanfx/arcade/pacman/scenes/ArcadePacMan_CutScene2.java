@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -68,7 +69,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.animations = renderConfig.createPacAnimations(spriteAnimationContainer);
+        pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimationContainer));
 
         blinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimationContainer, RED_GHOST_SHADOW);
 
@@ -122,12 +123,12 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     private void dressRaptures() {
         setDressState(NailDressState.RAPTURED);
         blinky.position().x -= 4;
-        blinky.animations.select(CommonAnimationID.BLINKY_DAMAGED);
+        blinky.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.BLINKY_DAMAGED);
     }
 
     private void blinkyStopsMoving(WorldMovementSystem navigator) {
         navigator.setSpeed(blinky, 0);
-        blinky.animations.stopSelected();
+        blinky.assertComponent(SpriteAnim.class).animations().stopSelected();
     }
 
     private void blinkyGetsCaughtOnNail(WorldMovementSystem navigator) {
@@ -140,8 +141,8 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         navigator.setMoveDir(blinky, Direction.LEFT);
         navigator.setWishDir(blinky, Direction.LEFT);
         navigator.setSpeed(blinky, 1.25f);
-        blinky.animations.select(CommonAnimationID.GHOST_NORMAL);
-        blinky.animations.playSelected();
+        blinky.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
+        blinky.assertComponent(SpriteAnim.class).animations().playSelected();
         blinky.visibility().show();
     }
 
@@ -150,8 +151,8 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         navigator.setMoveDir(pacMan, Direction.LEFT);
         navigator.setSpeed(pacMan, 1.15f);
 
-        pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
-        pacMan.animations.playSelected();
+        pacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+        pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
 
         pacMan.visibility().show();
     }
@@ -161,6 +162,6 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private SpriteAnimation blinkyAnimation(Identifier animationID) {
-        return (SpriteAnimation) blinky.animations.animation(animationID);
+        return (SpriteAnimation) blinky.assertComponent(SpriteAnim.class).animations().animation(animationID);
     }
 }

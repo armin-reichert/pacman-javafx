@@ -7,6 +7,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.component.world.WorldMovement;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -62,7 +63,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
             ctx.setFont(debugTextFont);
             ctx.fillText(text, scaled(pac.position().x - 4), scaled(pac.position().y + 16));
         }
-        if (movingActor.animations instanceof SpriteAnimationMap<?> spriteAnimations) {
+        if (movingActor.assertComponent(SpriteAnim.class).animations() instanceof SpriteAnimationMap<?> spriteAnimations) {
             Object animationID = spriteAnimations.selectedAnimationID();
             if (animationID != null) {
                 ctx.setFont(debugTextFont);

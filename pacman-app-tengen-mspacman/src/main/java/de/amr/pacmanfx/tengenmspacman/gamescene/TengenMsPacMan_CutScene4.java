@@ -10,6 +10,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -81,10 +82,10 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         juniors = new ArrayList<>();
         juniorCreationTimes = new ArrayList<>();
@@ -123,8 +124,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     navigator.setMoveDir(pacMan, Direction.RIGHT);
                     navigator.setSpeed(pacMan, 1f);
 
-                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.animations.playSelected();
+                    pacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
 
                     msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
                     msPacMan.visibility().show();
@@ -132,38 +133,38 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     navigator.setMoveDir(msPacMan, Direction.LEFT);
                     navigator.setSpeed(msPacMan, 1f);
 
-                    msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
-                    msPacMan.animations.playSelected();
+                    msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+                    msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
                 }
                 case 230 -> {
                     navigator.setSpeed(pacMan, 0);
-                    pacMan.animations.stopSelected();
-                    pacMan.animations.resetSelected();
+                    pacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
+                    pacMan.assertComponent(SpriteAnim.class).animations().resetSelected();
 
                     navigator.setSpeed(msPacMan, 0);
-                    msPacMan.animations.stopSelected();
-                    msPacMan.animations.resetSelected();
+                    msPacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
+                    msPacMan.assertComponent(SpriteAnim.class).animations().resetSelected();
                 }
                 case 400 -> {
-                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.animations.playSelected();
+                    pacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
 
-                    msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
-                    msPacMan.animations.playSelected();
+                    msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+                    msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
                 }
                 case 520 -> {
-                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_WAVING_HAND);
-                    msPacMan.animations.select(TengenMsPacMan_AnimationID.MS_PAC_MAN_WAVING_HAND);
+                    pacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_WAVING_HAND);
+                    msPacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MS_PAC_MAN_WAVING_HAND);
                 }
                 case 527 -> {
-                    pacMan.animations.playSelected();
-                    msPacMan.animations.playSelected();
+                    pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
+                    msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
                 }
                 case 648 -> {
-                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_TURNING_AWAY);
-                    pacMan.animations.playSelected();
-                    msPacMan.animations.select(TengenMsPacMan_AnimationID.MS_PAC_MAN_TURNING_AWAY);
-                    msPacMan.animations.playSelected();
+                    pacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_TURNING_AWAY);
+                    pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
+                    msPacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MS_PAC_MAN_TURNING_AWAY);
+                    msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
                 }
                 case 650 -> {
                     navigator.setSpeed(pacMan, 1.5f); // TODO not sure
@@ -194,13 +195,13 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         navigator.setMoveDir(junior, Direction.UP);
         navigator.setSpeed(junior, 2);
 
-        junior.animations = renderConfig.createPacAnimations(spriteAnimations);
-        junior.animations.select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
+        junior.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        junior.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
 
         juniors.add(junior);
         juniorCreationTimes.add(tick);
 
-        SoundID soundID = switch (randomInt(1, 3)) {
+        final SoundID soundID = switch (randomInt(1, 3)) {
             case 1 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_1;
             case 2 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_2;
             default -> throw new IllegalArgumentException();

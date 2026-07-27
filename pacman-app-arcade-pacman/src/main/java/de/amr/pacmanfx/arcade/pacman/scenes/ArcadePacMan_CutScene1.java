@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -43,7 +44,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer container = appContext().ui().sprites().animations();
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.animations = renderConfig.createPacAnimations(container);
+        pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(container));
         blinky = renderConfig.createAnimatedGhost(gameContext(), container, RED_GHOST_SHADOW);
         sceneTick = -1;
     }
@@ -80,8 +81,8 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         navigator.placeAtTile(pacMan, -3, 18, 0, 6.5f);
         navigator.setMoveDir(pacMan, Direction.RIGHT);
 
-        pacMan.animations.select(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
-        pacMan.animations.playSelected();
+        pacMan.assertComponent(SpriteAnim.class).animations().select(ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
+        pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
     }
 
     private void startBlinkyEscapingPacMan(WorldMovementSystem navigator) {
@@ -90,24 +91,24 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         navigator.setWishDir(blinky, Direction.RIGHT);
 
         navigator.setSpeed(blinky, 0.75f);
-        blinky.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
-        blinky.animations.playSelected();
+        blinky.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_FRIGHTENED);
+        blinky.assertComponent(SpriteAnim.class).animations().playSelected();
     }
 
     private void startBlinkyChasingPacMan(WorldMovementSystem navigator) {
         navigator.placeAtTile(pacMan, 29, 20);
         navigator.setMoveDir(pacMan, Direction.LEFT);
         navigator.setSpeed(pacMan, 1.25f);
-        pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
-        pacMan.animations.playSelected();
+        pacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+        pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
         pacMan.visibility().show();
 
         navigator.placeAtTile(blinky, 32, 20);
         navigator.setMoveDir(blinky, Direction.LEFT);
         navigator.setWishDir(blinky, Direction.LEFT);
         navigator.setSpeed(blinky, 1.3f);
-        blinky.animations.select(CommonAnimationID.GHOST_NORMAL);
-        blinky.animations.playSelected();
+        blinky.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
+        blinky.assertComponent(SpriteAnim.class).animations().playSelected();
         blinky.visibility().show();
     }
 }

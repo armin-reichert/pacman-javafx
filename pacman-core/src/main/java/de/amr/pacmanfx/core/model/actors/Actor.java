@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.core.model.actors;
 
-import de.amr.basics.spriteanim.SpriteAnimationAccess;
 import de.amr.pacmanfx.core.model.component.EntityComponent;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.common.Position;
@@ -15,26 +14,17 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-/**
- * Base class for all game actors like Pac-Man, the ghosts and the bonus entities.
- * <p>
- * Each actor has a position, movement and visibility component and access to sprite animations
- * in a UI independent way.
- * </p>
- */
 public class Actor {
 
     private final Map<Class<? extends EntityComponent>, EntityComponent> components = new LinkedHashMap<>();
 
-    public SpriteAnimationAccess animations = SpriteAnimationAccess.emptyAnimation();
-
     protected String name;
 
     public Actor() {
+        name = super.toString(); // default name
+
         registerComponent(Position.class, new Position());
         registerComponent(Visibility.class, new Visibility(false));
-
-        name = getClass().getSimpleName() + "#" + hashCode();
     }
 
     public <T extends EntityComponent> void registerComponent(Class<T> type, T component) {

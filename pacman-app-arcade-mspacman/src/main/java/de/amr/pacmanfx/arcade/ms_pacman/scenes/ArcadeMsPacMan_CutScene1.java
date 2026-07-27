@@ -17,6 +17,7 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -87,17 +88,17 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         final var spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         inky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
 
         pinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
 
         heart = new Actor();
-        heart.animations = singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART));
+        heart.assertComponent(SpriteAnim.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.position().set(tilesPx(3), tilesPx(10));
@@ -133,8 +134,8 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         navigator.setMoveDir(pacMan, Direction.RIGHT);
         navigator.setSpeed(pacMan, SPEED_PAC_CHASING);
 
-        pacMan.animations.select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
-        pacMan.animations.playSelected();
+        pacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
+        pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
 
         inky.position().set(pacMan.position().x - 6 * WorldMap.TS, pacMan.position().y);
         inky.visibility().show();
@@ -143,8 +144,8 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         navigator.setMoveDir(inky, Direction.RIGHT);
         navigator.setWishDir(inky, Direction.RIGHT);
 
-        inky.animations.select(CommonAnimationID.GHOST_NORMAL);
-        inky.animations.playSelected();
+        inky.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
+        inky.assertComponent(SpriteAnim.class).animations().playSelected();
 
         msPacMan.position().set(WorldMap.TS * 30, LOWER_Y);
         msPacMan.visibility().show();
@@ -152,8 +153,8 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         navigator.setMoveDir(msPacMan, Direction.LEFT);
         navigator.setSpeed(msPacMan, SPEED_PAC_CHASING);
 
-        msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
-        msPacMan.animations.playSelected();
+        msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+        msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
 
         pinky.position().set(msPacMan.position().x + 6 * WorldMap.TS, msPacMan.position().y);
         pinky.visibility().show();
@@ -162,8 +163,8 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         navigator.setWishDir(pinky, Direction.LEFT);
         navigator.setSpeed(pinky, SPEED_GHOST_CHASING);
 
-        pinky.animations.select(CommonAnimationID.GHOST_NORMAL);
-        pinky.animations.playSelected();
+        pinky.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
+        pinky.assertComponent(SpriteAnim.class).animations().playSelected();
 
         setState(SceneState.CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
     }
@@ -243,14 +244,14 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         navigator.setSpeed(pacMan, 0);
         navigator.setMoveDir(pacMan, Direction.LEFT);
 
-        pacMan.animations.stopSelected();
-        pacMan.animations.resetSelected();
+        pacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
+        pacMan.assertComponent(SpriteAnim.class).animations().resetSelected();
 
         navigator.setSpeed(msPacMan, 0);
         navigator.setMoveDir(msPacMan, Direction.RIGHT);
 
-        msPacMan.animations.stopSelected();
-        msPacMan.animations.resetSelected();
+        msPacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
+        msPacMan.assertComponent(SpriteAnim.class).animations().resetSelected();
 
         inky.visibility().hide();
         pinky.visibility().hide();

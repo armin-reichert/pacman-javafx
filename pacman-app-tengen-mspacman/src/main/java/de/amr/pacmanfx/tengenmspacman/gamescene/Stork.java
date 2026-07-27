@@ -10,6 +10,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.component.common.Movement;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
@@ -40,10 +41,10 @@ public class Stork extends Actor {
     private boolean bagReleasedFromBeak;
 
     public Stork(SpriteAnimationContainer container) {
-        registerComponent(Movement.class, new Movement());
-
         name = "Beatrix von";
-        animations = new StorkAnimations(container);
+        registerComponent(Movement.class, new Movement());
+        registerComponent(SpriteAnim.class, new SpriteAnim());
+        assertComponent(SpriteAnim.class).setAnimations(new StorkAnimations(container));
     }
 
     public void setBagReleasedFromBeak(boolean released) {

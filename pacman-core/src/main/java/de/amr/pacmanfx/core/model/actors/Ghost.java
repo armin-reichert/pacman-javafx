@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
 import de.amr.pacmanfx.core.model.component.ghost.GhostWorldMovementPolicy;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.component.world.WorldMovement;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -49,6 +50,7 @@ public class Ghost extends Actor implements UpdatableEntity {
         if (personality == GameModel.RED_GHOST_SHADOW) {
             registerComponent(Elroy.class, new Elroy());
         }
+        registerComponent(SpriteAnim.class, new SpriteAnim());
 
         worldMovement().corneringSpeedDelta = -1.25f;
     }
@@ -72,7 +74,7 @@ public class Ghost extends Actor implements UpdatableEntity {
 
     /**
      * @param states ghost states to be checked
-     * @return <code>true</code> if ghost ghost is in any of the given states.
+     * @return <code>true</code> if the ghost is in any of the given states.
      * If no alternatives are given, an exception is thrown.
      * <code>false</code>
      */
@@ -131,17 +133,20 @@ public class Ghost extends Actor implements UpdatableEntity {
         }
     }
 
+    //TODO move into sprite animation system
     public void playFrightenedAnimation(GameContext gameContext) {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
+        final SpriteAnim spriteAnimation = assertComponent(SpriteAnim.class);
+
         if (powerSystem.isPowerStartingFading(level, pac)) {
-            animations.select(CommonAnimationID.GHOST_FLASHING);
-            animations.playSelected();
+            spriteAnimation.animations().select(CommonAnimationID.GHOST_FLASHING);
+            spriteAnimation.animations().playSelected();
         }
         else if (!powerSystem.isPowerFading(level, pac)) {
-            animations.select(CommonAnimationID.GHOST_FRIGHTENED);
-            animations.playSelected();
+            spriteAnimation.animations().select(CommonAnimationID.GHOST_FRIGHTENED);
+            spriteAnimation.animations().playSelected();
         }
     }
 }

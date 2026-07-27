@@ -19,6 +19,7 @@ import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
@@ -124,7 +125,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         blinking = new Pulse(10, Pulse.State.ON);
 
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
-        pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         ghosts[0] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.RED_GHOST_SHADOW);
         ghosts[1] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
@@ -151,8 +152,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         pacMan.position().set(WorldMap.TS * 28, WorldMap.TS * 20);
         navigator.setMoveDir(pacMan, Direction.LEFT);
         navigator.setSpeed(pacMan, CHASING_SPEED);
-        pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
-        pacMan.animations.playSelected();
+        pacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+        pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
         pacMan.visibility().show();
         for (Ghost ghost : ghosts) {
             ghostStateSystem.changeState(ghost, GhostState.HUNTING_PAC);
@@ -161,8 +162,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             navigator.setSpeed(ghost, CHASING_SPEED);
             ghost.position().set(pacMan.position().x + 16 * ghost.personality() + 18, pacMan.position().y);
             ghost.visibility().show();
-            ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
-            ghost.animations.playSelected();
+            ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
+            ghost.assertComponent(SpriteAnim.class).animations().playSelected();
         }
     }
 
@@ -200,12 +201,12 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             navigator.setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
         }
 
-        pacMan.animations.stopSelected();
+        pacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
     }
 
     private void turnCardsRestartPacMan(WorldMovementSystem navigator) {
-        pacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
-        pacMan.animations.playSelected();
+        pacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+        pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
         navigator.setSpeed(pacMan, CHASING_SPEED);
     }
 
@@ -234,13 +235,13 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
 
         ghostStateSystem.changeState(victim, EATEN);
-        victim.animations.selectAndSetFrame(CommonAnimationID.GHOST_POINTS, numGhostsEaten++);
+        victim.assertComponent(SpriteAnim.class).animations().selectAndSetFrame(CommonAnimationID.GHOST_POINTS, numGhostsEaten++);
 
         pacMan.visibility().hide();
         navigator.setSpeed(pacMan, 0);
         for (Ghost ghost : ghosts) {
             navigator.setSpeed(ghost, 0);
-            ghost.animations.stopSelected();
+            ghost.assertComponent(SpriteAnim.class).animations().stopSelected();
         }
 
         lastGhostEatenTick = tick;
@@ -255,8 +256,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             } else {
                 ghost.visibility().show();
                 navigator.setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
-                ghost.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
-                ghost.animations.playSelected();
+                ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_FRIGHTENED);
+                ghost.assertComponent(SpriteAnim.class).animations().playSelected();
             }
         }
     }

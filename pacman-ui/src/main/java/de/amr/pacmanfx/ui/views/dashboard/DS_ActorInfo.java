@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.component.world.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
@@ -118,8 +119,8 @@ public class DS_ActorInfo extends GameDashboardSection {
     private Supplier<String> supplyPacAnimationText(GameAppContext appContext) {
         return () -> appContext.currentGameContext().model().optLevel().map(level -> {
             final Pac pac = level.entities().pac();
-            if (pac.animations instanceof SpriteAnimationMap<?> sam && sam.selectedAnimationID() != null) {
-                return "%s:%d".formatted(sam.selectedAnimationID(), pac.animations.currentFrame());
+            if (pac.assertComponent(SpriteAnim.class).animations() instanceof SpriteAnimationMap<?> sam && sam.selectedAnimationID() != null) {
+                return "%s:%d".formatted(sam.selectedAnimationID(), pac.assertComponent(SpriteAnim.class).animations().currentFrame());
             }
             return NO_INFO;
         }).orElse(NO_INFO);
@@ -142,9 +143,9 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private String ghostAnimationText(GameLevel level, Ghost ghost) {
-        if (ghost.animations instanceof SpriteAnimationMap<?> spriteAnimations) {
+        if (ghost.assertComponent(SpriteAnim.class).animations() instanceof SpriteAnimationMap<?> spriteAnimations) {
             return spriteAnimations.selectedAnimationID() != null
-                ? "%s:%d".formatted(spriteAnimations.selectedAnimationID(), ghost.animations.currentFrame())
+                ? "%s:%d".formatted(spriteAnimations.selectedAnimationID(), ghost.assertComponent(SpriteAnim.class).animations().currentFrame())
                 : NO_INFO;
         }
         return NO_INFO;

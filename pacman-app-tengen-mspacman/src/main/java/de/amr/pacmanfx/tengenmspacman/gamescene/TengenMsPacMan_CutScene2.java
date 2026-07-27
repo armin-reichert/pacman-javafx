@@ -8,6 +8,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -77,10 +78,10 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
         clapperboard.startAnimation();
 
         msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        msPacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         pacMan = TengenMsPacMan_ActorFactory.createPacMan();
-        pacMan.animations = renderConfig.createPacAnimations(spriteAnimations);
+        pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
     }
@@ -106,8 +107,8 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
                     navigator.setSpeed(msPacMan, 2.0f);
                     navigator.setMoveDir(msPacMan, Direction.RIGHT);
 
-                    msPacMan.animations.select(CommonAnimationID.PAC_MUNCHING);
-                    msPacMan.animations.playSelected();
+                    msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+                    msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
                 }
                 case 320 -> {
                     pacMan.position().set(LEFT_BORDER, UPPER_LANE);
@@ -116,8 +117,8 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
                     navigator.setSpeed(pacMan, 2.0f);
                     navigator.setMoveDir(pacMan, Direction.RIGHT);
 
-                    pacMan.animations.select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.animations.playSelected();
+                    pacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
                 }
                 case 520 -> {
                     pacMan.position().set(RIGHT_BORDER, LOWER_LANE);

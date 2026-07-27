@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
@@ -78,7 +79,7 @@ public abstract class CommonGamePlay implements GamePlay {
         navigator.setMoveDir(pac, Direction.LEFT);
         navigator.setWishDir(pac, Direction.LEFT);
         pac.power().timer().resetToIndefiniteDuration();
-        pac.animations.resetSelected();
+        pac.assertComponent(SpriteAnim.class).animations().resetSelected();
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
@@ -87,7 +88,7 @@ public abstract class CommonGamePlay implements GamePlay {
             navigator.setMoveDir(ghost, direction);
             navigator.setWishDir(ghost, direction);
             ghostStateSystem.changeState(ghost, GhostState.LOCKED);
-            ghost.animations.resetSelected();
+            ghost.assertComponent(SpriteAnim.class).animations().resetSelected();
         });
 
         level.heartbeat().setStartState(Pulse.State.ON); // Energizers are visible when ON
@@ -326,11 +327,12 @@ public abstract class CommonGamePlay implements GamePlay {
 
         ghostStateSystem.changeState(eatenGhost, GhostState.EATEN);
         // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
-        eatenGhost.animations.selectAndSetFrame(CommonAnimationID.GHOST_POINTS, killedBefore);
+        eatenGhost.assertComponent(SpriteAnim.class).animations()
+            .selectAndSetFrame(CommonAnimationID.GHOST_POINTS, killedBefore);
 
         level.addToGhostKillChain(eatenGhost);
         level.entities().pac().visibility().hide();
-        level.entities().ghosts().forEach(g -> g.animations.stopSelected());
+        level.entities().ghosts().forEach(ghost -> ghost.assertComponent(SpriteAnim.class).animations().stopSelected());
 
         eventManager.publishGameEvent(new GhostEatenEvent(eatenGhost));
     }
@@ -354,14 +356,16 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         navigator.setSpeed(pac, 0);
         pac.power().reset();
-        pac.animations.stopSelected();
-        pac.animations.select(CommonAnimationID.PAC_FULL);
+
+        pac.assertComponent(SpriteAnim.class).animations().stopSelected();
+        pac.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_FULL);
 
         level.entities().ghosts().forEach(ghost -> {
             navigator.setSpeed(ghost, 0);
+
             //TODO check in emulator if ghost animation is reset to normal
-            ghost.animations.stopSelected();
-            ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
+            ghost.assertComponent(SpriteAnim.class).animations().stopSelected();
+            ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
         });
 
         level.optBonus().ifPresent(bonus -> bonus.setInactive(gameContext));

@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostFactory;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -128,8 +129,10 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
             case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey  ("Clyde");
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);
         };
-        ghost.animations = createGhostAnimations(container, personality);
-        ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
+
+        ghost.assertComponent(SpriteAnim.class).setAnimations(createGhostAnimations(container, personality));
+        ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
+
         return ghost;
     }
 
