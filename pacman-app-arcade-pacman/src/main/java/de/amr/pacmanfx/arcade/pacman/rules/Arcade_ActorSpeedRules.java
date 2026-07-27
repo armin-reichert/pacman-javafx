@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
-import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;

@@ -6,9 +6,8 @@ package de.amr.pacmanfx.core.model.world;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.model.world.WorldMap.HTS;

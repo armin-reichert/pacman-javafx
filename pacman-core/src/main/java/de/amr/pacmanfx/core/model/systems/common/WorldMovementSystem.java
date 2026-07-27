@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.core.model.systems;
+package de.amr.pacmanfx.core.model.systems.common;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
@@ -41,6 +41,34 @@ public class WorldMovementSystem {
         final Position position = actor.position();
         final Vector2i tile = computeTile(actor);
         return new Vector2f(position.x - tile.x() * WorldMap.TS, position.y - tile.y() * WorldMap.TS);
+    }
+
+    /**
+     * @param numTiles number of tiles
+     * @return the tile located the given number of tiles towards the current move direction of the actor.
+     */
+    public static Vector2i tilesAhead(Actor actor, int numTiles) {
+        requireNonNull(actor);
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
+
+        return computeTile(actor).plus(worldMovement.moveDir().vector().scaled(numTiles));
+    }
+
+    /**
+     * @param numTiles number of tiles
+     * @return the tile located the given number of tiles towards the current move direction of the actor.
+     * Overflow bug: In case the actor looks UP, additional {@code numTiles} tiles are added towards LEFT.
+     */
+    public static Vector2i tilesAheadWithOverflowBug(Actor actor, int numTiles) {
+        requireNonNull(actor);
+
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
+
+        Vector2i ahead = tilesAhead(actor, numTiles);
+        if (worldMovement.moveDir() == UP) {
+            ahead = ahead.minus(numTiles, 0);
+        }
+        return ahead;
     }
 
     /**
@@ -115,34 +143,6 @@ public class WorldMovementSystem {
      */
     public void placeAtTile(Actor actor, Vector2i tile) {
         placeAtTile(actor, tile.x(), tile.y());
-    }
-
-    /**
-     * @param numTiles number of tiles
-     * @return the tile located the given number of tiles towards the current move direction of the actor.
-     */
-    public Vector2i tilesAhead(Actor actor, int numTiles) {
-        requireNonNull(actor);
-        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
-
-        return computeTile(actor).plus(worldMovement.moveDir().vector().scaled(numTiles));
-    }
-
-    /**
-     * @param numTiles number of tiles
-     * @return the tile located the given number of tiles towards the current move direction of the actor.
-     * Overflow bug: In case the actor looks UP, additional {@code numTiles} tiles are added towards LEFT.
-     */
-    public Vector2i tilesAheadWithOverflowBug(Actor actor, int numTiles) {
-        requireNonNull(actor);
-
-        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
-
-        Vector2i ahead = tilesAhead(actor, numTiles);
-        if (worldMovement.moveDir() == UP) {
-            ahead = ahead.minus(numTiles, 0);
-        }
-        return ahead;
     }
 
     public void setSpeed(Actor actor, float speed) {

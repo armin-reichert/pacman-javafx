@@ -14,7 +14,6 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostFactory;
-import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
@@ -92,11 +91,10 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, byte personality) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         final Ghost ghost = switch (personality) {
-            case GameModel.RED_GHOST_SHADOW -> GhostFactory.createRedGhostShadow("Blinky", worldMovementSystem);
-            case GameModel.PINK_GHOST_SPEEDY -> GhostFactory.createPinkGhostAmbusher("Pinky", worldMovementSystem);
-            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky", worldMovementSystem);
+            case GameModel.RED_GHOST_SHADOW   -> GhostFactory.createRedGhostShadow("Blinky");
+            case GameModel.PINK_GHOST_SPEEDY  -> GhostFactory.createPinkGhostAmbusher("Pinky");
+            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
             case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);
         };

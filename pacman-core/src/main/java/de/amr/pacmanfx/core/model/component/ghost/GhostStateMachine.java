@@ -13,9 +13,10 @@ import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.EntityComponent;
 import de.amr.pacmanfx.core.model.component.common.Position;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.MovementSystem;
-import de.amr.pacmanfx.core.model.systems.PacPowerSystem;
-import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
+import de.amr.pacmanfx.core.model.systems.ghost.GhostHuntingStrategy;
+import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
@@ -23,11 +24,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
-import java.util.Collection;
-
 import static de.amr.basics.math.Direction.*;
 import static de.amr.pacmanfx.core.Validations.differsAtMost;
-import static de.amr.pacmanfx.core.Validations.stateIsOneOf;
 import static java.util.Objects.requireNonNull;
 
 public class GhostStateMachine implements EntityComponent {
@@ -68,17 +66,7 @@ public class GhostStateMachine implements EntityComponent {
     }
 
     /**
-     * @param states ghost states to be checked
-     * @return <code>true</code> if ghost ghost is in any of the given states.
-     * If no alternatives are given, an exception is thrown.
-     * <code>false</code>
-     */
-    public boolean inAnyOfStates(Collection<GhostState> states) {
-        return state != null && stateIsOneOf(state(), states);
-    }
-
-    /**
-     * Changes the state of ghost ghost.
+     * Changes the state of the ghost.
      *
      * @param newState the new state
      */
@@ -213,7 +201,8 @@ public class GhostStateMachine implements EntityComponent {
     private void updateStateHuntingPac(GameContext gameContext, Ghost ghost, float speed) {
         // The specific hunting behavior is defined by the game variant. For example, in Ms. Pac-Man,
         // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-        ghost.hunt(gameContext, speed);
+        final GhostHuntingStrategy strategy = gameContext.systems().ghostHuntingStrategy(ghost.personality());
+        strategy.hunt(gameContext, ghost, speed);
     }
 
     // --- FRIGHTENED ---

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.rules;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;

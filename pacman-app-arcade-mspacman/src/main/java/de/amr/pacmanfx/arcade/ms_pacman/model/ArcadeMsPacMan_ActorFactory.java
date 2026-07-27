@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import org.tinylog.Logger;
@@ -29,18 +29,11 @@ public class ArcadeMsPacMan_ActorFactory {
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      */
     public static Ghost createGhost(GameContext gameContext, byte personality) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         return switch (personality) {
-            case GameModel.RED_GHOST_SHADOW   -> modifyShadowBehavior(
-                GhostFactory.createRedGhostShadow("Blinky", worldMovementSystem));
-
-            case GameModel.PINK_GHOST_SPEEDY  -> modifyAmbushBehavior(
-                GhostFactory.createPinkGhostAmbusher("Pinky", worldMovementSystem));
-
-            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky", worldMovementSystem);
-
+            case GameModel.RED_GHOST_SHADOW -> modifyShadowBehavior(GhostFactory.createRedGhostShadow("Blinky"));
+            case GameModel.PINK_GHOST_SPEEDY -> modifyAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky"));
+            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
             case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue");
-
             default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(personality));
         };
     }
@@ -53,6 +46,9 @@ public class ArcadeMsPacMan_ActorFactory {
     }
 
     private static Ghost modifyShadowBehavior(Ghost redGhost) {
+
+        //TODO create strategy class
+/*
         redGhost.setHuntingStrategy((GameContext gameContext, Float speed) -> {
             final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
             final GameLevel level = gameContext.assertLevel();
@@ -86,10 +82,15 @@ public class ArcadeMsPacMan_ActorFactory {
                 worldMovementSystem.tryMovingTowardsTargetTile(redGhost, gameContext, targetTile);
             }
         });
+
+ */
         return redGhost;
     }
 
     private static Ghost modifyAmbushBehavior(Ghost pinkGhost) {
+        //TODO create strategy class
+
+        /*
         pinkGhost.setHuntingStrategy((GameContext gameContext, Float speed) -> {
             final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
             final GameLevel level = gameContext.assertLevel();
@@ -121,6 +122,8 @@ public class ArcadeMsPacMan_ActorFactory {
                 worldMovementSystem.tryMovingTowardsTargetTile(pinkGhost, gameContext, targetTile);
             }
         });
+
+         */
         return pinkGhost;
     }
 

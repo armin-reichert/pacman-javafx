@@ -12,18 +12,18 @@ import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.common.Movement;
-import de.amr.pacmanfx.core.model.component.ghost.*;
+import de.amr.pacmanfx.core.model.component.ghost.Elroy;
+import de.amr.pacmanfx.core.model.component.ghost.GhostStateMachine;
+import de.amr.pacmanfx.core.model.component.ghost.GhostWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.world.WorldMovement;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.House;
 import org.tinylog.Logger;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 import static de.amr.basics.math.Direction.*;
 import static de.amr.pacmanfx.core.Validations.stateIsOneOf;
@@ -40,28 +40,6 @@ public class Ghost extends Actor implements UpdatableEntity {
     private Vector2f startPosition;
     private House house;
 
-    private Function<GameLevel, Vector2i> chasingTargetTileStrategy = _ -> null;
-
-    /**
-     * Default hunting behavior is to retreat towards the scatter tile in scatter phase
-     * and to go towards current target tile in chasing phase.
-     */
-    private BiConsumer<GameContext, Float> huntingStrategy = (gameContext, speed) -> {
-        requireNonNull(gameContext);
-        requireNonNull(speed);
-
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
-        final GameLevel level = gameContext.assertLevel();
-        
-        worldMovementSystem.setSpeed(this, speed);
-
-        final Vector2i targetTile = level.huntingRules().isChasing()
-            ? chasingTargetTileStrategy.apply(level)
-            : level.worldMap().terrainLayer().ghostScatterTile(personality());
-
-        worldMovementSystem.tryMovingTowardsTargetTile(this, gameContext, targetTile);
-    };
-
     public Ghost(byte personality, String name) {
         this.name = requireNonNull(name);
         this.personality = Validations.requireValidGhostPersonality(personality);
@@ -72,15 +50,6 @@ public class Ghost extends Actor implements UpdatableEntity {
         registerComponent(GhostStateMachine.class, new GhostStateMachine());
 
         //TODO call this in the actor factories of the different game variants
-        registerComponent(GhostHuntingStrategy.class, switch (personality) {
-            case GameModel.RED_GHOST_SHADOW -> new ShadowHuntingStrategy();
-            case GameModel.PINK_GHOST_SPEEDY -> new SpeedyHuntingStrategy();
-            case GameModel.CYAN_GHOST_BASHFUL-> new BashfulHuntingStrategy();
-            case GameModel.ORANGE_GHOST_POKEY -> new AttackRetreatIfNearHuntingStrategy();
-            default -> throw new IllegalStateException("Unexpected value: " + personality);
-        });
-
-        //TODO call this in the actor factories of the different game variants
         if (personality == GameModel.RED_GHOST_SHADOW) {
             registerComponent(Elroy.class, new Elroy());
         }
@@ -88,14 +57,17 @@ public class Ghost extends Actor implements UpdatableEntity {
         worldMovement().corneringSpeedDelta = -1.25f;
     }
 
-    public WorldMovement worldMovement() {
-        return assertComponent(WorldMovement.class);
+    /**
+     * @return this ghost's personality, see {@link GameModel#RED_GHOST_SHADOW},
+     * {@link GameModel#PINK_GHOST_SPEEDY}, {@link GameModel#CYAN_GHOST_BASHFUL} and
+     * {@link GameModel#ORANGE_GHOST_POKEY}.
+     */
+    public byte personality() {
+        return personality;
     }
 
-
-    @Override
-    public void update(GameContext gameContext) {
-        assertComponent(GhostStateMachine.class).update(gameContext, this);
+    public WorldMovement worldMovement() {
+        return assertComponent(WorldMovement.class);
     }
 
     public GhostState state() {
@@ -117,18 +89,6 @@ public class Ghost extends Actor implements UpdatableEntity {
         return stateIsOneOf(state(), states);
     }
 
-    public void setHuntingStrategy(BiConsumer<GameContext, Float> huntingStrategy) {
-        this.huntingStrategy = requireNonNull(huntingStrategy);
-    }
-
-    public Function<GameLevel, Vector2i> chasingTargetTileStrategy() {
-        return chasingTargetTileStrategy;
-    }
-
-    public void setChasingTargetTileStrategy(Function<GameLevel, Vector2i> chasingTargetTileStrategy) {
-        this.chasingTargetTileStrategy = requireNonNull(chasingTargetTileStrategy);
-    }
-
     public House house() {
         return house;
     }
@@ -137,14 +97,6 @@ public class Ghost extends Actor implements UpdatableEntity {
         this.house = house;
     }
 
-    /**
-     * @return this ghost's personality, see {@link GameModel#RED_GHOST_SHADOW},
-     * {@link GameModel#PINK_GHOST_SPEEDY}, {@link GameModel#CYAN_GHOST_BASHFUL} and
-     * {@link GameModel#ORANGE_GHOST_POKEY}.
-     */
-    public byte personality() {
-        return personality;
-    }
 
     public void setSpecialTerrainTiles(Set<Vector2i> tiles) {
         specialTerrainTiles = Set.copyOf(tiles);
@@ -163,6 +115,11 @@ public class Ghost extends Actor implements UpdatableEntity {
     }
 
     @Override
+    public void update(GameContext gameContext) {
+        assertComponent(GhostStateMachine.class).update(gameContext, this);
+    }
+
+    @Override
     public String toString() {
         return "Ghost{" +
             "personality=" + personality +
@@ -171,10 +128,6 @@ public class Ghost extends Actor implements UpdatableEntity {
             ", startPosition=" + startPosition +
             super.toString() +
             '}';
-    }
-
-    public void hunt(GameContext gameContext, float speed) {
-        huntingStrategy.accept(gameContext, speed);
     }
 
     /**

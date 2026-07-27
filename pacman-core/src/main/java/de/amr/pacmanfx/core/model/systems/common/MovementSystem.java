@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.core.model.systems;
+package de.amr.pacmanfx.core.model.systems.common;
 
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.component.common.Movement;

@@ -10,8 +10,8 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.PacDigestionSystem;
-import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import org.tinylog.Logger;
 
 import java.util.Arrays;

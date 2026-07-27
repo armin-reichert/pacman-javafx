@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -45,11 +45,10 @@ public final class TengenMsPacMan_ActorFactory {
      * </p>
      */
     public static Ghost createGhost(GameContext gameContext, byte personality) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         return switch (personality) {
-            case GameModel.RED_GHOST_SHADOW   -> modifyShadowBehavior(GhostFactory.createRedGhostShadow("Blinky", worldMovementSystem));
-            case GameModel.PINK_GHOST_SPEEDY  -> modifyAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky", worldMovementSystem));
-            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky", worldMovementSystem);
+            case GameModel.RED_GHOST_SHADOW   -> modifyShadowBehavior(GhostFactory.createRedGhostShadow("Blinky"));
+            case GameModel.PINK_GHOST_SPEEDY  -> modifyAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky"));
+            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
             case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue");
             default -> throw new IllegalArgumentException();
         };
@@ -68,6 +67,10 @@ public final class TengenMsPacMan_ActorFactory {
     }
 
     private static Ghost modifyShadowBehavior(Ghost ghost) {
+
+        //TODO create strategy class
+
+        /*
         ghost.setHuntingStrategy((GameContext gameContext, Float speed) -> {
             final GameLevel level = gameContext.assertLevel();
             final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
@@ -90,10 +93,16 @@ public final class TengenMsPacMan_ActorFactory {
                 worldMovementSystem.tryMovingTowardsTargetTile(ghost, gameContext, targetTile);
             }
         });
+
+         */
         return ghost;
     }
 
     private static Ghost modifyAmbushBehavior(Ghost ghost) {
+
+        //TODO create strategy class
+
+        /*
         ghost.setHuntingStrategy((GameContext gameContext, Float speed) -> {
             final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
             final GameLevel level = gameContext.assertLevel();
@@ -115,6 +124,8 @@ public final class TengenMsPacMan_ActorFactory {
                 worldMovementSystem.tryMovingTowardsTargetTile(ghost, gameContext, targetTile);
             }
         });
+
+         */
         return ghost;
     }
 

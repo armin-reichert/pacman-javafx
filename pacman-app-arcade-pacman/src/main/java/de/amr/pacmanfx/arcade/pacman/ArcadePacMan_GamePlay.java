@@ -7,20 +7,22 @@ package de.amr.pacmanfx.arcade.pacman;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
+import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.Bonus;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
-import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
-import de.amr.pacmanfx.core.rules.HuntingTimer;
-import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.world.*;
+import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.core.steering.RouteBasedSteering;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 
@@ -134,7 +136,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     protected void createAndSetGhosts(GameContext gameContext, GameLevel level, House house) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         // Special tiles where attacking ghosts cannot move up
@@ -143,10 +144,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             .collect(Collectors.toUnmodifiableSet());
 
         level.setGhosts(
-            createGhost(worldMovementSystem, GameModel.RED_GHOST_SHADOW,   terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles),
-            createGhost(worldMovementSystem, GameModel.PINK_GHOST_SPEEDY,  terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles),
-            createGhost(worldMovementSystem, GameModel.CYAN_GHOST_BASHFUL, terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles),
-            createGhost(worldMovementSystem, GameModel.ORANGE_GHOST_POKEY, terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles)
+            createGhost(GameModel.RED_GHOST_SHADOW,   terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles),
+            createGhost(GameModel.PINK_GHOST_SPEEDY,  terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles),
+            createGhost(GameModel.CYAN_GHOST_BASHFUL, terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles),
+            createGhost(GameModel.ORANGE_GHOST_POKEY, terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles)
         );
     }
 
