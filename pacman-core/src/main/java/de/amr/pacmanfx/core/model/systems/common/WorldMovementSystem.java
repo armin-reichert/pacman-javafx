@@ -104,6 +104,13 @@ public class WorldMovementSystem {
         worldMovement.wishDirProperty().set(dir);
     }
 
+    public void requestTurnBack(Actor actor) {
+        requireNonNull(actor);
+
+        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
+        worldMovement.setTurnBackRequested(true);
+    }
+
     /**
      * Places this actor at the given tile coordinate with the given tile offsets. Updates the
      * <code>newTileEntered</code> state.
@@ -235,8 +242,7 @@ public class WorldMovementSystem {
         }
         if (worldMovement.isTurnBackRequested() && worldMovementPolicy.canTurnBack(actor)) {
             setWishDir(actor, worldMovement.moveDir().opposite());
-            Logger.trace("{}: turned back at tile {}", actor.name(), computeTile(actor));
-            worldMovement.clearTurnBackRequested();
+            worldMovement.setTurnBackRequested(false);
         }
         tryMovingTowards(actor, gameContext, computeTile(actor), worldMovement.wishDir());
         if (worldMovement.info.moved) {
@@ -260,7 +266,7 @@ public class WorldMovementSystem {
     }
 
     private void tryMovingTowards(Actor actor, GameContext gameContext, Vector2i tileBeforeMoving, Direction dir) {
-        final MovementSystem motor = gameContext.systems().movementSystem;
+        final MovementSystem motor = gameContext.systems().motor;
         final WorldMovementPolicy worldMovementPolicy = actor.assertComponent(WorldMovementPolicy.class);
 
         final Movement movement = actor.movement();

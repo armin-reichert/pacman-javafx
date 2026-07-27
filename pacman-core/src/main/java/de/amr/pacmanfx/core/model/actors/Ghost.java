@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.model.component.ghost.GhostWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.world.WorldMovement;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.ghost.GhostStateMachine;
+import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.world.House;
 
@@ -70,11 +70,6 @@ public class Ghost extends Actor implements UpdatableEntity {
         return assertComponent(GhostStateComponent.class).state();
     }
 
-    public void setState(GhostState state) {
-        requireNonNull(state);
-        assertComponent(GhostStateComponent.class).setState(state);
-    }
-
     /**
      * @param states ghost states to be checked
      * @return <code>true</code> if ghost ghost is in any of the given states.
@@ -111,8 +106,8 @@ public class Ghost extends Actor implements UpdatableEntity {
 
     @Override
     public void update(GameContext gameContext) {
-        final GhostStateMachine stateMachine = gameContext.systems().ghostStateMachine;
-        stateMachine.update(gameContext, this);
+        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
+        ghostStateSystem.update(gameContext, this);
     }
 
     @Override

@@ -11,7 +11,7 @@ public class ShadowHuntingStrategy implements GhostHuntingStrategy {
 
     @Override
     public void hunt(GameContext gameContext, Ghost ghost, float speed) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
 
         worldMovementSystem.setSpeed(ghost, speed);

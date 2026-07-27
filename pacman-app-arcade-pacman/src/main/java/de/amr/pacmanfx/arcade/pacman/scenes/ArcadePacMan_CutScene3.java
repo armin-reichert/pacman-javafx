@@ -56,8 +56,8 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
             return;
         }
 
-        final MovementSystem motor = gameContext.systems().movementSystem;
-        final WorldMovementSystem navigator = gameContext.systems().worldMovementSystem;
+        final MovementSystem motor = gameContext.systems().motor;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         switch (sceneTick) {
             case TICK_ANIMATION_START      -> startAnimation(navigator);

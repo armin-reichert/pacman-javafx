@@ -35,7 +35,7 @@ public class SteeringActions {
 
         @Override
         public void doAction() {
-            final WorldMovementSystem worldMovementSystem = gameContext().systems().worldMovementSystem;
+            final WorldMovementSystem worldMovementSystem = gameContext().systems().navigator;
             gameContext().model().optLevel().ifPresent(level -> worldMovementSystem.setWishDir(level.entities().pac(), dir));
         }
 

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
 
 import java.util.Set;
 
@@ -24,11 +25,14 @@ public class CommonEatingGhostState extends GameState {
 
     @Override
     public void onUpdate(GameContext gameContext) {
+        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
+
         final GameModel model = gameContext.model();
         final GameLevel level = model.optLevel().orElseThrow();
+
         if (timer().hasExpired()) {
             level.entities().pac().visibility().show();
-            level.ghostsInState(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
+            level.ghostsInState(GhostState.EATEN).forEach(ghost -> ghostStateSystem.changeState(ghost, GhostState.RETURNING_HOME));
             level.entities().ghosts().forEach(ghost -> ghost.animations.playSelected());
             gameContext.flow().resumePreviousState(gameContext);
         } else {

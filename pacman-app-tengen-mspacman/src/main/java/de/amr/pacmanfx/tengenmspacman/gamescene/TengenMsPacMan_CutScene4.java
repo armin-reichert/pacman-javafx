@@ -99,8 +99,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        final MovementSystem motor = gameContext.systems().movementSystem;
-        final WorldMovementSystem navigator = gameContext.systems().worldMovementSystem;
+        final MovementSystem motor = gameContext.systems().motor;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
         
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final long gameStateTick = gameState().timer().tickCount();
@@ -239,7 +239,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private int compareBySmallestDistToSceneCenter(Pac junior, Direction dir1, Direction dir2) {
-        final WorldMovementSystem worldMovementSystem = gameContext().systems().worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext().systems().navigator;
         Vector2i tile = worldMovementSystem.computeTile(junior);
         Vector2f pos1 = tile.plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = tile.plus(dir2.vector()).scaled(TS).toVector2f();

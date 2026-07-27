@@ -49,7 +49,7 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         requireNonNull(actor);
 
         final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
 
         final Vector2i actorTile = WorldMovementSystem.computeTile(actor);
         final float offsetX = WorldMovementSystem.computeTileOffset(actor).x();

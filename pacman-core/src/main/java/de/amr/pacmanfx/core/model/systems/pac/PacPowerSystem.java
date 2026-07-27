@@ -13,6 +13,8 @@ import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.pac.PacPower;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
 import org.tinylog.Logger;
 
 import java.util.Set;
@@ -29,6 +31,8 @@ public final class PacPowerSystem {
         requireNonNull(gameContext);
         requireNonNull(pac);
 
+        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
+
         final PacPower power = pac.power();
         final GameLevel level = gameContext.assertLevel();
 
@@ -43,7 +47,7 @@ public final class PacPowerSystem {
 
                 // Resume hunting
                 level.huntingRules().start();
-                level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
+                level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghostStateSystem.changeState(ghost, GhostState.HUNTING_PAC));
 
                 gameContext.eventManager().publishGameEvent(new PacLostPowerEvent(pac));
             }
@@ -51,9 +55,11 @@ public final class PacPowerSystem {
     }
 
     public void start(GameContext gameContext, Pac pac) {
+        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
+
         final GameLevel level = gameContext.assertLevel();
-        level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(
-            ghost -> ghost.worldMovement().requestTurnBack());
+        level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(navigator::requestTurnBack);
 
         final float seconds = level.pacPowerSeconds();
         if (seconds > 0) {
@@ -61,7 +67,7 @@ public final class PacPowerSystem {
             final long ticks = TickTimer.secToTicks(seconds);
             pac.power().timer().restartTicks(ticks);
             Logger.debug("Power timer activated, {} ticks ({0.00} sec)", ticks, seconds);
-            level.ghostsInState(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
+            level.ghostsInState(GhostState.HUNTING_PAC).forEach(ghost -> ghostStateSystem.changeState(ghost, GhostState.FRIGHTENED));
             gameContext.eventManager().publishGameEvent(new PacGetsPowerEvent(pac));
         }
     }

@@ -9,15 +9,15 @@ import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 
 public final class GameSystems {
 
-    public final MovementSystem movementSystem =  new MovementSystem();
-    public final WorldMovementSystem worldMovementSystem = new WorldMovementSystem();
+    public final MovementSystem motor =  new MovementSystem();
+    public final WorldMovementSystem navigator = new WorldMovementSystem();
 
     public final PacPowerSystem pacPowerSystem = new PacPowerSystem();
     public final PacDigestionSystem pacDigestionSystem = new PacDigestionSystem();
 
     public final RandomWorldMovementSystem randomWorldMovementSystem = new RandomWorldMovementSystem();
 
-    public final GhostStateMachine ghostStateMachine = new GhostStateMachine();
+    public final GhostStateSystem ghostStateSystem = new GhostStateSystem();
     public final GhostHouseAccessSystem ghostHouseAccessSystem = new GhostHouseAccessSystem();
 
     public final GhostHuntingStrategy pokeyHuntingStrategy = new PokeyHuntingStrategy();

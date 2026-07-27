@@ -115,7 +115,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private void takeAction(GameContext gameContext, CollectedData data) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
 
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();

@@ -87,8 +87,8 @@ class XXL_ChaseAnimation {
         requireNonNull(canvas);
         requireNonNull(container);
 
-        final MovementSystem motor = gameContext.systems().movementSystem;
-        final WorldMovementSystem navigator = gameContext.systems().worldMovementSystem;
+        final MovementSystem motor = gameContext.systems().motor;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         timeline.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update(motor, navigator)));
 

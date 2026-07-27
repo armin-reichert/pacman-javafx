@@ -103,7 +103,7 @@ public class Pac extends Actor implements UpdatableEntity {
 
     @Override
     public void update(GameContext gameContext) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
         final PacDigestionSystem digestionSystem = gameContext.systems().pacDigestionSystem;
         final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
         final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();

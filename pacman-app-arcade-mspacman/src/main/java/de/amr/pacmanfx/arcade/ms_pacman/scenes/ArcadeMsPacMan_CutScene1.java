@@ -68,8 +68,8 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        final MovementSystem movementSystem = gameContext.systems().movementSystem;
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final MovementSystem movementSystem = gameContext.systems().motor;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
 
         switch (sceneState) {
             case CLAPPERBOARD -> updateStateClapperboard(worldMovementSystem);

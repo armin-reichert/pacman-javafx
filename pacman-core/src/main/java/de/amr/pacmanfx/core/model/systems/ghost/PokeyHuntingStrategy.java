@@ -16,7 +16,7 @@ public class PokeyHuntingStrategy implements GhostHuntingStrategy {
         requireNonNull(gameContext);
 
         final GameSystems systems = gameContext.systems();
-        final WorldMovementSystem worldMovementSystem = systems.worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = systems.navigator;
         final GameLevel level = gameContext.assertLevel();
 
         final Vector2i targetTile = level.huntingRules().isChasing()

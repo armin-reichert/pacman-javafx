@@ -5,7 +5,6 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.component.EntityComponent;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.Optional;
@@ -115,9 +114,6 @@ public class WorldMovement implements EntityComponent {
         return wishDir;
     }
 
-    /**
-     * @return The wish direction. Will be taken as soon as possible.
-     */
     public Direction wishDir() {
         return wishDir != null ? wishDir.get() : DEFAULT_WISH_DIR;
     }
@@ -138,22 +134,11 @@ public class WorldMovement implements EntityComponent {
         return canTeleport;
     }
 
-    /**
-     * @return {@code true} if the ghost should revert its direction at the next occasion
-     */
     public boolean isTurnBackRequested() {
         return turnBackRequested;
     }
 
-    public void clearTurnBackRequested() {
-        turnBackRequested = false;
-    }
-
-    /**
-     * Signals that this actor should reverse its move direction as soon as possible.
-     */
-    public void requestTurnBack() {
-        turnBackRequested = true;
-        Logger.debug("Turn back ASAP! {}", this);
+    public void setTurnBackRequested(boolean value) {
+        this.turnBackRequested = value;
     }
 }

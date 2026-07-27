@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -68,6 +69,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
+
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
 
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber, model.mapCategory());
@@ -84,7 +87,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
                 level.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
-                    .forEach(ghost -> ghost.worldMovement().requestTurnBack());
+                    .forEach(navigator::requestTurnBack);
             }
         });
 

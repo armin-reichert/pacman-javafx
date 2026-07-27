@@ -54,8 +54,8 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
             return;
         }
         
-        final MovementSystem motor =  gameContext.systems().movementSystem;
-        final WorldMovementSystem navigator = gameContext.systems().worldMovementSystem;
+        final MovementSystem motor =  gameContext.systems().motor;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
         
         if (sceneTick == ANIMATION_START_TICK) {
             appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_1, 2);

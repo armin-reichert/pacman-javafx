@@ -41,7 +41,7 @@ public class CommonPacManDyingState extends GameState {
     public void onEnter(GameContext gameContext) {
         requireNonNull(gameContext);
 
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
         final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
 
         final GameLevel level = gameContext.assertLevel();

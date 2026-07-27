@@ -63,7 +63,7 @@ public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
 
     @Override
     public float ghostSpeed(GameContext gameContext, Ghost ghost) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();

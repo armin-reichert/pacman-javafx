@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
@@ -130,7 +129,7 @@ public final class TengenMsPacMan_ActorFactory {
     }
 
     private static void selectRandomWishDir(Ghost ghost, GameContext gameContext) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
         final Vector2i ghostTile = WorldMovementSystem.computeTile(ghost);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(ghostTile);

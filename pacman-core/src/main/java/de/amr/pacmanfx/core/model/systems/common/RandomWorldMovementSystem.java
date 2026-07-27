@@ -30,7 +30,7 @@ public class RandomWorldMovementSystem {
         requireNonNull(actor);
 
         final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
 
         final Vector2i tile = WorldMovementSystem.computeTile(actor);

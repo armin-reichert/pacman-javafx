@@ -92,8 +92,8 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        final MovementSystem motor = gameContext.systems().movementSystem;
-        final WorldMovementSystem navigator = gameContext.systems().worldMovementSystem;
+        final MovementSystem motor = gameContext.systems().motor;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         final long gameStateTick = gameState().timer().tickCount();
 

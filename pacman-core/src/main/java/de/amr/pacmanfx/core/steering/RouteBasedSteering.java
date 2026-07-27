@@ -39,7 +39,7 @@ public class RouteBasedSteering implements Steering {
 
     @Override
     public void steer(Actor actor, GameContext gameContext) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
         final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         if (targetIndex == route.size()) {
@@ -57,7 +57,7 @@ public class RouteBasedSteering implements Steering {
     }
 
     private void selectNextTargetTile(GameContext gameContext, Actor actor) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
         final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
 
         ++targetIndex;

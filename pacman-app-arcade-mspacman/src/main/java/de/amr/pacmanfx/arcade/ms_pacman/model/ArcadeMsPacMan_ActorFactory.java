@@ -7,9 +7,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
-import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -128,7 +126,7 @@ public class ArcadeMsPacMan_ActorFactory {
     }
 
     private static void selectRandomWishDir(Ghost ghost, GameContext gameContext) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
         final WorldMovementPolicy policy = ghost.assertComponent(WorldMovementPolicy.class);
         final Vector2i ghostTile = WorldMovementSystem.computeTile(ghost);
         

@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.*;
@@ -64,7 +65,8 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public void prepareLevelForPlaying(GameContext gameContext) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
 
         final GameLevel level = gameContext.assertLevel();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
@@ -84,7 +86,7 @@ public abstract class CommonGamePlay implements GamePlay {
             final Direction direction = house.ghostStartDirection(ghost.personality());
             worldMovementSystem.setMoveDir(ghost, direction);
             worldMovementSystem.setWishDir(ghost, direction);
-            ghost.setState(GhostState.LOCKED);
+            ghostStateSystem.changeState(ghost, GhostState.LOCKED);
             ghost.animations.resetSelected();
         });
 
@@ -311,6 +313,8 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(gameContext);
         requireNonNull(eatenGhost);
 
+        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
+
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
         final GameEventManager eventManager = gameContext.eventManager();
@@ -320,7 +324,7 @@ public abstract class CommonGamePlay implements GamePlay {
         scorePoints(gameContext, points, level.number());
         Logger.info("Scored {} points for killing {}", points, eatenGhost.name());
 
-        eatenGhost.setState(GhostState.EATEN);
+        ghostStateSystem.changeState(eatenGhost, GhostState.EATEN);
         // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
         eatenGhost.animations.selectAndSetFrame(CommonAnimationID.GHOST_POINTS, killedBefore);
 
@@ -335,7 +339,7 @@ public abstract class CommonGamePlay implements GamePlay {
     public void onLevelCompleted(GameContext gameContext) {
         requireNonNull(gameContext);
 
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
 
         level.huntingRules().stop();

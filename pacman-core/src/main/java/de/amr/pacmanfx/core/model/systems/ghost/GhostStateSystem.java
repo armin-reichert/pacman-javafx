@@ -4,21 +4,18 @@
 
 package de.amr.pacmanfx.core.model.systems.ghost;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
-import de.amr.pacmanfx.core.model.component.common.Position;
+import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
 import de.amr.pacmanfx.core.model.systems.common.RandomWorldMovementSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import org.tinylog.Logger;
 
-import static de.amr.basics.math.Direction.DOWN;
 import static java.util.Objects.requireNonNull;
 
-public class GhostStateMachine {
+public class GhostStateSystem {
 
     public void update(GameContext gameContext, Ghost ghost) {
         final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
@@ -39,17 +36,23 @@ public class GhostStateMachine {
      *
      * @param newState the new state
      */
-    public void setState(Ghost ghost, GhostState newState) {
+    public void changeState(Ghost ghost, GhostState newState) {
         requireNonNull(newState);
         if (ghost.state() == newState) {
             Logger.debug("{} is already in state {}", ghost.name(), newState);
         }
-        ghost.setState(newState);
+        ghost.assertComponent(GhostStateComponent.class).setState(newState);
 
         // Execute "onEntry" action for the new state
         switch (newState) {
-            case LOCKED, HUNTING_PAC -> ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
-            case ENTERING_HOUSE, RETURNING_HOME -> ghost.animations.select(CommonAnimationID.GHOST_EYES);
+            case LOCKED, HUNTING_PAC -> {
+                ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
+                ghost.animations.playSelected();
+            }
+            case ENTERING_HOUSE, RETURNING_HOME -> {
+                ghost.animations.select(CommonAnimationID.GHOST_EYES);
+                ghost.animations.playSelected();
+            }
             case FRIGHTENED -> {
                 ghost.animations.select(CommonAnimationID.GHOST_FRIGHTENED);
                 ghost.animations.playSelected();
@@ -124,24 +127,8 @@ public class GhostStateMachine {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
-
-        final Position position = ghost.position();
-        final Vector2f houseEntry = ghost.house().entryPosition();
-        //TODO
-        final Vector2f positionVec =  position.asVector2f();
-        if (positionVec.roughlyEquals(houseEntry, speed, 0)) {
-            position.set(houseEntry.x(), houseEntry.y());
-            worldMovementSystem.setMoveDir(ghost, DOWN);
-            worldMovementSystem.setWishDir(ghost, DOWN);
-            setState(ghost, GhostState.ENTERING_HOUSE);
-        } else {
-            //TODO use system method
-            ghost.worldMovement().setTargetTile(ghost.house().leftDoorTile());
-            worldMovementSystem.setSpeed(ghost, speed);
-            worldMovementSystem.navigateTowardsTarget(ghost, gameContext);
-            worldMovementSystem.tryMovingOrTeleporting(ghost, gameContext);
-        }
+        final GhostHouseAccessSystem ghostHouseAccessSystem = gameContext.systems().ghostHouseAccessSystem;
+        ghostHouseAccessSystem.reachHouse(gameContext, ghost, speed);
     }
 
     // --- ENTERING_HOUSE ---

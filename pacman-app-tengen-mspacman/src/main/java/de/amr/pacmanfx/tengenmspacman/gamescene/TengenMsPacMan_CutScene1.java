@@ -94,7 +94,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final WorldMovementSystem worldMovementSystem = gameContext().systems().worldMovementSystem;
+        final WorldMovementSystem worldMovementSystem = gameContext().systems().navigator;
 
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
@@ -149,8 +149,8 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        final MovementSystem motor = gameContext.systems().movementSystem;
-        final WorldMovementSystem navigator = gameContext.systems().worldMovementSystem;
+        final MovementSystem motor = gameContext.systems().motor;
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         clapperboard.tick();
 

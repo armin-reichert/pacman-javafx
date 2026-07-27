@@ -8,16 +8,20 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
+import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.rules.HuntingTimer;
-import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.actors.Bonus;
+import de.amr.pacmanfx.core.model.actors.BonusState;
+import de.amr.pacmanfx.core.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.*;
+import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -31,12 +35,17 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
+    private static final Set<GhostState> TURNBACK_STATES = Set.of(
+        GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE);
+
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
     @Override
     public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
         requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
+
+        final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         final GameModel model = gameContext.model();
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber);
@@ -58,9 +67,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
-                level.ghostsInAnyOfStates(Set.of(
-                    GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
-                    .forEach(ghost -> ghost.worldMovement().requestTurnBack());
+                level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(navigator::requestTurnBack);
             }
         });
 
