@@ -55,7 +55,7 @@ public class CommonPacManDyingState extends GameState {
 
         // Pac-Man stops moving and is prepared for "dying" animation
         worldMovementSystem.setSpeed(pac, 0);
-        pacPowerSystem.resetPower(pac);
+        pacPowerSystem.reset(pac);
         pac.setDead(true);
         pac.animations.stopSelected();
 

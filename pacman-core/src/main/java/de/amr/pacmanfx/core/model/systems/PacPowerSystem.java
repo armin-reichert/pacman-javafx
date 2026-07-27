@@ -66,7 +66,7 @@ public final class PacPowerSystem {
         }
     }
 
-    public void resetPower(Pac pac) {
+    public void reset(Pac pac) {
         pac.power().reset();
     }
 
