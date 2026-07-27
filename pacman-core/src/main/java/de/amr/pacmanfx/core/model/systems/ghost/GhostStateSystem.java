@@ -9,8 +9,6 @@ import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
-import de.amr.pacmanfx.core.model.systems.common.RandomWorldMovementSystem;
-import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -18,8 +16,11 @@ import static java.util.Objects.requireNonNull;
 public class GhostStateSystem {
 
     public void update(GameContext gameContext, Ghost ghost) {
-        final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
-        final float speed = speedRules.ghostSpeed(gameContext, ghost);
+        requireNonNull(gameContext);
+        requireNonNull(ghost);
+
+        final float speed = gameContext.model().rules().actorSpeedRules().ghostSpeed(gameContext, ghost);
+
         switch (ghost.state()) {
             case LOCKED         -> updateStateLocked(gameContext, ghost, speed);
             case LEAVING_HOUSE  -> updateStateLeavingHouse(gameContext, ghost, speed);
@@ -31,13 +32,10 @@ public class GhostStateSystem {
         }
     }
 
-    /**
-     * Changes the state of the ghost.
-     *
-     * @param newState the new state
-     */
     public void changeState(Ghost ghost, GhostState newState) {
+        requireNonNull(ghost);
         requireNonNull(newState);
+
         if (ghost.state() == newState) {
             Logger.debug("{} is already in state {}", ghost.name(), newState);
         }
@@ -64,15 +62,13 @@ public class GhostStateSystem {
     // --- LOCKED ---
 
     private void updateStateLocked(GameContext gameContext, Ghost ghost, float speed) {
-        final GhostHouseAccessSystem ghostHouseAccessSystem = gameContext.systems().ghostHouseAccessSystem;
-        ghostHouseAccessSystem.stayInHouse(gameContext, ghost, speed);
+        gameContext.systems().ghostHouseAccessSystem.stayInHouse(gameContext, ghost, speed);
     }
 
     // --- LEAVING_HOUSE ---
 
     private void updateStateLeavingHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final GhostHouseAccessSystem ghostHouseAccessSystem = gameContext.systems().ghostHouseAccessSystem;
-        ghostHouseAccessSystem.leaveHouse(gameContext, ghost, speed);
+        gameContext.systems().ghostHouseAccessSystem.leaveHouse(gameContext, ghost, speed);
     }
 
     // --- HUNTING_PAC ---
@@ -87,8 +83,7 @@ public class GhostStateSystem {
     private void updateStateHuntingPac(GameContext gameContext, Ghost ghost, float speed) {
         // The specific hunting behavior is defined by the game variant. For example, in Ms. Pac-Man,
         // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-        final GhostHuntingStrategy strategy = gameContext.systems().ghostHuntingStrategy(ghost.personality());
-        strategy.hunt(gameContext, ghost, speed);
+        gameContext.systems().ghostHuntingStrategy(ghost.personality()).hunt(gameContext, ghost, speed);
     }
 
     // --- FRIGHTENED ---
@@ -106,8 +101,7 @@ public class GhostStateSystem {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameContext gameContext, Ghost ghost, float speed) {
-        final RandomWorldMovementSystem randomNavigator = gameContext.systems().randomWorldMovementSystem;
-        randomNavigator.roam(gameContext, ghost, speed);
+        gameContext.systems().randomWorldMovementSystem.roam(gameContext, ghost, speed);
         ghost.playFrightenedAnimation(gameContext);
     }
 
@@ -127,14 +121,12 @@ public class GhostStateSystem {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final GhostHouseAccessSystem ghostHouseAccessSystem = gameContext.systems().ghostHouseAccessSystem;
-        ghostHouseAccessSystem.reachHouse(gameContext, ghost, speed);
+        gameContext.systems().ghostHouseAccessSystem.reachHouse(gameContext, ghost, speed);
     }
 
     // --- ENTERING_HOUSE ---
 
     private void updateStateEnteringHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final GhostHouseAccessSystem ghostHouseAccessSystem = gameContext.systems().ghostHouseAccessSystem;
-        ghostHouseAccessSystem.enterHouse(gameContext, ghost, speed);
+        gameContext.systems().ghostHouseAccessSystem.enterHouse(gameContext, ghost, speed);
     }
 }

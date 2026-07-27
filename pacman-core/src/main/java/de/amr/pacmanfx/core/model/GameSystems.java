@@ -11,26 +11,25 @@ public final class GameSystems {
 
     public final MovementSystem motor =  new MovementSystem();
     public final WorldMovementSystem navigator = new WorldMovementSystem();
+    public final RandomWorldMovementSystem randomWorldMovementSystem = new RandomWorldMovementSystem();
 
     public final PacPowerSystem pacPowerSystem = new PacPowerSystem();
     public final PacDigestionSystem pacDigestionSystem = new PacDigestionSystem();
 
-    public final RandomWorldMovementSystem randomWorldMovementSystem = new RandomWorldMovementSystem();
-
     public final GhostStateSystem ghostStateSystem = new GhostStateSystem();
     public final GhostHouseAccessSystem ghostHouseAccessSystem = new GhostHouseAccessSystem();
 
-    public final GhostHuntingStrategy pokeyHuntingStrategy = new PokeyHuntingStrategy();
-    public final GhostHuntingStrategy bashfulHuntingStrategy = new BashfulHuntingStrategy();
-    public final GhostHuntingStrategy shadowHuntingStrategy = new ShadowHuntingStrategy();
-    public final GhostHuntingStrategy speedyHuntingStrategy = new SpeedyHuntingStrategy();
+    public final GhostHuntingStrategy orangeGhostPokeyHuntingStrategy = new PokeyHuntingStrategy();
+    public final GhostHuntingStrategy cyanGhostBashfulHuntingStrategy = new BashfulHuntingStrategy();
+    public final GhostHuntingStrategy redGhostShadowHuntingStrategy = new ShadowHuntingStrategy();
+    public final GhostHuntingStrategy pinkGhostSpeedyHuntingStrategy = new SpeedyHuntingStrategy();
 
     public GhostHuntingStrategy ghostHuntingStrategy(byte personality) {
         return switch (personality) {
-            case GameModel.RED_GHOST_SHADOW -> shadowHuntingStrategy;
-            case GameModel.PINK_GHOST_SPEEDY -> speedyHuntingStrategy;
-            case GameModel.CYAN_GHOST_BASHFUL -> bashfulHuntingStrategy;
-            case GameModel.ORANGE_GHOST_POKEY -> pokeyHuntingStrategy;
+            case GameModel.RED_GHOST_SHADOW -> redGhostShadowHuntingStrategy;
+            case GameModel.PINK_GHOST_SPEEDY -> pinkGhostSpeedyHuntingStrategy;
+            case GameModel.CYAN_GHOST_BASHFUL -> cyanGhostBashfulHuntingStrategy;
+            case GameModel.ORANGE_GHOST_POKEY -> orangeGhostPokeyHuntingStrategy;
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);
         };
     }

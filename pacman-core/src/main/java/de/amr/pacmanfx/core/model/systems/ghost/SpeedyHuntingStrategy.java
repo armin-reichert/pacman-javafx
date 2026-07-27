@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 
-public class SpeedyHuntingStrategy implements GhostHuntingStrategy{
+public class SpeedyHuntingStrategy implements GhostHuntingStrategy {
 
     @Override
     public void hunt(GameContext gameContext, Ghost ghost, float speed) {
