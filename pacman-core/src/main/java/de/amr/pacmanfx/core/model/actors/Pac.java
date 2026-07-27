@@ -13,8 +13,6 @@ import de.amr.pacmanfx.core.model.systems.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.steering.Steering;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 
 import static java.util.Objects.requireNonNull;
 
@@ -23,7 +21,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pac extends Actor implements UpdatableEntity {
 
-    private final BooleanProperty dead = new SimpleBooleanProperty(false);
+    private boolean dead = false;
 
     private Steering automaticSteering;
 
@@ -61,7 +59,7 @@ public class Pac extends Actor implements UpdatableEntity {
     public String toString() {
         return "Pac{" +
             "name=" + name +
-            ", dead=" + isDead() +
+            ", dead=" + dead +
             ", visible=" + visibility() +
             ", position=" + position() +
             ", movement=" + movement() +
@@ -85,20 +83,16 @@ public class Pac extends Actor implements UpdatableEntity {
         animations.select(CommonAnimationID.PAC_MUNCHING);
     }
 
-    public BooleanProperty deadProperty() {
+    public boolean isDead() {
         return dead;
     }
 
-    public boolean isDead() {
-        return dead.get();
-    }
-
     public boolean isAlive() {
-        return !isDead(); // Not sure if the opposite of being dead is being alive ;-)
+        return !dead; // Not sure if the opposite of being dead is being alive ;-)
     }
 
     public void setDead(boolean dead) {
-        deadProperty().set(dead);
+        this.dead = dead;
     }
 
     @Override

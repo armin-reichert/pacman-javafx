@@ -300,9 +300,9 @@ public class GameSoundEffects implements Disposable {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         if (pacPowerSystem.isPowerActive(pac)) {
-            return 1 + level.huntingRules().phaseIndex() / 2;
+            return NO_SIREN;
         }
-        return NO_SIREN;
+        return 1 + level.huntingRules().phaseIndex() / 2;
     }
 
     public void playSiren(int number) {
