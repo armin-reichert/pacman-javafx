@@ -38,9 +38,4 @@ public class BashfulHuntingStrategy implements GhostHuntingStrategy {
             .scaled(2)
             .minus(redGhostTile);
     }
-
-    private Vector2i computeScatterTile(GameContext gameContext, Ghost ghost) {
-        final GameLevel level = gameContext.assertLevel();
-        return level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
-    }
 }

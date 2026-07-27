@@ -26,9 +26,4 @@ public class ShadowHuntingStrategy implements GhostHuntingStrategy {
         final GameLevel level = gameContext.assertLevel();
         return WorldMovementSystem.computeTile(level.entities().pac());
     }
-
-    private Vector2i computeScatterTile(GameContext gameContext, Ghost ghost) {
-        final GameLevel level = gameContext.assertLevel();
-        return level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
-    }
 }

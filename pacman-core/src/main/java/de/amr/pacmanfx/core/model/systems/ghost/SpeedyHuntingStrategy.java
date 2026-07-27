@@ -28,10 +28,4 @@ public class SpeedyHuntingStrategy implements GhostHuntingStrategy {
         final Pac pac = level.entities().pac();
         return WorldMovementSystem.tilesAheadWithOverflowBug(pac, 4);
     }
-
-    private Vector2i computeScatterTile(GameContext gameContext, Ghost ghost) {
-        final GameLevel level = gameContext.assertLevel();
-        return level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
-    }
-
 }
