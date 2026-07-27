@@ -60,11 +60,15 @@ public class Pac extends Actor implements UpdatableEntity {
     @Override
     public String toString() {
         return "Pac{" +
+            "name=" + name +
             ", dead=" + isDead() +
             ", visible=" + visibility() +
             ", position=" + position() +
             ", movement=" + movement() +
+            ", worldMovement=" + worldMovement() +
             ", digestion=" + digestion() +
+            ", power=" + power() +
+            ", cheats=" + cheats() +
             '}';
     }
 

@@ -19,4 +19,11 @@ public class PacPower implements EntityComponent {
     public TickTimer timer() {
         return timer;
     }
+
+    @Override
+    public String toString() {
+        return "PacPower{" +
+            "timer=" + timer +
+            '}';
+    }
 }
