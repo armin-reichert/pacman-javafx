@@ -3,8 +3,6 @@
  */
 package de.amr.pacmanfx.core.model.actors;
 
-import de.amr.basics.math.Direction;
-import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
@@ -18,14 +16,11 @@ import de.amr.pacmanfx.core.model.component.ghost.GhostWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.world.WorldMovement;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.House;
-import org.tinylog.Logger;
 
 import java.util.Collection;
 import java.util.Set;
 
-import static de.amr.basics.math.Direction.*;
 import static de.amr.pacmanfx.core.Validations.stateIsOneOf;
 import static java.util.Objects.requireNonNull;
 
@@ -97,7 +92,6 @@ public class Ghost extends Actor implements UpdatableEntity {
         this.house = house;
     }
 
-
     public void setSpecialTerrainTiles(Set<Vector2i> tiles) {
         specialTerrainTiles = Set.copyOf(tiles);
     }
@@ -138,57 +132,5 @@ public class Ghost extends Actor implements UpdatableEntity {
         if (hasComponent(Elroy.class)) {
             assertComponent(Elroy.class).setEnabled(false);
         }
-    }
-
-    /**
-     * Lets the ghost roam through the current level's world.
-     * <p>
-     * <cite>
-            Roam if you want to, roam around the world!<br>
-            Roam if you want to, without wings without wheels!<br>
-            Roam if you want to, roam around the world!<br>
-            Roam if you want to, without anything but the love we feel!
-     </cite>
-     */
-    public void roam(GameContext gameContext) {
-        requireNonNull(gameContext);
-
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
-        final GameLevel level = gameContext.assertLevel();
-
-        final Vector2i tile = WorldMovementSystem.computeTile(this);
-        final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
-
-        final boolean stuck = !worldMovement().info.moved;
-        if ((worldMovement().isNewTileEntered() || stuck) && !teleporting) {
-            final Direction dir = computeRoamingDirection(gameContext, tile);
-            worldMovementSystem.setWishDir(this, dir);
-            Logger.debug("Ghost {} takes random wish direction {}", name, dir);
-        }
-        worldMovementSystem.tryMovingOrTeleporting(this, gameContext);
-    }
-
-    // try a random direction towards an accessible tile, do not turn back unless there is no other way
-    private Direction computeRoamingDirection(GameContext gameContext, Vector2i currentTile) {
-        final WorldMovementPolicy policy = assertComponent(WorldMovementPolicy.class);
-
-        Direction dir = pseudoRandomDirection();
-        int turns = 0;
-        while (dir == worldMovement().moveDir().opposite()
-            || !policy.canAccessTile(gameContext, this, currentTile.plus(dir.vector()))) {
-            dir = dir.nextClockwise();
-            if (++turns > 4) {
-                return worldMovement().moveDir().opposite();  // avoid endless loop
-            }
-        }
-        return dir;
-    }
-
-    private Direction pseudoRandomDirection() {
-        final int rnd = RandomNumberSupport.randomInt(0, 1000);
-        if (rnd < 163)             return UP;
-        if (rnd < 163 + 252)       return RIGHT;
-        if (rnd < 163 + 252 + 285) return DOWN;
-        return LEFT;
     }
 }

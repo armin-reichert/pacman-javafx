@@ -14,9 +14,10 @@ import de.amr.pacmanfx.core.model.component.EntityComponent;
 import de.amr.pacmanfx.core.model.component.common.Position;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.RandomWorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
@@ -126,7 +127,7 @@ public class GhostStateMachine implements EntityComponent {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         if (isThreatenedByPac(gameContext, ghost, pac)) {
-            playFrightenedAnimation(gameContext, ghost, pac);
+            playFrightenedAnimation(gameContext, ghost);
         } else {
             ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
         }
@@ -176,7 +177,7 @@ public class GhostStateMachine implements EntityComponent {
             movementSystem.moveAccelerated(ghost);
 
             if (isThreatenedByPac(gameContext, ghost, pac)) {
-                playFrightenedAnimation(gameContext, ghost, pac);
+                playFrightenedAnimation(gameContext, ghost);
             } else {
                 ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
             }
@@ -220,17 +221,14 @@ public class GhostStateMachine implements EntityComponent {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameContext gameContext, Ghost ghost, float speed) {
-        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
-        final GameLevel level = gameContext.assertLevel();
-
-        worldMovementSystem.setSpeed(ghost, speed);
-        ghost.roam(gameContext);
-
-        playFrightenedAnimation(gameContext, ghost, level.entities().pac());
+        final RandomWorldMovementSystem randomWorldMovementSystem = gameContext.systems().randomWorldMovementSystem;
+        randomWorldMovementSystem.roam(gameContext, ghost, speed);
+        playFrightenedAnimation(gameContext, ghost);
     }
 
-    private void playFrightenedAnimation(GameContext gameContext, Ghost ghost, Pac pac) {
+    private void playFrightenedAnimation(GameContext gameContext, Ghost ghost) {
         final GameLevel level = gameContext.assertLevel();
+        final Pac pac = level.entities().pac();
         final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
         if (powerSystem.isPowerStartingFading(level, pac)) {
             ghost.animations.select(CommonAnimationID.GHOST_FLASHING);
