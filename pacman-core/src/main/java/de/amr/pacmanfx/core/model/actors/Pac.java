@@ -131,17 +131,13 @@ public class Pac extends Actor implements UpdatableEntity {
         }
     }
 
-    /**
-     * @return {@code true} if Pac-Man has run against a wall and could not move, its speed is zero
-     * or if he is resting for an indefinite time.
-     */
-    public boolean gotStuck() {
-        return hasNoVelocity() || didNotMoveThroughWorld()
-            || digestion().restingTicks() == PacDigestion.REST_FOREVER;
+    public boolean isBlocked() {
+        return hasEmptySpeed() || didNotMoveThroughWorld();
     }
 
-    private boolean hasNoVelocity() {
-        return movement().velX == 0 && movement().velY == 0;
+    private boolean hasEmptySpeed() {
+        final Movement mov = movement();
+        return mov.velX == 0 && mov.velY == 0;
     }
 
     private boolean didNotMoveThroughWorld() {

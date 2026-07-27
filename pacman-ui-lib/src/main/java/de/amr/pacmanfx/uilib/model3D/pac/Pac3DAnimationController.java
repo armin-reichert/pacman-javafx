@@ -31,7 +31,7 @@ public class Pac3DAnimationController {
             pac3D.powerLight().ifPresent(light -> updatePowerLight(pacPowerSystem, pac, light));
         }
 
-        final boolean walking = pac.state() == Pac.State.ACTIVE && !pac.gotStuck();
+        final boolean walking = pac.state() == Pac.State.ACTIVE && !pac.isBlocked();
         if (walking) {
             animations.optAnimation(Pac3D.AnimationID.MOVING, Pac3DMovementAnimation.class).ifPresent(walkingAnimation -> {
                 walkingAnimation.playOrContinue();
