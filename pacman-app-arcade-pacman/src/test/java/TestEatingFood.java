@@ -231,9 +231,9 @@ public class TestEatingFood {
     public void testResting() {
         context.model().optLevel().ifPresent(level -> {
             eatNextPellet(level);
-            assertEquals(1, level.entities().pac().restingTicks());
+            assertEquals(1, level.entities().pac().digestion().restingTicks());
             eatNextEnergizer(level);
-            assertEquals(3, level.entities().pac().restingTicks());
+            assertEquals(3, level.entities().pac().digestion().restingTicks());
         });
     }
 }
