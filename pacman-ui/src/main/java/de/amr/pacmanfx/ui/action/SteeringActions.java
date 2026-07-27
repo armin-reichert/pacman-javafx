@@ -43,7 +43,7 @@ public class SteeringActions {
         public boolean isEnabled() {
             return gameContext().optLevel().isPresent()
                 && !gameContext().assertLevel().isDemoLevel()
-                && !gameContext().assertLevel().entities().pac().pacCheats().isUsingAutopilot();
+                && !gameContext().assertLevel().entities().pac().cheats().isUsingAutopilot();
         }
     }
 

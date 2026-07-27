@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.MovementSystem;
+import de.amr.pacmanfx.core.model.systems.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -43,7 +44,7 @@ public class Ghost extends Actor implements UpdatableEntity {
     private ObjectProperty<GhostState> state;
     private Set<Vector2i> specialTerrainTiles = Set.of();
     private Vector2f startPosition;
-    private House home;
+    private House house;
 
     private Function<GameLevel, Vector2i> chasingTargetTileStrategy = _ -> null;
 
@@ -114,11 +115,11 @@ public class Ghost extends Actor implements UpdatableEntity {
     }
 
     public House home() {
-        return home;
+        return house;
     }
 
-    public void setHome(House home) {
-        this.home = home;
+    public void setHouse(House house) {
+        this.house = house;
     }
 
     /**
@@ -284,9 +285,10 @@ public class Ghost extends Actor implements UpdatableEntity {
         final MovementSystem movementSystem = gameContext.systems().movementSystem;
         final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
 
-        if (home.isVisitedBy(this)) {
-            final float minY = (home.minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
-            final float maxY = (home.maxTile().y() - 1) * WorldMap.TS - WorldMap.HTS;
+        if (house.isVisitedBy(this)) {
+            // locked inside house: jumping
+            final float minY = (house.minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
+            final float maxY = (house.maxTile().y() - 1) * WorldMap.TS - WorldMap.HTS;
             if (position().y <= minY) {
                 worldMovementSystem.setMoveDir(this, DOWN);
                 worldMovementSystem.setWishDir(this, DOWN);
@@ -297,12 +299,16 @@ public class Ghost extends Actor implements UpdatableEntity {
             position().setY(Math.clamp(position().y, minY, maxY));
             worldMovementSystem.setSpeed(this, speed);
             movementSystem.moveAccelerated(this);
-        } else {
+        }
+        else {
+            // locked outside of house: standing still
             worldMovementSystem.setSpeed(this, 0);
         }
-        if (isInDanger(gameContext)) {
-            final GameLevel level = gameContext.assertLevel();
-            playFrightenedAnimation(level, level.entities().pac());
+
+        final GameLevel level = gameContext.assertLevel();
+        final Pac pac = level.entities().pac();
+        if (isThreatenedByPac(gameContext, pac)) {
+            playFrightenedAnimation(gameContext, pac);
         } else {
             animations.select(CommonAnimationID.GHOST_NORMAL);
         }
@@ -321,20 +327,21 @@ public class Ghost extends Actor implements UpdatableEntity {
         final MovementSystem movementSystem = gameContext.systems().movementSystem;
         final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
         final GameLevel level = gameContext.assertLevel();
+        final Pac pac = level.entities().pac();
 
-        final Vector2f houseEntryPosition = home.entryPosition();
+        final Vector2f houseEntryPosition = house.entryPosition();
         if (position().y <= houseEntryPosition.y()) {
             // outside at house entry
             position().setY(houseEntryPosition.y());
             worldMovementSystem.setMoveDir(this, LEFT);
             worldMovementSystem.setWishDir(this, LEFT);
             worldMovement().setNewTileEntered(false); // don't change direction until new tile is entered by moving
-            setState(isInDanger(gameContext) ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
+            setState(isThreatenedByPac(gameContext, pac) ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
         }
         else {
             // still inside house
             final float centerX = position().x + WorldMap.HTS;
-            final float houseCenterX = home.center().x();
+            final float houseCenterX = house.center().x();
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
                 // align horizontally and raise
                 position().setX(houseCenterX - WorldMap.HTS);
@@ -348,17 +355,18 @@ public class Ghost extends Actor implements UpdatableEntity {
             worldMovementSystem.setSpeed(this, speed);
             movementSystem.moveAccelerated(this);
 
-            if (isInDanger(gameContext)) {
-                playFrightenedAnimation(level, level.entities().pac());
+            if (isThreatenedByPac(gameContext, pac)) {
+                playFrightenedAnimation(gameContext, pac);
             } else {
                 animations.select(CommonAnimationID.GHOST_NORMAL);
             }
         }
     }
 
-    private boolean isInDanger(GameContext gameContext) {
+    private boolean isThreatenedByPac(GameContext gameContext, Pac pac) {
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
         final GameLevel level = gameContext.assertLevel();
-        return level.entities().pac().powerTimer().isRunning() && !level.isInGhostKilledChain(this);
+        return pacPowerSystem.isPowerActive(pac) && !level.isInGhostKilledChain(this);
     }
 
     // --- HUNTING_PAC ---
@@ -396,14 +404,18 @@ public class Ghost extends Actor implements UpdatableEntity {
 
         worldMovementSystem.setSpeed(this, speed);
         roam(gameContext);
-        playFrightenedAnimation(level, level.entities().pac());
+
+        playFrightenedAnimation(gameContext, level.entities().pac());
     }
 
-    private void playFrightenedAnimation(GameLevel level, Pac pac) {
-        if (pac.isPowerFadingStarting(level)) {
+    private void playFrightenedAnimation(GameContext gameContext, Pac pac) {
+        final GameLevel level = gameContext.assertLevel();
+        final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
+        if (powerSystem.isPowerStartingFading(level, pac)) {
             animations.select(CommonAnimationID.GHOST_FLASHING);
             animations.playSelected();
-        } else if (!pac.isPowerFading(level)) {
+        }
+        else if (!powerSystem.isPowerFading(level, pac)) {
             animations.select(CommonAnimationID.GHOST_FRIGHTENED);
             animations.playSelected();
         }
@@ -427,7 +439,7 @@ public class Ghost extends Actor implements UpdatableEntity {
     private void updateStateReturningToHouse(GameContext gameContext, float speed) {
         final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
 
-        final Vector2f houseEntry = home.entryPosition();
+        final Vector2f houseEntry = house.entryPosition();
         //TODO
         final Vector2f positionVec =  position().asVector2f();
         if (positionVec.roughlyEquals(houseEntry, speed, 0)) {
@@ -436,7 +448,7 @@ public class Ghost extends Actor implements UpdatableEntity {
             worldMovementSystem.setWishDir(this, DOWN);
             setState(GhostState.ENTERING_HOUSE);
         } else {
-            worldMovement().setTargetTile(home.leftDoorTile());
+            worldMovement().setTargetTile(house.leftDoorTile());
             worldMovementSystem.setSpeed(this, speed);
             worldMovementSystem.navigateTowardsTarget(this, gameContext);
             worldMovementSystem.tryMovingOrTeleporting(this, gameContext);
@@ -453,7 +465,7 @@ public class Ghost extends Actor implements UpdatableEntity {
         final MovementSystem movementSystem = gameContext.systems().movementSystem;
         final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
 
-        final Vector2f revivalPosition = WorldMap.halfTileRightOf(home.ghostRevivalTile(personality()));
+        final Vector2f revivalPosition = WorldMap.halfTileRightOf(house.ghostRevivalTile(personality()));
         final Vector2f positionVec = position().asVector2f();
         if (positionVec.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
             position().set(revivalPosition.x(), revivalPosition.y());

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.component.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -140,7 +141,9 @@ public class RuleBasedPacSteering implements Steering {
         if (worldMovement.info.moved && !level.worldMap().terrainLayer().isIntersection(pacTile))
             return;
 
-        if (!data.frightenedGhosts.isEmpty() && pac.powerTimer().remainingTicks() >= GameConstants.SIMULATION_FPS) {
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
+        if (!data.frightenedGhosts.isEmpty()
+            && pacPowerSystem.powerTicksRemaining(pac) >= GameConstants.SIMULATION_FPS) {
             final Ghost prey = data.frightenedGhosts.getFirst();
             final Vector2i preyTile = WorldMovementSystem.computeTile(prey);
             Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(), preyTile.manhattanDist(pacTile));
@@ -261,22 +264,26 @@ public class RuleBasedPacSteering implements Steering {
 
     private List<Vector2i> findNearestFoodTiles(GameContext gameContext) {
         final GameLevel level = gameContext.assertLevel();
+        final WorldMap worldMap = level.worldMap();
+        final FoodLayer foodLayer = worldMap.foodLayer();
         final Pac pac = level.entities().pac();
         final Vector2i pacManTile = WorldMovementSystem.computeTile(pac);
-        List<Vector2i> foodTiles = new ArrayList<>();
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
+        final long powerTicksRemaining = pacPowerSystem.powerTicksRemaining(pac);
+        final boolean enoughTimeLeft = powerTicksRemaining > 2L * GameConstants.SIMULATION_FPS;
+        final List<Vector2i> foodTiles = new ArrayList<>();
 
         long time = System.nanoTime();
 
         float minDist = Float.MAX_VALUE;
-        FoodLayer foodLayer = level.worldMap().foodLayer();
-        for (int x = 0; x < level.worldMap().numCols(); ++x) {
-            for (int y = 0; y < level.worldMap().numRows(); ++y) {
-                Vector2i tile = new Vector2i(x, y);
+        for (int x = 0; x < worldMap.numCols(); ++x) {
+            for (int y = 0; y < worldMap.numRows(); ++y) {
+                final Vector2i tile = new Vector2i(x, y);
                 if (!foodLayer.isFoodTile(tile) || foodLayer.hasEatenFoodAtTile(tile)) {
                     continue;
                 }
-                if (level.worldMap().foodLayer().isEnergizerTile(tile)
-                    && level.entities().pac().powerTimer().remainingTicks() > 2L * GameConstants.SIMULATION_FPS
+                if (foodLayer.isEnergizerTile(tile)
+                    && enoughTimeLeft
                     && foodLayer.remainingFoodCount() > 1) {
                     continue;
                 }
@@ -285,19 +292,16 @@ public class RuleBasedPacSteering implements Steering {
                     minDist = dist;
                     foodTiles.clear();
                     foodTiles.add(tile);
-                } else if (dist == minDist) {
+                }
+                else if (dist == minDist) {
                     foodTiles.add(tile);
                 }
             }
         }
 
         time = System.nanoTime() - time;
-
         Logger.trace("Nearest food tiles from Pac-Man location {}: (time {} millis)", pacManTile, time / 1_000_000f);
-        for (Vector2i t : foodTiles) {
-            Logger.trace("\t{} ({} tiles away from Pac-Man, {} tiles away from ghosts)", t, t.manhattanDist(pacManTile),
-                minDistanceFromGhosts(gameContext, pac));
-        }
+
         return foodTiles;
     }
 

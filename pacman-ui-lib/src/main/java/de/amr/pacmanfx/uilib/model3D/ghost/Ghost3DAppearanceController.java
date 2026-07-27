@@ -4,9 +4,11 @@
 
 package de.amr.pacmanfx.uilib.model3D.ghost;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.PacPowerSystem;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 
 public class Ghost3DAppearanceController {
@@ -18,21 +20,24 @@ public class Ghost3DAppearanceController {
         lookNormal(ghost3D);
     }
 
-    public void update(Ghost3D ghost3D, GameLevel level) {
+    public void update(Ghost3D ghost3D, GameContext gameContext) {
+        final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final Ghost ghost = ghost3D.ghost();
+
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
+        final boolean powerActive = pacPowerSystem.isPowerActive(pac);
+        final boolean powerFading = pacPowerSystem.isPowerFading(level, pac);
 
         final GhostAppearance appearance = switch (ghost.state()) {
             case LOCKED, LEAVING_HOUSE -> {
                 //TODO maybe the (model) ghost should store the "frightened no more" state?
-                final boolean powerActive = pac.powerTimer().isRunning();
-                final boolean powerFading = pac.isPowerFading(level);
                 final boolean killedDuringCurrentPhase = level.isInGhostKilledChain(ghost);
                 yield powerActive && !killedDuringCurrentPhase
                     ? powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED
                     : GhostAppearance.NORMAL;
             }
-            case FRIGHTENED -> pac.isPowerFading(level) ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
+            case FRIGHTENED -> powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
             case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
             case EATEN -> GhostAppearance.EATEN;
             default -> GhostAppearance.NORMAL;

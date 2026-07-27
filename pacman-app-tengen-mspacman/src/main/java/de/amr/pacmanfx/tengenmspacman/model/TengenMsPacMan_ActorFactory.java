@@ -57,7 +57,7 @@ public final class TengenMsPacMan_ActorFactory {
 
     public static Ghost createGhost(GameContext gameContext, byte personality, House house, TerrainLayer terrain, String startTileProperty) {
         final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(gameContext, personality);
-        ghost.setHome(house);
+        ghost.setHouse(house);
         if (ghost.personality() == GameModel.RED_GHOST_SHADOW) {
             ghost.setStartPosition(WorldMap.halfTileRightOf(terrain.getTileProperty(startTileProperty)));
         } else {

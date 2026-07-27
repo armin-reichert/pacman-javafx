@@ -129,8 +129,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         demoLevel.setGameOverStateTicks(120);
 
         final Pac pac = demoLevel.entities().pac();
-        pac.pacCheats().setImmune(false);
-        pac.pacCheats().setUsingAutopilot(true);
+        pac.cheats().setImmune(false);
+        pac.cheats().setUsingAutopilot(true);
 
         final var demoLevelSteering = new RuleBasedPacSteering();
         pac.setAutomaticSteering(demoLevelSteering);

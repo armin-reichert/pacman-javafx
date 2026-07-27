@@ -12,7 +12,10 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import org.tinylog.Logger;
+import de.amr.pacmanfx.core.model.systems.PacPowerSystem;
+import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
+
+import static java.util.Objects.requireNonNull;
 
 public class CommonPacManDyingState extends GameState {
 
@@ -36,27 +39,29 @@ public class CommonPacManDyingState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        final GameModel model = gameContext.model();
+        requireNonNull(gameContext);
+
+        final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
+
         final GameLevel level = gameContext.assertLevel();
+        final Pac pac = level.entities().pac();
 
-        model.gateKeeper().resetCounterAndSetEnabled(true);
-
+        gameContext.model().gateKeeper().resetCounterAndSetEnabled(true);
         level.huntingRules().stop();
 
+        level.entities().ghosts().forEach(ghost -> ghost.onPacKilled(level));
         level.entities().optBonus().ifPresent(bonus -> bonus.setInactive(gameContext));
 
-        final Pac pac = level.entities().pac();
-        pac.animations.stopSelected();
-        pac.powerTimer().stop();
-        pac.powerTimer().reset(0);
-        GameContext.SYSTEMS.worldMovementSystem.setSpeed(pac, 0);
+        // Pac-Man stops moving and is prepared for "dying" animation
+        worldMovementSystem.setSpeed(pac, 0);
+        pacPowerSystem.resetPower(pac);
         pac.setDead(true);
-        Logger.info("Pac power timer stopped and reset to zero.");
+        pac.animations.stopSelected();
 
-        level.entities().ghosts().forEach(ghost -> ghost.onPacKilled(level));
+        waitForTimeout();
 
         gameContext.eventManager().publishGameEvent(new StopAllSoundsEvent());
-        waitForTimeout(); // UI triggers timeout
     }
 
     @Override

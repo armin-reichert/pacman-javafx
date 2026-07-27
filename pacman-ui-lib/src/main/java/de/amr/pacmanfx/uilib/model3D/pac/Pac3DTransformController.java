@@ -10,18 +10,17 @@ import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 
-
 public class Pac3DTransformController {
 
     public void init(Pac3D pac3D, GameContext gameContext) {
-        update(pac3D, gameContext);
+        update(gameContext, pac3D);
         pac3D.setTranslateZ(-8); //TODO
         pac3D.setScaleX(1.0);
         pac3D.setScaleY(1.0);
         pac3D.setScaleZ(1.0);
     }
 
-    public void update(Pac3D pac3D, GameContext gameContext) {
+    public void update(GameContext gameContext, Pac3D pac3D) {
         final Pac pac = pac3D.pac();
         final Vector2f center = WorldMovementSystem.computeCenter(pac);
 

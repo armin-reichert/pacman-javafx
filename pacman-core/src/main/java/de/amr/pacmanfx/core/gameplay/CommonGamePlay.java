@@ -7,7 +7,6 @@ package de.amr.pacmanfx.core.gameplay;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.model.GameModel;
@@ -15,6 +14,7 @@ import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.systems.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
@@ -25,7 +25,6 @@ import org.tinylog.Logger;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
@@ -76,7 +75,7 @@ public abstract class CommonGamePlay implements GamePlay {
         pac.position().set(terrain.pacStartPosition());
         worldMovementSystem.setMoveDir(pac, Direction.LEFT);
         worldMovementSystem.setWishDir(pac, Direction.LEFT);
-        pac.powerTimer().resetToIndefiniteDuration();
+        pac.power().timer().resetToIndefiniteDuration();
         pac.animations.resetSelected();
 
         level.entities().ghosts().forEach(ghost -> {
@@ -223,7 +222,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void evalPacKilled(HuntingStepResult result, GameLevel level) {
-        if (level.isDemoLevel() && isPacSafeInDemoLevel(level) || level.entities().pac().pacCheats().isImmune()) {
+        if (level.isDemoLevel() && isPacSafeInDemoLevel(level) || level.entities().pac().cheats().isImmune()) {
             return;
         }
         result.setPacKilled(
@@ -348,19 +347,18 @@ public abstract class CommonGamePlay implements GamePlay {
         level.worldMap().foodLayer().eatAll();
 
         final Pac pac = level.entities().pac();
+        worldMovementSystem.setSpeed(pac, 0);
+        pac.power().reset();
         pac.animations.stopSelected();
         pac.animations.select(CommonAnimationID.PAC_FULL);
-        worldMovementSystem.setSpeed(pac, 0);
-        pac.powerTimer().stop();
-        pac.powerTimer().reset(0);
-        Logger.info("Power timer stopped and reset to zero.");
 
         level.entities().ghosts().forEach(ghost -> {
-            ghost.animations.stopSelected();
-            //TODO check in emulator if ghost animation is reset to normal
-            ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
             worldMovementSystem.setSpeed(ghost, 0);
+            //TODO check in emulator if ghost animation is reset to normal
+            ghost.animations.stopSelected();
+            ghost.animations.select(CommonAnimationID.GHOST_NORMAL);
         });
+
         level.optBonus().ifPresent(bonus -> bonus.setInactive(gameContext));
     }
 
@@ -369,21 +367,8 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(gameContext);
         requireNonNull(pac);
 
-        final GameLevel level = gameContext.assertLevel();
-        final GameEventManager eventManager = gameContext.eventManager();
-
-        level.ghostsInAnyOfStates(Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC)).forEach(
-            ghost -> ghost.worldMovement().requestTurnBack());
-        final float powerSeconds = level.pacPowerSeconds();
-        if (powerSeconds > 0) {
-            level.huntingRules().stop();
-            Logger.debug("Hunting stopped (Pac-Man got power)");
-            final long powerTicks = TickTimer.secToTicks(powerSeconds);
-            pac.powerTimer().restartTicks(powerTicks);
-            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, powerSeconds);
-            level.ghostsInState(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
-            eventManager.publishGameEvent(new PacGetsPowerEvent(pac));
-        }
+        final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
+        powerSystem.start(gameContext, pac);
     }
 
     @Override
@@ -391,21 +376,8 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(gameContext);
         requireNonNull(pac);
 
-        final GameLevel level = gameContext.assertLevel();
-        final GameEventManager eventManager = gameContext.eventManager();
-        if (pac.powerTimer().isRunning()) {
-            pac.powerTimer().doTick();
-            if (pac.isPowerFadingStarting(level)) {
-                eventManager.publishGameEvent(new PacPowerFadesEvent(pac));
-            } else if (pac.powerTimer().hasExpired()) {
-                pac.powerTimer().stop();
-                pac.powerTimer().reset(0);
-                level.clearGhostKillChain();
-                level.huntingRules().start();
-                level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-                eventManager.publishGameEvent(new PacLostPowerEvent(pac));
-            }
-        }
+        final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
+        powerSystem.update(gameContext, pac);
     }
 
     // Scoring

@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.WorldMovement;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
@@ -98,13 +99,15 @@ public class DS_ActorInfo extends GameDashboardSection {
     private Supplier<String> supplyPacPowerText(GameAppContext appContext) {
         return () -> appContext.currentGameContext().model().optLevel()
             .map(level -> level.entities().pac())
-            .map(this::pacPowerText)
+            .map(pac -> pacPowerText(
+                appContext.currentGameContext().systems().pacPowerSystem, pac
+            ))
             .orElse(NO_INFO);
     }
 
-    private String pacPowerText(Pac pac) {
-        return pac.powerTimer().isRunning()
-            ? "Remaining: %s".formatted(ticksToString(pac.powerTimer().remainingTicks()))
+    private String pacPowerText(PacPowerSystem pacPowerSystem, Pac pac) {
+        return pacPowerSystem.isPowerActive(pac)
+            ? "Remaining: %s".formatted(ticksToString(pacPowerSystem.powerTicksRemaining(pac)))
             : "No Power";
     }
 

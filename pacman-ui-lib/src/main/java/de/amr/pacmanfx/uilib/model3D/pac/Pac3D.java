@@ -120,14 +120,14 @@ public class Pac3D extends Group implements UpdatableEntity, DisposableGraphicsO
     public void init(GameContext gameContext) {
         requireNonNull(gameContext);
         transformController.init(this, gameContext);
-        animationController.init(this);
+        animationController.init();
         setPowerMode(false);
     }
 
     @Override
     public void update(GameContext gameContext) {
         requireNonNull(gameContext);
-        transformController.update(this, gameContext);
-        animationController.update(this);
+        transformController.update(gameContext, this);
+        animationController.update(gameContext, this);
     }
 }

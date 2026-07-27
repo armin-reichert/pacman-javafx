@@ -54,8 +54,8 @@ public class GameCheats {
             return;
         }
         final Pac pac = level.entities().pac();
-        pac.pacCheats().immuneProperty().set(isPacImmune());
-        pac.pacCheats().usingAutopilotProperty().set(isPacUsingAutopilot());
+        pac.cheats().immuneProperty().set(isPacImmune());
+        pac.cheats().usingAutopilotProperty().set(isPacUsingAutopilot());
         if (isPacImmune() || isPacUsingAutopilot()) {
             notifyCheatUsed();
         }

@@ -40,7 +40,7 @@ public class ArcadePacMan_ActorFactory {
             case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Clyde");
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);
         };
-        ghost.setHome(house);
+        ghost.setHouse(house);
         ghost.setSpecialTerrainTiles(specialTiles);
         ghost.setStartPosition(halfTileRightOf(terrain.getTileProperty(startTileProperty)));
         return ghost;

@@ -47,7 +47,7 @@ public class ArcadeMsPacMan_ActorFactory {
 
     public static Ghost createGhost(GameContext gameContext, byte personality, TerrainLayer terrain, House house, String startTileProperty) {
         final Ghost ghost = createGhost(gameContext, personality);
-        ghost.setHome(house);
+        ghost.setHouse(house);
         ghost.setStartPosition(halfTileRightOf(terrain.getTileProperty(startTileProperty)));
         return ghost;
     }

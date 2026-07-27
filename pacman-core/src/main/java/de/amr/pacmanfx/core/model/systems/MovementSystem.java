@@ -4,7 +4,7 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.component.Movement;
 import de.amr.pacmanfx.core.model.component.Position;
 
-public class MovementSystem {
+public final class MovementSystem {
 
     public void moveAccelerated(Actor actor) {
         final Position position = actor.position();

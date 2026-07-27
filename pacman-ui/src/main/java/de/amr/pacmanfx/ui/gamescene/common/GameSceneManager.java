@@ -7,7 +7,9 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.PacPowerSystem;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -137,17 +139,21 @@ public class GameSceneManager {
         }
 
         final GameLevel level = gameContext.assertLevel();
+        final Pac pac = level.entities().pac();
+
+        final GameLevel3D level3D = playScene3D.optGameLevel3D().orElseThrow();
+        final Pac3D pac3D = level3D.entities().pac3D();
+
         playScene3D.replaceGameLevel3D(gameContext);
         playScene3D.updateHUD3D(level);
         playScene3D.replaceActionBindings(level);
         playScene3D.initFood3D(level, true);
-
-        final GameLevel3D level3D = playScene3D.optGameLevel3D().orElseThrow();
-        final Pac3D pac3D = level3D.entities().pac3D();
         playScene3D.initPac3D(pac3D, gameContext);
+
         level3D.startLivesCounterTrackingPac();
 
-        if (level.entities().pac().powerTimer().isRunning()) {
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
+        if (pacPowerSystem.isPowerActive(pac)) {
             variantConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
         playScene3D.fadeInAnimation().playFromStart();

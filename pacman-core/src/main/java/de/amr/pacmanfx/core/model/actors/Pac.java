@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.model.actors;
 
-import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.WorldMovementSystem;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.steering.Steering;
@@ -24,10 +24,7 @@ public class Pac extends Actor implements UpdatableEntity {
 
     public static final byte REST_FOREVER = -1;
 
-    private final TickTimer powerTimer = new TickTimer("Pac-PowerTimer");
-
     private final BooleanProperty dead = new SimpleBooleanProperty(false);
-
 
     private long restingTicks;
 
@@ -39,19 +36,25 @@ public class Pac extends Actor implements UpdatableEntity {
      * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.
      */
     public Pac(String name) {
+        this.name = requireNonNull(name);
+
         registerComponent(Movement.class, new Movement());
         registerComponent(WorldMovement.class, new WorldMovement());
         registerComponent(WorldMovementPolicy.class, new PacManWorldMovementPolicy());
+        registerComponent(PacPower.class, new PacPower());
         registerComponent(PacCheats.class, new PacCheats());
 
-        this.name = requireNonNull(name);
     }
 
     public WorldMovement worldMovement() {
         return assertComponent(WorldMovement.class);
     }
 
-    public PacCheats pacCheats() {
+    public PacPower power() {
+        return assertComponent(PacPower.class);
+    }
+
+    public PacCheats cheats() {
         return assertComponent(PacCheats.class);
     }
 
@@ -76,9 +79,12 @@ public class Pac extends Actor implements UpdatableEntity {
         super.reset();
 
         setDead(false);
+
         restingTicks = 0;
         starvingTicks = 0;
+
         worldMovement().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
+
         animations.select(CommonAnimationID.PAC_MUNCHING);
     }
 
@@ -98,21 +104,6 @@ public class Pac extends Actor implements UpdatableEntity {
         deadProperty().set(dead);
     }
 
-    public TickTimer powerTimer() {
-        return powerTimer;
-    }
-
-    public boolean isPowerFading(GameLevel gameLevel) {
-        long fadingTicks = TickTimer.secToTicks(gameLevel.pacPowerFadingSeconds());
-        return powerTimer.isRunning() && powerTimer.remainingTicks() <= fadingTicks;
-    }
-
-    public boolean isPowerFadingStarting(GameLevel gameLevel) {
-        long fadingTicks = TickTimer.secToTicks(gameLevel.pacPowerFadingSeconds());
-        return powerTimer.isRunning() && powerTimer.remainingTicks() == fadingTicks
-            || powerTimer.durationTicks() < fadingTicks && powerTimer.tickCount() == 1;
-    }
-
     @Override
     public void update(GameContext gameContext) {
 
@@ -126,18 +117,20 @@ public class Pac extends Actor implements UpdatableEntity {
         }
 
         final WorldMovementSystem worldMovementSystem = gameContext.systems().worldMovementSystem;
-
-        final GameLevel level = gameContext.assertLevel();
+        final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
         final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
 
-        if (pacCheats().isUsingAutopilot()) {
+        final GameLevel level = gameContext.assertLevel();
+
+        if (cheats().isUsingAutopilot()) {
             automaticSteering.steer(this, gameContext);
         }
 
-        worldMovementSystem.setSpeed(this, powerTimer.isRunning()
+        final float speed = powerSystem.isPowerActive(this)
             ? speedRules.pacSpeedWhenHasPower(level)
-            : speedRules.pacSpeed(level));
+            : speedRules.pacSpeed(level);
 
+        worldMovementSystem.setSpeed(this, speed);
         worldMovementSystem.tryMovingOrTeleporting(this, gameContext);
 
         if (worldMovement().info.moved) {

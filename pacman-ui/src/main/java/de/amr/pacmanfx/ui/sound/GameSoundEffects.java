@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.PacPowerSystem;
 import de.amr.pacmanfx.core.state.GameStateID;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -195,7 +196,7 @@ public class GameSoundEffects implements Disposable {
             return;
         }
         if (GameStateID.GAME_LEVEL_PLAYING.identifies(gameContext.state())) {
-            playSiren(level);
+            playSiren(gameContext);
             playGhostSounds(level.entities().pac(), level.entities().ghosts());
         }
     }
@@ -284,21 +285,21 @@ public class GameSoundEffects implements Disposable {
      * <p>
      * Siren is only played when Pac-Man is being chased (not powered).
      * </p>
-     *
-     * @param level current game level
      */
-    public void playSiren(GameLevel level) {
-        requireNonNull(level);
-        final int sirenNumber = computeSirenNumber(level);
+    public void playSiren(GameContext gameContext) {
+        requireNonNull(gameContext);
+        final int sirenNumber = computeSirenNumber(gameContext);
         if (sirenNumber != NO_SIREN) {
             playSiren(sirenNumber);
         }
     }
 
     // siren numbers are 1..4, hunting phase index = 0..7
-    private int computeSirenNumber(GameLevel level) {
-        final boolean pacPowerless = !level.entities().pac().powerTimer().isRunning();
-        if (pacPowerless) {
+    private int computeSirenNumber(GameContext gameContext) {
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
+        final GameLevel level = gameContext.assertLevel();
+        final Pac pac = level.entities().pac();
+        if (pacPowerSystem.isPowerActive(pac)) {
             return 1 + level.huntingRules().phaseIndex() / 2;
         }
         return NO_SIREN;
