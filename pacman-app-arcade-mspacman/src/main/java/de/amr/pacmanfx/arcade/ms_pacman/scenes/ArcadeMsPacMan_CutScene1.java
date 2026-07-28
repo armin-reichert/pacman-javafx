@@ -198,12 +198,12 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     private void updateStateComingTogether(GameSystems sys) {
         // Pac-Man and Ms. Pac-Man reach end position?
-        if (pacMan.worldMovement().moveDir() == Direction.UP && pacMan.position().y < UPPER_Y) {
+        if (pacMan.worldNavigation().moveDir() == Direction.UP && pacMan.position().y < UPPER_Y) {
             enterStateInHeaven(sys);
         }
 
         // Pac-Man and Ms. Pac-Man meet?
-        else if (pacMan.worldMovement().moveDir() == Direction.LEFT && pacMan.position().x - msPacMan.position().x < WorldMap.TS * 2) {
+        else if (pacMan.worldNavigation().moveDir() == Direction.LEFT && pacMan.position().x - msPacMan.position().x < WorldMap.TS * 2) {
             sys.navigator.setMoveDir(pacMan, Direction.UP);
             sys.navigator.setSpeed(pacMan, SPEED_RISING);
             sys.navigator.setMoveDir(msPacMan, Direction.UP);

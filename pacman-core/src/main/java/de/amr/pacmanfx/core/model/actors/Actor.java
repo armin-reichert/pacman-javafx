@@ -52,7 +52,6 @@ public class Actor {
         return components.get(componentClass) != null;
     }
 
-
     public final Position position() {
         return assertComponent(Position.class);
     }

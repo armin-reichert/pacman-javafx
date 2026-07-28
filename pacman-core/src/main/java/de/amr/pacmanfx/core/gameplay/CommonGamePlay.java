@@ -249,9 +249,9 @@ public abstract class CommonGamePlay implements GamePlay {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         terrain.hPortalContainingTile(pacTile).ifPresent(hPortal -> {
-            if (pac.worldMovement().moveDir() == Direction.LEFT) {
+            if (pac.worldNavigation().moveDir() == Direction.LEFT) {
                 pac.position().setX(hPortal.rightBorderEntryTile().x() * WorldMap.TS + WorldMap.HTS);
-            } else if (pac.worldMovement().moveDir() == Direction.RIGHT) {
+            } else if (pac.worldNavigation().moveDir() == Direction.RIGHT) {
                 pac.position().setX(hPortal.leftBorderEntryTile().x() * WorldMap.TS - WorldMap.HTS);
             }
             // Not sure if colliding ghosts should also be moved back to visible area

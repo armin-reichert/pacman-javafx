@@ -72,7 +72,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private FacingSprite computePacSprite(Pac pac) {
         final int frame = animSystem.currentFrame(pac);
-        final Direction dir = pac.worldMovement().moveDir();
+        final Direction dir = pac.worldNavigation().moveDir();
         return switch (animSystem.selectedAnimationID(pac)) {
             case null -> throw new IllegalStateException("Could not determine Pac-sprite, no animation selected");
             case CommonAnimationID.PAC_DYING    -> computePacDyingSprite(pac);
@@ -83,7 +83,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING -> facingSprite(SpriteID.MR_PAC_MUNCHING, frame, dir);
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_TURNING_AWAY -> facingSprite(SpriteID.MR_PAC_TURNING_AWAY, frame, dir);
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_WAVING_HAND -> facingSprite(SpriteID.MR_PAC_WAVING_HAND, frame, dir);
-            default -> new FacingSprite(animSystem.currentSprite(pac), pac.worldMovement().moveDir());
+            default -> new FacingSprite(animSystem.currentSprite(pac), pac.worldNavigation().moveDir());
         };
     }
 

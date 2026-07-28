@@ -49,7 +49,7 @@ public class Pac extends Actor implements UpdatableEntity {
         state = State.ACTIVE;
     }
 
-    public WorldNavigation worldMovement() {
+    public WorldNavigation worldNavigation() {
         return assertComponent(WorldNavigation.class);
     }
 
@@ -73,7 +73,7 @@ public class Pac extends Actor implements UpdatableEntity {
             ", visible=" + visibility() +
             ", position=" + position() +
             ", movement=" + movement() +
-            ", worldMovement=" + worldMovement() +
+            ", worldNavigation=" + worldNavigation() +
             ", digestion=" + digestion() +
             ", power=" + power() +
             ", cheats=" + cheats() +
@@ -89,7 +89,7 @@ public class Pac extends Actor implements UpdatableEntity {
         super.reset();
 
         state = State.ACTIVE;
-        worldMovement().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
+        worldNavigation().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
 
         //TODO check this
         assertComponent(SpriteAnim.class).delegate().select(CommonAnimationID.PAC_MUNCHING);
@@ -130,7 +130,7 @@ public class Pac extends Actor implements UpdatableEntity {
         sys.navigator.setSpeed(this, speed);
         sys.navigator.tryMovingOrTeleporting(this, gameContext);
 
-        if (worldMovement().info.moved) {
+        if (worldNavigation().info.moved) {
             sys.spriteAnim.playSelected(this);
         } else {
             sys.spriteAnim.stopSelected(this);
@@ -147,6 +147,6 @@ public class Pac extends Actor implements UpdatableEntity {
     }
 
     private boolean didNotMoveThroughWorld() {
-        return !worldMovement().info.moved;
+        return !worldNavigation().info.moved;
     }
 }

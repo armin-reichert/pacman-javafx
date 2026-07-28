@@ -27,7 +27,7 @@ public class Pac3DTransformController {
         pac3D.setTranslateX(center.x());
         pac3D.setTranslateY(center.y());
 
-        pac3D.facingRotate().setAngle(switch (pac.worldMovement().moveDir()) {
+        pac3D.facingRotate().setAngle(switch (pac.worldNavigation().moveDir()) {
             case LEFT  -> 0;
             case UP    -> 90;
             case RIGHT -> 180;

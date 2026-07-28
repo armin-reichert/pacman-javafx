@@ -120,7 +120,7 @@ public class RuleBasedPacSteering implements Steering {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final Vector2i pacTile = WorldMovementSystem.computeTile(pac);
-        final WorldNavigation worldNavigation = pac.worldMovement();
+        final WorldNavigation worldNavigation = pac.worldNavigation();
         
         if (data.hunterAhead != null) {
             Direction escapeDir;
@@ -181,7 +181,7 @@ public class RuleBasedPacSteering implements Steering {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
 
-        final WorldNavigation worldNavigation = pac.worldMovement();
+        final WorldNavigation worldNavigation = pac.worldNavigation();
         final WorldMovementPolicy worldMovementPolicy = pac.assertComponent(WorldMovementPolicy.class);
 
         final Vector2i pacManTile = WorldMovementSystem.computeTile(pac);
@@ -214,7 +214,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private Ghost findHuntingGhostBehind(GameContext gameContext, Pac pac) {
-        final WorldNavigation worldNavigation = pac.worldMovement();
+        final WorldNavigation worldNavigation = pac.worldNavigation();
         final WorldMovementPolicy worldMovementPolicy = pac.assertComponent(WorldMovementPolicy.class);
 
         final GameLevel level = gameContext.assertLevel();

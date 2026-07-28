@@ -75,11 +75,11 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private RectShort computePacSprite(Pac pac) {
         RectShort sprite;
         if (animSystem().isSelected(pac, CommonAnimationID.PAC_MUNCHING)) {
-            final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.worldMovement().moveDir());
+            final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.worldNavigation().moveDir());
             sprite = spriteOrDefault(sprites, animSystem().currentFrame(pac));
         }
         else if (animSystem().isSelected(pac, CommonAnimationID.MR_PAC_MAN_MUNCHING)) {
-            final RectShort[] sprites = spriteSheet().mrPacManMunchingSprites(pac.worldMovement().moveDir());
+            final RectShort[] sprites = spriteSheet().mrPacManMunchingSprites(pac.worldNavigation().moveDir());
             sprite = spriteOrDefault(sprites, animSystem().currentFrame(pac));
         }
         else {
