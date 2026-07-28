@@ -95,7 +95,7 @@ public class XXL_MsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, byte personality) {
-        final Ghost ghost = ArcadeMsPacMan_ActorFactory.createGhost(gameContext, personality);
+        final Ghost ghost = ArcadeMsPacMan_ActorFactory.createGhost(personality);
 
         final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim;
         animSystem.setAnimations(ghost, createGhostAnimations(container, personality));

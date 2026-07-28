@@ -97,16 +97,16 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     protected void createAndSetGhosts(GameContext gameContext, GameLevel level, House house) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         level.setGhosts(
-            ArcadeMsPacMan_ActorFactory.createGhost(gameContext, GameModel.RED_GHOST_SHADOW,
+            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.RED_GHOST_SHADOW,
                 terrain, house, WorldMapPropertyName.POS_GHOST_1_RED),
 
-            ArcadeMsPacMan_ActorFactory.createGhost(gameContext, GameModel.PINK_GHOST_SPEEDY,
+            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.PINK_GHOST_SPEEDY,
                 terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK),
 
-            ArcadeMsPacMan_ActorFactory.createGhost(gameContext, GameModel.CYAN_GHOST_BASHFUL,
+            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.CYAN_GHOST_BASHFUL,
                 terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN),
 
-            ArcadeMsPacMan_ActorFactory.createGhost(gameContext, GameModel.ORANGE_GHOST_POKEY,
+            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.ORANGE_GHOST_POKEY,
                 terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE)
         );
     }

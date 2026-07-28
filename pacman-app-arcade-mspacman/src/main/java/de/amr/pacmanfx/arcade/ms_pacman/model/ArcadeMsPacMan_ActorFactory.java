@@ -26,7 +26,7 @@ public class ArcadeMsPacMan_ActorFactory {
      * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      */
-    public static Ghost createGhost(GameContext gameContext, byte personality) {
+    public static Ghost createGhost(byte personality) {
         return switch (personality) {
             case GameModel.RED_GHOST_SHADOW -> modifyShadowBehavior(GhostFactory.createRedGhostShadow("Blinky"));
             case GameModel.PINK_GHOST_SPEEDY -> modifyAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky"));
@@ -36,8 +36,8 @@ public class ArcadeMsPacMan_ActorFactory {
         };
     }
 
-    public static Ghost createGhost(GameContext gameContext, byte personality, TerrainLayer terrain, House house, String startTileProperty) {
-        final Ghost ghost = createGhost(gameContext, personality);
+    public static Ghost createGhost(byte personality, TerrainLayer terrain, House house, String startTileProperty) {
+        final Ghost ghost = createGhost(personality);
         ghost.setHouse(house);
         ghost.setStartPosition(halfTileRightOf(terrain.getTileProperty(startTileProperty)));
         return ghost;

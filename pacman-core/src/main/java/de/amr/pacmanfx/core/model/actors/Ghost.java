@@ -1,29 +1,25 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
-import de.amr.pacmanfx.core.model.component.ghost.GhostWorldMovementPolicy;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
-import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
 import de.amr.pacmanfx.core.model.world.House;
 
 import java.util.Collection;
 import java.util.Set;
 
+import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.core.Validations.stateIsOneOf;
 import static java.util.Objects.requireNonNull;
 
@@ -40,19 +36,7 @@ public class Ghost extends Actor implements UpdatableEntity {
 
     public Ghost(byte personality, String name) {
         this.name = requireNonNull(name);
-        this.personality = Validations.requireValidGhostPersonality(personality);
-
-        registerComponent(Movement.class, new Movement());
-        registerComponent(WorldNavigation.class, new WorldNavigation());
-        registerComponent(WorldMovementPolicy.class, new GhostWorldMovementPolicy());
-        registerComponent(GhostStateComponent.class, new GhostStateComponent());
-        //TODO call this in the actor factories of the different game variants
-        if (personality == GameModel.RED_GHOST_SHADOW) {
-            registerComponent(Elroy.class, new Elroy());
-        }
-        registerComponent(SpriteAnim.class, new SpriteAnim());
-
-        worldNavigation().corneringSpeedDelta = -1.25f;
+        this.personality = requireValidGhostPersonality(personality);
     }
 
     /**
@@ -108,8 +92,7 @@ public class Ghost extends Actor implements UpdatableEntity {
 
     @Override
     public void update(GameContext gameContext) {
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState;
-        ghostStateSystem.update(gameContext, this);
+        gameContext.systems().ghostState.update(gameContext, this);
     }
 
     @Override

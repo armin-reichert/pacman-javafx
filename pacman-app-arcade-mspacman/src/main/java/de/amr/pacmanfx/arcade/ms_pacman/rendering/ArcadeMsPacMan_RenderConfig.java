@@ -157,7 +157,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     public Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, byte personality) {
         final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim;
 
-        final Ghost ghost = ArcadeMsPacMan_ActorFactory.createGhost(gameContext, personality);
+        final Ghost ghost = ArcadeMsPacMan_ActorFactory.createGhost(personality);
 
         animSystem.setAnimations(ghost, createGhostAnimations(container, personality));
         animSystem.select(ghost, CommonAnimationID.GHOST_NORMAL);
