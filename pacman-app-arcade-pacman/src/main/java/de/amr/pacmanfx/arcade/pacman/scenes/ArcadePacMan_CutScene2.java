@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.basics.Identifier;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
@@ -13,12 +12,12 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -86,28 +85,29 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         if (++sceneTick < TICK_ANIMATION_START) {
             return;
         }
-        final MovementSystem motor = gameContext.systems().motor;
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+
+        final GameSystems sys = gameContext.systems();
 
         switch (sceneTick) {
             case TICK_ANIMATION_START        -> startTheShow();
-            case TICK_PAC_MAN_STARTS_RUNNING -> pacManStartsRunning(navigator);
-            case TICK_BLINKY_STARTS_RUNNING  -> blinkyStartsRunning(navigator);
-            case TICK_BLINKY_GETS_CAUGHT     -> blinkyGetsCaughtOnNail(navigator);
+            case TICK_PAC_MAN_STARTS_RUNNING -> pacManStartsRunning(sys);
+            case TICK_BLINKY_STARTS_RUNNING  -> blinkyStartsRunning(sys);
+            case TICK_BLINKY_GETS_CAUGHT     -> blinkyGetsCaughtOnNail(sys);
             case TICK_DRESS_STRETCHED_SMALL  -> setDressState(STRETCHED_SMALL);
             case TICK_DRESS_STRETCHED_MEDIUM -> setDressState(STRETCHED_MEDIUM);
             case TICK_DRESS_STRETCHED_LARGE  -> setDressState(STRETCHED_LARGE);
-            case TICK_BLINKY_STOPS_MOVING    -> blinkyStopsMoving(navigator);
-            case TICK_DRESS_RAPTURES         -> dressRaptures();
-            case TICK_BLINK_INSPECTS_DAMAGE  -> blinkyInspectsDamagedDress();
+            case TICK_BLINKY_STOPS_MOVING    -> blinkyStopsMoving(sys);
+            case TICK_DRESS_RAPTURES         -> dressRaptures(sys);
+            case TICK_BLINK_INSPECTS_DAMAGE  -> blinkyInspectsDamagedDress(sys.spriteAnim);
             case TICK_ANIMATION_ENDS         -> endTheShow();
         }
-        motor.moveAccelerated(pacMan);
-        motor.moveAccelerated(blinky);
+
+        sys.motor.moveAccelerated(pacMan);
+        sys.motor.moveAccelerated(blinky);
     }
 
-    private void blinkyInspectsDamagedDress() {
-        blinkyAnimation(CommonAnimationID.BLINKY_DAMAGED).advanceFrame();
+    private void blinkyInspectsDamagedDress(SpriteAnimSystem animSystem) {
+        animSystem.advanceFrame(blinky);
     }
 
     private void startTheShow() {
@@ -120,48 +120,48 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         gameState().triggerTimeout();
     }
 
-    private void dressRaptures() {
-        setDressState(NailDressState.RAPTURED);
+    private void dressRaptures(GameSystems sys) {
         blinky.position().x -= 4;
-        blinky.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.BLINKY_DAMAGED);
+        sys.spriteAnim.select(blinky, CommonAnimationID.BLINKY_DAMAGED);
+        setDressState(NailDressState.RAPTURED);
     }
 
-    private void blinkyStopsMoving(WorldMovementSystem navigator) {
-        navigator.setSpeed(blinky, 0);
-        blinky.assertComponent(SpriteAnim.class).animations().stopSelected();
+    private void blinkyStopsMoving(GameSystems sys) {
+        sys.navigator.setSpeed(blinky, 0);
+        sys.spriteAnim.stopSelected(blinky);
     }
 
-    private void blinkyGetsCaughtOnNail(WorldMovementSystem navigator) {
-        navigator.setSpeed(blinky, 0.09f);
-        blinkyAnimation(CommonAnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
+    private void blinkyGetsCaughtOnNail(GameSystems sys) {
+        sys.navigator.setSpeed(blinky, 0.09f);
+
+        //TODO
+        //blinkyAnimation(CommonAnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
     }
 
-    private void blinkyStartsRunning(WorldMovementSystem navigator) {
-        navigator.placeAtTile(blinky, 28, 20, -3, 0);
-        navigator.setMoveDir(blinky, Direction.LEFT);
-        navigator.setWishDir(blinky, Direction.LEFT);
-        navigator.setSpeed(blinky, 1.25f);
-        blinky.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
-        blinky.assertComponent(SpriteAnim.class).animations().playSelected();
+    private void blinkyStartsRunning(GameSystems sys) {
         blinky.visibility().show();
+
+        sys.navigator.placeAtTile(blinky, 28, 20, -3, 0);
+        sys.navigator.setMoveDir(blinky, Direction.LEFT);
+        sys.navigator.setWishDir(blinky, Direction.LEFT);
+        sys.navigator.setSpeed(blinky, 1.25f);
+
+        sys.spriteAnim.select(blinky, CommonAnimationID.GHOST_NORMAL);
+        sys.spriteAnim.playSelected(blinky);
     }
 
-    private void pacManStartsRunning(WorldMovementSystem navigator) {
-        navigator.placeAtTile(pacMan, 28, 20);
-        navigator.setMoveDir(pacMan, Direction.LEFT);
-        navigator.setSpeed(pacMan, 1.15f);
-
-        pacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
-        pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
-
+    private void pacManStartsRunning(GameSystems sys) {
         pacMan.visibility().show();
+
+        sys.navigator.placeAtTile(pacMan, 28, 20);
+        sys.navigator.setMoveDir(pacMan, Direction.LEFT);
+        sys.navigator.setSpeed(pacMan, 1.15f);
+
+        sys.spriteAnim.select(pacMan, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim.playSelected(pacMan);
     }
 
     private void setDressState(NailDressState state) {
         nailDressAnimation.setFrame(state.ordinal());
-    }
-
-    private SpriteAnimation blinkyAnimation(Identifier animationID) {
-        return (SpriteAnimation) blinky.assertComponent(SpriteAnim.class).animations().animation(animationID);
     }
 }

@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.pac.PacCheats;
@@ -12,12 +13,9 @@ import de.amr.pacmanfx.core.model.component.pac.PacDigestion;
 import de.amr.pacmanfx.core.model.component.pac.PacManWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.pac.PacPower;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.component.world.WorldMovement;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
-import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.steering.Steering;
 
@@ -41,7 +39,7 @@ public class Pac extends Actor implements UpdatableEntity {
         this.name = requireNonNull(name);
 
         registerComponent(Movement.class, new Movement());
-        registerComponent(WorldMovement.class, new WorldMovement());
+        registerComponent(WorldNavigation.class, new WorldNavigation());
         registerComponent(WorldMovementPolicy.class, new PacManWorldMovementPolicy());
         registerComponent(PacDigestion.class, new PacDigestion());
         registerComponent(PacPower.class, new PacPower());
@@ -51,8 +49,8 @@ public class Pac extends Actor implements UpdatableEntity {
         state = State.ACTIVE;
     }
 
-    public WorldMovement worldMovement() {
-        return assertComponent(WorldMovement.class);
+    public WorldNavigation worldMovement() {
+        return assertComponent(WorldNavigation.class);
     }
 
     public PacDigestion digestion() {
@@ -93,7 +91,8 @@ public class Pac extends Actor implements UpdatableEntity {
         state = State.ACTIVE;
         worldMovement().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
 
-        assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
+        //TODO check this
+        assertComponent(SpriteAnim.class).delegate().select(CommonAnimationID.PAC_MUNCHING);
     }
 
     public State state() {
@@ -106,11 +105,7 @@ public class Pac extends Actor implements UpdatableEntity {
 
     @Override
     public void update(GameContext gameContext) {
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
-        final PacDigestionSystem digestionSystem = gameContext.systems().pacDigestionSystem;
-        final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
-
-        final SpriteAnim spriteAnim = assertComponent(SpriteAnim.class);
+        final GameSystems sys = gameContext.systems();
 
         final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
         final GameLevel level = gameContext.assertLevel();
@@ -119,8 +114,8 @@ public class Pac extends Actor implements UpdatableEntity {
             return;
         }
 
-        digestionSystem.update(this);
-        if (digestionSystem.isResting(this)) {
+        sys.pacDigestion.update(this);
+        if (sys.pacDigestion.isResting(this)) {
             return;
         }
 
@@ -128,18 +123,17 @@ public class Pac extends Actor implements UpdatableEntity {
             automaticSteering.steer(this, gameContext);
         }
 
-        final float speed = powerSystem.isPowerActive(this)
+        final float speed = sys.pacPower.isPowerActive(this)
             ? speedRules.pacSpeedWhenHasPower(level)
             : speedRules.pacSpeed(level);
 
-        navigator.setSpeed(this, speed);
-        navigator.tryMovingOrTeleporting(this, gameContext);
+        sys.navigator.setSpeed(this, speed);
+        sys.navigator.tryMovingOrTeleporting(this, gameContext);
 
         if (worldMovement().info.moved) {
-            spriteAnim.animations().playSelected();
-        }
-        else {
-            spriteAnim.animations().stopSelected();
+            sys.spriteAnim.playSelected(this);
+        } else {
+            sys.spriteAnim.stopSelected(this);
         }
     }
 

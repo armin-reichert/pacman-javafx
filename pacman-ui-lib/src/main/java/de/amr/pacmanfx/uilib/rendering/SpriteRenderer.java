@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static java.util.Objects.requireNonNull;
@@ -13,9 +14,11 @@ import static java.util.Objects.requireNonNull;
 /**
  * Mix-in interface providing sprite rendering functionality.
  */
-public interface SpriteRendererMixin extends Renderer {
+public interface SpriteRenderer extends Renderer {
 
     record FacingSprite(RectShort sprite, Direction facingDirection) {}
+
+    SpriteAnimSystem animSystem();
 
     SpriteSheet<?> spriteSheet();
 

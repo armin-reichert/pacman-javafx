@@ -6,11 +6,10 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
@@ -99,6 +98,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         stork = new Stork(spriteAnimations);
+
         flyingBag = new Bag(spriteAnimations);
 
         darkness = false;
@@ -113,8 +113,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        final MovementSystem motor = gameContext.systems().motor;
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final GameSystems sys = gameContext.systems();
 
         final long gameStateTick = gameState().timer().tickCount();
 
@@ -124,41 +123,45 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     pacMan.position().set(WorldMap.TS * 3, GROUND_Y - 4);
                     pacMan.visibility().show();
 
-                    navigator.setMoveDir(pacMan, Direction.RIGHT);
-                    navigator.setSpeed(pacMan, 0);
+                    sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
+                    sys.navigator.setSpeed(pacMan, 0);
 
-                    pacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
+                    sys.spriteAnim.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    sys.spriteAnim.stopSelected(pacMan);
 
                     msPacMan.position().set(WorldMap.TS * 5, GROUND_Y - 4);
                     msPacMan.visibility().show();
 
-                    navigator.setMoveDir(msPacMan, Direction.RIGHT);
-                    navigator.setSpeed(msPacMan, 0);
+                    sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
+                    sys.navigator.setSpeed(msPacMan, 0);
 
-                    msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
-                    msPacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
+                    sys.spriteAnim.select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+                    sys.spriteAnim.stopSelected(msPacMan);
 
                     stork.position().set(RIGHT_BORDER, WorldMap.TS * 7);
                     stork.visibility().show();
                     stork.movement().setVelocity(-0.8f, 0);
-                    stork.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.STORK_FLYING);
-                    stork.assertComponent(SpriteAnim.class).animations().playSelected();
+
+                    sys.spriteAnim.select(stork, CommonAnimationID.STORK_FLYING);
+                    sys.spriteAnim.playSelected(stork);
+
+                    flyingBag.setOpen(gameContext, false);
                     stork.setBagReleasedFromBeak(false);
                 }
                 case 240 -> {
                     // stork releases bag, bag starts falling
                     stork.movement().setVelocity(-1f, 0); // faster, no bag to carry!
                     stork.setBagReleasedFromBeak(true);
+
                     flyingBag.position().set(stork.position().x - 15, stork.position().y + 8);
+                    flyingBag.visibility().show();
                     flyingBag.movement().setVelocity(-0.5f, 0);
                     flyingBag.movement().setAcceleration(0, 0.1f);
-                    flyingBag.visibility().show();
                 }
                 case 320 -> // reaches ground, starts bouncing
                     flyingBag.movement().setVelX(-0.5f);
                 case 380 -> {
-                    flyingBag.setOpen(true);
+                    flyingBag.setOpen(gameContext, true);
                     flyingBag.movement().setVelocity(0, 0);
                     flyingBag.movement().setAcceleration(0, 0);
                 }
@@ -168,9 +171,11 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         }
 
         clapperboard.tick();
-        motor.moveAccelerated(stork);
+
+        sys.motor.moveAccelerated(stork);
+
         if (!flyingBag.isOpen()) {
-            motor.moveAccelerated(flyingBag);
+            sys.motor.moveAccelerated(flyingBag);
             if (flyingBag.position().y > GROUND_Y) {
                 flyingBag.position().setY(GROUND_Y);
                 flyingBag.movement().setVelocity(0.9f * flyingBag.movement().velX, -0.3f * flyingBag.movement().velY);

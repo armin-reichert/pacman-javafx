@@ -12,13 +12,12 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.component.world.WorldMovement;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -57,7 +56,9 @@ public class DS_ActorInfo extends GameDashboardSection {
         addDynamicInfo(ghostName(personality), supplyGhostText(appContext, this::ghostNameAndStateText, personality));
         addDynamicInfo("Movement",  supplyGhostText(appContext, this::actorMovementText,  personality));
         addDynamicInfo("Tile",      supplyGhostText(appContext, this::actorLocationText,  personality));
-        addDynamicInfo("Animation", supplyGhostText(appContext, this::ghostAnimationText, personality));
+        addDynamicInfo("Animation", supplyGhostText(appContext,
+            (_, ghost) -> ghostAnimationText(appContext.currentGameContext().systems().spriteAnim, ghost),
+            personality));
     }
 
     private static String ghostName(byte personality) {
@@ -73,7 +74,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     private String actorLocationText(GameLevel level, Actor actor) {
         if (actor == null) return NO_INFO;
 
-        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
+        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
 
         final Vector2i tile = WorldMovementSystem.computeTile(actor);
         final Vector2f tileOffset = WorldMovementSystem.computeTileOffset(actor);
@@ -81,27 +82,27 @@ public class DS_ActorInfo extends GameDashboardSection {
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
             tile.x(), tile.y(),
             tileOffset.x(), tileOffset.y(),
-            worldMovement.isNewTileEntered() ? " NEW" : "");
+            worldNavigation.isNewTileEntered() ? " NEW" : "");
     }
 
     private String actorMovementText(GameLevel level, Actor actor) {
         if (actor == null) return NO_INFO;
 
-        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
+        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
 
         var speed = actor.movement().computeSpeed() * GameConstants.SIMULATION_FPS;
-        var blocked = !worldMovement.info.moved;
-        var reverseText = worldMovement.isTurnBackRequested() ? "REV!" : "";
+        var blocked = !worldNavigation.info.moved;
+        var reverseText = worldNavigation.isTurnBackRequested() ? "REV!" : "";
         return blocked
             ? "BLOCKED!"
-            : "%.2fpx/s %s (%s)%s".formatted(speed, worldMovement.moveDir(), worldMovement.wishDir(), reverseText);
+            : "%.2fpx/s %s (%s)%s".formatted(speed, worldNavigation.moveDir(), worldNavigation.wishDir(), reverseText);
     }
 
     private Supplier<String> supplyPacPowerText(GameAppContext appContext) {
         return () -> appContext.currentGameContext().model().optLevel()
             .map(level -> level.entities().pac())
             .map(pac -> pacPowerText(
-                appContext.currentGameContext().systems().pacPowerSystem, pac
+                appContext.currentGameContext().systems().pacPower, pac
             ))
             .orElse(NO_INFO);
     }
@@ -118,9 +119,10 @@ public class DS_ActorInfo extends GameDashboardSection {
 
     private Supplier<String> supplyPacAnimationText(GameAppContext appContext) {
         return () -> appContext.currentGameContext().model().optLevel().map(level -> {
+            final SpriteAnimSystem animSystem = appContext.currentGameContext().systems().spriteAnim;
             final Pac pac = level.entities().pac();
-            if (pac.assertComponent(SpriteAnim.class).animations() instanceof SpriteAnimationMap<?> sam && sam.selectedAnimationID() != null) {
-                return "%s:%d".formatted(sam.selectedAnimationID(), pac.assertComponent(SpriteAnim.class).animations().currentFrame());
+            if (animSystem.selectedAnimationID(pac) != null) {
+                return "%s:%d".formatted(animSystem.selectedAnimationID(pac), animSystem.currentFrame(pac));
             }
             return NO_INFO;
         }).orElse(NO_INFO);
@@ -142,13 +144,10 @@ public class DS_ActorInfo extends GameDashboardSection {
         return "%s (%s)".formatted(ghost.name(), ghostStateText(level, ghost));
     }
 
-    private String ghostAnimationText(GameLevel level, Ghost ghost) {
-        if (ghost.assertComponent(SpriteAnim.class).animations() instanceof SpriteAnimationMap<?> spriteAnimations) {
-            return spriteAnimations.selectedAnimationID() != null
-                ? "%s:%d".formatted(spriteAnimations.selectedAnimationID(), ghost.assertComponent(SpriteAnim.class).animations().currentFrame())
-                : NO_INFO;
-        }
-        return NO_INFO;
+    private String ghostAnimationText(SpriteAnimSystem animSystem, Ghost ghost) {
+        return animSystem.selectedAnimationID(ghost) != null
+            ? "%s:%d".formatted(animSystem.selectedAnimationID(ghost), animSystem.currentFrame(ghost))
+            : NO_INFO;
     }
 
     private String ghostStateText(GameLevel level, Ghost ghost) {

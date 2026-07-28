@@ -7,6 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.rules.HuntingRules;
@@ -22,15 +23,22 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
+import static java.util.Objects.requireNonNull;
 
 public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer {
 
     private static final List<Direction> CLOCK_ORDER = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
 
+    private final SpriteAnimSystem animSystem;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    public Arcade_PlayScene2D_DebugInfo_Renderer(Canvas canvas) {
+    public Arcade_PlayScene2D_DebugInfo_Renderer(SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
+        this.animSystem = requireNonNull(animSystem);
+    }
+
+    public SpriteAnimSystem animSystem() {
+        return animSystem;
     }
 
     @Override
@@ -79,7 +87,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
             ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, tilesPx(8));
 
             updateActorDrawingOrder(level);
-            actorsInZOrder.forEach(this::drawMovingActorInfo);
+            actorsInZOrder.forEach(actor -> drawMovingActorInfo(animSystem, actor));
         });
     }
 

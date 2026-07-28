@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.event.BonusExpiredEvent;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.bonus.BonusWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.common.Movement;
-import de.amr.pacmanfx.core.model.component.world.WorldMovement;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
@@ -48,7 +48,7 @@ public class Bonus extends Actor implements UpdatableEntity {
 
     public Bonus(int symbolCode, int points) {
         registerComponent(Movement.class, new Movement());
-        registerComponent(WorldMovement.class, new WorldMovement());
+        registerComponent(WorldNavigation.class, new WorldNavigation());
         registerComponent(WorldMovementPolicy.class, new BonusWorldMovementPolicy());
 
         this.name = "Bonus-symbol:%d-points:%d".formatted(symbolCode, points);
@@ -62,8 +62,8 @@ public class Bonus extends Actor implements UpdatableEntity {
         worldMovement().setCanTeleport(false); // override default value (true)
     }
 
-    public WorldMovement worldMovement() {
-        return assertComponent(WorldMovement.class);
+    public WorldNavigation worldMovement() {
+        return assertComponent(WorldNavigation.class);
     }
 
     public BonusState state() {

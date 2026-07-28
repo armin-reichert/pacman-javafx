@@ -8,10 +8,11 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gameplay.HuntingStepResult;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.rules.GameRules;
+import de.amr.pacmanfx.core.model.GameSystems;
+import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.rules.GameRules;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -24,7 +25,10 @@ public class CommonGameLevelPlayingState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
+        final GameSystems sys = gameContext.systems();
+
         final GameLevel level = gameContext.model().assertLevel();
+        final Pac pac = level.entities().pac();
 
         level.optMessage()
             .filter(message -> message.type() == GameLevelMessageType.READY)
@@ -33,8 +37,8 @@ public class CommonGameLevelPlayingState extends GameState {
         level.heartbeat().setStartState(Pulse.State.ON);
         level.heartbeat().restart();
 
-        level.entities().pac().assertComponent(SpriteAnim.class).animations().playSelected();
-        level.entities().ghosts().forEach(ghost -> ghost.assertComponent(SpriteAnim.class).animations().playSelected());
+        sys.spriteAnim.playSelected(pac);
+        level.entities().ghosts().forEach(sys.spriteAnim::playSelected);
 
         // This call fires a game event!
         level.huntingRules().startFirstPhase(gameContext, level.number());

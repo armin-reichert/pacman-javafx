@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -19,7 +20,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
-import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -27,15 +28,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.NES_SCREEN_WIDTH;
+import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_PlayScene2D_Renderer
     extends BaseRenderer
-    implements GameScene2D_Renderer, SpriteRendererMixin, TengenMsPacMan_SceneRendererMixin
+    implements GameScene2D_Renderer, SpriteRenderer, TengenMsPacMan_SceneRendererMixin
 {
     private static final int CONTENT_INDENT = 2 * WorldMap.TS;
     private static final List<Byte> GHOSTS_Z_ORDER = List.of(GameModel.ORANGE_GHOST_POKEY, GameModel.CYAN_GHOST_BASHFUL, GameModel.PINK_GHOST_SPEEDY, GameModel.RED_GHOST_SHADOW);
 
-    private static class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
+    private class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
 
         public PlaySceneDebugInfoRenderer(Canvas canvas) {
             super(canvas);
@@ -55,13 +57,15 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             ctx.setFont(debugTextFont);
             ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * WorldMap.TS));
             gameModel.optLevel().ifPresent(level -> {
-                drawMovingActorInfo(level.entities().pac());
-                level.entities().ghosts().forEach(this::drawMovingActorInfo);
+                drawMovingActorInfo(animSystem, level.entities().pac());
+                level.entities().ghosts().forEach(ghost -> drawMovingActorInfo(animSystem, ghost));
             });
             ctx.fillText("Camera y=%.2f".formatted(playScene.dynamicCamera().getTranslateY()), scaled(11* WorldMap.TS), scaled(15* WorldMap.TS));
             ctx.restore();
         }
     }
+
+    private final SpriteAnimSystem animSystem;
 
     private final RenderInfo renderInfo = new RenderInfo();
     private final TengenMsPacMan_GameLevelRenderer levelRenderer;
@@ -69,11 +73,18 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     private final BaseDebugInfoRenderer debugRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    public TengenMsPacMan_PlayScene2D_Renderer(GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_PlayScene2D_Renderer(
+        GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
-        levelRenderer = scene.configureRenderer((TengenMsPacMan_GameLevelRenderer) renderConfig.createGameLevelRenderer(canvas));
-        actorRenderer = scene.configureRenderer((TengenMsPacMan_ActorRenderer)     renderConfig.createActorRenderer(canvas));
+        this.animSystem = requireNonNull(animSystem);
+        levelRenderer = scene.configureRenderer((TengenMsPacMan_GameLevelRenderer) renderConfig.createGameLevelRenderer(animSystem, canvas));
+        actorRenderer = scene.configureRenderer((TengenMsPacMan_ActorRenderer)     renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer = scene.configureRenderer(new PlaySceneDebugInfoRenderer(canvas));
+    }
+
+    @Override
+    public SpriteAnimSystem animSystem() {
+        return animSystem;
     }
 
     @Override

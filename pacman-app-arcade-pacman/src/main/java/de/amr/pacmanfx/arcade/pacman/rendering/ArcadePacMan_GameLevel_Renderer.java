@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -14,19 +15,27 @@ import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
  * Renderer for classic Arcade Pac-Man. ThePac-Man XXL Pac-Man game subclasses this class to use a generic map
  * renderer instead of a sprite based one.
  */
-public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements SpriteRendererMixin, GameLevelRenderer {
+public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
 
+    private final SpriteAnimSystem animSystem;
     private final Image brightMapImage;
 
-    public ArcadePacMan_GameLevel_Renderer(Canvas canvas,  Image brightMapImage) {
+    public ArcadePacMan_GameLevel_Renderer(SpriteAnimSystem animSystem, Canvas canvas, Image brightMapImage) {
         super(canvas);
+        this.animSystem = requireNonNull(animSystem);
         this.brightMapImage = brightMapImage; // may be null e.g. in Pac-Man XXL where mazes are rendered without images
+    }
+
+    @Override
+    public SpriteAnimSystem animSystem() {
+        return animSystem;
     }
 
     @Override

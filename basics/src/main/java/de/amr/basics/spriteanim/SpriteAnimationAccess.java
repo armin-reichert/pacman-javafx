@@ -41,14 +41,11 @@ public interface SpriteAnimationAccess {
 
     void select(Identifier animationID);
 
-    default void selectAndSetFrame(Identifier animationID, int frameIndex) {
-        select(animationID);
-        setAnimationFrame(animationID, frameIndex);
-    }
-
     RectShort currentSprite();
 
     int currentFrame();
+
+    int numFrames();
 
     // playing
 

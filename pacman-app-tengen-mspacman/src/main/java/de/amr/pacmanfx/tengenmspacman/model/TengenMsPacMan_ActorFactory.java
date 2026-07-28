@@ -155,7 +155,7 @@ public final class TengenMsPacMan_ActorFactory {
 
         final Vector2i ghostTile = WorldMovementSystem.computeTile(ghost);
         final Vector2i neighborTile = ghostTile.plus(dir.vector());
-        return dir != ghost.worldMovement().moveDir().opposite()
+        return dir != ghost.worldNavigation().moveDir().opposite()
             && policy.canAccessTile(gameContext, ghost, neighborTile);
     }
 }

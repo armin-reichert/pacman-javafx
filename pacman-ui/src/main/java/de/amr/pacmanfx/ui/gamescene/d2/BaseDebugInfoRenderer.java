@@ -7,13 +7,12 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.component.world.WorldMovement;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -48,36 +47,34 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         drawTileGrid(scene.unscaledWidth(), scene.unscaledHeight(), Color.LIGHTGRAY);
     }
 
-    public void drawMovingActorInfo(Actor movingActor) {
-        if (!movingActor.visibility().isVisible()) {
+    public void drawMovingActorInfo(SpriteAnimSystem animSystem, Actor actor) {
+        if (!actor.visibility().isVisible()) {
             return;
         }
 
-        final WorldMovement worldMovement = movingActor.assertComponent(WorldMovement.class);
+        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
 
         ctx.setFill(Color.FORESTGREEN);
-        if (movingActor instanceof Pac pac) {
+        if (actor instanceof Pac pac) {
             String autopilot = pac.cheats().isUsingAutopilot() ? "autopilot" : "";
             String immune = pac.cheats().isImmune() ? "immune" : "";
             String text = "%s\n%s".formatted(autopilot, immune).trim();
             ctx.setFont(debugTextFont);
             ctx.fillText(text, scaled(pac.position().x - 4), scaled(pac.position().y + 16));
         }
-        if (movingActor.assertComponent(SpriteAnim.class).animations() instanceof SpriteAnimationMap<?> spriteAnimations) {
-            Object animationID = spriteAnimations.selectedAnimationID();
-            if (animationID != null) {
-                ctx.setFont(debugTextFont);
-                drawAnimationInfo(movingActor, spriteAnimations, animationID);
-            }
-            if (worldMovement.wishDir() != null) {
-                drawDirectionIndicator(movingActor);
-            }
+        Object animationID = animSystem.selectedAnimationID(actor);
+        if (animationID != null) {
+            ctx.setFont(debugTextFont);
+            drawAnimationInfo(animSystem, actor, animationID);
+        }
+        if (worldNavigation.wishDir() != null) {
+            drawDirectionIndicator(actor);
         }
     }
 
-    private void drawAnimationInfo(Actor actor, SpriteAnimationMap<?> spriteAnimationMap, Object selectedID) {
+    private void drawAnimationInfo(SpriteAnimSystem animSystem, Actor actor, Object selectedID) {
         ctx.save();
-        String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().frame());
+        String text = "[%s:%d]".formatted(selectedID, animSystem.currentFrame(actor));
         double x = scaled(actor.position().x - 4), y = scaled(actor.position().y - 4);
         ctx.setFill(debugTextFill);
         ctx.fillText(text, x, y);
@@ -85,17 +82,17 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
     }
 
     private void drawDirectionIndicator(Actor actor) {
-        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
+        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
 
         ctx.save();
         Vector2f center = WorldMovementSystem.computeCenter(actor);
-        Vector2f arrowHead = center.plus(worldMovement.wishDir().vector().scaled(12f)).scaled(scaling());
+        Vector2f arrowHead = center.plus(worldNavigation.wishDir().vector().scaled(12f)).scaled(scaling());
         Vector2f guyCenter = center.scaled(scaling());
         double radius = scaled(2), diameter = 2 * radius;
         ctx.setStroke(Color.WHITE);
         ctx.setLineWidth(0.5);
         ctx.strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-        ctx.setFill(worldMovement.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+        ctx.setFill(worldNavigation.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
         ctx.fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
         ctx.restore();
     }

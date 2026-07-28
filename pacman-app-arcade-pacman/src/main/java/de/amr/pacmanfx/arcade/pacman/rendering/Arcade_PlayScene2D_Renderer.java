@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
@@ -26,25 +27,32 @@ import static java.util.Objects.requireNonNull;
  * Renders the 2D play scene for the Arcade Pac-Man games. The XXL games use a generic map renderer that does not need
  * any graphics.
  */
-public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {
+public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRenderer {
 
     private static final List<Byte> GHOST_Z_ORDER = List.of(GameModel.ORANGE_GHOST_POKEY, GameModel.CYAN_GHOST_BASHFUL, GameModel.PINK_GHOST_SPEEDY, GameModel.RED_GHOST_SHADOW);
 
+    private final SpriteAnimSystem animSystem;
     private final SpriteSheet<?> spriteSheet;
     private final GameLevelRenderer levelRenderer;
     private final ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
     private final List<Actor> actorsInZOrder = new ArrayList<>();
 
-    public Arcade_PlayScene2D_Renderer(AbstractGameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_PlayScene2D_Renderer(AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
         requireNonNull(scene);
+        this.animSystem = requireNonNull(animSystem);
         this.spriteSheet = requireNonNull(spriteSheet);
 
         final GameVariantRenderConfig renderConfig = scene.appContext().variants().currentVariant().config().renderConfig();
-        levelRenderer = scene.configureRenderer(renderConfig.createGameLevelRenderer(canvas));
-        actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(canvas));
-        debugRenderer = scene.configureRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(canvas));
+        levelRenderer = scene.configureRenderer(renderConfig.createGameLevelRenderer(animSystem, canvas));
+        actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
+        debugRenderer = scene.configureRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(animSystem, canvas));
+    }
+
+    @Override
+    public SpriteAnimSystem animSystem() {
+        return animSystem;
     }
 
     @Override

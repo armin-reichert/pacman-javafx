@@ -6,22 +6,15 @@ package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
-import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.common.Position;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
-import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 
 import static de.amr.basics.math.Direction.*;
-import static de.amr.basics.math.Direction.LEFT;
-import static de.amr.basics.math.Direction.RIGHT;
 import static de.amr.pacmanfx.core.Validations.differsAtMost;
 
 public class GhostHouseAccessSystem {
@@ -57,15 +50,6 @@ public class GhostHouseAccessSystem {
             // locked outside of house: standing still
             navigator.setSpeed(ghost, 0);
         }
-
-        final GameLevel level = gameContext.assertLevel();
-        final Pac pac = level.entities().pac();
-        if (isThreatenedByPac(gameContext, ghost, pac)) {
-            ghost.playFrightenedAnimation(gameContext);
-        } else {
-            ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
-        }
-
     }
 
     /**
@@ -75,29 +59,24 @@ public class GhostHouseAccessSystem {
      * <p>
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
-    public void leaveHouse(GameContext gameContext, Ghost ghost, float speed) {
+    public boolean leaveHouse(GameContext gameContext, Ghost ghost, float speed) {
         final MovementSystem motor = gameContext.systems().motor;
         final WorldMovementSystem navigator = gameContext.systems().navigator;
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
-
-        final GameLevel level = gameContext.assertLevel();
-        final Pac pac = level.entities().pac();
 
         final Position position = ghost.position();
         final Vector2f houseEntryPosition = ghost.house().entryPosition();
+
         if (position.y <= houseEntryPosition.y()) {
-            // outside at house entry
             position.setY(houseEntryPosition.y());
             navigator.setMoveDir(ghost, LEFT);
             navigator.setWishDir(ghost, LEFT);
-            ghost.worldMovement().setNewTileEntered(false); // don't change direction until new tile is entered by moving
 
-            final GhostState state = isThreatenedByPac(gameContext, ghost, pac) ?
-                GhostState.FRIGHTENED : GhostState.HUNTING_PAC;
-            ghostStateSystem.changeState(ghost, state);
+            // don't change direction directly when outside house
+            ghost.worldNavigation().setNewTileEntered(false);
+
+            return true;
         }
         else {
-            // still inside house
             final float centerX = position.x + WorldMap.HTS;
             final float houseCenterX = ghost.house().center().x();
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
@@ -105,27 +84,18 @@ public class GhostHouseAccessSystem {
                 position.setX(houseCenterX - WorldMap.HTS);
                 navigator.setMoveDir(ghost, UP);
                 navigator.setWishDir(ghost, UP);
-            } else {
+            }
+            else {
                 // move sidewards until center axis is reached
                 navigator.setMoveDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
                 navigator.setWishDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
             }
-            navigator.setSpeed(ghost, speed);
 
+            navigator.setSpeed(ghost, speed);
             motor.moveAccelerated(ghost);
 
-            if (isThreatenedByPac(gameContext, ghost, pac)) {
-                ghost.playFrightenedAnimation(gameContext);
-            } else {
-                ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
-            }
+            return false;
         }
-    }
-
-    private boolean isThreatenedByPac(GameContext gameContext, Ghost ghost, Pac pac) {
-        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
-        final GameLevel level = gameContext.assertLevel();
-        return pacPowerSystem.isPowerActive(pac) && !level.isInGhostKilledChain(ghost);
     }
 
     /**
@@ -135,7 +105,7 @@ public class GhostHouseAccessSystem {
     public void enterHouse(GameContext gameContext, Ghost ghost, float speed) {
         final MovementSystem motor = gameContext.systems().motor;
         final WorldMovementSystem navigator = gameContext.systems().navigator;
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
+        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState;
 
         final Position position = ghost.position();
         final Vector2f revivalPosition = WorldMap.halfTileRightOf(ghost.house().ghostRevivalTile(ghost.personality()));
@@ -144,7 +114,8 @@ public class GhostHouseAccessSystem {
             position.set(revivalPosition.x(), revivalPosition.y());
             navigator.setMoveDir(ghost, UP);
             navigator.setWishDir(ghost, UP);
-            ghostStateSystem.changeState(ghost, GhostState.LOCKED);
+
+            ghostStateSystem.changeState(gameContext, ghost, GhostState.LOCKED);
             return;
         }
         if (position.y < revivalPosition.y()) {
@@ -165,7 +136,7 @@ public class GhostHouseAccessSystem {
     }
 
     public void reachHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
+        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState;
         final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         final Position position = ghost.position();
@@ -176,11 +147,13 @@ public class GhostHouseAccessSystem {
             position.set(houseEntry.x(), houseEntry.y());
             navigator.setMoveDir(ghost, DOWN);
             navigator.setWishDir(ghost, DOWN);
+
             //TODO check if this should be done here
-            ghostStateSystem.changeState(ghost, GhostState.ENTERING_HOUSE);
-        } else {
+            ghostStateSystem.changeState(gameContext, ghost, GhostState.ENTERING_HOUSE);
+        }
+        else {
             //TODO use system method
-            ghost.worldMovement().setTargetTile(ghost.house().leftDoorTile());
+            ghost.worldNavigation().setTargetTile(ghost.house().leftDoorTile());
             navigator.setSpeed(ghost, speed);
             navigator.navigateTowardsTarget(ghost, gameContext);
             navigator.tryMovingOrTeleporting(ghost, gameContext);

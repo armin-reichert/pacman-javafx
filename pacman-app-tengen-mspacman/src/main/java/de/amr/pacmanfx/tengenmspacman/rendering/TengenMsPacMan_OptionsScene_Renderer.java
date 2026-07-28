@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
@@ -16,7 +17,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -27,7 +28,7 @@ import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsSce
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
-    implements GameScene2D_Renderer, SpriteRendererMixin, TengenMsPacMan_SceneRendererMixin
+    implements GameScene2D_Renderer, SpriteRenderer, TengenMsPacMan_SceneRendererMixin
 {
     private static final int COL_ARROW = 2 * TS;
     private static final int COL_LABEL = 4 * TS;
@@ -37,12 +38,19 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     private static final Color NES_YELLOW = NES_Palette.color(0x28);
     private static final Color NES_WHITE = NES_Palette.color(0x20);
 
+    private final SpriteAnimSystem animSystem;
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public TengenMsPacMan_OptionsScene_Renderer(AbstractGameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_OptionsScene_Renderer(AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
         requireNonNull(scene);
+        this.animSystem = requireNonNull(animSystem);
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
+    }
+
+    @Override
+    public SpriteAnimSystem animSystem() {
+        return animSystem;
     }
 
     @Override

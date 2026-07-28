@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.model;
 
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.RandomWorldMovementSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.*;
@@ -13,15 +14,17 @@ import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 
 public final class GameSystems {
 
+    public final SpriteAnimSystem spriteAnim = new SpriteAnimSystem();
+
     public final MovementSystem motor =  new MovementSystem();
     public final WorldMovementSystem navigator = new WorldMovementSystem();
-    public final RandomWorldMovementSystem randomWorldMovementSystem = new RandomWorldMovementSystem();
+    public final RandomWorldMovementSystem roamingNavigator = new RandomWorldMovementSystem();
 
-    public final PacPowerSystem pacPowerSystem = new PacPowerSystem();
-    public final PacDigestionSystem pacDigestionSystem = new PacDigestionSystem();
+    public final PacPowerSystem pacPower = new PacPowerSystem();
+    public final PacDigestionSystem pacDigestion = new PacDigestionSystem();
 
-    public final GhostStateSystem ghostStateSystem = new GhostStateSystem();
-    public final GhostHouseAccessSystem ghostHouseAccessSystem = new GhostHouseAccessSystem();
+    public final GhostStateSystem ghostState = new GhostStateSystem();
+    public final GhostHouseAccessSystem ghostHouseAccess = new GhostHouseAccessSystem();
 
     public final GhostHuntingStrategy orangeGhostPokeyHuntingStrategy = new PokeyHuntingStrategy();
     public final GhostHuntingStrategy cyanGhostBashfulHuntingStrategy = new BashfulHuntingStrategy();

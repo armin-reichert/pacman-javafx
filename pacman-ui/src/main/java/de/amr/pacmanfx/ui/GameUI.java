@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
@@ -61,6 +62,8 @@ public class GameUI implements GameEventListener {
     private final GameUISettingsVM viewModel;
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
 
+    private GameAppContext appContext;
+
     public GameUI(Stage stage, int width, int height, GameUISettings settings, DashboardFactory dashboardFactory) {
         viewModel = new GameUISettingsVM();
         viewModel.init(settings);
@@ -106,6 +109,8 @@ public class GameUI implements GameEventListener {
     }
 
     public void setAppContext(GameAppContext appContext) {
+        this.appContext = requireNonNull(appContext);
+
         gameScenes.setGameAppContext(appContext);
         views.setGameAppContext(appContext);
         window.setGameAppContext(appContext);
@@ -155,7 +160,10 @@ public class GameUI implements GameEventListener {
     public void onGameEvent(GameEvent gameEvent) {
         boolean forceGameSceneReload = false;
         switch (gameEvent) {
-            case LevelCreatedEvent e -> views.gamePlayView().onLevelCreated(e.level());
+            case LevelCreatedEvent e -> {
+                final GameContext gameContext = appContext.currentGameContext();
+                views.gamePlayView().onLevelCreated(gameContext, e.level());
+            }
             case GameStateChangeEvent e -> {
                 if (GameStateID.GAME_LEVEL_COMPLETE.identifies(e.newState())) {
                     views.gamePlayView().onLevelCompleted();

@@ -101,7 +101,7 @@ public final class TengenMsPacMan_Actions {
             public void doAction() {
                 gameContext().model().optLevel().ifPresent(gameLevel -> {
                     final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) gameContext().model();
-                    tengenGame.activatePacBooster(gameLevel.entities().pac(), !tengenGame.isBoosterActive());
+                    tengenGame.activatePacBooster(gameContext(), gameLevel.entities().pac(), !tengenGame.isBoosterActive());
                     if (tengenGame.isBoosterActive()) {
                         appContext.ui().shortMessage("Booster!"); //TODO localize
                     }

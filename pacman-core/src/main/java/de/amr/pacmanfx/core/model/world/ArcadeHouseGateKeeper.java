@@ -10,9 +10,9 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import org.tinylog.Logger;
 
 import java.util.Arrays;
@@ -175,7 +175,7 @@ public final class ArcadeHouseGateKeeper {
         // check Pac-Man starving ticks
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
-        final PacDigestionSystem digestionSystem = gameContext.systems().pacDigestionSystem;
+        final PacDigestionSystem digestionSystem = gameContext.systems().pacDigestion;
         if (pac.digestion().starvingTicks() >= pacStarvingLimit) {
             digestionSystem.endStarving(pac);
             return Optional.of(String.format("%s reached starving limit (%d ticks)", pac.name(), pacStarvingLimit));
@@ -215,7 +215,7 @@ public final class ArcadeHouseGateKeeper {
         requireNonNull(gameContext);
 
         final WorldMovementSystem navigator = gameContext.systems().navigator;
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
+        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState;
 
         final GameLevel level = gameContext.assertLevel();
         final House house = level.worldMap().terrainLayer().assertHouse();
@@ -226,12 +226,12 @@ public final class ArcadeHouseGateKeeper {
                 // Leave house immediately again after being eaten
                 navigator.setMoveDir(blinky, Direction.UP);
                 navigator.setWishDir(blinky, Direction.UP);
-                ghostStateSystem.changeState(blinky, GhostState.LEAVING_HOUSE);
+                ghostStateSystem.changeState(gameContext, blinky, GhostState.LEAVING_HOUSE);
             } else {
                 // Start hunting towards west direction
                 navigator.setMoveDir(blinky, Direction.LEFT);
                 navigator.setWishDir(blinky, Direction.LEFT);
-                ghostStateSystem.changeState(blinky, GhostState.HUNTING_PAC);
+                ghostStateSystem.changeState(gameContext, blinky, GhostState.HUNTING_PAC);
             }
         }
         Stream.of(GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
@@ -241,7 +241,7 @@ public final class ArcadeHouseGateKeeper {
             .ifPresent(prisoner -> checkReleaseOfGhost(gameContext, prisoner).ifPresent(_ -> {
                 navigator.setMoveDir(prisoner, Direction.UP);
                 navigator.setWishDir(prisoner, Direction.UP);
-                ghostStateSystem.changeState(prisoner, GhostState.LEAVING_HOUSE);
+                ghostStateSystem.changeState(gameContext, prisoner, GhostState.LEAVING_HOUSE);
                 ghostReleasedCallback.accept(level, prisoner);
             }));
     }

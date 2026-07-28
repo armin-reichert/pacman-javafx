@@ -49,7 +49,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
     @Override
     default void onGameContinued(GameContinuedEvent e) {
         gameContext().model().optLevel().ifPresent(level -> {
-            gameScene().resetActorAnimations(level);
+            gameScene().resetActorAnimations(gameContext().systems().spriteAnim, level);
             gameScene().dynamicCamera().playIntroSequence();
             if (gameContext().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
                 tengenGame.showLevelMessage(level, GameLevelMessageType.READY);
@@ -98,7 +98,8 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onLevelStarted(LevelStartedEvent e) {
-        gameContext().model().optLevel().ifPresent(level -> gameScene().resetActorAnimations(level));
+        gameContext().model().optLevel().ifPresent(
+            level -> gameScene().resetActorAnimations(gameContext().systems().spriteAnim, level));
         gameScene().dynamicCamera().playIntroSequence();
     }
 

@@ -8,8 +8,8 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.model.actors.*;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.tengenmspacman.gamescene.Clapperboard;
 import de.amr.pacmanfx.tengenmspacman.gamescene.Stork;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
@@ -17,15 +17,23 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRendererMixin, ActorRenderer {
+public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
 
-    public TengenMsPacMan_ActorRenderer(Canvas canvas) {
+    private final SpriteAnimSystem animSystem;
+
+    public TengenMsPacMan_ActorRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
+        this.animSystem = requireNonNull(animSystem);
+    }
+
+    @Override
+    public SpriteAnimSystem animSystem() {
+        return animSystem;
     }
 
     @Override
@@ -45,27 +53,27 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Pac pac -> drawFacingSpriteCentered(computePacSprite(pac), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Stork stork -> drawStork(stork);
-            default -> drawSpriteCentered(actor.assertComponent(SpriteAnim.class).animations().currentSprite(), center);
+            default -> drawSpriteCentered(animSystem.currentSprite(actor), center);
         }
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        if (ghost.assertComponent(SpriteAnim.class).animations().isSelected(CommonAnimationID.GHOST_NORMAL)) {
-            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldMovement().wishDir());
-            return spriteOrDefault(sprites, ghost.assertComponent(SpriteAnim.class).animations().currentFrame());
+        if (animSystem.isSelected(ghost, CommonAnimationID.GHOST_NORMAL)) {
+            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
+            return spriteOrDefault(sprites, animSystem.currentFrame(ghost));
         }
-        if (ghost.assertComponent(SpriteAnim.class).animations().isSelected(CommonAnimationID.GHOST_EYES)) {
-            return spriteSheet().ghostEyesSprite(ghost.worldMovement().wishDir());
+        if (animSystem.isSelected(ghost, CommonAnimationID.GHOST_EYES)) {
+            return spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
         }
         else {
-            return ghost.assertComponent(SpriteAnim.class).animations().currentSprite();
+            return animSystem.currentSprite(ghost);
         }
     }
 
     private FacingSprite computePacSprite(Pac pac) {
-        final int frame = pac.assertComponent(SpriteAnim.class).animations().currentFrame();
+        final int frame = animSystem.currentFrame(pac);
         final Direction dir = pac.worldMovement().moveDir();
-        return switch (pac.assertComponent(SpriteAnim.class).animations().selectedAnimationID()) {
+        return switch (animSystem.selectedAnimationID(pac)) {
             case null -> throw new IllegalStateException("Could not determine Pac-sprite, no animation selected");
             case CommonAnimationID.PAC_DYING    -> computePacDyingSprite(pac);
             case CommonAnimationID.PAC_MUNCHING -> facingSprite(SpriteID.MS_PAC_MUNCHING, frame, dir);
@@ -75,7 +83,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING -> facingSprite(SpriteID.MR_PAC_MUNCHING, frame, dir);
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_TURNING_AWAY -> facingSprite(SpriteID.MR_PAC_TURNING_AWAY, frame, dir);
             case TengenMsPacMan_AnimationID.MR_PAC_MAN_WAVING_HAND -> facingSprite(SpriteID.MR_PAC_WAVING_HAND, frame, dir);
-            default -> new FacingSprite(pac.assertComponent(SpriteAnim.class).animations().currentSprite(), pac.worldMovement().moveDir());
+            default -> new FacingSprite(animSystem.currentSprite(pac), pac.worldMovement().moveDir());
         };
     }
 
@@ -85,7 +93,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     // Dying animation is realized by providing a sprite facing to the corresponding direction for each animation frame
     private FacingSprite computePacDyingSprite(Pac pac) {
-        final var dyingAnimation = pac.assertComponent(SpriteAnim.class).animations().animation(CommonAnimationID.PAC_DYING);
+        final var dyingAnimation = animSystem.animation(pac, CommonAnimationID.PAC_DYING);
         if (dyingAnimation instanceof SpriteAnimation spriteAnimation) {
             final Direction facingDir = switch (spriteAnimation.frame()) {
                 case 0, 4, 8  -> Direction.DOWN;
@@ -132,7 +140,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawStork(Stork stork) {
-        drawSpriteCentered(stork.assertComponent(SpriteAnim.class).animations().currentSprite(), WorldMovementSystem.computeCenter(stork));
+        drawSpriteCentered(animSystem.currentSprite(stork), WorldMovementSystem.computeCenter(stork));
         if (stork.isBagReleasedFromBeak()) {
             // Sprite sheet has no stork without bag under its beak so we over-paint the bag
             ctx.setFill(backgroundColor());

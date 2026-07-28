@@ -15,7 +15,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
@@ -96,44 +96,50 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene2D gameScene2D, Canvas canvas) {
+    public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene2D gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
-            case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(this, gameScene2D, canvas);
+            case Arcade_BootScene2D ignored        -> new Arcade_BootScene2D_Renderer(gameScene2D, animSystem, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
+            case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(this, gameScene2D, animSystem, canvas);
             case ArcadeMsPacMan_StartScene ignored -> new ArcadeMsPacMan_StartScene_Renderer(this, gameScene2D, canvas);
-            case Arcade_PlayScene2D ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, canvas, spriteSheet());
-            case ArcadeMsPacMan_CutScene1 ignored -> new ArcadeMsPacMan_CutScene1_Renderer(this, gameScene2D, canvas);
-            case ArcadeMsPacMan_CutScene2 ignored -> new ArcadeMsPacMan_CutScene2_Renderer(this, gameScene2D, canvas);
-            case ArcadeMsPacMan_CutScene3 ignored -> new ArcadeMsPacMan_CutScene3_Renderer(this, gameScene2D, canvas);
+            case Arcade_PlayScene2D ignored        -> new Arcade_PlayScene2D_Renderer(gameScene2D, animSystem, canvas, spriteSheet());
+            case ArcadeMsPacMan_CutScene1 ignored  -> new ArcadeMsPacMan_CutScene1_Renderer(this, gameScene2D, animSystem, canvas);
+            case ArcadeMsPacMan_CutScene2 ignored  -> new ArcadeMsPacMan_CutScene2_Renderer(this, gameScene2D, animSystem, canvas);
+            case ArcadeMsPacMan_CutScene3 ignored  -> new ArcadeMsPacMan_CutScene3_Renderer(this, gameScene2D, animSystem, canvas);
             default -> throw new IllegalStateException("Illegal game scene: " + gameScene2D);
         };
         return gameScene2D.configureRenderer(renderer);
     }
 
     @Override
-    public ArcadeMsPacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
+    public ArcadeMsPacMan_GameLevelRenderer createGameLevelRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
+        requireNonNull(animSystem);
         requireNonNull(canvas);
-        return new ArcadeMsPacMan_GameLevelRenderer(canvas, assets);
+        return new ArcadeMsPacMan_GameLevelRenderer(animSystem, canvas, assets);
     }
 
     @Override
-    public HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene2D gameScene2D, Canvas canvas) {
-        requireNonNull(canvas);
+    public HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene2D gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
         requireNonNull(gameScene2D);
-        final var hudRenderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(canvas);
-        hudRenderer.setImageSmoothing(true);
-        gameScene2D.configureRenderer(hudRenderer);
-        return hudRenderer;
+        requireNonNull(animSystem);
+        requireNonNull(canvas);
+
+        final var renderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(animSystem, canvas);
+        renderer.setImageSmoothing(true);
+        gameScene2D.configureRenderer(renderer);
+
+        return renderer;
     }
 
     @Override
-    public ActorRenderer createActorRenderer(Canvas canvas) {
+    public ActorRenderer createActorRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
         requireNonNull(canvas);
-        final var actorRenderer = new ArcadeMsPacMan_ActorRenderer(canvas);
-        actorRenderer.setImageSmoothing(true);
-        return actorRenderer;
+
+        final var renderer = new ArcadeMsPacMan_ActorRenderer(animSystem, canvas);
+        renderer.setImageSmoothing(true);
+
+        return renderer;
     }
 
     @Override
@@ -149,9 +155,13 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, byte personality) {
+        final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim;
+
         final Ghost ghost = ArcadeMsPacMan_ActorFactory.createGhost(gameContext, personality);
-        ghost.assertComponent(SpriteAnim.class).setAnimations(createGhostAnimations(container, personality));
-        ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
+
+        animSystem.setAnimations(ghost, createGhostAnimations(container, personality));
+        animSystem.select(ghost, CommonAnimationID.GHOST_NORMAL);
+
         return ghost;
     }
 

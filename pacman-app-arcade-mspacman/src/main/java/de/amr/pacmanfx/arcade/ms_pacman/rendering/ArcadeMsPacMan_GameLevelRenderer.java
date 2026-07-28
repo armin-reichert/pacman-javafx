@@ -7,6 +7,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
@@ -19,15 +20,23 @@ import static de.amr.pacmanfx.core.model.world.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRendererMixin, GameLevelRenderer {
+public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
 
+    protected final SpriteAnimSystem animSystem;
     protected final AssetMap assets;
 
-    public ArcadeMsPacMan_GameLevelRenderer(Canvas canvas, AssetMap assets) {
+    public ArcadeMsPacMan_GameLevelRenderer(SpriteAnimSystem animSystem, Canvas canvas, AssetMap assets) {
         super(canvas);
+        this.animSystem = requireNonNull(animSystem);
         this.assets = assets; // may be NULL e.g. in Ms. Pac-Man XXL where maze is drawn without images
+    }
+
+    @Override
+    public SpriteAnimSystem animSystem() {
+        return animSystem;
     }
 
     @Override

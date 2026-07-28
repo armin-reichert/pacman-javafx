@@ -5,11 +5,15 @@
 package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
+import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -33,29 +37,34 @@ public class GhostStateSystem {
         }
     }
 
-    public void changeState(Ghost ghost, GhostState newState) {
+    public void changeState(GameContext gameContext, Ghost ghost, GhostState newState) {
+        requireNonNull(gameContext);
         requireNonNull(ghost);
         requireNonNull(newState);
 
         if (ghost.state() == newState) {
             Logger.debug("{} is already in state {}", ghost.name(), newState);
+            //TODO return from function?
         }
+        
         ghost.assertComponent(GhostStateComponent.class).setState(newState);
 
-        // Execute "onEntry" action for the new state
-        final SpriteAnim spriteAnim = ghost.assertComponent(SpriteAnim.class);
-        switch (newState) {
+        initAnimation(ghost, gameContext.systems().spriteAnim); 
+    }
+    
+    private void initAnimation(Ghost ghost, SpriteAnimSystem animSystem) {
+        switch (ghost.state()) {
             case LOCKED, HUNTING_PAC -> {
-                spriteAnim.animations().select(CommonAnimationID.GHOST_NORMAL);
-                spriteAnim.animations().playSelected();
+                animSystem.select(ghost, CommonAnimationID.GHOST_NORMAL);
+                animSystem.playSelected(ghost);
             }
             case ENTERING_HOUSE, RETURNING_HOME -> {
-                spriteAnim.animations().select(CommonAnimationID.GHOST_EYES);
-                spriteAnim.animations().playSelected();
+                animSystem.select(ghost, CommonAnimationID.GHOST_EYES);
+                animSystem.playSelected(ghost);
             }
             case FRIGHTENED -> {
-                spriteAnim.animations().select(CommonAnimationID.GHOST_FRIGHTENED);
-                spriteAnim.animations().playSelected();
+                animSystem.select(ghost, CommonAnimationID.GHOST_FRIGHTENED);
+                animSystem.playSelected(ghost);
             }
             case EATEN -> {}
         }
@@ -64,13 +73,15 @@ public class GhostStateSystem {
     // --- LOCKED ---
 
     private void updateStateLocked(GameContext gameContext, Ghost ghost, float speed) {
-        gameContext.systems().ghostHouseAccessSystem.stayInHouse(gameContext, ghost, speed);
-    }
+        final GameSystems sys = gameContext.systems();
 
-    // --- LEAVING_HOUSE ---
+        sys.ghostHouseAccess.stayInHouse(gameContext, ghost, speed);
 
-    private void updateStateLeavingHouse(GameContext gameContext, Ghost ghost, float speed) {
-        gameContext.systems().ghostHouseAccessSystem.leaveHouse(gameContext, ghost, speed);
+        if (isThreatenedByPac(gameContext, ghost)) {
+            ghost.playFrightenedAnimation(gameContext);
+        } else {
+            sys.spriteAnim.select(ghost, CommonAnimationID.GHOST_NORMAL);
+        }
     }
 
     // --- HUNTING_PAC ---
@@ -103,7 +114,7 @@ public class GhostStateSystem {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameContext gameContext, Ghost ghost, float speed) {
-        gameContext.systems().randomWorldMovementSystem.roam(gameContext, ghost, speed);
+        gameContext.systems().roamingNavigator.roam(gameContext, ghost, speed);
         ghost.playFrightenedAnimation(gameContext);
     }
 
@@ -116,6 +127,28 @@ public class GhostStateSystem {
     private void updateStateEaten() {
     }
 
+    // --- LEAVING_HOUSE ---
+
+    private void updateStateLeavingHouse(GameContext gameContext, Ghost ghost, float speed) {
+        final GameSystems sys = gameContext.systems();
+
+        boolean leftHouse = sys.ghostHouseAccess.leaveHouse(gameContext, ghost, speed);
+        boolean threatened =  isThreatenedByPac(gameContext, ghost);
+
+        if (leftHouse) {
+            changeState(gameContext, ghost,
+                threatened ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
+        }
+        else {
+            if (threatened) {
+                //TODO use system
+                ghost.playFrightenedAnimation(gameContext);
+            } else {
+                sys.spriteAnim.select(ghost, CommonAnimationID.GHOST_NORMAL);
+            }
+        }
+    }
+
     // --- RETURNING_TO_HOUSE ---
 
     /**
@@ -123,12 +156,21 @@ public class GhostStateSystem {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse(GameContext gameContext, Ghost ghost, float speed) {
-        gameContext.systems().ghostHouseAccessSystem.reachHouse(gameContext, ghost, speed);
+        gameContext.systems().ghostHouseAccess.reachHouse(gameContext, ghost, speed);
     }
 
     // --- ENTERING_HOUSE ---
 
     private void updateStateEnteringHouse(GameContext gameContext, Ghost ghost, float speed) {
-        gameContext.systems().ghostHouseAccessSystem.enterHouse(gameContext, ghost, speed);
+        gameContext.systems().ghostHouseAccess.enterHouse(gameContext, ghost, speed);
+    }
+
+    // helper
+
+    private boolean isThreatenedByPac(GameContext gameContext, Ghost ghost) {
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower;
+        final GameLevel level = gameContext.assertLevel();
+        final Pac pac = level.entities().pac();
+        return pacPowerSystem.isPowerActive(pac) && !level.isInGhostKilledChain(ghost);
     }
 }

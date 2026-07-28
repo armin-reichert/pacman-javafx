@@ -14,14 +14,11 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
-import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -89,8 +86,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer container = appContext().ui().sprites().animations();
 
-        final WorldMovementSystem navigator = gameContext().systems().navigator;
-        final GhostStateSystem ghostStateSystem = gameContext().systems().ghostStateSystem;
+        final GameSystems sys = gameContext().systems();
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);
@@ -99,13 +95,14 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.position().set(WorldMap.TS * 31, WorldMap.TS * 20);
-        navigator.setMoveDir(msPacMan, Direction.LEFT);
-        navigator.setSpeed(msPacMan, ACTOR_SPEED);
         msPacMan.visibility().show();
 
-        msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(container));
-        msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
-        msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
+        sys.navigator.setMoveDir(msPacMan, Direction.LEFT);
+        sys.navigator.setSpeed(msPacMan, ACTOR_SPEED);
+
+        sys.spriteAnim.setAnimations(msPacMan, renderConfig.createPacAnimations(container));
+        sys.spriteAnim.select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim.playSelected(msPacMan);
 
         ghosts = List.of(
             renderConfig.createAnimatedGhost(gameContext(), container, GameModel.RED_GHOST_SHADOW),
@@ -116,13 +113,16 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
         for (Ghost ghost : ghosts) {
             ghost.position().set(WorldMap.TS * 33.5f, WorldMap.TS * 20);
-            navigator.setMoveDir(ghost, Direction.LEFT);
-            navigator.setWishDir(ghost, Direction.LEFT);
-            navigator.setSpeed(ghost, ACTOR_SPEED);
-            ghostStateSystem.changeState(ghost, GhostState.HUNTING_PAC);
             ghost.visibility().show();
-            ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
-            ghost.assertComponent(SpriteAnim.class).animations().playSelected();
+
+            sys.navigator.setMoveDir(ghost, Direction.LEFT);
+            sys.navigator.setWishDir(ghost, Direction.LEFT);
+            sys.navigator.setSpeed(ghost, ACTOR_SPEED);
+
+            sys.spriteAnim.select(ghost, CommonAnimationID.GHOST_NORMAL);
+            sys.spriteAnim.playSelected(ghost);
+
+            sys.ghostState.changeState(gameContext(), ghost, GhostState.HUNTING_PAC);
         }
 
         presentedGhostPersonality = GameModel.RED_GHOST_SHADOW;
@@ -169,33 +169,32 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             }
 
             boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
-                final MovementSystem motor = scene.gameContext().systems().motor;
-                final WorldMovementSystem navigator = scene.gameContext().systems().navigator;
+                final GameSystems sys = scene.gameContext().systems();
 
                 final Ghost ghost = scene.ghosts.get(scene.presentedGhostPersonality);
-                if (ghost.worldMovement().moveDir() == Direction.LEFT) {
+                if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
                     if (ghost.position().x <= STOP_X_GHOST) {
                         ghost.position().setX(STOP_X_GHOST);
-                        navigator.setMoveDir(ghost, Direction.UP);
-                        navigator.setWishDir(ghost, Direction.UP);
+                        sys.navigator.setMoveDir(ghost, Direction.UP);
+                        sys.navigator.setWishDir(ghost, Direction.UP);
                         scene.numTicksBeforeRising = 2;
                     } else {
-                        motor.moveAccelerated(ghost);
+                        sys.motor.moveAccelerated(ghost);
                     }
                 }
-                else if (ghost.worldMovement().moveDir() == Direction.UP) {
+                else if (ghost.worldNavigation().moveDir() == Direction.UP) {
                     int endPositionY = TOP_Y + scene.presentedGhostPersonality * 16 + 1;
                     if (scene.numTicksBeforeRising > 0) {
                         scene.numTicksBeforeRising--;
                     }
                     else if (ghost.position().y <= endPositionY) {
-                        navigator.setSpeed(ghost, 0);
-                        ghost.assertComponent(SpriteAnim.class).animations().stopSelected();
-                        ghost.assertComponent(SpriteAnim.class).animations().resetSelected();
+                        sys.navigator.setSpeed(ghost, 0);
+                        sys.spriteAnim.stopSelected(ghost);
+                        sys.spriteAnim.resetSelected(ghost);
                         return true;
                     }
                     else {
-                        motor.moveAccelerated(ghost);
+                        sys.motor.moveAccelerated(ghost);
                     }
                 }
                 return false;
@@ -205,14 +204,15 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         MS_PACMAN_MARCHING_IN {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final MovementSystem motor = scene.gameContext().systems().motor;
-                final WorldMovementSystem navigator = scene.gameContext().systems().navigator;
+                final GameSystems sys = scene.gameContext().systems();
+                final Pac msPacMan = scene.msPacMan;
 
                 scene.marquee.timer().doTick();
-                motor.moveAccelerated(scene.msPacMan);
-                if (scene.msPacMan.position().x <= STOP_X_MS_PACMAN) {
-                    navigator.setSpeed(scene.msPacMan, 0);
-                    scene.msPacMan.assertComponent(SpriteAnim.class).animations().resetSelected();
+
+                sys.motor.moveAccelerated(msPacMan);
+                if (msPacMan.position().x <= STOP_X_MS_PACMAN) {
+                    sys.navigator.setSpeed(msPacMan, 0);
+                    sys.spriteAnim.resetSelected(msPacMan);
                     scene.sceneFlow.enterState(scene, READY_TO_PLAY);
                 }
             }

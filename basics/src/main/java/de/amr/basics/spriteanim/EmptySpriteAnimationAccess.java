@@ -51,4 +51,9 @@ public class EmptySpriteAnimationAccess implements SpriteAnimationAccess {
     public int currentFrame() {
         return -1;
     }
+
+    @Override
+    public int numFrames() {
+        return 0;
+    }
 }

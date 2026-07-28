@@ -46,6 +46,11 @@ record SingleSpriteAnimationAccess(RectShort sprite) implements SpriteAnimationA
     }
 
     @Override
+    public int numFrames() {
+        return 1;
+    }
+
+    @Override
     public void playSelected() {}
 
     @Override

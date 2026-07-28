@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
@@ -34,13 +34,15 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
 
     private final Image copyrightImage;
 
-    public ArcadeMsPacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, Canvas canvas) {
+    public ArcadeMsPacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, AbstractGameScene2D scene,
+                                              SpriteAnimSystem animSystem, Canvas canvas) {
+
         super(canvas);
 
         copyrightImage = renderConfig.assets().image("logo.midway");
         marqueeRenderer = scene.configureRenderer(new MarqueeRenderer(canvas));
         copyrightRenderer = scene.configureRenderer(new CopyrightRenderer(canvas));
-        actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(canvas));
+        actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 

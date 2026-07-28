@@ -5,16 +5,17 @@ import de.amr.pacmanfx.core.model.component.EntityComponent;
 
 public class SpriteAnim implements EntityComponent {
 
-    private SpriteAnimationAccess animations = SpriteAnimationAccess.emptyAnimation();
+    private SpriteAnimationAccess delegate = SpriteAnimationAccess.emptyAnimation();
+
+    public void setAnimations(SpriteAnimationAccess delegate) {
+        this.delegate = delegate;
+    }
+
+    public SpriteAnimationAccess delegate() {
+        return delegate;
+    }
 
     @Override
     public void reset() {}
 
-    public SpriteAnimationAccess animations() {
-        return animations;
-    }
-
-    public void setAnimations(SpriteAnimationAccess animations) {
-        this.animations = animations;
-    }
 }

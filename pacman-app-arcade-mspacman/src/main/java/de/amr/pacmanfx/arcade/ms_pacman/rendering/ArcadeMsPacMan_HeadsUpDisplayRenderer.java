@@ -6,11 +6,12 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.HUDState;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.score.Score;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,7 +23,7 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implements SpriteRendererMixin, HeadsUpDisplay_Renderer {
+public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implements SpriteRenderer, HeadsUpDisplay_Renderer {
 
     public static final String SCORE_TEXT = "SCORE";
     public static final String HIGH_SCORE_TEXT = "HIGH SCORE";
@@ -30,8 +31,16 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
     private static final Color SCORE_TEXT_COLOR = ARCADE_WHITE;
     private static final Color SCORE_TEXT_COLOR_DISABLED = Color.GRAY;
 
-    public ArcadeMsPacMan_HeadsUpDisplayRenderer(Canvas canvas) {
+    private final SpriteAnimSystem animSystem;
+
+    public ArcadeMsPacMan_HeadsUpDisplayRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
+        this.animSystem = requireNonNull(animSystem);
+    }
+
+    @Override
+    public SpriteAnimSystem animSystem() {
+        return animSystem;
     }
 
     @Override

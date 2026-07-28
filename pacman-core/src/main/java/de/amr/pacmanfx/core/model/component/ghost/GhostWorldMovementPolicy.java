@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
-import de.amr.pacmanfx.core.model.component.world.WorldMovement;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
@@ -61,8 +61,8 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
         if (!(actor instanceof Ghost ghost)) {
             throw new IllegalArgumentException("Actor is not a Ghost");
         }
-        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
-        return worldMovement.isNewTileEntered()
+        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
+        return worldNavigation.isNewTileEntered()
             && ghost.inAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.FRIGHTENED));
     }
 }

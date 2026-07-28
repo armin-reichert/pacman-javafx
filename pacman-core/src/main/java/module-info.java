@@ -33,4 +33,5 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.model.systems.ghost;
     exports de.amr.pacmanfx.core.model.systems.pac;
     exports de.amr.pacmanfx.core.model.systems.common;
+    exports de.amr.pacmanfx.core.model.systems.spriteanim;
 }

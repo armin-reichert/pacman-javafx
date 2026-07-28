@@ -9,8 +9,10 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.LevelCreatedEvent;
 import de.amr.pacmanfx.core.event.LevelStartedEvent;
+import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
+import de.amr.pacmanfx.core.model.GameSystems;
+import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.rules.GameRules;
@@ -35,22 +37,26 @@ public class CommonDemoLevelPlayingState extends GameState {
 
     @Override
     public void onUpdate(GameContext gameContext) {
+        final GameSystems sys = gameContext.systems();
+
+        final GamePlay gamePlay = gameContext.gamePlay();
         final GameModel model = gameContext.model();
-        final GameLevel level = model.assertLevel();
+        final GameLevel level = gameContext.assertLevel();
+        final Pac pac = level.entities().pac();
 
         final long tick = timer().tickCount();
         if (tick == 1) {
-            gameContext.gamePlay().prepareLevelForPlaying(gameContext);
-            gameContext.gamePlay().showLevelMessage(level, GameLevelMessageType.GAME_OVER);
             model.score().setEnabled(false);
             model.highScore().setEnabled(false);
+            gamePlay.prepareLevelForPlaying(gameContext);
+            gamePlay.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
             Logger.info("Demo level {} started", level.number());
             // Note: This event is very important because it triggers the creation of the actor animations!
             gameContext.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }
         else if (tick == 2) {
             // Now, actor animations are available, show them
-            level.entities().pac().visibility().show();
+            pac.visibility().show();
             level.entities().ghosts().forEach(ghost -> ghost.visibility().show());
         }
         else if (tick == huntingStartTick) {
@@ -62,14 +68,14 @@ public class CommonDemoLevelPlayingState extends GameState {
             level.heartbeat().setStartState(Pulse.State.ON);
             level.heartbeat().restart();
 
-            level.entities().pac().assertComponent(SpriteAnim.class).animations().playSelected();
-            level.entities().ghosts().forEach(ghost -> ghost.assertComponent(SpriteAnim.class).animations().playSelected());
+            sys.spriteAnim.playSelected(pac);
+            level.entities().ghosts().forEach(sys.spriteAnim::playSelected);
 
             // This call fires a game event!
             level.huntingRules().startFirstPhase(gameContext, level.number());
         }
         else if (tick > huntingStartTick) {
-            gameContext.gamePlay().hunt(gameContext);
+            gamePlay.hunt(gameContext);
             gameContext.flow().enterState(gameContext, computeNextState(gameContext));
         }
     }

@@ -8,11 +8,11 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -78,7 +78,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         stork = new Stork(spriteAnimations);
 
         bag = new Bag(spriteAnimations);
-        bag.setOpen(false);
+        bag.setOpen(gameContext(), false);
 
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.position().set(tilesPx(3), tilesPx(10));
@@ -108,11 +108,11 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     private void updateSceneState() {
-        final WorldMovementSystem navigator = gameContext().systems().navigator;
+        final GameSystems sys = gameContext().systems();
 
         switch (sceneState) {
             case CLAPPERBOARD -> transition(SceneState.DELIVER_JUNIOR)
-                .ifPresentOrElse(state -> enterDeliverJuniorState(navigator, state), this::updateClapperboardState);
+                .ifPresentOrElse(state -> enterDeliverJuniorState(sys, state), this::updateClapperboardState);
 
             case DELIVER_JUNIOR -> transition(SceneState.END)
                 .ifPresentOrElse(this::changeState, this::updateDeliverJuniorState);
@@ -140,33 +140,33 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
     // State DELIVER_JUNIOR
 
-    private void enterDeliverJuniorState(WorldMovementSystem navigator, SceneState newState) {
+    private void enterDeliverJuniorState(GameSystems sys, SceneState newState) {
         pacMan.position().set(TS * 3, GROUND_Y - 4);
         pacMan.visibility().show();
-        navigator.setMoveDir(pacMan, Direction.RIGHT);
+        sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
 
-        pacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
-        pacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
+        sys.spriteAnim.select(pacMan, CommonAnimationID.MR_PAC_MAN_MUNCHING);
+        sys.spriteAnim.stopSelected(pacMan);
 
         msPacMan.position().set(TS * 5, GROUND_Y - 4);
         msPacMan.visibility().show();
-        navigator.setMoveDir(msPacMan, Direction.RIGHT);
+        sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
 
-        msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
-        msPacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
+        sys.spriteAnim.select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim.stopSelected(msPacMan);
 
         stork.position().set(TS * 30, TS * 12);
         stork.visibility().show();
         stork.movement().setVelocity(-0.8f, 0);
 
-        stork.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.STORK_FLYING);
-        stork.assertComponent(SpriteAnim.class).animations().playSelected();
+        sys.spriteAnim.select(stork, CommonAnimationID.STORK_FLYING);
+        sys.spriteAnim.playSelected(stork);
 
         bag.position().set(stork.position().x - 14, stork.position().y + 3);
         bag.visibility().show();
         bag.movement().setVelX(stork.movement().velX);
         bag.movement().setAcceleration(0, 0);
-        bag.setOpen(false);
+        bag.setOpen(gameContext(), false);
 
         bagReleased = false;
         numBagBounces = 0;
@@ -192,7 +192,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
                     bag.movement().setVelocity(-0.2f, -1.0f / numBagBounces); // add upwards velocity to bounce
                     bag.position().setY(GROUND_Y);
                 } else {
-                    bag.setOpen(true);
+                    bag.setOpen(gameContext(), true);
                     bag.position().setY(GROUND_Y);
                     bag.movement().setVelocity(0, 0);
                     bag.movement().setAcceleration(0, 0);

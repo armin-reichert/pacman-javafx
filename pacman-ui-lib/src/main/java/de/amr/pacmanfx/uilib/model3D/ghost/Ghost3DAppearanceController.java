@@ -25,7 +25,7 @@ public class Ghost3DAppearanceController {
         final Pac pac = level.entities().pac();
         final Ghost ghost = ghost3D.ghost();
 
-        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower;
         final boolean powerActive = pacPowerSystem.isPowerActive(pac);
         final boolean powerFading = pacPowerSystem.isPowerFading(level, pac);
 
@@ -54,7 +54,7 @@ public class Ghost3DAppearanceController {
 
     private void brakeIfTunnelEntered(Ghost3D ghost3D) {
         final Ghost ghost = ghost3D.ghost();
-        if (ghost.worldMovement().info.tunnelEntered) {
+        if (ghost.worldNavigation().info.tunnelEntered) {
             ghost3D.animations().animation(Ghost3D.AnimationID.BRAKING.key(ghost)).playFromStart();
         }
     }

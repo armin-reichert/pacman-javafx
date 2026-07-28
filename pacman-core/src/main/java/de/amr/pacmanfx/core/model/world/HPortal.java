@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.world;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.component.world.WorldMovement;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import org.tinylog.Logger;
 
@@ -48,7 +48,7 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         requireNonNull(gameContext);
         requireNonNull(actor);
 
-        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
+        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
         final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         final Vector2i actorTile = WorldMovementSystem.computeTile(actor);
@@ -59,7 +59,7 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         }
         final Vector2i leftWrappingTile = leftBorderEntryTile().minus(depth, 0);
         final Vector2i rightWrappingTile = rightBorderEntryTile().plus(depth, 0);
-        switch (worldMovement.moveDir()) {
+        switch (worldNavigation.moveDir()) {
             case LEFT -> {
                 if (actorTile.equals(leftWrappingTile) && offsetX == 0) {
                     navigator.placeAtTile(actor, rightWrappingTile.x(), rightWrappingTile.y(), -1, 0);
@@ -74,7 +74,7 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
                     return true;
                 }
             }
-            default -> throw new IllegalStateException("Actor moving %s cannot be teleported horizontally".formatted(worldMovement.moveDir()));
+            default -> throw new IllegalStateException("Actor moving %s cannot be teleported horizontally".formatted(worldNavigation.moveDir()));
         }
         return false;
     }

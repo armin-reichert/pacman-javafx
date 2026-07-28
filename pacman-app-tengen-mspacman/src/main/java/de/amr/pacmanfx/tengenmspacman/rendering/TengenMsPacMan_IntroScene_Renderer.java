@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
@@ -18,7 +19,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -29,7 +30,7 @@ import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConf
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
-    implements GameScene2D_Renderer, SpriteRendererMixin, TengenMsPacMan_SceneRendererMixin {
+    implements GameScene2D_Renderer, SpriteRenderer, TengenMsPacMan_SceneRendererMixin {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
     public static final String PRESS_START = "PRESS START";
@@ -41,19 +42,28 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     public static final String MS_PAC_MAN = "MS PAC-MAN";
     public static final String QUOTED_MS_PACMAN = "\"MS PAC-MAN\"";
 
+    private final SpriteAnimSystem animSystem;
     private final ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
     private final TengenMsPacMan_UISettings uiSettings;
 
-    public TengenMsPacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_IntroScene_Renderer(
+        GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
         requireNonNull(renderConfig);
         requireNonNull(scene);
-        actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(canvas));
+        this.animSystem = requireNonNull(animSystem);
+
+        actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
         uiSettings = scene.appContext().getExtensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
+    }
+
+    @Override
+    public SpriteAnimSystem animSystem() {
+        return animSystem;
     }
 
     @Override

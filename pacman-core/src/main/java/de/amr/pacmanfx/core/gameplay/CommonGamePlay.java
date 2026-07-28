@@ -10,14 +10,13 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.*;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
-import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.score.PropertyFileScore;
@@ -66,8 +65,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public void prepareLevelForPlaying(GameContext gameContext) {
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final GameSystems sys = gameContext.systems();
 
         final GameLevel level = gameContext.assertLevel();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
@@ -76,19 +74,21 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         pac.reset(); // initially invisible!
         pac.position().set(terrain.pacStartPosition());
-        navigator.setMoveDir(pac, Direction.LEFT);
-        navigator.setWishDir(pac, Direction.LEFT);
         pac.power().timer().resetToIndefiniteDuration();
-        pac.assertComponent(SpriteAnim.class).animations().resetSelected();
+
+        sys.navigator.setMoveDir(pac, Direction.LEFT);
+        sys.navigator.setWishDir(pac, Direction.LEFT);
+
+        sys.spriteAnim.resetSelected(pac);
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
             ghost.position().set(ghost.startPosition());
             final Direction direction = house.ghostStartDirection(ghost.personality());
-            navigator.setMoveDir(ghost, direction);
-            navigator.setWishDir(ghost, direction);
-            ghostStateSystem.changeState(ghost, GhostState.LOCKED);
-            ghost.assertComponent(SpriteAnim.class).animations().resetSelected();
+            sys.navigator.setMoveDir(ghost, direction);
+            sys.navigator.setWishDir(ghost, direction);
+            sys.ghostState.changeState(gameContext, ghost, GhostState.LOCKED);
+            sys.spriteAnim.resetSelected(ghost);
         });
 
         level.heartbeat().setStartState(Pulse.State.ON); // Energizers are visible when ON
@@ -159,7 +159,7 @@ public abstract class CommonGamePlay implements GamePlay {
             gateKeeper.unlockGhostIfPossible(gameContext);
         }
 
-        gameContext.systems().pacPowerSystem.update(gameContext, pac);
+        gameContext.systems().pacPower.update(gameContext, pac);
 
         // If double-check active, do an additional collision check before Pac has moved
         level.entities().forEach(entity -> {
@@ -200,7 +200,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final HuntingStepResult huntingResult = gameContext.thisFrame().huntingStep();
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
-        final PacDigestionSystem pacDigestionSystem = gameContext.systems().pacDigestionSystem;
+        final PacDigestionSystem pacDigestionSystem = gameContext.systems().pacDigestion;
 
         if (huntingResult.foodFound()) {
             pacDigestionSystem.endStarving(pac);
@@ -264,7 +264,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(gameContext);
         requireNonNull(tile);
 
-        final PacDigestionSystem pacDigestionSystem = gameContext.systems().pacDigestionSystem;
+        final PacDigestionSystem pacDigestionSystem = gameContext.systems().pacDigestion;
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
@@ -282,14 +282,14 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
-        final PacDigestionSystem pacDigestionSystem = gameContext.systems().pacDigestionSystem;
+        final PacDigestionSystem pacDigestionSystem = gameContext.systems().pacDigestion;
 
         scorePoints(gameContext, model.rules().scoringRules().pointsForEnergizer(), level.number());
         model.gateKeeper().registerFoodEaten(level);
         pacDigestionSystem.onPacEatsEnergizer(gameContext, pac);
         level.clearGhostKillChain();
 
-        gameContext.systems().pacPowerSystem.start(gameContext, pac);
+        gameContext.systems().pacPower.start(gameContext, pac);
     }
 
     @Override
@@ -314,25 +314,26 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(gameContext);
         requireNonNull(eatenGhost);
 
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
+        final GameSystems sys = gameContext.systems();
 
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
         final GameEventManager eventManager = gameContext.eventManager();
+
         final int killedBefore = level.ghostKillChainSize();
         final int points = model.rules().scoringRules().pointsForGhost(killedBefore);
 
         scorePoints(gameContext, points, level.number());
         Logger.info("Scored {} points for killing {}", points, eatenGhost.name());
 
-        ghostStateSystem.changeState(eatenGhost, GhostState.EATEN);
-        // Animation index is 0-based, so use animation frame 0 to show points for first killed ghost...
-        eatenGhost.assertComponent(SpriteAnim.class).animations()
-            .selectAndSetFrame(CommonAnimationID.GHOST_POINTS, killedBefore);
+        sys.ghostState.changeState(gameContext, eatenGhost, GhostState.EATEN);
+
+        // Animation index is 0-based, animation frame 0 shows points for *first* killed ghost...
+        sys.spriteAnim.selectAndSetFrame(eatenGhost, CommonAnimationID.GHOST_POINTS, killedBefore);
 
         level.addToGhostKillChain(eatenGhost);
         level.entities().pac().visibility().hide();
-        level.entities().ghosts().forEach(ghost -> ghost.assertComponent(SpriteAnim.class).animations().stopSelected());
+        level.entities().ghosts().forEach(sys.spriteAnim::stopSelected);
 
         eventManager.publishGameEvent(new GhostEatenEvent(eatenGhost));
     }
@@ -341,11 +342,10 @@ public abstract class CommonGamePlay implements GamePlay {
     public void onLevelCompleted(GameContext gameContext) {
         requireNonNull(gameContext);
 
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
-        final GameLevel level = gameContext.assertLevel();
+        final GameSystems sys = gameContext.systems();
 
+        final GameLevel level = gameContext.assertLevel();
         level.huntingRules().stop();
-        Logger.info("Hunting timer stopped.");
 
         level.heartbeat().setStartState(Pulse.State.OFF);
         level.heartbeat().reset();
@@ -354,18 +354,19 @@ public abstract class CommonGamePlay implements GamePlay {
         level.worldMap().foodLayer().eatAll();
 
         final Pac pac = level.entities().pac();
-        navigator.setSpeed(pac, 0);
         pac.power().reset();
 
-        pac.assertComponent(SpriteAnim.class).animations().stopSelected();
-        pac.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_FULL);
+        sys.navigator.setSpeed(pac, 0);
+
+        sys.spriteAnim.stopSelected(pac);
+        sys.spriteAnim.select(pac, CommonAnimationID.PAC_FULL);
 
         level.entities().ghosts().forEach(ghost -> {
-            navigator.setSpeed(ghost, 0);
+            sys.navigator.setSpeed(ghost, 0);
 
             //TODO check in emulator if ghost animation is reset to normal
-            ghost.assertComponent(SpriteAnim.class).animations().stopSelected();
-            ghost.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.GHOST_NORMAL);
+            sys.spriteAnim.stopSelected(ghost);
+            sys.spriteAnim.select(ghost, CommonAnimationID.GHOST_NORMAL);
         });
 
         level.optBonus().ifPresent(bonus -> bonus.setInactive(gameContext));

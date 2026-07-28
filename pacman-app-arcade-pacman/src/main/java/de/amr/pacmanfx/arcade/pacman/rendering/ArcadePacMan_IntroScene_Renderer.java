@@ -8,13 +8,14 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -22,8 +23,9 @@ import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene.SceneState.*;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
+import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {
+public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRenderer {
 
     private static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
     private static final String[] GHOST_NICKNAMES  = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
@@ -34,13 +36,19 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     private static final short ENERGIZER_X = WorldMap.TS * LEFT_TILE_X;
     private static final short ENERGIZER_Y = WorldMap.TS * 20;
 
+    private final SpriteAnimSystem animSystem;
     private final ArcadePacMan_ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
     private final RectShort energizerSprite;
 
-    public ArcadePacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, Canvas canvas) {
+    public ArcadePacMan_IntroScene_Renderer(
+        GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas) {
+
         super(canvas);
-        actorRenderer = scene.configureRenderer((ArcadePacMan_ActorRenderer) renderConfig.createActorRenderer(canvas));
+        this.animSystem = requireNonNull(animSystem);
+
+        actorRenderer = scene.configureRenderer((ArcadePacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
+
         debugRenderer = scene.configureRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override
             public void draw(AbstractGameScene2D scene, long tick) {
@@ -49,8 +57,15 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
                 ctx.fillText("Scene timer %d".formatted(introScene.flow.state().timer().tickCount()), 0, scaled(5 * WorldMap.TS));
             }
         });
+
         energizerSprite = spriteSheet().findSprite(SpriteID.ENERGIZER);
+
         setImageSmoothing(true);
+    }
+
+    @Override
+    public SpriteAnimSystem animSystem() {
+        return animSystem;
     }
 
     @Override

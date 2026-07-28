@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene3;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import javafx.scene.canvas.Canvas;
@@ -12,8 +13,8 @@ import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
 
 public class ArcadePacMan_CutScene3_Renderer extends ArcadePacMan_CutScene_Renderer {
 
-    public ArcadePacMan_CutScene3_Renderer(AbstractGameScene2D scene, Canvas canvas) {
-        super(scene, canvas);
+    public ArcadePacMan_CutScene3_Renderer(AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas) {
+        super(scene, animSystem, canvas);
         debugRenderer = scene.configureRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override
             public void draw(AbstractGameScene2D scene, long tick) {

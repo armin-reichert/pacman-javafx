@@ -154,7 +154,7 @@ public class GameSceneManager {
 
         level3D.startLivesCounterTrackingPac();
 
-        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower;
         if (pacPowerSystem.isPowerActive(pac)) {
             variantConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }

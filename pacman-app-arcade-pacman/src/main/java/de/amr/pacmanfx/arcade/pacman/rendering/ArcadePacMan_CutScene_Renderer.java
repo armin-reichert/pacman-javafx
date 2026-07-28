@@ -3,25 +3,35 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
-public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRendererMixin {
+import static java.util.Objects.requireNonNull;
 
+public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRenderer {
+
+    protected final SpriteAnimSystem animSystem;
     protected final ActorRenderer actorRenderer;
     protected BaseDebugInfoRenderer debugRenderer;
 
-    public ArcadePacMan_CutScene_Renderer(AbstractGameScene2D scene, Canvas canvas) {
+    public ArcadePacMan_CutScene_Renderer(AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
+        this.animSystem = requireNonNull(animSystem);
         final GameVariantRenderConfig renderConfig = scene.appContext().variants().currentVariant().config().renderConfig();
-        actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(canvas));
+        actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
+    }
+
+    @Override
+    public SpriteAnimSystem animSystem() {
+        return animSystem;
     }
 
     @Override

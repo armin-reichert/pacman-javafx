@@ -9,7 +9,7 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.component.world.WorldMovement;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import org.tinylog.Logger;
@@ -33,15 +33,15 @@ public class RandomWorldMovementSystem {
         requireNonNull(gameContext);
         requireNonNull(actor);
 
-        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
+        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
         final WorldMovementSystem navigator = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
 
         final Vector2i tile = WorldMovementSystem.computeTile(actor);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
-        final boolean stuck = !worldMovement.info.moved;
-        if ((worldMovement.isNewTileEntered() || stuck) && !teleporting) {
+        final boolean stuck = !worldNavigation.info.moved;
+        if ((worldNavigation.isNewTileEntered() || stuck) && !teleporting) {
             final Direction dir = computeRoamingDirection(gameContext, actor, tile);
             navigator.setWishDir(actor, dir);
             Logger.debug("Ghost {} takes random wish direction {}", actor.name(), dir);
@@ -52,10 +52,10 @@ public class RandomWorldMovementSystem {
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
     private Direction computeRoamingDirection(GameContext gameContext, Actor actor, Vector2i currentTile) {
-        final WorldMovement worldMovement = actor.assertComponent(WorldMovement.class);
+        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
         final WorldMovementPolicy policy = actor.assertComponent(WorldMovementPolicy.class);
 
-        final Direction oppositeDir = worldMovement.moveDir().opposite();
+        final Direction oppositeDir = worldNavigation.moveDir().opposite();
         Direction selectedDir = choosePseudoRandomDirection();
         int tries = 0;
         while (selectedDir == oppositeDir

@@ -7,6 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -100,14 +101,14 @@ public class MiniPlaySceneView {
         worldSize.set(size);
     }
 
-    public void setRenderConfig(GameVariantRenderConfig renderConfig) {
+    public void setRenderConfig(SpriteAnimSystem animSystem, GameVariantRenderConfig renderConfig) {
         canvasRenderer = new BaseRenderer(canvas);
 
-        levelRenderer = renderConfig.createGameLevelRenderer(canvas);
+        levelRenderer = renderConfig.createGameLevelRenderer(animSystem, canvas);
         levelRenderer.scalingProperty().bind(scaling);
         levelRenderer.backgroundColorProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty);
 
-        actorRenderer = renderConfig.createActorRenderer(canvas);
+        actorRenderer = renderConfig.createActorRenderer(animSystem, canvas);
         actorRenderer.scalingProperty().bind(scaling);
         actorRenderer.backgroundColorProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty);
     }

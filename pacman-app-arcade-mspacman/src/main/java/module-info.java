@@ -16,6 +16,7 @@ open module de.amr.pacmanfx.arcade.ms_pacman {
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
     requires de.amr.pacmanfx.arcade.pacman;
+    requires java.xml;
 
     exports de.amr.pacmanfx.arcade.ms_pacman;
     exports de.amr.pacmanfx.arcade.ms_pacman.app;

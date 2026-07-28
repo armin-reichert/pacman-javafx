@@ -9,11 +9,10 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -52,11 +51,11 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        final MovementSystem motor = gameContext.systems().motor;
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final GameSystems sys = gameContext.systems();
+
         switch (state) {
-            case SceneState.CLAPPERBOARD -> updateStateClapperboard(navigator);
-            case SceneState.CHASING -> updateStateChasing(motor, navigator);
+            case SceneState.CLAPPERBOARD -> updateStateClapperboard(sys);
+            case SceneState.CHASING -> updateStateChasing(sys);
             default -> throw new IllegalStateException("Illegal scene state: " + state);
         }
         sceneTimer.doTick();
@@ -65,10 +64,13 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
     private void initScene() {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
+
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.position().set(tilesPx(3), tilesPx(10));
         clapperboard.startAnimation();
@@ -87,81 +89,81 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
         sceneTimer.start();
     }
 
-    private void updateStateClapperboard(WorldMovementSystem navigator) {
+    private void updateStateClapperboard(GameSystems sys) {
         clapperboard.tick();
         if (sceneTimer.hasExpired()) {
             appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
-            enterStateChasing(navigator);
+            enterStateChasing(sys);
         }
     }
 
-    private void enterStateChasing(WorldMovementSystem navigator) {
-        navigator.setMoveDir(pacMan, Direction.RIGHT);
+    private void enterStateChasing(GameSystems sys) {
+        sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
 
-        pacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.MR_PAC_MAN_MUNCHING);
-        pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
+        sys.spriteAnim.select(pacMan, CommonAnimationID.MR_PAC_MAN_MUNCHING);
+        sys.spriteAnim.playSelected(pacMan);
 
-        navigator.setMoveDir(msPacMan, Direction.RIGHT);
+        sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
 
-        msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
-        msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
+        sys.spriteAnim.select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim.playSelected(msPacMan);
 
         setSceneState(SceneState.CHASING, TickTimer.INDEFINITE);
     }
 
-    private void updateStateChasing(MovementSystem motor, WorldMovementSystem navigator) {
+    private void updateStateChasing(GameSystems sys) {
         if (sceneTimer.atSecond(4.5)) {
             pacMan.position().set(TS * (-2), UPPER_Y);
-            navigator.setMoveDir(pacMan, Direction.RIGHT);
-            navigator.setSpeed(pacMan, 2.0f);
             pacMan.visibility().show();
+            sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
+            sys.navigator.setSpeed(pacMan, 2.0f);
 
             msPacMan.position().set(TS * (-8), UPPER_Y);
-            navigator.setMoveDir(msPacMan, Direction.RIGHT);
-            navigator.setSpeed(msPacMan, 2.0f);
             msPacMan.visibility().show();
+            sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
+            sys.navigator.setSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(9)) {
             pacMan.position().set(TS * 36, LOWER_Y);
-            navigator.setMoveDir(pacMan, Direction.LEFT);
-            navigator.setSpeed(pacMan, 2.0f);
+            sys.navigator.setMoveDir(pacMan, Direction.LEFT);
+            sys.navigator.setSpeed(pacMan, 2.0f);
 
             msPacMan.position().set(TS * 30, LOWER_Y);
-            navigator.setMoveDir(msPacMan, Direction.LEFT);
-            navigator.setSpeed(msPacMan, 2.0f);
+            sys.navigator.setMoveDir(msPacMan, Direction.LEFT);
+            sys.navigator.setSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(13.5)) {
             pacMan.position().set(TS * (-2), MIDDLE_Y);
-            navigator.setMoveDir(pacMan, Direction.RIGHT);
-            navigator.setSpeed(pacMan, 2.0f);
+            sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
+            sys.navigator.setSpeed(pacMan, 2.0f);
 
             msPacMan.position().set(TS * (-8), MIDDLE_Y);
-            navigator.setMoveDir(msPacMan, Direction.RIGHT);
-            navigator.setSpeed(msPacMan, 2.0f);
+            sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
+            sys.navigator.setSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(17.5)) {
             pacMan.position().set(TS * 42, UPPER_Y);
-            navigator.setMoveDir(pacMan, Direction.LEFT);
-            navigator.setSpeed(pacMan, 4.0f);
+            sys.navigator.setMoveDir(pacMan, Direction.LEFT);
+            sys.navigator.setSpeed(pacMan, 4.0f);
 
             msPacMan.position().set(TS * 30, UPPER_Y);
-            navigator.setMoveDir(msPacMan, Direction.LEFT);
-            navigator.setSpeed(msPacMan, 4.0f);
+            sys.navigator.setMoveDir(msPacMan, Direction.LEFT);
+            sys.navigator.setSpeed(msPacMan, 4.0f);
         }
         else if (sceneTimer.atSecond(18.5)) {
             pacMan.position().set(TS * (-2), LOWER_Y);
-            navigator.setMoveDir(pacMan, Direction.RIGHT);
-            navigator.setSpeed(pacMan, 4.0f);
+            sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
+            sys.navigator.setSpeed(pacMan, 4.0f);
 
             msPacMan.position().set(TS * (-14), LOWER_Y);
-            navigator.setMoveDir(msPacMan, Direction.RIGHT);
-            navigator.setSpeed(msPacMan, 4.0f);
+            sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
+            sys.navigator.setSpeed(msPacMan, 4.0f);
         }
         else if (sceneTimer.atSecond(23)) {
             gameState().triggerTimeout();
         }
         else {
-            List.of(pacMan, msPacMan).forEach(motor::moveAccelerated);
+            List.of(pacMan, msPacMan).forEach(sys.motor::moveAccelerated);
         }
     }
 }

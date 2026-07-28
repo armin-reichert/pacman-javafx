@@ -7,6 +7,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.score.Score;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene1;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
@@ -21,7 +22,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
@@ -33,7 +34,7 @@ import static de.amr.pacmanfx.core.model.world.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer implements SpriteRendererMixin, HeadsUpDisplay_Renderer {
+public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer implements SpriteRenderer, HeadsUpDisplay_Renderer {
 
     private static final Color SCORE_TEXT_COLOR = NES_Palette.color(0x20);
     private static final Color SCORE_TEXT_COLOR_DISABLED = NES_Palette.color(0x10);
@@ -43,9 +44,18 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
 
     private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
 
-    public TengenMsPacMan_HeadsUpDisplay_Renderer(Canvas canvas) {
+    private final SpriteAnimSystem animSystem;
+
+    public TengenMsPacMan_HeadsUpDisplay_Renderer(SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
+        this.animSystem = requireNonNull(animSystem);
+
         totalLivesFont.bind(scalingProperty().map(scaling -> Font.font("Serif", FontWeight.BOLD, scaling.doubleValue() * 8)));
+    }
+
+    @Override
+    public SpriteAnimSystem animSystem() {
+        return animSystem;
     }
 
     @Override

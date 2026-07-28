@@ -8,17 +8,17 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
 import de.amr.pacmanfx.core.model.component.ghost.GhostWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.component.world.WorldMovement;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
-import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.world.House;
 
 import java.util.Collection;
@@ -43,7 +43,7 @@ public class Ghost extends Actor implements UpdatableEntity {
         this.personality = Validations.requireValidGhostPersonality(personality);
 
         registerComponent(Movement.class, new Movement());
-        registerComponent(WorldMovement.class, new WorldMovement());
+        registerComponent(WorldNavigation.class, new WorldNavigation());
         registerComponent(WorldMovementPolicy.class, new GhostWorldMovementPolicy());
         registerComponent(GhostStateComponent.class, new GhostStateComponent());
         //TODO call this in the actor factories of the different game variants
@@ -52,7 +52,7 @@ public class Ghost extends Actor implements UpdatableEntity {
         }
         registerComponent(SpriteAnim.class, new SpriteAnim());
 
-        worldMovement().corneringSpeedDelta = -1.25f;
+        worldNavigation().corneringSpeedDelta = -1.25f;
     }
 
     /**
@@ -64,8 +64,8 @@ public class Ghost extends Actor implements UpdatableEntity {
         return personality;
     }
 
-    public WorldMovement worldMovement() {
-        return assertComponent(WorldMovement.class);
+    public WorldNavigation worldNavigation() {
+        return assertComponent(WorldNavigation.class);
     }
 
     public GhostState state() {
@@ -108,7 +108,7 @@ public class Ghost extends Actor implements UpdatableEntity {
 
     @Override
     public void update(GameContext gameContext) {
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
+        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState;
         ghostStateSystem.update(gameContext, this);
     }
 
@@ -133,20 +133,20 @@ public class Ghost extends Actor implements UpdatableEntity {
         }
     }
 
-    //TODO move into sprite animation system
+    //TODO move into ghost sprite animation system
     public void playFrightenedAnimation(GameContext gameContext) {
+        final GameSystems sys = gameContext.systems();
+
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
-        final PacPowerSystem powerSystem = gameContext.systems().pacPowerSystem;
-        final SpriteAnim spriteAnimation = assertComponent(SpriteAnim.class);
 
-        if (powerSystem.isPowerStartingFading(level, pac)) {
-            spriteAnimation.animations().select(CommonAnimationID.GHOST_FLASHING);
-            spriteAnimation.animations().playSelected();
+        if (sys.pacPower.isPowerStartingFading(level, pac)) {
+            sys.spriteAnim.select(this, CommonAnimationID.GHOST_FLASHING);
+            sys.spriteAnim.playSelected(this);
         }
-        else if (!powerSystem.isPowerFading(level, pac)) {
-            spriteAnimation.animations().select(CommonAnimationID.GHOST_FRIGHTENED);
-            spriteAnimation.animations().playSelected();
+        else if (!sys.pacPower.isPowerFading(level, pac)) {
+            sys.spriteAnim.select(this, CommonAnimationID.GHOST_FRIGHTENED);
+            sys.spriteAnim.playSelected(this);
         }
     }
 }

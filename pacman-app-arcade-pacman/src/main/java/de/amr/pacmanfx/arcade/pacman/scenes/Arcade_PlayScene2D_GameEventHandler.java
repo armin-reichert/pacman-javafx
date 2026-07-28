@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -50,7 +51,9 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
     @Override
     default void onGameContinued(GameContinuedEvent e) {
-        gameContext().model().optLevel().ifPresent(ActorAnimationManager::resetActorAnimations);
+        final SpriteAnimSystem animSystem = gameContext().systems().spriteAnim;
+        //TODO make animation systems from animation manager class
+        gameContext().model().optLevel().ifPresent(level -> ActorAnimationManager.resetActorAnimations(animSystem, level));
     }
 
     @Override

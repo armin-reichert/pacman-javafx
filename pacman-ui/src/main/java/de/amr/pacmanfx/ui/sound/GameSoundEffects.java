@@ -296,7 +296,7 @@ public class GameSoundEffects implements Disposable {
 
     // siren numbers are 1..4, hunting phase index = 0..7
     private int computeSirenNumber(GameContext gameContext) {
-        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPowerSystem;
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower;
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         if (pacPowerSystem.isPowerActive(pac)) {

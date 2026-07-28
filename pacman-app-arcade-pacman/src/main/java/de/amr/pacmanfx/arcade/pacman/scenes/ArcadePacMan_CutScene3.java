@@ -8,12 +8,11 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -44,9 +43,12 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
     public void onActivate() {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer container = appContext().ui().sprites().animations();
+
         pacMan = ArcadePacMan_ActorFactory.createPacMan();
         pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(container));
+
         blinky = renderConfig.createAnimatedGhost(gameContext(), container, RED_GHOST_SHADOW);
+
         sceneTick = -1;
     }
 
@@ -57,49 +59,50 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
             return;
         }
 
-        final MovementSystem motor = gameContext.systems().motor;
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final GameSystems sys = gameContext.systems();
 
         switch (sceneTick) {
-            case TICK_ANIMATION_START      -> startAnimation(navigator);
-            case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked(navigator);
+            case TICK_ANIMATION_START      -> startAnimation(sys);
+            case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked(sys);
             case TICK_ANIMATION_ENDS       -> gameState().triggerTimeout();
         }
-        motor.moveAccelerated(pacMan);
-        motor.moveAccelerated(blinky);
+
+        sys.motor.moveAccelerated(pacMan);
+        sys.motor.moveAccelerated(blinky);
     }
 
-    private void startAnimation(WorldMovementSystem navigator) {
+    private void startAnimation(GameSystems sys) {
         appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_3, 2);
-        startBlinkyChasingPacMan(navigator);
+        startBlinkyChasingPacMan(sys);
     }
 
-    private void startBlinkyRunningNaked(WorldMovementSystem navigator) {
-        navigator.placeAtTile(blinky, -1, 20);
-        navigator.setMoveDir(blinky, Direction.RIGHT);
-        navigator.setWishDir(blinky, Direction.RIGHT);
-        blinky.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.BLINKY_NAKED);
-        blinky.assertComponent(SpriteAnim.class).animations().playSelected();
+    private void startBlinkyRunningNaked(GameSystems sys) {
+        sys.navigator.placeAtTile(blinky, -1, 20);
+        sys.navigator.setMoveDir(blinky, Direction.RIGHT);
+        sys.navigator.setWishDir(blinky, Direction.RIGHT);
+
+        sys.spriteAnim.select(blinky, CommonAnimationID.BLINKY_NAKED);
+        sys.spriteAnim.playSelected(blinky);
     }
 
-    private void startBlinkyChasingPacMan(WorldMovementSystem navigator) {
-        navigator.placeAtTile(pacMan, 29, 20);
-        navigator.setMoveDir(pacMan, Direction.LEFT);
-        navigator.setSpeed(pacMan, 1.25f);
-
+    private void startBlinkyChasingPacMan(GameSystems sys) {
         pacMan.visibility().show();
 
-        pacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
-        pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
+        sys.navigator.placeAtTile(pacMan, 29, 20);
+        sys.navigator.setMoveDir(pacMan, Direction.LEFT);
+        sys.navigator.setSpeed(pacMan, 1.25f);
 
-        navigator.placeAtTile(blinky, 35, 20);
-        navigator.setMoveDir(blinky, Direction.LEFT);
-        navigator.setWishDir(blinky, Direction.LEFT);
-        navigator.setSpeed(blinky, 1.25f);
+        sys.spriteAnim.select(pacMan, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim.playSelected(pacMan);
 
         blinky.visibility().show();
 
-        blinky.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.BLINKY_PATCHED);
-        blinky.assertComponent(SpriteAnim.class).animations().playSelected();
+        sys.navigator.placeAtTile(blinky, 35, 20);
+        sys.navigator.setMoveDir(blinky, Direction.LEFT);
+        sys.navigator.setWishDir(blinky, Direction.LEFT);
+        sys.navigator.setSpeed(blinky, 1.25f);
+
+        sys.spriteAnim.select(blinky, CommonAnimationID.BLINKY_PATCHED);
+        sys.spriteAnim.playSelected(blinky);
     }
 }

@@ -8,6 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
@@ -26,7 +27,7 @@ import static de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet.Ma
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRendererMixin, GameLevelRenderer {
+public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
 
     /**
      * Strange map #15 (maze #32) has a "psychedelic" animation:
@@ -37,12 +38,20 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         return (int) (phase < 3 ? phase : 1);
     }
 
+    private final SpriteAnimSystem animSystem;
+
     //TODO pass render config instead?
     private final AssetMap assets;
 
-    public TengenMsPacMan_GameLevelRenderer(AssetMap assets, Canvas canvas) {
+    public TengenMsPacMan_GameLevelRenderer(AssetMap assets, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
-        this.assets = assets;
+        this.animSystem = requireNonNull(animSystem);
+        this.assets = requireNonNull(assets);
+    }
+
+    @Override
+    public SpriteAnimSystem animSystem() {
+        return animSystem;
     }
 
     @Override

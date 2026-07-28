@@ -8,10 +8,10 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
@@ -100,18 +100,17 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        final MovementSystem motor = gameContext.systems().motor;
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
-        
+        final GameSystems sys = gameContext.systems();
+
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final long gameStateTick = gameState().timer().tickCount();
 
         clapperboard.tick();
 
-        motor.moveAccelerated(pacMan);
-        motor.moveAccelerated(msPacMan);
+        sys.motor.moveAccelerated(pacMan);
+        sys.motor.moveAccelerated(msPacMan);
         for (int i = 0; i < juniors.size(); ++i) {
-            updateJunior(motor, navigator, gameStateTick, i);
+            updateJunior(sys, gameStateTick, i);
         }
 
         if (gameStateTick <= TICK_EXPIRES) {
@@ -121,70 +120,70 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     pacMan.position().set(LEFT_BORDER, LOWER_LANE);
                     pacMan.visibility().show();
 
-                    navigator.setMoveDir(pacMan, Direction.RIGHT);
-                    navigator.setSpeed(pacMan, 1f);
+                    sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
+                    sys.navigator.setSpeed(pacMan, 1f);
 
-                    pacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
+                    sys.spriteAnim.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    sys.spriteAnim.playSelected(pacMan);
 
                     msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
                     msPacMan.visibility().show();
 
-                    navigator.setMoveDir(msPacMan, Direction.LEFT);
-                    navigator.setSpeed(msPacMan, 1f);
+                    sys.navigator.setMoveDir(msPacMan, Direction.LEFT);
+                    sys.navigator.setSpeed(msPacMan, 1f);
 
-                    msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
-                    msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
+                    sys.spriteAnim.select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+                    sys.spriteAnim.playSelected(msPacMan);
                 }
                 case 230 -> {
-                    navigator.setSpeed(pacMan, 0);
-                    pacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
-                    pacMan.assertComponent(SpriteAnim.class).animations().resetSelected();
+                    sys.navigator.setSpeed(pacMan, 0);
+                    sys.spriteAnim.stopSelected(pacMan);
+                    sys.spriteAnim.resetSelected(pacMan);
 
-                    navigator.setSpeed(msPacMan, 0);
-                    msPacMan.assertComponent(SpriteAnim.class).animations().stopSelected();
-                    msPacMan.assertComponent(SpriteAnim.class).animations().resetSelected();
+                    sys.navigator.setSpeed(msPacMan, 0);
+                    sys.spriteAnim.stopSelected(msPacMan);
+                    sys.spriteAnim.resetSelected(msPacMan);
                 }
                 case 400 -> {
-                    pacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
+                    sys.spriteAnim.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    sys.spriteAnim.playSelected(pacMan);
 
-                    msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
-                    msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
+                    sys.spriteAnim.select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+                    sys.spriteAnim.playSelected(msPacMan);
                 }
                 case 520 -> {
-                    pacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_WAVING_HAND);
-                    msPacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MS_PAC_MAN_WAVING_HAND);
+                    sys.spriteAnim.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_WAVING_HAND);
+                    sys.spriteAnim.select(msPacMan, TengenMsPacMan_AnimationID.MS_PAC_MAN_WAVING_HAND);
                 }
                 case 527 -> {
-                    pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
-                    msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
+                    sys.spriteAnim.playSelected(pacMan);
+                    sys.spriteAnim.playSelected(msPacMan);
                 }
                 case 648 -> {
-                    pacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_TURNING_AWAY);
-                    pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
-                    msPacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MS_PAC_MAN_TURNING_AWAY);
-                    msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
+                    sys.spriteAnim.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_TURNING_AWAY);
+                    sys.spriteAnim.playSelected(pacMan);
+
+                    sys.spriteAnim.select(msPacMan, TengenMsPacMan_AnimationID.MS_PAC_MAN_TURNING_AWAY);
+                    sys.spriteAnim.playSelected(msPacMan);
                 }
                 case 650 -> {
-                    navigator.setSpeed(pacMan, 1.5f); // TODO not sure
-                    navigator.setMoveDir(pacMan, Direction.UP);
-
-                    navigator.setSpeed(msPacMan, 1.5f); // TODO not sure
-                    navigator.setMoveDir(msPacMan, Direction.UP);
+                    sys.navigator.setSpeed(pacMan, 1.5f); // TODO not sure
+                    sys.navigator.setMoveDir(pacMan, Direction.UP);
+                    sys.navigator.setSpeed(msPacMan, 1.5f); // TODO not sure
+                    sys.navigator.setMoveDir(msPacMan, Direction.UP);
                 }
                 case 720 -> {
                     pacMan.visibility().hide();
                     msPacMan.visibility().hide();
                 }
-                case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(navigator, renderConfig, gameStateTick);
+                case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(sys, renderConfig, gameStateTick);
                 case 1500 -> optSoundEffects().ifPresent(GameSoundEffects::stopAll);
                 case TICK_EXPIRES -> gameContext().flow().enterState(gameContext(), TengenMsPacMan_GameState.GAME_PREPARATION.state());
             }
         }
     }
 
-    private void spawnJunior(WorldMovementSystem navigator, GameVariantRenderConfig renderConfig, long tick) {
+    private void spawnJunior(GameSystems sys, GameVariantRenderConfig renderConfig, long tick) {
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
 
         double randomX = 8 * TS + (8 * TS) * Math.random();
@@ -192,11 +191,12 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         final Pac junior = TengenMsPacMan_ActorFactory.createPacMan();
         junior.position().set((float) randomX, unscaledHeight() - 4 * TS);
         junior.visibility().show();
-        navigator.setMoveDir(junior, Direction.UP);
-        navigator.setSpeed(junior, 2);
 
-        junior.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
-        junior.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.ANIM_JUNIOR);
+        sys.navigator.setMoveDir(junior, Direction.UP);
+        sys.navigator.setSpeed(junior, 2);
+
+        sys.spriteAnim.setAnimations(junior, renderConfig.createPacAnimations(spriteAnimations));
+        sys.spriteAnim.select(junior, TengenMsPacMan_AnimationID.ANIM_JUNIOR);
 
         juniors.add(junior);
         juniorCreationTimes.add(tick);
@@ -211,14 +211,14 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         Logger.info("Junior spawned at tick {}", tick);
     }
 
-    private void updateJunior(MovementSystem motor, WorldMovementSystem navigator, long tick, int index) {
+    private void updateJunior(GameSystems sys, long tick, int index) {
         Pac junior = juniors.get(index);
         long creationTime = juniorCreationTimes.get(index);
         long lifeTime = tick - creationTime;
         if (lifeTime> 0 && lifeTime % 10 == 0) {
-            computeNewMoveDir(navigator, junior);
+            computeNewMoveDir(sys.navigator, junior);
         }
-        motor.moveAccelerated(junior);
+        sys.motor.moveAccelerated(junior);
         if (junior.position().x > unscaledWidth()) {
             junior.position().setX(0);
         }

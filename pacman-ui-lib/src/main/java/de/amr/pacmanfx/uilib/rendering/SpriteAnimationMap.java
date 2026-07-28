@@ -96,6 +96,11 @@ public abstract class SpriteAnimationMap<ID extends Identifier> implements Sprit
     }
 
     @Override
+    public int numFrames() {
+        return currentAnimation() != null ? currentAnimation().numFrames() : 0;
+    }
+
+    @Override
     public void playSelected() {
         if (currentAnimation() != null) {
             currentAnimation().start();

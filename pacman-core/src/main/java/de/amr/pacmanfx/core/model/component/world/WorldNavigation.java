@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static de.amr.basics.math.Direction.RIGHT;
 
-public class WorldMovement implements EntityComponent {
+public class WorldNavigation implements EntityComponent {
 
     public static final Direction DEFAULT_MOVE_DIR = RIGHT;
     public static final Direction DEFAULT_WISH_DIR = RIGHT;
@@ -39,7 +39,7 @@ public class WorldMovement implements EntityComponent {
     //TODO: store in frame context?
     public final WorldMovementInfo info = new WorldMovementInfo();
 
-    public WorldMovement() {}
+    public WorldNavigation() {}
 
     @Override
     public void reset() {

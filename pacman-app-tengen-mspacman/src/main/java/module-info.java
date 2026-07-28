@@ -15,6 +15,7 @@ open module de.amr.pacmanfx.tengenmspacman {
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
+    requires java.xml;
 
     exports de.amr.pacmanfx.tengenmspacman;
     exports de.amr.pacmanfx.tengenmspacman.app;

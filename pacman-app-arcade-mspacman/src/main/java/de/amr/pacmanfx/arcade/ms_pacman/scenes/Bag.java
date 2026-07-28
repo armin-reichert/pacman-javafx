@@ -9,6 +9,7 @@ import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.component.common.Movement;
@@ -55,9 +56,9 @@ public class Bag extends Actor {
         assertComponent(SpriteAnim.class).setAnimations(new BagAnimations(container));
     }
 
-    public void setOpen(boolean open) {
+    public void setOpen(GameContext gameContext, boolean open) {
         this.open = open;
-        assertComponent(SpriteAnim.class).animations().select(open ? CommonAnimationID.JUNIOR : CommonAnimationID.BAG);
+        gameContext.systems().spriteAnim.select(this, open ? CommonAnimationID.JUNIOR : CommonAnimationID.BAG);
     }
 
     public boolean isOpen() {

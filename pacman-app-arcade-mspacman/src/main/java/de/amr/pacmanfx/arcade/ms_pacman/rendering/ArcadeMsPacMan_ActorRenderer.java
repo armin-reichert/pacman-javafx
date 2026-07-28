@@ -6,14 +6,13 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.spriteanim.SpriteAnimationAccess;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.core.model.actors.*;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
@@ -22,10 +21,18 @@ import static java.util.Objects.requireNonNull;
 /**
  * Implements the rendering for all actor types occurring in the Arcade Ms. Pac-Man game.
  */
-public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRendererMixin, ActorRenderer {
+public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
 
-    public ArcadeMsPacMan_ActorRenderer(Canvas canvas) {
+    private final SpriteAnimSystem animSystem;
+
+    public ArcadeMsPacMan_ActorRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
+        this.animSystem = requireNonNull(animSystem);
+    }
+
+    @Override
+    public SpriteAnimSystem animSystem() {
+        return animSystem;
     }
 
     @Override
@@ -43,22 +50,21 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Ghost ghost               -> drawSpriteCentered(computeGhostSprite(ghost), center);
             case Bonus bonus               -> drawSpriteCentered(computeBonusSprite(bonus), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default                        -> drawSpriteCentered(actor.assertComponent(SpriteAnim.class).animations().currentSprite(), center);
+            default                        -> drawSpriteCentered(animSystem().currentSprite(actor), center);
         }
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        final SpriteAnimationAccess animations = ghost.assertComponent(SpriteAnim.class).animations();
         RectShort sprite;
-        if (animations.isSelected(CommonAnimationID.GHOST_NORMAL)) {
-            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldMovement().wishDir());
-            sprite = spriteOrDefault(sprites, animations.currentFrame());
+        if (animSystem().isSelected(ghost, CommonAnimationID.GHOST_NORMAL)) {
+            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
+            sprite = spriteOrDefault(sprites, animSystem().currentFrame(ghost));
         }
-        else if (animations.isSelected(CommonAnimationID.GHOST_EYES)) {
-            sprite = spriteSheet().ghostEyesSprite(ghost.worldMovement().wishDir());
+        else if (animSystem().isSelected(ghost, CommonAnimationID.GHOST_EYES)) {
+            sprite = spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
         }
         else {
-            sprite = animations.currentSprite();
+            sprite = animSystem().currentSprite(ghost);
         }
         if (sprite == null) {
             throw new IllegalStateException("Could not determine Pac sprite");
@@ -68,16 +74,16 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private RectShort computePacSprite(Pac pac) {
         RectShort sprite;
-        if (pac.assertComponent(SpriteAnim.class).animations().isSelected(CommonAnimationID.PAC_MUNCHING)) {
+        if (animSystem().isSelected(pac, CommonAnimationID.PAC_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.worldMovement().moveDir());
-            sprite = spriteOrDefault(sprites, pac.assertComponent(SpriteAnim.class).animations().currentFrame());
+            sprite = spriteOrDefault(sprites, animSystem().currentFrame(pac));
         }
-        else if (pac.assertComponent(SpriteAnim.class).animations().isSelected(CommonAnimationID.MR_PAC_MAN_MUNCHING)) {
+        else if (animSystem().isSelected(pac, CommonAnimationID.MR_PAC_MAN_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().mrPacManMunchingSprites(pac.worldMovement().moveDir());
-            sprite = spriteOrDefault(sprites, pac.assertComponent(SpriteAnim.class).animations().currentFrame());
+            sprite = spriteOrDefault(sprites, animSystem().currentFrame(pac));
         }
         else {
-            sprite = pac.assertComponent(SpriteAnim.class).animations().currentSprite();
+            sprite = animSystem().currentSprite(pac);
         }
         if (sprite == null) {
             throw new IllegalStateException("Could not determine Pac sprite");

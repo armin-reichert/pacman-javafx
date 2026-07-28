@@ -31,7 +31,7 @@ public final class PacPowerSystem {
         requireNonNull(gameContext);
         requireNonNull(pac);
 
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
+        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState;
 
         final PacPower power = pac.power();
         final GameLevel level = gameContext.assertLevel();
@@ -47,7 +47,8 @@ public final class PacPowerSystem {
 
                 // Resume hunting
                 level.huntingRules().start();
-                level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost -> ghostStateSystem.changeState(ghost, GhostState.HUNTING_PAC));
+                level.ghostsInState(GhostState.FRIGHTENED)
+                    .forEach(ghost -> ghostStateSystem.changeState(gameContext, ghost, GhostState.HUNTING_PAC));
 
                 gameContext.eventManager().publishGameEvent(new PacLostPowerEvent(pac));
             }
@@ -55,7 +56,7 @@ public final class PacPowerSystem {
     }
 
     public void start(GameContext gameContext, Pac pac) {
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostStateSystem;
+        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState;
         final WorldMovementSystem navigator = gameContext.systems().navigator;
 
         final GameLevel level = gameContext.assertLevel();
@@ -67,7 +68,8 @@ public final class PacPowerSystem {
             final long ticks = TickTimer.secToTicks(seconds);
             pac.power().timer().restartTicks(ticks);
             Logger.debug("Power timer activated, {} ticks ({0.00} sec)", ticks, seconds);
-            level.ghostsInState(GhostState.HUNTING_PAC).forEach(ghost -> ghostStateSystem.changeState(ghost, GhostState.FRIGHTENED));
+            level.ghostsInState(GhostState.HUNTING_PAC)
+                .forEach(ghost -> ghostStateSystem.changeState(gameContext, ghost, GhostState.FRIGHTENED));
             gameContext.eventManager().publishGameEvent(new PacGetsPowerEvent(pac));
         }
     }

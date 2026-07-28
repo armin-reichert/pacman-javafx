@@ -100,7 +100,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.setGameOverStateTicks(model.mapCategory() == MapCategory.ARCADE
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
 
-        setMsPacMan(model, level);
+        setMsPacMan(gameContext, model, level);
         setGhosts(gameContext, level, house);
 
         //TODO not sure about this:
@@ -169,7 +169,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.entities().ghosts().forEach(ghost -> ghost.visibility().show());
 
         if (tengenModel.pacBoosterMode() == PacBooster.ALWAYS_ON) {
-            tengenModel.activatePacBooster(level.entities().pac(), true);
+            tengenModel.activatePacBooster(gameContext, level.entities().pac(), true);
         }
         showLevelMessage(level, GameLevelMessageType.READY);
 
@@ -236,10 +236,10 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     // private
 
-    private void setMsPacMan(TengenMsPacMan_GameModel model, GameLevel level) {
+    private void setMsPacMan(GameContext gameContext, TengenMsPacMan_GameModel model, GameLevel level) {
         final Pac msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
         msPacMan.setAutomaticSteering(new RuleBasedPacSteering());
-        model.activatePacBooster(msPacMan, model.pacBoosterMode() == PacBooster.ALWAYS_ON);
+        model.activatePacBooster(gameContext, msPacMan, model.pacBoosterMode() == PacBooster.ALWAYS_ON);
         level.setPac(msPacMan);
     }
 

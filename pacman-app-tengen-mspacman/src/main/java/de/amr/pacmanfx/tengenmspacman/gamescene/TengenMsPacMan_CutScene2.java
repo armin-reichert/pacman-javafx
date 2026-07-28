@@ -6,11 +6,10 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
@@ -93,8 +92,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        final MovementSystem motor = gameContext.systems().motor;
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final GameSystems sys = gameContext.systems();
 
         final long gameStateTick = gameState().timer().tickCount();
 
@@ -104,67 +102,68 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
                     msPacMan.position().set(LEFT_BORDER, UPPER_LANE);
                     msPacMan.visibility().show();
 
-                    navigator.setSpeed(msPacMan, 2.0f);
-                    navigator.setMoveDir(msPacMan, Direction.RIGHT);
+                    sys.navigator.setSpeed(msPacMan, 2.0f);
+                    sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
 
-                    msPacMan.assertComponent(SpriteAnim.class).animations().select(CommonAnimationID.PAC_MUNCHING);
-                    msPacMan.assertComponent(SpriteAnim.class).animations().playSelected();
+                    sys.spriteAnim.select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+                    sys.spriteAnim.playSelected(msPacMan);
                 }
                 case 320 -> {
                     pacMan.position().set(LEFT_BORDER, UPPER_LANE);
                     pacMan.visibility().show();
 
-                    navigator.setSpeed(pacMan, 2.0f);
-                    navigator.setMoveDir(pacMan, Direction.RIGHT);
+                    sys.navigator.setSpeed(pacMan, 2.0f);
+                    sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
 
-                    pacMan.assertComponent(SpriteAnim.class).animations().select(TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    pacMan.assertComponent(SpriteAnim.class).animations().playSelected();
+                    sys.spriteAnim.select(pacMan,TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    sys.spriteAnim.playSelected(pacMan);
                 }
                 case 520 -> {
                     pacMan.position().set(RIGHT_BORDER, LOWER_LANE);
-                    navigator.setMoveDir(pacMan, Direction.LEFT);
-                    navigator.setSpeed(pacMan, 2.0f);
+                    sys.navigator.setMoveDir(pacMan, Direction.LEFT);
+                    sys.navigator.setSpeed(pacMan, 2.0f);
                 }
                 case 570 -> {
                     msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
-                    navigator.setMoveDir(msPacMan, Direction.LEFT);
-                    navigator.setSpeed(msPacMan, 2.0f);
+                    sys.navigator.setMoveDir(msPacMan, Direction.LEFT);
+                    sys.navigator.setSpeed(msPacMan, 2.0f);
                 }
                 case 780 -> {
                     msPacMan.position().set(LEFT_BORDER, MIDDLE_LANE);
-                    navigator.setMoveDir(msPacMan, Direction.RIGHT);
-                    navigator.setSpeed(msPacMan, 2.0f);
+                    sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
+                    sys.navigator.setSpeed(msPacMan, 2.0f);
                 }
                 case 830 -> {
                     pacMan.position().set(LEFT_BORDER, MIDDLE_LANE);
-                    navigator.setMoveDir(pacMan, Direction.RIGHT);
-                    navigator.setSpeed(pacMan, 2.0f);
+                    sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
+                    sys.navigator.setSpeed(pacMan, 2.0f);
                 }
                 case 1040 -> {
                     pacMan.position().set(RIGHT_BORDER, UPPER_LANE);
-                    navigator.setMoveDir(pacMan, Direction.LEFT);
-                    navigator.setSpeed(pacMan, 4.0f); //TODO correct?
+                    sys.navigator.setMoveDir(pacMan, Direction.LEFT);
+                    sys.navigator.setSpeed(pacMan, 4.0f); //TODO correct?
                 }
                 case 1055 -> {
                     msPacMan.position().set(RIGHT_BORDER, UPPER_LANE);
-                    navigator.setMoveDir(msPacMan, Direction.LEFT);
-                    navigator.setSpeed(msPacMan, 4.0f);
+                    sys.navigator.setMoveDir(msPacMan, Direction.LEFT);
+                    sys.navigator.setSpeed(msPacMan, 4.0f);
                 }
                 case 1105 -> {
                     msPacMan.position().set(LEFT_BORDER, LOWER_LANE);
-                    navigator.setMoveDir(msPacMan, Direction.RIGHT);
-                    navigator.setSpeed(msPacMan, 4.0f);
+                    sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
+                    sys.navigator.setSpeed(msPacMan, 4.0f);
                 }
                 case 1120 -> {
                     pacMan.position().set(LEFT_BORDER, LOWER_LANE);
-                    navigator.setMoveDir(pacMan, Direction.RIGHT);
-                    navigator.setSpeed(pacMan, 4.0f);
+                    sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
+                    sys.navigator.setSpeed(pacMan, 4.0f);
                 }
                 case 1380 -> gameState().triggerTimeout();
             }
 
-            motor.moveAccelerated(pacMan);
-            motor.moveAccelerated(msPacMan);
+            sys.motor.moveAccelerated(pacMan);
+            sys.motor.moveAccelerated(msPacMan);
+
             clapperboard.tick();
         }
     }
