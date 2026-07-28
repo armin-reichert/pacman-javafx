@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.model.component.common;
 
-import de.amr.pacmanfx.core.model.component.EntityComponent;
+import de.amr.pacmanfx.core.model.component.ActorComponent;
 
-public class Movement implements EntityComponent {
+public class Movement implements ActorComponent {
 
     public float velX;
     public float velY;

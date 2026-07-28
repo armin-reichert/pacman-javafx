@@ -6,12 +6,12 @@ package de.amr.pacmanfx.core.model.component.ghost;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.component.EntityComponent;
+import de.amr.pacmanfx.core.model.component.ActorComponent;
 import de.amr.pacmanfx.core.model.world.House;
 
 import java.util.Set;
 
-public class GhostWorldPlacement implements EntityComponent {
+public class GhostWorldPlacement implements ActorComponent {
 
     private House house;
 

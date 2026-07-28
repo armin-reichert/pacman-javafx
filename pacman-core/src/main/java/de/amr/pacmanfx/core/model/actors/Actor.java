@@ -4,10 +4,11 @@
 
 package de.amr.pacmanfx.core.model.actors;
 
-import de.amr.pacmanfx.core.model.component.EntityComponent;
+import de.amr.pacmanfx.core.model.component.ActorComponent;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.common.Position;
 import de.amr.pacmanfx.core.model.component.common.Visibility;
+import org.tinylog.Logger;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -16,36 +17,37 @@ import static java.util.Objects.requireNonNull;
 
 public class Actor {
 
-    private final Map<Class<? extends EntityComponent>, EntityComponent> components = new LinkedHashMap<>();
+    private final Map<Class<? extends ActorComponent>, ActorComponent> components = new LinkedHashMap<>();
 
     protected String name;
 
     public Actor() {
         name = super.toString(); // default name
 
-        registerComponent(Position.class, new Position());
-        registerComponent(Visibility.class, new Visibility(false));
+        setComponent(Position.class, new Position());
+        setComponent(Visibility.class, new Visibility(false));
     }
 
-    public <T extends EntityComponent> void registerComponent(Class<T> type, T component) {
+    public <T extends ActorComponent> void setComponent(Class<T> type, T component) {
         requireNonNull(type);
         requireNonNull(component);
         if (components.containsKey(type)) {
-            throw new IllegalArgumentException("Component for class %s is already registered".formatted(type.getSimpleName()));
+            Logger.warn("Component for class {} is already registered! Not overwritten!", type.getSimpleName());
+            return;
         }
         components.put(type, component);
     }
 
-    public <T extends EntityComponent> T assertComponent(Class<T> componentClass) {
+    public <T extends ActorComponent> T assertComponent(Class<T> componentClass) {
         requireNonNull(componentClass);
-        final EntityComponent component = components.get(componentClass);
+        final ActorComponent component = components.get(componentClass);
         if (component == null) {
             throw new IllegalArgumentException("No component found for class %s".formatted(componentClass.getSimpleName()));
         }
         return componentClass.cast(component);
     }
 
-    public <T extends EntityComponent> boolean hasComponent(Class<T> componentClass) {
+    public <T extends ActorComponent> boolean hasComponent(Class<T> componentClass) {
         requireNonNull(componentClass);
         return components.get(componentClass) != null;
     }
@@ -79,7 +81,7 @@ public class Actor {
      * Note: actor is invisible by default!
      */
     public void reset() {
-        components.values().forEach(EntityComponent::reset);
+        components.values().forEach(ActorComponent::reset);
     }
 
     @Override

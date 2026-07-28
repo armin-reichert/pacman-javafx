@@ -27,7 +27,7 @@ public class MovingGameLevelMessage extends GameLevelMessage {
 
     public MovingGameLevelMessage(GameLevelMessageType messageType, Vector2f startPosition, int delayTicks) {
         super(messageType);
-        registerComponent(Movement.class, new Movement());
+        setComponent(Movement.class, new Movement());
         this.startPosition = requireNonNull(startPosition);
         this.delayTicks = delayTicks;
         position().set(startPosition);

@@ -42,7 +42,7 @@ public final class TengenMsPacMan_ActorFactory {
     public Ghost createRedGhost() {
         final Ghost ghost = new Ghost(GameModel.RED_GHOST_SHADOW, "Blinky");
         registerCommonComponents(ghost);
-        ghost.registerComponent(Elroy.class, new Elroy());
+        ghost.setComponent(Elroy.class, new Elroy());
         ghost.reset();
         return ghost;
     }
@@ -79,11 +79,11 @@ public final class TengenMsPacMan_ActorFactory {
     }
 
     private void registerCommonComponents(Ghost ghost) {
-        ghost.registerComponent(Movement.class, new Movement());
-        ghost.registerComponent(WorldNavigation.class, new WorldNavigation());
-        ghost.registerComponent(WorldMovementPolicy.class, new GhostWorldMovementPolicy());
-        ghost.registerComponent(GhostStateComponent.class, new GhostStateComponent());
-        ghost.registerComponent(SpriteAnim.class, new SpriteAnim());
+        ghost.setComponent(Movement.class, new Movement());
+        ghost.setComponent(WorldNavigation.class, new WorldNavigation());
+        ghost.setComponent(WorldMovementPolicy.class, new GhostWorldMovementPolicy());
+        ghost.setComponent(GhostStateComponent.class, new GhostStateComponent());
+        ghost.setComponent(SpriteAnim.class, new SpriteAnim());
         //TODO where does this belong?
         ghost.worldNavigation().corneringSpeedDelta = -1.25f;
     }

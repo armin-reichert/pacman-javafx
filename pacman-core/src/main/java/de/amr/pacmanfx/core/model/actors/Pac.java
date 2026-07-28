@@ -38,13 +38,13 @@ public class Pac extends Actor implements UpdatableEntity {
     public Pac(String name) {
         this.name = requireNonNull(name);
 
-        registerComponent(Movement.class, new Movement());
-        registerComponent(WorldNavigation.class, new WorldNavigation());
-        registerComponent(WorldMovementPolicy.class, new PacManWorldMovementPolicy());
-        registerComponent(PacDigestion.class, new PacDigestion());
-        registerComponent(PacPower.class, new PacPower());
-        registerComponent(PacCheats.class, new PacCheats());
-        registerComponent(SpriteAnim.class, new SpriteAnim());
+        setComponent(Movement.class, new Movement());
+        setComponent(WorldNavigation.class, new WorldNavigation());
+        setComponent(WorldMovementPolicy.class, new PacManWorldMovementPolicy());
+        setComponent(PacDigestion.class, new PacDigestion());
+        setComponent(PacPower.class, new PacPower());
+        setComponent(PacCheats.class, new PacCheats());
+        setComponent(SpriteAnim.class, new SpriteAnim());
 
         state = State.ACTIVE;
     }

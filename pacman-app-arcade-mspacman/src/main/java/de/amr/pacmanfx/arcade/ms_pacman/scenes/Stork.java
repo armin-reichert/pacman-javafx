@@ -38,8 +38,8 @@ public class Stork extends Actor {
 
     public Stork(SpriteAnimationContainer animationSet) {
         name = "Beatrix von";
-        registerComponent(Movement.class, new Movement());
-        registerComponent(SpriteAnim.class, new SpriteAnim());
+        setComponent(Movement.class, new Movement());
+        setComponent(SpriteAnim.class, new SpriteAnim());
         assertComponent(SpriteAnim.class).setAnimations(new StorkAnimations(animationSet));
     }
 }

@@ -47,8 +47,8 @@ public class Bag extends Actor {
 
     public Bag(SpriteAnimationContainer container) {
         name = "Birkin";
-        registerComponent(Movement.class, new Movement());
-        registerComponent(SpriteAnim.class, new SpriteAnim());
+        setComponent(Movement.class, new Movement());
+        setComponent(SpriteAnim.class, new SpriteAnim());
         assertComponent(SpriteAnim.class).setAnimations(new BagAnimations(container));
     }
 

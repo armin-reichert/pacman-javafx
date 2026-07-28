@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.model.component.ghost;
 
-import de.amr.pacmanfx.core.model.component.EntityComponent;
+import de.amr.pacmanfx.core.model.component.ActorComponent;
 
 import static java.util.Objects.requireNonNull;
 
-public class Elroy implements EntityComponent {
+public class Elroy implements ActorComponent {
 
     public enum Boost { NONE, MEDIUM, LARGE }
 

@@ -138,7 +138,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         navigator.setSpeed(pinky, 0);
 
         heart = new Actor();
-        heart.registerComponent(SpriteAnim.class, new SpriteAnim());
+        heart.setComponent(SpriteAnim.class, new SpriteAnim());
         heart.assertComponent(SpriteAnim.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
 
         collided = false;

@@ -7,9 +7,9 @@ package de.amr.pacmanfx.core.model.component.world;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.component.EntityComponent;
+import de.amr.pacmanfx.core.model.component.ActorComponent;
 
-public interface WorldMovementPolicy extends EntityComponent {
+public interface WorldMovementPolicy extends ActorComponent {
 
     /**
      * @param gameContext the game context, asserts that level exists!

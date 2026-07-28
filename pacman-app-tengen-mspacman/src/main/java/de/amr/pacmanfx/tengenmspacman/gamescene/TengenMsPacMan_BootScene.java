@@ -44,7 +44,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
     public void onActivate() {
         actionBindings().dispose();
         movingText = new Actor();
-        movingText.registerComponent(Movement.class, new Movement());
+        movingText.setComponent(Movement.class, new Movement());
         movingText.position().set(tilesPx(9), unscaledHeight()); // lower border of screen
         ghost = appContext().variants().currentVariant().config().renderConfig().createAnimatedGhost(
             gameContext(),

@@ -47,9 +47,9 @@ public class Bonus extends Actor implements UpdatableEntity {
     private RouteBasedSteering routeNavigation;
 
     public Bonus(int symbolCode, int points) {
-        registerComponent(Movement.class, new Movement());
-        registerComponent(WorldNavigation.class, new WorldNavigation());
-        registerComponent(WorldMovementPolicy.class, new BonusWorldMovementPolicy());
+        setComponent(Movement.class, new Movement());
+        setComponent(WorldNavigation.class, new WorldNavigation());
+        setComponent(WorldMovementPolicy.class, new BonusWorldMovementPolicy());
 
         this.name = "Bonus-symbol:%d-points:%d".formatted(symbolCode, points);
         this.symbolCode = Validations.requireNonNegativeInt(symbolCode);
