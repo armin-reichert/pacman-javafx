@@ -43,8 +43,9 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
     public void onActivate() {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer container = appContext().ui().sprites().animations();
+        final var factory = new ArcadePacMan_ActorFactory();
 
-        pacMan = ArcadePacMan_ActorFactory.createPacMan();
+        pacMan = factory.createPacMan();
         pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(container));
 
         blinky = renderConfig.createAnimatedGhost(gameContext(), container, RED_GHOST_SHADOW);

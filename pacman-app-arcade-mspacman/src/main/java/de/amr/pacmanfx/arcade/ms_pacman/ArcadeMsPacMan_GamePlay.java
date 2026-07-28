@@ -14,10 +14,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.Bonus;
-import de.amr.pacmanfx.core.model.actors.BonusState;
-import de.amr.pacmanfx.core.model.actors.GhostState;
-import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.*;
@@ -89,26 +86,29 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     }
 
     protected void createAndSetMsPacMan(GameLevel level) {
-        final Pac msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
+        final var factory = new ArcadeMsPacMan_ActorFactory();
+        final Pac msPacMan = factory.createMsPacMan();
         msPacMan.setAutomaticSteering(new RuleBasedPacSteering());
         level.setPac(msPacMan);
     }
 
     protected void createAndSetGhosts(GameContext gameContext, GameLevel level, House house) {
+        final var factory = new ArcadeMsPacMan_ActorFactory();
+
+        final Ghost redGhost = factory.createRedGhost();
+        final Ghost pinkGhost = factory.createPinkGhost();
+        final Ghost cyanGhost = factory.createCyanGhost();
+        final Ghost orangeGhost = factory.createOrangeGhost();
+
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        level.setGhosts(
-            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.RED_GHOST_SHADOW,
-                terrain, house, WorldMapPropertyName.POS_GHOST_1_RED),
+        final Set<Vector2i> specialTiles = Set.of();
 
-            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.PINK_GHOST_SPEEDY,
-                terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK),
+        factory.setTerrain(redGhost, terrain, house, WorldMapPropertyName.POS_GHOST_1_RED, specialTiles);
+        factory.setTerrain(pinkGhost, terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK, specialTiles);
+        factory.setTerrain(cyanGhost, terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN, specialTiles);
+        factory.setTerrain(orangeGhost, terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, specialTiles);
 
-            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.CYAN_GHOST_BASHFUL,
-                terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN),
-
-            ArcadeMsPacMan_ActorFactory.createGhost(GameModel.ORANGE_GHOST_POKEY,
-                terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE)
-        );
+        level.setGhosts(redGhost, pinkGhost, cyanGhost, orangeGhost);
     }
 
     @Override

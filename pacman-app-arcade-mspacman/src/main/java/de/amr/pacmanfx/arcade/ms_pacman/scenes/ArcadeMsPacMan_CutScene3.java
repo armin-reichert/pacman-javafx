@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
@@ -69,10 +68,12 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
 
-        pacMan = ArcadePacMan_ActorFactory.createPacMan();
+        final var factory = new ArcadeMsPacMan_ActorFactory();
+
+        pacMan = factory.createPacMan();
         pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
-        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
+        msPacMan = factory.createMsPacMan();
         msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         stork = new Stork(spriteAnimations);

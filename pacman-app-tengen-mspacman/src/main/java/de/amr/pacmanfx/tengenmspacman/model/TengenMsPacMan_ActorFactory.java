@@ -9,61 +9,85 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.common.Movement;
+import de.amr.pacmanfx.core.model.component.ghost.Elroy;
+import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
+import de.amr.pacmanfx.core.model.component.ghost.GhostWorldMovementPolicy;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.WorldMap;
 import org.tinylog.Logger;
+
+import static de.amr.pacmanfx.core.model.world.WorldMap.halfTileRightOf;
 
 public final class TengenMsPacMan_ActorFactory {
 
-    private TengenMsPacMan_ActorFactory() {}
-
-    public static Pac createPacMan() {
+    public Pac createPacMan() {
         final var pacMan = new Pac("Pac-Man");
         pacMan.reset();
         return pacMan;
     }
 
-    public static Pac createMsPacMan() {
+    public Pac createMsPacMan() {
         final var msPacMan = new Pac("Ms. Pac-Man");
         msPacMan.reset();
         return msPacMan;
     }
 
-    /**
-     * In Arcade Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
-     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
-     * <p>
-     * I use the same behavior here, however I do not know what the real Tengen implementation does.
-     * </p>
-     */
-    public static Ghost createGhost(GameContext gameContext, byte personality) {
-        return switch (personality) {
-            case GameModel.RED_GHOST_SHADOW   -> modifyShadowBehavior(GhostFactory.createRedGhostShadow("Blinky"));
-            case GameModel.PINK_GHOST_SPEEDY  -> modifyAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky"));
-            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
-            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue");
-            default -> throw new IllegalArgumentException();
-        };
-    }
-
-    public static Ghost createGhost(GameContext gameContext, byte personality, House house, TerrainLayer terrain, String startTileProperty) {
-        final Ghost ghost = TengenMsPacMan_ActorFactory.createGhost(gameContext, personality);
-        ghost.setHouse(house);
-        if (ghost.personality() == GameModel.RED_GHOST_SHADOW) {
-            ghost.setStartPosition(WorldMap.halfTileRightOf(terrain.getTileProperty(startTileProperty)));
-        } else {
-            // The ghosts starting inside the house sit at the *bottom*!
-            ghost.setStartPosition(WorldMap.halfTileRightOf(terrain.getTileProperty(startTileProperty)).plus(0, WorldMap.HTS));
-        }
+    public Ghost createRedGhost() {
+        final Ghost ghost = new Ghost(GameModel.RED_GHOST_SHADOW, "Blinky");
+        registerCommonComponents(ghost);
+        ghost.registerComponent(Elroy.class, new Elroy());
+        ghost.reset();
         return ghost;
     }
+
+    public Ghost createPinkGhost() {
+        final Ghost ghost = new Ghost(GameModel.PINK_GHOST_SPEEDY, "Pinky");
+        registerCommonComponents(ghost);
+        ghost.reset();
+        return ghost;
+    }
+
+    public Ghost createCyanGhost() {
+        final Ghost ghost = new Ghost(GameModel.CYAN_GHOST_BASHFUL, "Inky");
+        registerCommonComponents(ghost);
+        ghost.reset();
+        return ghost;
+    }
+
+    public Ghost createOrangeGhost() {
+        final Ghost ghost = new Ghost(GameModel.ORANGE_GHOST_POKEY, "Sue");
+        registerCommonComponents(ghost);
+        ghost.reset();
+        return ghost;
+    }
+
+    public void setTerrain(
+        Ghost ghost,
+        TerrainLayer terrain,
+        House house,
+        String startTileProperty)
+    {
+        ghost.setHouse(house);
+        ghost.setStartPosition(halfTileRightOf(terrain.getTileProperty(startTileProperty)));
+    }
+
+    private void registerCommonComponents(Ghost ghost) {
+        ghost.registerComponent(Movement.class, new Movement());
+        ghost.registerComponent(WorldNavigation.class, new WorldNavigation());
+        ghost.registerComponent(WorldMovementPolicy.class, new GhostWorldMovementPolicy());
+        ghost.registerComponent(GhostStateComponent.class, new GhostStateComponent());
+        ghost.registerComponent(SpriteAnim.class, new SpriteAnim());
+        //TODO where does this belong?
+        ghost.worldNavigation().corneringSpeedDelta = -1.25f;
+    }
+
 
     private static Ghost modifyShadowBehavior(Ghost ghost) {
 

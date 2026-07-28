@@ -28,12 +28,13 @@ import de.amr.pacmanfx.core.steering.RouteBasedSteering;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.amr.basics.math.RandomNumberSupport.randomFloat;
-import static de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory.createGhost;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.core.model.GameModel.*;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
@@ -133,24 +134,37 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     protected void createAndSetPacMan(GameLevel level) {
-        final Pac pacMan = ArcadePacMan_ActorFactory.createPacMan();
+        final var factory = new ArcadePacMan_ActorFactory();
+        final Pac pacMan = factory.createPacMan();
         pacMan.setAutomaticSteering(new RuleBasedPacSteering());
         level.setPac(pacMan);
     }
 
     protected void createAndSetGhosts(GameContext gameContext, GameLevel level, House house) {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final var factory = new ArcadePacMan_ActorFactory();
+        final Map<Byte, Ghost> ghosts = Map.of(
+            RED_GHOST_SHADOW,   factory.createRedGhost(),
+            PINK_GHOST_SPEEDY,  factory.createPinkGhost(),
+            CYAN_GHOST_BASHFUL, factory.createCyanGhost(),
+            ORANGE_GHOST_POKEY, factory.createOrangeGhost()
+        );
 
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
         // Special tiles where attacking ghosts cannot move up
         final Set<Vector2i> oneWayTiles = terrain.tiles()
             .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
             .collect(Collectors.toUnmodifiableSet());
 
+        factory.setTerrain(ghosts.get(RED_GHOST_SHADOW),   terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
+        factory.setTerrain(ghosts.get(PINK_GHOST_SPEEDY),  terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
+        factory.setTerrain(ghosts.get(CYAN_GHOST_BASHFUL), terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
+        factory.setTerrain(ghosts.get(ORANGE_GHOST_POKEY), terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
+
         level.setGhosts(
-            createGhost(GameModel.RED_GHOST_SHADOW,   terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles),
-            createGhost(GameModel.PINK_GHOST_SPEEDY,  terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles),
-            createGhost(GameModel.CYAN_GHOST_BASHFUL, terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles),
-            createGhost(GameModel.ORANGE_GHOST_POKEY, terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles)
+            ghosts.get(RED_GHOST_SHADOW),
+            ghosts.get(PINK_GHOST_SPEEDY),
+            ghosts.get(CYAN_GHOST_BASHFUL),
+            ghosts.get(ORANGE_GHOST_POKEY)
         );
     }
 
@@ -232,7 +246,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
-        final Ghost redGhost = level.ghost(GameModel.RED_GHOST_SHADOW);
+        final Ghost redGhost = level.ghost(RED_GHOST_SHADOW);
         if (redGhost != null) {
             final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
             final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();

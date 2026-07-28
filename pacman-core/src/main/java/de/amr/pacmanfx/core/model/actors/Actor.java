@@ -63,6 +63,10 @@ public class Actor {
         return assertComponent(Visibility.class);
     }
 
+    public void setName(String name) {
+        this.name = requireNonNull(name);
+    }
+
     /**
      * @return readable name, used in UI and logging
      */

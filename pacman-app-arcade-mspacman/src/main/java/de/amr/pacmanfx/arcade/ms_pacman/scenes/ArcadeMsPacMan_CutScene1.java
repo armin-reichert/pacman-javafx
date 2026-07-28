@@ -9,7 +9,6 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
@@ -85,10 +84,12 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
         final var spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
-        pacMan = ArcadePacMan_ActorFactory.createPacMan();
+        final var factory = new ArcadeMsPacMan_ActorFactory();
+
+        pacMan = factory.createPacMan();
         pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
-        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
+        msPacMan = factory.createMsPacMan();
         msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         inky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);

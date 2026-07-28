@@ -111,13 +111,15 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         clapperboard.visibility().show();
         clapperboard.startAnimation();
 
-        msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
+        final var factory = new TengenMsPacMan_ActorFactory();
+
+        msPacMan = factory.createMsPacMan();
         msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setMoveDir(msPacMan, Direction.LEFT);
         navigator.setSpeed(msPacMan, 0);
 
-        pacMan = TengenMsPacMan_ActorFactory.createPacMan();
+        pacMan = factory.createPacMan();
         pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         pacMan.position().set(LEFT_BORDER, UPPER_LANE);
         navigator.setMoveDir(pacMan, Direction.RIGHT);

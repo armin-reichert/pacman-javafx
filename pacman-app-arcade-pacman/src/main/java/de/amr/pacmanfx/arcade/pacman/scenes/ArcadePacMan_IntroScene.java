@@ -123,7 +123,9 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
         blinking = new Pulse(10, Pulse.State.ON);
 
-        pacMan = ArcadePacMan_ActorFactory.createPacMan();
+        final var factory = new ArcadePacMan_ActorFactory();
+
+        pacMan = factory.createPacMan();
         pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         ghosts[0] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.RED_GHOST_SHADOW);

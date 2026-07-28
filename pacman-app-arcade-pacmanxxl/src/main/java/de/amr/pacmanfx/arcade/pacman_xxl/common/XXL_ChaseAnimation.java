@@ -94,7 +94,9 @@ class XXL_ChaseAnimation {
         actorRenderer = renderConfig.createActorRenderer(sys.spriteAnim, canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
 
-        pac = ArcadePacMan_ActorFactory.createPacMan();
+        final var factory = new ArcadePacMan_ActorFactory();
+
+        pac = factory.createPacMan();
         pac.position().setX(numTilesX * WorldMap.TS);
         pac.visibility().show();
 

@@ -13,6 +13,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
@@ -155,9 +156,16 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, byte personality) {
+        final var factory = new ArcadeMsPacMan_ActorFactory();
         final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim;
 
-        final Ghost ghost = ArcadeMsPacMan_ActorFactory.createGhost(personality);
+        final Ghost ghost = switch (personality) {
+            case GameModel.RED_GHOST_SHADOW   -> factory.createRedGhost();
+            case GameModel.PINK_GHOST_SPEEDY  -> factory.createPinkGhost();
+            case GameModel.CYAN_GHOST_BASHFUL -> factory.createCyanGhost();
+            case GameModel.ORANGE_GHOST_POKEY -> factory.createOrangeGhost();
+            default -> throw new IllegalStateException("Illegal personality: " + personality);
+        };
 
         animSystem.setAnimations(ghost, createGhostAnimations(container, personality));
         animSystem.select(ghost, CommonAnimationID.GHOST_NORMAL);

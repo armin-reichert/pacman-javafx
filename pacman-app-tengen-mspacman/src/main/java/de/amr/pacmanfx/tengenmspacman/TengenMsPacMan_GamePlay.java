@@ -12,13 +12,13 @@ import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
-import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.*;
+import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
@@ -101,7 +101,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
 
         setMsPacMan(gameContext, model, level);
-        setGhosts(gameContext, level, house);
+        setGhosts(level, house);
 
         //TODO not sure about this:
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
@@ -237,19 +237,30 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // private
 
     private void setMsPacMan(GameContext gameContext, TengenMsPacMan_GameModel model, GameLevel level) {
-        final Pac msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
+        final var factory = new TengenMsPacMan_ActorFactory();
+        final Pac msPacMan = factory.createMsPacMan();
+
         msPacMan.setAutomaticSteering(new RuleBasedPacSteering());
         model.activatePacBooster(gameContext, msPacMan, model.pacBoosterMode() == PacBooster.ALWAYS_ON);
+
         level.setPac(msPacMan);
     }
 
-    private void setGhosts(GameContext gameContext, GameLevel level, House house) {
+    private void setGhosts(GameLevel level, House house) {
+        final var factory = new TengenMsPacMan_ActorFactory();
+
+        final Ghost redGhost = factory.createRedGhost();
+        final Ghost pinkGhost = factory.createPinkGhost();
+        final Ghost cyanGhost = factory.createCyanGhost();
+        final Ghost orangeGhost = factory.createOrangeGhost();
+
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        level.setGhosts(
-            TengenMsPacMan_ActorFactory.createGhost(gameContext, GameModel.RED_GHOST_SHADOW,   house, terrain, WorldMapPropertyName.POS_GHOST_1_RED),
-            TengenMsPacMan_ActorFactory.createGhost(gameContext, GameModel.PINK_GHOST_SPEEDY,  house, terrain, WorldMapPropertyName.POS_GHOST_2_PINK),
-            TengenMsPacMan_ActorFactory.createGhost(gameContext, GameModel.CYAN_GHOST_BASHFUL, house, terrain, WorldMapPropertyName.POS_GHOST_3_CYAN),
-            TengenMsPacMan_ActorFactory.createGhost(gameContext, GameModel.ORANGE_GHOST_POKEY, house, terrain, WorldMapPropertyName.POS_GHOST_4_ORANGE)
-        );
+
+        factory.setTerrain(redGhost,    terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
+        factory.setTerrain(pinkGhost,   terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
+        factory.setTerrain(cyanGhost,   terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
+        factory.setTerrain(orangeGhost, terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
+
+        level.setGhosts(redGhost, pinkGhost, cyanGhost, orangeGhost);
     }
 }

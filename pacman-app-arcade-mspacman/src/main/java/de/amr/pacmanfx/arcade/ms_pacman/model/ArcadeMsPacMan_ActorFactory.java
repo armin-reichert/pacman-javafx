@@ -2,22 +2,17 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.GhostFactory;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
-import de.amr.pacmanfx.core.model.world.House;
-import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.model.world.WorldMap.halfTileRightOf;
+public class ArcadeMsPacMan_ActorFactory extends ArcadePacMan_ActorFactory {
 
-public class ArcadeMsPacMan_ActorFactory {
-
-    public static Pac createMsPacMan() {
+    public Pac createMsPacMan() {
         return new Pac("Ms. Pac-Man");
     }
 
@@ -26,20 +21,21 @@ public class ArcadeMsPacMan_ActorFactory {
      * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      */
-    public static Ghost createGhost(byte personality) {
-        return switch (personality) {
-            case GameModel.RED_GHOST_SHADOW -> modifyShadowBehavior(GhostFactory.createRedGhostShadow("Blinky"));
-            case GameModel.PINK_GHOST_SPEEDY -> modifyAmbushBehavior(GhostFactory.createPinkGhostAmbusher("Pinky"));
-            case GameModel.CYAN_GHOST_BASHFUL -> GhostFactory.createCyanGhostBashful("Inky");
-            case GameModel.ORANGE_GHOST_POKEY -> GhostFactory.createOrangeGhostPokey("Sue");
-            default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(personality));
-        };
+    public Ghost createRedGhost() {
+        final Ghost ghost = super.createRedGhost();
+        //TODO modify behavior
+        return ghost;
     }
 
-    public static Ghost createGhost(byte personality, TerrainLayer terrain, House house, String startTileProperty) {
-        final Ghost ghost = createGhost(personality);
-        ghost.setHouse(house);
-        ghost.setStartPosition(halfTileRightOf(terrain.getTileProperty(startTileProperty)));
+    public Ghost createPinkGhost() {
+        final Ghost ghost = super.createPinkGhost();
+        //TODO modify behavior
+        return ghost;
+    }
+
+    public Ghost createOrangeGhost() {
+        final Ghost ghost = super.createOrangeGhost();
+        ghost.setName("Sue");
         return ghost;
     }
 

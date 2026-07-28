@@ -76,10 +76,12 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
         clapperboard.visibility().show();
         clapperboard.startAnimation();
 
-        msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
+        final var factory = new TengenMsPacMan_ActorFactory();
+
+        msPacMan = factory.createMsPacMan();
         msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
-        pacMan = TengenMsPacMan_ActorFactory.createPacMan();
+        pacMan = factory.createPacMan();
         pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);

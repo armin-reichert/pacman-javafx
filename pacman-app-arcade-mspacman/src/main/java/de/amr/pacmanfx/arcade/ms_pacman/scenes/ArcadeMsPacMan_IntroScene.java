@@ -93,7 +93,9 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         marquee.setBulbOnColor(ARCADE_WHITE);
         marquee.timer().restartIndefinitely();
 
-        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
+        final var factory = new ArcadeMsPacMan_ActorFactory();
+
+        msPacMan = factory.createMsPacMan();
         msPacMan.position().set(WorldMap.TS * 31, WorldMap.TS * 20);
         msPacMan.visibility().show();
 
