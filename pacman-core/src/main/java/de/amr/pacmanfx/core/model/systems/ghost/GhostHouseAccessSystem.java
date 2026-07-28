@@ -6,11 +6,10 @@ package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.component.common.Position;
-import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 
@@ -24,10 +23,9 @@ public class GhostHouseAccessSystem {
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
     public void stayInHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final MovementSystem motor = gameContext.systems().motor;
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final GameSystems sys = gameContext.systems();
 
-        final House house = ghost.house();
+        final House house = ghost.worldPlacement().house();
         final Position position = ghost.position();
 
         if (house.isVisitedBy(ghost)) {
@@ -35,20 +33,20 @@ public class GhostHouseAccessSystem {
             final float minY = (house.minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
             final float maxY = (house.maxTile().y() - 1) * WorldMap.TS - WorldMap.HTS;
             if (position.y <= minY) {
-                navigator.setMoveDir(ghost, DOWN);
-                navigator.setWishDir(ghost, DOWN);
+                sys.navigator.setMoveDir(ghost, DOWN);
+                sys.navigator.setWishDir(ghost, DOWN);
             }
             else if (position.y >= maxY) {
-                navigator.setMoveDir(ghost, UP);
-                navigator.setWishDir(ghost, UP);
+                sys.navigator.setMoveDir(ghost, UP);
+                sys.navigator.setWishDir(ghost, UP);
             }
             position.setY(Math.clamp(position.y, minY, maxY));
-            navigator.setSpeed(ghost, speed);
-            motor.moveAccelerated(ghost);
+            sys.navigator.setSpeed(ghost, speed);
+            sys.motor.moveAccelerated(ghost);
         }
         else {
             // locked outside of house: standing still
-            navigator.setSpeed(ghost, 0);
+            sys.navigator.setSpeed(ghost, 0);
         }
     }
 
@@ -60,16 +58,16 @@ public class GhostHouseAccessSystem {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     public boolean leaveHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final MovementSystem motor = gameContext.systems().motor;
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final GameSystems sys = gameContext.systems();
 
         final Position position = ghost.position();
-        final Vector2f houseEntryPosition = ghost.house().entryPosition();
+        final House house = ghost.worldPlacement().house();
+        final Vector2f houseEntryPosition = house.entryPosition();
 
         if (position.y <= houseEntryPosition.y()) {
             position.setY(houseEntryPosition.y());
-            navigator.setMoveDir(ghost, LEFT);
-            navigator.setWishDir(ghost, LEFT);
+            sys.navigator.setMoveDir(ghost, LEFT);
+            sys.navigator.setWishDir(ghost, LEFT);
 
             // don't change direction directly when outside house
             ghost.worldNavigation().setNewTileEntered(false);
@@ -78,21 +76,21 @@ public class GhostHouseAccessSystem {
         }
         else {
             final float centerX = position.x + WorldMap.HTS;
-            final float houseCenterX = ghost.house().center().x();
+            final float houseCenterX = house.center().x();
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
                 // align horizontally and raise
                 position.setX(houseCenterX - WorldMap.HTS);
-                navigator.setMoveDir(ghost, UP);
-                navigator.setWishDir(ghost, UP);
+                sys.navigator.setMoveDir(ghost, UP);
+                sys.navigator.setWishDir(ghost, UP);
             }
             else {
                 // move sidewards until center axis is reached
-                navigator.setMoveDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
-                navigator.setWishDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
+                sys.navigator.setMoveDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
+                sys.navigator.setWishDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
             }
 
-            navigator.setSpeed(ghost, speed);
-            motor.moveAccelerated(ghost);
+            sys.navigator.setSpeed(ghost, speed);
+            sys.motor.moveAccelerated(ghost);
 
             return false;
         }
@@ -103,60 +101,58 @@ public class GhostHouseAccessSystem {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     public void enterHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final MovementSystem motor = gameContext.systems().motor;
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState;
+        final GameSystems sys = gameContext.systems();
 
         final Position position = ghost.position();
-        final Vector2f revivalPosition = WorldMap.halfTileRightOf(ghost.house().ghostRevivalTile(ghost.personality()));
+        final House house = ghost.worldPlacement().house();
+        final Vector2f revivalPosition = WorldMap.halfTileRightOf(house.ghostRevivalTile(ghost.personality()));
         final Vector2f positionVec = position.asVector2f();
         if (positionVec.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
             position.set(revivalPosition.x(), revivalPosition.y());
-            navigator.setMoveDir(ghost, UP);
-            navigator.setWishDir(ghost, UP);
+            sys.navigator.setMoveDir(ghost, UP);
+            sys.navigator.setWishDir(ghost, UP);
 
-            ghostStateSystem.changeState(gameContext, ghost, GhostState.LOCKED);
+            sys.ghostState.changeState(gameContext, ghost, GhostState.LOCKED);
             return;
         }
         if (position.y < revivalPosition.y()) {
-            navigator.setMoveDir(ghost, DOWN);
-            navigator.setWishDir(ghost, DOWN);
+            sys.navigator.setMoveDir(ghost, DOWN);
+            sys.navigator.setWishDir(ghost, DOWN);
         }
         else if (position.x > revivalPosition.x()) {
-            navigator.setMoveDir(ghost, LEFT);
-            navigator.setWishDir(ghost, LEFT);
+            sys.navigator.setMoveDir(ghost, LEFT);
+            sys.navigator.setWishDir(ghost, LEFT);
         }
         else if (position.x < revivalPosition.x()) {
-            navigator.setMoveDir(ghost, RIGHT);
-            navigator.setWishDir(ghost, RIGHT);
+            sys.navigator.setMoveDir(ghost, RIGHT);
+            sys.navigator.setWishDir(ghost, RIGHT);
         }
-        navigator.setSpeed(ghost, speed);
+        sys.navigator.setSpeed(ghost, speed);
 
-        motor.moveAccelerated(ghost);
+        sys.motor.moveAccelerated(ghost);
     }
 
     public void reachHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState;
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final GameSystems sys = gameContext.systems();
 
         final Position position = ghost.position();
-        final Vector2f houseEntry = ghost.house().entryPosition();
-        //TODO
+        final House house = ghost.worldPlacement().house();
+        final Vector2f houseEntry = house.entryPosition();
         final Vector2f positionVec =  position.asVector2f();
         if (positionVec.roughlyEquals(houseEntry, speed, 0)) {
             position.set(houseEntry.x(), houseEntry.y());
-            navigator.setMoveDir(ghost, DOWN);
-            navigator.setWishDir(ghost, DOWN);
+            sys.navigator.setMoveDir(ghost, DOWN);
+            sys.navigator.setWishDir(ghost, DOWN);
 
             //TODO check if this should be done here
-            ghostStateSystem.changeState(gameContext, ghost, GhostState.ENTERING_HOUSE);
+            sys.ghostState.changeState(gameContext, ghost, GhostState.ENTERING_HOUSE);
         }
         else {
             //TODO use system method
-            ghost.worldNavigation().setTargetTile(ghost.house().leftDoorTile());
-            navigator.setSpeed(ghost, speed);
-            navigator.navigateTowardsTarget(ghost, gameContext);
-            navigator.tryMovingOrTeleporting(ghost, gameContext);
+            ghost.worldNavigation().setTargetTile(house.leftDoorTile());
+            sys.navigator.setSpeed(ghost, speed);
+            sys.navigator.navigateTowardsTarget(ghost, gameContext);
+            sys.navigator.tryMovingOrTeleporting(ghost, gameContext);
         }
     }
 }

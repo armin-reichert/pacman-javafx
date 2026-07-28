@@ -4,20 +4,17 @@
 
 package de.amr.pacmanfx.core.model.actors;
 
-import de.amr.basics.math.Vector2f;
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
+import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.House;
 
 import java.util.Collection;
-import java.util.Set;
 
 import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.core.Validations.stateIsOneOf;
@@ -29,10 +26,6 @@ import static java.util.Objects.requireNonNull;
 public class Ghost extends Actor implements UpdatableEntity {
 
     private final byte personality;
-
-    private Set<Vector2i> specialTerrainTiles = Set.of();
-    private Vector2f startPosition;
-    private House house;
 
     public Ghost(byte personality, String name) {
         this.name = requireNonNull(name);
@@ -46,6 +39,10 @@ public class Ghost extends Actor implements UpdatableEntity {
      */
     public byte personality() {
         return personality;
+    }
+
+    public GhostWorldPlacement worldPlacement() {
+        return assertComponent(GhostWorldPlacement.class);
     }
 
     public WorldNavigation worldNavigation() {
@@ -66,30 +63,6 @@ public class Ghost extends Actor implements UpdatableEntity {
         return stateIsOneOf(state(), states);
     }
 
-    public House house() {
-        return house;
-    }
-
-    public void setHouse(House house) {
-        this.house = house;
-    }
-
-    public void setSpecialTerrainTiles(Set<Vector2i> tiles) {
-        specialTerrainTiles = Set.copyOf(tiles);
-    }
-
-    public Set<Vector2i> specialTerrainTiles() {
-        return specialTerrainTiles;
-    }
-
-    public void setStartPosition(Vector2f startPosition) {
-        this.startPosition = startPosition;
-    }
-
-    public Vector2f startPosition() {
-        return startPosition;
-    }
-
     @Override
     public void update(GameContext gameContext) {
         gameContext.systems().ghostState.update(gameContext, this);
@@ -100,8 +73,7 @@ public class Ghost extends Actor implements UpdatableEntity {
         return "Ghost{" +
             "personality=" + personality +
             ", state=" + state() +
-            ", specialTerrainTiles=" + specialTerrainTiles +
-            ", startPosition=" + startPosition +
+            ", worldPlacement=" + worldPlacement() +
             super.toString() +
             '}';
     }

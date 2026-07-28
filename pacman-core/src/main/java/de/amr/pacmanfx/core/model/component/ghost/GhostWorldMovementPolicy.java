@@ -42,7 +42,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
         final Vector2i myTile = WorldMovementSystem.computeTile(actor);
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below
         // TODO: this is game-specific and does not belong here
-        if (ghost.specialTerrainTiles().contains(tile)
+        if (ghost.worldPlacement().specialTerrainTiles().contains(tile)
             && ghost.state() == GhostState.HUNTING_PAC
             && terrainLayer.content(tile) == TerrainTile.ONE_WAY_DOWN.$
             && tile.equals(myTile.plus(UP.vector()))
@@ -50,7 +50,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
             Logger.debug("Hunting {} cannot move up to special tile {}", actor.name(), tile);
             return false;
         }
-        if (ghost.house() != null && ghost.house().isDoorAt(tile)) {
+        if (ghost.worldPlacement().house() != null && ghost.worldPlacement().house().isDoorAt(tile)) {
             return ghost.inAnyOfStates(Set.of(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE));
         }
         return !terrainLayer.isTileBlocked(tile);

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
 import de.amr.pacmanfx.core.model.component.ghost.GhostWorldMovementPolicy;
+import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
@@ -59,21 +60,22 @@ public class ArcadePacMan_ActorFactory {
         return ghost;
     }
 
-    public void setTerrain(
+    public void initWorldPlacement(
         Ghost ghost,
         TerrainLayer terrain,
         House house,
         String startTileProperty,
         Set<Vector2i> specialTiles)
     {
-        ghost.setHouse(house);
-        ghost.setSpecialTerrainTiles(specialTiles);
-        ghost.setStartPosition(halfTileRightOf(terrain.getTileProperty(startTileProperty)));
+        ghost.worldPlacement().setHouse(house);
+        ghost.worldPlacement().setSpecialTerrainTiles(specialTiles);
+        ghost.worldPlacement().setStartPosition(halfTileRightOf(terrain.getTileProperty(startTileProperty)));
     }
 
     private void registerCommonComponents(Ghost ghost) {
         ghost.registerComponent(Movement.class, new Movement());
         ghost.registerComponent(WorldNavigation.class, new WorldNavigation());
+        ghost.registerComponent(GhostWorldPlacement.class, new GhostWorldPlacement());
         ghost.registerComponent(WorldMovementPolicy.class, new GhostWorldMovementPolicy());
         ghost.registerComponent(GhostStateComponent.class, new GhostStateComponent());
         ghost.registerComponent(SpriteAnim.class, new SpriteAnim());

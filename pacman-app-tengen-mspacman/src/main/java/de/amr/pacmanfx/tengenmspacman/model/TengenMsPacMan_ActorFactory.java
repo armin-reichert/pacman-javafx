@@ -68,14 +68,14 @@ public final class TengenMsPacMan_ActorFactory {
         return ghost;
     }
 
-    public void setTerrain(
+    public void initWorldPlacement(
         Ghost ghost,
         TerrainLayer terrain,
         House house,
         String startTileProperty)
     {
-        ghost.setHouse(house);
-        ghost.setStartPosition(halfTileRightOf(terrain.getTileProperty(startTileProperty)));
+        ghost.worldPlacement().setHouse(house);
+        ghost.worldPlacement().setStartPosition(halfTileRightOf(terrain.getTileProperty(startTileProperty)));
     }
 
     private void registerCommonComponents(Ghost ghost) {

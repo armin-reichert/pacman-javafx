@@ -103,10 +103,10 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final Set<Vector2i> specialTiles = Set.of();
 
-        factory.setTerrain(redGhost, terrain, house, WorldMapPropertyName.POS_GHOST_1_RED, specialTiles);
-        factory.setTerrain(pinkGhost, terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK, specialTiles);
-        factory.setTerrain(cyanGhost, terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN, specialTiles);
-        factory.setTerrain(orangeGhost, terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, specialTiles);
+        factory.initWorldPlacement(redGhost, terrain, house, WorldMapPropertyName.POS_GHOST_1_RED, specialTiles);
+        factory.initWorldPlacement(pinkGhost, terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK, specialTiles);
+        factory.initWorldPlacement(cyanGhost, terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN, specialTiles);
+        factory.initWorldPlacement(orangeGhost, terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, specialTiles);
 
         level.setGhosts(redGhost, pinkGhost, cyanGhost, orangeGhost);
     }

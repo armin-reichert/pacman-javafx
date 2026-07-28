@@ -83,7 +83,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
-            ghost.position().set(ghost.startPosition());
+            ghost.position().set(ghost.worldPlacement().startPosition());
             final Direction direction = house.ghostStartDirection(ghost.personality());
             sys.navigator.setMoveDir(ghost, direction);
             sys.navigator.setWishDir(ghost, direction);

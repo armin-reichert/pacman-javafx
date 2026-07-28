@@ -155,10 +155,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
             .collect(Collectors.toUnmodifiableSet());
 
-        factory.setTerrain(ghosts.get(RED_GHOST_SHADOW),   terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
-        factory.setTerrain(ghosts.get(PINK_GHOST_SPEEDY),  terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
-        factory.setTerrain(ghosts.get(CYAN_GHOST_BASHFUL), terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
-        factory.setTerrain(ghosts.get(ORANGE_GHOST_POKEY), terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
+        factory.initWorldPlacement(ghosts.get(RED_GHOST_SHADOW),   terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
+        factory.initWorldPlacement(ghosts.get(PINK_GHOST_SPEEDY),  terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
+        factory.initWorldPlacement(ghosts.get(CYAN_GHOST_BASHFUL), terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
+        factory.initWorldPlacement(ghosts.get(ORANGE_GHOST_POKEY), terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
 
         level.setGhosts(
             ghosts.get(RED_GHOST_SHADOW),
