@@ -20,6 +20,12 @@ import static java.util.Objects.requireNonNull;
 
 public class RandomWorldMovementSystem {
 
+    private final WorldNavigationSystem navigator;
+
+    public RandomWorldMovementSystem(WorldNavigationSystem navigator) {
+        this.navigator = requireNonNull(navigator);
+    }
+
     /**
      * Lets the actor roam through the current level's world.<br>
          <cite>
@@ -33,15 +39,14 @@ public class RandomWorldMovementSystem {
         requireNonNull(gameContext);
         requireNonNull(actor);
 
-        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
+        final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
         final GameLevel level = gameContext.assertLevel();
 
         final Vector2i tile = WorldNavigationSystem.computeTile(actor);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
-        final boolean stuck = !worldNavigation.info.moved;
-        if ((worldNavigation.isNewTileEntered() || stuck) && !teleporting) {
+        final boolean stuck = !navigation.info.moved;
+        if ((navigation.isNewTileEntered() || stuck) && !teleporting) {
             final Direction dir = computeRoamingDirection(gameContext, actor, tile);
             navigator.setWishDir(actor, dir);
             Logger.debug("Ghost {} takes random wish direction {}", actor.name(), dir);
@@ -52,10 +57,10 @@ public class RandomWorldMovementSystem {
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
     private Direction computeRoamingDirection(GameContext gameContext, Actor actor, Vector2i currentTile) {
-        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
+        final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
         final WorldMovementPolicy policy = actor.assertComponent(WorldMovementPolicy.class);
 
-        final Direction oppositeDir = worldNavigation.moveDir().opposite();
+        final Direction oppositeDir = navigation.moveDir().opposite();
         Direction selectedDir = choosePseudoRandomDirection();
         int tries = 0;
         while (selectedDir == oppositeDir

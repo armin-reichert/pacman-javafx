@@ -18,7 +18,7 @@ public final class GameSystems {
 
     public final MovementSystem motor =  new MovementSystem();
     public final WorldNavigationSystem navigator = new WorldNavigationSystem(motor);
-    public final RandomWorldMovementSystem roamingNavigator = new RandomWorldMovementSystem();
+    public final RandomWorldMovementSystem roamingNavigator = new RandomWorldMovementSystem(navigator);
 
     public final PacPowerSystem pacPower = new PacPowerSystem();
     public final PacDigestionSystem pacDigestion = new PacDigestionSystem();
