@@ -5,37 +5,23 @@
 package de.amr.pacmanfx.arcade.ms_pacman.model.systems.ghost;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
-import de.amr.pacmanfx.core.model.systems.ghost.GhostHuntingStrategy;
 
-import static java.util.Objects.requireNonNull;
-
-public class ArcadeMsPacMan_SpeedyHuntingStrategy implements GhostHuntingStrategy {
-
-    private final WorldNavigationSystem navigator;
+/**
+ * In Ms. Pac-Man, Blinky ("Shadow") and Pinky ("Speedy")  move randomly during the *first* scatter phase. Some say,
+ * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
+ * only the scatter target of Blinky and Pinky would have been affected. Who knows?
+ */
+public class ArcadeMsPacMan_SpeedyHuntingStrategy extends ArcadeMsPacMan_RandomizedHuntingStrategy {
 
     public ArcadeMsPacMan_SpeedyHuntingStrategy(WorldNavigationSystem navigator) {
-        this.navigator = requireNonNull(navigator);
+        super(navigator);
     }
 
     @Override
-    public void hunt(GameLevel level, Ghost ghost, float speed) {
-        requireNonNull(level);
-        requireNonNull(ghost);
-
-        final boolean chase = level.huntingRules().isChasing();
-        final Vector2i targetTile = chase
-            ? computeChasingTargetTile(level)
-            : computeScatterTile(level.worldMap(), ghost);
-
-        navigator.setSpeed(ghost, speed);
-        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
-    }
-
-    private Vector2i computeChasingTargetTile(GameLevel level) {
+    protected Vector2i computeChasingTargetTile(GameLevel level) {
         final Pac pac = level.entities().pac();
         return WorldNavigationSystem.tilesAheadWithOverflowBug(pac, 4);
     }
