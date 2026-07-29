@@ -7,10 +7,10 @@ package de.amr.pacmanfx.arcade.pacman.rules;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ScoringRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
-import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.rules.ActorCollisionRules;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
+import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.rules.GameRules;
 
 import java.util.Map;

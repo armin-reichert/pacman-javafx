@@ -3,7 +3,10 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-import de.amr.pacmanfx.core.model.world.*;
+import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
+import de.amr.pacmanfx.core.model.world.WorldMapParseException;
+import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import org.tinylog.Logger;
 
 import java.io.IOException;

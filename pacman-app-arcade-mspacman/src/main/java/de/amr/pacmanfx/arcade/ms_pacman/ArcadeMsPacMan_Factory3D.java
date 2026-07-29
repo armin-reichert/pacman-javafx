@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
+import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3DFactory;

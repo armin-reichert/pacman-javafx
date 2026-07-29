@@ -11,8 +11,6 @@ import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
 import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
-import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 
 import java.util.Collection;
 
@@ -81,22 +79,5 @@ public class Ghost extends Actor implements UpdatableEntity {
             ", worldNavigation=" + worldNavigation() +
             ", " + super.toString() +
             '}';
-    }
-
-    //TODO move into ghost sprite animation system
-    public void playFrightenedAnimation(GameContext gameContext) {
-        final GameSystems sys = gameContext.systems();
-
-        final GameLevel level = gameContext.assertLevel();
-        final Pac pac = level.entities().pac();
-
-        if (sys.pacPower().isPowerStartingFading(level, pac)) {
-            sys.spriteAnim().select(this, CommonAnimationID.GHOST_FLASHING);
-            sys.spriteAnim().playSelected(this);
-        }
-        else if (!sys.pacPower().isPowerFading(level, pac)) {
-            sys.spriteAnim().select(this, CommonAnimationID.GHOST_FRIGHTENED);
-            sys.spriteAnim().playSelected(this);
-        }
     }
 }

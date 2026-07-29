@@ -11,8 +11,6 @@ import de.amr.basics.spriteanim.SpriteAnimationAccess;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 
-import java.util.Objects;
-
 import static java.util.Objects.requireNonNull;
 
 public class SpriteAnimSystem {

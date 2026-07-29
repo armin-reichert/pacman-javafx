@@ -6,9 +6,9 @@ package de.amr.pacmanfx.core.model.systems.pac;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 
 import static java.util.Objects.requireNonNull;

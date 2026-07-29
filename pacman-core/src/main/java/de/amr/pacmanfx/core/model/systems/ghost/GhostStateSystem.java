@@ -78,7 +78,7 @@ public class GhostStateSystem {
         sys.ghostHouseAccess().stayInHouse(gameContext, ghost, speed);
 
         if (isThreatenedByPac(gameContext, ghost)) {
-            ghost.playFrightenedAnimation(gameContext);
+            playFrightenedAnimation(gameContext, ghost);
         } else {
             sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_NORMAL);
         }
@@ -117,7 +117,7 @@ public class GhostStateSystem {
      */
     private void updateStateFrightened(GameContext gameContext, Ghost ghost, float speed) {
         gameContext.systems().roamingNavigator().roam(gameContext, ghost, speed);
-        ghost.playFrightenedAnimation(gameContext);
+        playFrightenedAnimation(gameContext, ghost);
     }
 
     // --- EATEN ---
@@ -143,8 +143,7 @@ public class GhostStateSystem {
         }
         else {
             if (threatened) {
-                //TODO use system
-                ghost.playFrightenedAnimation(gameContext);
+                playFrightenedAnimation(gameContext, ghost);
             } else {
                 sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_NORMAL);
             }
@@ -175,4 +174,21 @@ public class GhostStateSystem {
         final Pac pac = level.entities().pac();
         return pacPowerSystem.isPowerActive(pac) && !level.isInGhostKilledChain(ghost);
     }
+
+    //TODO move into animation system class
+    private void playFrightenedAnimation(GameContext gameContext, Ghost ghost) {
+        final GameSystems sys = gameContext.systems();
+        final GameLevel level = gameContext.assertLevel();
+        final Pac pac = level.entities().pac();
+
+        if (sys.pacPower().isPowerStartingFading(level, pac)) {
+            sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_FLASHING);
+            sys.spriteAnim().playSelected(ghost);
+        }
+        else if (!sys.pacPower().isPowerFading(level, pac)) {
+            sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_FRIGHTENED);
+            sys.spriteAnim().playSelected(ghost);
+        }
+    }
+
 }

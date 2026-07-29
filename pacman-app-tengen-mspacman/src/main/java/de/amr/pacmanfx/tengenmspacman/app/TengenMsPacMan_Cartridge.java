@@ -4,10 +4,10 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.systems.common.DefaultGameSystems;
 import de.amr.pacmanfx.game.Cartridge;
 import de.amr.pacmanfx.game.GameExtension;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 

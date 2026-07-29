@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.arcade.pacman.app;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;

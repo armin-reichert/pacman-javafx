@@ -6,12 +6,12 @@ package de.amr.pacmanfx.arcade.pacman.rules;
 
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.component.ghost.Elroy;
-import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
-import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
+import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 
 public class Arcade_ActorSpeedRules implements ActorSpeedRules {
 

@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
-import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 

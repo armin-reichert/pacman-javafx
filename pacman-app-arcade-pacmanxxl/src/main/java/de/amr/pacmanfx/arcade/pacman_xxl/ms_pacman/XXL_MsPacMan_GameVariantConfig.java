@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_Factory3D;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameVariantConfig;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.game.GameVariantConfig;

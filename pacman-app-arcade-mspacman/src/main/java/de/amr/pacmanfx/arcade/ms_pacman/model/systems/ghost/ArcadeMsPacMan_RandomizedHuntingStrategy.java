@@ -8,10 +8,10 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
-import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostHuntingStrategy;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import org.tinylog.Logger;
 

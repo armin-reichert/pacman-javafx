@@ -3,11 +3,10 @@ package de.amr.pacmanfx.arcade.pacman_xxl.app;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameSystems;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
-import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GamePlay;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.core.model.systems.common.DefaultGameSystems;
 import de.amr.pacmanfx.game.Cartridge;
 import de.amr.pacmanfx.game.GameExtension;
 

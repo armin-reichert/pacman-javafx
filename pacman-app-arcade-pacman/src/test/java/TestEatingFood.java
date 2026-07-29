@@ -4,8 +4,8 @@
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
+import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameEvent;
@@ -16,11 +16,11 @@ import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.systems.common.DefaultGameSystems;
 import de.amr.pacmanfx.core.model.HUDState;
-import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.common.DefaultGameSystems;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.game.GameBox;

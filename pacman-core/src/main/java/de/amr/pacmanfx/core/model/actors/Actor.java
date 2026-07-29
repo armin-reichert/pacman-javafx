@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.pacmanfx.core.model.component.ActorComponent;
-import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.common.Position;
 import de.amr.pacmanfx.core.model.component.common.Visibility;
 import org.tinylog.Logger;

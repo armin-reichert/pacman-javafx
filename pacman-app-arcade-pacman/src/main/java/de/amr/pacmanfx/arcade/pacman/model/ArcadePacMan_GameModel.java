@@ -6,10 +6,10 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.rules.GameRules;
-import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
+import de.amr.pacmanfx.core.rules.GameRules;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.model.world.WorldMap.tile;

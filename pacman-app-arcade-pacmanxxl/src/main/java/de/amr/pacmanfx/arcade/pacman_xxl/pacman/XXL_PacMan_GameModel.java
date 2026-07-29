@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ScoringRules;
+import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_MapSelector;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_ScoringRules;
 

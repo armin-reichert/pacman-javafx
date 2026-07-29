@@ -26,11 +26,11 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationCon
 import de.amr.pacmanfx.ui.gamescene.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
-import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.ui.settings.world.Bonus3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;

@@ -10,9 +10,9 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import org.tinylog.Logger;
 
 import static de.amr.basics.math.Direction.*;
