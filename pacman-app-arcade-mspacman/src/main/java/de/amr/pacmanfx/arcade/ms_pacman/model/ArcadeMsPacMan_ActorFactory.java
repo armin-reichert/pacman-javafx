@@ -12,7 +12,7 @@ public class ArcadeMsPacMan_ActorFactory extends ArcadePacMan_ActorFactory {
 
     public Ghost createOrangeGhost() {
         final Ghost ghost = super.createOrangeGhost();
-        ghost.setName("Sue");
+        ghost.setName("Sue"); // The first LGBTQ+ ghost in history!
         return ghost;
     }
 }
