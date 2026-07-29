@@ -15,19 +15,23 @@ import static java.util.Objects.requireNonNull;
 
 public class PokeyHuntingStrategy implements GhostHuntingStrategy {
 
-    @Override
-    public void hunt(GameContext gameContext, Ghost ghost, float speed) {
-        requireNonNull(gameContext);
+    private final WorldNavigationSystem navigator;
 
-        final GameSystems sys = gameContext.systems();
-        final GameLevel level = gameContext.assertLevel();
+    public PokeyHuntingStrategy(WorldNavigationSystem navigator) {
+        this.navigator = requireNonNull(navigator);
+    }
+
+    @Override
+    public void hunt(GameLevel level, Ghost ghost, float speed) {
+        requireNonNull(level);
+        requireNonNull(ghost);
 
         final Vector2i targetTile = level.huntingRules().isChasing()
             ? computeChasingTargetTile(level, ghost)
             : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
 
-        sys.navigator.setSpeed(ghost, speed);
-        sys.navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
+        navigator.setSpeed(ghost, speed);
+        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
     }
 
     private Vector2i computeChasingTargetTile(GameLevel level, Ghost ghost) {

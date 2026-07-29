@@ -12,20 +12,30 @@ import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 
+import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
+
 public class ShadowHuntingStrategy implements GhostHuntingStrategy {
 
+    private final WorldNavigationSystem navigator;
+
+    public ShadowHuntingStrategy(WorldNavigationSystem navigator) {
+        this.navigator = requireNonNull(navigator);
+    }
+
     @Override
-    public void hunt(GameContext gameContext, Ghost ghost, float speed) {
-        final GameSystems sys = gameContext.systems();
-        final GameLevel level = gameContext.assertLevel();
+    public void hunt(GameLevel level, Ghost ghost, float speed) {
+        requireNonNull(level);
+        requireNonNull(ghost);
 
         final boolean chase = level.huntingRules().isChasing() || ghost.assertComponent(Elroy.class).enabled();
         final Vector2i targetTile = chase
             ? computeChasingTargetTile(level)
             : computeScatterTile(level.worldMap(), ghost);
 
-        sys.navigator.setSpeed(ghost, speed);
-        sys.navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
+        navigator.setSpeed(ghost, speed);
+        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
     }
 
     private Vector2i computeChasingTargetTile(GameLevel level) {

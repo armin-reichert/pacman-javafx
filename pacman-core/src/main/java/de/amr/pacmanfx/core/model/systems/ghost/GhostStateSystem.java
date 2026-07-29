@@ -94,9 +94,10 @@ public class GhostStateSystem {
      * <p>
      */
     private void updateStateHuntingPac(GameContext gameContext, Ghost ghost, float speed) {
+        final GameLevel level = gameContext.assertLevel();
         // The specific hunting behavior is defined by the game variant. For example, in Ms. Pac-Man,
         // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-        gameContext.systems().ghostHuntingStrategy(ghost.personality()).hunt(gameContext, ghost, speed);
+        gameContext.systems().ghostHuntingStrategy(ghost.personality()).hunt(level, ghost, speed);
     }
 
     // --- FRIGHTENED ---

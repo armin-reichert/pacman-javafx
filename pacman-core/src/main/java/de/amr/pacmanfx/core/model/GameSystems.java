@@ -26,10 +26,10 @@ public final class GameSystems {
     public final GhostStateSystem ghostState = new GhostStateSystem();
     public final GhostHouseAccessSystem ghostHouseAccess = new GhostHouseAccessSystem();
 
-    public final GhostHuntingStrategy orangeGhostPokeyHuntingStrategy = new PokeyHuntingStrategy();
-    public final GhostHuntingStrategy cyanGhostBashfulHuntingStrategy = new BashfulHuntingStrategy();
-    public final GhostHuntingStrategy redGhostShadowHuntingStrategy = new ShadowHuntingStrategy();
-    public final GhostHuntingStrategy pinkGhostSpeedyHuntingStrategy = new SpeedyHuntingStrategy();
+    public final GhostHuntingStrategy orangeGhostPokeyHuntingStrategy = new PokeyHuntingStrategy(navigator);
+    public final GhostHuntingStrategy cyanGhostBashfulHuntingStrategy = new BashfulHuntingStrategy(navigator);
+    public final GhostHuntingStrategy redGhostShadowHuntingStrategy = new ShadowHuntingStrategy(navigator);
+    public final GhostHuntingStrategy pinkGhostSpeedyHuntingStrategy = new SpeedyHuntingStrategy(navigator);
 
     public GhostHuntingStrategy ghostHuntingStrategy(byte personality) {
         return switch (personality) {
