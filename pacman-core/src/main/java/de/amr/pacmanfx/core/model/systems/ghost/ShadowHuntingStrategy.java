@@ -21,13 +21,12 @@ public class ShadowHuntingStrategy implements GhostHuntingStrategy {
         navigator.setSpeed(ghost, speed);
         final boolean chase = level.huntingRules().isChasing() || ghost.assertComponent(Elroy.class).enabled();
         final Vector2i targetTile = chase
-            ? computeChasingTargetTile(gameContext)
-            : computeScatterTile(gameContext, ghost);
+            ? computeChasingTargetTile(level)
+            : computeScatterTile(level.worldMap(), ghost);
         navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
     }
 
-    private Vector2i computeChasingTargetTile(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
+    private Vector2i computeChasingTargetTile(GameLevel level) {
         return WorldNavigationSystem.computeTile(level.entities().pac());
     }
 }

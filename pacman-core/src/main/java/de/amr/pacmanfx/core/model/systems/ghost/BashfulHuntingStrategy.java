@@ -25,15 +25,14 @@ public class BashfulHuntingStrategy implements GhostHuntingStrategy {
         final GameLevel level = gameContext.assertLevel();
 
         final Vector2i targetTile = level.huntingRules().isChasing()
-            ? computeChasingTargetTile(gameContext)
-            : computeScatterTile(gameContext, ghost);
+            ? computeChasingTargetTile(level)
+            : computeScatterTile(level.worldMap(), ghost);
 
         sys.navigator.setSpeed(ghost, speed);
         sys.navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
     }
 
-    private Vector2i computeChasingTargetTile(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
+    private Vector2i computeChasingTargetTile(GameLevel level) {
         final Pac pac = level.entities().pac();
         final Vector2i redGhostTile = WorldNavigationSystem.computeTile(level.ghost(RED_GHOST_SHADOW));
         return WorldNavigationSystem

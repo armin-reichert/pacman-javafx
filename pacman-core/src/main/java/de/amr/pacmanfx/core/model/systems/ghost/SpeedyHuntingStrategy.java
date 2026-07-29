@@ -20,15 +20,14 @@ public class SpeedyHuntingStrategy implements GhostHuntingStrategy {
 
         final boolean chase = level.huntingRules().isChasing();
         final Vector2i targetTile = chase
-            ? computeChasingTargetTile(gameContext)
-            : computeScatterTile(gameContext, ghost);
+            ? computeChasingTargetTile(level)
+            : computeScatterTile(level.worldMap(), ghost);
 
         navigator.setSpeed(ghost, speed);
         navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
     }
 
-    private Vector2i computeChasingTargetTile(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
+    private Vector2i computeChasingTargetTile(GameLevel level) {
         final Pac pac = level.entities().pac();
         return WorldNavigationSystem.tilesAheadWithOverflowBug(pac, 4);
     }
