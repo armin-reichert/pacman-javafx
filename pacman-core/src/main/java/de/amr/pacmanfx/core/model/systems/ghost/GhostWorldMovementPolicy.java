@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
@@ -20,9 +19,13 @@ import org.tinylog.Logger;
 import java.util.Set;
 
 import static de.amr.basics.math.Direction.UP;
+import static de.amr.pacmanfx.core.Validations.isOneOf;
 import static java.util.Objects.requireNonNull;
 
 public class GhostWorldMovementPolicy implements WorldMovementPolicy {
+
+    private static final Set<GhostState> DOOR_PASSING_STATES = Set.of(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
+    private static final Set<GhostState> TURN_BACK_STATES = Set.of(GhostState.HUNTING_PAC, GhostState.FRIGHTENED);
 
     @Override
     public boolean canAccessTile(GameLevel level, Actor actor, Vector2i tile) {
@@ -54,18 +57,16 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
             return false;
         }
         if (worldPlacement.house() != null && worldPlacement.house().isDoorAt(tile)) {
-            return ghost.inAnyOfStates(Set.of(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE));
+            return isOneOf(ghost.state(), DOOR_PASSING_STATES);
         }
         return !terrainLayer.isTileBlocked(tile);
     }
 
     @Override
     public boolean canTurnBack(Actor actor) {
-        if (!(actor instanceof Ghost ghost)) {
-            throw new IllegalArgumentException("Actor is not a Ghost");
+        if (actor instanceof Ghost ghost) {
+            return ghost.worldNavigation().isNewTileEntered() && isOneOf(ghost.state(), TURN_BACK_STATES);
         }
-        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
-        return worldNavigation.isNewTileEntered()
-            && ghost.inAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.FRIGHTENED));
+        return false;
     }
 }

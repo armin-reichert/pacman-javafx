@@ -12,10 +12,7 @@ import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
 import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 
-import java.util.Collection;
-
 import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.core.Validations.stateIsOneOf;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -53,16 +50,6 @@ public class Ghost extends Actor implements UpdatableEntity {
 
     public GhostState state() {
         return assertComponent(GhostStateComponent.class).state();
-    }
-
-    /**
-     * @param states ghost states to be checked
-     * @return <code>true</code> if the ghost is in any of the given states.
-     * If no alternatives are given, an exception is thrown.
-     * <code>false</code>
-     */
-    public boolean inAnyOfStates(Collection<GhostState> states) {
-        return stateIsOneOf(state(), states);
     }
 
     @Override

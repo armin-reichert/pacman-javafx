@@ -67,13 +67,13 @@ public interface Validations {
         return value >= (target - delta) && value <= (target + delta);
     }
 
-    static <T> boolean stateIsOneOf(T value, Collection<T> alternatives) {
+    static <T> boolean isOneOf(T value, Collection<T> valueSet) {
         if (value == null) {
             throw new IllegalArgumentException("Value is null");
         }
-        if (alternatives.isEmpty()) {
-            throw new IllegalArgumentException("No alternatives given");
+        if (valueSet.isEmpty()) {
+            throw new IllegalArgumentException("No values given");
         }
-        return alternatives.contains(value);
+        return valueSet.contains(value);
     }
 }
