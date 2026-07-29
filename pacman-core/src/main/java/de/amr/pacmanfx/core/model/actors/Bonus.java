@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.steering.RouteBasedSteering;
 import org.tinylog.Logger;
 
@@ -79,7 +79,7 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     public void setInactive(GameContext gameContext) {
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator;
 
         visibility().hide();
         navigator.setSpeed(this, 0);
@@ -98,7 +98,7 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     public void showEdibleAndStartWandering(GameContext gameContext, float speed) {
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator;
 
         visibility().show();
 
@@ -120,7 +120,7 @@ public class Bonus extends Actor implements UpdatableEntity {
         final var route = new ArrayList<>(waypoints);
         final Vector2i first = route.removeFirst();
 
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator;
 
         navigator.placeAtTile(this, first);
         navigator.setMoveDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
@@ -130,7 +130,7 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     public void showEatenForSeconds(GameContext gameContext, float seconds) {
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator;
 
         visibility().show();
         navigator.setSpeed(this, 0);
@@ -170,12 +170,12 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     private boolean wanderMaze(GameContext gameContext) {
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
 
         routeNavigation.steer(this, gameContext);
 
-        final Vector2i tile = WorldMovementSystem.computeTile(this);
+        final Vector2i tile = WorldNavigationSystem.computeTile(this);
         boolean mazeExitReached = routeNavigation.isRouteTraversed() || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         if (!mazeExitReached) {
             navigator.navigateTowardsTarget(this, gameContext);

@@ -158,7 +158,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         stork.position().set(TS * 30, TS * 12);
         stork.visibility().show();
-        stork.movement().setVelocity(-0.8f, 0);
+        sys.motor.setVelocity(stork, -0.8f, 0);
 
         sys.spriteAnim.select(stork, CommonAnimationID.STORK_FLYING);
         sys.spriteAnim.playSelected(stork);
@@ -180,8 +180,8 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         // release bag from beak when stork reaches tile 20
         if (stork.position().x <= 20 * WorldMap.TS && !bagReleased) {
-            bag.movement().setAcceleration(0, 0.04f); // set y-gravity to let bag fall to ground
-            stork.movement().setVelocity(-1, 0); // fly faster without heavy bag
+            motor.setAcceleration(bag, 0, 0.04f); // set y-gravity to let bag fall to ground
+            motor.setVelocity(stork, -1, 0); // fly faster without this heavy bag
             bagReleased = true;
         }
 
@@ -195,8 +195,8 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
                 } else {
                     bag.setOpen(gameContext(), true);
                     bag.position().setY(GROUND_Y);
-                    bag.movement().setVelocity(0, 0);
-                    bag.movement().setAcceleration(0, 0);
+                    motor.setVelocity(bag, 0, 0);
+                    motor.setAcceleration(bag, 0, 0);
                     Logger.info("Delivery of Junior at tick {}", sceneTick);            }
             }
         }

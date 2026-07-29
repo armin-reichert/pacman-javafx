@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.rules;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -18,8 +18,8 @@ public enum CollisionStrategy {
         public boolean collide(Actor either, Actor other) {
             requireNonNull(either, "Actor to check for collision must not be null");
             requireNonNull(other, "Actor to check for collision must not be null");
-            final Vector2i eitherTile = WorldMovementSystem.computeTile(either);
-            final Vector2i otherTile = WorldMovementSystem.computeTile(other);
+            final Vector2i eitherTile = WorldNavigationSystem.computeTile(either);
+            final Vector2i otherTile = WorldNavigationSystem.computeTile(other);
             return eitherTile.equals(otherTile);
         }
     },
@@ -30,8 +30,8 @@ public enum CollisionStrategy {
         public boolean collide(Actor either, Actor other) {
             requireNonNull(either, "Actor to check for collision must not be null");
             requireNonNull(other, "Actor to check for collision must not be null");
-            final Vector2f eitherCenter = WorldMovementSystem.computeCenter(either);
-            final Vector2f otherCenter = WorldMovementSystem.computeCenter(other);
+            final Vector2f eitherCenter = WorldNavigationSystem.computeCenter(either);
+            final Vector2f otherCenter = WorldNavigationSystem.computeCenter(other);
             float dist = eitherCenter.euclideanDist(otherCenter);
             if (dist < COLLISION_SENSITIVITY_PIXELS) {
                 Logger.info("Collision detected (dist={}): {} collides with {}", dist, either, other);

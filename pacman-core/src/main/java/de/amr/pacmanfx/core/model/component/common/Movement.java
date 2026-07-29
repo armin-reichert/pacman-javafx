@@ -43,8 +43,8 @@ public class Movement implements ActorComponent {
         this.velY = (float) vy;
     }
 
-    public double computeSpeed() {
-        return Math.hypot(velX, velY);
+    public float speed() {
+        return (float) Math.hypot(velX, velY);
     }
 
     public float accX() {

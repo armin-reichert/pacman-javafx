@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -35,7 +35,7 @@ public class SteeringActions {
 
         @Override
         public void doAction() {
-            final WorldMovementSystem navigator = gameContext().systems().navigator;
+            final WorldNavigationSystem navigator = gameContext().systems().navigator;
             gameContext().model().optLevel().ifPresent(level -> navigator.setWishDir(level.entities().pac(), dir));
         }
 

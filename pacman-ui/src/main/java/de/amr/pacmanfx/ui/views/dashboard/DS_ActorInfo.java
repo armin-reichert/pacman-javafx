@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -76,8 +76,8 @@ public class DS_ActorInfo extends GameDashboardSection {
 
         final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
 
-        final Vector2i tile = WorldMovementSystem.computeTile(actor);
-        final Vector2f tileOffset = WorldMovementSystem.computeTileOffset(actor);
+        final Vector2i tile = WorldNavigationSystem.computeTile(actor);
+        final Vector2f tileOffset = WorldNavigationSystem.computeTileOffset(actor);
 
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
             tile.x(), tile.y(),
@@ -90,7 +90,7 @@ public class DS_ActorInfo extends GameDashboardSection {
 
         final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
 
-        var speed = actor.movement().computeSpeed() * GameConstants.SIMULATION_FPS;
+        var speed = actor.movement().speed() * GameConstants.SIMULATION_FPS;
         var blocked = !worldNavigation.info.moved;
         var reverseText = worldNavigation.isTurnBackRequested() ? "REV!" : "";
         return blocked

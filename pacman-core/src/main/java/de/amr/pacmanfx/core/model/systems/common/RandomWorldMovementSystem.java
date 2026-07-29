@@ -34,10 +34,10 @@ public class RandomWorldMovementSystem {
         requireNonNull(actor);
 
         final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
 
-        final Vector2i tile = WorldMovementSystem.computeTile(actor);
+        final Vector2i tile = WorldNavigationSystem.computeTile(actor);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
         final boolean stuck = !worldNavigation.info.moved;

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
@@ -231,7 +231,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         }
     }
 
-    private void computeNewMoveDir(WorldMovementSystem navigator, Pac junior) {
+    private void computeNewMoveDir(WorldNavigationSystem navigator, Pac junior) {
         Direction oldMoveDir = junior.worldNavigation().moveDir();
         List<Direction> possibleDirs = new ArrayList<>(List.of(Direction.values()));
         possibleDirs.remove(oldMoveDir.opposite());
@@ -244,7 +244,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private int compareBySmallestDistToSceneCenter(Pac junior, Direction dir1, Direction dir2) {
-        Vector2i tile = WorldMovementSystem.computeTile(junior);
+        Vector2i tile = WorldNavigationSystem.computeTile(junior);
         Vector2f pos1 = tile.plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = tile.plus(dir2.vector()).scaled(TS).toVector2f();
         Vector2f center = new Vector2f(0.5f * unscaledWidth(), 0.5f * unscaledHeight());

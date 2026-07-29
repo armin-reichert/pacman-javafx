@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
+import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -310,7 +311,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         if (message instanceof MovingGameLevelMessage movingMessage) {
             final Font font = Font.font(BaseRenderer.ARCADE_FONT.getFamily(), TS);
             final double width = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, font);
-            movingMessage.startMovement(unscaledWidth(), width);
+            final MovementSystem motor = gameContext().systems().motor;
+            movingMessage.startMovement(motor, unscaledWidth(), width);
         }
     }
 

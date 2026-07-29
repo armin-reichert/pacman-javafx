@@ -9,13 +9,13 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 
 public class SpeedyHuntingStrategy implements GhostHuntingStrategy {
 
     @Override
     public void hunt(GameContext gameContext, Ghost ghost, float speed) {
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
 
         final boolean chase = level.huntingRules().isChasing();
@@ -30,6 +30,6 @@ public class SpeedyHuntingStrategy implements GhostHuntingStrategy {
     private Vector2i computeChasingTargetTile(GameContext gameContext) {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
-        return WorldMovementSystem.tilesAheadWithOverflowBug(pac, 4);
+        return WorldNavigationSystem.tilesAheadWithOverflowBug(pac, 4);
     }
 }

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 
 import static java.util.Objects.requireNonNull;
 
@@ -20,7 +20,7 @@ public class PokeyHuntingStrategy implements GhostHuntingStrategy {
         requireNonNull(gameContext);
 
         final GameSystems systems = gameContext.systems();
-        final WorldMovementSystem navigator = systems.navigator;
+        final WorldNavigationSystem navigator = systems.navigator;
         final GameLevel level = gameContext.assertLevel();
 
         final Vector2i targetTile = level.huntingRules().isChasing()
@@ -32,8 +32,8 @@ public class PokeyHuntingStrategy implements GhostHuntingStrategy {
     }
 
     private Vector2i computeChasingTargetTile(GameLevel level, Ghost ghost) {
-        final Vector2i pacTile = WorldMovementSystem.computeTile(level.entities().pac());
-        final Vector2i ghostTile = WorldMovementSystem.computeTile(ghost);
+        final Vector2i pacTile = WorldNavigationSystem.computeTile(level.entities().pac());
+        final Vector2i ghostTile = WorldNavigationSystem.computeTile(ghost);
         final Vector2i scatterTile = level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
         return ghostTile.euclideanDist(pacTile) < 8 ? scatterTile : pacTile;
     }

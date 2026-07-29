@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
@@ -66,7 +66,7 @@ public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
         final GameLevel level = gameContext.assertLevel();
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final Vector2i ghostTile = WorldMovementSystem.computeTile(ghost);
+        final Vector2i ghostTile = WorldNavigationSystem.computeTile(ghost);
         final GhostState state = ghost.state();
         final boolean insideHouse = terrain.assertHouse().isVisitedBy(ghost);
         final boolean tunnelSlowdown = terrain.isTunnel(ghostTile);

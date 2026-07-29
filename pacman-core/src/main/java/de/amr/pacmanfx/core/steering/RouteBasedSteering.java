@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class RouteBasedSteering implements Steering {
 
     @Override
     public void steer(Actor actor, GameContext gameContext) {
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator;
         final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
 
         if (targetIndex == route.size()) {
@@ -48,7 +48,7 @@ public class RouteBasedSteering implements Steering {
         else if (worldNavigation.optTargetTile().isEmpty()) {
             worldNavigation.setTargetTile(route.get(targetIndex));
         }
-        else if (WorldMovementSystem.computeTile(actor).equals(route.get(targetIndex))) {
+        else if (WorldNavigationSystem.computeTile(actor).equals(route.get(targetIndex))) {
             selectNextTargetTile(gameContext, actor);
         }
         else {
@@ -57,7 +57,7 @@ public class RouteBasedSteering implements Steering {
     }
 
     private void selectNextTargetTile(GameContext gameContext, Actor actor) {
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator;
         final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
 
         ++targetIndex;

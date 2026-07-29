@@ -142,7 +142,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
 
                     stork.position().set(RIGHT_BORDER, WorldMap.TS * 7);
                     stork.visibility().show();
-                    stork.movement().setVelocity(-0.8f, 0);
+                    sys.motor.setVelocity(stork, -0.8f, 0);
 
                     sys.spriteAnim.select(stork, CommonAnimationID.STORK_FLYING);
                     sys.spriteAnim.playSelected(stork);
@@ -152,20 +152,20 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                 }
                 case 240 -> {
                     // stork releases bag, bag starts falling
-                    stork.movement().setVelocity(-1f, 0); // faster, no bag to carry!
+                    sys.motor.setVelocity(stork, -1f, 0); // faster, no bag to carry!
                     stork.setBagReleasedFromBeak(true);
 
                     flyingBag.position().set(stork.position().x - 15, stork.position().y + 8);
                     flyingBag.visibility().show();
-                    flyingBag.movement().setVelocity(-0.5f, 0);
-                    flyingBag.movement().setAcceleration(0, 0.1f);
+                    sys.motor.setVelocity(flyingBag, -0.5f, 0);
+                    sys.motor.setAcceleration(flyingBag, 0, 0.1f);
                 }
                 case 320 -> // reaches ground, starts bouncing
-                    flyingBag.movement().setVelX(-0.5f);
+                    sys.motor.setVelocityX(flyingBag, -0.5f);
                 case 380 -> {
                     flyingBag.setOpen(gameContext, true);
-                    flyingBag.movement().setVelocity(0, 0);
-                    flyingBag.movement().setAcceleration(0, 0);
+                    sys.motor.setVelocity(flyingBag, 0, 0);
+                    sys.motor.setAcceleration(flyingBag, 0, 0);
                 }
                 case 640 -> darkness = true;
                 case TICK_EXPIRES -> gameState().triggerTimeout();
@@ -180,7 +180,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
             sys.motor.moveAccelerated(flyingBag);
             if (flyingBag.position().y > GROUND_Y) {
                 flyingBag.position().setY(GROUND_Y);
-                flyingBag.movement().setVelocity(
+                sys.motor.setVelocity(flyingBag,
                     0.9f * flyingBag.movement().velX(),
                     -0.3f * flyingBag.movement().velY()
                 );

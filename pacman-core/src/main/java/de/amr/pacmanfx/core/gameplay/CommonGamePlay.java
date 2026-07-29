@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
@@ -245,7 +245,7 @@ public abstract class CommonGamePlay implements GamePlay {
     private void fixPacPositionIfKilledInsidePortal(GameContext gameContext) {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
-        final Vector2i pacTile = WorldMovementSystem.computeTile(pac);
+        final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         terrain.hPortalContainingTile(pacTile).ifPresent(hPortal -> {
@@ -464,7 +464,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final FoodLayer foodLayer = level.worldMap().foodLayer();
-        final Vector2i pacTile = WorldMovementSystem.computeTile(pac);
+        final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
         if (foodLayer.hasFoodAtTile(pacTile)) {
             gameContext.thisFrame().huntingStep().setFoodFoundTile(pacTile);
             gameContext.thisFrame().huntingStep().setEnergizerFound(foodLayer.isEnergizerTile(pacTile));

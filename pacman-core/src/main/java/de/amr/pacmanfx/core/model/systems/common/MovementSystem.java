@@ -17,4 +17,20 @@ public final class MovementSystem {
         position.add(movement.velX(), movement.velY());
         movement.add(movement.accX(), movement.accY());
     }
+
+    public void setVelocity(Actor actor, float vx, float vy) {
+        actor.movement().setVelocity(vx, vy);
+    }
+
+    public void setVelocityX(Actor actor, float vx) {
+        actor.movement().setVelX(vx);
+    }
+
+    public void setVelocityY(Actor actor, float vy) {
+        actor.movement().setVelY(vy);
+    }
+
+    public void setAcceleration(Actor actor, float ax, float ay) {
+        actor.movement().setAcceleration(ax, ay);
+    }
 }

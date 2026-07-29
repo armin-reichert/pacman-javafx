@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -49,10 +49,10 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         requireNonNull(actor);
 
         final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator;
 
-        final Vector2i actorTile = WorldMovementSystem.computeTile(actor);
-        final float offsetX = WorldMovementSystem.computeTileOffset(actor).x();
+        final Vector2i actorTile = WorldNavigationSystem.computeTile(actor);
+        final float offsetX = WorldNavigationSystem.computeTileOffset(actor).x();
 
         if (actorTile.y() != leftBorderEntryTile().y()) {
             return false;

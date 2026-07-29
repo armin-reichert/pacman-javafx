@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.pac.PacPower;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
 import org.tinylog.Logger;
 
@@ -57,7 +57,7 @@ public final class PacPowerSystem {
 
     public void start(GameContext gameContext, Pac pac) {
         final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState;
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator;
 
         final GameLevel level = gameContext.assertLevel();
         level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(navigator::requestTurnBack);

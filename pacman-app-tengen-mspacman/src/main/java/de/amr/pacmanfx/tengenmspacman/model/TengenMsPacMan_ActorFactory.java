@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import org.tinylog.Logger;
@@ -153,9 +153,9 @@ public final class TengenMsPacMan_ActorFactory {
     }
 
     private static void selectRandomWishDir(Ghost ghost, GameContext gameContext) {
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator;
         final GameLevel level = gameContext.assertLevel();
-        final Vector2i ghostTile = WorldMovementSystem.computeTile(ghost);
+        final Vector2i ghostTile = WorldNavigationSystem.computeTile(ghost);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(ghostTile);
 
         if (teleporting) {
@@ -177,7 +177,7 @@ public final class TengenMsPacMan_ActorFactory {
     private static boolean isAcceptableWishDir(GameContext gameContext, Ghost ghost, Direction dir) {
         final WorldMovementPolicy policy = ghost.assertComponent(WorldMovementPolicy.class);
 
-        final Vector2i ghostTile = WorldMovementSystem.computeTile(ghost);
+        final Vector2i ghostTile = WorldNavigationSystem.computeTile(ghost);
         final Vector2i neighborTile = ghostTile.plus(dir.vector());
         return dir != ghost.worldNavigation().moveDir().opposite()
             && policy.canAccessTile(gameContext, ghost, neighborTile);

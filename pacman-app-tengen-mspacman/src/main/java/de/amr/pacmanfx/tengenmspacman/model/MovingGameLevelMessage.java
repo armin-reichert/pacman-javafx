@@ -33,15 +33,15 @@ public class MovingGameLevelMessage extends GameLevelMessage {
         position().set(startPosition);
     }
 
-    public void startMovement(float rightEdge, double messageTextWidth) {
+    public void startMovement(MovementSystem motor, float rightEdge, double messageTextWidth) {
         width = (float) messageTextWidth;
         wrapX = rightEdge + 0.5f * width;
-        movement().setVelocity(1, 0);
+        motor.setVelocity(this, 1, 0);
         playing = true;
     }
 
-    public void stopMovement() {
-        movement().setVelocity(0,0);
+    public void stopMovement(MovementSystem motor) {
+        motor.setVelocity(this, 0, 0);
         playing = false;
     }
 
@@ -58,7 +58,7 @@ public class MovingGameLevelMessage extends GameLevelMessage {
         if (wrapped) {
             if (position().x >= startPosition.x()) {
                 position().set(startPosition);
-                stopMovement();
+                stopMovement(motor);
             }
         } else if (position().x > wrapX) {
             position().setX(-0.5 * width);

@@ -6,11 +6,10 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.component.common.Movement;
-import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
@@ -54,31 +53,30 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext gameContext) {
-        final MovementSystem motor = gameContext.systems().motor;
-        final WorldMovementSystem navigator = gameContext.systems().navigator;
+        final GameSystems sys = gameContext.systems();
 
         final GameState gameState = gameState();
-        final int t = (int) gameState.timer().tickCount();
-        switch (t) {
+        final int stateTick = (int) gameState.timer().tickCount();
+        switch (stateTick) {
             case   1 -> gray(false);
             case   7 -> gray(true);
             case  12 -> gray(false);
             case  21 -> {
-                movingText.movement().setVelocity(0, -WorldMap.HTS);
                 movingText.visibility().show();
+                sys.motor.setVelocity(movingText, 0, -WorldMap.HTS);
             }
             case  55 -> {
                 movingText.position().set(tilesPx(9), tilesPx(13));
-                movingText.movement().setVelocity(0, 0);
+                sys.motor.setVelocity(movingText, 0, 0);
             }
             case 113 -> {
                 ghost.position().set(unscaledWidth() - WorldMap.TS, GHOST_Y);
-                navigator.setMoveDir(ghost, Direction.LEFT);
-                navigator.setWishDir(ghost, Direction.LEFT);
-                navigator.setSpeed(ghost, WorldMap.TS);
                 ghost.visibility().show();
+                sys.navigator.setMoveDir(ghost, Direction.LEFT);
+                sys.navigator.setWishDir(ghost, Direction.LEFT);
+                sys.navigator.setSpeed(ghost, WorldMap.TS);
             }
-            case 181 -> movingText.movement().setVelocity(0, WorldMap.TS);
+            case 181 -> sys.motor.setVelocity(movingText, 0, WorldMap.TS);
             case 203 -> {
                 movingText.visibility().hide();
                 ghost.visibility().hide();
@@ -90,9 +88,9 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
                 return;
             }
         }
-        shadeOfBlue = TengenMsPacMan_RenderConfig.shadeOfBlue(t);
-        motor.moveAccelerated(ghost);
-        motor.moveAccelerated(movingText);
+        shadeOfBlue = TengenMsPacMan_RenderConfig.shadeOfBlue(stateTick);
+        sys.motor.moveAccelerated(ghost);
+        sys.motor.moveAccelerated(movingText);
     }
 
     private void gray(boolean b)  { gray = b; }

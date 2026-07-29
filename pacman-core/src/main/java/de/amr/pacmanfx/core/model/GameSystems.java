@@ -10,14 +10,14 @@ import de.amr.pacmanfx.core.model.systems.common.RandomWorldMovementSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.*;
 import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldMovementSystem;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 
 public final class GameSystems {
 
     public final SpriteAnimSystem spriteAnim = new SpriteAnimSystem();
 
     public final MovementSystem motor =  new MovementSystem();
-    public final WorldMovementSystem navigator = new WorldMovementSystem();
+    public final WorldNavigationSystem navigator = new WorldNavigationSystem(motor);
     public final RandomWorldMovementSystem roamingNavigator = new RandomWorldMovementSystem();
 
     public final PacPowerSystem pacPower = new PacPowerSystem();
