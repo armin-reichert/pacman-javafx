@@ -52,24 +52,6 @@ public class GhostStateSystem {
         initAnimation(ghost, gameContext.systems().spriteAnim());
     }
     
-    private void initAnimation(Ghost ghost, SpriteAnimSystem animSystem) {
-        switch (ghost.state()) {
-            case LOCKED, HUNTING_PAC -> {
-                animSystem.select(ghost, CommonAnimationID.GHOST_NORMAL);
-                animSystem.playSelected(ghost);
-            }
-            case ENTERING_HOUSE, RETURNING_HOME -> {
-                animSystem.select(ghost, CommonAnimationID.GHOST_EYES);
-                animSystem.playSelected(ghost);
-            }
-            case FRIGHTENED -> {
-                animSystem.select(ghost, CommonAnimationID.GHOST_FRIGHTENED);
-                animSystem.playSelected(ghost);
-            }
-            case EATEN -> {}
-        }
-    }
-
     // --- LOCKED ---
 
     private void updateStateLocked(GameContext gameContext, Ghost ghost, float speed) {
@@ -176,6 +158,25 @@ public class GhostStateSystem {
     }
 
     //TODO move into animation system class
+
+    private void initAnimation(Ghost ghost, SpriteAnimSystem animSystem) {
+        switch (ghost.state()) {
+            case LOCKED, HUNTING_PAC -> {
+                animSystem.select(ghost, CommonAnimationID.GHOST_NORMAL);
+                animSystem.playSelected(ghost);
+            }
+            case ENTERING_HOUSE, RETURNING_HOME -> {
+                animSystem.select(ghost, CommonAnimationID.GHOST_EYES);
+                animSystem.playSelected(ghost);
+            }
+            case FRIGHTENED -> {
+                animSystem.select(ghost, CommonAnimationID.GHOST_FRIGHTENED);
+                animSystem.playSelected(ghost);
+            }
+            case EATEN -> {}
+        }
+    }
+
     private void playFrightenedAnimation(GameContext gameContext, Ghost ghost) {
         final GameSystems sys = gameContext.systems();
         final GameLevel level = gameContext.assertLevel();
