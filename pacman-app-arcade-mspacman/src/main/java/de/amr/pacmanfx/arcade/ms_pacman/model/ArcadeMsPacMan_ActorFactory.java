@@ -10,16 +10,6 @@ public class ArcadeMsPacMan_ActorFactory extends ArcadePacMan_ActorFactory {
         return new Pac("Ms. Pac-Man");
     }
 
-    public Ghost createRedGhost() {
-        final Ghost ghost = super.createRedGhost();
-        return ghost;
-    }
-
-    public Ghost createPinkGhost() {
-        final Ghost ghost = super.createPinkGhost();
-        return ghost;
-    }
-
     public Ghost createOrangeGhost() {
         final Ghost ghost = super.createOrangeGhost();
         ghost.setName("Sue");
