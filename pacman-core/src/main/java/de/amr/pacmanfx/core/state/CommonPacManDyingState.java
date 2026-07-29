@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 
@@ -49,7 +50,7 @@ public class CommonPacManDyingState extends GameState {
 
         level.huntingRules().stop();
 
-        level.entities().ghosts().forEach(ghost -> ghost.onPacKilled(level));
+        level.entities().ghosts().forEach(ghost -> ghost.optComponent(Elroy.class).ifPresent(elroy -> elroy.setEnabled(false)));
         level.entities().optBonus().ifPresent(bonus -> bonus.setInactive(gameContext));
 
         // Pac-Man stops moving and is prepared for "dying" animation

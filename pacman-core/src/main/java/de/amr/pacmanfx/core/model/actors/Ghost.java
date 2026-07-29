@@ -8,7 +8,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.common.Movement;
-import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
 import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
@@ -82,16 +81,6 @@ public class Ghost extends Actor implements UpdatableEntity {
             ", worldNavigation=" + worldNavigation() +
             ", " + super.toString() +
             '}';
-    }
-
-    /**
-     * Notifies this ghost about Pac-Man's assassination so he can react accordingly (send condolence message etc.)
-     * @param ignored the game level where this happens
-     */
-    public void onPacKilled(GameLevel ignored) {
-        if (hasComponent(Elroy.class)) {
-            assertComponent(Elroy.class).setEnabled(false);
-        }
     }
 
     //TODO move into ghost sprite animation system
