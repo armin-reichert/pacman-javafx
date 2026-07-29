@@ -42,10 +42,39 @@ public class DefaultGameSystems implements GameSystems {
     protected void createGhostSystems() {
         ghostState = new GhostStateSystem();
         ghostHouseAccess = new GhostHouseAccessSystem();
-        orangeGhostPokeyHuntingStrategy = new PokeyHuntingStrategy(navigator);
-        cyanGhostBashfulHuntingStrategy = new BashfulHuntingStrategy(navigator);
-        redGhostShadowHuntingStrategy = new ShadowHuntingStrategy(navigator);
-        pinkGhostSpeedyHuntingStrategy = new SpeedyHuntingStrategy(navigator);
+
+        redGhostShadowHuntingStrategy = createShadowHuntingStrategy();
+        pinkGhostSpeedyHuntingStrategy = createSpeedyHuntingStrategy();
+        cyanGhostBashfulHuntingStrategy = createBashfulHuntingStrategy();
+        orangeGhostPokeyHuntingStrategy = createPokeyHuntingStrategy();
+    }
+
+    /**
+     * @return strategy used by the red ghost ("Shadow")
+     */
+    protected GhostHuntingStrategy createShadowHuntingStrategy() {
+        return new ShadowHuntingStrategy(navigator);
+    }
+
+    /**
+     * @return strategy used by the pink ghost ("Speedy")
+     */
+    protected GhostHuntingStrategy createSpeedyHuntingStrategy() {
+        return  new SpeedyHuntingStrategy(navigator);
+    }
+
+    /**
+     * @return strategy used by the cyan ghost ("Bashful")
+     */
+    protected GhostHuntingStrategy createBashfulHuntingStrategy() {
+        return new BashfulHuntingStrategy(navigator);
+    }
+
+    /**
+     * @return strategy used by the orange ghost ("Pokey")
+     */
+    protected GhostHuntingStrategy createPokeyHuntingStrategy() {
+        return new PokeyHuntingStrategy(navigator);
     }
 
     @Override
