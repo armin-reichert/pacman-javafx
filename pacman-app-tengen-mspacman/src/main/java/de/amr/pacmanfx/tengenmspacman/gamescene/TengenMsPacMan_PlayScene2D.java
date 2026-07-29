@@ -323,13 +323,13 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         final SpriteAnimSystem animSystem = appContext().currentGameContext().systems().spriteAnim();
 
         final Pac pac = level.entities().pac();
-        if (!animSystem.hasAnimations(pac)) {
+        if (animSystem.hasNoAnimations(pac)) {
             animSystem.setAnimations(pac, renderConfig.createPacAnimations(animationContainer));
             resetPacAnimation(animSystem, pac);
         }
 
         level.entities().ghosts().forEach(ghost -> {
-            if (!animSystem.hasAnimations(ghost)) {
+            if (animSystem.hasNoAnimations(ghost)) {
                 animSystem.setAnimations(ghost, renderConfig.createGhostAnimations(animationContainer, ghost.personality()));
                 resetGhostAnimation(animSystem, ghost);
             }

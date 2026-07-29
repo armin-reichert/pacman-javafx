@@ -23,8 +23,8 @@ public class SpriteAnimSystem {
         return actor.assertComponent(SpriteAnim.class).delegate();
     }
 
-    public boolean hasAnimations(Actor actor) {
-        return !spriteAnim(actor).isEmpty();
+    public boolean hasNoAnimations(Actor actor) {
+        return spriteAnim(actor).isEmpty();
     }
 
     public Object animation(Actor actor, Identifier animationID) {
