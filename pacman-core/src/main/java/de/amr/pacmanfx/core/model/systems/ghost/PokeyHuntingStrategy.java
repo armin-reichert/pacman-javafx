@@ -19,16 +19,15 @@ public class PokeyHuntingStrategy implements GhostHuntingStrategy {
     public void hunt(GameContext gameContext, Ghost ghost, float speed) {
         requireNonNull(gameContext);
 
-        final GameSystems systems = gameContext.systems();
-        final WorldNavigationSystem navigator = systems.navigator;
+        final GameSystems sys = gameContext.systems();
         final GameLevel level = gameContext.assertLevel();
 
         final Vector2i targetTile = level.huntingRules().isChasing()
             ? computeChasingTargetTile(level, ghost)
             : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
 
-        navigator.setSpeed(ghost, speed);
-        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
+        sys.navigator.setSpeed(ghost, speed);
+        sys.navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
     }
 
     private Vector2i computeChasingTargetTile(GameLevel level, Ghost ghost) {

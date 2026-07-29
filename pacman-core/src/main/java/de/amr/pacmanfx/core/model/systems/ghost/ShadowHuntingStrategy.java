@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -15,15 +16,16 @@ public class ShadowHuntingStrategy implements GhostHuntingStrategy {
 
     @Override
     public void hunt(GameContext gameContext, Ghost ghost, float speed) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
+        final GameSystems sys = gameContext.systems();
         final GameLevel level = gameContext.assertLevel();
 
-        navigator.setSpeed(ghost, speed);
         final boolean chase = level.huntingRules().isChasing() || ghost.assertComponent(Elroy.class).enabled();
         final Vector2i targetTile = chase
             ? computeChasingTargetTile(level)
             : computeScatterTile(level.worldMap(), ghost);
-        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
+
+        sys.navigator.setSpeed(ghost, speed);
+        sys.navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
     }
 
     private Vector2i computeChasingTargetTile(GameLevel level) {
