@@ -164,7 +164,7 @@ public final class TengenMsPacMan_ActorFactory {
         int dirsTried = 0;
         Direction dir = Direction.random();
         while (++dirsTried <= 4) {
-            if (isAcceptableWishDir(gameContext, ghost, dir)) {
+            if (isAcceptableWishDir(level, ghost, dir)) {
                 navigator.setWishDir(ghost, dir);
                 Logger.debug("{} selects random wish direction {}", ghost.name(), dir);
                 break;
@@ -174,12 +174,12 @@ public final class TengenMsPacMan_ActorFactory {
         }
     }
 
-    private static boolean isAcceptableWishDir(GameContext gameContext, Ghost ghost, Direction dir) {
+    private static boolean isAcceptableWishDir(GameLevel level, Ghost ghost, Direction dir) {
         final WorldMovementPolicy policy = ghost.assertComponent(WorldMovementPolicy.class);
 
         final Vector2i ghostTile = WorldNavigationSystem.computeTile(ghost);
         final Vector2i neighborTile = ghostTile.plus(dir.vector());
         return dir != ghost.worldNavigation().moveDir().opposite()
-            && policy.canAccessTile(gameContext, ghost, neighborTile);
+            && policy.canAccessTile(level, ghost, neighborTile);
     }
 }

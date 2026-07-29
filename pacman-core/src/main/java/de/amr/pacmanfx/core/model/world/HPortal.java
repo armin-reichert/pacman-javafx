@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.core.model.world;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
@@ -44,12 +43,11 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         return leftBorderEntryTile.y();
     }
 
-    public boolean tryTeleporting(GameContext gameContext, Actor actor) {
-        requireNonNull(gameContext);
+    public boolean tryTeleporting(WorldNavigationSystem navigator, Actor actor) {
+        requireNonNull(navigator);
         requireNonNull(actor);
 
         final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
 
         final Vector2i actorTile = WorldNavigationSystem.computeTile(actor);
         final float offsetX = WorldNavigationSystem.computeTileOffset(actor).x();

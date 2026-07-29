@@ -178,8 +178,8 @@ public class Bonus extends Actor implements UpdatableEntity {
         final Vector2i tile = WorldNavigationSystem.computeTile(this);
         boolean mazeExitReached = routeNavigation.isRouteTraversed() || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         if (!mazeExitReached) {
-            navigator.navigateTowardsTarget(this, gameContext);
-            navigator.tryMovingOrTeleporting(this, gameContext);
+            navigator.navigateTowardsTarget(this,  level);
+            navigator.tryMovingOrTeleporting(this, level);
             jump();
         }
         return mazeExitReached;

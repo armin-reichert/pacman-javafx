@@ -128,7 +128,7 @@ public class Pac extends Actor implements UpdatableEntity {
             : speedRules.pacSpeed(level);
 
         sys.navigator.setSpeed(this, speed);
-        sys.navigator.tryMovingOrTeleporting(this, gameContext);
+        sys.navigator.tryMovingOrTeleporting(this, level);
 
         if (worldNavigation().info.moved) {
             sys.spriteAnim.playSelected(this);

@@ -9,13 +9,12 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import org.tinylog.Logger;
 
 import static de.amr.basics.math.Direction.*;
-import static de.amr.basics.math.Direction.LEFT;
 import static java.util.Objects.requireNonNull;
 
 public class RandomWorldMovementSystem {
@@ -47,16 +46,16 @@ public class RandomWorldMovementSystem {
 
         final boolean stuck = !navigation.info.moved;
         if ((navigation.isNewTileEntered() || stuck) && !teleporting) {
-            final Direction dir = computeRoamingDirection(gameContext, actor, tile);
+            final Direction dir = computeRoamingDirection(level, actor, tile);
             navigator.setWishDir(actor, dir);
             Logger.debug("Ghost {} takes random wish direction {}", actor.name(), dir);
         }
         navigator.setSpeed(actor, speed);
-        navigator.tryMovingOrTeleporting(actor, gameContext);
+        navigator.tryMovingOrTeleporting(actor, level);
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
-    private Direction computeRoamingDirection(GameContext gameContext, Actor actor, Vector2i currentTile) {
+    private Direction computeRoamingDirection(GameLevel level, Actor actor, Vector2i currentTile) {
         final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
         final WorldMovementPolicy policy = actor.assertComponent(WorldMovementPolicy.class);
 
@@ -64,7 +63,7 @@ public class RandomWorldMovementSystem {
         Direction selectedDir = choosePseudoRandomDirection();
         int tries = 0;
         while (selectedDir == oppositeDir
-            || !policy.canAccessTile(gameContext, actor, currentTile.plus(selectedDir.vector())))
+            || !policy.canAccessTile(level, actor, currentTile.plus(selectedDir.vector())))
         {
             selectedDir = selectedDir.nextClockwise();
             if (++tries > 4) {

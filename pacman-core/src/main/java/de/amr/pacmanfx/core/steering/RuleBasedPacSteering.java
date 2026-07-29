@@ -158,7 +158,7 @@ public class RuleBasedPacSteering implements Steering {
             worldNavigation.setTargetTile(findTileFarthestFromGhosts(gameContext, pac, findNearestFoodTiles(gameContext)));
         }
         worldNavigation.optTargetTile().ifPresent(_ -> {
-            navigator.navigateTowardsTarget(pac, gameContext);
+            navigator.navigateTowardsTarget(pac, level);
             Logger.trace("Navigated towards {}, moveDir={} wishDir={}",
                 worldNavigation.targetTile(), worldNavigation.moveDir(), worldNavigation.wishDir());
         });
@@ -190,7 +190,7 @@ public class RuleBasedPacSteering implements Steering {
         FoodLayer foodLayer = level.worldMap().foodLayer();
         for (int i = 1; i <= CollectedData.MAX_GHOST_AHEAD_DETECTION_DIST; ++i) {
             Vector2i ahead = pacManTile.plus(worldNavigation.moveDir().vector().scaled(i));
-            if (!worldMovementPolicy.canAccessTile(gameContext, pac, ahead)) {
+            if (!worldMovementPolicy.canAccessTile(level, pac, ahead)) {
                 break;
             }
             if (foodLayer.isEnergizerTile(ahead) && !foodLayer.hasEatenFoodAtTile(ahead)) {
@@ -222,7 +222,7 @@ public class RuleBasedPacSteering implements Steering {
 
         for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {
             var behind = pacManTile.plus(worldNavigation.moveDir().opposite().vector().scaled(i));
-            if (!worldMovementPolicy.canAccessTile(gameContext, pac, behind)) {
+            if (!worldMovementPolicy.canAccessTile(level, pac, behind)) {
                 break;
             }
             Iterable<Ghost> huntingGhosts = level.ghostsInState(GhostState.HUNTING_PAC)::iterator;
@@ -249,7 +249,7 @@ public class RuleBasedPacSteering implements Steering {
                 continue;
             }
             Vector2i neighbor = pacTile.plus(dir.vector());
-            if (worldMovementPolicy.canAccessTile(gameContext, pac, neighbor)) {
+            if (worldMovementPolicy.canAccessTile(level, pac, neighbor)) {
                 escapes.add(dir);
             }
         }

@@ -28,7 +28,7 @@ public class PokeyHuntingStrategy implements GhostHuntingStrategy {
             : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
 
         navigator.setSpeed(ghost, speed);
-        navigator.tryMovingTowardsTargetTile(ghost, gameContext, targetTile);
+        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
     }
 
     private Vector2i computeChasingTargetTile(GameLevel level, Ghost ghost) {

@@ -7,6 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 
 import java.util.List;
@@ -42,6 +43,8 @@ public class RouteBasedSteering implements Steering {
         final WorldNavigationSystem navigator = gameContext.systems().navigator;
         final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
 
+        final GameLevel level = gameContext.assertLevel();
+
         if (targetIndex == route.size()) {
             routeTraversed = true;
         }
@@ -49,22 +52,22 @@ public class RouteBasedSteering implements Steering {
             worldNavigation.setTargetTile(route.get(targetIndex));
         }
         else if (WorldNavigationSystem.computeTile(actor).equals(route.get(targetIndex))) {
-            selectNextTargetTile(gameContext, actor);
+            selectNextTargetTile(navigator, level, actor);
         }
         else {
-            navigator.navigateTowardsTarget(actor, gameContext);
+            navigator.navigateTowardsTarget(actor, level);
         }
     }
 
-    private void selectNextTargetTile(GameContext gameContext, Actor actor) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
-        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
-
+    private void selectNextTargetTile(WorldNavigationSystem navigator, GameLevel level, Actor actor) {
+        final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
         ++targetIndex;
         if (targetIndex < route.size()) {
-            worldNavigation.setTargetTile(route.get(targetIndex));
+            //TODO Use system method instead
+            navigation.setTargetTile(route.get(targetIndex));
+
             // The next line is important!
-            navigator.navigateTowardsTarget(actor, gameContext);
+            navigator.navigateTowardsTarget(actor, level);
         }
     }
 }

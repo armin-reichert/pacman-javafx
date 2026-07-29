@@ -25,11 +25,10 @@ public class BonusWorldMovementPolicy implements WorldMovementPolicy {
     }
 
     @Override
-    public boolean canAccessTile(GameContext gameContext, Actor actor, Vector2i tile) {
-        requireNonNull(gameContext);
+    public boolean canAccessTile(GameLevel level, Actor actor, Vector2i tile) {
+        requireNonNull(level);
         requireNonNull(tile);
 
-        final GameLevel level = gameContext.assertLevel();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         if (terrain.outOfBounds(tile)) {
             return terrain.isTileInPortalSpace(tile);

@@ -5,10 +5,9 @@
 package de.amr.pacmanfx.core.model.component.pac;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 
@@ -27,11 +26,11 @@ public class PacManWorldMovementPolicy implements WorldMovementPolicy {
     }
 
     @Override
-    public boolean canAccessTile(GameContext gameContext, Actor actor, Vector2i tile) {
-        requireNonNull(gameContext);
+    public boolean canAccessTile(GameLevel level, Actor actor, Vector2i tile) {
+        requireNonNull(level);
+        requireNonNull(tile);
         requireNonNull(tile);
 
-        final GameLevel level = gameContext.assertLevel();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         // Portal tiles are the only tiles outside the world that can be accessed

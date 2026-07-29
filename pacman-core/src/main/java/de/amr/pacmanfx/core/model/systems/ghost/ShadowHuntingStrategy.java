@@ -23,7 +23,7 @@ public class ShadowHuntingStrategy implements GhostHuntingStrategy {
         final Vector2i targetTile = chase
             ? computeChasingTargetTile(gameContext)
             : computeScatterTile(gameContext, ghost);
-        navigator.tryMovingTowardsTargetTile(ghost, gameContext, targetTile);
+        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
     }
 
     private Vector2i computeChasingTargetTile(GameContext gameContext) {

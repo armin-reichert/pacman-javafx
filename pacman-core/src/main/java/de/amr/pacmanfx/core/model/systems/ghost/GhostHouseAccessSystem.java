@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.component.common.Position;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 
@@ -132,8 +133,11 @@ public class GhostHouseAccessSystem {
         sys.motor.moveAccelerated(ghost);
     }
 
+    //TODO extract state change
     public void reachHouse(GameContext gameContext, Ghost ghost, float speed) {
         final GameSystems sys = gameContext.systems();
+
+        final GameLevel level = gameContext.assertLevel();
 
         final Position position = ghost.position();
         final House house = ghost.worldPlacement().house();
@@ -146,13 +150,14 @@ public class GhostHouseAccessSystem {
 
             //TODO check if this should be done here
             sys.ghostState.changeState(gameContext, ghost, GhostState.ENTERING_HOUSE);
+
         }
         else {
             //TODO use system method
             ghost.worldNavigation().setTargetTile(house.leftDoorTile());
             sys.navigator.setSpeed(ghost, speed);
-            sys.navigator.navigateTowardsTarget(ghost, gameContext);
-            sys.navigator.tryMovingOrTeleporting(ghost, gameContext);
+            sys.navigator.navigateTowardsTarget(ghost,  level);
+            sys.navigator.tryMovingOrTeleporting(ghost, level);
         }
     }
 }

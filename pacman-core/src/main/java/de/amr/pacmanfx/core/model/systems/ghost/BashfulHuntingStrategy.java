@@ -21,16 +21,15 @@ public class BashfulHuntingStrategy implements GhostHuntingStrategy {
     public void hunt(GameContext gameContext, Ghost ghost, float speed) {
         requireNonNull(gameContext);
 
-        final GameSystems systems = gameContext.systems();
-        final WorldNavigationSystem navigator = systems.navigator;
+        final GameSystems sys = gameContext.systems();
         final GameLevel level = gameContext.assertLevel();
 
         final Vector2i targetTile = level.huntingRules().isChasing()
             ? computeChasingTargetTile(gameContext)
             : computeScatterTile(gameContext, ghost);
 
-        navigator.setSpeed(ghost, speed);
-        navigator.tryMovingTowardsTargetTile(ghost, gameContext, targetTile);
+        sys.navigator.setSpeed(ghost, speed);
+        sys.navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
     }
 
     private Vector2i computeChasingTargetTile(GameContext gameContext) {
