@@ -8,6 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.common.Position;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
@@ -88,11 +89,12 @@ public class WorldNavigationSystem {
         requireNonNull(actor);
         requireNonNull(dir);
 
+        final Movement movement = actor.assertComponent(Movement.class);
         final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
 
         if (navigation.moveDir() == null && dir.equals(WorldNavigation.DEFAULT_MOVE_DIR)) return;
         navigation.moveDirProperty().set(dir);
-        float speed = actor.movement().speed();
+        float speed = movement.speed();
         motor.setVelocity(actor, dir.vector().x() * speed, dir.vector().y() * speed);
     }
 
@@ -263,10 +265,11 @@ public class WorldNavigationSystem {
     }
 
     private void tryMovingTowards(Actor actor, GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
+        final Movement movement = actor.assertComponent(Movement.class);
         final WorldMovementPolicy movementPolicy = actor.assertComponent(WorldMovementPolicy.class);
         final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
 
-        final Vector2f newVelocity = dir.vector().scaled(actor.movement().speed());
+        final Vector2f newVelocity = dir.vector().scaled(movement.speed());
         final Vector2f touchPosition = computeCenter(actor).plus(dir.vector().scaled((float) WorldMap.HTS)).plus(newVelocity);
         final Vector2i touchedTile = WorldMap.computeTileAt(touchPosition);
         final boolean turn = dir.vector().isOrthogonalTo(navigation.moveDir().vector());

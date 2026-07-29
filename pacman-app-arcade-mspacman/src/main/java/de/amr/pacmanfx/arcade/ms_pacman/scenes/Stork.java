@@ -42,4 +42,8 @@ public class Stork extends Actor {
         setComponent(SpriteAnim.class, new SpriteAnim());
         assertComponent(SpriteAnim.class).setAnimations(new StorkAnimations(animationSet));
     }
+
+    public Movement movement() {
+        return assertComponent(Movement.class);
+    }
 }

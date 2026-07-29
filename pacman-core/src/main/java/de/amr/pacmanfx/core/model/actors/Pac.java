@@ -49,6 +49,10 @@ public class Pac extends Actor implements UpdatableEntity {
         state = State.ACTIVE;
     }
 
+    public Movement movement() {
+        return assertComponent(Movement.class);
+    }
+
     public WorldNavigation worldNavigation() {
         return assertComponent(WorldNavigation.class);
     }

@@ -7,6 +7,7 @@ package de.amr.pacmanfx.core.model.actors;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
+import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
 import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
@@ -28,8 +29,8 @@ public class Ghost extends Actor implements UpdatableEntity {
     private final byte personality;
 
     public Ghost(byte personality, String name) {
-        this.name = requireNonNull(name);
         this.personality = requireValidGhostPersonality(personality);
+        this.name = requireNonNull(name);
     }
 
     /**
@@ -39,6 +40,10 @@ public class Ghost extends Actor implements UpdatableEntity {
      */
     public byte personality() {
         return personality;
+    }
+
+    public Movement movement() {
+        return assertComponent(Movement.class);
     }
 
     public GhostWorldPlacement worldPlacement() {
@@ -74,7 +79,8 @@ public class Ghost extends Actor implements UpdatableEntity {
             "personality=" + personality +
             ", state=" + state() +
             ", worldPlacement=" + worldPlacement() +
-            super.toString() +
+            ", worldNavigation=" + worldNavigation() +
+            ", " + super.toString() +
             '}';
     }
 

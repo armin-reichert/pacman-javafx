@@ -24,8 +24,7 @@ import static java.util.Objects.requireNonNull;
 public class GhostWorldMovementPolicy implements WorldMovementPolicy {
 
     @Override
-    public void reset() {
-    }
+    public void reset() {}
 
     @Override
     public boolean canAccessTile(GameLevel level, Actor actor, Vector2i tile) {

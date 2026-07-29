@@ -12,25 +12,25 @@ public final class MovementSystem {
 
     public void moveAccelerated(Actor actor) {
         final Position position = actor.position();
-        final Movement movement = actor.movement();
-
-        position.add(movement.velX(), movement.velY());
-        movement.add(movement.accX(), movement.accY());
+        actor.optComponent(Movement.class).ifPresent(movement -> {
+            position.add(movement.velX(), movement.velY());
+            movement.add(movement.accX(), movement.accY());
+        });
     }
 
     public void setVelocity(Actor actor, float vx, float vy) {
-        actor.movement().setVelocity(vx, vy);
+        actor.optComponent(Movement.class).ifPresent(movement -> movement.setVelocity(vx, vy));
     }
 
     public void setVelocityX(Actor actor, float vx) {
-        actor.movement().setVelX(vx);
+        actor.optComponent(Movement.class).ifPresent(movement -> movement.setVelX(vx));
     }
 
     public void setVelocityY(Actor actor, float vy) {
-        actor.movement().setVelY(vy);
+        actor.optComponent(Movement.class).ifPresent(movement -> movement.setVelY(vy));
     }
 
     public void setAcceleration(Actor actor, float ax, float ay) {
-        actor.movement().setAcceleration(ax, ay);
+        actor.optComponent(Movement.class).ifPresent(movement -> movement.setAcceleration(ax, ay));
     }
 }

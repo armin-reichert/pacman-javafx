@@ -62,6 +62,10 @@ public class Bonus extends Actor implements UpdatableEntity {
         worldMovement().setCanTeleport(false); // override default value (true)
     }
 
+    public Movement movement() {
+        return assertComponent(Movement.class);
+    }
+
     public WorldNavigation worldMovement() {
         return assertComponent(WorldNavigation.class);
     }

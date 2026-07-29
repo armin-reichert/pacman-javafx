@@ -163,11 +163,11 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         sys.spriteAnim().select(stork, CommonAnimationID.STORK_FLYING);
         sys.spriteAnim().playSelected(stork);
 
+        bag.setOpen(gameContext(), false);
         bag.position().set(stork.position().x - 14, stork.position().y + 3);
         bag.visibility().show();
-        bag.movement().setVelX(stork.movement().velX());
-        bag.movement().setAcceleration(0, 0);
-        bag.setOpen(gameContext(), false);
+        sys.motor().setVelocityX(bag, stork.movement().velX());
+        sys.motor().setAcceleration(bag, 0, 0);
 
         bagReleased = false;
         numBagBounces = 0;

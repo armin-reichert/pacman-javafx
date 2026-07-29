@@ -56,6 +56,10 @@ public class Bag extends Actor {
         assertComponent(SpriteAnim.class).setAnimations(new BagAnimations(container));
     }
 
+    public Movement movement() {
+        return assertComponent(Movement.class);
+    }
+
     public void setOpen(GameContext gameContext, boolean open) {
         this.open = open;
         gameContext.systems().spriteAnim().select(this, open ? CommonAnimationID.JUNIOR : CommonAnimationID.BAG);

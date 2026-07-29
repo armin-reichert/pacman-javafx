@@ -12,6 +12,7 @@ import org.tinylog.Logger;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -52,12 +53,14 @@ public class Actor {
         return components.get(componentClass) != null;
     }
 
-    public final Position position() {
-        return assertComponent(Position.class);
+    public <T extends ActorComponent> Optional<T> optComponent(Class<T> componentClass) {
+        requireNonNull(componentClass);
+        final ActorComponent component = components.get(componentClass);
+        return Optional.ofNullable(componentClass.cast(component));
     }
 
-    public final Movement movement() {
-        return assertComponent(Movement.class);
+    public final Position position() {
+        return assertComponent(Position.class);
     }
 
     public final Visibility visibility() {
@@ -86,8 +89,9 @@ public class Actor {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        builder.append("name=").append(name);
         for (var component : components.values()) {
-            builder.append("{").append(component).append("}\n");
+            builder.append("[").append(component).append("]\n");
         }
         return builder.toString();
     }

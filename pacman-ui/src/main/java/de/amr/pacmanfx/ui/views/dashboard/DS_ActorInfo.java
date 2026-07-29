@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
@@ -88,14 +89,15 @@ public class DS_ActorInfo extends GameDashboardSection {
     private String actorMovementText(GameLevel level, Actor actor) {
         if (actor == null) return NO_INFO;
 
-        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
-
-        var speed = actor.movement().speed() * GameConstants.SIMULATION_FPS;
-        var blocked = !worldNavigation.info.moved;
-        var reverseText = worldNavigation.isTurnBackRequested() ? "REV!" : "";
-        return blocked
-            ? "BLOCKED!"
-            : "%.2fpx/s %s (%s)%s".formatted(speed, worldNavigation.moveDir(), worldNavigation.wishDir(), reverseText);
+        return actor.optComponent(Movement.class).map(movement -> {
+            final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
+            final float speed = movement.speed() * GameConstants.SIMULATION_FPS;
+            final boolean blocked = !navigation.info.moved;
+            final String turnbackHint = navigation.isTurnBackRequested() ? "REV!" : "";
+            return blocked
+                ? "BLOCKED!"
+                : "%.2fpx/s %s (%s)%s".formatted(speed, navigation.moveDir(), navigation.wishDir(), turnbackHint);
+        }).orElse(NO_INFO);
     }
 
     private Supplier<String> supplyPacPowerText(GameAppContext appContext) {
