@@ -10,24 +10,43 @@ import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 
-public final class DefaultGameSystems implements GameSystems {
+public class DefaultGameSystems implements GameSystems {
 
-    private final SpriteAnimSystem spriteAnim = new SpriteAnimSystem();
+    protected SpriteAnimSystem spriteAnim = new SpriteAnimSystem();
 
-    private final MovementSystem motor =  new MovementSystem();
-    private final WorldNavigationSystem navigator = new WorldNavigationSystem(motor);
-    private final RandomWorldMovementSystem roamingNavigator = new RandomWorldMovementSystem(navigator);
+    protected MovementSystem motor =  new MovementSystem();
+    protected WorldNavigationSystem navigator = new WorldNavigationSystem(motor);
+    protected RandomWorldMovementSystem roamingNavigator = new RandomWorldMovementSystem(navigator);
 
-    private final PacPowerSystem pacPower = new PacPowerSystem();
-    private final PacDigestionSystem pacDigestion = new PacDigestionSystem();
+    protected PacPowerSystem pacPower;
+    protected PacDigestionSystem pacDigestion;
 
-    private final GhostStateSystem ghostState = new GhostStateSystem();
-    private final GhostHouseAccessSystem ghostHouseAccess = new GhostHouseAccessSystem();
+    protected GhostStateSystem ghostState;
+    protected GhostHouseAccessSystem ghostHouseAccess;
 
-    private final GhostHuntingStrategy orangeGhostPokeyHuntingStrategy = new PokeyHuntingStrategy(navigator);
-    private final GhostHuntingStrategy cyanGhostBashfulHuntingStrategy = new BashfulHuntingStrategy(navigator);
-    private final GhostHuntingStrategy redGhostShadowHuntingStrategy = new ShadowHuntingStrategy(navigator);
-    private final GhostHuntingStrategy pinkGhostSpeedyHuntingStrategy = new SpeedyHuntingStrategy(navigator);
+    protected GhostHuntingStrategy orangeGhostPokeyHuntingStrategy;
+    protected GhostHuntingStrategy cyanGhostBashfulHuntingStrategy;
+    protected GhostHuntingStrategy redGhostShadowHuntingStrategy;
+    protected GhostHuntingStrategy pinkGhostSpeedyHuntingStrategy;
+
+    public DefaultGameSystems() {
+        createPacSystems();
+        createGhostSystems();
+    }
+
+    protected void createPacSystems() {
+        pacPower = new PacPowerSystem();
+        pacDigestion = new PacDigestionSystem();
+    }
+
+    protected void createGhostSystems() {
+        ghostState = new GhostStateSystem();
+        ghostHouseAccess = new GhostHouseAccessSystem();
+        orangeGhostPokeyHuntingStrategy = new PokeyHuntingStrategy(navigator);
+        cyanGhostBashfulHuntingStrategy = new BashfulHuntingStrategy(navigator);
+        redGhostShadowHuntingStrategy = new ShadowHuntingStrategy(navigator);
+        pinkGhostSpeedyHuntingStrategy = new SpeedyHuntingStrategy(navigator);
+    }
 
     @Override
     public SpriteAnimSystem spriteAnim() {

@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameSystems;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameVariantConfig;
@@ -16,7 +17,7 @@ public class XXL_MsPacMan_Cartridge {
 
     public static final Cartridge CARTRIDGE = new Cartridge(
         GameVariantID.ARCADE_MS_PACMAN_XXL,
-        DefaultGameSystems::new,
+        ArcadeMsPacMan_GameSystems::new,
         XXL_MsPacMan_GamePlay::new,
         XXL_MsPacMan_GameVariantConfig::createGameFlow,
         XXL_MsPacMan_GameModel::new,
