@@ -138,12 +138,7 @@ public class Pac extends Actor implements UpdatableEntity {
     }
 
     public boolean isBlocked() {
-        return hasEmptySpeed() || didNotMoveThroughWorld();
-    }
-
-    private boolean hasEmptySpeed() {
-        final Movement mov = movement();
-        return mov.velX == 0 && mov.velY == 0;
+        return movement().hasZeroSpeed() || didNotMoveThroughWorld();
     }
 
     private boolean didNotMoveThroughWorld() {

@@ -165,7 +165,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         bag.position().set(stork.position().x - 14, stork.position().y + 3);
         bag.visibility().show();
-        bag.movement().setVelX(stork.movement().velX);
+        bag.movement().setVelX(stork.movement().velX());
         bag.movement().setAcceleration(0, 0);
         bag.setOpen(gameContext(), false);
 

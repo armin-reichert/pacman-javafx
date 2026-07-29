@@ -147,7 +147,7 @@ public class Bonus extends Actor implements UpdatableEntity {
         switch (state) {
             case EDIBLE -> {
                 boolean edibleStateOver;
-                if (movement().velX == 0 && movement().velY == 0) {
+                if (movement().hasZeroSpeed()) {
                     edibleStateOver = timer.hasExpired();
                 }
                 else {

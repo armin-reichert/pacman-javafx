@@ -36,6 +36,11 @@ public final class Position implements ActorComponent {
         y = v.y();
     }
 
+    public void add(float vx, float vy) {
+        x += vx;
+        y += vy;
+    }
+
     public Vector2f asVector2f() {
         return new Vector2f(x, y);
     }

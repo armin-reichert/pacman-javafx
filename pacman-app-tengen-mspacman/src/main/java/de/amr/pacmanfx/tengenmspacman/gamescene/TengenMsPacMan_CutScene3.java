@@ -180,7 +180,10 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
             sys.motor.moveAccelerated(flyingBag);
             if (flyingBag.position().y > GROUND_Y) {
                 flyingBag.position().setY(GROUND_Y);
-                flyingBag.movement().setVelocity(0.9f * flyingBag.movement().velX, -0.3f * flyingBag.movement().velY);
+                flyingBag.movement().setVelocity(
+                    0.9f * flyingBag.movement().velX(),
+                    -0.3f * flyingBag.movement().velY()
+                );
             }
         }
     }

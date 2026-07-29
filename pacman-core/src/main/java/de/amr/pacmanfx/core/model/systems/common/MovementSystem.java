@@ -14,9 +14,7 @@ public final class MovementSystem {
         final Position position = actor.position();
         final Movement movement = actor.movement();
 
-        position.x += movement.velX;
-        position.y += movement.velY;
-        movement.velX += movement.accX;
-        movement.velY += movement.accY;
+        position.add(movement.velX(), movement.velY());
+        movement.add(movement.accX(), movement.accY());
     }
 }

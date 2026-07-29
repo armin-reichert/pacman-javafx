@@ -8,11 +8,11 @@ import de.amr.pacmanfx.core.model.component.ActorComponent;
 
 public class Movement implements ActorComponent {
 
-    public float velX;
-    public float velY;
+    private float velX;
+    private float velY;
 
-    public float accX;
-    public float accY;
+    private float accX;
+    private float accY;
 
     @Override
     public void reset() {
@@ -22,8 +22,16 @@ public class Movement implements ActorComponent {
         accY = 0;
     }
 
+    public float velX() {
+        return velX;
+    }
+
     public final void setVelX(double velX) {
         this.velX = (float) velX;
+    }
+
+    public float velY() {
+        return velY;
     }
 
     public final void setVelY(double velY) {
@@ -39,8 +47,16 @@ public class Movement implements ActorComponent {
         return Math.hypot(velX, velY);
     }
 
+    public float accX() {
+        return accX;
+    }
+
     public final void setAccX(double accX) {
         this.accX = (float) accX;
+    }
+
+    public float accY() {
+        return accY;
     }
 
     public final void setAccY(double accY) {
@@ -50,6 +66,15 @@ public class Movement implements ActorComponent {
     public final void setAcceleration(double ax, double ay) {
         this.accX = (float) ax;
         this.accY = (float) ay;
+    }
+
+    public void add(float ax, float ay) {
+        velX += ax;
+        velY += ay;
+    }
+
+    public boolean hasZeroSpeed() {
+        return velX == 0 && velY == 0;
     }
 
     @Override

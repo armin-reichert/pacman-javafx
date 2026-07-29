@@ -216,14 +216,14 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
             sys.navigator.setWishDir(inky, Direction.RIGHT);
             sys.navigator.setSpeed(inky, SPEED_GHOST_AFTER_COLLISION);
 
-            inky.movement().velY -= 2.0f;
+            inky.movement().setVelY(inky.movement().velY() - 2.0f);
             inky.movement().setAcceleration(0, 0.4f);
 
             sys.navigator.setMoveDir(pinky, Direction.LEFT);
             sys.navigator.setWishDir(pinky, Direction.LEFT);
             sys.navigator.setSpeed(pinky, SPEED_GHOST_AFTER_COLLISION);
 
-            pinky.movement().velY -= 2.0f;
+            pinky.movement().setVelY(pinky.movement().velY() - 2.0f);
             pinky.movement().setAcceleration(0, 0.4f);
         }
 
