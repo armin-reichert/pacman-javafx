@@ -2,18 +2,15 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model;
+package de.amr.pacmanfx.core.model.systems.common;
 
-import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
-import de.amr.pacmanfx.core.model.systems.common.GameSystems;
-import de.amr.pacmanfx.core.model.systems.common.RandomWorldMovementSystem;
-import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.systems.ghost.*;
 import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 
-public final class GameSystemsImpl implements GameSystems {
+public final class DefaultGameSystems implements GameSystems {
 
     private final SpriteAnimSystem spriteAnim = new SpriteAnimSystem();
 

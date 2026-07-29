@@ -14,9 +14,9 @@ import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gameplay.HuntingStepResult;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.GameSystemsImpl;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.state.GameState;
 
 import java.util.Optional;
@@ -27,8 +27,6 @@ import static java.util.Objects.requireNonNull;
  * Context passed to game scenes and game flow state machines for the currently running game variant.
  */
 public class GameContextImpl implements GameContext {
-
-    private final GameSystemsImpl systems = new GameSystemsImpl();
 
     private final CoinMechanism coinMechanism;
 
@@ -88,8 +86,8 @@ public class GameContextImpl implements GameContext {
     }
 
     @Override
-    public GameSystemsImpl systems() {
-        return systems;
+    public GameSystems systems() {
+        return gameVariant.systems();
     }
 
     @Override

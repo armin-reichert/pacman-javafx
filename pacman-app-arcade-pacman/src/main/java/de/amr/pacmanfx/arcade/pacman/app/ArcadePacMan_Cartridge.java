@@ -6,6 +6,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.core.model.systems.common.DefaultGameSystems;
 import de.amr.pacmanfx.game.Cartridge;
 import de.amr.pacmanfx.game.GameExtension;
 
@@ -15,6 +16,7 @@ public class ArcadePacMan_Cartridge {
 
     public static final Cartridge CARTRIDGE = new Cartridge(
         GameVariantID.ARCADE_PACMAN,
+        DefaultGameSystems::new,
         ArcadePacMan_GamePlay::new,
         ArcadePacMan_GameVariantConfig::createGameFlow,
         ArcadePacMan_GameModel::new,

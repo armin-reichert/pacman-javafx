@@ -9,6 +9,8 @@ import de.amr.pacmanfx.core.flow.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.systems.common.DefaultGameSystems;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 
 import java.util.HashMap;
@@ -16,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class GameVariant {
+    private final GameSystems systems;
     private final GamePlay gamePlay;
     private final GameFlowController gameFlow;
     private final GameModel gameModel;
@@ -25,6 +28,7 @@ public class GameVariant {
     private final Map<Identifier, Object> extensionValues;
 
     public GameVariant(Cartridge cartridge) {
+        systems = cartridge.systemsFactory().get();
         gamePlay = cartridge.gamePlayFactory().get();
         gameFlow = cartridge.gameFlowFactory().get();
         gameModel = cartridge.gameModelFactory().get();
@@ -32,6 +36,10 @@ public class GameVariant {
         config = cartridge.uiConfigFactory().get();
         extensions = cartridge.gameExtensions();
         extensionValues = new HashMap<>();
+    }
+
+    public GameSystems systems() {
+        return systems;
     }
 
     public GamePlay gamePlay() {
