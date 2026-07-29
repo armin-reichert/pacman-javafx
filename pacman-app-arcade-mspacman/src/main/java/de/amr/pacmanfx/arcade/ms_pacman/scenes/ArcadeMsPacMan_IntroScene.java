@@ -13,7 +13,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
     public Marquee marquee;
     public Pac msPacMan;
     public List<Ghost> ghosts;
-    public byte presentedGhostPersonality;
+    public GhostPersonality ghostPresented;
 
     private int numTicksBeforeRising;
 
@@ -107,10 +107,10 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         sys.spriteAnim().playSelected(msPacMan);
 
         ghosts = List.of(
-            renderConfig.createAnimatedGhost(gameContext(), container, GameModel.RED_GHOST_SHADOW),
-            renderConfig.createAnimatedGhost(gameContext(), container, GameModel.PINK_GHOST_SPEEDY),
-            renderConfig.createAnimatedGhost(gameContext(), container, GameModel.CYAN_GHOST_BASHFUL),
-            renderConfig.createAnimatedGhost(gameContext(), container, GameModel.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(gameContext(), container, GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(gameContext(), container, GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(gameContext(), container, GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(gameContext(), container, GhostPersonality.ORANGE_GHOST_POKEY)
         );
 
         for (Ghost ghost : ghosts) {
@@ -127,7 +127,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             sys.ghostState().changeState(gameContext(), ghost, GhostState.HUNTING_PAC);
         }
 
-        presentedGhostPersonality = GameModel.RED_GHOST_SHADOW;
+        ghostPresented = GhostPersonality.RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
         appContext().ui().sounds().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
@@ -162,10 +162,10 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                 scene.marquee.timer().doTick();
                 boolean atEndPosition = letGhostWalkIn(scene);
                 if (atEndPosition) {
-                    if (scene.presentedGhostPersonality == GameModel.ORANGE_GHOST_POKEY) {
+                    if (scene.ghostPresented == GhostPersonality.ORANGE_GHOST_POKEY) {
                         scene.sceneFlow.enterState(scene, MS_PACMAN_MARCHING_IN);
                     } else {
-                        ++scene.presentedGhostPersonality;
+                        scene.ghostPresented = scene.ghostPresented.succ();
                     }
                 }
             }
@@ -173,7 +173,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
                 final GameSystems sys = scene.gameContext().systems();
 
-                final Ghost ghost = scene.ghosts.get(scene.presentedGhostPersonality);
+                final Ghost ghost = scene.ghosts.get(scene.ghostPresented.ordinal());
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
                     if (ghost.position().x <= STOP_X_GHOST) {
                         ghost.position().setX(STOP_X_GHOST);
@@ -185,7 +185,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                     }
                 }
                 else if (ghost.worldNavigation().moveDir() == Direction.UP) {
-                    int endPositionY = TOP_Y + scene.presentedGhostPersonality * 16 + 1;
+                    int endPositionY = TOP_Y + scene.ghostPresented.ordinal() * 16 + 1;
                     if (scene.numTicksBeforeRising > 0) {
                         scene.numTicksBeforeRising--;
                     }

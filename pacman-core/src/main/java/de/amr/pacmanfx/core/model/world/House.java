@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.model.world;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 
@@ -30,9 +31,9 @@ public interface House {
      */
     Vector2f entryPosition();
 
-    Direction ghostStartDirection(byte personality);
+    Direction ghostStartDirection(GhostPersonality personality);
 
-    Vector2i ghostRevivalTile(byte personality);
+    Vector2i ghostRevivalTile(GhostPersonality personality);
 
     default Vector2i sizeInTiles() {
         return maxTile().minus(minTile()).plus(1, 1);

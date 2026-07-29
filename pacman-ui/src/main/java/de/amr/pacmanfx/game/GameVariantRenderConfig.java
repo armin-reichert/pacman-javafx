@@ -7,6 +7,7 @@ package de.amr.pacmanfx.game;
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -40,9 +41,9 @@ public interface GameVariantRenderConfig {
 
     ActorRenderer createActorRenderer(SpriteAnimSystem animSystem, Canvas canvas);
 
-    Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, byte personality);
+    Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, GhostPersonality personality);
 
-    SpriteAnimationAccess createGhostAnimations(SpriteAnimationContainer container, byte personality);
+    SpriteAnimationAccess createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality);
 
     SpriteAnimationAccess createPacAnimations(SpriteAnimationContainer container);
 

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.animation.energizer;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector3f;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -36,16 +36,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class ParticlesAnimation3D extends ManagedAnimation implements Disposable {
 
-    private static final byte[] GHOST_PERSONALITIES = {
-        GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY
-    };
-
-    private static byte computeTargetSwirlIndex(byte personality) {
+    private static byte computeTargetSwirlIndex(GhostPersonality personality) {
         return switch (personality) {
-            case GameModel.CYAN_GHOST_BASHFUL -> 0;
-            case GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY -> 1;
-            case GameModel.ORANGE_GHOST_POKEY -> 2;
-            default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
+            case CYAN_GHOST_BASHFUL -> 0;
+            case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> 1;
+            case ORANGE_GHOST_POKEY -> 2;
         };
     }
 
@@ -79,7 +74,7 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
         this.outOfWorldTest = requireNonNull(outOfWorldTest);
 
         // The 3 ghost revival positions inside the house from left to right
-        swirlBases = Stream.of(GameModel.CYAN_GHOST_BASHFUL, GameModel.PINK_GHOST_SPEEDY, GameModel.ORANGE_GHOST_POKEY)
+        swirlBases = Stream.of(GhostPersonality.CYAN_GHOST_BASHFUL, GhostPersonality.PINK_GHOST_SPEEDY, GhostPersonality.ORANGE_GHOST_POKEY)
             .map(house::ghostRevivalTile)
             .map(tile -> tile.scaled(WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS))
             .map(pos -> new Vector3f(pos.x(), pos.y(), 0))
@@ -200,7 +195,7 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
      * integrated into the swirl and moves forever on the swirl surface.
      */
     private void onParticleLandedOnFloor(EnergizerParticle3D particle) {
-        final byte personality = randomByteArrayElement(GHOST_PERSONALITIES);
+        final GhostPersonality personality = GhostPersonality.random();
         final byte targetSwirlIndex = computeTargetSwirlIndex(personality);
         final Vector3f swirlCenter = swirlBases.get(targetSwirlIndex);
 
@@ -215,7 +210,7 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
 
         particle.setState(ParticleState.ATTRACTED_BY_SWIRL);
 
-        particle.shape().setMaterial(ghostDressMaterials.get(personality));
+        particle.shape().setMaterial(ghostDressMaterials.get(personality.ordinal()));
         particle.shape().setRadius(0.5 * config.attraction().particleSize());
     }
 }

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -164,33 +164,32 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         };
     }
 
-    public RectShort[] ghostNormalSprites(byte personality, Direction dir) {
+    public RectShort[] ghostNormalSprites(GhostPersonality personality, Direction dir) {
         return findSprites(switch (personality) {
-            case GameModel.RED_GHOST_SHADOW -> switch (dir) {
+            case RED_GHOST_SHADOW -> switch (dir) {
                 case RIGHT -> SpriteID.RED_GHOST_RIGHT;
                 case LEFT ->  SpriteID.RED_GHOST_LEFT;
                 case UP ->    SpriteID.RED_GHOST_UP;
                 case DOWN ->  SpriteID.RED_GHOST_DOWN;
             };
-            case GameModel.PINK_GHOST_SPEEDY -> switch (dir) {
+            case PINK_GHOST_SPEEDY -> switch (dir) {
                 case RIGHT -> SpriteID.PINK_GHOST_RIGHT;
                 case LEFT ->  SpriteID.PINK_GHOST_LEFT;
                 case UP ->    SpriteID.PINK_GHOST_UP;
                 case DOWN ->  SpriteID.PINK_GHOST_DOWN;
             };
-            case GameModel.CYAN_GHOST_BASHFUL -> switch (dir) {
+            case CYAN_GHOST_BASHFUL -> switch (dir) {
                 case RIGHT -> SpriteID.CYAN_GHOST_RIGHT;
                 case LEFT ->  SpriteID.CYAN_GHOST_LEFT;
                 case UP ->    SpriteID.CYAN_GHOST_UP;
                 case DOWN ->  SpriteID.CYAN_GHOST_DOWN;
             };
-            case GameModel.ORANGE_GHOST_POKEY -> switch (dir) {
+            case ORANGE_GHOST_POKEY -> switch (dir) {
                 case RIGHT -> SpriteID.ORANGE_GHOST_RIGHT;
                 case LEFT ->  SpriteID.ORANGE_GHOST_LEFT;
                 case UP ->    SpriteID.ORANGE_GHOST_UP;
                 case DOWN ->  SpriteID.ORANGE_GHOST_DOWN;
             };
-            default -> throw new IllegalArgumentException();
         });
     }
 

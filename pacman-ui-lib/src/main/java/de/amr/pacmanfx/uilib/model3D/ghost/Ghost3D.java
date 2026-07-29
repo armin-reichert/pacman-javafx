@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.ghost;
 
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -43,7 +44,7 @@ public class Ghost3D extends Group implements UpdatableEntity, DisposableGraphic
         }
     }
 
-    public record AnimationKey(AnimationID animationID, byte ghostID) {}
+    public record AnimationKey(AnimationID animationID, GhostPersonality ghostID) {}
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 

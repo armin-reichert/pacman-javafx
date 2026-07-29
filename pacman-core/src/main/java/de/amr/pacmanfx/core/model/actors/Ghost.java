@@ -5,14 +5,13 @@
 package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
 import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 
-import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -20,19 +19,19 @@ import static java.util.Objects.requireNonNull;
  */
 public class Ghost extends Actor implements UpdatableEntity {
 
-    private final byte personality;
+    private final GhostPersonality personality;
 
-    public Ghost(byte personality, String name) {
-        this.personality = requireValidGhostPersonality(personality);
+    public Ghost(GhostPersonality personality, String name) {
+        this.personality = requireNonNull(personality);
         this.name = requireNonNull(name);
     }
 
     /**
-     * @return this ghost's personality, see {@link GameModel#RED_GHOST_SHADOW},
-     * {@link GameModel#PINK_GHOST_SPEEDY}, {@link GameModel#CYAN_GHOST_BASHFUL} and
-     * {@link GameModel#ORANGE_GHOST_POKEY}.
+     * @return this ghost's personality, see {@link GhostPersonality#RED_GHOST_SHADOW},
+     * {@link GhostPersonality#PINK_GHOST_SPEEDY}, {@link GhostPersonality#CYAN_GHOST_BASHFUL} and
+     * {@link GhostPersonality#ORANGE_GHOST_POKEY}.
      */
-    public byte personality() {
+    public GhostPersonality personality() {
         return personality;
     }
 

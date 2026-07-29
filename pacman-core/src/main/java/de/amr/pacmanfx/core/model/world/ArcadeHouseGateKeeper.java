@@ -5,7 +5,7 @@ package de.amr.pacmanfx.core.model.world;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -142,10 +142,10 @@ public final class ArcadeHouseGateKeeper {
         pacStarvingLimit = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
         Arrays.fill(ghostLimits, (byte) 0);
         if (levelNumber == 1) {
-            ghostLimits[GameModel.CYAN_GHOST_BASHFUL] = 30;
-            ghostLimits[GameModel.ORANGE_GHOST_POKEY] = 60;
+            ghostLimits[GhostPersonality.CYAN_GHOST_BASHFUL.ordinal()] = 30;
+            ghostLimits[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()] = 60;
         } else if (levelNumber == 2) {
-            ghostLimits[GameModel.ORANGE_GHOST_POKEY] = 50;
+            ghostLimits[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()] = 50;
         }
         Arrays.fill(ghostCounters, 0);
         globalCounterValue = 0;
@@ -158,17 +158,18 @@ public final class ArcadeHouseGateKeeper {
      * @return description why ghost has been released or {@link Optional#empty()} if ghost is not released
      */
     private Optional<String> checkReleaseOfGhost(GameContext gameContext, Ghost prisoner) {
-        final byte personality = prisoner.personality();
-        if (personality == GameModel.RED_GHOST_SHADOW) {
+        final GhostPersonality personality = prisoner.personality();
+        final int ord = personality.ordinal();
+        if (personality == GhostPersonality.RED_GHOST_SHADOW) {
             return Optional.of("Red ghost gets released unconditionally");
         }
         // check individual dot counter first (if enabled)
-        if (!globalCounterEnabled && ghostCounters[personality] >= ghostLimits[personality]) {
-            return Optional.of(String.format("%s's individual dot counter reached limit (%d)", prisoner.name(), ghostLimits[personality]));
+        if (!globalCounterEnabled && ghostCounters[ord] >= ghostLimits[ord]) {
+            return Optional.of(String.format("%s's individual dot counter reached limit (%d)", prisoner.name(), ghostLimits[ord]));
         }
         // check global dot counter
-        if (globalCounterEnabled && GLOBAL_LIMITS[personality] != NO_LIMIT && globalCounterValue >= GLOBAL_LIMITS[personality]) {
-            return Optional.of(String.format("Global dot counter reached limit (%d)", GLOBAL_LIMITS[personality]));
+        if (globalCounterEnabled && GLOBAL_LIMITS[ord] != NO_LIMIT && globalCounterValue >= GLOBAL_LIMITS[ord]) {
+            return Optional.of(String.format("Global dot counter reached limit (%d)", GLOBAL_LIMITS[ord]));
         }
 
         // check Pac-Man starving ticks
@@ -194,9 +195,9 @@ public final class ArcadeHouseGateKeeper {
         final House house = level.worldMap().terrainLayer().assertHouse();
 
         if (globalCounterEnabled) {
-            if (level.ghost(GameModel.ORANGE_GHOST_POKEY).state() == GhostState.LOCKED && globalCounterValue == 32) {
+            if (level.ghost(GhostPersonality.ORANGE_GHOST_POKEY).state() == GhostState.LOCKED && globalCounterValue == 32) {
                 Logger.info("{} inside house when global counter reached {}",
-                    level.ghost(GameModel.ORANGE_GHOST_POKEY).name(), globalCounterValue);
+                    level.ghost(GhostPersonality.ORANGE_GHOST_POKEY).name(), globalCounterValue);
                 resetCounterAndSetEnabled(false);
             } else {
                 globalCounterValue++;
@@ -204,8 +205,8 @@ public final class ArcadeHouseGateKeeper {
             }
         } else {
             level.ghostsInState(GhostState.LOCKED).filter(house::isVisitedBy).findFirst().ifPresent(ghost -> {
-                ghostCounters[ghost.personality()]++;
-                Logger.trace("{} dot counter = {}", ghost.name(), ghostCounters[ghost.personality()]);
+                ghostCounters[ghost.personality().ordinal()]++;
+                Logger.trace("{} dot counter = {}", ghost.name(), ghostCounters[ghost.personality().ordinal()]);
             });
         }
     }
@@ -217,7 +218,7 @@ public final class ArcadeHouseGateKeeper {
 
         final GameLevel level = gameContext.assertLevel();
         final House house = level.worldMap().terrainLayer().assertHouse();
-        final Ghost blinky = level.ghost(GameModel.RED_GHOST_SHADOW);
+        final Ghost blinky = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
 
         if (blinky.state() == GhostState.LOCKED) {
             if (house.isVisitedBy(blinky)) {
@@ -235,7 +236,7 @@ public final class ArcadeHouseGateKeeper {
                 sys.ghostState().changeState(gameContext, blinky, GhostState.HUNTING_PAC);
             }
         }
-        Stream.of(GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
+        Stream.of(GhostPersonality.PINK_GHOST_SPEEDY, GhostPersonality.CYAN_GHOST_BASHFUL, GhostPersonality.ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .filter(ghost -> ghost.state() == GhostState.LOCKED)
             .findFirst()

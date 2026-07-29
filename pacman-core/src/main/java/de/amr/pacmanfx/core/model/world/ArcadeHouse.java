@@ -6,8 +6,7 @@ package de.amr.pacmanfx.core.model.world;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 
 import static de.amr.pacmanfx.core.model.world.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
@@ -44,19 +43,18 @@ public class ArcadeHouse implements House {
 
     public ArcadeHouse(Vector2i minTile) {
         this.minTile = requireNonNull(minTile);
-        ghostRevivalTiles[GameModel.RED_GHOST_SHADOW]   = minTile.plus(3, 2);
-        ghostRevivalTiles[GameModel.PINK_GHOST_SPEEDY]  = minTile.plus(3, 2);
-        ghostRevivalTiles[GameModel.CYAN_GHOST_BASHFUL] = minTile.plus(1, 2);
-        ghostRevivalTiles[GameModel.ORANGE_GHOST_POKEY] = minTile.plus(5, 2);
+        ghostRevivalTiles[0] = minTile.plus(3, 2);
+        ghostRevivalTiles[1] = minTile.plus(3, 2);
+        ghostRevivalTiles[2] = minTile.plus(1, 2);
+        ghostRevivalTiles[3] = minTile.plus(5, 2);
     }
 
     @Override
-    public Direction ghostStartDirection(byte personality) {
+    public Direction ghostStartDirection(GhostPersonality personality) {
         return switch (personality) {
-            case GameModel.RED_GHOST_SHADOW -> Direction.LEFT;
-            case GameModel.PINK_GHOST_SPEEDY -> Direction.DOWN;
-            case GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY -> Direction.UP;
-            default -> throw new IllegalStateException("Unexpected value: " + personality);
+            case RED_GHOST_SHADOW -> Direction.LEFT;
+            case PINK_GHOST_SPEEDY -> Direction.DOWN;
+            case CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY -> Direction.UP;
         };
     }
 
@@ -95,8 +93,8 @@ public class ArcadeHouse implements House {
     }
 
     @Override
-    public Vector2i ghostRevivalTile(byte personality) {
-        Validations.requireValidGhostPersonality(personality);
-        return ghostRevivalTiles[personality];
+    public Vector2i ghostRevivalTile(GhostPersonality personality) {
+        requireNonNull(personality);
+        return ghostRevivalTiles[personality.ordinal()];
     }
 }

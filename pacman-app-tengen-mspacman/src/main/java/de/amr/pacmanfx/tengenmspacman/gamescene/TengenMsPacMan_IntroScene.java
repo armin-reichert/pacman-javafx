@@ -9,7 +9,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
@@ -79,8 +79,12 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         actionBindings().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
 
         final List<GhostSettings> ghostSettings = variantConfig.worldSettings().ghosts();
-        ghostColors = Stream.of(GameModel.RED_GHOST_SHADOW, GameModel.PINK_GHOST_SPEEDY, GameModel.CYAN_GHOST_BASHFUL, GameModel.ORANGE_GHOST_POKEY)
-            .map(personality -> ghostSettings.get(personality).colors().normal().dressColor())
+        ghostColors = Stream.of(
+                GhostPersonality.RED_GHOST_SHADOW,
+                GhostPersonality.PINK_GHOST_SPEEDY,
+                GhostPersonality.CYAN_GHOST_BASHFUL,
+                GhostPersonality.ORANGE_GHOST_POKEY)
+            .map(personality -> ghostSettings.get(personality.ordinal()).colors().normal().dressColor())
             .toArray(Color[]::new);
 
         marquee = new Marquee();
@@ -143,10 +147,10 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 sys.spriteAnim().playSelected(scene.msPacMan);
 
                 scene.ghosts = List.of(
-                    renderConfig.createAnimatedGhost(scene.gameContext(), spriteAnimations, GameModel.RED_GHOST_SHADOW),
-                    renderConfig.createAnimatedGhost(scene.gameContext(), spriteAnimations, GameModel.CYAN_GHOST_BASHFUL),
-                    renderConfig.createAnimatedGhost(scene.gameContext(), spriteAnimations, GameModel.PINK_GHOST_SPEEDY),
-                    renderConfig.createAnimatedGhost(scene.gameContext(), spriteAnimations, GameModel.ORANGE_GHOST_POKEY)
+                    renderConfig.createAnimatedGhost(scene.gameContext(), spriteAnimations, GhostPersonality.RED_GHOST_SHADOW),
+                    renderConfig.createAnimatedGhost(scene.gameContext(), spriteAnimations, GhostPersonality.CYAN_GHOST_BASHFUL),
+                    renderConfig.createAnimatedGhost(scene.gameContext(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY),
+                    renderConfig.createAnimatedGhost(scene.gameContext(), spriteAnimations, GhostPersonality.ORANGE_GHOST_POKEY)
                 );
 
                 for (Ghost ghost : scene.ghosts) {

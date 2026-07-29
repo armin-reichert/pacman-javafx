@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
@@ -17,7 +18,6 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.model.GameModel.RED_GHOST_SHADOW;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -36,7 +36,7 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
 
     private final PointLight light;
     private final List<Ghost3D> ghosts3D;
-    private byte currentGhostID = RED_GHOST_SHADOW;
+    private GhostPersonality currentGhostID = GhostPersonality.RED_GHOST_SHADOW;
 
     public GhostLightRelayAnimation(PointLight light, List<Ghost3D> ghosts3DInOrder) {
         super("Ghost Light Animation");
@@ -45,14 +45,13 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
         this.ghosts3D = requireNonNull(ghosts3DInOrder);
 
         setFactory(() -> {
-            final var timeline = new Timeline(
-                new KeyFrame(LIGHT_CHANGE_INTERVAL, _ -> passGhostLightToNextHunter()));
+            final var timeline = new Timeline(new KeyFrame(LIGHT_CHANGE_INTERVAL, _ -> passGhostLightToNextHunter()));
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.statusProperty().addListener((_, _, status) -> {
                 switch (status) {
                     case STOPPED -> {
                         light.setLightOn(false);
-                        currentGhostID = RED_GHOST_SHADOW;
+                        currentGhostID = GhostPersonality.RED_GHOST_SHADOW;
                     }
                     case PAUSED -> {}
                     case RUNNING -> illuminateGhost(currentGhostID);
@@ -63,9 +62,9 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
         light.setMaxRange(LIGHT_MAX_RANGE);
     }
 
-    private void illuminateGhost(byte personality) {
-        final Ghost3D ghost3D = ghosts3D.get(personality);
-        final Color lightColor = ghosts3D.get(personality).settings().colors().normal().dressColor();
+    private void illuminateGhost(GhostPersonality personality) {
+        final Ghost3D ghost3D = ghosts3D.get(personality.ordinal());
+        final Color lightColor = ghosts3D.get(personality.ordinal()).settings().colors().normal().dressColor();
         light.setColor(lightColor);
         light.translateXProperty().bind(ghost3D.translateXProperty());
         light.translateYProperty().bind(ghost3D.translateYProperty());
@@ -79,10 +78,10 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
         findNextHunter().ifPresentOrElse(this::illuminateGhost, () -> light.setLightOn(false));
     }
 
-    private Optional<Byte> findNextHunter() {
-        byte next = nextGhostPersonality(currentGhostID);
+    private Optional<GhostPersonality> findNextHunter() {
+        GhostPersonality next = nextGhostPersonality(currentGhostID);
         while (next != currentGhostID) {
-            if (ghosts3D.get(next).ghost().state() == GhostState.HUNTING_PAC) {
+            if (ghosts3D.get(next.ordinal()).ghost().state() == GhostState.HUNTING_PAC) {
                 return Optional.of(next);
             }
             next = nextGhostPersonality(next);
@@ -90,7 +89,9 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
         return Optional.empty();
     }
 
-    private byte nextGhostPersonality(int personality) {
-        return (byte) ((personality + 1) % ghosts3D.size());
+    private GhostPersonality nextGhostPersonality(GhostPersonality personality) {
+        int next = personality.ordinal() + 1;
+        if (next == GhostPersonality.values().length) next = 0;
+        return GhostPersonality.values()[next];
     }
 }

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -25,7 +26,6 @@ import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene2.NailDressState.*;
-import static de.amr.pacmanfx.core.model.GameModel.RED_GHOST_SHADOW;
 
 /**
  * Second cut scene in Arcade Pac-Man game:<br>
@@ -71,7 +71,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         pacMan = factory.createPacMan();
         pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimationContainer));
 
-        blinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimationContainer, RED_GHOST_SHADOW);
+        blinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimationContainer, GhostPersonality.RED_GHOST_SHADOW);
 
         nailDressAnimation = new SpriteAnimationBuilder()
             .sprites(spriteSheet.findSprites(SpriteID.RED_GHOST_STRETCHED))
@@ -134,7 +134,6 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
 
     private void blinkyGetsCaughtOnNail(GameSystems sys) {
         sys.navigator().setSpeed(blinky, 0.09f);
-
         //TODO
         //blinkyAnimation(CommonAnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
     }

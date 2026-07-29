@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
@@ -109,13 +109,13 @@ class XXL_ChaseAnimation {
         sys.spriteAnim().playSelected(pac);
 
         ghosts = List.of(
-            renderConfig.createAnimatedGhost(gameContext, container, GameModel.RED_GHOST_SHADOW),
-            renderConfig.createAnimatedGhost(gameContext, container, GameModel.PINK_GHOST_SPEEDY),
-            renderConfig.createAnimatedGhost(gameContext, container, GameModel.CYAN_GHOST_BASHFUL),
-            renderConfig.createAnimatedGhost(gameContext, container, GameModel.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(gameContext, container, GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(gameContext, container, GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(gameContext, container, GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(gameContext, container, GhostPersonality.ORANGE_GHOST_POKEY)
         );
         for (Ghost ghost : ghosts) {
-            ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
+            ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
             ghost.visibility().show();
 
             sys.navigator().setMoveDir(ghost, Direction.LEFT);
@@ -154,7 +154,7 @@ class XXL_ChaseAnimation {
             pac.position().setX(numTilesX * WorldMap.TS);
 
             for (Ghost ghost : ghosts) {
-                ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * 2 * WorldMap.TS);
+                ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * 2 * WorldMap.TS);
                 ghost.visibility().show();
 
                 sys.navigator().setMoveDir(ghost, Direction.LEFT);
@@ -203,7 +203,7 @@ class XXL_ChaseAnimation {
 
             for (Ghost ghost : ghosts) {
                 ghost.visibility().show();
-                ghost.position().setX(pac.position().x + 22 * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
+                ghost.position().setX(pac.position().x + 22 * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
 
                 sys.navigator().setMoveDir(ghost, Direction.RIGHT);
                 sys.navigator().setWishDir(ghost, Direction.RIGHT);

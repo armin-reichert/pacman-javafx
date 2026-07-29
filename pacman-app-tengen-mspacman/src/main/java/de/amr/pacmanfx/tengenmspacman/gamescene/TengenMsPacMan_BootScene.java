@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.component.common.Movement;
@@ -47,8 +47,8 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
         movingText.position().set(tilesPx(9), unscaledHeight()); // lower border of screen
         ghost = appContext().variants().currentVariant().config().renderConfig().createAnimatedGhost(
             gameContext(),
-            appContext().ui().sprites().animations(), 
-            GameModel.RED_GHOST_SHADOW);
+            appContext().ui().sprites().animations(),
+            GhostPersonality.RED_GHOST_SHADOW);
     }
 
     @Override

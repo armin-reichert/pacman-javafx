@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.common.Movement;
@@ -30,7 +30,7 @@ public class ArcadePacMan_ActorFactory {
     }
 
     public Ghost createRedGhost() {
-        final Ghost ghost = new Ghost(GameModel.RED_GHOST_SHADOW, "Blinky");
+        final Ghost ghost = new Ghost(GhostPersonality.RED_GHOST_SHADOW, "Blinky");
         registerCommonComponents(ghost);
         ghost.setComponent(Elroy.class, new Elroy());
         ghost.reset();
@@ -38,21 +38,21 @@ public class ArcadePacMan_ActorFactory {
     }
 
     public Ghost createPinkGhost() {
-        final Ghost ghost = new Ghost(GameModel.PINK_GHOST_SPEEDY, "Pinky");
+        final Ghost ghost = new Ghost(GhostPersonality.PINK_GHOST_SPEEDY, "Pinky");
         registerCommonComponents(ghost);
         ghost.reset();
         return ghost;
     }
 
     public Ghost createCyanGhost() {
-        final Ghost ghost = new Ghost(GameModel.CYAN_GHOST_BASHFUL, "Inky");
+        final Ghost ghost = new Ghost(GhostPersonality.CYAN_GHOST_BASHFUL, "Inky");
         registerCommonComponents(ghost);
         ghost.reset();
         return ghost;
     }
 
     public Ghost createOrangeGhost() {
-        final Ghost ghost = new Ghost(GameModel.ORANGE_GHOST_POKEY, "Clyde");
+        final Ghost ghost = new Ghost(GhostPersonality.ORANGE_GHOST_POKEY, "Clyde");
         registerCommonComponents(ghost);
         ghost.reset();
         return ghost;

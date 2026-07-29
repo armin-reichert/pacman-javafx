@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
@@ -35,7 +36,12 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     implements GameScene2D_Renderer, SpriteRenderer, TengenMsPacMan_SceneRendererMixin
 {
     private static final int CONTENT_INDENT = 2 * WorldMap.TS;
-    private static final List<Byte> GHOSTS_Z_ORDER = List.of(GameModel.ORANGE_GHOST_POKEY, GameModel.CYAN_GHOST_BASHFUL, GameModel.PINK_GHOST_SPEEDY, GameModel.RED_GHOST_SHADOW);
+
+    private static final List<GhostPersonality> GHOSTS_Z_ORDER = List.of(
+        GhostPersonality.ORANGE_GHOST_POKEY,
+        GhostPersonality.CYAN_GHOST_BASHFUL,
+        GhostPersonality.PINK_GHOST_SPEEDY,
+        GhostPersonality.RED_GHOST_SHADOW);
 
     private class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
 

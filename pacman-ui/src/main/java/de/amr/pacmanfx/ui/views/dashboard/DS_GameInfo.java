@@ -8,6 +8,7 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.model.world.MapColorScheme;
@@ -27,7 +28,6 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static de.amr.basics.timer.TickTimer.secToTicks;
-import static de.amr.pacmanfx.core.model.GameModel.CYAN_GHOST_BASHFUL;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
 public class DS_GameInfo extends GameDashboardSection {
@@ -162,7 +162,7 @@ public class DS_GameInfo extends GameDashboardSection {
 
     private String fmtGhostAttackSpeed(GameLevel level, ActorSpeedRules speedControl) {
         // do not use Blinky because he has varying attack speed (Cruise Elroy mode)
-        final float speed = speedControl.ghostSpeedAttacking(level, level.ghost(CYAN_GHOST_BASHFUL));
+        final float speed = speedControl.ghostSpeedAttacking(level, level.ghost(GhostPersonality.CYAN_GHOST_BASHFUL));
         return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 

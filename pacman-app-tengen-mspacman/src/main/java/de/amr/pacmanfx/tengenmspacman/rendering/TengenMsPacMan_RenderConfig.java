@@ -8,7 +8,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
@@ -136,14 +136,13 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, byte personality) {
+    public Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, GhostPersonality personality) {
         final var factory = new TengenMsPacMan_ActorFactory();
         final Ghost ghost = switch (personality) {
-            case GameModel.RED_GHOST_SHADOW -> factory.createRedGhost();
-            case GameModel.PINK_GHOST_SPEEDY -> factory.createPinkGhost();
-            case GameModel.CYAN_GHOST_BASHFUL -> factory.createCyanGhost();
-            case GameModel.ORANGE_GHOST_POKEY -> factory.createOrangeGhost();
-            default -> throw new IllegalStateException("Unexpected value: " + personality);
+            case RED_GHOST_SHADOW -> factory.createRedGhost();
+            case PINK_GHOST_SPEEDY -> factory.createPinkGhost();
+            case CYAN_GHOST_BASHFUL -> factory.createCyanGhost();
+            case ORANGE_GHOST_POKEY -> factory.createOrangeGhost();
         };
 
         final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
@@ -154,7 +153,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public TengenMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, byte personality) {
+    public TengenMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
         return new TengenMsPacMan_GhostAnimations(container, personality);
     }
 

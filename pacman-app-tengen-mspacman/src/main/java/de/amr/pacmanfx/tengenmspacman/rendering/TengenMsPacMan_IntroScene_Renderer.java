@@ -115,7 +115,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
                     fillText(WITH, NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
                 final Ghost currentGhost = intro.ghosts.get(intro.ghostIndex);
-                final Color ghostColor = intro.ghostColors[currentGhost.personality()];
+                final Color ghostColor = intro.ghostColors[currentGhost.personality().ordinal()];
                 fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
                 intro.ghosts.forEach(actorRenderer::drawActor);
             }

@@ -14,7 +14,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
@@ -128,10 +128,10 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         pacMan = factory.createPacMan();
         pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
-        ghosts[0] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.RED_GHOST_SHADOW);
-        ghosts[1] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.PINK_GHOST_SPEEDY);
-        ghosts[2] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.CYAN_GHOST_BASHFUL);
-        ghosts[3] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GameModel.ORANGE_GHOST_POKEY);
+        ghosts[0] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.RED_GHOST_SHADOW);
+        ghosts[1] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
+        ghosts[2] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.CYAN_GHOST_BASHFUL);
+        ghosts[3] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.ORANGE_GHOST_POKEY);
 
         Arrays.fill(ghostImageVisible, false);
         Arrays.fill(ghostNicknameVisible, false);
@@ -160,7 +160,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         sys.spriteAnim().playSelected(pacMan);
 
         for (Ghost ghost : ghosts) {
-            ghost.position().set(pacMan.position().x + 16 * ghost.personality() + 18, pacMan.position().y);
+            ghost.position().set(pacMan.position().x + 16 * ghost.personality().ordinal() + 18, pacMan.position().y);
             ghost.visibility().show();
 
             sys.navigator().setMoveDir(ghost, Direction.LEFT);
@@ -184,8 +184,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
         // "shaking" effect
         final long tick_0_to_5 = tick % 6;
-        final Ghost pinkGhost = ghosts[GameModel.PINK_GHOST_SPEEDY];
-        final Ghost cyanGhost = ghosts[GameModel.CYAN_GHOST_BASHFUL];
+        final Ghost pinkGhost = ghosts[GhostPersonality.PINK_GHOST_SPEEDY.ordinal()];
+        final Ghost cyanGhost = ghosts[GhostPersonality.CYAN_GHOST_BASHFUL.ordinal()];
         if (tick_0_to_5 == 2) {
             pinkGhost.position().setX(pinkGhost.position().x + 0.5);
             cyanGhost.position().setX(cyanGhost.position().x - 0.5);
@@ -397,7 +397,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
                 final GameContext gameContext = scene.gameContext();
 
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
-                    scene.ghosts[GameModel.ORANGE_GHOST_POKEY].visibility().hide();
+                    scene.ghosts[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()].visibility().hide();
                     scene.gameFlow().enterState(gameContext, GameStateID.GAME_OR_LEVEL_STARTING);
                 }
             }

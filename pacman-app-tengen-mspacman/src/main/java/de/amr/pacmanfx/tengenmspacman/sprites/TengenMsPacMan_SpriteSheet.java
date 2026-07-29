@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.sprites;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
@@ -250,33 +250,32 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         return spriteMap.spriteSequence(id);
     }
 
-    public RectShort[] ghostNormalSprites(byte personality, Direction dir) {
+    public RectShort[] ghostNormalSprites(GhostPersonality personality, Direction dir) {
         return switch (personality) {
-            case GameModel.RED_GHOST_SHADOW -> switch (dir) {
+            case RED_GHOST_SHADOW -> switch (dir) {
                 case Direction.RIGHT -> findSprites(SpriteID.RED_GHOST_RIGHT);
                 case Direction.LEFT  -> findSprites(SpriteID.RED_GHOST_LEFT);
                 case Direction.UP    -> findSprites(SpriteID.RED_GHOST_UP);
                 case Direction.DOWN  -> findSprites(SpriteID.RED_GHOST_DOWN);
             };
-            case GameModel.PINK_GHOST_SPEEDY   -> switch (dir) {
+            case PINK_GHOST_SPEEDY   -> switch (dir) {
                 case Direction.RIGHT -> findSprites(SpriteID.PINK_GHOST_RIGHT);
                 case Direction.LEFT  -> findSprites(SpriteID.PINK_GHOST_LEFT);
                 case Direction.UP    -> findSprites(SpriteID.PINK_GHOST_UP);
                 case Direction.DOWN  -> findSprites(SpriteID.PINK_GHOST_DOWN);
             };
-            case GameModel.CYAN_GHOST_BASHFUL  -> switch (dir) {
+            case CYAN_GHOST_BASHFUL  -> switch (dir) {
                 case Direction.RIGHT -> findSprites(SpriteID.CYAN_GHOST_RIGHT);
                 case Direction.LEFT  -> findSprites(SpriteID.CYAN_GHOST_LEFT);
                 case Direction.UP    -> findSprites(SpriteID.CYAN_GHOST_UP);
                 case Direction.DOWN  -> findSprites(SpriteID.CYAN_GHOST_DOWN);
             };
-            case GameModel.ORANGE_GHOST_POKEY  -> switch (dir) {
+            case ORANGE_GHOST_POKEY  -> switch (dir) {
                 case Direction.RIGHT -> findSprites(SpriteID.ORANGE_GHOST_RIGHT);
                 case Direction.LEFT  -> findSprites(SpriteID.ORANGE_GHOST_LEFT);
                 case Direction.UP    -> findSprites(SpriteID.ORANGE_GHOST_UP);
                 case Direction.DOWN  -> findSprites(SpriteID.ORANGE_GHOST_DOWN);
             };
-            default -> throw new IllegalArgumentException();
         };
     }
 

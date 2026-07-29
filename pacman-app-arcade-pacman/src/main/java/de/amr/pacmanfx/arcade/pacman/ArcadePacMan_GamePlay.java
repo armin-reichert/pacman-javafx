@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
@@ -34,7 +35,6 @@ import java.util.stream.Collectors;
 
 import static de.amr.basics.math.RandomNumberSupport.randomFloat;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.core.model.GameModel.*;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
@@ -142,11 +142,11 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     protected void createAndSetGhosts(GameContext gameContext, GameLevel level, House house) {
         final var factory = new ArcadePacMan_ActorFactory();
-        final Map<Byte, Ghost> ghosts = Map.of(
-            RED_GHOST_SHADOW,   factory.createRedGhost(),
-            PINK_GHOST_SPEEDY,  factory.createPinkGhost(),
-            CYAN_GHOST_BASHFUL, factory.createCyanGhost(),
-            ORANGE_GHOST_POKEY, factory.createOrangeGhost()
+        final Map<GhostPersonality, Ghost> ghosts = Map.of(
+            GhostPersonality.RED_GHOST_SHADOW,   factory.createRedGhost(),
+            GhostPersonality.PINK_GHOST_SPEEDY,  factory.createPinkGhost(),
+            GhostPersonality.CYAN_GHOST_BASHFUL, factory.createCyanGhost(),
+            GhostPersonality.ORANGE_GHOST_POKEY, factory.createOrangeGhost()
         );
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
@@ -155,16 +155,16 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
             .collect(Collectors.toUnmodifiableSet());
 
-        factory.initWorldPlacement(ghosts.get(RED_GHOST_SHADOW),   terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
-        factory.initWorldPlacement(ghosts.get(PINK_GHOST_SPEEDY),  terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
-        factory.initWorldPlacement(ghosts.get(CYAN_GHOST_BASHFUL), terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
-        factory.initWorldPlacement(ghosts.get(ORANGE_GHOST_POKEY), terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
+        factory.initWorldPlacement(ghosts.get(GhostPersonality.RED_GHOST_SHADOW),   terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
+        factory.initWorldPlacement(ghosts.get(GhostPersonality.PINK_GHOST_SPEEDY),  terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
+        factory.initWorldPlacement(ghosts.get(GhostPersonality.CYAN_GHOST_BASHFUL), terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
+        factory.initWorldPlacement(ghosts.get(GhostPersonality.ORANGE_GHOST_POKEY), terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
 
         level.setGhosts(
-            ghosts.get(RED_GHOST_SHADOW),
-            ghosts.get(PINK_GHOST_SPEEDY),
-            ghosts.get(CYAN_GHOST_BASHFUL),
-            ghosts.get(ORANGE_GHOST_POKEY)
+            ghosts.get(GhostPersonality.RED_GHOST_SHADOW),
+            ghosts.get(GhostPersonality.PINK_GHOST_SPEEDY),
+            ghosts.get(GhostPersonality.CYAN_GHOST_BASHFUL),
+            ghosts.get(GhostPersonality.ORANGE_GHOST_POKEY)
         );
     }
 
@@ -246,7 +246,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
-        final Ghost redGhost = level.ghost(RED_GHOST_SHADOW);
+        final Ghost redGhost = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
         if (redGhost != null) {
             final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
             final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();

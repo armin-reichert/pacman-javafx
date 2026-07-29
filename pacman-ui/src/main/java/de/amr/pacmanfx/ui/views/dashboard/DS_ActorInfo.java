@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
@@ -40,20 +40,20 @@ public class DS_ActorInfo extends GameDashboardSection {
         addDynamicInfo("Power",     supplyPacPowerText(appContext));
         addDynamicInfo("Animation", supplyPacAnimationText(appContext));
         emptyRow();
-        addGhostInfo(appContext, GameModel.RED_GHOST_SHADOW);
+        addGhostInfo(appContext, GhostPersonality.RED_GHOST_SHADOW);
         emptyRow();
-        addGhostInfo(appContext, GameModel.PINK_GHOST_SPEEDY);
+        addGhostInfo(appContext, GhostPersonality.PINK_GHOST_SPEEDY);
         emptyRow();
-        addGhostInfo(appContext, GameModel.CYAN_GHOST_BASHFUL);
+        addGhostInfo(appContext, GhostPersonality.CYAN_GHOST_BASHFUL);
         emptyRow();
-        addGhostInfo(appContext, GameModel.ORANGE_GHOST_POKEY);
+        addGhostInfo(appContext, GhostPersonality.ORANGE_GHOST_POKEY);
     }
 
     private Supplier<String> supplyLivesCount(GameAppContext appContext) {
         return fnGameLevelInfo(appContext, level -> "%d".formatted(level.gameModel().lifeCount()));
     }
 
-    private void addGhostInfo(GameAppContext appContext, byte personality) {
+    private void addGhostInfo(GameAppContext appContext, GhostPersonality personality) {
         addDynamicInfo(ghostName(personality), supplyGhostText(appContext, this::ghostNameAndStateText, personality));
         addDynamicInfo("Movement",  supplyGhostText(appContext, this::actorMovementText,  personality));
         addDynamicInfo("Tile",      supplyGhostText(appContext, this::actorLocationText,  personality));
@@ -62,13 +62,12 @@ public class DS_ActorInfo extends GameDashboardSection {
             personality));
     }
 
-    private static String ghostName(byte personality) {
+    private static String ghostName(GhostPersonality personality) {
         return switch (personality) {
-            case GameModel.RED_GHOST_SHADOW   -> "Red Ghost";
-            case GameModel.PINK_GHOST_SPEEDY  -> "Pink Ghost";
-            case GameModel.CYAN_GHOST_BASHFUL -> "Cyan Ghost";
-            case GameModel.ORANGE_GHOST_POKEY -> "Orange Ghost";
-            default -> "Unknown Ghost";
+            case RED_GHOST_SHADOW   -> "Red Ghost";
+            case PINK_GHOST_SPEEDY  -> "Pink Ghost";
+            case CYAN_GHOST_BASHFUL -> "Cyan Ghost";
+            case ORANGE_GHOST_POKEY -> "Orange Ghost";
         };
     }
 
@@ -132,7 +131,7 @@ public class DS_ActorInfo extends GameDashboardSection {
 
     private Supplier<String> supplyGhostText(
         GameAppContext appContext,
-        BiFunction<GameLevel, Ghost, String> infoSupplier, byte personality) {
+        BiFunction<GameLevel, Ghost, String> infoSupplier, GhostPersonality personality) {
 
         return fnGameLevelInfo(appContext, level -> {
             if (!level.entities().ghosts().isEmpty()) {

@@ -6,8 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rules;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameException;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -137,13 +136,12 @@ public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
         });
     }
 
-    private static float ghostSpeedDelta(byte personality) {
+    private static float ghostSpeedDelta(GhostPersonality personality) {
         return speedUnitsToPixels(switch (personality) {
-            case GameModel.RED_GHOST_SHADOW -> 3;
-            case GameModel.ORANGE_GHOST_POKEY -> 2;
-            case GameModel.CYAN_GHOST_BASHFUL -> 1;
-            case GameModel.PINK_GHOST_SPEEDY -> 0;
-            default -> throw GameException.invalidGhostPersonality(personality);
+            case RED_GHOST_SHADOW -> 3;
+            case ORANGE_GHOST_POKEY -> 2;
+            case CYAN_GHOST_BASHFUL -> 1;
+            case PINK_GHOST_SPEEDY -> 0;
         });
     }
 

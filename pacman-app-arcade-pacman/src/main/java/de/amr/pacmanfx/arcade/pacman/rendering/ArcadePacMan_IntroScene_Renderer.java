@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -104,7 +103,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
             fillText("CHARACTER / NICKNAME", ARCADE_WHITE, tilesPx(LEFT_TILE_X + 3), tilesPx(6));
         }
         final int y = WorldMap.TS * 8;
-        for (byte p = GameModel.RED_GHOST_SHADOW; p <= GameModel.ORANGE_GHOST_POKEY; ++p) {
+        for (byte p = 0; p < 4; ++p) {
             int offsetY = 3 * p * WorldMap.TS;
             if (introScene.ghostImageVisible[p]) {
                 RectShort sprite = spriteSheet().findSprites(GALLERY_GHOSTS)[p];

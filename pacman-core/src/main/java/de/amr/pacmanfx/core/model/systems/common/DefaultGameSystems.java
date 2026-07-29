@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.model.systems.common;
 
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.systems.bonus.BonusWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.systems.ghost.*;
 import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
@@ -137,13 +137,12 @@ public class DefaultGameSystems implements GameSystems {
     }
 
     @Override
-    public GhostHuntingStrategy ghostHuntingStrategy(byte personality) {
+    public GhostHuntingStrategy ghostHuntingStrategy(GhostPersonality personality) {
         return switch (personality) {
-            case GameModel.RED_GHOST_SHADOW -> redGhostShadowHuntingStrategy;
-            case GameModel.PINK_GHOST_SPEEDY -> pinkGhostSpeedyHuntingStrategy;
-            case GameModel.CYAN_GHOST_BASHFUL -> cyanGhostBashfulHuntingStrategy;
-            case GameModel.ORANGE_GHOST_POKEY -> orangeGhostPokeyHuntingStrategy;
-            default -> throw new IllegalArgumentException("Unknown personality: " + personality);
+            case RED_GHOST_SHADOW -> redGhostShadowHuntingStrategy;
+            case PINK_GHOST_SPEEDY -> pinkGhostSpeedyHuntingStrategy;
+            case CYAN_GHOST_BASHFUL -> cyanGhostBashfulHuntingStrategy;
+            case ORANGE_GHOST_POKEY -> orangeGhostPokeyHuntingStrategy;
         };
     }
 

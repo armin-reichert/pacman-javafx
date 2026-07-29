@@ -8,10 +8,11 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
-import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
+import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
 
@@ -19,11 +20,11 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
     public static final int FLASHING_TICKS = 7;  // TODO check this in emulator
 
-    private final byte personality;
+    private final GhostPersonality personality;
 
-    public TengenMsPacMan_GhostAnimations(SpriteAnimationContainer container, byte personality) {
+    public TengenMsPacMan_GhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
         super(TengenMsPacMan_SpriteSheet.instance());
-        this.personality = requireValidGhostPersonality(personality);
+        this.personality = requireNonNull(personality);
         factory = id -> createAnimation(id, container);
     }
 

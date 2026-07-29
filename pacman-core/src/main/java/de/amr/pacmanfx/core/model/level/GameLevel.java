@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.model.level;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.Ghost;
@@ -302,11 +303,12 @@ public class GameLevel {
     }
 
     /**
-     * @param personality a valid ghost ID (e.g. {@link GameModel#ORANGE_GHOST_POKEY})
+     * @param personality a ghost personality (e.g. {@link GhostPersonality#ORANGE_GHOST_POKEY})
      * @return the ghost with this ID
      */
-    public Ghost ghost(byte personality) {
-        return entities.ghosts().get(requireValidGhostPersonality(personality));
+    public Ghost ghost(GhostPersonality personality) {
+        requireNonNull(personality);
+        return entities.ghosts().get(personality.ordinal());
     }
 
     public Stream<Ghost> ghostsInAnyOfStates(Collection<GhostState> states) {

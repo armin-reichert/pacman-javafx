@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -186,7 +186,11 @@ public class MiniPlaySceneView {
 
         level.optBonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
         actorRenderer.drawActor(level.entities().pac());
-        Stream.of(GameModel.ORANGE_GHOST_POKEY, GameModel.CYAN_GHOST_BASHFUL, GameModel.PINK_GHOST_SPEEDY, GameModel.RED_GHOST_SHADOW).map(level::ghost)
-            .forEach(ghost -> actorRenderer.drawActor(ghost));
+        Stream.of(
+            GhostPersonality.ORANGE_GHOST_POKEY,
+            GhostPersonality.CYAN_GHOST_BASHFUL,
+            GhostPersonality.PINK_GHOST_SPEEDY,
+            GhostPersonality.RED_GHOST_SHADOW
+        ).map(level::ghost).forEach(ghost -> actorRenderer.drawActor(ghost));
     }
 }

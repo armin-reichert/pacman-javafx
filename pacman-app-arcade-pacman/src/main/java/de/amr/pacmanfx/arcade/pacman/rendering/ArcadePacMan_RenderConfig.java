@@ -11,6 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
@@ -127,14 +128,13 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, byte personality) {
+    public Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, GhostPersonality personality) {
         final var factory = new ArcadePacMan_ActorFactory();
         final Ghost ghost = switch (personality) {
-            case GameModel.RED_GHOST_SHADOW   -> factory.createRedGhost();
-            case GameModel.PINK_GHOST_SPEEDY  -> factory.createPinkGhost();
-            case GameModel.CYAN_GHOST_BASHFUL -> factory.createCyanGhost();
-            case GameModel.ORANGE_GHOST_POKEY -> factory.createOrangeGhost();
-            default -> throw new IllegalArgumentException("Unknown personality: " + personality);
+            case RED_GHOST_SHADOW   -> factory.createRedGhost();
+            case PINK_GHOST_SPEEDY  -> factory.createPinkGhost();
+            case CYAN_GHOST_BASHFUL -> factory.createCyanGhost();
+            case ORANGE_GHOST_POKEY -> factory.createOrangeGhost();
         };
 
         final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
@@ -145,8 +145,8 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, byte personality) {
-        Validations.requireValidGhostPersonality(personality);
+    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
+        requireNonNull(personality);
         return new ArcadePacMan_GhostAnimations(container, personality);
     }
 

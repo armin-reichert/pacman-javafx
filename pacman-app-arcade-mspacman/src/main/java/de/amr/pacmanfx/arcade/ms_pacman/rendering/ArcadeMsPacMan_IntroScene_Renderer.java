@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -17,7 +18,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene.*;
-import static de.amr.pacmanfx.core.model.GameModel.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
@@ -62,9 +62,9 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
 
         switch (introScene.sceneState()) {
             case SceneState.GHOSTS_MARCHING_IN -> {
-                String ghostName = GHOST_NAMES[introScene.presentedGhostPersonality];
-                Color ghostColor = GHOST_COLORS[introScene.presentedGhostPersonality];
-                if (introScene.presentedGhostPersonality == RED_GHOST_SHADOW) {
+                String ghostName = GHOST_NAMES[introScene.ghostPresented.ordinal()];
+                Color ghostColor = GHOST_COLORS[introScene.ghostPresented.ordinal()];
+                if (introScene.ghostPresented == GhostPersonality.RED_GHOST_SHADOW) {
                     fillText("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + tilesPx(3));
                 }
                 double x = TITLE_X + (ghostName.length() < 4 ? tilesPx(4) : tilesPx(3));

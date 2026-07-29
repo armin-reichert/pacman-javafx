@@ -13,7 +13,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
@@ -36,7 +36,6 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.core.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
@@ -144,8 +143,8 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public ArcadeMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, byte personality) {
-        requireValidGhostPersonality(personality);
+    public ArcadeMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
+        requireNonNull(personality);
         return new ArcadeMsPacMan_GhostAnimations(container, personality);
     }
 
@@ -155,16 +154,15 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, byte personality) {
+    public Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, GhostPersonality personality) {
         final var factory = new ArcadeMsPacMan_ActorFactory();
         final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
 
         final Ghost ghost = switch (personality) {
-            case GameModel.RED_GHOST_SHADOW   -> factory.createRedGhost();
-            case GameModel.PINK_GHOST_SPEEDY  -> factory.createPinkGhost();
-            case GameModel.CYAN_GHOST_BASHFUL -> factory.createCyanGhost();
-            case GameModel.ORANGE_GHOST_POKEY -> factory.createOrangeGhost();
-            default -> throw new IllegalStateException("Illegal personality: " + personality);
+            case RED_GHOST_SHADOW   -> factory.createRedGhost();
+            case PINK_GHOST_SPEEDY  -> factory.createPinkGhost();
+            case CYAN_GHOST_BASHFUL -> factory.createCyanGhost();
+            case ORANGE_GHOST_POKEY -> factory.createOrangeGhost();
         };
 
         animSystem.setAnimations(ghost, createGhostAnimations(container, personality));

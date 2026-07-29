@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
@@ -47,7 +47,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
         scene.gameContext().model().optLevel().ifPresent(level -> {
             // We assume all ghosts have the same set of special terrain tiles
-            level.ghost(GameModel.RED_GHOST_SHADOW).worldPlacement().specialTerrainTiles().forEach(tile -> {
+            level.ghost(GhostPersonality.RED_GHOST_SHADOW).worldPlacement().specialTerrainTiles().forEach(tile -> {
                 final double x = scaled(tile.x() * WorldMap.TS);
                 final double y = scaled(tile.y() * WorldMap.TS + WorldMap.HTS), size = scaled(WorldMap.TS);
                 ctx.setFill(Color.RED);
@@ -95,8 +95,11 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
         actorsInZOrder.clear();
         level.optBonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(level.entities().pac());
-        Stream.of(GameModel.ORANGE_GHOST_POKEY, GameModel.CYAN_GHOST_BASHFUL, GameModel.PINK_GHOST_SPEEDY, GameModel.RED_GHOST_SHADOW)
-            .map(level::ghost)
-            .forEach(actorsInZOrder::add);
+        Stream.of(
+            GhostPersonality.ORANGE_GHOST_POKEY,
+            GhostPersonality.CYAN_GHOST_BASHFUL,
+            GhostPersonality.PINK_GHOST_SPEEDY,
+            GhostPersonality.RED_GHOST_SHADOW
+            ).map(level::ghost).forEach(actorsInZOrder::add);
     }
 }
